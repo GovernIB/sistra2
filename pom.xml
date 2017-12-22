@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>es.caib.sistra2</groupId>
+  <artifactId>sistra2</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Sistra2</name>
+
+	<properties>
+		<ate.version>0.0.1-SNAPSHOT</ate.version>
+		<gte.version>0.0.1-SNAPSHOT</gte.version>
+		<hlp.version>0.0.1-SNAPSHOT</hlp.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<maven.compiler.version>3.7.0</maven.compiler.version>
+		<maven.jar.version>3.0.2</maven.jar.version>
+		<maven.war.version>3.2.0</maven.war.version>
+		<maven.ear.version>2.10.1</maven.ear.version>
+		<maven.ejb.version>3.0.0</maven.ejb.version>
+		<maven.resources.version>3.0.2</maven.resources.version>
+		<spring.version>4.3.13.RELEASE</spring.version>
+		<spring-security.version>4.2.3.RELEASE</spring-security.version>
+		<ejb-api.version>3.0</ejb-api.version>
+		<jsr250-api.version>1.0</jsr250-api.version>
+		<servlet-api.version>3.1.0</servlet-api.version>
+		<jstl.version>1.2</jstl.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<validation-api.version>1.1.0.Final</validation-api.version>
+		<jsf2.version>2.2.15</jsf2.version>
+		<jstl.version>1.2</jstl.version>
+		<primefaces.version>6.1</primefaces.version>
+		<jersey.version>2.26</jersey.version>
+		<javax.inject.version>1</javax.inject.version>
+		<jersey-gf-cdi.version>2.14</jersey-gf-cdi.version>
+	</properties>
+  	<modules>
+		<module>ate</module>
+		<module>gte</module>
+		<module>hlp</module>
+  	</modules>
+</project>
