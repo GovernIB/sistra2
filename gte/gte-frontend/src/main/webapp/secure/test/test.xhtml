@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<!-- Ejemplo para meter parametro get en el valor del bean NO DISPONIBLE EN POSTCONSTRUCT	-->
+	<f:metadata>
+		<f:viewParam name="filtro" value="#{testController.filtro}"/>
+		<f:viewAction action="#{testController.init}" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+		<h:form style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+		        <f:facet name="left">
+		        	<h:panelGrid id="panelBotones" columns="6" cellspacing="5px">
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="ui-icon-trash" actionListener="#{testController.nuevo()}" process="@this" update="growl">
+		        			<p:ajax event="dialogReturn" listener="#{testController.returnDialogo}" update="growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="ui-icon-folder-open" actionListener="#{testController.editar()}" process="@this" update="growl">
+		        			<p:ajax event="dialogReturn" listener="#{testController.returnDialogo}" update="growl dataTable"/>		        			
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="ui-icon-trash" actionListener="#{testController.eliminar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton value="#{msg['test.dialogoComun']}"  actionListener="#{testController.abrirDialogoExterno()}" process="@this">
+		        			<p:ajax event="dialogReturn" listener="#{testController.returnDialogoExterno}" update="growl"/>
+		        		</p:commandButton>
+		        		<p:commandButton value="#{msg['test.mensaje']}"  actionListener="#{testController.mostrarMensaje()}" process="@this" update="growl"/>
+		        		<p:commandButton value="#{msg['test.mensajeDialog']}" actionListener="#{testController.mostrarMensajeDialog()}" process="@this" update="@none"/>
+		        	</h:panelGrid>
+		        </f:facet>
+		        <f:facet name="right">		        	
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{testController.filtro}"/>
+	           			<p:commandButton icon="ui-icon-search" actionListener="#{testController.filtrar()}" process="panelFiltro" update="dataTable growl" />
+	           		</h:panelGrid>
+		        </f:facet>
+		    </p:toolbar>
+
+
+			<!-- Data table -->			
+			<p:dataTable  id="dataTable" var="td" value="#{testController.listaDatos}"
+						 rows="10"
+						 scrollable="true" scrollHeight="88%"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+			        	 selectionMode="single" selection="#{testController.datoSeleccionado}" rowKey="#{td.codigo}">
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" />
+				<p:ajax event="rowUnselect" />
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['test.headerId']}">
+			        <h:outputText value="#{td.codigo}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['test.headerDescripcion']}">
+			        <h:outputText value="#{td.descripcion}" />
+			    </p:column>
+
+			</p:dataTable>
+			
+			<!-- Context menu -->
+			<p:contextMenu for="dataTable">
+		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditar()"/>        			
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="ui-icon-trash" onclick="rcEliminar()"/>
+		    </p:contextMenu>
+		
+			<h:outputScript >
+		      function rcEditar() {
+		        document.getElementById("form:btnEditar").click();
+		      }
+		      function rcEliminar() {
+		        document.getElementById("form:btnEliminar").click();
+		      }
+		    </h:outputScript>
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

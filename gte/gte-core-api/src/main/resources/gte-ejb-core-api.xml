@@ -18,5 +18,11 @@
 			id="ejemploService"
 			jndi-name="java:global/gte/gte-core/EjemploServiceBean!es.caib.sistra2.gte.core.api.service.EjemploService"
 			business-interface="es.caib.sistra2.gte.core.api.service.EjemploService"/>
+	
+	<!-- JBoss 7  -->
+	<jee:local-slsb
+			id="testService"
+			jndi-name="java:global/gte/gte-core/TestServiceBean!es.caib.sistra2.gte.core.api.service.TestService"
+			business-interface="es.caib.sistra2.gte.core.api.service.TestService"/>
 
 </beans>
