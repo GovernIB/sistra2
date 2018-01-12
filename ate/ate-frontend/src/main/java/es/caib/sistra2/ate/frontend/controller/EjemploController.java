@@ -22,7 +22,9 @@ public class EjemploController {
 		EjemploDto dato = ejemploService.recuperaDato();
 
 		mav = new ModelAndView("inicio");
-		mav.addObject("nombre", dato.getNombre());
+
+		// Obtenemos tb usuario y role en la parte web
+		mav.addObject("nombre", dato.getNombre() + " - WEB: usuario " + SecurityUtils.getUserName() + " role: " + SecurityUtils.hasRole("STR2_TEST") );
 
 		return mav;
 	}

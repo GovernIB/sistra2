@@ -61,5 +61,21 @@
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
     
+	<!-- Seguridad -->
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>gte-rest</web-resource-name>
+	        <url-pattern>/rest/*</url-pattern>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>STR2_TEST</role-name>
+	    </auth-constraint>
+	</security-constraint>
+
+	<login-config><auth-method>BASIC</auth-method><realm-name><![CDATA[Autenticacion]]></realm-name></login-config>
+	 
+	 <security-role>
+	    <role-name>STR2_TEST</role-name>
+	</security-role>    
  
 </web-app>

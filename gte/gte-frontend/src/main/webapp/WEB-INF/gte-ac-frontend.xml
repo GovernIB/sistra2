@@ -9,6 +9,18 @@
         		http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<context:annotation-config />
-	<context:component-scan base-package="es.caib.sistra2.gte.frontend.bean" />
+	<context:component-scan base-package="es.caib.sistra2.gte.frontend.controller" />
+	
+	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view)-->
+	<!-- Si usamos los ManagedBeans de JSF no hace falta -->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="view">
+					<bean class="es.caib.sistra2.gte.frontend.util.SpringViewScope" />
+				</entry>
+			</map>
+		</property>
+	</bean>
 
 </beans>

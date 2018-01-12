@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import es.caib.sistra2.gte.core.api.model.EjemploDto;
 import es.caib.sistra2.gte.core.api.service.EjemploService;
 
-@Service("ejemploService")
+@Service
 public class EjemploServiceImpl implements EjemploService {
 
 	@Override

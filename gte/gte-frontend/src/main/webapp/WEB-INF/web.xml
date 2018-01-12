@@ -3,29 +3,24 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 	      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
+	
 	<display-name>gte-frontend</display-name>
 
-
-	<welcome-file-list>
-		<welcome-file>index.xhtml</welcome-file>
-	</welcome-file-list>
-
-	<!-- Loads the Spring web application context -->
+	<!-- Spring configuration --> 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
-
-	<!-- The master configuration file for this Spring web application -->
+	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/${ac.server.context}
     			 /WEB-INF/gte-ac-frontend.xml
     </param-value>
-	</context-param>
+	</context-param>	
+
 
 	<!-- Enforce UTF-8 Character Encoding -->
 	<filter>
@@ -45,15 +40,6 @@
 		<url-pattern>*</url-pattern>
 	</filter-mapping>
 
-	<!--  enlace con Spring Security -->
-<!-- 	<filter> -->
-<!-- 		<filter-name>springSecurityFilterChain</filter-name> -->
-<!-- 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> -->
-<!-- 	</filter> -->
-<!-- 	<filter-mapping> -->
-<!-- 		<filter-name>springSecurityFilterChain</filter-name> -->
-<!-- 		<url-pattern>/*</url-pattern> -->
-<!-- 	</filter-mapping> -->
 
 	<!-- JSF -->
 	<listener>
@@ -65,6 +51,7 @@
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
@@ -74,29 +61,60 @@
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
 	</context-param>
-
+	
 	<context-param>
-		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>cupertino</param-value>
 	</context-param>
 	
-	
-<!-- 	<login-config> -->
-<!-- 		<auth-method>BASIC</auth-method> -->
-<!-- 		<realm-name>Govern de les Illes Balears</realm-name> -->
-<!-- 	</login-config> -->
+	<!-- Seguridad -->
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>gte-frontend</web-resource-name>
+	        <url-pattern>/secure/*</url-pattern>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>STR2_TEST</role-name>
+	    </auth-constraint>
+	</security-constraint>
 
-<!-- 	<security-role> -->
-<!-- 		<role-name>STR2_ADMIN</role-name> -->
-<!-- 	</security-role> -->
+	<login-config><auth-method>BASIC</auth-method><realm-name><![CDATA[Autenticacion]]></realm-name></login-config>
+	 
+	 <security-role>
+	    <role-name>STR2_TEST</role-name>
+	</security-role>
+
+	 
+	 <!-- Index -->
+ 	<welcome-file-list>
+		<welcome-file>index.xhtml</welcome-file>
+	</welcome-file-list>
+
+	<!-- Session configuration -->
+	<session-config>
+	    <session-timeout>30</session-timeout>
+	</session-config>
+	 
+	 <!-- Error pages --> 		   
+	  <error-page>
+	    <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+	    <location>/error/errorSesionExpirada.xhtml</location>
+	  </error-page>
+	  <error-page>
+	    <exception-type>java.lang.Exception</exception-type>
+	    <location>/error/errorException.xhtml</location>
+	  </error-page>
+	  <error-page>
+	    <error-code>403</error-code>
+	    <location>/error/errorCode.xhtml?errorCode=403</location>
+	  </error-page>
+	  <error-page>
+	    <error-code>404</error-code>
+	    <location>/error/errorCode.xhtml?errorCode=404</location>
+	  </error-page>
+	  <error-page>
+	    <error-code>500</error-code>
+	    <location>/error/errorCode.xhtml?errorCode=500</location>
+	  </error-page>
 	
-<!-- 	<security-constraint> -->
-<!-- 		<web-resource-collection> -->
-<!-- 			<web-resource-name>All</web-resource-name> -->
-<!-- 			<url-pattern>/*</url-pattern> -->
-<!-- 		</web-resource-collection> -->
-<!-- 		<auth-constraint> -->
-<!-- 			<role-name>STR2_ADMIN</role-name> -->
-<!-- 		</auth-constraint> -->
-<!-- 	</security-constraint>	 -->
 </web-app>
