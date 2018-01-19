@@ -16,7 +16,7 @@
 	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/${ac.server.context}
+		<param-value>/WEB-INF/gte-ac-frontend-jboss.xml
     			 /WEB-INF/gte-ac-frontend.xml
     </param-value>
 	</context-param>	
@@ -64,7 +64,7 @@
 	
 	<context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>cupertino</param-value>
+        <param-value>custom</param-value>
 	</context-param>
 	
 	<!-- Seguridad -->

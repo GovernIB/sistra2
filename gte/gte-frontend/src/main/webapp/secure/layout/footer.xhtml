@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html 
-	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:h="http://java.sun.com/jsf/html" 
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-  	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui">
 
-<body>
-  <ui:composition>
-    <div >
-      <div align="center">
-        PIE DE PAGINA
-      </div>
-    </div>
-  </ui:composition>
-</body>
+<h:body>
+	<ui:composition>
+
+		<p:panelGrid columns="3" layout="grid" columnClasses="grid-left grid-nobgcolor,grid-center grid-nobgcolor,grid-right grid-nobgcolor" styleClass="ui-noborder">
+			<h:outputText value="GTE v1.0" />
+			<h:outputText value="Entorno: Desarrollo" styleClass="grid-entorno"/>
+			<h:graphicImage value="/resources/images/feddr.png" height="38"/>
+		</p:panelGrid>
+
+	</ui:composition>
+</h:body>
 </html>

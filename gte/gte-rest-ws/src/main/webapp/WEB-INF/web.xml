@@ -23,7 +23,7 @@
   <!-- The master configuration file for this Spring web application -->        
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/${ac.server.context}</param-value>
+    <param-value>/WEB-INF/gte-ac-rest-ws-jboss.xml</param-value>
   </context-param>
 
   <!-- Enforce UTF-8 Character Encoding -->

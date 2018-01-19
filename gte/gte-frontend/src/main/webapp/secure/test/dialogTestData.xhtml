@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="#{sessionBean.lang}"  
+<html lang="#{sessionBean.lang}"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -24,34 +24,33 @@
 		-->
 		<f:viewParam name="MODO_ACCESO" value="#{testDialogController.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{testDialogController.id}"/>
-		<f:viewAction action="#{testDialogController.init}" />     	
+		<f:viewAction action="#{testDialogController.init}" />
 	</f:metadata>
-	
-	<!-- Contenido dialogo -->
 	<h:form>
-		
-		<!-- Growl mensajes -->
-		<p:growl id="growlDialogTestData" widgetVar="growlDialogTestData" life="2000" sticky="false" />			
-		
-	
-		 <p:panelGrid columns="2">
-		 	
-		 	<p:outputLabel for="codigo" value="#{msg['dialogTestData.codigo']}" />
-		 	<p:inputText id="codigo" value="#{testDialogController.data.codigo}" disabled="#{!testDialogController.isAlta()}" required="true"/> 
-		 	
-		 	<p:outputLabel for="descripcion" value="#{msg['dialogTestData.descripcion']}" />
-		 	<p:inputText id="descripcion" value="#{testDialogController.data.descripcion}" disabled="#{testDialogController.isConsulta()}" required="true"/>
-		             
-		</p:panelGrid>
-		
-		<p:toolbar>
-        	<f:facet name="left">
-        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{testDialogController.aceptar()}" process="@form" update="@form growlDialogTestData"/>
-				<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{testDialogController.cancelar()}" process="@this"/>		
-				<p:commandButton value="#{msg['dialogTestData.mostrarMensaje']}" actionListener="#{testDialogController.mensaje()}" process="@this"/>	
-        	</f:facet>
-        </p:toolbar>
-		
+ 		<p:layout fullPage="true">
+  			<p:layoutUnit position="center" id="dialog_center" style="border:0pt none;">
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialogTestData" widgetVar="growlDialogTestData" life="2000" sticky="false" />
+			 	<p:panelGrid columns="2" styleClass="ui-noborder">
+
+				 	<p:outputLabel for="codigo" value="#{msg['dialogTestData.codigo']}" />
+				 	<p:inputText id="codigo" value="#{testDialogController.data.codigo}" disabled="#{!testDialogController.isAlta()}" required="true"/>
+
+				 	<p:outputLabel for="descripcion" value="#{msg['dialogTestData.descripcion']}" />
+				 	<p:inputText id="descripcion" value="#{testDialogController.data.descripcion}" disabled="#{testDialogController.isConsulta()}" required="true"/>
+
+				</p:panelGrid>
+			</p:layoutUnit>
+		  	 <p:layoutUnit position="south" size="40" id="dialog_footer" style="border:0pt none;">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{testDialogController.aceptar()}" process="@form" update="@form growlDialogTestData"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{testDialogController.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:layoutUnit>
+		</p:layout>
 	</h:form>
 </h:body>
 

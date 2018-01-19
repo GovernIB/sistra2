@@ -1,5 +1,7 @@
 package es.caib.sistra2.gte.rest;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -8,19 +10,19 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.caib.sistra2.gte.core.api.model.EjemploDto;
-import es.caib.sistra2.gte.core.api.service.EjemploService;
+import es.caib.sistra2.gte.core.api.model.TestData;
+import es.caib.sistra2.gte.core.api.service.TestService;
 
 @Path("/ejemploRest")
 public class EjemploRest {
 
 	@Autowired
-	EjemploService ejemploService;
+	TestService testService;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("STR2_TEST")
-	public EjemploDto recuperaDato() {
-		return ejemploService.recuperaDato();
+	public List<TestData> recuperaDato() {
+		return testService.list("");
 	}
 }

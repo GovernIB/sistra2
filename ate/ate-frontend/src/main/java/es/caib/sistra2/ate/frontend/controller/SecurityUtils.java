@@ -6,9 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-
 /**
- * Utilidad para acceder al usuario y roles. Podría meterse en un Spring Bean en la parte web.
+ * Utilidad para acceder al usuario y roles.
  * 
  * @author Indra
  *

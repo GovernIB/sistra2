@@ -78,9 +78,6 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<properties>
-				<ac.server.context>gte-ac-rest-ws-jboss.xml</ac.server.context>
-			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>es.caib.sistra2</groupId>
@@ -111,16 +108,6 @@
 				<version>${maven.war.version}</version>
 				<configuration>
 					<warName>gte-rest</warName>
-					<webResources>
-						<webResource>
-							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
-							<includes>
-								<include>web.xml</include>
-							</includes>
-							<targetPath>WEB-INF</targetPath>
-							<filtering>true</filtering>
-						</webResource>
-					</webResources>
 				</configuration>
 			</plugin>
 

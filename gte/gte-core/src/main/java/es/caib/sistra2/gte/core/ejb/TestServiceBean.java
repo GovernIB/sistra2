@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import es.caib.sistra2.gte.core.api.service.TestService;
 
 @Stateless
 @Interceptors(SpringBeanAutowiringInterceptor.class)
+@TransactionAttribute(value=TransactionAttributeType.NOT_SUPPORTED)
 public class TestServiceBean implements TestService {
 
 	@Autowired
@@ -34,7 +37,7 @@ public class TestServiceBean implements TestService {
 	@Override
 	@RolesAllowed("STR2_TEST")
 	public void add(TestData testData) {
-		testService.add(testData);	
+		testService.add(testData);
 	}
 
 	@Override
@@ -47,6 +50,12 @@ public class TestServiceBean implements TestService {
 	@RolesAllowed("STR2_TEST")
 	public void update(TestData testData) {
 		testService.update(testData);
+	}
+
+	@Override
+	@RolesAllowed("STR2_TEST")
+	public void testTransactionNew() {
+		testService.testTransactionNew();
 	}
 
 }

@@ -1,94 +1,82 @@
 package es.caib.sistra2.gte.core.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistra2.gte.core.api.exception.TestException;
 import es.caib.sistra2.gte.core.api.model.TestData;
 import es.caib.sistra2.gte.core.api.service.TestService;
+import es.caib.sistra2.gte.core.interceptor.NegocioInterceptor;
+import es.caib.sistra2.gte.core.service.component.TestComponent;
+import es.caib.sistra2.gte.core.service.repository.dao.TestDataDao;
 
 @Service
+@Transactional
 public class TestServiceImpl implements TestService {
-	
-	private static List<TestData> DB;
-	
-	@PostConstruct
-	private void initialize() {
-		DB = new ArrayList<TestData>();
-		for (int i = 0; i < 50; i++) {
-			TestData td = new TestData();
-			td.setCodigo(i+"");
-			td.setDescripcion("Data " + i);
-			DB.add(td);
-		}
-	}
-	
+
+	private final Logger log = LoggerFactory.getLogger(TestServiceImpl.class);
+
+	@Autowired
+	TestDataDao testDataDao;
+
+	@Autowired
+	TestComponent testComponent;
+
 	@Override
-	public List<TestData> list(String filtro) {		
-		ArrayList<TestData> result = new ArrayList<TestData>();
-		for (TestData td : DB) {
-			if (filtro == null || filtro.trim().length() == 0 ||  td.getDescripcion().toLowerCase().indexOf(filtro) != -1) {
-				result.add(cloneTestData(td));			
-			}
-		}			
+	@NegocioInterceptor
+	public List<TestData> list(String filtro) {
+		List<TestData> result = null;
+		if (filtro == null || filtro.trim().length() == 0) {
+			result = testDataDao.getAllTestData();
+		} else {
+			result = testDataDao.getAllTestDataByFiltroDescripcion(filtro);
+		}
+
 		return result;
 	}
 
 	@Override
+	@NegocioInterceptor
 	public TestData load(String id) {
-		TestData result = null;		
-		for (TestData td : DB) {
-			if (td.getCodigo().equals(id)) {
-				result = cloneTestData(td);
-				break;
-			}
-		}
+		TestData result = null;
+		result = testDataDao.getTestDataById(id);
 		return result;
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void add(TestData testData) {
 		if (load(testData.getCodigo()) != null) {
 			throw new TestException();
 		}
-		DB.add(cloneTestData(testData));
-		
+		testDataDao.addTestData(testData);
+		log.debug("add");
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void remove(String id) {
-		int index = 0;
-		for (TestData td : DB) {
-			if (td.getCodigo().equals(id)) {
-				DB.remove(index);
-				break;
-			}
-			index++;
-		}		
-		
+		testDataDao.removeTestData(id);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void update(TestData testData) {
-		for (TestData td : DB) {
-			if (td.getCodigo().equals(testData.getCodigo())) {
-				td.setDescripcion(testData.getDescripcion());
-				break;
-			}
-		}
+		testDataDao.updateTestData(testData);
 	}
 
-	private TestData cloneTestData(TestData td) {
-		TestData result;
-		result = new TestData();
-		result.setCodigo(td.getCodigo());
-		result.setDescripcion(td.getDescripcion());
-		return result;
+	@Override
+	@NegocioInterceptor
+	public void testTransactionNew() {
+		TestData testData = new TestData();
+		testData.setCodigo(System.currentTimeMillis() +"");
+		testData.setDescripcion("testTransactionNew");
+		testComponent.add(testData);
+		throw new TestException();
 	}
-
-
 }

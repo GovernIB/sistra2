@@ -2,24 +2,24 @@ package es.caib.sistra2.gte.core.api.model.types;
 
 /**
  * Tipo para indicar los roles principales.
- * 
+ *
  * @author Indra
- * 
+ *
  */
 public enum TypeRoleAcceso {
-	
-	// TODO Definir roles acceso
-	
+
+	// TODO Definir roles acceso PASARLO A CONSTANTES
+
     /**
      * .
      */
     TEST ("STR2_TEST");
-    
+
     /**
      * Role name;
      */
     private String roleName;
-    
+
     /**
      * Constructor.
      * @param pRoleName Role name
@@ -27,11 +27,11 @@ public enum TypeRoleAcceso {
     private TypeRoleAcceso(String pRoleName) {
     	roleName = pRoleName;
     }
-    
-    
+
+
     /**
      * Obtiene enum desde string.
-     * 
+     *
      * @param text
      *            string
      * @return TypeSiNo
@@ -49,10 +49,10 @@ public enum TypeRoleAcceso {
         }
         return respuesta;
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Enum#toString()
      */
     @Override

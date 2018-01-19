@@ -10,8 +10,6 @@ import es.caib.sistra2.ate.core.api.service.EjemploService;
 @Service
 public class EjemploServiceImpl implements EjemploService {
 
-
-	/** EJB que permite a los SpringBeans acceder al contexto para verificar usuario. */
 	@Autowired
 	ContextService contextService;
 

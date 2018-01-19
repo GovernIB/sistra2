@@ -1,7 +1,7 @@
 package es.caib.sistra2.ate.core.api.service;
 
 /**
- * EJB que permite a los SpringBeans acceder al contexto para verificar usuario
+ * EJB que permite a los SpringBeans acceder al contexto para verificar usuario.
  * 
  * @author Indra
  *

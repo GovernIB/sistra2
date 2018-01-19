@@ -1,6 +1,5 @@
 package es.caib.sistra2.ate.core.ejb;
 
-
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.ejb.SessionContext;

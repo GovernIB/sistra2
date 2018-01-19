@@ -6,26 +6,28 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
   	xmlns:p="http://primefaces.org/ui">
 
-<body>
+<h:body>
   <ui:composition>
-    <div >
-      <div align="center">
-        
-        <h:outputText value="#{sessionBean.userName}"/> - <h:outputText value="#{sessionBean.lang}"/>
-        
-        <h:form>
-        	<!-- Cambio idioma -->
-	        <p:commandButton value="Castellano" action="#{sessionBean.cambiarIdioma('es')}"/>
-	        <p:commandButton value="Catalan" action="#{sessionBean.cambiarIdioma('ca')}"/>
-	         <!-- Menu -->
-	        <p:menuButton value="#{msg['menu.opciones']}">
-		        <p:menuitem value="Test" url="/secure/test/test.xhtml"/>		        
-		        <p:menuitem value="Test 2" url="/secure/test/test2.xhtml"/>
-		    </p:menuButton>
-
-	     </h:form>
-      </div>
-    </div>
+  	<h:form>
+  		<p:panelGrid columns="4" layout="grid" styleClass="ui-noborder"
+  		columnClasses="ui-grid-col-1 header-color grid-center,ui-grid-col-1 header-color grid-center,ui-grid-col-2 header-color,ui-grid-col-8 header-color">
+			<h:graphicImage value="/resources/images/#{sessionBean.logo}" height="55"/>
+			<h:graphicImage value="/resources/images/sistra2b.png" height="55"/>
+			<h:outputText value="" />
+			<p:panelGrid columns="1" styleClass="ui-noborder botonera_menu" columnClasses="header-color">
+				<p:row>
+					<p:column>
+	 		    		<p:menubar styleClass="header-color" model="#{sessionBean.menuModel}"/>
+	 		    	</p:column>
+	 		    </p:row>
+	 		    <p:row>
+	 		    	<p:column>
+	 		    		<p:menuButton value="#{msg['cabecera.opciones']}" model="#{sessionBean.menuModelOpciones}" iconPos="right" menuStyleClass="menuOpciones"/>
+	 		    	</p:column>
+	 		    </p:row>
+    		</p:panelGrid>
+		</p:panelGrid>
+	</h:form>
   </ui:composition>
-</body>
+</h:body>
 </html>
