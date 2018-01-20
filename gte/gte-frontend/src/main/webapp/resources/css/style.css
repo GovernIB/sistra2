@@ -44,7 +44,7 @@
 
 
 /* fondo del titulo de la pantalla*/
-#work .ui-layout-unit-header {background-color: #f9bf60;color: #ffffff;text-align:center;font-size: 1.1em;}
+#work .ui-layout-unit-header {background-color: #474543e6;color: #ffffff;text-align:center;font-size: 1.1em;}
 
 /* ajuste del cuerpo de la pantalla para meterlo un poco para dentro*/
 #work {padding-left:0.5% !important;padding-right:0.5% !important;padding-top: 0 !important;}
@@ -56,6 +56,9 @@
 .grid-right {text-align:right;}
 
 .sin_bordes {border:0pt none !important;}
+
+/* color cabecera dialogo */
+.ui-dialog-titlebar {background-color: #4745434d;}
 
 
 
