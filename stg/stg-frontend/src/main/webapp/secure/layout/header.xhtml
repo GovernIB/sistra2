@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+  	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+  <ui:composition>
+  	<h:form>
+  		<p:panelGrid columns="4" layout="grid" styleClass="ui-noborder"
+  		columnClasses="ui-grid-col-1 header-color grid-center,ui-grid-col-2 header-color grid-left,ui-grid-col-1 header-color,ui-grid-col-8 header-color">
+			<h:graphicImage value="/resources/images/#{sessionBean.logo}" height="55"/>
+			<h:graphicImage value="/resources/images/sistra2b.png" height="55"/>
+			<h:outputText value="" />
+			<p:panelGrid columns="1" styleClass="ui-noborder botonera-menu" columnClasses="header-color">
+				<p:row>
+					<p:column>
+	 		    		<p:menubar styleClass="header-color" model="#{sessionBean.menuModel}"/>
+	 		    	</p:column>
+	 		    </p:row>
+	 		    <p:row>
+	 		    	<p:column>
+	 		    		<p:menuButton value="#{msg['cabecera.opciones']}" model="#{sessionBean.menuModelOpciones}" iconPos="right" menuStyleClass="menuOpciones"/>
+	 		    	</p:column>
+	 		    </p:row>
+    		</p:panelGrid>
+		</p:panelGrid>
+	</h:form>
+  </ui:composition>
+</h:body>
+</html>

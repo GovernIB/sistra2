@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/aop
+	    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	    http://www.springframework.org/schema/tx
+	    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+
+	<context:component-scan base-package="es.caib.sistra2.stg.core" />
+
+	<!-- Anotaciones AOP -->
+	<context:annotation-config />
+	<aop:aspectj-autoproxy />
+
+	<!-- Anotaciones para tx -->
+	<tx:annotation-driven transaction-manager="transactionManager" order="2" />
+
+	<context:property-placeholder location="file:${es.caib.sistra2.stg.properties.path}"/>
+
+	<!-- Configuracion -->
+	<jee:jndi-lookup id="dataSource" jndi-name="${jdbc.jndi}" resource-ref="true" />
+
+	<!-- Hibernate / JPA -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceUnitName" value="sistra2-STG-PU" />
+		<property name="packagesToScan">
+			<list>
+				<value>es.caib.sistra2.stg.core.service.repository.model</value>
+			</list>
+		</property>
+		<property name="jpaDialect">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+			</props>
+		</property>
+	</bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+
+
+	<!-- Adecuar a STG -->
+	<jee:local-slsb
+			id="contextService"
+			jndi-name="java:app/stg-core/ContextServiceBean"
+			business-interface="es.caib.sistra2.stg.core.api.service.ContextService"/>
+
+</beans>

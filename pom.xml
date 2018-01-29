@@ -7,9 +7,9 @@
   <name>Sistra2</name>
 
 	<properties>
-		<ate.version>0.0.1-SNAPSHOT</ate.version>
-		<gte.version>0.0.1-SNAPSHOT</gte.version>
-		<hlp.version>0.0.1-SNAPSHOT</hlp.version>
+		<stt.version>0.0.1-SNAPSHOT</stt.version>
+		<stg.version>0.0.1-SNAPSHOT</stg.version>
+		<sth.version>0.0.1-SNAPSHOT</sth.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
@@ -39,8 +39,8 @@
 		<slf4j.version>1.5.8</slf4j.version>
 	</properties>
   	<modules>
-		<module>ate</module>
-		<module>gte</module>
-		<module>hlp</module>
+		<module>stt</module>
+		<module>stg</module>
+		<module>sth</module>
   	</modules>
 </project>

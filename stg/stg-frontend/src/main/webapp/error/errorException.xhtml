@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- TODO VER LAYOUT ERRORES (TEMPLATE UNICO?)
+		 OJO, EN LOS DIALOG SE GENERA DENTRO, ASI QUE MEJOR PAGINA NEUTRA SIN HEAD -->
+
+<h:head>
+</h:head>
+
+<body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+
+<p:outputPanel styleClass="error_panel_container">
+	<p:outputPanel styleClass="error_panel">
+			<p:outputPanel styleClass="error_panel1">
+				<h:graphicImage value="/resources/images/error.png" height="55"/>
+			</p:outputPanel>
+			<p:outputPanel styleClass="error_panel2">
+				<p:outputPanel styleClass="error_panel3">
+					<p:outputLabel value="Excepcion: " styleClass="error_texto_titulo"/>
+					<p:outputLabel value="#{pfExceptionHandler.type}" />
+				</p:outputPanel>
+				<p:outputPanel styleClass="error_panel3">
+					<p:outputLabel value="Mensaje: " styleClass="error_texto_titulo"/>
+					<p:outputLabel value="#{pfExceptionHandler.message}"/>
+				</p:outputPanel>
+				<p:outputPanel styleClass="error_panel3">
+					<p:outputLabel value="Traza:" styleClass="error_texto_titulo"></p:outputLabel>
+				</p:outputPanel>
+				<p:scrollPanel styleClass="error_panel4" >
+					<p:outputLabel value="#{pfExceptionHandler.formattedStackTrace}"></p:outputLabel>
+				</p:scrollPanel>
+
+
+			</p:outputPanel>
+	</p:outputPanel>
+</p:outputPanel>
+<!-- 		<p:layout fullPage="true"> -->
+<!-- 			<p:layoutUnit position="west" style="border:0pt none;"> -->
+<!-- 				<h:graphicImage value="/resources/images/error.png" height="55"/> -->
+<!-- 			</p:layoutUnit> -->
+<!-- 			<p:layoutUnit position="center" style="border:0pt none;"> -->
+<!-- 				<p:outputPanel id="exceptionPanel" style="width:500px;height:200px;border:1px;font-size:10px;"> -->
+<!-- 			        <p:outputLabel value="Exception Type :: #{pfExceptionHandler.type}"></p:outputLabel> -->
+<!-- 			        <p:outputLabel value="Exception Message :: #{pfExceptionHandler.message}"></p:outputLabel> -->
+<!-- 			        <p:outputLabel value="Exception StackTrace :: #{pfExceptionHandler.formattedStackTrace}"></p:outputLabel> -->
+<!-- 		    	</p:outputPanel> -->
+<!-- 			</p:layoutUnit> -->
+<!-- 		</p:layout> -->
+
+
+</body>
+
+
+</html>

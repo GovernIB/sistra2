@@ -1,0 +1,114 @@
+/****  cabecera *****/
+
+/* para que salga naranja la cabecera */
+#header, #header > div, .header-color {background-color: #f6a828;}
+
+/*para que se ajuste el menu de la cabecera al tamaño de la celda*/
+.botonera-menu {width:100% !important;}
+
+/* para que no se parta el texto de los menus de la cabecera */
+#header .ui-menubar ul.ui-menu-child {white-space: nowrap;}
+
+/* para que el menu de la cabecera salga por encima  */
+#header, #header > div, #footer, #footer > div  {
+    z-index:20 !important;
+    overflow:visible !important;
+}
+
+/* ajustamos los colores del menu para que sean blanco el texto y los iconos*/
+#header .ui-menu-parent > a > span {font-weight: bold;color: #ffffff;}
+
+#header .ui-menu-parent .ui-submenu-link .ui-icon {background-image: url(#{resource["primefaces-custom:images/ui-icons_ffffff_256x240.png"]});}
+
+/* quitamos los iconos de los submenus del menu de la cabecera*/
+#header .ui-menu-parent .ui-menu-child .ui-icon {display:none !important;}
+
+/* para que no se monte el icono del menu con el texto */
+.ui-menu .ui-icon {position:relative !important;left:0px !important;top:1px !important;}
+
+/* ajustamos el texto del menu de boton "opciones" ya que sale mas grande que el resto*/
+.menuOpciones {font-size:0.8em;}
+
+/* ajustamos en la cabecera el icono del menu de boton "opciones" */
+#header .ui-menubar, #header .ui-menubutton {float:right !important;}
+
+/****  fin cabecera *****/
+
+/*color gris para el cuerpo de la pantalla y el pie*/
+#footer, #footer > div,.grid-nobgcolor, .body-color, #work, #work .ui-layout-unit-content {background-color: #f0f0f0;border:0pt none;}
+
+/* para que salga en verde el fondo del entorno*/
+.grid-entorno {width:100%;font-size: 1.1em;font-weight: bold;background-color: #abf8b3;}
+
+
+/* fondo del titulo de la pantalla*/
+#work .ui-layout-unit-header {background-color:#726f6b;color: #ffffff;text-align:center;font-size: 1.1em;}
+
+/* ajuste del cuerpo de la pantalla para meterlo un poco para dentro*/
+#work {padding-left:0.5% !important;padding-right:0.5% !important;padding-top: 0 !important;}
+
+.pie_celda1 {
+	  display:inline-block;
+	  vertical-align: top;
+	  padding-right: 10px;
+	  }
+
+/* alinear celdas en los panelgrid*/
+.grid-left {text-align:left;}
+.grid-center {text-align:center;}
+.grid-right {text-align:right;}
+
+.sin-bordes {border:0pt none !important;}
+
+/* botonera dialogo */
+.botonera {position:fixed !important;bottom:2px !important;width:98% !important;left:1% !important;}
+
+/* color cabecera dialogo */
+.ui-dialog-titlebar {background-color: #999693;}
+
+/* color scrollbar*/
+.ui-scrollpanel-drag {border: 1px solid #b0b0b0!important;background: #c0c0c0!important;}
+
+
+/* pantalla de error*/
+.error_panel_container {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+}
+
+.error_panel {
+	position: absolute;
+	left: 0;
+	top: 15%;
+	width: 100%;
+	text-align: center;
+}
+
+.error_panel1 {
+	display:inline-block;
+	width: 5%;
+}
+
+.error_panel2 {
+	display:inline-block;
+	width: 70%;
+	vertical-align: top;
+	text-align: left;
+}
+
+.error_panel3 {
+	display: block;
+	width: 100%;
+}
+
+.error_panel4 {
+	display: block;
+	width: 100%;
+	height: 250px;
+}
+
+.error_texto_titulo {
+	font-weight: bold;
+	font-size: 105% !important;
+}

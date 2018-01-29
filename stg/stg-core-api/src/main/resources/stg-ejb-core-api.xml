@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans	xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="
+				http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+				http://www.springframework.org/schema/jee
+				http://www.springframework.org/schema/jee/spring-jee-4.3.xsd">
+
+	<!--
+
+		NOTAS
+
+		ESTE FICHERO SERIA NECESARIO SI SE QUISIERA ESTABLECER SPRING BEANS ENTRE LOS MANAGEDS BEANS DE JSF Y LOS EJBS DE LA CAPA DE SERVICIO.
+		HABRIA QUE DEFINIR EN ESTE FICHERO EL MAPEO DE TODOS LOS EJBS.
+
+		PARA PODER INTEGRAR JSF + SPRING SERIA NECESARIO DEFINIR UN SCOPE DE TIPO VIEW PARA SPRING (EN PACKAGE UTIL DEL FRONT: SPRINGVIEWSCOPE) Y ANOTAR
+		LOS BEANS JSF COMO SPRING BEANS:
+			@Named
+			@Scope("view")
+		Y EL ENLACE A LOS SERVICES COMO @AutoWired (USANDO EL MAPEO AL EJB DEFINIDO EN ESTE XML)
+
+
+		PARA USAR NATIVAMENTE JSF SE HAN USADO DIRECTAMENTE LAS ANOTICACIONES DE JSF:
+			@ManagedBean
+			@ViewScoped
+		Y EL ENLACE A LOS SERVICES DIRECTAMENTE A LOS EJB CON @Inject
+
+
+		EN CASO DE "RECONVERTIR" A UNA APLICACIÓN SIN USAR EJBS, QUE SEA PURAMENTE SPRING DEBERIA FUNCIONAR AÑADIENDO LA ANOTACION @Component PARA QUE
+		RECONOCIERA LAS ANOTICACIONES DE SPRINT:
+			@Component
+			@ManagedBean
+			@ViewScoped
+		Y DE ESTA FORMA USAR DIRECTAMENTE LOS SERVICES DE SPRING CON @AutoWired
+		(HABRIA TAMBIEN QUE RETOCAR LA PARTE DE SEGURIDAD EN EL CORE PARA ELIMINAR LA CAPA EJB Y TRASLADAR LAS ANOTICACIONES DE SEGURIDAD A LOS SERVICES DE SPRING.
+
+
+	 -->
+
+
+
+	<!-- JBoss 5
+	<jee:local-slsb
+			id="ejemploService"
+			jndi-name="stg/EjemploServiceBean/local"
+			business-interface="es.caib.sistra2.stg.core.api.service.EjemploService"/>
+ 	-->
+
+	<!-- JBoss 7  -->
+	<jee:local-slsb
+			id="testService"
+			jndi-name="java:app/stg-core/TestServiceBean"
+			business-interface="es.caib.sistra2.stg.core.api.service.TestService"/>
+
+</beans>
