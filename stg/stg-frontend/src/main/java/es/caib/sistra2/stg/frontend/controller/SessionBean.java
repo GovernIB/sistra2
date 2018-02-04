@@ -74,14 +74,14 @@ public class SessionBean {
 
 	private String logo;
 
-	private String tituloPantalla;
+	private String literalTituloPantalla;
 
-	public String getTituloPantalla() {
-		return tituloPantalla;
+	public String getLiteralTituloPantalla() {
+		return literalTituloPantalla;
 	}
 
-	public void setTituloPantalla(final String titulo) {
-		this.tituloPantalla = titulo;
+	public void setLiteralTituloPantalla(final String titulo) {
+		this.literalTituloPantalla = titulo;
 	}
 
 	@PostConstruct
@@ -115,7 +115,7 @@ public class SessionBean {
 
 		selectActiveRole();
 
-		setTituloPantalla("Mantenimiento de Test");
+		setLiteralTituloPantalla("Mantenimiento de Test");
 
 	}
 

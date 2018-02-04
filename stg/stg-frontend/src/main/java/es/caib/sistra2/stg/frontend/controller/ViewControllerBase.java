@@ -33,8 +33,8 @@ public abstract class ViewControllerBase {
 		this.sesion = sesion;
 	}
 
-	public void setTituloPantalla(final String titulo) {
-		sesion.setTituloPantalla(titulo);
+	public void setLiteralTituloPantalla(final String titulo) {
+		sesion.setLiteralTituloPantalla(titulo);
 	}
 
 	/**

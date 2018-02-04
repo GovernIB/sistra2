@@ -15,10 +15,18 @@ import javax.servlet.ServletContext;
 import org.primefaces.context.RequestContext;
 
 import es.caib.sistra2.stg.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistra2.stg.frontend.controller.ViewConfiguracionEntidad;
+import es.caib.sistra2.stg.frontend.controller.ViewDominiosEntidad;
 import es.caib.sistra2.stg.frontend.controller.ViewDominiosGlobales;
 import es.caib.sistra2.stg.frontend.controller.ViewEntidades;
-import es.caib.sistra2.stg.frontend.controller.ViewPlugins;
+import es.caib.sistra2.stg.frontend.controller.ViewFormulariosExternos;
+import es.caib.sistra2.stg.frontend.controller.ViewFuenteDatosEntidad;
+import es.caib.sistra2.stg.frontend.controller.ViewMensajesAvisoEntidad;
+import es.caib.sistra2.stg.frontend.controller.ViewPluginsEntidad;
+import es.caib.sistra2.stg.frontend.controller.ViewPluginsGlobales;
 import es.caib.sistra2.stg.frontend.controller.ViewPropiedadesConfiguracion;
+import es.caib.sistra2.stg.frontend.controller.ViewRolesPermisos;
+import es.caib.sistra2.stg.frontend.controller.ViewTramites;
 import es.caib.sistra2.stg.frontend.model.DialogResult;
 import es.caib.sistra2.stg.frontend.model.types.TypeModoAcceso;
 import es.caib.sistra2.stg.frontend.model.types.TypeNivelGravedad;
@@ -28,7 +36,7 @@ import es.caib.sistra2.stg.frontend.model.types.TypeParametroDialogo;
 
 /**
  * Utilidades.
- * 
+ *
  * @author Indra
  *
  */
@@ -43,7 +51,7 @@ public class UtilJSF {
 
 	/**
 	 * Abre pantalla de dialogo
-	 * 
+	 *
 	 * @param dialog
 	 *            Clase dialogo
 	 * @param modoAcceso
@@ -64,7 +72,7 @@ public class UtilJSF {
 
 	/**
 	 * Abre pantalla de dialogo
-	 * 
+	 *
 	 * @param dialog
 	 *            Nombre pantalla dialogo (dialogo.xhtml o id navegacion)
 	 * @param modoAcceso
@@ -102,7 +110,7 @@ public class UtilJSF {
 
 	/**
 	 * Cierra dialog
-	 * 
+	 *
 	 * @param result
 	 */
 	public static void closeDialog(final DialogResult result) {
@@ -111,7 +119,7 @@ public class UtilJSF {
 
 	/**
 	 * Muestra mensaje como ventana de dialogo.
-	 * 
+	 *
 	 * @param nivel
 	 *            Nivel gravedad
 	 * @param title
@@ -127,7 +135,7 @@ public class UtilJSF {
 	/**
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
-	 * 
+	 *
 	 * @param nivel
 	 *            Nivel gravedad
 	 * @param message
@@ -142,7 +150,7 @@ public class UtilJSF {
 	/**
 	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
 	 * messages,...).
-	 * 
+	 *
 	 * @param nivel
 	 *            Nivel gravedad
 	 * @param message
@@ -205,7 +213,7 @@ public class UtilJSF {
 
 	/**
 	 * Devuelve view name suponiendo que se llama igual que la clase.
-	 * 
+	 *
 	 * @param clase
 	 *            clase
 	 * @return view name
@@ -215,9 +223,13 @@ public class UtilJSF {
 		return className.substring(0, 1).toLowerCase() + className.substring(1);
 	}
 
+	public static String getTitleViewNameFromClass(final Class clase) {
+		return getViewNameFromClass(clase) + ".titulo";
+	}
+
 	/**
 	 * Devuelve url opcion menu super administrador.
-	 * 
+	 *
 	 * @param opcion
 	 *            opcion
 	 * @return url
@@ -233,10 +245,13 @@ public class UtilJSF {
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominiosGlobales.class) + EXTENSION_XHTML;
 			break;
 		case PLUGINS_GLOBALES:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPlugins.class) + EXTENSION_XHTML;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPluginsGlobales.class) + EXTENSION_XHTML;
 			break;
 		case PROPIEDADES_GLOBALES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPropiedadesConfiguracion.class) + EXTENSION_XHTML;
+			break;
+		case TEST:
+			url = "/secure/test/viewTest.xhtml";
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;
@@ -248,7 +263,7 @@ public class UtilJSF {
 
 	/**
 	 * Devuelve url opcion menu super administrador.
-	 * 
+	 *
 	 * @param opcion
 	 *            opcion
 	 * @return url
@@ -256,13 +271,30 @@ public class UtilJSF {
 	public static String getUrlOpcionMenuAdmOper(final TypeOpcionMenuAdmOper opcion) {
 		String url = null;
 
-		// TODO Ir añadiendo opciones
 		switch (opcion) {
 		case CONFIGURACION_ENTIDAD:
-			url = URL_SIN_IMPLEMENTAR;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionEntidad.class) + EXTENSION_XHTML;
 			break;
 		case FUENTES_DATOS:
-			url = URL_SIN_IMPLEMENTAR;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFuenteDatosEntidad.class) + EXTENSION_XHTML;
+			break;
+		case DOMINIOS_ENTIDAD:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominiosEntidad.class) + EXTENSION_XHTML;
+			break;
+		case PLUGINS_ENTIDAD:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPluginsEntidad.class) + EXTENSION_XHTML;
+			break;
+		case GESTORES_FORMULARIOS:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML;
+			break;
+		case TRAMITES:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewTramites.class) + EXTENSION_XHTML;
+			break;
+		case ROLES_PERMISOS:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewRolesPermisos.class) + EXTENSION_XHTML;
+			break;
+		case MENSAJES:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewMensajesAvisoEntidad.class) + EXTENSION_XHTML;
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;
@@ -274,7 +306,7 @@ public class UtilJSF {
 
 	/**
 	 * Devuelve opcion por defecto super administrador.
-	 * 
+	 *
 	 * @param opcion
 	 *            opcion
 	 * @return opcion
@@ -285,7 +317,7 @@ public class UtilJSF {
 
 	/**
 	 * Devuelve opcion por defecto administrador entidad/desarrollador.
-	 * 
+	 *
 	 * @param opcion
 	 *            opcion
 	 * @return opcion
@@ -296,7 +328,7 @@ public class UtilJSF {
 
 	/**
 	 * Devuelve url por defecto segun role.
-	 * 
+	 *
 	 * @param role
 	 *            role
 	 * @return url

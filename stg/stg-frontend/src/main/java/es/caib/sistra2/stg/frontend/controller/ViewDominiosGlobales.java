@@ -27,7 +27,7 @@ public class ViewDominiosGlobales extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
-		setTituloPantalla(UtilJSF.getLiteral("viewDominiosGlobales.titulo"));
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		final DominioGlobal dominioGlobal1 = new DominioGlobal();
 		dominioGlobal1.setCacheable(true);
@@ -202,7 +202,7 @@ public class ViewDominiosGlobales extends ViewControllerBase {
 
 	/**
 	 * Verifica si hay fila seleccionada.
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean verificarFilaSeleccionada() {
@@ -216,7 +216,7 @@ public class ViewDominiosGlobales extends ViewControllerBase {
 
 	/**
 	 * Retorno dialogo.
-	 * 
+	 *
 	 * @param event
 	 *            respuesta dialogo
 	 */

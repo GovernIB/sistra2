@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.SelectEvent;
 
@@ -52,13 +54,14 @@ public class ViewTest extends ViewControllerBase {
 	/**
 	 * Inicializacion.
 	 */
-	//@PostConstruct -> no se ven los parametros que se pasan por la request
-	//  public void init(ComponentSystemEvent event) {  // para <f:event type="preRenderView" . Habria que controlar manualmente con una vble boolean si la vista ya se ha inicializado
+	// @PostConstruct -> no se ven los parametros que se pasan por la request
+	// public void init(ComponentSystemEvent event) { // para <f:event
+	// type="preRenderView" . Habria que controlar manualmente con una vble boolean
+	// si la vista ya se ha inicializado
 	public void init() {
-		setTituloPantalla("View Test");
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		listaDatos = testService.list(filtro);
 	}
-
 
 	/**
 	 * Recuperacion de datos.
@@ -71,7 +74,6 @@ public class ViewTest extends ViewControllerBase {
 		// Muestra mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Aplicado filtro");
 	}
-
 
 	/**
 	 * Abre dialogo para nuevo dato.
@@ -87,10 +89,11 @@ public class ViewTest extends ViewControllerBase {
 	public void editar() {
 
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada()) return;
+		if (!verificarFilaSeleccionada())
+			return;
 
 		// Muestra dialogo
-		Map<String, String> params = new HashMap<String, String>();
+		final Map<String, String> params = new HashMap<String, String>();
 		params.put(TypeParametroDialogo.ID.toString(), this.datoSeleccionado.getCodigo());
 		UtilJSF.openDialog(DialogTest.class, TypeModoAcceso.EDICION, params, true, 340, 140);
 
@@ -101,7 +104,8 @@ public class ViewTest extends ViewControllerBase {
 	 */
 	public void eliminar() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada()) return;
+		if (!verificarFilaSeleccionada())
+			return;
 		// Eliminamos
 		testService.remove(this.datoSeleccionado.getCodigo());
 		// Refrescamos datos
@@ -112,6 +116,7 @@ public class ViewTest extends ViewControllerBase {
 
 	/**
 	 * Verifica si hay fila seleccionada.
+	 *
 	 * @return
 	 */
 	private boolean verificarFilaSeleccionada() {
@@ -123,14 +128,15 @@ public class ViewTest extends ViewControllerBase {
 		return filaSeleccionada;
 	}
 
-
 	/**
 	 * Retorno dialogo.
-	 * @param event respuesta dialogo
+	 *
+	 * @param event
+	 *            respuesta dialogo
 	 */
-	public void returnDialogo(SelectEvent event) {
+	public void returnDialogo(final SelectEvent event) {
 
-		DialogResult respuesta = (DialogResult) event.getObject();
+		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		String message = null;
 
@@ -144,8 +150,8 @@ public class ViewTest extends ViewControllerBase {
 				break;
 			case EDICION:
 				// Actualizamos fila actual
-				String id = (String) respuesta.getResult();
-				TestData dataUpdated = testService.load(id);
+				final String id = (String) respuesta.getResult();
+				final TestData dataUpdated = testService.load(id);
 				this.datoSeleccionado.setDescripcion(dataUpdated.getDescripcion());
 				// Mensaje
 				// TODO Ver acceso literales desde codigo
@@ -172,15 +178,15 @@ public class ViewTest extends ViewControllerBase {
 		UtilJSF.openDialog(DialogTestExterno.class, TypeModoAcceso.CONSULTA, null, true, 640, 340);
 	}
 
-
 	/**
 	 * Retorno dialogo externo.
-	 * @param event resultado
+	 *
+	 * @param event
+	 *            resultado
 	 */
-	public void returnDialogoExterno(SelectEvent event) {
+	public void returnDialogoExterno(final SelectEvent event) {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Retorno dialogo externo");
 	}
-
 
 	/**
 	 * Test para mostrar un mensaje.
@@ -209,7 +215,7 @@ public class ViewTest extends ViewControllerBase {
 		return filtro;
 	}
 
-	public void setFiltro(String filtro) {
+	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
 	}
 
@@ -217,30 +223,33 @@ public class ViewTest extends ViewControllerBase {
 		return listaDatos;
 	}
 
-	public void setListaDatos(List<TestData> listaDatos) {
+	public void setListaDatos(final List<TestData> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
-
 
 	public TestData getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
-
-	public void setDatoSeleccionado(TestData datoSeleccionado) {
+	public void setDatoSeleccionado(final TestData datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 
-
 	/**
-	 * Prueba a crear una transaccion dentro de otra, haciendo que la principal falle y la secundaria termine.
+	 * Prueba a crear una transaccion dentro de otra, haciendo que la principal
+	 * falle y la secundaria termine.
 	 */
 	public void nuevaTransaccion() {
 		testService.testTransactionNew();
 		filtrar();
 	}
 
+	public void expired() {
+		final HttpSession sesion = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		if (sesion != null) {
+			sesion.setMaxInactiveInterval(1);
+		}
+	}
 
 }
-
-

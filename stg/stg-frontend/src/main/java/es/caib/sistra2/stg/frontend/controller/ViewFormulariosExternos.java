@@ -8,49 +8,57 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistra2.stg.core.api.model.PropiedadConfiguracion;
+import es.caib.sistra2.stg.core.api.model.FormularioExterno;
 import es.caib.sistra2.stg.frontend.model.DialogResult;
 import es.caib.sistra2.stg.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistra2.stg.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de propiedades de configuracion.
+ * Mantenimiento de formularios externos.
  *
  * @author Indra
  *
  */
 @ManagedBean
 @ViewScoped
-public class ViewPropiedadesConfiguracion extends ViewControllerBase {
+public class ViewFormulariosExternos extends ViewControllerBase {
 
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
+
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final PropiedadConfiguracion propiedadConfiguracion1 = new PropiedadConfiguracion();
-		propiedadConfiguracion1.setCodigo("es.caib.sistra2.propietat1");
-		propiedadConfiguracion1.setDescripcion("PropiedadConfiguracion 1 descripcion");
-		propiedadConfiguracion1.setValor("http://www.caib.es");
-		final PropiedadConfiguracion propiedadConfiguracion2 = new PropiedadConfiguracion();
-		propiedadConfiguracion2.setCodigo("es.caib.sistra2.propietat2");
-		propiedadConfiguracion2.setDescripcion("PropiedadConfiguracion 2 descripcion");
-		propiedadConfiguracion2.setValor("localhost");
-		final PropiedadConfiguracion propiedadConfiguracion3 = new PropiedadConfiguracion();
-		propiedadConfiguracion3.setCodigo("es.caib.sistra2.propietat3");
-		propiedadConfiguracion3.setDescripcion("PropiedadConfiguracion 3 descripcion");
-		propiedadConfiguracion3.setValor("340");
-		final PropiedadConfiguracion propiedadConfiguracion4 = new PropiedadConfiguracion();
-		propiedadConfiguracion4.setCodigo("es.caib.sistra2.propietat4");
-		propiedadConfiguracion4.setDescripcion("PropiedadConfiguracion 4 descripcion");
-		propiedadConfiguracion4.setValor("usuario");
+		final FormularioExterno formularioExterno1 = new FormularioExterno();
+		formularioExterno1.setId(1l);
+		formularioExterno1.setCodigo("SADPERDOC");
+		formularioExterno1.setDescripcion("Gestión de formularios para trámites de Personal Docent.");
+		formularioExterno1.setUrl("http://host:port/sadperdocfront/iniciFormulari");
+
+		final FormularioExterno formularioExterno2 = new FormularioExterno();
+		formularioExterno2.setId(2l);
+		formularioExterno2.setCodigo("XESTIB");
+		formularioExterno2.setDescripcion("Gestión de formularios para trámites d'escolarització.");
+		formularioExterno2.setUrl("http://host:port/xestib/iniciFormulari");
+
+		final FormularioExterno formularioExterno3 = new FormularioExterno();
+		formularioExterno3.setId(3l);
+		formularioExterno3.setCodigo("OPOSEDU");
+		formularioExterno3.setDescripcion("Gestión de formularios para trámites d'inscripció de oposiciones");
+		formularioExterno3.setUrl("http://host:port/oposeduFront/tramit/inscripció/iniciFormulari");
+
+		final FormularioExterno formularioExterno4 = new FormularioExterno();
+		formularioExterno4.setId(4l);
+		formularioExterno4.setCodigo("SADPERDOC2");
+		formularioExterno4.setDescripcion("Gestión de formularios para trámites 2");
+		formularioExterno4.setUrl("http://host:port/sadperdocfrontNuevo/iniciFormulari");
 
 		listaDatos = new ArrayList<>();
-		listaDatos.add(propiedadConfiguracion1);
-		listaDatos.add(propiedadConfiguracion2);
-		listaDatos.add(propiedadConfiguracion3);
-		listaDatos.add(propiedadConfiguracion4);
+		listaDatos.add(formularioExterno1);
+		listaDatos.add(formularioExterno2);
+		listaDatos.add(formularioExterno3);
+		listaDatos.add(formularioExterno4);
 
 	}
 
@@ -62,33 +70,33 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<PropiedadConfiguracion> listaDatos;
+	private List<FormularioExterno> listaDatos;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private PropiedadConfiguracion datoSeleccionado;
+	private FormularioExterno datoSeleccionado;
 
 	/**
 	 * Recuperacion de datos.
 	 */
 	public void filtrar() {
 
-		if (filtro == null) {
+		if (filtro == null || filtro.isEmpty()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Rellene el filtro");
 			return;
 		}
 
 		// Filtra
-		final List<PropiedadConfiguracion> propiedadConfiguracionesFiltradas = new ArrayList<>();
-		for (final PropiedadConfiguracion propiedadConfiguracion : this.listaDatos) {
-			if (propiedadConfiguracion.getDescripcion() != null
-					&& propiedadConfiguracion.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				propiedadConfiguracionesFiltradas.add(propiedadConfiguracion);
+		final List<FormularioExterno> formularioExternosFiltradas = new ArrayList<>();
+		for (final FormularioExterno formularioExterno : this.listaDatos) {
+			if (formularioExterno.getDescripcion() != null
+					&& formularioExterno.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
+				formularioExternosFiltradas.add(formularioExterno);
 			}
 		}
 
-		this.listaDatos = propiedadConfiguracionesFiltradas;
+		this.listaDatos = formularioExternosFiltradas;
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 		// Muestra mensaje
@@ -174,7 +182,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<PropiedadConfiguracion> getListaDatos() {
+	public List<FormularioExterno> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -182,14 +190,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<PropiedadConfiguracion> listaDatos) {
+	public void setListaDatos(final List<FormularioExterno> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public PropiedadConfiguracion getDatoSeleccionado() {
+	public FormularioExterno getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -197,7 +205,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final PropiedadConfiguracion datoSeleccionado) {
+	public void setDatoSeleccionado(final FormularioExterno datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

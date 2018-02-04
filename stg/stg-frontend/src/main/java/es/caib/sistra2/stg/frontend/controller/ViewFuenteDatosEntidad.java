@@ -8,20 +8,20 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistra2.stg.core.api.model.PropiedadConfiguracion;
+import es.caib.sistra2.stg.core.api.model.FuenteDatos;
 import es.caib.sistra2.stg.frontend.model.DialogResult;
 import es.caib.sistra2.stg.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistra2.stg.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de propiedades de configuracion.
+ * Mantenimiento de fuente de datos entidad.
  *
  * @author Indra
  *
  */
 @ManagedBean
 @ViewScoped
-public class ViewPropiedadesConfiguracion extends ViewControllerBase {
+public class ViewFuenteDatosEntidad extends ViewControllerBase {
 
 	/**
 	 * Inicializacion.
@@ -29,28 +29,23 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	public void init() {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final PropiedadConfiguracion propiedadConfiguracion1 = new PropiedadConfiguracion();
-		propiedadConfiguracion1.setCodigo("es.caib.sistra2.propietat1");
-		propiedadConfiguracion1.setDescripcion("PropiedadConfiguracion 1 descripcion");
-		propiedadConfiguracion1.setValor("http://www.caib.es");
-		final PropiedadConfiguracion propiedadConfiguracion2 = new PropiedadConfiguracion();
-		propiedadConfiguracion2.setCodigo("es.caib.sistra2.propietat2");
-		propiedadConfiguracion2.setDescripcion("PropiedadConfiguracion 2 descripcion");
-		propiedadConfiguracion2.setValor("localhost");
-		final PropiedadConfiguracion propiedadConfiguracion3 = new PropiedadConfiguracion();
-		propiedadConfiguracion3.setCodigo("es.caib.sistra2.propietat3");
-		propiedadConfiguracion3.setDescripcion("PropiedadConfiguracion 3 descripcion");
-		propiedadConfiguracion3.setValor("340");
-		final PropiedadConfiguracion propiedadConfiguracion4 = new PropiedadConfiguracion();
-		propiedadConfiguracion4.setCodigo("es.caib.sistra2.propietat4");
-		propiedadConfiguracion4.setDescripcion("PropiedadConfiguracion 4 descripcion");
-		propiedadConfiguracion4.setValor("usuario");
+		final FuenteDatos fuenteDatos1 = new FuenteDatos();
+		fuenteDatos1.setId(1l);
+		fuenteDatos1.setCodigo("PESCA_REV_MAR");
+		fuenteDatos1.setDescripcion("Reserva marines de les Illes Balears");
+		final FuenteDatos fuenteDatos2 = new FuenteDatos();
+		fuenteDatos2.setId(2l);
+		fuenteDatos2.setCodigo("PESCA_ESP_AUT");
+		fuenteDatos2.setDescripcion("Llista d'espècies de plantes autóctones de les Illes Balears");
+		final FuenteDatos fuenteDatos3 = new FuenteDatos();
+		fuenteDatos3.setCodigo("EDUC_EQUAL_PROF");
+		fuenteDatos3.setId(3l);
+		fuenteDatos3.setDescripcion("Llistat de qualificacions profesionals.");
 
 		listaDatos = new ArrayList<>();
-		listaDatos.add(propiedadConfiguracion1);
-		listaDatos.add(propiedadConfiguracion2);
-		listaDatos.add(propiedadConfiguracion3);
-		listaDatos.add(propiedadConfiguracion4);
+		listaDatos.add(fuenteDatos1);
+		listaDatos.add(fuenteDatos2);
+		listaDatos.add(fuenteDatos3);
 
 	}
 
@@ -62,12 +57,12 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<PropiedadConfiguracion> listaDatos;
+	private List<FuenteDatos> listaDatos;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private PropiedadConfiguracion datoSeleccionado;
+	private FuenteDatos datoSeleccionado;
 
 	/**
 	 * Recuperacion de datos.
@@ -80,15 +75,15 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		}
 
 		// Filtra
-		final List<PropiedadConfiguracion> propiedadConfiguracionesFiltradas = new ArrayList<>();
-		for (final PropiedadConfiguracion propiedadConfiguracion : this.listaDatos) {
-			if (propiedadConfiguracion.getDescripcion() != null
-					&& propiedadConfiguracion.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				propiedadConfiguracionesFiltradas.add(propiedadConfiguracion);
+		final List<FuenteDatos> fuenteDatosesFiltradas = new ArrayList<>();
+		for (final FuenteDatos fuenteDatos : this.listaDatos) {
+			if (fuenteDatos.getDescripcion() != null
+					&& fuenteDatos.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
+				fuenteDatosesFiltradas.add(fuenteDatos);
 			}
 		}
 
-		this.listaDatos = propiedadConfiguracionesFiltradas;
+		this.listaDatos = fuenteDatosesFiltradas;
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 		// Muestra mensaje
@@ -174,7 +169,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<PropiedadConfiguracion> getListaDatos() {
+	public List<FuenteDatos> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -182,14 +177,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<PropiedadConfiguracion> listaDatos) {
+	public void setListaDatos(final List<FuenteDatos> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public PropiedadConfiguracion getDatoSeleccionado() {
+	public FuenteDatos getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -197,7 +192,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final PropiedadConfiguracion datoSeleccionado) {
+	public void setDatoSeleccionado(final FuenteDatos datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

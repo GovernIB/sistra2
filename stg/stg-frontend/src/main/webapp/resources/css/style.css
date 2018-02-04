@@ -24,7 +24,7 @@
 #header .ui-menu-parent .ui-menu-child .ui-icon {display:none !important;}
 
 /* para que no se monte el icono del menu con el texto */
-.ui-menu .ui-icon {position:relative !important;left:0px !important;top:1px !important;}
+.ui-menu .ui-icon {position:relative !important;left:0px !important;}
 
 /* ajustamos el texto del menu de boton "opciones" ya que sale mas grande que el resto*/
 .menuOpciones {font-size:0.8em;}
@@ -90,14 +90,14 @@
 	width: 5%;
 }
 
-.error_panel2 {
+.error_panel2,.error_code_panel2 {
 	display:inline-block;
 	width: 70%;
 	vertical-align: top;
 	text-align: left;
 }
 
-.error_panel3 {
+.error_panel3,.error_code_panel3 {
 	display: block;
 	width: 100%;
 }
@@ -108,7 +108,34 @@
 	height: 250px;
 }
 
+.error_button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding-top:2%;
+}
+
 .error_texto_titulo {
 	font-weight: bold;
 	font-size: 105% !important;
+}
+
+
+.error_code_panel2 {width:30% !important}
+.error_code_panel3 {padding-bottom:1%;}
+
+
+.w25 {
+	width: 25%;
+}
+.w50 {
+	width: 50%;
+}
+.w75{
+	width: 75%;
+}
+
+.noBorders tr, .noBorders td {
+    background: none !important;
+    border: none !important;
 }

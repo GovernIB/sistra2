@@ -28,7 +28,7 @@ public class ViewEntidades extends ViewControllerBase {
 	 */
 	public void init() {
 
-		setTituloPantalla(UtilJSF.getLiteral("viewEntidades.titulo"));
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		final Entidad entidad1 = new Entidad();
 		entidad1.setActivo(true);

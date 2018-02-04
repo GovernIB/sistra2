@@ -1,6 +1,7 @@
 package es.caib.sistra2.stg.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -8,20 +9,20 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistra2.stg.core.api.model.PropiedadConfiguracion;
+import es.caib.sistra2.stg.core.api.model.MensajeAviso;
 import es.caib.sistra2.stg.frontend.model.DialogResult;
 import es.caib.sistra2.stg.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistra2.stg.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de propiedades de configuracion.
+ * Mantenimiento de mensajes de aviso entidad.
  *
  * @author Indra
  *
  */
 @ManagedBean
 @ViewScoped
-public class ViewPropiedadesConfiguracion extends ViewControllerBase {
+public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 
 	/**
 	 * Inicializacion.
@@ -29,28 +30,31 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	public void init() {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final PropiedadConfiguracion propiedadConfiguracion1 = new PropiedadConfiguracion();
-		propiedadConfiguracion1.setCodigo("es.caib.sistra2.propietat1");
-		propiedadConfiguracion1.setDescripcion("PropiedadConfiguracion 1 descripcion");
-		propiedadConfiguracion1.setValor("http://www.caib.es");
-		final PropiedadConfiguracion propiedadConfiguracion2 = new PropiedadConfiguracion();
-		propiedadConfiguracion2.setCodigo("es.caib.sistra2.propietat2");
-		propiedadConfiguracion2.setDescripcion("PropiedadConfiguracion 2 descripcion");
-		propiedadConfiguracion2.setValor("localhost");
-		final PropiedadConfiguracion propiedadConfiguracion3 = new PropiedadConfiguracion();
-		propiedadConfiguracion3.setCodigo("es.caib.sistra2.propietat3");
-		propiedadConfiguracion3.setDescripcion("PropiedadConfiguracion 3 descripcion");
-		propiedadConfiguracion3.setValor("340");
-		final PropiedadConfiguracion propiedadConfiguracion4 = new PropiedadConfiguracion();
-		propiedadConfiguracion4.setCodigo("es.caib.sistra2.propietat4");
-		propiedadConfiguracion4.setDescripcion("PropiedadConfiguracion 4 descripcion");
-		propiedadConfiguracion4.setValor("usuario");
+		final MensajeAviso mensajeAviso1 = new MensajeAviso();
+		mensajeAviso1.setActivo(true);
+		mensajeAviso1.setId(1l);
+		mensajeAviso1.setDescripcion("La versió d'aquest tràmit està desactivat.");
+		mensajeAviso1.setTipo("Llista de tràmits");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(2018, 2, 2);
+		mensajeAviso1.setFechaInicio(calendar.getTime());
+		calendar.set(2018, 3, 3);
+		mensajeAviso1.setFechaFin(calendar.getTime());
+		final MensajeAviso mensajeAviso2 = new MensajeAviso();
+		mensajeAviso2.setActivo(true);
+		mensajeAviso2.setId(2l);
+		mensajeAviso2.setDescripcion("Per la tramitació que realitzarà necessitarà disposar de DNI electrònic.");
+		mensajeAviso2.setTipo("Tràmits amb firma");
+		final MensajeAviso mensajeAviso3 = new MensajeAviso();
+		mensajeAviso3.setActivo(false);
+		mensajeAviso3.setId(3l);
+		mensajeAviso3.setDescripcion("Per problemes técnics aquest tràmit està donat de baixa.");
+		mensajeAviso3.setTipo("Tots els tràmits");
 
 		listaDatos = new ArrayList<>();
-		listaDatos.add(propiedadConfiguracion1);
-		listaDatos.add(propiedadConfiguracion2);
-		listaDatos.add(propiedadConfiguracion3);
-		listaDatos.add(propiedadConfiguracion4);
+		listaDatos.add(mensajeAviso1);
+		listaDatos.add(mensajeAviso2);
+		listaDatos.add(mensajeAviso3);
 
 	}
 
@@ -62,12 +66,12 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<PropiedadConfiguracion> listaDatos;
+	private List<MensajeAviso> listaDatos;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private PropiedadConfiguracion datoSeleccionado;
+	private MensajeAviso datoSeleccionado;
 
 	/**
 	 * Recuperacion de datos.
@@ -80,15 +84,15 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		}
 
 		// Filtra
-		final List<PropiedadConfiguracion> propiedadConfiguracionesFiltradas = new ArrayList<>();
-		for (final PropiedadConfiguracion propiedadConfiguracion : this.listaDatos) {
-			if (propiedadConfiguracion.getDescripcion() != null
-					&& propiedadConfiguracion.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				propiedadConfiguracionesFiltradas.add(propiedadConfiguracion);
+		final List<MensajeAviso> mensajeAvisoesFiltradas = new ArrayList<>();
+		for (final MensajeAviso mensajeAviso : this.listaDatos) {
+			if (mensajeAviso.getDescripcion() != null
+					&& mensajeAviso.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
+				mensajeAvisoesFiltradas.add(mensajeAviso);
 			}
 		}
 
-		this.listaDatos = propiedadConfiguracionesFiltradas;
+		this.listaDatos = mensajeAvisoesFiltradas;
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 		// Muestra mensaje
@@ -174,7 +178,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<PropiedadConfiguracion> getListaDatos() {
+	public List<MensajeAviso> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -182,14 +186,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<PropiedadConfiguracion> listaDatos) {
+	public void setListaDatos(final List<MensajeAviso> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public PropiedadConfiguracion getDatoSeleccionado() {
+	public MensajeAviso getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -197,7 +201,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final PropiedadConfiguracion datoSeleccionado) {
+	public void setDatoSeleccionado(final MensajeAviso datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

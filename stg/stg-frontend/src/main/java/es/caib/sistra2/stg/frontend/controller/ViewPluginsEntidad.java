@@ -8,49 +8,54 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistra2.stg.core.api.model.PropiedadConfiguracion;
+import es.caib.sistra2.stg.core.api.model.PluginEntidad;
 import es.caib.sistra2.stg.frontend.model.DialogResult;
 import es.caib.sistra2.stg.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistra2.stg.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de propiedades de configuracion.
+ * Mantenimiento de plugins entidad.
  *
  * @author Indra
  *
  */
 @ManagedBean
 @ViewScoped
-public class ViewPropiedadesConfiguracion extends ViewControllerBase {
+public class ViewPluginsEntidad extends ViewControllerBase {
 
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
+
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final PropiedadConfiguracion propiedadConfiguracion1 = new PropiedadConfiguracion();
-		propiedadConfiguracion1.setCodigo("es.caib.sistra2.propietat1");
-		propiedadConfiguracion1.setDescripcion("PropiedadConfiguracion 1 descripcion");
-		propiedadConfiguracion1.setValor("http://www.caib.es");
-		final PropiedadConfiguracion propiedadConfiguracion2 = new PropiedadConfiguracion();
-		propiedadConfiguracion2.setCodigo("es.caib.sistra2.propietat2");
-		propiedadConfiguracion2.setDescripcion("PropiedadConfiguracion 2 descripcion");
-		propiedadConfiguracion2.setValor("localhost");
-		final PropiedadConfiguracion propiedadConfiguracion3 = new PropiedadConfiguracion();
-		propiedadConfiguracion3.setCodigo("es.caib.sistra2.propietat3");
-		propiedadConfiguracion3.setDescripcion("PropiedadConfiguracion 3 descripcion");
-		propiedadConfiguracion3.setValor("340");
-		final PropiedadConfiguracion propiedadConfiguracion4 = new PropiedadConfiguracion();
-		propiedadConfiguracion4.setCodigo("es.caib.sistra2.propietat4");
-		propiedadConfiguracion4.setDescripcion("PropiedadConfiguracion 4 descripcion");
-		propiedadConfiguracion4.setValor("usuario");
+		final PluginEntidad plugin1 = new PluginEntidad();
+		plugin1.setCodigo(1l);
+		plugin1.setTipo("Plugin de login");
+		plugin1.setClassname("es.caib.example.plugins.classPluginLogin");
+		plugin1.setInstancia("ATIB");
+		final PluginEntidad plugin2 = new PluginEntidad();
+		plugin2.setCodigo(2l);
+		plugin2.setTipo("Plugin de representació");
+		plugin2.setClassname("es.caib.example.plugins.classPluginRepresentacio");
+		plugin2.setInstancia("TPV");
+		final PluginEntidad plugin3 = new PluginEntidad();
+		plugin3.setCodigo(3l);
+		plugin3.setTipo("Plugin de dominis remots");
+		plugin3.setClassname("es.caib.example.plugins.classPluginDominisRemots");
+		plugin3.setInstancia("");
+		final PluginEntidad plugin4 = new PluginEntidad();
+		plugin4.setCodigo(4l);
+		plugin4.setTipo("Plugin de firma");
+		plugin4.setClassname("es.caib.example.plugins.classPluginFirma");
+		plugin4.setInstancia("ATIB");
 
 		listaDatos = new ArrayList<>();
-		listaDatos.add(propiedadConfiguracion1);
-		listaDatos.add(propiedadConfiguracion2);
-		listaDatos.add(propiedadConfiguracion3);
-		listaDatos.add(propiedadConfiguracion4);
+		listaDatos.add(plugin1);
+		listaDatos.add(plugin2);
+		listaDatos.add(plugin3);
+		listaDatos.add(plugin4);
 
 	}
 
@@ -62,33 +67,32 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<PropiedadConfiguracion> listaDatos;
+	private List<PluginEntidad> listaDatos;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private PropiedadConfiguracion datoSeleccionado;
+	private PluginEntidad datoSeleccionado;
 
 	/**
 	 * Recuperacion de datos.
 	 */
 	public void filtrar() {
 
-		if (filtro == null) {
+		if (filtro == null || filtro.isEmpty()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Rellene el filtro");
 			return;
 		}
 
 		// Filtra
-		final List<PropiedadConfiguracion> propiedadConfiguracionesFiltradas = new ArrayList<>();
-		for (final PropiedadConfiguracion propiedadConfiguracion : this.listaDatos) {
-			if (propiedadConfiguracion.getDescripcion() != null
-					&& propiedadConfiguracion.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				propiedadConfiguracionesFiltradas.add(propiedadConfiguracion);
+		final List<PluginEntidad> pluginesFiltradas = new ArrayList<>();
+		for (final PluginEntidad plugin : this.listaDatos) {
+			if (plugin.getClassname() != null && plugin.getClassname().toLowerCase().contains(filtro.toLowerCase())) {
+				pluginesFiltradas.add(plugin);
 			}
 		}
 
-		this.listaDatos = propiedadConfiguracionesFiltradas;
+		this.listaDatos = pluginesFiltradas;
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 		// Muestra mensaje
@@ -174,7 +178,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<PropiedadConfiguracion> getListaDatos() {
+	public List<PluginEntidad> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -182,14 +186,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<PropiedadConfiguracion> listaDatos) {
+	public void setListaDatos(final List<PluginEntidad> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public PropiedadConfiguracion getDatoSeleccionado() {
+	public PluginEntidad getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -197,7 +201,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final PropiedadConfiguracion datoSeleccionado) {
+	public void setDatoSeleccionado(final PluginEntidad datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

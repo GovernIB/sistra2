@@ -6,7 +6,7 @@
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
-		<f:viewAction action="#{viewPropiedadesConfiguracion.init}" />
+		<f:viewAction action="#{viewPluginsGlobales.init}" />
 	</f:metadata>
 
 
@@ -22,8 +22,8 @@
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
-			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPropiedadesConfiguracion.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPropiedadesConfiguracion.filtrar()}" process="panelFiltro" update="dataTable growl" />
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPluginsGlobales.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPluginsGlobales.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
@@ -49,13 +49,13 @@
 
 
 			<!-- Data table -->
-			<p:dataTable  id="dataTable" var="td" value="#{viewPropiedadesConfiguracion.listaDatos}"
+			<p:dataTable  id="dataTable" var="td" value="#{viewPluginsGlobales.listaDatos}"
 						 rows="10"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewPropiedadesConfiguracion.datoSeleccionado}" rowKey="#{td.codigo}" dblClickSelect="true">
+			        	 selectionMode="single" selection="#{viewPluginsGlobales.datoSeleccionado}" rowKey="#{td.codigo}" dblClickSelect="true">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
 				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
@@ -65,12 +65,12 @@
 				<p:ajax event="rowUnselect" />
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerCodigo']}">
-			        <h:outputText value="#{td.codigo}" />
+			    <p:column headerText="#{msg['viewPluginsGlobales.tipo']}">
+			        <h:outputText value="#{td.tipo}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerValor']}">
-			        <h:outputText value="#{td.valor}" />
+			    <p:column headerText="#{msg['viewPluginsGlobales.classname']}">
+			        <h:outputText value="#{td.classname}" />
 			    </p:column>
 
 			</p:dataTable>

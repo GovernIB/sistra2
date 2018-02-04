@@ -23,20 +23,20 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewEntidades.filtro}"/>
-	           			<p:commandButton icon="ui-icon-search" actionListener="#{viewEntidades.filtrar()}" process="panelFiltro" update="dataTable growl" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewEntidades.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="ui-icon-document" actionListener="#{viewEntidades.nuevo()}" process="@this" update="growl">
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEntidades.nuevo()}" process="@this" update="growl">
 		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="ui-icon-folder-open" actionListener="#{viewEntidades.editar()}" process="@this" update="growl">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.editar()}" process="@this" update="growl">
 		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="ui-icon-trash" actionListener="#{viewEntidades.eliminar()}" process="@this" update="growl dataTable"/>
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="ui-icon-help" actionListener="#{viewEntidades.ayudar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEntidades.eliminar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewEntidades.ayudar()}" process="@this" update="growl dataTable"/>
 
 		        	</h:panelGrid>
 		        </f:facet>

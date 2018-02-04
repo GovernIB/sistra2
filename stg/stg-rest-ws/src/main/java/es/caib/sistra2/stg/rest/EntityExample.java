@@ -1,13 +1,14 @@
 package es.caib.sistra2.stg.rest;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class EntityExample {
+public class EntityExample implements Serializable {
 
 	private String dato1;
 

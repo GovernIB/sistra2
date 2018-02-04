@@ -6,7 +6,7 @@
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
-		<f:viewAction action="#{viewPropiedadesConfiguracion.init}" />
+		<f:viewAction action="#{viewMensajesAvisoEntidad.init}" />
 	</f:metadata>
 
 
@@ -22,21 +22,23 @@
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
-			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPropiedadesConfiguracion.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPropiedadesConfiguracion.filtrar()}" process="panelFiltro" update="dataTable growl" />
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewMensajesAvisoEntidad.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewMensajesAvisoEntidad.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEntidades.nuevo()}" process="@this" update="growl">
+		        			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEntidades.nuevo()}" process="@this" update="growl">
 		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.editar()}" process="@this" update="growl">
 		        			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEntidades.eliminar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewMensajesAvisoEntidad.refrescarCache()}" process="@this" update="growl dataTable"/>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewEntidades.ayudar()}" process="@this" update="growl dataTable"/>
+
 
 		        	</h:panelGrid>
 		        </f:facet>
@@ -49,13 +51,13 @@
 
 
 			<!-- Data table -->
-			<p:dataTable  id="dataTable" var="td" value="#{viewPropiedadesConfiguracion.listaDatos}"
+			<p:dataTable  id="dataTable" var="td" value="#{viewMensajesAvisoEntidad.listaDatos}"
 						 rows="10"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewPropiedadesConfiguracion.datoSeleccionado}" rowKey="#{td.codigo}" dblClickSelect="true">
+			        	 selectionMode="single" selection="#{viewMensajesAvisoEntidad.datoSeleccionado}" rowKey="#{td.id}" dblClickSelect="true">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
 				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
@@ -65,12 +67,24 @@
 				<p:ajax event="rowUnselect" />
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerCodigo']}">
-			        <h:outputText value="#{td.codigo}" />
+			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerDescripcion']}">
+			        <h:outputText value="#{td.descripcion}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewPropiedadesConfiguracion.headerValor']}">
-			        <h:outputText value="#{td.valor}" />
+ 				<p:column headerText="#{msg['viewMensajesAvisoEntidad.headerTipo']}">
+			        <h:outputText value="#{td.tipo}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerFechaInicio']}">
+			        <h:outputText value="#{td.fechaInicio}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerFechaFin']}">
+			        <h:outputText value="#{td.fechaFin}" />
+			    </p:column>
+
+				<p:column headerText="#{msg['viewMensajesAvisoEntidad.headerActivo']}">
+			        <p:selectBooleanCheckbox value="#{td.activo}" disabled="true" />
 			    </p:column>
 
 			</p:dataTable>

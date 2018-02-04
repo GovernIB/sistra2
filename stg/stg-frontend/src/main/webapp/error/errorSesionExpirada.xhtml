@@ -10,16 +10,34 @@
 
 
 <h:head>
-
 </h:head>
 
 <!-- TODO REDIRECCION INICIO APP -->
 
 <body>
-	<h1>Sesion expirada</h1>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+	<h:form>
 
-	<a href="../secure/test/viewTest.xhtml">Redireccion</a>
-
+		<p:outputPanel styleClass="error_panel_container">
+			<p:outputPanel styleClass="error_panel">
+				<p:outputPanel styleClass="error_panel1">
+					<h:graphicImage value="/resources/images/error.png" height="55" />
+				</p:outputPanel>
+				<p:outputPanel styleClass="error_code_panel2">
+					<br/>
+					<p:outputPanel styleClass="error_panel3">
+						<p:outputLabel value="#{msg['error.sesionExpirada']}"
+							styleClass="error_texto_titulo" />
+					</p:outputPanel>
+				</p:outputPanel>
+				<p:outputPanel styleClass="error_button">
+					<p:button value="#{msg['botones.volver']}" outcome="/index" icon="fa fa-undo" />
+				</p:outputPanel>
+			</p:outputPanel>
+		</p:outputPanel>
+	</h:form>
 </body>
 
 

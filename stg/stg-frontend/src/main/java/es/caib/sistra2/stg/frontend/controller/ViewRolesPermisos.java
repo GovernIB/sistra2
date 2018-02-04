@@ -8,20 +8,20 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistra2.stg.core.api.model.PropiedadConfiguracion;
+import es.caib.sistra2.stg.core.api.model.Rol;
 import es.caib.sistra2.stg.frontend.model.DialogResult;
 import es.caib.sistra2.stg.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistra2.stg.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de propiedades de configuracion.
+ * Mantenimiento de roles y permisos.
  *
  * @author Indra
  *
  */
 @ManagedBean
 @ViewScoped
-public class ViewPropiedadesConfiguracion extends ViewControllerBase {
+public class ViewRolesPermisos extends ViewControllerBase {
 
 	/**
 	 * Inicializacion.
@@ -29,28 +29,29 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	public void init() {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final PropiedadConfiguracion propiedadConfiguracion1 = new PropiedadConfiguracion();
-		propiedadConfiguracion1.setCodigo("es.caib.sistra2.propietat1");
-		propiedadConfiguracion1.setDescripcion("PropiedadConfiguracion 1 descripcion");
-		propiedadConfiguracion1.setValor("http://www.caib.es");
-		final PropiedadConfiguracion propiedadConfiguracion2 = new PropiedadConfiguracion();
-		propiedadConfiguracion2.setCodigo("es.caib.sistra2.propietat2");
-		propiedadConfiguracion2.setDescripcion("PropiedadConfiguracion 2 descripcion");
-		propiedadConfiguracion2.setValor("localhost");
-		final PropiedadConfiguracion propiedadConfiguracion3 = new PropiedadConfiguracion();
-		propiedadConfiguracion3.setCodigo("es.caib.sistra2.propietat3");
-		propiedadConfiguracion3.setDescripcion("PropiedadConfiguracion 3 descripcion");
-		propiedadConfiguracion3.setValor("340");
-		final PropiedadConfiguracion propiedadConfiguracion4 = new PropiedadConfiguracion();
-		propiedadConfiguracion4.setCodigo("es.caib.sistra2.propietat4");
-		propiedadConfiguracion4.setDescripcion("PropiedadConfiguracion 4 descripcion");
-		propiedadConfiguracion4.setValor("usuario");
+		final Rol rol1 = new Rol();
+		rol1.setId(1l);
+		rol1.setCodigo("STR_SALUT_DEV");
+		rol1.setDescripcion("Rol de desenvolupament per tràmits de salut");
+		rol1.setPermisos("Alta - Baixa - Modificació");
+		rol1.setArea("Area 1");
+		final Rol rol2 = new Rol();
+		rol2.setId(2l);
+		rol2.setCodigo("STR_TEST_CONS");
+		rol2.setDescripcion("Rol de consulta de tràmits de funcionalitats.");
+		rol2.setPermisos("Consulta");
+		rol2.setArea("Area 2");
+		final Rol rol3 = new Rol();
+		rol3.setId(3l);
+		rol3.setCodigo("STR_PESCA_HELPDESK");
+		rol3.setDescripcion("Rol per resolució d'incidències de pesca.");
+		rol3.setPermisos("Helpdesk");
+		rol3.setArea("Area 3");
 
 		listaDatos = new ArrayList<>();
-		listaDatos.add(propiedadConfiguracion1);
-		listaDatos.add(propiedadConfiguracion2);
-		listaDatos.add(propiedadConfiguracion3);
-		listaDatos.add(propiedadConfiguracion4);
+		listaDatos.add(rol1);
+		listaDatos.add(rol2);
+		listaDatos.add(rol3);
 
 	}
 
@@ -62,12 +63,12 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<PropiedadConfiguracion> listaDatos;
+	private List<Rol> listaDatos;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private PropiedadConfiguracion datoSeleccionado;
+	private Rol datoSeleccionado;
 
 	/**
 	 * Recuperacion de datos.
@@ -80,15 +81,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		}
 
 		// Filtra
-		final List<PropiedadConfiguracion> propiedadConfiguracionesFiltradas = new ArrayList<>();
-		for (final PropiedadConfiguracion propiedadConfiguracion : this.listaDatos) {
-			if (propiedadConfiguracion.getDescripcion() != null
-					&& propiedadConfiguracion.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				propiedadConfiguracionesFiltradas.add(propiedadConfiguracion);
+		final List<Rol> rolesFiltradas = new ArrayList<>();
+		for (final Rol rol : this.listaDatos) {
+			if (rol.getDescripcion() != null && rol.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
+				rolesFiltradas.add(rol);
 			}
 		}
 
-		this.listaDatos = propiedadConfiguracionesFiltradas;
+		this.listaDatos = rolesFiltradas;
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 		// Muestra mensaje
@@ -174,7 +174,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<PropiedadConfiguracion> getListaDatos() {
+	public List<Rol> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -182,14 +182,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<PropiedadConfiguracion> listaDatos) {
+	public void setListaDatos(final List<Rol> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public PropiedadConfiguracion getDatoSeleccionado() {
+	public Rol getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -197,7 +197,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final PropiedadConfiguracion datoSeleccionado) {
+	public void setDatoSeleccionado(final Rol datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

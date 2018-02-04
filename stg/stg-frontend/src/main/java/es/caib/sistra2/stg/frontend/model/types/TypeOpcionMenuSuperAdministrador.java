@@ -25,7 +25,11 @@ public enum TypeOpcionMenuSuperAdministrador implements OpcionMenu {
     /**
      * Dominios globales.
      */
-    DOMINIOS_GLOBALES;
-
-
+    DOMINIOS_GLOBALES,
+    
+    /**
+     * Test
+     */
+    TEST
+    ;
 }
