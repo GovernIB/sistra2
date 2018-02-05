@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   <name>Sistra2</name>
 
-	<properties>
+	<properties> 
 		<stt.version>0.0.1-SNAPSHOT</stt.version>
 		<stg.version>0.0.1-SNAPSHOT</stg.version>
 		<sth.version>0.0.1-SNAPSHOT</sth.version>
@@ -31,6 +31,7 @@
 		<primefaces.version>6.1</primefaces.version>
 		<primefaces.allThemes.version>1.0.8</primefaces.allThemes.version>
 		<jersey.version>2.26</jersey.version>
+		<jackson.version>2.9.4</jackson.version> <!-- Da error en listas la version que viene con jersey 2.8.4 (con 2.9.4 devuelve list bien) -->
 		<javax.inject.version>1</javax.inject.version>
 		<jersey-gf-cdi.version>2.14</jersey-gf-cdi.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>
