@@ -124,6 +124,13 @@ public class ViewDominiosEntidad extends ViewControllerBase {
 		// Mostramos mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Se ha eliminado fila");
 	}
+	
+	/**
+	 * Abre explorar gestion logo.
+	 */
+	public void explorarGestorLogo() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
 
 	/**
 	 * Verifica si hay fila seleccionada.

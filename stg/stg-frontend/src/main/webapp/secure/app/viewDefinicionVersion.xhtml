@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewDefinicionVersion.init()}" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<p:outputPanel id="panel" styleClass="h100">
+
+				<p:layout id="mainDefinicionVersion" styleClass="h100">
+
+					<p:layoutUnit id="breadDefinicionVersionLayout" position="north" styleClass="body-color">
+						<p:outputPanel id="breadDefinicionVersion">
+							<p:breadCrumb homeDisplay="text" model="#{viewDefinicionVersion.breadCrumModel}" />
+						</p:outputPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit id="indexDefinicionVersion" position="west" size="320">
+						<h:form>
+							<p:tree value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}" style="height:100% !important;" styleClass="sin-bordes">
+								<p:treeNode>
+									<h:outputText value="#{node}" />
+								</p:treeNode>
+
+								<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}" update=":workDefinicionVersion :breadDefinicionVersion"/>
+							</p:tree>
+						</h:form>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" styleClass="padding8">
+						<p:outputPanel id="workDefinicionVersion" styleClass="h100">
+						   <ui:include src="#{viewDefinicionVersion.opcionUrl}"/>
+						 </p:outputPanel>
+					</p:layoutUnit>
+
+				</p:layout>
+
+		</p:outputPanel>
+	</ui:define>
+
+</ui:composition>

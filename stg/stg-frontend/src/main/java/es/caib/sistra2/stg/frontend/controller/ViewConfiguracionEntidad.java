@@ -10,7 +10,7 @@ import es.caib.sistra2.stg.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistra2.stg.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de plugins entidad.
+ * Mantenimiento de configuracion entidad.
  *
  * @author Indra
  *
@@ -29,11 +29,41 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
-	 * Abre dialogo para nuevo dato.
+	 * Abre explorar gestion logo.
 	 */
-	public void nuevo() {
+	public void explorarGestorLogo() {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
+	
+	/**
+	 * Abre explorar asistente logo.
+	 */
+	public void explorarAssistentLogo() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+	
+	/**
+	 * Abre explorar asistente css.
+	 */
+	public void explorarAssistentCss() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+	
+	/**
+	 * Abre explorar asistente pie.
+	 */
+	public void explorarAssistentPie() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+	
+	/**
+	 * Abre explorar configuración del formulario de contacto.
+	 */
+	public void configFormulariContacte() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+	
+	
 
 	/**
 	 * Retorno dialogo.

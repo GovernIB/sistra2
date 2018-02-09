@@ -179,6 +179,13 @@ public class ViewDominiosGlobales extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre dialogo para nuevo dato.
+	 */
+	public void ping() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+	
+	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {

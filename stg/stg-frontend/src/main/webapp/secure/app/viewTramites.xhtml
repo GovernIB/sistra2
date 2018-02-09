@@ -12,10 +12,169 @@
 
 	<ui:define name="content">
 
-		<h:form id="form" style="height: 100%">
+		<h:form id="form" style="height: 80%">
 
-			Tramites
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar()}" process="panelFiltro" update="growl" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayudar()}" process="@this" update="growl" iconPos="top" />
+		        	</h:panelGrid>
+		        </f:facet>
+
+		    </p:toolbar>
+
+
+			<div class="ui-g"  style="height: 100%">
+
+			<div class="ui-g-4 ui-g-nopad"  style="height: 99%">
+				<!-- Toolbar -->
+				<p:toolbar id="toolbar2">
+					<f:facet name="left">
+							<h:outputText value="#{msg['viewTramites.listadoAreas']}" />
+		           	</f:facet>
+		           	<f:facet name="right">
+		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea()}" process="@this" update="growl">
+			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        		</p:commandButton>
+			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea()}" process="@this" update="growl dataTableTramites">
+			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        		</p:commandButton>
+			        		<p:menuButton value="Más..">
+	        					<p:menuitem id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea()}" process="@this" update="growl "/>
+					        	<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea()}" process="@this" update="growl "/>
+					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datos']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea()}" process="@this" update="growl "/>
+	    					</p:menuButton>
+					</f:facet>
+				</p:toolbar>
+
+				<p:tree id="arbolArea" value="#{viewTramites.areas}" var="area" style="width: 100%;height: 100%;overflow: auto;display: block"
+						selection="#{viewTramites.areaSeleccionada}"
+						selectionMode="single">
+				        <p:treeNode>
+				            <h:outputText value="#{area.descripcion}" />
+				        </p:treeNode>
+
+
+						<p:ajax event="select"
+		                        listener="#{viewTramites.onRowSelectArea}"
+		                        update=":form:arbolArea :form:dataTableTramites"
+		                        />
+
+						<p:ajax event="unselect"
+		                        listener="#{viewTramites.onRowUnselectArea}"
+		                        update=":form:arbolArea :form:dataTableTramites"
+		                        />
+
+				</p:tree>
+
+		    </div>
+			<div class="ui-g-8 ui-g-nopad" style="padding-left:10px">
+
+				<!-- Toolbar -->
+				<p:toolbar id="toolbar3">
+					<f:facet name="left">
+							<h:outputText value="#{msg['viewTramites.listadoTramites']}"  />
+					</f:facet>
+			        <f:facet name="right">
+							<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaTramite()}" process="@this" update="growl">
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        		</p:commandButton>
+			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite()}" process="@this" update="growl">
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        		</p:commandButton>
+			        		<p:commandButton id="btnEliminarTramite" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite()}" process="@this" update="growl"/>
+			        		<p:commandButton id="btnVersionesTramite" value="#{msg['viewTramites.botones.versiones']}" icon="fa fa-level-down" actionListener="#{viewTramites.versionesTramite()}" process="@this" update="growl"/>
+			        		<p:commandButton id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite()}" process="@this" update="growl"/>
+					</f:facet>
+				</p:toolbar>
+
+
+				<p:dataTable  id="dataTableTramites" var="td" value="#{viewTramites.tramites}"
+												 rows="10"
+												 scrollable="true" scrollHeight="100%"
+						                         paginator="true" paginatorPosition="bottom"
+						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						                         rowsPerPageTemplate="5,10,15,30"
+									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">
+
+
+
+										<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+										<!-- p:ajax event="rowDblselect" oncomplete="rcEditar();"/-->
+
+										<!-- Necesario para actualizar en controlador la fila seleccionada -->
+										<p:ajax event="rowSelect" />
+	                					<p:ajax event="rowUnselect" />
+
+										<!-- Columnas -->
+									    <p:column headerText="#{msg['viewTramites.headerCodigo']}">
+									        <h:outputText value="#{td.codigo}" />
+									    </p:column>
+
+									    <p:column headerText="#{msg['viewTramites.headerDescripcion']}">
+									        <h:outputText value="#{td.descripcion}" />
+									    </p:column>
+
+						 				<p:column headerText="#{msg['viewTramites.headerActivo']}">
+									        <p:selectBooleanCheckbox value="#{td.activo}" disabled="true" />
+									    </p:column>
+
+
+										<p:column headerText="#{msg['viewTramites.headerBloqueada']}">
+									        <p:selectBooleanCheckbox value="#{td.bloqueada}" disabled="true" />
+									    </p:column>
+
+									    <p:column headerText="#{msg['viewTramites.headerModificacion']}">
+									        <h:outputText value="#{td.modificacion}" disabled="true" />
+									    </p:column>
+						</p:dataTable>
+
+
+				</div>
+
+
+
+			</div>
+
+
+
+			<!-- Context menu -->
+			<p:contextMenu for="dataTableTramites">
+		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarTramite()"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="ui-icon-trash" onclick="rcEliminarTramite()"/>
+		    </p:contextMenu>
+
+		    <!-- Context menu -->
+			<p:contextMenu for="arbolArea">
+		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarArea()"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="ui-icon-trash" onclick="rcEliminarArea()"/>
+		    </p:contextMenu>
+
+			<h:outputScript >
+			 function rcEditarArea() {
+		        document.getElementById("form:btnEditarArea").click();
+		      }
+		      function rcEditarTramite() {
+		        document.getElementById("form:btnEditarTramite").click();
+		      }
+		      function rcEliminarArea() {
+		        document.getElementById("form:btnEliminarArea").click();
+		      }
+		      function rcEliminarTramite() {
+		        document.getElementById("form:btnEliminarTramite").click();
+		      }
+		    </h:outputScript>
 		</h:form>
 
 	</ui:define>

@@ -23,14 +23,14 @@
 			<p:toolbar id="toolbar">
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTest.filtro}"/>
 	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTest.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
-		        	<h:panelGrid id="panelBotones" columns="8" cellspacing="5px">
+		        	<h:panelGrid id="panelBotones" columns="8" cellspacing="5">
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file-o" actionListener="#{viewTest.nuevo()}" process="@this" update="growl">
 		        			<p:ajax event="dialogReturn" listener="#{viewTest.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>

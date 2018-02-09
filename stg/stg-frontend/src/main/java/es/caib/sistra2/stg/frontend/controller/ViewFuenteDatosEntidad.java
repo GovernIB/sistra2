@@ -118,6 +118,13 @@ public class ViewFuenteDatosEntidad extends ViewControllerBase {
 		// Mostramos mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Se ha eliminado fila");
 	}
+	
+	/**
+	 * Datos.
+	 */
+	public void datos() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
 
 	/**
 	 * Verifica si hay fila seleccionada.

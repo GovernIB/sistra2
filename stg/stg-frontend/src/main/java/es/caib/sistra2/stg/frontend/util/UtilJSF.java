@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 import org.primefaces.context.RequestContext;
 
 import es.caib.sistra2.stg.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistra2.stg.frontend.controller.SessionBean;
 import es.caib.sistra2.stg.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistra2.stg.frontend.controller.ViewDominiosEntidad;
 import es.caib.sistra2.stg.frontend.controller.ViewDominiosGlobales;
@@ -166,8 +167,12 @@ public class UtilJSF {
 
 	public static String getLiteral(final String key) {
 		final FacesContext context = FacesContext.getCurrentInstance();
-		final ResourceBundle text = context.getApplication().evaluateExpressionGet(context, "#{msg}",
-				ResourceBundle.class);
+		// final ResourceBundle text =
+		// context.getApplication().evaluateExpressionGet(context,
+		// "#{msg}",ResourceBundle.class);
+
+		final ResourceBundle text = ResourceBundle.getBundle("i18n.messages", ((SessionBean) FacesContext
+				.getCurrentInstance().getExternalContext().getSessionMap().get("sessionBean")).getLocale());
 		final String result = text.getString(key);
 		return result;
 	}
@@ -361,4 +366,7 @@ public class UtilJSF {
 		redirectJsfPage(getDefaultUrlRole(role));
 	}
 
+	public static String getUrlArbolDefinicionVersion(final String opcion) {
+		return PATH_VIEWS + opcion + EXTENSION_XHTML;
+	}
 }

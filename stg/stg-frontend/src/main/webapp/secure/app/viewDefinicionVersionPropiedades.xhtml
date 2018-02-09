@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formViewDefinicionVersionPropiedades" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+
+        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+
+            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl"/>
+       		</p:outputPanel>
+
+            <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
+			<p:panelGrid styleClass="noBorders">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="autenticado" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true"/>
+					</p:column>
+					<p:column>
+						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
+						<p:spacer width="8" height="1"/>
+						<p:inputText id="nivelQAA" disabled="true" size="2" value="1" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="sinAutenticacion" disabled="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" />
+					</p:column>
+					<p:column>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+         	<p:outputLabel for="idiomaCastellano" value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
+			<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
+				<p:selectBooleanCheckbox id="idiomaCastellano" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
+				<p:selectBooleanCheckbox id="idiomaCatalan" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
+				<p:selectBooleanCheckbox id="idiomaIngles"  value="false" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
+			</p:panelGrid>
+
+         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
+			<p:panelGrid styleClass="noBorders">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="true"/>
+						<p:spacer width="40" height="1"/>
+					</p:column>
+					<p:column>
+						<p:selectOneRadio id="tipopersistencia" disabled="true" value="pordias">
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="sinlimite" />
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="pordias" />
+		     		   </p:selectOneRadio>
+		     		 </p:column>
+					<p:column>
+							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
+							<p:spacer width="8"/>
+							<p:inputText id="numdias" size="3" disabled="true" value="15"/>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:outputLabel for="scriptpersonalizacion" value="#{msg['viewDefinicionVersionPropiedades.scriptpersonalizacion']}" />
+			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl"/>
+
+			<p:outputLabel for="scriptparametrosiniciales" value="#{msg['viewDefinicionVersionPropiedades.scriptparametrosiniciales']}" />
+			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="true" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl"/>
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl" />
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

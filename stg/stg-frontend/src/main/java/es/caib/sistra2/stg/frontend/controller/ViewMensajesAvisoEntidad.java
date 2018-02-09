@@ -127,6 +127,13 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		// Mostramos mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Se ha eliminado fila");
 	}
+	
+	/**
+	 * Refrescar cache.
+	 */
+	public void refrescarCache() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
 
 	/**
 	 * Verifica si hay fila seleccionada.
