@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewPluginsEntidad.init}" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<h:form id="form" style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+		        <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPluginsEntidad.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPluginsEntidad.filtrar()}" process="panelFiltro" update="dataTable growl" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewPluginsEntidad.nuevo()}" process="@this" update="growl">
+		        			<p:ajax event="dialogReturn" listener="#{viewPluginsEntidad.returnDialogo}" update="growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPluginsEntidad.editar()}" process="@this" update="growl">
+		        			<p:ajax event="dialogReturn" listener="#{viewPluginsEntidad.returnDialogo}" update="growl dataTable"/>
+		        		</p:commandButton>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewPluginsEntidad.eliminar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPluginsEntidad.ayudar()}" process="@this" update="growl dataTable"/>
+
+		        	</h:panelGrid>
+		        </f:facet>
+
+
+
+		    </p:toolbar>
+
+
+
+
+			<!-- Data table -->
+			<p:dataTable  id="dataTable" var="td" value="#{viewPluginsEntidad.listaDatos}"
+						 rows="10"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewPluginsEntidad.datoSeleccionado}" rowKey="#{td.codigo}" dblClickSelect="true">
+
+				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" />
+				<p:ajax event="rowUnselect" />
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['viewPluginsEntidad.headerTipo']}">
+			        <h:outputText value="#{td.tipo}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewPluginsEntidad.headerClassname']}">
+			        <h:outputText value="#{td.classname}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewPluginsEntidad.headerInstancia']}">
+			        <h:outputText value="#{td.instancia}" />
+			    </p:column>
+
+			</p:dataTable>
+
+			<!-- Context menu -->
+			<p:contextMenu for="dataTable">
+		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditar()"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="ui-icon-trash" onclick="rcEliminar()"/>
+		    </p:contextMenu>
+
+			<h:outputScript >
+		      function rcEditar() {
+		        document.getElementById("form:btnEditar").click();
+		      }
+		      function rcEliminar() {
+		        document.getElementById("form:btnEliminar").click();
+		      }
+		    </h:outputScript>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

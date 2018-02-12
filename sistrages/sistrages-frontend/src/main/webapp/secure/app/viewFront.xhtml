@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formViewFrontal" styleClass="h100">
+
+		<div style="display:inline-flex;">
+					<img class="editable" src="http://www.caib.es/govern/imgs/svg/logo.svg" width="40" height="40" />
+					<h2><b>Sol-licitud de beques educatives</b></h2>
+
+		</div>
+		<div>
+			<div>
+				<h2 style="color:red">Dades de la persona interessada</h2>
+				<label class="editable">NIF/NIE/PASSPORT</label>
+				<input class="editable" type="text" value="" data-type="dni" />
+
+				<label class="editable">Nom</label>
+				<input class="editable" type="text" value="" data-type="text" />
+
+				<label class="editable">Primer llinatge</label>
+				<input class="editable" type="text" value="" data-type="text"  />
+			</div>
+			<div>
+				<label class="editable">Email</label>
+				<input class="editable" type="text" value="" data-type="email"  />
+			</div>
+
+		</div>
+		<div>
+			<div>
+				<h2 style="color:red">Dades de la sol-licitud</h2>
+				<p>
+					<label class="editable">Tipus de beca</label>
+					<select class="editable" name="tipo" />
+				</p>
+
+				<p>
+					<label class="editable">Format de la beca</label>
+					<input class="editable" type="radio" name="formato" value="C">Completa</input>
+		 			<input class="editable" type="radio" name="formato" value="P">Parcial</input>
+				</p>
+
+				<p>
+					<label class="editable">Convocatoria a la que se presenta</label>
+					<input class="editable" type="checkbox" name="convocatorias" value="G">Gener de 2018</input>
+		 			<input class="editable" type="checkbox" name="convocatorias" value="J">Juny de 2018</input>
+		 			<input class="editable" type="checkbox" name="convocatorias" value="N">Novembre de 2018</input>
+				</p>
+
+				<p>
+					<label class="editable">Dades adicionals de la sol-licitud</label>
+					<textarea class="editable" data-type="area"  />
+				</p>
+			</div>
+		</div>
+
+
+	</h:form>
+
+	<script type="text/javascript">
+		 //<![CDATA[
+		function rcEditarArea(tag,id) {
+			document.getElementById("form:tagname").value(tag);
+			document.getElementById("form:nodeId").value(tag);
+			document.getElementById("form:btnEditar").click();
+	    }
+
+     	var elementos = document.getElementsByClassName("editable");
+
+     	for(var i = 0 ; i < elementos.length; i++) {
+     		var element = elementos[i];
+     		element.addEventListener("click", function(event){ rcEditarArea (event.target.tagName, event.target.id); });
+		}
+		 //]]>
+    </script>
+
+</ui:composition>

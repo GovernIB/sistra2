@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDominioGlobal.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
+		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogDominioGlobal.modoAcceso}"/>
+		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogDominioGlobal.id}"/>
+		-->
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioGlobal.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDominioGlobal.id}"/>
+		<f:viewAction action="#{dialogDominioGlobal.init}" />
+	</f:metadata>
+	<h:form id="dialogTest">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			<p:panelGrid style="width:100%" styleClass="ui-noborder">
+			  <p:row>
+				    <p:column>
+				    	<p:outputLabel for="codigo" value="#{msg['dialogDominioGlobal.headerCodigo']}" />
+				    </p:column>
+				    <p:column colspan="3">
+				    	<p:inputText id="codigo" value="#{dialogDominioGlobal.data.codigo}" disabled="#{!dialogDominioGlobal.isAlta()}" required="true"/>
+				    </p:column>
+			  </p:row>
+			  <p:row>
+				    <p:column>
+				    	<p:outputLabel for="descripcion" value="#{msg['dialogDominioGlobal.headerDescripcion']}" />
+					</p:column>
+				    <p:column colspan="3">
+				    	<p:inputTextarea id="descripcion" value="#{dialogDominioGlobal.data.descripcion}" disabled="#{dialogDominioGlobal.isConsulta()}" required="true" rows="4" cols="40" />
+				    </p:column>
+			  </p:row>
+
+			  <p:row>
+				    <p:column>
+				    	<p:outputLabel for="cacheo" value="#{msg['dialogDominioGlobal.headerCachear']}" />
+					</p:column>
+				    <p:column  colspan="3"><p:selectBooleanCheckbox id="cacheo" value="#{dialogDominioGlobal.data.cacheable}" itemLabel="#{msg['dialogDominioGlobal.headerCachearCheck']}" /></p:column>
+			  </p:row>
+			  <p:row>
+				    <p:column>
+				    	<p:outputLabel for="cacheo" value="#{msg['dialogDominioGlobal.headerTipo']}" />
+					</p:column>
+				    <p:column>
+						<p:selectOneRadio layout="pageDirection"  id="console" value="#{dialogDominioGlobal.data.tipo}">
+				            <f:selectItem itemLabel="#{msg['dialogDominioGlobal.headerTipo.consultaBD']}" itemValue="B" />
+				            <f:selectItem itemLabel="#{msg['dialogDominioGlobal.headerTipo.listado']}" itemValue="L" />
+				            <f:selectItem itemLabel="#{msg['dialogDominioGlobal.headerTipo.consultaRemota']}" itemValue="R" />
+					    </p:selectOneRadio>
+					</p:column>
+					<p:column>
+						<p>
+							<p:outputLabel for="jdni" value="#{msg['dialogDominioGlobal.headerTipo.consultaBD.jdni']}" />
+						</p>
+						<p:outputLabel for="query" value="#{msg['dialogDominioGlobal.headerTipo.consultaBD.query']}" />
+					</p:column>
+					<p:column>
+						<p>
+							<p:inputText id="jdni" value="#{dialogDominioGlobal.data.jdni}" disabled="#{!dialogDominioGlobal.isAlta()}" />
+						</p>
+						<p>
+							<p:inputText id="query" value="#{dialogDominioGlobal.data.query}" disabled="#{!dialogDominioGlobal.isAlta()}" />
+						</p>
+					</p:column>
+					 <p:row>
+						    <p:column>
+						    	<p:outputLabel for="cacheo" value="#{msg['dialogDominioGlobal.headerCachear']}" />
+							</p:column>
+						    <p:column  colspan="2">
+						    	<!-- Data table -->
+								<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogDominioGlobal.data.propiedades}"
+											 rows="10"
+											 scrollable="true" scrollHeight="90%"
+					                         paginator="true" paginatorPosition="bottom"
+					                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					                         rowsPerPageTemplate="5,10,15,30"
+								        	 selectionMode="single" selection="#{dialogDominioGlobal.propiedadSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">
+
+									<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+									<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
+
+									<!-- Necesario para actualizar en controlador la fila seleccionada -->
+									<p:ajax event="rowSelect" />
+									<p:ajax event="rowUnselect" />
+
+									<!-- Columnas -->
+								    <p:column headerText="#{msg['dialogDominioGlobal.headerParametros.codigo']}" class="ui-panelgrid-cell">
+								        <h:outputText value="#{td.codigo}" />
+								    </p:column>
+
+								    <p:column headerText="#{msg['dialogDominioGlobal.headerParametros.valor']}" class="ui-panelgrid-cell">
+								        <h:outputText value="#{td.valor}" />
+								    </p:column>
+
+					 			</p:dataTable>
+
+					 			<h:outputScript >
+							      function rcEditarPropiedad() {
+							        document.getElementById("form:btnEditarPropiedad").click();
+							      }
+							      function  rcBorrarPropiedad() {
+							        document.getElementById("form:btnEliminarPropiedad").click();
+							      }
+							    </h:outputScript>
+
+						    </p:column>
+						     <p:column>
+						    	<p>
+						    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogDominioGlobal.nuevaPropiedad()}" process="@this" update="growlDialog">
+		        						<p:ajax event="dialogReturn" listener="#{dialogDominioGlobal.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+		        					</p:commandButton>
+		        				</p>
+		        				<p>
+						    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogDominioGlobal.editarPropiedad()}" process="@this" update="growlDialog">
+		        						<p:ajax event="dialogReturn" listener="#{dialogDominioGlobal.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+		        					</p:commandButton>
+		        				</p>
+						    	<p>
+						    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogDominioGlobal.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+						    	</p>
+						    	<p>
+						    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogDominioGlobal.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+						    	</p>
+						    	<p>
+						    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogDominioGlobal.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+						    	</p>
+							 </p:column>
+
+					  </p:row>
+
+			  </p:row>
+			 </p:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDominioGlobal.aceptar()}" process="@form" update="@form growlDialog"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominioGlobal.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

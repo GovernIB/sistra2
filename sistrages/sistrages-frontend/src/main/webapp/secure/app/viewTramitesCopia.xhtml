@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewTramites.init}" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<h:form id="form" style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+		        <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar()}" process="panelFiltro" update="growl" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayudar()}" process="@this" />
+		        	</h:panelGrid>
+		        </f:facet>
+
+		    </p:toolbar>
+
+		<div class="ui-g">
+
+			<div class="ui-g-4 ui-g-nopad">
+		        <p:dataList value="#{viewTramites.areas}" var="area" type="ordered">
+							        <f:facet name="header" style="height:200px" heigth="200">
+							             <p:outputPanel style="float: left;">
+											    <h:outputText value="Llistat de àrees" />
+										 </p:outputPanel>
+										 <p:outputPanel style="float: right">
+											    <p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewEntidades.nuevo()}" process="@this">
+						        					<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" />
+						        				</p:commandButton>
+						        				<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.editar()}" process="@this" >
+						        					<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" />
+						        				</p:commandButton>
+					        					<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewEntidades.eliminar()}" process="@this" />
+
+				        				 </p:outputPanel>
+
+							        </f:facet>
+							        #{area.descripcion}
+							    </p:dataList>
+		    </div>
+
+		    <div class="ui-g-8 ui-g-nopad">
+		         <p:dataTable  id="dataTable" var="td" value="#{viewTramites.tramites}"
+											 rows="10"
+											 scrollable="true" scrollHeight="90%"
+					                         paginator="true" paginatorPosition="bottom"
+					                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					                         rowsPerPageTemplate="5,10,15,30"
+								        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">
+
+
+									<f:facet name="header">
+							             <p:outputPanel style="float: left">
+											    <h:outputText value="Llistat de trámites" />
+										 </p:outputPanel>
+										 <p:outputPanel style="float: right">
+											    <h:outputText value="Botones" />
+										 </p:outputPanel>
+							        </f:facet>
+
+									<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+									<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
+
+									<!-- Necesario para actualizar en controlador la fila seleccionada -->
+									<p:ajax event="rowSelect" />
+									<p:ajax event="rowUnselect" />
+
+									<!-- Columnas -->
+								    <p:column headerText="#{msg['viewTramites.headerCodigo']}">
+								        <h:outputText value="#{td.codigo}" />
+								    </p:column>
+
+								    <p:column headerText="#{msg['viewTramites.headerDescripcion']}">
+								        <h:outputText value="#{td.descripcion}" />
+								    </p:column>
+
+					 				<p:column headerText="#{msg['viewTramites.headerActivo']}">
+								        <p:selectBooleanCheckbox value="#{td.activo}" disabled="true" />
+								    </p:column>
+
+
+								</p:dataTable>
+		    </div>
+
+
+
+		</div>
+
+
+
+				<!-- Context menu -->
+						<p:contextMenu for="dataTable">
+					        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditar()"/>
+					        <p:menuitem value="#{msg['botones.eliminar']}" icon="ui-icon-trash" onclick="rcEliminar()"/>
+					    </p:contextMenu>
+
+						<h:outputScript >
+					      function rcEditar() {
+					        document.getElementById("form:btnEditar").click();
+					      }
+					      function rcEliminar() {
+					        document.getElementById("form:btnEliminar").click();
+					      }
+					    </h:outputScript>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

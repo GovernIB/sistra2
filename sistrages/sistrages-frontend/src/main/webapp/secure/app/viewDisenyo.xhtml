@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewDisenyo.init()}" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+		<h:form id="form" style="height: 100%">
+		<p:outputPanel id="panel" styleClass="h100">
+
+				<p:layout styleClass="h100">
+
+					<p:layoutUnit position="north" styleClass="body-color">
+						<p:commandButton id="btnCabecera" 		value="Capçelera" 		icon="fa fa-heading" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnSeccion" 		value="Secció" 			icon="fa fa-list-ul" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnEtiqueta" 		value="Etiqueta" 		icon="fa fa-font" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnImagen" 		value="Imatge" 			icon="fa fa-image" actionListener="#{viewFuenteDatosEntidad.datos()}" process="@this" />
+		        		<p:commandButton id="btnCampoTexto" 	value="Camp de text" 	icon="fa fa-square" actionListener="#{viewFuenteDatosEntidad.ayudar()}" process="@this" />
+						<p:commandButton id="btnCampoSelector" 	value="Camp selector" 	icon="fa fa-square" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnCampoCheckbox" 	value="Camp checkbox" 	icon="fa fa-check-square" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnCaptcha" 		value="Captcha" 		icon="fa fa-retweet" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+					<span style="display:none">
+						<p:commandButton id="btnEditar"
+								value="setearURl"
+								actionListener="#{viewDisenyo.editar()}"
+								process="@this" update="layoutEast panelEast includeEast" />
+						<p:inputText id="tagname" value="#{viewTramites.tagname}"  />
+						<p:inputText id="nodeId"  value="#{viewTramites.nodeId}"  />
+						</span>
+					</p:layoutUnit>
+
+					<p:layoutUnit id="layoutEast" position="east" size="420">
+							<p:outputPanel id="panelEast" styleClass="h100">
+							   <ui:include id="includeEast" src="#{viewDisenyo.opcionUrl}"/>
+							 </p:outputPanel>
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" styleClass="noPadding">
+						<p:outputPanel styleClass="h100">
+							<ui:include src="/secure/app/viewFront.xhtml"/>
+						 </p:outputPanel>
+					</p:layoutUnit>
+
+				</p:layout>
+
+		</p:outputPanel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

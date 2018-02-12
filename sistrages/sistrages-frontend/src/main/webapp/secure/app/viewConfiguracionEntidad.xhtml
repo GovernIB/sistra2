@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewConfiguracionEntidad.init}" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<h:form id="form" style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+
+
+			<p:panel header="#{msg['viewConfiguracionEntidad.gestorTramits.titulo']}" style="width: 100%" columnClasses="w25 right-alignment, w75 left-alignment">
+		        <h:panelGrid columns="2" cellpadding="10">
+
+		             <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
+		           	<p:commandButton id="btnGestorLogo" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarGestorLogo()}" process="@this" update="growl"/>
+
+		        </h:panelGrid>
+		    </p:panel>
+
+
+    		<p:panel header="#{msg['viewConfiguracionEntidad.assistentTramitacio.titulo']}" style="width: 100%" columnClasses="w25 right-alignment, w75 left-alignment">
+		        <h:panelGrid columns="2" cellpadding="10">
+
+		            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLog']}" />
+		            <p:panel   styleClass="noBorders">
+		            	<p:commandButton id="btnAssistentLogo" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarAssistentLogo()}" process="@this" update="growl"/>
+						<h:outputText value="#{msg['error.noseleccionadofitxer']}" />
+		            </p:panel>
+
+		        	<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerCss']}" />
+		            <p:panel styleClass="noBorders">
+		            	<p:commandButton id="btnAssistentCss" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarAssistentCss()}" process="@this" update="growl"/>
+						<h:outputText value="#{msg['error.noseleccionadofitxer']}" />
+					</p:panel>
+
+		        	<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerPie']}" />
+		            <p:panel styleClass="noBorders">
+		            	<p:inputText value="" />
+		            	<p:commandButton id="btnAssistentPie" icon="fa fa-compass" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie()}" process="@this" update="growl"/>
+					</p:panel>
+
+					<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerAjuda']}" />
+		            <h:panelGrid styleClass="noBorders" columns="3" cellpadding="10">
+		            				<p:selectBooleanCheckbox id="checkEmail" />
+ 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.email']}" />
+ 								    <h:outputText value=" " />
+
+									<p:selectBooleanCheckbox id="checkTelefonSuport" />
+ 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}" />
+ 								    <p:inputText value="" />
+
+ 									<p:selectBooleanCheckbox id="checkUrlSuportTecnic" />
+ 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.urlSuport']}" />
+ 								    <p:inputText value="" />
+
+									<p:selectBooleanCheckbox id="check2" />
+ 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.formulariCont']}" />
+ 								   <p:commandButton id="btnFormulariContacte" icon="fa fa-cog" actionListener="#{viewConfiguracionEntidad.configFormulariContacte()}" process="@this" update="growl"/>
+
+					</h:panelGrid>
+
+		        </h:panelGrid>
+		    </p:panel>
+
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+		        		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
+		        		<p:commandButton id="btnAceptar"  value="#{msg['botones.aceptar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.guardar()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" icon="fa fa-ban" actionListener="#{viewConfiguracionEntidad.cancelar()}" process="@this" update="growl"/>
+
+		        	</h:panelGrid>
+		        </f:facet>
+
+
+
+		    </p:toolbar>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

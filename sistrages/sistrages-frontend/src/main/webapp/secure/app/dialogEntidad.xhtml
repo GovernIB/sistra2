@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogEntidad.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
+		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogEntidad.modoAcceso}"/>
+		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogEntidad.id}"/>
+		-->
+		<f:viewParam name="MODO_ACCESO" value="#{dialogEntidad.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogEntidad.id}"/>
+		<f:viewAction action="#{dialogEntidad.init}" />
+	</f:metadata>
+	<h:form id="dialogTest">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+			 	<p:panelGrid columns="2" styleClass="ui-noborder">
+
+				 	<p:outputLabel for="codigo" value="#{msg['dialogEntidad.headerCodigo']}" />
+				 	<p:inputText id="codigo" value="#{dialogEntidad.data.codigo}" disabled="#{!dialogEntidad.isAlta()}" required="true"/>
+
+				 	<p:outputLabel for="descripcion" value="#{msg['dialogEntidad.headerDescripcion']}" />
+				 	<p:inputText id="descripcion" value="#{dialogEntidad.data.descripcion}" disabled="#{dialogEntidad.isConsulta()}" required="true"/>
+
+					<p:outputLabel for="rol" value="#{msg['dialogEntidad.headerRol']}" />
+				 	<p:inputText id="rol" value="#{dialogEntidad.data.rol}" disabled="#{dialogEntidad.isConsulta()}" required="true"/>
+
+
+					<p:outputLabel for="activo" value="#{msg['dialogEntidad.headerActivo']}" />
+					<p:selectBooleanCheckbox  id="activo" value="#{dialogEntidad.data.activo}" />
+
+				</p:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogEntidad.aceptar()}" process="@form" update="@form growlDialog"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogEntidad.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formViewDefinicionVersionControlAcceso" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+
+        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+
+            <p:outputLabel for="activo" value="#{msg['viewDefinicionVersionControlAcceso.activo']}" />
+            <p:selectBooleanCheckbox id="activo" disabled="true" value="true"/>
+
+
+         	<p:outputLabel for="plazodesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.desactivacion']}" />
+			<p:panelGrid styleClass="noBorders w100">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="plazodesactivacion" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacion']}"/>
+
+						<p:spacer width="20" height="1" />
+
+						<p:outputLabel for="plazodesactivacioninicio" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacioninicio']}" />
+						<p:spacer width="8" height="1" />
+						<p:calendar id="plazodesactivacioninicio" disabled="true" value="01/02/2018" pattern="dd/MM/yyyy" size="10"/>
+
+						<p:spacer width="40" height="1" />
+
+						<p:outputLabel for="plazodesactivacionfin" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacionfin']}" />
+						<p:spacer width="8"/>
+						<p:calendar id="plazodesactivacionfin" disabled="true" value="31/12/2018" pattern="dd/MM/yyyy" size="10"/>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-inputgroup noPadding-left">
+		           		<p:outputLabel for="mensajedesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.mensajedesactivacion']}" />
+		           		<p:spacer width="8" height="1" />
+		           		<p:inputText id="mensajedesactivacion" disabled="true" styleClass="w60"/>
+		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionControlAcceso.editar()}"
+								process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+            <p:outputLabel for="habilitardebug" value="#{msg['viewDefinicionVersionControlAcceso.habilitardebug']}" />
+            <p:selectBooleanCheckbox id="habilitardebug" disabled="true" value="false"/>
+
+         	<p:outputLabel for="limitartramitacion" value="#{msg['viewDefinicionVersionControlAcceso.limitartramitacion']}" />
+			<p:panelGrid styleClass="noBorders">
+				<p:row>
+					<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="limitartramitacion" disabled="true" value="true"/>
+					</p:column>
+					<p:column>
+						<p:spacer width="20" height="1" />
+					</p:column>
+					<p:column>
+						<p:outputLabel for="numtramitraciones" value="#{msg['viewDefinicionVersionControlAcceso.numtramitraciones']}" />
+						<p:spacer width="8" height="1" />
+						<p:inputText id="numtramitraciones" disabled="true" size="4" />
+					</p:column>
+					<p:column>
+						<p:spacer width="10" height="1" />
+					</p:column>
+					<p:column>
+						<p:outputLabel for="intervalo" value="#{msg['viewDefinicionVersionControlAcceso.intervalo']}" />
+						<p:spacer width="8" height="1" />
+						<p:inputText id="intervalo" disabled="true" size="4"/>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{viewDefinicionVersionControlAcceso.editar()}"
+						process="@this" update="growl" />
+				</p:outputPanel>
+			</f:facet>
+		</h:panelGrid>
+
+
+	</h:form>
+
+</ui:composition>
