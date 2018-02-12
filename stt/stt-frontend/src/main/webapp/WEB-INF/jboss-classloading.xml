@@ -1,6 +1,0 @@
-<classloading xmlns="urn:jboss:classloading:1.0"
-		domain="stt-frontend.war"
-		parent-domain="stt-frontend.war"
-		export-all="NON_EMPTY"
-		import-all="true">
-</classloading>
