@@ -11,41 +11,49 @@
 
 
 	<ui:define name="content">
-		<h:form id="form" style="height: 100%">
-		<p:outputPanel id="panel" styleClass="h100">
+		<h:form id="form" style="height: 100%; overflow:hidden">
+		<p:toolbar>
+					 <f:facet name="left">
+						<p:commandButton id="btnCabecera" 		value="#{msg['viewDisenyo.headerCabecera']}" 		icon="fa fa-heading" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnSeccion" 		value="#{msg['viewDisenyo.headerSeccion']}" 			icon="fa fa-list-ul" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnEtiqueta" 		value="#{msg['viewDisenyo.headerEtiqueta']}" 		icon="fa fa-font" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnImagen" 		value="#{msg['viewDisenyo.headerImagen']}" 			icon="fa fa-image" actionListener="#{viewFuenteDatosEntidad.datos()}" process="@this" />
+		        		<p:commandButton id="btnCampoTexto" 	value="#{msg['viewDisenyo.headerCampoTexto']}" 	icon="fa fa-square" actionListener="#{viewFuenteDatosEntidad.ayudar()}" process="@this" />
+						<p:commandButton id="btnCampoSelector" 	value="#{msg['viewDisenyo.headerCampoSelector']}" 	icon="fa fa-square" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnCampoCheckbox" 	value="#{msg['viewDisenyo.headerCampoCheckbox']}" 	icon="fa fa-check-square" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+		        		<p:commandButton id="btnCaptcha" 		value="#{msg['viewDisenyo.headerCaptcha']}" 		icon="fa fa-retweet" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+
+						<h:inputHidden id="tagname" value="#{viewDisenyo.tagname}" />
+						<h:inputHidden id="nodeId" value="#{viewDisenyo.nodeId}" />
+						<p:commandButton id="btnEditar"
+								value="setearURl"
+								style="display:none"
+								actionListener="#{viewDisenyo.editar()}"
+								process="@this :form:tagname :form:nodeId" update="panelEast" />
+			  </f:facet>
+			  </p:toolbar>
+
+		<p:outputPanel styleClass="h100">
 
 				<p:layout styleClass="h100">
 
-					<p:layoutUnit position="north" styleClass="body-color">
-						<p:commandButton id="btnCabecera" 		value="Capçelera" 		icon="fa fa-heading" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
-		        		<p:commandButton id="btnSeccion" 		value="Secció" 			icon="fa fa-list-ul" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
-		        		<p:commandButton id="btnEtiqueta" 		value="Etiqueta" 		icon="fa fa-font" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
-		        		<p:commandButton id="btnImagen" 		value="Imatge" 			icon="fa fa-image" actionListener="#{viewFuenteDatosEntidad.datos()}" process="@this" />
-		        		<p:commandButton id="btnCampoTexto" 	value="Camp de text" 	icon="fa fa-square" actionListener="#{viewFuenteDatosEntidad.ayudar()}" process="@this" />
-						<p:commandButton id="btnCampoSelector" 	value="Camp selector" 	icon="fa fa-square" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
-		        		<p:commandButton id="btnCampoCheckbox" 	value="Camp checkbox" 	icon="fa fa-check-square" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
-		        		<p:commandButton id="btnCaptcha" 		value="Captcha" 		icon="fa fa-retweet" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
-					<span style="display:none">
-						<p:commandButton id="btnEditar"
-								value="setearURl"
-								actionListener="#{viewDisenyo.editar()}"
-								process="@this" update="layoutEast panelEast includeEast" />
-						<p:inputText id="tagname" value="#{viewTramites.tagname}"  />
-						<p:inputText id="nodeId"  value="#{viewTramites.nodeId}"  />
-						</span>
-					</p:layoutUnit>
-
-					<p:layoutUnit id="layoutEast" position="east" size="420">
-							<p:outputPanel id="panelEast" styleClass="h100">
-							   <ui:include id="includeEast" src="#{viewDisenyo.opcionUrl}"/>
-							 </p:outputPanel>
+					<p:layoutUnit position="east" styleClass="padding8" size="400">
+						<p:outputPanel id="panelEast" styleClass="h100">
+						   <ui:include src="#{viewDisenyo.opcionUrl}">
+						   		<ui:param id="ID" name="ID" value="#{viewDisenyo.nodeId}" />
+						   	</ui:include>
+						 </p:outputPanel>
 					</p:layoutUnit>
 
 					<p:layoutUnit position="center" styleClass="noPadding">
 						<p:outputPanel styleClass="h100">
-							<ui:include src="/secure/app/viewFront.xhtml"/>
+							<iframe id="imagepgframe" name="imagepgframe"  src="/sistragesback/secure/app/viewIframe.html" width="100%" height="1000px">
+				              <p>Tu navegador no soporta iframes.</p>
+				            </iframe>
 						 </p:outputPanel>
 					</p:layoutUnit>
+
+
 
 				</p:layout>
 

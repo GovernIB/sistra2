@@ -22,9 +22,9 @@
 						</p:outputPanel>
 					</p:layoutUnit>
 
-					<p:layoutUnit id="indexDefinicionVersion" position="west" size="320">
+					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">
 						<h:form>
-							<p:tree value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}" style="height:100% !important;" styleClass="sin-bordes">
+							<p:tree value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w80">
 								<p:treeNode>
 									<h:outputText value="#{node}" />
 								</p:treeNode>

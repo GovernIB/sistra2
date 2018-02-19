@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
+		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogDominio.modoAcceso}"/>
+		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogDominio.id}"/>
+		-->
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDominio.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDominio.id}"/>
+		<f:viewAction action="#{dialogDominio.init}" />
+	</f:metadata>
+	<h:form id="dialogTest">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			<p:panelGrid style="width:100%" styleClass="ui-noborder" rowclass=",ui-datatable-odd">
+			  <p:row>
+				    <p:column>
+				    	<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
+				    </p:column>
+				    <p:column colspan="4">
+				    	<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.isAlta()}" required="true"/>
+				    </p:column>
+			  </p:row>
+			  <p:row class="ui-datatable-odd">
+				    <p:column>
+				    	<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
+					</p:column>
+				    <p:column colspan="3">
+				    	<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" style="width:95%" />
+				    </p:column>
+				    <p:column>
+				    	<p:commandButton id="btnEditarDescripcion" icon="fa fa-edit" actionListener="#{dialogDominio.editarDescripcion()}" process="@this" update="growlDialog">
+       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog" />
+       					</p:commandButton>
+				    </p:column>
+
+			  </p:row>
+
+			  <p:row>
+				    <p:column>
+				    	<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
+					</p:column>
+				    <p:column  colspan="4"><p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" /></p:column>
+
+			  </p:row>
+			  <p:row  class="ui-datatable-odd">
+				    <p:column>
+				    	<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerTipo']}" />
+					</p:column>
+				    <p:column>
+						<p:selectOneRadio layout="pageDirection"  id="console" value="#{dialogDominio.data.tipo}">
+				            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaBD']}" itemValue="B" />
+				            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.listado']}" itemValue="L" />
+				            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaRemota']}" itemValue="R" />
+					    </p:selectOneRadio>
+					</p:column>
+					<p:column>
+						<p>
+							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" />
+						</p>
+						<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" />
+					</p:column>
+					<p:column colspan="2">
+						<p>
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" />
+						</p>
+						<p>
+							<p:inputText id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" />
+						</p>
+					</p:column>
+				</p:row>
+				<p:row>
+						    <p:column>
+						    	<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
+							</p:column>
+						    <p:column  colspan="3">
+						    	<p:panel style="min-height:200px" min-height="1000px">
+							    	<!-- Data table -->
+									<p:dataTable  id="dataTableParametros" var="td" value="#{dialogDominio.data.parametros}"
+												 rows="10"
+												 style="border:1px"
+												 scrollable="true"
+												 scrollHeight="100%"
+												 scrollWidth="100%"
+												 paginator="true"
+												 paginatorPosition="bottom"
+						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						                         rowsPerPageTemplate="5,10,15,30"
+									        	 selectionMode="single" selection="#{dialogDominio.propiedadSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">
+
+										<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+										<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
+
+										<!-- Necesario para actualizar en controlador la fila seleccionada -->
+										<p:ajax event="rowSelect" />
+										<p:ajax event="rowUnselect" />
+
+										<!-- Columnas -->
+									    <p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
+									        <h:outputText value="#{td.codigo}" />
+									    </p:column>
+
+									    <p:column headerText="#{msg['dialogDominio.headerParametros.valor']}" class="ui-panelgrid-cell">
+									        <h:outputText value="#{td.valor}" />
+									    </p:column>
+
+						 			</p:dataTable>
+								</p:panel>
+					 			<h:outputScript >
+							      function rcEditarPropiedad() {
+							        document.getElementById("form:btnEditarPropiedad").click();
+							      }
+							      function  rcBorrarPropiedad() {
+							        document.getElementById("form:btnEliminarPropiedad").click();
+							      }
+							    </h:outputScript>
+
+						    </p:column>
+						     <p:column style="width:20px">
+						     	<p>
+						    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
+		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+		        					</p:commandButton>
+		        				</p>
+		        				<p>
+						    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
+		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+		        					</p:commandButton>
+		        				</p>
+						    	<p>
+						    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+						    	</p>
+						    	<p>
+						    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+						    	</p>
+						    	<p>
+						    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+						    	</p>
+							 </p:column>
+					  </p:row>
+
+			 </p:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

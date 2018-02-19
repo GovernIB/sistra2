@@ -17,8 +17,7 @@ import org.primefaces.context.RequestContext;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.frontend.controller.SessionBean;
 import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
-import es.caib.sistrages.frontend.controller.ViewDominiosEntidad;
-import es.caib.sistrages.frontend.controller.ViewDominiosGlobales;
+import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
 import es.caib.sistrages.frontend.controller.ViewFormulariosExternos;
 import es.caib.sistrages.frontend.controller.ViewFuenteDatosEntidad;
@@ -247,7 +246,7 @@ public class UtilJSF {
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewEntidades.class) + EXTENSION_XHTML;
 			break;
 		case DOMINIOS_GLOBALES:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominiosGlobales.class) + EXTENSION_XHTML;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominios.class) + EXTENSION_XHTML + "?ambito=G";
 			break;
 		case PLUGINS_GLOBALES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPluginsGlobales.class) + EXTENSION_XHTML;
@@ -273,7 +272,7 @@ public class UtilJSF {
 	 *            opcion
 	 * @return url
 	 */
-	public static String getUrlOpcionMenuAdmOper(final TypeOpcionMenuAdmOper opcion) {
+	public static String getUrlOpcionMenuAdmOper(final TypeOpcionMenuAdmOper opcion, final Long idEntidad) {
 		String url = null;
 
 		switch (opcion) {
@@ -281,10 +280,12 @@ public class UtilJSF {
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionEntidad.class) + EXTENSION_XHTML;
 			break;
 		case FUENTES_DATOS:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFuenteDatosEntidad.class) + EXTENSION_XHTML;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFuenteDatosEntidad.class) + EXTENSION_XHTML
+					+ "?ambito=E&id=" + idEntidad;
 			break;
 		case DOMINIOS_ENTIDAD:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominiosEntidad.class) + EXTENSION_XHTML;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominios.class) + EXTENSION_XHTML + "?ambito=E&id="
+					+ idEntidad;
 			break;
 		case PLUGINS_ENTIDAD:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPluginsEntidad.class) + EXTENSION_XHTML;
@@ -338,17 +339,17 @@ public class UtilJSF {
 	 *            role
 	 * @return url
 	 */
-	public static String getDefaultUrlRole(final TypeRoleAcceso role) {
+	public static String getDefaultUrlRole(final TypeRoleAcceso role, final Long idEntidad) {
 		String url = null;
 		switch (role) {
 		case SUPER_ADMIN:
 			url = getUrlOpcionMenuSuperadministrador(getDefaultOpcionSuperadministrador());
 			break;
 		case ADMIN_ENT:
-			url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper());
+			url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper(), idEntidad);
 			break;
 		case DESAR:
-			url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper());
+			url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper(), idEntidad);
 			break;
 		default:
 			break;
@@ -362,8 +363,8 @@ public class UtilJSF {
 	 * @param jsfPage
 	 *            path JSF page
 	 */
-	public static void redirectJsfDefaultPageRole(final TypeRoleAcceso role) {
-		redirectJsfPage(getDefaultUrlRole(role));
+	public static void redirectJsfDefaultPageRole(final TypeRoleAcceso role, final Long idEntidad) {
+		redirectJsfPage(getDefaultUrlRole(role, idEntidad));
 	}
 
 	public static String getUrlArbolDefinicionVersion(final String opcion) {

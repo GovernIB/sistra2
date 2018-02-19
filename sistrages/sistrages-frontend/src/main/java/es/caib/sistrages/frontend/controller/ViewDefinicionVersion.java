@@ -15,7 +15,9 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Formulario;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.frontend.model.OpcionArbol;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -65,6 +67,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Lista de Formularios.
 	 */
 	private List<Formulario> listaFormularios;
+
+	/**
+	 * Lista de documentos.
+	 */
+	private List<Documento> listaDocumentos;
+
+	/**
+	 * Lista de tasas.
+	 */
+	private List<Tasa> listaTasas;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -125,7 +137,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final TramitePaso paso5 = new TramitePaso();
 		paso5.setId(5L);
 		paso5.setCodigo("5");
-		paso5.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.registrarTramites");
+		paso5.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.registrarTramite");
 		paso5.setOrden(5);
 
 		listaPasos = new ArrayList<>();
@@ -142,16 +154,44 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		formulario1.setDescripcion("Datos de la solicitud");
 		formulario1.setObligatoriedad("Obligatorio");
 		formulario1.setTipo("Interno");
-		final Formulario formulario2 = new Formulario();
-		formulario2.setId(2L);
-		formulario2.setCodigo("Formulario2");
-		formulario2.setDescripcion("Datos relativos al interesado");
-		formulario2.setObligatoriedad("Dependiente");
-		formulario2.setTipo("Interno");
+		// final Formulario formulario2 = new Formulario();
+		// formulario2.setId(2L);
+		// formulario2.setCodigo("Formulario2");
+		// formulario2.setDescripcion("Datos relativos al interesado");
+		// formulario2.setObligatoriedad("Dependiente");
+		// formulario2.setTipo("Interno");
 
 		listaFormularios = new ArrayList<>();
 		listaFormularios.add(formulario1);
-		listaFormularios.add(formulario2);
+		// listaFormularios.add(formulario2);
+
+		/* inicializa documentos */
+		final Documento documento1 = new Documento();
+		documento1.setId(1L);
+		documento1.setCodigo("Anexo1");
+		documento1.setDescripcion("Certificado de penales");
+		documento1.setObligatoriedad("Obligatorio");
+
+		// final Documento documento2 = new Documento();
+		// documento2.setId(2L);
+		// documento2.setCodigo("Anexo2");
+		// documento2.setDescripcion("Titulos academicos");
+		// documento2.setObligatoriedad("Obligatorio");
+
+		listaDocumentos = new ArrayList<>();
+		listaDocumentos.add(documento1);
+		// listaDocumentos.add(documento2);
+
+		/* inicializa tasas */
+		final Tasa tasa1 = new Tasa();
+		tasa1.setId(1L);
+		tasa1.setCodigo("Tasa1");
+		tasa1.setDescripcion("Tasa de incripción");
+		tasa1.setObligatoriedad("Obligatorio");
+		tasa1.setTipo("Telemático");
+
+		listaTasas = new ArrayList<>();
+		listaTasas.add(tasa1);
 
 		/* inicializa arbol */
 		root = new DefaultTreeNode("Root", null);
@@ -189,6 +229,30 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 							UtilJSF.getLiteral("viewDefinicionVersion.indice.pasosTramitacion."
 									+ formulario.getCodigo().toLowerCase()),
 							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersion" + formulario.getCodigo())));
+
+					nodo.getChildren().add(nodoRellenar);
+				}
+			}
+
+			if (!listaDocumentos.isEmpty() && "viewDefinicionVersion.indice.pasosTramitacion.anexarDocumentos"
+					.equals(tramitePaso.getDescripcion())) {
+				for (final Documento documento : listaDocumentos) {
+					final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(
+							UtilJSF.getLiteral("viewDefinicionVersion.indice.pasosTramitacion."
+									+ documento.getCodigo().toLowerCase()),
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersion" + documento.getCodigo())));
+
+					nodo.getChildren().add(nodoRellenar);
+				}
+			}
+
+			if (!listaTasas.isEmpty() && "viewDefinicionVersion.indice.pasosTramitacion.pagarTasas"
+					.equals(tramitePaso.getDescripcion())) {
+				for (final Tasa tasa : listaTasas) {
+					final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(
+							UtilJSF.getLiteral(
+									"viewDefinicionVersion.indice.pasosTramitacion." + tasa.getCodigo().toLowerCase()),
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersion" + tasa.getCodigo())));
 
 					nodo.getChildren().add(nodoRellenar);
 				}
@@ -267,13 +331,31 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				breadCrumb = copyMenuModel(breadCrumbRoot);
 
 				if (breadCrumb != null) {
-					// TODO: hay que hacer un bucle para recuperar hasta la raiz del arbol y ademas
-					// hay que quitar el 2. o el que toque
-					final DefaultMenuItem item = new DefaultMenuItem(opcionArbol.getName());
-					item.setUrl("#");
-					breadCrumb.addElement(item);
+					creaRutaArbolBreadCrumb(breadCrumb, event.getTreeNode());
 					breadCrumb.generateUniqueIds();
 				}
+			}
+		}
+	}
+
+	/**
+	 * Crea la ruta del arbol para el breadcrumb.
+	 *
+	 * @param miga
+	 *            breadcrumb
+	 * @param arbol
+	 *            arbol
+	 */
+	private void creaRutaArbolBreadCrumb(final MenuModel miga, final TreeNode arbol) {
+		if (miga != null && arbol != null) {
+			if (arbol.getParent() != null) {
+				creaRutaArbolBreadCrumb(miga, arbol.getParent());
+			}
+			if (!"root".equals(arbol.getRowKey())) {
+				final OpcionArbol opcionArbol = (OpcionArbol) arbol.getData();
+				final DefaultMenuItem item = new DefaultMenuItem(opcionArbol.getName());
+				item.setUrl("#");
+				breadCrumb.addElement(item);
 			}
 		}
 	}
@@ -351,6 +433,44 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setListaFormularios(final List<Formulario> listaFormularios) {
 		this.listaFormularios = listaFormularios;
+	}
+
+	/**
+	 * Obtiene el valor de listaDocumentos.
+	 *
+	 * @return el valor de listaDocumentos
+	 */
+	public List<Documento> getListaDocumentos() {
+		return listaDocumentos;
+	}
+
+	/**
+	 * Establece el valor de listaDocumentos.
+	 *
+	 * @param listaDocumentos
+	 *            el nuevo valor de listaDocumentos
+	 */
+	public void setListaDocumentos(final List<Documento> listaDocumentos) {
+		this.listaDocumentos = listaDocumentos;
+	}
+
+	/**
+	 * Obtiene el valor de listaTasas.
+	 *
+	 * @return el valor de listaTasas
+	 */
+	public List<Tasa> getListaTasas() {
+		return listaTasas;
+	}
+
+	/**
+	 * Establece el valor de listaTasas.
+	 *
+	 * @param listaTasas
+	 *            el nuevo valor de listaTasas
+	 */
+	public void setListaTasas(final List<Tasa> listaTasas) {
+		this.listaTasas = listaTasas;
 	}
 
 }

@@ -3,12 +3,12 @@ package es.caib.sistrages.frontend.controller;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Formulario;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de definici&oacute;n de versi&oacute;n de dominios empleados.
+ * Mantenimiento de definici&oacute;n de versi&oacute;n de rellenar.
  *
  * @author Indra
  *
@@ -20,10 +20,10 @@ public class ViewDefinicionVersionRellenar extends ViewControllerBase {
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private Dominio datoSeleccionado;
+	private Formulario datoSeleccionado;
 
 	/**
-	 * Crea una nueva instancia de ViewDefinicionVersionDominios.
+	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
 	 */
 	public ViewDefinicionVersionRellenar() {
 		super();
@@ -41,7 +41,7 @@ public class ViewDefinicionVersionRellenar extends ViewControllerBase {
 	 *
 	 * @return el valor de datoSeleccionado
 	 */
-	public Dominio getDatoSeleccionado() {
+	public Formulario getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -51,7 +51,7 @@ public class ViewDefinicionVersionRellenar extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            el nuevo valor de datoSeleccionado
 	 */
-	public void setDatoSeleccionado(final Dominio datoSeleccionado) {
+	public void setDatoSeleccionado(final Formulario datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

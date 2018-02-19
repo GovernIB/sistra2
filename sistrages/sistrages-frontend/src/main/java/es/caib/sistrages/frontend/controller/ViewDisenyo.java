@@ -36,18 +36,18 @@ public class ViewDisenyo extends ViewControllerBase {
 	 * Editar.
 	 */
 	public void editar() {
+
 		if (tagname == null) {
+			opcionUrl = null;
 			return;
 		}
 
 		if ("input".equals(tagname)) {
 			opcionUrl = "/secure/app/viewDisenyoTextbox.xhtml";
-		} else if ("label".equals(tagname)) {
-			opcionUrl = "/secure/app/viewDisenyoLabel.xhtml";
 		} else if ("select".equals(tagname)) {
 			opcionUrl = "/secure/app/viewDisenyoSelect.xhtml";
-		} else if ("img".equals(tagname)) {
-			opcionUrl = "/secure/app/viewDisenyoImage.xhtml";
+		} else {
+			opcionUrl = null;
 		}
 
 	}
@@ -59,7 +59,7 @@ public class ViewDisenyo extends ViewControllerBase {
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		opcionUrl = "/secure/app/viewDisenyoTextbox.xhtml";
+		// opcionUrl = "/secure/app/viewDisenyoTextbox.xhtml";
 
 	}
 

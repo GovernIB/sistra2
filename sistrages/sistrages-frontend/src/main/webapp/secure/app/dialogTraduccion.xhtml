@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogTraduccion.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+	<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="2000" sticky="false" />
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
+		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogTraduccion.modoAcceso}"/>
+		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogTraduccion.id}"/>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccion.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogTraduccion.id}"/>
+		-->
+
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccion.modoAcceso}"/>
+		<f:viewParam name="DATA" value="#{dialogTraduccion.data}"/>
+		<f:viewAction action="#{dialogTraduccion.init}" />
+	</f:metadata>
+	<h:form id="dialogTraduccion">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="2000" sticky="false" />
+					<p:dataTable  styleClass="hide-table-header" var="traduccion" value="#{dialogTraduccion.data}">
+					    <p:column class="w30">
+					        <p:outputLabel value="#{msg[traduccion.idioma]}" />
+				 		</p:column>
+						<p:column>
+							<p:inputText id="traduccion_#{traduccion.idioma}" value="#{traduccion.texto}" disabled="#{!dialogTraduccion.isConsulta()}" required="#{!dialogTraduccion.isObligatorio(traduccion.idioma)}"/>
+						</p:column>
+					</p:dataTable>
+			 </p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="@form" update="@form growlDialogTraduccion"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

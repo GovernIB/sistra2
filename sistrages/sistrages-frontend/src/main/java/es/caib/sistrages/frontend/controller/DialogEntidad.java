@@ -39,7 +39,7 @@ public class DialogEntidad extends DialogControllerBase {
 		} else {
 			data = new Entidad();// entidadService.load(id);
 			data.setCodigo(Long.valueOf(id));
-			data.setDescripcion("Descripc");
+			data.setNombre("Descripc");
 			data.setRol("ROL X");
 		}
 	}

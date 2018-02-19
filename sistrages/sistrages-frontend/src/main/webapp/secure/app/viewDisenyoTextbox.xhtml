@@ -1,14 +1,149 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<h:form id="formDisenyoTextbox" styleClass="h100">
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-		textbox
+<h:body>
 
+		<f:metadata>
+			<f:viewParam  name="ID" value="#{viewDisenyoTextbox.identificador}"/>
+			<f:viewAction action="#{viewDisenyoTextbox.init}" />
+		</f:metadata>
+
+		<h:form id="formDisenyoTextbox" styleClass="h100">
+			<h3 style="margin-bottom:2px">
+			<h:outputText value="#{msg['viewDisenyoTextbox.titulo']}" />  - #{ID}
+		</h3>
+
+		<p:panel id="panelPropietats" header="#{msg['viewDisenyoTextbox.propiedades.titulo']}" toggleable="true" widgetVar="panel"  collapsed="#{viewDisenyoTextbox.visiblePropiedades}">
+
+			<p:ajax event="toggle" listener="#{viewDisenyoTextbox.onToggle}" update="panelPropietats panelScripts panelEstilos" />
+
+	         <h:panelGrid columns="2" header="Propietats">
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.identificador']}" /></h:column>
+	         	<h:column>
+	         		<h:inputText value="#{viewDisenyTextbox.identificador}" />
+	         	</h:column>
+
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.etiqueta']}" /></h:column>
+	         	<h:column>
+	         		<h:inputText value="#{viewDisenyTextbox.etiqueta}" />
+	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+	         	</h:column>
+
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.columnasOcupadas']}" /></h:column>
+	         	<h:column>
+	         		<p:selectOneMenu id="columnas" value="#{viewDisenyTextbox.columnas}" style="width:125px">
+				            <f:selectItem itemLabel="1" itemValue="1" />
+				            <f:selectItem itemLabel="2" itemValue="2" />
+				            <f:selectItem itemLabel="3" itemValue="3" />
+				        </p:selectOneMenu>
+ 				</h:column>
+
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.obligatorio']}" /></h:column>
+	         	<h:column>
+	         		<p:selectBooleanCheckbox value="#{viewDisenyTextbox.obligatorio}" />
+	         	</h:column>
+
+	            <h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.soloLectura']}" /></h:column>
+	         	<h:column>
+	         		<p:selectBooleanCheckbox value="#{viewDisenyTextbox.soloLectura}" />
+				</h:column>
+
+				<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.ayudaOnline']}" /></h:column>
+	         	<h:column>
+	         		<h:inputText value="#{viewDisenyTextbox.ayudaOnline}"></h:inputText>
+	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{viewDisenyo.sinImplementar()}" process="@this" />
+				</h:column>
+
+				<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.tipo']}" /></h:column>
+	         	<h:column>
+						<p:selectOneMenu id="tipo" value="#{viewDisenyTextbox.tipo}" style="width:125px">
+				            <f:selectItem itemLabel="Texte Normal" 	itemValue="T" />
+				            <f:selectItem itemLabel="Contraseña" 	itemValue="C" />
+				            <f:selectItem itemLabel="Número" 		itemValue="N" />
+				            <f:selectItem itemLabel="Data" 			itemValue="D" />
+				            <f:selectItem itemLabel="Email" 		itemValue="E" />
+				            <f:selectItem itemLabel="Identificació" itemValue="I" />
+				            <f:selectItem itemLabel="Codi Postal" 	itemValue="P" />
+				            <f:selectItem itemLabel="Telèfon" 		itemValue="H" />
+				            <f:selectItem itemLabel="Expressió Regular" itemValue="R" />
+				        </p:selectOneMenu>
+	         	</h:column>
+
+				<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.identificacion']}" /></h:column>
+	         	<h:column>
+	         		<p:selectOneRadio id="radioIdentifacion" value="#{viewDisenyTextbox.identificacion}">
+			            <f:selectItem itemLabel="NIF" itemValue="N" />
+			            <f:selectItem itemLabel="CIF" itemValue="C" />
+			            <f:selectItem itemLabel="NIE" itemValue="E" />
+			            <f:selectItem itemLabel="NSS" itemValue="S" />
+			        </p:selectOneRadio>
+	         	</h:column>
+
+				<h:column><h:outputText value="#{msg['viewDisenyoTextbox.propiedades.medidaMaxima']}" /></h:column>
+	         	<h:column>
+	         		<div class="ui-inputgroup">
+			            <p:commandButton icon="fa fa-minus" styleClass="green-button"/>
+			            <p:inputText placeholder="0" value="#{viewDisenyTextbox.tamanyoMaximo}" style="width:30px" />
+			            <p:commandButton icon="fa fa-plus" styleClass="red-button"/>
+			        </div>
+	         	</h:column>
+
+				<h:column>
+						<h:outputText value="#{msg['viewDisenyoTextbox.propiedades.multilinea']}" style="margin-right:8px" />
+						<p:selectBooleanCheckbox value="#{viewDisenyTextbox.multilineaActivo}" />
+	         	</h:column>
+	         	<h:column>
+	         		<div class="ui-inputgroup">
+			            <p:commandButton icon="fa fa-minus" styleClass="green-button"  />
+			            <p:inputText placeholder="1" value="#{viewDisenyTextbox.multilinea}" style="width:30px" />
+			            <p:commandButton icon="fa fa-plus" styleClass="red-button"/>
+			        </div>
+	         	</h:column>
+	        </h:panelGrid>
+
+		</p:panel>
+		<p:panel id="panelScripts" header="#{msg['viewDisenyoTextbox.scripts.titulo']}" toggleable="true" widgetVar="panelScripts" collapsed="#{viewDisenyoTextbox.visibleScripts}">
+
+			<p:ajax event="toggle" listener="#{viewDisenyoTextbox.onToggle}" update="panelPropietats panelScripts panelEstilos" />
+
+			<h:panelGrid columns="2" header="Scripts">
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.scripts.autorelleno']}" /></h:column>
+	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.scripts.soloLectura']}" /></h:column>
+	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.scripts.validacion']}" /></h:column>
+	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.scripts.valoresPosibles']}" /></h:column>
+	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
+	        </h:panelGrid>
+
+
+	    </p:panel>
+
+	    <p:panel id="panelEstilos" header="Estils" toggleable="true" widgetVar="#{msg['viewDisenyoTextbox.estilos.titulo']}" style="margin-bottom:2px" collapsed="#{viewDisenyoTextbox.visibleEstilos}">
+
+			<p:ajax event="toggle" listener="#{viewDisenyoTextbox.onToggle}" update="panelPropietats panelScripts panelEstilos" />
+
+			<h:panelGrid columns="2" header="Scripts">
+	         	<h:column><h:outputText value="#{msg['viewDisenyoTextbox.estilos.titulo']}" /></h:column>
+	         	<h:inputTextarea value="#{viewDisenyTextbox.estilos}" />
+
+	        </h:panelGrid>
+
+
+	    </p:panel>
 
 	</h:form>
-
+</h:body>
+</f:view>
 </ui:composition>

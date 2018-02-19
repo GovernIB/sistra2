@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formViewDefinicionVersionRegistrarTramite" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+
+        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino']}" />
+			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,,,">
+				<p:row>
+					<p:column>
+						<p:outputLabel for="oficina"
+							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="oficina" disabled="true" size="30"
+							required="true" />
+					</p:column>
+					<p:column>
+						<p:outputLabel for="libro"
+							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="libro" disabled="true" size="30" required="true" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="tipo"
+							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.tipo']}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="tipo" disabled="true" size="30" required="true" />
+					</p:column>
+					<p:column>
+						<p:outputLabel for="organo"
+							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.organo']}" />
+					</p:column>
+					<p:column>
+						<p:inputText id="organo" disabled="true" size="30" required="true" />
+					</p:column>
+
+				</p:row>
+				<p:row>
+					<p:column colspan="4">
+						<p:commandButton icon="fa fa-bolt"
+							actionListener="#{viewDefinicionVersionAnexo1.editar()}"
+							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.parametros']}"
+							process="@this" update="growl" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instrucciones']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="instrucciones" required="true" disabled="true" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl"/>
+       		</p:outputPanel>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.tramitacion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl"/>
+       		</p:outputPanel>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl" value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion.establecer']}"/>
+				<p:spacer width="30" height="1"/>
+				<p:selectBooleanCheckbox id="firmar" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.presentacion.firmar']}"/>
+       		</p:outputPanel>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.representacion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+            <p:selectBooleanCheckbox id="admite" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.admite']}"/>
+            <p:spacer width="30" height="1"/>
+           		<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl" value="#{msg['viewDefinicionVersionRegistrarTramite.representacion.establecer']}"/>
+				<p:spacer width="30" height="1"/>
+				<p:selectBooleanCheckbox id="valida" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
+       		</p:outputPanel>
+
+       		<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.registrar']}" />
+			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						process="@this" update="growl"/>
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{viewDefinicionVersionRegistrarTramite.editar()}"
+						process="@this" update="growl" />
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

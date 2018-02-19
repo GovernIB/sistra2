@@ -18,7 +18,7 @@
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 			<!-- Toolbar -->
-			<p:toolbar id="toolbar">
+			<p:toolbar id="toolbar" styleClass="margin-bottom-3">
 				<f:facet name="left">
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" />
@@ -33,7 +33,6 @@
 		        </f:facet>
 
 		    </p:toolbar>
-
 
 			<div class="ui-g"  style="height: 100%">
 
@@ -152,13 +151,13 @@
 			<!-- Context menu -->
 			<p:contextMenu for="dataTableTramites">
 		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarTramite()"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="ui-icon-trash" onclick="rcEliminarTramite()"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarTramite()"/>
 		    </p:contextMenu>
 
 		    <!-- Context menu -->
 			<p:contextMenu for="arbolArea">
 		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarArea()"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="ui-icon-trash" onclick="rcEliminarArea()"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarArea()"/>
 		    </p:contextMenu>
 
 			<h:outputScript >

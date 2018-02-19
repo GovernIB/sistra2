@@ -16,6 +16,7 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ContextService;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -96,21 +97,21 @@ public class SessionBean {
 		listaEntidades = new ArrayList<>();
 		Entidad newEntidad = new Entidad();
 		newEntidad.setCodigo(Long.valueOf(1));
-		newEntidad.setDescripcion("Govern de les Illes Balears");
-		newEntidad.setLogo("caib.png");
+		newEntidad.setNombre("Govern de les Illes Balears");
+		newEntidad.setLogoGestor(new Fichero(0l, "caib.png"));
 		listaEntidades.add(newEntidad);
 		entidad = newEntidad;
 
 		newEntidad = new Entidad();
 		newEntidad.setCodigo(Long.valueOf(2));
-		newEntidad.setDescripcion("Entidad 1");
-		newEntidad.setLogo("caibe1.png");
+		newEntidad.setNombre("Entidad 1");
+		newEntidad.setLogoGestor(new Fichero(0l, "caibe1.png"));
 		listaEntidades.add(newEntidad);
 
 		newEntidad = new Entidad();
 		newEntidad.setCodigo(Long.valueOf(3));
-		newEntidad.setDescripcion("Entidad 2");
-		newEntidad.setLogo("caibe2.png");
+		newEntidad.setNombre("Entidad 2");
+		newEntidad.setLogoGestor(new Fichero(0l, "caibe2.png"));
 		listaEntidades.add(newEntidad);
 
 		selectActiveRole();
@@ -125,11 +126,11 @@ public class SessionBean {
 			logo = Constantes.SUPER_ADMIN_LOGO;
 		} else if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT)) {
 			activeRole = TypeRoleAcceso.ADMIN_ENT;
-			logo = entidad.getLogo();
+			logo = entidad.getLogoGestor().getNombre();
 
 		} else if (rolesList.contains(TypeRoleAcceso.DESAR)) {
 			activeRole = TypeRoleAcceso.DESAR;
-			logo = entidad.getLogo();
+			logo = entidad.getLogoGestor().getNombre();
 		}
 	}
 
@@ -141,7 +142,7 @@ public class SessionBean {
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
 		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole);
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
 	}
 
 	public String getLogo() {
@@ -222,7 +223,7 @@ public class SessionBean {
 		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
 			logo = Constantes.SUPER_ADMIN_LOGO;
 		} else {
-			logo = entidad.getLogo();
+			logo = entidad.getLogoGestor().getNombre();
 
 		}
 	}
@@ -235,14 +236,14 @@ public class SessionBean {
 		cambiarLogo();
 
 		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole);
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
 	}
 
 	public void cambiarEntidadActivo(final String activeEntidad) {
 
 		// Cambia entidad
 		for (final Entidad newEntidad : listaEntidades) {
-			if (activeEntidad.equals(newEntidad.getDescripcion())) {
+			if (activeEntidad.equals(newEntidad.getNombre())) {
 				entidad = newEntidad;
 			}
 		}
@@ -250,19 +251,19 @@ public class SessionBean {
 		cambiarLogo();
 
 		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole);
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
 	}
 
 	public MenuModel getMenuModel() {
 		final MenuModel model = new DefaultMenuModel();
 
 		if (!TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
-			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(entidad.getDescripcion());
+			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(entidad.getNombre());
 			entidadSubmenu.setIcon("fa-li fa fa-institution");
 			for (final Entidad newEntidad : listaEntidades) {
 				if (!entidad.equals(newEntidad)) {
-					final DefaultMenuItem item3 = new DefaultMenuItem(newEntidad.getDescripcion());
-					item3.setCommand("#{sessionBean.cambiarEntidadActivo(\"" + newEntidad.getDescripcion() + "\")}");
+					final DefaultMenuItem item3 = new DefaultMenuItem(newEntidad.getNombre());
+					item3.setCommand("#{sessionBean.cambiarEntidadActivo(\"" + newEntidad.getNombre() + "\")}");
 					item3.setIcon("fa-li fa fa-institution");
 					entidadSubmenu.addElement(item3);
 				}
@@ -313,7 +314,7 @@ public class SessionBean {
 
 			for (final TypeOpcionMenuAdmOper opcion : TypeOpcionMenuAdmOper.values()) {
 				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion));
+				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getCodigo()));
 				model.addElement(item);
 			}
 
@@ -328,6 +329,6 @@ public class SessionBean {
 	 *
 	 */
 	public void redirectDefaultUrl() {
-		UtilJSF.redirectJsfDefaultPageRole(activeRole);
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
 	}
 }

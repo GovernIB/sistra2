@@ -40,8 +40,8 @@
 				 	<p:outputLabel for="codigo" value="#{msg['dialogEntidad.headerCodigo']}" />
 				 	<p:inputText id="codigo" value="#{dialogEntidad.data.codigo}" disabled="#{!dialogEntidad.isAlta()}" required="true"/>
 
-				 	<p:outputLabel for="descripcion" value="#{msg['dialogEntidad.headerDescripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogEntidad.data.descripcion}" disabled="#{dialogEntidad.isConsulta()}" required="true"/>
+				 	<p:outputLabel for="nombre" value="#{msg['dialogEntidad.headerDescripcion']}" />
+				 	<p:inputText id="nombre" value="#{dialogEntidad.data.nombre}" disabled="#{dialogEntidad.isConsulta()}" required="true"/>
 
 					<p:outputLabel for="rol" value="#{msg['dialogEntidad.headerRol']}" />
 				 	<p:inputText id="rol" value="#{dialogEntidad.data.rol}" disabled="#{dialogEntidad.isConsulta()}" required="true"/>

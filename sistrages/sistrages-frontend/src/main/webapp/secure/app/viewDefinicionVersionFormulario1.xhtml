@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formViewDefinicionVersionFormulario1" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+
+        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+
+            <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionFormulario1.identificador']}" />
+          	<p:inputText id="identificador" required="true" disabled="true" styleClass="w35"/>
+
+
+            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario1.descripcion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionFormulario1.editar()}"
+						process="@this" update="growl"/>
+       		</p:outputPanel>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario1.obligatoriedad']}" />
+         	<p:panelGrid styleClass="noBorders">
+       	  		<p:row>
+	       	  		<p:column styleClass="noPadding-left">
+			         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="obligatorio">
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionFormulario1.obligatoriedad.obligatorio']}" itemValue="obligatorio" />
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionFormulario1.obligatoriedad.opcional']}" itemValue="opcional" />
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionFormulario1.obligatoriedad.dependiente']}" itemValue="dependiente" />
+					     </p:selectOneRadio>
+				     </p:column>
+				     <p:column>
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.obligatoriedad.establecerdependencia']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+         	</p:panelGrid>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario1.presentacionelectronica']}" />
+         	<p:panelGrid styleClass="noBorders">
+       	  		<p:row>
+	       	  		<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="firmardigitalmente" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionFormulario1.firmardigitalmente']}"/>
+				     </p:column>
+				     <p:column>
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.establecerfirmantes']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+         	</p:panelGrid>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionFormulario1.presentacionpresencial']}" />
+			<p:selectBooleanCheckbox id="presentarprerregistro" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionFormulario1.presentarprerregistro']}"/>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion']}" />
+         	<p:panelGrid styleClass="noBorders">
+       	  		<p:row>
+	       	  		<p:column styleClass="noPadding-left">
+						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.cargadatos']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+				<p:row>
+				     <p:column styleClass="noPadding-left">
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.parametrosapertura']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+				<p:row>
+				     <p:column styleClass="noPadding-left">
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.postguardar']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+         	</p:panelGrid>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario1.disenyoformulario']}" />
+			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.disenyoformulario.consultardisenyo']}"
+							process="@this" update="growl"/>
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{viewDefinicionVersionFormulario1.editar()}"
+						process="@this" update="growl" />
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

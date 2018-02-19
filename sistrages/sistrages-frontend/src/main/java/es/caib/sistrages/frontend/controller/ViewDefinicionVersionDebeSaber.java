@@ -17,7 +17,7 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 public class ViewDefinicionVersionDebeSaber extends ViewControllerBase {
 
 	/**
-	 * Crea una nueva instancia de ViewDefinicionVersionTramitePasos.
+	 * Crea una nueva instancia de ViewDefinicionVersionDebeSaber.
 	 */
 	public ViewDefinicionVersionDebeSaber() {
 		super();
