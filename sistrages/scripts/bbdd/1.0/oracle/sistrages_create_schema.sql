@@ -1,4 +1,4 @@
-/* V 1.0.0 (Pendiente tratamiento LOBs)*/
+/* V 1.0.0 */
 
 create sequence STG_ACCPER_SEQ;
 
@@ -1986,7 +1986,12 @@ create table STG_SCRIPT
 (
    SCR_CODIGO           NUMBER(20)           not null,
    SCR_SCRIPT           CLOB
-);
+ ) 
+ TABLESPACE SISTRAGES_DADES
+   LOB (SCR_SCRIPT) STORE AS STG_SCRIPT_SCRIPT_LOB
+	 (TABLESPACE SISTRAGES_LOB
+	 INDEX STG_SCRIPT_SCRIPT_LOB_I); 
+
 
 comment on table STG_SCRIPT is
 'Scripts';
@@ -2738,3 +2743,64 @@ alter table STG_VERTRA
    add constraint STG_VERTRA_TRAMIT_FK foreign key (VTR_CODTRM)
       references STG_TRAMIT (TRM_CODIGO);
 
+
+/*==============================================================*/
+/* Table: STG_AREFUE                                            */
+/*==============================================================*/
+create table STG_AREFUE 
+(
+   FUA_CODAREA          NUMBER(20)           not null,
+   FUA_CODFUE           NUMBER(20)           not null
+);
+
+comment on table STG_AREFUE is
+'Fuente de datos de área';
+
+comment on column STG_AREFUE.FUA_CODAREA is
+'Código área';
+
+comment on column STG_AREFUE.FUA_CODFUE is
+'Codigo fuente de datos';
+
+alter table STG_AREFUE
+   add constraint STG_AREFUE_PK primary key (FUA_CODAREA, FUA_CODFUE);
+
+alter table STG_AREFUE
+   add constraint STG_AREFUE_FUEDAT_FK foreign key (FUA_CODFUE)
+      references STG_FUEDAT (FUE_CODIGO);
+
+alter table STG_AREFUE
+   add constraint STG_FUEDOM_AREA_FK foreign key (FUA_CODAREA)
+      references STG_AREA (ARE_CODIGO);
+
+
+/*==============================================================*/
+/* Table: STG_AREDOM                                            */
+/*==============================================================*/
+create table STG_AREDOM 
+(
+   DMA_CODARE           NUMBER(20)           not null,
+   DMA_CODDOM           NUMBER(20)           not null
+);
+
+comment on table STG_AREDOM is
+'Dominios area';
+
+comment on column STG_AREDOM.DMA_CODARE is
+'Código area';
+
+comment on column STG_AREDOM.DMA_CODDOM is
+'Código dominio';
+
+alter table STG_AREDOM
+   add constraint STG_AREDOM_PK primary key (DMA_CODARE, DMA_CODDOM);
+
+alter table STG_AREDOM
+   add constraint STG_AREDOM_AREA_FK foreign key (DMA_CODARE)
+      references STG_AREA (ARE_CODIGO);
+
+alter table STG_AREDOM
+   add constraint STG_AREDOM_DOMINI_FK foreign key (DMA_CODDOM)
+      references STG_DOMINI (DOM_CODIGO);
+      
+      
