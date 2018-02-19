@@ -9,16 +9,15 @@
 <h:body>
   <ui:composition>
   	<h:form>
-  		<p:panelGrid columns="4" layout="grid" styleClass="ui-noborder"
-  		columnClasses="ui-grid-col-1 header-color grid-center noPadding-bottom noPadding-top,
-  					   ui-grid-col-2 header-color grid-left ,
-  					   ui-grid-col-4 header-color,
-  					   ui-grid-col-5 header-color">
+  		<p:panelGrid columns="4" styleClass="ui-noborder w100 h100"
+  		columnClasses="logo-color grid-center noPadding-bottom noPadding-top h100 wpx120 ,
+  					   header-color grid-left wpx250,
+  					   header-color wpx270,
+  					   header-color">
 
-  			<p:outputPanel styleClass="logo-color h100">
-  				<span class="center-vertical"></span>
-				<h:graphicImage value="/resources/images/#{sessionBean.logo}" height="65" styleClass="va-middle"/>
-			</p:outputPanel>
+
+			<h:graphicImage value="/resources/images/#{sessionBean.logo}" height="65" styleClass="va-middle"/>
+
 
 			<p:outputPanel styleClass="h100">
 				<span class="center-vertical"></span>

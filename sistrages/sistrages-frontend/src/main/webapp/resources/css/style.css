@@ -23,6 +23,7 @@
 
 .titulo-color {
 	font-size:22pt;
+	white-space: nowrap;
 }
 
 #header .ui-menu-parent .ui-submenu-link .ui-icon {background-image: url(#{resource["primefaces-custom:images/ui-icons_ffffff_256x240.png"]});}
@@ -44,6 +45,8 @@
 /*color gris para el cuerpo de la pantalla y el pie*/
 #footer, #footer > div,.grid-nobgcolor, .body-color, #work, #work > .ui-layout-unit-content,
 #breadDefinicionVersionLayout .ui-layout-unit-content,.logo-color  {background-color: #f0f0f0;border:0pt none;}
+
+.logo-color {border-left:10px solid #CC073C !important;}
 
 /* para que salga en verde el fondo del entorno*/
 /* .grid-entorno {width:100%;font-size: 1.1em;font-weight: bold;background-color: #abf8b3;} */
@@ -86,6 +89,7 @@
 /* color scrollbar*/
 .ui-scrollpanel-drag {border: 1px solid #b0b0b0!important;background: #c0c0c0!important;}
 
+/* quitar? */
 .tablaSinHeader thead {
     display:none;
 }
@@ -249,17 +253,40 @@
 	 width: 120px !important;
 }
 
+.wpx150{
+	 width: 150px !important;
+}
+
+.wpx200{
+	 width: 200px !important;
+}
+
+.wpx250{
+	 width: 250px !important;
+}
+
+.wpx280{
+	 width: 280px !important;
+}
+
+.wpx300{
+	 width: 300px !important;
+}
+
+.wpx350{
+	 width: 350px !important;
+}
 .h80{
-  height: 80%;
+  height: 80% !important;
 }
 
 
 .h90{
-  height: 90%;
+  height: 90% !important;
 }
 
 .h100{
-  height: 100%;
+  height: 100% !important;
 }
 
 .va-middle{

@@ -53,13 +53,13 @@
 						<webModule>
 							<groupId>es.caib.sistra2</groupId>
 							<artifactId>sistramit-frontend</artifactId>
-							<contextRoot>/sistramit</contextRoot>
+							<contextRoot>/sistramitfront</contextRoot>
 							<bundleFileName>sistramit-frontend.war</bundleFileName>
 						</webModule>
 						<webModule>
 							<groupId>es.caib.sistra2</groupId>
 							<artifactId>sistramit-rest-ws</artifactId>
-							<contextRoot>/sistramit/rest</contextRoot>
+							<contextRoot>/sistramit/api/rest</contextRoot>
 							<bundleFileName>sistramit-rest.war</bundleFileName>
 						</webModule>
 					</modules>

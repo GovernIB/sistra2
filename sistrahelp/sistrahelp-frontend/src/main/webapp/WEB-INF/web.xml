@@ -23,7 +23,7 @@
   <!-- The master configuration file for this Spring web application -->        
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/${ac.server.context}
+    <param-value>/WEB-INF/sistrahelp-ac-frontend-jboss.xml
     			 /WEB-INF/sistrahelp-ac-frontend.xml
     </param-value>
   </context-param>

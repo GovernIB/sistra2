@@ -78,9 +78,6 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<properties>
-				<ac.server.context>sistramit-ac-rest-ws-jboss.xml</ac.server.context>
-			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>es.caib.sistra2</groupId>
@@ -109,19 +106,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${maven.war.version}</version>
-				<configuration>
-					<warName>sistramit-rest</warName>
-					<webResources>
-						<webResource>
-							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
-							<includes>
-								<include>web.xml</include>
-							</includes>
-							<targetPath>WEB-INF</targetPath>
-							<filtering>true</filtering>
-						</webResource>
-					</webResources>
-				</configuration>
 			</plugin>
 
 			<plugin>
