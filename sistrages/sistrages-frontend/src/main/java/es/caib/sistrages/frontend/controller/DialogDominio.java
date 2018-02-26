@@ -10,38 +10,51 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeDominio;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
 public class DialogDominio extends DialogControllerBase {
 
-	/**
-	 * Servicio.
-	 */
-	// @Inject
-	// private DominioService dominioGlobalService;
-
-	/**
-	 * Id elemento a tratar.
-	 */
+	/** Id elemento a tratar. */
 	private String id;
 
-	/**
-	 * Datos elemento.
-	 */
+	/** Datos elemento. */
 	private Dominio data;
 
-	/**
-	 * Propiedad seleccionada
-	 */
+	/** Propiedad seleccionada */
 	private Propiedad propiedadSeleccionada;
+
+	/** Valor seleccionado. **/
+	private Propiedad valorSeleccionado;
+
+	/** Indica si es visible los textos relacionados a JNDI **/
+	private boolean visibleJNDI;
+
+	/** Indica si es visible la lista para indicar una lista de valores. **/
+	private boolean visibleLista;
+
+	/** Indica si es visible los textos relacionados con remoto. **/
+	private boolean visibleRemoto;
+
+	/** Lista de propiedades. **/
+	private List<Propiedad> propiedades;
+
+	/** Lista valores. **/
+	private List<Propiedad> listaValores;
 
 	/**
 	 * Inicialización.
@@ -50,6 +63,9 @@ public class DialogDominio extends DialogControllerBase {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Dominio();
+			propiedades = new ArrayList<>();
+			listaValores = new ArrayList<>();
+
 		} else {
 			data = new Dominio();// dominioGlobalService.load(id);
 			data.setId(Long.valueOf(id));
@@ -57,7 +73,9 @@ public class DialogDominio extends DialogControllerBase {
 			data.setDescripcion("Descripc");
 			data.setCacheable(true);
 			data.setTipo("B");
-			final List<Propiedad> propiedades = new ArrayList<>();
+
+			// las propiedades se leerían del JSON
+			propiedades = new ArrayList<>();
 			final Propiedad p1 = new Propiedad();
 			p1.setCodigo("COD 1");
 			p1.setValor("VAL 1");
@@ -66,9 +84,25 @@ public class DialogDominio extends DialogControllerBase {
 			p2.setCodigo("COD 2");
 			p2.setValor("VAL 2");
 			propiedades.add(p2);
-			data.setParametros(propiedades);
+
+			// la lista se leería del JSON
+			listaValores = new ArrayList<>();
+			final Propiedad lista1 = new Propiedad();
+			lista1.setCodigo("COD L 1");
+			lista1.setValor("VAL 1");
+			listaValores.add(lista1);
+			final Propiedad lista2 = new Propiedad();
+			lista2.setCodigo("COD L 2");
+			lista2.setValor("VAL 2");
+			listaValores.add(lista2);
 		}
+		visibleJNDI = true;
+		visibleLista = false;
+		visibleRemoto = false;
 	}
+
+	/** Is Dialogo Propiedad (o dialogo lista valores). **/
+	boolean isDialogoPropiedad;
 
 	/**
 	 * Retorno dialogo de los botones de propiedades.
@@ -84,25 +118,42 @@ public class DialogDominio extends DialogControllerBase {
 		if (!respuesta.isCanceled()) {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
-				// Refrescamos datos
-				final Propiedad propiedad = (Propiedad) respuesta.getResult();
-				if (this.data.getParametros() == null) {
-					this.data.setParametros(new ArrayList<Propiedad>());
+				if (isDialogoPropiedad) {
+					// Refrescamos datos
+					final Propiedad propiedad = (Propiedad) respuesta.getResult();
+					this.propiedades.add(propiedad);
+				} else {
+					// Refrescamos datos
+					final Propiedad propiedad = (Propiedad) respuesta.getResult();
+					this.listaValores.add(propiedad);
 				}
-				this.data.getParametros().add(propiedad);
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
+
 				break;
+
 			case EDICION:
-				// Actualizamos fila actual
-				final Propiedad propiedadEdicion = (Propiedad) respuesta.getResult();
-				// Muestra dialogo
-				final int posicion = this.data.getParametros().indexOf(this.propiedadSeleccionada);
+				if (isDialogoPropiedad) {
+					// Actualizamos fila actual
+					final Propiedad propiedadEdicion = (Propiedad) respuesta.getResult();
+					// Muestra dialogo
+					final int posicion = this.propiedades.indexOf(this.propiedadSeleccionada);
 
-				this.data.getParametros().remove(posicion);
-				this.data.getParametros().add(posicion, propiedadEdicion);
+					this.propiedades.remove(posicion);
+					this.propiedades.add(posicion, propiedadEdicion);
+
+				} else {
+					// Actualizamos fila actual
+					final Propiedad propiedadEdicion = (Propiedad) respuesta.getResult();
+					// Muestra dialogo
+					final int posicion = this.listaValores.indexOf(this.valorSeleccionado);
+
+					this.listaValores.remove(posicion);
+					this.listaValores.add(posicion, propiedadEdicion);
+
+				}
+
 				// Mensaje
-
 				message = UtilJSF.getLiteral("info.modificado.ok");
 				break;
 			case CONSULTA:
@@ -121,28 +172,72 @@ public class DialogDominio extends DialogControllerBase {
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 360, 200);
+		isDialogoPropiedad = true;
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
+	}
+
+	/**
+	 * Crea nuevo valor.
+	 */
+	public void nuevoValor() {
+		isDialogoPropiedad = false;
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
 	}
 
 	/**
 	 * Edita una propiedad.
+	 *
+	 * @throws JsonProcessingException
 	 */
-	public void editarPropiedad() {
+	public void editarPropiedad() throws JsonProcessingException {
 
 		if (!verificarFilaSeleccionada())
 			return;
 
+		isDialogoPropiedad = true;
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.propiedadSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 360, 200);
+		params.put(TypeParametroDialogo.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
+	}
+
+	/**
+	 * Edita una propiedad.
+	 *
+	 * @throws JsonProcessingException
+	 */
+	public void editarValor() throws JsonProcessingException {
+
+		if (!verificarFilaSeleccionadaValor())
+			return;
+
+		isDialogoPropiedad = false;
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroDialogo.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
 	}
 
 	/**
 	 * Editar descripcion del dominio.
+	 *
+	 * @throws JsonProcessingException
 	 */
-	public void editarDescripcion() {
+	public void editarDescripcion() throws JsonProcessingException {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.DATO.toString(), String.valueOf(this.data.getDescripcion()));
+		final Traducciones traducciones = new Traducciones();
+		traducciones.add(new Traduccion("ca", "Traduccion ca"));
+		traducciones.add(new Traduccion("es", "Traduccion es"));
+		traducciones.add(new Traduccion("en", "Traduccion en"));
+		final ObjectMapper mapper = new ObjectMapper();
+		params.put(TypeParametroDialogo.DATO.toString(), mapper.writeValueAsString(traducciones));
+		final List<String> obligatorios = new ArrayList<>();
+		obligatorios.add("ca");
+		final List<String> posibles = new ArrayList<>();
+		posibles.add("ca");
+		posibles.add("es");
+		posibles.add("en");
+		posibles.add("de");
+		params.put("OBLIGATORIOS", mapper.writeValueAsString(obligatorios));
+		params.put("POSIBLES", mapper.writeValueAsString(posibles));
 		UtilJSF.openDialog(DialogTraduccion.class, TypeModoAcceso.EDICION, params, true, 460, 250);
 	}
 
@@ -153,7 +248,18 @@ public class DialogDominio extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		this.data.getParametros().remove(this.propiedadSeleccionada);
+		this.propiedades.remove(this.propiedadSeleccionada);
+
+	}
+
+	/**
+	 * Quita una propiedad.
+	 */
+	public void quitarValor() {
+		if (!verificarFilaSeleccionadaValor())
+			return;
+
+		this.listaValores.remove(this.valorSeleccionado);
 
 	}
 
@@ -164,14 +270,31 @@ public class DialogDominio extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		final int posicion = this.data.getParametros().indexOf(this.propiedadSeleccionada);
-		if (posicion >= this.data.getParametros().size() - 1) {
+		final int posicion = this.propiedades.indexOf(this.propiedadSeleccionada);
+		if (posicion >= this.propiedades.size() - 1) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
-		final Propiedad propiedad = this.data.getParametros().remove(posicion);
-		this.data.getParametros().add(posicion + 1, propiedad);
+		final Propiedad propiedad = this.propiedades.remove(posicion);
+		this.propiedades.add(posicion + 1, propiedad);
+	}
+
+	/**
+	 * Baja la propiedad de posición.
+	 */
+	public void bajarValor() {
+		if (!verificarFilaSeleccionadaValor())
+			return;
+
+		final int posicion = this.listaValores.indexOf(this.valorSeleccionado);
+		if (posicion >= this.listaValores.size() - 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			return;
+		}
+
+		final Propiedad propiedad = this.listaValores.remove(posicion);
+		this.listaValores.add(posicion + 1, propiedad);
 	}
 
 	/**
@@ -181,14 +304,31 @@ public class DialogDominio extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		final int posicion = this.data.getParametros().indexOf(this.propiedadSeleccionada);
+		final int posicion = this.propiedades.indexOf(this.propiedadSeleccionada);
 		if (posicion <= 0) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
-		final Propiedad propiedad = this.data.getParametros().remove(posicion);
-		this.data.getParametros().add(posicion - 1, propiedad);
+		final Propiedad propiedad = this.propiedades.remove(posicion);
+		this.propiedades.add(posicion - 1, propiedad);
+	}
+
+	/**
+	 * Sube la propiedad de posición.
+	 */
+	public void subirValor() {
+		if (!verificarFilaSeleccionadaValor())
+			return;
+
+		final int posicion = this.listaValores.indexOf(this.valorSeleccionado);
+		if (posicion <= 0) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			return;
+		}
+
+		final Propiedad propiedad = this.listaValores.remove(posicion);
+		this.listaValores.add(posicion - 1, propiedad);
 	}
 
 	/**
@@ -198,9 +338,21 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
-		// final DataTable dataTable = (DataTable)
-		// FacesContext.getCurrentInstance().getViewRoot().findComponent(":dialogTest:dataTablePropiedades");
 		if (this.propiedadSeleccionada == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarFilaSeleccionadaValor() {
+		boolean filaSeleccionada = true;
+		if (this.valorSeleccionado == null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
@@ -246,6 +398,22 @@ public class DialogDominio extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/**
+	 * Cuando se actualiza el tipo (radiobutton), se actualiza el click.
+	 */
+	public void actualizarTipo() {
+		visibleJNDI = false;
+		visibleLista = false;
+		visibleRemoto = false;
+		if (TypeDominio.CONSULTA_BD.fromEnum().equals(this.data.getTipo())) {
+			visibleJNDI = true;
+		} else if (TypeDominio.CONSULTA_REMOTA.fromEnum().equals(this.data.getTipo())) {
+			visibleRemoto = true;
+		} else if (TypeDominio.LISTA_FIJA.fromEnum().equals(this.data.getTipo())) {
+			visibleLista = true;
+		}
+	}
+
 	public void mensaje() {
 		UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "Atento", "Ojo al dato.");
 	}
@@ -279,6 +447,96 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void setPropiedadSeleccionada(final Propiedad propiedadSeleccionada) {
 		this.propiedadSeleccionada = propiedadSeleccionada;
+	}
+
+	/**
+	 * @return the visibleJNDI
+	 */
+	public boolean isVisibleJNDI() {
+		return visibleJNDI;
+	}
+
+	/**
+	 * @param visibleJNDI
+	 *            the visibleJNDI to set
+	 */
+	public void setVisibleJNDI(final boolean visibleJNDI) {
+		this.visibleJNDI = visibleJNDI;
+	}
+
+	/**
+	 * @return the valorSeleccionado
+	 */
+	public Propiedad getValorSeleccionado() {
+		return valorSeleccionado;
+	}
+
+	/**
+	 * @param valorSeleccionado
+	 *            the valorSeleccionado to set
+	 */
+	public void setValorSeleccionado(final Propiedad valorSeleccionado) {
+		this.valorSeleccionado = valorSeleccionado;
+	}
+
+	/**
+	 * @return the visibleLista
+	 */
+	public boolean isVisibleLista() {
+		return visibleLista;
+	}
+
+	/**
+	 * @param visibleLista
+	 *            the visibleLista to set
+	 */
+	public void setVisibleLista(final boolean visibleLista) {
+		this.visibleLista = visibleLista;
+	}
+
+	/**
+	 * @return the visibleRemoto
+	 */
+	public boolean isVisibleRemoto() {
+		return visibleRemoto;
+	}
+
+	/**
+	 * @param visibleRemoto
+	 *            the visibleRemoto to set
+	 */
+	public void setVisibleRemoto(final boolean visibleRemoto) {
+		this.visibleRemoto = visibleRemoto;
+	}
+
+	/**
+	 * @return the propiedades
+	 */
+	public List<Propiedad> getPropiedades() {
+		return propiedades;
+	}
+
+	/**
+	 * @param propiedades
+	 *            the propiedades to set
+	 */
+	public void setPropiedades(final List<Propiedad> propiedades) {
+		this.propiedades = propiedades;
+	}
+
+	/**
+	 * @return the listaValores
+	 */
+	public List<Propiedad> getListaValores() {
+		return listaValores;
+	}
+
+	/**
+	 * @param listaValores
+	 *            the listaValores to set
+	 */
+	public void setListaValores(final List<Propiedad> listaValores) {
+		this.listaValores = listaValores;
 	}
 
 }

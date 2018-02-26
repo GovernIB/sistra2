@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogPlugin.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogPlugin.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogPlugin.id}"/>
+		<f:viewParam name="AMBITO" value="#{dialogPlugin.ambito}"/>
+		<f:viewAction action="#{dialogPlugin.init}" />
+	</f:metadata>
+	<h:form id="dialogPlugin" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,,wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" />
+					<p:selectOneMenu id="tipo" autoWidth="true"  styleClass="va-middle">
+						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.l']}" itemValue="L" />
+						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.r']}" itemValue="R" />
+						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.d']}" itemValue="D" />
+						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.f']}" itemValue="F" />
+					</p:selectOneMenu>
+					<p:outputLabel value="" />
+
+					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" />
+					<p:inputText id="valor" value="#{dialogPlugin.data.classname}" disabled="#{dialogPlugin.isConsulta()}" required="true" size="40" />
+					<p:outputLabel value="" />
+
+					<p:outputLabel for="descripcion" value="#{msg['dialogPlugin.headerDescripcion']}" />
+					<p:inputText id="descripcion" value="#{dialogPlugin.data.descripcion}" disabled="#{dialogPlugin.isConsulta()}" required="true" size="40" />
+					<p:outputLabel value="" />
+
+					<p:outputLabel for="instancia" value="#{msg['dialogPlugin.headerInstancia']}" rendered="#{dialogPlugin.visibleInstancia}" />
+					<p:inputText id="instancia" value="#{dialogPlugin.data.instancia}" disabled="#{dialogPlugin.isConsulta()}" rendered="#{dialogPlugin.visibleInstancia}" size="40"  />
+					<p:outputLabel value="" rendered="#{dialogPlugin.visibleInstancia}" />
+
+					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" />
+					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
+								  rows="10"
+								  scrollable="true" scrollHeight="90%"
+		                          paginator="false"
+		                          selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">
+
+						<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+						<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
+
+						<!-- Necesario para actualizar en controlador la fila seleccionada -->
+						<p:ajax event="rowSelect" />
+						<p:ajax event="rowUnselect" />
+
+						<!-- Columnas -->
+					    <p:column headerText="#{msg['dialogPlugin.headerParametros.codigo']}" class="ui-panelgrid-cell">
+					        <h:outputText value="#{td.codigo}" />
+					    </p:column>
+
+					    <p:column headerText="#{msg['dialogPlugin.headerParametros.valor']}" class="ui-panelgrid-cell">
+					        <h:outputText value="#{td.valor}" />
+					    </p:column>
+
+		 			</p:dataTable>
+		 			<p:column>
+						    <p>
+					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog">
+	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+	        					</p:commandButton>
+	        				</p>
+	        				<p>
+					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog">
+	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
+	        					</p:commandButton>
+	        				</p>
+					    	<p>
+					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+					    	</p>
+					    	<p>
+					    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+					    	</p>
+					    	<p>
+					    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+					    	</p>
+					</p:column>
+
+				</h:panelGrid>
+				<h:outputScript >
+				      function rcEditarPropiedad() {
+				        document.getElementById("form:btnEditarPropiedad").click();
+				      }
+
+				      function  rcBorrarPropiedad() {
+				        document.getElementById("form:btnEliminarPropiedad").click();
+				      }
+			    </h:outputScript>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

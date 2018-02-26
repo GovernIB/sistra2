@@ -9,35 +9,38 @@ package es.caib.sistrages.core.api.model;
 public class Fichero {
 
 	/** Código interno. **/
-	private Long codigo;
+	private Long id;
 
 	/** Nombre del fichero. */
 	private String nombre;
 
+	/** Contenido. **/
+	private byte[] contenido;
+
 	/**
 	 * Constructor.
-	 * 
-	 * @param iCodigo
+	 *
+	 * @param iId
 	 * @param iNombre
 	 */
-	public Fichero(final Long iCodigo, final String iNombre) {
-		this.codigo = iCodigo;
+	public Fichero(final Long iId, final String iNombre) {
+		this.setId(iId);
 		this.nombre = iNombre;
 	}
 
 	/**
-	 * @return the codigo
+	 * @return the id
 	 */
-	public Long getCodigo() {
-		return codigo;
+	public Long getId() {
+		return id;
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setCodigo(final Long codigo) {
-		this.codigo = codigo;
+	public void setId(final Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -53,5 +56,20 @@ public class Fichero {
 	 */
 	public void setNombre(final String nombre) {
 		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the contenido
+	 */
+	public byte[] getContenido() {
+		return contenido;
+	}
+
+	/**
+	 * @param contenido
+	 *            the contenido to set
+	 */
+	public void setContenido(final byte[] contenido) {
+		this.contenido = contenido;
 	}
 }

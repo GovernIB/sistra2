@@ -32,12 +32,14 @@ public class ViewDominios extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
 		if (ambito == null) {
 			return;
 		}
 
 		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
+
 		switch (typeAmbito) {
 		case AREA:
 			final Dominio dominio1 = new Dominio();
@@ -200,9 +202,16 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * Abre explorar gestion logo.
+	 * Ping.
 	 */
-	public void explorarGestorLogo() {
+	public void ping() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+
+	/**
+	 * Refrescar cache.
+	 */
+	public void refrescarCache() {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 

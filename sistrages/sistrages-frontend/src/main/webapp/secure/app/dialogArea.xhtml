@@ -22,34 +22,30 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
-		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogTest.modoAcceso}"/>
-		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogTest.id}"/>
-		-->
-		<f:viewParam name="MODO_ACCESO" value="#{dialogTest.modoAcceso}"/>
-		<f:viewParam name="ID" value="#{dialogTest.id}"/>
-		<f:viewAction action="#{dialogTest.init}" />
+		<f:viewParam name="MODO_ACCESO" value="#{dialogArea.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogArea.id}"/>
+		<f:viewAction action="#{dialogArea.init}" />
 	</f:metadata>
-	<h:form id="dialogTest">
+	<h:form id="dialogArea" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
-				<p:growl id="growlDialogTestData" widgetVar="growlDialogTestData" life="2000" sticky="false" />
-			 	<p:panelGrid columns="2" styleClass="ui-noborder">
+				<p:growl id="growlDialogAreaData" widgetVar="growlDialogAreaData" life="2000" sticky="false" />
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogArea.codigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogTest.data.codigo}" disabled="#{!dialogTest.isAlta}" required="true"/>
+				 	<p:inputText id="codigo" value="#{dialogArea.data.codigo}" disabled="#{!dialogArea.isAlta()}" required="true" size="40" />
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogArea.descripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogTest.data.descripcion}" disabled="#{dialogTest.isConsulta()}" required="true"/>
+				 	<p:inputText id="descripcion" value="#{dialogArea.data.descripcion}" disabled="#{dialogArea.isConsulta()}" required="true" size="40"  />
 
-				</p:panelGrid>
+				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTest.aceptar()}" process="@form" update="@form growlDialogTestData"/>
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTest.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogArea.aceptar()}" process="@form" update="@form growlDialogAreaData"  styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogArea.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

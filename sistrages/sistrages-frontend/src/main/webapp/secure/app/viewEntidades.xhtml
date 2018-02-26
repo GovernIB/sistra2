@@ -22,8 +22,8 @@
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
-			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar()}" process="panelFiltro" update="growl" />
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewEntidades.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewEntidades.filtrar()}" process="panelFiltro" update="growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
@@ -52,7 +52,7 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewEntidades.datoSeleccionado}" rowKey="#{td.codigo}" dblClickSelect="true">
+			        	 selectionMode="single" selection="#{viewEntidades.datoSeleccionado}" rowKey="#{td.id}" dblClickSelect="true">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
 				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
@@ -62,8 +62,8 @@
 				<p:ajax event="rowUnselect" />
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewEntidades.headerCodigo']}">
-			        <h:outputText value="#{td.codigo}" />
+			    <p:column headerText="#{msg['viewEntidades.headerCodigoDIR3']}">
+			        <h:outputText value="#{td.codigoDIR3}" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewEntidades.headerDescripcion']}">

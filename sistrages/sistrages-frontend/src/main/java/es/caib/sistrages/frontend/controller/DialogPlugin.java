@@ -10,8 +10,9 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.PluginGlobal;
+import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -20,7 +21,7 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
-public class DialogPluginGlobal extends DialogControllerBase {
+public class DialogPlugin extends DialogControllerBase {
 
 	/**
 	 * Servicio.
@@ -36,7 +37,17 @@ public class DialogPluginGlobal extends DialogControllerBase {
 	/**
 	 * Datos elemento.
 	 */
-	private PluginGlobal data;
+	private Plugin data;
+
+	/**
+	 * Ambito.
+	 */
+	private String ambito;
+
+	/**
+	 * Visible instancia
+	 */
+	private boolean visibleInstancia;
 
 	/**
 	 * Propiedad seleccionada.
@@ -49,11 +60,11 @@ public class DialogPluginGlobal extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new PluginGlobal();
+			data = new Plugin();
 		} else {
-			data = new PluginGlobal();// pluginGlobalService.load(id);
+			data = new Plugin();// pluginGlobalService.load(id);
 			data.setClassname("Classname");
-			data.setCodigo(1l);
+			data.setId(1l);
 			data.setTipo("F");
 			data.setDescripcion("Descripcion");
 			final List<Propiedad> propiedades = new ArrayList<>();
@@ -66,6 +77,11 @@ public class DialogPluginGlobal extends DialogControllerBase {
 			p2.setValor("VAL 2");
 			propiedades.add(p2);
 			data.setPropiedades(propiedades);
+		}
+		if (ambito == null || TypeAmbito.toString(TypeAmbito.GLOBAL).equals(ambito)) {
+			visibleInstancia = false;
+		} else {
+			visibleInstancia = true;
 		}
 	}
 
@@ -117,7 +133,7 @@ public class DialogPluginGlobal extends DialogControllerBase {
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 360, 200);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
 	}
 
 	/**
@@ -130,7 +146,7 @@ public class DialogPluginGlobal extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.propiedadSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 360, 200);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
 	}
 
 	/**
@@ -219,7 +235,7 @@ public class DialogPluginGlobal extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getCodigo());
+		result.setResult(data.getId());
 		UtilJSF.closeDialog(result);
 	}
 
@@ -233,23 +249,33 @@ public class DialogPluginGlobal extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
-	public void mensaje() {
-		UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "Atento", "Ojo al dato.");
-	}
-
+	/**
+	 * @return the id
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public PluginGlobal getData() {
+	/**
+	 * @return the data
+	 */
+	public Plugin getData() {
 		return data;
 	}
 
-	public void setData(final PluginGlobal data) {
+	/**
+	 * @param data
+	 *            the data to set
+	 */
+	public void setData(final Plugin data) {
 		this.data = data;
 	}
 
@@ -266,6 +292,36 @@ public class DialogPluginGlobal extends DialogControllerBase {
 	 */
 	public void setPropiedadSeleccionada(final Propiedad propiedadSeleccionada) {
 		this.propiedadSeleccionada = propiedadSeleccionada;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito
+	 *            the ambito to set
+	 */
+	public void setAmbito(final String ambito) {
+		this.ambito = ambito;
+	}
+
+	/**
+	 * @return the visibleInstancia
+	 */
+	public boolean isVisibleInstancia() {
+		return visibleInstancia;
+	}
+
+	/**
+	 * @param visibleInstancia
+	 *            the visibleInstancia to set
+	 */
+	public void setVisibleInstancia(final boolean visibleInstancia) {
+		this.visibleInstancia = visibleInstancia;
 	}
 
 }

@@ -1,7 +1,9 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,7 +12,9 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FormularioExterno;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -107,14 +111,22 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.openDialog(DialogFormularioExterno.class, TypeModoAcceso.ALTA, null, true, 540, 200);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		UtilJSF.openDialog(DialogFormularioExterno.class, TypeModoAcceso.EDICION, params, true, 540, 200);
 	}
 
 	/**

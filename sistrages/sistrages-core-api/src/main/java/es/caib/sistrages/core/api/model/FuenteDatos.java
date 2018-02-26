@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.List;
+
 /**
  *
  * Fuente Datos.
@@ -9,20 +11,17 @@ package es.caib.sistrages.core.api.model;
  */
 public class FuenteDatos {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
-	/**
-	 * Codigo.
-	 */
+	/** Codigo. */
 	private String codigo;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripcion. */
 	private String descripcion;
+
+	/** Campos. **/
+	private List<FuenteDatosCampo> campos;
 
 	/**
 	 * @return the id
@@ -67,5 +66,20 @@ public class FuenteDatos {
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the campos
+	 */
+	public List<FuenteDatosCampo> getCampos() {
+		return campos;
+	}
+
+	/**
+	 * @param campos
+	 *            the campos to set
+	 */
+	public void setCampos(final List<FuenteDatosCampo> campos) {
+		this.campos = campos;
 	}
 }

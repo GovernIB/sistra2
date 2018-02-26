@@ -1,0 +1,42 @@
+CONFIGURACIÓN MÓDULOS
+---------------------
+
+Cada módulo (sistrages, sistramit y sistrahelp) genera un EAR que se configura de forma externa a través de un fichero de propiedades.
+Este fichero de propiedades se encuentra dentro de cada módulo en el directorio "/scripts/conf".
+
+La carga del fichero de propiedades se realiza a partir de una propiedad de sistema, que se nombra según el módulo:
+	es.caib.sistrages.properties.path
+	es.caib.sistramit.properties.path
+	es.caib.sistrahelp.properties.path
+	
+Para establecer la propiedad de sistema en JBoss 7 EAP se puede realizar de 2 formas:
+
+	- Estableciendo directamente las propiedades en el fichero de configuración de JBoss (standalone.xml):
+	
+			<system-properties>
+		        <property name="es.caib.sistrages.properties.path" value="/conf/sistrages/sistrages.properties"/>
+		        <property name="es.caib.sistramit.properties.path" value="/conf/sistramit/sistramit.properties"/>
+		        <property name="es.caib.sistrahelp.properties.path" value="/conf/sistrahelp/sistrahelp.properties"/>
+		    </system-properties> 
+
+	- Cargando esta propiedad mediante un fichero de propiedades estableciendo en dicho fichero de propiedades la propiedad con el path.
+	  P.e. para indicar el path para sistrages:  
+	
+			standalone.sh  -c standalone.xml -P /app/server/jboss-eap-7.0/standalone/deployments/sistrages.properties 
+			
+			donde sistrages.properties contiene una única propiedad:
+				es.caib.sistrages.properties.path=/conf/sistrages/sistrages.properties
+			
+	  En este sentido se puede modificar el script que se tenga para el arranque del JBoss para añadir los ficheros de properties que se dejen el directorio de despliegue de forma dinámica:
+	  	
+	  	# Indicar dir de despliegue y que se carguen los properties como propiedades de sistema
+	  	jboss_opts=
+	  	deploy=/app/server/jboss-eap-7.0/standalone/deployments   
+	    for fichero in `ls $deploy/*.properties` ; do
+            jboss_opts="$jboss_opts -P $fichero"
+        done
+        standalone.sh -c standalone.xml $jboss_opts
+         	
+       Se dejan en el directorio /jboss los properties para indicar los ficheros de configuración mediante este mecanismo.   
+         
+ 

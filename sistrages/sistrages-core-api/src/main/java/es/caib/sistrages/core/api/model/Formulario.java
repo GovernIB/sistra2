@@ -1,6 +1,5 @@
 package es.caib.sistrages.core.api.model;
 
-// TODO: Auto-generated Javadoc
 /**
  *
  * Formulario.
@@ -10,29 +9,19 @@ package es.caib.sistrages.core.api.model;
  */
 public class Formulario {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
-	/**
-	 * Codigo.
-	 */
+	/** Código. */
 	private String codigo;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripción. */
 	private String descripcion;
 
-	/**
-	 * Tipo.
-	 */
+	/** Tipo. */
 	private String tipo;
 
-	/**
-	 * obligatoriedad.
-	 */
+	/** Obligatoriedad. */
 	private String obligatoriedad;
 
 	/**

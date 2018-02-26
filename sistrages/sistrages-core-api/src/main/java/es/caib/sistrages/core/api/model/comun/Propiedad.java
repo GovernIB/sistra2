@@ -20,11 +20,6 @@ public final class Propiedad {
 	private String valor;
 
 	/**
-	 * Descripcion.
-	 */
-	private String descripcion;
-
-	/**
 	 * Orden.
 	 */
 	private Integer orden;
@@ -74,18 +69,4 @@ public final class Propiedad {
 		this.orden = orden;
 	}
 
-	/**
-	 * @return the descripcion
-	 */
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	/**
-	 * @param descripcion
-	 *            the descripcion to set
-	 */
-	public void setDescripcion(final String descripcion) {
-		this.descripcion = descripcion;
-	}
 }

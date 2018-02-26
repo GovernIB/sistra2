@@ -11,7 +11,7 @@
 	<context:component-scan base-package="es.caib.sistrages.frontend.controller" />
 
 	<context:property-placeholder
-		location="file:${es.caib.sistra2.stg.properties.path}" />
+		location="file:#{systemProperties['es.caib.sistrages.properties.path']}" />
 
 
 	<bean id="negocioModuleConfig" class="es.caib.sistrages.frontend.model.comun.ModuleConfig">

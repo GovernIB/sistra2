@@ -11,34 +11,22 @@ import java.util.Date;
  */
 public class MensajeAviso {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripción. */
 	private String descripcion;
 
-	/**
-	 * Tipo.
-	 */
+	/** Tipo. */
 	private String tipo;
 
-	/**
-	 * Activo.
-	 */
+	/** Activo. */
 	private boolean activo;
 
-	/**
-	 * Fecha inicio.
-	 */
+	/** Fecha inicio. */
 	private Date fechaInicio;
 
-	/**
-	 * Fecha fin.
-	 */
+	/** Fecha fin. */
 	private Date fechaFin;
 
 	/**

@@ -39,83 +39,99 @@ public class ViewEntidades extends ViewControllerBase {
 		final String STR_STM_ADMIN = "STR_STM_ADMIN";
 		final Entidad entidad1 = new Entidad();
 		entidad1.setActivo(true);
-		entidad1.setCodigo(1l);
+		entidad1.setId(1l);
 		entidad1.setNombre("Entidad 1");
+		entidad1.setCodigoDIR3("DIR3 - 1 ");
 		entidad1.setRol(STR_GOIB_ADMIN);
 		final Entidad entidad2 = new Entidad();
 		entidad2.setActivo(true);
-		entidad2.setCodigo(2l);
+		entidad2.setId(2l);
 		entidad2.setNombre("Entidad 2");
+		entidad2.setCodigoDIR3("DIR3 - 2 ");
 		entidad2.setRol(STR_APB_ADMIN);
 		final Entidad entidad3 = new Entidad();
 		entidad3.setActivo(true);
-		entidad3.setCodigo(3l);
+		entidad3.setId(3l);
 		entidad3.setNombre("Entidad 3");
+		entidad3.setCodigoDIR3("DIR3 - 3 ");
 		entidad3.setRol(STR_STM_ADMIN);
 		final Entidad entidad4 = new Entidad();
 		entidad4.setActivo(false);
-		entidad4.setCodigo(4l);
+		entidad4.setId(4l);
 		entidad4.setNombre("Entidad 4");
+		entidad4.setCodigoDIR3("DIR3 - 4 ");
 		entidad4.setRol(STR_APB_ADMIN);
 		final Entidad entidad5 = new Entidad();
 		entidad5.setActivo(true);
-		entidad5.setCodigo(5l);
+		entidad5.setId(5l);
 		entidad5.setNombre("Entidad 5");
+		entidad5.setCodigoDIR3("DIR3 - 5 ");
 		entidad5.setRol(STR_GOIB_ADMIN);
 		final Entidad entidad6 = new Entidad();
 		entidad6.setActivo(true);
-		entidad6.setCodigo(6l);
+		entidad6.setId(6l);
 		entidad6.setNombre("Entidad 6");
+		entidad6.setCodigoDIR3("DIR3 - 6 ");
 		entidad6.setRol(STR_GOIB_ADMIN);
 		final Entidad entidad7 = new Entidad();
 		entidad7.setActivo(false);
-		entidad7.setCodigo(7l);
+		entidad7.setId(7l);
 		entidad7.setNombre("Entidad 7");
+		entidad7.setCodigoDIR3("DIR3 - 7 ");
 		entidad7.setRol(STR_APB_ADMIN);
 		final Entidad entidad8 = new Entidad();
 		entidad8.setActivo(true);
-		entidad8.setCodigo(8l);
+		entidad8.setId(8l);
 		entidad8.setNombre("Entidad 8");
+		entidad8.setCodigoDIR3("DIR3 - 8 ");
 		entidad8.setRol(STR_STM_ADMIN);
 		final Entidad entidad9 = new Entidad();
 		entidad9.setActivo(false);
-		entidad9.setCodigo(9l);
+		entidad9.setId(9l);
 		entidad9.setNombre("Entidad 9");
+		entidad9.setCodigoDIR3("DIR3 - 9 ");
 		entidad9.setRol(STR_APB_ADMIN);
 		final Entidad entidad10 = new Entidad();
 		entidad10.setActivo(true);
-		entidad10.setCodigo(10l);
+		entidad10.setId(10l);
+		entidad10.setCodigoDIR3("DIR3 - 10 ");
 		entidad10.setNombre("Entidad 10");
 		entidad10.setRol(STR_GOIB_ADMIN);
 		final Entidad entidad11 = new Entidad();
 		entidad11.setActivo(true);
-		entidad11.setCodigo(11l);
+		entidad11.setId(11l);
 		entidad11.setNombre("Entidad 11");
+		entidad11.setCodigoDIR3("DIR3 - 11 ");
 		entidad11.setRol(STR_GOIB_ADMIN);
 		final Entidad entidad12 = new Entidad();
 		entidad12.setActivo(false);
-		entidad12.setCodigo(12l);
+		entidad12.setId(12l);
 		entidad12.setNombre("Entidad 12");
+		entidad12.setCodigoDIR3("DIR3 - 12 ");
 		entidad12.setRol(STR_APB_ADMIN);
 		final Entidad entidad13 = new Entidad();
 		entidad13.setActivo(false);
-		entidad13.setCodigo(13l);
+		entidad13.setId(13l);
 		entidad13.setNombre("Entidad 13");
+		entidad13.setCodigoDIR3("DIR3 - 13 ");
 		entidad13.setRol(STR_GOIB_ADMIN);
 		final Entidad entidad14 = new Entidad();
 		entidad14.setActivo(false);
-		entidad14.setCodigo(14l);
+		entidad14.setId(14l);
 		entidad14.setNombre("Entidad 14");
+		entidad14.setCodigoDIR3("DIR3 - 14 ");
 		entidad14.setRol(STR_APB_ADMIN);
 		final Entidad entidad15 = new Entidad();
 		entidad15.setActivo(true);
-		entidad15.setCodigo(15l);
+		entidad15.setId(15l);
 		entidad15.setNombre("Entidad 15");
+		entidad15.setCodigoDIR3("DIR3 - 15 ");
 		entidad15.setRol(STR_APB_ADMIN);
 		final Entidad entidad16 = new Entidad();
 		entidad16.setActivo(true);
-		entidad16.setCodigo(16l);
+		entidad16.setId(16l);
 		entidad16.setNombre("Entidad 16");
+		entidad16.setCodigoDIR3("DIR3 - 16 ");
 		entidad16.setRol(STR_STM_ADMIN);
 
 		listaDatos = new ArrayList<>();
@@ -194,7 +210,7 @@ public class ViewEntidades extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 540, 200);
+		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 530, 190);
 	}
 
 	/**
@@ -207,8 +223,8 @@ public class ViewEntidades extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true, 540, 200);
+		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true, 530, 190);
 	}
 
 	/**
@@ -250,12 +266,35 @@ public class ViewEntidades extends ViewControllerBase {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		final String message = null;
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+				// Refrescamos datos
+				// this.filtrar();
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+				break;
+			case EDICION:
+				// Actualizamos fila actual
+				// final String id = (String) respuesta.getResult();
+				// final Area dataUpdated = testService.load(id);
+				// this.areaSeleccionada.setDescripcion(dataUpdated.getDescripcion());
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
 
 		// Mostramos mensaje
 		if (message != null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		}
+
 	}
 
 	/**

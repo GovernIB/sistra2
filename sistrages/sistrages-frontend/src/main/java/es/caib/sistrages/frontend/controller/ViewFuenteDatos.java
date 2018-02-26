@@ -1,7 +1,9 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -9,8 +11,11 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -21,47 +26,77 @@ import es.caib.sistrages.frontend.util.UtilJSF;
  */
 @ManagedBean
 @ViewScoped
-public class ViewFuenteDatosEntidad extends ViewControllerBase {
+public class ViewFuenteDatos extends ViewControllerBase {
 
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final FuenteDatos fuenteDatos1 = new FuenteDatos();
-		fuenteDatos1.setId(1l);
-		fuenteDatos1.setCodigo("PESCA_REV_MAR");
-		fuenteDatos1.setDescripcion("Reserva marines de les Illes Balears");
-		final FuenteDatos fuenteDatos2 = new FuenteDatos();
-		fuenteDatos2.setId(2l);
-		fuenteDatos2.setCodigo("PESCA_ESP_AUT");
-		fuenteDatos2.setDescripcion("Llista d'espècies de plantes autóctones de les Illes Balears");
-		final FuenteDatos fuenteDatos3 = new FuenteDatos();
-		fuenteDatos3.setCodigo("EDUC_EQUAL_PROF");
-		fuenteDatos3.setId(3l);
-		fuenteDatos3.setDescripcion("Llistat de qualificacions profesionals.");
+		if (ambito == null) {
+			return;
+		}
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 
-		listaDatos = new ArrayList<>();
-		listaDatos.add(fuenteDatos1);
-		listaDatos.add(fuenteDatos2);
-		listaDatos.add(fuenteDatos3);
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+		if (typeAmbito == TypeAmbito.AREA) {
+
+			final FuenteDatos fuenteDatos1 = new FuenteDatos();
+			fuenteDatos1.setId(1l);
+			fuenteDatos1.setCodigo("PESCA_REV_MAR");
+			fuenteDatos1.setDescripcion("AREA - Reserva marines de les Illes Balears");
+			final FuenteDatos fuenteDatos2 = new FuenteDatos();
+			fuenteDatos2.setId(2l);
+			fuenteDatos2.setCodigo("PESCA_ESP_AUT");
+			fuenteDatos2.setDescripcion("Llista d'espècies de plantes autóctones de les Illes Balears");
+			final FuenteDatos fuenteDatos3 = new FuenteDatos();
+			fuenteDatos3.setCodigo("EDUC_EQUAL_PROF");
+			fuenteDatos3.setId(3l);
+			fuenteDatos3.setDescripcion("Llistat de qualificacions profesionals.");
+
+			listaDatos = new ArrayList<>();
+			listaDatos.add(fuenteDatos1);
+			listaDatos.add(fuenteDatos2);
+			listaDatos.add(fuenteDatos3);
+		} else if (typeAmbito == TypeAmbito.ENTIDAD) {
+
+			final FuenteDatos fuenteDatos1 = new FuenteDatos();
+			fuenteDatos1.setId(1l);
+			fuenteDatos1.setCodigo("PESCA_REV_MAR");
+			fuenteDatos1.setDescripcion("ENT - Reserva marines de les Illes Balears");
+			final FuenteDatos fuenteDatos2 = new FuenteDatos();
+			fuenteDatos2.setId(2l);
+			fuenteDatos2.setCodigo("PESCA_ESP_AUT");
+			fuenteDatos2.setDescripcion("Llista d'espècies de plantes autóctones de les Illes Balears");
+			final FuenteDatos fuenteDatos3 = new FuenteDatos();
+			fuenteDatos3.setCodigo("EDUC_EQUAL_PROF");
+			fuenteDatos3.setId(3l);
+			fuenteDatos3.setDescripcion("Llistat de qualificacions profesionals.");
+
+			listaDatos = new ArrayList<>();
+			listaDatos.add(fuenteDatos1);
+			listaDatos.add(fuenteDatos2);
+			listaDatos.add(fuenteDatos3);
+
+		} else {
+			listaDatos = new ArrayList<>();
+		}
 
 	}
 
-	/**
-	 * Filtro (puede venir por parametro).
-	 */
+	/** Id. **/
+	private String id;
+
+	/** Ambito. **/
+	private String ambito;
+
+	/** Filtro (puede venir por parametro). */
 	private String filtro;
 
-	/**
-	 * Lista de datos.
-	 */
+	/** Lista de datos. */
 	private List<FuenteDatos> listaDatos;
 
-	/**
-	 * Dato seleccionado en la lista.
-	 */
+	/** Dato seleccionado en la lista. */
 	private FuenteDatos datoSeleccionado;
 
 	/**
@@ -94,14 +129,22 @@ public class ViewFuenteDatosEntidad extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.ALTA, null, true, 740, 650);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.EDICION, params, true, 740, 650);
+
 	}
 
 	/**
@@ -201,6 +244,36 @@ public class ViewFuenteDatosEntidad extends ViewControllerBase {
 	 */
 	public void setDatoSeleccionado(final FuenteDatos datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito
+	 *            the ambito to set
+	 */
+	public void setAmbito(final String ambito) {
+		this.ambito = ambito;
 	}
 
 }

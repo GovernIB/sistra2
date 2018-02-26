@@ -9,29 +9,19 @@ package es.caib.sistrages.core.api.model;
  */
 public class Rol {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
-	/**
-	 * Codigo.
-	 */
+	/** Código. */
 	private String codigo;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripción. */
 	private String descripcion;
 
-	/**
-	 * Permisos
-	 */
+	/** Permisos */
 	private String permisos;
 
-	/**
-	 * Permisos
-	 */
+	/** Area */
 	private String area;
 
 	/**

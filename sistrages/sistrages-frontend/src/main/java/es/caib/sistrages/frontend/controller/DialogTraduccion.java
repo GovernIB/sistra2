@@ -1,12 +1,17 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -15,62 +20,138 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogTraduccion extends DialogControllerBase {
 
-	/**
-	 * Servicio.
-	 */
-	// @Inject
-	// private EntidadService entidadService;
+	/** Texto Catalán. **/
+	private String textoCa;
+	/** Texto Espanyol. **/
+	private String textoEs;
+	/** Texto inglés. **/
+	private String textoEn;
+	/** Texto Alemán. **/
+	private String textoDe;
 
-	/**
-	 * Id elemento a tratar.
-	 */
-	private String id;
+	/** Visible Catalán. **/
+	private boolean visibleCa = false;
+	/** Visible Español. **/
+	private boolean visibleEs = false;
+	/** Visible Inglés. **/
+	private boolean visibleEn = false;
+	/** Visible Alemán. **/
+	private boolean visibleDe = false;
 
-	/**
-	 * Datos elemento.
-	 */
-	private List<Traduccion> data;
+	/** Obligatorio catalan. **/
+	private boolean requiredCa = false;
+	/** Obligatorio español. **/
+	private boolean requiredEs = false;
+	/** Obligatorio inglés. **/
+	private boolean requiredEn = false;
+	/** Obligatorio alemán. **/
+	private boolean requiredDe = false;
 
+	/** Data en formato JSON. **/
+	private String iData;
+	/** Idiomas obligatorios en formato JSON. **/
+	private String iIdiomasObligatorios;
+	/** Idiomas posibles en formato JSON. **/
+	private String iIdiomasPosibles;
+
+	/** Parametro de entrada. **/
+	private Traducciones data;
 	/**
-	 * Idiomas obligatorios.
-	 */
+	 * Lista de idiomas obligatorios opcional (en caso de no pasarlo, todos son
+	 * obligatorios.
+	 **/
 	private List<String> idiomasObligatorios;
+	/**
+	 * Lista de idiomas posibles a introducir (que debe ser igual o mayor que el
+	 * obligatorio).
+	 **/
+	private List<String> idiomasPosibles;
 
 	/**
 	 * Inicialización.
+	 *
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	public void init() {
-
+	public void init() throws JsonParseException, JsonMappingException, IOException {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		if (modo == TypeModoAcceso.ALTA) {
-			data = new ArrayList<>();
+		// if (modo == TypeModoAcceso.ALTA && data == null) {
+		if (iData == null || iData.isEmpty()) {
+			// Borrar, sólo de prueba.
+			data = new Traducciones();
+			data.add(new Traduccion("ca", "Traduccion Catalan"));
+			data.add(new Traduccion("es", "Traduccion Español"));
+			data.add(new Traduccion("en", "Traduccion Inglés"));
 		} else {
-			data = new ArrayList<>();
-			data.add(new Traduccion("es", "Traduccion espanyol"));
-			data.add(new Traduccion("ca", "Traduccion catalán"));
-			data.add(new Traduccion("en", "Traduccion inglés"));
+			final ObjectMapper mapper = new ObjectMapper();
+			data = mapper.readValue(iData, Traducciones.class);
 		}
 
-		if (idiomasObligatorios == null) {
+		if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
 			// Si no tiene los idiomas obligatorios, damos por hecho
 			// que todos los idiomas que hay de datos son obligatorios.
-			idiomasObligatorios = new ArrayList<>();
-			for (final Traduccion dato : data) {
-				idiomasObligatorios.add(dato.getIdioma());
-			}
+			idiomasObligatorios = data.getIdiomas();
 		} else {
-			for (final String idiomaObligatorio : idiomasObligatorios) {
+			final ObjectMapper mapper = new ObjectMapper();
+			idiomasObligatorios = mapper.readValue(iIdiomasObligatorios, List.class);
+		}
 
-				boolean noEncontrado = true;
-				for (final Traduccion dato : data) {
-					if (idiomaObligatorio.equals(dato.getIdioma())) {
-						noEncontrado = false;
-					}
-				}
+		if (iIdiomasPosibles == null || iIdiomasPosibles.isEmpty()) {
+			idiomasPosibles = data.getIdiomas();
+		} else {
+			final ObjectMapper mapper = new ObjectMapper();
+			idiomasPosibles = mapper.readValue(iIdiomasPosibles, List.class);
+		}
 
-				if (noEncontrado) {
-					data.add(new Traduccion(idiomaObligatorio, ""));
+		// Si en los posibles, no está alguno de los idiomasObligatorios, hay que
+		// añadirlo
+		for (final String idiomaObligatorio : idiomasObligatorios) {
+			if (!idiomasPosibles.contains(idiomaObligatorio)) {
+				idiomasPosibles.add(idiomaObligatorio);
+			}
+		}
+
+		inicializarTextosPermisos();
+
+	}
+
+	/**
+	 * Inicializa los textos, la visiblidad y obligatoriedad.
+	 */
+	private void inicializarTextosPermisos() {
+		for (final String idioma : idiomasPosibles) {
+			switch (idioma) {
+			case "ca":
+				textoCa = data.getTraduccion("ca");
+				visibleCa = true;
+				if (idiomasObligatorios.contains("ca")) {
+					requiredCa = true;
 				}
+				break;
+			case "es":
+				textoEs = data.getTraduccion("es");
+				visibleEs = true;
+				if (idiomasObligatorios.contains("es")) {
+					requiredEs = true;
+				}
+				break;
+			case "en":
+				textoEn = data.getTraduccion("en");
+				visibleEn = true;
+				if (idiomasObligatorios.contains("en")) {
+					requiredEn = true;
+				}
+				break;
+			case "de":
+				textoDe = data.getTraduccion("de");
+				visibleDe = true;
+				if (idiomasObligatorios.contains("de")) {
+					requiredDe = true;
+				}
+				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -79,6 +160,19 @@ public class DialogTraduccion extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (visibleCa) {
+			data.add(new Traduccion("ca", textoCa));
+		}
+		if (visibleEs) {
+			data.add(new Traduccion("es", textoEs));
+		}
+		if (visibleEn) {
+			data.add(new Traduccion("en", textoEn));
+		}
+		if (visibleDe) {
+			data.add(new Traduccion("de", textoDe));
+		}
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -99,64 +193,229 @@ public class DialogTraduccion extends DialogControllerBase {
 	}
 
 	/**
-	 * ¿Es obligatorio el idioma? Es para marcarlo como obligatorio o no.
-	 *
-	 * @param idioma
+	 * @return the textoCa
 	 */
-	public boolean isObligatorio(final String idioma) {
-		boolean retorno;
-		if (idioma == null) {
-			retorno = false;
-		} else if (idiomasObligatorios.contains(idioma)) {
-			retorno = true;
-		} else {
-			retorno = false;
-		}
-		return retorno;
+	public String getTextoCa() {
+		return textoCa;
 	}
 
 	/**
-	 * @return the id
+	 * @param textoCa
+	 *            the textoCa to set
 	 */
-	public String getId() {
-		return id;
+	public void setTextoCa(final String textoCa) {
+		this.textoCa = textoCa;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @return the textoEs
 	 */
-	public void setId(final String id) {
-		this.id = id;
+	public String getTextoEs() {
+		return textoEs;
 	}
 
 	/**
-	 * @return the data
+	 * @param textoEs
+	 *            the textoEs to set
 	 */
-	public List<Traduccion> getData() {
-		return data;
+	public void setTextoEs(final String textoEs) {
+		this.textoEs = textoEs;
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @return the textoEn
 	 */
-	public void setData(final List<Traduccion> data) {
-		this.data = data;
+	public String getTextoEn() {
+		return textoEn;
 	}
 
 	/**
-	 * @return the idiomasObligatorios
+	 * @param textoEn
+	 *            the textoEn to set
 	 */
-	public List<String> getIdiomasObligatorios() {
-		return idiomasObligatorios;
+	public void setTextoEn(final String textoEn) {
+		this.textoEn = textoEn;
 	}
 
 	/**
-	 * @param idiomasObligatorios
-	 *            the idiomasObligatorios to set
+	 * @return the textoDe
 	 */
-	public void setIdiomasObligatorios(final List<String> idiomasObligatorios) {
-		this.idiomasObligatorios = idiomasObligatorios;
+	public String getTextoDe() {
+		return textoDe;
 	}
+
+	/**
+	 * @param textoDe
+	 *            the textoDe to set
+	 */
+	public void setTextoDe(final String textoDe) {
+		this.textoDe = textoDe;
+	}
+
+	/**
+	 * @return the visibleCa
+	 */
+	public boolean isVisibleCa() {
+		return visibleCa;
+	}
+
+	/**
+	 * @param visibleCa
+	 *            the visibleCa to set
+	 */
+	public void setVisibleCa(final boolean visibleCa) {
+		this.visibleCa = visibleCa;
+	}
+
+	/**
+	 * @return the visibleEs
+	 */
+	public boolean isVisibleEs() {
+		return visibleEs;
+	}
+
+	/**
+	 * @param visibleEs
+	 *            the visibleEs to set
+	 */
+	public void setVisibleEs(final boolean visibleEs) {
+		this.visibleEs = visibleEs;
+	}
+
+	/**
+	 * @return the visibleEn
+	 */
+	public boolean isVisibleEn() {
+		return visibleEn;
+	}
+
+	/**
+	 * @param visibleEn
+	 *            the visibleEn to set
+	 */
+	public void setVisibleEn(final boolean visibleEn) {
+		this.visibleEn = visibleEn;
+	}
+
+	/**
+	 * @return the visibleDe
+	 */
+	public boolean isVisibleDe() {
+		return visibleDe;
+	}
+
+	/**
+	 * @param visibleDe
+	 *            the visibleDe to set
+	 */
+	public void setVisibleDe(final boolean visibleDe) {
+		this.visibleDe = visibleDe;
+	}
+
+	/**
+	 * @return the requiredCa
+	 */
+	public boolean isRequiredCa() {
+		return requiredCa;
+	}
+
+	/**
+	 * @param requiredCa
+	 *            the requiredCa to set
+	 */
+	public void setRequiredCa(final boolean requiredCa) {
+		this.requiredCa = requiredCa;
+	}
+
+	/**
+	 * @return the requiredEs
+	 */
+	public boolean isRequiredEs() {
+		return requiredEs;
+	}
+
+	/**
+	 * @param requiredEs
+	 *            the requiredEs to set
+	 */
+	public void setRequiredEs(final boolean requiredEs) {
+		this.requiredEs = requiredEs;
+	}
+
+	/**
+	 * @return the requiredEn
+	 */
+	public boolean isRequiredEn() {
+		return requiredEn;
+	}
+
+	/**
+	 * @param requiredEn
+	 *            the requiredEn to set
+	 */
+	public void setRequiredEn(final boolean requiredEn) {
+		this.requiredEn = requiredEn;
+	}
+
+	/**
+	 * @return the requiredDe
+	 */
+	public boolean isRequiredDe() {
+		return requiredDe;
+	}
+
+	/**
+	 * @param requiredDe
+	 *            the requiredDe to set
+	 */
+	public void setRequiredDe(final boolean requiredDe) {
+		this.requiredDe = requiredDe;
+	}
+
+	/**
+	 * @return the iData
+	 */
+	public String getiData() {
+		return iData;
+	}
+
+	/**
+	 * @param iData
+	 *            the iData to set
+	 */
+	public void setiData(final String iData) {
+		this.iData = iData;
+	}
+
+	/**
+	 * @return the iIdiomasObligatorios
+	 */
+	public String getiIdiomasObligatorios() {
+		return iIdiomasObligatorios;
+	}
+
+	/**
+	 * @param iIdiomasObligatorios
+	 *            the iIdiomasObligatorios to set
+	 */
+	public void setiIdiomasObligatorios(final String iIdiomasObligatorios) {
+		this.iIdiomasObligatorios = iIdiomasObligatorios;
+	}
+
+	/**
+	 * @return the iIdiomasPosibles
+	 */
+	public String getiIdiomasPosibles() {
+		return iIdiomasPosibles;
+	}
+
+	/**
+	 * @param iIdiomasPosibles
+	 *            the iIdiomasPosibles to set
+	 */
+	public void setiIdiomasPosibles(final String iIdiomasPosibles) {
+		this.iIdiomasPosibles = iIdiomasPosibles;
+
+	}
+
 }

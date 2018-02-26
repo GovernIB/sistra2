@@ -96,20 +96,20 @@ public class SessionBean {
 
 		listaEntidades = new ArrayList<>();
 		Entidad newEntidad = new Entidad();
-		newEntidad.setCodigo(Long.valueOf(1));
+		newEntidad.setId(Long.valueOf(1));
 		newEntidad.setNombre("Govern de les Illes Balears");
 		newEntidad.setLogoGestor(new Fichero(0l, "caib.png"));
 		listaEntidades.add(newEntidad);
 		entidad = newEntidad;
 
 		newEntidad = new Entidad();
-		newEntidad.setCodigo(Long.valueOf(2));
+		newEntidad.setId(Long.valueOf(2));
 		newEntidad.setNombre("Entidad 1");
 		newEntidad.setLogoGestor(new Fichero(0l, "caibe1.png"));
 		listaEntidades.add(newEntidad);
 
 		newEntidad = new Entidad();
-		newEntidad.setCodigo(Long.valueOf(3));
+		newEntidad.setId(Long.valueOf(3));
 		newEntidad.setNombre("Entidad 2");
 		newEntidad.setLogoGestor(new Fichero(0l, "caibe2.png"));
 		listaEntidades.add(newEntidad);
@@ -142,7 +142,7 @@ public class SessionBean {
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
 		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
 	}
 
 	public String getLogo() {
@@ -236,7 +236,7 @@ public class SessionBean {
 		cambiarLogo();
 
 		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
 	}
 
 	public void cambiarEntidadActivo(final String activeEntidad) {
@@ -251,7 +251,7 @@ public class SessionBean {
 		cambiarLogo();
 
 		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
 	}
 
 	public MenuModel getMenuModel() {
@@ -314,7 +314,7 @@ public class SessionBean {
 
 			for (final TypeOpcionMenuAdmOper opcion : TypeOpcionMenuAdmOper.values()) {
 				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getCodigo()));
+				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getId()));
 				model.addElement(item);
 			}
 
@@ -329,6 +329,6 @@ public class SessionBean {
 	 *
 	 */
 	public void redirectDefaultUrl() {
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getCodigo());
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
 	}
 }

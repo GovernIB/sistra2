@@ -2,26 +2,23 @@ package es.caib.sistrages.core.api.model;
 
 /**
  *
- * Area.
+ * Área.
  *
  * @author Indra
  *
  */
 public class Area {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
-	/**
-	 * Codigo.
-	 */
+	/** Entidad */
+	private Entidad entidad;
+
+	/** Codigo. */
 	private String codigo;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripción. */
 	private String descripcion;
 
 	/**
@@ -37,6 +34,21 @@ public class Area {
 	 */
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public Entidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad
+	 *            the entidad to set
+	 */
+	public void setEntidad(final Entidad entidad) {
+		this.entidad = entidad;
 	}
 
 	/**

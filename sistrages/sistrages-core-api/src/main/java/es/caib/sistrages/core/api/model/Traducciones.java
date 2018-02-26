@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,7 +52,63 @@ public class Traducciones {
 			}
 		}
 
-		return "";
+		return null;
+	}
+
+	/**
+	 * Incluye una traducción, si la traducción:
+	 * <ul>
+	 * <li>No existe, añade la traducción.</li>
+	 * <li>Sí existe, actualiza el texto.</li>
+	 * </ul>
+	 *
+	 * @param traduccion
+	 */
+	public void add(final Traduccion traduccion) {
+		boolean encontrado = false;
+		if (trads == null) {
+			trads = new ArrayList<>();
+		}
+		for (final Traduccion trad : trads) {
+			if (trad.getIdioma().equals(traduccion.getIdioma())) {
+				encontrado = true;
+				trad.setTexto(traduccion.getTexto());
+			}
+		}
+
+		if (!encontrado) {
+			trads.add(traduccion);
+		}
+	}
+
+	/**
+	 * Comprueba si esta un idioma en concreto.
+	 *
+	 * @param idioma
+	 * @return
+	 */
+	public boolean contains(final String idioma) {
+		boolean existe = false;
+		for (final Traduccion traduccion : trads) {
+			if (idioma.equals(traduccion.getIdioma())) {
+				existe = true;
+			}
+		}
+
+		return existe;
+	}
+
+	/**
+	 * Devuelve los idiomas que tiene este traducciones.
+	 *
+	 * @return
+	 */
+	public List<String> getIdiomas() {
+		final List<String> idiomas = new ArrayList<>();
+		for (final Traduccion traduccion : trads) {
+			idiomas.add(traduccion.getIdioma());
+		}
+		return idiomas;
 	}
 
 	/**

@@ -78,6 +78,12 @@
 			<version>${primefaces.allThemes.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+
 		<!--  TODO: Ver pq no la coge del core -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

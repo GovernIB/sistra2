@@ -9,19 +9,16 @@ package es.caib.sistrages.core.api.model;
  */
 public class FormularioExterno {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
-	/**
-	 * Código.
-	 */
+	/** Entidad. */
+	private Entidad entidad;
+
+	/** Código. */
 	private String codigo;
 
-	/**
-	 * Descripción.
-	 */
+	/** Descripción. */
 	private String descripcion;
 
 	/**
@@ -42,6 +39,21 @@ public class FormularioExterno {
 	 */
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public Entidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad
+	 *            the entidad to set
+	 */
+	public void setEntidad(final Entidad entidad) {
+		this.entidad = entidad;
 	}
 
 	/**

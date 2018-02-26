@@ -59,7 +59,7 @@
 						<webModule>
 							<groupId>es.caib.sistra2</groupId>
 							<artifactId>sistrages-rest-ws</artifactId>
-							<contextRoot>/sistrages/api/rest</contextRoot>
+							<contextRoot>/sistrages/api</contextRoot>
 							<bundleFileName>sistrages-rest.war</bundleFileName>
 						</webModule>
 					</modules>

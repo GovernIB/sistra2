@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="#{sessionBean.lang}"
 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -23,35 +24,55 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
-		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogTraduccion.modoAcceso}"/>
-		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogTraduccion.id}"/>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccion.modoAcceso}"/>
-		<f:viewParam name="ID" value="#{dialogTraduccion.id}"/>
-		-->
-
-		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccion.modoAcceso}"/>
-		<f:viewParam name="DATA" value="#{dialogTraduccion.data}"/>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccion.modoAcceso}" />
+		<f:viewParam name="DATA" value="#{dialogTraduccion.iData}" />
+		<f:viewParam name="OBLIGATORIOS" value="#{dialogTraduccion.iIdiomasObligatorios}" />
+		<f:viewParam name="POSIBLES" value="#{dialogTraduccion.iIdiomasPosibles}" />
 		<f:viewAction action="#{dialogTraduccion.init}" />
 	</f:metadata>
-	<h:form id="dialogTraduccion">
-  			<p:outputPanel>
-				<!-- Contenido dialogo -->
-				<!-- Growl mensajes -->
-				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="2000" sticky="false" />
-					<p:dataTable  styleClass="hide-table-header" var="traduccion" value="#{dialogTraduccion.data}">
-					    <p:column class="w30">
-					        <p:outputLabel value="#{msg[traduccion.idioma]}" />
+
+	<h:form id="formTraduccion">
+  				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="2000" sticky="false" />
+
+				 <h:panelGrid  style="width: 100%" styleClass="hide-table-header" rowclass="w30,w70">
+		  			<p:row rendered="#{dialogTraduccion.visibleCa}" >
+						<p:column class="w30">
+ 							<p:outputLabel for="traduccion_ca" id="labelCa" value="#{msg['ca']}" />
+				 		</p:column>
+						<p:column class="w70">
+							<p:inputText id="traduccion_ca" value="#{dialogTraduccion.textoCa}" required="#{dialogTraduccion.requiredCa}" />
+						</p:column>
+					</p:row>
+					<p:row rendered="#{dialogTraduccion.visibleEs}" >
+						<p:column class="w30">
+					        <p:outputLabel for="traduccion_es"  id="labelEs"  value="#{msg['es']}" />
 				 		</p:column>
 						<p:column>
-							<p:inputText id="traduccion_#{traduccion.idioma}" value="#{traduccion.texto}" disabled="#{!dialogTraduccion.isConsulta()}" required="#{!dialogTraduccion.isObligatorio(traduccion.idioma)}"/>
+							<p:inputText id="traduccion_es" value="#{dialogTraduccion.textoEs}" required="#{dialogTraduccion.requiredEs}" />
 						</p:column>
-					</p:dataTable>
-			 </p:outputPanel>
+					</p:row>
+					<p:row rendered="#{dialogTraduccion.visibleEn}" >
+						<p:column class="w30">
+					        <p:outputLabel for="traduccion_en"  id="labelEn"  value="#{msg['en']}" />
+				 		</p:column>
+						<p:column>
+							<p:inputText id="traduccion_en" value="#{dialogTraduccion.textoEn}" required="#{dialogTraduccion.requiredEn}" />
+						</p:column>
+					</p:row>
+					<p:row rendered="#{dialogTraduccion.visibleDe}" >
+						<p:column class="w30">
+					        <p:outputLabel for="traduccion_de"  id="labelDe"  value="#{msg['de']}" />
+				 		</p:column>
+						<p:column>
+							<p:inputText id="traduccion_de" value="#{dialogTraduccion.textoDe}" required="#{dialogTraduccion.requiredDe}" />
+						</p:column>
+					</p:row>
+  			 </h:panelGrid>
+
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="@form" update="@form growlDialogTraduccion"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

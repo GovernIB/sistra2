@@ -1,8 +1,5 @@
 package es.caib.sistrages.core.api.model;
 
-import java.util.List;
-
-import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
 /**
@@ -47,7 +44,7 @@ public class Dominio {
 	private FuenteDatos fuenteDatos;
 
 	/**
-	 * Para tipo Lista fija de datos contiene lista serializada con codigo - valor
+	 * JSON con la lista de valores (codigo - valor)
 	 */
 	private String listaFija;
 
@@ -57,8 +54,8 @@ public class Dominio {
 	 */
 	private String url;
 
-	/** Lista serializada de códigos parámetros dominio */
-	private List<Propiedad> parametros;
+	/** JSON con la lista de parametros (codigo - valor). */
+	private String parametros;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -250,7 +247,7 @@ public class Dominio {
 	/**
 	 * @return the parametros
 	 */
-	public List<Propiedad> getParametros() {
+	public String getParametros() {
 		return parametros;
 	}
 
@@ -258,7 +255,7 @@ public class Dominio {
 	 * @param parametros
 	 *            the parametros to set
 	 */
-	public void setParametros(final List<Propiedad> parametros) {
+	public void setParametros(final String parametros) {
 		this.parametros = parametros;
 	}
 

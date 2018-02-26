@@ -1,0 +1,50 @@
+package es.caib.sistrages.frontend.util;
+
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ *
+ * @author Indra
+ *
+ */
+public class UtilJSON {
+
+	/** Constructor privado para evitar problema. */
+	private UtilJSON() {
+		// not called
+	}
+
+	/**
+	 * Clase para convertir un objeto a JSON.
+	 *
+	 * @param objeto
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public static String toJSON(final Object objeto) throws JsonProcessingException {
+		final ObjectMapper mapper = new ObjectMapper();
+		return mapper.writeValueAsString(objeto);
+
+	}
+
+	/**
+	 * Clase para convertir de json a objeto.
+	 *
+	 * @param json
+	 * @param clase
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public static Object fromJSON(final String json, final Class<?> clase) throws IOException {
+		final ObjectMapper mapper = new ObjectMapper();
+		return mapper.readValue(json, clase);
+	}
+
+}

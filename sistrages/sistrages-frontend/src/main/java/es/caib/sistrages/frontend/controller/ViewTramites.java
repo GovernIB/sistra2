@@ -17,6 +17,7 @@ import org.primefaces.model.TreeNode;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -111,15 +112,23 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void editarArea() {
 
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea())
+			return;
 
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroDialogo.ID.toString(),
+				String.valueOf(((Area) this.areaSeleccionada.getData()).getId()));
+		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.EDICION, params, true, 520, 120);
 	}
 
 	/**
 	 * Abre dialogo de nueva Area.
 	 */
 	public void nuevaArea() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.ALTA, null, true, 520, 120);
 	}
 
 	/**
@@ -138,14 +147,14 @@ public class ViewTramites extends ViewControllerBase {
 	 * Dominios de area.
 	 */
 	public void dominioArea() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=X");
 	}
 
 	/**
 	 * Datos area.
 	 */
 	public void datosArea() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.redirectJsfPage("/secure/app/viewFuenteDatos.xhtml?ambito=A&id=X");
 	}
 
 	/**
@@ -153,8 +162,15 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void editarTramite() {
 
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaTramite())
+			return;
 
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
+		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.EDICION, params, true, 540, 120);
 	}
 
 	/**
@@ -177,7 +193,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * Abre dialogo de nueva Area.
 	 */
 	public void nuevaTramite() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.ALTA, null, true, 540, 120);
 	}
 
 	/**

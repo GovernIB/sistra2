@@ -20,10 +20,9 @@ import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
 import es.caib.sistrages.frontend.controller.ViewFormulariosExternos;
-import es.caib.sistrages.frontend.controller.ViewFuenteDatosEntidad;
+import es.caib.sistrages.frontend.controller.ViewFuenteDatos;
 import es.caib.sistrages.frontend.controller.ViewMensajesAvisoEntidad;
-import es.caib.sistrages.frontend.controller.ViewPluginsEntidad;
-import es.caib.sistrages.frontend.controller.ViewPluginsGlobales;
+import es.caib.sistrages.frontend.controller.ViewPlugins;
 import es.caib.sistrages.frontend.controller.ViewPropiedadesConfiguracion;
 import es.caib.sistrages.frontend.controller.ViewRolesPermisos;
 import es.caib.sistrages.frontend.controller.ViewTramites;
@@ -40,7 +39,12 @@ import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
  * @author Indra
  *
  */
-public class UtilJSF {
+public final class UtilJSF {
+
+	/** Constructor privado para evitar problema. */
+	private UtilJSF() {
+		// not called
+	}
 
 	/** Path views. */
 	public static final String PATH_VIEWS = "/secure/app/";
@@ -65,8 +69,8 @@ public class UtilJSF {
 	 * @param heigth
 	 *            altura
 	 */
-	public static void openDialog(final Class clase, final TypeModoAcceso modoAcceso, final Map<String, String> params,
-			final boolean modal, final int width, final int heigth) {
+	public static void openDialog(final Class<?> clase, final TypeModoAcceso modoAcceso,
+			final Map<String, String> params, final boolean modal, final int width, final int heigth) {
 		openDialog(UtilJSF.getViewNameFromClass(clase), modoAcceso, params, modal, width, heigth);
 	}
 
@@ -89,7 +93,7 @@ public class UtilJSF {
 	public static void openDialog(final String dialog, final TypeModoAcceso modoAcceso,
 			final Map<String, String> params, final boolean modal, final int width, final int heigth) {
 		// Opciones dialogo
-		final Map<String, Object> options = new HashMap<String, Object>();
+		final Map<String, Object> options = new HashMap<>();
 		options.put("modal", modal);
 		options.put("width", width);
 		options.put("height", heigth);
@@ -222,12 +226,18 @@ public class UtilJSF {
 	 *            clase
 	 * @return view name
 	 */
-	public static String getViewNameFromClass(final Class clase) {
+	public static String getViewNameFromClass(final Class<?> clase) {
 		final String className = clase.getSimpleName();
 		return className.substring(0, 1).toLowerCase() + className.substring(1);
 	}
 
-	public static String getTitleViewNameFromClass(final Class clase) {
+	/**
+	 * Devuelve el title name de la clase.
+	 *
+	 * @param clase
+	 * @return
+	 */
+	public static String getTitleViewNameFromClass(final Class<?> clase) {
 		return getViewNameFromClass(clase) + ".titulo";
 	}
 
@@ -249,7 +259,7 @@ public class UtilJSF {
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominios.class) + EXTENSION_XHTML + "?ambito=G";
 			break;
 		case PLUGINS_GLOBALES:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPluginsGlobales.class) + EXTENSION_XHTML;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPlugins.class) + EXTENSION_XHTML + "?ambito=G";
 			break;
 		case PROPIEDADES_GLOBALES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPropiedadesConfiguracion.class) + EXTENSION_XHTML;
@@ -274,21 +284,20 @@ public class UtilJSF {
 	 */
 	public static String getUrlOpcionMenuAdmOper(final TypeOpcionMenuAdmOper opcion, final Long idEntidad) {
 		String url = null;
+		final String ambitoEntidadURL = "?ambito=E&id=" + idEntidad;
 
 		switch (opcion) {
 		case CONFIGURACION_ENTIDAD:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionEntidad.class) + EXTENSION_XHTML;
 			break;
 		case FUENTES_DATOS:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFuenteDatosEntidad.class) + EXTENSION_XHTML
-					+ "?ambito=E&id=" + idEntidad;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFuenteDatos.class) + EXTENSION_XHTML + ambitoEntidadURL;
 			break;
 		case DOMINIOS_ENTIDAD:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominios.class) + EXTENSION_XHTML + "?ambito=E&id="
-					+ idEntidad;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominios.class) + EXTENSION_XHTML + ambitoEntidadURL;
 			break;
 		case PLUGINS_ENTIDAD:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPluginsEntidad.class) + EXTENSION_XHTML;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPlugins.class) + EXTENSION_XHTML + ambitoEntidadURL;
 			break;
 		case GESTORES_FORMULARIOS:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML;

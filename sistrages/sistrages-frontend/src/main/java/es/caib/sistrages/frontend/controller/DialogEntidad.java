@@ -38,7 +38,8 @@ public class DialogEntidad extends DialogControllerBase {
 			data = new Entidad();
 		} else {
 			data = new Entidad();// entidadService.load(id);
-			data.setCodigo(Long.valueOf(id));
+			data.setId(Long.valueOf(id));
+			data.setCodigoDIR3("CODIGO DIR3");
 			data.setNombre("Descripc");
 			data.setRol("ROL X");
 		}
@@ -69,7 +70,7 @@ public class DialogEntidad extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getCodigo());
+		result.setResult(data.getId());
 		UtilJSF.closeDialog(result);
 	}
 

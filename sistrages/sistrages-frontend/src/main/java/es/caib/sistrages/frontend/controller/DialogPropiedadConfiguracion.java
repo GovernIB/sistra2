@@ -38,8 +38,9 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 			data = new PropiedadConfiguracion();
 		} else {
 			data = new PropiedadConfiguracion();// propiedadConfiguracionService.load(id);
+			data.setId(1l);
 			data.setCodigo("CODIGO 1");
-			data.setDescripcion("Descripc");
+			data.setDescripcion("Descripcion de una propiedad del sistema.");
 			data.setValor("VALOR ");
 		}
 	}
@@ -70,7 +71,7 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getCodigo());
+		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 

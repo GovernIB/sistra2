@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.List;
+
 /**
  *
  * Entidad.
@@ -10,7 +12,7 @@ package es.caib.sistrages.core.api.model;
 public class Entidad {
 
 	/** Código interno. */
-	private Long codigo;
+	private Long id;
 
 	/** Código DIR3. **/
 	private String codigoDIR3;
@@ -57,19 +59,22 @@ public class Entidad {
 	/** Habilitado contacto formulario incidencias . **/
 	private boolean formularioIncidenciasHabilitado;
 
+	/** Formularios de incidencias. **/
+	private List<FormularioSoporte> formularioIncidencias;
+
 	/**
-	 * @return the codigo
+	 * @return the id
 	 */
-	public Long getCodigo() {
-		return codigo;
+	public Long getId() {
+		return id;
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setCodigo(final Long codigo) {
-		this.codigo = codigo;
+	public void setId(final Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -295,6 +300,21 @@ public class Entidad {
 	 */
 	public void setFormularioIncidenciasHabilitado(final boolean formularioIncidenciasHabilitado) {
 		this.formularioIncidenciasHabilitado = formularioIncidenciasHabilitado;
+	}
+
+	/**
+	 * @return the formularioIncidencias
+	 */
+	public List<FormularioSoporte> getFormularioIncidencias() {
+		return formularioIncidencias;
+	}
+
+	/**
+	 * @param formularioIncidencias
+	 *            the formularioIncidencias to set
+	 */
+	public void setFormularioIncidencias(final List<FormularioSoporte> formularioIncidencias) {
+		this.formularioIncidencias = formularioIncidencias;
 	}
 
 }

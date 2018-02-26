@@ -6,7 +6,7 @@ package es.caib.sistrages.frontend.model.types;
  * @author Indra
  *
  */
-public enum TypeDominioGlobal {
+public enum TypeDominio {
 	/**
 	 * Consulta de BBDD.
 	 */
@@ -22,7 +22,7 @@ public enum TypeDominioGlobal {
 
 	private String valor;
 
-	TypeDominioGlobal(final String iValor) {
+	TypeDominio(final String iValor) {
 		this.valor = iValor;
 	}
 
@@ -32,8 +32,18 @@ public enum TypeDominioGlobal {
 	 * @param tipo
 	 * @return
 	 */
-	public String fromEnum(final TypeDominioGlobal tipo) {
+	public static String fromEnum(final TypeDominio tipo) {
 		return tipo.valor;
+	}
+
+	/**
+	 * Devuelve el valor de un enumerado.
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	public String fromEnum() {
+		return this.valor;
 	}
 
 	/**
@@ -42,20 +52,20 @@ public enum TypeDominioGlobal {
 	 * @param tipo
 	 * @return
 	 */
-	public TypeDominioGlobal toEnum(final String tipo) {
-		TypeDominioGlobal retorno;
+	public TypeDominio toEnum(final String tipo) {
+		TypeDominio retorno;
 		if (tipo == null) {
 			retorno = null;
 		} else {
 			switch (tipo) {
 			case "B":
-				retorno = TypeDominioGlobal.CONSULTA_BD;
+				retorno = TypeDominio.CONSULTA_BD;
 				break;
 			case "L":
-				retorno = TypeDominioGlobal.LISTA_FIJA;
+				retorno = TypeDominio.LISTA_FIJA;
 				break;
 			case "R":
-				retorno = TypeDominioGlobal.CONSULTA_REMOTA;
+				retorno = TypeDominio.CONSULTA_REMOTA;
 				break;
 			default:
 				retorno = null;

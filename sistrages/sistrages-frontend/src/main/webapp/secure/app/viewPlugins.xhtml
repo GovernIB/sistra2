@@ -6,7 +6,9 @@
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
-		<f:viewAction action="#{viewFuenteDatosEntidad.init}" />
+		<f:viewParam name="ambito" value="#{viewPlugins.ambito}"/>
+		<f:viewParam name="id" value="#{viewPlugins.id}"/>
+		<f:viewAction action="#{viewPlugins.init}" />
 	</f:metadata>
 
 
@@ -22,22 +24,22 @@
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
-			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewFuenteDatosEntidad.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewFuenteDatosEntidad.filtrar()}" process="panelFiltro" update="dataTable growl" />
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPlugins.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPlugins.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewFuenteDatosEntidad.nuevo()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewFuenteDatosEntidad.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewPlugins.nuevo()}" process="@this" update="growl">
+		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewFuenteDatosEntidad.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewFuenteDatosEntidad.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPlugins.editar()}" process="@this" update="growl">
+		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewFuenteDatosEntidad.eliminar()}" process="@this" update="growl dataTable"/>
-		        		<p:commandButton id="btnDatos" value="#{msg['botones.datos']}" icon="fa fa-table" actionListener="#{viewFuenteDatosEntidad.datos()}" process="@this" update="growl dataTable"/>
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFuenteDatosEntidad.ayudar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewPlugins.eliminar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPlugins.ayudar()}" process="@this" update="growl dataTable"/>
+
 		        	</h:panelGrid>
 		        </f:facet>
 
@@ -49,13 +51,13 @@
 
 
 			<!-- Data table -->
-			<p:dataTable  id="dataTable" var="td" value="#{viewFuenteDatosEntidad.listaDatos}"
+			<p:dataTable  id="dataTable" var="td" value="#{viewPlugins.listaDatos}"
 						 rows="10"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewFuenteDatosEntidad.datoSeleccionado}" rowKey="#{td.codigo}" dblClickSelect="true">
+			        	 selectionMode="single" selection="#{viewPlugins.datoSeleccionado}" rowKey="#{td.id}" dblClickSelect="true">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
 				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
@@ -65,14 +67,13 @@
 				<p:ajax event="rowUnselect" />
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewFuenteDatosEntidad.headerCodigo']}">
-			        <h:outputText value="#{td.codigo}" />
+			    <p:column headerText="#{msg['viewPlugins.tipo']}">
+			        <h:outputText value="#{td.tipo}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewFuenteDatosEntidad.headerDescripcion']}">
-			        <h:outputText value="#{td.descripcion}" />
+			    <p:column headerText="#{msg['viewPlugins.classname']}">
+			        <h:outputText value="#{td.classname}" />
 			    </p:column>
-
 
 			</p:dataTable>
 

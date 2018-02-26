@@ -1,3 +1,8 @@
+/*** El body en dialog aplica un margin. **/
+body{
+  margin:0px;
+}
+
 /****  cabecera *****/
 
 /* para que salga fresa la cabecera */
@@ -245,6 +250,22 @@
   width: 100% !important;
 }
 
+.wpx10{
+	 width: 10px !important;
+}
+
+.wpx25{
+	 width: 25px !important;
+}
+
+.wpx50{
+	 width: 50px !important;
+}
+
+.wpx75{
+	 width: 75px !important;
+}
+
 .wpx100{
 	 width: 100px !important;
 }
@@ -342,8 +363,24 @@
      padding-left: 0.8em !important;
 }
 
+.padding-left-18 {
+     padding-left: 1.8em !important;
+}
+
 .padding-right-8 {
      padding-right: 0.8em !important;
+}
+
+.padding-right-18 {
+     padding-right: 1.8em !important;
+}
+
+.noMargin {
+     margin: 0px !important;
+}
+
+.margin-top-10 {
+	margin-top: 10px !important;
 }
 
 .margin-bottom-3 {
@@ -410,3 +447,8 @@ label.ui-state-disabled {
 }
 
 .panel_izq {border-left:1px solid silver;padding-left:0.4em;}
+
+/** Para cambiar el fondo a los inputs y se vea blanco. **/
+.ui-inputfield {
+	background: white;
+}

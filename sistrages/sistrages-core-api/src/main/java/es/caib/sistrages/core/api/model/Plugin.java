@@ -6,51 +6,62 @@ import es.caib.sistrages.core.api.model.comun.Propiedad;
 
 /**
  *
- * Plugin global.
+ * Plugin.
  *
  * @author Indra
  *
  */
-public class PluginGlobal {
+public class Plugin {
 
-	/**
-	 * Codigo.
-	 */
-	private Long codigo;
+	/** Id. */
+	private Long id;
 
-	/**
-	 * Tipo.
-	 */
+	/** Ámbito (G:Global / E:Entidad) */
+	private String ambito;
+
+	/** Tipo. */
 	private String tipo;
 
-	/**
-	 * Classname.
-	 */
+	/** Classname. */
 	private String classname;
 
-	/**
-	 * Descripcion
-	 */
+	/** Instancia. */
+	private String instancia;
+
+	/** Descripción. */
 	private String descripcion;
 
-	/**
-	 * Propiedades
-	 */
+	/** Propiedades */
 	private List<Propiedad> propiedades;
 
 	/**
-	 * @return the codigo
+	 * @return the id
 	 */
-	public Long getCodigo() {
-		return codigo;
+	public Long getId() {
+		return id;
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setCodigo(final Long codigo) {
-		this.codigo = codigo;
+	public void setId(final Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito
+	 *            the ambito to set
+	 */
+	public void setAmbito(final String ambito) {
+		this.ambito = ambito;
 	}
 
 	/**
@@ -111,5 +122,20 @@ public class PluginGlobal {
 	 */
 	public void setPropiedades(final List<Propiedad> propiedades) {
 		this.propiedades = propiedades;
+	}
+
+	/**
+	 * @return the instancia
+	 */
+	public String getInstancia() {
+		return instancia;
+	}
+
+	/**
+	 * @param instancia
+	 *            the instancia to set
+	 */
+	public void setInstancia(final String instancia) {
+		this.instancia = instancia;
 	}
 }

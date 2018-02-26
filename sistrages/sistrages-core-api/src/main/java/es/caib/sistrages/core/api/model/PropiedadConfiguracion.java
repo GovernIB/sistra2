@@ -9,20 +9,32 @@ package es.caib.sistrages.core.api.model;
  */
 public class PropiedadConfiguracion {
 
-	/**
-	 * Codigo.
-	 */
+	/** Id. */
+	private Long id;
+
+	/** Propiedad. **/
 	private String codigo;
 
-	/**
-	 * Valor.
-	 */
+	/** Valor. */
 	private String valor;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripcion. */
 	private String descripcion;
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the codigo
@@ -32,9 +44,10 @@ public class PropiedadConfiguracion {
 	}
 
 	/**
-	 * @param codigo the codigo to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setCodigo(String codigo) {
+	public void setCodigo(final String codigo) {
 		this.codigo = codigo;
 	}
 
@@ -46,9 +59,10 @@ public class PropiedadConfiguracion {
 	}
 
 	/**
-	 * @param valor the valor to set
+	 * @param valor
+	 *            the valor to set
 	 */
-	public void setValor(String valor) {
+	public void setValor(final String valor) {
 		this.valor = valor;
 	}
 
@@ -60,9 +74,10 @@ public class PropiedadConfiguracion {
 	}
 
 	/**
-	 * @param descripcion the descripcion to set
+	 * @param descripcion
+	 *            the descripcion to set
 	 */
-	public void setDescripcion(String descripcion) {
+	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
 	}
 

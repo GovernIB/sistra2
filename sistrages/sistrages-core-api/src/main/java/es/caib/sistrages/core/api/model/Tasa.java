@@ -9,29 +9,19 @@ package es.caib.sistrages.core.api.model;
  */
 public class Tasa {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
-	/**
-	 * Codigo.
-	 */
+	/** Código. */
 	private String codigo;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripcion. */
 	private String descripcion;
 
-	/**
-	 * Tipo.
-	 */
+	/** Tipo. */
 	private String tipo;
 
-	/**
-	 * obligatoriedad.
-	 */
+	/** Obligatoriedad. */
 	private String obligatoriedad;
 
 	/**

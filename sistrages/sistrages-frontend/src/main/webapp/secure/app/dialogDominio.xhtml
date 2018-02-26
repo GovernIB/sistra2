@@ -22,153 +22,193 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
-		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogDominio.modoAcceso}"/>
-		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogDominio.id}"/>
-		-->
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDominio.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogDominio.id}"/>
 		<f:viewAction action="#{dialogDominio.init}" />
 	</f:metadata>
-	<h:form id="dialogTest">
+	<h:form id="dialogDominio" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
-			<p:panelGrid style="width:100%" styleClass="ui-noborder" rowclass=",ui-datatable-odd">
-			  <p:row>
-				    <p:column>
-				    	<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				    </p:column>
-				    <p:column colspan="4">
-				    	<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.isAlta()}" required="true"/>
-				    </p:column>
-			  </p:row>
-			  <p:row class="ui-datatable-odd">
-				    <p:column>
-				    	<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
-					</p:column>
-				    <p:column colspan="3">
-				    	<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" style="width:95%" />
-				    </p:column>
-				    <p:column>
-				    	<p:commandButton id="btnEditarDescripcion" icon="fa fa-edit" actionListener="#{dialogDominio.editarDescripcion()}" process="@this" update="growlDialog">
-       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog" />
-       					</p:commandButton>
-				    </p:column>
 
-			  </p:row>
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-			  <p:row>
-				    <p:column>
-				    	<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
-					</p:column>
-				    <p:column  colspan="4"><p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" /></p:column>
+				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
+				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.isAlta()}" required="true"/>
 
-			  </p:row>
-			  <p:row  class="ui-datatable-odd">
-				    <p:column>
-				    	<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerTipo']}" />
-					</p:column>
-				    <p:column>
-						<p:selectOneRadio layout="pageDirection"  id="console" value="#{dialogDominio.data.tipo}">
-				            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaBD']}" itemValue="B" />
-				            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.listado']}" itemValue="L" />
-				            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaRemota']}" itemValue="R" />
-					    </p:selectOneRadio>
-					</p:column>
-					<p:column>
-						<p>
-							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" />
-						</p>
-						<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" />
-					</p:column>
-					<p:column colspan="2">
-						<p>
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" />
-						</p>
-						<p>
-							<p:inputText id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" />
-						</p>
-					</p:column>
-				</p:row>
-				<p:row>
-						    <p:column>
-						    	<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
-							</p:column>
-						    <p:column  colspan="3">
-						    	<p:panel style="min-height:200px" min-height="1000px">
-							    	<!-- Data table -->
-									<p:dataTable  id="dataTableParametros" var="td" value="#{dialogDominio.data.parametros}"
-												 rows="10"
-												 style="border:1px"
-												 scrollable="true"
-												 scrollHeight="100%"
-												 scrollWidth="100%"
-												 paginator="true"
-												 paginatorPosition="bottom"
-						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						                         rowsPerPageTemplate="5,10,15,30"
-									        	 selectionMode="single" selection="#{dialogDominio.propiedadSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">
+				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
+				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" style="width:95%" />
 
-										<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-										<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
+				<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
+				<p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" />
 
-										<!-- Necesario para actualizar en controlador la fila seleccionada -->
-										<p:ajax event="rowSelect" />
-										<p:ajax event="rowUnselect" />
+				<p:column>
+			    	<p style="width:230px">
+			    		<p:outputLabel  value="#{msg['dialogDominio.headerTipo']}:" />
+					</p>
+					<p:selectOneRadio layout="pageDirection"  id="console" value="#{dialogDominio.data.tipo}" required="true">
+			            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaBD']}" itemValue="B" />
+			            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.listado']}" itemValue="L" />
+			            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaRemota']}" itemValue="R" />
 
-										<!-- Columnas -->
-									    <p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
-									        <h:outputText value="#{td.codigo}" />
-									    </p:column>
+			            <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota" />
 
-									    <p:column headerText="#{msg['dialogDominio.headerParametros.valor']}" class="ui-panelgrid-cell">
-									        <h:outputText value="#{td.valor}" />
-									    </p:column>
+				    </p:selectOneRadio>
+				</p:column>
+				<h:panelGrid columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-						 			</p:dataTable>
-								</p:panel>
-					 			<h:outputScript >
-							      function rcEditarPropiedad() {
-							        document.getElementById("form:btnEditarPropiedad").click();
-							      }
-							      function  rcBorrarPropiedad() {
-							        document.getElementById("form:btnEliminarPropiedad").click();
-							      }
-							    </h:outputScript>
+						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
+							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30" required="true" />
+						</p:column>
+						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
-						    </p:column>
-						     <p:column style="width:20px">
-						     	<p>
-						    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
-		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+						<p:column id="columnaBBDD2" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
+							<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" style="margin-right:20px"  />
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" />
+						</p:column>
+						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
+
+						<p:column id="columnaLista1" colspan="2" rendered="#{dialogDominio.visibleLista}">
+
+							<!-- Data table -->
+							<p:dataTable  id="datalistValores"
+										 var="td"
+										 value="#{dialogDominio.listaValores}"
+										 scrollable="true"
+										 scrollHeight="140"
+										 paginator="false"
+										 selectionMode="single"
+										 selection="#{dialogDominio.valorSeleccionado}"
+										 rowKey="#{td.codigo}"
+										 dblClickSelect="true">
+
+								<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+								<p:ajax event="rowDblselect" oncomplete="rcEditarValor();"/>
+
+								<!-- Necesario para actualizar en controlador la fila seleccionada -->
+								<p:ajax event="rowSelect" />
+								<p:ajax event="rowUnselect" />
+
+								<!-- Columnas -->
+								<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
+									<h:outputText value="#{td.codigo}" />
+							    </p:column>
+
+							    <p:column headerText="#{msg['dialogDominio.headerParametros.valor']}" class="ui-panelgrid-cell">
+							        <h:outputText value="#{td.valor}" />
+							    </p:column>
+				 			</p:dataTable>
+						</p:column>
+						<p:column id="columnaLista2"  rendered="#{dialogDominio.visibleLista}">
+								<p>
+									<p:commandButton id="btnNuevoValor" icon="fa fa-plus" actionListener="#{dialogDominio.nuevoValor()}" process="@this" update="growlDialog"  >
+		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-						    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
-		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+		        					<p:commandButton id="btnEditarValor" icon="fa fa-edit" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  >
+		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
 		        					</p:commandButton>
 		        				</p>
-						    	<p>
-						    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+							    <p>
+							    	<p:commandButton id="btnEliminarValor" icon="fa fa-minus" actionListener="#{dialogDominio.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
+							    </p>
+							    <p>
+						    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogDominio.subirValor()}" process="@this" update="growlDialog datalistValores" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+						    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogDominio.bajarValor()}" process="@this" update="growlDialog datalistValores" />
 						    	</p>
-						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
-						    	</p>
-							 </p:column>
-					  </p:row>
+						</p:column>
 
-			 </p:panelGrid>
+						<p:column id="columnaRemota" rendered="#{dialogDominio.visibleRemoto}">
+							<p>
+								<p:outputLabel for="urlRemoto" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}"  />
+							</p>
+							<p>
+								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="40"  />
+							</p>
+						</p:column>
+						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />
+
+
+				</h:panelGrid>
+
+				<p:outputLabel for="dataTableParametros" value="#{msg['dialogDominio.headerParametros.titulo']}" />
+				<h:panelGrid columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:dataTable  id="dataTableParametros"
+									 var="td"
+									 value="#{dialogDominio.propiedades}"
+									 scrollable="true"
+									 scrollHeight="140"
+									 selectionMode="single"
+									 selection="#{dialogDominio.propiedadSeleccionada}"
+									 rowKey="#{td.codigo}"
+									 dblClickSelect="true">
+
+							<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+							<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
+
+							<!-- Necesario para actualizar en controlador la fila seleccionada -->
+							<p:ajax event="rowSelect" />
+							<p:ajax event="rowUnselect" />
+
+							<!-- Columnas -->
+							<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
+								<h:outputText value="#{td.codigo}" />
+						    </p:column>
+
+						    <p:column headerText="#{msg['dialogDominio.headerParametros.valor']}" class="ui-panelgrid-cell">
+						        <h:outputText value="#{td.valor}" />
+						    </p:column>
+			 		</p:dataTable>
+			 		<p:column>
+						<p>
+				    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
+	       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+	       					</p:commandButton>
+	       				</p>
+	       				<p>
+				    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
+	       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+	       					</p:commandButton>
+	       				</p>
+						<p>
+				    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+				    	</p>
+				    	<p>
+				    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+				    	</p>
+				    	<p>
+				    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+				    	</p>
+					</p:column>
+		 		</h:panelGrid>
+			</h:panelGrid>
+
+			<h:outputScript>
+		      function rcEditarPropiedad() {
+		        document.getElementById("form:btnEditarPropiedad").click();
+		      }
+		      function rcEditarValor() {
+		        document.getElementById("form:btnEditarValor").click();
+		      }
+		      function  rcBorrarPropiedad() {
+		        document.getElementById("form:btnEliminarPropiedad").click();
+		      }
+		      function  rcBorrarValor() {
+		        document.getElementById("form:btnEliminarValor").click();
+		      }
+		    </h:outputScript>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

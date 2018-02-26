@@ -16,13 +16,13 @@ import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Formulario;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.frontend.model.OpcionArbol;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
-// TODO: Auto-generated Javadoc
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n de tr&aacute;mites.
  *
@@ -79,6 +79,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private List<Tasa> listaTasas;
 
 	/**
+	 * Lista de dominios.
+	 */
+	private List<Dominio> listaDominios;
+
+	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
 	public ViewDefinicionVersion() {
@@ -112,6 +117,40 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		breadCrumbRoot.generateUniqueIds();
 
 		breadCrumb = copyMenuModel(breadCrumbRoot);
+
+		/* inicializa dominio */
+		final Dominio dominio1 = new Dominio();
+		dominio1.setId(1L);
+		dominio1.setCodigo("1");
+		dominio1.setDescripcion("Dominio 1");
+		dominio1.setAmbito("Entidad");
+		final Dominio dominio2 = new Dominio();
+		dominio2.setId(2L);
+		dominio2.setCodigo("2");
+		dominio2.setDescripcion("Dominio 2");
+		dominio2.setAmbito("Area");
+		final Dominio dominio3 = new Dominio();
+		dominio3.setId(3L);
+		dominio3.setCodigo("3");
+		dominio3.setDescripcion("Dominio 3");
+		dominio3.setAmbito("Generico");
+		final Dominio dominio4 = new Dominio();
+		dominio4.setId(4L);
+		dominio4.setCodigo("4");
+		dominio4.setDescripcion("Dominio 4");
+		dominio4.setAmbito("Entidad");
+		final Dominio dominio5 = new Dominio();
+		dominio5.setId(5L);
+		dominio5.setCodigo("5");
+		dominio5.setDescripcion("Dominio 5");
+		dominio5.setAmbito("Generico");
+
+		listaDominios = new ArrayList<>();
+		listaDominios.add(dominio1);
+		listaDominios.add(dominio2);
+		listaDominios.add(dominio3);
+		listaDominios.add(dominio4);
+		listaDominios.add(dominio5);
 
 		/* iniciliza pasos tramite */
 		final TramitePaso paso1 = new TramitePaso();
@@ -471,6 +510,25 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setListaTasas(final List<Tasa> listaTasas) {
 		this.listaTasas = listaTasas;
+	}
+
+	/**
+	 * Obtiene el valor de listaDominios.
+	 *
+	 * @return el valor de listaDominios
+	 */
+	public List<Dominio> getListaDominios() {
+		return listaDominios;
+	}
+
+	/**
+	 * Establece el valor de listaDominios.
+	 *
+	 * @param listaDominios
+	 *            el nuevo valor de listaDominios
+	 */
+	public void setListaDominios(final List<Dominio> listaDominios) {
+		this.listaDominios = listaDominios;
 	}
 
 }

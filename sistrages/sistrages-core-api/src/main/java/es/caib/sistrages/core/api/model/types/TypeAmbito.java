@@ -19,7 +19,7 @@ public enum TypeAmbito {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param pAmbito
 	 *            Role name
 	 */
@@ -44,6 +44,21 @@ public enum TypeAmbito {
 				}
 			}
 
+		}
+		return respuesta;
+	}
+
+	/**
+	 * Obtiene enum desde string.
+	 *
+	 * @param text
+	 *            string
+	 * @return TypeSiNo
+	 */
+	public static String toString(final TypeAmbito ambito) {
+		String respuesta = null;
+		if (ambito != null) {
+			respuesta = ambito.ambito;
 		}
 		return respuesta;
 	}
