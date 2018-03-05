@@ -17,7 +17,7 @@ import es.caib.sistrages.core.api.service.TestService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -94,7 +94,7 @@ public class ViewTest extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<String, String>();
-		params.put(TypeParametroDialogo.ID.toString(), this.datoSeleccionado.getCodigo());
+		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo());
 		UtilJSF.openDialog(DialogTest.class, TypeModoAcceso.EDICION, params, true, 340, 140);
 
 	}

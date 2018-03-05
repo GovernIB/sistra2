@@ -43,12 +43,7 @@
 		        	</h:panelGrid>
 		        </f:facet>
 
-
-
 		    </p:toolbar>
-
-
-
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewPlugins.listaDatos}"
@@ -68,7 +63,7 @@
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewPlugins.tipo']}">
-			        <h:outputText value="#{td.tipo}" />
+			        <h:outputText value="#{msg['typePlugin.' += td.tipo]}" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewPlugins.classname']}">

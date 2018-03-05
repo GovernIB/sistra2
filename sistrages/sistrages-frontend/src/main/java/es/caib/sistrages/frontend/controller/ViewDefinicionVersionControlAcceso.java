@@ -1,9 +1,14 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -27,6 +32,15 @@ public class ViewDefinicionVersionControlAcceso extends ViewControllerBase {
 	 * Abre un di&aacute;logo para editar los datos.
 	 */
 	public void editar() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf("1"));
+		UtilJSF.openDialog(DialogDefinicionVersionControlAcceso.class, TypeModoAcceso.EDICION, params, true, 950, 450);
+	}
+
+	/**
+	 * Editar descripcion.
+	 */
+	public void editarMensajeDesactivacion() {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 

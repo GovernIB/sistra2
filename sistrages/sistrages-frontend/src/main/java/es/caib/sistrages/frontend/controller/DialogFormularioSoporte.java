@@ -1,9 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,67 +8,39 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
 public class DialogFormularioSoporte extends DialogControllerBase {
 
-	/** Id elemento a tratar. */
-	private String id;
-
 	/** Datos elemento. */
-	private List<FormularioSoporte> data;
+	private FormularioSoporte data;
 
-	/** Data Seleccionada. **/
-	private FormularioSoporte dataSeleccionada;
+	/** Formulario Soporte en formato JSON. **/
+	private String iData;
 
 	/**
 	 * Inicialización.
+	 *
+	 * @throws IOException
 	 */
-	public void init() {
+	public void init() throws IOException {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new ArrayList<>();
+			data = new FormularioSoporte();
 
 		} else {
-			data = new ArrayList<>();// dominioGlobalService.load(id);
-			final FormularioSoporte form1 = new FormularioSoporte();
-			final Traducciones tradDescripcion = new Traducciones();
-			tradDescripcion.add(new Traduccion("ca", "Descripcion ca form1"));
-			tradDescripcion.add(new Traduccion("es", "Descripcion es form1"));
-			form1.setDescripcion(tradDescripcion);
-
-			final Traducciones tradTipoIncidencia = new Traducciones();
-			tradTipoIncidencia.add(new Traduccion("ca", "TipoIncidencia ca form1"));
-			tradTipoIncidencia.add(new Traduccion("es", "TipoIncidencia es form1"));
-			form1.setTipoIncidencia(tradTipoIncidencia);
-			form1.setDestinatario("R");
-			form1.setId(1l);
-
-			final FormularioSoporte form2 = new FormularioSoporte();
-			final Traducciones tradDescripcion2 = new Traducciones();
-			tradDescripcion2.add(new Traduccion("ca", "Descripcion ca form2"));
-			tradDescripcion2.add(new Traduccion("es", "Descripcion es form2"));
-			form2.setDescripcion(tradDescripcion2);
-
-			final Traducciones tradTipoIncidencia2 = new Traducciones();
-			tradTipoIncidencia2.add(new Traduccion("ca", "TipoIncidencia ca form2"));
-			tradTipoIncidencia2.add(new Traduccion("es", "TipoIncidencia es form2"));
-			form2.setTipoIncidencia(tradTipoIncidencia2);
-			form2.setDestinatario("E");
-			form2.setEmails("email1@caib.es, email2@caib.es, email3@caib.es");
-			data.add(form1);
-			data.add(form2);
+			data = (FormularioSoporte) UtilJSON.fromJSON(iData, FormularioSoporte.class);
 		}
 
 	}
@@ -82,17 +51,19 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 * @param event
 	 *            respuesta dialogo
 	 */
-	public void returnDialogo(final SelectEvent event) {
+	public void returnDialogoDescripcion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		String message = null;
 
 		if (!respuesta.isCanceled()) {
+
 			switch (respuesta.getModoAcceso()) {
+
 			case ALTA:
-				// Refrescamos datos
-				final FormularioSoporte formulario = (FormularioSoporte) respuesta.getResult();
-				this.data.add(formulario);
+
+				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				data.setDescripcion(traducciones);
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
@@ -100,13 +71,9 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 				break;
 
 			case EDICION:
-				// Actualizamos fila actual
-				final FormularioSoporte propiedadEdicion = (FormularioSoporte) respuesta.getResult();
-				// Muestra dialogo
-				final int posicion = this.data.indexOf(this.dataSeleccionada);
 
-				this.data.remove(posicion);
-				this.data.add(posicion, propiedadEdicion);
+				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				data.setDescripcion(traduccionesMod);
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.modificado.ok");
@@ -124,28 +91,48 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * Crea nueva propiedad.
-	 */
-	public void nuevoFormulario() {
-		// UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true,
-		// 360, 200);
-	}
-
-	/**
-	 * Edita una propiedad.
+	 * Retorno dialogo de los botones de propiedades.
 	 *
-	 * @throws JsonProcessingException
+	 * @param event
+	 *            respuesta dialogo
 	 */
-	public void editarFormulario() throws JsonProcessingException {
+	public void returnDialogoTipoIncidencia(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		if (!verificarFilaSeleccionada())
-			return;
+		String message = null;
 
-		// final Map<String, String> params = new HashMap<>();
-		// params.put(TypeParametroDialogo.DATO.toString(),
-		// UtilJSON.toJSON(this.propiedadSeleccionada));
-		// UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params,
-		// true, 360, 200);
+		if (!respuesta.isCanceled()) {
+
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+
+				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				data.setTipoIncidencia(traducciones);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				final Traducciones traduccionesTipoIncid = (Traducciones) respuesta.getResult();
+				data.setTipoIncidencia(traduccionesTipoIncid);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
 	}
 
 	/**
@@ -154,72 +141,42 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 * @throws JsonProcessingException
 	 */
 	public void editarDescripcion() throws JsonProcessingException {
-		final Map<String, String> params = new HashMap<>();
-		final Traducciones traducciones = new Traducciones();
-		traducciones.add(new Traduccion("ca", "Traduccion ca"));
-		traducciones.add(new Traduccion("es", "Traduccion es"));
-		traducciones.add(new Traduccion("en", "Traduccion en"));
-		final ObjectMapper mapper = new ObjectMapper();
-		params.put(TypeParametroDialogo.DATO.toString(), mapper.writeValueAsString(traducciones));
-		final List<String> obligatorios = new ArrayList<>();
-		obligatorios.add("ca");
-		final List<String> posibles = new ArrayList<>();
-		posibles.add("ca");
-		posibles.add("es");
-		posibles.add("en");
-		posibles.add("de");
-		params.put("OBLIGATORIOS", mapper.writeValueAsString(obligatorios));
-		params.put("POSIBLES", mapper.writeValueAsString(posibles));
-		UtilJSF.openDialog(DialogTraduccion.class, TypeModoAcceso.EDICION, params, true, 460, 250);
-	}
-
-	/**
-	 * Quita un formulario.
-	 */
-	public void quitarFormulario() {
-		if (!verificarFilaSeleccionada())
-			return;
-
-		this.data.remove(this.dataSeleccionada);
-
-	}
-
-	/**
-	 * Verifica si hay fila seleccionada.
-	 *
-	 * @return
-	 */
-	private boolean verificarFilaSeleccionada() {
-		boolean filaSeleccionada = true;
-		if (this.dataSeleccionada == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
-			filaSeleccionada = false;
+		if (data.getDescripcion() == null || data.getDescripcion().getTraducciones() == null
+				|| data.getDescripcion().getTraduccion().isEmpty()) {
+			final Traducciones traducciones = new Traducciones();
+			traducciones.add(new Traduccion("ca", ""));
+			traducciones.add(new Traduccion("es", ""));
+			data.setDescripcion(traducciones);
 		}
-		return filaSeleccionada;
+		UtilJSF.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), null, null);
+	}
+
+	/**
+	 * Editar descripcion del dominio.
+	 *
+	 * @throws JsonProcessingException
+	 */
+	public void editarTipoIncidencia() throws JsonProcessingException {
+		if (data.getTipoIncidencia() == null || data.getTipoIncidencia().getTraducciones() == null
+				|| data.getTipoIncidencia().getTraduccion().isEmpty()) {
+			final Traducciones traducciones = new Traducciones();
+			traducciones.add(new Traduccion("ca", ""));
+			traducciones.add(new Traduccion("es", ""));
+			data.setTipoIncidencia(traducciones);
+		}
+		UtilJSF.openDialogTraduccion(TypeModoAcceso.EDICION, data.getTipoIncidencia(), null, null);
 	}
 
 	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
-		// Realizamos alta o update
-		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		switch (acceso) {
-		case ALTA:
-			/*
-			 * if (dominioGlobalService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; } dominioGlobalService.add(data);
-			 */
 
-			break;
-		case EDICION:
-			// dominioGlobalService.update(data);
-			break;
-		case CONSULTA:
-			// No hay que hacer nada
-			break;
+		if (data.getDestinatario() == TypeFormularioSoporte.LISTA_DE_EMAILS && data.getEmails().isEmpty()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogFormularioSoporte.error.emailVacio");
+			return;
 		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -238,24 +195,9 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	/**
 	 * @return the data
 	 */
-	public List<FormularioSoporte> getData() {
+	public FormularioSoporte getData() {
 		return data;
 	}
 
@@ -263,23 +205,23 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final List<FormularioSoporte> data) {
+	public void setData(final FormularioSoporte data) {
 		this.data = data;
 	}
 
 	/**
-	 * @return the dataSeleccionada
+	 * @return the iData
 	 */
-	public FormularioSoporte getDataSeleccionada() {
-		return dataSeleccionada;
+	public String getiData() {
+		return iData;
 	}
 
 	/**
-	 * @param dataSeleccionada
-	 *            the dataSeleccionada to set
+	 * @param iData
+	 *            the iData to set
 	 */
-	public void setDataSeleccionada(final FormularioSoporte dataSeleccionada) {
-		this.dataSeleccionada = dataSeleccionada;
+	public void setiData(final String iData) {
+		this.iData = iData;
 	}
 
 }

@@ -1,16 +1,21 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -29,24 +34,34 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	public void init() {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
+		final Area area1 = new Area();
+		area1.setId(1l);
+		area1.setDescripcion("Area 1 desc");
+		area1.setCodigo("Area 1");
+		final Area area2 = new Area();
+		area2.setId(2l);
+		area2.setDescripcion("Area 2 desc");
+		area2.setCodigo("Area 2");
+
 		final Rol rol1 = new Rol();
 		rol1.setId(1l);
 		rol1.setCodigo("STR_SALUT_DEV");
 		rol1.setDescripcion("Rol de desenvolupament per tràmits de salut");
-		rol1.setPermisos("Alta - Baixa - Modificació");
-		rol1.setArea("Area 1");
+		rol1.setAlta(true);
+		rol1.setModificacion(true);
+		rol1.setArea(area1);
 		final Rol rol2 = new Rol();
 		rol2.setId(2l);
 		rol2.setCodigo("STR_TEST_CONS");
 		rol2.setDescripcion("Rol de consulta de tràmits de funcionalitats.");
-		rol2.setPermisos("Consulta");
-		rol2.setArea("Area 2");
+		rol2.setConsulta(true);
+		rol2.setArea(area2);
 		final Rol rol3 = new Rol();
 		rol3.setId(3l);
 		rol3.setCodigo("STR_PESCA_HELPDESK");
 		rol3.setDescripcion("Rol per resolució d'incidències de pesca.");
-		rol3.setPermisos("Helpdesk");
-		rol3.setArea("Area 3");
+		rol3.setHelpdesk(true);
+		rol3.setArea(area1);
 
 		listaDatos = new ArrayList<>();
 		listaDatos.add(rol1);
@@ -99,14 +114,25 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+
+		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.ALTA, null, true, 600, 220);
+
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.EDICION, params, true, 600, 220);
+
 	}
 
 	/**

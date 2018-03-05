@@ -8,7 +8,7 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogFormularioExterno.titulo']}"/></title>
@@ -22,36 +22,33 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<!-- TODO No funciona usando el enum. Sin embargo en h:outputText si que va <h:outputText value="#{TypeParametroDialogo.MODO_ACCESO}"/>
-		<f:viewParam name="#{TypeParametroDialogo.MODO_ACCESO.toString()}" value="#{dialogFormularioExterno.modoAcceso}"/>
-		<f:viewParam name="#{TypeParametroDialogo.ID}" value="#{dialogFormularioExterno.id}"/>
-		-->
 		<f:viewParam name="MODO_ACCESO" value="#{dialogFormularioExterno.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogFormularioExterno.id}"/>
+		<f:viewParam name="DATO" value="#{dialogFormularioExterno.iData}"/>
 		<f:viewAction action="#{dialogFormularioExterno.init}" />
 	</f:metadata>
-	<h:form id="dialogArea">
+	<h:form id="dialogArea" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialogAreaData" widgetVar="growlDialogAreaData" life="2000" sticky="false" />
-			 	<p:panelGrid columns="2" styleClass="ui-noborder">
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogFormularioExterno.headerCodigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogFormularioExterno.data.codigo}" disabled="#{!dialogFormularioExterno.isAlta()}" required="true"/>
+				 	<p:inputText id="codigo" value="#{dialogFormularioExterno.data.codigo}" disabled="#{!dialogFormularioExterno.isAlta()}" required="true" size="40" />
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogFormularioExterno.headerDescripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogFormularioExterno.data.descripcion}" disabled="#{dialogFormularioExterno.isConsulta()}" required="true"/>
+				 	<p:inputText id="descripcion" value="#{dialogFormularioExterno.data.descripcion}" disabled="#{dialogFormularioExterno.isConsulta()}" required="true" size="40"  />
 
 					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerUrl']}" />
-				 	<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" disabled="#{dialogFormularioExterno.isConsulta()}" required="true"/>
+				 	<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" disabled="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" />
 
-				</p:panelGrid>
+				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFormularioExterno.aceptar()}" process="@form" update="@form growlDialogAreaData"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFormularioExterno.aceptar()}" process="@form" update="@form growlDialogAreaData" styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormularioExterno.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

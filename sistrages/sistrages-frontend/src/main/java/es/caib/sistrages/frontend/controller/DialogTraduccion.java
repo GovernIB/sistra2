@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
@@ -80,12 +81,11 @@ public class DialogTraduccion extends DialogControllerBase {
 		if (iData == null || iData.isEmpty()) {
 			// Borrar, sólo de prueba.
 			data = new Traducciones();
-			data.add(new Traduccion("ca", "Traduccion Catalan"));
-			data.add(new Traduccion("es", "Traduccion Español"));
-			data.add(new Traduccion("en", "Traduccion Inglés"));
+			data.add(new Traduccion("ca", ""));
+			data.add(new Traduccion("es", ""));
+			data.add(new Traduccion("en", ""));
 		} else {
-			final ObjectMapper mapper = new ObjectMapper();
-			data = mapper.readValue(iData, Traducciones.class);
+			data = (Traducciones) UtilJSON.fromJSON(iData, Traducciones.class);
 		}
 
 		if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {

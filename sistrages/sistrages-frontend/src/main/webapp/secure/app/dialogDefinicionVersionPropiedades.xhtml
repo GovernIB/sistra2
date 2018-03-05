@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+	<h:head>
+		<title>
+			<h:outputText value="#{msg['dialogDefinicionVersionPropiedades.titulo']}" />
+		</title>
+
+		<!-- Parametros dialogo -->
+		<f:metadata>
+			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionPropiedades.modoAcceso}" />
+			<f:viewParam name="ID" value="#{dialogDefinicionVersionPropiedades.id}" />
+			<f:viewAction action="#{dialogDefinicionVersionPropiedades.init}" />
+		</f:metadata>
+	</h:head>
+
+	<h:body>
+
+		<f:facet name="last">
+			<h:outputStylesheet library="css" name="style.css" />
+		</f:facet>
+
+		<h:form id="formDialogDefinicionVersionPropiedades">
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			<!-- Contenido dialogo -->
+			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
+
+	            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
+	            <p:outputPanel>
+	           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion.getTraduccion(sessionBean.lang)}"/>
+	           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionPropiedades.editarDescripcion()}" styleClass="va-top"
+							process="@this" update="growlDialog"/>
+	       		</p:outputPanel>
+
+	            <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
+				<p:panelGrid styleClass="noBorders">
+					<p:row>
+						<p:column styleClass="noPadding-left">
+							<p:selectBooleanCheckbox id="autenticado" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.autenticado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true"/>
+						</p:column>
+
+						<p:column>
+							<h:panelGrid columns="2" columnClasses="w55 grid-left, w45 grid-left" styleClass="w100 h100" cellpadding="3">
+								<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
+
+						        <p:selectOneMenu id="nivelQAA" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.nivelQAA}">
+						            <f:selectItem itemLabel="1" itemValue="1" />
+						            <f:selectItem itemLabel="2" itemValue="2" />
+						            <f:selectItem itemLabel="3" itemValue="3" />
+						        </p:selectOneMenu>
+					        </h:panelGrid>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column styleClass="noPadding-left">
+							<p:selectBooleanCheckbox id="sinAutenticacion"  itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" />
+						</p:column>
+						<p:column>
+							<p:spacer width="8"/>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+	         	<p:outputLabel for="idiomaCastellano" value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
+				<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
+					<p:selectBooleanCheckbox id="idiomaCastellano" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEsSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
+					<p:selectBooleanCheckbox id="idiomaCatalan" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaCaSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
+					<p:selectBooleanCheckbox id="idiomaIngles"  value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEnSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
+				</p:panelGrid>
+
+	         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
+				<p:panelGrid styleClass="noBorders">
+					<p:row>
+						<p:column styleClass="noPadding-left">
+							<p:selectBooleanCheckbox id="persistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistencia}"/>
+							<p:spacer width="40" height="1"/>
+						</p:column>
+						<p:column>
+							<p:selectOneRadio id="tipopersistencia" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaInfinita}">
+					            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
+					            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
+			     		   </p:selectOneRadio>
+			     		 </p:column>
+						<p:column>
+								<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
+								<p:spacer width="8"/>
+								<p:spinner id="numdias" size="3" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.persistenciaDias}" min="1" max="99"/>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<p:outputLabel for="scriptpersonalizacion" value="#{msg['viewDefinicionVersionPropiedades.scriptpersonalizacion']}" />
+				<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt"  actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
+							process="@this" update="growlDialog"/>
+
+				<p:outputLabel for="scriptparametrosiniciales" value="#{msg['viewDefinicionVersionPropiedades.scriptparametrosiniciales']}" />
+				<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
+							process="@this" update="growlDialog"/>
+
+			</h:panelGrid>
+
+			<!-- botonera inferior -->
+			<p:outputPanel styleClass="botonera">
+				<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.aceptar']}" styleClass="boton-azul"
+							actionListener="#{dialogDefinicionVersionPropiedades.aceptar()}" process="@form"
+							update="@form growlDialog" />
+						<p:commandButton value="#{msg['botones.cancelar']}"
+							actionListener="#{dialogDefinicionVersionPropiedades.cancelar()}" process="@this" />
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+		</h:form>
+	</h:body>
+
+</f:view>
+</html>

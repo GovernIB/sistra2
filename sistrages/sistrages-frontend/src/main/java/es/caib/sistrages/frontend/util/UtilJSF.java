@@ -9,18 +9,24 @@ import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.frontend.controller.DialogTraduccion;
 import es.caib.sistrages.frontend.controller.SessionBean;
 import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
 import es.caib.sistrages.frontend.controller.ViewFormulariosExternos;
-import es.caib.sistrages.frontend.controller.ViewFuenteDatos;
+import es.caib.sistrages.frontend.controller.ViewFuentes;
 import es.caib.sistrages.frontend.controller.ViewMensajesAvisoEntidad;
 import es.caib.sistrages.frontend.controller.ViewPlugins;
 import es.caib.sistrages.frontend.controller.ViewPropiedadesConfiguracion;
@@ -31,7 +37,7 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuSuperAdministrador;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 
 /**
  * Utilidades.
@@ -102,7 +108,7 @@ public final class UtilJSF {
 		options.put("headerElement", "customheader");
 		// Parametros
 		final Map<String, List<String>> paramsDialog = new HashMap<>();
-		paramsDialog.put(TypeParametroDialogo.MODO_ACCESO.toString(), Collections.singletonList(modoAcceso.toString()));
+		paramsDialog.put(TypeParametroVentana.MODO_ACCESO.toString(), Collections.singletonList(modoAcceso.toString()));
 		if (params != null) {
 			for (final String key : params.keySet()) {
 				paramsDialog.put(key, Collections.singletonList(params.get(key)));
@@ -196,6 +202,31 @@ public final class UtilJSF {
 			// TODO Gestion Excepciones
 		}
 	}
+
+	/**
+	 * Redirect jsf page.
+	 *
+	 * @param jsfPage
+	 *            the jsf page
+	 * @param params
+	 *            the params
+	 */
+	public static void redirectJsfPage(final String jsfPage, final Map<String, List<String>> params) {
+		try {
+			final ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance()
+					.getExternalContext().getContext();
+			final String contextPath = servletContext.getContextPath();
+			final ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+			FacesContext.getCurrentInstance().getExternalContext()
+					.redirect(ec.encodeRedirectURL(contextPath + jsfPage, params));
+			FacesContext.getCurrentInstance().responseComplete();
+		} catch (final IOException e) {
+			// TODO Gestion Excepciones
+		}
+	}
+
+	// FacesContext.getCurrentInstance().getExternalContext().encodeRedirectURL(baseUrl,
+	// parameters)
 
 	private static Severity getSeverity(final TypeNivelGravedad nivel) {
 		Severity severity;
@@ -291,7 +322,7 @@ public final class UtilJSF {
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewConfiguracionEntidad.class) + EXTENSION_XHTML;
 			break;
 		case FUENTES_DATOS:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFuenteDatos.class) + EXTENSION_XHTML + ambitoEntidadURL;
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFuentes.class) + EXTENSION_XHTML + ambitoEntidadURL;
 			break;
 		case DOMINIOS_ENTIDAD:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewDominios.class) + EXTENSION_XHTML + ambitoEntidadURL;
@@ -376,7 +407,73 @@ public final class UtilJSF {
 		redirectJsfPage(getDefaultUrlRole(role, idEntidad));
 	}
 
+	/**
+	 * Get Url Arbol definicion version
+	 *
+	 * @param opcion
+	 * @return
+	 */
 	public static String getUrlArbolDefinicionVersion(final String opcion) {
 		return PATH_VIEWS + opcion + EXTENSION_XHTML;
+	}
+
+	/**
+	 * Abre un dialog de tipo traduccion.
+	 *
+	 * @param modoAcceso
+	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones
+	 *            Dato en formato json de tipo Traducciones
+	 * @param idiomas
+	 *            La lista de idiomas que se puede introducir literal. Si no se
+	 *            introduce, se supondrán que son los que tenga traducciones.
+	 * @param idiomasObligatorios
+	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
+	 *            que son los que tenga traducciones.
+	 * @throws JsonProcessingException
+	 */
+	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, Traducciones traducciones,
+			List<String> idiomas, List<String> idiomasObligatorios) throws JsonProcessingException {
+
+		final Map<String, String> params = new HashMap<>();
+
+		if (traducciones == null || traducciones.getIdiomas() == null || traducciones.getIdiomas().isEmpty()) {
+			traducciones = new Traducciones();
+			traducciones.add(new Traduccion("ca", ""));
+			traducciones.add(new Traduccion("es", ""));
+		}
+
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(traducciones));
+
+		if (idiomas == null) {
+			idiomas = traducciones.getIdiomas();
+		}
+
+		if (idiomasObligatorios == null) {
+			idiomasObligatorios = traducciones.getIdiomas();
+		}
+
+		params.put("OBLIGATORIOS", UtilJSON.toJSON(idiomasObligatorios));
+		params.put("IDIOMAS", UtilJSON.toJSON(idiomas));
+
+		/** Calculamos la altura según el nº de idiomas a mostrar. **/
+		int altura;
+		switch (idiomas.size()) {
+		case 1:
+			altura = 120;
+			break;
+		case 2:
+			altura = 200;
+			break;
+		case 3:
+			altura = 280;
+			break;
+		case 4:
+			altura = 360;
+			break;
+		default:
+			altura = 100;
+		}
+		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 460, altura);
 	}
 }

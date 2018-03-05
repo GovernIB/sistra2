@@ -75,7 +75,7 @@ public class DialogFichero extends DialogControllerBase {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public void init() throws JsonParseException, JsonMappingException, IOException {
+	public void init() throws IOException {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 
 		if (id == null) {

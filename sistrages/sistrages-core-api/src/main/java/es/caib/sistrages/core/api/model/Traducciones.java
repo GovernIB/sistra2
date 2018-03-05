@@ -12,6 +12,13 @@ import java.util.List;
  */
 public class Traducciones {
 
+	/**
+	 * Crea una nueva instancia de Traducciones.
+	 */
+	public Traducciones() {
+		super();
+	}
+
 	/** Idioma. **/
 	private List<Traduccion> trads;
 
@@ -28,17 +35,19 @@ public class Traducciones {
 
 		for (final Traduccion traduccion : trads) {
 			if ("ca".equals(traduccion.getIdioma())) {
-				return traduccion.getTexto();
+				return traduccion.getLiteral();
 			}
 		}
 
-		return trads.get(0).getTexto();
+		return trads.get(0).getLiteral();
 	}
 
 	/**
-	 * Para obtener una traducción
+	 * Obtiene el valor de traduccion.
 	 *
-	 * @return
+	 * @param idioma
+	 *            the idioma
+	 * @return el valor de traduccion
 	 */
 	public String getTraduccion(final String idioma) {
 
@@ -48,7 +57,7 @@ public class Traducciones {
 
 		for (final Traduccion traduccion : trads) {
 			if (idioma.equals(traduccion.getIdioma())) {
-				return traduccion.getTexto();
+				return traduccion.getLiteral();
 			}
 		}
 
@@ -63,6 +72,7 @@ public class Traducciones {
 	 * </ul>
 	 *
 	 * @param traduccion
+	 *            traduccion
 	 */
 	public void add(final Traduccion traduccion) {
 		boolean encontrado = false;
@@ -72,7 +82,7 @@ public class Traducciones {
 		for (final Traduccion trad : trads) {
 			if (trad.getIdioma().equals(traduccion.getIdioma())) {
 				encontrado = true;
-				trad.setTexto(traduccion.getTexto());
+				trad.setLiteral(traduccion.getLiteral());
 			}
 		}
 
@@ -85,7 +95,8 @@ public class Traducciones {
 	 * Comprueba si esta un idioma en concreto.
 	 *
 	 * @param idioma
-	 * @return
+	 *            idioma
+	 * @return true si existe
 	 */
 	public boolean contains(final String idioma) {
 		boolean existe = false;
@@ -105,8 +116,10 @@ public class Traducciones {
 	 */
 	public List<String> getIdiomas() {
 		final List<String> idiomas = new ArrayList<>();
-		for (final Traduccion traduccion : trads) {
-			idiomas.add(traduccion.getIdioma());
+		if (trads != null) {
+			for (final Traduccion traduccion : trads) {
+				idiomas.add(traduccion.getIdioma());
+			}
 		}
 		return idiomas;
 	}

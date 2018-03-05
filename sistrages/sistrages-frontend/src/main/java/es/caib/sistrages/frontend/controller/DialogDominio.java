@@ -11,17 +11,15 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Fuente;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.types.TypeDominio;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilJSON;
 
@@ -50,11 +48,17 @@ public class DialogDominio extends DialogControllerBase {
 	/** Indica si es visible los textos relacionados con remoto. **/
 	private boolean visibleRemoto;
 
+	/** Indica si es visible fuente de datos. **/
+	private boolean visibleFuente;
+
 	/** Lista de propiedades. **/
 	private List<Propiedad> propiedades;
 
 	/** Lista valores. **/
 	private List<Propiedad> listaValores;
+
+	/** Lista con las fuentes de datos. **/
+	private List<Fuente> fuentes;
 
 	/**
 	 * Inicialización.
@@ -72,17 +76,19 @@ public class DialogDominio extends DialogControllerBase {
 			data.setCodigo("Entidad 1");
 			data.setDescripcion("Descripc");
 			data.setCacheable(true);
-			data.setTipo("B");
+			data.setTipo(TypeDominio.CONSULTA_BD);
 
 			// las propiedades se leerían del JSON
 			propiedades = new ArrayList<>();
 			final Propiedad p1 = new Propiedad();
 			p1.setCodigo("COD 1");
 			p1.setValor("VAL 1");
+			p1.setOrden(1);
 			propiedades.add(p1);
 			final Propiedad p2 = new Propiedad();
 			p2.setCodigo("COD 2");
 			p2.setValor("VAL 2");
+			p2.setOrden(2);
 			propiedades.add(p2);
 
 			// la lista se leería del JSON
@@ -96,9 +102,24 @@ public class DialogDominio extends DialogControllerBase {
 			lista2.setValor("VAL 2");
 			listaValores.add(lista2);
 		}
+
 		visibleJNDI = true;
 		visibleLista = false;
 		visibleRemoto = false;
+		visibleFuente = false;
+
+		fuentes = new ArrayList<>();
+		final Fuente f1 = new Fuente();
+		f1.setCodigo("Fuente 1");
+		f1.setDescripcion("Descripcion");
+		f1.setId(1l);
+		final Fuente f2 = new Fuente();
+		f2.setCodigo("Fuente 2");
+		f2.setDescripcion("Descripcion 2");
+		f2.setId(2l);
+		fuentes.add(f1);
+		fuentes.add(f2);
+
 	}
 
 	/** Is Dialogo Propiedad (o dialogo lista valores). **/
@@ -141,6 +162,7 @@ public class DialogDominio extends DialogControllerBase {
 
 					this.propiedades.remove(posicion);
 					this.propiedades.add(posicion, propiedadEdicion);
+					this.propiedadSeleccionada = propiedadEdicion;
 
 				} else {
 					// Actualizamos fila actual
@@ -150,6 +172,7 @@ public class DialogDominio extends DialogControllerBase {
 
 					this.listaValores.remove(posicion);
 					this.listaValores.add(posicion, propiedadEdicion);
+					this.valorSeleccionado = propiedadEdicion;
 
 				}
 
@@ -196,7 +219,7 @@ public class DialogDominio extends DialogControllerBase {
 
 		isDialogoPropiedad = true;
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
 		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
 	}
 
@@ -212,33 +235,8 @@ public class DialogDominio extends DialogControllerBase {
 
 		isDialogoPropiedad = false;
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
 		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
-	}
-
-	/**
-	 * Editar descripcion del dominio.
-	 *
-	 * @throws JsonProcessingException
-	 */
-	public void editarDescripcion() throws JsonProcessingException {
-		final Map<String, String> params = new HashMap<>();
-		final Traducciones traducciones = new Traducciones();
-		traducciones.add(new Traduccion("ca", "Traduccion ca"));
-		traducciones.add(new Traduccion("es", "Traduccion es"));
-		traducciones.add(new Traduccion("en", "Traduccion en"));
-		final ObjectMapper mapper = new ObjectMapper();
-		params.put(TypeParametroDialogo.DATO.toString(), mapper.writeValueAsString(traducciones));
-		final List<String> obligatorios = new ArrayList<>();
-		obligatorios.add("ca");
-		final List<String> posibles = new ArrayList<>();
-		posibles.add("ca");
-		posibles.add("es");
-		posibles.add("en");
-		posibles.add("de");
-		params.put("OBLIGATORIOS", mapper.writeValueAsString(obligatorios));
-		params.put("POSIBLES", mapper.writeValueAsString(posibles));
-		UtilJSF.openDialog(DialogTraduccion.class, TypeModoAcceso.EDICION, params, true, 460, 250);
 	}
 
 	/**
@@ -278,6 +276,10 @@ public class DialogDominio extends DialogControllerBase {
 
 		final Propiedad propiedad = this.propiedades.remove(posicion);
 		this.propiedades.add(posicion + 1, propiedad);
+
+		for (int i = 0; i < this.propiedades.size(); i++) {
+			this.propiedades.get(i).setOrden(i + 1);
+		}
 	}
 
 	/**
@@ -312,6 +314,10 @@ public class DialogDominio extends DialogControllerBase {
 
 		final Propiedad propiedad = this.propiedades.remove(posicion);
 		this.propiedades.add(posicion - 1, propiedad);
+
+		for (int i = 0; i < this.propiedades.size(); i++) {
+			this.propiedades.get(i).setOrden(i + 1);
+		}
 	}
 
 	/**
@@ -405,12 +411,15 @@ public class DialogDominio extends DialogControllerBase {
 		visibleJNDI = false;
 		visibleLista = false;
 		visibleRemoto = false;
-		if (TypeDominio.CONSULTA_BD.fromEnum().equals(this.data.getTipo())) {
+		visibleFuente = false;
+		if (TypeDominio.CONSULTA_BD == this.data.getTipo()) {
 			visibleJNDI = true;
-		} else if (TypeDominio.CONSULTA_REMOTA.fromEnum().equals(this.data.getTipo())) {
+		} else if (TypeDominio.CONSULTA_REMOTA == this.data.getTipo()) {
 			visibleRemoto = true;
-		} else if (TypeDominio.LISTA_FIJA.fromEnum().equals(this.data.getTipo())) {
+		} else if (TypeDominio.LISTA_FIJA == this.data.getTipo()) {
 			visibleLista = true;
+		} else if (TypeDominio.FUENTE_DATOS == this.data.getTipo()) {
+			visibleFuente = true;
 		}
 	}
 
@@ -510,6 +519,21 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
+	 * @return the visibleFuente
+	 */
+	public boolean isVisibleFuente() {
+		return visibleFuente;
+	}
+
+	/**
+	 * @param visibleFuente
+	 *            the visibleFuente to set
+	 */
+	public void setVisibleFuente(final boolean visibleFuente) {
+		this.visibleFuente = visibleFuente;
+	}
+
+	/**
 	 * @return the propiedades
 	 */
 	public List<Propiedad> getPropiedades() {
@@ -537,6 +561,21 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void setListaValores(final List<Propiedad> listaValores) {
 		this.listaValores = listaValores;
+	}
+
+	/**
+	 * @return the fuentes
+	 */
+	public List<Fuente> getFuentes() {
+		return fuentes;
+	}
+
+	/**
+	 * @param fuentes
+	 *            the fuentes to set
+	 */
+	public void setFuentes(final List<Fuente> fuentes) {
+		this.fuentes = fuentes;
 	}
 
 }

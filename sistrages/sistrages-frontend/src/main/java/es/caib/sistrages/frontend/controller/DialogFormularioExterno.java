@@ -1,5 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.io.IOException;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -8,6 +10,7 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
@@ -19,29 +22,26 @@ public class DialogFormularioExterno extends DialogControllerBase {
 	// @Inject
 	// private FormularioExternoService formularioExternoService;
 
-	/**
-	 * Id elemento a tratar.
-	 */
+	/** Id elemento a tratar. */
 	private String id;
 
-	/**
-	 * Datos elemento.
-	 */
+	/** Dato en JSON. **/
+	private String iData;
+
+	/** Datos elemento. */
 	private FormularioExterno data;
 
 	/**
 	 * Inicialización.
+	 *
+	 * @throws IOException
 	 */
-	public void init() {
+	public void init() throws IOException {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FormularioExterno();
 		} else {
-			data = new FormularioExterno();// formularioExternoService.load(id);
-			data.setId(Long.valueOf(id));
-			data.setDescripcion("Descripcion formulario externo");
-			data.setCodigo("codigo descripcion externo");
-			data.setUrl("http://www.caib.es");
+			data = (FormularioExterno) UtilJSON.fromJSON(iData, FormularioExterno.class);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class DialogFormularioExterno extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getCodigo());
+		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -103,6 +103,21 @@ public class DialogFormularioExterno extends DialogControllerBase {
 
 	public void setData(final FormularioExterno data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the iData
+	 */
+	public String getiData() {
+		return iData;
+	}
+
+	/**
+	 * @param iData
+	 *            the iData to set
+	 */
+	public void setiData(final String iData) {
+		this.iData = iData;
 	}
 
 }

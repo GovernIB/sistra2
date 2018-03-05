@@ -14,7 +14,7 @@ import es.caib.sistrages.core.api.model.PropiedadConfiguracion;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -127,7 +127,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.EDICION, params, true, 540, 150);
 	}
 

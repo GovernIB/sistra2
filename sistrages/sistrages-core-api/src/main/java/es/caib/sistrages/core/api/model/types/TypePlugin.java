@@ -1,4 +1,4 @@
-package es.caib.sistrages.frontend.model.types;
+package es.caib.sistrages.core.api.model.types;
 
 /**
  * Enum para indicar el tipo de plugin global.
@@ -6,7 +6,7 @@ package es.caib.sistrages.frontend.model.types;
  * @author Indra
  *
  */
-public enum TypePluginGlobal {
+public enum TypePlugin {
 	/**
 	 * Plugin de login
 	 */
@@ -18,7 +18,7 @@ public enum TypePluginGlobal {
 	/**
 	 * Plugin de dominio remoto
 	 */
-	DOMINIO_REMOTA("D"),
+	DOMINIO_REMOTO("D"),
 	/**
 	 * Plugin de firma.
 	 */
@@ -26,7 +26,7 @@ public enum TypePluginGlobal {
 
 	private String valor;
 
-	TypePluginGlobal(final String iValor) {
+	TypePlugin(final String iValor) {
 		this.valor = iValor;
 	}
 
@@ -36,7 +36,7 @@ public enum TypePluginGlobal {
 	 * @param tipo
 	 * @return
 	 */
-	public String fromEnum(final TypePluginGlobal tipo) {
+	public String fromEnum(final TypePlugin tipo) {
 		return tipo.valor;
 	}
 
@@ -46,23 +46,23 @@ public enum TypePluginGlobal {
 	 * @param tipo
 	 * @return
 	 */
-	public TypePluginGlobal toEnum(final String tipo) {
-		TypePluginGlobal retorno;
+	public TypePlugin toEnum(final String tipo) {
+		TypePlugin retorno;
 		if (tipo == null) {
 			retorno = null;
 		} else {
 			switch (tipo) {
 			case "L":
-				retorno = TypePluginGlobal.LOGIN;
+				retorno = TypePlugin.LOGIN;
 				break;
 			case "R":
-				retorno = TypePluginGlobal.REPRESENTACION;
+				retorno = TypePlugin.REPRESENTACION;
 				break;
 			case "D":
-				retorno = TypePluginGlobal.DOMINIO_REMOTA;
+				retorno = TypePlugin.DOMINIO_REMOTO;
 				break;
 			case "F":
-				retorno = TypePluginGlobal.FIRMA;
+				retorno = TypePlugin.FIRMA;
 				break;
 			default:
 				retorno = null;
@@ -72,4 +72,13 @@ public enum TypePluginGlobal {
 		return retorno;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Enum#toString()
+	 */
+	@Override
+	public String toString() {
+		return valor;
+	}
 }

@@ -7,13 +7,13 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class FuenteDatosCampo {
+public class FuenteCampo {
 
 	/** Id. */
 	private Long id;
 
 	/** Fuente de datos. **/
-	private FuenteDatos fuenteDatos;
+	private Fuente fuenteDatos;
 
 	/** Id campo **/
 	private String codigo;
@@ -37,9 +37,32 @@ public class FuenteDatosCampo {
 	}
 
 	/**
+	 * @return the idString
+	 */
+	public String getIdString() {
+		if (id == null) {
+			return null;
+		} else {
+			return id.toString();
+		}
+	}
+
+	/**
+	 * @param idString
+	 *            the id to set
+	 */
+	public void setIdString(final String idString) {
+		if (id == null) {
+			this.id = null;
+		} else {
+			this.id = Long.valueOf(idString);
+		}
+	}
+
+	/**
 	 * @return the fuenteDatos
 	 */
-	public FuenteDatos getFuenteDatos() {
+	public Fuente getFuenteDatos() {
 		return fuenteDatos;
 	}
 
@@ -47,7 +70,7 @@ public class FuenteDatosCampo {
 	 * @param fuenteDatos
 	 *            the fuenteDatos to set
 	 */
-	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
+	public void setFuenteDatos(final Fuente fuenteDatos) {
 		this.fuenteDatos = fuenteDatos;
 	}
 

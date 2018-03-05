@@ -1,12 +1,12 @@
 package es.caib.sistrages.frontend.model.types;
 
 /**
- * Tipo para indicar parametros comunes para abrir un dialogo.
+ * Tipo para indicar parametros comunes para abrir una ventana.
  *
  * @author Indra
  *
  */
-public enum TypeParametroDialogo {
+public enum TypeParametroVentana {
 	/**
 	 * Modo acceso.
 	 */
@@ -18,5 +18,13 @@ public enum TypeParametroDialogo {
 	/**
 	 * Dato
 	 */
-	DATO;
+	DATO,
+	/**
+	 * Dato2
+	 */
+	DATO2,
+	/**
+	 * Ambito (Global, Entidad, Area)
+	 */
+	AMBITO;
 }

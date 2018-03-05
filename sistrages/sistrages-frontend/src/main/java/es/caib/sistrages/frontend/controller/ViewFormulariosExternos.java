@@ -10,12 +10,15 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import es.caib.sistrages.core.api.model.FormularioExterno;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilJSON;
 
 /**
  * Mantenimiento de formularios externos.
@@ -111,13 +114,15 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogFormularioExterno.class, TypeModoAcceso.ALTA, null, true, 540, 200);
+		UtilJSF.openDialog(DialogFormularioExterno.class, TypeModoAcceso.ALTA, null, true, 540, 180);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
+	 *
+	 * @throws JsonProcessingException
 	 */
-	public void editar() {
+	public void editar() throws JsonProcessingException {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
@@ -125,8 +130,9 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
-		UtilJSF.openDialog(DialogFormularioExterno.class, TypeModoAcceso.EDICION, params, true, 540, 200);
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.datoSeleccionado));
+		UtilJSF.openDialog(DialogFormularioExterno.class, TypeModoAcceso.EDICION, params, true, 540, 180);
 	}
 
 	/**

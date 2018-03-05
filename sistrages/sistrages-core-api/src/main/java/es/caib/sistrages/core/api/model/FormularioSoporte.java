@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
+
 /**
  *
  * Formulario de soporte.
@@ -21,8 +23,8 @@ public class FormularioSoporte {
 	/** Literal descripción tipo de incidencia. */
 	private Traducciones descripcion;
 
-	/** Tipo destinatario (R:responsable incidencias / E: lista emails) */
-	private String destinatario;
+	/** Tipo destinatario, tipo enum. **/
+	private TypeFormularioSoporte destinatario;
 
 	/** Lista emails separados por ; para tipo destinario E */
 	private String emails;
@@ -40,6 +42,25 @@ public class FormularioSoporte {
 	 */
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the idString
+	 */
+	public String getIdString() {
+		if (id == null) {
+			return null;
+		} else {
+			return id.toString();
+		}
+	}
+
+	/**
+	 * @param idString
+	 *            the idString to set
+	 */
+	public void setIdString(final String idString) {
+		this.id = Long.valueOf(idString);
 	}
 
 	/**
@@ -88,21 +109,6 @@ public class FormularioSoporte {
 	}
 
 	/**
-	 * @return the destinatario
-	 */
-	public String getDestinatario() {
-		return destinatario;
-	}
-
-	/**
-	 * @param destinatario
-	 *            the destinatario to set
-	 */
-	public void setDestinatario(final String destinatario) {
-		this.destinatario = destinatario;
-	}
-
-	/**
 	 * @return the emails
 	 */
 	public String getEmails() {
@@ -115,6 +121,21 @@ public class FormularioSoporte {
 	 */
 	public void setEmails(final String emails) {
 		this.emails = emails;
+	}
+
+	/**
+	 * @return the destinatario
+	 */
+	public TypeFormularioSoporte getDestinatario() {
+		return destinatario;
+	}
+
+	/**
+	 * @param destinatario
+	 *            the destinatario to set
+	 */
+	public void setDestinatario(final TypeFormularioSoporte destinatario) {
+		this.destinatario = destinatario;
 	}
 
 }

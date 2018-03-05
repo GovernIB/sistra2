@@ -36,7 +36,7 @@ public class Entidad {
 	private Fichero css;
 
 	/** Pie de página de contacto para Asistente Tramitación (HTML). */
-	private Fichero pie;
+	private Traducciones pie;
 
 	/** Email contacto genérico. */
 	private String email;
@@ -185,7 +185,7 @@ public class Entidad {
 	/**
 	 * @return the pie
 	 */
-	public Fichero getPie() {
+	public Traducciones getPie() {
 		return pie;
 	}
 
@@ -193,7 +193,7 @@ public class Entidad {
 	 * @param pie
 	 *            the pie to set
 	 */
-	public void setPie(final Fichero pie) {
+	public void setPie(final Traducciones pie) {
 		this.pie = pie;
 	}
 

@@ -11,25 +11,34 @@
 
 
 	<ui:define name="content">
-
-		<h:form id="form" style="height: 100%">
+		<h:form id="form" style="height: 100%"  enctype="multipart/form-data">
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
+				<p:panel header="#{msg['viewConfiguracionEntidad.gestorTramits.titulo']}" style="width: 100%" columnClasses="w25 right-alignment, w75 left-alignment">
+			        <h:panelGrid columns="2" cellpadding="10">
+
+			            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
+			           	<p:column>
+								<ui:remove> <h:outputText value="-UPLOAD MODE=ADVANCED" /></ui:remove>
+			           			<ui:remove> <p:fileUpload value="#{viewConfiguracionEntidad.fileLogoGestor}" fileUploadListener="#{viewConfiguracionEntidad.uploadModeAdvanced}" mode="advanced" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" skinSimple="true"/></ui:remove>
+
+								<ui:remove> <p:fileUpload value="#{viewConfiguracionEntidad.fileLogoGestor}" ajax="false" mode="simple" skinSimple="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" process="@this" oncomplete="#{viewConfiguracionEntidad.uploadModeSimple()}"  /> </ui:remove>
+ 								<ui:remove> <p:commandButton value="With Icon... " id="withIcon" fileUploadListener="#{viewConfiguracionEntidad.uploadModeSimple3}" actionListener="#{viewConfiguracionEntidad.uploadModeSimple2()}" update="growl" process="@this"  icon="ui-icon-disk" /> </ui:remove>
 
 
-			<p:panel header="#{msg['viewConfiguracionEntidad.gestorTramits.titulo']}" style="width: 100%" columnClasses="w25 right-alignment, w75 left-alignment">
-		        <h:panelGrid columns="2" cellpadding="10">
+    							<ui:remove> <p:commandButton id="btnAssistentLogo2" value="#{msg['botones.explorar']}" ajax="false" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.prepDownload}" process="@this" update="growl" style="margin-right:5px" /> </ui:remove>
+    							<ui:remove> <p:fileDownload value="#{viewConfiguracionEntidad.downloadGestorLogo}" /> </ui:remove>
 
-		            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
-		           	<p:column>
-			           	<p:commandButton id="btnGestorLogo" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarGestorLogo()}" process="@this" update="growl" style="margin-right:5px"  />
-						<h:outputText value="#{msg['error.noseleccionadofitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoGestor}"  />
-		        	</p:column>
-		        </h:panelGrid>
+    							<p:commandButton id="btnGestorLogo" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarGestorLogo()}" process="@this" update="growl" style="margin-right:5px" />
+								<h:outputText value="#{msg['error.noseleccionadofitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoGestor}" />
 
-		    </p:panel>
+			        	</p:column>
+			        </h:panelGrid>
+
+			    </p:panel>
+
 
 
     		<p:panel header="#{msg['viewConfiguracionEntidad.assistentTramitacio.titulo']}" style="width: 100%" columnClasses="w25 right-alignment, w75 left-alignment">
@@ -49,12 +58,14 @@
 
 		        	<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerPie']}" />
 		            <p:column>
-		            	<p:inputText value="" style="width:400px;margin-right:5px" />
-		            	<p:commandButton id="btnAssistentPie" icon="fa fa-compass" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie()}" process="@this" update="growl" style="margin-right:5px" />
+		            	<p:inputText  id="inputPie" size="40" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.pie.getTraduccion(sessionBean.lang)}" disabled="true" />
+		            	<p:commandButton id="btnAssistentPie" icon="fa fa-compass" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie()}" process="@this" update="growl" style="margin-right:5px">
+		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoAsistentePie}" update="growl inputPie"/>
+		        		</p:commandButton>
 					</p:column>
 
 					<h:outputText for="emailGenerico" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerEmailGenerico']}" />
-		            <p:inputText  id="emailGenerico" required="true" style="width:400px"  value="#{viewConfiguracionEntidad.data.email}" />
+		            <p:inputText  id="emailGenerico" required="true" size="40" value="#{viewConfiguracionEntidad.data.email}" />
 
 
 					<h:outputText for="checkEmail" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerAjuda']}" />
@@ -64,12 +75,12 @@
  								    <h:outputText value=" " />
 
 									<p:selectBooleanCheckbox id="checkTelefonSuport"  value="#{viewConfiguracionEntidad.data.telefonoHabilitado}" />
- 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}" />
- 								    <p:inputText value="#{viewConfiguracionEntidad.data.telefono}" />
+ 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}"  />
+ 								    <p:inputText value="#{viewConfiguracionEntidad.data.telefono}" size="40"  />
 
  									<p:selectBooleanCheckbox id="checkUrlSuportTecnic" value="#{viewConfiguracionEntidad.data.urlSoporteHabilitado}" />
  									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.urlSuport']}" />
- 								    <p:inputText value="#{viewConfiguracionEntidad.data.urlSoporte}" />
+ 								    <p:inputText value="#{viewConfiguracionEntidad.data.urlSoporte}" size="40"  />
 
 									<p:selectBooleanCheckbox id="checkFormularioContacto" value="#{viewConfiguracionEntidad.data.formularioIncidenciasHabilitado}" />
  									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.formulariCont']}" />
@@ -83,15 +94,11 @@
 
 			<!-- Toolbar -->
 			<p:toolbar id="toolbar">
-		        		        <f:facet name="right">
-		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
-		        		<p:commandButton id="btnAceptar"  value="#{msg['botones.aceptar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@this" update="growl"/>
-		        	</h:panelGrid>
+       	        <f:facet name="right">
+			        	<p:commandButton id="btnAceptar"  value="#{msg['botones.aceptar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@this" update="growl" styleClass="boton-azul" />
 		        </f:facet>
-
-
-
 		    </p:toolbar>
+
 		</h:form>
 
 	</ui:define>

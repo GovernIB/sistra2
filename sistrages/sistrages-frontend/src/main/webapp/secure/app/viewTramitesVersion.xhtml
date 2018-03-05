@@ -24,8 +24,8 @@
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
-			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar()}" process="panelFiltro" update="growl" />
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramitesVersion.filtro}"/>
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramitesVersion.filtrar()}" process="panelFiltro" update="growl dataTable" />
 	           		</h:panelGrid>
 		        </f:facet>
 
@@ -63,7 +63,7 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewTramitesVersion.datoSeleccionado}" rowKey="#{td.version}" dblClickSelect="true">
+			        	 selectionMode="single" selection="#{viewTramitesVersion.datoSeleccionado}" rowKey="#{td.id}">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
 				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
@@ -74,15 +74,15 @@
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}">
-			        <h:outputText value="#{td.version}" />
+			        <h:outputText value="#{td.numeroVersion}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
-			        <h:outputText value="#{td.flujo}" />
+			   <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
+			     <h:outputText value="#{msg['typeFlujo.'.concat(td.tipoFlujo)]}" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewTramitesVersion.headerDescripcion']}">
-			        <h:outputText value="#{td.descripcion}" />
+			        <h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
 			    </p:column>
 
  				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}">
@@ -94,7 +94,7 @@
 			    </p:column>
 
 				<p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}">
-			        <h:outputText value="#{td.bloqueado}" />
+			        <h:outputText value="#{td.codigoUsuarioBloqueo}" />
 			    </p:column>
 
 			</p:dataTable>

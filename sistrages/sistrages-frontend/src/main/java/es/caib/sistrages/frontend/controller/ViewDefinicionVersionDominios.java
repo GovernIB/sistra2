@@ -1,10 +1,14 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -30,15 +34,15 @@ public class ViewDefinicionVersionDominios extends ViewControllerBase {
 	}
 
 	public void init() {
-		int a = 0;
-		a++;
 	}
 
 	/**
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 */
 	public void anyadir() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf("1"));
+		UtilJSF.openDialog(DialogDefinicionVersionDominios.class, TypeModoAcceso.EDICION, params, true, 950, 450);
 	}
 
 	/**

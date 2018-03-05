@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +14,14 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -52,26 +57,44 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		breadCrumb.generateUniqueIds();
 
 		final TramiteVersion tramiteVersion1 = new TramiteVersion();
-		tramiteVersion1.setVersion("1");
-		tramiteVersion1.setFlujo("Normalitzat");
-		tramiteVersion1.setDescripcion("Tràmit 1 - Convocatòria de desembre de 2017");
+		tramiteVersion1.setId(Long.valueOf(1));
+		tramiteVersion1.setNumeroVersion(1);
+		tramiteVersion1.setTipoFlujo(TypeFlujo.NORMAL);
+
+		final Traducciones desc1 = new Traducciones();
+		desc1.add(new Traduccion("es", "Trámite 1 - Convocatoria de diciembre de 2017"));
+		desc1.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de desembre de 2017"));
+		tramiteVersion1.setDescripcion(desc1);
+
 		tramiteVersion1.setActiva(false);
-		tramiteVersion1.setRelease("5");
-		tramiteVersion1.setBloqueado(" ");
+		tramiteVersion1.setRelease(5);
+		tramiteVersion1.setCodigoUsuarioBloqueo("usuario1");
+
 		final TramiteVersion tramiteVersion2 = new TramiteVersion();
-		tramiteVersion2.setVersion("2");
-		tramiteVersion2.setFlujo("Normalitzat");
-		tramiteVersion2.setDescripcion("Tràmit 1 - Convocatòria de febrer de 2018");
+		tramiteVersion2.setId(Long.valueOf(2));
+		tramiteVersion2.setNumeroVersion(2);
+		tramiteVersion2.setTipoFlujo(TypeFlujo.NORMAL);
+
+		final Traducciones desc2 = new Traducciones();
+		desc2.add(new Traduccion("es", "Trámite 1 - Convocatoria de febrero de 2018"));
+		desc2.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de febrer de 2018"));
+		tramiteVersion2.setDescripcion(desc2);
+
 		tramiteVersion2.setActiva(false);
-		tramiteVersion2.setRelease("20");
-		tramiteVersion2.setBloqueado(" ");
+		tramiteVersion2.setRelease(20);
+
 		final TramiteVersion tramiteVersion3 = new TramiteVersion();
-		tramiteVersion3.setVersion("3");
-		tramiteVersion3.setFlujo("Personalitzat");
-		tramiteVersion3.setDescripcion("Tràmit 1 - Convocatòria de juny de 2018");
+		tramiteVersion3.setId(Long.valueOf(3));
+		tramiteVersion3.setNumeroVersion(3);
+		tramiteVersion3.setTipoFlujo(TypeFlujo.PERSONALIZADO);
+
+		final Traducciones desc3 = new Traducciones();
+		desc3.add(new Traduccion("es", "Trámite 1 - Convocatoria de junio de 2018"));
+		desc3.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de juny de 2018"));
+		tramiteVersion3.setDescripcion(desc3);
+
 		tramiteVersion3.setActiva(true);
-		tramiteVersion3.setRelease("12");
-		tramiteVersion3.setBloqueado("u18654");
+		tramiteVersion3.setRelease(12);
 
 		listaDatos = new ArrayList<>();
 		listaDatos.add(tramiteVersion1);
@@ -113,8 +136,8 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		// Filtra
 		final List<TramiteVersion> tramiteVersionesFiltradas = new ArrayList<>();
 		for (final TramiteVersion tramiteVersion : this.listaDatos) {
-			if (tramiteVersion.getDescripcion() != null
-					&& tramiteVersion.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
+			if (tramiteVersion.getDescripcion() != null && tramiteVersion.getDescripcion()
+					.getTraduccion(getSesion().getLang()).toLowerCase().contains(filtro.toLowerCase())) {
 				tramiteVersionesFiltradas.add(tramiteVersion);
 			}
 		}
@@ -142,9 +165,10 @@ public class ViewTramitesVersion extends ViewControllerBase {
 			return;
 
 		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.ID.toString(), "");// this.datoSeleccionado.getId().toString());
-		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml");
+		final Map<String, List<String>> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getId().toString()));
+		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
+		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
 
 	}
 

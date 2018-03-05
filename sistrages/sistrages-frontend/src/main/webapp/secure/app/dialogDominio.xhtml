@@ -8,7 +8,7 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeDominio" var="TypeDominio"/>
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
@@ -48,26 +48,24 @@
 			    	<p style="width:230px">
 			    		<p:outputLabel  value="#{msg['dialogDominio.headerTipo']}:" />
 					</p>
-					<p:selectOneRadio layout="pageDirection"  id="console" value="#{dialogDominio.data.tipo}" required="true">
-			            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaBD']}" itemValue="B" />
-			            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.listado']}" itemValue="L" />
-			            <f:selectItem itemLabel="#{msg['dialogDominio.headerTipo.consultaRemota']}" itemValue="R" />
+					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true">
+					     <f:selectItems value="#{TypeDominio.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}" />
+						<p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota columnaFuente1 columnaFuente2" />
+					</p:selectOneMenu >
 
-			            <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota" />
 
-				    </p:selectOneRadio>
 				</p:column>
 				<h:panelGrid columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30" required="true" />
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30"  />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
 						<p:column id="columnaBBDD2" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" style="margin-right:20px"  />
-							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" />
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -134,7 +132,20 @@
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />
 
+						<p:column id="columnaFuente1" colspan="1" rendered="#{dialogDominio.visibleFuente}" >
+							<p:outputLabel for="fuente" value="#{msg['dialogDominio.headerTipo.fuente.fuente']}" style="margin-right:20px" />
+							<p:selectOneMenu id="fuente" value="#{dialogDominio.data.fuenteDatos}" style="width:200px">
+							    <f:selectItems value="#{dialogDominio.fuentes}" var="fd"
+		    							itemValue="#{fd}" itemLabel="#{fd.codigo}" />
+							</p:selectOneMenu >
+						</p:column>
+						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 
+						<p:column id="columnaFuente2" colspan="1" rendered="#{dialogDominio.visibleFuente}" >
+							<p:outputLabel for="fuenteQuery" value="#{msg['dialogDominio.headerTipo.fuente.query']}" style="margin-right:20px"  />
+							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.fuenteDatosQuery}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" />
+						</p:column>
+						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 				</h:panelGrid>
 
 				<p:outputLabel for="dataTableParametros" value="#{msg['dialogDominio.headerParametros.titulo']}" />
@@ -158,13 +169,15 @@
 							<p:ajax event="rowUnselect" />
 
 							<!-- Columnas -->
+							<p:column headerText="#{msg['dialogDominio.headerParametros.orden']}" class="ui-panelgrid-cell">
+						        <h:outputText value="#{td.orden}" />
+						    </p:column>
+
 							<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
 								<h:outputText value="#{td.codigo}" />
 						    </p:column>
 
-						    <p:column headerText="#{msg['dialogDominio.headerParametros.valor']}" class="ui-panelgrid-cell">
-						        <h:outputText value="#{td.valor}" />
-						    </p:column>
+
 			 		</p:dataTable>
 			 		<p:column>
 						<p>

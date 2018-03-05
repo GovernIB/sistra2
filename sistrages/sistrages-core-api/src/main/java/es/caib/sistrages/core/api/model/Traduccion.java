@@ -8,53 +8,121 @@ package es.caib.sistrages.core.api.model;
  */
 public class Traduccion {
 
-	/** Idioma. **/
+	/**
+	 * id.
+	 */
+	private Long id;
+
+	/**
+	 * idTraduccion.
+	 */
+	private Long idTraduccion;
+
+	/**
+	 * idioma.
+	 */
 	private String idioma;
 
-	/** Texto. **/
-	private String texto;
+	/**
+	 * literal.
+	 */
+	private String literal;
+
+	/** Constructor vacio. **/
+	public Traduccion() {
+		id = null;
+		idTraduccion = null;
+		idioma = null;
+		literal = null;
+	}
 
 	/**
 	 * Constructor.
 	 *
 	 * @param iIdioma
 	 *            ca/es/en
-	 * @param iTexto
-	 *            texto
+	 * @param iLiteral
+	 *            literal
 	 */
-	public Traduccion(final String iIdioma, final String iTexto) {
+	public Traduccion(final String iIdioma, final String iLiteral) {
 		this.idioma = iIdioma;
-		this.texto = iTexto;
+		this.literal = iLiteral;
 	}
 
 	/**
-	 * @return the idioma
+	 * Obtiene el valor de id.
+	 *
+	 * @return el valor de id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * Establece el valor de id.
+	 *
+	 * @param id
+	 *            el nuevo valor de id
+	 */
+	public void setId(final Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * Obtiene el valor de idioma.
+	 *
+	 * @return el valor de idioma
 	 */
 	public String getIdioma() {
 		return idioma;
 	}
 
 	/**
+	 * Establece el valor de idioma.
+	 *
 	 * @param idioma
-	 *            the idioma to set
+	 *            el nuevo valor de idioma
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
 
 	/**
-	 * @return the texto
+	 * Obtiene el valor de literal.
+	 *
+	 * @return el valor de literal
 	 */
-	public String getTexto() {
-		return texto;
+	public String getLiteral() {
+		return literal;
 	}
 
 	/**
-	 * @param texto
-	 *            the texto to set
+	 * Establece el valor de literal.
+	 *
+	 * @param literal
+	 *            el nuevo valor de literal
 	 */
-	public void setTexto(final String texto) {
-		this.texto = texto;
+	public void setLiteral(final String literal) {
+		this.literal = literal;
+	}
+
+	/**
+	 * Obtiene el valor de idTraduccion.
+	 *
+	 * @return el valor de idTraduccion
+	 */
+	public Long getIdTraduccion() {
+		return idTraduccion;
+	}
+
+	/**
+	 * Establece el valor de idTraduccion.
+	 *
+	 * @param idTraduccion
+	 *            el nuevo valor de idTraduccion
+	 */
+	public void setIdTraduccion(final Long idTraduccion) {
+		this.idTraduccion = idTraduccion;
 	}
 
 }

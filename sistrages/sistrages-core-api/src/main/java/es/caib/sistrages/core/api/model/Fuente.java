@@ -9,7 +9,7 @@ import java.util.List;
  * @author Indra
  *
  */
-public class FuenteDatos {
+public class Fuente {
 
 	/** Id. */
 	private Long id;
@@ -21,7 +21,7 @@ public class FuenteDatos {
 	private String descripcion;
 
 	/** Campos. **/
-	private List<FuenteDatosCampo> campos;
+	private List<FuenteCampo> campos;
 
 	/**
 	 * @return the id
@@ -71,7 +71,7 @@ public class FuenteDatos {
 	/**
 	 * @return the campos
 	 */
-	public List<FuenteDatosCampo> getCampos() {
+	public List<FuenteCampo> getCampos() {
 		return campos;
 	}
 
@@ -79,7 +79,7 @@ public class FuenteDatos {
 	 * @param campos
 	 *            the campos to set
 	 */
-	public void setCampos(final List<FuenteDatosCampo> campos) {
+	public void setCampos(final List<FuenteCampo> campos) {
 		this.campos = campos;
 	}
 }

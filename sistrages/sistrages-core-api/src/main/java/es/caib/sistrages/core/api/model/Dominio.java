@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 
 /**
  * Dominio.
@@ -32,7 +33,7 @@ public class Dominio {
 	 * Tipo dominio (B: Base datos / F: Fuente datos / L: Lista fija datos / R:
 	 * Remota)
 	 */
-	private String tipo;
+	private TypeDominio tipo;
 
 	/** Para tipo Base datos indica JNDI Datasource. */
 	private String jndi;
@@ -41,7 +42,10 @@ public class Dominio {
 	private String sql;
 
 	/** Para tipo Fuente de datos indica el ID de la Fuente de datos */
-	private FuenteDatos fuenteDatos;
+	private Fuente fuenteDatos;
+
+	/** Query para la fuente de datos. **/
+	private String fuenteDatosQuery;
 
 	/**
 	 * JSON con la lista de valores (codigo - valor)
@@ -157,7 +161,7 @@ public class Dominio {
 	/**
 	 * @return the tipo
 	 */
-	public String getTipo() {
+	public TypeDominio getTipo() {
 		return tipo;
 	}
 
@@ -165,7 +169,7 @@ public class Dominio {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(final String tipo) {
+	public void setTipo(final TypeDominio tipo) {
 		this.tipo = tipo;
 	}
 
@@ -202,7 +206,7 @@ public class Dominio {
 	/**
 	 * @return the fuenteDatos
 	 */
-	public FuenteDatos getFuenteDatos() {
+	public Fuente getFuenteDatos() {
 		return fuenteDatos;
 	}
 
@@ -210,8 +214,23 @@ public class Dominio {
 	 * @param fuenteDatos
 	 *            the fuenteDatos to set
 	 */
-	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
+	public void setFuenteDatos(final Fuente fuenteDatos) {
 		this.fuenteDatos = fuenteDatos;
+	}
+
+	/**
+	 * @return the fuenteDatosQuery
+	 */
+	public String getFuenteDatosQuery() {
+		return fuenteDatosQuery;
+	}
+
+	/**
+	 * @param fuenteDatosQuery
+	 *            the fuenteDatosQuery to set
+	 */
+	public void setFuenteDatosQuery(final String fuenteDatosQuery) {
+		this.fuenteDatosQuery = fuenteDatosQuery;
 	}
 
 	/**

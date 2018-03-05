@@ -23,9 +23,9 @@ public abstract class DialogControllerBase {
 	 */
 	protected String modoAcceso;
 
-
 	/**
 	 * Devuelve logger.
+	 *
 	 * @return logger
 	 */
 	protected Logger getLogger() {
@@ -34,33 +34,37 @@ public abstract class DialogControllerBase {
 
 	/**
 	 * Indica si el dialogo se abre en modo alta.
+	 *
 	 * @return boolean
 	 */
 	public boolean isAlta() {
-		TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		return (modo == TypeModoAcceso.ALTA);
 	}
 
 	/**
 	 * Indica si el dialogo se abre en modo edicion.
+	 *
 	 * @return boolean
 	 */
 	public boolean isEdicion() {
-		TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		return (modo == TypeModoAcceso.EDICION);
 	}
 
 	/**
 	 * Indica si el dialogo se abre en modo consulta.
+	 *
 	 * @return boolean
 	 */
 	public boolean isConsulta() {
-		TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		return (modo == TypeModoAcceso.CONSULTA);
 	}
 
 	/**
 	 * Obtiene modo acceso.
+	 *
 	 * @return modo acceso
 	 */
 	public String getModoAcceso() {
@@ -69,9 +73,12 @@ public abstract class DialogControllerBase {
 
 	/**
 	 * Establece modo acceso.
-	 * @param modoAcceso modo acceso
+	 *
+	 * @param modoAcceso
+	 *            modo acceso
 	 */
-	public void setModoAcceso(String modoAcceso) {
+	public void setModoAcceso(final String modoAcceso) {
 		this.modoAcceso = modoAcceso;
 	}
+
 }

@@ -12,10 +12,11 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -47,19 +48,19 @@ public class ViewDominios extends ViewControllerBase {
 			dominio1.setId(1l);
 			dominio1.setCodigo("GOIB_ORGANISME");
 			dominio1.setDescripcion("Area - Dominio que retorna el organisme de la entitat");
-			dominio1.setTipo("Consulta de BBDD");
+			dominio1.setTipo(TypeDominio.CONSULTA_BD);
 			final Dominio dominio2 = new Dominio();
 			dominio2.setCacheable(true);
 			dominio2.setId(2l);
 			dominio2.setCodigo("GOIB_PSTDOCUME");
 			dominio2.setDescripcion("Llistat de punts de lliurament de documentació");
-			dominio2.setTipo("Consulta de BBDD");
+			dominio2.setTipo(TypeDominio.CONSULTA_BD);
 			final Dominio dominio3 = new Dominio();
 			dominio3.setCacheable(false);
 			dominio3.setCodigo("GOIB_ENTBNCOL");
 			dominio3.setId(3l);
 			dominio3.setDescripcion("Llistat de entitats bancaries");
-			dominio3.setTipo("Consulta remota");
+			dominio3.setTipo(TypeDominio.CONSULTA_REMOTA);
 
 			listaDatos = new ArrayList<>();
 			listaDatos.add(dominio1);
@@ -72,19 +73,19 @@ public class ViewDominios extends ViewControllerBase {
 			dominioEntidad1.setId(1l);
 			dominioEntidad1.setCodigo("GOIB_ORGANISME");
 			dominioEntidad1.setDescripcion("Entidad - Dominio que retorna el organisme de la entitat");
-			dominioEntidad1.setTipo("Consulta de BBDD");
+			dominioEntidad1.setTipo(TypeDominio.CONSULTA_BD);
 			final Dominio dominioEntidad2 = new Dominio();
 			dominioEntidad2.setCacheable(true);
 			dominioEntidad2.setId(2l);
 			dominioEntidad2.setCodigo("GOIB_PSTDOCUME");
 			dominioEntidad2.setDescripcion("Llistat de punts de lliurament de documentació");
-			dominioEntidad2.setTipo("Consulta de BBDD");
+			dominioEntidad2.setTipo(TypeDominio.CONSULTA_BD);
 			final Dominio dominioEntidad3 = new Dominio();
 			dominioEntidad3.setCacheable(false);
 			dominioEntidad3.setCodigo("GOIB_ENTBNCOL");
 			dominioEntidad3.setId(3l);
 			dominioEntidad3.setDescripcion("Llistat de entitats bancaries");
-			dominioEntidad3.setTipo("Consulta remota");
+			dominioEntidad3.setTipo(TypeDominio.CONSULTA_REMOTA);
 
 			listaDatos = new ArrayList<>();
 			listaDatos.add(dominioEntidad1);
@@ -97,19 +98,19 @@ public class ViewDominios extends ViewControllerBase {
 			dominioGlobal1.setId(1l);
 			dominioGlobal1.setCodigo("GOIB_ORGANISME");
 			dominioGlobal1.setDescripcion("Global - Dominio que retorna el organisme de la entitat");
-			dominioGlobal1.setTipo("Consulta de BBDD");
+			dominioGlobal1.setTipo(TypeDominio.CONSULTA_BD);
 			final Dominio dominioGlobal2 = new Dominio();
 			dominioGlobal2.setCacheable(true);
 			dominioGlobal2.setId(2l);
 			dominioGlobal2.setCodigo("GOIB_PSTDOCUME");
 			dominioGlobal2.setDescripcion("Llistat de punts de lliurament de documentació");
-			dominioGlobal2.setTipo("Consulta de BBDD");
+			dominioGlobal2.setTipo(TypeDominio.CONSULTA_BD);
 			final Dominio dominioGlobal3 = new Dominio();
 			dominioGlobal3.setCacheable(false);
 			dominioGlobal3.setCodigo("GOIB_ENTBNCOL");
 			dominioGlobal3.setId(3l);
 			dominioGlobal3.setDescripcion("Llistat de entitats bancaries");
-			dominioGlobal3.setTipo("Consulta remota");
+			dominioGlobal3.setTipo(TypeDominio.CONSULTA_REMOTA);
 
 			listaDatos = new ArrayList<>();
 			listaDatos.add(dominioGlobal1);
@@ -169,7 +170,10 @@ public class ViewDominios extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.ALTA, null, true, 740, 650);
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.ALTA, params, true, 740, 650);
 	}
 
 	/**
@@ -182,7 +186,8 @@ public class ViewDominios extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.EDICION, params, true, 740, 650);
 	}
 

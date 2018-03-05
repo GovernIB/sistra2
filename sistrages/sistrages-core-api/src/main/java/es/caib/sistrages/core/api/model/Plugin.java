@@ -3,6 +3,8 @@ package es.caib.sistrages.core.api.model;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 
 /**
  *
@@ -17,10 +19,10 @@ public class Plugin {
 	private Long id;
 
 	/** Ámbito (G:Global / E:Entidad) */
-	private String ambito;
+	private TypeAmbito ambito;
 
 	/** Tipo. */
-	private String tipo;
+	private TypePlugin tipo;
 
 	/** Classname. */
 	private String classname;
@@ -52,7 +54,7 @@ public class Plugin {
 	/**
 	 * @return the ambito
 	 */
-	public String getAmbito() {
+	public TypeAmbito getAmbito() {
 		return ambito;
 	}
 
@@ -60,14 +62,14 @@ public class Plugin {
 	 * @param ambito
 	 *            the ambito to set
 	 */
-	public void setAmbito(final String ambito) {
+	public void setAmbito(final TypeAmbito ambito) {
 		this.ambito = ambito;
 	}
 
 	/**
 	 * @return the tipo
 	 */
-	public String getTipo() {
+	public TypePlugin getTipo() {
 		return tipo;
 	}
 
@@ -75,7 +77,7 @@ public class Plugin {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(final String tipo) {
+	public void setTipo(final TypePlugin tipo) {
 		this.tipo = tipo;
 	}
 

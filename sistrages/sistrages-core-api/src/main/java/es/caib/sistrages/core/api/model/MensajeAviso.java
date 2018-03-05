@@ -2,6 +2,8 @@ package es.caib.sistrages.core.api.model;
 
 import java.util.Date;
 
+import es.caib.sistrages.core.api.model.types.TypeMensajeAviso;
+
 /**
  *
  * Mensaje aviso.
@@ -18,7 +20,7 @@ public class MensajeAviso {
 	private String descripcion;
 
 	/** Tipo. */
-	private String tipo;
+	private TypeMensajeAviso tipo;
 
 	/** Activo. */
 	private boolean activo;
@@ -62,7 +64,7 @@ public class MensajeAviso {
 	/**
 	 * @return the tipo
 	 */
-	public String getTipo() {
+	public TypeMensajeAviso getTipo() {
 		return tipo;
 	}
 
@@ -70,7 +72,7 @@ public class MensajeAviso {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(final String tipo) {
+	public void setTipo(final TypeMensajeAviso tipo) {
 		this.tipo = tipo;
 	}
 

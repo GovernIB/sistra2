@@ -72,4 +72,13 @@ public enum TypeAmbito {
 	public String toString() {
 		return ambito;
 	}
+
+	/**
+	 * Label para los selectItems.
+	 *
+	 * @return
+	 */
+	public String getLabel() {
+		return "ambito." + this.ambito;
+	}
 }

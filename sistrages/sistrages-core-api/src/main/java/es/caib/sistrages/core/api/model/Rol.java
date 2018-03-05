@@ -18,11 +18,20 @@ public class Rol {
 	/** Descripción. */
 	private String descripcion;
 
-	/** Permisos */
-	private String permisos;
-
 	/** Area */
-	private String area;
+	private Area area;
+
+	/** Alta. **/
+	private boolean alta;
+
+	/** Modificacion. **/
+	private boolean modificacion;
+
+	/** Consulta. **/
+	private boolean consulta;
+
+	/** Helpdesk. **/
+	private boolean helpdesk;
 
 	/**
 	 * @return the id
@@ -70,24 +79,9 @@ public class Rol {
 	}
 
 	/**
-	 * @return the permisos
-	 */
-	public String getPermisos() {
-		return permisos;
-	}
-
-	/**
-	 * @param permisos
-	 *            the permisos to set
-	 */
-	public void setPermisos(final String permisos) {
-		this.permisos = permisos;
-	}
-
-	/**
 	 * @return the area
 	 */
-	public String getArea() {
+	public Area getArea() {
 		return area;
 	}
 
@@ -95,8 +89,68 @@ public class Rol {
 	 * @param area
 	 *            the area to set
 	 */
-	public void setArea(final String area) {
+	public void setArea(final Area area) {
 		this.area = area;
+	}
+
+	/**
+	 * @return the alta
+	 */
+	public boolean isAlta() {
+		return alta;
+	}
+
+	/**
+	 * @param alta
+	 *            the alta to set
+	 */
+	public void setAlta(final boolean alta) {
+		this.alta = alta;
+	}
+
+	/**
+	 * @return the modificacion
+	 */
+	public boolean isModificacion() {
+		return modificacion;
+	}
+
+	/**
+	 * @param modificacion
+	 *            the modificacion to set
+	 */
+	public void setModificacion(final boolean modificacion) {
+		this.modificacion = modificacion;
+	}
+
+	/**
+	 * @return the consulta
+	 */
+	public boolean isConsulta() {
+		return consulta;
+	}
+
+	/**
+	 * @param consulta
+	 *            the consulta to set
+	 */
+	public void setConsulta(final boolean consulta) {
+		this.consulta = consulta;
+	}
+
+	/**
+	 * @return the helpdesk
+	 */
+	public boolean isHelpdesk() {
+		return helpdesk;
+	}
+
+	/**
+	 * @param helpdesk
+	 *            the helpdesk to set
+	 */
+	public void setHelpdesk(final boolean helpdesk) {
+		this.helpdesk = helpdesk;
 	}
 
 }

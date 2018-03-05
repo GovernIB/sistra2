@@ -1,8 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -10,14 +9,17 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
@@ -29,54 +31,35 @@ public class DialogPlugin extends DialogControllerBase {
 	// @Inject
 	// private PluginGlobalService pluginGlobalService;
 
-	/**
-	 * Id elemento a tratar.
-	 */
+	/** Id elemento a tratar. */
 	private String id;
 
-	/**
-	 * Datos elemento.
-	 */
+	/** Data en formato JSON. */
+	private String iData;
+
+	/** Datos elemento. */
 	private Plugin data;
 
-	/**
-	 * Ambito.
-	 */
+	/** Ambito. */
 	private String ambito;
 
-	/**
-	 * Visible instancia
-	 */
+	/** Visible instancia */
 	private boolean visibleInstancia;
 
-	/**
-	 * Propiedad seleccionada.
-	 */
+	/** Propiedad seleccionada. */
 	private Propiedad propiedadSeleccionada;
 
 	/**
 	 * Inicialización.
+	 *
+	 * @throws IOException
 	 */
-	public void init() {
+	public void init() throws IOException {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Plugin();
 		} else {
-			data = new Plugin();// pluginGlobalService.load(id);
-			data.setClassname("Classname");
-			data.setId(1l);
-			data.setTipo("F");
-			data.setDescripcion("Descripcion");
-			final List<Propiedad> propiedades = new ArrayList<>();
-			final Propiedad p1 = new Propiedad();
-			p1.setCodigo("COD 1");
-			p1.setValor("VAL 1");
-			propiedades.add(p1);
-			final Propiedad p2 = new Propiedad();
-			p2.setCodigo("COD 2");
-			p2.setValor("VAL 2");
-			propiedades.add(p2);
-			data.setPropiedades(propiedades);
+			data = (Plugin) UtilJSON.fromJSON(iData, Plugin.class);
 		}
 		if (ambito == null || TypeAmbito.toString(TypeAmbito.GLOBAL).equals(ambito)) {
 			visibleInstancia = false;
@@ -113,6 +96,7 @@ public class DialogPlugin extends DialogControllerBase {
 
 				this.data.getPropiedades().remove(posicion);
 				this.data.getPropiedades().add(posicion, propiedadEdicion);
+				this.propiedadSeleccionada = propiedadEdicion;
 				// Mensaje
 
 				message = UtilJSF.getLiteral("info.modificado.ok");
@@ -138,14 +122,16 @@ public class DialogPlugin extends DialogControllerBase {
 
 	/**
 	 * Edita una propiedad.
+	 *
+	 * @throws JsonProcessingException
 	 */
-	public void editarPropiedad() {
+	public void editarPropiedad() throws JsonProcessingException {
 
 		if (!verificarFilaSeleccionada())
 			return;
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.propiedadSeleccionada.getCodigo()));
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
 		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
 	}
 
@@ -235,7 +221,7 @@ public class DialogPlugin extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getId());
+		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -322,6 +308,21 @@ public class DialogPlugin extends DialogControllerBase {
 	 */
 	public void setVisibleInstancia(final boolean visibleInstancia) {
 		this.visibleInstancia = visibleInstancia;
+	}
+
+	/**
+	 * @return the iData
+	 */
+	public String getiData() {
+		return iData;
+	}
+
+	/**
+	 * @param iData
+	 *            the iData to set
+	 */
+	public void setiData(final String iData) {
+		this.iData = iData;
 	}
 
 }

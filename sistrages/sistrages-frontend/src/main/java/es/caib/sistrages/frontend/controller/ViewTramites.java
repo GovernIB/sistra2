@@ -19,7 +19,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroDialogo;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -119,7 +119,7 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroDialogo.ID.toString(),
+		params.put(TypeParametroVentana.ID.toString(),
 				String.valueOf(((Area) this.areaSeleccionada.getData()).getId()));
 		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.EDICION, params, true, 520, 120);
 	}
@@ -154,7 +154,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * Datos area.
 	 */
 	public void datosArea() {
-		UtilJSF.redirectJsfPage("/secure/app/viewFuenteDatos.xhtml?ambito=A&id=X");
+		UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=X");
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroDialogo.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
 		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.EDICION, params, true, 540, 120);
 	}
 
@@ -184,7 +184,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroDialogo.ID.toString(), this.tramiteSeleccionada.getCodigo());
+		params.put(TypeParametroVentana.ID.toString(), this.tramiteSeleccionada.getCodigo());
 		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml");
 
 	}

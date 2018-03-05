@@ -1,4 +1,4 @@
-package es.caib.sistrages.frontend.model.types;
+package es.caib.sistrages.core.api.model.types;
 
 /**
  * Tipo para indicar el tipo de un dominio global.
@@ -18,7 +18,11 @@ public enum TypeDominio {
 	/**
 	 * Consulta remota.
 	 */
-	CONSULTA_REMOTA("R");
+	CONSULTA_REMOTA("R"),
+	/**
+	 * Fuente de datos.
+	 */
+	FUENTE_DATOS("F");
 
 	private String valor;
 
@@ -67,12 +71,25 @@ public enum TypeDominio {
 			case "R":
 				retorno = TypeDominio.CONSULTA_REMOTA;
 				break;
+			case "F":
+				retorno = TypeDominio.FUENTE_DATOS;
+				break;
 			default:
 				retorno = null;
 				break;
 			}
 		}
 		return retorno;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Enum#toString()
+	 */
+	@Override
+	public String toString() {
+		return valor;
 	}
 
 }

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAmbito" var="TipoAmbito"/>
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+	<h:head>
+		<title>
+			<h:outputText value="#{msg['dialogDefinicionVersionDominios.titulo']}" />
+		</title>
+
+		<!-- Parametros dialogo -->
+		<f:metadata>
+			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionDominios.modoAcceso}" />
+			<f:viewParam name="ID" value="#{dialogDefinicionVersionDominios.id}" />
+			<f:viewAction action="#{dialogDefinicionVersionDominios.init}" />
+		</f:metadata>
+	</h:head>
+
+	<h:body>
+
+		<f:facet name="last">
+			<h:outputStylesheet library="css" name="style.css" />
+		</f:facet>
+
+		<h:form id="formDialogDefinicionVersionControlAcceso">
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			<!-- Contenido dialogo -->
+			<h:panelGrid columns="2" columnClasses="w15 grid-right, w85 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
+
+				<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.tipos']}" />
+				<h:selectOneMenu value="#{dialogDefinicionVersionDominios.tipo}" id="tipo" >
+				    <f:selectItems value="#{TipoAmbito.ALL_VALUES}"  itemLabel="#{msg['ambito.'+=tipo]}" var="tipo"/>
+				</h:selectOneMenu>
+
+				<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.filtrar']}" />
+				<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
+	        		<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewEntidades.filtro}" size="50"/>
+	       			<p:commandButton icon="fa fa-search" actionListener="#{viewEntidades.filtrar()}" process="panelFiltro" update="growlDialog" />
+	           	</h:panelGrid>
+
+	           	<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.resultados']}" />
+	           	<p:dataTable  id="dataTable" var="dominio" value="#{dialogDefinicionVersionDominios.listaDominios}"
+					 rows="10"
+					 scrollable="true"
+		             paginator="false" selectionMode="single" selection="#{dialogDefinicionVersionDominios.datoSeleccionado}"
+		             rowKey="#{dominio.id}" dblClickSelect="true">
+
+					<!-- Columnas -->
+				    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.codigo}">
+				        <h:outputText value="#{dominio.codigo}" />
+				    </p:column>
+
+				    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}"  sortBy="#{dominio.descripcion}">
+				        <h:outputText value="#{dominio.descripcion}" />
+				    </p:column>
+
+				</p:dataTable>
+			</h:panelGrid>
+
+			<!-- botonera inferior -->
+			<p:outputPanel styleClass="botonera">
+				<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.aceptar']}" styleClass="boton-azul"
+							actionListener="#{dialogDefinicionVersionDominios.aceptar()}" process="@form"
+							update="@form growlDialog" />
+						<p:commandButton value="#{msg['botones.cancelar']}"
+							actionListener="#{dialogDefinicionVersionDominios.cancelar()}" process="@this" />
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+		</h:form>
+	</h:body>
+
+</f:view>
+</html>

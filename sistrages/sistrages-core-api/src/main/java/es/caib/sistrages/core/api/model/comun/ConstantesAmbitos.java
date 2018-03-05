@@ -17,7 +17,7 @@ public final class ConstantesAmbitos {
 	public static final String ENTIDAD = "E";
 	public static final String AREA = "A";
 
-	public static final String[] listaRoles() {
+	public static final String[] listaAmbitos() {
 		final String[] ambitosPrincipales = { GLOBAL, ENTIDAD, AREA };
 		return ambitosPrincipales;
 	}

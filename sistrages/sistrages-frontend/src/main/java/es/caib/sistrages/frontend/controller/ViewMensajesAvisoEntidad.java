@@ -2,7 +2,9 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,8 +12,11 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.MensajeAviso;
+import es.caib.sistrages.core.api.model.types.TypeMensajeAviso;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -34,7 +39,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		mensajeAviso1.setActivo(true);
 		mensajeAviso1.setId(1l);
 		mensajeAviso1.setDescripcion("La versió d'aquest tràmit està desactivat.");
-		mensajeAviso1.setTipo("Llista de tràmits");
+		mensajeAviso1.setTipo(TypeMensajeAviso.TODOS);
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(2018, 2, 2);
 		mensajeAviso1.setFechaInicio(calendar.getTime());
@@ -44,12 +49,12 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		mensajeAviso2.setActivo(true);
 		mensajeAviso2.setId(2l);
 		mensajeAviso2.setDescripcion("Per la tramitació que realitzarà necessitarà disposar de DNI electrònic.");
-		mensajeAviso2.setTipo("Tràmits amb firma");
+		mensajeAviso2.setTipo(TypeMensajeAviso.FIRMA);
 		final MensajeAviso mensajeAviso3 = new MensajeAviso();
 		mensajeAviso3.setActivo(false);
 		mensajeAviso3.setId(3l);
 		mensajeAviso3.setDescripcion("Per problemes técnics aquest tràmit està donat de baixa.");
-		mensajeAviso3.setTipo("Tots els tràmits");
+		mensajeAviso3.setTipo(TypeMensajeAviso.AUTENTICADOS);
 
 		listaDatos = new ArrayList<>();
 		listaDatos.add(mensajeAviso1);
@@ -103,14 +108,22 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.openDialog(DialogMensajeAviso.class, TypeModoAcceso.EDICION, null, true, 530, 250);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		UtilJSF.openDialog(DialogMensajeAviso.class, TypeModoAcceso.EDICION, params, true, 530, 250);
+
 	}
 
 	/**

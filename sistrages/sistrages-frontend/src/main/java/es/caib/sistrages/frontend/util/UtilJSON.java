@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.util;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,7 +45,25 @@ public class UtilJSON {
 	 */
 	public static Object fromJSON(final String json, final Class<?> clase) throws IOException {
 		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return mapper.readValue(json, clase);
+	}
+
+	/**
+	 * Clase para convertir de json a objeto.
+	 *
+	 * @param json
+	 * @param clase
+	 * @param claseLista
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public static List<?> fromListJSON(final String json, final Class<?> claseLista) throws IOException {
+		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		return mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, claseLista));
 	}
 
 }

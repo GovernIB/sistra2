@@ -9,7 +9,7 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogTraduccion.titulo']}"/></title>
@@ -25,54 +25,36 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccion.modoAcceso}" />
-		<f:viewParam name="DATA" value="#{dialogTraduccion.iData}" />
+		<f:viewParam name="DATO" value="#{dialogTraduccion.iData}" />
 		<f:viewParam name="OBLIGATORIOS" value="#{dialogTraduccion.iIdiomasObligatorios}" />
 		<f:viewParam name="POSIBLES" value="#{dialogTraduccion.iIdiomasPosibles}" />
 		<f:viewAction action="#{dialogTraduccion.init}" />
 	</f:metadata>
 
 	<h:form id="formTraduccion">
+
   				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="2000" sticky="false" />
 
-				 <h:panelGrid  style="width: 100%" styleClass="hide-table-header" rowclass="w30,w70">
-		  			<p:row rendered="#{dialogTraduccion.visibleCa}" >
-						<p:column class="w30">
- 							<p:outputLabel for="traduccion_ca" id="labelCa" value="#{msg['ca']}" />
-				 		</p:column>
-						<p:column class="w70">
-							<p:inputText id="traduccion_ca" value="#{dialogTraduccion.textoCa}" required="#{dialogTraduccion.requiredCa}" />
-						</p:column>
-					</p:row>
-					<p:row rendered="#{dialogTraduccion.visibleEs}" >
-						<p:column class="w30">
-					        <p:outputLabel for="traduccion_es"  id="labelEs"  value="#{msg['es']}" />
-				 		</p:column>
-						<p:column>
-							<p:inputText id="traduccion_es" value="#{dialogTraduccion.textoEs}" required="#{dialogTraduccion.requiredEs}" />
-						</p:column>
-					</p:row>
-					<p:row rendered="#{dialogTraduccion.visibleEn}" >
-						<p:column class="w30">
-					        <p:outputLabel for="traduccion_en"  id="labelEn"  value="#{msg['en']}" />
-				 		</p:column>
-						<p:column>
-							<p:inputText id="traduccion_en" value="#{dialogTraduccion.textoEn}" required="#{dialogTraduccion.requiredEn}" />
-						</p:column>
-					</p:row>
-					<p:row rendered="#{dialogTraduccion.visibleDe}" >
-						<p:column class="w30">
-					        <p:outputLabel for="traduccion_de"  id="labelDe"  value="#{msg['de']}" />
-				 		</p:column>
-						<p:column>
-							<p:inputText id="traduccion_de" value="#{dialogTraduccion.textoDe}" required="#{dialogTraduccion.requiredDe}" />
-						</p:column>
-					</p:row>
+				 <h:panelGrid  style="width: 100%" styleClass="hide-table-header" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30,padding-right-18" columns="2" >
+
+		  			<p:outputLabel   for="traduccion_ca" id="labelCa" value="#{msg['ca']}" rendered="#{dialogTraduccion.visibleCa}" />
+		  			<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccion.textoCa}" required="#{dialogTraduccion.requiredCa}" rendered="#{dialogTraduccion.visibleCa}" rows="4" cols="40" autoResize="false"  />
+
+					<p:outputLabel   for="traduccion_es"  id="labelEs"  value="#{msg['es']}" rendered="#{dialogTraduccion.visibleEs}" />
+					<p:inputTextarea id="traduccion_es" value="#{dialogTraduccion.textoEs}" required="#{dialogTraduccion.requiredEs}" rendered="#{dialogTraduccion.visibleEs}" rows="4" cols="40" autoResize="false"  />
+
+					<p:outputLabel   for="traduccion_en"  id="labelEn"  value="#{msg['en']}" rendered="#{dialogTraduccion.visibleEn}" />
+					<p:inputTextarea id="traduccion_en" value="#{dialogTraduccion.textoEn}" required="#{dialogTraduccion.requiredEn}" rendered="#{dialogTraduccion.visibleEn}" rows="4" cols="40" autoResize="false"  />
+
+		  			<p:outputLabel   for="traduccion_de"  id="labelDe"  value="#{msg['de']}"  rendered="#{dialogTraduccion.visibleDe}" />
+		  			<p:inputTextarea id="traduccion_de" value="#{dialogTraduccion.textoDe}" required="#{dialogTraduccion.requiredDe}" rendered="#{dialogTraduccion.visibleDe}" rows="4" cols="40" autoResize="false"  />
+
   			 </h:panelGrid>
 
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion" styleClass="boton-azul"  />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

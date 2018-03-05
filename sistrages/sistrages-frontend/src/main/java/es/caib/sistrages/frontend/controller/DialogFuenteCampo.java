@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.FuenteCampo;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -13,36 +13,29 @@ import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
-public class DialogFuenteDatosCampo extends DialogControllerBase {
+public class DialogFuenteCampo extends DialogControllerBase {
 
 	/** Id elemento a tratar. */
 	private String id;
 
 	/** Datos elemento. */
-	private FuenteDatosCampo data;
+	private FuenteCampo data;
 
 	/** Fuente Datos en formato JSON. **/
 	private String iData;
 
 	/**
 	 * Inicialización.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void init() throws IOException {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new FuenteDatosCampo();
+			data = new FuenteCampo();
 
 		} else {
-			if (iData == null) {
-				data = new FuenteDatosCampo();// FuenteDatosGlobalService.load(id);
-				data.setId(Long.valueOf(id));
-				data.setCodigo("CAMPO");
-				data.setClavePrimaria(true);
-			} else {
-				data = (FuenteDatosCampo) UtilJSON.fromJSON(iData, FuenteDatosCampo.class);
-			}
+			data = (FuenteCampo) UtilJSON.fromJSON(iData, FuenteCampo.class);
 		}
 	}
 
@@ -73,6 +66,8 @@ public class DialogFuenteDatosCampo extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		// TODO borrar la siguiente linea
+		data.setId(Long.valueOf(Math.round(Math.random())));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
@@ -105,7 +100,7 @@ public class DialogFuenteDatosCampo extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public FuenteDatosCampo getData() {
+	public FuenteCampo getData() {
 		return data;
 	}
 
@@ -113,8 +108,23 @@ public class DialogFuenteDatosCampo extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FuenteDatosCampo data) {
+	public void setData(final FuenteCampo data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the iData
+	 */
+	public String getiData() {
+		return iData;
+	}
+
+	/**
+	 * @param iData
+	 *            the iData to set
+	 */
+	public void setiData(final String iData) {
+		this.iData = iData;
 	}
 
 }

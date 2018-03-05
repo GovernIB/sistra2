@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogFuenteFila.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogFuenteFila.modoAcceso}"/>
+		<f:viewParam name="DATO" value="#{dialogFuenteFila.iData}" />
+		<f:viewParam name="DATO2" value="#{dialogFuenteFila.iCampos}" />
+		<f:viewAction action="#{dialogFuenteFila.init}" />
+	</f:metadata>
+	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
+
+  			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+			  	<c:forEach items="#{dialogFuenteFila.data.datos}" var="dato">
+			  			<h:outputText value="#{dato.campo.codigo}" />
+			  			<p:inputTextarea id="input#{dato.campo.codigo}" value="#{dato.valor}" rows="4" cols="40" required="true" />
+				</c:forEach>
+
+			 </h:panelGrid>
+
+			<h:outputScript >
+			      function rcEditarPropiedad() {
+			        document.getElementById("form:btnEditarPropiedad").click();
+			      }
+			      function rcEditarValor() {
+			        document.getElementById("form:btnEditarPropiedad").click();
+			      }
+			      function  rcBorrarPropiedad() {
+			        document.getElementById("form:btnEliminarPropiedad").click();
+			      }
+		    </h:outputScript>
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFuenteFila.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

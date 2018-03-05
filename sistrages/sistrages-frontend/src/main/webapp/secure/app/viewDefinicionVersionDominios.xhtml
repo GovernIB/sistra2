@@ -22,8 +22,8 @@
 						actionListener="#{viewDefinicionVersionDominios.anyadir()}" process="@this"
 						update="growl" />
 
-					<p:commandButton id="btnEliminar"
-						value="#{msg['botones.eliminar']}" icon="fa fa-times"
+					<p:commandButton id="btnQuitar"
+						value="#{msg['botones.quitar']}" icon="fa fa-times"
 						actionListener="#{viewDefinicionVersionDominios.anyadir()}"
 						process="@this" update="growl" />
 
@@ -35,7 +35,7 @@
 			</f:facet>
 		</p:toolbar>
 
-		<p:dataTable  id="dataTable" var="dominio" value="#{viewDefinicionVersion.listaDominios}"
+		<p:dataTable  id="dataTable" var="dominio" value="#{viewDefinicionVersion.tramiteVersion.listaDominios}"
 			 rows="10"
 			 scrollable="true"
              paginator="false" selectionMode="single" selection="#{viewDefinicionVersionDominios.datoSeleccionado}"

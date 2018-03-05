@@ -10,12 +10,12 @@
 		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 
-        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
-            <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+            <p:outputPanel>
+           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramiteVersion.descripcion.getTraduccion(sessionBean.lang)}"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editarDescripcion()}" styleClass="va-top"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 
@@ -23,12 +23,12 @@
 			<p:panelGrid styleClass="noBorders">
 				<p:row>
 					<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="autenticado" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true"/>
+						<p:selectBooleanCheckbox id="autenticado" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.autenticado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.autenticado']}" required="true"/>
 					</p:column>
 					<p:column>
 						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 						<p:spacer width="8" height="1"/>
-						<p:inputText id="nivelQAA" disabled="true" size="2" value="1" />
+						<p:inputText id="nivelQAA" disabled="true" size="2" value="#{viewDefinicionVersion.tramiteVersion.nivelQAA}" />
 					</p:column>
 				</p:row>
 				<p:row>
@@ -42,43 +42,43 @@
 
          	<p:outputLabel for="idiomaCastellano" value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
 			<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
-				<p:selectBooleanCheckbox id="idiomaCastellano" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
-				<p:selectBooleanCheckbox id="idiomaCatalan" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
-				<p:selectBooleanCheckbox id="idiomaIngles"  value="false" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
+				<p:selectBooleanCheckbox id="idiomaCastellano" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.idiomasSoportados.contains('es')}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
+				<p:selectBooleanCheckbox id="idiomaCatalan" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.idiomasSoportados.contains('ca')}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
+				<p:selectBooleanCheckbox id="idiomaIngles"  disabled="true" value="#{viewDefinicionVersion.tramiteVersion.idiomasSoportados.contains('en')}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
 			</p:panelGrid>
 
          	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
 			<p:panelGrid styleClass="noBorders">
 				<p:row>
 					<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="true"/>
+						<p:selectBooleanCheckbox id="persistencia" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistencia}"/>
 						<p:spacer width="40" height="1"/>
 					</p:column>
 					<p:column>
-						<p:selectOneRadio id="tipopersistencia" disabled="true" value="pordias">
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="sinlimite" />
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="pordias" />
+						<p:selectOneRadio id="tipopersistencia" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaInfinita}">
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.sinlimite']}" itemValue="true" />
+				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionPropiedades.pordias']}" itemValue="false" />
 		     		   </p:selectOneRadio>
 		     		 </p:column>
 					<p:column>
 							<p:outputLabel for="numdias" value="#{msg['viewDefinicionVersionPropiedades.numdias']}" />
 							<p:spacer width="8"/>
-							<p:inputText id="numdias" size="3" disabled="true" value="15"/>
+							<p:inputText id="numdias" size="3" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.persistenciaDias}"/>
 					</p:column>
 				</p:row>
 			</p:panelGrid>
 
 			<p:outputLabel for="scriptpersonalizacion" value="#{msg['viewDefinicionVersionPropiedades.scriptpersonalizacion']}" />
-			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.idScriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
 						process="@this" update="growl"/>
 
 			<p:outputLabel for="scriptparametrosiniciales" value="#{msg['viewDefinicionVersionPropiedades.scriptparametrosiniciales']}" />
-			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="true" actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersion.tramiteVersion.idScriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
 						process="@this" update="growl"/>
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
-					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul" rendered="#{viewDefinicionVersion.isEdicion()}"
 						actionListener="#{viewDefinicionVersionPropiedades.editar()}"
 						process="@this" update="growl" />
 				</p:outputPanel>

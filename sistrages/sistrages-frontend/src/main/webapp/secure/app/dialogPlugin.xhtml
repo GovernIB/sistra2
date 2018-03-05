@@ -8,7 +8,8 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroDialogo" var="TypeParametroDialogo"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePlugin" var="TypePlugin"/>
+
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogPlugin.titulo']}"/></title>
@@ -24,6 +25,7 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogPlugin.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogPlugin.id}"/>
+		<f:viewParam name="DATO" value="#{dialogPlugin.iData}"/>
 		<f:viewParam name="AMBITO" value="#{dialogPlugin.ambito}"/>
 		<f:viewAction action="#{dialogPlugin.init}" />
 	</f:metadata>
@@ -36,12 +38,9 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,,wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" />
-					<p:selectOneMenu id="tipo" autoWidth="true"  styleClass="va-middle">
-						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.l']}" itemValue="L" />
-						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.r']}" itemValue="R" />
-						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.d']}" itemValue="D" />
-						<f:selectItem itemLabel="#{msg['dialogPlugin.tipo.f']}" itemValue="F" />
-					</p:selectOneMenu>
+					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}" style="width:200px" required="true">
+    					 <f:selectItems value="#{TypePlugin.ALL_VALUES}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}" />
+					</p:selectOneMenu >
 					<p:outputLabel value="" />
 
 					<p:outputLabel for="valor" value="#{msg['dialogPlugin.headerClassname']}" />
