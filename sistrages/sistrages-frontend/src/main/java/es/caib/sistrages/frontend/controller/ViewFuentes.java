@@ -10,8 +10,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.Fuente;
 import es.caib.sistrages.core.api.model.FuenteCampo;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -180,10 +178,8 @@ public class ViewFuentes extends ViewControllerBase {
 
 	/**
 	 * Abre dialogo para editar dato.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void editar() throws JsonProcessingException {
+	public void editar() {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
@@ -212,10 +208,8 @@ public class ViewFuentes extends ViewControllerBase {
 
 	/**
 	 * Datos.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void datos() throws JsonProcessingException {
+	public void datos() {
 
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())

@@ -37,7 +37,7 @@
 					<h:outputText value="#{msg['dialogFormularioSoporte.headerTipoIncidencia']}" />
 					<p:column>
 						<p:inputText  id="inputTipoIncidencia" value="#{dialogFormularioSoporte.data.tipoIncidencia.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
-						<p:commandButton id="btnTipoIncidencia" icon="fa fa-compass" actionListener="#{dialogFormularioSoporte.editarTipoIncidencia()}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
+						<p:commandButton id="btnTipoIncidencia" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarTipoIncidencia()}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoTipoIncidencia}" update="growlDialogFormularioSoporte inputTipoIncidencia" />
 		        		</p:commandButton>
 					</p:column>
@@ -45,7 +45,7 @@
 					<h:outputText value="#{msg['dialogFormularioSoporte.headerDescripcion']}" />
 					<p:column>
 						<p:inputText id="inputDescripcion"  value="#{dialogFormularioSoporte.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
-						<p:commandButton id="btnDescripcion" icon="fa fa-compass" actionListener="#{dialogFormularioSoporte.editarDescripcion()}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
+						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarDescripcion()}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoDescripcion}" update="growlDialogFormularioSoporte inputDescripcion" />
 		        		</p:commandButton>
 					</p:column>

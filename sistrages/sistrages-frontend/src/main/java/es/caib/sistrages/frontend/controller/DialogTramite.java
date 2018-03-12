@@ -1,13 +1,20 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.event.SelectEvent;
+
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -39,7 +46,10 @@ public class DialogTramite extends DialogControllerBase {
 		} else {
 			data = new Tramite();// areaService.load(id);
 			data.setId(Long.valueOf(id));
-			data.setDescripcion("Descripc");
+			final Traducciones traducciones = new Traducciones();
+			traducciones.add(new Traduccion("es", "Descripcion del trámite"));
+			traducciones.add(new Traduccion("ca", "Descripció del tràmit"));
+			data.setDescripcion(traducciones);
 			data.setCodigo("codigo");
 		}
 	}
@@ -71,6 +81,66 @@ public class DialogTramite extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data.getCodigo());
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Retorno dialogo de los botones de traducciones.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogo(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+
+				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				data.setDescripcion(traducciones);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				data.setDescripcion(traduccionesMod);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+	}
+
+	/**
+	 * Editar descripcion del dominio.
+	 */
+	public void editarDescripcion() {
+
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		if (data.getDescripcion() == null) {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
+					idiomas, idiomas);
+		} else {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+		}
+
 	}
 
 	/**

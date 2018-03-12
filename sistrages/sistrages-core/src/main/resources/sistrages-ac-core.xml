@@ -40,7 +40,7 @@
 		<property name="persistenceUnitName" value="sistrages-PU" />
 		<property name="packagesToScan">
 			<list>
-				<value>es.caib.sistrages.core.service.repository.model</value>
+				<value>es.caib.sistrages.core.service.repository.modeltest</value>
 			</list>
 		</property>
 		<property name="jpaDialect">

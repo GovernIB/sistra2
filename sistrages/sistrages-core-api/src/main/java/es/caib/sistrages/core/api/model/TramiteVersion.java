@@ -1,6 +1,3 @@
-/*
- *
- */
 package es.caib.sistrages.core.api.model;
 
 import java.util.Date;
@@ -11,14 +8,8 @@ import es.caib.sistrages.core.api.model.types.TypeFlujo;
 /**
  * The Class TramiteVersion.
  */
-public class TramiteVersion {
-
-	/**
-	 * Crea una nueva instancia de TramiteVersion.
-	 */
-	public TramiteVersion() {
-		super();
-	}
+@SuppressWarnings("serial")
+public class TramiteVersion extends ModelApi {
 
 	/**
 	 * id.

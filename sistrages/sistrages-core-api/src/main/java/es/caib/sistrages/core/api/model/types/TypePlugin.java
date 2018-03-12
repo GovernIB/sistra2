@@ -46,30 +46,17 @@ public enum TypePlugin {
 	 * @param tipo
 	 * @return
 	 */
-	public TypePlugin toEnum(final String tipo) {
-		TypePlugin retorno;
-		if (tipo == null) {
-			retorno = null;
-		} else {
-			switch (tipo) {
-			case "L":
-				retorno = TypePlugin.LOGIN;
-				break;
-			case "R":
-				retorno = TypePlugin.REPRESENTACION;
-				break;
-			case "D":
-				retorno = TypePlugin.DOMINIO_REMOTO;
-				break;
-			case "F":
-				retorno = TypePlugin.FIRMA;
-				break;
-			default:
-				retorno = null;
-				break;
+	public TypePlugin toEnum(final String text) {
+		TypePlugin respuesta = null;
+		if (text != null) {
+			for (final TypePlugin b : TypePlugin.values()) {
+				if (text.equalsIgnoreCase(b.toString())) {
+					respuesta = b;
+					break;
+				}
 			}
 		}
-		return retorno;
+		return respuesta;
 	}
 
 	/*

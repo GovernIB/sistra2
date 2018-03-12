@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:column>CAMPO TEXTO</h:column>
+<h:column>
+	<h:inputText value="#{dialogDisenyoFormulario.componentEdit.campoPropioTexto}">
+		<p:ajax event="blur" process="@this" />
+	</h:inputText>
+</h:column>
+
+</ui:composition>

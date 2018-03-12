@@ -21,8 +21,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.UploadedFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
@@ -35,6 +34,7 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilJSON;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
  * Mantenimiento de configuracion entidad.
@@ -154,38 +154,39 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 * Para subir ficheros con el uploadEvent en modo Avanzado.
 	 *
 	 * @param event
-	 * @throws IOException
 	 */
-	public void uploadModeAdvanced(final FileUploadEvent event) throws IOException {
-		if (event.getFile() != null) {
-			final String filename = event.getFile().getFileName();
-			final InputStream is = event.getFile().getInputstream();
-			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+	public void uploadModeAdvanced(final FileUploadEvent event) {
+		try {
+			if (event.getFile() != null) {
+				final String filename = event.getFile().getFileName();
+				final InputStream is = event.getFile().getInputstream();
+				final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-			int nRead;
-			final byte[] contenido = new byte[16384];
+				int nRead;
+				final byte[] contenido = new byte[16384];
 
-			while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
-				buffer.write(contenido, 0, nRead);
+				while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
+					buffer.write(contenido, 0, nRead);
+				}
+
+				buffer.flush();
+
+				final Fichero fichero = new Fichero(1l, filename);
+				fichero.setContenido(contenido);
+				data.setLogoGestor(fichero);
 			}
-
-			buffer.flush();
-
-			final Fichero fichero = new Fichero(1l, filename);
-			fichero.setContenido(contenido);
-			data.setLogoGestor(fichero);
+		} catch (final IOException ex) {
+			throw new FrontException("Error upload", ex);
 		}
 	}
 
 	/**
 	 * Upload en modo simple.
-	 *
-	 * @throws IOException
 	 */
-	public void uploadModeSimple2() throws IOException {
+	public void uploadModeSimple2() {
 		try {
 			uploadModeSimple();
-		} catch (final Exception e) {
+		} catch (final FrontException e) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "No se puede subir");
 		}
 	}
@@ -193,12 +194,11 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Upload en modo simple.
 	 *
-	 * @throws IOException
 	 */
-	public void uploadModeSimple3(final FileUploadEvent event) throws IOException {
+	public void uploadModeSimple3(final FileUploadEvent event) {
 		try {
 			uploadModeSimple();
-		} catch (final Exception e) {
+		} catch (final FrontException e) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "No se puede subir");
 		}
 	}
@@ -206,33 +206,36 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Upload en modo simple.
 	 *
-	 * @throws IOException
 	 */
-	public void uploadModeSimple() throws IOException {
-		if (fileLogoGestor != null) {
-			final String filename = fileLogoGestor.getFileName();
-			final InputStream is = fileLogoGestor.getInputstream();
-			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+	public void uploadModeSimple() {
+		try {
+			if (fileLogoGestor != null) {
+				final String filename = fileLogoGestor.getFileName();
+				final InputStream is = fileLogoGestor.getInputstream();
+				final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-			int nRead;
-			final byte[] contenido = new byte[16384];
+				int nRead;
+				final byte[] contenido = new byte[16384];
 
-			while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
-				buffer.write(contenido, 0, nRead);
+				while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
+					buffer.write(contenido, 0, nRead);
+				}
+
+				buffer.flush();
+
+				final Fichero fichero = new Fichero(1l, filename);
+				fichero.setContenido(contenido);
+				data.setLogoGestor(fichero);
 			}
-
-			buffer.flush();
-
-			final Fichero fichero = new Fichero(1l, filename);
-			fichero.setContenido(contenido);
-			data.setLogoGestor(fichero);
+		} catch (final IOException ex) {
+			throw new FrontException("Error descarga", ex);
 		}
 	}
 
 	/**
 	 * Abre explorar gestion logo.
 	 */
-	public void explorarGestorLogo() throws IOException {
+	public void explorarGestorLogo() {
 
 		// Muestra dialogo
 		/*
@@ -241,47 +244,52 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		 * String.valueOf(this.data.getId())); UtilJSF.openDialog(DialogFichero.class,
 		 * TypeModoAcceso.EDICION, params, true, 740, 650);
 		 */
+		try {
+			if (data.getLogoGestor() == null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "No tienes logo subido");
+			} else {
+				// Get the FacesContext
+				final FacesContext facesContext = FacesContext.getCurrentInstance();
 
-		if (data.getLogoGestor() == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "No tienes logo subido");
-		} else {
-			// Get the FacesContext
-			final FacesContext facesContext = FacesContext.getCurrentInstance();
+				// Get HTTP response
+				final HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext()
+						.getResponse();
 
-			// Get HTTP response
-			final HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+				// Set response headers
+				response.reset(); // Reset the response in the first place
+				response.setHeader("Content-Type", "application/pdf"); // Set only the content type
 
-			// Set response headers
-			response.reset(); // Reset the response in the first place
-			response.setHeader("Content-Type", "application/pdf"); // Set only the content type
+				// Open response output stream
+				final OutputStream responseOutputStream = response.getOutputStream();
 
-			// Open response output stream
-			final OutputStream responseOutputStream = response.getOutputStream();
+				// Read PDF contents
+				final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream(
+						data.getLogoGestor().getContenido());
 
-			// Read PDF contents
-			final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream(data.getLogoGestor().getContenido());
+				// Read PDF contents and write them to the output
+				final byte[] bytesBuffer = new byte[2048];
+				int bytesRead;
+				while ((bytesRead = pdfInputStream.read(bytesBuffer)) > 0) {
+					responseOutputStream.write(bytesBuffer, 0, bytesRead);
+				}
 
-			// Read PDF contents and write them to the output
-			final byte[] bytesBuffer = new byte[2048];
-			int bytesRead;
-			while ((bytesRead = pdfInputStream.read(bytesBuffer)) > 0) {
-				responseOutputStream.write(bytesBuffer, 0, bytesRead);
+				// Make sure that everything is out
+				responseOutputStream.flush();
+
+				// Close both streams
+				pdfInputStream.close();
+				responseOutputStream.close();
+
+				// JSF doc:
+				// Signal the JavaServer Faces implementation that the HTTP response for this
+				// request has already been generated
+				// (such as an HTTP redirect), and that the request processing lifecycle should
+				// be terminated
+				// as soon as the current phase is completed.
+				facesContext.responseComplete();
 			}
-
-			// Make sure that everything is out
-			responseOutputStream.flush();
-
-			// Close both streams
-			pdfInputStream.close();
-			responseOutputStream.close();
-
-			// JSF doc:
-			// Signal the JavaServer Faces implementation that the HTTP response for this
-			// request has already been generated
-			// (such as an HTTP redirect), and that the request processing lifecycle should
-			// be terminated
-			// as soon as the current phase is completed.
-			facesContext.responseComplete();
+		} catch (final IOException ex) {
+			throw new FrontException("Error descarga", ex);
 		}
 	}
 
@@ -292,28 +300,32 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		return downloadGestorLogo;
 	}
 
-	public void prepDownload() throws IOException {
+	public void prepDownload() {
 		downloadGestorLogo = new DefaultStreamedContent(new ByteArrayInputStream(data.getLogoGestor().getContenido()));
 	}
 
-	public void uploadGestorLogo() throws IOException {
-		final String filename = file.getName();
+	public void uploadGestorLogo() {
+		try {
+			final String filename = file.getName();
 
-		final InputStream is = file.getInputStream();
-		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			final InputStream is = file.getInputStream();
+			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-		int nRead;
-		final byte[] contenido = new byte[16384];
+			int nRead;
+			final byte[] contenido = new byte[16384];
 
-		while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
-			buffer.write(contenido, 0, nRead);
+			while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
+				buffer.write(contenido, 0, nRead);
+			}
+
+			buffer.flush();
+
+			final Fichero fichero = new Fichero(1l, filename);
+			fichero.setContenido(contenido);
+			data.setLogoGestor(fichero);
+		} catch (final IOException ex) {
+			throw new FrontException("Error upload", ex);
 		}
-
-		buffer.flush();
-
-		final Fichero fichero = new Fichero(1l, filename);
-		fichero.setContenido(contenido);
-		data.setLogoGestor(fichero);
 	}
 
 	/**
@@ -349,18 +361,22 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Abre explorar asistente pie.
 	 *
-	 * @throws JsonProcessingException
+	 *
 	 */
-	public void explorarAssistentPie() throws JsonProcessingException {
-		UtilJSF.openDialogTraduccion(TypeModoAcceso.EDICION, data.getPie(), null, null);
+	public void explorarAssistentPie() {
+
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		if (data.getPie() == null) {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, data.getPie(), idiomas, idiomas);
+		} else {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getPie(), idiomas, idiomas);
+		}
 	}
 
 	/**
 	 * Abre explorar configuración del formulario de contacto.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void configFormulariContacte() throws JsonProcessingException {
+	public void configFormulariContacte() {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.data.getFormularioIncidencias()));

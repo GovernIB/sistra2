@@ -9,7 +9,8 @@ import java.util.Date;
  * @author Indra
  *
  */
-public class Tramite {
+@SuppressWarnings("serial")
+public class Tramite extends ModelApi {
 
 	/**
 	 * Id.
@@ -24,7 +25,7 @@ public class Tramite {
 	/**
 	 * Descripcion.
 	 */
-	private String descripcion;
+	private Traducciones descripcion;
 
 	/**
 	 * Activo
@@ -57,6 +58,21 @@ public class Tramite {
 	}
 
 	/**
+	 * @return the descripcion
+	 */
+	public Traducciones getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(final Traducciones descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
 	 * @return the codigo
 	 */
 	public String getCodigo() {
@@ -69,21 +85,6 @@ public class Tramite {
 	 */
 	public void setCodigo(final String codigo) {
 		this.codigo = codigo;
-	}
-
-	/**
-	 * @return the descripcion
-	 */
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	/**
-	 * @param descripcion
-	 *            the descripcion to set
-	 */
-	public void setDescripcion(final String descripcion) {
-		this.descripcion = descripcion;
 	}
 
 	/**

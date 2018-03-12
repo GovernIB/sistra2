@@ -7,7 +7,8 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class FormularioExterno {
+@SuppressWarnings("serial")
+public class FormularioExterno extends ModelApi {
 
 	/** Id. */
 	private Long id;

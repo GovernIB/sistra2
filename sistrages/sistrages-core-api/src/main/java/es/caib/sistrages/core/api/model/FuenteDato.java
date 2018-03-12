@@ -7,7 +7,8 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class FuenteDato {
+@SuppressWarnings("serial")
+public class FuenteDato extends ModelApi {
 
 	/** Id. **/
 	private Long id;

@@ -39,10 +39,18 @@
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  <servlet>
+   <servlet-name>FormRenderServlet</servlet-name>
+   <servlet-class>es.caib.sistrages.frontend.servlet.FormRenderServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+	   <servlet-name>FormRenderServlet</servlet-name>
+	   <url-pattern>/secure/app/FormRenderServlet</url-pattern>
+	</servlet-mapping>
   <context-param>
     <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
     <param-value>.xhtml</param-value>

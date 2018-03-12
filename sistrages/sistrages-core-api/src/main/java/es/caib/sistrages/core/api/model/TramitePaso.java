@@ -2,30 +2,49 @@ package es.caib.sistrages.core.api.model;
 
 /**
  *
- * Area.
+ * Tramite paso.
  *
  * @author Indra
  *
  */
-public class TramitePaso {
+@SuppressWarnings("serial")
+public class TramitePaso extends ModelApi {
 
-	/**
-	 * Id.
-	 */
+	/** Id. */
 	private Long id;
 
+	/** Trámite version. **/
+	private TramiteVersion tramiteVersion;
+
+	/** Tipo del paso de tramitación. **/
+	private TramiteTipo tipo;
+
 	/**
-	 * Codigo.
+	 * Identificador paso tramitación. Para flujo normalizado será establecido
+	 * automáticamente, para flujo personalizado será establecido por desarrollador.
 	 */
 	private String codigo;
 
 	/**
-	 * Descripcion.
+	 * Descripción del paso de tramitación. En flujo normalizado será establecido
+	 * automáticamente.
 	 */
 	private String descripcion;
 
-	/** orden. **/
+	/** Orden paso. **/
 	private int orden;
+
+	/** Indica que paso es final. */
+	private boolean pasoFinal;
+
+	/** Para flujo personalizado permite establecer script navegación. */
+	private Script scriptNavegacion;
+
+	/**
+	 * Para flujo personalizado permite almacenamiento de variables a usar entre
+	 * pasos.
+	 */
+	private Script scriptVariables;
 
 	/**
 	 * Crea una nueva instancia de TramitePaso.
@@ -35,8 +54,6 @@ public class TramitePaso {
 	}
 
 	/**
-	 * Obtiene el valor de id.
-	 *
 	 * @return the id
 	 */
 	public Long getId() {
@@ -44,8 +61,6 @@ public class TramitePaso {
 	}
 
 	/**
-	 * Establece el valor de id.
-	 *
 	 * @param id
 	 *            the id to set
 	 */
@@ -54,8 +69,36 @@ public class TramitePaso {
 	}
 
 	/**
-	 * Obtiene el valor de codigo.
-	 *
+	 * @return the tramiteVersion
+	 */
+	public TramiteVersion getTramiteVersion() {
+		return tramiteVersion;
+	}
+
+	/**
+	 * @param tramiteVersion
+	 *            the tramiteVersion to set
+	 */
+	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
+		this.tramiteVersion = tramiteVersion;
+	}
+
+	/**
+	 * @return the tipo
+	 */
+	public TramiteTipo getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
+	public void setTipo(final TramiteTipo tipo) {
+		this.tipo = tipo;
+	}
+
+	/**
 	 * @return the codigo
 	 */
 	public String getCodigo() {
@@ -63,8 +106,6 @@ public class TramitePaso {
 	}
 
 	/**
-	 * Establece el valor de codigo.
-	 *
 	 * @param codigo
 	 *            the codigo to set
 	 */
@@ -73,8 +114,6 @@ public class TramitePaso {
 	}
 
 	/**
-	 * Obtiene el valor de descripcion.
-	 *
 	 * @return the descripcion
 	 */
 	public String getDescripcion() {
@@ -82,8 +121,6 @@ public class TramitePaso {
 	}
 
 	/**
-	 * Establece el valor de descripcion.
-	 *
 	 * @param descripcion
 	 *            the descripcion to set
 	 */
@@ -92,22 +129,63 @@ public class TramitePaso {
 	}
 
 	/**
-	 * Obtiene el valor de orden.
-	 *
-	 * @return el valor de orden
+	 * @return the orden
 	 */
 	public int getOrden() {
 		return orden;
 	}
 
 	/**
-	 * Establece el valor de orden.
-	 *
 	 * @param orden
-	 *            el nuevo valor de orden
+	 *            the orden to set
 	 */
 	public void setOrden(final int orden) {
 		this.orden = orden;
+	}
+
+	/**
+	 * @return the pasoFinal
+	 */
+	public boolean isPasoFinal() {
+		return pasoFinal;
+	}
+
+	/**
+	 * @param pasoFinal
+	 *            the pasoFinal to set
+	 */
+	public void setPasoFinal(final boolean pasoFinal) {
+		this.pasoFinal = pasoFinal;
+	}
+
+	/**
+	 * @return the scriptNavegacion
+	 */
+	public Script getScriptNavegacion() {
+		return scriptNavegacion;
+	}
+
+	/**
+	 * @param scriptNavegacion
+	 *            the scriptNavegacion to set
+	 */
+	public void setScriptNavegacion(final Script scriptNavegacion) {
+		this.scriptNavegacion = scriptNavegacion;
+	}
+
+	/**
+	 * @return the scriptVariables
+	 */
+	public Script getScriptVariables() {
+		return scriptVariables;
+	}
+
+	/**
+	 * @param scriptVariables
+	 *            the scriptVariables to set
+	 */
+	public void setScriptVariables(final Script scriptVariables) {
+		this.scriptVariables = scriptVariables;
 	}
 
 }

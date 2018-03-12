@@ -1,6 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.io.IOException;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,7 +10,6 @@ import org.primefaces.event.SelectEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import es.caib.sistrages.core.api.model.FormularioSoporte;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -18,6 +17,7 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilJSON;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -31,10 +31,8 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 	/**
 	 * Inicialización.
-	 *
-	 * @throws IOException
 	 */
-	public void init() throws IOException {
+	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FormularioSoporte();
@@ -138,33 +136,32 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Editar descripcion del dominio.
 	 *
-	 * @throws JsonProcessingException
+
 	 */
-	public void editarDescripcion() throws JsonProcessingException {
-		if (data.getDescripcion() == null || data.getDescripcion().getTraducciones() == null
-				|| data.getDescripcion().getTraduccion().isEmpty()) {
-			final Traducciones traducciones = new Traducciones();
-			traducciones.add(new Traduccion("ca", ""));
-			traducciones.add(new Traduccion("es", ""));
-			data.setDescripcion(traducciones);
+	public void editarDescripcion() {
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		if (data.getDescripcion() == null) {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
+					idiomas, idiomas);
+		} else {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
 		}
-		UtilJSF.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), null, null);
+
 	}
 
 	/**
 	 * Editar descripcion del dominio.
 	 *
-	 * @throws JsonProcessingException
+
 	 */
-	public void editarTipoIncidencia() throws JsonProcessingException {
-		if (data.getTipoIncidencia() == null || data.getTipoIncidencia().getTraducciones() == null
-				|| data.getTipoIncidencia().getTraduccion().isEmpty()) {
-			final Traducciones traducciones = new Traducciones();
-			traducciones.add(new Traduccion("ca", ""));
-			traducciones.add(new Traduccion("es", ""));
-			data.setTipoIncidencia(traducciones);
+	public void editarTipoIncidencia() {
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		if (data.getTipoIncidencia() == null) {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
+					idiomas, idiomas);
+		} else {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getTipoIncidencia(), idiomas, idiomas);
 		}
-		UtilJSF.openDialogTraduccion(TypeModoAcceso.EDICION, data.getTipoIncidencia(), null, null);
 	}
 
 	/**

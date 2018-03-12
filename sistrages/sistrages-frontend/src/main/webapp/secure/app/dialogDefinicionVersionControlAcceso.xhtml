@@ -34,25 +34,27 @@
 			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
 
 	         	<p:outputLabel for="activo" value="#{msg['viewDefinicionVersionControlAcceso.activo']}" />
-	            <p:selectBooleanCheckbox id="activo" disabled="true" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.activa}"/>
+	            <p:selectBooleanCheckbox id="activo" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.activa}"/>
 
 	         	<p:outputLabel for="plazodesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.desactivacion']}" />
 				<p:panelGrid styleClass="noBorders w100">
 					<p:row>
 						<p:column styleClass="noPadding-left">
-							<p:selectBooleanCheckbox id="plazodesactivacion" disabled="true" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.desactivacion}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacion']}"/>
+							<p:selectBooleanCheckbox id="plazodesactivacion" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.desactivacion}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacion']}">
+								<p:ajax update="plazodesactivacioninicio plazodesactivacionfin buttonMensajeDesactivacion" />
+							</p:selectBooleanCheckbox>
 
 							<p:spacer width="20" height="1" />
 
 							<p:outputLabel for="plazodesactivacioninicio" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacioninicio']}" />
 							<p:spacer width="8" height="1" />
-							<p:calendar id="plazodesactivacioninicio" disabled="true" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.plazoInicioDesactivacion}" pattern="dd/MM/yyyy" size="10"/>
+							<p:calendar id="plazodesactivacioninicio" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.desactivacion}" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.plazoInicioDesactivacion}" pattern="dd/MM/yyyy" size="10"/>
 
 							<p:spacer width="40" height="1" />
 
 							<p:outputLabel for="plazodesactivacionfin" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacionfin']}" />
 							<p:spacer width="8"/>
-							<p:calendar id="plazodesactivacionfin" disabled="true" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.plazoFinDesactivacion}" pattern="dd/MM/yyyy" size="10"/>
+							<p:calendar id="plazodesactivacionfin" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.desactivacion}" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.plazoFinDesactivacion}" pattern="dd/MM/yyyy" size="10"/>
 						</p:column>
 					</p:row>
 					<p:row>
@@ -61,20 +63,24 @@
 			           		<p:spacer width="8" height="1" />
 			           		<p:inputText id="mensajedesactivacion" disabled="true" styleClass="w60" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.mensajeDesactivacion.getTraduccion(sessionBean.lang)}"/>
 
-			           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top"
-									process="@this" update="growlDialog"/>
+			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top"
+									process="@this" update="growlDialog" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.desactivacion}">
+									<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionControlAcceso.returnDialogoMensajeDesactivacion}" update="growlDialog mensajedesactivacion" />
+							</p:commandButton>
 						</p:column>
 					</p:row>
 				</p:panelGrid>
 
 	            <p:outputLabel for="habilitardebug" value="#{msg['viewDefinicionVersionControlAcceso.habilitardebug']}" />
-	            <p:selectBooleanCheckbox id="habilitardebug" disabled="true" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.debug}"/>
+	            <p:selectBooleanCheckbox id="habilitardebug" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.debug}"/>
 
 	         	<p:outputLabel for="limitartramitacion" value="#{msg['viewDefinicionVersionControlAcceso.limitartramitacion']}" />
 				<p:panelGrid styleClass="noBorders">
 					<p:row>
 						<p:column styleClass="noPadding-left">
-							<p:selectBooleanCheckbox id="limitartramitacion" disabled="true" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}"/>
+							<p:selectBooleanCheckbox id="limitartramitacion" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}">
+									<p:ajax update="numtramitraciones intervalo" />
+							</p:selectBooleanCheckbox>
 						</p:column>
 						<p:column>
 							<p:spacer width="20" height="1" />
@@ -82,7 +88,7 @@
 						<p:column>
 							<p:outputLabel for="numtramitraciones" value="#{msg['viewDefinicionVersionControlAcceso.numtramitraciones']}" />
 							<p:spacer width="8" height="1" />
-							<p:inputText id="numtramitraciones" disabled="true" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.numLimiteTramitacion}"/>
+							<p:inputNumber decimalPlaces="0" id="numtramitraciones" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.numLimiteTramitacion}"/>
 						</p:column>
 						<p:column>
 							<p:spacer width="10" height="1" />
@@ -90,7 +96,7 @@
 						<p:column>
 							<p:outputLabel for="intervalo" value="#{msg['viewDefinicionVersionControlAcceso.intervalo']}" />
 							<p:spacer width="8" height="1" />
-							<p:inputText id="intervalo" disabled="true" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.intLimiteTramitacion}"/>
+							<p:inputNumber decimalPlaces="0" id="intervalo" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.intLimiteTramitacion}"/>
 						</p:column>
 					</p:row>
 				</p:panelGrid>

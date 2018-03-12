@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
+
+	<h:form id="formviewDefinicionVersionFormulario" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+
+        <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
+
+            <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionFormulario.identificador']}" />
+          	<p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersionFormulario.data.codigo}" />
+
+
+            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario.descripcion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang)}" />
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionFormulario.editarDescripcion()}"	process="@this" update="growl" />
+       		</p:outputPanel>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.obligatoriedad']}" />
+         	<p:panelGrid styleClass="noBorders">
+       	  		<p:row>
+	       	  		<p:column styleClass="noPadding-left">
+			         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersionFormulario.data.obligatoriedad}">
+			         		<f:selectItems value="#{TypeRolPermiso.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad' += tipo]}" />
+					    </p:selectOneRadio>
+				     </p:column>
+				     <p:column>
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario.script()}" value="#{msg['viewDefinicionVersionFormulario.obligatoriedad.establecerdependencia']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+         	</p:panelGrid>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.presentacionelectronica']}" />
+         	<p:panelGrid styleClass="noBorders">
+       	  		<p:row>
+	       	  		<p:column styleClass="noPadding-left">
+						<p:selectBooleanCheckbox id="firmardigitalmente" disabled="true" value="#{viewDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['viewDefinicionVersionFormulario.firmardigitalmente']}"/>
+				     </p:column>
+				     <p:column>
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario.script()}" value="#{msg['viewDefinicionVersionFormulario.establecerfirmantes']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+         	</p:panelGrid>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.presentacionpresencial']}" />
+			<p:selectBooleanCheckbox id="presentarprerregistro" disabled="true" value="#{viewDefinicionVersionFormulario.data.debePrerregistrarse}" itemLabel="#{msg['viewDefinicionVersionFormulario.presentarprerregistro']}"/>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion']}" />
+         	<p:panelGrid styleClass="noBorders">
+       	  		<p:row>
+	       	  		<p:column styleClass="noPadding-left">
+						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario.script()}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.cargadatos']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+				<p:row>
+				     <p:column styleClass="noPadding-left">
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario.script()}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.parametrosapertura']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+				<p:row>
+				     <p:column styleClass="noPadding-left">
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario.script()}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.postguardar']}"
+							process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+         	</p:panelGrid>
+
+         	<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.disenyoformulario']}" />
+			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario.editarDisenyo()}" value="#{msg['viewDefinicionVersionFormulario.disenyoformulario.consultardisenyo']}"
+							process="@this" update="growl"/>
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{viewDefinicionVersionFormulario.editar()}"
+						process="@this" update="growl" />
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

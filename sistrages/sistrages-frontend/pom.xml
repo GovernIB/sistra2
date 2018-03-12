@@ -79,9 +79,39 @@
 		</dependency>
 
 		<dependency>
+	        <groupId>org.primefaces.extensions</groupId>
+	        <artifactId>primefaces-extensions</artifactId>
+	        <version>${primefacesExtensions.version}</version>
+	    </dependency>
+
+	    <dependency>
+	        <groupId>org.primefaces.extensions</groupId>
+	        <artifactId>resources-codemirror</artifactId>
+	        <version>${primefacesExtensions.version}</version>
+	    </dependency>
+
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
 		    <version>${jackson.version}</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>${commons-fileupload}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>commons-beanutils</groupId>
+		    <artifactId>commons-beanutils</artifactId>
+		    <version>${commons-beanutils.version}</version>
 		</dependency>
 
 		<!--  TODO: Ver pq no la coge del core -->

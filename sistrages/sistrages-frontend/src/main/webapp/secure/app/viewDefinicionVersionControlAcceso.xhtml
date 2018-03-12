@@ -41,7 +41,7 @@
 		           		<p:spacer width="8" height="1" />
 		           		<p:inputText id="mensajedesactivacion" disabled="true" styleClass="w60" value="#{viewDefinicionVersion.tramiteVersion.mensajeDesactivacion.getTraduccion(sessionBean.lang)}"/>
 
-		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top"
+		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionControlAcceso.editarMensajeDesactivacion(viewDefinicionVersion.tramiteVersion.mensajeDesactivacion)}" styleClass="va-top"
 								process="@this" update="growl"/>
 					</p:column>
 				</p:row>

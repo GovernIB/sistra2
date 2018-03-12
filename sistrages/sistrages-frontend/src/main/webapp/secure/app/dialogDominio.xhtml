@@ -42,7 +42,10 @@
 				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" style="width:95%" />
 
 				<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
-				<p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" />
+				<p:column>
+					<p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" />
+					<p:commandButton value="#{msg['botones.refrescarCache']}" actionListener="#{dialogDominio.refrescarCache()}" icon="fa fa-refresh" process="@form" update="growlDialog"  />
+				</p:column>
 
 				<p:column>
 			    	<p style="width:230px">

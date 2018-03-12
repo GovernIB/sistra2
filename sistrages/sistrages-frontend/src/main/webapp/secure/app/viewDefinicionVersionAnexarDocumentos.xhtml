@@ -20,39 +20,47 @@
 								<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
 									actionListener="#{viewDefinicionVersionAnexarDocumentos.nuevo()}" process="@this"
 									update="growl">
-								</p:commandButton>
+									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionAnexarDocumentos.returnDialogo}" update="growl dataTable"/>
+		        				</p:commandButton>
 
 								<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
-									actionListener="#{viewDefinicionVersionAnexarDocumentos.nuevo()}" process="@this"
-									update="growl" />
+									actionListener="#{viewDefinicionVersionAnexarDocumentos.editar()}" process="@this"
+									update="growl dataTable">
+									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionAnexarDocumentos.returnDialogo}" update="growl dataTable"/>
+		        				</p:commandButton>
 
 								<p:commandButton id="btnEliminar"
 									value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
-									actionListener="#{viewDefinicionVersionAnexarDocumentos.nuevo()}"
-									process="@this" update="growl" />
+									actionListener="#{viewDefinicionVersionAnexarDocumentos.eliminar()}"
+									process="@this" update="growl dataTable" />
 
 								<p:commandButton id="btnSubir"
 									value="#{msg['botones.subir']}" icon="fa fa-caret-up"
-									actionListener="#{viewDefinicionVersionAnexarDocumentos.nuevo()}"
-									process="@this" update="growl" />
+									actionListener="#{viewDefinicionVersionAnexarDocumentos.subir()}"
+									process="@this" update="growl dataTable" />
 
 								<p:commandButton id="btnBajar"
 									value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
-									actionListener="#{viewDefinicionVersionAnexarDocumentos.nuevo()}"
-									process="@this" update="growl" />
+									actionListener="#{viewDefinicionVersionAnexarDocumentos.bajar()}"
+									process="@this" update="growl dataTable" />
 
 								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 									icon="fa fa-question-circle-o"
-									actionListener="#{viewDefinicionVersionAnexarDocumentos.nuevo()}" process="@this"
+									actionListener="#{viewDefinicionVersionAnexarDocumentos.ayudar()}" process="@this"
 									update="growl dataTable" />
 							</h:panelGrid>
 						</f:facet>
 					</p:toolbar>
 
 					<p:dataTable id="dataTable" var="documentos"
-						value="#{viewDefinicionVersion.listaDocumentos}" rows="5"
-						scrollable="true" paginator="false" rowKey="#{documentos.id}" selectionMode="single"
+						value="#{viewDefinicionVersionAnexarDocumentos.data.documentos}" rows="5"
+						scrollable="true" paginator="false" rowKey="#{documentos.idString}" selectionMode="single"
 						 selection="#{viewDefinicionVersionAnexarDocumentos.datoSeleccionado}" dblClickSelect="true">
+
+
+						<!-- Necesario para actualizar en controlador la fila seleccionada -->
+						<p:ajax event="rowSelect" />
+						<p:ajax event="rowUnselect" />
 
 						<!-- Columnas -->
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerIdentificador']}" >
@@ -61,7 +69,7 @@
 
 
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerDescripcion']}">
-							<h:outputText value="#{documentos.descripcion}" />
+							<h:outputText value="#{documentos.descripcion.getTraduccion(sessionBean.lang)}" />
 						</p:column>
 
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerObligatoriedad']}">
@@ -73,7 +81,7 @@
 				</p:outputPanel>
 
 				<p:outputLabel for="listadinamica" value="#{msg['viewDefinicionVersionAnexarDocumentos.listadinamica']}" />
-				<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionAnexarDocumentos.nuevo()}"
+				<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionAnexarDocumentos.script()}"
 						process="@this" update="growl"/>
 		</h:panelGrid>
 

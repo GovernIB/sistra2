@@ -1,5 +1,9 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.types.TypeFormulario;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypeInterno;
+
 /**
  *
  * Formulario.
@@ -7,22 +11,68 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class Formulario {
+@SuppressWarnings("serial")
+public class Formulario extends ModelApi {
 
 	/** Id. */
 	private Long id;
 
-	/** Código. */
+	/** Identificador del formulario. */
 	private String codigo;
 
-	/** Descripción. */
-	private String descripcion;
+	/** Descripción formulario. */
+	private Traducciones descripcion;
 
-	/** Tipo. */
-	private String tipo;
+	/** Tipo: formulario trámite (T) o formulario captura (C). */
+	private TypeFormulario tipo;
 
-	/** Obligatoriedad. */
-	private String obligatoriedad;
+	/** Orden. **/
+	private int orden;
+
+	/**
+	 * Obligatorio:
+	 * <ul>
+	 * <li>Si (S)</li>
+	 * <li>Opcional (N)</li>
+	 * <li>Dependiente (D)</li>
+	 */
+	private TypeFormularioObligatoriedad obligatoriedad;
+
+	/** En caso de ser dependiente establece obligatoriedad */
+	private Script scriptObligatoriedad;
+
+	/** Indica si se debe firmar digitalmente (para formulario tipo Tramite) */
+	private boolean debeFirmarse;
+
+	/**
+	 * Permite establecer quién debe firmar el formulario (para formulario tramite)
+	 */
+	private Script scriptFirma;
+
+	/** Indica si se debe presentar en preregistro. */
+	private boolean debePrerregistrarse;
+
+	/** Script para establecer datos iniciales formulario. */
+	private Script scriptPrerrigistro;
+
+	/** Permite establecer parametros cada vez que se acceda al formulario */
+	private Script scriptDatosIniciales;
+
+	/**
+	 * Este script se ejecutará tras el retorno del gestor de formulario y
+	 * permitirá: - validar el formulario tras el retorno del gestor de formulario -
+	 * alimentar datos de los otros formularios y cambiar su estado.
+	 */
+	private Script scriptRetorno;
+
+	/** Indica tipo formulario: interno (I) / externo (E) */
+	private TypeInterno tipoFormulario;
+
+	/** Formulario gestor interno (si es interno) */
+	private Gestor formularioGestorInterno;
+
+	/** Formulario gestor externo (si es externo) */
+	private Gestor formularioGestorExterno;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -51,6 +101,34 @@ public class Formulario {
 	}
 
 	/**
+	 * Obtiene el valor de idString.
+	 *
+	 * @return el valor de idString
+	 */
+	public String getIdString() {
+		if (id == null) {
+			return "";
+		} else {
+			return id.toString();
+		}
+	}
+
+	/**
+	 * Establece el valor de id.
+	 *
+	 * @param id
+	 *            el nuevo valor de id
+	 */
+	public void setIdString(final String id) {
+		if (id == null) {
+			this.id = null;
+		} else {
+			this.id = Long.valueOf(id);
+		}
+
+	}
+
+	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
@@ -74,7 +152,7 @@ public class Formulario {
 	 *
 	 * @return el valor de descripcion
 	 */
-	public String getDescripcion() {
+	public Traducciones getDescripcion() {
 		return descripcion;
 	}
 
@@ -84,7 +162,7 @@ public class Formulario {
 	 * @param descripcion
 	 *            el nuevo valor de descripcion
 	 */
-	public void setDescripcion(final String descripcion) {
+	public void setDescripcion(final Traducciones descripcion) {
 		this.descripcion = descripcion;
 	}
 
@@ -93,7 +171,7 @@ public class Formulario {
 	 *
 	 * @return el valor de tipo
 	 */
-	public String getTipo() {
+	public TypeFormulario getTipo() {
 		return tipo;
 	}
 
@@ -103,8 +181,23 @@ public class Formulario {
 	 * @param tipo
 	 *            el nuevo valor de tipo
 	 */
-	public void setTipo(final String tipo) {
+	public void setTipo(final TypeFormulario tipo) {
 		this.tipo = tipo;
+	}
+
+	/**
+	 * @return the orden
+	 */
+	public int getOrden() {
+		return orden;
+	}
+
+	/**
+	 * @param orden
+	 *            the orden to set
+	 */
+	public void setOrden(final int orden) {
+		this.orden = orden;
 	}
 
 	/**
@@ -112,7 +205,7 @@ public class Formulario {
 	 *
 	 * @return el valor de obligatoriedad
 	 */
-	public String getObligatoriedad() {
+	public TypeFormularioObligatoriedad getObligatoriedad() {
 		return obligatoriedad;
 	}
 
@@ -122,8 +215,158 @@ public class Formulario {
 	 * @param obligatoriedad
 	 *            el nuevo valor de obligatoriedad
 	 */
-	public void setObligatoriedad(final String obligatoriedad) {
+	public void setObligatoriedad(final TypeFormularioObligatoriedad obligatoriedad) {
 		this.obligatoriedad = obligatoriedad;
+	}
+
+	/**
+	 * @return the scriptObligatoriedad
+	 */
+	public Script getScriptObligatoriedad() {
+		return scriptObligatoriedad;
+	}
+
+	/**
+	 * @param scriptObligatoriedad
+	 *            the scriptObligatoriedad to set
+	 */
+	public void setScriptObligatoriedad(final Script scriptObligatoriedad) {
+		this.scriptObligatoriedad = scriptObligatoriedad;
+	}
+
+	/**
+	 * @return the debeFirmarse
+	 */
+	public boolean isDebeFirmarse() {
+		return debeFirmarse;
+	}
+
+	/**
+	 * @param debeFirmarse
+	 *            the debeFirmarse to set
+	 */
+	public void setDebeFirmarse(final boolean debeFirmarse) {
+		this.debeFirmarse = debeFirmarse;
+	}
+
+	/**
+	 * @return the scriptFirma
+	 */
+	public Script getScriptFirma() {
+		return scriptFirma;
+	}
+
+	/**
+	 * @param scriptFirma
+	 *            the scriptFirma to set
+	 */
+	public void setScriptFirma(final Script scriptFirma) {
+		this.scriptFirma = scriptFirma;
+	}
+
+	/**
+	 * @return the debePrerregistrarse
+	 */
+	public boolean isDebePrerregistrarse() {
+		return debePrerregistrarse;
+	}
+
+	/**
+	 * @param debePrerregistrarse
+	 *            the debePrerregistrarse to set
+	 */
+	public void setDebePrerregistrarse(final boolean debePrerregistrarse) {
+		this.debePrerregistrarse = debePrerregistrarse;
+	}
+
+	/**
+	 * @return the scriptPrerrigistro
+	 */
+	public Script getScriptPrerrigistro() {
+		return scriptPrerrigistro;
+	}
+
+	/**
+	 * @param scriptPrerrigistro
+	 *            the scriptPrerrigistro to set
+	 */
+	public void setScriptPrerrigistro(final Script scriptPrerrigistro) {
+		this.scriptPrerrigistro = scriptPrerrigistro;
+	}
+
+	/**
+	 * @return the scriptDatosIniciales
+	 */
+	public Script getScriptDatosIniciales() {
+		return scriptDatosIniciales;
+	}
+
+	/**
+	 * @param scriptDatosIniciales
+	 *            the scriptDatosIniciales to set
+	 */
+	public void setScriptDatosIniciales(final Script scriptDatosIniciales) {
+		this.scriptDatosIniciales = scriptDatosIniciales;
+	}
+
+	/**
+	 * @return the scriptRetorno
+	 */
+	public Script getScriptRetorno() {
+		return scriptRetorno;
+	}
+
+	/**
+	 * @param scriptRetorno
+	 *            the scriptRetorno to set
+	 */
+	public void setScriptRetorno(final Script scriptRetorno) {
+		this.scriptRetorno = scriptRetorno;
+	}
+
+	/**
+	 * @return the tipoFormulario
+	 */
+	public TypeInterno getTipoFormulario() {
+		return tipoFormulario;
+	}
+
+	/**
+	 * @param tipoFormulario
+	 *            the tipoFormulario to set
+	 */
+	public void setTipoFormulario(final TypeInterno tipoFormulario) {
+		this.tipoFormulario = tipoFormulario;
+	}
+
+	/**
+	 * @return the formularioGestorInterno
+	 */
+	public Gestor getFormularioGestorInterno() {
+		return formularioGestorInterno;
+	}
+
+	/**
+	 * @param formularioGestorInterno
+	 *            the formularioGestorInterno to set
+	 */
+	public void setFormularioGestorInterno(final Gestor formularioGestorInterno) {
+		this.formularioGestorInterno = formularioGestorInterno;
+	}
+
+	/**
+	 * @return the formularioGestorExterno
+	 */
+	public Gestor getFormularioGestorExterno() {
+		return formularioGestorExterno;
+	}
+
+	/**
+	 * @param formularioGestorExterno
+	 *            the formularioGestorExterno to set
+	 */
+	public void setFormularioGestorExterno(final Gestor formularioGestorExterno) {
+		this.formularioGestorExterno = formularioGestorExterno;
 	}
 
 }

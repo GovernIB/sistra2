@@ -68,7 +68,7 @@
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerDescripcion']}">
-			        <h:outputText value="#{td.descripcion}" />
+			        <h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
 			    </p:column>
 
  				<p:column headerText="#{msg['viewMensajesAvisoEntidad.headerTipo']}">

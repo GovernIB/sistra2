@@ -4,7 +4,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<f:metadata>
+		<f:viewAction action="#{viewDefinicionVersionDominios.init}" />
+		<f:viewParam name="id" value="#{viewDefinicionVersionDominios.id}"/>
+	</f:metadata>
+
 	<h:form id="formViewDefinicionVersionDominios" styleClass="h100">
+
+
 
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
@@ -16,16 +23,19 @@
 					<p:commandButton value="#{msg['botones.anyadir']}" icon="fa fa-plus"
 						actionListener="#{viewDefinicionVersionDominios.anyadir()}" process="@this"
 						update="growl">
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionDominios.returnDialogo}" update="growl dataTable"/>
 					</p:commandButton>
-
-					<p:commandButton value="#{msg['botones.consultar']}" icon="fa fa-search"
-						actionListener="#{viewDefinicionVersionDominios.anyadir()}" process="@this"
-						update="growl" />
 
 					<p:commandButton id="btnQuitar"
 						value="#{msg['botones.quitar']}" icon="fa fa-times"
-						actionListener="#{viewDefinicionVersionDominios.anyadir()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersionDominios.quitar()}"
+						process="@this" update="growl dataTable" />
+
+					<p:commandButton value="#{msg['botones.consultar']}" icon="fa fa-search"
+						actionListener="#{viewDefinicionVersionDominios.consultar()}" process="@this"
+						update="growl">
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionDominios.returnDialogo}" update="growl dataTable"/>
+					</p:commandButton>
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 						icon="fa fa-question-circle-o"
@@ -35,11 +45,18 @@
 			</f:facet>
 		</p:toolbar>
 
-		<p:dataTable  id="dataTable" var="dominio" value="#{viewDefinicionVersion.tramiteVersion.listaDominios}"
-			 rows="10"
-			 scrollable="true"
-             paginator="false" selectionMode="single" selection="#{viewDefinicionVersionDominios.datoSeleccionado}"
-             rowKey="#{dominio.id}" dblClickSelect="true">
+		<p:dataTable  id="dataTable" var="dominio" value="#{viewDefinicionVersionDominios.tramiteVersion.listaDominios}"
+						 rows="10"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewDefinicionVersionDominios.datoSeleccionado}" rowKey="#{dominio.idString}" dblClickSelect="true">
+
+			<!-- Necesario para actualizar en controlador la fila seleccionada -->
+			<p:ajax event="rowSelect" />
+			<p:ajax event="rowUnselect" />
+
 
 			<!-- Columnas -->
 		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.codigo}">

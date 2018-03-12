@@ -8,6 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.caib.sistrages.core.api.exception.FrontException;
+
 /**
  *
  * @author Indra
@@ -27,10 +29,13 @@ public class UtilJSON {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public static String toJSON(final Object objeto) throws JsonProcessingException {
-		final ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(objeto);
-
+	public static String toJSON(final Object objeto) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			return mapper.writeValueAsString(objeto);
+		} catch (final JsonProcessingException ex) {
+			throw new FrontException("Excepcion convirtiendo a JSON", ex);
+		}
 	}
 
 	/**
@@ -43,10 +48,14 @@ public class UtilJSON {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public static Object fromJSON(final String json, final Class<?> clase) throws IOException {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		return mapper.readValue(json, clase);
+	public static Object fromJSON(final String json, final Class<?> clase) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			return mapper.readValue(json, clase);
+		} catch (final IOException ex) {
+			throw new FrontException("Excepcion convirtiendo desde JSON", ex);
+		}
 	}
 
 	/**
@@ -56,14 +65,15 @@ public class UtilJSON {
 	 * @param clase
 	 * @param claseLista
 	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
 	 */
-	public static List<?> fromListJSON(final String json, final Class<?> claseLista) throws IOException {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		return mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, claseLista));
+	public static List<?> fromListJSON(final String json, final Class<?> claseLista) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			return mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, claseLista));
+		} catch (final IOException e) {
+			throw new FrontException("Excepcion convirtiendo desde JSON", e);
+		}
 	}
 
 }

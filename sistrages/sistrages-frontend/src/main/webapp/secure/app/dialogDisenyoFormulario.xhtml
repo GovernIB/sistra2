@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDisenyoFormulario.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDisenyoFormulario.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDisenyoFormulario.id}"/>
+		<f:viewAction action="#{dialogDisenyoFormulario.init}" />
+	</f:metadata>
+
+
+	<!-- Growl mensajes -->
+	<p:growl id="growlDisenyoFormulario" widgetVar="growlDisenyoFormulario" showDetail="false" life="2000" sticky="false" />
+
+	<h:form id="dialogDisenyoFormulario" >
+
+		<!--  Toolbar -->
+		<p:toolbar>
+					 <f:facet name="left">
+						<p:commandButton id="btnFormulario" 	value="#{msg['dialogDisenyoFormulario.formulario']}" 		icon="fa fa-heading" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+						<p:commandButton id="btnPagina" 		value="#{msg['dialogDisenyoFormulario.pagina']}" 			icon="fa fa-heading" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+		        		<p:commandButton id="btnSeccion" 		value="#{msg['dialogDisenyoFormulario.componente.SC']}" 	icon="fa fa-list-ul" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+		        		<p:commandButton id="btnEtiqueta" 		value="#{msg['dialogDisenyoFormulario.componente.ET']}" 	icon="fa fa-font" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+		        		<p:commandButton id="btnImagen" 		value="#{msg['dialogDisenyoFormulario.componente.IM']}" 	icon="fa fa-image" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+		        		<p:commandButton id="btnCampoTexto" 	value="#{msg['dialogDisenyoFormulario.componente.CT']}" 	icon="fa fa-square" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+						<p:commandButton id="btnCampoSelector" 	value="#{msg['dialogDisenyoFormulario.componente.SE']}" 	icon="fa fa-square" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+		        		<p:commandButton id="btnCampoCheckbox" 	value="#{msg['dialogDisenyoFormulario.componente.CK']}" 	icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+		        		<p:commandButton id="btnCaptcha" 		value="#{msg['dialogDisenyoFormulario.componente.CP']}" 	icon="fa fa-retweet" actionListener="#{dialogDisenyoFormulario.sinImplementar()}" process="@this" update="growlDisenyoFormulario"/>
+
+						<!-- Remote command invocado al seleccionar componente en iframe -->
+						<p:remoteCommand name="seleccionarElementoCommand"
+						 		actionListener="#{dialogDisenyoFormulario.editarComponente()}"
+								process="@this" update="componente-panel, growlDisenyoFormulario" />
+
+
+						<!-- Dialogo confirmar cambios desde view a traves de boton oculto -->
+					    <p:commandButton value="Confirmation" id="confirmationButton" widgetVar="confirmationButton" onclick="PF('dlgConfirmar').show();" style="display: none"  />
+
+					    <p:dialog header="Confirmar cambios" id="dlgConfirmar" widgetVar="dlgConfirmar" modal="true">
+				            <h:outputText value="¿Desea confirmar" />
+				            <p:commandButton value="Si" actionListener="#{dialogDisenyoFormulario.confirmacionCambios()}" onclick="PF('dlgConfirmar').hide();" process="@this"  update="growlDisenyoFormulario, componente-panel, formulario-panel" />
+				            <p:commandButton value="No" actionListener="#{dialogDisenyoFormulario.descartarCambios()}"  onclick="PF('dlgConfirmar').hide();" process="@this"  update="growlDisenyoFormulario, componente-panel, formulario-panel"  />
+				        </p:dialog>
+
+
+			  </f:facet>
+		</p:toolbar>
+	</h:form>
+
+	<!-- Workpanel: Iframe HTML + Editor campos  -->
+	<p:panelGrid columns="2" columnClasses="w75 grid-left va-top, w25 grid-left va-top" styleClass="w100">
+		<p:outputPanel id="formulario-panel" styleClass="w100 h100">
+			<iframe id="formulario-frame" name="formulario-frame"  src="#{dialogDisenyoFormulario.urlIframe}" width="100%" height="500px" scrolling="auto" >
+			  <p>Tu navegador no soporta iframes.</p>
+			</iframe>
+		 </p:outputPanel>
+
+		<p:outputPanel id="componente-panel" styleClass="h100">
+		   <ui:include src="#{dialogDisenyoFormulario.panelPropiedadesUrl}">
+		   </ui:include>
+		 </p:outputPanel>
+	</p:panelGrid>
+
+
+	<!-- Botonera abajo -->
+	<p:panelGrid columns="1" columnClasses="w100 grid-center va-top" styleClass="w100">
+		<p:commandButton value="Aplicar cambios" actionListener="#{dialogDisenyoFormulario.aplicarCambios()}" process="@this" update="growlDisenyoFormulario, formulario-panel" />
+	</p:panelGrid>
+
+
+</h:body>
+
+</f:view>
+</html>

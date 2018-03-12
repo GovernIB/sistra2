@@ -19,7 +19,7 @@
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario1.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionFormulario1.editar()}"
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionFormulario1.sinImplementar()}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 
@@ -34,7 +34,7 @@
 					     </p:selectOneRadio>
 				     </p:column>
 				     <p:column>
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.obligatoriedad.establecerdependencia']}"
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.sinImplementar()}" value="#{msg['viewDefinicionVersionFormulario1.obligatoriedad.establecerdependencia']}"
 							process="@this" update="growl"/>
 					</p:column>
 				</p:row>
@@ -47,7 +47,7 @@
 						<p:selectBooleanCheckbox id="firmardigitalmente" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionFormulario1.firmardigitalmente']}"/>
 				     </p:column>
 				     <p:column>
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.establecerfirmantes']}"
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.sinImplementar()}" value="#{msg['viewDefinicionVersionFormulario1.establecerfirmantes']}"
 							process="@this" update="growl"/>
 					</p:column>
 				</p:row>
@@ -60,19 +60,19 @@
          	<p:panelGrid styleClass="noBorders">
        	  		<p:row>
 	       	  		<p:column styleClass="noPadding-left">
-						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.cargadatos']}"
+						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.sinImplementar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.cargadatos']}"
 							process="@this" update="growl"/>
 					</p:column>
 				</p:row>
 				<p:row>
 				     <p:column styleClass="noPadding-left">
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.parametrosapertura']}"
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.sinImplementar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.parametrosapertura']}"
 							process="@this" update="growl"/>
 					</p:column>
 				</p:row>
 				<p:row>
 				     <p:column styleClass="noPadding-left">
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.editar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.postguardar']}"
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionFormulario1.sinImplementar()}" value="#{msg['viewDefinicionVersionFormulario1.scriptpersonalizacion.postguardar']}"
 							process="@this" update="growl"/>
 					</p:column>
 				</p:row>
@@ -85,7 +85,7 @@
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
-						actionListener="#{viewDefinicionVersionFormulario1.editar()}"
+						actionListener="#{viewDefinicionVersionFormulario1.sinImplementar()}"
 						process="@this" update="growl" />
 				</p:outputPanel>
 			</f:facet>

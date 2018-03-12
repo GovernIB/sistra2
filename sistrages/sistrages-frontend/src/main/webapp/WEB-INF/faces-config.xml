@@ -58,4 +58,15 @@
     	</navigation-case>
   	</navigation-rule>
 
+	<!-- 
+	
+	 Workaroung para BUG si se emplea Datatable de PrimeFaces que contienen datagrids. De momento se utiliza el propio de JSF.
+	   
+	<render-kit>
+        <renderer>
+            <component-family>org.primefaces.component</component-family>
+            <renderer-type>org.primefaces.component.DataTableRenderer</renderer-type>
+            <renderer-class>es.caib.sistrages.frontend.util.WorkaroundDatatableRenderer</renderer-class>
+        </renderer>
+    </render-kit> -->
 </faces-config>

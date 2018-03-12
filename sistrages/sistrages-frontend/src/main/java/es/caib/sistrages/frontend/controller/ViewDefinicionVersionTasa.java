@@ -7,19 +7,19 @@ import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de definici&oacute;n de versi&oacute;n Anexo1.
+ * Mantenimiento de definici&oacute;n de versi&oacute;n tasa1.
  *
  * @author Indra
  *
  */
 @ManagedBean
 @ViewScoped
-public class ViewDefinicionVersionAnexo1 extends ViewControllerBase {
+public class ViewDefinicionVersionTasa extends ViewControllerBase {
 
 	/**
-	 * Crea una nueva instancia de ViewDefinicionVersionAnexo1.
+	 * Crea una nueva instancia de ViewDefinicionVersionTasa1.
 	 */
-	public ViewDefinicionVersionAnexo1() {
+	public ViewDefinicionVersionTasa() {
 		super();
 	}
 

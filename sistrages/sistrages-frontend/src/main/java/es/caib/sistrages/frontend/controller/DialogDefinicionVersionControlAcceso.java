@@ -9,6 +9,8 @@ import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.event.SelectEvent;
+
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -16,6 +18,7 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
  * DialogDefinicionVersionControlAcceso.
@@ -40,6 +43,59 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	 */
 	public void init() {
 		recuperaTramiteVersion(Long.valueOf(1));
+	}
+
+	/**
+	 * Editar descripcion.
+	 */
+	public void editarMensajeDesactivacion() {
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.tramiteVersion.getMensajeDesactivacion(),
+				null, null);
+	}
+
+	/**
+	 * Retorno dialogo de la traduccion.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoMensajeDesactivacion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+
+				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				this.tramiteVersion.setMensajeDesactivacion(traducciones);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				this.tramiteVersion.setMensajeDesactivacion(traduccionesMod);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
 	}
 
 	/**
@@ -137,13 +193,6 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 		tramiteVersion.setNumLimiteTramitacion(1);
 		tramiteVersion.setIntLimiteTramitacion(2);
 
-	}
-
-	/**
-	 * Editar descripcion.
-	 */
-	public void editarMensajeDesactivacion() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 
 }

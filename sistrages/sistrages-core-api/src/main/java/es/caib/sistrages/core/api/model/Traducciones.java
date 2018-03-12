@@ -10,7 +10,8 @@ import java.util.List;
  * @author indra
  *
  */
-public class Traducciones {
+@SuppressWarnings("serial")
+public class Traducciones extends ModelApi {
 
 	/**
 	 * Crea una nueva instancia de Traducciones.

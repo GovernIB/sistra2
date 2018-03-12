@@ -1,0 +1,99 @@
+package es.caib.sistrages.core.api.model.types;
+
+/**
+ * Tipo para indicar el tipo de componente de formulario.
+ *
+ * @author Indra
+ *
+ */
+public enum TypeComponenteFormulario {
+
+	/**
+	 * Campo de texto.
+	 */
+	CAMPO_TEXTO("CT"),
+	/**
+	 * Selector.
+	 */
+	SELECTOR("SE"),
+	/**
+	 * Seccion.
+	 */
+	SECCION("SC"),
+	/**
+	 * Checkbox.
+	 */
+	CHECKBOX("CK"),
+	/**
+	 * Etiqueta.
+	 */
+	ETIQUETA("ET"),
+	/**
+	 * Captcha.
+	 */
+	CAPTCHA("CP"),
+	/**
+	 * Imagen.
+	 */
+	IMAGEN("IM"),
+	/**
+	 * Lista elementos.
+	 */
+	LISTA_ELEMENTOS("LE");
+
+	private String valor;
+
+	TypeComponenteFormulario(final String iValor) {
+		this.valor = iValor;
+	}
+
+	/**
+	 * Devuelve el valor de un enumerado.
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	public static String fromEnum(final TypeComponenteFormulario tipo) {
+		return tipo.valor;
+	}
+
+	/**
+	 * Devuelve el valor de un enumerado.
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	public String fromEnum() {
+		return this.valor;
+	}
+
+	/**
+	 * Convierte un string en enumerado.
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	public TypeComponenteFormulario toEnum(final String text) {
+		TypeComponenteFormulario respuesta = null;
+		if (text != null) {
+			for (final TypeComponenteFormulario b : TypeComponenteFormulario.values()) {
+				if (text.equalsIgnoreCase(b.toString())) {
+					respuesta = b;
+					break;
+				}
+			}
+		}
+		return respuesta;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Enum#toString()
+	 */
+	@Override
+	public String toString() {
+		return valor;
+	}
+
+}

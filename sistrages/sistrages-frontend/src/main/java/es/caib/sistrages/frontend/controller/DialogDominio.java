@@ -10,8 +10,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fuente;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
@@ -192,6 +190,13 @@ public class DialogDominio extends DialogControllerBase {
 	}
 
 	/**
+	 * Refresca la cache
+	 */
+	public void refrescarCache() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+
+	/**
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
@@ -209,10 +214,8 @@ public class DialogDominio extends DialogControllerBase {
 
 	/**
 	 * Edita una propiedad.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void editarPropiedad() throws JsonProcessingException {
+	public void editarPropiedad() {
 
 		if (!verificarFilaSeleccionada())
 			return;
@@ -225,10 +228,8 @@ public class DialogDominio extends DialogControllerBase {
 
 	/**
 	 * Edita una propiedad.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void editarValor() throws JsonProcessingException {
+	public void editarValor() {
 
 		if (!verificarFilaSeleccionadaValor())
 			return;

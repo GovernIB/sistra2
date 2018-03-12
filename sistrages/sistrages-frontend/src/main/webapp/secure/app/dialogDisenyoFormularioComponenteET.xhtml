@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeEtiqueta" var="TypeEtiqueta"/>
+
+<h:column>TIPO ETIQUETA</h:column>
+<h:column>
+	<p:selectOneMenu id="tipoEtiqueta" value="#{dialogDisenyoFormulario.componentEdit.tipoEtiqueta}" style="width:200px" required="true">
+	    <p:ajax event="blur" process="@this" />
+	    <f:selectItems value="#{TypeEtiqueta.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeEtiqueta.' += tipo]}" />
+	</p:selectOneMenu>
+</h:column>
+
+</ui:composition>

@@ -37,8 +37,12 @@
 				 	<p:inputText id="codigo" value="#{dialogTramite.data.codigo}" disabled="#{!dialogTramite.isAlta()}" required="true" size="40" />
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogTramite.descripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogTramite.data.descripcion}" disabled="#{dialogTramite.isConsulta()}" required="true" size="40" />
-
+				 	<p:column>
+				 		<p:inputTextarea id="descripcion" value="#{dialogTramite.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="#{dialogTramite.isConsulta()}" required="true" size="40"  cols="35" autoResize="false" />
+				 		<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogTramite.editarDescripcion()}" process="@this" update="growldialogTramiteData" style="margin-left:5px; margin-bottom:15px">
+		            		<p:ajax event="dialogReturn" listener="#{dialogTramite.returnDialogo}" update="growldialogTramiteData descripcion" />
+		        		</p:commandButton>
+					</p:column>
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

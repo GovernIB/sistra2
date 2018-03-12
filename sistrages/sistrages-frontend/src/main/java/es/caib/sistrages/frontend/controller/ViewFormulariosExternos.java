@@ -10,8 +10,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.FormularioExterno;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -119,10 +117,8 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 
 	/**
 	 * Abre dialogo para editar dato.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void editar() throws JsonProcessingException {
+	public void editar() {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;

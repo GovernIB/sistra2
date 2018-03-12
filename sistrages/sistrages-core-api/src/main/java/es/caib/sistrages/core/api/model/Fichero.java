@@ -6,7 +6,8 @@ package es.caib.sistrages.core.api.model;
  * @author indra
  *
  */
-public class Fichero {
+@SuppressWarnings("serial")
+public class Fichero extends ModelApi {
 
 	/** Código interno. **/
 	private Long id;
@@ -14,6 +15,7 @@ public class Fichero {
 	/** Nombre del fichero. */
 	private String nombre;
 
+	// TODO SACAR CONTENIDO APARTE
 	/** Contenido. **/
 	private byte[] contenido;
 

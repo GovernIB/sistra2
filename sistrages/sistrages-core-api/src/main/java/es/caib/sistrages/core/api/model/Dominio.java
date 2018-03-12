@@ -9,7 +9,8 @@ import es.caib.sistrages.core.api.model.types.TypeDominio;
  * @author Indra
  *
  */
-public class Dominio {
+@SuppressWarnings("serial")
+public class Dominio extends ModelApi {
 
 	/** Id. */
 	private Long id;
@@ -81,6 +82,29 @@ public class Dominio {
 	 */
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getIdString() {
+		if (id == null) {
+			return null;
+		} else {
+			return String.valueOf(id);
+		}
+	}
+
+	/**
+	 * @param idString
+	 *            the id to set
+	 */
+	public void setIdString(final String idString) {
+		if (idString == null) {
+			this.id = null;
+		} else {
+			this.id = Long.valueOf(idString);
+		}
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+
 /**
  *
  * Tasa.
@@ -7,7 +9,8 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class Tasa {
+@SuppressWarnings("serial")
+public class Tasa extends ModelApi {
 
 	/** Id. */
 	private Long id;
@@ -22,7 +25,10 @@ public class Tasa {
 	private String tipo;
 
 	/** Obligatoriedad. */
-	private String obligatoriedad;
+	private TypeFormularioObligatoriedad obligatoriedad;
+
+	/** Orden. **/
+	private int orden;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -112,7 +118,7 @@ public class Tasa {
 	 *
 	 * @return el valor de obligatoriedad
 	 */
-	public String getObligatoriedad() {
+	public TypeFormularioObligatoriedad getObligatoriedad() {
 		return obligatoriedad;
 	}
 
@@ -122,8 +128,23 @@ public class Tasa {
 	 * @param obligatoriedad
 	 *            el nuevo valor de obligatoriedad
 	 */
-	public void setObligatoriedad(final String obligatoriedad) {
+	public void setObligatoriedad(final TypeFormularioObligatoriedad obligatoriedad) {
 		this.obligatoriedad = obligatoriedad;
+	}
+
+	/**
+	 * @return the orden
+	 */
+	public int getOrden() {
+		return orden;
+	}
+
+	/**
+	 * @param orden
+	 *            the orden to set
+	 */
+	public void setOrden(final int orden) {
+		this.orden = orden;
 	}
 
 }

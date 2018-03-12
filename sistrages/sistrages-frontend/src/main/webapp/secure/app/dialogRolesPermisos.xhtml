@@ -8,7 +8,8 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeMensajeAviso" var="TypeMensajeAviso"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeRolPermiso" var="TypeRolPermiso" />
+
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogRolesPermisos.titulo']}"/></title>
@@ -34,8 +35,18 @@
 
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
+					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
+					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:200px" required="true">
+					     <f:selectItems value="#{TypeRolPermiso.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeRolPermiso.' += tipo]}" />
+					</p:selectOneMenu >
+
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
 					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.codigo}" disabled="#{dialogRolesPermisos.isConsulta()}" required="true" size="40" />
+
+					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
+					<p:selectOneMenu id="area">
+            				<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.descripcion}" itemValue="#{area}" />
+        			</p:selectOneMenu>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />
 					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}"  required="true" size="40" />
@@ -48,10 +59,6 @@
 						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.helpdesk}" itemLabel="#{msg['typeRolPermisos.H']}" />
 					</p:selectManyCheckbox>
 
-					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
-					<p:selectOneMenu id="area">
-            				<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.descripcion}" itemValue="#{area}" />
-        			</p:selectOneMenu>
 				</h:panelGrid>
 				<h:outputScript >
 				      function rcEditarPropiedad() {

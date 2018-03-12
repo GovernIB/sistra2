@@ -4,6 +4,11 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<f:metadata>
+		<f:viewAction action="#{viewDefinicionVersionRellenar.init}" />
+		<f:viewParam name="id" value="#{viewDefinicionVersionRellenar.id}"/>
+	</f:metadata>
+
 	<h:form id="formViewDefinicionVersionRellenar" styleClass="h100">
 
 		<!-- Growl mensajes -->
@@ -16,40 +21,50 @@
 					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
 						actionListener="#{viewDefinicionVersionRellenar.nuevo()}" process="@this"
 						update="growl">
-					</p:commandButton>
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionRellenar.returnDialogo}" update="growl dataTable"/>
+		        	</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
-						actionListener="#{viewDefinicionVersionRellenar.nuevo()}" process="@this"
-						update="growl" />
+						actionListener="#{viewDefinicionVersionRellenar.editar()}" process="@this"
+						update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionRellenar.returnDialogo}" update="growl dataTable"/>
+					</p:commandButton>
 
 					<p:commandButton id="btnEliminar"
 						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
-						actionListener="#{viewDefinicionVersionRellenar.nuevo()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersionRellenar.eliminar()}"
+						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnSubir"
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
-						actionListener="#{viewDefinicionVersionRellenar.nuevo()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersionRellenar.subir()}"
+						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnBajar"
 						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
-						actionListener="#{viewDefinicionVersionRellenar.nuevo()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersionRellenar.bajar()}"
+						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 						icon="fa fa-question-circle-o"
-						actionListener="#{viewDefinicionVersionRellenar.nuevo()}" process="@this"
+						actionListener="#{viewDefinicionVersionRellenar.ayudar()}" process="@this"
 						update="growl dataTable" />
 				</h:panelGrid>
 			</f:facet>
 		</p:toolbar>
 
 
-		<p:dataTable id="dataTable" var="formularios"
-			value="#{viewDefinicionVersion.listaFormularios}" rows="10"
-			scrollable="true" paginator="false" rowKey="#{formularios.id}" selectionMode="single"
-			 selection="#{viewDefinicionVersionRellenar.datoSeleccionado}" dblClickSelect="true">
+			<p:dataTable  id="dataTable" var="formularios" value="#{viewDefinicionVersionRellenar.data.formulariosTramite}"
+						 rows="10"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewDefinicionVersionRellenar.datoSeleccionado}" rowKey="#{formularios.idString}" dblClickSelect="true">
+
+			<!-- Necesario para actualizar en controlador la fila seleccionada -->
+			<p:ajax event="rowSelect" />
+			<p:ajax event="rowUnselect" />
 
 			<!-- Columnas -->
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerIdentificador']}" >
@@ -58,15 +73,11 @@
 
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerDescripcion']}">
-				<h:outputText value="#{formularios.descripcion}" />
+				<h:outputText value="#{formularios.descripcion.getTraduccion(sessionBean.lang)}" />
 			</p:column>
 
-			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerObligatoriedad']}">
-				<h:outputText value="#{formularios.obligatoriedad}" />
-			</p:column>
-
-			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerTipo']}">
-				<h:outputText value="#{formularios.tipo}" />
+						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerTipo']}">
+				<h:outputText value="#{formularios.tipoFormulario}" />
 			</p:column>
 
 		</p:dataTable>

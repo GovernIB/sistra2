@@ -1,6 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,8 +7,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
@@ -51,10 +48,8 @@ public class DialogPlugin extends DialogControllerBase {
 
 	/**
 	 * Inicialización.
-	 *
-	 * @throws IOException
 	 */
-	public void init() throws IOException {
+	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Plugin();
@@ -122,10 +117,8 @@ public class DialogPlugin extends DialogControllerBase {
 
 	/**
 	 * Edita una propiedad.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void editarPropiedad() throws JsonProcessingException {
+	public void editarPropiedad() {
 
 		if (!verificarFilaSeleccionada())
 			return;

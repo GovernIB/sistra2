@@ -48,24 +48,17 @@ public enum TypeFormularioSoporte {
 	 * @param tipo
 	 * @return
 	 */
-	public TypeFormularioSoporte toEnum(final String tipo) {
-		TypeFormularioSoporte retorno;
-		if (tipo == null) {
-			retorno = null;
-		} else {
-			switch (tipo) {
-			case "R":
-				retorno = TypeFormularioSoporte.RESPONSABLE_DE_INCIDENCIAS;
-				break;
-			case "L":
-				retorno = TypeFormularioSoporte.LISTA_DE_EMAILS;
-				break;
-			default:
-				retorno = null;
-				break;
+	public TypeFormularioSoporte toEnum(final String text) {
+		TypeFormularioSoporte respuesta = null;
+		if (text != null) {
+			for (final TypeFormularioSoporte b : TypeFormularioSoporte.values()) {
+				if (text.equalsIgnoreCase(b.toString())) {
+					respuesta = b;
+					break;
+				}
 			}
 		}
-		return retorno;
+		return respuesta;
 	}
 
 	/*

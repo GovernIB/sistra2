@@ -36,9 +36,9 @@
 			<h:panelGrid columns="2" columnClasses="w15 grid-right, w85 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
 
 				<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.tipos']}" />
-				<h:selectOneMenu value="#{dialogDefinicionVersionDominios.tipo}" id="tipo" >
+				<p:selectOneMenu value="#{dialogDefinicionVersionDominios.tipo}" id="tipo" >
 				    <f:selectItems value="#{TipoAmbito.ALL_VALUES}"  itemLabel="#{msg['ambito.'+=tipo]}" var="tipo"/>
-				</h:selectOneMenu>
+				</p:selectOneMenu>
 
 				<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.filtrar']}" />
 				<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">

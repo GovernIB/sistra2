@@ -7,7 +7,8 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class Area {
+@SuppressWarnings("serial")
+public class Area extends ModelApi {
 
 	/** Id. */
 	private Long id;

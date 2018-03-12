@@ -6,7 +6,8 @@ package es.caib.sistrages.core.api.model;
  * @author indra
  *
  */
-public class Traduccion {
+@SuppressWarnings("serial")
+public class Traduccion extends ModelApi {
 
 	/**
 	 * id.

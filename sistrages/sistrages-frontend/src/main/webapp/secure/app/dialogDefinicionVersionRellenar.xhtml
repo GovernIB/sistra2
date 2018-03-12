@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormulario" var="TypeFormulario" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeInterno" var="TypeInterno" />
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDefinicionVersionRellenar.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionRellenar.modoAcceso}"/>
+		<f:viewAction action="#{dialogDefinicionVersionRellenar.init}" />
+	</f:metadata>
+	<h:form id="dialogDefinicionRellenar" styleClass="margin-top-10">
+
+  				<!-- Growl mensajes -->
+				<p:growl id="growldialogDefinicionRellenar" widgetVar="growldialogDefinicionRellenar" life="2000" sticky="false" />
+
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<h:outputText value="#{msg['dialogDefinicionVersionRellenar.headerIdentificador']}" />
+					<p:inputText  value="#{dialogDefinicionVersionRellenar.data.codigo}" size="40" />
+
+					<h:outputText value="#{msg['dialogDefinicionVersionRellenar.headerDescripcion']}" />
+					<p:column>
+						<p:inputText id="inputDescripcion"  value="#{dialogDefinicionVersionRellenar.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
+						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionRellenar.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" style="margin-right:5px">
+		            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRellenar.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
+		        		</p:commandButton>
+					</p:column>
+
+					<h:outputText value="#{msg['dialogDefinicionVersionRellenar.headerTipo']}" />
+					<p:selectOneMenu  value="#{dialogDefinicionVersionRellenar.data.tipoFormulario}" style="width:200px" required="true">
+					     <f:selectItems value="#{TypeInterno.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeInterno.' += tipo]}" />
+					</p:selectOneMenu >
+
+
+			 </h:panelGrid>
+				 <h:outputScript >
+			      function rcEditarPropiedad() {
+			        document.getElementById("form:btnEditarFormulario").click();
+			      }
+			      function  rcBorrarPropiedad() {
+			        document.getElementById("form:btnEliminarFormulario").click();
+			      }
+			    </h:outputScript>
+				  	 <p:outputPanel styleClass="botonera">
+				     	<p:toolbar>
+							<f:facet name="right">
+				        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDefinicionVersionRellenar.aceptar()}" process="@form" update="@form growldialogDefinicionRellenar" styleClass="boton-azul" />
+								<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionRellenar.cancelar()}" process="@this"/>
+							</f:facet>
+					  </p:toolbar>
+			    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

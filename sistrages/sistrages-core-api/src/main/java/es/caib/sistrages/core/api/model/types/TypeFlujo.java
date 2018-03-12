@@ -1,6 +1,6 @@
 package es.caib.sistrages.core.api.model.types;
 
-import es.caib.sistrages.core.api.model.comun.ConstantesTipoFlujo;;
+import es.caib.sistrages.core.api.model.comun.ConstantesTipoFlujo;
 
 /**
  * Tipo para indicar los tipo de flujo de version de tramite.

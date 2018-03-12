@@ -11,13 +11,14 @@ import es.caib.sistrages.core.api.model.types.TypeMensajeAviso;
  * @author Indra
  *
  */
-public class MensajeAviso {
+@SuppressWarnings("serial")
+public class MensajeAviso extends ModelApi {
 
 	/** Id. */
 	private Long id;
 
 	/** Descripción. */
-	private String descripcion;
+	private Traducciones descripcion;
 
 	/** Tipo. */
 	private TypeMensajeAviso tipo;
@@ -49,15 +50,14 @@ public class MensajeAviso {
 	/**
 	 * @return the descripcion
 	 */
-	public String getDescripcion() {
+	public Traducciones getDescripcion() {
 		return descripcion;
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * @param descripcion the descripcion to set
 	 */
-	public void setDescripcion(final String descripcion) {
+	public void setDescripcion(Traducciones descripcion) {
 		this.descripcion = descripcion;
 	}
 

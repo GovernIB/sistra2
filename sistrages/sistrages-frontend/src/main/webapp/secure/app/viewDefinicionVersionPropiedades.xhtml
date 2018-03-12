@@ -15,7 +15,7 @@
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
             <p:outputPanel>
            		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramiteVersion.descripcion.getTraduccion(sessionBean.lang)}"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editarDescripcion()}" styleClass="va-top"
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editarDescripcion(viewDefinicionVersion.tramiteVersion.descripcion)}" styleClass="va-top"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 
@@ -79,7 +79,7 @@
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul" rendered="#{viewDefinicionVersion.isEdicion()}"
-						actionListener="#{viewDefinicionVersionPropiedades.editar()}"
+						actionListener="#{viewDefinicionVersionPropiedades.editar(viewDefinicionVersion.tramiteVersion.id)}"
 						process="@this" update="growl" />
 				</p:outputPanel>
 			</f:facet>

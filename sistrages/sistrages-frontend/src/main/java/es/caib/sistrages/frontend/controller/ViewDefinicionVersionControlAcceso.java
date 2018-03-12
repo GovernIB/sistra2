@@ -6,10 +6,13 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n control de acceso.
@@ -39,9 +42,11 @@ public class ViewDefinicionVersionControlAcceso extends ViewControllerBase {
 
 	/**
 	 * Editar descripcion.
+	 * 
+
 	 */
-	public void editarMensajeDesactivacion() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	public void editarMensajeDesactivacion(final Traducciones traducciones) {
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, traducciones, null, null);
 	}
 
 }

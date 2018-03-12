@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogScript.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogScript.modoAcceso}"/>
+		<f:viewAction action="#{dialogScript.init}" />
+	</f:metadata>
+	<h:form id="dialogScript" styleClass="margin-top-10">
+
+			<p:growl id="growlScript" widgetVar="growlScript" life="2000" sticky="false" />
+				<p:panel id="panelTop" header="Parametres d'inici tràmit" toggleable="false" widgetVar="panel" style="padding:0px">
+					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx200, padding-right-18 " columns = "2" cellpadding = "5" cellspacing = "0"  style="padding:0px">
+
+						<h:outputLabel value="Per a qué serveix?"></h:outputLabel>
+						<h:outputLabel value="Permet establir per scripts paràmetres d'inici de tràmit"></h:outputLabel>
+
+						<h:outputLabel value="Quan se executa?"></h:outputLabel>
+						<h:outputLabel value="En iniciar el tràmit"></h:outputLabel>
+
+						<h:outputLabel value="Que ha de retornar?"></h:outputLabel>
+						<h:outputLabel value="Retorna les dades paràmetres inicials"></h:outputLabel>
+
+					</h:panelGrid>
+				</p:panel>
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, padding-right-18 wpx200" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<pe:codeMirror id="codeMirror"
+        						mode="#{dialogScript.mode}"
+        						theme="#{dialogScript.theme}"
+    							value="#{dialogScript.content}"
+    							keyMap="#{dialogScript.keymap}"
+    							lineNumbers="true"
+    							matchBrackets="true"
+    							readonly="#{dialogScript.isConsulta()}"
+
+    							 />
+
+    				<p:column>
+
+    					<p:panel id="panelHerramientas" header="Herramientas" toggleable="true" widgetVar="panelHerramientas"  collapsed="#{dialogScript.visibleHerramientas}">
+
+								 <p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelHerramientas panelMensajes panelFormularios panelDominios" />
+						         <h:panelGrid columns="2" columnClasses=", wpx25" header="Propietats">
+
+						         	<h:outputText value="DADES PARAMETRE INICIAL" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+
+						         	<h:outputText value="PLUGIN_AWS" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+
+					         		<h:outputText value="PLUGIN_DOMINIS" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+
+									<h:outputText value="PLUGIN_ERROR" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+
+									<h:outputText value="PLUGIN_LOG" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+
+									<h:outputText value="PLUGIN_MISSATGEVALIDACIÓ" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+
+						         	<h:outputText value="PLUGIN_SESSIO" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+
+						         	<h:outputText value="PLUGIN_VALIDACIONS" />
+						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+					        </h:panelGrid>
+
+							</p:panel>
+							<p:panel id="panelMensajes" header="Missatges de validació" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}">
+
+								<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelHerramientas panelMensajes panelFormularios panelDominios" />
+
+								<h:panelGrid columns="2" header="Scripts">
+						         	<h:column><h:outputText value="#{msg['dialogScript.scripts.autorelleno']}" /></h:column>
+						         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+						        </h:panelGrid>
+
+
+						    </p:panel>
+
+						    <p:panel id="panelFormularios" header="Estils" toggleable="true" widgetVar="panelEstilos" style="margin-bottom:2px" collapsed="#{dialogScript.visibleFormularios}">
+
+								<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelHerramientas panelMensajes panelFormularios panelDominios" />
+
+								<h:panelGrid columns="2" header="Scripts">
+
+						         	<h:column><h:outputText value="Estilos" /></h:column>
+						         	<h:inputTextarea value="Estilos" />
+
+						        </h:panelGrid>
+
+						    </p:panel>
+
+						    <p:panel id="panelDominios" header="Dominios" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}">
+
+								<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelHerramientas panelMensajes panelFormularios panelDominios" />
+
+								<h:panelGrid columns="2" header="Scripts">
+
+						         	<h:column><h:outputText value="Dominios" /></h:column>
+						         	<h:inputText value="Dominios" />
+
+						        </h:panelGrid>
+
+						    </p:panel>
+
+    					</p:column>
+			</h:panelGrid>
+			<p:toolbar>
+						<f:facet name="right">
+			        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" />
+							<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogScript.cancelar()}" process="@this"/>
+						</f:facet>
+				</p:toolbar>
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

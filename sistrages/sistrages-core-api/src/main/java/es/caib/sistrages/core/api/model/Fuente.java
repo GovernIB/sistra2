@@ -9,7 +9,8 @@ import java.util.List;
  * @author Indra
  *
  */
-public class Fuente {
+@SuppressWarnings("serial")
+public class Fuente extends ModelApi {
 
 	/** Id. */
 	private Long id;

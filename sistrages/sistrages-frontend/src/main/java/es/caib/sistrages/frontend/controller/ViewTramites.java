@@ -15,6 +15,8 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -80,7 +82,10 @@ public class ViewTramites extends ViewControllerBase {
 		final Tramite tramite1 = new Tramite();
 		tramite1.setId(1l);
 		tramite1.setCodigo("TRAMIT1");
-		tramite1.setDescripcion("Inscripció a les proves en catalá");
+		final Traducciones trad1 = new Traducciones();
+		trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
+		trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
+		tramite1.setDescripcion(trad1);
 		tramite1.setActivo(true);
 		tramite1.setBloqueada(false);
 		final Calendar calendar = Calendar.getInstance();
@@ -88,7 +93,10 @@ public class ViewTramites extends ViewControllerBase {
 		final Tramite tramite2 = new Tramite();
 		tramite2.setId(2l);
 		tramite2.setCodigo("TRAMIT2");
-		tramite2.setDescripcion("Solicitud d'admisió de FP a distància");
+		final Traducciones trad2 = new Traducciones();
+		trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
+		trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
+		tramite2.setDescripcion(trad2);
 		tramite2.setActivo(false);
 		tramite2.setBloqueada(false);
 		calendar.set(2016, 2, 2);
@@ -96,7 +104,10 @@ public class ViewTramites extends ViewControllerBase {
 		final Tramite tramite3 = new Tramite();
 		tramite3.setId(3l);
 		tramite3.setCodigo("TRAMIT3");
-		tramite3.setDescripcion("Solicitud d'admisió d'escolarització");
+		final Traducciones trad3 = new Traducciones();
+		trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
+		trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
+		tramite3.setDescripcion(trad3);
 		tramite3.setActivo(true);
 		tramite3.setBloqueada(true);
 		calendar.set(2014, 3, 3);
@@ -170,7 +181,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
-		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.EDICION, params, true, 540, 120);
+		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.EDICION, params, true, 540, 220);
 	}
 
 	/**
@@ -193,7 +204,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * Abre dialogo de nueva Area.
 	 */
 	public void nuevaTramite() {
-		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.ALTA, null, true, 540, 120);
+		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.ALTA, null, true, 540, 220);
 	}
 
 	/**
@@ -307,12 +318,18 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite1 = new Tramite();
 			tramite1.setId(1l);
 			tramite1.setCodigo("TRAMIT1");
-			tramite1.setDescripcion("Inscripció a les proves en catalá");
+			final Traducciones trad1 = new Traducciones();
+			trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
+			trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
+			tramite1.setDescripcion(trad1);
 			tramite1.setActivo(true);
 			final Tramite tramite2 = new Tramite();
 			tramite2.setId(2l);
 			tramite2.setCodigo("TRAMIT2");
-			tramite2.setDescripcion("Solicitud d'admisió de FP a distància");
+			final Traducciones trad2 = new Traducciones();
+			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
+			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
+			tramite2.setDescripcion(trad2);
 			tramite2.setActivo(false);
 			tramites.add(tramite1);
 			tramites.add(tramite2); // org.primefaces.context.RequestContext.getCurrentInstance().update("dataTableTramites");
@@ -321,17 +338,26 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite1 = new Tramite();
 			tramite1.setId(1l);
 			tramite1.setCodigo("TRAMIT1");
-			tramite1.setDescripcion("Inscripció a les proves en catalá");
+			final Traducciones trad1 = new Traducciones();
+			trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
+			trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
+			tramite1.setDescripcion(trad1);
 			tramite1.setActivo(true);
 			final Tramite tramite2 = new Tramite();
 			tramite2.setId(2l);
 			tramite2.setCodigo("TRAMIT2");
-			tramite2.setDescripcion("Solicitud d'admisió de FP a distància");
+			final Traducciones trad2 = new Traducciones();
+			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
+			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
+			tramite2.setDescripcion(trad2);
 			tramite2.setActivo(false);
 			final Tramite tramite3 = new Tramite();
 			tramite3.setId(3l);
 			tramite3.setCodigo("TRAMIT3");
-			tramite3.setDescripcion("Solicitud d'admisió d'escolarització");
+			final Traducciones trad3 = new Traducciones();
+			trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
+			trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
+			tramite3.setDescripcion(trad3);
 			tramite3.setActivo(true);
 			tramites.add(tramite1);
 			tramites.add(tramite2);
@@ -341,12 +367,18 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite2 = new Tramite();
 			tramite2.setId(2l);
 			tramite2.setCodigo("TRAMIT2");
-			tramite2.setDescripcion("Solicitud d'admisió de FP a distància");
+			final Traducciones trad2 = new Traducciones();
+			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
+			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
+			tramite2.setDescripcion(trad2);
 			tramite2.setActivo(false);
 			final Tramite tramite3 = new Tramite();
 			tramite3.setId(3l);
 			tramite3.setCodigo("TRAMIT3");
-			tramite3.setDescripcion("Solicitud d'admisió d'escolarització");
+			final Traducciones trad3 = new Traducciones();
+			trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
+			trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
+			tramite3.setDescripcion(trad3);
 			tramite3.setActivo(true);
 			tramites.add(tramite2);
 			tramites.add(tramite3);

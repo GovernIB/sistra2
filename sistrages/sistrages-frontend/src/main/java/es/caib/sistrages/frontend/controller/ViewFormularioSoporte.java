@@ -1,6 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.FormularioSoporte;
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -42,9 +37,8 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Inicialización.
 	 *
-	 * @throws IOException
 	 */
-	public void init() throws IOException {
+	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new ArrayList<>();
@@ -114,10 +108,8 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 
 	/**
 	 * Edita una propiedad.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void editarFormulario() throws JsonProcessingException {
+	public void editarFormulario() {
 
 		if (!verificarFilaSeleccionada())
 			return;
@@ -126,27 +118,6 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.dataSeleccionado));
 
 		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.EDICION, params, true, 590, 250);
-	}
-
-	/**
-	 * Editar descripcion del dominio.
-	 *
-	 * @throws JsonProcessingException
-	 */
-	public void editarDescripcion() throws JsonProcessingException {
-		final Traducciones traducciones = new Traducciones();
-		traducciones.add(new Traduccion("ca", "Traduccion ca"));
-		traducciones.add(new Traduccion("es", "Traduccion es"));
-		traducciones.add(new Traduccion("en", "Traduccion en"));
-
-		final List<String> obligatorios = new ArrayList<>();
-		obligatorios.add("ca");
-		final List<String> posibles = new ArrayList<>();
-		posibles.add("ca");
-		posibles.add("es");
-		posibles.add("en");
-		posibles.add("de");
-		UtilJSF.openDialogTraduccion(TypeModoAcceso.EDICION, traducciones, posibles, obligatorios);
 	}
 
 	/**

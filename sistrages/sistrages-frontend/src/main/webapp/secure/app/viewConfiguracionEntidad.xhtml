@@ -59,7 +59,7 @@
 		        	<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerPie']}" />
 		            <p:column>
 		            	<p:inputText  id="inputPie" size="40" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.pie.getTraduccion(sessionBean.lang)}" disabled="true" />
-		            	<p:commandButton id="btnAssistentPie" icon="fa fa-compass" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie()}" process="@this" update="growl" style="margin-right:5px">
+		            	<p:commandButton id="btnAssistentPie" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie()}" process="@this" update="growl" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoAsistentePie}" update="growl inputPie"/>
 		        		</p:commandButton>
 					</p:column>

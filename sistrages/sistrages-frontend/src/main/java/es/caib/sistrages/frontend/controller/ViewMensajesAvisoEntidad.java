@@ -12,6 +12,8 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.MensajeAviso;
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.types.TypeMensajeAviso;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -38,7 +40,10 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		final MensajeAviso mensajeAviso1 = new MensajeAviso();
 		mensajeAviso1.setActivo(true);
 		mensajeAviso1.setId(1l);
-		mensajeAviso1.setDescripcion("La versió d'aquest tràmit està desactivat.");
+		final Traducciones trad1 = new Traducciones();
+		trad1.add(new Traduccion("ca", "La versió d'aquest tràmit està desactivat."));
+		trad1.add(new Traduccion("es", "La versió d'aquest tràmit està desactivat."));
+		mensajeAviso1.setDescripcion(trad1);
 		mensajeAviso1.setTipo(TypeMensajeAviso.TODOS);
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(2018, 2, 2);
@@ -48,12 +53,18 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		final MensajeAviso mensajeAviso2 = new MensajeAviso();
 		mensajeAviso2.setActivo(true);
 		mensajeAviso2.setId(2l);
-		mensajeAviso2.setDescripcion("Per la tramitació que realitzarà necessitarà disposar de DNI electrònic.");
+		final Traducciones trad2 = new Traducciones();
+		trad2.add(new Traduccion("ca", "Per la tramitació que realitzarà necessitarà disposar de DNI electrònic."));
+		trad2.add(new Traduccion("es", "Per la tramitació que realitzarà necessitarà disposar de DNI electrònic."));
+		mensajeAviso2.setDescripcion(trad2);
 		mensajeAviso2.setTipo(TypeMensajeAviso.FIRMA);
 		final MensajeAviso mensajeAviso3 = new MensajeAviso();
 		mensajeAviso3.setActivo(false);
 		mensajeAviso3.setId(3l);
-		mensajeAviso3.setDescripcion("Per problemes técnics aquest tràmit està donat de baixa.");
+		final Traducciones trad3 = new Traducciones();
+		trad3.add(new Traduccion("ca", "Per problemes técnics aquest tràmit està donat de baixa."));
+		trad3.add(new Traduccion("es", "Per problemes técnics aquest tràmit està donat de baixa."));
+		mensajeAviso3.setDescripcion(trad3);
 		mensajeAviso3.setTipo(TypeMensajeAviso.AUTENTICADOS);
 
 		listaDatos = new ArrayList<>();
@@ -91,10 +102,11 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		// Filtra
 		final List<MensajeAviso> mensajeAvisoesFiltradas = new ArrayList<>();
 		for (final MensajeAviso mensajeAviso : this.listaDatos) {
-			if (mensajeAviso.getDescripcion() != null
-					&& mensajeAviso.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				mensajeAvisoesFiltradas.add(mensajeAviso);
-			}
+			// if (mensajeAviso.getDescripcion() != null
+			// &&
+			// mensajeAviso.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
+			mensajeAvisoesFiltradas.add(mensajeAviso);
+			// }
 		}
 
 		this.listaDatos = mensajeAvisoesFiltradas;

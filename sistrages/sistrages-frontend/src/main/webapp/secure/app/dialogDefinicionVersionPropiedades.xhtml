@@ -37,7 +37,9 @@
 	            <p:outputPanel>
 	           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion.getTraduccion(sessionBean.lang)}"/>
 	           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionPropiedades.editarDescripcion()}" styleClass="va-top"
-							process="@this" update="growlDialog"/>
+							process="@this" update="growlDialog">
+						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionPropiedades.returnDialogoDescripcion}" update="growlDialog descripcion" />
+		        	</p:commandButton>
 	       		</p:outputPanel>
 
 	            <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
@@ -98,12 +100,16 @@
 				</p:panelGrid>
 
 				<p:outputLabel for="scriptpersonalizacion" value="#{msg['viewDefinicionVersionPropiedades.scriptpersonalizacion']}" />
-				<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt"  actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
-							process="@this" update="growlDialog"/>
+				<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt"  actionListener="#{dialogDefinicionVersionPropiedades.editarScriptPersonalizacion()}"
+							process="@this" update="growlDialog">
+							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionPropiedades.returnDialogoPersonalizacion}" update="growlDialog scriptpersonalizacion" />
+				</p:commandButton>
 
 				<p:outputLabel for="scriptparametrosiniciales" value="#{msg['viewDefinicionVersionPropiedades.scriptparametrosiniciales']}" />
-				<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
-							process="@this" update="growlDialog"/>
+				<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionPropiedades.editarScriptInicializacion()}"
+							process="@this" update="growlDialog">
+							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionPropiedades.returnDialogoParamsIniciales}" update="growlDialog scriptparametrosiniciales" />
+				</p:commandButton>
 
 			</h:panelGrid>
 

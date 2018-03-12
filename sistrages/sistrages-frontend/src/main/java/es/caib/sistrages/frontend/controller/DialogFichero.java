@@ -19,9 +19,7 @@ import javax.servlet.http.Part;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -71,11 +69,8 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Inicialización.
 	 *
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
 	 */
-	public void init() throws IOException {
+	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 
 		if (id == null) {
@@ -118,9 +113,8 @@ public class DialogFichero extends DialogControllerBase {
 	 * Devuelve la imagen.
 	 *
 	 * @return
-	 * @throws IOException
 	 */
-	public StreamedContent getImagen() throws IOException {
+	public StreamedContent getImagen() {
 		final FacesContext context = FacesContext.getCurrentInstance();
 
 		if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
@@ -140,96 +134,105 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * This method reads PDF from the URL and writes it back as a response.
 	 *
-	 * @throws IOException
 	 */
-	public void descargar() throws IOException {
-		// Get the FacesContext
-		final FacesContext facesContext = FacesContext.getCurrentInstance();
+	public void descargar() {
+		try {
+			// Get the FacesContext
+			final FacesContext facesContext = FacesContext.getCurrentInstance();
 
-		// Get HTTP response
-		final HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+			// Get HTTP response
+			final HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
 
-		// Set response headers
-		response.reset(); // Reset the response in the first place
-		response.setHeader("Content-Type", "application/pdf"); // Set only the content type
+			// Set response headers
+			response.reset(); // Reset the response in the first place
+			response.setHeader("Content-Type", "application/pdf"); // Set only the content type
 
-		// Open response output stream
-		final OutputStream responseOutputStream = response.getOutputStream();
+			// Open response output stream
+			final OutputStream responseOutputStream = response.getOutputStream();
 
-		// Read PDF contents
-		final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream(data.getContenido());
+			// Read PDF contents
+			final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream(data.getContenido());
 
-		// Read PDF contents and write them to the output
-		final byte[] bytesBuffer = new byte[2048];
-		int bytesRead;
-		while ((bytesRead = pdfInputStream.read(bytesBuffer)) > 0) {
-			responseOutputStream.write(bytesBuffer, 0, bytesRead);
+			// Read PDF contents and write them to the output
+			final byte[] bytesBuffer = new byte[2048];
+			int bytesRead;
+			while ((bytesRead = pdfInputStream.read(bytesBuffer)) > 0) {
+				responseOutputStream.write(bytesBuffer, 0, bytesRead);
+			}
+
+			// Make sure that everything is out
+			responseOutputStream.flush();
+
+			// Close both streams
+			pdfInputStream.close();
+			responseOutputStream.close();
+
+			// JSF doc:
+			// Signal the JavaServer Faces implementation that the HTTP response for this
+			// request has already been generated
+			// (such as an HTTP redirect), and that the request processing lifecycle should
+			// be terminated
+			// as soon as the current phase is completed.
+			facesContext.responseComplete();
+		} catch (final IOException ex) {
+			throw new FrontException("Error descarga", ex);
 		}
-
-		// Make sure that everything is out
-		responseOutputStream.flush();
-
-		// Close both streams
-		pdfInputStream.close();
-		responseOutputStream.close();
-
-		// JSF doc:
-		// Signal the JavaServer Faces implementation that the HTTP response for this
-		// request has already been generated
-		// (such as an HTTP redirect), and that the request processing lifecycle should
-		// be terminated
-		// as soon as the current phase is completed.
-		facesContext.responseComplete();
-
 	}
 
 	/**
 	 * Descargar.
 	 */
-	public void descargar2() throws IOException {
-		final File fileTemporal = File.createTempFile("fichero", "png");
-		final InputStream fis = new FileInputStream(fileTemporal);
-		int offset = 0;
-		int numRead = 0;
-		while ((offset < data.getContenido().length)
-				&& ((numRead = fis.read(data.getContenido(), offset, data.getContenido().length - offset)) >= 0)) {
-			offset += numRead;
-		}
-		fis.close();
-		final HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance()
-				.getExternalContext().getResponse();
+	public void descargar2() {
+		try {
+			final File fileTemporal = File.createTempFile("fichero", "png");
+			final InputStream fis = new FileInputStream(fileTemporal);
+			int offset = 0;
+			int numRead = 0;
+			while ((offset < data.getContenido().length)
+					&& ((numRead = fis.read(data.getContenido(), offset, data.getContenido().length - offset)) >= 0)) {
+				offset += numRead;
+			}
+			fis.close();
+			final HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance()
+					.getExternalContext().getResponse();
 
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment;filename=instructions.txt");
-		response.getOutputStream().write(data.getContenido());
-		response.getOutputStream().flush();
-		response.getOutputStream().close();
-		fis.close();
-		FacesContext.getCurrentInstance().responseComplete();
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment;filename=instructions.txt");
+			response.getOutputStream().write(data.getContenido());
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			fis.close();
+			FacesContext.getCurrentInstance().responseComplete();
+		} catch (final IOException ex) {
+			throw new FrontException("Error descarga", ex);
+		}
 	}
 
 	/**
 	 * Upload.
 	 *
-	 * @throws IOException
 	 */
-	public void upload() throws IOException {
-		final String filename = file.getName();
+	public void upload() {
+		try {
+			final String filename = file.getName();
 
-		final InputStream is = file.getInputStream();
-		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			final InputStream is = file.getInputStream();
+			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-		int nRead;
-		final byte[] contenido = new byte[16384];
+			int nRead;
+			final byte[] contenido = new byte[16384];
 
-		while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
-			buffer.write(contenido, 0, nRead);
+			while ((nRead = is.read(contenido, 0, contenido.length)) != -1) {
+				buffer.write(contenido, 0, nRead);
+			}
+
+			buffer.flush();
+
+			data.setNombre(filename);
+			data.setContenido(contenido);
+		} catch (final IOException ex) {
+			throw new FrontException("Error upload", ex);
 		}
-
-		buffer.flush();
-
-		data.setNombre(filename);
-		data.setContenido(contenido);
 	}
 
 	private boolean valido = false;

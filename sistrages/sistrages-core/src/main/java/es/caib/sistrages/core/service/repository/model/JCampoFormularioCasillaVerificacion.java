@@ -1,0 +1,71 @@
+package es.caib.sistrages.core.service.repository.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+/**
+ * JCampoFormularioCasillaVerificacion
+ */
+@Entity
+@Table(name = "STG_FORCHK")
+public class JCampoFormularioCasillaVerificacion implements java.io.Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name = "CCK_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
+	private long codigo;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
+	@JoinColumn(name = "CCK_CODIGO")
+	private JCampoFormulario campoFormulario;
+
+	@Column(name = "CCK_VALCHK", nullable = false, length = 100)
+	private String valorChecked;
+
+	@Column(name = "CCK_VALNCH", nullable = false, length = 100)
+	private String valorNoChecked;
+
+	public JCampoFormularioCasillaVerificacion() {
+	}
+
+	public long getCodigo() {
+		return this.codigo;
+	}
+
+	public void setCodigo(final long codigo) {
+		this.codigo = codigo;
+	}
+
+	public JCampoFormulario getCampoFormulario() {
+		return this.campoFormulario;
+	}
+
+	public void setCampoFormulario(final JCampoFormulario campoFormulario) {
+		this.campoFormulario = campoFormulario;
+	}
+
+	public String getCckValchk() {
+		return this.valorChecked;
+	}
+
+	public void setCckValchk(final String valorChecked) {
+		this.valorChecked = valorChecked;
+	}
+
+	public String getValorNoChecked() {
+		return this.valorNoChecked;
+	}
+
+	public void setValorNoChecked(final String valorNoChecked) {
+		this.valorNoChecked = valorNoChecked;
+	}
+
+}

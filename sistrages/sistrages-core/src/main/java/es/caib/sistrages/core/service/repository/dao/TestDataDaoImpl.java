@@ -11,7 +11,7 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.model.TestData;
-import es.caib.sistrages.core.service.repository.model.*;
+import es.caib.sistrages.core.service.repository.modeltest.HTestData;
 
 @Repository("testDataDao")
 public class TestDataDaoImpl implements TestDataDao {
@@ -24,7 +24,7 @@ public class TestDataDaoImpl implements TestDataDao {
 	public TestData getTestDataById(final String pCodigo) {
 		TestData testdata = null;
 
-		HTestData htestdata = getHTestDataById(pCodigo);
+		final HTestData htestdata = getHTestDataById(pCodigo);
 
 		if (htestdata != null) {
 			// Establecemos datos
@@ -40,16 +40,17 @@ public class TestDataDaoImpl implements TestDataDao {
 	@Override
 	public List<TestData> getAllTestDataByFiltroDescripcion(final String pFiltro) {
 		TestData testdata = null;
-		List<TestData> resultado = new ArrayList<>();
+		final List<TestData> resultado = new ArrayList<>();
 
-		final Query query = entityManager.createQuery("Select t From HTestData t Where upper(t.descripcion) like :filtro");
-		query.setParameter("filtro", "%"+pFiltro.toUpperCase()+"%");
+		final Query query = entityManager
+				.createQuery("Select t From HTestData t Where upper(t.descripcion) like :filtro");
+		query.setParameter("filtro", "%" + pFiltro.toUpperCase() + "%");
 
 		final List<HTestData> results = query.getResultList();
 
 		if (results != null && !results.isEmpty()) {
-			for (Iterator<HTestData> iterator = results.iterator(); iterator.hasNext();) {
-				HTestData htestdata = iterator.next();
+			for (final Iterator<HTestData> iterator = results.iterator(); iterator.hasNext();) {
+				final HTestData htestdata = iterator.next();
 
 				// Establecemos datos
 				testdata = new TestData();
@@ -67,15 +68,15 @@ public class TestDataDaoImpl implements TestDataDao {
 	@Override
 	public List<TestData> getAllTestData() {
 		TestData testdata = null;
-		List<TestData> resultado = new ArrayList<>();
+		final List<TestData> resultado = new ArrayList<>();
 
 		final Query query = entityManager.createQuery("Select t From HTestData t");
 
 		final List<HTestData> results = query.getResultList();
 
 		if (results != null && !results.isEmpty()) {
-			for (Iterator<HTestData> iterator = results.iterator(); iterator.hasNext();) {
-				HTestData htestdata = iterator.next();
+			for (final Iterator<HTestData> iterator = results.iterator(); iterator.hasNext();) {
+				final HTestData htestdata = iterator.next();
 
 				// Establecemos datos
 				testdata = new TestData();
@@ -90,8 +91,8 @@ public class TestDataDaoImpl implements TestDataDao {
 	}
 
 	@Override
-	public void addTestData(TestData pTestData) {
-		HTestData htestdata = new HTestData();
+	public void addTestData(final TestData pTestData) {
+		final HTestData htestdata = new HTestData();
 		htestdata.setCodigo(pTestData.getCodigo());
 		htestdata.setDescripcion(pTestData.getDescripcion());
 
@@ -100,9 +101,9 @@ public class TestDataDaoImpl implements TestDataDao {
 	}
 
 	@Override
-	public void removeTestData(String pCodigo) {
+	public void removeTestData(final String pCodigo) {
 
-		HTestData htestdata = getHTestDataById(pCodigo);
+		final HTestData htestdata = getHTestDataById(pCodigo);
 		if (htestdata != null) {
 			entityManager.remove(htestdata);
 		}
@@ -126,9 +127,9 @@ public class TestDataDaoImpl implements TestDataDao {
 	}
 
 	@Override
-	public void updateTestData(TestData pTestData) {
+	public void updateTestData(final TestData pTestData) {
 
-		HTestData htestdata = getHTestDataById(pTestData.getCodigo());
+		final HTestData htestdata = getHTestDataById(pTestData.getCodigo());
 		if (htestdata != null) {
 			htestdata.setDescripcion(pTestData.getDescripcion());
 			entityManager.merge(htestdata);

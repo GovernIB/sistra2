@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:body>
+
+		<h:form id="formDisenyoTextbox" styleClass="h100">
+			<h3 style="margin-bottom:2px">
+			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.' += dialogDisenyoFormulario.componentEdit.tipo]}" />
+		</h3>
+
+		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
+
+			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
+
+	         <h:panelGrid columns="2" header="Propietats">
+	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
+	         	<h:column>
+	         		<h:inputText value="#{dialogDisenyoFormulario.componentEdit.codigo}">
+	         			<p:ajax event="blur" process="@this" />
+	         		</h:inputText>
+	         	</h:column>
+
+				<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
+	         	<h:column>
+	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.componentEdit.columnas}" style="width:125px">
+
+	         				<p:ajax event="blur" process="@this" />
+
+				            <f:selectItem itemLabel="1" itemValue="1" />
+				            <f:selectItem itemLabel="2" itemValue="2" />
+				            <f:selectItem itemLabel="3" itemValue="3" />
+				            <f:selectItem itemLabel="4" itemValue="4" />
+				            <f:selectItem itemLabel="5" itemValue="5" />
+				            <f:selectItem itemLabel="6" itemValue="6" />
+				        </p:selectOneMenu>
+ 				</h:column>
+
+	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
+	         	<h:column>
+	         		<h:inputText id="texto" value="#{dialogDisenyoFormulario.componentEdit.texto.getTraduccion(sessionBean.lang)}" readonly="true"/>
+	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto()}" process="@this">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraducciones}" update="texto" />
+	        		</p:commandButton>
+	         	</h:column>
+
+				<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.ayudaOnline']}" /></h:column>
+	         	<h:column>
+	         		<h:inputText id="ayuda" value="#{dialogDisenyoFormulario.componentEdit.ayuda.getTraduccion(sessionBean.lang)}" readonly="true"/>
+	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda()}" process="@this">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraducciones}" update="ayuda" />
+	        		</p:commandButton>
+				</h:column>
+
+	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.obligatorio']}"/></h:column>
+	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
+	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.componentEdit.obligatorio}">
+	         			<f:ajax event="click" execute="@this" />
+	         		</h:selectBooleanCheckbox>
+	         	</h:column>
+
+	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}" rendered="false"/></h:column>
+	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
+	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.componentEdit.soloLectura}">
+	         			<f:ajax event="click" execute="@this" />
+	         		</h:selectBooleanCheckbox>
+				</h:column>
+
+
+
+				<ui:include src="#{dialogDisenyoFormulario.detalleComponenteUrl}" />
+
+
+	        </h:panelGrid>
+
+		</p:panel>
+		<p:panel id="panelScripts" header="#{msg['dialogDisenyoFormulario.componente.panelScripts']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogDisenyoFormulario.visibleScripts}" rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
+
+			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
+
+			<h:panelGrid columns="2" header="Scripts">
+	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.autorelleno']}" /></h:column>
+	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
+	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.soloLectura']}" /></h:column>
+	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
+	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.validacion']}" /></h:column>
+	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
+	        </h:panelGrid>
+
+
+	    </p:panel>
+
+	    <p:panel id="panelEstilos" header="Estils" toggleable="true" widgetVar="#{msg['dialogDisenyoFormulario.componente.panelEstilos']}" style="margin-bottom:2px" collapsed="#{dialogDisenyoFormulario.visibleEstilos}">
+
+			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
+
+			<h:panelGrid columns="2" header="Scripts">
+	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormularioTextbox.componente.estilos']}" /></h:column>
+
+	        </h:panelGrid>
+
+
+	    </p:panel>
+
+	</h:form>
+</h:body>
+</f:view>
+</ui:composition>

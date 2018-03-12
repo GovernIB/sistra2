@@ -115,7 +115,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	 */
 	public void nuevo() {
 
-		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.ALTA, null, true, 600, 220);
+		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.ALTA, null, true, 630, 220);
 
 	}
 
@@ -131,7 +131,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
-		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.EDICION, params, true, 600, 220);
+		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.EDICION, params, true, 630, 220);
 
 	}
 

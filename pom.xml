@@ -29,6 +29,7 @@
 		<jsf2.version>2.2.15</jsf2.version>
 		<jstl.version>1.2</jstl.version>
 		<primefaces.version>6.1</primefaces.version>
+		<primefacesExtensions.version>6.1.1</primefacesExtensions.version>
 		<primefaces.allThemes.version>1.0.8</primefaces.allThemes.version>
 		<jersey.version>2.26</jersey.version>
 		<jackson.version>2.9.4</jackson.version> <!-- Da error en listas la version que viene con jersey 2.8.4 (con 2.9.4 devuelve list bien) -->
@@ -37,6 +38,8 @@
 		<hibernate.version>4.3.11.Final</hibernate.version>
 		<hibernate-validator.version>5.4.2.Final</hibernate-validator.version>
 		<commons-lang3.version>3.7</commons-lang3.version>
+		<commons-fileupload>1.2</commons-fileupload>
+		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<slf4j.version>1.5.8</slf4j.version>
 	</properties>
   	<modules>

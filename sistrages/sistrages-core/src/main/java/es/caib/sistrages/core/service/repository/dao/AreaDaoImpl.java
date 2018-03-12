@@ -11,7 +11,7 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.service.repository.model.HArea;
+import es.caib.sistrages.core.service.repository.modeltest.HArea;
 
 @Repository("areaDao")
 public class AreaDaoImpl implements AreaDao {

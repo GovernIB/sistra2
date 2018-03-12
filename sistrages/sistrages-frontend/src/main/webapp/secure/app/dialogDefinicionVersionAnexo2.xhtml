@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+	<h:head>
+		<title>
+			<h:outputText value="#{msg['dialogDefinicionVersionControlAcceso.titulo']}" />
+		</title>
+
+		<!-- Parametros dialogo -->
+		<f:metadata>
+			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionAnexo.modoAcceso}"/>
+			<f:viewParam name="ID" value="#{dialogDefinicionVersionAnexo.id}" />
+			<f:viewAction action="#{dialogDefinicionVersionAnexo.init}" />
+		</f:metadata>
+	</h:head>
+
+	<h:body>
+
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePresentacion" var="TypePresentacion" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeTamanyo" var="TypeTamanyo" />
+
+	<h:form id="formDialogDefinicionVersionAnexo" styleClass="h100">
+
+		<!-- Growl mensajes -->
+		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+       	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
+
+            <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexo.identificador']}" />
+          	<p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionAnexo.data.codigo}"  />
+
+
+            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionAnexo.descripcion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="descripcion" disabled="true" required="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.descripcion.getTraduccion(sessionBean.lang)}" />
+           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexo.editarDescripcion()}"
+						process="@this" update="growl"/>
+       		</p:outputPanel>
+
+         	<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad']}" />
+         	<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
+	         	<p:selectOneRadio id="obligatoriedad" value="#{dialogDefinicionVersionAnexo.data.obligatoriedad}">
+		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
+			     </p:selectOneRadio>
+
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.script()}" value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+					process="@this" update="growl"/>
+         	</p:panelGrid>
+
+        	<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.ayuda']}" />
+        	<p:outputPanel>
+	        	<p:selectOneRadio id="ayuda" value="fichero" layout="custom">
+		        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.ayuda.fichero']}" itemValue="fichero" />
+		        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.ayuda.url']}" itemValue="url" />
+		        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.ayuda.mensaje']}" itemValue="mensaje" />
+	        	</p:selectOneRadio>
+	         	<h:panelGrid columns="2" columnClasses="noPadding-left wpx100," styleClass="w100">
+
+					<p:outputPanel>
+						<p:radioButton id="fichero" for="ayuda" itemIndex="0" />
+						<p:spacer width="8" height="1"/>
+						<p:outputLabel for="fichero" value="#{msg['dialogDefinicionVersionAnexo.ayuda.fichero']}" />
+					</p:outputPanel>
+					<p:inputText id="fichero_input"  styleClass="w85" type="file"/>
+
+					<p:outputPanel>
+						<p:radioButton id="url" for="ayuda" itemIndex="1" />
+						<p:spacer width="8" height="1"/>
+						<p:outputLabel for="url" value="#{msg['dialogDefinicionVersionAnexo.ayuda.url']}" />
+					</p:outputPanel>
+					<p:inputText id="url_input"  styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.ayudaURL}" />
+
+					<p:outputPanel>
+						<p:radioButton id="mensaje" for="ayuda" itemIndex="2" />
+						<p:spacer width="8" height="1"/>
+						<p:outputLabel for="mensaje" value="#{msg['dialogDefinicionVersionAnexo.ayuda.mensaje']}" />
+					</p:outputPanel>
+					<p:outputPanel styleClass="ui-inputgroup">
+	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.ayudaTexto.getTraduccion(sessionBean.lang)}" />
+	           			<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexo.editarAyudaTexto()}"
+							process="@this" update="growl"/>
+	       			</p:outputPanel>
+
+	         	</h:panelGrid>
+			</p:outputPanel>
+
+         	<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion']}" />
+        	<p:outputPanel>
+	        	<p:selectOneRadio id="tipopresentacion" value="#{dialogDefinicionVersionAnexo.data.tipoPresentacion}" layout="custom">
+		        	     <f:selectItems value="#{TypePresentacion.ALL_VALUES}" var="tipo" itemLabel="#{msg['typePresentacion.' += tipo]}" />
+		        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial']}" itemValue="presencial" />
+	        	</p:selectOneRadio>
+	         	<h:panelGrid columns="2" columnClasses="noPadding-left wpx100 padding8," styleClass="w100">
+					<p:outputPanel>
+						<p:radioButton id="electronica" for="tipopresentacion" itemIndex="0" />
+						<p:spacer width="8" height="1"/>
+						<p:outputLabel for="fichero" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica']}" />
+					</p:outputPanel>
+					<h:panelGrid columns="2" columnClasses="wpx120" styleClass="panel_izq w100">
+						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.numinstancias']}" for="numinstancias"/>
+						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
+							<p:inputText id="numinstancias" size="3" value="#{dialogDefinicionVersionAnexo.data.numeroInstancia}" />
+							<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
+								<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
+								<p:selectOneRadio id="extensiones" value="anexarfirmado">
+						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="todas" />
+						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="personalizadas" />
+					        	</p:selectOneRadio>
+					        	<p:inputText id="personalizadas_input" size="15"/>
+						     </p:panelGrid>
+						</p:panelGrid>
+
+
+						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
+						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
+							<p:inputText id="tammaximo" size="3" value="#{dialogDefinicionVersionAnexo.data.tamanyoMaximo}"  />
+							<p:selectOneRadio id="tipotam" columns="1" value="#{dialogDefinicionVersionAnexo.data.tipoTamanyo}">
+						        	<f:selectItems value="#{TypeTamanyo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTamanyo.' += tipo]}" />
+					        </p:selectOneRadio>
+
+
+							<p:spacer width="8" height="1"/>
+							<p:selectBooleanCheckbox id="convertirpdf" value="true" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"/>
+						</p:panelGrid>
+
+						<p:spacer width="8" height="1"/>
+						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,noPadding-left">
+							<p:selectOneRadio id="firma" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}">
+					        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" itemValue="anexarfirmado" />
+					        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" itemValue="firmar" />
+						     </p:selectOneRadio>
+							<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.script()}" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+									process="@this" update="growl"/>
+						</p:panelGrid>
+
+						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.scriptvalidacion']}" />
+						<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.script()}"
+									process="@this" update="growl"/>
+
+					</h:panelGrid>
+
+
+					<p:outputPanel>
+						<p:radioButton id="presencial" for="tipopresentacion" itemIndex="1" />
+						<p:spacer width="8" height="1"/>
+						<p:outputLabel for="presencial" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial']}" />
+					</p:outputPanel>
+					<p:outputPanel>
+						<p:selectBooleanCheckbox id="compulsar" value="#{dialogDefinicionVersionAnexo.data.debeCompulsar}" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial.compulsar']}"/>
+						<p:selectBooleanCheckbox id="presentarfotocopia" value="#{dialogDefinicionVersionAnexo.data.debeFotocopiar}"  itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial.presentarfotocopia']}"/>
+					</p:outputPanel>
+	         	</h:panelGrid>
+			</p:outputPanel>
+
+
+			<f:facet name = "footer">
+				<p:outputPanel id="toolbar" styleClass="grid-right">
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
+						actionListener="#{dialogDefinicionVersionAnexo.editar()}"
+						process="@this" update="growl" />
+				</p:outputPanel>
+			</f:facet>
+
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</f:view>
+</html>

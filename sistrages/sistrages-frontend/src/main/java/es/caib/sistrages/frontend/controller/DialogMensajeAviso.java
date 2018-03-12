@@ -1,15 +1,24 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.event.SelectEvent;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import es.caib.sistrages.core.api.model.MensajeAviso;
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.types.TypeMensajeAviso;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -46,7 +55,10 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			calendar.set(Calendar.MONTH, 1);
 			data.setFechaInicio(calendar.getTime());
 			data.setActivo(true);
-			data.setDescripcion("La versió d'aquest tràmit està desactivat.");
+			final Traducciones traducciones = new Traducciones();
+			traducciones.add(new Traduccion("ca", "La versió d'aquest tràmit està desactivat."));
+			traducciones.add(new Traduccion("es", "La versión de este trámite está desactivado."));
+			data.setDescripcion(traducciones);
 			data.setTipo(TypeMensajeAviso.ORGANISMO);
 		}
 	}
@@ -88,6 +100,66 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Retorno dialogo de los botones de propiedades.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogo(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+
+				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				data.setDescripcion(traducciones);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				data.setDescripcion(traduccionesMod);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+	}
+
+	/**
+	 * Editar descripcion
+	 *
+
+	 */
+	public void editarMensaje() {
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		if (data.getDescripcion() == null) {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
+					idiomas, idiomas);
+		} else {
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+		}
 	}
 
 	/**

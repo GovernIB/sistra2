@@ -6,16 +6,16 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilJSON;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -71,49 +71,46 @@ public class DialogTraduccion extends DialogControllerBase {
 	/**
 	 * Inicialización.
 	 *
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
 	 */
-	public void init() throws JsonParseException, JsonMappingException, IOException {
-		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		// if (modo == TypeModoAcceso.ALTA && data == null) {
-		if (iData == null || iData.isEmpty()) {
-			// Borrar, sólo de prueba.
-			data = new Traducciones();
-			data.add(new Traduccion("ca", ""));
-			data.add(new Traduccion("es", ""));
-			data.add(new Traduccion("en", ""));
-		} else {
-			data = (Traducciones) UtilJSON.fromJSON(iData, Traducciones.class);
-		}
-
-		if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
-			// Si no tiene los idiomas obligatorios, damos por hecho
-			// que todos los idiomas que hay de datos son obligatorios.
-			idiomasObligatorios = data.getIdiomas();
-		} else {
-			final ObjectMapper mapper = new ObjectMapper();
-			idiomasObligatorios = mapper.readValue(iIdiomasObligatorios, List.class);
-		}
-
-		if (iIdiomasPosibles == null || iIdiomasPosibles.isEmpty()) {
-			idiomasPosibles = data.getIdiomas();
-		} else {
-			final ObjectMapper mapper = new ObjectMapper();
-			idiomasPosibles = mapper.readValue(iIdiomasPosibles, List.class);
-		}
-
-		// Si en los posibles, no está alguno de los idiomasObligatorios, hay que
-		// añadirlo
-		for (final String idiomaObligatorio : idiomasObligatorios) {
-			if (!idiomasPosibles.contains(idiomaObligatorio)) {
-				idiomasPosibles.add(idiomaObligatorio);
+	public void init() {
+		try {
+			final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+			// if (modo == TypeModoAcceso.ALTA && data == null) {
+			if (iData == null || iData.isEmpty()) {
+				// Borrar, sólo de prueba.
+				data = UtilTraducciones.getTraduccionesPorDefecto();
+			} else {
+				data = (Traducciones) UtilJSON.fromJSON(iData, Traducciones.class);
 			}
+
+			if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
+				// Si no tiene los idiomas obligatorios, damos por hecho
+				// que todos los idiomas que hay de datos son obligatorios.
+				idiomasObligatorios = data.getIdiomas();
+			} else {
+				final ObjectMapper mapper = new ObjectMapper();
+				idiomasObligatorios = mapper.readValue(iIdiomasObligatorios, List.class);
+			}
+
+			if (iIdiomasPosibles == null || iIdiomasPosibles.isEmpty()) {
+				idiomasPosibles = data.getIdiomas();
+			} else {
+				final ObjectMapper mapper = new ObjectMapper();
+				idiomasPosibles = mapper.readValue(iIdiomasPosibles, List.class);
+			}
+
+			// Si en los posibles, no está alguno de los idiomasObligatorios, hay que
+			// añadirlo
+			for (final String idiomaObligatorio : idiomasObligatorios) {
+				if (!idiomasPosibles.contains(idiomaObligatorio)) {
+					idiomasPosibles.add(idiomaObligatorio);
+				}
+			}
+
+			inicializarTextosPermisos();
+		} catch (final IOException e) {
+			throw new FrontException("Error convirtiendo traducciones desde JSON", e);
 		}
-
-		inicializarTextosPermisos();
-
 	}
 
 	/**
@@ -122,31 +119,31 @@ public class DialogTraduccion extends DialogControllerBase {
 	private void inicializarTextosPermisos() {
 		for (final String idioma : idiomasPosibles) {
 			switch (idioma) {
-			case "ca":
-				textoCa = data.getTraduccion("ca");
+			case UtilTraducciones.LANG_CATALAN:
+				textoCa = data.getTraduccion(UtilTraducciones.LANG_CATALAN);
 				visibleCa = true;
-				if (idiomasObligatorios.contains("ca")) {
+				if (idiomasObligatorios.contains(UtilTraducciones.LANG_CATALAN)) {
 					requiredCa = true;
 				}
 				break;
-			case "es":
-				textoEs = data.getTraduccion("es");
+			case UtilTraducciones.LANG_CASTELLANO:
+				textoEs = data.getTraduccion(UtilTraducciones.LANG_CASTELLANO);
 				visibleEs = true;
-				if (idiomasObligatorios.contains("es")) {
+				if (idiomasObligatorios.contains(UtilTraducciones.LANG_CASTELLANO)) {
 					requiredEs = true;
 				}
 				break;
-			case "en":
-				textoEn = data.getTraduccion("en");
+			case UtilTraducciones.LANG_INGLES:
+				textoEn = data.getTraduccion(UtilTraducciones.LANG_INGLES);
 				visibleEn = true;
-				if (idiomasObligatorios.contains("en")) {
+				if (idiomasObligatorios.contains(UtilTraducciones.LANG_INGLES)) {
 					requiredEn = true;
 				}
 				break;
-			case "de":
-				textoDe = data.getTraduccion("de");
+			case UtilTraducciones.LANG_ALEMAN:
+				textoDe = data.getTraduccion(UtilTraducciones.LANG_ALEMAN);
 				visibleDe = true;
-				if (idiomasObligatorios.contains("de")) {
+				if (idiomasObligatorios.contains(UtilTraducciones.LANG_ALEMAN)) {
 					requiredDe = true;
 				}
 				break;
@@ -162,16 +159,16 @@ public class DialogTraduccion extends DialogControllerBase {
 	public void aceptar() {
 
 		if (visibleCa) {
-			data.add(new Traduccion("ca", textoCa));
+			data.add(new Traduccion(UtilTraducciones.LANG_CATALAN, textoCa));
 		}
 		if (visibleEs) {
-			data.add(new Traduccion("es", textoEs));
+			data.add(new Traduccion(UtilTraducciones.LANG_CASTELLANO, textoEs));
 		}
 		if (visibleEn) {
-			data.add(new Traduccion("en", textoEn));
+			data.add(new Traduccion(UtilTraducciones.LANG_INGLES, textoEn));
 		}
 		if (visibleDe) {
-			data.add(new Traduccion("de", textoDe));
+			data.add(new Traduccion(UtilTraducciones.LANG_ALEMAN, textoDe));
 		}
 
 		// Retornamos resultado

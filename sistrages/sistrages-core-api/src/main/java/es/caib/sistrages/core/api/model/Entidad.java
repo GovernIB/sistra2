@@ -9,7 +9,8 @@ import java.util.List;
  * @author Indra
  *
  */
-public class Entidad {
+@SuppressWarnings("serial")
+public class Entidad extends ModelApi {
 
 	/** Código interno. */
 	private Long id;

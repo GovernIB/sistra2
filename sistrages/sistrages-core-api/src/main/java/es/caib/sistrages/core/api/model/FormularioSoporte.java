@@ -9,7 +9,8 @@ import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
  * @author Indra
  *
  */
-public class FormularioSoporte {
+@SuppressWarnings("serial")
+public class FormularioSoporte extends ModelApi {
 
 	/** Id. */
 	private Long id;

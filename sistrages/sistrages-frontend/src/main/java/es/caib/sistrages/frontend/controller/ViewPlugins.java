@@ -10,8 +10,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -103,9 +101,11 @@ public class ViewPlugins extends ViewControllerBase {
 			pluginEntidad3.setId(3l);
 			pluginEntidad3.setTipo(TypePlugin.DOMINIO_REMOTO);
 			pluginEntidad3.setClassname("es.caib.example.plugins.classPluginDominisRemots");
+			pluginEntidad3.setInstancia("ATIB");
 			final Plugin pluginEntidad4 = new Plugin();
 			pluginEntidad4.setId(4l);
 			pluginEntidad4.setTipo(TypePlugin.FIRMA);
+			pluginEntidad4.setInstancia("TPV");
 			pluginEntidad4.setClassname("es.caib.example.plugins.classPluginFirma");
 
 			final List<Propiedad> propiedadesEntidad = new ArrayList<>();
@@ -185,10 +185,8 @@ public class ViewPlugins extends ViewControllerBase {
 
 	/**
 	 * Abre dialogo para editar dato.
-	 *
-	 * @throws JsonProcessingException
 	 */
-	public void editar() throws JsonProcessingException {
+	public void editar() {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;

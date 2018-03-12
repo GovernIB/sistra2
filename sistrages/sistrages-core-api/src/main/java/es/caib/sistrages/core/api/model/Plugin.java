@@ -13,7 +13,8 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
  * @author Indra
  *
  */
-public class Plugin {
+@SuppressWarnings("serial")
+public class Plugin extends ModelApi {
 
 	/** Id. */
 	private Long id;

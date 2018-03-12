@@ -58,6 +58,15 @@
 				</p:layout>
 
 		</p:outputPanel>
+
+		<!-- Confirmacion cambios -->
+		<p:commandButton style="display: none"
+		                 widgetVar="confirmButton"
+		                 actionListener="#{viewDisenyo.confirmacionCambios}" >
+		   	<p:confirm header="Confirmation" message="Are you sure?" />
+		</p:commandButton>
+
+
 		</h:form>
 	</ui:define>
 

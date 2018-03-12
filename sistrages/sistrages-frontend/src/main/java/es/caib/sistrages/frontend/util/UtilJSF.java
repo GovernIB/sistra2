@@ -15,12 +15,7 @@ import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
-import es.caib.sistrages.frontend.controller.DialogTraduccion;
 import es.caib.sistrages.frontend.controller.SessionBean;
 import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistrages.frontend.controller.ViewDominios;
@@ -418,62 +413,12 @@ public final class UtilJSF {
 	}
 
 	/**
-	 * Abre un dialog de tipo traduccion.
+	 * Get Url Arbol definicion version
 	 *
-	 * @param modoAcceso
-	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
-	 * @param traducciones
-	 *            Dato en formato json de tipo Traducciones
-	 * @param idiomas
-	 *            La lista de idiomas que se puede introducir literal. Si no se
-	 *            introduce, se supondrán que son los que tenga traducciones.
-	 * @param idiomasObligatorios
-	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
-	 *            que son los que tenga traducciones.
-	 * @throws JsonProcessingException
+	 * @param opcion
+	 * @return
 	 */
-	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, Traducciones traducciones,
-			List<String> idiomas, List<String> idiomasObligatorios) throws JsonProcessingException {
-
-		final Map<String, String> params = new HashMap<>();
-
-		if (traducciones == null || traducciones.getIdiomas() == null || traducciones.getIdiomas().isEmpty()) {
-			traducciones = new Traducciones();
-			traducciones.add(new Traduccion("ca", ""));
-			traducciones.add(new Traduccion("es", ""));
-		}
-
-		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(traducciones));
-
-		if (idiomas == null) {
-			idiomas = traducciones.getIdiomas();
-		}
-
-		if (idiomasObligatorios == null) {
-			idiomasObligatorios = traducciones.getIdiomas();
-		}
-
-		params.put("OBLIGATORIOS", UtilJSON.toJSON(idiomasObligatorios));
-		params.put("IDIOMAS", UtilJSON.toJSON(idiomas));
-
-		/** Calculamos la altura según el nº de idiomas a mostrar. **/
-		int altura;
-		switch (idiomas.size()) {
-		case 1:
-			altura = 120;
-			break;
-		case 2:
-			altura = 200;
-			break;
-		case 3:
-			altura = 280;
-			break;
-		case 4:
-			altura = 360;
-			break;
-		default:
-			altura = 100;
-		}
-		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 460, altura);
+	public static String getUrlArbolDefinicionVersion(final String opcion, final Long id) {
+		return PATH_VIEWS + opcion + EXTENSION_XHTML; // + "?id=" + id;
 	}
 }

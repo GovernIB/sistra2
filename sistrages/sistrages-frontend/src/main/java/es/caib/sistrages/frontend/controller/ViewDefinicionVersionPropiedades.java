@@ -6,10 +6,13 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n propiedades.
@@ -31,24 +34,26 @@ public class ViewDefinicionVersionPropiedades extends ViewControllerBase {
 	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 */
-	public void editar() {
+	public void editar(final Long id) {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf("1"));
+		params.put(TypeParametroVentana.ID.toString(), id.toString());
 		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 520);
 	}
 
 	/**
 	 * Editar descripcion.
+	 *
+
 	 */
-	public void editarDescripcion() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	public void editarDescripcion(final Traducciones traducciones) {
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, traducciones, null, null);
 	}
 
 	/**
 	 * Editar Script.
 	 */
 	public void editarScript() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
 	}
 
 }

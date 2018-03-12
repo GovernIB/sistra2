@@ -1,7 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.io.IOException;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -33,10 +31,8 @@ public class DialogFormularioExterno extends DialogControllerBase {
 
 	/**
 	 * Inicialización.
-	 *
-	 * @throws IOException
 	 */
-	public void init() throws IOException {
+	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FormularioExterno();

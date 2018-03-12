@@ -8,6 +8,7 @@ import javax.faces.bean.ViewScoped;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.types.TypeRolPermiso;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -44,6 +45,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		} else {
 			data = new Rol();// entidadService.load(id);
 			data.setId(1l);
+			data.setTipo(TypeRolPermiso.ROL);
 			data.setCodigo("STR_SALUT_DEV");
 			data.setDescripcion("Rol de desenvolupament per tràmits de salut");
 			data.setAlta(true);

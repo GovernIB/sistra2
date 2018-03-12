@@ -7,41 +7,47 @@
 			<img class="editable" src="http://www.caib.es/govern/imgs/svg/logo.svg" width="40" height="40" />
 			<h2><b>Sol-licitud de beques educatives</b></h2>
 		</div>
-		<div>
+		<div >
 			<div>
 				<h2 style="color:red">Dades de la persona interessada</h2>
 				<label>NIF/NIE/PASSPORT</label>
-				<input id="inputNIF" class="editable" type="text" value="" data-type="dni" />
+				<input id="1" name="inputNIF" class="editable" type="text" value="" data-type="dni" />
 
 				<label>Nom</label>
-				<input id="inputNom" class="editable" type="text" value="" data-type="text" />
+				<input id="2" name="inputNom" class="editable" type="text" value="" data-type="text" />
 
 				<label>Primer llinatge</label>
-				<input id="inputApellido" class="editable" type="text" value="" data-type="text"  />
+				<input id="3" name="inputApellido" class="editable" type="text" value="" data-type="text"  />
 			</div>
 			<div>
 				<label>Email</label>
-				<input id="inputEmail" class="editable" type="text" value="" data-type="email"  />
+				<input id="4" name="inputEmail" class="editable" type="text" value="" data-type="email"  />
 
 				<label >Seleccionar pregunta</label>
-				<select id="idSelect" class="editable"></select>
+				<select id="5" name="idSelect" class="editable"></select>
+			</div>
+			<div>
+				<label>Mas</label>
 			</div>
 
 		</div>
 
 		<script type="text/javascript">
 			 //<![CDATA[
-			function rcEditarArea(tag,id) {
-				top.document.getElementById("form:tagname").value = tag.toLowerCase();
-				top.document.getElementById("form:nodeId").value = id;
-				top.document.getElementById("form:btnEditar").click();
+			function rcEditarArea(/*tag,*/ id) {
+				/*
+				parent.document.getElementById("dialogDominioForm:tagname").value = tag.toLowerCase();
+				parent.document.getElementById("dialogDominioForm:nodeId").value = id;
+				*/
+
+				parent.seleccionarElementoCommand([{name:'id', value:id}]);
 		    }
 
 	     	var elementos = document.getElementsByClassName("editable");
 
 	     	for(var i = 0 ; i < elementos.length; i++) {
 	     		var element = elementos[i];
-	     		element.addEventListener("click", function(event){ rcEditarArea (event.target.tagName, event.target.id); });
+	     		element.addEventListener("click", function(event){ rcEditarArea (/*event.target.tagName,*/ event.target.id); });
 			}
    		 	//]]>
     </script>
