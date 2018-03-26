@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.ejb;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
@@ -18,15 +17,8 @@ public class EjemploServiceBean implements EjemploService {
 	EjemploService ejemploService;
 
 	@Override
-	@RolesAllowed("STR2_TEST")
 	public EjemploDto recuperaDato() {
-		return ejemploService.recuperaDato("EJB");
-	}
-
-	@Override
-	@RolesAllowed("STR2_TEST")
-	public EjemploDto recuperaDato(String origen) {
-		return ejemploService.recuperaDato(origen);
+		return ejemploService.recuperaDato();
 	}
 
 }

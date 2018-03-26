@@ -48,37 +48,9 @@ public enum TypeAmbito {
 		return respuesta;
 	}
 
-	/**
-	 * Obtiene enum desde string.
-	 *
-	 * @param text
-	 *            string
-	 * @return TypeSiNo
-	 */
-	public static String toString(final TypeAmbito ambito) {
-		String respuesta = null;
-		if (ambito != null) {
-			respuesta = ambito.ambito;
-		}
-		return respuesta;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return ambito;
 	}
 
-	/**
-	 * Label para los selectItems.
-	 *
-	 * @return
-	 */
-	public String getLabel() {
-		return "ambito." + this.ambito;
-	}
 }

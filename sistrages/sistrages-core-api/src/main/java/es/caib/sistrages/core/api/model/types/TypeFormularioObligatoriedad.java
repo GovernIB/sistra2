@@ -21,32 +21,12 @@ public enum TypeFormularioObligatoriedad {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public static String fromEnum(final TypeFormularioObligatoriedad tipo) {
-		return tipo.valor;
-	}
-
-	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum() {
-		return this.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypeFormularioObligatoriedad toEnum(final String text) {
+	public static TypeFormularioObligatoriedad fromString(final String text) {
 		TypeFormularioObligatoriedad respuesta = null;
 		if (text != null) {
 			for (final TypeFormularioObligatoriedad b : TypeFormularioObligatoriedad.values()) {
@@ -59,11 +39,6 @@ public enum TypeFormularioObligatoriedad {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

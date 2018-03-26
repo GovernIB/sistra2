@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
@@ -70,7 +70,7 @@ public class ViewDefinicionVersionAnexo extends ViewControllerBase {
 
 			case ALTA:
 
-				final Traducciones traduccion = (Traducciones) respuesta.getResult();
+				final Literal traduccion = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccion);
 
 				// Mensaje
@@ -80,7 +80,7 @@ public class ViewDefinicionVersionAnexo extends ViewControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionMod = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccionMod);
 
 				// Mensaje
@@ -106,14 +106,14 @@ public class ViewDefinicionVersionAnexo extends ViewControllerBase {
 		data = new Documento();
 		data.setId(1L);
 		data.setCodigo("Anexo1");
-		final Traducciones tradDesc = new Traducciones();
+		final Literal tradDesc = new Literal();
 		tradDesc.add(new Traduccion("ca", "Descripció"));
 		tradDesc.add(new Traduccion("es", "Descripción"));
 		data.setDescripcion(tradDesc);
 		data.setObligatoriedad(TypeFormularioObligatoriedad.DEPENDIENTE);
 		data.setAyudaFichero(new Fichero(1l, ""));
 		data.setAyudaURL("http://www.caib.es");
-		final Traducciones ayudaTexto = new Traducciones();
+		final Literal ayudaTexto = new Literal();
 		ayudaTexto.add(new Traduccion("ca", "Texte ajuda"));
 		ayudaTexto.add(new Traduccion("es", "Texto ayuda"));
 		data.setAyudaTexto(ayudaTexto);

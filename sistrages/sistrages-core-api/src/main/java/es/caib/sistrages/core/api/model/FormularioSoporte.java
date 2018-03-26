@@ -19,10 +19,10 @@ public class FormularioSoporte extends ModelApi {
 	private Entidad entidad;
 
 	/** Literal tipo de incidencia. */
-	private Traducciones tipoIncidencia;
+	private Literal tipoIncidencia;
 
 	/** Literal descripción tipo de incidencia. */
-	private Traducciones descripcion;
+	private Literal descripcion;
 
 	/** Tipo destinatario, tipo enum. **/
 	private TypeFormularioSoporte destinatario;
@@ -82,7 +82,7 @@ public class FormularioSoporte extends ModelApi {
 	/**
 	 * @return the tipoIncidencia
 	 */
-	public Traducciones getTipoIncidencia() {
+	public Literal getTipoIncidencia() {
 		return tipoIncidencia;
 	}
 
@@ -90,14 +90,14 @@ public class FormularioSoporte extends ModelApi {
 	 * @param tipoIncidencia
 	 *            the tipoIncidencia to set
 	 */
-	public void setTipoIncidencia(final Traducciones tipoIncidencia) {
+	public void setTipoIncidencia(final Literal tipoIncidencia) {
 		this.tipoIncidencia = tipoIncidencia;
 	}
 
 	/**
 	 * @return the descripcion
 	 */
-	public Traducciones getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -105,7 +105,7 @@ public class FormularioSoporte extends ModelApi {
 	 * @param descripcion
 	 *            the descripcion to set
 	 */
-	public void setDescripcion(final Traducciones descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 

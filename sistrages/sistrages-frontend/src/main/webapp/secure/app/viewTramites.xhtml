@@ -44,13 +44,13 @@
 		           	</f:facet>
 		           	<f:facet name="right">
 		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea()}" process="@this" update="growl">
-			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
 			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea()}" process="@this" update="growl dataTableTramites">
-			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
 			        		<p:menuButton value="Más..">
-	        					<p:menuitem id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea()}" process="@this" update="growl "/>
+	        					<p:menuitem id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea()}" process="@this" update="growl arbolArea" />
 					        	<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea()}" process="@this" update="growl "/>
 					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuente']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea()}" process="@this" update="growl "/>
 	    					</p:menuButton>
@@ -61,7 +61,7 @@
 						selection="#{viewTramites.areaSeleccionada}"
 						selectionMode="single">
 				        <p:treeNode>
-				            <h:outputText value="#{area.descripcion}" />
+				            <h:outputText value="#{area.codigo}" />
 				        </p:treeNode>
 
 
@@ -87,10 +87,10 @@
 					</f:facet>
 			        <f:facet name="right">
 							<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaTramite()}" process="@this" update="growl">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl"/>
 			        		</p:commandButton>
 			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite()}" process="@this" update="growl">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogo}" update="growl"/>
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl"/>
 			        		</p:commandButton>
 			        		<p:commandButton id="btnEliminarTramite" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite()}" process="@this" update="growl"/>
 			        		<p:commandButton id="btnVersionesTramite" value="#{msg['viewTramites.botones.versiones']}" icon="fa fa-level-down" actionListener="#{viewTramites.versionesTramite()}" process="@this" update="growl"/>

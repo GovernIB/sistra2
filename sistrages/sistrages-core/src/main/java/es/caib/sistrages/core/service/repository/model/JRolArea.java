@@ -16,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_ROLARE")
-public class JRolArea implements java.io.Serializable {
+public class JRolArea implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class JRolArea implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_ROLARE_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_ROLARE_SEQ", sequenceName = "STG_ROLARE_SEQ")
 	@Column(name = "RLA_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "RLA_CODARE", nullable = false)
@@ -57,11 +57,11 @@ public class JRolArea implements java.io.Serializable {
 	public JRolArea() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

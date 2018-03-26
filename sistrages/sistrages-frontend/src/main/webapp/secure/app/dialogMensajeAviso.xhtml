@@ -8,17 +8,18 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeMensajeAviso" var="TypeMensajeAviso"/>
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAvisoEntidad" var="TypeAvisoEntidad"/>
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogMensajeAviso.titulo']}"/></title>
-
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
+	<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+	<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
 </h:head>
 
 <h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -26,6 +27,7 @@
 		<f:viewParam name="ID" value="#{dialogMensajeAviso.id}"/>
 		<f:viewAction action="#{dialogMensajeAviso.init}" />
 	</f:metadata>
+
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
@@ -36,7 +38,7 @@
 
 					<p:outputLabel for="mensaje" value="#{msg['dialogMensajeAviso.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="mensaje" value="#{dialogMensajeAviso.data.descripcion.getTraduccion(sessionBean.lang)}" required="true" size="40" disabled="true" style="margin-right:10px" />
+						<p:inputText id="mensaje" value="#{dialogMensajeAviso.data.mensaje!=null?dialogMensajeAviso.data.mensaje.getTraduccion(sessionBean.lang):''}" disabled="true" required="true" size="40"  style="margin-right:10px" />
 						<p:commandButton id="btnMensaje" icon="fa fa-language" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" >
 	            			<p:ajax event="dialogReturn" listener="#{dialogMensajeAviso.returnDialogo}" update="growlDialog mensaje" />
 	        			</p:commandButton>
@@ -44,17 +46,17 @@
 
 					<p:outputLabel for="tipo" value="#{msg['dialogMensajeAviso.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true">
-					    <f:selectItems value="#{TypeMensajeAviso.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeMensajeAviso.' += tipo]}" />
+					    <f:selectItems value="#{TypeAvisoEntidad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeMensajeAviso.' += tipo]}" />
 					</p:selectOneMenu>
 
-					<p:outputLabel for="activo" value="#{msg['dialogMensajeAviso.headerActivo']}" />
-					<p:selectBooleanCheckbox id="activo" value="#{dialogMensajeAviso.data.activo}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="40" />
+					<p:outputLabel for="activo" value="#{msg['dialogMensajeAviso.headerBloqueado']}" />
+					<p:selectBooleanCheckbox id="activo" value="#{dialogMensajeAviso.data.bloqueado}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="40" />
 
 					<p:outputLabel for="fechaInicio" value="#{msg['dialogMensajeAviso.headerFechaInicio']}" />
-					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="40" />
+					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="8" locale="#{sessionBean.locale}"/>
 
 					<p:outputLabel for="fechaFin" value="#{msg['dialogMensajeAviso.headerFechaFin']}" />
-					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="40" />
+					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="8" locale="#{sessionBean.locale}"/>
 
 				</h:panelGrid>
 				<h:outputScript >

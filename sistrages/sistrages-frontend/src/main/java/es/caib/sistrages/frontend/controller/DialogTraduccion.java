@@ -9,12 +9,13 @@ import javax.faces.bean.ViewScoped;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilJSON;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
@@ -56,7 +57,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	private String iIdiomasPosibles;
 
 	/** Parametro de entrada. **/
-	private Traducciones data;
+	private Literal data;
 	/**
 	 * Lista de idiomas obligatorios opcional (en caso de no pasarlo, todos son
 	 * obligatorios.
@@ -80,7 +81,7 @@ public class DialogTraduccion extends DialogControllerBase {
 				// Borrar, sólo de prueba.
 				data = UtilTraducciones.getTraduccionesPorDefecto();
 			} else {
-				data = (Traducciones) UtilJSON.fromJSON(iData, Traducciones.class);
+				data = (Literal) UtilJSON.fromJSON(iData, Literal.class);
 			}
 
 			if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
@@ -118,32 +119,35 @@ public class DialogTraduccion extends DialogControllerBase {
 	 */
 	private void inicializarTextosPermisos() {
 		for (final String idioma : idiomasPosibles) {
-			switch (idioma) {
-			case UtilTraducciones.LANG_CATALAN:
-				textoCa = data.getTraduccion(UtilTraducciones.LANG_CATALAN);
+
+			final TypeIdioma idiomaType = TypeIdioma.fromString(idioma);
+
+			switch (idiomaType) {
+			case CATALAN:
+				textoCa = data.getTraduccion(idioma);
 				visibleCa = true;
-				if (idiomasObligatorios.contains(UtilTraducciones.LANG_CATALAN)) {
+				if (idiomasObligatorios.contains(idioma)) {
 					requiredCa = true;
 				}
 				break;
-			case UtilTraducciones.LANG_CASTELLANO:
-				textoEs = data.getTraduccion(UtilTraducciones.LANG_CASTELLANO);
+			case CASTELLANO:
+				textoEs = data.getTraduccion(idioma);
 				visibleEs = true;
-				if (idiomasObligatorios.contains(UtilTraducciones.LANG_CASTELLANO)) {
+				if (idiomasObligatorios.contains(idioma)) {
 					requiredEs = true;
 				}
 				break;
-			case UtilTraducciones.LANG_INGLES:
-				textoEn = data.getTraduccion(UtilTraducciones.LANG_INGLES);
+			case INGLES:
+				textoEn = data.getTraduccion(idioma);
 				visibleEn = true;
-				if (idiomasObligatorios.contains(UtilTraducciones.LANG_INGLES)) {
+				if (idiomasObligatorios.contains(idioma)) {
 					requiredEn = true;
 				}
 				break;
-			case UtilTraducciones.LANG_ALEMAN:
-				textoDe = data.getTraduccion(UtilTraducciones.LANG_ALEMAN);
+			case ALEMAN:
+				textoDe = data.getTraduccion(idioma);
 				visibleDe = true;
-				if (idiomasObligatorios.contains(UtilTraducciones.LANG_ALEMAN)) {
+				if (idiomasObligatorios.contains(idioma)) {
 					requiredDe = true;
 				}
 				break;
@@ -159,16 +163,16 @@ public class DialogTraduccion extends DialogControllerBase {
 	public void aceptar() {
 
 		if (visibleCa) {
-			data.add(new Traduccion(UtilTraducciones.LANG_CATALAN, textoCa));
+			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 		}
 		if (visibleEs) {
-			data.add(new Traduccion(UtilTraducciones.LANG_CASTELLANO, textoEs));
+			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 		}
 		if (visibleEn) {
-			data.add(new Traduccion(UtilTraducciones.LANG_INGLES, textoEn));
+			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 		}
 		if (visibleDe) {
-			data.add(new Traduccion(UtilTraducciones.LANG_ALEMAN, textoDe));
+			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 		}
 
 		// Retornamos resultado

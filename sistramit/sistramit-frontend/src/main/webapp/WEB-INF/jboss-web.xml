@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jboss-web>
+	<!-- TODO: Quitar, no ira contra seycon
 	<security-domain>seycon</security-domain>
+	-->
 </jboss-web>
+
+

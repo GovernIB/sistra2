@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_CAMFUE", uniqueConstraints = @UniqueConstraint(columnNames = { "CFU_CODFUE", "CFU_IDENT" }))
-public class JCampoFuenteDatos implements java.io.Serializable {
+public class JCampoFuenteDatos implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class JCampoFuenteDatos implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_CAMFUE_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_CAMFUE_SEQ", sequenceName = "STG_CAMFUE_SEQ")
 	@Column(name = "CFU_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CFU_CODFUE", nullable = false)
@@ -47,11 +47,11 @@ public class JCampoFuenteDatos implements java.io.Serializable {
 	public JCampoFuenteDatos() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

@@ -23,32 +23,12 @@ public enum TypePresentacion {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public static String fromEnum(final TypePresentacion tipo) {
-		return tipo.valor;
-	}
-
-	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum() {
-		return this.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypePresentacion toEnum(final String text) {
+	public static TypePresentacion fromString(final String text) {
 		TypePresentacion respuesta = null;
 		if (text != null) {
 			for (final TypePresentacion b : TypePresentacion.values()) {
@@ -61,11 +41,6 @@ public enum TypePresentacion {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

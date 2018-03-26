@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_TRAMIT", uniqueConstraints = @UniqueConstraint(columnNames = "TRM_IDENTI"))
-public class JTramite implements java.io.Serializable {
+public class JTramite implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class JTramite implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_TRAMIT_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_TRAMIT_SEQ", sequenceName = "STG_TRAMIT_SEQ")
 	@Column(name = "TRM_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TRM_CODARE", nullable = false)
@@ -47,11 +47,11 @@ public class JTramite implements java.io.Serializable {
 	public JTramite() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

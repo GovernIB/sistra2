@@ -22,7 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORTRA")
-public class JFormularioTramite implements java.io.Serializable {
+public class JFormularioTramite implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,7 +30,7 @@ public class JFormularioTramite implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FORTRA_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FORTRA_SEQ", sequenceName = "STG_FORTRA_SEQ")
 	@Column(name = "FTR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FTR_CODFOR")
@@ -62,7 +62,7 @@ public class JFormularioTramite implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FTR_DESCRIP", nullable = false)
-	private JLiterales descripcion;
+	private JLiteral descripcion;
 
 	@Column(name = "FTR_IDENTI", nullable = false, length = 20)
 	private String identificador;
@@ -100,11 +100,11 @@ public class JFormularioTramite implements java.io.Serializable {
 	public JFormularioTramite() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -164,11 +164,11 @@ public class JFormularioTramite implements java.io.Serializable {
 		this.scriptObligatoriedad = scriptObligatoriedad;
 	}
 
-	public JLiterales getDescripcion() {
+	public JLiteral getDescripcion() {
 		return this.descripcion;
 	}
 
-	public void setDescripcion(final JLiterales descripcion) {
+	public void setDescripcion(final JLiteral descripcion) {
 		this.descripcion = descripcion;
 	}
 

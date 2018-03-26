@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORELE")
-public class JElementoFormulario implements java.io.Serializable {
+public class JElementoFormulario implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class JElementoFormulario implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FORELE_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FORELE_SEQ", sequenceName = "STG_FORELE_SEQ")
 	@Column(name = "FEL_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FEL_CODFLS", nullable = false)
@@ -34,11 +34,11 @@ public class JElementoFormulario implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FEL_AYUDA")
-	private JLiterales ayuda;
+	private JLiteral ayuda;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FEL_TEXTO")
-	private JLiterales texto;
+	private JLiteral texto;
 
 	@Column(name = "FEL_IDENTI", nullable = false, length = 50)
 	private String identificador;
@@ -82,11 +82,11 @@ public class JElementoFormulario implements java.io.Serializable {
 	public JElementoFormulario() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -98,19 +98,19 @@ public class JElementoFormulario implements java.io.Serializable {
 		this.lineaSeccionFormulario = lineaSeccionFormulario;
 	}
 
-	public JLiterales getAyuda() {
+	public JLiteral getAyuda() {
 		return this.ayuda;
 	}
 
-	public void setAyuda(final JLiterales ayuda) {
+	public void setAyuda(final JLiteral ayuda) {
 		this.ayuda = ayuda;
 	}
 
-	public JLiterales getTexto() {
+	public JLiteral getTexto() {
 		return this.texto;
 	}
 
-	public void setTexto(final JLiterales texto) {
+	public void setTexto(final JLiteral texto) {
 		this.texto = texto;
 	}
 

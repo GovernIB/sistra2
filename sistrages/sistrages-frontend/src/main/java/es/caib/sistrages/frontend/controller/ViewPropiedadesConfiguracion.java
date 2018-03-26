@@ -1,16 +1,17 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.PropiedadConfiguracion;
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -27,36 +28,8 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
-	/**
-	 * Inicializacion.
-	 */
-	public void init() {
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
-		final PropiedadConfiguracion propiedadConfiguracion1 = new PropiedadConfiguracion();
-		propiedadConfiguracion1.setCodigo("es.caib.sistra2.propietat1");
-		propiedadConfiguracion1.setDescripcion("PropiedadConfiguracion 1 descripcion");
-		propiedadConfiguracion1.setValor("http://www.caib.es");
-		final PropiedadConfiguracion propiedadConfiguracion2 = new PropiedadConfiguracion();
-		propiedadConfiguracion2.setCodigo("es.caib.sistra2.propietat2");
-		propiedadConfiguracion2.setDescripcion("PropiedadConfiguracion 2 descripcion");
-		propiedadConfiguracion2.setValor("localhost");
-		final PropiedadConfiguracion propiedadConfiguracion3 = new PropiedadConfiguracion();
-		propiedadConfiguracion3.setCodigo("es.caib.sistra2.propietat3");
-		propiedadConfiguracion3.setDescripcion("PropiedadConfiguracion 3 descripcion");
-		propiedadConfiguracion3.setValor("340");
-		final PropiedadConfiguracion propiedadConfiguracion4 = new PropiedadConfiguracion();
-		propiedadConfiguracion4.setCodigo("es.caib.sistra2.propietat4");
-		propiedadConfiguracion4.setDescripcion("PropiedadConfiguracion 4 descripcion");
-		propiedadConfiguracion4.setValor("usuario");
-
-		listaDatos = new ArrayList<>();
-		listaDatos.add(propiedadConfiguracion1);
-		listaDatos.add(propiedadConfiguracion2);
-		listaDatos.add(propiedadConfiguracion3);
-		listaDatos.add(propiedadConfiguracion4);
-
-	}
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/**
 	 * Filtro (puede venir por parametro).
@@ -66,23 +39,33 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<PropiedadConfiguracion> listaDatos;
+	private List<ConfiguracionGlobal> listaDatos;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private PropiedadConfiguracion datoSeleccionado;
+	private ConfiguracionGlobal datoSeleccionado;
+
+	/**
+	 * Inicializacion.
+	 */
+	public void init() {
+
+		// Verificamos acceso
+		UtilJSF.verificarAccesoSuperAdministrador();
+
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
+		buscar();
+	}
 
 	/**
 	 * Recuperacion de datos.
 	 */
 	public void filtrar() {
-
-		if (filtro == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.filtronorelleno"));
-			return;
-		}
-
+		// Normaliza filtro
+		filtro = normalizarFiltro(filtro);
+		// Buscar
 		buscar();
 	}
 
@@ -90,31 +73,17 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * El autentico buscador.
 	 */
 	private void buscar() {
-		if (this.filtro == null) {
-			return;
-		}
-
 		// Filtra
-		final List<PropiedadConfiguracion> propiedadConfiguracionesFiltradas = new ArrayList<>();
-		for (final PropiedadConfiguracion propiedadConfiguracion : this.listaDatos) {
-			if (propiedadConfiguracion.getDescripcion() != null
-					&& propiedadConfiguracion.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				propiedadConfiguracionesFiltradas.add(propiedadConfiguracion);
-			}
-		}
-
-		this.listaDatos = propiedadConfiguracionesFiltradas;
+		listaDatos = configuracionGlobalService.listConfiguracionGlobal(filtro.toLowerCase());
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
-		// Muestra mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.filtro.ok"));
 	}
 
 	/**
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.ALTA, null, true, 540, 150);
+		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.ALTA, null, true, 550, 250);
 	}
 
 	/**
@@ -127,8 +96,8 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.EDICION, params, true, 540, 150);
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.EDICION, params, true, 550, 250);
 	}
 
 	/**
@@ -139,7 +108,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		listaDatos.remove(this.datoSeleccionado);
+		configuracionGlobalService.removeConfiguracionGlobal(datoSeleccionado.getId());
 		// Refrescamos datos
 		buscar();
 		// Mostramos mensaje
@@ -170,12 +139,20 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		final String message = null;
-
-		// Mostramos mensaje
-		if (message != null) {
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			// Refrescamos datos
+			buscar();
 		}
+
 	}
 
 	/**
@@ -196,7 +173,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<PropiedadConfiguracion> getListaDatos() {
+	public List<ConfiguracionGlobal> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -204,14 +181,14 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<PropiedadConfiguracion> listaDatos) {
+	public void setListaDatos(final List<ConfiguracionGlobal> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public PropiedadConfiguracion getDatoSeleccionado() {
+	public ConfiguracionGlobal getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -219,7 +196,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final PropiedadConfiguracion datoSeleccionado) {
+	public void setDatoSeleccionado(final ConfiguracionGlobal datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

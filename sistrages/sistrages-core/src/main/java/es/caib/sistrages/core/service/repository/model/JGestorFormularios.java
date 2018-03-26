@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_GESFOR", uniqueConstraints = @UniqueConstraint(columnNames = "GFE_IDENTI"))
-public class JGestorFormularios implements java.io.Serializable {
+public class JGestorFormularios implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,11 +29,11 @@ public class JGestorFormularios implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_GESFOR_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_GESFOR_SEQ", sequenceName = "STG_GESFOR_SEQ")
 	@Column(name = "GFE_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "GFE_CODENT", nullable = false)
-	private JEntidades entidad;
+	private JEntidad entidad;
 
 	@Column(name = "GFE_IDENTI", unique = true, nullable = false, length = 20)
 	private String identificador;
@@ -50,19 +50,19 @@ public class JGestorFormularios implements java.io.Serializable {
 	public JGestorFormularios() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
-	public JEntidades getEntidad() {
+	public JEntidad getEntidad() {
 		return this.entidad;
 	}
 
-	public void setEntidad(final JEntidades entidad) {
+	public void setEntidad(final JEntidad entidad) {
 		this.entidad = entidad;
 	}
 

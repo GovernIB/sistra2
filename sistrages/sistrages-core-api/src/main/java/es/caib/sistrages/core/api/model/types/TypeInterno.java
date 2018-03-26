@@ -19,32 +19,12 @@ public enum TypeInterno {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public static String fromEnum(final TypeInterno tipo) {
-		return tipo.valor;
-	}
-
-	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum() {
-		return this.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypeInterno toEnum(final String text) {
+	public static TypeInterno fromString(final String text) {
 		TypeInterno respuesta = null;
 		if (text != null) {
 			for (final TypeInterno b : TypeInterno.values()) {
@@ -57,11 +37,6 @@ public enum TypeInterno {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

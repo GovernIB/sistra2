@@ -10,6 +10,14 @@ import es.caib.sistrages.core.api.model.Area;
  */
 public interface AreaComponent {
 
-	void add(Area area);
+	/**
+	 * Añade area a entidad.
+	 * 
+	 * @param idEntidad
+	 *            Id entidad
+	 * @param area
+	 *            Datos area
+	 */
+	void add(final Long idEntidad, Area area);
 
 }

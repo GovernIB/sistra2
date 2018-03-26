@@ -18,7 +18,7 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.FormularioDisenyo;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -50,7 +50,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private ComponenteFormulario componentEdit;
 
 	/** Traducciones editado (cuando se llama a editar traducciones). */
-	private Traducciones traduccionesEdit;
+	private Literal traduccionesEdit;
 
 	/** Url ventana propiedades **/
 	private String panelPropiedadesUrl;
@@ -274,7 +274,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			final DialogResult respuesta = (DialogResult) event.getObject();
 			// Solo tiene sentido cambios para edicion
 			if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				BeanUtils.copyProperties(traduccionesEdit, traduccionesMod);
 			}
 		} catch (IllegalAccessException | InvocationTargetException e) {
@@ -433,11 +433,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		this.detalleComponenteUrl = detalleComponenteUrl;
 	}
 
-	public Traducciones getTraduccionesEdit() {
+	public Literal getTraduccionesEdit() {
 		return traduccionesEdit;
 	}
 
-	public void setTraduccionesEdit(final Traducciones traduccionesEdit) {
+	public void setTraduccionesEdit(final Literal traduccionesEdit) {
 		this.traduccionesEdit = traduccionesEdit;
 	}
 }

@@ -11,12 +11,12 @@ package es.caib.sistrages.core.api.model;
 public class TramitePasoDebeSaber extends TramitePaso {
 
 	/** Instrucciones iniciales. **/
-	private Traducciones instruccionesIniciales;
+	private Literal instruccionesIniciales;
 
 	/**
 	 * @return the instruccionesInciales
 	 */
-	public Traducciones getInstruccionesIniciales() {
+	public Literal getInstruccionesIniciales() {
 		return instruccionesIniciales;
 	}
 
@@ -24,7 +24,7 @@ public class TramitePasoDebeSaber extends TramitePaso {
 	 * @param instruccionesInciales
 	 *            the instruccionesInciales to set
 	 */
-	public void setInstruccionesIniciales(final Traducciones instruccionesIniciales) {
+	public void setInstruccionesIniciales(final Literal instruccionesIniciales) {
 		this.instruccionesIniciales = instruccionesIniciales;
 	}
 }

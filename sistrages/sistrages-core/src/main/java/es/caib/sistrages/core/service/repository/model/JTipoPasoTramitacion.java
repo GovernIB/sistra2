@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_TIPPTR", uniqueConstraints = @UniqueConstraint(columnNames = "TIP_PASO"))
-public class JTipoPasoTramitacion implements java.io.Serializable {
+public class JTipoPasoTramitacion implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,11 +29,11 @@ public class JTipoPasoTramitacion implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_TIPPTR_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_TIPPTR_SEQ", sequenceName = "STG_TIPPTR_SEQ")
 	@Column(name = "TIP_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TIP_DESCOR", nullable = false)
-	private JLiterales descripcionCorta;
+	private JLiteral descripcionCorta;
 
 	@Column(name = "TIP_PASO", unique = true, nullable = false, length = 20)
 	private String tipoPaso;
@@ -47,19 +47,19 @@ public class JTipoPasoTramitacion implements java.io.Serializable {
 	public JTipoPasoTramitacion() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
-	public JLiterales getDescripcionCorta() {
+	public JLiteral getDescripcionCorta() {
 		return this.descripcionCorta;
 	}
 
-	public void setDescripcionCorta(final JLiterales descripcionCorta) {
+	public void setDescripcionCorta(final JLiteral descripcionCorta) {
 		this.descripcionCorta = descripcionCorta;
 	}
 

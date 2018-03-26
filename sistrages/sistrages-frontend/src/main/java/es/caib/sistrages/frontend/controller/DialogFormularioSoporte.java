@@ -10,13 +10,13 @@ import org.primefaces.event.SelectEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import es.caib.sistrages.core.api.model.FormularioSoporte;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilJSON;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
@@ -60,7 +60,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
 
 				// Mensaje
@@ -70,7 +70,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccionesMod);
 
 				// Mensaje
@@ -105,7 +105,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setTipoIncidencia(traducciones);
 
 				// Mensaje
@@ -115,7 +115,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesTipoIncid = (Traducciones) respuesta.getResult();
+				final Literal traduccionesTipoIncid = (Literal) respuesta.getResult();
 				data.setTipoIncidencia(traduccionesTipoIncid);
 
 				// Mensaje

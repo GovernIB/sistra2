@@ -9,10 +9,10 @@ import javax.faces.bean.ViewScoped;
 import es.caib.sistrages.core.api.model.FuenteCampo;
 import es.caib.sistrages.core.api.model.FuenteDato;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped

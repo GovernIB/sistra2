@@ -28,10 +28,10 @@ public abstract class ComponenteFormulario extends ModelApi {
 	private int columnas = 1;
 
 	/** Literal texto componente. */
-	private Traducciones texto;
+	private Literal texto;
 
 	/** Literal ayuda componente. */
-	private Traducciones ayuda;
+	private Literal ayuda;
 
 	/** Indica si se muestra texto componente. */
 	private boolean mostrarTexto = true;
@@ -79,19 +79,19 @@ public abstract class ComponenteFormulario extends ModelApi {
 		this.columnas = columnas;
 	}
 
-	public Traducciones getTexto() {
+	public Literal getTexto() {
 		return texto;
 	}
 
-	public void setTexto(final Traducciones texto) {
+	public void setTexto(final Literal texto) {
 		this.texto = texto;
 	}
 
-	public Traducciones getAyuda() {
+	public Literal getAyuda() {
 		return ayuda;
 	}
 
-	public void setAyuda(final Traducciones ayuda) {
+	public void setAyuda(final Literal ayuda) {
 		this.ayuda = ayuda;
 	}
 

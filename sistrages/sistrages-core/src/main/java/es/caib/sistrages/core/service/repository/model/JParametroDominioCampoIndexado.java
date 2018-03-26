@@ -16,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_PRDCIN")
-public class JParametroDominioCampoIndexado implements java.io.Serializable {
+public class JParametroDominioCampoIndexado implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class JParametroDominioCampoIndexado implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_PRDCIN_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_PRDCIN_SEQ", sequenceName = "STG_PRDCIN_SEQ")
 	@Column(name = "CIP_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CIP_CODCIN", nullable = false)
@@ -42,11 +42,11 @@ public class JParametroDominioCampoIndexado implements java.io.Serializable {
 	public JParametroDominioCampoIndexado() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

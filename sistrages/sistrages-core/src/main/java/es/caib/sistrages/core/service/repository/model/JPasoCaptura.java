@@ -15,13 +15,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_PASCAP")
-public class JPasoCaptura implements java.io.Serializable {
+public class JPasoCaptura implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "PCA_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PCA_CODFOR")
@@ -35,11 +35,11 @@ public class JPasoCaptura implements java.io.Serializable {
 	public JPasoCaptura() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

@@ -15,11 +15,6 @@ public class Traduccion extends ModelApi {
 	private Long id;
 
 	/**
-	 * idTraduccion.
-	 */
-	private Long idTraduccion;
-
-	/**
 	 * idioma.
 	 */
 	private String idioma;
@@ -29,12 +24,8 @@ public class Traduccion extends ModelApi {
 	 */
 	private String literal;
 
-	/** Constructor vacio. **/
+	/** Constructor. **/
 	public Traduccion() {
-		id = null;
-		idTraduccion = null;
-		idioma = null;
-		literal = null;
 	}
 
 	/**
@@ -105,25 +96,6 @@ public class Traduccion extends ModelApi {
 	 */
 	public void setLiteral(final String literal) {
 		this.literal = literal;
-	}
-
-	/**
-	 * Obtiene el valor de idTraduccion.
-	 *
-	 * @return el valor de idTraduccion
-	 */
-	public Long getIdTraduccion() {
-		return idTraduccion;
-	}
-
-	/**
-	 * Establece el valor de idTraduccion.
-	 *
-	 * @param idTraduccion
-	 *            el nuevo valor de idTraduccion
-	 */
-	public void setIdTraduccion(final Long idTraduccion) {
-		this.idTraduccion = idTraduccion;
 	}
 
 }

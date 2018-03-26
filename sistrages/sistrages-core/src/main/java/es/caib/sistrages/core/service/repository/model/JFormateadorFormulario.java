@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORFMT")
-public class JFormateadorFormulario implements java.io.Serializable {
+public class JFormateadorFormulario implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class JFormateadorFormulario implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FORFMT_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FORFMT_SEQ", sequenceName = "STG_FORFMT_SEQ")
 	@Column(name = "FMT_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@Column(name = "FMT_CLASS", nullable = false, length = 500)
 	private String classname;
@@ -40,11 +40,11 @@ public class JFormateadorFormulario implements java.io.Serializable {
 	public JFormateadorFormulario() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

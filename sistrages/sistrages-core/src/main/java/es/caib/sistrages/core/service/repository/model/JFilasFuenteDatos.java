@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FILFUE")
-public class JFilasFuenteDatos implements java.io.Serializable {
+public class JFilasFuenteDatos implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class JFilasFuenteDatos implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FILFUE_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FILFUE_SEQ", sequenceName = "STG_FILFUE_SEQ")
 	@Column(name = "FIF_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FIF_CODFUE", nullable = false)
@@ -40,23 +40,11 @@ public class JFilasFuenteDatos implements java.io.Serializable {
 	public JFilasFuenteDatos() {
 	}
 
-	public JFilasFuenteDatos(final long codigo, final JFuenteDatos fuenteDatos) {
-		this.codigo = codigo;
-		this.fuenteDatos = fuenteDatos;
-	}
-
-	public JFilasFuenteDatos(final long codigo, final JFuenteDatos fuenteDatos,
-			final Set<JValorFuenteDatos> valoresFuenteDatos) {
-		this.codigo = codigo;
-		this.fuenteDatos = fuenteDatos;
-		this.valoresFuenteDatos = valoresFuenteDatos;
-	}
-
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

@@ -25,7 +25,7 @@ public class Tramite extends ModelApi {
 	/**
 	 * Descripcion.
 	 */
-	private Traducciones descripcion;
+	private Literal descripcion;
 
 	/**
 	 * Activo
@@ -60,7 +60,7 @@ public class Tramite extends ModelApi {
 	/**
 	 * @return the descripcion
 	 */
-	public Traducciones getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -68,7 +68,7 @@ public class Tramite extends ModelApi {
 	 * @param descripcion
 	 *            the descripcion to set
 	 */
-	public void setDescripcion(final Traducciones descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 

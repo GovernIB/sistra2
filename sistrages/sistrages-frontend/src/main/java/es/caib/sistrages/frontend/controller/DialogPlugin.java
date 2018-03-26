@@ -5,28 +5,28 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.service.PluginService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
 public class DialogPlugin extends DialogControllerBase {
 
-	/**
-	 * Servicio.
-	 */
-	// @Inject
-	// private PluginGlobalService pluginGlobalService;
+	/** Servicio. */
+	@Inject
+	private PluginService pluginService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -53,10 +53,11 @@ public class DialogPlugin extends DialogControllerBase {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Plugin();
+			data.setAmbito(TypeAmbito.fromString(ambito));
 		} else {
-			data = (Plugin) UtilJSON.fromJSON(iData, Plugin.class);
+			data = pluginService.getPlugin(new Long(id));
 		}
-		if (ambito == null || TypeAmbito.toString(TypeAmbito.GLOBAL).equals(ambito)) {
+		if (ambito == null || TypeAmbito.fromString(ambito) == TypeAmbito.GLOBAL) {
 			visibleInstancia = false;
 		} else {
 			visibleInstancia = true;
@@ -72,16 +73,12 @@ public class DialogPlugin extends DialogControllerBase {
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
 		if (!respuesta.isCanceled()) {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 				// Refrescamos datos
 				final Propiedad propiedad = (Propiedad) respuesta.getResult();
 				this.data.getPropiedades().add(propiedad);
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
 				break;
 			case EDICION:
 				// Actualizamos fila actual
@@ -92,19 +89,11 @@ public class DialogPlugin extends DialogControllerBase {
 				this.data.getPropiedades().remove(posicion);
 				this.data.getPropiedades().add(posicion, propiedadEdicion);
 				this.propiedadSeleccionada = propiedadEdicion;
-				// Mensaje
-
-				message = UtilJSF.getLiteral("info.modificado.ok");
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
 				break;
 			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		}
 	}
 
@@ -197,15 +186,10 @@ public class DialogPlugin extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
-			/*
-			 * if (pluginGlobalService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; } pluginGlobalService.add(data);
-			 */
-
+			pluginService.addPlugin(data, UtilJSF.getIdEntidad());
 			break;
 		case EDICION:
-			// pluginGlobalService.update(data);
+			pluginService.updatePlugin(data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada

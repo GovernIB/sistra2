@@ -2,8 +2,10 @@ package es.caib.sistrages.frontend.controller;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
-import es.caib.sistrages.core.api.model.PropiedadConfiguracion;
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -16,8 +18,8 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	/**
 	 * Servicio.
 	 */
-	// @Inject
-	// private PropiedadConfiguracionService propiedadConfiguracionService;
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/**
 	 * Id elemento a tratar.
@@ -27,7 +29,7 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	/**
 	 * Datos elemento.
 	 */
-	private PropiedadConfiguracion data;
+	private ConfiguracionGlobal data;
 
 	/**
 	 * Inicialización.
@@ -35,13 +37,11 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new PropiedadConfiguracion();
+			data = new ConfiguracionGlobal();
 		} else {
-			data = new PropiedadConfiguracion();// propiedadConfiguracionService.load(id);
-			data.setId(1l);
-			data.setCodigo("CODIGO 1");
-			data.setDescripcion("Descripcion de una propiedad del sistema.");
-			data.setValor("VALOR ");
+			if (id != null) {
+				data = configuracionGlobalService.getConfiguracionGlobal(Long.valueOf(id));
+			}
 		}
 	}
 
@@ -53,16 +53,16 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
-			/*
-			 * if (propiedadConfiguracionService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; }
-			 * propiedadConfiguracionService.add(data);
-			 */
+			if (configuracionGlobalService.getConfiguracionGlobal(data.getPropiedad()) != null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.duplicated"));
+				return;
+			}
+
+			configuracionGlobalService.addConfiguracionGlobal(data);
 
 			break;
 		case EDICION:
-			// propiedadConfiguracionService.update(data);
+			configuracionGlobalService.updateConfiguracionGlobal(data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -85,10 +85,6 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
-	public void mensaje() {
-		UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "Atento", "Ojo al dato.");
-	}
-
 	public String getId() {
 		return id;
 	}
@@ -97,11 +93,11 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 		this.id = id;
 	}
 
-	public PropiedadConfiguracion getData() {
+	public ConfiguracionGlobal getData() {
 		return data;
 	}
 
-	public void setData(final PropiedadConfiguracion data) {
+	public void setData(final ConfiguracionGlobal data) {
 		this.data = data;
 	}
 

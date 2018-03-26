@@ -14,13 +14,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORCTX")
-public class JCampoFormularioTexto implements java.io.Serializable {
+public class JCampoFormularioTexto implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "CTX_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
@@ -87,11 +87,11 @@ public class JCampoFormularioTexto implements java.io.Serializable {
 	public JCampoFormularioTexto() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

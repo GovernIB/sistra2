@@ -23,32 +23,12 @@ public enum TypeTamanyo {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public static String fromEnum(final TypeTamanyo tipo) {
-		return tipo.valor;
-	}
-
-	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum() {
-		return this.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypeTamanyo toEnum(final String text) {
+	public static TypeTamanyo toEnum(final String text) {
 		TypeTamanyo respuesta = null;
 		if (text != null) {
 			for (final TypeTamanyo b : TypeTamanyo.values()) {
@@ -61,11 +41,6 @@ public enum TypeTamanyo {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

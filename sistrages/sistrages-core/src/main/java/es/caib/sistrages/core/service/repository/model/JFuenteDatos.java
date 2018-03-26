@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_FUEDAT", uniqueConstraints = @UniqueConstraint(columnNames = "FUE_IDENT"))
-public class JFuenteDatos implements java.io.Serializable {
+public class JFuenteDatos implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class JFuenteDatos implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FUEDAT_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FUEDAT_SEQ", sequenceName = "STG_FUEDAT_SEQ")
 	@Column(name = "FUE_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@Column(name = "FUE_AMBITO", nullable = false, length = 1)
 	private String ambito;
@@ -49,11 +49,11 @@ public class JFuenteDatos implements java.io.Serializable {
 	public JFuenteDatos() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

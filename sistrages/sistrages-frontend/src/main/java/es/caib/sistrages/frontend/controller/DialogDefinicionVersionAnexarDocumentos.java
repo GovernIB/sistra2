@@ -10,7 +10,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -50,7 +50,7 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		data = new Documento();
 		data.setId(1L);
 		data.setCodigo("Anexo1");
-		final Traducciones traducciones1 = new Traducciones();
+		final Literal traducciones1 = new Literal();
 		traducciones1.add(new Traduccion("ca", "Certificat de penals"));
 		traducciones1.add(new Traduccion("es", "Certificado de penales"));
 		data.setDescripcion(traducciones1);
@@ -74,7 +74,7 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
 
 				// Mensaje
@@ -84,7 +84,7 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 
 			case EDICION:
 
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccionesMod);
 
 				// Mensaje

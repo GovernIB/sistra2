@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "STG_FICEXT")
-public class JFicheroExterno implements java.io.Serializable {
+public class JFicheroExterno implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class JFicheroExterno implements java.io.Serializable {
 	private Date fechaReferencia;
 
 	@Column(name = "FIE_CODFIC", nullable = false, precision = 18, scale = 0)
-	private long codigoFichero;
+	private Long codigoFichero;
 
 	@Column(name = "FIE_BORRAR", nullable = false, precision = 1, scale = 0)
 	private boolean borrar;
@@ -51,11 +51,11 @@ public class JFicheroExterno implements java.io.Serializable {
 		this.fechaReferencia = fechaReferencia;
 	}
 
-	public long getCodigoFichero() {
+	public Long getCodigoFichero() {
 		return this.codigoFichero;
 	}
 
-	public void setCodigoFichero(final long codigoFichero) {
+	public void setCodigoFichero(final Long codigoFichero) {
 		this.codigoFichero = codigoFichero;
 	}
 

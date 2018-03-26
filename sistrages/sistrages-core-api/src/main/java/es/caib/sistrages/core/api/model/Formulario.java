@@ -21,7 +21,7 @@ public class Formulario extends ModelApi {
 	private String codigo;
 
 	/** Descripción formulario. */
-	private Traducciones descripcion;
+	private Literal descripcion;
 
 	/** Tipo: formulario trámite (T) o formulario captura (C). */
 	private TypeFormulario tipo;
@@ -152,7 +152,7 @@ public class Formulario extends ModelApi {
 	 *
 	 * @return el valor de descripcion
 	 */
-	public Traducciones getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -162,7 +162,7 @@ public class Formulario extends ModelApi {
 	 * @param descripcion
 	 *            el nuevo valor de descripcion
 	 */
-	public void setDescripcion(final Traducciones descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 

@@ -55,26 +55,6 @@ public enum TypeFlujo {
 		return respuesta;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @param pTipo
-	 *            tipo
-	 * @return the string
-	 */
-	public static String toString(final TypeFlujo pTipo) {
-		String respuesta = null;
-		if (pTipo != null) {
-			respuesta = pTipo.tipo;
-		}
-		return respuesta;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return tipo;

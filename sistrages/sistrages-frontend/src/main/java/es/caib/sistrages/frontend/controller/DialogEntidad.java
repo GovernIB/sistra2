@@ -1,13 +1,21 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+
+import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -16,8 +24,8 @@ public class DialogEntidad extends DialogControllerBase {
 	/**
 	 * Servicio.
 	 */
-	// @Inject
-	// private EntidadService entidadService;
+	@Inject
+	private EntidadService entidadService;
 
 	/**
 	 * Id elemento a tratar.
@@ -37,12 +45,32 @@ public class DialogEntidad extends DialogControllerBase {
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Entidad();
 		} else {
-			data = new Entidad();// entidadService.load(id);
-			data.setId(Long.valueOf(id));
-			data.setCodigoDIR3("CODIGO DIR3");
-			data.setNombre("Descripc");
-			data.setRol("ROL X");
+			data = entidadService.loadEntidad(Long.valueOf(id));
 		}
+	}
+
+	/**
+	 * Retorno dialogo de los botones de traducciones.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogo(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literal = (Literal) respuesta.getResult();
+			data.setNombre(literal);
+		}
+	}
+
+	/**
+	 * Editar descripcion del dominio.
+	 *
+	 *
+	 */
+	public void editarNombre() {
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getNombre(), idiomas, idiomas);
 	}
 
 	/**
@@ -53,15 +81,10 @@ public class DialogEntidad extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
-			/*
-			 * if (entidadService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; } entidadService.add(data);
-			 */
-
+			entidadService.addEntidad(data);
 			break;
 		case EDICION:
-			// entidadService.update(data);
+			entidadService.updateEntidadSuperAdministrador(data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -70,7 +93,7 @@ public class DialogEntidad extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getId());
+		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 

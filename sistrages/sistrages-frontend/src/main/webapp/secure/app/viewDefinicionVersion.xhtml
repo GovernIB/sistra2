@@ -26,8 +26,8 @@
 					</p:layoutUnit>
 
 					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">
-						<h:form>
-							<p:tree value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w80">
+						<h:form id="formArbol">
+							<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w80">
 								<p:treeNode>
 									<h:outputText value="#{node}" />
 								</p:treeNode>

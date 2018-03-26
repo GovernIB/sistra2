@@ -23,32 +23,12 @@ public enum TypeFormularioSoporte {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public static String fromEnum(final TypeFormularioSoporte tipo) {
-		return tipo.valor;
-	}
-
-	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum() {
-		return this.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypeFormularioSoporte toEnum(final String text) {
+	public static TypeFormularioSoporte fromString(final String text) {
 		TypeFormularioSoporte respuesta = null;
 		if (text != null) {
 			for (final TypeFormularioSoporte b : TypeFormularioSoporte.values()) {
@@ -61,11 +41,6 @@ public enum TypeFormularioSoporte {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

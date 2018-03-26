@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORLI")
-public class JLineaSeccionFormulario implements java.io.Serializable {
+public class JLineaSeccionFormulario implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class JLineaSeccionFormulario implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FORLI_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FORLI_SEQ", sequenceName = "STG_FORLI_SEQ")
 	@Column(name = "FLS_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FLS_CODPAF", nullable = false)
@@ -43,11 +43,11 @@ public class JLineaSeccionFormulario implements java.io.Serializable {
 	public JLineaSeccionFormulario() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

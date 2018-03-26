@@ -8,10 +8,8 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -52,7 +50,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 		tramiteVersion.setId(1l);
 		tramiteVersion.setIdiomasSoportados("ca;es;en");
 		data.setTramiteVersion(tramiteVersion);
-		final Traducciones traducciones = new Traducciones();
+		final Literal traducciones = new Literal();
 		traducciones.add(new Traduccion("ca", "<b>Debe saber</b>"));
 		traducciones.add(new Traduccion("es", "<b>Debe saber</b>"));
 		data.setInstruccionesIniciales(traducciones);
@@ -75,7 +73,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setInstruccionesIniciales(traducciones);
 
 				// Mensaje
@@ -85,7 +83,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				data.setInstruccionesIniciales(traduccionesMod);
 
 				// Mensaje
@@ -106,7 +104,7 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	/**
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 *
-
+	 * 
 	 */
 	public void editar() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(data.getTramiteVersion());

@@ -48,11 +48,12 @@
 			business-interface="es.caib.sistrages.core.api.service.EjemploService"/>
  	-->
 
-	<!-- JBoss 7  -->
+	<!-- JBoss 7
 	<jee:local-slsb
 			id="testService"
 			jndi-name="java:app/sistrages-core/TestServiceBean"
 			business-interface="es.caib.sistrages.core.api.service.TestService"/>
 
+ 	-->
 
 </beans>

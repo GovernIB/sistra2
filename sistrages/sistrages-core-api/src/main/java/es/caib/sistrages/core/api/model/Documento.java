@@ -22,7 +22,7 @@ public class Documento extends ModelApi {
 	private String codigo;
 
 	/** Descripción. */
-	private Traducciones descripcion;
+	private Literal descripcion;
 
 	/** Tipo. */
 	private TypeFormulario tipo;
@@ -37,7 +37,7 @@ public class Documento extends ModelApi {
 	private Script scriptObligatoriedad;
 
 	/** Texto de ayuda online para realizar el anexado */
-	private Traducciones ayudaTexto;
+	private Literal ayudaTexto;
 
 	/** Fichero binario con la plantilla del documento */
 	private Fichero ayudaFichero;
@@ -165,7 +165,7 @@ public class Documento extends ModelApi {
 	 *
 	 * @return el valor de descripcion
 	 */
-	public Traducciones getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -175,7 +175,7 @@ public class Documento extends ModelApi {
 	 * @param descripcion
 	 *            el nuevo valor de descripcion
 	 */
-	public void setDescripcion(final Traducciones descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 
@@ -220,7 +220,7 @@ public class Documento extends ModelApi {
 	/**
 	 * @return the ayudaTexto
 	 */
-	public Traducciones getAyudaTexto() {
+	public Literal getAyudaTexto() {
 		return ayudaTexto;
 	}
 
@@ -228,7 +228,7 @@ public class Documento extends ModelApi {
 	 * @param ayudaTexto
 	 *            the ayudaTexto to set
 	 */
-	public void setAyudaTexto(final Traducciones ayudaTexto) {
+	public void setAyudaTexto(final Literal ayudaTexto) {
 		this.ayudaTexto = ayudaTexto;
 	}
 

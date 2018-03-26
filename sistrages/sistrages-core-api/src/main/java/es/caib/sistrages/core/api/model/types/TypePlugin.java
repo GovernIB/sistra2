@@ -31,22 +31,12 @@ public enum TypePlugin {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum(final TypePlugin tipo) {
-		return tipo.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypePlugin toEnum(final String text) {
+	public static TypePlugin fromString(final String text) {
 		TypePlugin respuesta = null;
 		if (text != null) {
 			for (final TypePlugin b : TypePlugin.values()) {
@@ -59,11 +49,6 @@ public enum TypePlugin {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

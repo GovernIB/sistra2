@@ -26,7 +26,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_VERTRA", uniqueConstraints = @UniqueConstraint(columnNames = { "VTR_CODTRM", "VTR_NUMVER" }))
-public class JVersionTramite implements java.io.Serializable {
+public class JVersionTramite implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,7 +34,7 @@ public class JVersionTramite implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_VERTRA_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_VERTRA_SEQ", sequenceName = "STG_VERTRA_SEQ")
 	@Column(name = "VTR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "VTR_SCRINTRA")
@@ -45,12 +45,8 @@ public class JVersionTramite implements java.io.Serializable {
 	private JScript scriptPersonalizacion;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "VTR_DESCRIP", nullable = false)
-	private JLiterales descripcion;
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "VTR_DESMEN")
-	private JLiterales mensajeDesactivacion;
+	private JLiteral mensajeDesactivacion;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "VTR_CODTRM", nullable = false)
@@ -136,11 +132,11 @@ public class JVersionTramite implements java.io.Serializable {
 	public JVersionTramite() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -160,19 +156,11 @@ public class JVersionTramite implements java.io.Serializable {
 		this.scriptPersonalizacion = scriptPersonalizacion;
 	}
 
-	public JLiterales getDescripcion() {
-		return this.descripcion;
-	}
-
-	public void setDescripcion(final JLiterales descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public JLiterales getMensajeDesactivacion() {
+	public JLiteral getMensajeDesactivacion() {
 		return this.mensajeDesactivacion;
 	}
 
-	public void setMensajeDesactivacion(final JLiterales mensajeDesactivacion) {
+	public void setMensajeDesactivacion(final JLiteral mensajeDesactivacion) {
 		this.mensajeDesactivacion = mensajeDesactivacion;
 	}
 

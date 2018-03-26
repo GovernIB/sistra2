@@ -24,7 +24,7 @@ public class EjemploController {
 		mav = new ModelAndView("inicio");
 
 		// Obtenemos tb usuario y role en la parte web
-		mav.addObject("nombre", dato.getNombre() + " - WEB: usuario " + SecurityUtils.getUserName() + " role: " + SecurityUtils.hasRole("STR2_TEST") );
+		mav.addObject("nombre", dato.getNombre());
 
 		return mav;
 	}

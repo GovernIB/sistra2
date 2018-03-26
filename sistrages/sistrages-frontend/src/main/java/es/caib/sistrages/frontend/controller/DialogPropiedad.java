@@ -4,10 +4,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilJSON;
 
 @ManagedBean
 @ViewScoped
@@ -24,6 +24,16 @@ public class DialogPropiedad extends DialogControllerBase {
 	private Propiedad data;
 
 	/**
+	 * Parametro de entrada para ocultar 'valor'.
+	 */
+	private String ocultarValor;
+
+	/**
+	 * Muestra el valor.
+	 */
+	private boolean mostrarValor = true;
+
+	/**
 	 * Inicialización.
 	 */
 	public void init() {
@@ -32,6 +42,9 @@ public class DialogPropiedad extends DialogControllerBase {
 			data = new Propiedad();
 		} else {
 			data = (Propiedad) UtilJSON.fromJSON(iData, Propiedad.class);
+		}
+		if (ocultarValor != null && "S".equals(ocultarValor)) {
+			mostrarValor = false;
 		}
 	}
 
@@ -85,6 +98,36 @@ public class DialogPropiedad extends DialogControllerBase {
 	 */
 	public void setData(final Propiedad data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the mostrarValor
+	 */
+	public boolean isMostrarValor() {
+		return mostrarValor;
+	}
+
+	/**
+	 * @param mostrarValor
+	 *            the mostrarValor to set
+	 */
+	public void setMostrarValor(final boolean mostrarValor) {
+		this.mostrarValor = mostrarValor;
+	}
+
+	/**
+	 * @return the ocultarValor
+	 */
+	public String getOcultarValor() {
+		return ocultarValor;
+	}
+
+	/**
+	 * @param ocultarValor
+	 *            the ocultarValor to set
+	 */
+	public void setOcultarValor(final String ocultarValor) {
+		this.ocultarValor = ocultarValor;
 	}
 
 }

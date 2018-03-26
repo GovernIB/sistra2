@@ -15,7 +15,7 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -61,7 +61,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		tramiteVersion1.setNumeroVersion(1);
 		tramiteVersion1.setTipoFlujo(TypeFlujo.NORMAL);
 
-		final Traducciones desc1 = new Traducciones();
+		final Literal desc1 = new Literal();
 		desc1.add(new Traduccion("es", "Trámite 1 - Convocatoria de diciembre de 2017"));
 		desc1.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de desembre de 2017"));
 		tramiteVersion1.setDescripcion(desc1);
@@ -75,7 +75,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		tramiteVersion2.setNumeroVersion(2);
 		tramiteVersion2.setTipoFlujo(TypeFlujo.NORMAL);
 
-		final Traducciones desc2 = new Traducciones();
+		final Literal desc2 = new Literal();
 		desc2.add(new Traduccion("es", "Trámite 1 - Convocatoria de febrero de 2018"));
 		desc2.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de febrer de 2018"));
 		tramiteVersion2.setDescripcion(desc2);
@@ -88,7 +88,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		tramiteVersion3.setNumeroVersion(3);
 		tramiteVersion3.setTipoFlujo(TypeFlujo.PERSONALIZADO);
 
-		final Traducciones desc3 = new Traducciones();
+		final Literal desc3 = new Literal();
 		desc3.add(new Traduccion("es", "Trámite 1 - Convocatoria de junio de 2018"));
 		desc3.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de juny de 2018"));
 		tramiteVersion3.setDescripcion(desc3);

@@ -8,7 +8,7 @@ import javax.faces.bean.ViewScoped;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -45,7 +45,7 @@ public class ViewDefinicionVersionPropiedades extends ViewControllerBase {
 	 *
 
 	 */
-	public void editarDescripcion(final Traducciones traducciones) {
+	public void editarDescripcion(final Literal traducciones) {
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, traducciones, null, null);
 	}
 

@@ -13,9 +13,6 @@ public class Area extends ModelApi {
 	/** Id. */
 	private Long id;
 
-	/** Entidad */
-	private Entidad entidad;
-
 	/** Codigo. */
 	private String codigo;
 
@@ -35,21 +32,6 @@ public class Area extends ModelApi {
 	 */
 	public void setId(final Long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the entidad
-	 */
-	public Entidad getEntidad() {
-		return entidad;
-	}
-
-	/**
-	 * @param entidad
-	 *            the entidad to set
-	 */
-	public void setEntidad(final Entidad entidad) {
-		this.entidad = entidad;
 	}
 
 	/**

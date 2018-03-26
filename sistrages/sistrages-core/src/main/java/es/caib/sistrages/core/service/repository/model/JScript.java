@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_SCRIPT")
-public class JScript implements java.io.Serializable {
+public class JScript implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,7 +23,7 @@ public class JScript implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_SCRIPT_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_SCRIPT_SEQ", sequenceName = "STG_SCRIPT_SEQ")
 	@Column(name = "SCR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@Column(name = "SCR_SCRIPT")
 	private Clob script;
@@ -31,12 +31,12 @@ public class JScript implements java.io.Serializable {
 	public JScript() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long scrCodigo) {
-		this.codigo = scrCodigo;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	public Clob getScript() {

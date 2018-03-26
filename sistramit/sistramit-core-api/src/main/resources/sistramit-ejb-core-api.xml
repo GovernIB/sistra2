@@ -7,6 +7,9 @@
 				http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 				http://www.springframework.org/schema/jee
 				http://www.springframework.org/schema/jee/spring-jee-4.3.xsd">
+
+	<!-- TODO: Revisar si es necesario -->
+
 	<!-- JBoss 5
 	<jee:local-slsb
 			id="ejemploService"

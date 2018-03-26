@@ -1,18 +1,18 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -29,97 +29,9 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewDominios extends ViewControllerBase {
 
-	/**
-	 * Inicializacion.
-	 */
-	public void init() {
-
-		if (ambito == null) {
-			return;
-		}
-
-		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
-
-		switch (typeAmbito) {
-		case AREA:
-			final Dominio dominio1 = new Dominio();
-			dominio1.setCacheable(true);
-			dominio1.setId(1l);
-			dominio1.setCodigo("GOIB_ORGANISME");
-			dominio1.setDescripcion("Area - Dominio que retorna el organisme de la entitat");
-			dominio1.setTipo(TypeDominio.CONSULTA_BD);
-			final Dominio dominio2 = new Dominio();
-			dominio2.setCacheable(true);
-			dominio2.setId(2l);
-			dominio2.setCodigo("GOIB_PSTDOCUME");
-			dominio2.setDescripcion("Llistat de punts de lliurament de documentació");
-			dominio2.setTipo(TypeDominio.CONSULTA_BD);
-			final Dominio dominio3 = new Dominio();
-			dominio3.setCacheable(false);
-			dominio3.setCodigo("GOIB_ENTBNCOL");
-			dominio3.setId(3l);
-			dominio3.setDescripcion("Llistat de entitats bancaries");
-			dominio3.setTipo(TypeDominio.CONSULTA_REMOTA);
-
-			listaDatos = new ArrayList<>();
-			listaDatos.add(dominio1);
-			listaDatos.add(dominio2);
-			listaDatos.add(dominio3);
-			break;
-		case ENTIDAD:
-			final Dominio dominioEntidad1 = new Dominio();
-			dominioEntidad1.setCacheable(true);
-			dominioEntidad1.setId(1l);
-			dominioEntidad1.setCodigo("GOIB_ORGANISME");
-			dominioEntidad1.setDescripcion("Entidad - Dominio que retorna el organisme de la entitat");
-			dominioEntidad1.setTipo(TypeDominio.CONSULTA_BD);
-			final Dominio dominioEntidad2 = new Dominio();
-			dominioEntidad2.setCacheable(true);
-			dominioEntidad2.setId(2l);
-			dominioEntidad2.setCodigo("GOIB_PSTDOCUME");
-			dominioEntidad2.setDescripcion("Llistat de punts de lliurament de documentació");
-			dominioEntidad2.setTipo(TypeDominio.CONSULTA_BD);
-			final Dominio dominioEntidad3 = new Dominio();
-			dominioEntidad3.setCacheable(false);
-			dominioEntidad3.setCodigo("GOIB_ENTBNCOL");
-			dominioEntidad3.setId(3l);
-			dominioEntidad3.setDescripcion("Llistat de entitats bancaries");
-			dominioEntidad3.setTipo(TypeDominio.CONSULTA_REMOTA);
-
-			listaDatos = new ArrayList<>();
-			listaDatos.add(dominioEntidad1);
-			listaDatos.add(dominioEntidad2);
-			listaDatos.add(dominioEntidad3);
-			break;
-		case GLOBAL:
-			final Dominio dominioGlobal1 = new Dominio();
-			dominioGlobal1.setCacheable(true);
-			dominioGlobal1.setId(1l);
-			dominioGlobal1.setCodigo("GOIB_ORGANISME");
-			dominioGlobal1.setDescripcion("Global - Dominio que retorna el organisme de la entitat");
-			dominioGlobal1.setTipo(TypeDominio.CONSULTA_BD);
-			final Dominio dominioGlobal2 = new Dominio();
-			dominioGlobal2.setCacheable(true);
-			dominioGlobal2.setId(2l);
-			dominioGlobal2.setCodigo("GOIB_PSTDOCUME");
-			dominioGlobal2.setDescripcion("Llistat de punts de lliurament de documentació");
-			dominioGlobal2.setTipo(TypeDominio.CONSULTA_BD);
-			final Dominio dominioGlobal3 = new Dominio();
-			dominioGlobal3.setCacheable(false);
-			dominioGlobal3.setCodigo("GOIB_ENTBNCOL");
-			dominioGlobal3.setId(3l);
-			dominioGlobal3.setDescripcion("Llistat de entitats bancaries");
-			dominioGlobal3.setTipo(TypeDominio.CONSULTA_REMOTA);
-
-			listaDatos = new ArrayList<>();
-			listaDatos.add(dominioGlobal1);
-			listaDatos.add(dominioGlobal2);
-			listaDatos.add(dominioGlobal3);
-			break;
-		}
-
-	}
+	/** Enlace servicio. */
+	@Inject
+	private DominioService dominioService;
 
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
@@ -141,25 +53,39 @@ public class ViewDominios extends ViewControllerBase {
 	private Dominio datoSeleccionado;
 
 	/**
+	 * Inicializacion.
+	 */
+	public void init() {
+
+		if (ambito == null) {
+			return;
+		}
+
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
+		buscar(null);
+
+	}
+
+	/**
+	 *
+	 * @param filtro
+	 */
+	public void buscar(final String filtro) {
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+		Long lId = null;
+		if (id != null) {
+			lId = Long.valueOf(id);
+		}
+		listaDatos = dominioService.listDominio(typeAmbito, lId, filtro);
+	}
+
+	/**
 	 * Recuperacion de datos.
 	 */
 	public void filtrar() {
 
-		if (filtro == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.filtronorelleno"));
-			return;
-		}
+		this.buscar(filtro);
 
-		// Filtra
-		final List<Dominio> dominioesFiltradas = new ArrayList<>();
-		for (final Dominio dominio : this.listaDatos) {
-			if (dominio.getDescripcion() != null
-					&& dominio.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				dominioesFiltradas.add(dominio);
-			}
-		}
-
-		this.listaDatos = dominioesFiltradas;
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 		// Muestra mensaje
@@ -173,7 +99,14 @@ public class ViewDominios extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.ALTA, params, true, 740, 650);
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+		if (typeAmbito == TypeAmbito.AREA) {
+			params.put("AREA", id);
+		}
+		if (typeAmbito == TypeAmbito.ENTIDAD) {
+			params.put("ENTIDAD", id);
+		}
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.ALTA, params, true, 770, 680);
 	}
 
 	/**
@@ -188,7 +121,15 @@ public class ViewDominios extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.EDICION, params, true, 740, 650);
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+
+		if (typeAmbito == TypeAmbito.AREA) {
+			params.put("AREA", id);
+		}
+		if (typeAmbito == TypeAmbito.ENTIDAD) {
+			params.put("ENTIDAD", id);
+		}
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.EDICION, params, true, 770, 680);
 	}
 
 	/**
@@ -244,12 +185,21 @@ public class ViewDominios extends ViewControllerBase {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		final String message = null;
-
-		// Mostramos mensaje
-		if (message != null) {
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Refrescamos datos
+			buscar(filtro);
 		}
+
 	}
 
 	/**

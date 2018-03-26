@@ -17,12 +17,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.Area;
+
 /**
  * JArea
  */
 @Entity
 @Table(name = "STG_AREA", uniqueConstraints = @UniqueConstraint(columnNames = "ARE_IDENTI"))
-public class JArea implements java.io.Serializable {
+public class JArea implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,11 +32,11 @@ public class JArea implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_AREA_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_AREA_SEQ", sequenceName = "STG_AREA_SEQ")
 	@Column(name = "ARE_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARE_CODENT", nullable = false)
-	private JEntidades entidad;
+	private JEntidad entidad;
 
 	@Column(name = "ARE_IDENTI", unique = true, nullable = false, length = 20)
 	private String identificador;
@@ -57,19 +59,19 @@ public class JArea implements java.io.Serializable {
 	public JArea() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
-	public JEntidades getEntidad() {
+	public JEntidad getEntidad() {
 		return this.entidad;
 	}
 
-	public void setEntidad(final JEntidades entidad) {
+	public void setEntidad(final JEntidad entidad) {
 		this.entidad = entidad;
 	}
 
@@ -103,6 +105,24 @@ public class JArea implements java.io.Serializable {
 
 	public void setStgDominis(final Set<JDominio> dominios) {
 		this.dominios = dominios;
+	}
+
+	public Area toModel() {
+		final Area area = new Area();
+		area.setId(this.codigo);
+		area.setDescripcion(this.descripcion);
+		area.setCodigo(this.identificador);
+		return area;
+	}
+
+	public static JArea fromModel(final Area area) {
+		final JArea jArea = new JArea();
+		if (area != null) {
+			jArea.setCodigo(area.getId());
+			jArea.setIdentificador(area.getCodigo());
+			jArea.setDescripcion(area.getDescripcion());
+		}
+		return jArea;
 	}
 
 }

@@ -1,6 +1,3 @@
-/**
- *
- */
 package es.caib.sistrages.frontend.model.comun;
 
 /**
@@ -13,7 +10,10 @@ public final class Constantes {
 		super();
 	}
 
-	public static final String SUPER_ADMIN_LOGO ="super-adminb.png";
-	public static final String LANG_ES ="es";
-	public static final String LANG_CA ="ca";
+	/** Logo superadministrador. */
+	public static final String SUPER_ADMIN_LOGO = "super-adminb.png";
+
+	/** Entidad sin logo. */
+	public static final String ENTIDAD_NO_LOGO = "entidad_no_logo.png";
+
 }

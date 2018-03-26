@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistrages.core.api.exception.TestException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.service.AreaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -32,9 +31,9 @@ public class AreaServiceImpl implements AreaService {
 	public List<Area> list(final String filtro) {
 		List<Area> result = null;
 		if (filtro == null || filtro.trim().length() == 0) {
-			result = areaDataDao.getAllArea();
+			result = areaDataDao.getAll();
 		} else {
-			result = areaDataDao.getAllAreaByFiltroDescripcion(filtro);
+			result = areaDataDao.getAllByFiltro(filtro);
 		}
 
 		return result;
@@ -42,32 +41,28 @@ public class AreaServiceImpl implements AreaService {
 
 	@Override
 	@NegocioInterceptor
-	public Area load(final String id) {
+	public Area load(final Long id) {
 		Area result = null;
-		result = areaDataDao.getAreaById(id);
+		result = areaDataDao.getById(id);
 		return result;
 	}
 
 	@Override
 	@NegocioInterceptor
-	public void add(final Area testData) {
-		if (load(testData.getCodigo()) != null) {
-			throw new TestException("Dato repetido");
-		}
-		areaDataDao.addArea(testData);
-		log.debug("add");
+	public void add(final Long idEntidad, final Area area) {
+		areaDataDao.add(idEntidad, area);
 	}
 
 	@Override
 	@NegocioInterceptor
-	public void remove(final String id) {
-		areaDataDao.removeArea(id);
+	public void remove(final Long id) {
+		areaDataDao.remove(id);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public void update(final Area area) {
-		areaDataDao.updateArea(area);
+		areaDataDao.update(area);
 	}
 
 }

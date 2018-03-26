@@ -1,6 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,10 +14,10 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
-import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
-import es.caib.sistrages.core.api.service.ContextService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuSuperAdministrador;
@@ -40,7 +39,7 @@ public class SessionBean {
 	private String userName;
 
 	/**
-	 * Roles.
+	 * Roles del usuario.
 	 */
 	private List<TypeRoleAcceso> rolesList;
 
@@ -50,32 +49,272 @@ public class SessionBean {
 	private TypeRoleAcceso activeRole;
 
 	/**
-	 * Idioma.
+	 * Idioma actual.
 	 */
 	private String lang;
 
 	/**
-	 * Locale.
+	 * Locale actual.
 	 */
 	private Locale locale;
 
 	/**
-	 * Entidad.
+	 * Entidad actual.
 	 */
 	private Entidad entidad;
 
 	/**
-	 * Contexto.
+	 * Servicio seguridad.
 	 */
-	// @Autowired
 	@Inject
-	private ContextService context;
+	private SecurityService securityService;
 
+	/**
+	 * Lista entidades a las que tiene acceso desde el menú (si es Admin Entidad o
+	 * Desarrollador).
+	 */
 	private List<Entidad> listaEntidades;
 
-	private String logo;
+	/**
+	 * Lista entidades a las que tiene acceso como administrador.
+	 */
+	private List<Entidad> listaEntidadesAdministrador;
 
+	/**
+	 * Lista entidades a las que tiene acceso como desarrollador.
+	 */
+	private List<Entidad> listaEntidadesDesarrollador;
+
+	/**
+	 * Titulo pantalla.
+	 */
 	private String literalTituloPantalla;
+
+	/**
+	 * Logo entidad.
+	 */
+	private String logo; // TODO PENDIENTE CAMBIAR
+
+	/** Inicio sesión. */
+	@PostConstruct
+	public void init() {
+
+		// Recupera info usuario
+		userName = securityService.getUsername();
+		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+		rolesList = securityService.getRoles();
+		listaEntidadesAdministrador = securityService.getEntidadesAdministrador();
+		listaEntidadesDesarrollador = securityService.getEntidadesDesarrollador();
+
+		// Eliminamos role admin y desarrollador si no tiene entidades asociadas
+		if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT) && listaEntidadesAdministrador.isEmpty()) {
+			rolesList.remove(TypeRoleAcceso.ADMIN_ENT);
+		}
+		if (rolesList.contains(TypeRoleAcceso.DESAR) && listaEntidadesDesarrollador.isEmpty()) {
+			rolesList.remove(TypeRoleAcceso.DESAR);
+		}
+
+		// Establece role activo por defecto
+		activeRole = null;
+		if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
+			activeRole = TypeRoleAcceso.SUPER_ADMIN;
+		} else if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT)) {
+			activeRole = TypeRoleAcceso.ADMIN_ENT;
+			listaEntidades = listaEntidadesAdministrador;
+			entidad = listaEntidades.get(0);
+		} else if (rolesList.contains(TypeRoleAcceso.DESAR)) {
+			activeRole = TypeRoleAcceso.DESAR;
+			listaEntidades = listaEntidadesDesarrollador;
+			entidad = listaEntidades.get(0);
+		} else {
+			// TODO VER GESTION EXCEPCION. GENERAR EXCEPCION PARTICULARIZADA PARA SACAR
+			// MENSAJE PARTICULAR Y NO EXCEPCION
+			throw new FrontException("No tiene ningún role de acceso o entidad asociada");
+		}
+
+		// Establece logo segun role y entidad
+		cambiarLogo();
+
+	}
+
+	/** Cambio de idioma. */
+	public void cambiarIdioma(final String idioma) {
+		// Cambia idioma
+		FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(idioma));
+		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+		// Recarga pagina principal
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
+	}
+
+	/** Cambio role activo. */
+	public void cambiarRoleActivo(final String role) {
+		// Cambia role
+		final TypeRoleAcceso roleChange = TypeRoleAcceso.fromString(role);
+		if (!rolesList.contains(roleChange)) {
+			throw new FrontException("No tiene el role indicado");
+		}
+		activeRole = roleChange;
+		// Establecemos entidades a mostrar en funcion del role
+		listaEntidades = null;
+		if (activeRole == TypeRoleAcceso.ADMIN_ENT) {
+			listaEntidades = listaEntidadesAdministrador;
+		} else if (activeRole == TypeRoleAcceso.DESAR) {
+			listaEntidades = listaEntidadesDesarrollador;
+		}
+		entidad = null;
+		if (listaEntidades != null) {
+			entidad = listaEntidades.get(0);
+		}
+		// Cambia logo
+		cambiarLogo();
+		// Recarga pagina principal segun role
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
+	}
+
+	/** Cambio entidad activa. */
+	public void cambiarEntidadActivo(final long idEntidad) {
+		// Cambia entidad
+		for (final Entidad e : listaEntidades) {
+			if (e.getId().longValue() == idEntidad) {
+				entidad = e;
+			}
+		}
+		// Cambio logo
+		cambiarLogo();
+		// Recarga pagina principal
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
+	}
+
+	/** Genera menu segun role activo. */
+	public MenuModel getMenuModel() {
+		final MenuModel model = new DefaultMenuModel();
+		if (!TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
+			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(entidad.getNombre().getTraduccion(this.lang));
+			entidadSubmenu.setIcon("fa-li fa fa-institution");
+			for (final Entidad newEntidad : listaEntidades) {
+				if (!entidad.equals(newEntidad)) {
+					final DefaultMenuItem item3 = new DefaultMenuItem(newEntidad.getNombre().getTraduccion(this.lang));
+					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getId() + ")}");
+					item3.setIcon("fa-li fa fa-institution");
+					entidadSubmenu.addElement(item3);
+				}
+			}
+			model.addElement(entidadSubmenu);
+		}
+
+		final DefaultSubMenu firstSubmenu = new DefaultSubMenu(getUserName());
+		firstSubmenu.setIcon("fa-li fa fa-user-o");
+		final DefaultMenuItem item = new DefaultMenuItem(UtilJSF.getLiteral(getChangeLang()));
+		item.setCommand("#{sessionBean.cambiarIdioma(sessionBean.getChangeLang())}");
+		item.setIcon("fa-li fa fa-flag");
+		firstSubmenu.addElement(item);
+
+		model.addElement(firstSubmenu);
+
+		final DefaultSubMenu secondSubmenu = new DefaultSubMenu(
+				UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
+		secondSubmenu.setIcon("fa-li fa fa-id-card-o");
+		for (final TypeRoleAcceso role : rolesList) {
+			if (!activeRole.equals(role)) {
+				final DefaultMenuItem item2 = new DefaultMenuItem(
+						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
+				item2.setIcon("fa-li fa fa-id-card-o");
+				secondSubmenu.addElement(item2);
+			}
+		}
+		model.addElement(secondSubmenu);
+		model.generateUniqueIds();
+		return model;
+	}
+
+	/** Opciones del menú. */
+	public MenuModel getMenuModelOpciones() {
+		final MenuModel model = new DefaultMenuModel();
+
+		DefaultMenuItem item = null;
+
+		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
+
+			for (final TypeOpcionMenuSuperAdministrador opcion : TypeOpcionMenuSuperAdministrador.values()) {
+				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+				item.setUrl(UtilJSF.getUrlOpcionMenuSuperadministrador(opcion));
+				model.addElement(item);
+			}
+
+		} else {
+
+			for (final TypeOpcionMenuAdmOper opcion : TypeOpcionMenuAdmOper.values()) {
+				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
+				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getId()));
+				model.addElement(item);
+			}
+
+		}
+
+		model.generateUniqueIds();
+		return model;
+	}
+
+	/**
+	 * Redirige a la URL por defecto para el rol activo.
+	 *
+	 */
+	public void redirectDefaultUrl() {
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
+	}
+
+	/**
+	 * Obtiene lenguaje opuesto al seleccionado (supone solo castellano/catalan).
+	 *
+	 * @return lang
+	 */
+	public String getChangeLang() {
+		String res = null;
+		if ("es".equals(lang)) {
+			res = "ca";
+		} else {
+			res = "es";
+		}
+		return res;
+	}
+
+	// --------- PRIVATE METHODS --------------------
+
+	/** Cambiar logo. */
+	private void cambiarLogo() {
+		// TODO PENDIENTE CAMBIAR GESTION FICHEROS
+		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
+			logo = Constantes.SUPER_ADMIN_LOGO;
+		} else {
+			if (entidad.getLogoGestor() != null) {
+				logo = entidad.getLogoGestor().getNombre();
+			} else {
+				logo = Constantes.ENTIDAD_NO_LOGO;
+			}
+		}
+	}
+
+	/** Obtiene id entidad. */
+	private Long obtenerIdEntidad() {
+		Long idEntidad = null;
+		if (entidad != null) {
+			idEntidad = entidad.getId();
+		}
+		return idEntidad;
+	}
+
+	// --------- GETTERS / SETTERS ------------------
+
+	public SecurityService getSecurityService() {
+		return securityService;
+	}
+
+	public void setSecurityService(final SecurityService securityService) {
+		this.securityService = securityService;
+	}
 
 	public String getLiteralTituloPantalla() {
 		return literalTituloPantalla;
@@ -83,66 +322,6 @@ public class SessionBean {
 
 	public void setLiteralTituloPantalla(final String titulo) {
 		this.literalTituloPantalla = titulo;
-	}
-
-	@PostConstruct
-	public void init() {
-
-		userName = context.getUsername();
-		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
-		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
-		rolesList = context.getRoles();
-
-		listaEntidades = new ArrayList<>();
-		Entidad newEntidad = new Entidad();
-		newEntidad.setId(Long.valueOf(1));
-		newEntidad.setNombre("Govern de les Illes Balears");
-		newEntidad.setLogoGestor(new Fichero(0l, "caib.png"));
-		listaEntidades.add(newEntidad);
-		entidad = newEntidad;
-
-		newEntidad = new Entidad();
-		newEntidad.setId(Long.valueOf(2));
-		newEntidad.setNombre("Entidad 1");
-		newEntidad.setLogoGestor(new Fichero(0l, "caibe1.png"));
-		listaEntidades.add(newEntidad);
-
-		newEntidad = new Entidad();
-		newEntidad.setId(Long.valueOf(3));
-		newEntidad.setNombre("Entidad 2");
-		newEntidad.setLogoGestor(new Fichero(0l, "caibe2.png"));
-		listaEntidades.add(newEntidad);
-
-		selectActiveRole();
-
-		setLiteralTituloPantalla("Mantenimiento de Test");
-
-	}
-
-	private void selectActiveRole() {
-		if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
-			activeRole = TypeRoleAcceso.SUPER_ADMIN;
-			logo = Constantes.SUPER_ADMIN_LOGO;
-		} else if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT)) {
-			activeRole = TypeRoleAcceso.ADMIN_ENT;
-			logo = entidad.getLogoGestor().getNombre();
-
-		} else if (rolesList.contains(TypeRoleAcceso.DESAR)) {
-			activeRole = TypeRoleAcceso.DESAR;
-			logo = entidad.getLogoGestor().getNombre();
-		}
-	}
-
-	public void cambiarIdioma(final String idioma) {
-
-		// Cambia idioma
-		FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(idioma));
-		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
-		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
-		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
 	}
 
 	public String getLogo() {
@@ -167,14 +346,6 @@ public class SessionBean {
 
 	public void setActiveRole(final TypeRoleAcceso activeRole) {
 		this.activeRole = activeRole;
-	}
-
-	public ContextService getContext() {
-		return context;
-	}
-
-	public void setContext(final ContextService context) {
-		this.context = context;
 	}
 
 	public String getLang() {
@@ -209,126 +380,27 @@ public class SessionBean {
 		this.listaEntidades = listaEntidades;
 	}
 
-	public String getChangeLang() {
-		String res = null;
-		if (Constantes.LANG_ES.equals(lang)) {
-			res = Constantes.LANG_CA;
-		} else {
-			res = Constantes.LANG_ES;
-		}
-		return res;
+	public List<Entidad> getListaEntidadesAdministrador() {
+		return listaEntidadesAdministrador;
 	}
 
-	private void cambiarLogo() {
-		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
-			logo = Constantes.SUPER_ADMIN_LOGO;
-		} else {
-			logo = entidad.getLogoGestor().getNombre();
-
-		}
+	public void setListaEntidadesAdministrador(final List<Entidad> listaEntidadesAdministrador) {
+		this.listaEntidadesAdministrador = listaEntidadesAdministrador;
 	}
 
-	public void cambiarRoleActivo(final String role) {
-
-		// Cambia role
-		activeRole = TypeRoleAcceso.fromString(role);
-
-		cambiarLogo();
-
-		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
+	public List<Entidad> getListaEntidadesDesarrollador() {
+		return listaEntidadesDesarrollador;
 	}
 
-	public void cambiarEntidadActivo(final String activeEntidad) {
-
-		// Cambia entidad
-		for (final Entidad newEntidad : listaEntidades) {
-			if (activeEntidad.equals(newEntidad.getNombre())) {
-				entidad = newEntidad;
-			}
-		}
-
-		cambiarLogo();
-
-		// Recarga pagina principal
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
+	public void setListaEntidadesDesarrollador(final List<Entidad> listaEntidadesDesarrollador) {
+		this.listaEntidadesDesarrollador = listaEntidadesDesarrollador;
 	}
 
-	public MenuModel getMenuModel() {
-		final MenuModel model = new DefaultMenuModel();
-
-		if (!TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
-			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(entidad.getNombre());
-			entidadSubmenu.setIcon("fa-li fa fa-institution");
-			for (final Entidad newEntidad : listaEntidades) {
-				if (!entidad.equals(newEntidad)) {
-					final DefaultMenuItem item3 = new DefaultMenuItem(newEntidad.getNombre());
-					item3.setCommand("#{sessionBean.cambiarEntidadActivo(\"" + newEntidad.getNombre() + "\")}");
-					item3.setIcon("fa-li fa fa-institution");
-					entidadSubmenu.addElement(item3);
-				}
-			}
-			model.addElement(entidadSubmenu);
-		}
-
-		final DefaultSubMenu firstSubmenu = new DefaultSubMenu(getUserName());
-		firstSubmenu.setIcon("fa-li fa fa-user-o");
-		final DefaultMenuItem item = new DefaultMenuItem(UtilJSF.getLiteral(getChangeLang()));
-		item.setCommand("#{sessionBean.cambiarIdioma(sessionBean.changeLang)}");
-		item.setIcon("fa-li fa fa-flag");
-		firstSubmenu.addElement(item);
-
-		model.addElement(firstSubmenu);
-
-		final DefaultSubMenu secondSubmenu = new DefaultSubMenu(
-				UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
-		secondSubmenu.setIcon("fa-li fa fa-id-card-o");
-		for (final TypeRoleAcceso role : rolesList) {
-			if (!activeRole.equals(role)) {
-				final DefaultMenuItem item2 = new DefaultMenuItem(
-						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
-				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
-				item2.setIcon("fa-li fa fa-id-card-o");
-				secondSubmenu.addElement(item2);
-			}
-		}
-		model.addElement(secondSubmenu);
-		model.generateUniqueIds();
-		return model;
+	public List<TypeRoleAcceso> getRolesList() {
+		return rolesList;
 	}
 
-	public MenuModel getMenuModelOpciones() {
-		final MenuModel model = new DefaultMenuModel();
-
-		DefaultMenuItem item = null;
-
-		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
-
-			for (final TypeOpcionMenuSuperAdministrador opcion : TypeOpcionMenuSuperAdministrador.values()) {
-				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenuSuperadministrador(opcion));
-				model.addElement(item);
-			}
-
-		} else {
-
-			for (final TypeOpcionMenuAdmOper opcion : TypeOpcionMenuAdmOper.values()) {
-				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getId()));
-				model.addElement(item);
-			}
-
-		}
-
-		model.generateUniqueIds();
-		return model;
-	}
-
-	/**
-	 * Redirige a la URL por defecto para el rol activo.
-	 *
-	 */
-	public void redirectDefaultUrl() {
-		UtilJSF.redirectJsfDefaultPageRole(activeRole, entidad.getId());
+	public void setRolesList(final List<TypeRoleAcceso> rolesList) {
+		this.rolesList = rolesList;
 	}
 }

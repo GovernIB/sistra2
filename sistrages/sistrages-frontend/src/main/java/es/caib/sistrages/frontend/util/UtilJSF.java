@@ -15,6 +15,9 @@ import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 
+import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.frontend.controller.SessionBean;
 import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
@@ -169,16 +172,72 @@ public final class UtilJSF {
 		context.addMessage(null, new FacesMessage(severity, message, detail));
 	}
 
+	/**
+	 * Obtiene literal.
+	 *
+	 * @param key
+	 *            key
+	 * @return literal
+	 */
 	public static String getLiteral(final String key) {
 		final FacesContext context = FacesContext.getCurrentInstance();
 		// final ResourceBundle text =
 		// context.getApplication().evaluateExpressionGet(context,
 		// "#{msg}",ResourceBundle.class);
 
-		final ResourceBundle text = ResourceBundle.getBundle("i18n.messages", ((SessionBean) FacesContext
-				.getCurrentInstance().getExternalContext().getSessionMap().get("sessionBean")).getLocale());
+		final ResourceBundle text = ResourceBundle.getBundle("i18n.messages", getSessionBean().getLocale());
 		final String result = text.getString(key);
 		return result;
+	}
+
+	/**
+	 * Obtiene bean de sesión.
+	 *
+	 * @return bean de sesión
+	 */
+	public static SessionBean getSessionBean() {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		return sb;
+	}
+
+	/**
+	 * Verifica si accede el superadministrador generando excepción en caso
+	 * contrario.
+	 *
+	 */
+	public static void verificarAccesoSuperAdministrador() {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.SUPER_ADMIN) {
+			throw new FrontException("No se está accediendo con perfil SuperAdministrador");
+		}
+	}
+
+	/**
+	 * Verifica si accede el administrador entidad o desarrollador entidad generando
+	 * excepción en caso contrario.
+	 *
+	 */
+	public static void verificarAccesoAdministradorDesarrolladorEntidad(final Long idEntidad) {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.ADMIN_ENT && sb.getActiveRole() != TypeRoleAcceso.DESAR) {
+			throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad");
+		}
+		if (idEntidad == null) {
+			throw new FrontException("No se ha seleccionado ninguna entidad");
+		}
+		boolean found = false;
+		for (final Entidad e : sb.getListaEntidades()) {
+			if (e.getId().longValue() == idEntidad) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			throw new FrontException("No tiene acceso a la entidad");
+		}
 	}
 
 	/**
@@ -421,4 +480,28 @@ public final class UtilJSF {
 	public static String getUrlArbolDefinicionVersion(final String opcion, final Long id) {
 		return PATH_VIEWS + opcion + EXTENSION_XHTML; // + "?id=" + id;
 	}
+
+	/**
+	 * Obtiene idioma.
+	 *
+	 * @return idioma
+	 */
+	public static TypeIdioma getIdioma() {
+		return TypeIdioma.fromString(getSessionBean().getLang());
+	}
+
+	/**
+	 * Obtiene id entidad.
+	 *
+	 * @return id entidad
+	 */
+	public static Long getIdEntidad() {
+		Long idEntidad = null;
+		final Entidad entidad = UtilJSF.getSessionBean().getEntidad();
+		if (entidad != null) {
+			idEntidad = entidad.getId();
+		}
+		return idEntidad;
+	}
+
 }

@@ -19,13 +19,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORCIN")
-public class JCampoFormularioIndexado implements java.io.Serializable {
+public class JCampoFormularioIndexado implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "CIN_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CIN_DOMCOD")
@@ -66,11 +66,11 @@ public class JCampoFormularioIndexado implements java.io.Serializable {
 	public JCampoFormularioIndexado() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -142,7 +142,8 @@ public class JCampoFormularioIndexado implements java.io.Serializable {
 		return this.parametrosDominioCampoIndexado;
 	}
 
-	public void setParametrosDominioCampoIndexado(final Set<JParametroDominioCampoIndexado> parametrosDominioCampoIndexado) {
+	public void setParametrosDominioCampoIndexado(
+			final Set<JParametroDominioCampoIndexado> parametrosDominioCampoIndexado) {
 		this.parametrosDominioCampoIndexado = parametrosDominioCampoIndexado;
 	}
 

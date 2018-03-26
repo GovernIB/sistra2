@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -16,8 +17,9 @@ import org.primefaces.model.TreeNode;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.service.AreaService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -35,54 +37,48 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 public class ViewTramites extends ViewControllerBase {
 
 	/**
+	 * Enlace area.
+	 */
+	@Inject
+	private AreaService areaService;
+
+	/**
 	 * Inicializacion.
 	 */
 	public void init() {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
-		areas = new DefaultTreeNode("Root", null);
-
-		final Area area1 = new Area();
-		area1.setId(1l);
-		area1.setCodigo("1");
-		area1.setDescripcion("Area 1");
-		areas.getChildren().add(new DefaultTreeNode(area1));
-
-		final Area area2 = new Area();
-		area2.setId(2l);
-		area2.setCodigo("2");
-		area2.setDescripcion("Area 2");
-		areas.getChildren().add(new DefaultTreeNode(area2));
-
-		final Area area3 = new Area();
-		area3.setId(3l);
-		area3.setCodigo("3");
-		area3.setDescripcion("Area 3");
-		areas.getChildren().add(new DefaultTreeNode(area3));
-
-		final Area area4 = new Area();
-		area4.setId(4l);
-		area4.setCodigo("4");
-		area4.setDescripcion("Area 4");
-		areas.getChildren().add(new DefaultTreeNode(area4));
-
-		final Area area5 = new Area();
-		area5.setId(5l);
-		area5.setCodigo("5");
-		area5.setDescripcion("Area 5");
-		areas.getChildren().add(new DefaultTreeNode(area5));
-
-		final Area area6 = new Area();
-		area6.setId(6l);
-		area6.setCodigo("6");
-		area6.setDescripcion("Area 6");
-		areas.getChildren().add(new DefaultTreeNode(area6));
-
+		/*
+		 * areas = new DefaultTreeNode("Root", null);
+		 *
+		 * final Area area1 = new Area(); area1.setId(1l); area1.setCodigo("1");
+		 * area1.setDescripcion("Area 1"); areas.getChildren().add(new
+		 * DefaultTreeNode(area1));
+		 *
+		 * final Area area2 = new Area(); area2.setId(2l); area2.setCodigo("2");
+		 * area2.setDescripcion("Area 2"); areas.getChildren().add(new
+		 * DefaultTreeNode(area2));
+		 *
+		 * final Area area3 = new Area(); area3.setId(3l); area3.setCodigo("3");
+		 * area3.setDescripcion("Area 3"); areas.getChildren().add(new
+		 * DefaultTreeNode(area3));
+		 *
+		 * final Area area4 = new Area(); area4.setId(4l); area4.setCodigo("4");
+		 * area4.setDescripcion("Area 4"); areas.getChildren().add(new
+		 * DefaultTreeNode(area4));
+		 *
+		 * final Area area5 = new Area(); area5.setId(5l); area5.setCodigo("5");
+		 * area5.setDescripcion("Area 5"); areas.getChildren().add(new
+		 * DefaultTreeNode(area5));
+		 *
+		 * final Area area6 = new Area(); area6.setId(6l); area6.setCodigo("6");
+		 * area6.setDescripcion("Area 6"); areas.getChildren().add(new
+		 * DefaultTreeNode(area6));
+		 */
 		tramites = new ArrayList<>();
 		final Tramite tramite1 = new Tramite();
 		tramite1.setId(1l);
 		tramite1.setCodigo("TRAMIT1");
-		final Traducciones trad1 = new Traducciones();
+		final Literal trad1 = new Literal();
 		trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
 		trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
 		tramite1.setDescripcion(trad1);
@@ -93,7 +89,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Tramite tramite2 = new Tramite();
 		tramite2.setId(2l);
 		tramite2.setCodigo("TRAMIT2");
-		final Traducciones trad2 = new Traducciones();
+		final Literal trad2 = new Literal();
 		trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
 		trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
 		tramite2.setDescripcion(trad2);
@@ -104,7 +100,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Tramite tramite3 = new Tramite();
 		tramite3.setId(3l);
 		tramite3.setCodigo("TRAMIT3");
-		final Traducciones trad3 = new Traducciones();
+		final Literal trad3 = new Literal();
 		trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
 		trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
 		tramite3.setDescripcion(trad3);
@@ -115,6 +111,8 @@ public class ViewTramites extends ViewControllerBase {
 		tramites.add(tramite1);
 		tramites.add(tramite2);
 		tramites.add(tramite3);
+
+		this.buscarAreas();
 
 	}
 
@@ -151,7 +149,9 @@ public class ViewTramites extends ViewControllerBase {
 		if (!verificarFilaSeleccionadaArea())
 			return;
 
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		final Area area = (Area) this.areaSeleccionada.getData();
+		this.areaService.remove(area.getId());
+		this.buscarAreas();
 	}
 
 	/**
@@ -225,7 +225,67 @@ public class ViewTramites extends ViewControllerBase {
 	 * @param event
 	 *            respuesta dialogo
 	 */
-	public void returnDialogo(final SelectEvent event) {
+	public void returnDialogoArea(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+				this.buscarAreas();
+
+				// Mensaje
+				message = UtilJSF.getLiteral("test.altaOk");
+				break;
+			case EDICION:
+				this.buscarAreas();
+
+				// Mensaje
+				message = "Update realizado";
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+	}
+
+	/**
+	 * Aqui
+	 */
+	private void buscarAreas() {
+
+		areas = new DefaultTreeNode("Root", null);
+		for (final Area area : areaService.list(this.filtro)) {
+			areas.getChildren().add(new DefaultTreeNode(area));
+		}
+	}
+
+	/**
+	 * Método publico de filtrar
+	 */
+	public void filtrar() {
+		if (filtro == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.filtronorelleno"));
+			return;
+		}
+
+		this.buscarAreas();
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoTramite(final SelectEvent event) {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
@@ -318,7 +378,7 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite1 = new Tramite();
 			tramite1.setId(1l);
 			tramite1.setCodigo("TRAMIT1");
-			final Traducciones trad1 = new Traducciones();
+			final Literal trad1 = new Literal();
 			trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
 			trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
 			tramite1.setDescripcion(trad1);
@@ -326,7 +386,7 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite2 = new Tramite();
 			tramite2.setId(2l);
 			tramite2.setCodigo("TRAMIT2");
-			final Traducciones trad2 = new Traducciones();
+			final Literal trad2 = new Literal();
 			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
 			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
 			tramite2.setDescripcion(trad2);
@@ -338,7 +398,7 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite1 = new Tramite();
 			tramite1.setId(1l);
 			tramite1.setCodigo("TRAMIT1");
-			final Traducciones trad1 = new Traducciones();
+			final Literal trad1 = new Literal();
 			trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
 			trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
 			tramite1.setDescripcion(trad1);
@@ -346,7 +406,7 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite2 = new Tramite();
 			tramite2.setId(2l);
 			tramite2.setCodigo("TRAMIT2");
-			final Traducciones trad2 = new Traducciones();
+			final Literal trad2 = new Literal();
 			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
 			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
 			tramite2.setDescripcion(trad2);
@@ -354,7 +414,7 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite3 = new Tramite();
 			tramite3.setId(3l);
 			tramite3.setCodigo("TRAMIT3");
-			final Traducciones trad3 = new Traducciones();
+			final Literal trad3 = new Literal();
 			trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
 			trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
 			tramite3.setDescripcion(trad3);
@@ -367,7 +427,7 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite2 = new Tramite();
 			tramite2.setId(2l);
 			tramite2.setCodigo("TRAMIT2");
-			final Traducciones trad2 = new Traducciones();
+			final Literal trad2 = new Literal();
 			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
 			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
 			tramite2.setDescripcion(trad2);
@@ -375,7 +435,7 @@ public class ViewTramites extends ViewControllerBase {
 			final Tramite tramite3 = new Tramite();
 			tramite3.setId(3l);
 			tramite3.setCodigo("TRAMIT3");
-			final Traducciones trad3 = new Traducciones();
+			final Literal trad3 = new Literal();
 			trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
 			trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
 			tramite3.setDescripcion(trad3);

@@ -65,6 +65,12 @@
 					</modules>
 					<defaultLibBundleDir>lib/</defaultLibBundleDir>
 					<skinnyWars>true</skinnyWars>
+					<!-- Anyadir dependencia Hibernate de JBoss en MANIFEST -->
+					<archive>
+					    <manifestEntries>
+					        <Dependencies>org.hibernate</Dependencies>
+					    </manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>

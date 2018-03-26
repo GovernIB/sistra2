@@ -31,32 +31,12 @@ public enum TypeEtiqueta {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public static String fromEnum(final TypeEtiqueta tipo) {
-		return tipo.valor;
-	}
-
-	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum() {
-		return this.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypeEtiqueta toEnum(final String text) {
+	public static TypeEtiqueta fromString(final String text) {
 		TypeEtiqueta respuesta = null;
 		if (text != null) {
 			for (final TypeEtiqueta b : TypeEtiqueta.values()) {
@@ -69,11 +49,6 @@ public enum TypeEtiqueta {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

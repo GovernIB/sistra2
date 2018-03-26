@@ -21,40 +21,40 @@
 					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
 						actionListener="#{viewDefinicionVersionRellenar.nuevo()}" process="@this"
 						update="growl">
-							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionRellenar.returnDialogo}" update="growl dataTable"/>
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol dataTable formViewDefinicionVersionRellenar:dataTable"  />
 		        	</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersionRellenar.editar()}" process="@this"
 						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionRellenar.returnDialogo}" update="growl dataTable"/>
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol dataTable" />
 					</p:commandButton>
 
 					<p:commandButton id="btnEliminar"
 						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
-						actionListener="#{viewDefinicionVersionRellenar.eliminar()}"
+						actionListener="#{viewDefinicionVersion.eliminarFormulario()}"
 						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnSubir"
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
-						actionListener="#{viewDefinicionVersionRellenar.subir()}"
+						actionListener="#{viewDefinicionVersion.subirFormulario()}"
 						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnBajar"
 						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
-						actionListener="#{viewDefinicionVersionRellenar.bajar()}"
+						actionListener="#{viewDefinicionVersion.bajarFormulario()}"
 						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 						icon="fa fa-question-circle-o"
-						actionListener="#{viewDefinicionVersionRellenar.ayudar()}" process="@this"
+						actionListener="#{viewDefinicionVersion.ayudar()}" process="@this"
 						update="growl dataTable" />
 				</h:panelGrid>
 			</f:facet>
 		</p:toolbar>
 
 
-			<p:dataTable  id="dataTable" var="formularios" value="#{viewDefinicionVersionRellenar.data.formulariosTramite}"
+			<p:dataTable  id="dataTable" var="formularios" value="#{viewDefinicionVersion.tramitePasoRELLSeleccionado.formulariosTramite}"
 						 rows="10"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"

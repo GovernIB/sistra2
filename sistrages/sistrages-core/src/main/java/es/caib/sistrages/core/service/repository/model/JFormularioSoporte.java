@@ -16,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORSOP")
-public class JFormularioSoporte implements java.io.Serializable {
+public class JFormularioSoporte implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,19 +24,19 @@ public class JFormularioSoporte implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FORSOP_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FORSOP_SEQ", sequenceName = "STG_FORSOP_SEQ")
 	@Column(name = "FSO_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FSO_CODENT", nullable = false)
-	private JEntidades entidad;
+	private JEntidad entidad;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FSO_TIPINC", nullable = false)
-	private JLiterales literalTipoIncidencia;
+	private JLiteral literalTipoIncidencia;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FSO_DSCTIP", nullable = false)
-	private JLiterales descripcionTipoIncidencia;
+	private JLiteral descripcionTipoIncidencia;
 
 	@Column(name = "FSO_TIPDST", nullable = false, length = 1)
 	private String tipoDestinatario;
@@ -47,35 +47,35 @@ public class JFormularioSoporte implements java.io.Serializable {
 	public JFormularioSoporte() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long fsoCodigo) {
-		this.codigo = fsoCodigo;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
-	public JEntidades getEntidad() {
+	public JEntidad getEntidad() {
 		return this.entidad;
 	}
 
-	public void setEntidad(final JEntidades entidad) {
+	public void setEntidad(final JEntidad entidad) {
 		this.entidad = entidad;
 	}
 
-	public JLiterales getLiteralTipoIncidencia() {
+	public JLiteral getLiteralTipoIncidencia() {
 		return this.literalTipoIncidencia;
 	}
 
-	public void setLiteralTipoIncidencia(final JLiterales literalTipoIncidencia) {
+	public void setLiteralTipoIncidencia(final JLiteral literalTipoIncidencia) {
 		this.literalTipoIncidencia = literalTipoIncidencia;
 	}
 
-	public JLiterales getDescripcionTipoIncidencia() {
+	public JLiteral getDescripcionTipoIncidencia() {
 		return this.descripcionTipoIncidencia;
 	}
 
-	public void setDescripcionTipoIncidencia(final JLiterales descripcionTipoIncidencia) {
+	public void setDescripcionTipoIncidencia(final JLiteral descripcionTipoIncidencia) {
 		this.descripcionTipoIncidencia = descripcionTipoIncidencia;
 	}
 

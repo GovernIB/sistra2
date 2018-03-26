@@ -16,30 +16,33 @@
 					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
 						actionListener="#{viewDefinicionVersionPagarTasas.nuevo()}" process="@this"
 						update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionPagarTasas.returnDialogo}" update="growl dataTable"/>
 					</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
-						actionListener="#{viewDefinicionVersionPagarTasas.nuevo()}" process="@this"
-						update="growl" />
+						actionListener="#{viewDefinicionVersionPagarTasas.editar()}" process="@this"
+						update="growl dataTable">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersionPagarTasas.returnDialogo}" update="growl dataTable"/>
+					</p:commandButton>
 
 					<p:commandButton id="btnEliminar"
 						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
-						actionListener="#{viewDefinicionVersionPagarTasas.nuevo()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersionPagarTasas.eliminar()}"
+						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnSubir"
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
-						actionListener="#{viewDefinicionVersionPagarTasas.nuevo()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersionPagarTasas.subir()}"
+						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnBajar"
 						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
-						actionListener="#{viewDefinicionVersionPagarTasas.nuevo()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersionPagarTasas.bajar()}"
+						process="@this" update="growl dataTable" />
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 						icon="fa fa-question-circle-o"
-						actionListener="#{viewDefinicionVersionPagarTasas.nuevo()}" process="@this"
+						actionListener="#{viewDefinicionVersionPagarTasas.ayudar()}" process="@this"
 						update="growl dataTable" />
 				</h:panelGrid>
 			</f:facet>
@@ -47,9 +50,13 @@
 
 
 		<p:dataTable id="dataTable" var="tasas"
-			value="#{viewDefinicionVersion.listaTasas}" rows="10"
+			value="#{viewDefinicionVersionPagarTasas.data.tasas}" rows="10"
 			scrollable="true" paginator="false" rowKey="#{tasas.id}" selectionMode="single"
 			 selection="#{viewDefinicionVersionPagarTasas.datoSeleccionado}" dblClickSelect="true">
+
+			<!-- Necesario para actualizar en controlador la fila seleccionada -->
+			<p:ajax event="rowSelect" />
+			<p:ajax event="rowUnselect" />
 
 			<!-- Columnas -->
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerIdentificador']}" >
@@ -58,7 +65,7 @@
 
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerDescripcion']}">
-				<h:outputText value="#{tasas.descripcion}" />
+				<h:outputText value="#{tasas.descripcion.getTraduccion(sessionBean.lang)}" />
 			</p:column>
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerObligatoriedad']}">

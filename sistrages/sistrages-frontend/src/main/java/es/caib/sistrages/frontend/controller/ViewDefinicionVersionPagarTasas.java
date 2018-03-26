@@ -12,8 +12,11 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Tasa;
+import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypePago;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -57,15 +60,21 @@ public class ViewDefinicionVersionPagarTasas extends ViewControllerBase {
 		final Tasa tasa1 = new Tasa();
 		tasa1.setId(1L);
 		tasa1.setCodigo("Tasa1");
-		tasa1.setDescripcion("Tasa de incripción");
+		final Literal trad1 = new Literal();
+		trad1.add(new Traduccion("ca", "Tasa de inscripció"));
+		trad1.add(new Traduccion("es", "Tasa de inscripción"));
+		tasa1.setDescripcion(trad1);
 		tasa1.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		tasa1.setTipo("Telemático");
+		tasa1.setTipo(TypePago.TELEMATICO);
 		final Tasa tasa2 = new Tasa();
 		tasa2.setId(2L);
 		tasa2.setCodigo("Tasa2");
-		tasa2.setDescripcion("Tasa de incripción");
+		final Literal trad2 = new Literal();
+		trad2.add(new Traduccion("ca", "Tasa de inscripció 2"));
+		trad2.add(new Traduccion("es", "Tasa de inscripción 2"));
+		tasa2.setDescripcion(trad2);
 		tasa2.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
-		tasa2.setTipo("Telemático");
+		tasa2.setTipo(TypePago.PRESENCIAL);
 
 		final List<Tasa> tasas = new ArrayList<>();
 		tasas.add(tasa1);
@@ -127,16 +136,13 @@ public class ViewDefinicionVersionPagarTasas extends ViewControllerBase {
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 */
 	public void nuevo() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
-		//UtilJSF.openDialog(DialogDefinicionVersionAnexarDocumentos.class, TypeModoAcceso.ALTA, null, true, 600, 300);
+		UtilJSF.openDialog(DialogDefinicionVersionPagarTasas.class, TypeModoAcceso.ALTA, null, true, 600, 300);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
-		/*
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
@@ -144,9 +150,8 @@ public class ViewDefinicionVersionPagarTasas extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
-		UtilJSF.openDialog(DialogDefinicionVersionAnexarDocumentos.class, TypeModoAcceso.EDICION, params, true, 600,
-				300);
-				*/
+		UtilJSF.openDialog(DialogDefinicionVersionPagarTasas.class, TypeModoAcceso.EDICION, params, true, 600, 300);
+
 	}
 
 	/**

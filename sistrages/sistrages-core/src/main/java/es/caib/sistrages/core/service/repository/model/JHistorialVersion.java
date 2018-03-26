@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "STG_HISVER")
-public class JHistorialVersion implements java.io.Serializable {
+public class JHistorialVersion implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class JHistorialVersion implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_HISVER_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_HISVER_SEQ", sequenceName = "STG_HISVER_SEQ")
 	@Column(name = "HVE_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "HVE_CODVTR", nullable = false)
@@ -53,11 +53,11 @@ public class JHistorialVersion implements java.io.Serializable {
 	public JHistorialVersion() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

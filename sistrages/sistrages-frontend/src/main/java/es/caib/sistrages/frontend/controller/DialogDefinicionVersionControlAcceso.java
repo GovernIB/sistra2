@@ -12,7 +12,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -70,7 +70,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				this.tramiteVersion.setMensajeDesactivacion(traducciones);
 
 				// Mensaje
@@ -80,7 +80,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				this.tramiteVersion.setMensajeDesactivacion(traduccionesMod);
 
 				// Mensaje
@@ -184,7 +184,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 		dia.set(2018, 1, 1);
 		tramiteVersion.setPlazoInicioDesactivacion(dia.getTime());
 		tramiteVersion.setPlazoFinDesactivacion(new Date());
-		final Traducciones desact1 = new Traducciones();
+		final Literal desact1 = new Literal();
 		desact1.add(new Traduccion("es", "Mensaje de desactivacion"));
 		desact1.add(new Traduccion("ca", "Missatge de desactivació"));
 		tramiteVersion.setMensajeDesactivacion(desact1);

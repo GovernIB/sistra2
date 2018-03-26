@@ -1,5 +1,8 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.List;
+
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 
@@ -16,10 +19,7 @@ public class Dominio extends ModelApi {
 	private Long id;
 
 	/** Ámbito dominio (G : Global / E: Entidad / A: Área) */
-	private String ambito;
-
-	/** Ámbito dominio (G : Global / E: Entidad / A: Área) */
-	private TypeAmbito typeAmbito;
+	private TypeAmbito ambito;
 
 	/** Identificador. **/
 	private String codigo;
@@ -51,7 +51,7 @@ public class Dominio extends ModelApi {
 	/**
 	 * JSON con la lista de valores (codigo - valor)
 	 */
-	private String listaFija;
+	private List<Propiedad> listaFija;
 
 	/**
 	 * Para tipo Remoto indica URL de acceso al servicio remoto de consulta de
@@ -60,7 +60,7 @@ public class Dominio extends ModelApi {
 	private String url;
 
 	/** JSON con la lista de parametros (codigo - valor). */
-	private String parametros;
+	private List<Propiedad> parametros;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -82,6 +82,21 @@ public class Dominio extends ModelApi {
 	 */
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public TypeAmbito getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito
+	 *            the ambito to set
+	 */
+	public void setAmbito(final TypeAmbito ambito) {
+		this.ambito = ambito;
 	}
 
 	/**
@@ -120,36 +135,6 @@ public class Dominio extends ModelApi {
 	 */
 	public void setCodigo(final String codigo) {
 		this.codigo = codigo;
-	}
-
-	/**
-	 * @return the ambito
-	 */
-	public String getAmbito() {
-		return ambito;
-	}
-
-	/**
-	 * @param ambito
-	 *            the ambito to set
-	 */
-	public void setAmbito(final String ambito) {
-		this.ambito = ambito;
-	}
-
-	/**
-	 * @return the typeAmbito
-	 */
-	public TypeAmbito getTypeAmbito() {
-		return typeAmbito;
-	}
-
-	/**
-	 * @param typeAmbito
-	 *            the typeAmbito to set
-	 */
-	public void setTypeAmbito(final TypeAmbito typeAmbito) {
-		this.typeAmbito = typeAmbito;
 	}
 
 	/**
@@ -260,7 +245,7 @@ public class Dominio extends ModelApi {
 	/**
 	 * @return the listaFija
 	 */
-	public String getListaFija() {
+	public List<Propiedad> getListaFija() {
 		return listaFija;
 	}
 
@@ -268,7 +253,7 @@ public class Dominio extends ModelApi {
 	 * @param listaFija
 	 *            the listaFija to set
 	 */
-	public void setListaFija(final String listaFija) {
+	public void setListaFija(final List<Propiedad> listaFija) {
 		this.listaFija = listaFija;
 	}
 
@@ -290,7 +275,7 @@ public class Dominio extends ModelApi {
 	/**
 	 * @return the parametros
 	 */
-	public String getParametros() {
+	public List<Propiedad> getParametros() {
 		return parametros;
 	}
 
@@ -298,7 +283,7 @@ public class Dominio extends ModelApi {
 	 * @param parametros
 	 *            the parametros to set
 	 */
-	public void setParametros(final String parametros) {
+	public void setParametros(final List<Propiedad> parametros) {
 		this.parametros = parametros;
 	}
 

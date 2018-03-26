@@ -5,15 +5,16 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Area;
 
 public interface AreaDao {
-	Area getAreaById(final String pCodigo);
 
-	List<Area> getAllAreaByFiltroDescripcion(final String pFiltro);
+	Area getById(final Long pCodigo);
 
-	List<Area> getAllArea();
+	List<Area> getAll();
 
-	void addArea(final Area pArea);
+	List<Area> getAllByFiltro(final String pFiltro);
 
-	void removeArea(final String pCodigo);
+	void add(Long idEntidad, final Area pArea);
 
-	void updateArea(final Area pArea);
+	void remove(final Long pCodigo);
+
+	void update(final Area pArea);
 }

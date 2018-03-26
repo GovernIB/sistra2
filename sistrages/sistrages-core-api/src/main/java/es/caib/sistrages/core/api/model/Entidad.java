@@ -19,7 +19,7 @@ public class Entidad extends ModelApi {
 	private String codigoDIR3;
 
 	/** Nombre entidad. **/
-	private String nombre;
+	private Literal nombre;
 
 	/** Indica si la entidad está activa. */
 	private boolean activo;
@@ -37,7 +37,7 @@ public class Entidad extends ModelApi {
 	private Fichero css;
 
 	/** Pie de página de contacto para Asistente Tramitación (HTML). */
-	private Traducciones pie;
+	private Literal pie;
 
 	/** Email contacto genérico. */
 	private String email;
@@ -60,6 +60,7 @@ public class Entidad extends ModelApi {
 	/** Habilitado contacto formulario incidencias . **/
 	private boolean formularioIncidenciasHabilitado;
 
+	// TODO Gestionarlo mejor fuera de la entidad
 	/** Formularios de incidencias. **/
 	private List<FormularioSoporte> formularioIncidencias;
 
@@ -96,7 +97,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * @return the nombre
 	 */
-	public String getNombre() {
+	public Literal getNombre() {
 		return nombre;
 	}
 
@@ -104,7 +105,7 @@ public class Entidad extends ModelApi {
 	 * @param nombre
 	 *            the nombre to set
 	 */
-	public void setNombre(final String nombre) {
+	public void setNombre(final Literal nombre) {
 		this.nombre = nombre;
 	}
 
@@ -186,7 +187,7 @@ public class Entidad extends ModelApi {
 	/**
 	 * @return the pie
 	 */
-	public Traducciones getPie() {
+	public Literal getPie() {
 		return pie;
 	}
 
@@ -194,7 +195,7 @@ public class Entidad extends ModelApi {
 	 * @param pie
 	 *            the pie to set
 	 */
-	public void setPie(final Traducciones pie) {
+	public void setPie(final Literal pie) {
 		this.pie = pie;
 	}
 

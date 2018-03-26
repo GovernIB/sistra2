@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORMUL")
-public class JFormulario implements java.io.Serializable {
+public class JFormulario implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class JFormulario implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FORMUL_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FORMUL_SEQ", sequenceName = "STG_FORMUL_SEQ")
 	@Column(name = "FOR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FOR_CABLOG")
@@ -40,7 +40,7 @@ public class JFormulario implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FOR_CABTXT")
-	private JLiterales textoCabecera;
+	private JLiteral textoCabecera;
 
 	@Column(name = "FOR_ACCPER", nullable = false, precision = 1, scale = 0)
 	private boolean permitirAccionesPersonalizadas;
@@ -63,11 +63,11 @@ public class JFormulario implements java.io.Serializable {
 	public JFormulario() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -87,11 +87,11 @@ public class JFormulario implements java.io.Serializable {
 		this.scriptPlantilla = scriptPlantilla;
 	}
 
-	public JLiterales getTextoCabecera() {
+	public JLiteral getTextoCabecera() {
 		return this.textoCabecera;
 	}
 
-	public void setTextoCabecera(final JLiterales textoCabecera) {
+	public void setTextoCabecera(final JLiteral textoCabecera) {
 		this.textoCabecera = textoCabecera;
 	}
 

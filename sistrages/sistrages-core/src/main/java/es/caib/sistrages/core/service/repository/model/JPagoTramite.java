@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_PAGTRA", uniqueConstraints = @UniqueConstraint(columnNames = { "PAG_CODPTR", "PAG_IDENTI" }))
-public class JPagoTramite implements java.io.Serializable {
+public class JPagoTramite implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,7 +25,7 @@ public class JPagoTramite implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_PAGTRA_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_PAGTRA_SEQ", sequenceName = "STG_PAGTRA_SEQ")
 	@Column(name = "PAG_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PAG_CODPTR", nullable = false)
@@ -41,7 +41,7 @@ public class JPagoTramite implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PAG_DESCRIP", nullable = false)
-	private JLiterales descripcion;
+	private JLiteral descripcion;
 
 	@Column(name = "PAG_IDENTI", nullable = false, length = 20)
 	private String identificador;
@@ -64,11 +64,11 @@ public class JPagoTramite implements java.io.Serializable {
 	public JPagoTramite() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -96,11 +96,11 @@ public class JPagoTramite implements java.io.Serializable {
 		this.scriptDatosPago = scriptDatosPago;
 	}
 
-	public JLiterales getDescripcion() {
+	public JLiteral getDescripcion() {
 		return this.descripcion;
 	}
 
-	public void setDescripcion(final JLiterales descripcion) {
+	public void setDescripcion(final JLiteral descripcion) {
 		this.descripcion = descripcion;
 	}
 

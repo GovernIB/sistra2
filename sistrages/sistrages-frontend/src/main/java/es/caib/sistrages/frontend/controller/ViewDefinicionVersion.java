@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -20,19 +21,24 @@ import org.primefaces.model.menu.MenuModel;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Formulario;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypeInterno;
+import es.caib.sistrages.core.api.model.types.TypePago;
+import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.OpcionArbol;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
@@ -80,34 +86,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	private TramiteVersion tramiteVersion;
 
-	/*** esto debe de ir dentro de tramiteVersion ***/
-
-	/**
-	 * Lista de pasos.
-	 */
-	private List<TramitePaso> listaPasos;
-
-	/**
-	 * Lista de Formularios.
-	 */
-	private List<Formulario> listaFormularios;
-
-	/**
-	 * Lista de tramites de pasos a rellenar.
-	 */
-	private List<TramitePasoRellenar> tramitePasosRellenar;
-
-	/**
-	 * Lista de documentos.
-	 */
-	private List<Documento> listaDocumentos;
-
-	/**
-	 * Lista de tasas.
-	 */
-	private List<Tasa> listaTasas;
-
-	/*** fin de dentro ***/
+	/** Formulario seleccionado. **/
+	private Formulario formularioSeleccionado;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -147,142 +127,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		/* recuperamos los datos */
 		recuperaTramiteVersion(id);
 
-		/* iniciliza pasos tramite */
-		final TramitePasoDebeSaber paso1 = new TramitePasoDebeSaber();
-		paso1.setId(1L);
-		paso1.setCodigo("1");
-		paso1.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.debeSaber");
-		paso1.setOrden(1);
-		final TramitePasoRellenar paso2 = new TramitePasoRellenar();
-		paso2.setId(2L);
-		paso2.setCodigo("2");
-		paso2.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.rellenar");
-		paso2.setOrden(2);
-		final TramitePasoAnexar paso3 = new TramitePasoAnexar();
-		paso3.setId(3L);
-		paso3.setCodigo("3");
-		paso3.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.anexarDocumentos");
-		paso3.setOrden(3);
-		final TramitePasoTasa paso4 = new TramitePasoTasa();
-		paso4.setId(4L);
-		paso4.setCodigo("4");
-		paso4.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.pagarTasas");
-		paso4.setOrden(4);
-		final TramitePaso paso5 = new TramitePaso();
-		paso5.setId(5L);
-		paso5.setCodigo("5");
-		paso5.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.registrarTramite");
-		paso5.setOrden(5);
+		/** Inicializamos el arbol. **/
+		inicializarArbol();
+	}
 
-		listaPasos = new ArrayList<>();
-		// DebeSaber
-		listaPasos.add(paso1);
-
-		final Formulario formulario1 = new Formulario();
-		formulario1.setId(1L);
-		formulario1.setCodigo("Formulario1");
-		final Traducciones traducciones = new Traducciones();
-		traducciones.add(new Traduccion("ca", "Datos de la solicitud"));
-		traducciones.add(new Traduccion("es", "Datos de la solicitud"));
-		formulario1.setDescripcion(traducciones);
-		formulario1.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
-		formulario1.setTipo(TypeFormulario.TRAMITE);
-
-		final Formulario formulario2 = new Formulario();
-		formulario2.setCodigo("Formulario2");
-		final Traducciones traducciones2 = new Traducciones();
-		traducciones2.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
-		traducciones2.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
-		formulario2.setDescripcion(traducciones2);
-		formulario2.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		formulario2.setDebeFirmarse(true);
-		formulario2.setScriptFirma(new Script());
-		formulario2.setDebePrerregistrarse(true);
-		formulario2.setScriptPrerrigistro(new Script());
-		formulario2.setScriptDatosIniciales(new Script());
-
-		final Formulario formulario3 = new Formulario();
-		formulario3.setCodigo("Formulario3");
-		final Traducciones traducciones3 = new Traducciones();
-		traducciones3.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
-		traducciones3.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
-		formulario3.setDescripcion(traducciones3);
-		formulario3.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		formulario3.setDebeFirmarse(true);
-		formulario3.setScriptFirma(new Script());
-		formulario3.setDebePrerregistrarse(true);
-		formulario3.setScriptPrerrigistro(new Script());
-		formulario3.setScriptDatosIniciales(new Script());
-
-		final List<Formulario> formularios = new ArrayList<>();
-		formularios.add(formulario1);
-		formularios.add(formulario2);
-		formularios.add(formulario3);
-		paso2.setFormulariosTramite(formularios);
-
-		// Rellenar
-		listaPasos.add(paso2);
-
-		/* inicializa documentos */
-		final Documento documento1 = new Documento();
-		documento1.setId(1L);
-		documento1.setCodigo("Anexo1");
-		final Traducciones traduccionesdoc1 = new Traducciones();
-		traduccionesdoc1.add(new Traduccion("ca", "Certificat de penals"));
-		traduccionesdoc1.add(new Traduccion("es", "Certificado de penales"));
-		documento1.setDescripcion(traduccionesdoc1);
-		documento1.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		final Documento documento2 = new Documento();
-		documento2.setId(2L);
-		documento2.setCodigo("Anexo2");
-		final Traducciones traduccionesdoc2 = new Traducciones();
-		traduccionesdoc2.add(new Traduccion("ca", "Titols acadèmics"));
-		traduccionesdoc2.add(new Traduccion("es", "Titulos academicos"));
-		documento2.setDescripcion(traduccionesdoc2);
-		documento2.setObligatoriedad(TypeFormularioObligatoriedad.DEPENDIENTE);
-
-		listaDocumentos = new ArrayList<>();
-		listaDocumentos.add(documento1);
-		listaDocumentos.add(documento2);
-		paso3.setDocumentos(listaDocumentos);
-
-		listaPasos.add(paso3);
-
-		/* inicializa tasas */
-		final Tasa tasa1 = new Tasa();
-		tasa1.setId(1L);
-		tasa1.setCodigo("Tasa1");
-		tasa1.setDescripcion("Tasa de incripción");
-		tasa1.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		tasa1.setTipo("Telemático");
-		final Tasa tasa2 = new Tasa();
-		tasa2.setId(2L);
-		tasa2.setCodigo("Tasa2");
-		tasa2.setDescripcion("Tasa de incripción");
-		tasa2.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
-		tasa2.setTipo("Telemático");
-
-		listaTasas = new ArrayList<>();
-		listaTasas.add(tasa1);
-		listaTasas.add(tasa2);
-		paso4.setTasas(listaTasas);
-		listaPasos.add(paso4);
-		listaPasos.add(paso5);
-
-		// Prepara los formularios
-		listaFormularios = new ArrayList<>();
-		listaFormularios.add(formulario1);
-		listaFormularios.add(formulario2);
-		listaFormularios.add(formulario3);
-
-		// final Documento documento2 = new Documento();
-		// documento2.setId(2L);
-		// documento2.setCodigo("Anexo2");
-		// documento2.setDescripcion("Titulos academicos");
-		// documento2.setObligatoriedad("Obligatorio");
-
-		// listaDocumentos.add(documento2);
-
+	/**
+	 * Método que se encarga de cargar de nuevo el arbol.
+	 */
+	private void inicializarArbol() {
 		/* inicializa arbol */
 		root = new DefaultTreeNode("Root", null);
 
@@ -304,13 +156,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPasos")),
 				root);
 
-		for (final TramitePaso tramitePaso : listaPasos) {
+		for (final TramitePaso tramitePaso : this.tramiteVersion.getListaPasos()) {
 
 			if (tramitePaso instanceof TramitePasoDebeSaber) {
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
 								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionDebeSaber", tramitePaso.getId())));
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionDebeSaber", tramitePaso.getId()),
+						tramitePaso));
 
 				nodePasosTramitacion.getChildren().add(nodo);
 			} else if (tramitePaso instanceof TramitePasoRellenar) {
@@ -318,15 +171,17 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
 								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionRellenar", tramitePaso.getId())));
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionRellenar", tramitePaso.getId()),
+						tramitePaso));
 
 				if (((TramitePasoRellenar) tramitePaso).getFormulariosTramite() != null
 						&& !((TramitePasoRellenar) tramitePaso).getFormulariosTramite().isEmpty()) {
 
 					for (final Formulario formulario : ((TramitePasoRellenar) tramitePaso).getFormulariosTramite()) {
-						final TreeNode nodoRellenar = new DefaultTreeNode(
-								new OpcionArbol(formulario.getCodigo(), UtilJSF.getUrlArbolDefinicionVersion(
-										"viewDefinicionVersionFormulario", formulario.getId())));
+						final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(formulario.getCodigo(),
+								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario",
+										formulario.getId()),
+								formulario, tramitePaso));
 
 						nodo.getChildren().add(nodoRellenar);
 					}
@@ -338,14 +193,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 						String.valueOf(tramitePaso.getOrden()) + ". "
 								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexarDocumentos",
-								tramitePaso.getId())));
+								tramitePaso.getId()),
+						tramitePaso));
 
 				if (((TramitePasoAnexar) tramitePaso).getDocumentos() != null
 						&& !((TramitePasoAnexar) tramitePaso).getDocumentos().isEmpty()) {
 
 					for (final Documento documento : ((TramitePasoAnexar) tramitePaso).getDocumentos()) {
 						final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(documento.getCodigo(),
-								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo", documento.getId())));
+								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo", documento.getId()),
+								documento, tramitePaso));
 
 						nodo.getChildren().add(nodoRellenar);
 					}
@@ -356,14 +213,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
 								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPagarTasas", tramitePaso.getId())));
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPagarTasas", tramitePaso.getId()),
+						tramitePaso));
 
 				if (((TramitePasoTasa) tramitePaso).getTasas() != null
 						&& !((TramitePasoTasa) tramitePaso).getTasas().isEmpty()) {
 
 					for (final Tasa tasa : ((TramitePasoTasa) tramitePaso).getTasas()) {
 						final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(tasa.getCodigo(),
-								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa", tasa.getId())));
+								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa", tasa.getId()), tasa,
+								tramitePaso));
 
 						nodo.getChildren().add(nodoRellenar);
 					}
@@ -384,15 +243,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Recupera el valor de root.
-	 *
-	 * @return el valor de root
-	 */
-	public TreeNode getRoot() {
-		return root;
-	}
-
-	/**
 	 * Establece la propiedad expandida en un arbol recursivamente.
 	 *
 	 * @param node
@@ -410,24 +260,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Obtiene el valor de breadCrumb.
-	 *
-	 * @return el valor de breadCrumb
-	 */
-	public MenuModel getBreadCrumModel() {
-		return breadCrumb;
-	}
-
-	/**
-	 * Obtiene el valor de selectedNode.
-	 *
-	 * @return el valor de selectedNode
-	 */
-	public TreeNode getSelectedNode() {
-		return selectedNode;
-	}
-
-	/**
 	 * Establece el valor de selectedNode.
 	 *
 	 * @param selectedNode
@@ -435,6 +267,71 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setSelectedNode(final TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
+	}
+
+	/**
+	 * Tramite paso seleccionado.
+	 *
+	 * @return
+	 */
+	public TramitePaso getTramitePasoSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
+	}
+
+	/**
+	 * Tramite paso debe saber seleccionado.
+	 *
+	 * @return
+	 */
+	public TramitePasoDebeSaber getTramitePasoDSSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return (TramitePasoDebeSaber) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
+	}
+
+	/**
+	 * Tramite paso rellenar seleccionado.
+	 *
+	 * @return
+	 */
+	public TramitePasoRellenar getTramitePasoRELLSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return (TramitePasoRellenar) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
+	}
+
+	/**
+	 * Tramite paso anexar seleccionado.
+	 *
+	 * @return
+	 */
+	public TramitePasoAnexar getTramitePasoANEXSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return (TramitePasoAnexar) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
+	}
+
+	/**
+	 * Tramite paso tasa seleccionado.
+	 *
+	 * @return
+	 */
+	public TramitePasoTasa getTramitePasTSSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return (TramitePasoTasa) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
 	}
 
 	/**
@@ -482,25 +379,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Obtiene el valor de opcionUrl.
-	 *
-	 * @return el valor de opcionUrl
-	 */
-	public String getOpcionUrl() {
-		return opcionUrl;
-	}
-
-	/**
-	 * Establece el valor de opcionUrl.
-	 *
-	 * @param opcion
-	 *            el nuevo valor de opcionUrl
-	 */
-	public void setOpcionUrl(final String opcion) {
-		this.opcionUrl = opcion;
-	}
-
-	/**
 	 * Crea un nuevo MenuModel a partir del que se pasa por par&aacute;metro.
 	 *
 	 * @param menumodel
@@ -529,7 +407,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		tramiteVersion.setId(id);
 
 		/* propiedades */
-		final Traducciones desc1 = new Traducciones();
+		final Literal desc1 = new Literal();
 		desc1.add(new Traduccion("es", "Trámite 1 - Convocatoria de diciembre de 2017 "));
 		desc1.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de desembre de 2017"));
 		tramiteVersion.setDescripcion(desc1);
@@ -550,7 +428,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		dia.set(2018, 1, 1);
 		tramiteVersion.setPlazoInicioDesactivacion(dia.getTime());
 		tramiteVersion.setPlazoFinDesactivacion(new Date());
-		final Traducciones desact1 = new Traducciones();
+		final Literal desact1 = new Literal();
 		desact1.add(new Traduccion("es", "Mensaje de desactivacion"));
 		desact1.add(new Traduccion("ca", "Missatge de desactivació"));
 		tramiteVersion.setMensajeDesactivacion(desact1);
@@ -564,27 +442,27 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		dominio1.setId(1L);
 		dominio1.setCodigo("1");
 		dominio1.setDescripcion("Dominio 1");
-		dominio1.setAmbito("Entidad");
+		dominio1.setAmbito(TypeAmbito.GLOBAL);
 		final Dominio dominio2 = new Dominio();
 		dominio2.setId(2L);
 		dominio2.setCodigo("2");
 		dominio2.setDescripcion("Dominio 2");
-		dominio2.setAmbito("Area");
+		dominio2.setAmbito(TypeAmbito.AREA);
 		final Dominio dominio3 = new Dominio();
 		dominio3.setId(3L);
 		dominio3.setCodigo("3");
 		dominio3.setDescripcion("Dominio 3");
-		dominio3.setAmbito("Generico");
+		dominio3.setAmbito(TypeAmbito.GLOBAL);
 		final Dominio dominio4 = new Dominio();
 		dominio4.setId(4L);
 		dominio4.setCodigo("4");
 		dominio4.setDescripcion("Dominio 4");
-		dominio4.setAmbito("Entidad");
+		dominio4.setAmbito(TypeAmbito.ENTIDAD);
 		final Dominio dominio5 = new Dominio();
 		dominio5.setId(5L);
 		dominio5.setCodigo("5");
 		dominio5.setDescripcion("Dominio 5");
-		dominio5.setAmbito("Generico");
+		dominio5.setAmbito(TypeAmbito.GLOBAL);
 
 		final ArrayList<Dominio> listaDominios = new ArrayList<>();
 		listaDominios.add(dominio1);
@@ -594,82 +472,344 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		listaDominios.add(dominio5);
 
 		tramiteVersion.setListaDominios(listaDominios);
+
+		/* iniciliza pasos tramite */
+		final TramitePasoDebeSaber paso1 = new TramitePasoDebeSaber();
+		paso1.setId(1L);
+		paso1.setCodigo("1");
+		paso1.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.debeSaber");
+		final Literal tradDebeSaber = new Literal();
+		tradDebeSaber.add(new Traduccion("ca", "<b>Debe saber - ca</b>"));
+		tradDebeSaber.add(new Traduccion("es", "<b>Debe saber - es</b>"));
+		paso1.setInstruccionesIniciales(tradDebeSaber);
+		paso1.setOrden(1);
+		final TramitePasoRellenar paso2 = new TramitePasoRellenar();
+		paso2.setId(2L);
+		paso2.setCodigo("2");
+		paso2.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.rellenar");
+		paso2.setOrden(2);
+		final TramitePasoAnexar paso3 = new TramitePasoAnexar();
+		paso3.setId(3L);
+		paso3.setCodigo("3");
+		paso3.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.anexarDocumentos");
+		paso3.setOrden(3);
+		final TramitePasoTasa paso4 = new TramitePasoTasa();
+		paso4.setId(4L);
+		paso4.setCodigo("4");
+		paso4.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.pagarTasas");
+		paso4.setOrden(4);
+		final TramitePaso paso5 = new TramitePaso();
+		paso5.setId(5L);
+		paso5.setCodigo("5");
+		paso5.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.registrarTramite");
+		paso5.setOrden(5);
+
+		final List<TramitePaso> listaPasos = new ArrayList<>();
+		// DebeSaber
+		listaPasos.add(paso1);
+
+		final Formulario formulario1 = new Formulario();
+		formulario1.setId(1L);
+		formulario1.setCodigo("Formulario1");
+		final Literal traducciones = new Literal();
+		traducciones.add(new Traduccion("ca", "Datos de la solicitud"));
+		traducciones.add(new Traduccion("es", "Datos de la solicitud"));
+		formulario1.setDescripcion(traducciones);
+		formulario1.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
+		formulario1.setTipo(TypeFormulario.TRAMITE);
+		formulario1.setTipoFormulario(TypeInterno.INTERNO);
+
+		final Formulario formulario2 = new Formulario();
+		formulario2.setCodigo("Formulario2");
+		final Literal traducciones2 = new Literal();
+		traducciones2.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
+		traducciones2.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
+		formulario2.setDescripcion(traducciones2);
+		formulario2.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
+		formulario2.setDebeFirmarse(true);
+		formulario2.setScriptFirma(new Script());
+		formulario2.setDebePrerregistrarse(true);
+		formulario2.setScriptPrerrigistro(new Script());
+		formulario2.setScriptDatosIniciales(new Script());
+		formulario2.setTipoFormulario(TypeInterno.EXTERNO);
+
+		final Formulario formulario3 = new Formulario();
+		formulario3.setCodigo("Formulario3");
+		final Literal traducciones3 = new Literal();
+		traducciones3.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
+		traducciones3.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
+		formulario3.setDescripcion(traducciones3);
+		formulario3.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
+		formulario3.setDebeFirmarse(true);
+		formulario3.setScriptFirma(new Script());
+		formulario3.setDebePrerregistrarse(true);
+		formulario3.setScriptPrerrigistro(new Script());
+		formulario3.setScriptDatosIniciales(new Script());
+		formulario3.setTipoFormulario(TypeInterno.EXTERNO);
+
+		final List<Formulario> formularios = new ArrayList<>();
+		formularios.add(formulario1);
+		formularios.add(formulario2);
+		formularios.add(formulario3);
+		paso2.setFormulariosTramite(formularios);
+
+		// Rellenar
+		listaPasos.add(paso2);
+
+		/* inicializa documentos */
+		final Documento documento1 = new Documento();
+		documento1.setId(1L);
+		documento1.setCodigo("Anexo1");
+		final Literal traduccionesdoc1 = new Literal();
+		traduccionesdoc1.add(new Traduccion("ca", "Certificat de penals"));
+		traduccionesdoc1.add(new Traduccion("es", "Certificado de penales"));
+		documento1.setDescripcion(traduccionesdoc1);
+		documento1.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
+		final Documento documento2 = new Documento();
+		documento2.setId(2L);
+		documento2.setCodigo("Anexo2");
+		final Literal traduccionesdoc2 = new Literal();
+		traduccionesdoc2.add(new Traduccion("ca", "Titols acadèmics"));
+		traduccionesdoc2.add(new Traduccion("es", "Titulos academicos"));
+		documento2.setDescripcion(traduccionesdoc2);
+		documento2.setObligatoriedad(TypeFormularioObligatoriedad.DEPENDIENTE);
+
+		final List<Documento> listaDocumentos = new ArrayList<>();
+		listaDocumentos.add(documento1);
+		listaDocumentos.add(documento2);
+		paso3.setDocumentos(listaDocumentos);
+
+		listaPasos.add(paso3);
+
+		/* inicializa tasas */
+		final Tasa tasa1 = new Tasa();
+		tasa1.setId(1L);
+		tasa1.setCodigo("Tasa1");
+		final Literal trad1 = new Literal();
+		trad1.add(new Traduccion("ca", "Tasa de inscripció"));
+		trad1.add(new Traduccion("es", "Tasa de inscripción"));
+		tasa1.setDescripcion(trad1);
+		tasa1.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
+		tasa1.setTipo(TypePago.TELEMATICO);
+		final Tasa tasa2 = new Tasa();
+		tasa2.setId(2L);
+		tasa2.setCodigo("Tasa2");
+		final Literal trad2 = new Literal();
+		trad2.add(new Traduccion("ca", "Tasa de inscripció"));
+		trad2.add(new Traduccion("es", "Tasa de inscripción"));
+		tasa2.setDescripcion(trad2);
+		tasa2.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
+		tasa2.setTipo(TypePago.PRESENCIAL);
+
+		final List<Tasa> listaTasas = new ArrayList<>();
+		listaTasas.add(tasa1);
+		listaTasas.add(tasa2);
+		paso4.setTasas(listaTasas);
+		listaPasos.add(paso4);
+		listaPasos.add(paso5);
+
+		// Prepara los formularios
+		final List<Formulario> listaFormularios = new ArrayList<>();
+		listaFormularios.add(formulario1);
+		listaFormularios.add(formulario2);
+		listaFormularios.add(formulario3);
+
+		tramiteVersion.setListaPasos(listaPasos);
 	}
 
 	/**
-	 * Obtiene el valor de listaPasos.
+	 * Retorno dialogo de un Paso Tramite.
 	 *
-	 * @return el valor de listaPasos
-	 */
-	public List<TramitePaso> getListaPasos() {
-		return listaPasos;
+	 * @param event
+	 *            respuesta dialogo
+	 ***/
+	public void returnDialogoPT(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+
+				final TramitePaso tramitePaso = (TramitePaso) respuesta.getResult();
+				tramiteVersion.getListaPasos().add(tramitePaso);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				final TramitePaso tramitePasoMod = (TramitePaso) respuesta.getResult();
+				for (int i = 0; i < tramiteVersion.getListaPasos().size(); i++) {
+					if (tramiteVersion.getListaPasos().get(i).getId().compareTo(tramitePasoMod.getId()) == 0) {
+						tramiteVersion.getListaPasos().remove(i);
+						tramiteVersion.getListaPasos().add(i, tramitePasoMod);
+						break;
+					}
+				}
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+
+		final TreeNode seleccionado = this.selectedNode;
+		inicializarArbol();
+		this.selectedNode = seleccionado;
 	}
 
 	/**
-	 * Establece el valor de listaPasos.
+	 * Retorno dialogo de un Paso Tramite.
 	 *
-	 * @param listaPasos
-	 *            el nuevo valor de listaPasos
-	 */
-	public void setListaPasos(final List<TramitePaso> listaPasos) {
-		this.listaPasos = listaPasos;
+	 * @param event
+	 *            respuesta dialogo
+	 ***/
+	public void returnDialogoFormulario(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			final Long idTP = this.getTramitePasoRELLSeleccionado().getId();
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+
+				final Formulario formularioNew = (Formulario) respuesta.getResult();
+
+				// Busca el tramite paso y lo añadimos
+				for (int i = 0; i < tramiteVersion.getListaPasos().size(); i++) {
+					if (tramiteVersion.getListaPasos().get(i).getId().compareTo(idTP) == 0) {
+						((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i)).getFormulariosTramite()
+								.add(formularioNew);
+						break;
+					}
+				}
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+				final Formulario formularioMod = (Formulario) respuesta.getResult();
+
+				// Busca el tramite paso y lo añadimos
+				for (int i = 0; i < tramiteVersion.getListaPasos().size(); i++) {
+					if (tramiteVersion.getListaPasos().get(i).getId().compareTo(idTP) == 0) {
+						final TramitePasoRellenar tpr = ((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i));
+						for (int j = 0; j < tpr.getFormulariosTramite().size(); j++) {
+							if (tpr.getFormulariosTramite().get(j).getId().compareTo(formularioMod.getId()) == 0) {
+								((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i)).getFormulariosTramite()
+										.remove(j);
+								((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i)).getFormulariosTramite()
+										.add(j, formularioMod);
+								break;
+							}
+						}
+					}
+				}
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+
+		final TreeNode seleccionado = this.selectedNode;
+		inicializarArbol();
+		this.selectedNode = seleccionado;
 	}
 
 	/**
-	 * Obtiene el valor de listaFormularios.
-	 *
-	 * @return el valor de listaFormularios
+	 * Elimina formulario.
 	 */
-	public List<Formulario> getListaFormularios() {
-		return listaFormularios;
+	public void eliminar() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFormularioSeleccionado())
+			return;
+
+		// this.selectedNode.getFormulariosTramite().remove(this.formularioSeleccionado);
 	}
 
 	/**
-	 * Establece el valor de listaFormularios.
+	 * Verifica si hay formulario seleccionado.
 	 *
-	 * @param listaFormularios
-	 *            el nuevo valor de listaFormularios
+	 * @return
 	 */
-	public void setListaFormularios(final List<Formulario> listaFormularios) {
-		this.listaFormularios = listaFormularios;
+	private boolean verificarFormularioSeleccionado() {
+		boolean filaSeleccionada = true;
+		if (this.formularioSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
 	}
 
 	/**
-	 * Obtiene el valor de listaDocumentos.
-	 *
-	 * @return el valor de listaDocumentos
+	 * Sube el formulario.
 	 */
-	public List<Documento> getListaDocumentos() {
-		return listaDocumentos;
+	public void subir() {
+		if (!verificarFormularioSeleccionado())
+			return;
+		/*
+		 * final int posicion =
+		 * this.data.getFormulariosTramite().indexOf(this.formularioSeleccionado); if
+		 * (posicion <= 0) { UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+		 * UtilJSF.getLiteral("error.moverarriba")); return; }
+		 * 
+		 * final Formulario formulario =
+		 * this.data.getFormulariosTramite().remove(posicion);
+		 * this.data.getFormulariosTramite().add(posicion - 1, formulario);
+		 * 
+		 * for (int i = 0; i < this.data.getFormulariosTramite().size(); i++) {
+		 * this.data.getFormulariosTramite().get(i).setOrden(i + 1); }
+		 */
 	}
 
 	/**
-	 * Establece el valor de listaDocumentos.
-	 *
-	 * @param listaDocumentos
-	 *            el nuevo valor de listaDocumentos
+	 * Baja el formulario.
 	 */
-	public void setListaDocumentos(final List<Documento> listaDocumentos) {
-		this.listaDocumentos = listaDocumentos;
-	}
-
-	/**
-	 * Obtiene el valor de listaTasas.
-	 *
-	 * @return el valor de listaTasas
-	 */
-	public List<Tasa> getListaTasas() {
-		return listaTasas;
-	}
-
-	/**
-	 * Establece el valor de listaTasas.
-	 *
-	 * @param listaTasas
-	 *            el nuevo valor de listaTasas
-	 */
-	public void setListaTasas(final List<Tasa> listaTasas) {
-		this.listaTasas = listaTasas;
+	public void bajarFormulario() {
+		if (!verificarFormularioSeleccionado())
+			return;
+		/*
+		 * final int posicion =
+		 * this.data.getFormulariosTramite().indexOf(this.formularioSeleccionado); if
+		 * (posicion >= this.data.getFormulariosTramite().size() - 1) {
+		 * UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+		 * UtilJSF.getLiteral("error.moverabajo")); return; }
+		 * 
+		 * final Formulario formulario =
+		 * this.data.getFormulariosTramite().remove(posicion);
+		 * this.data.getFormulariosTramite().add(posicion + 1, formulario);
+		 * 
+		 * for (int i = 0; i < this.data.getFormulariosTramite().size(); i++) {
+		 * this.data.getFormulariosTramite().get(i).setOrden(i + 1); }
+		 */
 	}
 
 	/**
@@ -711,18 +851,63 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @return the tramitePasosRellenar
+	 * Obtiene el valor de opcionUrl.
+	 *
+	 * @return el valor de opcionUrl
 	 */
-	public List<TramitePasoRellenar> getTramitePasosRellenar() {
-		return tramitePasosRellenar;
+	public String getOpcionUrl() {
+		return opcionUrl;
 	}
 
 	/**
-	 * @param tramitePasosRellenar
-	 *            the tramitePasosRellenar to set
+	 * Establece el valor de opcionUrl.
+	 *
+	 * @param opcion
+	 *            el nuevo valor de opcionUrl
 	 */
-	public void setTramitePasosRellenar(final List<TramitePasoRellenar> tramitePasosRellenar) {
-		this.tramitePasosRellenar = tramitePasosRellenar;
+	public void setOpcionUrl(final String opcion) {
+		this.opcionUrl = opcion;
 	}
 
+	/**
+	 * Recupera el valor de root.
+	 *
+	 * @return el valor de root
+	 */
+	public TreeNode getRoot() {
+		return root;
+	}
+
+	/**
+	 * Obtiene el valor de breadCrumb.
+	 *
+	 * @return el valor de breadCrumb
+	 */
+	public MenuModel getBreadCrumModel() {
+		return breadCrumb;
+	}
+
+	/**
+	 * Obtiene el valor de selectedNode.
+	 *
+	 * @return el valor de selectedNode
+	 */
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	/**
+	 * @return the formularioSeleccionado
+	 */
+	public Formulario getFormularioSeleccionado() {
+		return formularioSeleccionado;
+	}
+
+	/**
+	 * @param formularioSeleccionado
+	 *            the formularioSeleccionado to set
+	 */
+	public void setFormularioSeleccionado(final Formulario formularioSeleccionado) {
+		this.formularioSeleccionado = formularioSeleccionado;
+	}
 }

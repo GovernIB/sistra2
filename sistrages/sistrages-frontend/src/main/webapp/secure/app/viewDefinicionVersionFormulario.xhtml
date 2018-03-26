@@ -29,7 +29,7 @@
        	  		<p:row>
 	       	  		<p:column styleClass="noPadding-left">
 			         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersionFormulario.data.obligatoriedad}">
-			         		<f:selectItems value="#{TypeRolPermiso.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad' += tipo]}" />
+			         		<f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
 					    </p:selectOneRadio>
 				     </p:column>
 				     <p:column>

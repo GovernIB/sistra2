@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_ACCPER", uniqueConstraints = @UniqueConstraint(columnNames = { "ACP_CODFOR", "ACP_ACCION" }))
-public class JAccionPersonalizada implements java.io.Serializable {
+public class JAccionPersonalizada implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,7 +25,7 @@ public class JAccionPersonalizada implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_ACCPER_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_ACCPER_SEQ", sequenceName = "STG_ACCPER_SEQ")
 	@Column(name = "ACP_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ACP_CODFOR", nullable = false)
@@ -33,7 +33,7 @@ public class JAccionPersonalizada implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ACP_DESCRI", nullable = false)
-	private JLiterales titulo;
+	private JLiteral titulo;
 
 	@Column(name = "ACP_ACCION", nullable = false, length = 20)
 	private String accion;
@@ -42,13 +42,14 @@ public class JAccionPersonalizada implements java.io.Serializable {
 	private boolean validar;
 
 	public JAccionPersonalizada() {
+		super();
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -60,11 +61,11 @@ public class JAccionPersonalizada implements java.io.Serializable {
 		this.formulario = formulario;
 	}
 
-	public JLiterales getTitulo() {
+	public JLiteral getTitulo() {
 		return this.titulo;
 	}
 
-	public void setTitulo(final JLiterales titulo) {
+	public void setTitulo(final JLiteral titulo) {
 		this.titulo = titulo;
 	}
 

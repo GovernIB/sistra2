@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import es.caib.sistrages.core.api.model.Formulario;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
@@ -48,7 +48,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		data = new Formulario();
 		data.setId(1L);
 		data.setCodigo("Formulario1");
-		final Traducciones traducciones = new Traducciones();
+		final Literal traducciones = new Literal();
 		traducciones.add(new Traduccion("ca", "Datos de la solicitud"));
 		traducciones.add(new Traduccion("es", "Datos de la solicitud"));
 		data.setDescripcion(traducciones);
@@ -78,7 +78,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
 
 				// Mensaje
@@ -88,7 +88,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesTipoIncid = (Traducciones) respuesta.getResult();
+				final Literal traduccionesTipoIncid = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccionesTipoIncid);
 
 				// Mensaje

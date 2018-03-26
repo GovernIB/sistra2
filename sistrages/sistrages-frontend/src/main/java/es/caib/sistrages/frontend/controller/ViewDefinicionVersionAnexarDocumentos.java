@@ -13,7 +13,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -105,7 +105,7 @@ public class ViewDefinicionVersionAnexarDocumentos extends ViewControllerBase {
 		final Documento documento1 = new Documento();
 		documento1.setId(1L);
 		documento1.setCodigo("Anexo1");
-		final Traducciones traducciones1 = new Traducciones();
+		final Literal traducciones1 = new Literal();
 		traducciones1.add(new Traduccion("ca", "Certificat de penals"));
 		traducciones1.add(new Traduccion("es", "Certificado de penales"));
 		documento1.setDescripcion(traducciones1);
@@ -113,7 +113,7 @@ public class ViewDefinicionVersionAnexarDocumentos extends ViewControllerBase {
 		final Documento documento2 = new Documento();
 		documento2.setId(2L);
 		documento2.setCodigo("Anexo2");
-		final Traducciones traducciones2 = new Traducciones();
+		final Literal traducciones2 = new Literal();
 		traducciones2.add(new Traduccion("ca", "Titols acadèmics"));
 		traducciones2.add(new Traduccion("es", "Titulos academicos"));
 		documento2.setDescripcion(traducciones2);

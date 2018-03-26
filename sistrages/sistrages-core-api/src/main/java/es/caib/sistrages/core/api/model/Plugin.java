@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.comun.Propiedad;
@@ -35,7 +36,7 @@ public class Plugin extends ModelApi {
 	private String descripcion;
 
 	/** Propiedades */
-	private List<Propiedad> propiedades;
+	private List<Propiedad> propiedades = new ArrayList<Propiedad>();
 
 	/**
 	 * @return the id

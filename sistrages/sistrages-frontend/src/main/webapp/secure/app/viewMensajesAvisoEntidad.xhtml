@@ -21,14 +21,14 @@
 			<p:toolbar id="toolbar">
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewMensajesAvisoEntidad.filtro}"/>
 	           			<p:commandButton icon="fa fa-search" actionListener="#{viewMensajesAvisoEntidad.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
-		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewMensajesAvisoEntidad.nuevo()}" process="@this" update="growl">
 		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
@@ -43,21 +43,17 @@
 		        	</h:panelGrid>
 		        </f:facet>
 
-
-
 		    </p:toolbar>
-
-
 
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewMensajesAvisoEntidad.listaDatos}"
-						 rows="10"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewMensajesAvisoEntidad.datoSeleccionado}" rowKey="#{td.id}" dblClickSelect="true">
+			        	 selectionMode="single" selection="#{viewMensajesAvisoEntidad.datoSeleccionado}" rowKey="#{td.id}">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
 				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
@@ -68,7 +64,7 @@
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerDescripcion']}">
-			        <h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
+			        <h:outputText value="#{td.mensaje.getTraduccion(sessionBean.lang)}" />
 			    </p:column>
 
  				<p:column headerText="#{msg['viewMensajesAvisoEntidad.headerTipo']}">
@@ -77,18 +73,18 @@
 
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerFechaInicio']}">
 			        <h:outputText value="#{td.fechaInicio}">
-			        	<f:convertDateTime pattern="dd/MM/yyyy" />
+			        	<f:convertDateTime pattern="dd/MM/yyyy"/>
 			        </h:outputText>
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerFechaFin']}">
 			        <h:outputText value="#{td.fechaFin}">
-			        	<f:convertDateTime pattern="dd/MM/yyyy" />
+			        	<f:convertDateTime pattern="dd/MM/yyyy"/>
 			        </h:outputText>
 			    </p:column>
 
-				<p:column headerText="#{msg['viewMensajesAvisoEntidad.headerActivo']}">
-			        <p:selectBooleanCheckbox value="#{td.activo}" disabled="true" />
+				<p:column headerText="#{msg['viewMensajesAvisoEntidad.headerBloqueado']}">
+			        <p:selectBooleanCheckbox value="#{td.bloqueado}" disabled="true" />
 			    </p:column>
 
 			</p:dataTable>

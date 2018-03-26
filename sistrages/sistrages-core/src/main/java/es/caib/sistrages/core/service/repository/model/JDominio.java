@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.service.repository.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,12 +19,18 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.util.UtilJSON;
+
 /**
  * JDominio
  */
 @Entity
 @Table(name = "STG_DOMINI", uniqueConstraints = @UniqueConstraint(columnNames = "DOM_IDENTI"))
-public class JDominio implements java.io.Serializable {
+public class JDominio implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,7 +38,7 @@ public class JDominio implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_DOMINI_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_DOMINI_SEQ", sequenceName = "STG_DOMINI_SEQ")
 	@Column(name = "DOM_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DOM_FDIDFD")
@@ -71,7 +78,7 @@ public class JDominio implements java.io.Serializable {
 	@JoinTable(name = "STG_DOMENT", joinColumns = {
 			@JoinColumn(name = "DEN_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DEN_CODENT", nullable = false, updatable = false) })
-	private Set<JEntidades> entidades = new HashSet<JEntidades>(0);
+	private Set<JEntidad> entidades = new HashSet<JEntidad>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "dominio")
 	private Set<JCampoFormularioIndexado> camposFormularioIndexado = new HashSet<JCampoFormularioIndexado>(0);
@@ -91,11 +98,11 @@ public class JDominio implements java.io.Serializable {
 	public JDominio() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -187,11 +194,11 @@ public class JDominio implements java.io.Serializable {
 		this.parametros = parametros;
 	}
 
-	public Set<JEntidades> getEntidades() {
+	public Set<JEntidad> getEntidades() {
 		return this.entidades;
 	}
 
-	public void setEntidades(final Set<JEntidades> entidades) {
+	public void setEntidades(final Set<JEntidad> entidades) {
 		this.entidades = entidades;
 	}
 
@@ -217,6 +224,52 @@ public class JDominio implements java.io.Serializable {
 
 	public void setVersionesTramite(final Set<JVersionTramite> versionesTramite) {
 		this.versionesTramite = versionesTramite;
+	}
+
+	public Dominio toModel() {
+		final Dominio dominio = new Dominio();
+		dominio.setId(this.codigo);
+		dominio.setCacheable(this.cacheo);
+		dominio.setCodigo(this.identificador);
+		dominio.setDescripcion(this.descripcion);
+		// Pendiente del toModel: dominio.setFuenteDatos(this.fuenteDatos);
+		dominio.setJndi(this.datasourceJndi);
+		dominio.setListaFija((List<Propiedad>) UtilJSON.fromListJSON(this.listaFijaValores, Propiedad.class));
+		dominio.setParametros((List<Propiedad>) UtilJSON.fromListJSON(this.parametros, Propiedad.class));
+		dominio.setSql(this.sql);
+		dominio.setTipo(TypeDominio.fromString(this.tipo));
+		dominio.setAmbito(TypeAmbito.fromString(this.ambito));
+		dominio.setUrl(this.servicioRemotoUrl);
+
+		return dominio;
+	}
+
+	public static JDominio fromModelStatic(final Dominio dominio) {
+		JDominio jdominio = null;
+		if (dominio != null) {
+			jdominio = new JDominio();
+			jdominio.fromModel(dominio);
+		}
+		return jdominio;
+	}
+
+	public JDominio fromModel(final Dominio dominio) {
+		if (dominio != null) {
+			this.setCodigo(dominio.getId());
+			this.setCacheo(dominio.isCacheable());
+			this.setIdentificador(dominio.getCodigo());
+			this.setDescripcion(dominio.getDescripcion());
+			// jdominio.setFuenteDatos(JFuenteDatos.fromModel(dominio.getFuenteDatos());
+			this.setDatasourceJndi(dominio.getJndi());
+			this.setListaFijaValores(UtilJSON.toJSON(dominio.getListaFija()));
+			this.setParametros(UtilJSON.toJSON(dominio.getParametros()));
+
+			this.setSql(dominio.getSql());
+			this.setTipo(dominio.getTipo().toString());
+			this.setAmbito(dominio.getAmbito().toString());
+			this.setServicioRemotoUrl(dominio.getUrl());
+		}
+		return this;
 	}
 
 }

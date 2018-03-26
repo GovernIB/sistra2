@@ -5,5 +5,5 @@ import es.caib.sistramit.core.api.model.EjemploDto;
 public interface EjemploService {
 
 	public EjemploDto recuperaDato();
-	public EjemploDto recuperaDato(String origen);
+
 }

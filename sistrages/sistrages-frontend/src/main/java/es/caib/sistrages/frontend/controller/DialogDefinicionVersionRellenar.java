@@ -9,11 +9,9 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Formulario;
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypeInterno;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -49,15 +47,15 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 		// TODO tendría que obtener el tramitePasoRellenar a partir de la id.
 		setId("1");
 		data = new Formulario();
-		data.setId(1L);
-		data.setCodigo("Formulario1");
-		final Traducciones traducciones = new Traducciones();
-		traducciones.add(new Traduccion("ca", "Datos de la solicitud"));
-		traducciones.add(new Traduccion("es", "Datos de la solicitud"));
-		data.setDescripcion(traducciones);
+		data.setId(66L);
+		data.setCodigo("");
+		// final Traducciones traducciones = new Traducciones();
+		// traducciones.add(new Traduccion("ca", ""));
+		// traducciones.add(new Traduccion("es", ""));
+		// data.setDescripcion(traducciones);
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
 		data.setTipo(TypeFormulario.TRAMITE);
-		data.setTipoFormulario(TypeInterno.INTERNO);
+		// data.setTipoFormulario(TypeInterno.INTERNO);
 	}
 
 	/**
@@ -77,7 +75,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
 
 				// Mensaje
@@ -87,7 +85,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccionesMod);
 
 				// Mensaje
@@ -108,12 +106,12 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	/**
 	 * Editar descripcion del dominio.
 	 *
-	 * 
+	 *
 	 */
 	public void editarDescripcion() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, UtilTraducciones.getTraduccionesPorDefecto(),
 					idiomas, idiomas);
 		} else {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);

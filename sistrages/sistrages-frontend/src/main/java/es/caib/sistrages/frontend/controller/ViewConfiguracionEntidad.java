@@ -26,14 +26,14 @@ import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilJSON;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
@@ -70,7 +70,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		data.setLogoAsistente(new Fichero(1l, "logoAsistente.png"));
 		// data.setLogoGestor(new Fichero(2l, "logoGestor.png"));
 		data.setCss(new Fichero(3l, "estilo.css"));
-		final Traducciones traducciones = new Traducciones();
+		final Literal traducciones = new Literal();
 		traducciones.add(new Traduccion("ca", "Traduccion pie catala"));
 		traducciones.add(new Traduccion("es", "Traduccion pie espanol"));
 		data.setPie(traducciones);
@@ -83,12 +83,12 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 		final FormularioSoporte form1 = new FormularioSoporte();
 		form1.setId(1l);
-		final Traducciones tradDescripcion = new Traducciones();
+		final Literal tradDescripcion = new Literal();
 		tradDescripcion.add(new Traduccion("ca", "Descripcion ca form1"));
 		tradDescripcion.add(new Traduccion("es", "Descripcion es form1"));
 		form1.setDescripcion(tradDescripcion);
 
-		final Traducciones tradTipoIncidencia = new Traducciones();
+		final Literal tradTipoIncidencia = new Literal();
 		tradTipoIncidencia.add(new Traduccion("ca", "TipoIncidencia ca form1"));
 		tradTipoIncidencia.add(new Traduccion("es", "TipoIncidencia es form1"));
 		form1.setTipoIncidencia(tradTipoIncidencia);
@@ -96,12 +96,12 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 		final FormularioSoporte form2 = new FormularioSoporte();
 		form2.setId(2l);
-		final Traducciones tradDescripcion2 = new Traducciones();
+		final Literal tradDescripcion2 = new Literal();
 		tradDescripcion2.add(new Traduccion("ca", "Descripcion ca form2"));
 		tradDescripcion2.add(new Traduccion("es", "Descripcion es form2"));
 		form2.setDescripcion(tradDescripcion2);
 
-		final Traducciones tradTipoIncidencia2 = new Traducciones();
+		final Literal tradTipoIncidencia2 = new Literal();
 		tradTipoIncidencia2.add(new Traduccion("ca", "TipoIncidencia ca form2"));
 		tradTipoIncidencia2.add(new Traduccion("es", "TipoIncidencia es form2"));
 		form2.setTipoIncidencia(tradTipoIncidencia2);
@@ -465,7 +465,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				this.data.setPie(traducciones);
 
 				// Mensaje
@@ -475,7 +475,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesModif = (Traducciones) respuesta.getResult();
+				final Literal traduccionesModif = (Literal) respuesta.getResult();
 				this.data.setPie(traduccionesModif);
 
 				// Mensaje

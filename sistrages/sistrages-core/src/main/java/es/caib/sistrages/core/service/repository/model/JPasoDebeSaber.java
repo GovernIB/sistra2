@@ -15,13 +15,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_PASDBS")
-public class JPasoDebeSaber implements java.io.Serializable {
+public class JPasoDebeSaber implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "PDB_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
@@ -30,16 +30,16 @@ public class JPasoDebeSaber implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PDB_INSINI")
-	private JLiterales instruccionesInicio;
+	private JLiteral instruccionesInicio;
 
 	public JPasoDebeSaber() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -51,11 +51,11 @@ public class JPasoDebeSaber implements java.io.Serializable {
 		this.pasoTramitacion = pasoTramitacion;
 	}
 
-	public JLiterales getInstruccionesInicio() {
+	public JLiteral getInstruccionesInicio() {
 		return this.instruccionesInicio;
 	}
 
-	public void setInstruccionesInicio(final JLiterales instruccionesInicio) {
+	public void setInstruccionesInicio(final JLiteral instruccionesInicio) {
 		this.instruccionesInicio = instruccionesInicio;
 	}
 

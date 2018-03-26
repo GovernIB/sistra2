@@ -22,8 +22,9 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogPropiedad.modoAcceso}"/>
-		<f:viewParam name="DATO" value="#{dialogPropiedad.iData}"/>
+		<f:viewParam name="MODO_ACCESO" 	value="#{dialogPropiedad.modoAcceso}"/>
+		<f:viewParam name="DATO" 			value="#{dialogPropiedad.iData}"/>
+		<f:viewParam name="OCULTARVALOR"    value="#{dialogPropiedad.ocultarValor}" />
 		<f:viewAction action="#{dialogPropiedad.init}" />
 	</f:metadata>
 	<h:form id="dialogPropiedad" styleClass="margin-top-10">
@@ -35,8 +36,8 @@
 					<p:outputLabel for="codigo" value="#{msg['dialogPropiedad.headerCodigo']}" />
 				 	<p:inputText id="codigo" value="#{dialogPropiedad.data.codigo}" disabled="#{dialogPropiedad.isConsulta()}" required="true" size="40" />
 
-					<p:outputLabel for="valor" value="#{msg['dialogPropiedad.headerValor']}" />
-				 	<p:inputText id="valor" value="#{dialogPropiedad.data.valor}" disabled="#{dialogPropiedad.isConsulta()}" required="true" size="40" />
+					<p:outputLabel for="valor" value="#{msg['dialogPropiedad.headerValor']}" rendered="#{dialogPropiedad.mostrarValor}" />
+				 	<p:inputText id="valor" value="#{dialogPropiedad.data.valor}" disabled="#{dialogPropiedad.isConsulta()}" required="#{dialogPropiedad.mostrarValor}" size="40" rendered="#{dialogPropiedad.mostrarValor}" />
 
 				</h:panelGrid>
 			</p:outputPanel>

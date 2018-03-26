@@ -24,6 +24,9 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDominio.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogDominio.id}"/>
+		<f:viewParam name="AMBITO" value="#{dialogDominio.ambito}"/>
+		<f:viewParam name="AREA" value="#{dialogDominio.idArea}"/>
+		<f:viewParam name="ENTIDAD" value="#{dialogDominio.idEntidad}"/>
 		<f:viewAction action="#{dialogDominio.init}" />
 	</f:metadata>
 	<h:form id="dialogDominio" styleClass="margin-top-10">
@@ -52,8 +55,8 @@
 			    		<p:outputLabel  value="#{msg['dialogDominio.headerTipo']}:" />
 					</p>
 					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true">
-					     <f:selectItems value="#{TypeDominio.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}" />
-						<p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota columnaFuente1 columnaFuente2" />
+					     <f:selectItems value="#{dialogDominio.tipos}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}"  />
+						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota columnaFuente1 columnaFuente2 labelParametros gridParametros" />
 					</p:selectOneMenu >
 
 
@@ -77,7 +80,7 @@
 							<!-- Data table -->
 							<p:dataTable  id="datalistValores"
 										 var="td"
-										 value="#{dialogDominio.listaValores}"
+										 value="#{dialogDominio.data.listaFija}"
 										 scrollable="true"
 										 scrollHeight="140"
 										 paginator="false"
@@ -151,12 +154,12 @@
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 				</h:panelGrid>
 
-				<p:outputLabel for="dataTableParametros" value="#{msg['dialogDominio.headerParametros.titulo']}" />
-				<h:panelGrid columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<p:outputLabel id="labelParametros" for="dataTableParametros" value="#{msg['dialogDominio.headerParametros.titulo']}" rendered="#{dialogDominio.mostrarParametros()}" />
+				<h:panelGrid   id="gridParametros" columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%"  rendered="#{dialogDominio.mostrarParametros()}">
 
 					<p:dataTable  id="dataTableParametros"
 									 var="td"
-									 value="#{dialogDominio.propiedades}"
+									 value="#{dialogDominio.data.parametros}"
 									 scrollable="true"
 									 scrollHeight="140"
 									 selectionMode="single"
@@ -172,10 +175,6 @@
 							<p:ajax event="rowUnselect" />
 
 							<!-- Columnas -->
-							<p:column headerText="#{msg['dialogDominio.headerParametros.orden']}" class="ui-panelgrid-cell">
-						        <h:outputText value="#{td.orden}" />
-						    </p:column>
-
 							<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
 								<h:outputText value="#{td.codigo}" />
 						    </p:column>

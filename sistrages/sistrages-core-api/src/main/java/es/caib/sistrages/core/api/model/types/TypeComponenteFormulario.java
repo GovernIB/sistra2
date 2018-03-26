@@ -48,32 +48,12 @@ public enum TypeComponenteFormulario {
 	}
 
 	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public static String fromEnum(final TypeComponenteFormulario tipo) {
-		return tipo.valor;
-	}
-
-	/**
-	 * Devuelve el valor de un enumerado.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public String fromEnum() {
-		return this.valor;
-	}
-
-	/**
 	 * Convierte un string en enumerado.
 	 *
 	 * @param tipo
 	 * @return
 	 */
-	public TypeComponenteFormulario toEnum(final String text) {
+	public static TypeComponenteFormulario fromString(final String text) {
 		TypeComponenteFormulario respuesta = null;
 		if (text != null) {
 			for (final TypeComponenteFormulario b : TypeComponenteFormulario.values()) {
@@ -86,11 +66,6 @@ public enum TypeComponenteFormulario {
 		return respuesta;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return valor;

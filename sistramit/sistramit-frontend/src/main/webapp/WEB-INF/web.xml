@@ -46,20 +46,4 @@
       <url-pattern>*.html</url-pattern>
   </servlet-mapping>
   
-  <security-constraint>
-	    <web-resource-collection>
-	        <web-resource-name>sistramit-frontend</web-resource-name>
-	        <url-pattern>/*</url-pattern>
-	    </web-resource-collection>
-	    <auth-constraint>
-	        <role-name>STR2_TEST</role-name>
-	    </auth-constraint>
-	</security-constraint>
-
-	<login-config><auth-method>BASIC</auth-method><realm-name><![CDATA[Autenticacion]]></realm-name></login-config>
-	 
-	 <security-role>
-	    <role-name>STR2_TEST</role-name>
-	</security-role>
-  
 </web-app>

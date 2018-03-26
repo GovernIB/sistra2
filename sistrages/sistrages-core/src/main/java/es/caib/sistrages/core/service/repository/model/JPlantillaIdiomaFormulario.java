@@ -16,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORPLI")
-public class JPlantillaIdiomaFormulario implements java.io.Serializable {
+public class JPlantillaIdiomaFormulario implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class JPlantillaIdiomaFormulario implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_FORPLI_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_FORPLI_SEQ", sequenceName = "STG_FORPLI_SEQ")
 	@Column(name = "PLI_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PLI_CODFIC", nullable = false)
@@ -41,11 +41,11 @@ public class JPlantillaIdiomaFormulario implements java.io.Serializable {
 	public JPlantillaIdiomaFormulario() {
 	}
 
-	public long getPliCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setPliCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

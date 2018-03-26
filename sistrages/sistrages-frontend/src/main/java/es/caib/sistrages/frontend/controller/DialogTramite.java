@@ -8,7 +8,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -46,7 +46,7 @@ public class DialogTramite extends DialogControllerBase {
 		} else {
 			data = new Tramite();// areaService.load(id);
 			data.setId(Long.valueOf(id));
-			final Traducciones traducciones = new Traducciones();
+			final Literal traducciones = new Literal();
 			traducciones.add(new Traduccion("es", "Descripcion del trámite"));
 			traducciones.add(new Traduccion("ca", "Descripció del tràmit"));
 			data.setDescripcion(traducciones);
@@ -100,7 +100,7 @@ public class DialogTramite extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
 
 				// Mensaje
@@ -110,7 +110,7 @@ public class DialogTramite extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				data.setDescripcion(traduccionesMod);
 
 				// Mensaje

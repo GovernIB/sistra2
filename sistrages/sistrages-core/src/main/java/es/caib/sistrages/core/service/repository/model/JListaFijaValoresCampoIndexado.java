@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_LFVCIN", uniqueConstraints = @UniqueConstraint(columnNames = { "LFV_CODCIN", "LFV_VALOR" }))
-public class JListaFijaValoresCampoIndexado implements java.io.Serializable {
+public class JListaFijaValoresCampoIndexado implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,7 +25,7 @@ public class JListaFijaValoresCampoIndexado implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_LFVCIN_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_LFVCIN_SEQ", sequenceName = "STG_LFVCIN_SEQ")
 	@Column(name = "LFV_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "LFV_CODCIN", nullable = false)
@@ -33,7 +33,7 @@ public class JListaFijaValoresCampoIndexado implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "LFV_DESCRIP", nullable = false)
-	private JLiterales descripcion;
+	private JLiteral descripcion;
 
 	@Column(name = "LFV_VALOR", nullable = false, length = 100)
 	private String valor;
@@ -47,12 +47,12 @@ public class JListaFijaValoresCampoIndexado implements java.io.Serializable {
 	public JListaFijaValoresCampoIndexado() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long lfvCodigo) {
-		this.codigo = lfvCodigo;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	public JCampoFormularioIndexado getCampoFormularioIndexado() {
@@ -63,11 +63,11 @@ public class JListaFijaValoresCampoIndexado implements java.io.Serializable {
 		this.campoFormularioIndexado = campoFormularioIndexado;
 	}
 
-	public JLiterales getDescripcion() {
+	public JLiteral getDescripcion() {
 		return this.descripcion;
 	}
 
-	public void setDescripcion(final JLiterales descripcion) {
+	public void setDescripcion(final JLiteral descripcion) {
 		this.descripcion = descripcion;
 	}
 

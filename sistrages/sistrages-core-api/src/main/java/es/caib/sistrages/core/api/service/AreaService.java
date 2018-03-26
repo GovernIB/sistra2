@@ -14,11 +14,11 @@ public interface AreaService {
 
 	public List<Area> list(String filtro);
 
-	public Area load(String id);
+	public Area load(Long id);
 
-	public void add(Area area);
+	public void add(Long idEntidad, Area area);
 
-	public void remove(String id);
+	public void remove(Long id);
 
 	public void update(Area area);
 

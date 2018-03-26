@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "STG_ANETRA", uniqueConstraints = @UniqueConstraint(columnNames = { "ANE_CODPTR", "ANE_IDEDOC" }))
-public class JAnexoTramite implements java.io.Serializable {
+public class JAnexoTramite implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,7 +25,7 @@ public class JAnexoTramite implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_ANETRA_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_ANETRA_SEQ", sequenceName = "STG_ANETRA_SEQ")
 	@Column(name = "ANE_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ANE_AYUFIC")
@@ -49,11 +49,11 @@ public class JAnexoTramite implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ANE_DESCRIP", nullable = false)
-	private JLiterales descripcion;
+	private JLiteral descripcion;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ANE_AYUTXT")
-	private JLiterales textoAyuda;
+	private JLiteral textoAyuda;
 
 	@Column(name = "ANE_IDEDOC", nullable = false, length = 20)
 	private String identificadorDocumento;
@@ -91,20 +91,14 @@ public class JAnexoTramite implements java.io.Serializable {
 	@Column(name = "ANE_FIRMAD", nullable = false, precision = 1, scale = 0)
 	private boolean anexarFirmado;
 
-	@Column(name = "ANE_COMPUL", nullable = false, precision = 1, scale = 0)
-	private boolean compulsar;
-
-	@Column(name = "ANE_FOTOCP", nullable = false, precision = 1, scale = 0)
-	private boolean fotocopia;
-
 	public JAnexoTramite() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -148,19 +142,19 @@ public class JAnexoTramite implements java.io.Serializable {
 		this.scriptObligatoriedad = scriptObligatoriedad;
 	}
 
-	public JLiterales getDescripcion() {
+	public JLiteral getDescripcion() {
 		return this.descripcion;
 	}
 
-	public void setDescripcion(final JLiterales descripcion) {
+	public void setDescripcion(final JLiteral descripcion) {
 		this.descripcion = descripcion;
 	}
 
-	public JLiterales getTextoAyuda() {
+	public JLiteral getTextoAyuda() {
 		return this.textoAyuda;
 	}
 
-	public void setTextoAyuda(final JLiterales textoAyuda) {
+	public void setTextoAyuda(final JLiteral textoAyuda) {
 		this.textoAyuda = textoAyuda;
 	}
 
@@ -258,22 +252,6 @@ public class JAnexoTramite implements java.io.Serializable {
 
 	public void setAnexarFirmado(final boolean anexarFirmado) {
 		this.anexarFirmado = anexarFirmado;
-	}
-
-	public boolean isCompulsar() {
-		return this.compulsar;
-	}
-
-	public void setCompulsar(final boolean compulsar) {
-		this.compulsar = compulsar;
-	}
-
-	public boolean isFotocopia() {
-		return this.fotocopia;
-	}
-
-	public void setFotocopia(final boolean fotocopia) {
-		this.fotocopia = fotocopia;
 	}
 
 }

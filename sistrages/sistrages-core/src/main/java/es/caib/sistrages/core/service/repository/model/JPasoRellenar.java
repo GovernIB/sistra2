@@ -19,13 +19,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_PASREL")
-public class JPasoRellenar implements java.io.Serializable {
+public class JPasoRellenar implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "PRL_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
@@ -41,12 +41,12 @@ public class JPasoRellenar implements java.io.Serializable {
 	public JPasoRellenar() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long prlCodigo) {
-		this.codigo = prlCodigo;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	public JPasoTramitacion getPasoTramitacion() {

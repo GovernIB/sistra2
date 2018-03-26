@@ -1,22 +1,18 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import es.caib.sistrages.core.api.model.MensajeAviso;
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
-import es.caib.sistrages.core.api.model.types.TypeMensajeAviso;
+import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -27,8 +23,8 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/**
 	 * Servicio.
 	 */
-	// @Inject
-	// private EntidadService entidadService;
+	@Inject
+	private AvisoEntidadService avisoEntidadService;
 
 	/**
 	 * Id elemento a tratar.
@@ -36,30 +32,32 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private String id;
 
 	/**
+	 * Id entidad.
+	 */
+	private Long idEntidad;
+
+	/**
 	 * Datos elemento.
 	 */
-	private MensajeAviso data;
+	private AvisoEntidad data;
 
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
+
+		// Id entidad
+		idEntidad = UtilJSF.getSessionBean().getEntidad().getId();
+
+		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new MensajeAviso();
+			data = new AvisoEntidad();
 		} else {
-			data = new MensajeAviso();// entidadService.load(id);
-			data.setId(1l);
-			final Calendar calendar = Calendar.getInstance();
-			data.setFechaFin(calendar.getTime());
-			calendar.set(Calendar.MONTH, 1);
-			data.setFechaInicio(calendar.getTime());
-			data.setActivo(true);
-			final Traducciones traducciones = new Traducciones();
-			traducciones.add(new Traduccion("ca", "La versió d'aquest tràmit està desactivat."));
-			traducciones.add(new Traduccion("es", "La versión de este trámite está desactivado."));
-			data.setDescripcion(traducciones);
-			data.setTipo(TypeMensajeAviso.ORGANISMO);
+			if (id != null) {
+				data = avisoEntidadService.getAvisoEntidad(Long.valueOf(id));
+			}
+
 		}
 	}
 
@@ -71,15 +69,10 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
-			/*
-			 * if (entidadService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; } entidadService.add(data);
-			 */
-
+			avisoEntidadService.addAvisoEntidad(idEntidad, data);
 			break;
 		case EDICION:
-			// entidadService.update(data);
+			avisoEntidadService.updateAvisoEntidad(data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -110,55 +103,24 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 */
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		if (!respuesta.isCanceled()) {
-
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
-				data.setDescripcion(traducciones);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
-			case EDICION:
-
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
-				data.setDescripcion(traduccionesMod);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literal = (Literal) respuesta.getResult();
+			data.setMensaje(literal);
 		}
 	}
 
 	/**
 	 * Editar descripcion
 	 *
-
+	 *
 	 */
 	public void editarMensaje() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		if (data.getDescripcion() == null) {
+		if (data.getMensaje() == null) {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
 					idiomas, idiomas);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getMensaje(), idiomas, idiomas);
 		}
 	}
 
@@ -180,7 +142,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public MensajeAviso getData() {
+	public AvisoEntidad getData() {
 		return data;
 	}
 
@@ -188,7 +150,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final MensajeAviso data) {
+	public void setData(final AvisoEntidad data) {
 		this.data = data;
 	}
 

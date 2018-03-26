@@ -14,10 +14,4 @@
 	<context:annotation-config />
 	<context:component-scan base-package="es.caib.sistramit.core.service" />
 
-	<!--  Acceso a EJB que nos permite acceder a contexto -->
-	<jee:local-slsb
-			id="contextService"
-			jndi-name="java:global/sistramit/sistramit-core/ContextServiceBean!es.caib.sistramit.core.api.service.ContextService"
-			business-interface="es.caib.sistramit.core.api.service.ContextService"/>
-		 
 </beans>

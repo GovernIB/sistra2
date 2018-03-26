@@ -15,7 +15,7 @@ public class TramiteTipo {
 	private String codigo;
 
 	/** Descripción corta **/
-	private Traducciones descripcion;
+	private Literal descripcion;
 
 	/** Orden, si forman parte del flujo normal */
 	private int orden;
@@ -53,7 +53,7 @@ public class TramiteTipo {
 	/**
 	 * @return the descripcion
 	 */
-	public Traducciones getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -61,7 +61,7 @@ public class TramiteTipo {
 	 * @param descripcion
 	 *            the descripcion to set
 	 */
-	public void setDescripcion(final Traducciones descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 

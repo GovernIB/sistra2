@@ -8,12 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+
 /**
  * JConfiguracionGlobal
  */
 @Entity
 @Table(name = "STG_CNFGLO")
-public class JConfiguracionGlobal implements java.io.Serializable {
+public class JConfiguracionGlobal implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,7 +23,7 @@ public class JConfiguracionGlobal implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_CNFGLO_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_CNFGLO_SEQ", sequenceName = "STG_CNFGLO_SEQ")
 	@Column(name = "CFG_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@Column(name = "CFG_PROP", nullable = false, length = 100)
 	private String propiedad;
@@ -33,13 +35,14 @@ public class JConfiguracionGlobal implements java.io.Serializable {
 	private String descripcion;
 
 	public JConfiguracionGlobal() {
+		super();
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -65,6 +68,24 @@ public class JConfiguracionGlobal implements java.io.Serializable {
 
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public ConfiguracionGlobal toModel() {
+		final ConfiguracionGlobal model = new ConfiguracionGlobal();
+		model.setId(codigo);
+		model.setPropiedad(propiedad);
+		model.setValor(valor);
+		model.setDescripcion(descripcion);
+		return model;
+	}
+
+	public static JConfiguracionGlobal fromModel(final ConfiguracionGlobal model) {
+		final JConfiguracionGlobal jConfiguracionglobal = new JConfiguracionGlobal();
+		jConfiguracionglobal.setCodigo(model.getId());
+		jConfiguracionglobal.setDescripcion(model.getDescripcion());
+		jConfiguracionglobal.setPropiedad(model.getPropiedad());
+		jConfiguracionglobal.setValor(model.getValor());
+		return jConfiguracionglobal;
 	}
 
 }

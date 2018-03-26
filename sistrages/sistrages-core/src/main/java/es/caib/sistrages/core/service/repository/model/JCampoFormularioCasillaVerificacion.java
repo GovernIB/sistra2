@@ -14,13 +14,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORCHK")
-public class JCampoFormularioCasillaVerificacion implements java.io.Serializable {
+public class JCampoFormularioCasillaVerificacion implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "CCK_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
@@ -36,11 +36,11 @@ public class JCampoFormularioCasillaVerificacion implements java.io.Serializable
 	public JCampoFormularioCasillaVerificacion() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

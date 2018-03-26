@@ -14,7 +14,7 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.Formulario;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeInterno;
@@ -107,7 +107,7 @@ public class ViewDefinicionVersionRellenar extends ViewControllerBase {
 		final Formulario formulario1 = new Formulario();
 		formulario1.setId(1l);
 		formulario1.setCodigo("Formularis");
-		final Traducciones traducciones1 = new Traducciones();
+		final Literal traducciones1 = new Literal();
 		traducciones1.add(new Traduccion("ca", "Formulari 1"));
 		traducciones1.add(new Traduccion("es", "Formulario 1"));
 		formulario1.setDescripcion(traducciones1);
@@ -122,7 +122,7 @@ public class ViewDefinicionVersionRellenar extends ViewControllerBase {
 		final Formulario formulario2 = new Formulario();
 		formulario2.setId(2l);
 		formulario2.setCodigo("Formularis2");
-		final Traducciones traducciones2 = new Traducciones();
+		final Literal traducciones2 = new Literal();
 		traducciones2.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
 		traducciones2.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
 		formulario2.setDescripcion(traducciones2);
@@ -137,7 +137,7 @@ public class ViewDefinicionVersionRellenar extends ViewControllerBase {
 		final Formulario formulario3 = new Formulario();
 		formulario3.setId(3l);
 		formulario3.setCodigo("Formularis3");
-		final Traducciones traducciones3 = new Traducciones();
+		final Literal traducciones3 = new Literal();
 		traducciones3.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
 		traducciones3.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
 		formulario3.setDescripcion(traducciones3);

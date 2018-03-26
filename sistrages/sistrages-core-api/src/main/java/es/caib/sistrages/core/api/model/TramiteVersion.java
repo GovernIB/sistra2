@@ -34,7 +34,7 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * descripcion.
 	 */
-	private Traducciones descripcion;
+	private Literal descripcion;
 
 	/**
 	 * autenticado.
@@ -139,12 +139,17 @@ public class TramiteVersion extends ModelApi {
 	/**
 	 * mensaje desactivacion.
 	 */
-	private Traducciones mensajeDesactivacion;
+	private Literal mensajeDesactivacion;
 
 	/**
 	 * Lista de dominios.
 	 */
 	private List<Dominio> listaDominios;
+
+	/**
+	 * Pasos de tramite.
+	 */
+	private List<TramitePaso> listaPasos;
 
 	/**
 	 * Obtiene el valor de id.
@@ -607,7 +612,7 @@ public class TramiteVersion extends ModelApi {
 	 *
 	 * @return el valor de descripcion
 	 */
-	public Traducciones getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -617,7 +622,7 @@ public class TramiteVersion extends ModelApi {
 	 * @param descripcion
 	 *            el nuevo valor de descripcion
 	 */
-	public void setDescripcion(final Traducciones descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 
@@ -626,7 +631,7 @@ public class TramiteVersion extends ModelApi {
 	 *
 	 * @return el valor de mensajeDesactivacion
 	 */
-	public Traducciones getMensajeDesactivacion() {
+	public Literal getMensajeDesactivacion() {
 		return mensajeDesactivacion;
 	}
 
@@ -636,7 +641,7 @@ public class TramiteVersion extends ModelApi {
 	 * @param mensajeDesactivacion
 	 *            el nuevo valor de mensajeDesactivacion
 	 */
-	public void setMensajeDesactivacion(final Traducciones mensajeDesactivacion) {
+	public void setMensajeDesactivacion(final Literal mensajeDesactivacion) {
 		this.mensajeDesactivacion = mensajeDesactivacion;
 	}
 
@@ -657,6 +662,20 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setListaDominios(final List<Dominio> listaDominios) {
 		this.listaDominios = listaDominios;
+	}
+
+	/**
+	 * @return the listaPasos
+	 */
+	public List<TramitePaso> getListaPasos() {
+		return listaPasos;
+	}
+
+	/**
+	 * @param listaPasos the listaPasos to set
+	 */
+	public void setListaPasos(List<TramitePaso> listaPasos) {
+		this.listaPasos = listaPasos;
 	}
 
 }

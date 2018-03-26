@@ -1,20 +1,17 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.MensajeAviso;
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
-import es.caib.sistrages.core.api.model.types.TypeMensajeAviso;
+import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -31,48 +28,13 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 
+	@Inject
+	private AvisoEntidadService avisoEntidadService;
+
 	/**
-	 * Inicializacion.
+	 * Id entidad.
 	 */
-	public void init() {
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
-		final MensajeAviso mensajeAviso1 = new MensajeAviso();
-		mensajeAviso1.setActivo(true);
-		mensajeAviso1.setId(1l);
-		final Traducciones trad1 = new Traducciones();
-		trad1.add(new Traduccion("ca", "La versió d'aquest tràmit està desactivat."));
-		trad1.add(new Traduccion("es", "La versió d'aquest tràmit està desactivat."));
-		mensajeAviso1.setDescripcion(trad1);
-		mensajeAviso1.setTipo(TypeMensajeAviso.TODOS);
-		final Calendar calendar = Calendar.getInstance();
-		calendar.set(2018, 2, 2);
-		mensajeAviso1.setFechaInicio(calendar.getTime());
-		calendar.set(2018, 3, 3);
-		mensajeAviso1.setFechaFin(calendar.getTime());
-		final MensajeAviso mensajeAviso2 = new MensajeAviso();
-		mensajeAviso2.setActivo(true);
-		mensajeAviso2.setId(2l);
-		final Traducciones trad2 = new Traducciones();
-		trad2.add(new Traduccion("ca", "Per la tramitació que realitzarà necessitarà disposar de DNI electrònic."));
-		trad2.add(new Traduccion("es", "Per la tramitació que realitzarà necessitarà disposar de DNI electrònic."));
-		mensajeAviso2.setDescripcion(trad2);
-		mensajeAviso2.setTipo(TypeMensajeAviso.FIRMA);
-		final MensajeAviso mensajeAviso3 = new MensajeAviso();
-		mensajeAviso3.setActivo(false);
-		mensajeAviso3.setId(3l);
-		final Traducciones trad3 = new Traducciones();
-		trad3.add(new Traduccion("ca", "Per problemes técnics aquest tràmit està donat de baixa."));
-		trad3.add(new Traduccion("es", "Per problemes técnics aquest tràmit està donat de baixa."));
-		mensajeAviso3.setDescripcion(trad3);
-		mensajeAviso3.setTipo(TypeMensajeAviso.AUTENTICADOS);
-
-		listaDatos = new ArrayList<>();
-		listaDatos.add(mensajeAviso1);
-		listaDatos.add(mensajeAviso2);
-		listaDatos.add(mensajeAviso3);
-
-	}
+	private Long idEntidad;
 
 	/**
 	 * Filtro (puede venir por parametro).
@@ -82,45 +44,52 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<MensajeAviso> listaDatos;
+	private List<AvisoEntidad> listaDatos;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private MensajeAviso datoSeleccionado;
+	private AvisoEntidad datoSeleccionado;
+
+	/**
+	 * Inicializacion.
+	 */
+	public void init() {
+		// Id entidad
+		idEntidad = UtilJSF.getIdEntidad();
+		// Control acceso
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		// Titulo
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+		// Recupera datos
+		buscar();
+	}
 
 	/**
 	 * Recuperacion de datos.
 	 */
 	public void filtrar() {
+		// Normaliza filtro
+		filtro = normalizarFiltro(filtro);
+		// Busca
+		buscar();
+	}
 
-		if (filtro == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.filtronorelleno"));
-			return;
-		}
-
+	/**
+	 * Buscar datos.
+	 */
+	private void buscar() {
 		// Filtra
-		final List<MensajeAviso> mensajeAvisoesFiltradas = new ArrayList<>();
-		for (final MensajeAviso mensajeAviso : this.listaDatos) {
-			// if (mensajeAviso.getDescripcion() != null
-			// &&
-			// mensajeAviso.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-			mensajeAvisoesFiltradas.add(mensajeAviso);
-			// }
-		}
-
-		this.listaDatos = mensajeAvisoesFiltradas;
+		listaDatos = avisoEntidadService.listAvisoEntidad(idEntidad, UtilJSF.getIdioma(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
-		// Muestra mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.filtro.ok"));
 	}
 
 	/**
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogMensajeAviso.class, TypeModoAcceso.EDICION, null, true, 530, 250);
+		UtilJSF.openDialog(DialogMensajeAviso.class, TypeModoAcceso.ALTA, null, true, 530, 250);
 	}
 
 	/**
@@ -146,9 +115,9 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		listaDatos.remove(this.datoSeleccionado);
+		avisoEntidadService.removeAvisoEntidad(datoSeleccionado.getId());
 		// Refrescamos datos
-		filtrar();
+		buscar();
 		// Mostramos mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 	}
@@ -184,11 +153,18 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		final String message = null;
-
-		// Mostramos mensaje
-		if (message != null) {
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			// Refrescamos datos
+			buscar();
 		}
 	}
 
@@ -210,7 +186,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<MensajeAviso> getListaDatos() {
+	public List<AvisoEntidad> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -218,14 +194,14 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<MensajeAviso> listaDatos) {
+	public void setListaDatos(final List<AvisoEntidad> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public MensajeAviso getDatoSeleccionado() {
+	public AvisoEntidad getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -233,7 +209,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final MensajeAviso datoSeleccionado) {
+	public void setDatoSeleccionado(final AvisoEntidad datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

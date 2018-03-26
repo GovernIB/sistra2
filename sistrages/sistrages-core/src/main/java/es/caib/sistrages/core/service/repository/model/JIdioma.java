@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_IDIOMA")
-public class JIdioma implements java.io.Serializable {
+public class JIdioma implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,6 +21,10 @@ public class JIdioma implements java.io.Serializable {
 	public JIdioma() {
 	}
 
+	public JIdioma(final String idioma) {
+		this.setIdentificador(idioma);
+	}
+
 	public String getIdentificador() {
 		return this.identificador;
 	}
@@ -29,4 +33,7 @@ public class JIdioma implements java.io.Serializable {
 		this.identificador = idiIdenti;
 	}
 
+	public void fromModel(final String texto) {
+		this.identificador = texto;
+	}
 }

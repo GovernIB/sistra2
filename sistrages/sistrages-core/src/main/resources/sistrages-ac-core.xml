@@ -41,6 +41,7 @@
 		<property name="packagesToScan">
 			<list>
 				<value>es.caib.sistrages.core.service.repository.modeltest</value>
+				<value>es.caib.sistrages.core.service.repository.model</value>
 			</list>
 		</property>
 		<property name="jpaDialect">
@@ -63,7 +64,7 @@
 
 
 
-	<!-- Adecuar a sistrages -->
+	<!-- Acceso a EJB para obtener contexto seguridad -->
 	<jee:local-slsb
 			id="contextService"
 			jndi-name="java:app/sistrages-core/ContextServiceBean"

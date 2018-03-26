@@ -14,13 +14,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORSEC")
-public class JSeccionFormulario implements java.io.Serializable {
+public class JSeccionFormulario implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "FSE_CODIGO", length = 19)
-	private long codigo;
+	private Long codigo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
@@ -36,11 +36,11 @@ public class JSeccionFormulario implements java.io.Serializable {
 	public JSeccionFormulario() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 

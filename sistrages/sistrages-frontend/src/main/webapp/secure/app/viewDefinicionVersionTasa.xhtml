@@ -13,12 +13,12 @@
         <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionTasa.identificador']}" />
-          	<p:inputText id="identificador" required="true" disabled="true" styleClass="w35"/>
+          	<p:inputText id="identificador" value="#{viewDefinicionVersionTasa.data.codigo}" required="true" disabled="true" styleClass="w35"/>
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionTasa.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85"/>
+           		<p:inputText id="descripcion" value="#{viewDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionTasa.editar()}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
@@ -45,7 +45,7 @@
 							process="@this" update="growl"/>
 
             <p:outputLabel for="plugindepago" value="#{msg['viewDefinicionVersionTasa.plugindepago']}" />
-          	<p:inputText id="plugindepago" disabled="true" size="10"/>
+          	<p:inputText id="plugindepago" disabled="true" size="30" />
 
           	<p:outputLabel value="#{msg['viewDefinicionVersionTasa.tipopago']}" />
           	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">

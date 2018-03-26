@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.controller.DialogTraduccion;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -20,15 +22,6 @@ import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
  *
  */
 public final class UtilTraducciones {
-
-	/** Idioma español. */
-	public static final String LANG_CASTELLANO = "es";
-	/** Idioma catalan. **/
-	public static final String LANG_CATALAN = "ca";
-	/** Idioma ingles. **/
-	public static final String LANG_INGLES = "en";
-	/** Idioma aleman. **/
-	public static final String LANG_ALEMAN = "de";
 
 	/** Constructor privado para evitar problema. */
 	private UtilTraducciones() {
@@ -49,7 +42,7 @@ public final class UtilTraducciones {
 	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
 	 *            que son los que tenga traducciones.
 	 */
-	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, Traducciones traducciones,
+	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, Literal traducciones,
 			List<String> idiomas, List<String> idiomasObligatorios) {
 
 		final Map<String, String> params = new HashMap<>();
@@ -78,16 +71,16 @@ public final class UtilTraducciones {
 			altura = 120;
 			break;
 		case 2:
-			altura = 200;
+			altura = 250;
 			break;
 		case 3:
-			altura = 280;
+			altura = 320;
 			break;
 		case 4:
-			altura = 360;
+			altura = 410;
 			break;
 		default:
-			altura = 100;
+			altura = 120;
 		}
 		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 460, altura);
 
@@ -99,10 +92,10 @@ public final class UtilTraducciones {
 	 *
 	 * @return
 	 */
-	public static Traducciones getTraduccionesPorDefecto() {
-		final Traducciones traducciones = new Traducciones();
-		traducciones.add(new Traduccion(UtilTraducciones.LANG_CATALAN, ""));
-		traducciones.add(new Traduccion(UtilTraducciones.LANG_CASTELLANO, ""));
+	public static Literal getTraduccionesPorDefecto() {
+		final Literal traducciones = new Literal();
+		traducciones.add(new Traduccion(TypeIdioma.CATALAN.toString(), ""));
+		traducciones.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), ""));
 		return traducciones;
 	}
 
@@ -118,8 +111,8 @@ public final class UtilTraducciones {
 		if (tramiteVersion == null || tramiteVersion.getIdiomasSoportados() == null
 				|| tramiteVersion.getIdiomasSoportados().isEmpty()) {
 			idiomas = new ArrayList<>();
-			idiomas.add(UtilTraducciones.LANG_CATALAN);
-			idiomas.add(UtilTraducciones.LANG_CASTELLANO);
+			idiomas.add(TypeIdioma.CATALAN.toString());
+			idiomas.add(TypeIdioma.CASTELLANO.toString());
 
 		} else {
 			idiomas = Arrays.asList(tramiteVersion.getIdiomasSoportados().split(";"));
@@ -134,8 +127,8 @@ public final class UtilTraducciones {
 	 */
 	public static List<String> getIdiomasPorDefecto() {
 		final List<String> idiomas = new ArrayList<>();
-		idiomas.add(UtilTraducciones.LANG_CATALAN);
-		idiomas.add(UtilTraducciones.LANG_CASTELLANO);
+		idiomas.add(TypeIdioma.CATALAN.toString());
+		idiomas.add(TypeIdioma.CASTELLANO.toString());
 		return idiomas;
 	}
 }

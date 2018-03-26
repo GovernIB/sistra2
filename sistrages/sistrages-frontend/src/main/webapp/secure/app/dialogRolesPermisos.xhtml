@@ -8,7 +8,7 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeRolPermiso" var="TypeRolPermiso" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeRoleUser" var="TypeRoleUser" />
 
 
 <h:head>
@@ -37,7 +37,7 @@
 
 					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:200px" required="true">
-					     <f:selectItems value="#{TypeRolPermiso.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeRolPermiso.' += tipo]}" />
+					     <f:selectItems value="#{TypeRoleUser.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeRoleUser.' += tipo]}" />
 					</p:selectOneMenu >
 
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
@@ -53,10 +53,10 @@
 
 					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}" />
 					<p:selectManyCheckbox id="basic">
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.alta}" itemLabel="#{msg['typeRolPermisos.A']}" />
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.modificacion}" itemLabel="#{msg['typeRolPermisos.M']}" />
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.consulta}" itemLabel="#{msg['typeRolPermisos.C']}" />
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.helpdesk}" itemLabel="#{msg['typeRolPermisos.H']}" />
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.alta}" itemLabel="#{msg['typeRolePermisos.A']}" />
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.modificacion}" itemLabel="#{msg['typeRolePermisos.M']}" />
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.consulta}" itemLabel="#{msg['typeRolePermisos.C']}" />
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.helpdesk}" itemLabel="#{msg['typeRolePermisos.H']}" />
 					</p:selectManyCheckbox>
 
 				</h:panelGrid>

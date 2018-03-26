@@ -1,7 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,17 +9,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.Plugin;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.util.UtilJSON;
 
 /**
  * JPlugin
  */
 @Entity
 @Table(name = "STG_PLUGIN")
-public class JPlugin implements java.io.Serializable {
+public class JPlugin implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +32,7 @@ public class JPlugin implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_PLUGIN_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_PLUGIN_SEQ", sequenceName = "STG_PLUGIN_SEQ")
 	@Column(name = "PLG_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@Column(name = "PLG_AMBITO", nullable = false, length = 1)
 	private String ambito;
@@ -48,21 +52,19 @@ public class JPlugin implements java.io.Serializable {
 	@Column(name = "PLG_IDINST", length = 20)
 	private String idInstancia;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_PLGENT", joinColumns = {
-			@JoinColumn(name = "PLE_CODPLG", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "PLE_CODENT", nullable = false, updatable = false) })
-	private Set<JEntidades> entidades = new HashSet<JEntidades>(0);
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PLG_CODENT", nullable = false)
+	private JEntidad entidad;
 
 	public JPlugin() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long plgCodigo) {
-		this.codigo = plgCodigo;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	public String getAmbito() {
@@ -71,6 +73,14 @@ public class JPlugin implements java.io.Serializable {
 
 	public void setAmbito(final String plgAmbito) {
 		this.ambito = plgAmbito;
+	}
+
+	public JEntidad getEntidad() {
+		return entidad;
+	}
+
+	public void setEntidad(final JEntidad entidad) {
+		this.entidad = entidad;
 	}
 
 	public String getTipo() {
@@ -113,12 +123,28 @@ public class JPlugin implements java.io.Serializable {
 		this.idInstancia = idInstancia;
 	}
 
-	public Set<JEntidades> getEntidades() {
-		return this.entidades;
+	public Plugin toModel() {
+		final Plugin plugin = new Plugin();
+		plugin.setId(this.getCodigo());
+		plugin.setAmbito(TypeAmbito.fromString(this.getAmbito()));
+		plugin.setClassname(this.claseImplementadora);
+		plugin.setDescripcion(this.descripcion);
+		plugin.setInstancia(this.idInstancia);
+		plugin.setTipo(TypePlugin.fromString(this.tipo));
+		plugin.setPropiedades((List<Propiedad>) UtilJSON.fromListJSON(propiedades, Propiedad.class));
+		return plugin;
 	}
 
-	public void setEntidades(final Set<JEntidades> entidades) {
-		this.entidades = entidades;
+	public static JPlugin fromModel(final Plugin plugin) {
+		final JPlugin jPlugin = new JPlugin();
+		jPlugin.setCodigo(plugin.getId());
+		jPlugin.setAmbito(plugin.getAmbito().toString());
+		jPlugin.setClaseImplementadora(plugin.getClassname());
+		jPlugin.setDescripcion(plugin.getDescripcion());
+		jPlugin.setIdInstancia(plugin.getInstancia());
+		jPlugin.setPropiedades(UtilJSON.toJSON(plugin.getPropiedades()));
+		jPlugin.setTipo(plugin.getTipo().toString());
+		return jPlugin;
 	}
 
 }

@@ -5,6 +5,7 @@ package es.caib.sistrages.frontend.controller;
 
 import javax.faces.bean.ManagedProperty;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,6 +132,20 @@ public abstract class ViewControllerBase {
 	 */
 	public void setModoAcceso(final String modoAcceso) {
 		this.modoAcceso = modoAcceso;
+	}
+
+	/**
+	 * Normaliza filtro
+	 * 
+	 * @param filtro
+	 *            Filtro
+	 * @return filtro
+	 */
+	protected String normalizarFiltro(String filtro) {
+		if (filtro != null && StringUtils.isBlank(filtro)) {
+			filtro = null;
+		}
+		return filtro;
 	}
 
 }

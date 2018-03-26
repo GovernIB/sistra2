@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypePago;
 
 /**
  *
@@ -19,16 +20,28 @@ public class Tasa extends ModelApi {
 	private String codigo;
 
 	/** Descripcion. */
-	private String descripcion;
-
-	/** Tipo. */
-	private String tipo;
+	private Literal descripcion;
 
 	/** Obligatoriedad. */
 	private TypeFormularioObligatoriedad obligatoriedad;
 
 	/** Orden. **/
 	private int orden;
+
+	/** En caso de ser dependiente establece obligatoriedad */
+	private Script scriptObligatoriedad;
+
+	/** Tipo de plugin. **/
+	private String tipoPlugin;
+
+	/** Permite establecer dinámicamente los datos del pago */
+	private Script scriptPago;
+
+	/** Tipo: T (Telemático) / P (Presencial). Dependerá del tipo de plugin. */
+	private TypePago tipo;
+
+	/** Indica que el pago es simulado. */
+	private boolean simulado;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -80,7 +93,7 @@ public class Tasa extends ModelApi {
 	 *
 	 * @return el valor de descripcion
 	 */
-	public String getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -90,27 +103,8 @@ public class Tasa extends ModelApi {
 	 * @param descripcion
 	 *            el nuevo valor de descripcion
 	 */
-	public void setDescripcion(final String descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
-	}
-
-	/**
-	 * Obtiene el valor de tipo.
-	 *
-	 * @return el valor de tipo
-	 */
-	public String getTipo() {
-		return tipo;
-	}
-
-	/**
-	 * Establece el valor de tipo.
-	 *
-	 * @param tipo
-	 *            el nuevo valor de tipo
-	 */
-	public void setTipo(final String tipo) {
-		this.tipo = tipo;
 	}
 
 	/**
@@ -145,6 +139,74 @@ public class Tasa extends ModelApi {
 	 */
 	public void setOrden(final int orden) {
 		this.orden = orden;
+	}
+
+	/**
+	 * @return the scriptObligatoriedad
+	 */
+	public Script getScriptObligatoriedad() {
+		return scriptObligatoriedad;
+	}
+
+	/**
+	 * @param scriptObligatoriedad
+	 *            the scriptObligatoriedad to set
+	 */
+	public void setScriptObligatoriedad(final Script scriptObligatoriedad) {
+		this.scriptObligatoriedad = scriptObligatoriedad;
+	}
+
+	/**
+	 * @return the tipoPlugin
+	 */
+	public String getTipoPlugin() {
+		return tipoPlugin;
+	}
+
+	/**
+	 * @param tipoPlugin
+	 *            the tipoPlugin to set
+	 */
+	public void setTipoPlugin(final String tipoPlugin) {
+		this.tipoPlugin = tipoPlugin;
+	}
+
+	/**
+	 * @return the scriptPago
+	 */
+	public Script getScriptPago() {
+		return scriptPago;
+	}
+
+	/**
+	 * @param scriptPago
+	 *            the scriptPago to set
+	 */
+	public void setScriptPago(final Script scriptPago) {
+		this.scriptPago = scriptPago;
+	}
+
+	/**
+	 * @return the simulado
+	 */
+	public boolean isSimulado() {
+		return simulado;
+	}
+
+	/**
+	 * @param simulado
+	 *            the simulado to set
+	 */
+	public void setSimulado(final boolean simulado) {
+		this.simulado = simulado;
+	}
+
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
+	public void setTipo(final TypePago tipo) {
+		this.tipo = tipo;
 	}
 
 }

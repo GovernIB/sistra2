@@ -14,7 +14,7 @@ import org.primefaces.event.SelectEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Traducciones;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -134,7 +134,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		tramiteVersion = new TramiteVersion();
 		tramiteVersion.setId(id);
 
-		final Traducciones desc1 = new Traducciones();
+		final Literal desc1 = new Literal();
 		desc1.add(new Traduccion("es", "Trámite 1 - Convocatoria de diciembre de 2017 "));
 		desc1.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de desembre de 2017"));
 		tramiteVersion.setDescripcion(desc1);
@@ -181,7 +181,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 			case ALTA:
 
-				final Traducciones traducciones = (Traducciones) respuesta.getResult();
+				final Literal traducciones = (Literal) respuesta.getResult();
 				this.tramiteVersion.setDescripcion(traducciones);
 
 				// Mensaje
@@ -191,7 +191,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 			case EDICION:
 
-				final Traducciones traduccionesMod = (Traducciones) respuesta.getResult();
+				final Literal traduccionesMod = (Literal) respuesta.getResult();
 				this.tramiteVersion.setDescripcion(traduccionesMod);
 
 				// Mensaje

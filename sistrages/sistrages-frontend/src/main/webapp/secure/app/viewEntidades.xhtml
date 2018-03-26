@@ -23,7 +23,7 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewEntidades.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewEntidades.filtrar()}" process="panelFiltro" update="growl" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewEntidades.filtrar()}" process="panelFiltro" update="growl dataTable" />
 	           		</h:panelGrid>
 		        </f:facet>
 
@@ -67,7 +67,7 @@
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewEntidades.headerDescripcion']}">
-			        <h:outputText value="#{td.nombre}" />
+			        <h:outputText value="#{td.nombre.getTraduccion(sessionBean.lang)}" />
 			    </p:column>
 
  				<p:column headerText="#{msg['viewEntidades.headerActivo']}">

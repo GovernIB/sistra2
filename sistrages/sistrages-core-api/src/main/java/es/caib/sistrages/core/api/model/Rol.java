@@ -1,6 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
-import es.caib.sistrages.core.api.model.types.TypeRolPermiso;
+import es.caib.sistrages.core.api.model.types.TypeRoleUser;
 
 /**
  *
@@ -16,7 +16,7 @@ public class Rol extends ModelApi {
 	private Long id;
 
 	/** Tipo: R (Role) / U (Usuario) */
-	private TypeRolPermiso tipo;
+	private TypeRoleUser tipo;
 
 	/** Para Role el código de Role, para Usuario el NIF del usuario. */
 	private String codigo;
@@ -57,7 +57,7 @@ public class Rol extends ModelApi {
 	/**
 	 * @return the tipo
 	 */
-	public TypeRolPermiso getTipo() {
+	public TypeRoleUser getTipo() {
 		return tipo;
 	}
 
@@ -65,7 +65,7 @@ public class Rol extends ModelApi {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(final TypeRolPermiso tipo) {
+	public void setTipo(final TypeRoleUser tipo) {
 		this.tipo = tipo;
 	}
 

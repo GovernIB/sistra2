@@ -14,13 +14,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "STG_FORETQ")
-public class JEtiquetaFormulario implements java.io.Serializable {
+public class JEtiquetaFormulario implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "ETI_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private long codigo;
+	private Long codigo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
@@ -33,11 +33,11 @@ public class JEtiquetaFormulario implements java.io.Serializable {
 	public JEtiquetaFormulario() {
 	}
 
-	public long getCodigo() {
+	public Long getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(final long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
