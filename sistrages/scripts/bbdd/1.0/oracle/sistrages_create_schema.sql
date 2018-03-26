@@ -1,4 +1,3 @@
-/* V 1.0.0 */
 
 create sequence STG_ACCPER_SEQ;
 
@@ -6,7 +5,7 @@ create sequence STG_ANETRA_SEQ;
 
 create sequence STG_AREA_SEQ;
 
-create sequence STG_AVENT_SEQ;
+create sequence STG_AVIENT_SEQ;
 
 create sequence STG_CAMFUE_SEQ;
 
@@ -33,8 +32,6 @@ create sequence STG_FORPAG_SEQ;
 create sequence STG_FORPLI_SEQ;
 
 create sequence STG_FORPLT_SEQ;
-
-create sequence STG_FORSEC_SEQ;
 
 create sequence STG_FORSOP_SEQ;
 
@@ -79,10 +76,10 @@ create sequence STG_VERTRA_SEQ;
 /*==============================================================*/
 create table STG_ACCPER 
 (
-   ACP_CODIGO           NUMBER(20)           not null,
-   ACP_CODFOR           NUMBER(20)           not null,
+   ACP_CODIGO           NUMBER(18)           not null,
+   ACP_CODFOR           NUMBER(18)           not null,
    ACP_ACCION           VARCHAR2(20)         not null,
-   ACP_DESCRI           NUMBER(20)           not null,
+   ACP_DESCRI           NUMBER(18)           not null,
    ACP_VALIDA           NUMBER(1)            default 0 not null
 );
 
@@ -120,28 +117,26 @@ create unique index STG_ACCPER_CODFOR_ACCION_UK on STG_ACCPER (
 /*==============================================================*/
 create table STG_ANETRA 
 (
-   ANE_CODIGO           NUMBER(20)           not null,
-   ANE_CODPTR           NUMBER(20)           not null,
+   ANE_CODIGO           NUMBER(18)           not null,
+   ANE_CODPTR           NUMBER(18)           not null,
    ANE_IDEDOC           VARCHAR2(20)         not null,
-   ANE_DESCRIP          NUMBER(20)           not null,
+   ANE_DESCRIP          NUMBER(18)           not null,
    ANE_ORDEN            NUMBER(2)            not null,
    ANE_OBLIGA           VARCHAR2(1 CHAR)     not null,
-   ANE_SCROBL           NUMBER(20),
-   ANE_AYUTXT           NUMBER(20),
-   ANE_AYUFIC           NUMBER(20),
+   ANE_SCROBL           NUMBER(18),
+   ANE_AYUTXT           NUMBER(18),
+   ANE_AYUFIC           NUMBER(18),
    ANE_AYUULR           VARCHAR2(250 CHAR),
    ANE_TIPPRE           VARCHAR2(1 CHAR)     not null,
    ANE_NUMINS           NUMBER(2)            not null,
    ANE_EXTPER           VARCHAR2(1000 CHAR)  not null,
    ANE_TAMMAX           NUMBER(4)            not null,
    ANE_TAMUNI           VARCHAR2(2)          default 'KB' not null,
-   ANE_CNVPDF           NUMBER(1)            not null,
+   ANE_CNVPDF           NUMBER(1)            default 0 not null,
    ANE_FIRMAR           NUMBER(1)            default 0 not null,
-   ANE_SCRFIR           NUMBER(20),
+   ANE_SCRFIR           NUMBER(18),
    ANE_FIRMAD           NUMBER(1)            default 0 not null,
-   ANE_SCRVAL           NUMBER(20),
-   ANE_COMPUL           NUMBER(1)            default 0 not null,
-   ANE_FOTOCP           NUMBER(1)            default 0 not null
+   ANE_SCRVAL           NUMBER(18)
 );
 
 comment on table STG_ANETRA is
@@ -211,12 +206,6 @@ comment on column STG_ANETRA.ANE_FIRMAD is
 comment on column STG_ANETRA.ANE_SCRVAL is
 'Permite establecer una validación sobre el documento anexado. En este script estará disponible un plugin que permita acceder a datos de formularios PDF.';
 
-comment on column STG_ANETRA.ANE_COMPUL is
-'Compulsar (presencial)';
-
-comment on column STG_ANETRA.ANE_FOTOCP is
-'Fotocopia (presencial)';
-
 alter table STG_ANETRA
    add constraint STG_ANETRA_PK primary key (ANE_CODIGO);
 
@@ -233,8 +222,8 @@ create unique index STG_ANETRA_CODPTR_IDEDOC_UK on STG_ANETRA (
 /*==============================================================*/
 create table STG_AREA 
 (
-   ARE_CODIGO           NUMBER(20)           not null,
-   ARE_CODENT           NUMBER(20)           not null,
+   ARE_CODIGO           NUMBER(18)           not null,
+   ARE_CODENT           NUMBER(18)           not null,
    ARE_IDENTI           VARCHAR2(20)         not null,
    ARE_DESCR            VARCHAR2(255 CHAR)   not null
 );
@@ -265,13 +254,55 @@ create unique index STG_AREA_IDENTI_UK on STG_AREA (
 );
 
 /*==============================================================*/
+/* Table: STG_AREDOM                                            */
+/*==============================================================*/
+create table STG_AREDOM 
+(
+   DMA_CODARE           NUMBER(18)           not null,
+   DMA_CODDOM           NUMBER(18)           not null
+);
+
+comment on table STG_AREDOM is
+'Dominios area';
+
+comment on column STG_AREDOM.DMA_CODARE is
+'Código area';
+
+comment on column STG_AREDOM.DMA_CODDOM is
+'Código dominio';
+
+alter table STG_AREDOM
+   add constraint STG_AREDOM_PK primary key (DMA_CODARE, DMA_CODDOM);
+
+/*==============================================================*/
+/* Table: STG_AREFUE                                            */
+/*==============================================================*/
+create table STG_AREFUE 
+(
+   FUA_CODAREA          NUMBER(18)           not null,
+   FUA_CODFUE           NUMBER(18)           not null
+);
+
+comment on table STG_AREFUE is
+'Fuente de datos de área';
+
+comment on column STG_AREFUE.FUA_CODAREA is
+'Código área';
+
+comment on column STG_AREFUE.FUA_CODFUE is
+'Codigo fuente de datos';
+
+alter table STG_AREFUE
+   add constraint STG_AREFUE_PK primary key (FUA_CODAREA, FUA_CODFUE);
+
+/*==============================================================*/
 /* Table: STG_AVIENT                                            */
 /*==============================================================*/
 create table STG_AVIENT 
 (
-   AVI_CODIGO           NUMBER(20)           not null,
-   AVI_CODENT           NUMBER(20)           not null,
-   AVI_TRAMEN           NUMBER(20)           not null,
+   AVI_CODIGO           NUMBER(18)           not null,
+   AVI_CODENT           NUMBER(18)           not null,
+   AVI_TRAMEN           NUMBER(18)           not null,
    AVI_TIPO             VARCHAR2(3 CHAR)     not null,
    AVI_BLOQ             NUMBER(1)            default 0 not null,
    AVI_FCINI            DATE,
@@ -299,7 +330,6 @@ comment on column STG_AVIENT.AVI_TIPO is
   - PAG: Con pago
   - REG: Con registro
   - FIR: Con firma
-  - ORG: Por organismo
   - LST: Lista trámites ';
 
 comment on column STG_AVIENT.AVI_BLOQ is
@@ -322,8 +352,8 @@ alter table STG_AVIENT
 /*==============================================================*/
 create table STG_CAMFUE 
 (
-   CFU_CODIGO           NUMBER(20)           not null,
-   CFU_CODFUE           NUMBER(20)           not null,
+   CFU_CODIGO           NUMBER(18)           not null,
+   CFU_CODFUE           NUMBER(18)           not null,
    CFU_IDENT            VARCHAR2(20)         not null,
    CFU_ESPK             VARCHAR2(1)          default 'N' not null
 );
@@ -359,7 +389,7 @@ create unique index STG_CAMFUE_CODFUE_IDENT_UK on STG_CAMFUE (
 /*==============================================================*/
 create table STG_CNFGLO 
 (
-   CFG_CODIGO           NUMBER(20)           not null,
+   CFG_CODIGO           NUMBER(18)           not null,
    CFG_PROP             VARCHAR2(100 CHAR)   not null,
    CFG_VALOR            VARCHAR2(500 CHAR),
    CFG_DESCR            VARCHAR2(255 CHAR)   not null
@@ -388,8 +418,8 @@ alter table STG_CNFGLO
 /*==============================================================*/
 create table STG_DOMENT 
 (
-   DEN_CODENT           NUMBER(20)           not null,
-   DEN_CODDOM           NUMBER(20)           not null
+   DEN_CODENT           NUMBER(18)           not null,
+   DEN_CODDOM           NUMBER(18)           not null
 );
 
 comment on table STG_DOMENT is
@@ -409,7 +439,7 @@ alter table STG_DOMENT
 /*==============================================================*/
 create table STG_DOMINI 
 (
-   DOM_CODIGO           NUMBER(20)           not null,
+   DOM_CODIGO           NUMBER(18)           not null,
    DOM_AMBITO           VARCHAR2(1 CHAR)     not null,
    DOM_IDENTI           VARCHAR2(20)         not null,
    DOM_DESCR            VARCHAR2(255 CHAR)   not null,
@@ -417,7 +447,7 @@ create table STG_DOMINI
    DOM_TIPO             VARCHAR2(1 CHAR)     not null,
    DOM_BDJNDI           VARCHAR2(500 CHAR),
    DOM_BDSQL            VARCHAR2(2000 CHAR),
-   DOM_FDIDFD           NUMBER(20),
+   DOM_FDIDFD           NUMBER(18),
    DOM_LFVALS           VARCHAR2(4000 CHAR),
    DOM_REURL            VARCHAR2(500 CHAR),
    DOM_PARAMS           VARCHAR2(4000 CHAR)
@@ -477,8 +507,8 @@ create unique index STG_DOMINI_IDENTI_UK on STG_DOMINI (
 /*==============================================================*/
 create table STG_DOMVER 
 (
-   DVT_CODVTR           NUMBER(20)           not null,
-   DVT_CODDOM           NUMBER(20)           not null
+   DVT_CODVTR           NUMBER(18)           not null,
+   DVT_CODDOM           NUMBER(18)           not null
 );
 
 comment on table STG_DOMVER is
@@ -498,15 +528,15 @@ alter table STG_DOMVER
 /*==============================================================*/
 create table STG_ENTIDA 
 (
-   ENT_CODIGO           NUMBER(20)           not null,
+   ENT_CODIGO           NUMBER(18)           not null,
    ENT_DIR3             VARCHAR2(10)         not null,
-   ENT_NOMBRE           NUMBER(20)           not null,
+   ENT_NOMBRE           NUMBER(18)           not null,
    ENT_ACTIVA           NUMBER(1)            default 0 not null,
    ENT_ROLADM           VARCHAR2(100 CHAR)   not null,
-   ENT_LOGOTG           NUMBER(20),
-   ENT_LOGOTT           NUMBER(20),
-   ENT_CSSTT            NUMBER(20),
-   ENT_PIETT            NUMBER(20),
+   ENT_LOGOTG           NUMBER(18),
+   ENT_LOGOTT           NUMBER(18),
+   ENT_CSSTT            NUMBER(18),
+   ENT_PIETT            NUMBER(18),
    ENT_EMAIL            VARCHAR2(500 CHAR),
    ENT_CNTEMA           NUMBER(1)            default 0 not null,
    ENT_CNTTEL           NUMBER(1)            default 0 not null,
@@ -584,9 +614,14 @@ create table STG_FICEXT
 (
    FIE_REFDOC           VARCHAR2(1000)       not null,
    FIE_REFFEC           TIMESTAMP            not null,
-   FIE_CODFIC           NUMBER(20)           not null,
+   FIE_CODFIC           NUMBER(18)           not null,
    FIE_BORRAR           NUMBER(1)            default 0 not null
-);
+)
+  lob
+ ( FIC_DATOS )
+    store as
+         RDS_FICHER_LOB
+ ( index  RDS_FICHER_I_LOB );
 
 comment on table STG_FICEXT is
 'Ubicación de ficheros en sistema remoto
@@ -626,7 +661,7 @@ alter table STG_FICEXT
 /*==============================================================*/
 create table STG_FICHER 
 (
-   FIC_CODIGO           NUMBER(20)           not null,
+   FIC_CODIGO           NUMBER(18)           not null,
    FIC_NOMBRE           VARCHAR2(500 CHAR)   not null
 );
 
@@ -647,8 +682,8 @@ alter table STG_FICHER
 /*==============================================================*/
 create table STG_FILFUE 
 (
-   FIF_CODIGO           NUMBER(20)           not null,
-   FIF_CODFUE           NUMBER(20)           not null
+   FIF_CODIGO           NUMBER(18)           not null,
+   FIF_CODFUE           NUMBER(18)           not null
 );
 
 comment on table STG_FILFUE is
@@ -668,13 +703,13 @@ alter table STG_FILFUE
 /*==============================================================*/
 create table STG_FORCAM 
 (
-   FCA_CODIGO           NUMBER(20)           not null,
+   FCA_CODIGO           NUMBER(18)           not null,
    FCA_OBLIGA           NUMBER(1)            default 0 not null,
    FCA_LECTUR           NUMBER(1)            default 0 not null,
    FCA_NOMODI           NUMBER(1)            default 0 not null,
-   FCA_SCRAUT           NUMBER(20),
-   FCA_SCRSLE           NUMBER(20),
-   FCA_SCRVAL           NUMBER(20)
+   FCA_SCRAUT           NUMBER(18),
+   FCA_SCRSLE           NUMBER(18),
+   FCA_SCRVAL           NUMBER(18)
 );
 
 comment on table STG_FORCAM is
@@ -710,7 +745,7 @@ alter table STG_FORCAM
 /*==============================================================*/
 create table STG_FORCHK 
 (
-   CCK_CODIGO           NUMBER(20)           not null,
+   CCK_CODIGO           NUMBER(18)           not null,
    CCK_VALCHK           VARCHAR2(100)        not null,
    CCK_VALNCH           VARCHAR2(100)        not null
 );
@@ -735,11 +770,11 @@ alter table STG_FORCHK
 /*==============================================================*/
 create table STG_FORCIN 
 (
-   CIN_CODIGO           NUMBER(20)           not null,
+   CIN_CODIGO           NUMBER(18)           not null,
    CIN_TIPO             VARCHAR2(10 CHAR)    not null,
    CIN_TIPLST           VARCHAR2(1 CHAR)     not null,
-   CIN_SCRVAP           NUMBER(20),
-   CIN_DOMCOD           NUMBER(20),
+   CIN_SCRVAP           NUMBER(18),
+   CIN_DOMCOD           NUMBER(18),
    CIN_DOMCCD           VARCHAR2(100 CHAR),
    CIN_DOMCDS           VARCHAR2(100 CHAR),
    CIN_INDICE           NUMBER(1)            default 0 not null
@@ -785,7 +820,8 @@ alter table STG_FORCIN
 /*==============================================================*/
 create table STG_FORCTX 
 (
-   CTX_CODIGO           NUMBER(20)           not null,
+   CTX_CODIGO           NUMBER(18)           not null,
+   CTX_OCULTO           NUMBER(1)            default 0 not null,
    CTX_TIPO             VARCHAR2(10 CHAR)    not null,
    CTX_NORTAM           NUMBER(4),
    CTX_NORMUL           NUMBER(1)            default 0 not null,
@@ -812,6 +848,9 @@ comment on table STG_FORCTX is
 comment on column STG_FORCTX.CTX_CODIGO is
 'Código elemento';
 
+comment on column STG_FORCTX.CTX_OCULTO is
+'Indica si es campo oculto';
+
 comment on column STG_FORCTX.CTX_TIPO is
 'Tipo campo de texto;
 - NORMAL
@@ -821,7 +860,9 @@ comment on column STG_FORCTX.CTX_TIPO is
 - CP
 - TELEFONO
 - FECHA
-- EXPR';
+- HORA
+- EXPR
+- IMPORTE';
 
 comment on column STG_FORCTX.CTX_NORTAM is
 'Tamaño (tipo normal)';
@@ -885,14 +926,18 @@ alter table STG_FORCTX
 /*==============================================================*/
 create table STG_FORELE 
 (
-   FEL_CODIGO           NUMBER(20)           not null,
-   FEL_CODFLS           NUMBER(20)           not null,
+   FEL_CODIGO           NUMBER(18)           not null,
+   FEL_CODFLS           NUMBER(18)           not null,
    FEL_IDENTI           VARCHAR2(50 CHAR)    not null,
    FEL_TIPO             VARCHAR2(2 CHAR)     not null,
    FEL_ORDEN            NUMBER(3)            not null,
    FEL_NUMCOL           NUMBER(2)            not null,
-   FEL_TEXTO            NUMBER(20),
-   FEL_AYUDA            NUMBER(20)
+   FEL_TEXTO            NUMBER(18),
+   FEL_AYUDA            NUMBER(18),
+   FEL_TEXTNO           NUMBER(1)            default 0 not null,
+   FEL_TEXTAL           VARCHAR2(1 CHAR)     default 'I' not null,
+   FEL_LELMOS           NUMBER(1)            default 0 not null,
+   FEL_LELCOL           NUMBER(1)            default 0
 );
 
 comment on table STG_FORELE is
@@ -908,13 +953,13 @@ comment on column STG_FORELE.FEL_IDENTI is
 'Identificador elemento';
 
 comment on column STG_FORELE.FEL_TIPO is
-'Tipo elemento: CT (Campo de texto) / SE (Selector) / CK (Checkbox) / ET (Etiqueta) / CP (Captcha) / IM (Imagen)';
+'Tipo elemento: CT (Campo de texto) / SE (Selector) / CK (Checkbox) / ET (Etiqueta) / CP (Captcha) / IM (Imagen) / Lista elementos (LE)';
 
 comment on column STG_FORELE.FEL_ORDEN is
 'Orden';
 
 comment on column STG_FORELE.FEL_NUMCOL is
-'Número de columnas ocupadas';
+'Número de columnas ocupadas (max 6)';
 
 comment on column STG_FORELE.FEL_TEXTO is
 'Texto';
@@ -922,15 +967,48 @@ comment on column STG_FORELE.FEL_TEXTO is
 comment on column STG_FORELE.FEL_AYUDA is
 'Texto tooltip ayuda';
 
+comment on column STG_FORELE.FEL_TEXTNO is
+'No mostrar texto componente';
+
+comment on column STG_FORELE.FEL_TEXTAL is
+'Alineación texto: Izquierda (I), Centrada (C), Derecha (D)';
+
+comment on column STG_FORELE.FEL_LELMOS is
+'Para campos de un componente lista de elementos, indica si sale en la lista';
+
+comment on column STG_FORELE.FEL_LELCOL is
+'Para campos de un componente lista de elementos, si sale en la lista indica el ancho de columna';
+
 alter table STG_FORELE
    add constraint STG_FORELE_PK primary key (FEL_CODIGO);
+
+/*==============================================================*/
+/* Table: STG_FORETQ                                            */
+/*==============================================================*/
+create table STG_FORETQ 
+(
+   ETI_CODIGO           NUMBER(18)           not null,
+   ETI_TIPETI           VARCHAR2(1 CHAR)     default 'N' not null
+);
+
+comment on table STG_FORETQ is
+'Etiqueta';
+
+comment on column STG_FORETQ.ETI_CODIGO is
+'Código';
+
+comment on column STG_FORETQ.ETI_TIPETI is
+'Tipo etiqueta: Normal (N) / Info (I) / Warning (W) / Error (E)';
+
+alter table STG_FORETQ
+   add constraint STG_FORETQ primary key (ETI_CODIGO);
 
 /*==============================================================*/
 /* Table: STG_FORFMT                                            */
 /*==============================================================*/
 create table STG_FORFMT 
 (
-   FMT_CODIGO           NUMBER(20)           not null,
+   FMT_CODIGO           NUMBER(18)           not null,
    FMT_CLASS            VARCHAR2(500 CHAR)   not null,
    FMT_DESCRI           VARCHAR2(255 CHAR)   not null
 );
@@ -955,8 +1033,8 @@ alter table STG_FORFMT
 /*==============================================================*/
 create table STG_FORIMG 
 (
-   FIM_CODIGO           NUMBER(20)           not null,
-   FIM_CODFIC           NUMBER(20)           not null
+   FIM_CODIGO           NUMBER(18)           not null,
+   FIM_CODFIC           NUMBER(18)           not null
 );
 
 comment on table STG_FORIMG is
@@ -972,12 +1050,33 @@ alter table STG_FORIMG
    add constraint STG_FORIMG_PK primary key (FIM_CODIGO);
 
 /*==============================================================*/
+/* Table: STG_FORLEL                                            */
+/*==============================================================*/
+create table STG_FORLEL 
+(
+   LEL_CODIGO           NUMBER(18)           not null,
+   LEL_CODPAF           NUMBER(18)           not null
+);
+
+comment on table STG_FORLEL is
+'Componente lista de elementos';
+
+comment on column STG_FORLEL.LEL_CODIGO is
+'Código';
+
+comment on column STG_FORLEL.LEL_CODPAF is
+'Código página asociada';
+
+alter table STG_FORLEL
+   add constraint STG_FORLEL_PK primary key (LEL_CODIGO);
+
+/*==============================================================*/
 /* Table: STG_FORLI                                             */
 /*==============================================================*/
 create table STG_FORLI 
 (
-   FLS_CODIGO           NUMBER(20)           not null,
-   FLS_CODFSE           NUMBER(20)           not null,
+   FLS_CODIGO           NUMBER(18)           not null,
+   FLS_CODPAF           NUMBER(18)           not null,
    FLS_ORDEN            NUMBER(2)            not null
 );
 
@@ -987,8 +1086,8 @@ comment on table STG_FORLI is
 comment on column STG_FORLI.FLS_CODIGO is
 'Código';
 
-comment on column STG_FORLI.FLS_CODFSE is
-'Código sección';
+comment on column STG_FORLI.FLS_CODPAF is
+'Código página';
 
 comment on column STG_FORLI.FLS_ORDEN is
 'Orden';
@@ -1001,9 +1100,12 @@ alter table STG_FORLI
 /*==============================================================*/
 create table STG_FORMUL 
 (
-   FOR_CODIGO           NUMBER(20)           not null,
-   GTTFORGST_ACCPER     NUMBER(1)            default 0 not null,
-   FOR_SCRPLT           NUMBER(20)
+   FOR_CODIGO           NUMBER(18)           not null,
+   FOR_ACCPER           NUMBER(1)            default 0 not null,
+   FOR_SCRPLT           NUMBER(18),
+   FOR_CABFOR           NUMBER(1)            default 0 not null,
+   FOR_CABLOG           NUMBER(18),
+   FOR_CABTXT           NUMBER(18)
 );
 
 comment on table STG_FORMUL is
@@ -1012,11 +1114,20 @@ comment on table STG_FORMUL is
 comment on column STG_FORMUL.FOR_CODIGO is
 'Código';
 
-comment on column STG_FORMUL.GTTFORGST_ACCPER is
+comment on column STG_FORMUL.FOR_ACCPER is
 'Permitir acciones personalizadas';
 
 comment on column STG_FORMUL.FOR_SCRPLT is
 'Script para permitir indicar que plantilla usar';
+
+comment on column STG_FORMUL.FOR_CABFOR is
+'Indica si se establece cabecera formulario (logo + título)';
+
+comment on column STG_FORMUL.FOR_CABLOG is
+'Logo cabecera';
+
+comment on column STG_FORMUL.FOR_CABTXT is
+'Texto cabecera';
 
 alter table STG_FORMUL
    add constraint STG_FORMUL_PK primary key (FOR_CODIGO);
@@ -1026,13 +1137,12 @@ alter table STG_FORMUL
 /*==============================================================*/
 create table STG_FORPAG 
 (
-   PAF_CODIGO           NUMBER(20)           not null,
-   PAF_CODFOR           NUMBER(20)           not null,
-   PAF_SCRVAL           NUMBER(20),
+   PAF_CODIGO           NUMBER(18)           not null,
+   PAF_CODFOR           NUMBER(18)           not null,
+   PAF_SCRVAL           NUMBER(18),
    PAF_ORDEN            NUMBER(2)            not null,
-   PAF_CABFOR           NUMBER(1)            default 0 not null,
-   PAF_CABLOG           NUMBER(20),
-   PAF_CABTXT           NUMBER(20)
+   PAF_PAGFIN           NUMBER(1)            default 0 not null,
+   PAF_PAGLEL           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_FORPAG is
@@ -1050,14 +1160,11 @@ comment on column STG_FORPAG.PAF_SCRVAL is
 comment on column STG_FORPAG.PAF_ORDEN is
 'Orden';
 
-comment on column STG_FORPAG.PAF_CABFOR is
-'Indica si se establece cabecera formulario (logo + título)';
+comment on column STG_FORPAG.PAF_PAGFIN is
+'Indica si es página final';
 
-comment on column STG_FORPAG.PAF_CABLOG is
-'Logo cabecera';
-
-comment on column STG_FORPAG.PAF_CABTXT is
-'Texto cabecera';
+comment on column STG_FORPAG.PAF_PAGLEL is
+'Indica si una página asociada a un componente lista de elementos';
 
 alter table STG_FORPAG
    add constraint STG_FORPAG_PK primary key (PAF_CODIGO);
@@ -1067,10 +1174,10 @@ alter table STG_FORPAG
 /*==============================================================*/
 create table STG_FORPLI 
 (
-   PLI_CODIGO           NUMBER(20)           not null,
-   PLI_CODPLT           NUMBER(20)           not null,
+   PLI_CODIGO           NUMBER(18)           not null,
+   PLI_CODPLT           NUMBER(18)           not null,
    PLI_CODIDI           VARCHAR2(2 CHAR)     not null,
-   PLI_CODFIC           NUMBER(20)           not null
+   PLI_CODFIC           NUMBER(18)           not null
 );
 
 comment on table STG_FORPLI is
@@ -1096,9 +1203,9 @@ alter table STG_FORPLI
 /*==============================================================*/
 create table STG_FORPLT 
 (
-   PLT_CODIGO           NUMBER(20)           not null,
-   PLT_CODFOR           NUMBER(20)           not null,
-   PLT_CODFMT           NUMBER(20)           not null,
+   PLT_CODIGO           NUMBER(18)           not null,
+   PLT_CODFOR           NUMBER(18)           not null,
+   PLT_CODFMT           NUMBER(18)           not null,
    PLT_DESCRI           VARCHAR2(255 CHAR)   not null,
    PLT_DEFECT           NUMBER(1)            default 0 not null
 );
@@ -1129,10 +1236,9 @@ alter table STG_FORPLT
 /*==============================================================*/
 create table STG_FORSEC 
 (
-   FSE_CODIGO           NUMBER(20)           not null,
-   FSE_CODPAF           NUMBER(20)           not null,
+   FSE_CODIGO           NUMBER(18)           not null,
    FSE_ORDEN            NUMBER(2)            not null,
-   FSE_TITULO           NUMBER(20)           not null
+   FSE_LETRA            VARCHAR2(2 CHAR)
 );
 
 comment on table STG_FORSEC is
@@ -1141,14 +1247,11 @@ comment on table STG_FORSEC is
 comment on column STG_FORSEC.FSE_CODIGO is
 'Código';
 
-comment on column STG_FORSEC.FSE_CODPAF is
-'Código página';
-
 comment on column STG_FORSEC.FSE_ORDEN is
 'Orden';
 
-comment on column STG_FORSEC.FSE_TITULO is
-'Titulo sección';
+comment on column STG_FORSEC.FSE_LETRA is
+'Letra de la sección';
 
 alter table STG_FORSEC
    add constraint STG_FORSEC_PK primary key (FSE_CODIGO);
@@ -1158,10 +1261,10 @@ alter table STG_FORSEC
 /*==============================================================*/
 create table STG_FORSOP 
 (
-   FSO_CODIGO           NUMBER(20)           not null,
-   FSO_CODENT           NUMBER(20)           not null,
-   FSO_TIPINC           NUMBER(20)           not null,
-   FSO_DSCTIP           NUMBER(20)           not null,
+   FSO_CODIGO           NUMBER(18)           not null,
+   FSO_CODENT           NUMBER(18)           not null,
+   FSO_TIPINC           NUMBER(18)           not null,
+   FSO_DSCTIP           NUMBER(18)           not null,
    FSO_TIPDST           VARCHAR2(1 CHAR)     not null,
    FSO_LSTEMA           VARCHAR2(4000 CHAR)
 );
@@ -1195,22 +1298,22 @@ alter table STG_FORSOP
 /*==============================================================*/
 create table STG_FORTRA 
 (
-   FTR_CODIGO           NUMBER(20)           not null,
+   FTR_CODIGO           NUMBER(18)           not null,
    FTR_IDENTI           VARCHAR2(20)         not null,
-   FTR_DESCRIP          NUMBER(20)           not null,
+   FTR_DESCRIP          NUMBER(18)           not null,
    FTR_TIPO             VARCHAR2(1)          not null,
    FTR_ORDEN            NUMBER(2)            not null,
    FTR_OBLIGA           VARCHAR2(1 CHAR)     not null,
-   FTR_SCROBL           NUMBER(20),
+   FTR_SCROBL           NUMBER(18),
    FTR_FIRDIG           NUMBER(1)            default 0,
-   FTR_SCRFIR           NUMBER(20),
+   FTR_SCRFIR           NUMBER(18),
    FTR_PREREG           NUMBER(1)            default 0,
-   FTR_SCRINI           NUMBER(20),
-   FTR_SCRPAR           NUMBER(20),
-   FTR_SCRRET           NUMBER(20),
+   FTR_SCRINI           NUMBER(18),
+   FTR_SCRPAR           NUMBER(18),
+   FTR_SCRRET           NUMBER(18),
    FTR_TIPFOR           VARCHAR2(1 CHAR)     not null,
-   FTR_CODFOR           NUMBER(20),
-   FTR_FEXGST           NUMBER(20),
+   FTR_CODFOR           NUMBER(18),
+   FTR_FEXGST           NUMBER(18),
    FTR_FEXIDE           VARCHAR2(20)
 );
 
@@ -1281,7 +1384,7 @@ alter table STG_FORTRA
 /*==============================================================*/
 create table STG_FUEDAT 
 (
-   FUE_CODIGO           NUMBER(20)           not null,
+   FUE_CODIGO           NUMBER(18)           not null,
    FUE_AMBITO           VARCHAR2(1 CHAR)     not null,
    FUE_IDENT            VARCHAR2(20)         not null,
    FUE_DESCR            VARCHAR2(255 CHAR)   not null
@@ -1317,8 +1420,8 @@ create unique index STG_FUEDAT_IDENTI_UK on STG_FUEDAT (
 /*==============================================================*/
 create table STG_GESFOR 
 (
-   GFE_CODIGO           NUMBER(20)           not null,
-   GFE_CODENT           NUMBER(20)           not null,
+   GFE_CODIGO           NUMBER(18)           not null,
+   GFE_CODENT           NUMBER(18)           not null,
    GFE_IDENTI           VARCHAR2(20)         not null,
    GFE_DESCR            VARCHAR2(255 CHAR)   not null,
    GFE_URL              VARCHAR2(100 CHAR)   not null
@@ -1357,8 +1460,8 @@ create unique index STG_GESFOR_IDENTI_UK on STG_GESFOR (
 /*==============================================================*/
 create table STG_HISVER 
 (
-   HVE_CODIGO           NUMBER(20)           not null,
-   HVE_CODVTR           NUMBER(20)           not null,
+   HVE_CODIGO           NUMBER(18)           not null,
+   HVE_CODVTR           NUMBER(18)           not null,
    HVE_FECHA            DATE                 not null,
    HVE_ACCION           VARCHAR2(1 CHAR)     not null,
    HVE_RELEAS           NUMBER(8)            not null,
@@ -1415,10 +1518,10 @@ alter table STG_IDIOMA
 /*==============================================================*/
 create table STG_LFVCIN 
 (
-   LFV_CODIGO           NUMBER(20)           not null,
-   LFV_CODCIN           NUMBER(20)           not null,
+   LFV_CODIGO           NUMBER(18)           not null,
+   LFV_CODCIN           NUMBER(18)           not null,
    LFV_VALOR            VARCHAR2(100 CHAR)   not null,
-   LFV_DESCRIP          NUMBER(20)           not null,
+   LFV_DESCRIP          NUMBER(18)           not null,
    LFV_DEFECT           NUMBER(1)            default 0 not null,
    LFV_ORDEN            NUMBER(2)            not null
 );
@@ -1460,10 +1563,10 @@ create unique index STG_LFVCIN_CODCIN_VALOR_UK on STG_LFVCIN (
 /*==============================================================*/
 create table STG_LITSCR 
 (
-   LSC_CODIGO           NUMBER(20)           not null,
-   LSC_CODSCR           NUMBER(20)           not null,
+   LSC_CODIGO           NUMBER(18)           not null,
+   LSC_CODSCR           NUMBER(18)           not null,
    LSC_IDENTI           VARCHAR2(20)         not null,
-   LSC_CODTRA           NUMBER(20)           not null
+   LSC_CODTRA           NUMBER(18)           not null
 );
 
 comment on table STG_LITSCR is
@@ -1497,15 +1600,15 @@ create unique index STG_LITSCR_CODSCR_IDENTI_UK on STG_LITSCR (
 /*==============================================================*/
 create table STG_PAGTRA 
 (
-   PAG_CODIGO           NUMBER(20)           not null,
-   PAG_CODPTR           NUMBER(20)           not null,
+   PAG_CODIGO           NUMBER(18)           not null,
+   PAG_CODPTR           NUMBER(18)           not null,
    PAG_IDENTI           VARCHAR2(20)         not null,
-   PAG_DESCRIP          NUMBER(20)           not null,
+   PAG_DESCRIP          NUMBER(18)           not null,
    PAG_ORDEN            NUMBER(2)            not null,
    PAG_OBLIGA           VARCHAR2(1 CHAR)     not null,
-   PAG_SCROBL           NUMBER(20),
+   PAG_SCROBL           NUMBER(18),
    PAG_PLUGIN           VARCHAR2(20)         not null,
-   PAG_SCRDPG           NUMBER(20),
+   PAG_SCRDPG           NUMBER(18),
    PAG_TIPO             VARCHAR2(1 CHAR)     not null,
    PAG_SIMULA           NUMBER(1)            default 0 not null
 );
@@ -1544,7 +1647,7 @@ comment on column STG_PAGTRA.PAG_SCRDPG is
 'Permite establecer dinámicamente los datos del pago';
 
 comment on column STG_PAGTRA.PAG_TIPO is
-'Tipo: T (Telemático) / P (Presencial). Dependerá del tipo de plugin.';
+'Tipo: T (Telemático) / P (Presencial) / A (Ambos). Dependerá del tipo de plugin.';
 
 comment on column STG_PAGTRA.PAG_SIMULA is
 'Indica que el pago es simulado.';
@@ -1565,8 +1668,8 @@ create unique index STG_PAGTRA_CODPTR_IDENTI_UK on STG_PAGTRA (
 /*==============================================================*/
 create table STG_PASANE 
 (
-   PAN_CODIGO           NUMBER(20)           not null,
-   PAN_SCRDIN           NUMBER(20)
+   PAN_CODIGO           NUMBER(18)           not null,
+   PAN_SCRDIN           NUMBER(18)
 );
 
 comment on table STG_PASANE is
@@ -1586,8 +1689,8 @@ alter table STG_PASANE
 /*==============================================================*/
 create table STG_PASCAP 
 (
-   PCA_CODIGO           NUMBER(20)           not null,
-   PCA_CODFOR           NUMBER(20)
+   PCA_CODIGO           NUMBER(18)           not null,
+   PCA_CODFOR           NUMBER(18)
 );
 
 comment on table STG_PASCAP is
@@ -1607,8 +1710,8 @@ alter table STG_PASCAP
 /*==============================================================*/
 create table STG_PASDBS 
 (
-   PDB_CODIGO           NUMBER(20)           not null,
-   PDB_INSINI           NUMBER(20)
+   PDB_CODIGO           NUMBER(18)           not null,
+   PDB_INSINI           NUMBER(18)
 );
 
 comment on table STG_PASDBS is
@@ -1628,9 +1731,9 @@ alter table STG_PASDBS
 /*==============================================================*/
 create table STG_PASINF 
 (
-   PIN_CODIGO           NUMBER(20)           not null,
-   PIN_SCRDAT           NUMBER(20),
-   PIN_FICPLA           NUMBER(20)
+   PIN_CODIGO           NUMBER(18)           not null,
+   PIN_SCRDAT           NUMBER(18),
+   PIN_FICPLA           NUMBER(18)
 );
 
 comment on table STG_PASINF is
@@ -1653,15 +1756,15 @@ alter table STG_PASINF
 /*==============================================================*/
 create table STG_PASOTR 
 (
-   PTR_CODIGO           NUMBER(20)           not null,
-   PTR_CODVTR           NUMBER(20)           not null,
-   PTR_TIPPTR           NUMBER(20)           not null,
+   PTR_CODIGO           NUMBER(18)           not null,
+   PTR_CODVTR           NUMBER(18)           not null,
+   PTR_TIPPTR           NUMBER(18)           not null,
    PTR_IDEPTR           VARCHAR2(20 CHAR)    not null,
-   PTR_DESCRI           NUMBER(20),
+   PTR_DESCRI           NUMBER(18),
    PTR_ORDEN            NUMBER(2)            not null,
    PTR_FINAL            NUMBER(1)            default 0 not null,
-   PTR_SCRNVG           NUMBER(20),
-   PTR_SCRVAR           NUMBER(20)
+   PTR_SCRNVG           NUMBER(18),
+   PTR_SCRVAR           NUMBER(18)
 );
 
 comment on table STG_PASOTR is
@@ -1710,7 +1813,7 @@ create unique index STG_PASOTR_IDEPTR_CODVTR_UK on STG_PASOTR (
 /*==============================================================*/
 create table STG_PASPAG 
 (
-   PPG_CODIGO           NUMBER(20)           not null
+   PPG_CODIGO           NUMBER(18)           not null
 );
 
 comment on table STG_PASPAG is
@@ -1727,20 +1830,18 @@ alter table STG_PASPAG
 /*==============================================================*/
 create table STG_PASREG 
 (
-   PRG_CODIGO           NUMBER(20)           not null,
+   PRG_CODIGO           NUMBER(18)           not null,
    PRG_REGOFI           VARCHAR2(20),
    PRG_REGLIB           VARCHAR2(20),
    PRG_REGASU           VARCHAR2(20),
-   PRG_REGORG           VARCHAR2(20),
-   PRG_SCRREG           NUMBER(20),
-   PRG_INSPRE           NUMBER(20),
-   PRG_INSFIT           NUMBER(20),
-   PRG_SCRPRE           NUMBER(20),
-   PRG_FIRMAR           NUMBER(1)            default 0 not null,
+   PRG_SCRREG           NUMBER(18),
+   PRG_INSPRE           NUMBER(18),
+   PRG_INSFIT           NUMBER(18),
+   PRG_SCRPRE           NUMBER(18),
    PRG_REPADM           NUMBER(1)            default 0 not null,
    PRG_REPVAL           NUMBER(1)            default 0 not null,
-   PRG_SCRREP           NUMBER(20),
-   PRG_SCRVAL           NUMBER(20)
+   PRG_SCRREP           NUMBER(18),
+   PRG_SCRVAL           NUMBER(18)
 );
 
 comment on table STG_PASREG is
@@ -1758,9 +1859,6 @@ comment on column STG_PASREG.PRG_REGLIB is
 comment on column STG_PASREG.PRG_REGASU is
 'Código tipo asunto';
 
-comment on column STG_PASREG.PRG_REGORG is
-'Código órgano destino';
-
 comment on column STG_PASREG.PRG_SCRREG is
 'Script destino registro';
 
@@ -1772,9 +1870,6 @@ comment on column STG_PASREG.PRG_INSFIT is
 
 comment on column STG_PASREG.PRG_SCRPRE is
 'Script presentador';
-
-comment on column STG_PASREG.PRG_FIRMAR is
-'Indica si se ha de firmar';
 
 comment on column STG_PASREG.PRG_REPADM is
 'Indica si admite representación';
@@ -1796,7 +1891,7 @@ alter table STG_PASREG
 /*==============================================================*/
 create table STG_PASREL 
 (
-   PRL_CODIGO           NUMBER(20)           not null
+   PRL_CODIGO           NUMBER(18)           not null
 );
 
 comment on table STG_PASREL is
@@ -1809,33 +1904,13 @@ alter table STG_PASREL
    add constraint STG_PASREL_PK primary key (PRL_CODIGO);
 
 /*==============================================================*/
-/* Table: STG_PLGENT                                            */
-/*==============================================================*/
-create table STG_PLGENT 
-(
-   PLE_CODPLG           NUMBER(20)           not null,
-   PLE_CODENT           NUMBER(20)           not null
-);
-
-comment on table STG_PLGENT is
-'Plugins Entidad';
-
-comment on column STG_PLGENT.PLE_CODPLG is
-'Codigo plugin';
-
-comment on column STG_PLGENT.PLE_CODENT is
-'Código entidad';
-
-alter table STG_PLGENT
-   add constraint STG_PLGENT_PK primary key (PLE_CODPLG, PLE_CODENT);
-
-/*==============================================================*/
 /* Table: STG_PLUGIN                                            */
 /*==============================================================*/
 create table STG_PLUGIN 
 (
-   PLG_CODIGO           NUMBER(20)           not null,
+   PLG_CODIGO           NUMBER(18)           not null,
    PLG_AMBITO           VARCHAR2(1 CHAR)     not null,
+   PLG_CODENT           NUMBER(18),
    PLG_TIPO             VARCHAR2(3 CHAR)     not null,
    PLG_DESCR            VARCHAR2(255 CHAR)   not null,
    PLG_CLASS            VARCHAR2(500 CHAR)   not null,
@@ -1851,6 +1926,9 @@ comment on column STG_PLUGIN.PLG_CODIGO is
 
 comment on column STG_PLUGIN.PLG_AMBITO is
 'Ámbito: G (Global) , E (Entidad)';
+
+comment on column STG_PLUGIN.PLG_CODENT is
+'Código entidad (Ambito entidad)';
 
 comment on column STG_PLUGIN.PLG_TIPO is
 'Tipo plugin:  
@@ -1877,8 +1955,8 @@ alter table STG_PLUGIN
 /*==============================================================*/
 create table STG_PRDCIN 
 (
-   CIP_CODIGO           NUMBER(20)           not null,
-   CIP_CODCIN           NUMBER(20)           not null,
+   CIP_CODIGO           NUMBER(18)           not null,
+   CIP_CODCIN           NUMBER(18)           not null,
    CIP_TIPO             VARCHAR2(1 CHAR)     not null,
    CIP_VALOR            VARCHAR2(1000 CHAR)  not null,
    CIP_PARAM            VARCHAR2(1000 CHAR)
@@ -1910,8 +1988,8 @@ alter table STG_PRDCIN
 /*==============================================================*/
 create table STG_PRLFTR 
 (
-   FPR_CODPRL           NUMBER(20)           not null,
-   FPR_CODFOR           NUMBER(20)           not null
+   FPR_CODPRL           NUMBER(18)           not null,
+   FPR_CODFOR           NUMBER(18)           not null
 );
 
 comment on table STG_PRLFTR is
@@ -1931,8 +2009,8 @@ alter table STG_PRLFTR
 /*==============================================================*/
 create table STG_ROLARE 
 (
-   RLA_CODIGO           NUMBER(20)           not null,
-   RLA_CODARE           NUMBER(20)           not null,
+   RLA_CODIGO           NUMBER(18)           not null,
+   RLA_CODARE           NUMBER(18)           not null,
    RLA_TIPO             VARCHAR2(1 CHAR)     not null,
    RLA_VALOR            VARCHAR2(100 CHAR)   not null,
    RLA_DESCR            VARCHAR2(255 CHAR)   not null,
@@ -1984,14 +2062,13 @@ alter table STG_ROLARE
 /*==============================================================*/
 create table STG_SCRIPT 
 (
-   SCR_CODIGO           NUMBER(20)           not null,
+   SCR_CODIGO           NUMBER(18)           not null,
    SCR_SCRIPT           CLOB
- ) 
- TABLESPACE SISTRAGES_DADES
+)
+TABLESPACE SISTRAGES_DADES
    LOB (SCR_SCRIPT) STORE AS STG_SCRIPT_SCRIPT_LOB
 	 (TABLESPACE SISTRAGES_LOB
-	 INDEX STG_SCRIPT_SCRIPT_LOB_I); 
-
+	 INDEX STG_SCRIPT_SCRIPT_LOB_I);
 
 comment on table STG_SCRIPT is
 'Scripts';
@@ -2010,9 +2087,9 @@ alter table STG_SCRIPT
 /*==============================================================*/
 create table STG_TIPPTR 
 (
-   TIP_CODIGO           NUMBER(20)           not null,
+   TIP_CODIGO           NUMBER(18)           not null,
    TIP_PASO             VARCHAR2(20)         not null,
-   TIP_DESCOR           NUMBER(20)           not null,
+   TIP_DESCOR           NUMBER(18)           not null,
    TIP_ORDEN            NUMBER(2)
 );
 
@@ -2042,7 +2119,7 @@ Paso que permite realizar el registro del trámite una vez se completen los pasos
 Después de este paso no podrá haber más pasos.';
 
 comment on column STG_TIPPTR.TIP_CODIGO is
-'Código tipo certificado';
+'Código';
 
 comment on column STG_TIPPTR.TIP_PASO is
 'Identificador tipo de paso';
@@ -2068,7 +2145,7 @@ create unique index STG_TIPPTR_PASO_UK on STG_TIPPTR (
 /*==============================================================*/
 create table STG_TRADUC 
 (
-   TRA_CODIGO           NUMBER(20)           not null
+   TRA_CODIGO           NUMBER(18)           not null
 );
 
 comment on table STG_TRADUC is
@@ -2085,8 +2162,8 @@ alter table STG_TRADUC
 /*==============================================================*/
 create table STG_TRAIDI 
 (
-   TRI_CODIGO           NUMBER(20)           not null,
-   TRI_CODTRA           NUMBER(20)           not null,
+   TRI_CODIGO           NUMBER(18)           not null,
+   TRI_CODTRA           NUMBER(18)           not null,
    TRI_LITERA           VARCHAR2(1000 CHAR)  not null,
    TRI_IDIOMA           VARCHAR2(2 CHAR)     not null
 );
@@ -2114,8 +2191,8 @@ alter table STG_TRAIDI
 /*==============================================================*/
 create table STG_TRAMIT 
 (
-   TRM_CODIGO           NUMBER(20)           not null,
-   TRM_CODARE           NUMBER(20)           not null,
+   TRM_CODIGO           NUMBER(18)           not null,
+   TRM_CODARE           NUMBER(18)           not null,
    TRM_IDENTI           VARCHAR2(20)         not null,
    TRM_DESCR            VARCHAR2(1000 CHAR)  not null
 );
@@ -2150,9 +2227,9 @@ create unique index STG_TRAMIT_IDENTI_UK on STG_TRAMIT (
 /*==============================================================*/
 create table STG_VALCFU 
 (
-   VCF_CODIGO           NUMBER(20)           not null,
-   VCF_CODFIF           NUMBER(20)           not null,
-   VCF_CODCFU           NUMBER(20)           not null,
+   VCF_CODIGO           NUMBER(18)           not null,
+   VCF_CODFIF           NUMBER(18)           not null,
+   VCF_CODCFU           NUMBER(18)           not null,
    VCF_VALOR            VARCHAR2(4000)
 );
 
@@ -2179,24 +2256,24 @@ alter table STG_VALCFU
 /*==============================================================*/
 create table STG_VERTRA 
 (
-   VTR_CODIGO           NUMBER(20)           not null,
-   VTR_CODTRM           NUMBER(20)           not null,
+   VTR_CODIGO           NUMBER(18)           not null,
+   VTR_CODTRM           NUMBER(18)           not null,
    VTR_NUMVER           NUMBER(2)            not null,
    VTR_TIPFLU           VARCHAR2(1)          not null,
-   VTR_DESCRIP          NUMBER(20)           not null,
    VTR_AUTENT           NUMBER(1)            default 0 not null,
    VTR_AUTQAA           NUMBER(1),
+   VTR_AUTENO           NUMBER(1)            default 0 not null,
    VTR_IDISOP           VARCHAR2(50)         not null,
    VTR_PERSIS           NUMBER(1)            default 0 not null,
    VTR_PERINF           NUMBER(1)            default 0 not null,
    VTR_PERDIA           NUMBER(2),
-   VTR_SCRPER           NUMBER(20),
-   VTR_SCRINTRA         NUMBER(20),
-   VTR_BLOQ             NUMBER(1),
+   VTR_SCRPER           NUMBER(18),
+   VTR_SCRINTRA         NUMBER(18),
+   VTR_BLOQ             NUMBER(1)            default 0,
    VTR_BLOQID           VARCHAR2(10 CHAR),
    VTR_BLOQUS           VARCHAR2(255 CHAR),
    VTR_RELEAS           NUMBER(8),
-   VTR_ACTIVO           NUMBER(1)            not null,
+   VTR_ACTIVO           NUMBER(1)            default 0 not null,
    VTR_DEBUG            NUMBER(1)            default 0 not null,
    VTR_LIMTIP           VARCHAR2(1 char)     default 'N' not null,
    VTR_LIMNUM           NUMBER(5),
@@ -2204,7 +2281,7 @@ create table STG_VERTRA
    VTR_DESPLZ           NUMBER(1)            default 0 not null,
    VTR_DESINI           DATE,
    VTR_DESFIN           DATE,
-   VTR_DESMEN           NUMBER(20)
+   VTR_DESMEN           NUMBER(18)
 );
 
 comment on table STG_VERTRA is
@@ -2222,14 +2299,14 @@ comment on column STG_VERTRA.VTR_NUMVER is
 comment on column STG_VERTRA.VTR_TIPFLU is
 'Tipo de flujo; Normal (N) / Personalizado (P)';
 
-comment on column STG_VERTRA.VTR_DESCRIP is
-'Código traducción';
-
 comment on column STG_VERTRA.VTR_AUTENT is
-'Indica si es autenticado o no';
+'Indica si es autenticado';
 
 comment on column STG_VERTRA.VTR_AUTQAA is
 'Para autenticado indica nivel QAA';
+
+comment on column STG_VERTRA.VTR_AUTENO is
+'Indica si no es autenticado';
 
 comment on column STG_VERTRA.VTR_IDISOP is
 'Idiomas soportados (lista de idiomas separados por coma)';
@@ -2339,6 +2416,22 @@ alter table STG_AREA
    add constraint STG_AREA_ENTIDA_FK foreign key (ARE_CODENT)
       references STG_ENTIDA (ENT_CODIGO);
 
+alter table STG_AREDOM
+   add constraint STG_AREDOM_AREA_FK foreign key (DMA_CODARE)
+      references STG_AREA (ARE_CODIGO);
+
+alter table STG_AREDOM
+   add constraint STG_AREDOM_DOMINI_FK foreign key (DMA_CODDOM)
+      references STG_DOMINI (DOM_CODIGO);
+
+alter table STG_AREFUE
+   add constraint STG_AREFUE_FUEDAT_FK foreign key (FUA_CODFUE)
+      references STG_FUEDAT (FUE_CODIGO);
+
+alter table STG_AREFUE
+   add constraint STG_FUEDOM_AREA_FK foreign key (FUA_CODAREA)
+      references STG_AREA (ARE_CODIGO);
+
 alter table STG_AVIENT
    add constraint STG_AVIENT_ENTIDA_FK foreign key (AVI_CODENT)
       references STG_ENTIDA (ENT_CODIGO);
@@ -2443,6 +2536,10 @@ alter table STG_FORELE
    add constraint STG_FORELE_TRADUC_FK2 foreign key (FEL_AYUDA)
       references STG_TRADUC (TRA_CODIGO);
 
+alter table STG_FORETQ
+   add constraint STG_FORETQ_FORELE_FK foreign key (ETI_CODIGO)
+      references STG_FORELE (FEL_CODIGO);
+
 alter table STG_FORIMG
    add constraint STG_FORIMG_FICHER_FK foreign key (FIM_CODFIC)
       references STG_FICHER (FIC_CODIGO);
@@ -2451,17 +2548,29 @@ alter table STG_FORIMG
    add constraint STG_FORIMG_FORELE_FK foreign key (FIM_CODIGO)
       references STG_FORELE (FEL_CODIGO);
 
+alter table STG_FORLEL
+   add constraint STG_FORLEL_FORELE_FK foreign key (LEL_CODIGO)
+      references STG_FORELE (FEL_CODIGO);
+
+alter table STG_FORLEL
+   add constraint FK_STG_FORL_STG_FORLE_STG_FORP foreign key (LEL_CODPAF)
+      references STG_FORPAG (PAF_CODIGO);
+
 alter table STG_FORLI
-   add constraint STG_FORLI_FORSEC_FK foreign key (FLS_CODFSE)
-      references STG_FORSEC (FSE_CODIGO);
+   add constraint STG_FORLI_FORPAG_FK foreign key (FLS_CODPAF)
+      references STG_FORPAG (PAF_CODIGO);
+
+alter table STG_FORMUL
+   add constraint STG_FORMUL_FICHER_FK foreign key (FOR_CABLOG)
+      references STG_FICHER (FIC_CODIGO);
 
 alter table STG_FORMUL
    add constraint STG_FORMUL_SCRIPT_FK foreign key (FOR_SCRPLT)
       references STG_SCRIPT (SCR_CODIGO);
 
-alter table STG_FORPAG
-   add constraint STG_FORPAG_FICHER_FK foreign key (PAF_CABLOG)
-      references STG_FICHER (FIC_CODIGO);
+alter table STG_FORMUL
+   add constraint STG_FORMUL_TRADUC_FK foreign key (FOR_CABTXT)
+      references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_FORPAG
    add constraint STG_FORPAG_FORMUL_FK foreign key (PAF_CODFOR)
@@ -2470,10 +2579,6 @@ alter table STG_FORPAG
 alter table STG_FORPAG
    add constraint STG_FORPAG_SCRIPT_FK foreign key (PAF_SCRVAL)
       references STG_SCRIPT (SCR_CODIGO);
-
-alter table STG_FORPAG
-   add constraint STG_FORPAG_TRADUC_FK foreign key (PAF_CABTXT)
-      references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_FORPLI
    add constraint STG_FORPLI_FICHER_FK foreign key (PLI_CODFIC)
@@ -2496,12 +2601,8 @@ alter table STG_FORPLT
       references STG_FORMUL (FOR_CODIGO);
 
 alter table STG_FORSEC
-   add constraint STG_FORSEC_FORPAG_FK foreign key (FSE_CODPAF)
-      references STG_FORPAG (PAF_CODIGO);
-
-alter table STG_FORSEC
-   add constraint STG_FORSEC_TRADUC_FK foreign key (FSE_TITULO)
-      references STG_TRADUC (TRA_CODIGO);
+   add constraint STG_FORSEC_FORELE_FK foreign key (FSE_CODIGO)
+      references STG_FORELE (FEL_CODIGO);
 
 alter table STG_FORSOP
    add constraint STG_FORSOP_ENTIDA_FK foreign key (FSO_CODENT)
@@ -2679,13 +2780,9 @@ alter table STG_PASREL
    add constraint STG_PASREL_PRLFTR_FK foreign key (PRL_CODIGO)
       references STG_PASOTR (PTR_CODIGO);
 
-alter table STG_PLGENT
-   add constraint STG_PLGENT_ENTIDA_FK foreign key (PLE_CODENT)
+alter table STG_PLUGIN
+   add constraint STG_PLUGIN_ENTIDA_FK foreign key (PLG_CODENT)
       references STG_ENTIDA (ENT_CODIGO);
-
-alter table STG_PLGENT
-   add constraint STG_PLGENT_PLUGIN_FK foreign key (PLE_CODPLG)
-      references STG_PLUGIN (PLG_CODIGO);
 
 alter table STG_PRDCIN
    add constraint STG_FORCIN_PRDCIN_FK foreign key (CIP_CODCIN)
@@ -2736,71 +2833,10 @@ alter table STG_VERTRA
       references STG_SCRIPT (SCR_CODIGO);
 
 alter table STG_VERTRA
-   add constraint STG_VERTRA_TRADUC_FK foreign key (VTR_DESCRIP)
+   add constraint STG_VERTRA_TRADUC_FK2 foreign key (VTR_DESMEN)
       references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_VERTRA
    add constraint STG_VERTRA_TRAMIT_FK foreign key (VTR_CODTRM)
       references STG_TRAMIT (TRM_CODIGO);
 
-
-/*==============================================================*/
-/* Table: STG_AREFUE                                            */
-/*==============================================================*/
-create table STG_AREFUE 
-(
-   FUA_CODAREA          NUMBER(20)           not null,
-   FUA_CODFUE           NUMBER(20)           not null
-);
-
-comment on table STG_AREFUE is
-'Fuente de datos de área';
-
-comment on column STG_AREFUE.FUA_CODAREA is
-'Código área';
-
-comment on column STG_AREFUE.FUA_CODFUE is
-'Codigo fuente de datos';
-
-alter table STG_AREFUE
-   add constraint STG_AREFUE_PK primary key (FUA_CODAREA, FUA_CODFUE);
-
-alter table STG_AREFUE
-   add constraint STG_AREFUE_FUEDAT_FK foreign key (FUA_CODFUE)
-      references STG_FUEDAT (FUE_CODIGO);
-
-alter table STG_AREFUE
-   add constraint STG_FUEDOM_AREA_FK foreign key (FUA_CODAREA)
-      references STG_AREA (ARE_CODIGO);
-
-
-/*==============================================================*/
-/* Table: STG_AREDOM                                            */
-/*==============================================================*/
-create table STG_AREDOM 
-(
-   DMA_CODARE           NUMBER(20)           not null,
-   DMA_CODDOM           NUMBER(20)           not null
-);
-
-comment on table STG_AREDOM is
-'Dominios area';
-
-comment on column STG_AREDOM.DMA_CODARE is
-'Código area';
-
-comment on column STG_AREDOM.DMA_CODDOM is
-'Código dominio';
-
-alter table STG_AREDOM
-   add constraint STG_AREDOM_PK primary key (DMA_CODARE, DMA_CODDOM);
-
-alter table STG_AREDOM
-   add constraint STG_AREDOM_AREA_FK foreign key (DMA_CODARE)
-      references STG_AREA (ARE_CODIGO);
-
-alter table STG_AREDOM
-   add constraint STG_AREDOM_DOMINI_FK foreign key (DMA_CODDOM)
-      references STG_DOMINI (DOM_CODIGO);
-      
-      
