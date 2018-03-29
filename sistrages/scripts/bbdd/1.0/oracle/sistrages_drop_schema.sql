@@ -7,8 +7,6 @@ drop table STG_AREA cascade constraints;
 
 drop table STG_AREDOM cascade constraints;
 
-drop table STG_AREFUE cascade constraints;
-
 drop table STG_AVIENT cascade constraints;
 
 drop table STG_CAMFUE cascade constraints;

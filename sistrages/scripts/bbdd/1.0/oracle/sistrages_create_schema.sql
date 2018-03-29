@@ -275,27 +275,6 @@ alter table STG_AREDOM
    add constraint STG_AREDOM_PK primary key (DMA_CODARE, DMA_CODDOM);
 
 /*==============================================================*/
-/* Table: STG_AREFUE                                            */
-/*==============================================================*/
-create table STG_AREFUE 
-(
-   FUA_CODAREA          NUMBER(18)           not null,
-   FUA_CODFUE           NUMBER(18)           not null
-);
-
-comment on table STG_AREFUE is
-'Fuente de datos de área';
-
-comment on column STG_AREFUE.FUA_CODAREA is
-'Código área';
-
-comment on column STG_AREFUE.FUA_CODFUE is
-'Codigo fuente de datos';
-
-alter table STG_AREFUE
-   add constraint STG_AREFUE_PK primary key (FUA_CODAREA, FUA_CODFUE);
-
-/*==============================================================*/
 /* Table: STG_AVIENT                                            */
 /*==============================================================*/
 create table STG_AVIENT 
@@ -355,7 +334,8 @@ create table STG_CAMFUE
    CFU_CODIGO           NUMBER(18)           not null,
    CFU_CODFUE           NUMBER(18)           not null,
    CFU_IDENT            VARCHAR2(20)         not null,
-   CFU_ESPK             VARCHAR2(1)          default 'N' not null
+   CFU_ESPK             VARCHAR2(1)          default 'N' not null,
+   CFU_ORDEN            NUMBER(2)            default 0 not null
 );
 
 comment on table STG_CAMFUE is
@@ -372,6 +352,9 @@ comment on column STG_CAMFUE.CFU_IDENT is
 
 comment on column STG_CAMFUE.CFU_ESPK is
 'Indica si el campo forma parte de la clave primaria';
+
+comment on column STG_CAMFUE.CFU_ORDEN is
+'Orden';
 
 alter table STG_CAMFUE
    add constraint STG_CAMFUE_PK primary key (CFU_CODIGO);
@@ -624,11 +607,11 @@ create table STG_FICEXT
  ( index  RDS_FICHER_I_LOB );
 
 comment on table STG_FICEXT is
-'Ubicación de ficheros en sistema remoto
+'Ubicación de ficheros en sistema remoto. Se almacenará en filesystem que se accederá de forma compartida desde SISTRAMIT.
 
 No se activa FK para que al borrar un fichero se marquen para borrar todos sus referencias externas
 
-POR DETERMINAR SI SE ALMACENA EN SISTEMA DE FICHEROS
+
 
 
 ';
@@ -662,7 +645,8 @@ alter table STG_FICEXT
 create table STG_FICHER 
 (
    FIC_CODIGO           NUMBER(18)           not null,
-   FIC_NOMBRE           VARCHAR2(500 CHAR)   not null
+   FIC_NOMBRE           VARCHAR2(500 CHAR)   not null,
+   FIC_PUBLIC           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_FICHER is
@@ -673,6 +657,9 @@ comment on column STG_FICHER.FIC_CODIGO is
 
 comment on column STG_FICHER.FIC_NOMBRE is
 'Nombre fichero con extensión';
+
+comment on column STG_FICHER.FIC_PUBLIC is
+'Indica si es público (accesible desde internet)';
 
 alter table STG_FICHER
    add constraint STG_FICHER_PK primary key (FIC_CODIGO);
@@ -1387,7 +1374,9 @@ create table STG_FUEDAT
    FUE_CODIGO           NUMBER(18)           not null,
    FUE_AMBITO           VARCHAR2(1 CHAR)     not null,
    FUE_IDENT            VARCHAR2(20)         not null,
-   FUE_DESCR            VARCHAR2(255 CHAR)   not null
+   FUE_DESCR            VARCHAR2(255 CHAR)   not null,
+   FUE_CODENT           NUMBER(18),
+   FUE_CODARE           NUMBER(18)
 );
 
 comment on table STG_FUEDAT is
@@ -1404,6 +1393,12 @@ comment on column STG_FUEDAT.FUE_IDENT is
 
 comment on column STG_FUEDAT.FUE_DESCR is
 'Descripción fuente de datos';
+
+comment on column STG_FUEDAT.FUE_CODENT is
+'Código entidad';
+
+comment on column STG_FUEDAT.FUE_CODARE is
+'Código área';
 
 alter table STG_FUEDAT
    add constraint STG_FUEDAT_PK primary key (FUE_CODIGO);
@@ -2424,14 +2419,6 @@ alter table STG_AREDOM
    add constraint STG_AREDOM_DOMINI_FK foreign key (DMA_CODDOM)
       references STG_DOMINI (DOM_CODIGO);
 
-alter table STG_AREFUE
-   add constraint STG_AREFUE_FUEDAT_FK foreign key (FUA_CODFUE)
-      references STG_FUEDAT (FUE_CODIGO);
-
-alter table STG_AREFUE
-   add constraint STG_FUEDOM_AREA_FK foreign key (FUA_CODAREA)
-      references STG_AREA (ARE_CODIGO);
-
 alter table STG_AVIENT
    add constraint STG_AVIENT_ENTIDA_FK foreign key (AVI_CODENT)
       references STG_ENTIDA (ENT_CODIGO);
@@ -2647,6 +2634,14 @@ alter table STG_FORTRA
 alter table STG_FORTRA
    add constraint STG_FORTRA_TRADUC_FK foreign key (FTR_DESCRIP)
       references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_FUEDAT
+   add constraint STG_FUEDAT_AREA_FK foreign key (FUE_CODARE)
+      references STG_AREA (ARE_CODIGO);
+
+alter table STG_FUEDAT
+   add constraint STG_FUEDAT_ENTIDA_FK foreign key (FUE_CODENT)
+      references STG_ENTIDA (ENT_CODIGO);
 
 alter table STG_GESFOR
    add constraint STG_GESFOR_ENTIDA_FK foreign key (GFE_CODENT)
