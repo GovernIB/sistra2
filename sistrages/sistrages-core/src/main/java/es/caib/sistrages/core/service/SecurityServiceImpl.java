@@ -88,17 +88,28 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public List<Entidad> getEntidadesAdministrador() {
-		// TODO Pendiente filtro por role
 		final List<Entidad> listaEntidades = entidadDao.getAll();
-		return listaEntidades;
+		final List<Entidad> res = new ArrayList<Entidad>();
+		for (final Entidad e : listaEntidades) {
+			if (e.isActivo() && contextService.hashRole(e.getRol().trim())) {
+				res.add(e);
+			}
+		}
+		return res;
 	}
 
 	@Override
 	@NegocioInterceptor
 	public List<Entidad> getEntidadesDesarrollador() {
-		// TODO Pendiente filtro por role
 		final List<Entidad> listaEntidades = entidadDao.getAll();
-		return listaEntidades;
+		// TODO Pendiente filtro por role
+		final List<Entidad> res = new ArrayList<Entidad>();
+		for (final Entidad e : listaEntidades) {
+			if (e.isActivo()) {
+				res.add(e);
+			}
+		}
+		return res;
 	}
 
 	@Override

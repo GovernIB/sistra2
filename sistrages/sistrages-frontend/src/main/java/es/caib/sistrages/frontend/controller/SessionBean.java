@@ -150,25 +150,40 @@ public class SessionBean {
 
 	/** Cambio role activo. */
 	public void cambiarRoleActivo(final String role) {
+
 		// Cambia role
 		final TypeRoleAcceso roleChange = TypeRoleAcceso.fromString(role);
 		if (!rolesList.contains(roleChange)) {
 			throw new FrontException("No tiene el role indicado");
 		}
 		activeRole = roleChange;
+
 		// Establecemos entidades a mostrar en funcion del role
 		listaEntidades = null;
 		if (activeRole == TypeRoleAcceso.ADMIN_ENT) {
+			listaEntidadesAdministrador = securityService.getEntidadesAdministrador();
 			listaEntidades = listaEntidadesAdministrador;
 		} else if (activeRole == TypeRoleAcceso.DESAR) {
+			listaEntidadesDesarrollador = securityService.getEntidadesDesarrollador();
 			listaEntidades = listaEntidadesDesarrollador;
 		}
+
 		entidad = null;
-		if (listaEntidades != null) {
+
+		// Para role Admin entidad o Desarrollador verificamos que tenga al menos una
+		// entidad y establecemos la primera como activa
+		if (activeRole == TypeRoleAcceso.ADMIN_ENT || activeRole == TypeRoleAcceso.DESAR) {
+			if (listaEntidades == null || listaEntidades.isEmpty()) {
+				// TODO VER GESTION EXCEPCION. GENERAR EXCEPCION PARTICULARIZADA PARA SACAR
+				// MENSAJE PARTICULAR Y NO EXCEPCION
+				throw new FrontException("No tiene ninguna entidad asociada al role activo");
+			}
 			entidad = listaEntidades.get(0);
 		}
+
 		// Cambia logo
 		cambiarLogo();
+
 		// Recarga pagina principal segun role
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
@@ -285,14 +300,14 @@ public class SessionBean {
 
 	/** Cambiar logo. */
 	private void cambiarLogo() {
-		// TODO PENDIENTE CAMBIAR GESTION FICHEROS
+		final String url = "/resources/images/";
 		if (TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
-			logo = Constantes.SUPER_ADMIN_LOGO;
+			logo = url + Constantes.SUPER_ADMIN_LOGO;
 		} else {
 			if (entidad.getLogoGestor() != null) {
-				logo = entidad.getLogoGestor().getNombre();
+				logo = Constantes.DESCARGA_FICHEROS_URL + "?id=" + entidad.getLogoGestor().getId();
 			} else {
-				logo = Constantes.ENTIDAD_NO_LOGO;
+				logo = url + Constantes.ENTIDAD_NO_LOGO;
 			}
 		}
 	}
