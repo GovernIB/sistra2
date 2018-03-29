@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 
+// TODO: Auto-generated Javadoc
 /**
  * La clase ConfiguracionGlobalServiceBean.
  */

@@ -33,7 +33,7 @@ public interface PluginService {
 	 * Elimina Plugin.
 	 *
 	 * @param id
-	 *            el identificador
+	 *            identificador
 	 * @return indica si ha borrado o no (por dependencias)
 	 */
 	boolean removePlugin(Long id);
@@ -47,15 +47,15 @@ public interface PluginService {
 	void updatePlugin(Plugin plugin);
 
 	/**
-	 * Lista de Aviso Entidad.
+	 * Lista los plugin.
 	 *
-	 * @param idEntidad
-	 *            id Entidad
 	 * @param ambito
 	 *            ambito
+	 * @param idEntidad
+	 *            idEntidad
 	 * @param filtro
-	 *            filtro busqueda
-	 * @return la lista de Aviso Entidad
+	 *            filtro
+	 * @return la lista de plugin
 	 */
 	List<Plugin> listPlugin(TypeAmbito ambito, Long idEntidad, String filtro);
 

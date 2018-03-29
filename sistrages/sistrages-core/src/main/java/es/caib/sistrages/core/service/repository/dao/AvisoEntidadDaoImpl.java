@@ -23,10 +23,26 @@ import es.caib.sistrages.core.service.repository.model.JLiteral;
 @Repository("avisoEntidadDao")
 public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 
-	/** Entity manager. */
+	/**
+	 * entity manager.
+	 */
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	 * Crea una nueva instancia de AvisoEntidadDaoImpl.
+	 */
+	public AvisoEntidadDaoImpl() {
+		super();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao#getById(java.
+	 * lang.Long)
+	 */
 	@Override
 	public AvisoEntidad getById(final Long id) {
 		AvisoEntidad avisoEntidad = null;
@@ -37,6 +53,12 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		return avisoEntidad;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao#add(long,
+	 * es.caib.sistrages.core.api.model.AvisoEntidad)
+	 */
 	@Override
 	public void add(final long idEntidad, final AvisoEntidad avisoEntidad) {
 		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
@@ -45,6 +67,13 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		entityManager.persist(jAvisoEntidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao#remove(java.
+	 * lang.Long)
+	 */
 	@Override
 	public void remove(final Long id) {
 		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, id);
@@ -54,6 +83,13 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		entityManager.remove(jAvisoEntidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao#update(es.caib.
+	 * sistrages.core.api.model.AvisoEntidad)
+	 */
 	@Override
 	public void update(final AvisoEntidad avisoEntidad) {
 		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, avisoEntidad.getId());
@@ -68,21 +104,51 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		entityManager.merge(jAvisoEntidadNew);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao#getAllByFiltro(
+	 * java.lang.Long, es.caib.sistrages.core.api.model.types.TypeIdioma,
+	 * java.lang.String)
+	 */
 	@Override
 	public List<AvisoEntidad> getAllByFiltro(final Long idEntidad, final TypeIdioma idioma, final String filtro) {
 		return listarAvisos(idEntidad, idioma, filtro);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao#getAll(java.
+	 * lang.Long)
+	 */
 	@Override
 	public List<AvisoEntidad> getAll(final Long idEntidad) {
 		return listarAvisos(idEntidad, null, null);
 	}
 
+	/**
+	 * Listar avisos.
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 * @param idioma
+	 *            idioma
+	 * @param filtro
+	 *            filtro
+	 * @return Listado de avisos
+	 */
 	private List<AvisoEntidad> listarAvisos(final Long idEntidad, final TypeIdioma idioma, final String filtro) {
 		final List<AvisoEntidad> listaAvisoEntidad = new ArrayList<>();
-		String sql = "select t from JAvisoEntidad as a where a.entidad.codigo = :idEntidad";
+		String sql = "select a from JAvisoEntidad as a";
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " LEFT JOIN a.mensaje.traduccionLiterales t WHERE (t.idioma.identificador = :idioma AND LOWER(t.literal) LIKE :filtro)";
+			sql += " LEFT JOIN a.mensaje.traduccionLiterales t ";
+		}
+		sql += " where a.entidad.codigo = :idEntidad ";
+		if (StringUtils.isNotBlank(filtro)) {
+			sql += "  AND (t.idioma.identificador = :idioma AND LOWER(t.literal) LIKE :filtro) ";
 		}
 		sql += "  order by a.fechaInicio";
 

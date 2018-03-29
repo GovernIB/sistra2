@@ -1,19 +1,18 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Fuente;
-import es.caib.sistrages.core.api.model.FuenteCampo;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -30,103 +29,9 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewFuentes extends ViewControllerBase {
 
-	/**
-	 * Inicializacion.
-	 */
-	public void init() {
-
-		if (ambito == null) {
-			return;
-		}
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
-
-		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
-		if (typeAmbito == TypeAmbito.AREA) {
-
-			final Fuente fuenteDatos1 = new Fuente();
-			fuenteDatos1.setId(1l);
-			fuenteDatos1.setCodigo("PESCA_REV_MAR");
-			fuenteDatos1.setDescripcion("AREA - Reserva marines de les Illes Balears");
-
-			final Fuente fuenteDatos2 = new Fuente();
-			fuenteDatos2.setId(2l);
-			fuenteDatos2.setCodigo("PESCA_ESP_AUT");
-			fuenteDatos2.setDescripcion("Llista d'espècies de plantes autóctones de les Illes Balears");
-			final Fuente fuenteDatos3 = new Fuente();
-			fuenteDatos3.setCodigo("EDUC_EQUAL_PROF");
-			fuenteDatos3.setId(3l);
-			fuenteDatos3.setDescripcion("Llistat de qualificacions profesionals.");
-
-			listaDatos = new ArrayList<>();
-			listaDatos.add(fuenteDatos1);
-			listaDatos.add(fuenteDatos2);
-			listaDatos.add(fuenteDatos3);
-
-			final List<FuenteCampo> campos = new ArrayList<>();
-			final FuenteCampo campo1 = new FuenteCampo();
-			campo1.setId(1l);
-			campo1.setCodigo("CODI");
-			campo1.setClavePrimaria(true);
-			campos.add(campo1);
-			final FuenteCampo campo2 = new FuenteCampo();
-			campo2.setId(2l);
-			campo2.setCodigo("DESC_ES");
-			campo2.setClavePrimaria(false);
-			campos.add(campo2);
-			final FuenteCampo campo3 = new FuenteCampo();
-			campo3.setId(3l);
-			campo3.setCodigo("DESC_CA");
-			campo3.setClavePrimaria(false);
-			campos.add(campo3);
-			fuenteDatos1.setCampos(campos);
-			fuenteDatos2.setCampos(campos);
-			fuenteDatos3.setCampos(campos);
-
-		} else if (typeAmbito == TypeAmbito.ENTIDAD) {
-
-			final Fuente fuenteDatos1 = new Fuente();
-			fuenteDatos1.setId(1l);
-			fuenteDatos1.setCodigo("PESCA_REV_MAR");
-			fuenteDatos1.setDescripcion("ENT - Reserva marines de les Illes Balears");
-			final Fuente fuenteDatos2 = new Fuente();
-			fuenteDatos2.setId(2l);
-			fuenteDatos2.setCodigo("PESCA_ESP_AUT");
-			fuenteDatos2.setDescripcion("Llista d'espècies de plantes autóctones de les Illes Balears");
-			final Fuente fuenteDatos3 = new Fuente();
-			fuenteDatos3.setCodigo("EDUC_EQUAL_PROF");
-			fuenteDatos3.setId(3l);
-			fuenteDatos3.setDescripcion("Llistat de qualificacions profesionals.");
-
-			listaDatos = new ArrayList<>();
-			listaDatos.add(fuenteDatos1);
-			listaDatos.add(fuenteDatos2);
-			listaDatos.add(fuenteDatos3);
-
-			final List<FuenteCampo> campos = new ArrayList<>();
-			final FuenteCampo campo1 = new FuenteCampo();
-			campo1.setId(1l);
-			campo1.setCodigo("CODIGO");
-			campo1.setClavePrimaria(true);
-			campos.add(campo1);
-			final FuenteCampo campo2 = new FuenteCampo();
-			campo2.setId(2l);
-			campo2.setCodigo("DESCRIPCION");
-			campo2.setClavePrimaria(false);
-			campos.add(campo2);
-			final FuenteCampo campo3 = new FuenteCampo();
-			campo3.setId(3l);
-			campo3.setCodigo("DATO");
-			campo3.setClavePrimaria(false);
-			campos.add(campo3);
-			fuenteDatos1.setCampos(campos);
-			fuenteDatos2.setCampos(campos);
-			fuenteDatos3.setCampos(campos);
-
-		} else {
-			listaDatos = new ArrayList<>();
-		}
-
-	}
+	/** Enlace servicio. */
+	@Inject
+	private DominioService dominioService;
 
 	/** Id. **/
 	private String id;
@@ -138,42 +43,42 @@ public class ViewFuentes extends ViewControllerBase {
 	private String filtro;
 
 	/** Lista de datos. */
-	private List<Fuente> listaDatos;
+	private List<FuenteDatos> listaDatos;
 
 	/** Dato seleccionado en la lista. */
-	private Fuente datoSeleccionado;
+	private FuenteDatos datoSeleccionado;
+
+	/**
+	 * Inicializacion.
+	 */
+	public void init() {
+
+		if (ambito == null) {
+			return;
+		}
+		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
+		buscar(null);
+	}
 
 	/**
 	 * Recuperacion de datos.
 	 */
 	public void filtrar() {
 
-		if (filtro == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.filtronorelleno"));
-			return;
-		}
+		buscar(filtro);
 
-		// Filtra
-		final List<Fuente> fuenteDatosesFiltradas = new ArrayList<>();
-		for (final Fuente fuenteDatos : this.listaDatos) {
-			if (fuenteDatos.getDescripcion() != null
-					&& fuenteDatos.getDescripcion().toLowerCase().contains(filtro.toLowerCase())) {
-				fuenteDatosesFiltradas.add(fuenteDatos);
-			}
-		}
-
-		this.listaDatos = fuenteDatosesFiltradas;
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
-		// Muestra mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.filtro.ok"));
 	}
 
 	/**
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogFuente.class, TypeModoAcceso.ALTA, null, true, 740, 450);
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AREA.toString(), this.id);
+		params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
+		UtilJSF.openDialog(DialogFuente.class, TypeModoAcceso.ALTA, params, true, 740, 450);
 	}
 
 	/**
@@ -186,7 +91,9 @@ public class ViewFuentes extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.datoSeleccionado));
+		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
+		params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
+		params.put(TypeParametroVentana.AREA.toString(), this.id);
 		UtilJSF.openDialog(DialogFuente.class, TypeModoAcceso.EDICION, params, true, 740, 450);
 
 	}
@@ -217,10 +124,37 @@ public class ViewFuentes extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.datoSeleccionado));
+		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.EDICION, params, true, 740, 450);
 	}
 
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogo(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Refrescamos datos
+			buscar(filtro);
+		}
+	}
+
+	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Verifica si hay fila seleccionada.
 	 *
@@ -236,23 +170,17 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * Retorno dialogo.
+	 * Filtro de buscar
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @param iFiltro
 	 */
-	public void returnDialogo(final SelectEvent event) {
+	private void buscar(final String iFiltro) {
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+		listaDatos = dominioService.listFuenteDato(typeAmbito, Long.valueOf(id), iFiltro);
 
-		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		final String message = null;
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
+	// ------- GETTERS / SETTERS --------------------------------
 	/**
 	 * @return the filtro
 	 */
@@ -271,7 +199,7 @@ public class ViewFuentes extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<Fuente> getListaDatos() {
+	public List<FuenteDatos> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -279,14 +207,14 @@ public class ViewFuentes extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<Fuente> listaDatos) {
+	public void setListaDatos(final List<FuenteDatos> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public Fuente getDatoSeleccionado() {
+	public FuenteDatos getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -294,7 +222,7 @@ public class ViewFuentes extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final Fuente datoSeleccionado) {
+	public void setDatoSeleccionado(final FuenteDatos datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 

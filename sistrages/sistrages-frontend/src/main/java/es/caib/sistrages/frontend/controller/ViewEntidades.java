@@ -109,12 +109,16 @@ public class ViewEntidades extends ViewControllerBase {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
-		// Eliminamos
-		entidadService.removeEntidad(datoSeleccionado.getId());
-		// Refrescamos datos
-		buscar();
-		// Mostramos mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		// Eliminamos si no tiene dependencias
+		if (entidadService.removeEntidad(datoSeleccionado.getId())) {
+			// Refrescamos datos
+			buscar();
+			// Mostramos mensaje
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+		}
+
 	}
 
 	/**

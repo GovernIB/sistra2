@@ -6,8 +6,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import es.caib.sistrages.core.api.model.FuenteCampo;
-import es.caib.sistrages.core.api.model.FuenteDato;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.FuenteDatosValor;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -25,7 +25,7 @@ public class DialogFuenteFila extends DialogControllerBase {
 	private String iCampos;
 
 	/** Fuente de campos. **/
-	private List<FuenteCampo> campos;
+	private List<FuenteDatosCampo> campos;
 
 	/** Datos elemento en JSON. **/
 	private String iData;
@@ -52,11 +52,11 @@ public class DialogFuenteFila extends DialogControllerBase {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FuenteFila();
-			campos = (List<FuenteCampo>) UtilJSON.fromListJSON(iCampos, FuenteCampo.class);
-			final List<FuenteDato> fuenteDatos = new ArrayList<>();
+			campos = (List<FuenteDatosCampo>) UtilJSON.fromListJSON(iCampos, FuenteDatosCampo.class);
+			final List<FuenteDatosValor> fuenteDatos = new ArrayList<>();
 			Long i = 0l;
-			for (final FuenteCampo campo : campos) {
-				fuenteDatos.add(new FuenteDato(i, campo, ""));
+			for (final FuenteDatosCampo campo : campos) {
+				fuenteDatos.add(new FuenteDatosValor(i, campo, ""));
 				i++;
 			}
 			data.setDatos(fuenteDatos);
@@ -120,7 +120,7 @@ public class DialogFuenteFila extends DialogControllerBase {
 	/**
 	 * @return the campos
 	 */
-	public List<FuenteCampo> getCampos() {
+	public List<FuenteDatosCampo> getCampos() {
 		return campos;
 	}
 
@@ -128,7 +128,7 @@ public class DialogFuenteFila extends DialogControllerBase {
 	 * @param campos
 	 *            the campos to set
 	 */
-	public void setCampos(final List<FuenteCampo> campos) {
+	public void setCampos(final List<FuenteDatosCampo> campos) {
 		this.campos = campos;
 	}
 

@@ -16,4 +16,7 @@ public final class Constantes {
 	/** Entidad sin logo. */
 	public static final String ENTIDAD_NO_LOGO = "entidad_no_logo.png";
 
+	/** Url descarga ficheros. */
+	public static final String DESCARGA_FICHEROS_URL = "/secure/app/GestorFicherosServlet";
+
 }

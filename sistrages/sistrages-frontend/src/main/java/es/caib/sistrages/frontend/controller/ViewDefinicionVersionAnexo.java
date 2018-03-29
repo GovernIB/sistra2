@@ -10,12 +10,9 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Fichero;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
@@ -111,7 +108,7 @@ public class ViewDefinicionVersionAnexo extends ViewControllerBase {
 		tradDesc.add(new Traduccion("es", "Descripción"));
 		data.setDescripcion(tradDesc);
 		data.setObligatoriedad(TypeFormularioObligatoriedad.DEPENDIENTE);
-		data.setAyudaFichero(new Fichero(1l, ""));
+		// data.setAyudaFichero(new Fichero(1l, ""));
 		data.setAyudaURL("http://www.caib.es");
 		final Literal ayudaTexto = new Literal();
 		ayudaTexto.add(new Traduccion("ca", "Texte ajuda"));
@@ -139,7 +136,7 @@ public class ViewDefinicionVersionAnexo extends ViewControllerBase {
 	/**
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 *
-
+	 * 
 	 */
 	public void editarDescripcion() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
@@ -149,7 +146,7 @@ public class ViewDefinicionVersionAnexo extends ViewControllerBase {
 	/**
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 *
-
+	 * 
 	 */
 	public void editarAyudaTexto() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);

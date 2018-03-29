@@ -10,9 +10,9 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Fuente;
-import es.caib.sistrages.core.api.model.FuenteCampo;
-import es.caib.sistrages.core.api.model.FuenteDato;
+import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.FuenteDatosValor;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -32,7 +32,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	private String iData;
 
 	/** Datos elemento. */
-	private Fuente data;
+	private FuenteDatos data;
 
 	/**
 	 * Los datos.
@@ -51,46 +51,46 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new Fuente();
+			data = new FuenteDatos();
 			data.setCampos(new ArrayList<>());
 		} else {
-			data = (Fuente) UtilJSON.fromJSON(iData, Fuente.class);
+			data = (FuenteDatos) UtilJSON.fromJSON(iData, FuenteDatos.class);
 		}
 
 		datos = new ArrayList<>();
-		final FuenteCampo campo1 = new FuenteCampo();
+		final FuenteDatosCampo campo1 = new FuenteDatosCampo();
 		campo1.setId(1l);
 		campo1.setCodigo("CODI");
 		campo1.setClavePrimaria(true);
-		final FuenteCampo campo2 = new FuenteCampo();
+		final FuenteDatosCampo campo2 = new FuenteDatosCampo();
 		campo2.setId(2l);
 		campo2.setCodigo("DESC_ES");
 		campo2.setClavePrimaria(false);
-		final FuenteCampo campo3 = new FuenteCampo();
+		final FuenteDatosCampo campo3 = new FuenteDatosCampo();
 		campo3.setId(3l);
 		campo3.setCodigo("DESC_CA");
 		campo3.setClavePrimaria(false);
 
 		final FuenteFila fila1 = new FuenteFila();
 		fila1.setId(1l);
-		fila1.addFuenteDato(new FuenteDato(11l, campo1, "1"));
-		fila1.addFuenteDato(new FuenteDato(12l, campo2, "Norte de Menorca"));
-		fila1.addFuenteDato(new FuenteDato(13l, campo3, "Norte de Menorca"));
+		fila1.addFuenteDato(new FuenteDatosValor(11l, campo1, "1"));
+		fila1.addFuenteDato(new FuenteDatosValor(12l, campo2, "Norte de Menorca"));
+		fila1.addFuenteDato(new FuenteDatosValor(13l, campo3, "Norte de Menorca"));
 		final FuenteFila fila2 = new FuenteFila();
 		fila2.setId(2l);
-		fila2.addFuenteDato(new FuenteDato(21l, campo1, "2"));
-		fila2.addFuenteDato(new FuenteDato(22l, campo2, "Bahía de Palma"));
-		fila2.addFuenteDato(new FuenteDato(23l, campo3, "Badia de Palma"));
+		fila2.addFuenteDato(new FuenteDatosValor(21l, campo1, "2"));
+		fila2.addFuenteDato(new FuenteDatosValor(22l, campo2, "Bahía de Palma"));
+		fila2.addFuenteDato(new FuenteDatosValor(23l, campo3, "Badia de Palma"));
 		final FuenteFila fila3 = new FuenteFila();
 		fila3.setId(3l);
-		fila3.addFuenteDato(new FuenteDato(31l, campo1, "3"));
-		fila3.addFuenteDato(new FuenteDato(32l, campo2, "Isla del Toro"));
-		fila3.addFuenteDato(new FuenteDato(33l, campo3, "Illa del Toro"));
+		fila3.addFuenteDato(new FuenteDatosValor(31l, campo1, "3"));
+		fila3.addFuenteDato(new FuenteDatosValor(32l, campo2, "Isla del Toro"));
+		fila3.addFuenteDato(new FuenteDatosValor(33l, campo3, "Illa del Toro"));
 		final FuenteFila fila4 = new FuenteFila();
 		fila4.setId(4l);
-		fila4.addFuenteDato(new FuenteDato(31l, campo1, "4"));
-		fila4.addFuenteDato(new FuenteDato(32l, campo2, "Levante de Mallorca"));
-		fila4.addFuenteDato(new FuenteDato(33l, campo3, "Llevant de Mallorca"));
+		fila4.addFuenteDato(new FuenteDatosValor(31l, campo1, "4"));
+		fila4.addFuenteDato(new FuenteDatosValor(32l, campo2, "Levante de Mallorca"));
+		fila4.addFuenteDato(new FuenteDatosValor(33l, campo3, "Llevant de Mallorca"));
 
 		datos.add(fila1);
 		datos.add(fila2);
@@ -152,7 +152,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	public void nuevaFuenteDato() {
 		final FuenteFila fila = this.datos.get(0);
 		fila.setId(Long.valueOf(this.datos.size() + 1));
-		for (final FuenteDato dato : fila.getDatos()) {
+		for (final FuenteDatosValor dato : fila.getDatos()) {
 			dato.setValor("");
 		}
 
@@ -323,7 +323,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public Fuente getData() {
+	public FuenteDatos getData() {
 		return data;
 	}
 
@@ -331,7 +331,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final Fuente data) {
+	public void setData(final FuenteDatos data) {
 		this.data = data;
 	}
 

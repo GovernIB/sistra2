@@ -43,7 +43,7 @@ public class Dominio extends ModelApi {
 	private String sql;
 
 	/** Para tipo Fuente de datos indica el ID de la Fuente de datos */
-	private Fuente fuenteDatos;
+	private FuenteDatos fuenteDatos;
 
 	/** Query para la fuente de datos. **/
 	private String fuenteDatosQuery;
@@ -215,7 +215,7 @@ public class Dominio extends ModelApi {
 	/**
 	 * @return the fuenteDatos
 	 */
-	public Fuente getFuenteDatos() {
+	public FuenteDatos getFuenteDatos() {
 		return fuenteDatos;
 	}
 
@@ -223,7 +223,7 @@ public class Dominio extends ModelApi {
 	 * @param fuenteDatos
 	 *            the fuenteDatos to set
 	 */
-	public void setFuenteDatos(final Fuente fuenteDatos) {
+	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
 		this.fuenteDatos = fuenteDatos;
 	}
 

@@ -1,8 +1,11 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,11 +13,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
 /**
  * JFuenteDatos
@@ -40,13 +47,19 @@ public class JFuenteDatos implements IModelApi {
 	@Column(name = "FUE_DESCR", nullable = false)
 	private String descripcion;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_AREFUE", joinColumns = {
-			@JoinColumn(name = "FUA_CODFUE", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "FUA_CODAREA", nullable = false, updatable = false) })
-	private Set<JArea> areas = new HashSet<JArea>(0);
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "FUE_CODENT", nullable = true)
+	private JEntidad entidad;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "FUE_CODARE", nullable = true)
+	private JArea area;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "fuenteDatos", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<JCampoFuenteDatos> campos = new HashSet<>(0);
 
 	public JFuenteDatos() {
+		// Constructor publico
 	}
 
 	public Long getCodigo() {
@@ -81,12 +94,82 @@ public class JFuenteDatos implements IModelApi {
 		this.descripcion = descripcion;
 	}
 
-	public Set<JArea> getAreas() {
-		return this.areas;
+	/**
+	 * @return the entidad
+	 */
+	public JEntidad getEntidad() {
+		return entidad;
 	}
 
-	public void setAreas(final Set<JArea> areas) {
-		this.areas = areas;
+	/**
+	 * @param entidad
+	 *            the entidad to set
+	 */
+	public void setEntidad(final JEntidad entidad) {
+		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public JArea getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area
+	 *            the area to set
+	 */
+	public void setArea(final JArea area) {
+		this.area = area;
+	}
+
+	/**
+	 * @return the campos
+	 */
+	public Set<JCampoFuenteDatos> getCampos() {
+		return campos;
+	}
+
+	/**
+	 * @param campos
+	 *            the campos to set
+	 */
+	public void setCampos(final Set<JCampoFuenteDatos> campos) {
+		this.campos = campos;
+	}
+
+	public FuenteDatos toModel() {
+		final FuenteDatos fuenteDato = new FuenteDatos();
+		fuenteDato.setCodigo(this.getCodigo());
+		fuenteDato.setAmbito(TypeAmbito.fromString(this.getAmbito()));
+		fuenteDato.setIdentificador(this.getIdentificador());
+		fuenteDato.setDescripcion(this.getDescripcion());
+		if (this.getCampos() != null) {
+			final List<FuenteDatosCampo> lcampos = new ArrayList<>();
+			for (final JCampoFuenteDatos campo : this.getCampos()) {
+				lcampos.add(campo.toModel());
+			}
+			fuenteDato.setCampos(lcampos);
+		}
+		return fuenteDato;
+	}
+
+	public void fromModel(final FuenteDatos fuenteDato) {
+		if (fuenteDato != null) {
+			this.setCodigo(fuenteDato.getCodigo());
+			this.setAmbito(fuenteDato.getAmbito().toString());
+			this.setIdentificador(fuenteDato.getIdentificador());
+			this.setDescripcion(fuenteDato.getDescripcion());
+			campos = new HashSet<>(0);
+			if (fuenteDato.getCampos() != null) {
+				for (final FuenteDatosCampo campo : fuenteDato.getCampos()) {
+					final JCampoFuenteDatos jcampoFuenteDatos = new JCampoFuenteDatos();
+					jcampoFuenteDatos.fromModel(campo);
+					campos.add(jcampoFuenteDatos);
+				}
+			}
+		}
 	}
 
 }

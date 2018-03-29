@@ -11,10 +11,8 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -158,7 +156,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/**
 	 * Editar descripcion.
 	 *
-
+	 * 
 	 */
 	public void editarDescripcion() {
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.tramiteVersion.getDescripcion(), null, null);

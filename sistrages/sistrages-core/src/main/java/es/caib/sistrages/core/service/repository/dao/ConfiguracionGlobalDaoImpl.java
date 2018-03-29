@@ -20,6 +20,9 @@ import es.caib.sistrages.core.service.repository.model.JConfiguracionGlobal;
 @Repository("configuracionGlobalDao")
 public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 
+	/**
+	 * Crea una nueva instancia de ConfiguracionGlobalDaoImpl.
+	 */
 	public ConfiguracionGlobalDaoImpl() {
 		super();
 	}
@@ -30,6 +33,13 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao#getById(
+	 * java.lang.Long)
+	 */
 	@Override
 	public ConfiguracionGlobal getById(final Long id) {
 		ConfiguracionGlobal configuracionGlobal = null;
@@ -40,6 +50,12 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 		return configuracionGlobal;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao#
+	 * getByPropiedad(java.lang.String)
+	 */
 	@Override
 	public ConfiguracionGlobal getByPropiedad(final String propiedad) {
 		ConfiguracionGlobal configuracionGlobal = null;
@@ -53,6 +69,13 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 		return configuracionGlobal;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao#add(es.
+	 * caib.sistrages.core.api.model.ConfiguracionGlobal)
+	 */
 	@Override
 	public void add(final ConfiguracionGlobal configuracionGlobal) {
 		final JConfiguracionGlobal jConfiguracionGlobal = JConfiguracionGlobal.fromModel(configuracionGlobal);
@@ -60,6 +83,13 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 		entityManager.persist(jConfiguracionGlobal);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao#remove(
+	 * java.lang.Long)
+	 */
 	@Override
 	public void remove(final Long id) {
 		final JConfiguracionGlobal jConfiguracionGlobal = entityManager.find(JConfiguracionGlobal.class, id);
@@ -69,6 +99,13 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 		entityManager.remove(jConfiguracionGlobal);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao#update(
+	 * es.caib.sistrages.core.api.model.ConfiguracionGlobal)
+	 */
 	@Override
 	public void update(final ConfiguracionGlobal configuracionGlobal) {
 		final JConfiguracionGlobal jConfiguracionGlobal = entityManager.find(JConfiguracionGlobal.class,
@@ -80,16 +117,35 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 		entityManager.merge(jConfiguracionGlobalNew);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao#getAll()
+	 */
 	@Override
 	public List<ConfiguracionGlobal> getAll() {
 		return listarPropiedades(null);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao#
+	 * getAllByFiltro(java.lang.String)
+	 */
 	@Override
 	public List<ConfiguracionGlobal> getAllByFiltro(final String filtro) {
 		return listarPropiedades(filtro);
 	}
 
+	/**
+	 * Lista de valores de configuracion global.
+	 *
+	 * @param filtro
+	 *            filtro
+	 * @return lista de configuracion global
+	 */
 	private List<ConfiguracionGlobal> listarPropiedades(final String filtro) {
 		final List<ConfiguracionGlobal> listaConfiguracionGlobal = new ArrayList<>();
 
@@ -101,7 +157,7 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 		final Query query = entityManager.createQuery(sql);
 
 		if (StringUtils.isNotBlank(filtro)) {
-			query.setParameter("pFiltro", "%".concat(filtro).concat("%"));
+			query.setParameter("pFiltro", "%".concat(filtro.toLowerCase()).concat("%"));
 		}
 
 		final List<JConfiguracionGlobal> results = query.getResultList();
@@ -115,6 +171,13 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 		return listaConfiguracionGlobal;
 	}
 
+	/**
+	 * Obtiene el valor de configuracion global.
+	 *
+	 * @param propiedad
+	 *            propiedad
+	 * @return el valor de configuracion global
+	 */
 	@SuppressWarnings("unchecked")
 	private JConfiguracionGlobal getJByPropiedad(final String propiedad) {
 		JConfiguracionGlobal jConfiguracionGlobal = null;

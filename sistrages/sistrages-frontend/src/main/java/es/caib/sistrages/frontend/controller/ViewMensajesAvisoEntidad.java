@@ -115,11 +115,14 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		avisoEntidadService.removeAvisoEntidad(datoSeleccionado.getId());
-		// Refrescamos datos
-		buscar();
-		// Mostramos mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		if (avisoEntidadService.removeAvisoEntidad(datoSeleccionado.getId())) {
+			// Refrescamos datos
+			buscar();
+			// Mostramos mensaje
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+		}
 	}
 
 	/**

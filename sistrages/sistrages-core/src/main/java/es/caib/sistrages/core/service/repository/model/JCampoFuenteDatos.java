@@ -1,8 +1,5 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,10 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 
 /**
  * JCampoFuenteDatos
@@ -41,10 +39,8 @@ public class JCampoFuenteDatos implements IModelApi {
 	@Column(name = "CFU_ESPK", nullable = false, length = 1)
 	private String clavePrimaria;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFuenteDatos")
-	private Set<JValorFuenteDatos> valoresFuenteDatos = new HashSet<JValorFuenteDatos>(0);
-
 	public JCampoFuenteDatos() {
+		// Constructor publico
 	}
 
 	public Long getCodigo() {
@@ -79,12 +75,28 @@ public class JCampoFuenteDatos implements IModelApi {
 		this.clavePrimaria = clavePrimaria;
 	}
 
-	public Set<JValorFuenteDatos> getValoresFuenteDatos() {
-		return this.valoresFuenteDatos;
+	public void fromModel(final FuenteDatosCampo campo) {
+		if (campo != null) {
+			this.setCodigo(campo.getId());
+			if (campo.isClavePrimaria()) {
+				this.setClavePrimaria("S");
+			} else {
+				this.setClavePrimaria("N");
+			}
+			this.setIdCampo(campo.getCodigo());
+		}
 	}
 
-	public void setValoresFuenteDatos(final Set<JValorFuenteDatos> valoresFuenteDatos) {
-		this.valoresFuenteDatos = valoresFuenteDatos;
+	public FuenteDatosCampo toModel() {
+		final FuenteDatosCampo fuenteDatosCampo = new FuenteDatosCampo();
+		if (this.getClavePrimaria() != null && "S".equals(this.getClavePrimaria())) {
+			fuenteDatosCampo.setClavePrimaria(true);
+		} else {
+			fuenteDatosCampo.setClavePrimaria(false);
+		}
+		fuenteDatosCampo.setCodigo(this.getIdCampo());
+		fuenteDatosCampo.setId(this.getCodigo());
+		return fuenteDatosCampo;
 	}
 
 }

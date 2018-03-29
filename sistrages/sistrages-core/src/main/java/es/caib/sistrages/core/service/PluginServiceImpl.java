@@ -14,8 +14,9 @@ import es.caib.sistrages.core.api.service.PluginService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.repository.dao.PluginsDao;
 
+// TODO: Auto-generated Javadoc
 /**
- * PluginService implementación.
+ * La clase PluginServiceImpl.
  */
 @Service
 @Transactional
@@ -27,23 +28,42 @@ public class PluginServiceImpl implements PluginService {
 	private static final Logger LOG = LoggerFactory.getLogger(PluginServiceImpl.class);
 
 	/**
-	 * aviso entidad dao.
+	 * plugin dao.
 	 */
 	@Autowired
 	PluginsDao pluginDao;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.PluginService#getPlugin(java.lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
 	public Plugin getPlugin(final Long id) {
 		return pluginDao.getById(id);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.PluginService#addPlugin(es.caib.sistrages.
+	 * core.api.model.Plugin, java.lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
 	public void addPlugin(final Plugin plugin, final Long idEntidad) {
 		pluginDao.add(plugin, idEntidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.PluginService#removePlugin(java.lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
 	public boolean removePlugin(final Long id) {
@@ -51,12 +71,25 @@ public class PluginServiceImpl implements PluginService {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.PluginService#updatePlugin(es.caib.
+	 * sistrages.core.api.model.Plugin)
+	 */
 	@Override
 	@NegocioInterceptor
 	public void updatePlugin(final Plugin plugin) {
 		pluginDao.update(plugin);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.PluginService#listPlugin(es.caib.sistrages
+	 * .core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
+	 */
 	@Override
 	@NegocioInterceptor
 	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final String filtro) {

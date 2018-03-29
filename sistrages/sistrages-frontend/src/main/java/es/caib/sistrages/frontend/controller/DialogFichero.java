@@ -2,8 +2,6 @@ package es.caib.sistrages.frontend.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -73,21 +71,14 @@ public class DialogFichero extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 
-		if (id == null) {
-			data = new Fichero(0l, "Fichero0.jpg");
-		} else if (id == "1") {
-			data = new Fichero(1l, "Fichero.png");
-			previsualizar = "S";
-		} else if (id == "2") {
-			data = new Fichero(1l, "Fichero.gif");
-			previsualizar = "S";
-		} else if (id == "2") {
-			data = new Fichero(1l, "Fichero.css");
-			previsualizar = "N";
-		} else {
-			data = new Fichero(0l, "Fichero0.jpg");
-		}
-
+		// TODO REVISAR
+		/*
+		 * if (id == null) { data = new Fichero(0l, "Fichero0.jpg"); } else if (id ==
+		 * "1") { data = new Fichero(1l, "Fichero.png"); previsualizar = "S"; } else if
+		 * (id == "2") { data = new Fichero(1l, "Fichero.gif"); previsualizar = "S"; }
+		 * else if (id == "2") { data = new Fichero(1l, "Fichero.css"); previsualizar =
+		 * "N"; } else { data = new Fichero(0l, "Fichero0.jpg"); }
+		 */
 		if (previsualizar != null && "S".equals(previsualizar)) {
 			visiblePrevisualizar = true;
 		} else {
@@ -124,7 +115,12 @@ public class DialogFichero extends DialogControllerBase {
 		} else {
 			// So, browser is requesting the image. Return a real StreamedContent with the
 			// image bytes.
-			return new DefaultStreamedContent(new ByteArrayInputStream(data.getContenido()));
+
+			// TODO REVISAR
+			// return new DefaultStreamedContent(new
+			// ByteArrayInputStream(data.getContenido()));
+			return null;
+
 		}
 	}
 
@@ -151,7 +147,11 @@ public class DialogFichero extends DialogControllerBase {
 			final OutputStream responseOutputStream = response.getOutputStream();
 
 			// Read PDF contents
-			final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream(data.getContenido());
+
+			// TODO REVISAR
+			// final ByteArrayInputStream pdfInputStream = new
+			// ByteArrayInputStream(data.getContenido());
+			final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream("Revisar".getBytes());
 
 			// Read PDF contents and write them to the output
 			final byte[] bytesBuffer = new byte[2048];
@@ -183,29 +183,24 @@ public class DialogFichero extends DialogControllerBase {
 	 * Descargar.
 	 */
 	public void descargar2() {
-		try {
-			final File fileTemporal = File.createTempFile("fichero", "png");
-			final InputStream fis = new FileInputStream(fileTemporal);
-			int offset = 0;
-			int numRead = 0;
-			while ((offset < data.getContenido().length)
-					&& ((numRead = fis.read(data.getContenido(), offset, data.getContenido().length - offset)) >= 0)) {
-				offset += numRead;
-			}
-			fis.close();
-			final HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance()
-					.getExternalContext().getResponse();
-
-			response.setContentType("application/octet-stream");
-			response.setHeader("Content-Disposition", "attachment;filename=instructions.txt");
-			response.getOutputStream().write(data.getContenido());
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
-			fis.close();
-			FacesContext.getCurrentInstance().responseComplete();
-		} catch (final IOException ex) {
-			throw new FrontException("Error descarga", ex);
-		}
+		// TODO REVISAR
+		/*
+		 * try { final File fileTemporal = File.createTempFile("fichero", "png"); final
+		 * InputStream fis = new FileInputStream(fileTemporal); int offset = 0; int
+		 * numRead = 0; while ((offset < data.getContenido().length) && ((numRead =
+		 * fis.read(data.getContenido(), offset, data.getContenido().length - offset))
+		 * >= 0)) { offset += numRead; } fis.close(); final HttpServletResponse response
+		 * = (HttpServletResponse) FacesContext.getCurrentInstance()
+		 * .getExternalContext().getResponse();
+		 *
+		 * response.setContentType("application/octet-stream");
+		 * response.setHeader("Content-Disposition",
+		 * "attachment;filename=instructions.txt");
+		 * response.getOutputStream().write(data.getContenido());
+		 * response.getOutputStream().flush(); response.getOutputStream().close();
+		 * fis.close(); FacesContext.getCurrentInstance().responseComplete(); } catch
+		 * (final IOException ex) { throw new FrontException("Error descarga", ex); }
+		 */
 	}
 
 	/**
@@ -229,7 +224,8 @@ public class DialogFichero extends DialogControllerBase {
 			buffer.flush();
 
 			data.setNombre(filename);
-			data.setContenido(contenido);
+
+			// data.setContenido(contenido);
 		} catch (final IOException ex) {
 			throw new FrontException("Error upload", ex);
 		}

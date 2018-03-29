@@ -12,13 +12,12 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
-
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
 </h:head>
 
 <h:body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -39,7 +38,7 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.isAlta()}" required="true"/>
+				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta}" required="true"/>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
 				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" style="width:95%" />
@@ -79,7 +78,7 @@
 
 							<!-- Data table -->
 							<p:dataTable  id="datalistValores"
-										 var="td"
+										 var="td" emptyMessage="#{msg['error.emptyRows']}"
 										 value="#{dialogDominio.data.listaFija}"
 										 scrollable="true"
 										 scrollHeight="140"
@@ -158,7 +157,7 @@
 				<h:panelGrid   id="gridParametros" columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%"  rendered="#{dialogDominio.mostrarParametros()}">
 
 					<p:dataTable  id="dataTableParametros"
-									 var="td"
+									 var="td" emptyMessage="#{msg['error.emptyRows']}"
 									 value="#{dialogDominio.data.parametros}"
 									 scrollable="true"
 									 scrollHeight="140"

@@ -3,7 +3,7 @@ package es.caib.sistrages.frontend.controller;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import es.caib.sistrages.core.api.model.FuenteCampo;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -17,7 +17,7 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	private String id;
 
 	/** Datos elemento. */
-	private FuenteCampo data;
+	private FuenteDatosCampo data;
 
 	/** Fuente Datos en formato JSON. **/
 	private String iData;
@@ -28,10 +28,10 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new FuenteCampo();
+			data = new FuenteDatosCampo();
 
 		} else {
-			data = (FuenteCampo) UtilJSON.fromJSON(iData, FuenteCampo.class);
+			data = (FuenteDatosCampo) UtilJSON.fromJSON(iData, FuenteDatosCampo.class);
 		}
 	}
 
@@ -62,8 +62,6 @@ public class DialogFuenteCampo extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		// TODO borrar la siguiente linea
-		data.setId(Long.valueOf(Math.round(Math.random())));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
@@ -96,7 +94,7 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public FuenteCampo getData() {
+	public FuenteDatosCampo getData() {
 		return data;
 	}
 
@@ -104,7 +102,7 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FuenteCampo data) {
+	public void setData(final FuenteDatosCampo data) {
 		this.data = data;
 	}
 

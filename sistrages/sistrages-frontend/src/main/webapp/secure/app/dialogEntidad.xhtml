@@ -12,12 +12,11 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogEntidad.titulo']}"/></title>
-
+</h:head>
+<h:body>
   	<f:facet name="last">
     	<h:outputStylesheet library="css" name="style.css" />
   	</f:facet>
-</h:head>
-<h:body>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -34,11 +33,12 @@
 					<p:outputLabel for="codigo" value="#{msg['dialogEntidad.headerCodigoDIR3']}" />
 					<p:inputText id="codigo" value="#{dialogEntidad.data.codigoDIR3}" required="true" size="40" maxlength="10" />
 
-					<p:outputLabel for="nombre" value="#{msg['dialogEntidad.headerDescripcion']}" />
+					<p:outputLabel for="nombreHidden" value="#{msg['dialogEntidad.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="nombre" value="#{dialogEntidad.data.nombre.getTraduccion(sessionBean.lang)}" disabled="true" required="true" size="40" style="margin-right:5px" />
+						<p:inputText id="nombre" value="#{dialogEntidad.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="nombreHidden" value="#{dialogEntidad.literal}" type="hidden" required="true" binding="#{mensajesComponent}"/>
 						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogEntidad.editarNombre()}" process="@this" update="growlDialog" style="margin-right:5px">
-		            		<p:ajax event="dialogReturn" listener="#{dialogEntidad.returnDialogo}" update="growlDialog nombre" />
+		            		<p:ajax event="dialogReturn" listener="#{dialogEntidad.returnDialogo}" update="growlDialog nombre nombreHidden" />
 		        		</p:commandButton>
 					</p:column>
 

@@ -28,6 +28,9 @@ public class JFichero implements IModelApi {
 	@Column(name = "FIC_NOMBRE", nullable = false, length = 500)
 	private String nombre;
 
+	@Column(name = "FIC_PUBLIC", nullable = false)
+	private boolean publico;
+
 	public JFichero() {
 	}
 
@@ -39,6 +42,14 @@ public class JFichero implements IModelApi {
 		this.codigo = codigo;
 	}
 
+	public boolean isPublico() {
+		return publico;
+	}
+
+	public void setPublico(final boolean publico) {
+		this.publico = publico;
+	}
+
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -48,7 +59,10 @@ public class JFichero implements IModelApi {
 	}
 
 	public Fichero toModel() {
-		final Fichero f = new Fichero(this.codigo, this.nombre);
+		final Fichero f = new Fichero();
+		f.setId(this.codigo);
+		f.setNombre(this.nombre);
+		f.setPublico(publico);
 		return f;
 	}
 
@@ -56,6 +70,7 @@ public class JFichero implements IModelApi {
 		final JFichero jFichero = new JFichero();
 		jFichero.setCodigo(fichero.getId());
 		jFichero.setNombre(fichero.getNombre());
+		jFichero.setPublico(true);
 		return jFichero;
 	}
 

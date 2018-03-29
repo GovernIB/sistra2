@@ -53,7 +53,7 @@ public class JPlugin implements IModelApi {
 	private String idInstancia;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PLG_CODENT", nullable = false)
+	@JoinColumn(name = "PLG_CODENT", nullable = true)
 	private JEntidad entidad;
 
 	public JPlugin() {

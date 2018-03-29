@@ -125,11 +125,14 @@ public class ViewPlugins extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		pluginService.removePlugin(this.datoSeleccionado.getId());
-		// Refrescamos datos
-		buscar();
-		// Mostramos mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		if (pluginService.removePlugin(this.datoSeleccionado.getId())) {
+			// Refrescamos datos
+			buscar();
+			// Mostramos mensaje
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+		}
 	}
 
 	/**

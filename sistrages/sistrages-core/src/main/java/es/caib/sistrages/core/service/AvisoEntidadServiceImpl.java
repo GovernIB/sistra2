@@ -32,12 +32,26 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 	@Autowired
 	AvisoEntidadDao avisoEntidadDao;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.AvisoEntidadService#getAvisoEntidad(java.
+	 * lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
 	public AvisoEntidad getAvisoEntidad(final Long idAvisoEntidad) {
 		return avisoEntidadDao.getById(idAvisoEntidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.AvisoEntidadService#addAvisoEntidad(java.
+	 * lang.Long, es.caib.sistrages.core.api.model.AvisoEntidad)
+	 */
 	@Override
 	@NegocioInterceptor
 	public void addAvisoEntidad(final Long idEntidad, final AvisoEntidad avisoEntidad) {
@@ -47,15 +61,30 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 		avisoEntidadDao.add(idEntidad, avisoEntidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.AvisoEntidadService#removeAvisoEntidad(
+	 * java.lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
-	public void removeAvisoEntidad(final Long idAvisoEntidad) {
+	public boolean removeAvisoEntidad(final Long idAvisoEntidad) {
 
 		// TODO Pendiente control acceso entidad
 
 		avisoEntidadDao.remove(idAvisoEntidad);
+		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.AvisoEntidadService#updateAvisoEntidad(es.
+	 * caib.sistrages.core.api.model.AvisoEntidad)
+	 */
 	@Override
 	@NegocioInterceptor
 	public void updateAvisoEntidad(final AvisoEntidad avisoEntidad) {
@@ -66,6 +95,14 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.AvisoEntidadService#listAvisoEntidad(java.
+	 * lang.Long, es.caib.sistrages.core.api.model.types.TypeIdioma,
+	 * java.lang.String)
+	 */
 	@Override
 	@NegocioInterceptor
 	public List<AvisoEntidad> listAvisoEntidad(final Long idEntidad, final TypeIdioma idioma, final String filtro) {

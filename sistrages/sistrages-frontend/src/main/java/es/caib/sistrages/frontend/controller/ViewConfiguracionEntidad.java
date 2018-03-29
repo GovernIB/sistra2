@@ -23,10 +23,9 @@ import org.primefaces.model.UploadedFile;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
-import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -67,9 +66,9 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		data = new Entidad();
 		data.setActivo(true);
 		data.setEmail("prueba@caib.es");
-		data.setLogoAsistente(new Fichero(1l, "logoAsistente.png"));
+		// data.setLogoAsistente(new Fichero(1l, "logoAsistente.png"));
 		// data.setLogoGestor(new Fichero(2l, "logoGestor.png"));
-		data.setCss(new Fichero(3l, "estilo.css"));
+		// data.setCss(new Fichero(3l, "estilo.css"));
 		final Literal traducciones = new Literal();
 		traducciones.add(new Traduccion("ca", "Traduccion pie catala"));
 		traducciones.add(new Traduccion("es", "Traduccion pie espanol"));
@@ -171,9 +170,10 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 				buffer.flush();
 
-				final Fichero fichero = new Fichero(1l, filename);
-				fichero.setContenido(contenido);
-				data.setLogoGestor(fichero);
+				/*
+				 * final Fichero fichero = new Fichero(1l, filename);
+				 * fichero.setContenido(contenido); data.setLogoGestor(fichero);
+				 */
 			}
 		} catch (final IOException ex) {
 			throw new FrontException("Error upload", ex);
@@ -223,9 +223,10 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 				buffer.flush();
 
-				final Fichero fichero = new Fichero(1l, filename);
-				fichero.setContenido(contenido);
-				data.setLogoGestor(fichero);
+				/*
+				 * final Fichero fichero = new Fichero(1l, filename);
+				 * fichero.setContenido(contenido); data.setLogoGestor(fichero);
+				 */
 			}
 		} catch (final IOException ex) {
 			throw new FrontException("Error descarga", ex);
@@ -263,8 +264,12 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 				final OutputStream responseOutputStream = response.getOutputStream();
 
 				// Read PDF contents
-				final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream(
-						data.getLogoGestor().getContenido());
+				// TODO REVISAR
+				/*
+				 * final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream(
+				 * data.getLogoGestor().getContenido());
+				 */
+				final ByteArrayInputStream pdfInputStream = new ByteArrayInputStream("Revisar".getBytes());
 
 				// Read PDF contents and write them to the output
 				final byte[] bytesBuffer = new byte[2048];
@@ -296,12 +301,18 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	private DefaultStreamedContent downloadGestorLogo;
 
 	public DefaultStreamedContent getFicheroGestorLogo() {
-		downloadGestorLogo = new DefaultStreamedContent(new ByteArrayInputStream(data.getLogoGestor().getContenido()));
+
+		// TODO REVISAR
+		// downloadGestorLogo = new DefaultStreamedContent(new
+		// ByteArrayInputStream(data.getLogoGestor().getContenido()));
+		downloadGestorLogo = new DefaultStreamedContent(new ByteArrayInputStream("Revisar".getBytes()));
+
 		return downloadGestorLogo;
 	}
 
 	public void prepDownload() {
-		downloadGestorLogo = new DefaultStreamedContent(new ByteArrayInputStream(data.getLogoGestor().getContenido()));
+		// downloadGestorLogo = new DefaultStreamedContent(new
+		// ByteArrayInputStream(data.getLogoGestor().getContenido()));
 	}
 
 	public void uploadGestorLogo() {
@@ -320,9 +331,11 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 
 			buffer.flush();
 
-			final Fichero fichero = new Fichero(1l, filename);
-			fichero.setContenido(contenido);
-			data.setLogoGestor(fichero);
+			/*
+			 * final Fichero fichero = new Fichero(1l, filename);
+			 * fichero.setContenido(contenido); data.setLogoGestor(fichero);
+			 */
+
 		} catch (final IOException ex) {
 			throw new FrontException("Error upload", ex);
 		}

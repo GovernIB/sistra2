@@ -36,11 +36,12 @@
 
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel for="mensaje" value="#{msg['dialogMensajeAviso.headerDescripcion']}" />
+					<p:outputLabel for="mensajeHidden" value="#{msg['dialogMensajeAviso.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="mensaje" value="#{dialogMensajeAviso.data.mensaje!=null?dialogMensajeAviso.data.mensaje.getTraduccion(sessionBean.lang):''}" disabled="true" required="true" size="40"  style="margin-right:10px" />
+						<p:inputText id="mensaje" value="#{dialogMensajeAviso.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="mensajeHidden" value="#{dialogMensajeAviso.literal}" type="hidden" required="true" binding="#{mensajesComponent}"/>
 						<p:commandButton id="btnMensaje" icon="fa fa-language" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" >
-	            			<p:ajax event="dialogReturn" listener="#{dialogMensajeAviso.returnDialogo}" update="growlDialog mensaje" />
+	            			<p:ajax event="dialogReturn" listener="#{dialogMensajeAviso.returnDialogo}" update="growlDialog mensaje mensajeHidden" />
 	        			</p:commandButton>
 					</p:column>
 

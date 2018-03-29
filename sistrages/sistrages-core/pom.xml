@@ -10,6 +10,8 @@
 	<name>sistrages-core</name>
 	<packaging>ejb</packaging>
 	<dependencies>
+
+		<!-- Modulo LIB -->
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrages-lib</artifactId>
@@ -40,15 +42,6 @@
 		</dependency>
 
 		<!-- JPA -->
-		<!--  No hay q poner hibernate, ni javassist,... -->
-		<!--
-		<dependency>
-		    <groupId>org.hibernate.javax.persistence</groupId>
-		    <artifactId>hibernate-jpa-2.0-api</artifactId>
-		    <version>1.0.1.Final</version>
-		    <scope>provided</scope>
-		</dependency>
-		 -->
 		<dependency>
 		    <groupId>org.hibernate.javax.persistence</groupId>
 		    <artifactId>hibernate-jpa-2.1-api</artifactId>

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.TestData;
+import es.caib.sistrages.core.api.service.GestorFicherosService;
 import es.caib.sistrages.core.api.service.TestService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -29,6 +30,9 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ManagedBean
 @ViewScoped
 public class ViewTest extends ViewControllerBase {
+
+	@Inject
+	private GestorFicherosService gestorFicherosService;
 
 	/**
 	 * Enlace servicio.

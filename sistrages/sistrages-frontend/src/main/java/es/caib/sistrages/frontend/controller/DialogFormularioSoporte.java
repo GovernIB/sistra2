@@ -7,8 +7,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
@@ -136,7 +134,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Editar descripcion del dominio.
 	 *
-
+	 * 
 	 */
 	public void editarDescripcion() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
@@ -152,7 +150,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Editar descripcion del dominio.
 	 *
-
+	 * 
 	 */
 	public void editarTipoIncidencia() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();

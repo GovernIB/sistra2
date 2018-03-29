@@ -17,13 +17,25 @@ import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 
+/**
+ * La clase DominioDaoImpl.
+ */
 @Repository("dominioDao")
 public class DominioDaoImpl implements DominioDao {
 
-	/** EntityManager. */
+	/**
+	 * entity manager.
+	 */
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.DominioDao#getById(java.lang.
+	 * Long)
+	 */
 	@Override
 	public Dominio getById(final Long idDominio) {
 		Dominio dominio = null;
@@ -35,6 +47,12 @@ public class DominioDaoImpl implements DominioDao {
 		return dominio;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.DominioDao#add(es.caib.
+	 * sistrages.core.api.model.Dominio, java.lang.Long, java.lang.Long)
+	 */
 	@Override
 	public void add(final Dominio dominio, final Long idEntidad, final Long idArea) {
 		// Añade dominio por superadministrador estableciendo datos minimos
@@ -57,6 +75,13 @@ public class DominioDaoImpl implements DominioDao {
 		entityManager.persist(jDominio);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.DominioDao#remove(java.lang.
+	 * Long)
+	 */
 	@Override
 	public void remove(final Long idDominio) {
 		final JDominio hdominio = entityManager.find(JDominio.class, idDominio);
@@ -65,31 +90,56 @@ public class DominioDaoImpl implements DominioDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.DominioDao#getAllByFiltro(es.
+	 * caib.sistrages.core.api.model.types.TypeAmbito, java.lang.Long,
+	 * java.lang.String)
+	 */
 	@Override
 	public List<Dominio> getAllByFiltro(final TypeAmbito ambito, final Long id, final String filtro) {
 		return listarDominios(ambito, id, filtro);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.DominioDao#getAll(es.caib.
+	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long)
+	 */
 	@Override
 	public List<Dominio> getAll(final TypeAmbito ambito, final Long id) {
 		return listarDominios(ambito, id, null);
 	}
 
+	/**
+	 * Listar dominios.
+	 *
+	 * @param ambito
+	 *            ambito
+	 * @param id
+	 *            id
+	 * @param filtro
+	 *            filtro
+	 * @return lista de dominios
+	 */
 	private List<Dominio> listarDominios(final TypeAmbito ambito, final Long id, final String filtro) {
 		final List<Dominio> dominioes = new ArrayList<>();
 
 		String sql = "SELECT DISTINCT d FROM JDominio d ";
 
 		if (ambito == TypeAmbito.AREA) {
-			sql += " WHERE d.areas.id = :id AND ambito LIKE '" + TypeAmbito.AREA + "'";
+			sql += " JOIN d.areas area WHERE area.id = :id AND d.ambito = '" + TypeAmbito.AREA + "'";
 		} else if (ambito == TypeAmbito.ENTIDAD) {
-			sql += " WHERE d.entidades.id = :id ambito LIKE '" + TypeAmbito.ENTIDAD + "'";
+			sql += " JOIN d.entidades ent WHERE ent.id = :id AND d.ambito = '" + TypeAmbito.ENTIDAD + "'";
 		} else if (ambito == TypeAmbito.GLOBAL) {
-			sql += " WHERE d.ambito LIKE '" + TypeAmbito.GLOBAL + "'";
+			sql += " WHERE d.ambito = '" + TypeAmbito.GLOBAL + "'";
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " AND LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro";
+			sql += " AND (LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro)";
 		}
 
 		sql += " ORDER BY d.identificador";
@@ -116,10 +166,17 @@ public class DominioDaoImpl implements DominioDao {
 		return dominioes;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.DominioDao#updateDominio(es.
+	 * caib.sistrages.core.api.model.Dominio)
+	 */
 	@Override
 	public void updateDominio(final Dominio dominio) {
 		final JDominio jdominio = entityManager.find(JDominio.class, dominio.getId());
 		jdominio.fromModel(dominio);
-		entityManager.persist(jdominio);
+		entityManager.merge(jdominio);
 	}
 }

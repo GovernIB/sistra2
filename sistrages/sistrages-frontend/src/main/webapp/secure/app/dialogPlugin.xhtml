@@ -13,13 +13,12 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogPlugin.titulo']}"/></title>
-
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
 </h:head>
 
 <h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -56,7 +55,7 @@
 
 					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" />
 					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
-								  rows="10"
+								  rows="10" emptyMessage="#{msg['error.emptyRows']}"
 								  scrollable="true" scrollHeight="90%"
 		                          paginator="false"
 		                          selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">

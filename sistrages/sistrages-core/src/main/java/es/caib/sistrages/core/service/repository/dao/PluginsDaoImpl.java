@@ -20,9 +20,12 @@ import es.caib.sistrages.core.service.repository.model.JPlugin;
 /**
  * La clase PluginsDaoImpl.
  */
-@Repository("plugin")
+@Repository("pluginsDao")
 public class PluginsDaoImpl implements PluginsDao {
 
+	/**
+	 * Crea una nueva instancia de PluginsDaoImpl.
+	 */
 	public PluginsDaoImpl() {
 		super();
 	}
@@ -33,6 +36,13 @@ public class PluginsDaoImpl implements PluginsDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.PluginsDao#getById(java.lang.
+	 * Long)
+	 */
 	@Override
 	public Plugin getById(final Long id) {
 		Plugin plugin = null;
@@ -43,16 +53,36 @@ public class PluginsDaoImpl implements PluginsDao {
 		return plugin;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.PluginsDao#getAll(es.caib.
+	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long)
+	 */
 	@Override
 	public List<Plugin> getAll(final TypeAmbito ambito, final Long idEntidad) {
 		return listarPlugins(ambito, idEntidad, null);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.PluginsDao#getAllByFiltro(es.
+	 * caib.sistrages.core.api.model.types.TypeAmbito, java.lang.Long,
+	 * java.lang.String)
+	 */
 	@Override
 	public List<Plugin> getAllByFiltro(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
 		return listarPlugins(ambito, idEntidad, filtro);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.PluginsDao#add(es.caib.
+	 * sistrages.core.api.model.Plugin, java.lang.Long)
+	 */
 	@Override
 	public void add(final Plugin plugin, final Long idEntidad) {
 		JEntidad jEntidad = null;
@@ -68,6 +98,12 @@ public class PluginsDaoImpl implements PluginsDao {
 		entityManager.persist(jPlugin);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.PluginsDao#update(es.caib.
+	 * sistrages.core.api.model.Plugin)
+	 */
 	@Override
 	public void update(final Plugin plugin) {
 		final JPlugin jPlugin = entityManager.find(JPlugin.class, plugin.getId());
@@ -79,6 +115,13 @@ public class PluginsDaoImpl implements PluginsDao {
 		entityManager.merge(jPluginNew);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.PluginsDao#remove(java.lang.
+	 * Long)
+	 */
 	@Override
 	public void remove(final Long id) {
 		final JPlugin jPlugin = entityManager.find(JPlugin.class, id);
@@ -88,6 +131,17 @@ public class PluginsDaoImpl implements PluginsDao {
 		entityManager.remove(jPlugin);
 	}
 
+	/**
+	 * Listado de plugins.
+	 *
+	 * @param ambito
+	 *            ambito
+	 * @param idEntidad
+	 *            idEntidad
+	 * @param filtro
+	 *            filtro
+	 * @return lista de plugins
+	 */
 	private List<Plugin> listarPlugins(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
 		final List<Plugin> listaPlugin = new ArrayList<>();
 
@@ -106,7 +160,7 @@ public class PluginsDaoImpl implements PluginsDao {
 			query.setParameter("idEntidad", idEntidad);
 		}
 		if (StringUtils.isNotBlank(filtro)) {
-			query.setParameter("pFiltro", "%".concat(filtro).concat("%"));
+			query.setParameter("pFiltro", "%".concat(filtro.toLowerCase()).concat("%"));
 		}
 
 		final List<JPlugin> results = query.getResultList();

@@ -1,7 +1,5 @@
 package es.caib.sistrages.core.api.model.types;
 
-import es.caib.sistrages.core.api.model.comun.ConstantesAmbitos;
-
 /**
  * Tipo para indicar los ámbitos principales de la aplicación.
  *
@@ -10,7 +8,7 @@ import es.caib.sistrages.core.api.model.comun.ConstantesAmbitos;
  */
 public enum TypeAmbito {
 
-	GLOBAL(ConstantesAmbitos.GLOBAL), ENTIDAD(ConstantesAmbitos.ENTIDAD), AREA(ConstantesAmbitos.AREA);
+	GLOBAL("G"), ENTIDAD("E"), AREA("A");
 
 	/**
 	 * Ambito nombre;

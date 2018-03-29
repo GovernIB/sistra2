@@ -88,8 +88,6 @@ public class ViewDominios extends ViewControllerBase {
 
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
-		// Muestra mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.filtro.ok"));
 	}
 
 	/**
@@ -139,12 +137,17 @@ public class ViewDominios extends ViewControllerBase {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
+
 		// Eliminamos
-		listaDatos.remove(this.datoSeleccionado);
-		// Refrescamos datos
-		filtrar();
-		// Mostramos mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		if (this.dominioService.removeDominio(this.datoSeleccionado.getId())) {
+			// Refrescamos datos
+			filtrar();
+
+			// Mostramos mensaje
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+		}
 	}
 
 	/**
@@ -159,20 +162,6 @@ public class ViewDominios extends ViewControllerBase {
 	 */
 	public void refrescarCache() {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
-	}
-
-	/**
-	 * Verifica si hay fila seleccionada.
-	 *
-	 * @return
-	 */
-	private boolean verificarFilaSeleccionada() {
-		boolean filaSeleccionada = true;
-		if (this.datoSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
-			filaSeleccionada = false;
-		}
-		return filaSeleccionada;
 	}
 
 	/**
@@ -202,6 +191,22 @@ public class ViewDominios extends ViewControllerBase {
 
 	}
 
+	// ------- FUNCIONES PRIVADAS ------------------------------
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarFilaSeleccionada() {
+		boolean filaSeleccionada = true;
+		if (this.datoSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	// ------- GETTERS / SETTERS --------------------------------
 	/**
 	 * @return the filtro
 	 */

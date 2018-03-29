@@ -1,6 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -126,11 +128,16 @@ public class JLiteral implements IModelApi {
 			jModel = JLiteral.fromModel(mLiteral);
 		} else {
 			// Borrar idiomas no pasados en modelo
+			final List<JTraduccionLiteral> borrar = new ArrayList<JTraduccionLiteral>();
 			for (final JTraduccionLiteral jTrad : jLiteral.getTraduccionLiterales()) {
 				if (!mLiteral.getIdiomas().contains(jTrad.getIdioma().getIdentificador())) {
-					jLiteral.getTraduccionLiterales().remove(jTrad);
+					borrar.add(jTrad);
 				}
 			}
+			for (final JTraduccionLiteral jTrad : borrar) {
+				jLiteral.getTraduccionLiterales().remove(jTrad);
+			}
+
 			// Actualizamos idiomas pasados en modelo
 			for (final String idioma : mLiteral.getIdiomas()) {
 				JTraduccionLiteral jTraduccionLiteral = jLiteral.getJTraduccionLiteral(idioma);

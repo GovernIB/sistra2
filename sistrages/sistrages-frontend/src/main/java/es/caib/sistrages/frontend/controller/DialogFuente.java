@@ -6,11 +6,14 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Fuente;
-import es.caib.sistrages.core.api.model.FuenteCampo;
+import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -22,17 +25,24 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogFuente extends DialogControllerBase {
 
+	/** Enlace servicio. */
+	@Inject
+	private DominioService dominioService;
+
 	/** Id elemento a tratar. */
 	private String id;
 
-	/** Datos elemento en JSON. **/
-	private String iData;
+	/** Id area. **/
+	private String idArea;
+
+	/** Ambito. **/
+	private String ambito;
 
 	/** Datos elemento. */
-	private Fuente data;
+	private FuenteDatos data;
 
 	/** Valor seleccionado. **/
-	private FuenteCampo valorSeleccionado;
+	private FuenteDatosCampo valorSeleccionado;
 
 	/**
 	 * Inicialización.
@@ -40,11 +50,11 @@ public class DialogFuente extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new Fuente();
+			data = new FuenteDatos();
+			data.setAmbito(TypeAmbito.fromString(ambito));
 			data.setCampos(new ArrayList<>());
 		} else {
-			data = (Fuente) UtilJSON.fromJSON(iData, Fuente.class);
-
+			data = dominioService.loadFuenteDato(Long.valueOf(id));
 		}
 	}
 
@@ -57,23 +67,18 @@ public class DialogFuente extends DialogControllerBase {
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
 		if (!respuesta.isCanceled()) {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 				// Refrescamos datos
-				final FuenteCampo fuenteDatosCampo = (FuenteCampo) respuesta.getResult();
+				final FuenteDatosCampo fuenteDatosCampo = (FuenteDatosCampo) respuesta.getResult();
 				this.data.getCampos().add(fuenteDatosCampo);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
 
 				break;
 
 			case EDICION:
 				// Actualizamos fila actual
-				final FuenteCampo fuenteDatosCampoEdicion = (FuenteCampo) respuesta.getResult();
+				final FuenteDatosCampo fuenteDatosCampoEdicion = (FuenteDatosCampo) respuesta.getResult();
 				// Muestra dialogo
 				final int posicion = this.data.getCampos().indexOf(this.valorSeleccionado);
 
@@ -81,8 +86,6 @@ public class DialogFuente extends DialogControllerBase {
 				this.data.getCampos().add(posicion, fuenteDatosCampoEdicion);
 				this.valorSeleccionado = fuenteDatosCampoEdicion;
 
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
@@ -90,10 +93,6 @@ public class DialogFuente extends DialogControllerBase {
 			}
 		}
 
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
 	/**
@@ -140,7 +139,7 @@ public class DialogFuente extends DialogControllerBase {
 			return;
 		}
 
-		final FuenteCampo fuenteDatosCampo = this.data.getCampos().remove(posicion);
+		final FuenteDatosCampo fuenteDatosCampo = this.data.getCampos().remove(posicion);
 		this.data.getCampos().add(posicion + 1, fuenteDatosCampo);
 	}
 
@@ -157,22 +156,8 @@ public class DialogFuente extends DialogControllerBase {
 			return;
 		}
 
-		final FuenteCampo fuenteDatosCampo = this.data.getCampos().remove(posicion);
+		final FuenteDatosCampo fuenteDatosCampo = this.data.getCampos().remove(posicion);
 		this.data.getCampos().add(posicion - 1, fuenteDatosCampo);
-	}
-
-	/**
-	 * Verifica si hay fila seleccionada.
-	 *
-	 * @return
-	 */
-	private boolean verificarFilaSeleccionada() {
-		boolean filaSeleccionada = true;
-		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
-			filaSeleccionada = false;
-		}
-		return filaSeleccionada;
 	}
 
 	/**
@@ -183,21 +168,16 @@ public class DialogFuente extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
-			/*
-			 * if (FuenteDatosGlobalService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; }
-			 * FuenteDatosGlobalService.add(data);
-			 */
-
+			this.dominioService.addFuenteDato(this.data, Long.valueOf(idArea));
 			break;
 		case EDICION:
-			// FuenteDatosGlobalService.update(data);
+			this.dominioService.updateFuenteDato(this.data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
 			break;
 		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -215,6 +195,22 @@ public class DialogFuente extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	// ------- FUNCIONES PRIVADAS ------------------------------
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarFilaSeleccionada() {
+		boolean filaSeleccionada = true;
+		if (this.valorSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	// ------- GETTERS / SETTERS --------------------------------
 	/**
 	 * @return the id
 	 */
@@ -233,7 +229,7 @@ public class DialogFuente extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public Fuente getData() {
+	public FuenteDatos getData() {
 		return data;
 	}
 
@@ -241,14 +237,14 @@ public class DialogFuente extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final Fuente data) {
+	public void setData(final FuenteDatos data) {
 		this.data = data;
 	}
 
 	/**
 	 * @return the valorSeleccionado
 	 */
-	public FuenteCampo getValorSeleccionado() {
+	public FuenteDatosCampo getValorSeleccionado() {
 		return valorSeleccionado;
 	}
 
@@ -256,23 +252,38 @@ public class DialogFuente extends DialogControllerBase {
 	 * @param valorSeleccionado
 	 *            the valorSeleccionado to set
 	 */
-	public void setValorSeleccionado(final FuenteCampo valorSeleccionado) {
+	public void setValorSeleccionado(final FuenteDatosCampo valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
 	}
 
 	/**
-	 * @return the iData
+	 * @return the idArea
 	 */
-	public String getiData() {
-		return iData;
+	public String getIdArea() {
+		return idArea;
 	}
 
 	/**
-	 * @param iData
-	 *            the iData to set
+	 * @param idArea
+	 *            the idArea to set
 	 */
-	public void setiData(final String iData) {
-		this.iData = iData;
+	public void setIdArea(final String idArea) {
+		this.idArea = idArea;
+	}
+
+	/**
+	 * @return the ambito
+	 */
+	public String getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito
+	 *            the ambito to set
+	 */
+	public void setAmbito(final String ambito) {
+		this.ambito = ambito;
 	}
 
 }

@@ -38,6 +38,11 @@ public class DialogEntidad extends DialogControllerBase {
 	private Entidad data;
 
 	/**
+	 * literal para mostrar.
+	 */
+	private String literal;
+
+	/**
 	 * Inicialización.
 	 */
 	public void init() {
@@ -45,7 +50,12 @@ public class DialogEntidad extends DialogControllerBase {
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Entidad();
 		} else {
-			data = entidadService.loadEntidad(Long.valueOf(id));
+			if (id != null) {
+				data = entidadService.loadEntidad(Long.valueOf(id));
+				if (data != null && data.getNombre() != null) {
+					literal = data.getNombre().getTraduccion(UtilJSF.getSessionBean().getLang());
+				}
+			}
 		}
 	}
 
@@ -58,8 +68,9 @@ public class DialogEntidad extends DialogControllerBase {
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
-			final Literal literal = (Literal) respuesta.getResult();
-			data.setNombre(literal);
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setNombre(literales);
+			literal = literales.getTraduccion(UtilJSF.getSessionBean().getLang());
 		}
 	}
 
@@ -127,4 +138,22 @@ public class DialogEntidad extends DialogControllerBase {
 		this.data = data;
 	}
 
+	/**
+	 * Obtiene el valor de literal.
+	 *
+	 * @return el valor de literal
+	 */
+	public String getLiteral() {
+		return literal;
+	}
+
+	/**
+	 * Establece el valor de literal.
+	 *
+	 * @param literal
+	 *            el nuevo valor de literal
+	 */
+	public void setLiteral(final String literal) {
+		this.literal = literal;
+	}
 }

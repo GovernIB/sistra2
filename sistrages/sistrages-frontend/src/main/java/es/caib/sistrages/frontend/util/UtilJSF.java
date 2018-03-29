@@ -504,4 +504,13 @@ public final class UtilJSF {
 		return idEntidad;
 	}
 
+	/**
+	 * Obtiene context path.
+	 * 
+	 * @return context path
+	 */
+	public static String getContextPath() {
+		return FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+	}
+
 }

@@ -9,9 +9,8 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Fichero;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
@@ -154,7 +153,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		tradDesc.add(new Traduccion("es", "Descripción"));
 		data.setDescripcion(tradDesc);
 		data.setObligatoriedad(TypeFormularioObligatoriedad.DEPENDIENTE);
-		data.setAyudaFichero(new Fichero(1l, ""));
+		// data.setAyudaFichero(new Fichero(1l, ""));
 		data.setAyudaURL("http://www.caib.es");
 		final Literal ayudaTexto = new Literal();
 		ayudaTexto.add(new Traduccion("ca", "Texte ajuda"));

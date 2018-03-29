@@ -13,6 +13,13 @@ import es.caib.sistrages.core.api.model.types.TypeIdioma;
  */
 public interface EntidadService {
 
+	/**
+	 * Obtener entidad.
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 * @return entidad
+	 */
 	public Entidad loadEntidad(Long idEntidad);
 
 	/**
@@ -32,16 +39,17 @@ public interface EntidadService {
 	public void updateEntidadSuperAdministrador(Entidad entidad);
 
 	/**
-	 * Borrar entidad.
-	 * 
+	 * Elimina entidad.
+	 *
 	 * @param idEntidad
 	 *            idEntidad
+	 * @return true, si se ha realizado con &eacute;xito
 	 */
-	public void removeEntidad(Long idEntidad);
+	public boolean removeEntidad(Long idEntidad);
 
 	/**
 	 * Listar entidades.
-	 * 
+	 *
 	 * @param typeIdioma
 	 *            Idioma
 	 * @param filtro

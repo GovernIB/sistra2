@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.Fuente;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
@@ -66,7 +66,7 @@ public class DialogDominio extends DialogControllerBase {
 	private boolean visibleFuente;
 
 	/** Lista con las fuentes de datos. **/
-	private List<Fuente> fuentes;
+	private List<FuenteDatos> fuentes;
 
 	/**
 	 * Tipos. Es el único enumerado que funciona así, porque el tipo GLOBAL debe
@@ -119,14 +119,14 @@ public class DialogDominio extends DialogControllerBase {
 			visibleFuente = true;
 		}
 		fuentes = new ArrayList<>();
-		final Fuente f1 = new Fuente();
-		f1.setCodigo("Fuente 1");
+		final FuenteDatos f1 = new FuenteDatos();
+		f1.setIdentificador("Fuente 1");
 		f1.setDescripcion("Descripcion");
-		f1.setId(1l);
-		final Fuente f2 = new Fuente();
-		f2.setCodigo("Fuente 2");
+		f1.setCodigo(1l);
+		final FuenteDatos f2 = new FuenteDatos();
+		f2.setIdentificador("Fuente 2");
 		f2.setDescripcion("Descripcion 2");
-		f2.setId(2l);
+		f2.setCodigo(2l);
 		fuentes.add(f1);
 		fuentes.add(f2);
 
@@ -435,7 +435,7 @@ public class DialogDominio extends DialogControllerBase {
 
 	/**
 	 * Mostrar la fila de parámetros si no es de tipo lista fija
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean mostrarParametros() {
@@ -446,22 +446,51 @@ public class DialogDominio extends DialogControllerBase {
 		return mostrar;
 	}
 
+	/**
+	 * Checkea si el tipo debe ocultarse o no.
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	public boolean checkTipo(final TypeDominio tipo) {
+		boolean mostrar = false;
+		if (TypeAmbito.fromString(ambito) == TypeAmbito.GLOBAL && tipo == TypeDominio.FUENTE_DATOS) {
+			mostrar = true;
+		}
+		return mostrar;
+	}
+
+	/**
+	 * @return the id
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(final String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the data
+	 */
 	public Dominio getData() {
 		return data;
 	}
 
+	/**
+	 * @param data
+	 *            the data to set
+	 */
 	public void setData(final Dominio data) {
 		this.data = data;
 	}
 
+	// ------- GETTERS / SETTERS --------------------------------
 	/**
 	 * @return the propiedadSeleccionada
 	 */
@@ -555,7 +584,7 @@ public class DialogDominio extends DialogControllerBase {
 	/**
 	 * @return the fuentes
 	 */
-	public List<Fuente> getFuentes() {
+	public List<FuenteDatos> getFuentes() {
 		return fuentes;
 	}
 
@@ -563,7 +592,7 @@ public class DialogDominio extends DialogControllerBase {
 	 * @param fuentes
 	 *            the fuentes to set
 	 */
-	public void setFuentes(final List<Fuente> fuentes) {
+	public void setFuentes(final List<FuenteDatos> fuentes) {
 		this.fuentes = fuentes;
 	}
 
@@ -610,20 +639,6 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
-	}
-
-	/**
-	 * Checkea si el tipo debe ocultarse o no.
-	 *
-	 * @param tipo
-	 * @return
-	 */
-	public boolean checkTipo(final TypeDominio tipo) {
-		boolean mostrar = false;
-		if (TypeAmbito.fromString(ambito) == TypeAmbito.GLOBAL && tipo == TypeDominio.FUENTE_DATOS) {
-			mostrar = true;
-		}
-		return mostrar;
 	}
 
 	/**

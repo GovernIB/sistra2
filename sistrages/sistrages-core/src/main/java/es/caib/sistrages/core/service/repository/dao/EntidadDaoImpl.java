@@ -23,6 +23,13 @@ public class EntidadDaoImpl implements EntidadDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#getById(java.lang.
+	 * Long)
+	 */
 	@Override
 	public Entidad getById(final Long idEntidad) {
 		Entidad entidad = null;
@@ -34,6 +41,12 @@ public class EntidadDaoImpl implements EntidadDao {
 		return entidad;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.EntidadDao#add(es.caib.
+	 * sistrages.core.api.model.Entidad)
+	 */
 	@Override
 	public void add(final Entidad entidad) {
 		// Añade entidad por superadministrador estableciendo datos minimos
@@ -45,6 +58,13 @@ public class EntidadDaoImpl implements EntidadDao {
 		entityManager.persist(jEntidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#remove(java.lang.
+	 * Long)
+	 */
 	@Override
 	public void remove(final Long idEntidad) {
 		final JEntidad hentidad = entityManager.find(JEntidad.class, idEntidad);
@@ -54,6 +74,12 @@ public class EntidadDaoImpl implements EntidadDao {
 		entityManager.remove(hentidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.EntidadDao#
+	 * updateSuperAdministrador(es.caib.sistrages.core.api.model.Entidad)
+	 */
 	@Override
 	public void updateSuperAdministrador(final Entidad entidad) {
 		// Update entidad por superadministrador estableciendo datos minimos
@@ -68,16 +94,37 @@ public class EntidadDaoImpl implements EntidadDao {
 		entityManager.merge(jEntidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#getAllByFiltro(es.
+	 * caib.sistrages.core.api.model.types.TypeIdioma, java.lang.String)
+	 */
 	@Override
 	public List<Entidad> getAllByFiltro(final TypeIdioma idioma, final String filtro) {
 		return listarEntidades(idioma, filtro);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.EntidadDao#getAll()
+	 */
 	@Override
 	public List<Entidad> getAll() {
 		return listarEntidades(null, null);
 	}
 
+	/**
+	 * Listar entidades.
+	 *
+	 * @param idioma
+	 *            idioma
+	 * @param filtro
+	 *            filtro
+	 * @return lista de entidades
+	 */
 	private List<Entidad> listarEntidades(final TypeIdioma idioma, final String filtro) {
 		final List<Entidad> entidades = new ArrayList<>();
 

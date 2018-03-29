@@ -389,6 +389,10 @@ body{
 	margin-bottom: 0.3em !important;
 }
 
+.margin-right-10 {
+	margin-right: 10px !important;
+}
+
 .noBackground,.noBackground div {
    background: none !important;
 }
@@ -449,6 +453,10 @@ label.ui-state-disabled {
 }
 
 .panel_izq {border-left:1px solid silver;padding-left:0.4em;}
+
+.confirmar_botonera {float:right !important;}
+
+.confirmar_icono {height: auto !important;width: auto !important;}
 
 /** Para cambiar el fondo a los inputs y se vea blanco. **/
 /* .ui-inputfield { */

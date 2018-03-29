@@ -33,7 +33,7 @@ public class Literal extends ModelApi {
 	public String getTraduccion() {
 
 		if (trads == null) {
-			return null;
+			return "";
 		}
 
 		for (final Traduccion traduccion : trads) {

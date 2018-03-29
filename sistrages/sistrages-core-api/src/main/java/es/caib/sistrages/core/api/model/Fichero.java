@@ -15,19 +15,12 @@ public class Fichero extends ModelApi {
 	/** Nombre del fichero. */
 	private String nombre;
 
-	// TODO SACAR CONTENIDO APARTE
-	/** Contenido. **/
-	private byte[] contenido;
+	/** Indica si es público. */
+	private boolean publico;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param iId
-	 * @param iNombre
-	 */
-	public Fichero(final Long iId, final String iNombre) {
-		this.setId(iId);
-		this.nombre = iNombre;
+	/** Constructor. */
+	public Fichero() {
+		super();
 	}
 
 	/**
@@ -60,18 +53,11 @@ public class Fichero extends ModelApi {
 		this.nombre = nombre;
 	}
 
-	/**
-	 * @return the contenido
-	 */
-	public byte[] getContenido() {
-		return contenido;
+	public boolean isPublico() {
+		return publico;
 	}
 
-	/**
-	 * @param contenido
-	 *            the contenido to set
-	 */
-	public void setContenido(final byte[] contenido) {
-		this.contenido = contenido;
+	public void setPublico(final boolean publico) {
+		this.publico = publico;
 	}
 }

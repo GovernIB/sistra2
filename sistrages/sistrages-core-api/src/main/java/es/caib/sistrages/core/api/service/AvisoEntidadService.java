@@ -35,7 +35,7 @@ public interface AvisoEntidadService {
 	 * @param id
 	 *            el identificador
 	 */
-	void removeAvisoEntidad(Long id);
+	boolean removeAvisoEntidad(Long id);
 
 	/**
 	 * Actualiza Aviso Entidad.

@@ -16,7 +16,7 @@ public class FuenteFila extends ModelApi {
 	private Long id;
 
 	/** Lista de fuentes de datos. **/
-	private List<FuenteDato> datos;
+	private List<FuenteDatosValor> datos;
 
 	/** Constructor basico. **/
 	public FuenteFila() {
@@ -64,7 +64,7 @@ public class FuenteFila extends ModelApi {
 	/**
 	 * @return the datos
 	 */
-	public List<FuenteDato> getDatos() {
+	public List<FuenteDatosValor> getDatos() {
 		return datos;
 	}
 
@@ -72,7 +72,7 @@ public class FuenteFila extends ModelApi {
 	 * @param datos
 	 *            the datos to set
 	 */
-	public void setDatos(final List<FuenteDato> datos) {
+	public void setDatos(final List<FuenteDatosValor> datos) {
 		this.datos = datos;
 	}
 
@@ -81,7 +81,7 @@ public class FuenteFila extends ModelApi {
 	 *
 	 * @param dato11
 	 */
-	public void addFuenteDato(final FuenteDato dato11) {
+	public void addFuenteDato(final FuenteDatosValor dato11) {
 		this.datos.add(dato11);
 	}
 
@@ -90,7 +90,7 @@ public class FuenteFila extends ModelApi {
 	 *
 	 * @param dato11
 	 */
-	public void removeFuenteDato(final FuenteDato dato11) {
+	public void removeFuenteDato(final FuenteDatosValor dato11) {
 		this.datos.remove(dato11);
 	}
 }

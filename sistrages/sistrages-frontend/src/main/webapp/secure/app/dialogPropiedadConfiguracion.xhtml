@@ -33,13 +33,13 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "15" cellspacing = "0" width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogPropiedadConfiguracion.headerCodigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogPropiedadConfiguracion.data.propiedad}" disabled="#{!dialogPropiedadConfiguracion.isAlta()}" required="true" size="40" />
+				 	<p:inputText id="codigo" value="#{dialogPropiedadConfiguracion.data.propiedad}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
 
 				 	<p:outputLabel for="valor" value="#{msg['dialogPropiedadConfiguracion.headerValor']}" />
-				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" disabled="#{dialogPropiedadConfiguracion.isConsulta()}" required="true" size="40" />
+				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" disabled="#{dialogPropiedadConfiguracion.consulta}" required="true" size="40" />
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogPropiedadConfiguracion.headerDescripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogPropiedadConfiguracion.data.descripcion}" disabled="#{dialogPropiedadConfiguracion.isConsulta()}" required="true" size="40" />
+				 	<p:inputText id="descripcion" value="#{dialogPropiedadConfiguracion.data.descripcion}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
 
 				</h:panelGrid>
 			</p:outputPanel>

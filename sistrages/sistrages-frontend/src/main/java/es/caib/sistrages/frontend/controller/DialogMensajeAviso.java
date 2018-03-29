@@ -42,6 +42,11 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private AvisoEntidad data;
 
 	/**
+	 * literal para mostrar.
+	 */
+	private String literal;
+
+	/**
 	 * Inicialización.
 	 */
 	public void init() {
@@ -56,6 +61,9 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		} else {
 			if (id != null) {
 				data = avisoEntidadService.getAvisoEntidad(Long.valueOf(id));
+				if (data != null && data.getMensaje() != null) {
+					literal = data.getMensaje().getTraduccion(UtilJSF.getSessionBean().getLang());
+				}
 			}
 
 		}
@@ -104,8 +112,9 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
-			final Literal literal = (Literal) respuesta.getResult();
-			data.setMensaje(literal);
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setMensaje(literales);
+			literal = literales.getTraduccion(UtilJSF.getSessionBean().getLang());
 		}
 	}
 
@@ -147,11 +156,32 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
+	 * Establece el valor de data.
+	 *
 	 * @param data
-	 *            the data to set
+	 *            el nuevo valor de data
 	 */
 	public void setData(final AvisoEntidad data) {
 		this.data = data;
+	}
+
+	/**
+	 * Obtiene el valor de literal.
+	 *
+	 * @return el valor de literal
+	 */
+	public String getLiteral() {
+		return literal;
+	}
+
+	/**
+	 * Establece el valor de literal.
+	 *
+	 * @param literal
+	 *            el nuevo valor de literal
+	 */
+	public void setLiteral(final String literal) {
+		this.literal = literal;
 	}
 
 }

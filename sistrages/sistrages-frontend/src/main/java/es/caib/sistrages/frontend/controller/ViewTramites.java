@@ -16,8 +16,8 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.service.AreaService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -158,14 +158,25 @@ public class ViewTramites extends ViewControllerBase {
 	 * Dominios de area.
 	 */
 	public void dominioArea() {
-		UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=X");
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea())
+			return;
+
+		final Area area = (Area) this.areaSeleccionada.getData();
+		UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getId());
 	}
 
 	/**
-	 * Datos area.
+	 * Fuente datos area.
 	 */
 	public void datosArea() {
-		UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=X");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea())
+			return;
+
+		final Area area = (Area) this.areaSeleccionada.getData();
+		UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=" + area.getId());
 	}
 
 	/**

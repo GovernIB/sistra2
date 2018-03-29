@@ -8,11 +8,9 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import es.caib.sistrages.core.api.model.Formulario;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
@@ -109,7 +107,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 *
-
+	 * 
 	 */
 	public void editarDescripcion() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramite);

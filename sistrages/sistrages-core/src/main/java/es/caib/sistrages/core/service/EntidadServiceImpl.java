@@ -23,6 +23,12 @@ public class EntidadServiceImpl implements EntidadService {
 	@Autowired
 	EntidadDao entidadDao;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.EntidadService#loadEntidad(java.lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
 	public Entidad loadEntidad(final Long idEntidad) {
@@ -31,28 +37,55 @@ public class EntidadServiceImpl implements EntidadService {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.EntidadService#addEntidad(es.caib.
+	 * sistrages.core.api.model.Entidad)
+	 */
 	@Override
 	@NegocioInterceptor
 	public void addEntidad(final Entidad entidad) {
 		entidadDao.add(entidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.EntidadService#removeEntidad(java.lang.
+	 * Long)
+	 */
 	@Override
 	@NegocioInterceptor
-	public void removeEntidad(final Long idEntidad) {
+	public boolean removeEntidad(final Long idEntidad) {
 
 		// TODO Verificar dependencias
 		// TODO Gestion borrado ficheros
 
 		entidadDao.remove(idEntidad);
+
+		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.EntidadService#
+	 * updateEntidadSuperAdministrador(es.caib.sistrages.core.api.model.Entidad)
+	 */
 	@Override
 	@NegocioInterceptor
 	public void updateEntidadSuperAdministrador(final Entidad entidad) {
 		entidadDao.updateSuperAdministrador(entidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.EntidadService#listEntidad(es.caib.
+	 * sistrages.core.api.model.types.TypeIdioma, java.lang.String)
+	 */
 	@Override
 	@NegocioInterceptor
 	public List<Entidad> listEntidad(final TypeIdioma idioma, final String filtro) {

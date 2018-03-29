@@ -22,22 +22,24 @@
 			<p:toolbar id="toolbar">
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPlugins.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPlugins.filtrar()}" process="panelFiltro" update="dataTable growl" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPlugins.filtrar()}" process="panelFiltro" update="dataTable growl form:btnEliminar" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
-		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewPlugins.nuevo()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable form:btnEliminar"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPlugins.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable form:btnEliminar"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewPlugins.eliminar()}" process="@this" update="growl dataTable"/>
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPlugins.ayudar()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewPlugins.eliminar()}" process="@this" update="growl dataTable form:btnEliminar">
+	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{viewPlugins.datoSeleccionado eq null}"/>
+						</p:commandButton>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPlugins.ayudar()}" process="@this" update="growl dataTable form:btnEliminar"/>
 
 		        	</h:panelGrid>
 		        </f:facet>
@@ -46,7 +48,7 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewPlugins.listaDatos}"
-						 rows="10"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -57,8 +59,8 @@
 				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" />
-				<p:ajax event="rowUnselect" />
+				<p:ajax event="rowSelect" update="form:btnEliminar"/>
+				<p:ajax event="rowUnselect" update="form:btnEliminar" />
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewPlugins.tipo']}">
@@ -89,6 +91,14 @@
 		        document.getElementById("form:btnEliminar").click();
 		      }
 		    </h:outputScript>
+
+			<!-- dialogo para confirmar -->
+		    <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
 
 		</h:form>
 

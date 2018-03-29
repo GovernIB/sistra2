@@ -74,7 +74,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = configuracionGlobalService.listConfiguracionGlobal(filtro.toLowerCase());
+		listaDatos = configuracionGlobalService.listConfiguracionGlobal(filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
