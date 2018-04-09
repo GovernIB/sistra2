@@ -1,4 +1,5 @@
 
+
 create sequence STG_ACCPER_SEQ;
 
 create sequence STG_ANETRA_SEQ;
@@ -87,19 +88,19 @@ comment on table STG_ACCPER is
 'Acciones personalizadas del formulario';
 
 comment on column STG_ACCPER.ACP_CODIGO is
-'Codigo de la acciÛn';
+'Codigo de la acci√≥n';
 
 comment on column STG_ACCPER.ACP_CODFOR is
-'Formulario al que pertenece la acciÛn';
+'Formulario al que pertenece la acci√≥n';
 
 comment on column STG_ACCPER.ACP_ACCION is
-'AcciÛn a realizar. ⁄nica en el formulario';
+'Acci√≥n a realizar. √önica en el formulario';
 
 comment on column STG_ACCPER.ACP_DESCRI is
-'TÌtulo de la acciÛn';
+'T√≠tulo de la acci√≥n';
 
 comment on column STG_ACCPER.ACP_VALIDA is
-'La acciÛn hace que se valide el formulario';
+'La acci√≥n hace que se valide el formulario';
 
 alter table STG_ACCPER
    add constraint STG_ACCPER_PK primary key (ACP_CODIGO);
@@ -140,19 +141,19 @@ create table STG_ANETRA
 );
 
 comment on table STG_ANETRA is
-'Anexo tr·mite';
+'Anexo tr√°mite';
 
 comment on column STG_ANETRA.ANE_CODIGO is
-'CÛdigo anexo';
+'C√≥digo anexo';
 
 comment on column STG_ANETRA.ANE_CODPTR is
-'CÛdigo paso tramitaciÛn';
+'C√≥digo paso tramitaci√≥n';
 
 comment on column STG_ANETRA.ANE_IDEDOC is
-'Identificador documento dentro de la versiÛn';
+'Identificador documento dentro de la versi√≥n';
 
 comment on column STG_ANETRA.ANE_DESCRIP is
-'DescripciÛn anexo';
+'Descripci√≥n anexo';
 
 comment on column STG_ANETRA.ANE_ORDEN is
 'Orden';
@@ -176,19 +177,19 @@ comment on column STG_ANETRA.ANE_AYUULR is
 'Plantilla es una URL';
 
 comment on column STG_ANETRA.ANE_TIPPRE is
-'Tipo presentaciÛn: E (electrÛnica) / P (Presencial)';
+'Tipo presentaci√≥n: E (electr√≥nica) / P (Presencial)';
 
 comment on column STG_ANETRA.ANE_NUMINS is
-'N˙mero instancia (por defecto 1, para multiinstancia > 1)';
+'N√∫mero instancia (por defecto 1, para multiinstancia > 1)';
 
 comment on column STG_ANETRA.ANE_EXTPER is
 'Lista extensiones permitidas separadas por coma';
 
 comment on column STG_ANETRA.ANE_TAMMAX is
-'TamaÒo m·ximo (segun unidad tamaÒo)';
+'Tama√±o m√°ximo (segun unidad tama√±o)';
 
 comment on column STG_ANETRA.ANE_TAMUNI is
-'Unidad de tamaÒo del anexo (KB o MB)';
+'Unidad de tama√±o del anexo (KB o MB)';
 
 comment on column STG_ANETRA.ANE_CNVPDF is
 'Indica si hay que convertir a PDF el anexo';
@@ -197,14 +198,14 @@ comment on column STG_ANETRA.ANE_FIRMAR is
 'Indica si se debe firmar digitalmente ';
 
 comment on column STG_ANETRA.ANE_SCRFIR is
-'Permite indicar quiÈn debe firmar el anexo (permite indicar varios firmantes). 
-Si se habilita el pase a bandeja de firma se podr· especificar si el anexo debe ser anexado por uno de los firmantes.';
+'Permite indicar qui√©n debe firmar el anexo (permite indicar varios firmantes). 
+Si se habilita el pase a bandeja de firma se podr√° especificar si el anexo debe ser anexado por uno de los firmantes.';
 
 comment on column STG_ANETRA.ANE_FIRMAD is
 'Indica si se debe anexar firmado';
 
 comment on column STG_ANETRA.ANE_SCRVAL is
-'Permite establecer una validaciÛn sobre el documento anexado. En este script estar· disponible un plugin que permita acceder a datos de formularios PDF.';
+'Permite establecer una validaci√≥n sobre el documento anexado. En este script estar√° disponible un plugin que permita acceder a datos de formularios PDF.';
 
 alter table STG_ANETRA
    add constraint STG_ANETRA_PK primary key (ANE_CODIGO);
@@ -232,16 +233,16 @@ comment on table STG_AREA is
 'Areas funcionales';
 
 comment on column STG_AREA.ARE_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_AREA.ARE_CODENT is
-'CÛdigo entidad';
+'C√≥digo entidad';
 
 comment on column STG_AREA.ARE_IDENTI is
 'Identificador';
 
 comment on column STG_AREA.ARE_DESCR is
-'DescripciÛn';
+'Descripci√≥n';
 
 alter table STG_AREA
    add constraint STG_AREA_PK primary key (ARE_CODIGO);
@@ -266,10 +267,10 @@ comment on table STG_AREDOM is
 'Dominios area';
 
 comment on column STG_AREDOM.DMA_CODARE is
-'CÛdigo area';
+'C√≥digo area';
 
 comment on column STG_AREDOM.DMA_CODDOM is
-'CÛdigo dominio';
+'C√≥digo dominio';
 
 alter table STG_AREDOM
    add constraint STG_AREDOM_PK primary key (DMA_CODARE, DMA_CODDOM);
@@ -290,13 +291,13 @@ create table STG_AVIENT
 );
 
 comment on table STG_AVIENT is
-'Avisos entidad (para el asistente de tramitaciÛn)';
+'Avisos entidad (para el asistente de tramitaci√≥n)';
 
 comment on column STG_AVIENT.AVI_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_AVIENT.AVI_CODENT is
-'CÛdigo entidad';
+'C√≥digo entidad';
 
 comment on column STG_AVIENT.AVI_TRAMEN is
 'Mensaje aviso multiidioma';
@@ -309,10 +310,10 @@ comment on column STG_AVIENT.AVI_TIPO is
   - PAG: Con pago
   - REG: Con registro
   - FIR: Con firma
-  - LST: Lista tr·mites ';
+  - LST: Lista tr√°mites ';
 
 comment on column STG_AVIENT.AVI_BLOQ is
-'Si se bloquea acceso al tr·mite';
+'Si se bloquea acceso al tr√°mite';
 
 comment on column STG_AVIENT.AVI_FCINI is
 'Fecha inicio';
@@ -321,7 +322,7 @@ comment on column STG_AVIENT.AVI_FCFIN is
 'Fecha fin';
 
 comment on column STG_AVIENT.AVI_LSTTRA is
-'Lista serializada con cÛdigos de tr·mites ';
+'Lista serializada con c√≥digos de tr√°mites ';
 
 alter table STG_AVIENT
    add constraint STG_AVIENT_PK primary key (AVI_CODIGO);
@@ -379,10 +380,10 @@ create table STG_CNFGLO
 );
 
 comment on table STG_CNFGLO is
-'Propiedades configuraciÛn global';
+'Propiedades configuraci√≥n global';
 
 comment on column STG_CNFGLO.CFG_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_CNFGLO.CFG_PROP is
 'Propiedad';
@@ -391,7 +392,7 @@ comment on column STG_CNFGLO.CFG_VALOR is
 'Valor';
 
 comment on column STG_CNFGLO.CFG_DESCR is
-'DescripciÛn propiedad';
+'Descripci√≥n propiedad';
 
 alter table STG_CNFGLO
    add constraint STG_CNFGLO_PK primary key (CFG_CODIGO);
@@ -409,10 +410,10 @@ comment on table STG_DOMENT is
 'Dominios entidad';
 
 comment on column STG_DOMENT.DEN_CODENT is
-'CÛdigo entidad';
+'C√≥digo entidad';
 
 comment on column STG_DOMENT.DEN_CODDOM is
-'CÛdigo dominio';
+'C√≥digo dominio';
 
 alter table STG_DOMENT
    add constraint STG_DOMENT_PK primary key (DEN_CODENT, DEN_CODDOM);
@@ -440,16 +441,16 @@ comment on table STG_DOMINI is
 'Dominios';
 
 comment on column STG_DOMINI.DOM_CODIGO is
-'CÛdigo interno';
+'C√≥digo interno';
 
 comment on column STG_DOMINI.DOM_AMBITO is
-'Ambito dominio (G : Global / E: Entidad / A: ¡rea)';
+'Ambito dominio (G : Global / E: Entidad / A: √Årea)';
 
 comment on column STG_DOMINI.DOM_IDENTI is
 'Identificador dominio';
 
 comment on column STG_DOMINI.DOM_DESCR is
-'DescripciÛn';
+'Descripci√≥n';
 
 comment on column STG_DOMINI.DOM_CACHE is
 'Indica si se realiza cacheo dominio';
@@ -473,7 +474,7 @@ comment on column STG_DOMINI.DOM_REURL is
 'Para tipo Remoto indica URL de acceso al servicio remoto de consulta de dominio';
 
 comment on column STG_DOMINI.DOM_PARAMS is
-'Lista serializada de cÛdigos par·metros dominio ';
+'Lista serializada de c√≥digos par√°metros dominio ';
 
 alter table STG_DOMINI
    add constraint STG_DOMINI_PK primary key (DOM_CODIGO);
@@ -495,13 +496,13 @@ create table STG_DOMVER
 );
 
 comment on table STG_DOMVER is
-'Dominios utilizados en una versiÛn de  tr·mite';
+'Dominios utilizados en una versi√≥n de  tr√°mite';
 
 comment on column STG_DOMVER.DVT_CODVTR is
-'CÛdigo versiÛn tr·mite';
+'C√≥digo versi√≥n tr√°mite';
 
 comment on column STG_DOMVER.DVT_CODDOM is
-'CÛdigo dominio';
+'C√≥digo dominio';
 
 alter table STG_DOMVER
    add constraint STG_DOMVER_PK primary key (DVT_CODVTR, DVT_CODDOM);
@@ -533,40 +534,40 @@ comment on table STG_ENTIDA is
 'Entidades';
 
 comment on column STG_ENTIDA.ENT_CODIGO is
-'CÛdigo interno';
+'C√≥digo interno';
 
 comment on column STG_ENTIDA.ENT_DIR3 is
-'CÛdigo DIR3';
+'C√≥digo DIR3';
 
 comment on column STG_ENTIDA.ENT_NOMBRE is
 'Nombre Entidad';
 
 comment on column STG_ENTIDA.ENT_ACTIVA is
-'Indica si la entidad est· activa';
+'Indica si la entidad est√° activa';
 
 comment on column STG_ENTIDA.ENT_ROLADM is
 'Role asociado al administrador de la entidad';
 
 comment on column STG_ENTIDA.ENT_LOGOTG is
-'Logo entidad Gestor Tr·mites';
+'Logo entidad Gestor Tr√°mites';
 
 comment on column STG_ENTIDA.ENT_LOGOTT is
-'Logo entidad Asistente TramitaciÛn';
+'Logo entidad Asistente Tramitaci√≥n';
 
 comment on column STG_ENTIDA.ENT_CSSTT is
-'CSS Asistente TramitaciÛn';
+'CSS Asistente Tramitaci√≥n';
 
 comment on column STG_ENTIDA.ENT_PIETT is
-'Pie de p·gina de contacto para Asistente TramitaciÛn (HTML)';
+'Pie de p√°gina de contacto para Asistente Tramitaci√≥n (HTML)';
 
 comment on column STG_ENTIDA.ENT_EMAIL is
-'Email contacto genÈrico';
+'Email contacto gen√©rico';
 
 comment on column STG_ENTIDA.ENT_CNTEMA is
 'Habilitado contacto email';
 
 comment on column STG_ENTIDA.ENT_CNTTEL is
-'Habilitado contacto telÈfono';
+'Habilitado contacto tel√©fono';
 
 comment on column STG_ENTIDA.ENT_CNTURL is
 'Habilitado contacto url';
@@ -575,7 +576,7 @@ comment on column STG_ENTIDA.ENT_CNTFOR is
 'Habilitado contacto formulario incidencias';
 
 comment on column STG_ENTIDA.ENT_TELEFO is
-'TelÈfono contacto';
+'Tel√©fono contacto';
 
 comment on column STG_ENTIDA.ENT_URLSOP is
 'Url soporte';
@@ -599,15 +600,10 @@ create table STG_FICEXT
    FIE_REFFEC           TIMESTAMP            not null,
    FIE_CODFIC           NUMBER(18)           not null,
    FIE_BORRAR           NUMBER(1)            default 0 not null
-)
-  lob
- ( FIC_DATOS )
-    store as
-         RDS_FICHER_LOB
- ( index  RDS_FICHER_I_LOB );
+);
 
 comment on table STG_FICEXT is
-'UbicaciÛn de ficheros en sistema remoto. Se almacenar· en filesystem que se acceder· de forma compartida desde SISTRAMIT.
+'Ubicaci√≥n de ficheros en sistema remoto. Se almacenar√° en filesystem que se acceder√° de forma compartida desde SISTRAMIT.
 
 No se activa FK para que al borrar un fichero se marquen para borrar todos sus referencias externas
 
@@ -622,16 +618,16 @@ comment on column STG_FICEXT.FIE_REFDOC is
 REFERENCIA DOC:  Path 
 /ENTIDAD-<codigo>
         /ESTILOS: docs asociados a estilos entidad (logo, css, ...)
-        /TRAMITE-<codigo>/VERSION-<codigo>: docs asociados a esa versiÛn de tr·mite, formularios, etc.
+        /TRAMITE-<codigo>/VERSION-<codigo>: docs asociados a esa versi√≥n de tr√°mite, formularios, etc.
 
     Nombre de fichero: id generado automaticamente
 ';
 
 comment on column STG_FICEXT.FIE_REFFEC is
-'Fecha referencia (sÛlo ser· v·lida la ˙ltima, el resto se borrar·n)';
+'Fecha referencia (s√≥lo ser√° v√°lida la √∫ltima, el resto se borrar√°n)';
 
 comment on column STG_FICEXT.FIE_CODFIC is
-'CÛdigo fichero al que est· enlazado';
+'C√≥digo fichero al que est√° enlazado';
 
 comment on column STG_FICEXT.FIE_BORRAR is
 'Indica si esta marcado para borrar (proceso de purgado)';
@@ -653,13 +649,13 @@ comment on table STG_FICHER is
 'Ficheros';
 
 comment on column STG_FICHER.FIC_CODIGO is
-'CÛdigo fichero';
+'C√≥digo fichero';
 
 comment on column STG_FICHER.FIC_NOMBRE is
-'Nombre fichero con extensiÛn';
+'Nombre fichero con extensi√≥n';
 
 comment on column STG_FICHER.FIC_PUBLIC is
-'Indica si es p˙blico (accesible desde internet)';
+'Indica si es p√∫blico (accesible desde internet)';
 
 alter table STG_FICHER
    add constraint STG_FICHER_PK primary key (FIC_CODIGO);
@@ -703,26 +699,26 @@ comment on table STG_FORCAM is
 'Campo formulario';
 
 comment on column STG_FORCAM.FCA_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORCAM.FCA_OBLIGA is
 'Obligatorio';
 
 comment on column STG_FORCAM.FCA_LECTUR is
-'SÛlo lectura';
+'S√≥lo lectura';
 
 comment on column STG_FORCAM.FCA_NOMODI is
 'No modificable';
 
 comment on column STG_FORCAM.FCA_SCRAUT is
-'Permite establecer el valor de un campo en funciÛn de otros';
+'Permite establecer el valor de un campo en funci√≥n de otros';
 
 comment on column STG_FORCAM.FCA_SCRSLE is
 'Permite indicar si un campo es de solo lectura
 ';
 
 comment on column STG_FORCAM.FCA_SCRVAL is
-'Permite establecer validaciones personalizadas sobre un campo permitiendo mostrar un mensaje particularizado de error. Este script se ejecutar· al guardar la p·gina.';
+'Permite establecer validaciones personalizadas sobre un campo permitiendo mostrar un mensaje particularizado de error. Este script se ejecutar√° al guardar la p√°gina.';
 
 alter table STG_FORCAM
    add constraint STG_FORCAM_PK primary key (FCA_CODIGO);
@@ -738,10 +734,10 @@ create table STG_FORCHK
 );
 
 comment on table STG_FORCHK is
-'Campo formulario casilla verificaciÛn';
+'Campo formulario casilla verificaci√≥n';
 
 comment on column STG_FORCHK.CCK_CODIGO is
-'CÛdigo elemento';
+'C√≥digo elemento';
 
 comment on column STG_FORCHK.CCK_VALCHK is
 'Valor checked';
@@ -771,7 +767,7 @@ comment on table STG_FORCIN is
 'Campo formulario indexado';
 
 comment on column STG_FORCIN.CIN_CODIGO is
-'CÛdigo elemento';
+'C√≥digo elemento';
 
 comment on column STG_FORCIN.CIN_TIPO is
 'Tipo campo indexado:
@@ -790,13 +786,13 @@ comment on column STG_FORCIN.CIN_DOMCOD is
 'Codigo de dominio';
 
 comment on column STG_FORCIN.CIN_DOMCCD is
-'Campo del dominio que se utilizar· como codigo';
+'Campo del dominio que se utilizar√° como codigo';
 
 comment on column STG_FORCIN.CIN_DOMCDS is
-'Campo del dominio que se utilizar· como descripciÛn';
+'Campo del dominio que se utilizar√° como descripci√≥n';
 
 comment on column STG_FORCIN.CIN_INDICE is
-'Indica si se tiene que mostrar un Ìndice alfabÈtico en los campos de selecciÛn.
+'Indica si se tiene que mostrar un √≠ndice alfab√©tico en los campos de selecci√≥n.
 ';
 
 alter table STG_FORCIN
@@ -833,7 +829,7 @@ comment on table STG_FORCTX is
 'Campo formulario texto';
 
 comment on column STG_FORCTX.CTX_CODIGO is
-'CÛdigo elemento';
+'C√≥digo elemento';
 
 comment on column STG_FORCTX.CTX_OCULTO is
 'Indica si es campo oculto';
@@ -852,22 +848,22 @@ comment on column STG_FORCTX.CTX_TIPO is
 - IMPORTE';
 
 comment on column STG_FORCTX.CTX_NORTAM is
-'TamaÒo (tipo normal)';
+'Tama√±o (tipo normal)';
 
 comment on column STG_FORCTX.CTX_NORMUL is
 'Multilinea (tipo normal)';
 
 comment on column STG_FORCTX.CTX_NORLIN is
-'N˙mero lÌneas (tipo normal)';
+'N√∫mero l√≠neas (tipo normal)';
 
 comment on column STG_FORCTX.CTX_NOREXP is
-'ExpresiÛn regular (tipo normal)';
+'Expresi√≥n regular (tipo normal)';
 
 comment on column STG_FORCTX.CTX_NUMENT is
-'N˙mero dÌgitos enteros (tipo numero)';
+'N√∫mero d√≠gitos enteros (tipo numero)';
 
 comment on column STG_FORCTX.CTX_NUMDEC is
-'N˙mero dÌgitos decimales (tipo numero)';
+'N√∫mero d√≠gitos decimales (tipo numero)';
 
 comment on column STG_FORCTX.CTX_NUMSEP is
 'Separador miles, decimales (tipo numero):
@@ -882,22 +878,22 @@ comment on column STG_FORCTX.CTX_NUMRMX is
 'Permite introducir un rango maximo (tipo numero)';
 
 comment on column STG_FORCTX.CTX_NUMSIG is
-'Indica si se admiten n˙meros con signo (tipo numero)';
+'Indica si se admiten n√∫meros con signo (tipo numero)';
 
 comment on column STG_FORCTX.CTX_IDENIF is
-'Permite nif (tipo identificaciÛn)';
+'Permite nif (tipo identificaci√≥n)';
 
 comment on column STG_FORCTX.CTX_IDECIF is
-'Permite cif (tipo identificaciÛn)';
+'Permite cif (tipo identificaci√≥n)';
 
 comment on column STG_FORCTX.CTX_IDENIE is
-'Permite nie (tipo identificaciÛn)';
+'Permite nie (tipo identificaci√≥n)';
 
 comment on column STG_FORCTX.CTX_IDENSS is
-'Permite nss (tipo identificaciÛn)';
+'Permite nss (tipo identificaci√≥n)';
 
 comment on column STG_FORCTX.CTX_TELMOV is
-'Permite mÛvil (tipo telefono)';
+'Permite m√≥vil (tipo telefono)';
 
 comment on column STG_FORCTX.CTX_TELFIJ is
 'Permite fijo (tipo telefono)';
@@ -931,10 +927,10 @@ comment on table STG_FORELE is
 'Elemento formulario';
 
 comment on column STG_FORELE.FEL_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORELE.FEL_CODFLS is
-'CÛdigo fila';
+'C√≥digo fila';
 
 comment on column STG_FORELE.FEL_IDENTI is
 'Identificador elemento';
@@ -946,7 +942,7 @@ comment on column STG_FORELE.FEL_ORDEN is
 'Orden';
 
 comment on column STG_FORELE.FEL_NUMCOL is
-'N˙mero de columnas ocupadas (max 6)';
+'N√∫mero de columnas ocupadas (max 6)';
 
 comment on column STG_FORELE.FEL_TEXTO is
 'Texto';
@@ -958,7 +954,7 @@ comment on column STG_FORELE.FEL_TEXTNO is
 'No mostrar texto componente';
 
 comment on column STG_FORELE.FEL_TEXTAL is
-'AlineaciÛn texto: Izquierda (I), Centrada (C), Derecha (D)';
+'Alineaci√≥n texto: Izquierda (I), Centrada (C), Derecha (D)';
 
 comment on column STG_FORELE.FEL_LELMOS is
 'Para campos de un componente lista de elementos, indica si sale en la lista';
@@ -982,7 +978,7 @@ comment on table STG_FORETQ is
 'Etiqueta';
 
 comment on column STG_FORETQ.ETI_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORETQ.ETI_TIPETI is
 'Tipo etiqueta: Normal (N) / Info (I) / Warning (W) / Error (E)';
@@ -1004,13 +1000,13 @@ comment on table STG_FORFMT is
 'Formateadores formulario';
 
 comment on column STG_FORFMT.FMT_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORFMT.FMT_CLASS is
 'Classname del formateador';
 
 comment on column STG_FORFMT.FMT_DESCRI is
-'DescripciÛn del formateador';
+'Descripci√≥n del formateador';
 
 alter table STG_FORFMT
    add constraint STG_FORFMT_PK primary key (FMT_CODIGO);
@@ -1028,7 +1024,7 @@ comment on table STG_FORIMG is
 'Imagen formulario';
 
 comment on column STG_FORIMG.FIM_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORIMG.FIM_CODFIC is
 'Fichero imagen';
@@ -1049,10 +1045,10 @@ comment on table STG_FORLEL is
 'Componente lista de elementos';
 
 comment on column STG_FORLEL.LEL_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORLEL.LEL_CODPAF is
-'CÛdigo p·gina asociada';
+'C√≥digo p√°gina asociada';
 
 alter table STG_FORLEL
    add constraint STG_FORLEL_PK primary key (LEL_CODIGO);
@@ -1068,13 +1064,13 @@ create table STG_FORLI
 );
 
 comment on table STG_FORLI is
-'Linea secciÛn formulario';
+'Linea secci√≥n formulario';
 
 comment on column STG_FORLI.FLS_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORLI.FLS_CODPAF is
-'CÛdigo p·gina';
+'C√≥digo p√°gina';
 
 comment on column STG_FORLI.FLS_ORDEN is
 'Orden';
@@ -1099,7 +1095,7 @@ comment on table STG_FORMUL is
 'Formularios internos';
 
 comment on column STG_FORMUL.FOR_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORMUL.FOR_ACCPER is
 'Permitir acciones personalizadas';
@@ -1108,7 +1104,7 @@ comment on column STG_FORMUL.FOR_SCRPLT is
 'Script para permitir indicar que plantilla usar';
 
 comment on column STG_FORMUL.FOR_CABFOR is
-'Indica si se establece cabecera formulario (logo + tÌtulo)';
+'Indica si se establece cabecera formulario (logo + t√≠tulo)';
 
 comment on column STG_FORMUL.FOR_CABLOG is
 'Logo cabecera';
@@ -1133,25 +1129,25 @@ create table STG_FORPAG
 );
 
 comment on table STG_FORPAG is
-'P·gina formulario';
+'P√°gina formulario';
 
 comment on column STG_FORPAG.PAF_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORPAG.PAF_CODFOR is
-'CÛdigo formulario';
+'C√≥digo formulario';
 
 comment on column STG_FORPAG.PAF_SCRVAL is
-'Script de validaciÛn (permite establecer siguiente p·gina)';
+'Script de validaci√≥n (permite establecer siguiente p√°gina)';
 
 comment on column STG_FORPAG.PAF_ORDEN is
 'Orden';
 
 comment on column STG_FORPAG.PAF_PAGFIN is
-'Indica si es p·gina final';
+'Indica si es p√°gina final';
 
 comment on column STG_FORPAG.PAF_PAGLEL is
-'Indica si una p·gina asociada a un componente lista de elementos';
+'Indica si una p√°gina asociada a un componente lista de elementos';
 
 alter table STG_FORPAG
    add constraint STG_FORPAG_PK primary key (PAF_CODIGO);
@@ -1171,16 +1167,16 @@ comment on table STG_FORPLI is
 'Plantilla idioma formulario';
 
 comment on column STG_FORPLI.PLI_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORPLI.PLI_CODPLT is
-'CÛdigo plantilla';
+'C√≥digo plantilla';
 
 comment on column STG_FORPLI.PLI_CODIDI is
 'Identificador idioma';
 
 comment on column STG_FORPLI.PLI_CODFIC is
-'CÛdigo fichero';
+'C√≥digo fichero';
 
 alter table STG_FORPLI
    add constraint STG_FORPLI_PK primary key (PLI_CODIGO);
@@ -1201,16 +1197,16 @@ comment on table STG_FORPLT is
 'Plantillas formulario';
 
 comment on column STG_FORPLT.PLT_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORPLT.PLT_CODFOR is
-'CÛdigo formulario';
+'C√≥digo formulario';
 
 comment on column STG_FORPLT.PLT_CODFMT is
-'CÛdigo formateador';
+'C√≥digo formateador';
 
 comment on column STG_FORPLT.PLT_DESCRI is
-'DescripciÛn';
+'Descripci√≥n';
 
 comment on column STG_FORPLT.PLT_DEFECT is
 'Plantilla por defecto';
@@ -1232,13 +1228,13 @@ comment on table STG_FORSEC is
 'Secciones formulario';
 
 comment on column STG_FORSEC.FSE_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORSEC.FSE_ORDEN is
 'Orden';
 
 comment on column STG_FORSEC.FSE_LETRA is
-'Letra de la secciÛn';
+'Letra de la secci√≥n';
 
 alter table STG_FORSEC
    add constraint STG_FORSEC_PK primary key (FSE_CODIGO);
@@ -1260,16 +1256,16 @@ comment on table STG_FORSOP is
 'Formulario soporte para incidencias';
 
 comment on column STG_FORSOP.FSO_CODIGO is
-'CÛdigo interno';
+'C√≥digo interno';
 
 comment on column STG_FORSOP.FSO_CODENT is
-'CÛdigo interno';
+'C√≥digo interno';
 
 comment on column STG_FORSOP.FSO_TIPINC is
 'Literal tipo incidencia';
 
 comment on column STG_FORSOP.FSO_DSCTIP is
-'Literal descripciÛn tipo incidencia';
+'Literal descripci√≥n tipo incidencia';
 
 comment on column STG_FORSOP.FSO_TIPDST is
 'Tipo destinatario (R: responsable incidencias / E: lista emails)';
@@ -1305,19 +1301,19 @@ create table STG_FORTRA
 );
 
 comment on table STG_FORTRA is
-'Formulario tr·mite';
+'Formulario tr√°mite';
 
 comment on column STG_FORTRA.FTR_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_FORTRA.FTR_IDENTI is
 'Identificador del formulario';
 
 comment on column STG_FORTRA.FTR_DESCRIP is
-'DescripciÛn formulario';
+'Descripci√≥n formulario';
 
 comment on column STG_FORTRA.FTR_TIPO is
-'Tipo: formulario tr·mite (T) o formulario captura (C)';
+'Tipo: formulario tr√°mite (T) o formulario captura (C)';
 
 comment on column STG_FORTRA.FTR_ORDEN is
 'Orden';
@@ -1335,7 +1331,7 @@ comment on column STG_FORTRA.FTR_FIRDIG is
 'Indica si se debe firmar digitalmente (para formulario tipo Tramite)';
 
 comment on column STG_FORTRA.FTR_SCRFIR is
-'Permite establecer quiÈn debe firmar el formulario (para formulario tramite)';
+'Permite establecer qui√©n debe firmar el formulario (para formulario tramite)';
 
 comment on column STG_FORTRA.FTR_PREREG is
 'Indica si se debe presentar en preregistro';
@@ -1347,7 +1343,7 @@ comment on column STG_FORTRA.FTR_SCRPAR is
 'Permite establecer parametros cada vez que se acceda al formulario';
 
 comment on column STG_FORTRA.FTR_SCRRET is
-'Este script se ejecutar· tras el retorno del gestor de formulario y permitir·:  
+'Este script se ejecutar√° tras el retorno del gestor de formulario y permitir√°:  
 - validar el formulario tras el retorno del gestor de formulario  
 - alimentar datos de los otros formularios y cambiar su estado. ';
 
@@ -1355,7 +1351,7 @@ comment on column STG_FORTRA.FTR_TIPFOR is
 'Indica tipo formulario: interno (I)  / externo (E)';
 
 comment on column STG_FORTRA.FTR_CODFOR is
-'CÛdigo formulario gestor interno (si es interno)';
+'C√≥digo formulario gestor interno (si es interno)';
 
 comment on column STG_FORTRA.FTR_FEXGST is
 'Gestor formulario externo (si es externo)';
@@ -1386,19 +1382,19 @@ comment on column STG_FUEDAT.FUE_CODIGO is
 'Codigo interno';
 
 comment on column STG_FUEDAT.FUE_AMBITO is
-'Ambito fuente datos (G : Global / E: Entidad / A: ¡rea)';
+'Ambito fuente datos (G : Global / E: Entidad / A: √Årea)';
 
 comment on column STG_FUEDAT.FUE_IDENT is
 'Identificador fuente de datos';
 
 comment on column STG_FUEDAT.FUE_DESCR is
-'DescripciÛn fuente de datos';
+'Descripci√≥n fuente de datos';
 
 comment on column STG_FUEDAT.FUE_CODENT is
-'CÛdigo entidad';
+'C√≥digo entidad';
 
 comment on column STG_FUEDAT.FUE_CODARE is
-'CÛdigo ·rea';
+'C√≥digo √°rea';
 
 alter table STG_FUEDAT
    add constraint STG_FUEDAT_PK primary key (FUE_CODIGO);
@@ -1426,16 +1422,16 @@ comment on table STG_GESFOR is
 'Gestor formularios externos';
 
 comment on column STG_GESFOR.GFE_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_GESFOR.GFE_CODENT is
-'CÛdigo entidad';
+'C√≥digo entidad';
 
 comment on column STG_GESFOR.GFE_IDENTI is
 'Identificador';
 
 comment on column STG_GESFOR.GFE_DESCR is
-'DescripciÛn';
+'Descripci√≥n';
 
 comment on column STG_GESFOR.GFE_URL is
 'Url acceso gestor formularios';
@@ -1465,22 +1461,22 @@ create table STG_HISVER
 );
 
 comment on table STG_HISVER is
-'Historial versiÛn';
+'Historial versi√≥n';
 
 comment on column STG_HISVER.HVE_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_HISVER.HVE_CODVTR is
-'CÛdigo versiÛn tr·mite';
+'C√≥digo versi√≥n tr√°mite';
 
 comment on column STG_HISVER.HVE_FECHA is
 'Fecha';
 
 comment on column STG_HISVER.HVE_ACCION is
-'Tipo acciÛn: C (CreaciÛn) / M (ModificaciÛn) / I (ImportaciÛn)';
+'Tipo acci√≥n: C (Creaci√≥n) / M (Modificaci√≥n) / I (Importaci√≥n)';
 
 comment on column STG_HISVER.HVE_RELEAS is
-'Release versiÛn';
+'Release versi√≥n';
 
 comment on column STG_HISVER.HVE_CAMBIO is
 'Detalle cambio';
@@ -1525,16 +1521,16 @@ comment on table STG_LFVCIN is
 'Para campo indexado de lista valores fija especifica la lista de valores';
 
 comment on column STG_LFVCIN.LFV_CODIGO is
-'CÛdigo valor';
+'C√≥digo valor';
 
 comment on column STG_LFVCIN.LFV_CODCIN is
-'CÛdigo elemento';
+'C√≥digo elemento';
 
 comment on column STG_LFVCIN.LFV_VALOR is
 'Valor';
 
 comment on column STG_LFVCIN.LFV_DESCRIP is
-'DescripciÛn';
+'Descripci√≥n';
 
 comment on column STG_LFVCIN.LFV_DEFECT is
 'Valor por defecto';
@@ -1574,10 +1570,10 @@ comment on column STG_LITSCR.LSC_CODSCR is
 'Codigo del Script';
 
 comment on column STG_LITSCR.LSC_IDENTI is
-'IdentificaciÛn del literal';
+'Identificaci√≥n del literal';
 
 comment on column STG_LITSCR.LSC_CODTRA is
-'CÛdigo traducciÛn';
+'C√≥digo traducci√≥n';
 
 alter table STG_LITSCR
    add constraint STG_LITSCR_PK primary key (LSC_CODIGO);
@@ -1609,19 +1605,19 @@ create table STG_PAGTRA
 );
 
 comment on table STG_PAGTRA is
-'Pago tr·mite';
+'Pago tr√°mite';
 
 comment on column STG_PAGTRA.PAG_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_PAGTRA.PAG_CODPTR is
-'CÛdigo paso tramitaciÛn';
+'C√≥digo paso tramitaci√≥n';
 
 comment on column STG_PAGTRA.PAG_IDENTI is
 'Codigo del documento de pago';
 
 comment on column STG_PAGTRA.PAG_DESCRIP is
-'DescripciÛn anexo';
+'Descripci√≥n anexo';
 
 comment on column STG_PAGTRA.PAG_ORDEN is
 'Orden';
@@ -1639,10 +1635,10 @@ comment on column STG_PAGTRA.PAG_PLUGIN is
 'Tipo plugin a emplear';
 
 comment on column STG_PAGTRA.PAG_SCRDPG is
-'Permite establecer din·micamente los datos del pago';
+'Permite establecer din√°micamente los datos del pago';
 
 comment on column STG_PAGTRA.PAG_TIPO is
-'Tipo: T (Telem·tico) / P (Presencial) / A (Ambos). Depender· del tipo de plugin.';
+'Tipo: T (Telem√°tico) / P (Presencial) / A (Ambos). Depender√° del tipo de plugin.';
 
 comment on column STG_PAGTRA.PAG_SIMULA is
 'Indica que el pago es simulado.';
@@ -1671,10 +1667,10 @@ comment on table STG_PASANE is
 'Paso anexar';
 
 comment on column STG_PASANE.PAN_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_PASANE.PAN_SCRDIN is
-'Script para anexos din·micos';
+'Script para anexos din√°micos';
 
 alter table STG_PASANE
    add constraint STG_PASANE_PK primary key (PAN_CODIGO);
@@ -1692,10 +1688,10 @@ comment on table STG_PASCAP is
 'Paso captura';
 
 comment on column STG_PASCAP.PCA_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_PASCAP.PCA_CODFOR is
-'CÛdigo';
+'C√≥digo';
 
 alter table STG_PASCAP
    add constraint STG_PASCAP_PK primary key (PCA_CODIGO);
@@ -1713,7 +1709,7 @@ comment on table STG_PASDBS is
 'Paso debe saber';
 
 comment on column STG_PASDBS.PDB_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_PASDBS.PDB_INSINI is
 'Instrucciones inicio (HTML)';
@@ -1732,10 +1728,10 @@ create table STG_PASINF
 );
 
 comment on table STG_PASINF is
-'Paso informaciÛn';
+'Paso informaci√≥n';
 
 comment on column STG_PASINF.PIN_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_PASINF.PIN_SCRDAT is
 'Script datos';
@@ -1763,22 +1759,22 @@ create table STG_PASOTR
 );
 
 comment on table STG_PASOTR is
-'Paso tramitaciÛn';
+'Paso tramitaci√≥n';
 
 comment on column STG_PASOTR.PTR_CODIGO is
-'CÛdigo paso tramitaciÛn';
+'C√≥digo paso tramitaci√≥n';
 
 comment on column STG_PASOTR.PTR_CODVTR is
-'CÛdigo versiÛn tr·mite';
+'C√≥digo versi√≥n tr√°mite';
 
 comment on column STG_PASOTR.PTR_TIPPTR is
-'Tipo del paso de tramitaciÛn';
+'Tipo del paso de tramitaci√≥n';
 
 comment on column STG_PASOTR.PTR_IDEPTR is
-'Identificador paso tramitaciÛn. Para flujo normalizado ser· establecido autom·ticamente, para flujo personalizado ser· establecido por desarrollador.';
+'Identificador paso tramitaci√≥n. Para flujo normalizado ser√° establecido autom√°ticamente, para flujo personalizado ser√° establecido por desarrollador.';
 
 comment on column STG_PASOTR.PTR_DESCRI is
-'DescripciÛn del paso de tramitaciÛn. En flujo normalizado ser· establecido autom·ticamente.';
+'Descripci√≥n del paso de tramitaci√≥n. En flujo normalizado ser√° establecido autom√°ticamente.';
 
 comment on column STG_PASOTR.PTR_ORDEN is
 'Orden paso';
@@ -1787,7 +1783,7 @@ comment on column STG_PASOTR.PTR_FINAL is
 'Indica que paso es final';
 
 comment on column STG_PASOTR.PTR_SCRNVG is
-'Para flujo personalizado permite establecer script navegaciÛn';
+'Para flujo personalizado permite establecer script navegaci√≥n';
 
 comment on column STG_PASOTR.PTR_SCRVAR is
 'Para flujo personalizado permite almacenamiento de variables a usar entre pasos';
@@ -1815,7 +1811,7 @@ comment on table STG_PASPAG is
 'Paso pagos';
 
 comment on column STG_PASPAG.PPG_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 alter table STG_PASPAG
    add constraint STG_PASPAG_PK primary key (PPG_CODIGO);
@@ -1843,34 +1839,34 @@ comment on table STG_PASREG is
 'Paso registrar';
 
 comment on column STG_PASREG.PRG_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_PASREG.PRG_REGOFI is
-'CÛdigo oficina registro';
+'C√≥digo oficina registro';
 
 comment on column STG_PASREG.PRG_REGLIB is
-'CÛdigo libro registro';
+'C√≥digo libro registro';
 
 comment on column STG_PASREG.PRG_REGASU is
-'CÛdigo tipo asunto';
+'C√≥digo tipo asunto';
 
 comment on column STG_PASREG.PRG_SCRREG is
 'Script destino registro';
 
 comment on column STG_PASREG.PRG_INSPRE is
-'Instrucciones presentaciÛn';
+'Instrucciones presentaci√≥n';
 
 comment on column STG_PASREG.PRG_INSFIT is
-'Instrucciones fin tramitaciÛn';
+'Instrucciones fin tramitaci√≥n';
 
 comment on column STG_PASREG.PRG_SCRPRE is
 'Script presentador';
 
 comment on column STG_PASREG.PRG_REPADM is
-'Indica si admite representaciÛn';
+'Indica si admite representaci√≥n';
 
 comment on column STG_PASREG.PRG_REPVAL is
-'Indica si valida representaciÛn';
+'Indica si valida representaci√≥n';
 
 comment on column STG_PASREG.PRG_SCRREP is
 'Script representante';
@@ -1893,7 +1889,7 @@ comment on table STG_PASREL is
 'Paso rellenar';
 
 comment on column STG_PASREL.PRL_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 alter table STG_PASREL
    add constraint STG_PASREL_PK primary key (PRL_CODIGO);
@@ -1914,24 +1910,24 @@ create table STG_PLUGIN
 );
 
 comment on table STG_PLUGIN is
-'Plugins de conexiÛn con otros sistemas';
+'Plugins de conexi√≥n con otros sistemas';
 
 comment on column STG_PLUGIN.PLG_CODIGO is
 'Codigo';
 
 comment on column STG_PLUGIN.PLG_AMBITO is
-'¡mbito: G (Global) , E (Entidad)';
+'√Åmbito: G (Global) , E (Entidad)';
 
 comment on column STG_PLUGIN.PLG_CODENT is
-'CÛdigo entidad (Ambito entidad)';
+'C√≥digo entidad (Ambito entidad)';
 
 comment on column STG_PLUGIN.PLG_TIPO is
 'Tipo plugin:  
-  - Global:  LOG: Login, REP: RepresentaciÛn, DOM: Dominios remotos, FIR: Firma
+  - Global:  LOG: Login, REP: Representaci√≥n, DOM: Dominios remotos, FIR: Firma
   - Entidad: PRO: Catalogo procedimientos, REG: Registro, PAG: Pagos';
 
 comment on column STG_PLUGIN.PLG_DESCR is
-'DescripciÛn plugin';
+'Descripci√≥n plugin';
 
 comment on column STG_PLUGIN.PLG_CLASS is
 'Clase implementadora';
@@ -1958,22 +1954,22 @@ create table STG_PRDCIN
 );
 
 comment on table STG_PRDCIN is
-'Para campo indexado de tipo dominio especifica par·metros dominio ';
+'Para campo indexado de tipo dominio especifica par√°metros dominio ';
 
 comment on column STG_PRDCIN.CIP_CODIGO is
-'CÛdigo interno';
+'C√≥digo interno';
 
 comment on column STG_PRDCIN.CIP_CODCIN is
-'CÛdigo campo indexado';
+'C√≥digo campo indexado';
 
 comment on column STG_PRDCIN.CIP_TIPO is
-'Tipo par·metro: constante, campo, par·metro apertura, etc.';
+'Tipo par√°metro: constante, campo, par√°metro apertura, etc.';
 
 comment on column STG_PRDCIN.CIP_VALOR is
-'Valor par·metro';
+'Valor par√°metro';
 
 comment on column STG_PRDCIN.CIP_PARAM is
-'Par·metro dominio';
+'Par√°metro dominio';
 
 alter table STG_PRDCIN
    add constraint STG_PRDCIN_PK primary key (CIP_CODIGO);
@@ -1991,13 +1987,39 @@ comment on table STG_PRLFTR is
 'Formularios paso rellenar';
 
 comment on column STG_PRLFTR.FPR_CODPRL is
-'CÛdigo paso rellenar';
+'C√≥digo paso rellenar';
 
 comment on column STG_PRLFTR.FPR_CODFOR is
-'CÛdigo paso formulario';
+'C√≥digo paso formulario';
 
 alter table STG_PRLFTR
    add constraint STG_PRLFTR_PK primary key (FPR_CODPRL, FPR_CODFOR);
+
+/*==============================================================*/
+/* Table: STG_PROCES                                            */
+/*==============================================================*/
+create table STG_PROCES 
+(
+   PROC_IDENT           VARCHAR2(20)         not null,
+   PROC_INSTAN          VARCHAR2(50),
+   PROC_FECHA           DATE
+);
+
+comment on table STG_PROCES is
+'Control ejecuci√≥n procesos background.
+Para que una sola instancia se autoconfigure como maestro.';
+
+comment on column STG_PROCES.PROC_IDENT is
+'Identificador fijo';
+
+comment on column STG_PROCES.PROC_INSTAN is
+'Id instancia';
+
+comment on column STG_PROCES.PROC_FECHA is
+'Fecha ultima verificaci√≥n';
+
+alter table STG_PROCES
+   add constraint STG_PROCES_PK primary key (PROC_IDENT);
 
 /*==============================================================*/
 /* Table: STG_ROLARE                                            */
@@ -2012,42 +2034,38 @@ create table STG_ROLARE
    RLA_PERALT           NUMBER(1)            default 0 not null,
    RLA_PERMOD           NUMBER(1)            default 0 not null,
    RLA_PERCON           NUMBER(1)            default 0 not null,
-   RLA_PERHLP           NUMBER(1)            default 0 not null,
-   RLA_PERDOM           NUMBER(1)            default 0 not null
+   RLA_PERHLP           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_ROLARE is
-'Roles ·rea';
+'Roles √°rea';
 
 comment on column STG_ROLARE.RLA_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_ROLARE.RLA_CODARE is
-'CÛdigo ·rea';
+'C√≥digo √°rea';
 
 comment on column STG_ROLARE.RLA_TIPO is
 'Tipo: R (Role) / U (Usuario)';
 
 comment on column STG_ROLARE.RLA_VALOR is
-'Para Role el cÛdigo de Role, para Usuario el NIF del usuario';
+'Para Role el c√≥digo de Role, para Usuario el NIF del usuario';
 
 comment on column STG_ROLARE.RLA_DESCR is
-'DescripciÛn';
+'Descripci√≥n';
 
 comment on column STG_ROLARE.RLA_PERALT is
-'Permiso alta-baja tr·mites';
+'Permiso alta-baja tr√°mites';
 
 comment on column STG_ROLARE.RLA_PERMOD is
-'Permiso modificaciÛn tr·mites';
+'Permiso modificaci√≥n tr√°mites';
 
 comment on column STG_ROLARE.RLA_PERCON is
-'Permiso consulta tr·mites';
+'Permiso consulta tr√°mites';
 
 comment on column STG_ROLARE.RLA_PERHLP is
 'Permiso acceso helpdesk';
-
-comment on column STG_ROLARE.RLA_PERDOM is
-'Permiso gestiÛn dominios ·rea';
 
 alter table STG_ROLARE
    add constraint STG_ROLARE_PK primary key (RLA_CODIGO);
@@ -2060,7 +2078,7 @@ create table STG_SCRIPT
    SCR_CODIGO           NUMBER(18)           not null,
    SCR_SCRIPT           CLOB
 )
-TABLESPACE SISTRAGES_DADES
+TABLESPACE SISTRAGES
    LOB (SCR_SCRIPT) STORE AS STG_SCRIPT_SCRIPT_LOB
 	 (TABLESPACE SISTRAGES_LOB
 	 INDEX STG_SCRIPT_SCRIPT_LOB_I);
@@ -2069,7 +2087,7 @@ comment on table STG_SCRIPT is
 'Scripts';
 
 comment on column STG_SCRIPT.SCR_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_SCRIPT.SCR_SCRIPT is
 'Script';
@@ -2089,16 +2107,16 @@ create table STG_TIPPTR
 );
 
 comment on table STG_TIPPTR is
-'Tipos de paso de tramitaciÛn:
+'Tipos de paso de tramitaci√≥n:
 
 Debe saber
-InformaciÛn en paso de debe saber
+Informaci√≥n en paso de debe saber
 
 Rellenar formularios    
 Paso que permite rellenar de 1 a n formularios. Muestra pantalla con la lista de formularios a completar.
 
 Capturar datos
-Paso que permite capturar datos a travÈs de un formulario.
+Paso que permite capturar datos a trav√©s de un formulario.
 
 Anexar documentos
 Paso que permite anexar 1 a n documentos binarios
@@ -2106,21 +2124,21 @@ Paso que permite anexar 1 a n documentos binarios
 Pagar tasas
 Paso que permite realizar el pago de tasas
 
-InformaciÛn
-Paso que permite mostrar una pantalla informativa calculando din·micamente los datos a mostrar.
+Informaci√≥n
+Paso que permite mostrar una pantalla informativa calculando din√°micamente los datos a mostrar.
 
-Registrar tr·mite
-Paso que permite realizar el registro del tr·mite una vez se completen los pasos requeridos.
-DespuÈs de este paso no podr· haber m·s pasos.';
+Registrar tr√°mite
+Paso que permite realizar el registro del tr√°mite una vez se completen los pasos requeridos.
+Despu√©s de este paso no podr√° haber m√°s pasos.';
 
 comment on column STG_TIPPTR.TIP_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_TIPPTR.TIP_PASO is
 'Identificador tipo de paso';
 
 comment on column STG_TIPPTR.TIP_DESCOR is
-'DescripciÛn corta';
+'Descripci√≥n corta';
 
 comment on column STG_TIPPTR.TIP_ORDEN is
 'Orden, si forman parte del flujo normal';
@@ -2147,7 +2165,7 @@ comment on table STG_TRADUC is
 'Tabla de literales multidioma';
 
 comment on column STG_TRADUC.TRA_CODIGO is
-'CÛdigo interno';
+'C√≥digo interno';
 
 alter table STG_TRADUC
    add constraint STG_TRADUC_PK primary key (TRA_CODIGO);
@@ -2164,13 +2182,13 @@ create table STG_TRAIDI
 );
 
 comment on table STG_TRAIDI is
-'TraducciÛn literales';
+'Traducci√≥n literales';
 
 comment on column STG_TRAIDI.TRI_CODIGO is
-'CÛdigo interno';
+'C√≥digo interno';
 
 comment on column STG_TRAIDI.TRI_CODTRA is
-'CÛdigo traducciÛn';
+'C√≥digo traducci√≥n';
 
 comment on column STG_TRAIDI.TRI_LITERA is
 'Literal';
@@ -2196,16 +2214,16 @@ comment on table STG_TRAMIT is
 'Tramites';
 
 comment on column STG_TRAMIT.TRM_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_TRAMIT.TRM_CODARE is
-'CÛdigo ·rea';
+'C√≥digo √°rea';
 
 comment on column STG_TRAMIT.TRM_IDENTI is
-'Identificador tr·mite';
+'Identificador tr√°mite';
 
 comment on column STG_TRAMIT.TRM_DESCR is
-'DescripciÛn';
+'Descripci√≥n';
 
 alter table STG_TRAMIT
    add constraint STG_TRAMIT_PK primary key (TRM_CODIGO);
@@ -2280,16 +2298,16 @@ create table STG_VERTRA
 );
 
 comment on table STG_VERTRA is
-'VersiÛn tr·mite';
+'Versi√≥n tr√°mite';
 
 comment on column STG_VERTRA.VTR_CODIGO is
-'CÛdigo';
+'C√≥digo';
 
 comment on column STG_VERTRA.VTR_CODTRM is
-'CÛdigo tr·mite';
+'C√≥digo tr√°mite';
 
 comment on column STG_VERTRA.VTR_NUMVER is
-'N˙mero versiÛn';
+'N√∫mero versi√≥n';
 
 comment on column STG_VERTRA.VTR_TIPFLU is
 'Tipo de flujo; Normal (N) / Personalizado (P)';
@@ -2313,28 +2331,28 @@ comment on column STG_VERTRA.VTR_PERINF is
 'En caso de admitir persistencia indica si es infinita';
 
 comment on column STG_VERTRA.VTR_PERDIA is
-'En caso de admitir persistencia y no ser infinita se indican los dÌas de persistencia';
+'En caso de admitir persistencia y no ser infinita se indican los d√≠as de persistencia';
 
 comment on column STG_VERTRA.VTR_SCRPER is
-'Script de personalizacion. Se ejecuta al cargar tr·mite (inicio o retomar desde persistencia)';
+'Script de personalizacion. Se ejecuta al cargar tr√°mite (inicio o retomar desde persistencia)';
 
 comment on column STG_VERTRA.VTR_SCRINTRA is
-'Script inicializaciÛn tr·mite. Se ejecuta al iniciar un tr·mite.';
+'Script inicializaci√≥n tr√°mite. Se ejecuta al iniciar un tr√°mite.';
 
 comment on column STG_VERTRA.VTR_BLOQ is
-'VersiÛn bloqueada';
+'Versi√≥n bloqueada';
 
 comment on column STG_VERTRA.VTR_BLOQID is
-'IdentificaciÛn del usuario que bloquea la versiÛn';
+'Identificaci√≥n del usuario que bloquea la versi√≥n';
 
 comment on column STG_VERTRA.VTR_BLOQUS is
-'Nombre y apellidos del usuario que bloquea la versiÛn';
+'Nombre y apellidos del usuario que bloquea la versi√≥n';
 
 comment on column STG_VERTRA.VTR_RELEAS is
-'Realease actual, se crea al desbloquear la versiÛn';
+'Realease actual, se crea al desbloquear la versi√≥n';
 
 comment on column STG_VERTRA.VTR_ACTIVO is
-'Indica si la versiÛn est· activa';
+'Indica si la versi√≥n est√° activa';
 
 comment on column STG_VERTRA.VTR_DEBUG is
 'Indica si esta habilitado el debug del tramite';
@@ -2343,22 +2361,22 @@ comment on column STG_VERTRA.VTR_LIMTIP is
 'Liimite tramitacion: N, I (sin limite, iniciados x intervalo, ...)';
 
 comment on column STG_VERTRA.VTR_LIMNUM is
-'Limite tramitacion: n˙mero x intervalo';
+'Limite tramitacion: n√∫mero x intervalo';
 
 comment on column STG_VERTRA.VTR_LIMINT is
 'Limite tramitacion: minutos intervalo';
 
 comment on column STG_VERTRA.VTR_DESPLZ is
-'Indica si se activa un plazo de desactivaciÛn temporal';
+'Indica si se activa un plazo de desactivaci√≥n temporal';
 
 comment on column STG_VERTRA.VTR_DESINI is
-'Plazo inicio desactivaciÛn';
+'Plazo inicio desactivaci√≥n';
 
 comment on column STG_VERTRA.VTR_DESFIN is
-'Plazo fin desactivaciÛn';
+'Plazo fin desactivaci√≥n';
 
 comment on column STG_VERTRA.VTR_DESMEN is
-'Mensaje desactivaciÛn';
+'Mensaje desactivaci√≥n';
 
 alter table STG_VERTRA
    add constraint STG_VERTRA_PK primary key (VTR_CODIGO);
