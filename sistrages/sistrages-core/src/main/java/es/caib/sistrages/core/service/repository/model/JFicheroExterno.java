@@ -33,6 +33,7 @@ public class JFicheroExterno implements IModelApi {
 	private boolean borrar;
 
 	public JFicheroExterno() {
+		super();
 	}
 
 	public String getReferenciaExterna() {

@@ -36,16 +36,16 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, w25px" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<p:outputLabel value="#{msg['dialogFuente.headerCodigo']}" />
-			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" disabled="#{!dialogFuente.isAlta()}" required="true"/>
+			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" disabled="#{!dialogFuente.alta}" required="true" maxlength="20"/>
 				<p:outputLabel value="" />
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogFuente.headerDescripcion']}" />
-				<p:inputTextarea id="descripcion" value="#{dialogFuente.data.descripcion}" disabled="#{dialogFuente.isConsulta()}" required="true" rows="4" cols="40" style="width:95%" />
+				<p:inputTextarea id="descripcion" value="#{dialogFuente.data.descripcion}" disabled="#{dialogFuente.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
 				<p:outputLabel value="" />
 
 				<p:outputLabel value="#{msg['dialogFuente.headerCampos']}" />
 				<p:dataTable  id="dataTableParametros"
-												 var="td"
+												 var="td" emptyMessage="#{msg['error.emptyRows']}"
 												 value="#{dialogFuente.data.campos}"
 												 width="100%"
 												 height="100%"
@@ -55,8 +55,7 @@
 												 paginator="false"
 												 selection="#{dialogFuente.valorSeleccionado}"
 												 selectionMode="single"
-												 rowKey="#{td.codigo}"
-												 dblClickSelect="true">
+												 rowKey="#{td.codigo}">
 
 										<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
 										<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
@@ -100,13 +99,13 @@
 
 			<h:outputScript >
 			      function rcEditarPropiedad() {
-			        document.getElementById("form:btnEditarPropiedad").click();
+			        document.getElementById("dialogFuenteDatos:btnEditarPropiedad").click();
 			      }
 			      function rcEditarValor() {
-			        document.getElementById("form:btnEditarPropiedad").click();
+			        document.getElementById("dialogFuenteDatos:btnEditarPropiedad").click();
 			      }
 			      function  rcBorrarPropiedad() {
-			        document.getElementById("form:btnEliminarPropiedad").click();
+			        document.getElementById("dialogFuenteDatos:btnEliminarPropiedad").click();
 			      }
 		    </h:outputScript>
 

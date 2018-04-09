@@ -142,6 +142,7 @@ public class PluginsDaoImpl implements PluginsDao {
 	 *            filtro
 	 * @return lista de plugins
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Plugin> listarPlugins(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
 		final List<Plugin> listaPlugin = new ArrayList<>();
 

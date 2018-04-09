@@ -34,6 +34,7 @@ public interface AvisoEntidadService {
 	 *
 	 * @param id
 	 *            el identificador
+	 * @return true, si se realiza correctamente
 	 */
 	boolean removeAvisoEntidad(Long id);
 

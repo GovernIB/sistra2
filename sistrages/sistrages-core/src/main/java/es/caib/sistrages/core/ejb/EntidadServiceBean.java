@@ -91,4 +91,16 @@ public class EntidadServiceBean implements EntidadService {
 		entidadService.updateEntidadSuperAdministrador(entidad);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.sistrages.core.api.service.EntidadService#
+	 * updateEntidadAdministradorEntidad(es.caib.sistrages.core.api.model.Entidad)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void updateEntidadAdministradorEntidad(final Entidad entidad) {
+		entidadService.updateEntidadAdministradorEntidad(entidad);
+	}
+
 }

@@ -25,10 +25,11 @@ public enum TypeRoleUser {
 	/**
 	 * Convierte un string en enumerado.
 	 *
-	 * @param tipo
-	 * @return
+	 * @param text
+	 *            tipo
+	 * @return TypeRoleUser
 	 */
-	public static TypeRoleUser toEnum(final String text) {
+	public static TypeRoleUser fromString(final String text) {
 		TypeRoleUser respuesta = null;
 		if (text != null) {
 			for (final TypeRoleUser b : TypeRoleUser.values()) {

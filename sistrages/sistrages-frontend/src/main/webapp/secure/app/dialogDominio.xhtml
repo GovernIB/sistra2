@@ -38,10 +38,10 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta}" required="true"/>
+				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta}" required="true" maxlength="20"/>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
-				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" style="width:95%" />
+				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
 
 				<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
 				<p:column>
@@ -64,13 +64,13 @@
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30"  />
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30" maxlength="500"/>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
 						<p:column id="columnaBBDD2" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" style="margin-right:20px"  />
-							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" />
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" maxlength="2000"/>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -132,7 +132,7 @@
 								<p:outputLabel for="urlRemoto" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}"  />
 							</p>
 							<p>
-								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="40"  />
+								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="40"  maxlength="500"/>
 							</p>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />

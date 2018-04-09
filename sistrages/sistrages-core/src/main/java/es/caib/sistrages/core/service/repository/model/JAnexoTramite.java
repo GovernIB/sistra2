@@ -92,6 +92,7 @@ public class JAnexoTramite implements IModelApi {
 	private boolean anexarFirmado;
 
 	public JAnexoTramite() {
+		super();
 	}
 
 	public Long getCodigo() {

@@ -11,81 +11,65 @@
 
 
 	<ui:define name="content">
-		<h:form id="form" style="height: 100%"  enctype="multipart/form-data">
+
+		<h:form id="form" styleClass="h100">
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
-				<p:panel header="#{msg['viewConfiguracionEntidad.gestorTramits.titulo']}" style="width: 100%" columnClasses="w25 right-alignment, w75 left-alignment">
-			        <h:panelGrid columns="2" cellpadding="10">
+			<p:panel header="#{msg['viewConfiguracionEntidad.gestorTramits.titulo']}" columnClasses="w25 right-alignment, w75 left-alignment">
+		        <h:panelGrid columns="2" cellpadding="10">
+		            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
+		           	<p:column>
+		           		<h:outputText value="#{empty viewConfiguracionEntidad.data.logoGestor?msg['error.noseleccionadofitxer']:viewConfiguracionEntidad.data.logoGestor.nombre}" />
+		           		<p:spacer width="40" height="1"/>
+		        	</p:column>
+		        </h:panelGrid>
+		    </p:panel>
 
-			            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
-			           	<p:column>
-								<ui:remove> <h:outputText value="-UPLOAD MODE=ADVANCED" /></ui:remove>
-			           			<ui:remove> <p:fileUpload value="#{viewConfiguracionEntidad.fileLogoGestor}" fileUploadListener="#{viewConfiguracionEntidad.uploadModeAdvanced}" mode="advanced" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" skinSimple="true"/></ui:remove>
-
-								<ui:remove> <p:fileUpload value="#{viewConfiguracionEntidad.fileLogoGestor}" ajax="false" mode="simple" skinSimple="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" process="@this" oncomplete="#{viewConfiguracionEntidad.uploadModeSimple()}"  /> </ui:remove>
- 								<ui:remove> <p:commandButton value="With Icon... " id="withIcon" fileUploadListener="#{viewConfiguracionEntidad.uploadModeSimple3}" actionListener="#{viewConfiguracionEntidad.uploadModeSimple2()}" update="growl" process="@this"  icon="ui-icon-disk" /> </ui:remove>
-
-
-    							<ui:remove> <p:commandButton id="btnAssistentLogo2" value="#{msg['botones.explorar']}" ajax="false" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.prepDownload}" process="@this" update="growl" style="margin-right:5px" /> </ui:remove>
-    							<ui:remove> <p:fileDownload value="#{viewConfiguracionEntidad.downloadGestorLogo}" /> </ui:remove>
-
-    							<p:commandButton id="btnGestorLogo" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarGestorLogo()}" process="@this" update="growl" style="margin-right:5px" />
-								<h:outputText value="#{msg['error.noseleccionadofitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoGestor}" />
-
-			        	</p:column>
-			        </h:panelGrid>
-
-			    </p:panel>
-
-
-
-    		<p:panel header="#{msg['viewConfiguracionEntidad.assistentTramitacio.titulo']}" style="width: 100%" columnClasses="w25 right-alignment, w75 left-alignment">
+    		<p:panel header="#{msg['viewConfiguracionEntidad.assistentTramitacio.titulo']}"  columnClasses="w25 right-alignment, w75 left-alignment">
 		        <h:panelGrid columns="2" cellpadding="10">
 
 		            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLog']}" />
 		            <p:column>
-		            	<p:commandButton id="btnAssistentLogo" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarAssistentLogo()}" process="@this" update="growl" style="margin-right:5px" />
-						<h:outputText value="#{msg['error.noseleccionadofitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoAsistente}" />
+		            		<h:outputText value="#{empty viewConfiguracionEntidad.data.logoAsistente?msg['error.noseleccionadofitxer']:viewConfiguracionEntidad.data.logoAsistente.nombre}" />
+		            		<p:spacer width="40" height="1"/>
 		            </p:column>
 
 		        	<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerCss']}" />
 		            <p:column>
-		            	<p:commandButton id="btnAssistentCss" value="#{msg['botones.explorar']}" icon="fa fa-folder-open" actionListener="#{viewConfiguracionEntidad.explorarAssistentCss()}" process="@this" update="growl" style="margin-right:5px" />
-						<h:outputText value="#{msg['error.noseleccionadofitxer']}" rendered="#{empty viewConfiguracionEntidad.data.css}" />
+						<h:outputText value="#{empty viewConfiguracionEntidad.data.css?msg['error.noseleccionadofitxer']:viewConfiguracionEntidad.data.css.nombre}" />
+						<p:spacer width="40" height="1"/>
 					</p:column>
 
 		        	<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerPie']}" />
 		            <p:column>
 		            	<p:inputText  id="inputPie" size="40" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.pie.getTraduccion(sessionBean.lang)}" disabled="true" />
-		            	<p:commandButton id="btnAssistentPie" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie()}" process="@this" update="growl" style="margin-right:5px">
+		            	<p:commandButton id="btnAssistentPie" icon="fa fa-language" process="@this" update="growl" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoAsistentePie}" update="growl inputPie"/>
 		        		</p:commandButton>
 					</p:column>
 
-					<h:outputText for="emailGenerico" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerEmailGenerico']}" />
-		            <p:inputText  id="emailGenerico" required="true" size="40" value="#{viewConfiguracionEntidad.data.email}" />
-
+					<p:outputLabel for="emailGenerico" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerEmailGenerico']}" />
+		            <p:inputText  id="emailGenerico" size="40" value="#{viewConfiguracionEntidad.data.email}" maxlength="500"/>
 
 					<h:outputText for="checkEmail" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerAjuda']}" />
 		            <h:panelGrid styleClass="noBorders" columns="3" cellpadding="10">
-		            				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" />
- 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.email']}" />
- 								    <h:outputText value=" " />
+           				<p:selectBooleanCheckbox id="checkEmail" required="true" value="#{viewConfiguracionEntidad.data.emailHabilitado}" />
+						<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.email']}" />
+					    <h:outputText value=" " />
 
-									<p:selectBooleanCheckbox id="checkTelefonSuport"  value="#{viewConfiguracionEntidad.data.telefonoHabilitado}" />
- 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}"  />
- 								    <p:inputText value="#{viewConfiguracionEntidad.data.telefono}" size="40"  />
+						<p:selectBooleanCheckbox id="checkTelefonSuport"  value="#{viewConfiguracionEntidad.data.telefonoHabilitado}" />
+						<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.telSuport']}"  />
+					    <p:inputText value="#{viewConfiguracionEntidad.data.telefono}" size="40"  maxlength="10"/>
 
- 									<p:selectBooleanCheckbox id="checkUrlSuportTecnic" value="#{viewConfiguracionEntidad.data.urlSoporteHabilitado}" />
- 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.urlSuport']}" />
- 								    <p:inputText value="#{viewConfiguracionEntidad.data.urlSoporte}" size="40"  />
+						<p:selectBooleanCheckbox id="checkUrlSuportTecnic" value="#{viewConfiguracionEntidad.data.urlSoporteHabilitado}" />
+						<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.urlSuport']}" />
+					    <p:inputText value="#{viewConfiguracionEntidad.data.urlSoporte}" size="40"  maxlength="500"/>
 
-									<p:selectBooleanCheckbox id="checkFormularioContacto" value="#{viewConfiguracionEntidad.data.formularioIncidenciasHabilitado}" />
- 									<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.formulariCont']}" />
- 								    <p:commandButton id="btnFormulariContacte" icon="fa fa-cog" actionListener="#{viewConfiguracionEntidad.configFormulariContacte()}" process="@this" update="growl"/>
-
+						<p:selectBooleanCheckbox id="checkFormularioContacto" value="#{viewConfiguracionEntidad.data.formularioIncidenciasHabilitado}" />
+						<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.ajuda.formulariCont']}" />
+					    <p:commandButton id="btnFormulariContacte" icon="fa fa-cog" process="@this" update="growl"/>
 					</h:panelGrid>
 
 		        </h:panelGrid>
@@ -95,7 +79,7 @@
 			<!-- Toolbar -->
 			<p:toolbar id="toolbar">
        	        <f:facet name="right">
-			        	<p:commandButton id="btnAceptar"  value="#{msg['botones.aceptar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@this" update="growl" styleClass="boton-azul" />
+			        	<p:commandButton id="btnAceptar"  value="#{msg['botones.aceptar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@form" update="@form growl" styleClass="boton-azul" />
 		        </f:facet>
 		    </p:toolbar>
 

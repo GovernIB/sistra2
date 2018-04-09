@@ -3,7 +3,8 @@ package es.caib.sistrages.frontend.model.types;
 import es.caib.sistrages.frontend.model.OpcionMenu;
 
 /**
- * Tipo para indicar las diferentes opciones del menu para role Administrador Entidad y Operador.
+ * Tipo para indicar las diferentes opciones del menu para role Administrador
+ * Entidad y Operador.
  *
  * @author Indra
  *
@@ -11,37 +12,40 @@ import es.caib.sistrages.frontend.model.OpcionMenu;
 public enum TypeOpcionMenuAdmOper implements OpcionMenu {
 
 	/**
-     * Tramites.
-     */
-    TRAMITES,
-    /**
-     * Configuracion entidad.
-     */
-    CONFIGURACION_ENTIDAD,
-    /**
-     * Plugins entidad.
-     */
-    PLUGINS_ENTIDAD,
-    /**
-     * Gestores formularios.
-     */
-    GESTORES_FORMULARIOS,
-    /**
-     * Gestores formularios.
-     */
-    DOMINIOS_ENTIDAD,
-    /**
-     * Gestores formularios.
-     */
-    FUENTES_DATOS,
-    /**
-     * Gestores formularios.
-     */
-    MENSAJES,
-    /**
-     * Gestores formularios.
-     */
-    ROLES_PERMISOS;
-
+	 * Tramites.
+	 */
+	TRAMITES,
+	/**
+	 * Configuracion entidad.
+	 */
+	CONFIGURACION_ENTIDAD,
+	/**
+	 * Plugins entidad.
+	 */
+	PLUGINS_ENTIDAD,
+	/**
+	 * Gestores formularios.
+	 */
+	// GESTORES_FORMULARIOS,
+	/**
+	 * Formateador formularios
+	 */
+	FormateadorFormulario,
+	/**
+	 * DOMINIOS ENTIDAD.
+	 */
+	DOMINIOS_ENTIDAD,
+	/**
+	 * FUENTES DATOS.
+	 */
+	FUENTES_DATOS,
+	/**
+	 * MENSAJES.
+	 */
+	MENSAJES,
+	/**
+	 * ROLES PERMISOS.
+	 */
+	ROLES_PERMISOS;
 
 }

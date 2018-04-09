@@ -56,7 +56,6 @@ public class DialogPropiedad extends DialogControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		UtilJSF.closeDialog(result);
 	}
 

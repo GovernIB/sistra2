@@ -10,16 +10,14 @@
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeRoleUser" var="TypeRoleUser" />
 
-
 <h:head>
 	<title><h:outputText value="#{msg['dialogRolesPermisos.titulo']}"/></title>
-
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
 </h:head>
 
 <h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -27,6 +25,7 @@
 		<f:viewParam name="ID" value="#{dialogRolesPermisos.id}"/>
 		<f:viewAction action="#{dialogRolesPermisos.init}" />
 	</f:metadata>
+
 	<h:form id="dialogPlugin" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
@@ -36,39 +35,30 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogRolesPermisos.headerTipo']}" />
-					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:200px" required="true">
+					<p:selectOneMenu id="tipo" value="#{dialogRolesPermisos.data.tipo}" style="width:200px" required="true" disabled="#{dialogRolesPermisos.consulta}">
 					     <f:selectItems value="#{TypeRoleUser.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeRoleUser.' += tipo]}" />
 					</p:selectOneMenu >
 
 					<p:outputLabel for="codigo" value="#{msg['dialogRolesPermisos.headerCodigo']}" />
-					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.codigo}" disabled="#{dialogRolesPermisos.isConsulta()}" required="true" size="40" />
+					<p:inputText id="codigo" value="#{dialogRolesPermisos.data.codigo}" disabled="#{dialogRolesPermisos.consulta}" required="true" size="40" maxlength="100"/>
 
 					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
-					<p:selectOneMenu id="area">
-            				<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.descripcion}" itemValue="#{area}" />
+					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
+            			<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.codigo}" itemValue="#{area}" />
         			</p:selectOneMenu>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />
-					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}"  required="true" size="40" />
+					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" size="40" maxlength="255" disabled="#{dialogRolesPermisos.consulta}"/>
 
 					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}" />
 					<p:selectManyCheckbox id="basic">
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.alta}" itemLabel="#{msg['typeRolePermisos.A']}" />
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.modificacion}" itemLabel="#{msg['typeRolePermisos.M']}" />
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.consulta}" itemLabel="#{msg['typeRolePermisos.C']}" />
-						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.helpdesk}" itemLabel="#{msg['typeRolePermisos.H']}" />
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.alta}" itemLabel="#{msg['typeRolePermisos.A']}" disabled="#{dialogRolesPermisos.consulta}"/>
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.modificacion}" itemLabel="#{msg['typeRolePermisos.M']}" disabled="#{dialogRolesPermisos.consulta}"/>
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.consulta}" itemLabel="#{msg['typeRolePermisos.C']}" disabled="#{dialogRolesPermisos.consulta}"/>
+						<p:selectBooleanCheckbox value="#{dialogRolesPermisos.data.helpdesk}" itemLabel="#{msg['typeRolePermisos.H']}" disabled="#{dialogRolesPermisos.consulta}"/>
 					</p:selectManyCheckbox>
-
 				</h:panelGrid>
-				<h:outputScript >
-				      function rcEditarPropiedad() {
-				        document.getElementById("form:btnEditarPropiedad").click();
-				      }
 
-				      function  rcBorrarPropiedad() {
-				        document.getElementById("form:btnEliminarPropiedad").click();
-				      }
-			    </h:outputScript>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>

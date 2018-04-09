@@ -205,7 +205,7 @@ public class DialogDominio extends DialogControllerBase {
 		isDialogoPropiedad = true;
 		final Map<String, String> params = new HashMap<>();
 		params.put("OCULTARVALOR", "S");
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 100);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
 	}
 
 	/**

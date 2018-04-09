@@ -22,8 +22,9 @@ public enum TypePropiedadGlobal {
 	/**
 	 * Convierte un string en enumerado.
 	 *
-	 * @param tipo
-	 * @return
+	 * @param text
+	 *            tipo
+	 * @return tipo
 	 */
 	public static TypePropiedadGlobal fromString(final String text) {
 		TypePropiedadGlobal respuesta = null;

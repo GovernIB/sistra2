@@ -25,6 +25,13 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	 * Crea una nueva instancia de FuenteDatoDaoImpl.
+	 */
+	public FuenteDatoDaoImpl() {
+		super();
+	}
+
 	@Override
 	public FuenteDatos getById(final Long idFuenteDato) {
 		FuenteDatos fuenteDato = null;
@@ -81,6 +88,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		return listarFuenteDatos(ambito, id, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<FuenteDatos> listarFuenteDatos(final TypeAmbito ambito, final Long id, final String filtro) {
 		final List<FuenteDatos> fuenteDatoes = new ArrayList<>();
 

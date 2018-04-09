@@ -140,6 +140,7 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 *            filtro
 	 * @return Listado de avisos
 	 */
+	@SuppressWarnings("unchecked")
 	private List<AvisoEntidad> listarAvisos(final Long idEntidad, final TypeIdioma idioma, final String filtro) {
 		final List<AvisoEntidad> listaAvisoEntidad = new ArrayList<>();
 		String sql = "select a from JAvisoEntidad as a";

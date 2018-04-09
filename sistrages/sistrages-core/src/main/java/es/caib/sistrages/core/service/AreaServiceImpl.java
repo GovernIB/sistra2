@@ -26,42 +26,64 @@ public class AreaServiceImpl implements AreaService {
 	@Autowired
 	AreaComponent areaComponent;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.AreaService#listArea(java.lang.Long,
+	 * java.lang.String)
+	 */
 	@Override
 	@NegocioInterceptor
-	public List<Area> list(final String filtro) {
-		List<Area> result = null;
-		if (filtro == null || filtro.trim().length() == 0) {
-			result = areaDataDao.getAll();
-		} else {
-			result = areaDataDao.getAllByFiltro(filtro);
-		}
-
-		return result;
+	public List<Area> listArea(final Long idEntidad, final String filtro) {
+		return areaDataDao.getAllByFiltro(idEntidad, filtro);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.AreaService#getArea(java.lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
-	public Area load(final Long id) {
-		Area result = null;
-		result = areaDataDao.getById(id);
-		return result;
+	public Area getArea(final Long id) {
+		return areaDataDao.getById(id);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.AreaService#addArea(java.lang.Long,
+	 * es.caib.sistrages.core.api.model.Area)
+	 */
 	@Override
 	@NegocioInterceptor
-	public void add(final Long idEntidad, final Area area) {
+	public void addArea(final Long idEntidad, final Area area) {
 		areaDataDao.add(idEntidad, area);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.AreaService#removeArea(java.lang.Long)
+	 */
 	@Override
 	@NegocioInterceptor
-	public void remove(final Long id) {
+	public boolean removeArea(final Long id) {
 		areaDataDao.remove(id);
+		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * es.caib.sistrages.core.api.service.AreaService#updateArea(es.caib.sistrages.
+	 * core.api.model.Area)
+	 */
 	@Override
 	@NegocioInterceptor
-	public void update(final Area area) {
+	public void updateArea(final Area area) {
 		areaDataDao.update(area);
 	}
 

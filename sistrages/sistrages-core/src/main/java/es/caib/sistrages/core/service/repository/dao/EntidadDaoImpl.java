@@ -23,6 +23,13 @@ public class EntidadDaoImpl implements EntidadDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	 * Crea una nueva instancia de EntidadDaoImpl.
+	 */
+	public EntidadDaoImpl() {
+		super();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -97,6 +104,30 @@ public class EntidadDaoImpl implements EntidadDao {
 	/*
 	 * (non-Javadoc)
 	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.EntidadDao#
+	 * updateAdministradorEntidad(es.caib.sistrages.core.api.model.Entidad)
+	 */
+	@Override
+	public void updateAdministradorEntidad(final Entidad entidad) {
+
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, entidad.getId());
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + entidad.getId());
+		}
+
+		jEntidad.setEmail(entidad.getEmail());
+		jEntidad.setContactoEmail(entidad.isEmailHabilitado());
+		jEntidad.setContactoTelefono(entidad.isTelefonoHabilitado());
+		jEntidad.setTelefono(entidad.getTelefono());
+		jEntidad.setContactoUrl(entidad.isUrlSoporteHabilitado());
+		jEntidad.setUrlSoporte(entidad.getUrlSoporte());
+		jEntidad.setContactoFormularioIncidencias(entidad.isFormularioIncidenciasHabilitado());
+		entityManager.merge(jEntidad);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see
 	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#getAllByFiltro(es.
 	 * caib.sistrages.core.api.model.types.TypeIdioma, java.lang.String)
@@ -125,6 +156,7 @@ public class EntidadDaoImpl implements EntidadDao {
 	 *            filtro
 	 * @return lista de entidades
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Entidad> listarEntidades(final TypeIdioma idioma, final String filtro) {
 		final List<Entidad> entidades = new ArrayList<>();
 

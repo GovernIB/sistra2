@@ -58,4 +58,12 @@ public interface EntidadDao {
 	 */
 	void updateSuperAdministrador(final Entidad entidad);
 
+	/**
+	 * Actualiza una entidad.
+	 *
+	 * @param entidad
+	 *            la entidad
+	 */
+	void updateAdministradorEntidad(final Entidad entidad);
+
 }

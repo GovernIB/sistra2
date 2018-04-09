@@ -1,14 +1,15 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Rol;
-import es.caib.sistrages.core.api.model.types.TypeRoleUser;
+import es.caib.sistrages.core.api.service.AreaService;
+import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -20,8 +21,16 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	/**
 	 * Servicio.
 	 */
-	// @Inject
-	// private EntidadService entidadService;
+	@Inject
+	private RolService rolService;
+
+	@Inject
+	private AreaService areaService;
+
+	/**
+	 * Id entidad.
+	 */
+	private Long idEntidad;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -32,39 +41,25 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	/** Areas. **/
 	private List<Area> areas;
 
-	/** Area seleccionada. **/
-	private Area areaSeleccionada;
-
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
+		// Id entidad
+		idEntidad = UtilJSF.getSessionBean().getEntidad().getId();
+
+		areas = areaService.listArea(idEntidad, null);
+
+		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Rol();
 		} else {
-			data = new Rol();// entidadService.load(id);
-			data.setId(1l);
-			data.setTipo(TypeRoleUser.ROL);
-			data.setCodigo("STR_SALUT_DEV");
-			data.setDescripcion("Rol de desenvolupament per tràmits de salut");
-			data.setAlta(true);
-			final Area area = new Area();
-			area.setId(1l);
-			area.setDescripcion("Area 1");
-			data.setArea(area);
-		}
+			if (id != null) {
+				data = rolService.getRol(Long.valueOf(id));
+			}
 
-		final Area area1 = new Area();
-		area1.setId(1l);
-		area1.setDescripcion("Area 1");
-		final Area area2 = new Area();
-		area2.setId(2l);
-		area2.setDescripcion("Area 2");
-		areas = new ArrayList<>();
-		areas.add(area1);
-		areas.add(area2);
-		setAreaSeleccionada(area1);
+		}
 	}
 
 	/**
@@ -75,14 +70,10 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
-			/*
-			 * if (entidadService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; } entidadService.add(data);
-			 */
+			rolService.addRol(data);
 			break;
 		case EDICION:
-			// entidadService.update(data);
+			rolService.updateRol(data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -91,8 +82,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		data.setArea(areaSeleccionada);
-		result.setResult(data);
+		result.setResult(data.getId());
 		UtilJSF.closeDialog(result);
 	}
 
@@ -149,21 +139,6 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	 */
 	public void setAreas(final List<Area> areas) {
 		this.areas = areas;
-	}
-
-	/**
-	 * @return the areaSeleccionada
-	 */
-	public Area getAreaSeleccionada() {
-		return areaSeleccionada;
-	}
-
-	/**
-	 * @param areaSeleccionada
-	 *            the areaSeleccionada to set
-	 */
-	public void setAreaSeleccionada(final Area areaSeleccionada) {
-		this.areaSeleccionada = areaSeleccionada;
 	}
 
 }

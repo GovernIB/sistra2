@@ -122,6 +122,15 @@ public class ViewEntidades extends ViewControllerBase {
 	}
 
 	/**
+	 * Obtiene el valor de filaSeleccionada.
+	 *
+	 * @return el valor de filaSeleccionada
+	 */
+	public boolean getFilaSeleccionada() {
+		return verificarFilaSeleccionada();
+	}
+
+	/**
 	 * Verifica si hay fila seleccionada.
 	 *
 	 * @return

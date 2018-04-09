@@ -23,7 +23,7 @@ import es.caib.sistrages.frontend.controller.SessionBean;
 import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistrages.frontend.controller.ViewDominios;
 import es.caib.sistrages.frontend.controller.ViewEntidades;
-import es.caib.sistrages.frontend.controller.ViewFormulariosExternos;
+import es.caib.sistrages.frontend.controller.ViewFormateadorFormulario;
 import es.caib.sistrages.frontend.controller.ViewFuentes;
 import es.caib.sistrages.frontend.controller.ViewMensajesAvisoEntidad;
 import es.caib.sistrages.frontend.controller.ViewPlugins;
@@ -384,8 +384,13 @@ public final class UtilJSF {
 		case PLUGINS_ENTIDAD:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPlugins.class) + EXTENSION_XHTML + ambitoEntidadURL;
 			break;
-		case GESTORES_FORMULARIOS:
-			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) + EXTENSION_XHTML;
+		// case GESTORES_FORMULARIOS:
+		// url = PATH_VIEWS +
+		// UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) +
+		// EXTENSION_XHTML;
+		// break;
+		case FormateadorFormulario:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormateadorFormulario.class) + EXTENSION_XHTML;
 			break;
 		case TRAMITES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewTramites.class) + EXTENSION_XHTML;
@@ -506,7 +511,7 @@ public final class UtilJSF {
 
 	/**
 	 * Obtiene context path.
-	 * 
+	 *
 	 * @return context path
 	 */
 	public static String getContextPath() {

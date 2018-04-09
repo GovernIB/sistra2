@@ -3,175 +3,224 @@ package es.caib.sistrages.core.api.model;
 import es.caib.sistrages.core.api.model.types.TypeRoleUser;
 
 /**
- *
- * Rol.
- *
- * @author Indra
- *
+ * La clase Rol.
  */
 @SuppressWarnings("serial")
 public class Rol extends ModelApi {
 
-	/** Id. */
+	/**
+	 * id.
+	 */
 	private Long id;
 
-	/** Tipo: R (Role) / U (Usuario) */
+	/**
+	 * tipo.
+	 */
 	private TypeRoleUser tipo;
 
-	/** Para Role el código de Role, para Usuario el NIF del usuario. */
+	/**
+	 * codigo.
+	 */
 	private String codigo;
 
-	/** Descripción. */
+	/**
+	 * descripcion.
+	 */
 	private String descripcion;
 
-	/** Area */
+	/**
+	 * area.
+	 */
 	private Area area;
 
-	/** Permiso alta-baja trámites. **/
+	/**
+	 * alta.
+	 */
 	private boolean alta;
 
-	/** Permiso modificacion trámites. **/
+	/**
+	 * modificacion.
+	 */
 	private boolean modificacion;
 
-	/** Permiso consulta trámites. **/
+	/**
+	 * consulta.
+	 */
 	private boolean consulta;
 
-	/** Permiso helpdesk trámites. **/
+	/**
+	 * helpdesk.
+	 */
 	private boolean helpdesk;
 
 	/**
-	 * @return the id
+	 * Obtiene el valor de id.
+	 *
+	 * @return el valor de id
 	 */
 	public Long getId() {
 		return id;
 	}
 
 	/**
+	 * Establece el valor de id.
+	 *
 	 * @param id
-	 *            the id to set
+	 *            el nuevo valor de id
 	 */
 	public void setId(final Long id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return the tipo
+	 * Obtiene el valor de tipo.
+	 *
+	 * @return el valor de tipo
 	 */
 	public TypeRoleUser getTipo() {
 		return tipo;
 	}
 
 	/**
+	 * Establece el valor de tipo.
+	 *
 	 * @param tipo
-	 *            the tipo to set
+	 *            el nuevo valor de tipo
 	 */
 	public void setTipo(final TypeRoleUser tipo) {
 		this.tipo = tipo;
 	}
 
 	/**
-	 * @return the codigo
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
 	 */
 	public String getCodigo() {
 		return codigo;
 	}
 
 	/**
+	 * Establece el valor de codigo.
+	 *
 	 * @param codigo
-	 *            the codigo to set
+	 *            el nuevo valor de codigo
 	 */
 	public void setCodigo(final String codigo) {
 		this.codigo = codigo;
 	}
 
 	/**
-	 * @return the descripcion
+	 * Obtiene el valor de descripcion.
+	 *
+	 * @return el valor de descripcion
 	 */
 	public String getDescripcion() {
 		return descripcion;
 	}
 
 	/**
+	 * Establece el valor de descripcion.
+	 *
 	 * @param descripcion
-	 *            the descripcion to set
+	 *            el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
 	}
 
 	/**
-	 * @return the area
+	 * Obtiene el valor de area.
+	 *
+	 * @return el valor de area
 	 */
 	public Area getArea() {
 		return area;
 	}
 
 	/**
+	 * Establece el valor de area.
+	 *
 	 * @param area
-	 *            the area to set
+	 *            el nuevo valor de area
 	 */
 	public void setArea(final Area area) {
 		this.area = area;
 	}
 
 	/**
-	 * @return the alta
+	 * Verifica si es alta.
+	 *
+	 * @return true, si es alta
 	 */
 	public boolean isAlta() {
 		return alta;
 	}
 
 	/**
+	 * Establece el valor de alta.
+	 *
 	 * @param alta
-	 *            the alta to set
+	 *            el nuevo valor de alta
 	 */
 	public void setAlta(final boolean alta) {
 		this.alta = alta;
 	}
 
 	/**
-	 * @return the modificacion
+	 * Verifica si es modificacion.
+	 *
+	 * @return true, si es modificacion
 	 */
 	public boolean isModificacion() {
 		return modificacion;
 	}
 
 	/**
+	 * Establece el valor de modificacion.
+	 *
 	 * @param modificacion
-	 *            the modificacion to set
+	 *            el nuevo valor de modificacion
 	 */
 	public void setModificacion(final boolean modificacion) {
 		this.modificacion = modificacion;
 	}
 
 	/**
-	 * @return the consulta
+	 * Verifica si es consulta.
+	 *
+	 * @return true, si es consulta
 	 */
 	public boolean isConsulta() {
 		return consulta;
 	}
 
 	/**
+	 * Establece el valor de consulta.
+	 *
 	 * @param consulta
-	 *            the consulta to set
+	 *            el nuevo valor de consulta
 	 */
 	public void setConsulta(final boolean consulta) {
 		this.consulta = consulta;
 	}
 
 	/**
-	 * @return the helpdesk
+	 * Verifica si es helpdesk.
+	 *
+	 * @return true, si es helpdesk
 	 */
 	public boolean isHelpdesk() {
 		return helpdesk;
 	}
 
 	/**
+	 * Establece el valor de helpdesk.
+	 *
 	 * @param helpdesk
-	 *            the helpdesk to set
+	 *            el nuevo valor de helpdesk
 	 */
 	public void setHelpdesk(final boolean helpdesk) {
 		this.helpdesk = helpdesk;
 	}
-
 }

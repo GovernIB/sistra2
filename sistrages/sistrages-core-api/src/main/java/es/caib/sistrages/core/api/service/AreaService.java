@@ -5,21 +5,55 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Area;
 
 /**
- * Area Service.
- *
- * @author Indra.
- *
+ * La interface AreaService.
  */
 public interface AreaService {
 
-	public List<Area> list(String filtro);
+	/**
+	 * Lista de areas.
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 * @param filtro
+	 *            filtro
+	 * @return lista de areas
+	 */
+	public List<Area> listArea(final Long idEntidad, String filtro);
 
-	public Area load(Long id);
+	/**
+	 * Obtiene el area.
+	 *
+	 * @param id
+	 *            identificador
+	 * @return area
+	 */
+	public Area getArea(Long id);
 
-	public void add(Long idEntidad, Area area);
+	/**
+	 * Añade un area.
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 * @param area
+	 *            area
+	 */
+	public void addArea(Long idEntidad, Area area);
 
-	public void remove(Long id);
+	/**
+	 * Elimina un area.
+	 *
+	 * @param id
+	 *            identificador
+	 * @return true, si se realiza con exito
+	 */
+	public boolean removeArea(Long id);
 
-	public void update(Area area);
+	/**
+	 * Actualiza un area.
+	 *
+	 * @param area
+	 *            area
+	 */
+	public void updateArea(Area area);
 
 }

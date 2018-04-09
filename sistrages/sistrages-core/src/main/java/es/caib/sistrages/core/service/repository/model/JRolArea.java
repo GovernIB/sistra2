@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.types.TypeRoleUser;
+
 /**
  * JRolArea
  */
@@ -51,10 +54,8 @@ public class JRolArea implements IModelApi {
 	@Column(name = "RLA_PERHLP", nullable = false, precision = 1, scale = 0)
 	private boolean permisoAccesoHelpdesk;
 
-	@Column(name = "RLA_PERDOM", nullable = false, precision = 1, scale = 0)
-	private boolean permisoGestionDominiosArea;
-
 	public JRolArea() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -129,12 +130,34 @@ public class JRolArea implements IModelApi {
 		this.permisoAccesoHelpdesk = permisoAccesoHelpdesk;
 	}
 
-	public boolean isPermisoGestionDominiosArea() {
-		return this.permisoGestionDominiosArea;
+	public Rol toModel() {
+		final Rol rol = new Rol();
+		rol.setId(codigo);
+		rol.setTipo(TypeRoleUser.fromString(tipo));
+		rol.setCodigo(valor);
+		rol.setDescripcion(descripcion);
+		rol.setAlta(permisoAltaBajaTramites);
+		rol.setModificacion(permisoModificacionTramites);
+		rol.setConsulta(permisoConsultaTramites);
+		rol.setHelpdesk(permisoAccesoHelpdesk);
+
+		return rol;
 	}
 
-	public void setPermisoGestionDominiosArea(final boolean permisoGestionDominiosArea) {
-		this.permisoGestionDominiosArea = permisoGestionDominiosArea;
+	public static JRolArea fromModel(final Rol model) {
+		JRolArea jModel = null;
+		if (model != null) {
+			jModel = new JRolArea();
+			jModel.setCodigo(model.getId());
+			jModel.setTipo(model.getTipo().toString());
+			jModel.setValor(model.getCodigo());
+			jModel.setDescripcion(model.getDescripcion());
+			jModel.setPermisoAltaBajaTramites(model.isAlta());
+			jModel.setPermisoModificacionTramites(model.isModificacion());
+			jModel.setPermisoConsultaTramites(model.isConsulta());
+			jModel.setPermisoAccesoHelpdesk(model.isHelpdesk());
+		}
+		return jModel;
 	}
 
 }

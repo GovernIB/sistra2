@@ -13,7 +13,7 @@ body{
 .botonera-menu {width:100% !important;}
 
 /* para que no se parta el texto de los menus de la cabecera */
-#header .ui-menubar ul.ui-menu-child {white-space: nowrap;}
+#header .ui-menubar ul.ui-menu-child {white-space: nowrap; width: auto !important;}
 
 .ui-menu .ui-menuitem-text {white-space: nowrap !important;}
 

@@ -46,7 +46,7 @@ public class DialogArea extends DialogControllerBase {
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Area();
 		} else {
-			data = areaService.load(Long.valueOf(id));
+			data = areaService.getArea(Long.valueOf(id));
 		}
 	}
 
@@ -61,10 +61,10 @@ public class DialogArea extends DialogControllerBase {
 
 		switch (acceso) {
 		case ALTA:
-			areaService.add(idEntidad, data);
+			areaService.addArea(idEntidad, data);
 			break;
 		case EDICION:
-			areaService.update(data);
+			areaService.updateArea(data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada

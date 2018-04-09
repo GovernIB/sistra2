@@ -39,6 +39,14 @@ public interface EntidadService {
 	public void updateEntidadSuperAdministrador(Entidad entidad);
 
 	/**
+	 * Actualización entidad por parte del administrador de entidad.
+	 *
+	 * @param entidad
+	 *            Entidad con los datos requeridos por el administrador de entidad.
+	 */
+	public void updateEntidadAdministradorEntidad(final Entidad entidad);
+
+	/**
 	 * Elimina entidad.
 	 *
 	 * @param idEntidad

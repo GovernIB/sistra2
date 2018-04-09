@@ -29,6 +29,13 @@ public class DominioDaoImpl implements DominioDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	 * Crea una nueva instancia de DominioDaoImpl.
+	 */
+	public DominioDaoImpl() {
+		super();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -125,6 +132,7 @@ public class DominioDaoImpl implements DominioDao {
 	 *            filtro
 	 * @return lista de dominios
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Dominio> listarDominios(final TypeAmbito ambito, final Long id, final String filtro) {
 		final List<Dominio> dominioes = new ArrayList<>();
 

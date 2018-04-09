@@ -96,6 +96,7 @@ public class JDominio implements IModelApi {
 	private Set<JVersionTramite> versionesTramite = new HashSet<JVersionTramite>(0);
 
 	public JDominio() {
+		super();
 	}
 
 	public Long getCodigo() {

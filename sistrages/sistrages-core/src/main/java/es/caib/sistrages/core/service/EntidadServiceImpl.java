@@ -82,6 +82,18 @@ public class EntidadServiceImpl implements EntidadService {
 
 	/*
 	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.sistrages.core.api.service.EntidadService#
+	 * updateEntidadAdministradorEntidad(es.caib.sistrages.core.api.model.Entidad)
+	 */
+	@Override
+	@NegocioInterceptor
+	public void updateEntidadAdministradorEntidad(final Entidad entidad) {
+		entidadDao.updateAdministradorEntidad(entidad);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 *
 	 * @see es.caib.sistrages.core.api.service.EntidadService#listEntidad(es.caib.
 	 * sistrages.core.api.model.types.TypeIdioma, java.lang.String)

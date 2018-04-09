@@ -146,6 +146,7 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 	 *            filtro
 	 * @return lista de configuracion global
 	 */
+	@SuppressWarnings("unchecked")
 	private List<ConfiguracionGlobal> listarPropiedades(final String filtro) {
 		final List<ConfiguracionGlobal> listaConfiguracionGlobal = new ArrayList<>();
 

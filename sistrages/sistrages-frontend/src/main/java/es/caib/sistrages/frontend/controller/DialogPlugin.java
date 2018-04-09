@@ -46,6 +46,8 @@ public class DialogPlugin extends DialogControllerBase {
 	/** Propiedad seleccionada. */
 	private Propiedad propiedadSeleccionada;
 
+	private static final int MAXLENGTH_PROPIEDADES = 4000;
+
 	/**
 	 * Inicialización.
 	 */
@@ -114,6 +116,7 @@ public class DialogPlugin extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.propiedadSeleccionada));
+
 		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.EDICION, params, true, 430, 120);
 	}
 
@@ -169,8 +172,7 @@ public class DialogPlugin extends DialogControllerBase {
 	 */
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
-		// final DataTable dataTable = (DataTable)
-		// FacesContext.getCurrentInstance().getViewRoot().findComponent(":dialogTest:dataTablePropiedades");
+
 		if (this.propiedadSeleccionada == null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
@@ -186,9 +188,15 @@ public class DialogPlugin extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
+			if (!verificarGuardar()) {
+				return;
+			}
 			pluginService.addPlugin(data, UtilJSF.getIdEntidad());
 			break;
 		case EDICION:
+			if (!verificarGuardar()) {
+				return;
+			}
 			pluginService.updatePlugin(data);
 			break;
 		case CONSULTA:
@@ -210,6 +218,22 @@ public class DialogPlugin extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Verificar precondiciones al guardar.
+	 *
+	 * @return true, si se cumplen las todas la condiciones
+	 */
+	private boolean verificarGuardar() {
+		if (MAXLENGTH_PROPIEDADES
+				- (data.getPropiedades() == null ? 0 : UtilJSON.toJSON(data.getPropiedades()).length()) < 0) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("error.propiedades.tamanyosuperado"));
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

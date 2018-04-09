@@ -1,17 +1,14 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
 
 /**
  * JFormateadorFormulario
@@ -33,9 +30,6 @@ public class JFormateadorFormulario implements IModelApi {
 
 	@Column(name = "FMT_DESCRI", nullable = false)
 	private String descripcion;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formateadorFormulario")
-	private Set<JPlantillaFormulario> plantillasFormulario = new HashSet<JPlantillaFormulario>(0);
 
 	public JFormateadorFormulario() {
 	}
@@ -64,12 +58,25 @@ public class JFormateadorFormulario implements IModelApi {
 		this.descripcion = descripcion;
 	}
 
-	public Set<JPlantillaFormulario> getPlantillasFormulario() {
-		return this.plantillasFormulario;
+	public FormateadorFormulario toModel() {
+		final FormateadorFormulario fmt = new FormateadorFormulario();
+		fmt.setId(codigo);
+		fmt.setClassname(classname);
+		fmt.setDescripcion(descripcion);
+
+		return fmt;
 	}
 
-	public void setPlantillasFormulario(final Set<JPlantillaFormulario> plantillasFormulario) {
-		this.plantillasFormulario = plantillasFormulario;
+	public static JFormateadorFormulario fromModel(final FormateadorFormulario model) {
+		JFormateadorFormulario jModel = null;
+		if (model != null) {
+			jModel = new JFormateadorFormulario();
+			jModel.setCodigo(model.getId());
+			jModel.setClassname(model.getClassname());
+			jModel.setDescripcion(model.getDescripcion());
+		}
+
+		return jModel;
 	}
 
 }

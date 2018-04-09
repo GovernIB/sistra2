@@ -150,8 +150,12 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 
 		final Area area = (Area) this.areaSeleccionada.getData();
-		this.areaService.remove(area.getId());
-		this.buscarAreas();
+		if (this.areaService.removeArea(area.getId())) {
+			this.buscarAreas();
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+		}
 	}
 
 	/**
@@ -271,9 +275,8 @@ public class ViewTramites extends ViewControllerBase {
 	 * Aqui
 	 */
 	private void buscarAreas() {
-
 		areas = new DefaultTreeNode("Root", null);
-		for (final Area area : areaService.list(this.filtro)) {
+		for (final Area area : areaService.listArea(UtilJSF.getSessionBean().getEntidad().getId(), this.filtro)) {
 			areas.getChildren().add(new DefaultTreeNode(area));
 		}
 	}

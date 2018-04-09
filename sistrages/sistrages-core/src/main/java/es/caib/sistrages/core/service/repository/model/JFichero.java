@@ -32,6 +32,7 @@ public class JFichero implements IModelApi {
 	private boolean publico;
 
 	public JFichero() {
+		super();
 	}
 
 	public Long getCodigo() {

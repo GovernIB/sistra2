@@ -45,6 +45,12 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#
+	 * getContentById(java.lang.Long)
+	 */
 	@Override
 	public ContenidoFichero getContentById(final Long id) {
 		// Obtiene metadatos fichero
@@ -71,11 +77,25 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#getPathById(
+	 * java.lang.Long)
+	 */
 	@Override
 	public String getPathById(final Long id) {
 		return getPathAbsolutoFichero(id);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#
+	 * purgarFicheros()
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void purgarFicheros() {
 		final Query query = entityManager.createQuery("select f from JFicheroExterno f where f.borrar = TRUE");
@@ -95,6 +115,13 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#
+	 * guardarFichero(java.lang.Long, es.caib.sistrages.core.api.model.Fichero,
+	 * byte[])
+	 */
 	@Override
 	public void guardarFichero(final Long idEntidad, final Fichero fichero, final byte[] content) {
 
@@ -127,6 +154,13 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#marcarBorrar(
+	 * java.lang.Long)
+	 */
 	@Override
 	public void marcarBorrar(final Long id) {
 		// Si existe fichero anterior, lo marca a borrado
@@ -143,6 +177,7 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	 *
 	 * @return path almacenamiento
 	 */
+	@SuppressWarnings("unchecked")
 	private String getPathAlmacenamiento() {
 		final Query query = entityManager
 				.createQuery("select p from JConfiguracionGlobal p where p.propiedad = :propiedad");
@@ -200,6 +235,7 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	 *            id
 	 * @return fichero externo
 	 */
+	@SuppressWarnings("unchecked")
 	private JFicheroExterno getById(final Long id) {
 		final Query query = entityManager
 				.createQuery("select f from JFicheroExterno f where f.codigoFichero = :id and f.borrar = FALSE");

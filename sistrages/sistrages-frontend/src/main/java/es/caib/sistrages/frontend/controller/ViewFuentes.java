@@ -154,6 +154,15 @@ public class ViewFuentes extends ViewControllerBase {
 		}
 	}
 
+	/**
+	 * Obtiene el valor de filaSeleccionada.
+	 *
+	 * @return el valor de filaSeleccionada
+	 */
+	public boolean getFilaSeleccionada() {
+		return verificarFilaSeleccionada();
+	}
+
 	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Verifica si hay fila seleccionada.

@@ -13,7 +13,7 @@
 
 	<ui:define name="content">
 
-		<h:form id="form" style="height: 100%">
+		<h:form id="form" styleClass="h100">
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
@@ -24,23 +24,22 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPlugins.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPlugins.filtrar()}" process="panelFiltro" update="dataTable growl form:btnEliminar" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPlugins.filtrar()}" process="panelFiltro" update="growl dataTable form:panelBotones" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewPlugins.nuevo()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable form:btnEliminar"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable form:panelBotones"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPlugins.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable form:btnEliminar"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewPlugins.returnDialogo}" update="growl dataTable form:panelBotones"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewPlugins.eliminar()}" process="@this" update="growl dataTable form:btnEliminar">
-	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{viewPlugins.datoSeleccionado eq null}"/>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewPlugins.eliminar()}" process="@this" update="growl dataTable form:panelBotones">
+	       		   			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{!viewPlugins.filaSeleccionada}"/>
 						</p:commandButton>
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPlugins.ayudar()}" process="@this" update="growl dataTable form:btnEliminar"/>
-
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPlugins.ayudar()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 
@@ -53,14 +52,11 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewPlugins.datoSeleccionado}" rowKey="#{td.id}" dblClickSelect="true">
-
-				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
+			        	 selectionMode="single" selection="#{viewPlugins.datoSeleccionado}" rowKey="#{td.id}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" update="form:btnEliminar"/>
-				<p:ajax event="rowUnselect" update="form:btnEliminar" />
+				<p:ajax event="rowSelect" update="form:panelBotones"/>
+				<p:ajax event="rowUnselect" update="form:panelBotones" />
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewPlugins.tipo']}">
