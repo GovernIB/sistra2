@@ -1,5 +1,3 @@
-/* V1.0.0 */
-
 
 create sequence STT_DOCPTR_SEQ;
 
@@ -28,24 +26,24 @@ create sequence STT_TRAPER_SEQ;
 /*==============================================================*/
 create table STT_DOCPTR 
 (
-   DTP_CODIGO           NUMBER(20)           not null,
-   DTP_CODPTR           NUMBER(20)           not null,
+   DTP_CODIGO           NUMBER(19)           not null,
+   DTP_CODPTR           NUMBER(19)           not null,
    DTP_DOCIDE           VARCHAR2(20)         not null,
    DTP_DOCINS           TIMESTAMP            not null,
    DTP_DOCTIP           VARCHAR2(1 CHAR)     not null,
    DTP_ESTADO           VARCHAR2(1 CHAR)     not null,
-   DTP_FICHERO          NUMBER(20),
+   DTP_FICHERO          NUMBER(19),
    DTP_FICCLA           VARCHAR2(50),
-   DTP_FORPDF           NUMBER(20),
+   DTP_FORPDF           NUMBER(19),
    DTP_FORPDC           VARCHAR2(50),
    DTP_ANENFI           VARCHAR2(500 CHAR),
    DTP_ANEDES           VARCHAR2(100 CHAR),
-   DTP_PAGJUS           NUMBER(20),
+   DTP_PAGJUS           NUMBER(19),
    DTP_PAGJUC           VARCHAR2(50),
    DTP_PAGEST           VARCHAR2(1 CHAR),
    DTP_PAGERR           VARCHAR2(100 CHAR),
    DTP_PAGERM           VARCHAR2(4000 CHAR),
-   DTP_REGDPR           NUMBER(20),
+   DTP_REGDPR           NUMBER(19),
    DTP_REGDPC           VARCHAR2(50),
    DTP_REGNUM           VARCHAR2(500),
    DTP_REGPRE           VARCHAR2(1),
@@ -53,13 +51,13 @@ create table STT_DOCPTR
 );
 
 comment on table STT_DOCPTR is
-'Documentos paso tr·mite persistente';
+'Documentos paso tr√°mite persistente';
 
 comment on column STT_DOCPTR.DTP_CODIGO is
-'CÛdigo documento persistente';
+'C√≥digo documento persistente';
 
 comment on column STT_DOCPTR.DTP_CODPTR is
-'CÛdigo paso';
+'C√≥digo paso';
 
 comment on column STT_DOCPTR.DTP_DOCIDE is
 'Identificador documento';
@@ -80,16 +78,16 @@ comment on column STT_DOCPTR.DTP_FICCLA is
 'Clave fichero';
 
 comment on column STT_DOCPTR.DTP_FORPDF is
-'En caso de ser un formulario puede tener un pdf de visualizaciÛn (codigo)';
+'En caso de ser un formulario puede tener un pdf de visualizaci√≥n (codigo)';
 
 comment on column STT_DOCPTR.DTP_FORPDC is
-'En caso de ser un formulario puede tener un pdf de visualizaciÛn (clave)';
+'En caso de ser un formulario puede tener un pdf de visualizaci√≥n (clave)';
 
 comment on column STT_DOCPTR.DTP_ANENFI is
 'En caso de un anexo nos guardamos el nombre del fichero anexado para no tener que acceder al fichero';
 
 comment on column STT_DOCPTR.DTP_ANEDES is
-'En caso de un anexo gemÈrico se permite establecer una descripciÛn para el documento';
+'En caso de un anexo gem√©rico se permite establecer una descripci√≥n para el documento';
 
 comment on column STT_DOCPTR.DTP_PAGJUS is
 'En caso de ser un pago puede tener un justificante de pago (codigo)';
@@ -166,16 +164,16 @@ create index STT_DOCPTR_REGDPR_I on STT_DOCPTR (
 /*==============================================================*/
 create table STT_FICPTR 
 (
-   FIC_CODIGO           NUMBER(20)           not null,
+   FIC_CODIGO           NUMBER(19)           not null,
    FIC_CLAVE            VARCHAR2(50)         not null,
    FIC_NOMFIC           VARCHAR2(500)        not null,
    FIC_DATFIC           BLOB                 not null,
    FIC_BORRAR           NUMBER(1)            default 0 not null,
-   FIC_CODTRP           NUMBER(20),
+   FIC_CODTRP           NUMBER(19),
    FIC_FECHA            DATE,
    FIC_TAMANYO          NUMBER(11,0)
 )
-TABLESPACE SISTRAMIT_DADES
+TABLESPACE SISTRAMIT
    LOB (FIC_DATFIC) STORE AS STT_FICPTR_DATFIC_LOB
 	 (TABLESPACE SISTRAMIT_LOB
 	 INDEX STT_FICPTR_DATFIC_LOB_I);
@@ -184,13 +182,13 @@ comment on table STT_FICPTR is
 'Tabla de ficheros';
 
 comment on column STT_FICPTR.FIC_CODIGO is
-'CÛdigo interno';
+'C√≥digo interno';
 
 comment on column STT_FICPTR.FIC_CLAVE is
 'Clave acceso';
 
 comment on column STT_FICPTR.FIC_NOMFIC is
-'Nombre fichero con extensiÛn';
+'Nombre fichero con extensi√≥n';
 
 comment on column STT_FICPTR.FIC_DATFIC is
 'Contenido del fichero';
@@ -205,7 +203,7 @@ comment on column STT_FICPTR.FIC_FECHA is
 'Fecha creacion fichero';
 
 comment on column STT_FICPTR.FIC_TAMANYO is
-'TamaÒo del fichero';
+'Tama√±o del fichero';
 
 alter table STT_FICPTR
    add constraint STT_FICPTR_PK primary key (FIC_CODIGO);
@@ -222,28 +220,28 @@ create index STT_FICCPTR_BORRAR_I on STT_FICPTR (
 /*==============================================================*/
 create table STT_FIRDPT 
 (
-   FDP_CODIGO           NUMBER(20)           not null,
-   FDP_CODDPT           NUMBER(20)           not null,
-   FDP_CODFIC           NUMBER(20)           not null,
+   FDP_CODIGO           NUMBER(19)           not null,
+   FDP_CODDPT           NUMBER(19)           not null,
+   FDP_CODFIC           NUMBER(19)           not null,
    FDP_FTENIF           VARCHAR2(10 CHAR)    not null,
    FDP_FTENOM           VARCHAR2(500 CHAR)   not null,
    FDP_FECFIR           DATE                 not null,
    FDP_TIPFIR           VARCHAR2(4 CHAR)     not null,
-   FDP_FIRMA            NUMBER(20)           not null,
+   FDP_FIRMA            NUMBER(19)           not null,
    FDP_FIRMAC           VARCHAR2(50)         not null
 );
 
 comment on table STT_FIRDPT is
-'Firmas de un documento de un paso de tramitaciÛn';
+'Firmas de un documento de un paso de tramitaci√≥n';
 
 comment on column STT_FIRDPT.FDP_CODIGO is
-'CÛdigo firma';
+'C√≥digo firma';
 
 comment on column STT_FIRDPT.FDP_CODDPT is
-'CÛdigo documento persistente';
+'C√≥digo documento persistente';
 
 comment on column STT_FIRDPT.FDP_CODFIC is
-'CÛdigo fichero al que pertenece la firma';
+'C√≥digo fichero al que pertenece la firma';
 
 comment on column STT_FIRDPT.FDP_FTENIF is
 'Nif firmante';
@@ -301,7 +299,7 @@ create index STT_FIRDPT_CODFIC_I on STT_FIRDPT (
 /*==============================================================*/
 create table STT_FORMUL 
 (
-   SFR_CODIGO           NUMBER(20)           not null,
+   SFR_CODIGO           NUMBER(19)           not null,
    SFR_TICKET           VARCHAR2(200 CHAR)   not null,
    SFR_FECINI           DATE                 not null,
    SFR_IDESTR           VARCHAR2(50 CHAR)    not null,
@@ -329,7 +327,7 @@ create table STT_FORMUL
    SFR_PDF              BLOB,
    SFR_TCKUSA           NUMBER(1)            default 0
 )
-TABLESPACE SISTRAMIT_DADES
+TABLESPACE SISTRAMIT
    LOB (SFR_DATFOR) STORE AS STT_FORMUL_DATFOR_LOB
 	 (TABLESPACE SISTRAMIT_LOB
 	 INDEX STT_FORMUL_DATFOR_LOB_I)
@@ -348,7 +346,6 @@ TABLESPACE SISTRAMIT_DADES
    LOB (SFR_PDF) STORE AS STT_FORMUL_PDF_LOB
 	 (TABLESPACE SISTRAMIT_LOB
 	 INDEX STT_FORMUL_PDF_LOB_I);
-	 
 
 comment on table STT_FORMUL is
 'Formularios retornados desde los gestores de formulario (interno / externo)';
@@ -363,7 +360,7 @@ comment on column STT_FORMUL.SFR_FECINI is
 'Fecha de apertura del formulario';
 
 comment on column STT_FORMUL.SFR_IDESTR is
-'Identificador sesiÛn tramitaciÛn';
+'Identificador sesi√≥n tramitaci√≥n';
 
 comment on column STT_FORMUL.SFR_IDPASO is
 'Identificador paso';
@@ -414,13 +411,13 @@ comment on column STT_FORMUL.SFR_PARFOR is
 'Parametros formulario (serializado en un string)';
 
 comment on column STT_FORMUL.SFR_INFPRO is
-'InformaciÛn procedimiento (Para form internos)';
+'Informaci√≥n procedimiento (Para form internos)';
 
 comment on column STT_FORMUL.SFR_INFAUT is
 'Informacion de autenticacion serializada (para vuelta de form externos)';
 
 comment on column STT_FORMUL.SFR_FECFIN is
-'Fecha de finalizaciÛn formulario';
+'Fecha de finalizaci√≥n formulario';
 
 comment on column STT_FORMUL.SFR_CANCEL is
 'Indica si el formulario se ha cancelado';
@@ -429,7 +426,7 @@ comment on column STT_FORMUL.SFR_XML is
 'Xml de datos';
 
 comment on column STT_FORMUL.SFR_PDF is
-'Pdf de visualizaciÛn';
+'Pdf de visualizaci√≥n';
 
 comment on column STT_FORMUL.SFR_TCKUSA is
 'Indica si el ticket se ha usado para retornar';
@@ -463,7 +460,7 @@ create index STT_FORMUL_FECFIN_I on STT_FORMUL (
 /*==============================================================*/
 create table STT_INVALI 
 (
-   INV_CODIGO           NUMBER(20)           not null,
+   INV_CODIGO           NUMBER(19)           not null,
    INV_TIPO             VARCHAR2(1)          not null,
    INV_IDENTI           VARCHAR2(400)        not null,
    INV_FECHA            DATE                 not null
@@ -473,7 +470,7 @@ comment on table STT_INVALI is
 'Invalidaciones de definicion de tramites y datos de dominios';
 
 comment on column STT_INVALI.INV_CODIGO is
-'CÛdigo secuencial interno';
+'C√≥digo secuencial interno';
 
 comment on column STT_INVALI.INV_TIPO is
 'Tipo invalidacion: definicion tramite (T) / datos dominio (D) / avisos plataforma (A)';
@@ -482,7 +479,7 @@ comment on column STT_INVALI.INV_IDENTI is
 'Identificador elemento: para tramite: idtramite-version / para dominio: iddominio / para avisos: TODOS';
 
 comment on column STT_INVALI.INV_FECHA is
-'Fecha invalidaciÛn';
+'Fecha invalidaci√≥n';
 
 alter table STT_INVALI
    add constraint STT_INVALI_PK primary key (INV_CODIGO);
@@ -492,9 +489,9 @@ alter table STT_INVALI
 /*==============================================================*/
 create table STT_LOGINT 
 (
-   LOG_CODIGO           NUMBER(20)           not null,
+   LOG_CODIGO           NUMBER(19)           not null,
    LOG_EVETIP           VARCHAR2(100 CHAR)   not null,
-   LOG_CODSES           NUMBER(20)           not null,
+   LOG_CODSES           NUMBER(19)           not null,
    LOG_EVEFEC           TIMESTAMP            not null,
    LOG_EVEUSU           VARCHAR2(10 CHAR),
    LOG_EVEDES           VARCHAR2(1000 CHAR)  not null,
@@ -503,7 +500,7 @@ create table STT_LOGINT
    LOG_ERRCOD           VARCHAR2(500 CHAR),
    LOG_ERRDET           CLOB
 )
-TABLESPACE SISTRAMIT_DADES
+TABLESPACE SISTRAMIT
    LOB (LOG_ERRDET) STORE AS STT_LOGINT_ERRDET_LOB
 	 (TABLESPACE SISTRAMIT_LOB
 	 INDEX STT_LOGINT_ERRDET_LOB_I);
@@ -512,31 +509,31 @@ comment on table STT_LOGINT is
 'Log interno de auditoria y errores';
 
 comment on column STT_LOGINT.LOG_CODIGO is
-'CÛdigo evento';
+'C√≥digo evento';
 
 comment on column STT_LOGINT.LOG_EVETIP is
 'Tipo evento';
 
 comment on column STT_LOGINT.LOG_CODSES is
-'Codigo sesiÛn';
+'Codigo sesi√≥n';
 
 comment on column STT_LOGINT.LOG_EVEFEC is
 'Fecha';
 
 comment on column STT_LOGINT.LOG_EVEUSU is
-'Usuario identificado en la sesiÛn';
+'Usuario identificado en la sesi√≥n';
 
 comment on column STT_LOGINT.LOG_EVEDES is
-'DescripciÛn evento';
+'Descripci√≥n evento';
 
 comment on column STT_LOGINT.LOG_EVERES is
 'Resultado evento (depende del evento)';
 
 comment on column STT_LOGINT.LOG_EVEDET is
-'Detalle evento (depende del evento). Permite establecer info adicional mediante una lista de campos de informaciÛn particulares del evento con formato: propiedad1=valor1#@#propiedad2=valor2';
+'Detalle evento (depende del evento). Permite establecer info adicional mediante una lista de campos de informaci√≥n particulares del evento con formato: propiedad1=valor1#@#propiedad2=valor2';
 
 comment on column STT_LOGINT.LOG_ERRCOD is
-'Para evento de tipo error indica el cÛdigo de error (excepciÛn de negocio)';
+'Para evento de tipo error indica el c√≥digo de error (excepci√≥n de negocio)';
 
 comment on column STT_LOGINT.LOG_ERRDET is
 'Para evento de tipo error permite establecer la traza del error';
@@ -588,7 +585,7 @@ create index STT_LOGINT_EVFC_EVTI_EVUS_I on STT_LOGINT (
 /*==============================================================*/
 create table STT_PAGEXT 
 (
-   PAE_CODIGO           NUMBER(20)           not null,
+   PAE_CODIGO           NUMBER(19)           not null,
    PAE_TICKET           VARCHAR2(200 CHAR)   not null,
    PAE_FECINI           DATE                 not null,
    PAE_IDESTR           VARCHAR2(50 CHAR)    not null,
@@ -599,7 +596,7 @@ create table STT_PAGEXT
    PAE_FECFIN           DATE,
    PAE_TCKUSA           NUMBER(1)            default 0
 )
-TABLESPACE SISTRAMIT_DADES
+TABLESPACE SISTRAMIT
    LOB (PAE_INFAUT) STORE AS STT_PAGEXT_INFAUT_LOB
 	 (TABLESPACE SISTRAMIT_LOB
 	 INDEX STT_PAGEXT_INFAUT_LOB_I);
@@ -617,7 +614,7 @@ comment on column STT_PAGEXT.PAE_FECINI is
 'Fecha de apertura del formulario';
 
 comment on column STT_PAGEXT.PAE_IDESTR is
-'Identificador sesiÛn tramitaciÛn';
+'Identificador sesi√≥n tramitaci√≥n';
 
 comment on column STT_PAGEXT.PAE_IDPASO is
 'Identificador paso';
@@ -626,7 +623,7 @@ comment on column STT_PAGEXT.PAE_IDPAGO is
 'Identificador pago';
 
 comment on column STT_PAGEXT.PAE_NIVAUT is
-'Nivel autenticaciÛn para el retorno';
+'Nivel autenticaci√≥n para el retorno';
 
 comment on column STT_PAGEXT.PAE_INFAUT is
 'Informacion de autenticacion serializada para el retorno';
@@ -666,8 +663,8 @@ create index STT_PAGEXT_FECFIN_I on STT_PAGEXT (
 /*==============================================================*/
 create table STT_PASTRP 
 (
-   PTR_CODIGO           NUMBER(20)           not null,
-   PTR_CODTRP           NUMBER(20)           not null,
+   PTR_CODIGO           NUMBER(19)           not null,
+   PTR_CODTRP           NUMBER(19)           not null,
    PTR_IDEPTR           VARCHAR2(20)         not null,
    PTR_TIPO             VARCHAR2(2 CHAR)     not null,
    PTR_ESTADO           VARCHAR2(1 CHAR)     not null,
@@ -675,38 +672,38 @@ create table STT_PASTRP
 );
 
 comment on table STT_PASTRP is
-'Paso tr·mite persistente.';
+'Paso tr√°mite persistente.';
 
 comment on column STT_PASTRP.PTR_CODIGO is
-'CÛdigo paso';
+'C√≥digo paso';
 
 comment on column STT_PASTRP.PTR_CODTRP is
-'CÛdigo tr·mite persistente';
+'C√≥digo tr√°mite persistente';
 
 comment on column STT_PASTRP.PTR_IDEPTR is
-'Identificador paso (para flujo normalizado ser· fijo, para flujo personalizado ser· particular)';
+'Identificador paso (para flujo normalizado ser√° fijo, para flujo personalizado ser√° particular)';
 
 comment on column STT_PASTRP.PTR_TIPO is
 'Tipo paso:
 - Paso inicial de Debe saber: "ds"
 - Paso de rellenar formularios: "rf"
 - Paso de anexar documentos: "ad"
-- Paso de captura de datos a travÈs de un formulario: "cd"
-- Paso informativo que muestra datos a partir de una plantilla de visualizaciÛn: "in"
+- Paso de captura de datos a trav√©s de un formulario: "cd"
+- Paso informativo que muestra datos a partir de una plantilla de visualizaci√≥n: "in"
 - Paso de pago de tasas: "pt"
-- Paso de registro del tr·mite: "rt"
+- Paso de registro del tr√°mite: "rt"
 - Paso para guardar el justificante: "gj"
 ';
 
 comment on column STT_PASTRP.PTR_ESTADO is
 'Estado paso:
-    NO_INICIALIZADO ("n") :  No inicializado. TodavÌa no se han inicializado los datos del paso.
+    NO_INICIALIZADO ("n") :  No inicializado. Todav√≠a no se han inicializado los datos del paso.
     PENDIENTE ("p"): Paso pendiente.
     COMPLETADO ("c"): Paso completado.
     REVISAR ("r"): Paso pendiente revisar porque se ha modificado un paso anterior. Se deben revisar los datos del paso.';
 
 comment on column STT_PASTRP.PTR_ORDEN is
-'N˙mero orden';
+'N√∫mero orden';
 
 alter table STT_PASTRP
    add constraint STT_PASTRP_PK primary key (PTR_CODIGO);
@@ -724,7 +721,7 @@ create unique index STT_PASTRP_UK on STT_PASTRP (
 /*==============================================================*/
 create table STT_SESION 
 (
-   SES_CODIGO           NUMBER(20)           not null,
+   SES_CODIGO           NUMBER(19)           not null,
    SES_IDESTR           VARCHAR2(50 CHAR)    not null,
    SES_FECHA            DATE                 not null
 );
@@ -761,14 +758,14 @@ create table STT_TIPEVE
 );
 
 comment on table STT_TIPEVE is
-'Tipo evento. Adem·s de los eventos propios de las aplicaciones debe existir el evento ERROR  para auditar errores
+'Tipo evento. Adem√°s de los eventos propios de las aplicaciones debe existir el evento ERROR  para auditar errores
 ';
 
 comment on column STT_TIPEVE.TEV_CODIGO is
 'Tipo evento';
 
 comment on column STT_TIPEVE.TEV_DESCRIP is
-'DescripciÛn evento';
+'Descripci√≥n evento';
 
 alter table STT_TIPEVE
    add constraint STT_TIPEVE_PK primary key (TEV_CODIGO);
@@ -778,8 +775,8 @@ alter table STT_TIPEVE
 /*==============================================================*/
 create table STT_TRAPER 
 (
-   TRP_CODIGO           NUMBER(20)           not null,
-   TRP_CODSTR           NUMBER(20)           not null,
+   TRP_CODIGO           NUMBER(19)           not null,
+   TRP_CODSTR           NUMBER(19)           not null,
    TRP_IDETRA           VARCHAR2(20)         not null,
    TRP_VERTRA           NUMBER(2)            not null,
    TRP_CODPROC          VARCHAR2(20)         not null,
@@ -813,68 +810,68 @@ create table STT_TRAPER
 );
 
 comment on table STT_TRAPER is
-'Tr·mites en persistencia';
+'Tr√°mites en persistencia';
 
 comment on column STT_TRAPER.TRP_CODIGO is
-'CÛdigo tr·mite persistente';
+'C√≥digo tr√°mite persistente';
 
 comment on column STT_TRAPER.TRP_CODSTR is
-'CÛdigo sesiÛn tr·mitaciÛn';
+'C√≥digo sesi√≥n tr√°mitaci√≥n';
 
 comment on column STT_TRAPER.TRP_IDETRA is
-'Identificador tr·mite';
+'Identificador tr√°mite';
 
 comment on column STT_TRAPER.TRP_VERTRA is
-'VersiÛn  tr·mite';
+'Versi√≥n  tr√°mite';
 
 comment on column STT_TRAPER.TRP_CODPROC is
 'Codigo del procedimiento asociado con el tramite';
 
 comment on column STT_TRAPER.TRP_DESTRA is
-'DescripciÛn tr·mite';
+'Descripci√≥n tr√°mite';
 
 comment on column STT_TRAPER.TRP_TITPER is
 'Titulo persistencia: si se quiere dar una descripcion personalizada al tramite';
 
 comment on column STT_TRAPER.TRP_ESTADO is
-'Estado tr·mite: 
-    RELLENANDO("r"): Tr·mite en fase de rellenado
-    PENDIENTE_ENVIAR_BANDEJAFIRMA("e"): Indica que el tr·mite debe enviarse a la bandeja de firma
-    ENVIADO_BANDEJAFIRMA("b"): Indica que el tr·mite no puede modificarse ya que se ha enviado a bandeja de firma
-    FINALIZADO("f"): Indica que el tr·mite se ha finalizado
+'Estado tr√°mite: 
+    RELLENANDO("r"): Tr√°mite en fase de rellenado
+    PENDIENTE_ENVIAR_BANDEJAFIRMA("e"): Indica que el tr√°mite debe enviarse a la bandeja de firma
+    ENVIADO_BANDEJAFIRMA("b"): Indica que el tr√°mite no puede modificarse ya que se ha enviado a bandeja de firma
+    FINALIZADO("f"): Indica que el tr√°mite se ha finalizado
 
-Es calculado en funciÛn de los pasos.';
+Es calculado en funci√≥n de los pasos.';
 
 comment on column STT_TRAPER.TRP_NIVAUT is
-'Nivel autenticaciÛn: C Autenticado/ AnÛnimo (A)';
+'Nivel autenticaci√≥n: C Autenticado/ An√≥nimo (A)';
 
 comment on column STT_TRAPER.TRP_METAUT is
-'MÈtodo autenticaciÛn inicio tr·mite:
+'M√©todo autenticaci√≥n inicio tr√°mite:
 ANONIMO
 CLAVE_CERTIFICADO
 CLAVE_PIN
 CLAVE_PERMANENTE';
 
 comment on column STT_TRAPER.TRP_NIFINI is
-'Nif iniciador tr·mite (en caso de autenticado)';
+'Nif iniciador tr√°mite (en caso de autenticado)';
 
 comment on column STT_TRAPER.TRP_NOMINI is
-'Nombre iniciador tr·mite (en caso de autenticado)';
+'Nombre iniciador tr√°mite (en caso de autenticado)';
 
 comment on column STT_TRAPER.TRP_APE1INI is
-'Apellido 1 iniciador tr·mite (en caso de autenticado)';
+'Apellido 1 iniciador tr√°mite (en caso de autenticado)';
 
 comment on column STT_TRAPER.TRP_APE2INI is
-'Apellido 2  iniciador tr·mite (en caso de autenticado)';
+'Apellido 2  iniciador tr√°mite (en caso de autenticado)';
 
 comment on column STT_TRAPER.TRP_TSFLUJO is
-'Timestamp del flujo, Para controlar que sÛlo haya una sesiÛn activa sobre el flujo.';
+'Timestamp del flujo, Para controlar que s√≥lo haya una sesi√≥n activa sobre el flujo.';
 
 comment on column STT_TRAPER.TRP_IDIOMA is
-'Idioma tramitaciÛn';
+'Idioma tramitaci√≥n';
 
 comment on column STT_TRAPER.TRP_PARINI is
-'Par·metros iniciales tr·mite';
+'Par√°metros iniciales tr√°mite';
 
 comment on column STT_TRAPER.TRP_PERSIS is
 'Indica si el tramite es persistente';
@@ -883,28 +880,28 @@ comment on column STT_TRAPER.TRP_DUPLIC is
 'En caso de ser persistente indica si se puede duplicar';
 
 comment on column STT_TRAPER.TRP_PLZDIN is
-'Indica si el plazo se ha establecido de forma din·mica. En este caso se obviar·n los plazos de GUC.';
+'Indica si el plazo se ha establecido de forma din√°mica. En este caso se obviar√°n los plazos de GUC.';
 
 comment on column STT_TRAPER.TRP_FECINI is
 'Fecha inicio';
 
 comment on column STT_TRAPER.TRP_FECACC is
-'Fecha ˙ltimo acceso';
+'Fecha √∫ltimo acceso';
 
 comment on column STT_TRAPER.TRP_FECCAD is
-'Fecha caducidad tr·mite (minimo persistencia y fin plazo)';
+'Fecha caducidad tr√°mite (minimo persistencia y fin plazo)';
 
 comment on column STT_TRAPER.TRP_FECFIN is
-'Fecha finalizaciÛn tr·mite (envÌo o cancelaciÛn)';
+'Fecha finalizaci√≥n tr√°mite (env√≠o o cancelaci√≥n)';
 
 comment on column STT_TRAPER.TRP_BORRAD is
-'Indica si el tr·mite se ha cancelado antes de enviar.';
+'Indica si el tr√°mite se ha cancelado antes de enviar.';
 
 comment on column STT_TRAPER.TRP_NIFFIN is
-'Nif que realiza la presentaciÛn del tr·mite';
+'Nif que realiza la presentaci√≥n del tr√°mite';
 
 comment on column STT_TRAPER.TRP_NOMFIN is
-'Nombre y apellidos del que realiza la presentaciÛn del tr·mite';
+'Nombre y apellidos del que realiza la presentaci√≥n del tr√°mite';
 
 comment on column STT_TRAPER.TRP_PURGA is
 'Indica si el tramite se ha prugado';
