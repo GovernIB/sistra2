@@ -1,5 +1,4 @@
 
-
 create sequence STG_ACCPER_SEQ;
 
 create sequence STG_ANETRA_SEQ;
@@ -992,6 +991,8 @@ alter table STG_FORETQ
 create table STG_FORFMT 
 (
    FMT_CODIGO           NUMBER(18)           not null,
+   FMT_IDENTI           VARCHAR2(20)         not null,
+   FMT_CODENT           NUMBER(18)           not null,
    FMT_CLASS            VARCHAR2(500 CHAR)   not null,
    FMT_DESCRI           VARCHAR2(255 CHAR)   not null
 );
@@ -1002,6 +1003,12 @@ comment on table STG_FORFMT is
 comment on column STG_FORFMT.FMT_CODIGO is
 'Código';
 
+comment on column STG_FORFMT.FMT_IDENTI is
+'Identificador';
+
+comment on column STG_FORFMT.FMT_CODENT is
+'Código entidad';
+
 comment on column STG_FORFMT.FMT_CLASS is
 'Classname del formateador';
 
@@ -1010,6 +1017,14 @@ comment on column STG_FORFMT.FMT_DESCRI is
 
 alter table STG_FORFMT
    add constraint STG_FORFMT_PK primary key (FMT_CODIGO);
+
+/*==============================================================*/
+/* Index: STG_FORFMT_IDENTI_UK                                  */
+/*==============================================================*/
+create unique index STG_FORFMT_IDENTI_UK on STG_FORFMT (
+   FMT_IDENTI ASC,
+   FMT_CODENT ASC
+);
 
 /*==============================================================*/
 /* Table: STG_FORIMG                                            */
@@ -2544,6 +2559,10 @@ alter table STG_FORELE
 alter table STG_FORETQ
    add constraint STG_FORETQ_FORELE_FK foreign key (ETI_CODIGO)
       references STG_FORELE (FEL_CODIGO);
+
+alter table STG_FORFMT
+   add constraint STG_FORFMT_ENTIDA_FK foreign key (FMT_CODENT)
+      references STG_ENTIDA (ENT_CODIGO);
 
 alter table STG_FORIMG
    add constraint STG_FORIMG_FICHER_FK foreign key (FIM_CODFIC)
