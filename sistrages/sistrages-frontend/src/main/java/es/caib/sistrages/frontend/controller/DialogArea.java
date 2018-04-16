@@ -5,7 +5,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.service.AreaService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -18,7 +18,7 @@ public class DialogArea extends DialogControllerBase {
 	 * Enlace area.
 	 */
 	@Inject
-	private AreaService areaService;
+	private TramiteService areaService;
 
 	/**
 	 * Id elemento a tratar.

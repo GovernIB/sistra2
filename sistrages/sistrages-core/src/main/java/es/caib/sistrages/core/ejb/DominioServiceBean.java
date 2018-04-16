@@ -13,6 +13,9 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.FuenteDatosValores;
+import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -39,9 +42,15 @@ public class DominioServiceBean implements DominioService {
 	 * es.caib.sistrages.core.api.service.DominioService#loadDominio(java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public Dominio loadDominio(final Long idDominio) {
 		return dominioService.loadDominio(idDominio);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Dominio loadDominio(final String codigoDominio) {
+		return dominioService.loadDominio(codigoDominio);
 	}
 
 	/*
@@ -51,7 +60,7 @@ public class DominioServiceBean implements DominioService {
 	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Dominio> listDominio(final TypeAmbito ambito, final Long id, final String filtro) {
 		return dominioService.listDominio(ambito, id, filtro);
 	}
@@ -63,7 +72,7 @@ public class DominioServiceBean implements DominioService {
 	 * sistrages.core.api.model.Dominio, java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void addDominio(final Dominio entidad, final Long idEntidad, final Long idArea) {
 		dominioService.addDominio(entidad, idEntidad, idArea);
 	}
@@ -76,7 +85,7 @@ public class DominioServiceBean implements DominioService {
 	 * Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean removeDominio(final Long idDominio) {
 		return dominioService.removeDominio(idDominio);
 	}
@@ -88,7 +97,7 @@ public class DominioServiceBean implements DominioService {
 	 * sistrages.core.api.model.Dominio)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateDominio(final Dominio dominio) {
 		dominioService.updateDominio(dominio);
 	}
@@ -101,9 +110,15 @@ public class DominioServiceBean implements DominioService {
 	 * Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public FuenteDatos loadFuenteDato(final Long idFuenteDato) {
 		return dominioService.loadFuenteDato(idFuenteDato);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public FuenteDatosValores loadFuenteDatoValores(final Long idFuenteDato) {
+		return dominioService.loadFuenteDatoValores(idFuenteDato);
 	}
 
 	/*
@@ -113,7 +128,7 @@ public class DominioServiceBean implements DominioService {
 	 * sistrages.core.api.model.FuenteDatos, java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void addFuenteDato(final FuenteDatos fuenteDato, final Long idArea) {
 		dominioService.addFuenteDato(fuenteDato, idArea);
 	}
@@ -126,7 +141,7 @@ public class DominioServiceBean implements DominioService {
 	 * sistrages.core.api.model.FuenteDatos)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateFuenteDato(final FuenteDatos fuenteDato) {
 		dominioService.updateFuenteDato(fuenteDato);
 	}
@@ -139,9 +154,48 @@ public class DominioServiceBean implements DominioService {
 	 * Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
-	public void removeFuenteDato(final Long idFuenteDato) {
-		dominioService.removeFuenteDato(idFuenteDato);
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean removeFuenteDato(final Long idFuenteDato) {
+		return dominioService.removeFuenteDato(idFuenteDato);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
+	 * Long)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void addFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo, final Long idFuenteDato) {
+		dominioService.addFuenteDatoCampo(fuenteDatoCampo, idFuenteDato);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
+	 * Long)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo) {
+		dominioService.updateFuenteDatoCampo(fuenteDatoCampo);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
+	 * Long)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removeFuenteDatoCampo(final Long idFuenteDatoCampo) {
+		dominioService.removeFuenteDatoCampo(idFuenteDatoCampo);
 	}
 
 	/*
@@ -152,9 +206,67 @@ public class DominioServiceBean implements DominioService {
 	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<FuenteDatos> listFuenteDato(final TypeAmbito ambito, final Long id, final String filtro) {
 		return dominioService.listFuenteDato(ambito, id, filtro);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#listFuenteDato(es.caib.
+	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public FuenteFila loadFuenteDatoFila(final Long idFuenteDatoFila) {
+		return dominioService.loadFuenteDatoFila(idFuenteDatoFila);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#listFuenteDato(es.caib.
+	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void addFuenteDatoFila(final FuenteFila fila, final Long idFuente) {
+		dominioService.addFuenteDatoFila(fila, idFuente);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#listFuenteDato(es.caib.
+	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateFuenteDatoFila(final FuenteFila fila) {
+		dominioService.updateFuenteDatoFila(fila);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#listFuenteDato(es.caib.
+	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removeFuenteFila(final Long idFila) {
+		dominioService.removeFuenteFila(idFila);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean isCorrectoPK(final FuenteFila fuenteFila, final Long idFuenteDato) {
+		return dominioService.isCorrectoPK(fuenteFila, idFuenteDato);
 	}
 
 }

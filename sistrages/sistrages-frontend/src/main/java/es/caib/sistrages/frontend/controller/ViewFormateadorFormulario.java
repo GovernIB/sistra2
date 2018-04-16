@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -66,7 +67,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogFormateadorFormulario.class, TypeModoAcceso.ALTA, null, true, 640, 130);
+		abrirDialogo(TypeModoAcceso.ALTA);
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 * @return el valor de permiteAlta
 	 */
 	public boolean getPermiteAlta() {
-		return true;
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 	}
 
 	/**
@@ -116,7 +117,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean getPermiteEditar() {
-		return false;
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 	}
 
 	/**
@@ -157,7 +158,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = fmtService.listFormateadorFormulario(filtro);
+		listaDatos = fmtService.listFormateadorFormulario(UtilJSF.getIdEntidad(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -181,12 +182,15 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 */
 	private void abrirDialogo(final TypeModoAcceso modo) {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
+		if (modo != TypeModoAcceso.ALTA && !verificarFilaSeleccionada()) {
 			return;
+		}
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getId().toString());
-		UtilJSF.openDialog(DialogFormateadorFormulario.class, modo, params, true, 640, 130);
+		if (modo != TypeModoAcceso.ALTA) {
+			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getId().toString());
+		}
+		UtilJSF.openDialog(DialogFormateadorFormulario.class, modo, params, true, 640, 180);
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------

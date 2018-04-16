@@ -3,11 +3,16 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.FuenteDatosValores;
+import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
 public interface FuenteDatoDao {
 
 	FuenteDatos getById(final Long idFuenteDato);
+
+	FuenteDatosValores getValoresById(final Long idFuenteDato);
 
 	List<FuenteDatos> getAll(TypeAmbito ambito, Long id);
 
@@ -17,6 +22,30 @@ public interface FuenteDatoDao {
 
 	void remove(final Long idFuenteDato);
 
+	/**
+	 * Elimina fuente datos de una entidad.
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 */
+	void removeByEntidad(final Long idEntidad);
+
 	void updateFuenteDato(FuenteDatos fuenteDato);
+
+	FuenteFila loadFuenteDatoFila(Long idFuenteDatoFila);
+
+	void addFuenteDatoFila(FuenteFila fila, Long idFuente);
+
+	void updateFuenteDatoFila(FuenteFila fila);
+
+	void removeFuenteFila(Long idFila);
+
+	void removeFuenteDatoCampo(Long idFuenteDatoCampo);
+
+	void addFuenteDatoCampo(FuenteDatosCampo campo, Long idFuente);
+
+	void updateFuenteDatoCampo(FuenteDatosCampo campo);
+
+	boolean isCorrectoPK(FuenteFila fuenteFila, Long idFuenteDato);
 
 }

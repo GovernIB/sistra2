@@ -23,10 +23,10 @@ import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.types.TypePropiedadGlobal;
+import es.caib.sistrages.core.api.util.GeneradorId;
 import es.caib.sistrages.core.service.repository.model.JConfiguracionGlobal;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFicheroExterno;
-import es.caib.sistrages.core.service.util.GeneradorId;
 
 /**
  * FicheroExternoDao implementación.
@@ -45,12 +45,6 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#
-	 * getContentById(java.lang.Long)
-	 */
 	@Override
 	public ContenidoFichero getContentById(final Long id) {
 		// Obtiene metadatos fichero
@@ -77,24 +71,11 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#getPathById(
-	 * java.lang.Long)
-	 */
 	@Override
 	public String getPathById(final Long id) {
 		return getPathAbsolutoFichero(id);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#
-	 * purgarFicheros()
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void purgarFicheros() {
@@ -115,13 +96,6 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#
-	 * guardarFichero(java.lang.Long, es.caib.sistrages.core.api.model.Fichero,
-	 * byte[])
-	 */
 	@Override
 	public void guardarFichero(final Long idEntidad, final Fichero fichero, final byte[] content) {
 
@@ -154,13 +128,6 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.FicheroExternoDao#marcarBorrar(
-	 * java.lang.Long)
-	 */
 	@Override
 	public void marcarBorrar(final Long id) {
 		// Si existe fichero anterior, lo marca a borrado

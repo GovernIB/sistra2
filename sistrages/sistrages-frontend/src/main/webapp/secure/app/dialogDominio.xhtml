@@ -38,24 +38,24 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta}" required="true" maxlength="20"/>
+				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta or dialogDominio.isConsulta()}" required="true" maxlength="20"/>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
 				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
 
 				<p:outputLabel for="cacheo" value="#{msg['dialogDominio.headerCachear']}" />
 				<p:column>
-					<p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" />
-					<p:commandButton value="#{msg['botones.refrescarCache']}" actionListener="#{dialogDominio.refrescarCache()}" icon="fa fa-refresh" process="@form" update="growlDialog"  />
+					<p:selectBooleanCheckbox id="cacheo" value="#{dialogDominio.data.cacheable}" itemLabel="#{msg['dialogDominio.headerCachearCheck']}" disabled="#{dialogDominio.isConsulta()}" />
+					<p:commandButton value="#{msg['botones.refrescarCache']}" actionListener="#{dialogDominio.refrescarCache()}" icon="fa fa-refresh" process="@form" update="growlDialog" disabled="#{dialogDominio.isConsulta()}" />
 				</p:column>
 
 				<p:column>
 			    	<p style="width:230px">
 			    		<p:outputLabel  value="#{msg['dialogDominio.headerTipo']}:" />
 					</p>
-					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true">
+					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true" disabled="#{dialogDominio.isConsulta()}">
 					     <f:selectItems value="#{dialogDominio.tipos}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}"  />
-						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota columnaFuente1 columnaFuente2 labelParametros gridParametros" />
+						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this @form" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota columnaFuente1 columnaFuente2 labelParametros gridParametros" />
 					</p:selectOneMenu >
 
 
@@ -64,7 +64,7 @@
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30" maxlength="500"/>
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30" maxlength="500" />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -88,9 +88,6 @@
 										 rowKey="#{td.codigo}"
 										 dblClickSelect="true">
 
-								<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-								<p:ajax event="rowDblselect" oncomplete="rcEditarValor();"/>
-
 								<!-- Necesario para actualizar en controlador la fila seleccionada -->
 								<p:ajax event="rowSelect" />
 								<p:ajax event="rowUnselect" />
@@ -105,25 +102,25 @@
 							    </p:column>
 				 			</p:dataTable>
 						</p:column>
-						<p:column id="columnaLista2"  rendered="#{dialogDominio.visibleLista}">
+						<p:column id="columnaLista2" rendered="#{dialogDominio.visibleLista and !dialogDominio.isConsulta()}">
 								<p>
-									<p:commandButton id="btnNuevoValor" icon="fa fa-plus" actionListener="#{dialogDominio.nuevoValor()}" process="@this" update="growlDialog"  >
+									<p:commandButton id="btnNuevoValor" alt="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevoValor()}" process="@this" update="growlDialog"  >
 		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-		        					<p:commandButton id="btnEditarValor" icon="fa fa-edit" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  >
+		        					<p:commandButton id="btnEditarValor" alt="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  >
 		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
 		        					</p:commandButton>
 		        				</p>
 							    <p>
-							    	<p:commandButton id="btnEliminarValor" icon="fa fa-minus" actionListener="#{dialogDominio.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
+							    	<p:commandButton id="btnEliminarValor" alt="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
 							    </p>
 							    <p>
-						    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogDominio.subirValor()}" process="@this" update="growlDialog datalistValores" />
+						    		<p:commandButton icon="fa fa-arrow-up" alt="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirValor()}" process="@this" update="growlDialog datalistValores" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogDominio.bajarValor()}" process="@this" update="growlDialog datalistValores" />
+						    		<p:commandButton icon="fa fa-arrow-down" alt="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarValor()}" process="@this" update="growlDialog datalistValores" />
 						    	</p>
 						</p:column>
 
@@ -139,16 +136,15 @@
 
 						<p:column id="columnaFuente1" colspan="1" rendered="#{dialogDominio.visibleFuente}" >
 							<p:outputLabel for="fuente" value="#{msg['dialogDominio.headerTipo.fuente.fuente']}" style="margin-right:20px" />
-							<p:selectOneMenu id="fuente" value="#{dialogDominio.data.fuenteDatos}" style="width:200px">
-							    <f:selectItems value="#{dialogDominio.fuentes}" var="fd"
-		    							itemValue="#{fd}" itemLabel="#{fd.codigo}" />
+							<p:selectOneMenu id="fuente" value="#{dialogDominio.idFuenteDato}"  style="width:200px" disabled="#{dialogDominio.isConsulta()}">
+							    <f:selectItems value="#{dialogDominio.fuentes}" var="fd" itemValue="#{fd.codigo}" itemLabel="#{fd.identificador}" />
 							</p:selectOneMenu >
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 
 						<p:column id="columnaFuente2" colspan="1" rendered="#{dialogDominio.visibleFuente}" >
 							<p:outputLabel for="fuenteQuery" value="#{msg['dialogDominio.headerTipo.fuente.query']}" style="margin-right:20px"  />
-							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.fuenteDatosQuery}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" />
+							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 				</h:panelGrid>
@@ -166,9 +162,6 @@
 									 rowKey="#{td.codigo}"
 									 dblClickSelect="true">
 
-							<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-							<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
-
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
 							<p:ajax event="rowSelect" />
 							<p:ajax event="rowUnselect" />
@@ -180,7 +173,7 @@
 
 
 			 		</p:dataTable>
-			 		<p:column>
+			 		<p:column rendered="#{!dialogDominio.isConsulta()}">
 						<p>
 				    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
 	       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
@@ -204,7 +197,7 @@
 		 		</h:panelGrid>
 			</h:panelGrid>
 
-			<h:outputScript>
+			<h:outputScript rendered="#{!dialogDominio.isConsulta()}">
 		      function rcEditarPropiedad() {
 		        document.getElementById("form:btnEditarPropiedad").click();
 		      }
@@ -222,8 +215,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.isConsulta()}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

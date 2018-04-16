@@ -38,6 +38,14 @@ public interface AvisoEntidadDao {
 	void remove(Long id);
 
 	/**
+	 * Elimina Avisos Entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador entidad
+	 */
+	void removeByEntidad(Long idEntidad);
+
+	/**
 	 * Actualiza Aviso Entidad.
 	 *
 	 * @param avisoEntidad

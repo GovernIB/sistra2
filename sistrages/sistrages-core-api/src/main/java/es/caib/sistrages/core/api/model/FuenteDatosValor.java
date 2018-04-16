@@ -13,6 +13,12 @@ public class FuenteDatosValor extends ModelApi {
 	/** Id. **/
 	private Long id;
 
+	/** Codigo del Campo. **/
+	private String idCampo;
+
+	/** Orden del campo. **/
+	private Integer ordenCampo;
+
 	/** Campo. **/
 	private FuenteDatosCampo campo;
 
@@ -24,18 +30,17 @@ public class FuenteDatosValor extends ModelApi {
 	 */
 	public FuenteDatosValor() {
 		id = null;
-		campo = null;
 	}
 
 	/**
 	 * Constructor .
 	 *
 	 * @param id
-	 * @param campo
+	 * @param codigo
 	 */
-	public FuenteDatosValor(final Long id, final FuenteDatosCampo campo, final String valor) {
+	public FuenteDatosValor(final Long id, final String idCampo, final String valor) {
 		this.id = id;
-		this.campo = campo;
+		this.setIdCampo(idCampo);
 		this.valor = valor;
 	}
 
@@ -55,6 +60,21 @@ public class FuenteDatosValor extends ModelApi {
 	}
 
 	/**
+	 * @return the valor
+	 */
+	public String getValor() {
+		return valor;
+	}
+
+	/**
+	 * @param valor
+	 *            the valor to set
+	 */
+	public void setValor(final String valor) {
+		this.valor = valor;
+	}
+
+	/**
 	 * @return the campo
 	 */
 	public FuenteDatosCampo getCampo() {
@@ -70,18 +90,33 @@ public class FuenteDatosValor extends ModelApi {
 	}
 
 	/**
-	 * @return the valor
+	 * @return the idCampo
 	 */
-	public String getValor() {
-		return valor;
+	public String getIdCampo() {
+		return idCampo;
 	}
 
 	/**
-	 * @param valor
-	 *            the valor to set
+	 * @param idCampo
+	 *            the idCampo to set
 	 */
-	public void setValor(final String valor) {
-		this.valor = valor;
+	public void setIdCampo(final String idCampo) {
+		this.idCampo = idCampo;
+	}
+
+	/**
+	 * @return the ordenCampo
+	 */
+	public Integer getOrdenCampo() {
+		return ordenCampo;
+	}
+
+	/**
+	 * @param ordenCampo
+	 *            the ordenCampo to set
+	 */
+	public void setOrdenCampo(final Integer ordenCampo) {
+		this.ordenCampo = ordenCampo;
 	}
 
 }

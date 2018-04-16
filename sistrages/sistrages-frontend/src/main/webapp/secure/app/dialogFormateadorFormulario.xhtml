@@ -32,6 +32,9 @@
 
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
+					<p:outputLabel for="codigo" value="#{msg['dialogFormateadorFormulario.codigo']}" />
+					<p:inputText id="codigo" value="#{dialogFormateadorFormulario.data.codigo}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="30" maxlength="20"/>
+
 					<p:outputLabel for="classname" value="#{msg['dialogFormateadorFormulario.classname']}" />
 					<p:inputText id="classname" value="#{dialogFormateadorFormulario.data.classname}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="500"/>
 
@@ -44,8 +47,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFormateadorFormulario.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFormateadorFormulario.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this"  rendered="#{dialogFormateadorFormulario.isConsulta()}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

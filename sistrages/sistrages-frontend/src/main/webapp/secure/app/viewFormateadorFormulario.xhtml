@@ -22,23 +22,23 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewFormateadorFormulario.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewFormateadorFormulario.filtrar()}" process="panelFiltro" update="growl dataTable form:panelBotones" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewFormateadorFormulario.filtrar()}" process="panelFiltro" update="growl dataTable" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewFormateadorFormulario.nuevo()}" process="@this" update="growl" rendered="#{viewFormateadorFormulario.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewFormateadorFormulario.returnDialogo}" update="growl dataTable form:panelBotones"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewFormateadorFormulario.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewFormateadorFormulario.consultar()}" process="@this" update="growl" rendered="#{not viewFormateadorFormulario.permiteEditar and not viewFormateadorFormulario.permiteAlta}" />
 
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewFormateadorFormulario.editar()}" process="@this" update="growl" rendered="#{viewFormateadorFormulario.permiteEditar or viewFormateadorFormulario.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewFormateadorFormulario.returnDialogo}" update="growl dataTable form:panelBotones"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewFormateadorFormulario.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewFormateadorFormulario.eliminar()}" process="@this" update="growl dataTable form:panelBotones" rendered="#{viewFormateadorFormulario.permiteAlta}">
-		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{!viewFormateadorFormulario.filaSeleccionada}"/>
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewFormateadorFormulario.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewFormateadorFormulario.permiteAlta}">
+		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFormateadorFormulario.ayudar()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
@@ -57,10 +57,14 @@
 			        	 selectionMode="single" selection="#{viewFormateadorFormulario.datoSeleccionado}" rowKey="#{td.id}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" update="form:panelBotones"/>
-				<p:ajax event="rowUnselect" update="form:panelBotones" />
+				<p:ajax event="rowSelect"/>
+				<p:ajax event="rowUnselect"/>
 
 				<!-- Columnas -->
+				<p:column headerText="#{msg['viewFormateadorFormulario.headerIdentificador']}">
+			        <h:outputText value="#{td.codigo}" />
+			    </p:column>
+
 			    <p:column headerText="#{msg['viewFormateadorFormulario.headerClassname']}">
 			        <h:outputText value="#{td.classname}" />
 			    </p:column>

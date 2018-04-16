@@ -16,6 +16,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.Tramite;
+
 /**
  * JTramite
  */
@@ -45,6 +47,7 @@ public class JTramite implements IModelApi {
 	private Set<JVersionTramite> versionTramite = new HashSet<JVersionTramite>(0);
 
 	public JTramite() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -87,4 +90,23 @@ public class JTramite implements IModelApi {
 		this.versionTramite = versionTramite;
 	}
 
+	public Tramite toModel() {
+		final Tramite tramite = new Tramite();
+		tramite.setId(codigo);
+		tramite.setDescripcion(descripcion);
+		tramite.setIdentificador(identificador);
+
+		return tramite;
+	}
+
+	public static JTramite fromModel(final Tramite model) {
+		JTramite jModel = null;
+		if (model != null) {
+			jModel = new JTramite();
+			jModel.setCodigo(model.getId());
+			jModel.setIdentificador(model.getIdentificador());
+			jModel.setDescripcion(model.getDescripcion());
+		}
+		return jModel;
+	}
 }

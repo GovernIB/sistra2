@@ -71,7 +71,7 @@ public class JFichero implements IModelApi {
 		final JFichero jFichero = new JFichero();
 		jFichero.setCodigo(fichero.getId());
 		jFichero.setNombre(fichero.getNombre());
-		jFichero.setPublico(true);
+		jFichero.setPublico(fichero.isPublico());
 		return jFichero;
 	}
 

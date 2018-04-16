@@ -1,7 +1,5 @@
 package es.caib.sistrages.core.api.model;
 
-import java.util.Date;
-
 /**
  *
  * Trámite.
@@ -20,12 +18,12 @@ public class Tramite extends ModelApi {
 	/**
 	 * Codigo.
 	 */
-	private String codigo;
+	private String identificador;
 
 	/**
 	 * Descripcion.
 	 */
-	private Literal descripcion;
+	private String descripcion;
 
 	/**
 	 * Activo
@@ -33,14 +31,11 @@ public class Tramite extends ModelApi {
 	private boolean activo;
 
 	/**
-	 * Bloqueada
+	 * Crea una nueva instancia de Tramite.
 	 */
-	private boolean bloqueada;
-
-	/**
-	 * Modificacion
-	 */
-	private Date modificacion;
+	public Tramite() {
+		super();
+	}
 
 	/**
 	 * @return the id
@@ -60,7 +55,7 @@ public class Tramite extends ModelApi {
 	/**
 	 * @return the descripcion
 	 */
-	public Literal getDescripcion() {
+	public String getDescripcion() {
 		return descripcion;
 	}
 
@@ -68,23 +63,23 @@ public class Tramite extends ModelApi {
 	 * @param descripcion
 	 *            the descripcion to set
 	 */
-	public void setDescripcion(final Literal descripcion) {
+	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
 	}
 
 	/**
-	 * @return the codigo
+	 * @return the identificador
 	 */
-	public String getCodigo() {
-		return codigo;
+	public String getIdentificador() {
+		return identificador;
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param identificador
+	 *            the identificador to set
 	 */
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**
@@ -100,36 +95,6 @@ public class Tramite extends ModelApi {
 	 */
 	public void setActivo(final boolean activo) {
 		this.activo = activo;
-	}
-
-	/**
-	 * @return the bloqueada
-	 */
-	public boolean isBloqueada() {
-		return bloqueada;
-	}
-
-	/**
-	 * @param bloqueada
-	 *            the bloqueada to set
-	 */
-	public void setBloqueada(final boolean bloqueada) {
-		this.bloqueada = bloqueada;
-	}
-
-	/**
-	 * @return the modificacion
-	 */
-	public Date getModificacion() {
-		return modificacion;
-	}
-
-	/**
-	 * @param modificacion
-	 *            the modificacion to set
-	 */
-	public void setModificacion(final Date modificacion) {
-		this.modificacion = modificacion;
 	}
 
 }

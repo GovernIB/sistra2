@@ -13,6 +13,7 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -105,12 +106,16 @@ public class ViewFuentes extends ViewControllerBase {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
+
 		// Eliminamos
-		listaDatos.remove(this.datoSeleccionado);
-		// Refrescamos datos
-		filtrar();
-		// Mostramos mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		if (!dominioService.removeFuenteDato(this.datoSeleccionado.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+		} else {
+			// Refrescamos datos
+			filtrar();
+			// Mostramos mensaje
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		}
 	}
 
 	/**
@@ -125,6 +130,8 @@ public class ViewFuentes extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
+		final FuenteDatos fuente = dominioService.loadFuenteDato(this.datoSeleccionado.getCodigo());
+		params.put("CAMPOS", UtilJSON.toJSON(fuente.getCampos()));
 		UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.EDICION, params, true, 740, 450);
 	}
 

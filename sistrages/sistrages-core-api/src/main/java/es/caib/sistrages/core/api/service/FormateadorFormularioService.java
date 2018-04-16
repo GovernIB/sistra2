@@ -19,12 +19,25 @@ public interface FormateadorFormularioService {
 	FormateadorFormulario getFormateadorFormulario(Long idFmt);
 
 	/**
+	 * Obtiene el formateador de formulario.
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 * @param codigo
+	 *            codigo
+	 * @return el formateador de formulario.
+	 */
+	FormateadorFormulario getFormateadorFormulario(Long idEntidad, String codigo);
+
+	/**
 	 * Añade el formateador de formulario.
 	 *
+	 * @param idEntidad
+	 *            idEntidad
 	 * @param fmt
 	 *            el formateador de formulario
 	 */
-	void addFormateadorFormulario(FormateadorFormulario fmt);
+	void addFormateadorFormulario(Long idEntidad, FormateadorFormulario fmt);
 
 	/**
 	 * Elimina el formateador de formulario.
@@ -46,10 +59,12 @@ public interface FormateadorFormularioService {
 	/**
 	 * Lista de formateadores de formulario.
 	 *
+	 * @param idEntidad
+	 *            idEntidad
 	 * @param filtro
 	 *            filtro busqueda
 	 * @return la lista de formateadores de formulario
 	 */
-	List<FormateadorFormulario> listFormateadorFormulario(String filtro);
+	List<FormateadorFormulario> listFormateadorFormulario(Long idEntidad, String filtro);
 
 }

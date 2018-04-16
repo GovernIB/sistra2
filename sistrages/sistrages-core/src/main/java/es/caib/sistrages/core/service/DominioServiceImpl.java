@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.FuenteDatosValores;
+import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -51,6 +54,14 @@ public class DominioServiceImpl implements DominioService {
 	public Dominio loadDominio(final Long idDominio) {
 		Dominio result = null;
 		result = dominioDao.getById(idDominio);
+		return result;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Dominio loadDominio(final String codigoDominio) {
+		Dominio result = null;
+		result = dominioDao.getByCodigo(codigoDominio);
 		return result;
 	}
 
@@ -112,9 +123,19 @@ public class DominioServiceImpl implements DominioService {
 	 */
 	@Override
 	public FuenteDatos loadFuenteDato(final Long idFuenteDato) {
-		FuenteDatos result = null;
-		result = fuenteDatoDao.getById(idFuenteDato);
-		return result;
+		return fuenteDatoDao.getById(idFuenteDato);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#loadFuenteDato(java.lang.
+	 * Long)
+	 */
+	@Override
+	public FuenteDatosValores loadFuenteDatoValores(final Long idFuenteDato) {
+		return fuenteDatoDao.getValoresById(idFuenteDato);
 	}
 
 	/*
@@ -148,8 +169,51 @@ public class DominioServiceImpl implements DominioService {
 	 * Long)
 	 */
 	@Override
-	public void removeFuenteDato(final Long idFuenteDato) {
-		fuenteDatoDao.remove(idFuenteDato);
+	public boolean removeFuenteDato(final Long idFuenteDato) {
+		boolean borrar;
+		if (!dominioDao.getAllByFuenteDatos(idFuenteDato).isEmpty()) {
+			borrar = false;
+		} else {
+			borrar = true;
+			fuenteDatoDao.remove(idFuenteDato);
+		}
+		return borrar;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
+	 * Long)
+	 */
+	@Override
+	public void addFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo, final Long idFuente) {
+		fuenteDatoDao.addFuenteDatoCampo(fuenteDatoCampo, idFuente);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
+	 * Long)
+	 */
+	@Override
+	public void updateFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo) {
+		fuenteDatoDao.updateFuenteDatoCampo(fuenteDatoCampo);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
+	 * Long)
+	 */
+	@Override
+	public void removeFuenteDatoCampo(final Long idFuenteDatoCampo) {
+		fuenteDatoDao.removeFuenteDatoCampo(idFuenteDatoCampo);
 	}
 
 	/*
@@ -162,6 +226,31 @@ public class DominioServiceImpl implements DominioService {
 	@Override
 	public List<FuenteDatos> listFuenteDato(final TypeAmbito ambito, final Long id, final String filtro) {
 		return fuenteDatoDao.getAllByFiltro(ambito, id, filtro);
+	}
+
+	@Override
+	public FuenteFila loadFuenteDatoFila(final Long idFuenteDatoFila) {
+		return fuenteDatoDao.loadFuenteDatoFila(idFuenteDatoFila);
+	}
+
+	@Override
+	public void addFuenteDatoFila(final FuenteFila fila, final Long idFuente) {
+		fuenteDatoDao.addFuenteDatoFila(fila, idFuente);
+	}
+
+	@Override
+	public void updateFuenteDatoFila(final FuenteFila fila) {
+		fuenteDatoDao.updateFuenteDatoFila(fila);
+	}
+
+	@Override
+	public void removeFuenteFila(final Long idFila) {
+		fuenteDatoDao.removeFuenteFila(idFila);
+	}
+
+	@Override
+	public boolean isCorrectoPK(final FuenteFila fuenteFila, final Long idFuenteDato) {
+		return fuenteDatoDao.isCorrectoPK(fuenteFila, idFuenteDato);
 	}
 
 }

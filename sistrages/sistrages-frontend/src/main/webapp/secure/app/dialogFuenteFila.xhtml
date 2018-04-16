@@ -24,8 +24,9 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogFuenteFila.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogFuenteFila.id}" />
 		<f:viewParam name="DATO" value="#{dialogFuenteFila.iData}" />
-		<f:viewParam name="DATO2" value="#{dialogFuenteFila.iCampos}" />
+		<f:viewParam name="DATO2" value="#{dialogFuenteFila.idFuenteDato}" />
 		<f:viewAction action="#{dialogFuenteFila.init}" />
 	</f:metadata>
 	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
@@ -36,8 +37,8 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<c:forEach items="#{dialogFuenteFila.data.datos}" var="dato">
-			  			<h:outputText value="#{dato.campo.codigo}" />
-			  			<p:inputTextarea id="input#{dato.campo.codigo}" value="#{dato.valor}" rows="4" cols="40" required="true" />
+			  			<h:outputText value="#{dato.idCampo}" />
+			  			<p:inputTextarea value="#{dato.valor}" rows="4" cols="40" required="true" />
 				</c:forEach>
 
 			 </h:panelGrid>

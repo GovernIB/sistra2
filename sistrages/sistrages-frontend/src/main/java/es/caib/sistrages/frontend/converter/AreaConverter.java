@@ -8,19 +8,19 @@ import javax.faces.convert.Converter;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.service.AreaService;
+import es.caib.sistrages.core.api.service.TramiteService;
 
 @ManagedBean
 @RequestScoped
 public class AreaConverter implements Converter {
 
 	@Inject
-	private AreaService areaService;
+	private TramiteService tramiteService;
 
 	@Override
 	public Object getAsObject(final FacesContext fc, final UIComponent uic, final String value) {
 		if (value != null && value.trim().length() > 0) {
-			return areaService.getArea(Long.parseLong(value));
+			return tramiteService.getArea(Long.parseLong(value));
 
 		} else {
 			return null;

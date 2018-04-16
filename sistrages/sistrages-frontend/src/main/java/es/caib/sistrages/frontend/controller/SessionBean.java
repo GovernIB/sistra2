@@ -17,6 +17,7 @@ import org.primefaces.model.menu.MenuModel;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
@@ -68,6 +69,12 @@ public class SessionBean {
 	 */
 	@Inject
 	private SecurityService securityService;
+
+	/**
+	 * Servicio entidad.
+	 */
+	@Inject
+	private EntidadService entidadService;
 
 	/**
 	 * Lista entidades a las que tiene acceso desde el menú (si es Admin Entidad o
@@ -296,6 +303,29 @@ public class SessionBean {
 		return res;
 	}
 
+	/**
+	 * Refrescar datos de la entidad.
+	 */
+	public void refrescarEntidad() {
+		int i = 0;
+		if (entidad != null) {
+			entidad = entidadService.loadEntidad(entidad.getId());
+
+			// Cambia entidad
+			for (final Entidad e : listaEntidades) {
+				if (e.getId().longValue() == entidad.getId()) {
+					break;
+				}
+				i++;
+			}
+
+			listaEntidades.set(i, entidad);
+
+			// Cambio logo
+			cambiarLogo();
+		}
+	}
+
 	// --------- PRIVATE METHODS --------------------
 
 	/** Cambiar logo. */
@@ -417,5 +447,13 @@ public class SessionBean {
 
 	public void setRolesList(final List<TypeRoleAcceso> rolesList) {
 		this.rolesList = rolesList;
+	}
+
+	public EntidadService getEntidadService() {
+		return entidadService;
+	}
+
+	public void setEntidadService(final EntidadService entidadService) {
+		this.entidadService = entidadService;
 	}
 }

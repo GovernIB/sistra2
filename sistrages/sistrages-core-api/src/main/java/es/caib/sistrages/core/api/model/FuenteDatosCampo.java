@@ -19,6 +19,12 @@ public class FuenteDatosCampo extends ModelApi {
 	/** Indica si el campo forma parte de la clave primaria **/
 	private boolean clavePrimaria;
 
+	/** Orden. **/
+	private Integer orden;
+
+	/** Fuente de datos. */
+	private FuenteDatos fuenteDatos;
+
 	/**
 	 * @return the id
 	 */
@@ -62,6 +68,36 @@ public class FuenteDatosCampo extends ModelApi {
 	 */
 	public void setClavePrimaria(final boolean clavePrimaria) {
 		this.clavePrimaria = clavePrimaria;
+	}
+
+	/**
+	 * @return the orden
+	 */
+	public Integer getOrden() {
+		return orden;
+	}
+
+	/**
+	 * @param orden
+	 *            the orden to set
+	 */
+	public void setOrden(final Integer orden) {
+		this.orden = orden;
+	}
+
+	/**
+	 * @return the fuenteDatos
+	 */
+	public FuenteDatos getFuenteDatos() {
+		return fuenteDatos;
+	}
+
+	/**
+	 * @param fuenteDatos
+	 *            the fuenteDatos to set
+	 */
+	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
+		this.fuenteDatos = fuenteDatos;
 	}
 
 }

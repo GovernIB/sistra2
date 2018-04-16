@@ -8,10 +8,11 @@ import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Rol;
-import es.caib.sistrages.core.api.service.AreaService;
 import es.caib.sistrages.core.api.service.RolService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -25,12 +26,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	private RolService rolService;
 
 	@Inject
-	private AreaService areaService;
-
-	/**
-	 * Id entidad.
-	 */
-	private Long idEntidad;
+	private TramiteService areaService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -45,10 +41,8 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		// Id entidad
-		idEntidad = UtilJSF.getSessionBean().getEntidad().getId();
 
-		areas = areaService.listArea(idEntidad, null);
+		areas = areaService.listArea(UtilJSF.getSessionBean().getEntidad().getId(), null);
 
 		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
@@ -70,9 +64,15 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
+			if (!validaRoles()) {
+				return;
+			}
 			rolService.addRol(data);
 			break;
 		case EDICION:
+			if (!validaRoles()) {
+				return;
+			}
 			rolService.updateRol(data);
 			break;
 		case CONSULTA:
@@ -94,6 +94,25 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Valida roles.
+	 *
+	 * @return true, si tiene exito
+	 */
+	private boolean validaRoles() {
+		if (data != null) {
+			if (data.isAlta() || data.isModificacion() || data.isConsulta() || data.isHelpdesk()) {
+				return true;
+			} else {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
+				return false;
+			}
+		} else {
+			return false;
+		}
+
 	}
 
 	/**

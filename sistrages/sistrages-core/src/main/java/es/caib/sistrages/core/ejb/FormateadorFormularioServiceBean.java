@@ -36,9 +36,15 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	 * getFormateadorFormulario(java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public FormateadorFormulario getFormateadorFormulario(final Long idFmt) {
 		return fmtService.getFormateadorFormulario(idFmt);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	public FormateadorFormulario getFormateadorFormulario(final Long idEntidad, final String codigo) {
+		return fmtService.getFormateadorFormulario(idEntidad, codigo);
 	}
 
 	/*
@@ -50,8 +56,8 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	 */
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
-	public void addFormateadorFormulario(final FormateadorFormulario fmt) {
-		fmtService.addFormateadorFormulario(fmt);
+	public void addFormateadorFormulario(final Long idEntidad, final FormateadorFormulario fmt) {
+		fmtService.addFormateadorFormulario(idEntidad, fmt);
 
 	}
 
@@ -84,14 +90,14 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.FormateadorFormularioService#
 	 * listFormateadorFormulario(java.lang.String)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
-	public List<FormateadorFormulario> listFormateadorFormulario(final String filtro) {
-		return fmtService.listFormateadorFormulario(filtro);
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro) {
+		return fmtService.listFormateadorFormulario(idEntidad, filtro);
 	}
 
 }

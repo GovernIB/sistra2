@@ -55,7 +55,7 @@ public final class UtilJSF {
 	/** Extensión .html **/
 	private static final String EXTENSION_XHTML = ".xhtml";
 	/** Url sin implementar. **/
-	private static final String URL_SIN_IMPLEMENTAR = "/error/errorCode.xhtml?errorCode=404";;
+	private static final String URL_SIN_IMPLEMENTAR = "/error/errorCode.xhtml?errorCode=404";
 
 	/**
 	 * Abre pantalla de dialogo
@@ -516,6 +516,22 @@ public final class UtilJSF {
 	 */
 	public static String getContextPath() {
 		return FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+	}
+
+	/**
+	 * Obtiene id servlet context (identifica instancia de aplicación).
+	 *
+	 * @return id servlet context
+	 */
+	public static String getIdServletContext() {
+		/*
+		 * final ServletContext servletContext = (ServletContext)
+		 * FacesContext.getCurrentInstance().getExternalContext() .getContext(); String
+		 * id = (String) servletContext.getAttribute(Constantes.SERVLET_CONTEXT_ID); if
+		 * (id == null) { id = "xxx";
+		 * servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id); } return id;
+		 */
+		return "123456";
 	}
 
 }

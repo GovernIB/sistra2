@@ -45,9 +45,6 @@ public class Dominio extends ModelApi {
 	/** Para tipo Fuente de datos indica el ID de la Fuente de datos */
 	private FuenteDatos fuenteDatos;
 
-	/** Query para la fuente de datos. **/
-	private String fuenteDatosQuery;
-
 	/**
 	 * JSON con la lista de valores (codigo - valor)
 	 */
@@ -225,21 +222,6 @@ public class Dominio extends ModelApi {
 	 */
 	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
 		this.fuenteDatos = fuenteDatos;
-	}
-
-	/**
-	 * @return the fuenteDatosQuery
-	 */
-	public String getFuenteDatosQuery() {
-		return fuenteDatosQuery;
-	}
-
-	/**
-	 * @param fuenteDatosQuery
-	 *            the fuenteDatosQuery to set
-	 */
-	public void setFuenteDatosQuery(final String fuenteDatosQuery) {
-		this.fuenteDatosQuery = fuenteDatosQuery;
 	}
 
 	/**

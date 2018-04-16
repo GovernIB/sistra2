@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 public interface EntidadDao {
@@ -65,5 +66,62 @@ public interface EntidadDao {
 	 *            la entidad
 	 */
 	void updateAdministradorEntidad(final Entidad entidad);
+
+	/**
+	 * Elimina el logo de gestor de tramites de una entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador de entidad
+	 */
+	void removeLogoGestor(final Long idEntidad);
+
+	/**
+	 * Elimina el logo de asistente de tramites de una entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador de entidad
+	 */
+	void removeLogoAsistente(final Long idEntidad);
+
+	/**
+	 * Elimina el css del asistente de tramites de una entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador de entidad
+	 */
+	void removeCssAsistente(final Long idEntidad);
+
+	/**
+	 * Incorpora el logo de gestor de tramites de una entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador de entidad
+	 * @param fichero
+	 *            fichero
+	 * @return fichero
+	 */
+	Fichero uploadLogoGestor(final Long idEntidad, final Fichero fichero);
+
+	/**
+	 * Incorpora el logo de asistente de tramites de una entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador de entidad
+	 * @param fichero
+	 *            fichero
+	 * @return fichero
+	 */
+	Fichero uploadLogoAsistente(final Long idEntidad, final Fichero fichero);
+
+	/**
+	 * Incorpora el css del asistente de tramites de una entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador de entidad
+	 * @param fichero
+	 *            fichero
+	 * @return fichero
+	 */
+	Fichero uploadCssAsistente(final Long idEntidad, final Fichero fichero);
 
 }

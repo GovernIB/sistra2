@@ -34,5 +34,10 @@ public enum TypeParametroVentana {
 	/**
 	 * AREA
 	 */
-	AREA;
+	AREA,
+
+	/**
+	 * campo fichero.
+	 */
+	CAMPO_FICHERO;
 }

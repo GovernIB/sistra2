@@ -20,14 +20,14 @@
 			<!-- Toolbar -->
 			<p:toolbar id="toolbar" styleClass="margin-bottom-3">
 				<f:facet name="left">
-		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" />
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar()}" process="panelFiltro" update="growl" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="panelFiltro" update="growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
-		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5px">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayudar()}" process="@this" update="growl" iconPos="top" />
 		        	</h:panelGrid>
 		        </f:facet>
@@ -43,16 +43,22 @@
 							<h:outputText value="#{msg['viewTramites.listadoAreas']}" />
 		           	</f:facet>
 		           	<f:facet name="right">
-		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea()}" process="@this" update="growl">
+		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaArea}">
 			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
-			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea()}" process="@this" update="growl dataTableTramites">
+
+			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarArea and not viewTramites.permiteAltaArea}" />
+
+
+			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarArea or viewTramites.permiteAltaArea}">
 			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
 			        		<p:menuButton value="Más..">
-	        					<p:menuitem id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea()}" process="@this" update="growl arbolArea" />
-					        	<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea()}" process="@this" update="growl "/>
-					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuente']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea()}" process="@this" update="growl "/>
+	        					<p:menuitem id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="growl arbolArea" rendered="#{viewTramites.permiteAltaArea}">
+	        						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+	        					</p:menuitem>
+					        	<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl "/>
+					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuente']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl "/>
 	    					</p:menuButton>
 					</f:facet>
 				</p:toolbar>
@@ -67,12 +73,12 @@
 
 						<p:ajax event="select"
 		                        listener="#{viewTramites.onRowSelectArea}"
-		                        update=":form:arbolArea :form:dataTableTramites"
+		                        update=":form:arbolArea :form:dataTableTramites :form:toolbarTramites"
 		                        />
 
 						<p:ajax event="unselect"
 		                        listener="#{viewTramites.onRowUnselectArea}"
-		                        update=":form:arbolArea :form:dataTableTramites"
+		                        update=":form:arbolArea :form:dataTableTramites :form:toolbarTramites"
 		                        />
 
 				</p:tree>
@@ -81,36 +87,37 @@
 			<div class="ui-g-8 ui-g-nopad" style="padding-left:10px">
 
 				<!-- Toolbar -->
-				<p:toolbar id="toolbar3">
+				<p:toolbar id="toolbarTramites">
 					<f:facet name="left">
 							<h:outputText value="#{msg['viewTramites.listadoTramites']}"  />
 					</f:facet>
 			        <f:facet name="right">
-							<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaTramite()}" process="@this" update="growl">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl"/>
+							<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite}">
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl :form:dataTableTramites"/>
 			        		</p:commandButton>
-			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite()}" process="@this" update="growl">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl"/>
+
+			        		<p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarTramite and not viewTramites.permiteAltaTramite}" />
+
+			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarTramite or viewTramites.permiteAltaTramite}">
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl :form:dataTableTramites"/>
 			        		</p:commandButton>
-			        		<p:commandButton id="btnEliminarTramite" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite()}" process="@this" update="growl"/>
-			        		<p:commandButton id="btnVersionesTramite" value="#{msg['viewTramites.botones.versiones']}" icon="fa fa-level-down" actionListener="#{viewTramites.versionesTramite()}" process="@this" update="growl"/>
-			        		<p:commandButton id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite()}" process="@this" update="growl"/>
+			        		<p:commandButton id="btnEliminarTramite" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl :form:dataTableTramites" rendered="#{viewTramites.permiteAltaTramite}">
+			        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+			        		</p:commandButton>
+			        		<p:commandButton id="btnVersionesTramite" value="#{msg['viewTramites.botones.versiones']}" icon="fa fa-level-down" actionListener="#{viewTramites.versionesTramite}" process="@this" update="growl"/>
+			        		<p:commandButton id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl"/>
 					</f:facet>
 				</p:toolbar>
 
 
 				<p:dataTable  id="dataTableTramites" var="td" value="#{viewTramites.tramites}"
-												 rows="10"
+												 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 												 scrollable="true" scrollHeight="100%"
 						                         paginator="true" paginatorPosition="bottom"
 						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						                         rowsPerPageTemplate="5,10,15,30"
-									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.codigo}" dblClickSelect="true">
+									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.id}">
 
-
-
-										<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-										<!-- p:ajax event="rowDblselect" oncomplete="rcEditar();"/-->
 
 										<!-- Necesario para actualizar en controlador la fila seleccionada -->
 										<p:ajax event="rowSelect" />
@@ -118,34 +125,20 @@
 
 										<!-- Columnas -->
 									    <p:column headerText="#{msg['viewTramites.headerCodigo']}">
-									        <h:outputText value="#{td.codigo}" />
+									        <h:outputText value="#{td.identificador}" />
 									    </p:column>
 
 									    <p:column headerText="#{msg['viewTramites.headerDescripcion']}">
-									        <h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
+									        <h:outputText value="#{td.descripcion}" />
 									    </p:column>
 
 						 				<p:column headerText="#{msg['viewTramites.headerActivo']}">
 									        <p:selectBooleanCheckbox value="#{td.activo}" disabled="true" />
 									    </p:column>
 
-
-										<p:column headerText="#{msg['viewTramites.headerBloqueada']}">
-									        <p:selectBooleanCheckbox value="#{td.bloqueada}" disabled="true" />
-									    </p:column>
-
-									    <p:column headerText="#{msg['viewTramites.headerModificacion']}">
-									        <h:outputText value="#{td.modificacion}" disabled="true" />
-									    </p:column>
-						</p:dataTable>
-
-
+					</p:dataTable>
 				</div>
-
-
-
 			</div>
-
 
 
 			<!-- Context menu -->
@@ -174,6 +167,13 @@
 		        document.getElementById("form:btnEliminarTramite").click();
 		      }
 		    </h:outputScript>
+
+		    <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
 		</h:form>
 
 	</ui:define>

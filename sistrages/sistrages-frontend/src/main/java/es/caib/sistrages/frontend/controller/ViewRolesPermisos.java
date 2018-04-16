@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -81,7 +82,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	 */
 	public void nuevo() {
 
-		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.ALTA, null, true, 630, 220);
+		UtilJSF.openDialog(DialogRolesPermisos.class, TypeModoAcceso.ALTA, null, true, 630, 240);
 
 	}
 
@@ -149,7 +150,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	 * @return el valor de permiteAlta
 	 */
 	public boolean getPermiteAlta() {
-		return true;
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean getPermiteEditar() {
-		return false;
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 	}
 
 	/**
@@ -199,7 +200,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
-		UtilJSF.openDialog(DialogRolesPermisos.class, modoAcceso, params, true, 630, 220);
+		UtilJSF.openDialog(DialogRolesPermisos.class, modoAcceso, params, true, 630, 240);
 	}
 
 	/**

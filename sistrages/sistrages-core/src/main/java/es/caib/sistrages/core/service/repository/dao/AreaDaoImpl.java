@@ -114,14 +114,14 @@ public class AreaDaoImpl implements AreaDao {
 	 * es.caib.sistrages.core.service.repository.dao.AreaDao#remove(java.lang.Long)
 	 */
 	@Override
-	public void remove(final Long pCodigo) {
-		if (pCodigo == null) {
+	public void remove(final Long idArea) {
+		if (idArea == null) {
 			throw new FaltanDatosException("Falta el identificador");
 		}
 
-		final JArea jArea = entityManager.find(JArea.class, pCodigo);
+		final JArea jArea = entityManager.find(JArea.class, idArea);
 		if (jArea == null) {
-			throw new NoExisteDato("No existe area: " + pCodigo);
+			throw new NoExisteDato("No existe area: " + idArea);
 		}
 		entityManager.remove(jArea);
 	}
@@ -146,7 +146,7 @@ public class AreaDaoImpl implements AreaDao {
 		final JArea jAreaNew = JArea.fromModel(pArea);
 		jAreaNew.setCodigo(jArea.getCodigo());
 		jAreaNew.setEntidad(jArea.getEntidad());
-
+		jAreaNew.setDominios(jArea.getDominios());
 		entityManager.merge(jAreaNew);
 	}
 

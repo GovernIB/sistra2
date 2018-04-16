@@ -54,6 +54,19 @@ public class DominioDaoImpl implements DominioDao {
 		return dominio;
 	}
 
+	@Override
+	public Dominio getByCodigo(final String codigoDominio) {
+		Dominio result = null;
+		final String sql = "SELECT d FROM JDominio d where d.identificador = :codigoDominio";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("codigoDominio", codigoDominio);
+		final List<JDominio> list = query.getResultList();
+		if (!list.isEmpty()) {
+			result = list.get(0).toModel();
+		}
+		return result;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -136,6 +149,65 @@ public class DominioDaoImpl implements DominioDao {
 	private List<Dominio> listarDominios(final TypeAmbito ambito, final Long id, final String filtro) {
 		final List<Dominio> dominioes = new ArrayList<>();
 
+		final List<JDominio> results = listarJDominios(ambito, id, filtro);
+
+		if (results != null && !results.isEmpty()) {
+			for (final JDominio jdominio : results) {
+				final Dominio dominio = jdominio.toModel();
+				dominioes.add(dominio);
+			}
+		}
+
+		return dominioes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.DominioDao#updateDominio(es.
+	 * caib.sistrages.core.api.model.Dominio)
+	 */
+	@Override
+	public void updateDominio(final Dominio dominio) {
+		final JDominio jdominio = entityManager.find(JDominio.class, dominio.getId());
+		jdominio.fromModel(dominio);
+		entityManager.merge(jdominio);
+	}
+
+	@Override
+	public void removeByEntidad(final Long idEntidad) {
+		final List<JDominio> dominios = listarJDominios(TypeAmbito.ENTIDAD, idEntidad, null);
+		for (final JDominio d : dominios) {
+			remove(d.getCodigo());
+		}
+	}
+
+	@Override
+	public List<Dominio> getAllByFuenteDatos(final Long idFuenteDatos) {
+		final List<Dominio> result = new ArrayList<>();
+		final String sql = "SELECT d FROM JDominio d where d.fuenteDatos.codigo = :idFuenteDatos";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFuenteDatos", idFuenteDatos);
+		final List<JDominio> list = query.getResultList();
+		for (final JDominio d : list) {
+			result.add(d.toModel());
+		}
+		return result;
+	}
+
+	/**
+	 * Lista dominios.
+	 *
+	 * @param ambito
+	 *            Ambito
+	 * @param id
+	 *            id
+	 * @param filtro
+	 *            filtro
+	 * @return dominios
+	 */
+	private List<JDominio> listarJDominios(final TypeAmbito ambito, final Long id, final String filtro) {
 		String sql = "SELECT DISTINCT d FROM JDominio d ";
 
 		if (ambito == TypeAmbito.AREA) {
@@ -163,28 +235,7 @@ public class DominioDaoImpl implements DominioDao {
 		}
 
 		final List<JDominio> results = query.getResultList();
-
-		if (results != null && !results.isEmpty()) {
-			for (final JDominio jdominio : results) {
-				final Dominio dominio = jdominio.toModel();
-				dominioes.add(dominio);
-			}
-		}
-
-		return dominioes;
+		return results;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * es.caib.sistrages.core.service.repository.dao.DominioDao#updateDominio(es.
-	 * caib.sistrages.core.api.model.Dominio)
-	 */
-	@Override
-	public void updateDominio(final Dominio dominio) {
-		final JDominio jdominio = entityManager.find(JDominio.class, dominio.getId());
-		jdominio.fromModel(dominio);
-		entityManager.merge(jdominio);
-	}
 }

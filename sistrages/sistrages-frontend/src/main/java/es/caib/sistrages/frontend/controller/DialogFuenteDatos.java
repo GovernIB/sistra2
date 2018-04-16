@@ -1,19 +1,19 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
-import es.caib.sistrages.core.api.model.FuenteDatosValor;
+import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -28,19 +28,18 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	/** Id elemento a tratar. */
 	private String id;
 
-	/** Datos elemento en JSON. **/
-	private String iData;
+	/** Enlace servicio. */
+	@Inject
+	private DominioService dominioService;
 
 	/** Datos elemento. */
-	private FuenteDatos data;
+	private FuenteDatosValores data;
 
-	/**
-	 * Los datos.
-	 *
-	 * @see Para hacer las columnas mas dinamicas:
-	 *      https://www.primefaces.org/showcase/ui/data/datatable/columns.xhtml
-	 **/
-	private List<FuenteFila> datos;
+	/** Campos. **/
+	private List<FuenteDatosCampo> campos;
+
+	/** Campos en formato JSON. **/
+	private String iCampos;
 
 	/** Fila seleccionada. **/
 	private FuenteFila valorSeleccionado;
@@ -50,52 +49,17 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 */
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		if (modo == TypeModoAcceso.ALTA) {
-			data = new FuenteDatos();
-			data.setCampos(new ArrayList<>());
-		} else {
-			data = (FuenteDatos) UtilJSON.fromJSON(iData, FuenteDatos.class);
-		}
+		campos = (List<FuenteDatosCampo>) UtilJSON.fromListJSON(this.iCampos, FuenteDatosCampo.class);
+		refreshTabla();
 
-		datos = new ArrayList<>();
-		final FuenteDatosCampo campo1 = new FuenteDatosCampo();
-		campo1.setId(1l);
-		campo1.setCodigo("CODI");
-		campo1.setClavePrimaria(true);
-		final FuenteDatosCampo campo2 = new FuenteDatosCampo();
-		campo2.setId(2l);
-		campo2.setCodigo("DESC_ES");
-		campo2.setClavePrimaria(false);
-		final FuenteDatosCampo campo3 = new FuenteDatosCampo();
-		campo3.setId(3l);
-		campo3.setCodigo("DESC_CA");
-		campo3.setClavePrimaria(false);
+	}
 
-		final FuenteFila fila1 = new FuenteFila();
-		fila1.setId(1l);
-		fila1.addFuenteDato(new FuenteDatosValor(11l, campo1, "1"));
-		fila1.addFuenteDato(new FuenteDatosValor(12l, campo2, "Norte de Menorca"));
-		fila1.addFuenteDato(new FuenteDatosValor(13l, campo3, "Norte de Menorca"));
-		final FuenteFila fila2 = new FuenteFila();
-		fila2.setId(2l);
-		fila2.addFuenteDato(new FuenteDatosValor(21l, campo1, "2"));
-		fila2.addFuenteDato(new FuenteDatosValor(22l, campo2, "Bahía de Palma"));
-		fila2.addFuenteDato(new FuenteDatosValor(23l, campo3, "Badia de Palma"));
-		final FuenteFila fila3 = new FuenteFila();
-		fila3.setId(3l);
-		fila3.addFuenteDato(new FuenteDatosValor(31l, campo1, "3"));
-		fila3.addFuenteDato(new FuenteDatosValor(32l, campo2, "Isla del Toro"));
-		fila3.addFuenteDato(new FuenteDatosValor(33l, campo3, "Illa del Toro"));
-		final FuenteFila fila4 = new FuenteFila();
-		fila4.setId(4l);
-		fila4.addFuenteDato(new FuenteDatosValor(31l, campo1, "4"));
-		fila4.addFuenteDato(new FuenteDatosValor(32l, campo2, "Levante de Mallorca"));
-		fila4.addFuenteDato(new FuenteDatosValor(33l, campo3, "Llevant de Mallorca"));
+	/**
+	 * Cargar valores de BBDD
+	 */
+	private void refreshTabla() {
+		data = dominioService.loadFuenteDatoValores(Long.valueOf(id));
 
-		datos.add(fila1);
-		datos.add(fila2);
-		datos.add(fila3);
-		datos.add(fila4);
 	}
 
 	/**
@@ -113,26 +77,24 @@ public class DialogFuenteDatos extends DialogControllerBase {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 				// Refrescamos datos
-				final FuenteFila filaFilaAlta = (FuenteFila) respuesta.getResult();
-				this.datos.add(filaFilaAlta);
+				final FuenteFila fuenteFilaAlta = (FuenteFila) respuesta.getResult();
+				dominioService.addFuenteDatoFila(fuenteFilaAlta, this.data.getCodigo());
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
 
+				refreshTabla();
 				break;
 
 			case EDICION:
 				// Actualizamos fila actual
 				final FuenteFila fuenteFilaEdicion = (FuenteFila) respuesta.getResult();
-				// Muestra dialogo
-				final int posicion = this.datos.indexOf(this.valorSeleccionado);
-
-				this.datos.remove(posicion);
-				this.datos.add(posicion, fuenteFilaEdicion);
-				this.valorSeleccionado = fuenteFilaEdicion;
+				dominioService.updateFuenteDatoFila(fuenteFilaEdicion);
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.modificado.ok");
+
+				refreshTabla();
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
@@ -150,16 +112,12 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 * Crea nueva FuenteDatosCampo.
 	 */
 	public void nuevaFuenteDato() {
-		final FuenteFila fila = this.datos.get(0);
-		fila.setId(Long.valueOf(this.datos.size() + 1));
-		for (final FuenteDatosValor dato : fila.getDatos()) {
-			dato.setValor("");
-		}
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.DATO2.toString(), UtilJSON.toJSON(this.data.getCampos()));
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.getCampos()));
+		params.put(TypeParametroVentana.DATO2.toString(), UtilJSON.toJSON(this.getData().getCodigo()));
 		UtilJSF.openDialog(DialogFuenteFila.class, TypeModoAcceso.ALTA, params, true, 460,
-				calcularY(this.data.getCampos().size()));
+				calcularY(this.getCampos().size()));
 	}
 
 	/**
@@ -171,9 +129,10 @@ public class DialogFuenteDatos extends DialogControllerBase {
 			return;
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
+		params.put(TypeParametroVentana.ID.toString(), UtilJSON.toJSON(this.valorSeleccionado.getId()));
+		params.put(TypeParametroVentana.DATO2.toString(), UtilJSON.toJSON(this.getData().getCodigo()));
 		UtilJSF.openDialog(DialogFuenteFila.class, TypeModoAcceso.EDICION, params, true, 460,
-				calcularY(this.data.getCampos().size()));
+				calcularY(this.getCampos().size()));
 	}
 
 	/**
@@ -193,8 +152,8 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		this.datos.remove(this.valorSeleccionado);
-
+		dominioService.removeFuenteFila(this.valorSeleccionado.getId());
+		this.refreshTabla();
 	}
 
 	/**
@@ -204,14 +163,14 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		final int posicion = this.datos.indexOf(this.valorSeleccionado);
-		if (posicion >= this.datos.size() - 1) {
+		final int posicion = this.data.getFilas().indexOf(this.valorSeleccionado);
+		if (posicion >= this.data.getFilas().size() - 1) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
-		final FuenteFila fuenteFila = this.datos.remove(posicion);
-		this.datos.add(posicion + 1, fuenteFila);
+		final FuenteFila fuenteFila = this.data.getFilas().remove(posicion);
+		this.data.getFilas().add(posicion + 1, fuenteFila);
 	}
 
 	/**
@@ -221,14 +180,14 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		final int posicion = this.datos.indexOf(this.valorSeleccionado);
+		final int posicion = this.data.getFilas().indexOf(this.valorSeleccionado);
 		if (posicion <= 0) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
-		final FuenteFila fuenteFila = this.datos.remove(posicion);
-		this.datos.add(posicion - 1, fuenteFila);
+		final FuenteFila fuenteFila = this.data.getFilas().remove(posicion);
+		this.data.getFilas().add(posicion - 1, fuenteFila);
 	}
 
 	public void importarCSV() {
@@ -258,36 +217,10 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
-		// Retornamos resultado
-		final DialogResult result = new DialogResult();
-		// result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		// result.setResult(data);
-		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * Cancelar.
-	 */
-	public void cancelar() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * @return the datos
-	 */
-	public List<FuenteFila> getDatos() {
-		return datos;
-	}
-
-	/**
-	 * @param datos
-	 *            the datos to set
-	 */
-	public void setDatos(final List<FuenteFila> datos) {
-		this.datos = datos;
 	}
 
 	/**
@@ -306,24 +239,9 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the iData
-	 */
-	public String getiData() {
-		return iData;
-	}
-
-	/**
-	 * @param iData
-	 *            the iData to set
-	 */
-	public void setiData(final String iData) {
-		this.iData = iData;
-	}
-
-	/**
 	 * @return the data
 	 */
-	public FuenteDatos getData() {
+	public FuenteDatosValores getData() {
 		return data;
 	}
 
@@ -331,7 +249,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FuenteDatos data) {
+	public void setData(final FuenteDatosValores data) {
 		this.data = data;
 	}
 
@@ -348,6 +266,36 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 */
 	public void setValorSeleccionado(final FuenteFila valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
+	}
+
+	/**
+	 * @return the campos
+	 */
+	public List<FuenteDatosCampo> getCampos() {
+		return campos;
+	}
+
+	/**
+	 * @param campos
+	 *            the campos to set
+	 */
+	public void setCampos(final List<FuenteDatosCampo> campos) {
+		this.campos = campos;
+	}
+
+	/**
+	 * @return the iCampos
+	 */
+	public String getiCampos() {
+		return iCampos;
+	}
+
+	/**
+	 * @param iCampos
+	 *            the iCampos to set
+	 */
+	public void setiCampos(final String iCampos) {
+		this.iCampos = iCampos;
 	}
 
 }

@@ -6,9 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<f:view locale="#{sessiondialogFichero.locale}" encoding="UTF-8" contentType="text/html">
 
-	<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo" />
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 	<h:head>
 		<title><h:outputText value="#{msg['dialogFichero.titulo']}" /></title>
@@ -22,25 +21,39 @@
 
 		<!-- Parametros dialogo -->
 		<f:metadata>
-			<f:viewParam name="MODO_ACCESO" value="#{dialogFichero.modoAcceso}" />
 			<f:viewParam name="ID" value="#{dialogFichero.id}" />
+			<f:viewParam name="CAMPO_FICHERO" value="#{dialogFichero.campoFichero}" />
 			<f:viewAction action="#{dialogFichero.init}" />
 		</f:metadata>
 
 
-		<h:form id="formFichero">
+		<h:form id="formFichero" styleClass="margin-top-10" enctype="multipart/form-data">
 			<p:growl id="growlDialogFichero" widgetVar="growlDialogFichero"	life="2000" sticky="false" />
 
-			<h:panelGrid style="width: 100%" styleClass="hide-table-header"	rowclass="w30,w70">
-				<p:row>
-					<p:column styleClass="w30">
-						<p:outputLabel value="#{msg['nombreFichero']}" />
-					</p:column>
-					<p:column styleClass="w70">
-						<p:outputLabel value="#{dialogFichero.data.nombre}" />
-					</p:column>
-				</p:row>
+			<h:panelGrid styleClass="hide-table-header w100 margin-top-10" cellpadding="10" columnClasses="w90,w10" columns="2">
+				<p:outputPanel>
+					<p:outputLabel value="#{msg['dialogFichero.fichero']}"/>
+					<p:spacer width="10" height="1"/>
+					<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{!dialogFichero.existeFichero}"/>
+					<h:outputText value="#{dialogFichero.nombreFichero}" rendered="#{dialogFichero.existeFichero}"/>
+				</p:outputPanel>
+				<p:commandButton id="quitar" value="#{msg['botones.quitar']}" actionListener="#{dialogFichero.eliminar}" process="@form" update="formFichero growlDialogFichero" disabled="#{!dialogFichero.existeFichero}" />
 			</h:panelGrid>
+
+			<p:outputPanel styleClass="padding-right-8 padding-left-8">
+				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogFichero.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
+					update="formFichero growlDialogFichero" fileLimit="1"  accept="#{dialogFichero.extensiones}" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
+			</p:outputPanel>
+
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFichero.cerrar}" process="@form" update="growlDialogFichero"  styleClass="boton-azul" />
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
 		</h:form>
 
 	</h:body>

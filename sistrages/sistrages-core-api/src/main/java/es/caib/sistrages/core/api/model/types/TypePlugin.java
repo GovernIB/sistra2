@@ -8,21 +8,37 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypePlugin {
 	/**
-	 * Plugin de login
+	 * Plugin de login (Global).
 	 */
 	LOGIN("L"),
 	/**
-	 * Plugin de representacion
+	 * Plugin de representacion (Global).
 	 */
 	REPRESENTACION("R"),
 	/**
-	 * Plugin de dominio remoto
+	 * Plugin de dominio remoto (Global).
 	 */
 	DOMINIO_REMOTO("D"),
 	/**
-	 * Plugin de firma.
+	 * Catálogo procedimientos (Entidad).
 	 */
-	FIRMA("F");
+	CATALOGO_PROCEDIMIENTOS("C"),
+	/**
+	 * Plugin de firma (Entidad).
+	 */
+	FIRMA("F"),
+	/**
+	 * Plugin de pagos (Entidad).
+	 */
+	PAGOS("P"),
+	/**
+	 * Plugin de registro (Entidad).
+	 */
+	FORMULARIOS_EXTERNOS("G"),
+	/**
+	 * Plugin de formularios externo (Entidad).
+	 */
+	REGISTRO("E");
 
 	private String valor;
 

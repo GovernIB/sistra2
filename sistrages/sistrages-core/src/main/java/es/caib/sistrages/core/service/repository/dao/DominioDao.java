@@ -20,6 +20,15 @@ public interface DominioDao {
 	Dominio getById(final Long idDominio);
 
 	/**
+	 * Obtiene el dominio.
+	 *
+	 * @param codigoDominio
+	 *            codigoDominio
+	 * @return el valor de dominio
+	 */
+	Dominio getByCodigo(final String codigoDominio);
+
+	/**
 	 * Obtiene la lista de todos los dominios
 	 *
 	 * @param ambito
@@ -44,6 +53,15 @@ public interface DominioDao {
 	List<Dominio> getAllByFiltro(TypeAmbito ambito, Long id, String filtro);
 
 	/**
+	 * Obtiene la lista de todos los dominios asociados a una fuente de datos.
+	 *
+	 * @param idFuenteDatos
+	 *            id fuente datos
+	 * @return lista dominios
+	 */
+	List<Dominio> getAllByFuenteDatos(Long idFuenteDatos);
+
+	/**
 	 * Añade un dominio.
 	 *
 	 * @param entidad
@@ -62,6 +80,14 @@ public interface DominioDao {
 	 *            idDominio
 	 */
 	void remove(final Long idDominio);
+
+	/**
+	 * Elimina dominios entidad.
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 */
+	void removeByEntidad(final Long idEntidad);
 
 	/**
 	 * Actualiza dominio.

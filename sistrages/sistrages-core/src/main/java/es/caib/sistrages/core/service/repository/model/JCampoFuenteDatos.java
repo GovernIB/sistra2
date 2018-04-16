@@ -39,6 +39,9 @@ public class JCampoFuenteDatos implements IModelApi {
 	@Column(name = "CFU_ESPK", nullable = false, length = 1)
 	private String clavePrimaria;
 
+	@Column(name = "CFU_ORDEN")
+	private Integer orden;
+
 	public JCampoFuenteDatos() {
 		// Constructor publico
 	}
@@ -75,6 +78,21 @@ public class JCampoFuenteDatos implements IModelApi {
 		this.clavePrimaria = clavePrimaria;
 	}
 
+	/**
+	 * @return the orden
+	 */
+	public Integer getOrden() {
+		return orden;
+	}
+
+	/**
+	 * @param orden
+	 *            the orden to set
+	 */
+	public void setOrden(final Integer orden) {
+		this.orden = orden;
+	}
+
 	public void fromModel(final FuenteDatosCampo campo) {
 		if (campo != null) {
 			this.setCodigo(campo.getId());
@@ -84,6 +102,7 @@ public class JCampoFuenteDatos implements IModelApi {
 				this.setClavePrimaria("N");
 			}
 			this.setIdCampo(campo.getCodigo());
+			this.setOrden(campo.getOrden());
 		}
 	}
 
@@ -96,7 +115,17 @@ public class JCampoFuenteDatos implements IModelApi {
 		}
 		fuenteDatosCampo.setCodigo(this.getIdCampo());
 		fuenteDatosCampo.setId(this.getCodigo());
+		fuenteDatosCampo.setOrden(this.getOrden());
 		return fuenteDatosCampo;
+	}
+
+	public void merge(final FuenteDatosCampo fuenteDatoCampo) {
+		if (fuenteDatoCampo.isClavePrimaria()) {
+			this.setClavePrimaria("S");
+		} else {
+			this.setClavePrimaria("N");
+		}
+		this.setIdCampo(fuenteDatoCampo.getCodigo());
 	}
 
 }

@@ -4,13 +4,14 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
-import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -21,11 +22,20 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogFormularioSoporte extends DialogControllerBase {
 
+	@Inject
+	private EntidadService entidadService;
+
+	/**
+	 * Id elemento a tratar.
+	 */
+	private String id;
+
 	/** Datos elemento. */
 	private FormularioSoporte data;
 
-	/** Formulario Soporte en formato JSON. **/
-	private String iData;
+	private String tipoIncidencia;
+
+	private String descripcion;
 
 	/**
 	 * Inicialización.
@@ -36,7 +46,16 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 			data = new FormularioSoporte();
 
 		} else {
-			data = (FormularioSoporte) UtilJSON.fromJSON(iData, FormularioSoporte.class);
+			if (id != null) {
+				data = entidadService.loadOpcionFormularioSoporte(Long.valueOf(id));
+				if (data != null && data.getDescripcion() != null) {
+					descripcion = data.getDescripcion().getTraduccion(UtilJSF.getSessionBean().getLang());
+				}
+
+				if (data != null && data.getTipoIncidencia() != null) {
+					tipoIncidencia = data.getTipoIncidencia().getTraduccion(UtilJSF.getSessionBean().getLang());
+				}
+			}
 		}
 
 	}
@@ -48,42 +67,14 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 *            respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
+
 		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		if (!respuesta.isCanceled()) {
-
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-
-				final Literal traducciones = (Literal) respuesta.getResult();
-				data.setDescripcion(traducciones);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
-			case EDICION:
-
-				final Literal traduccionesMod = (Literal) respuesta.getResult();
-				data.setDescripcion(traduccionesMod);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setDescripcion(literales);
+			descripcion = literales.getTraduccion(UtilJSF.getSessionBean().getLang());
 		}
 
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
 	/**
@@ -94,47 +85,17 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 */
 	public void returnDialogoTipoIncidencia(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		if (!respuesta.isCanceled()) {
-
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-
-				final Literal traducciones = (Literal) respuesta.getResult();
-				data.setTipoIncidencia(traducciones);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
-			case EDICION:
-
-				final Literal traduccionesTipoIncid = (Literal) respuesta.getResult();
-				data.setTipoIncidencia(traduccionesTipoIncid);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setTipoIncidencia(literales);
+			tipoIncidencia = literales.getTraduccion(UtilJSF.getSessionBean().getLang());
 		}
 	}
 
 	/**
 	 * Editar descripcion del dominio.
 	 *
-	 * 
+	 *
 	 */
 	public void editarDescripcion() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
@@ -150,7 +111,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	/**
 	 * Editar descripcion del dominio.
 	 *
-	 * 
+	 *
 	 */
 	public void editarTipoIncidencia() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
@@ -167,15 +128,28 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
-		if (data.getDestinatario() == TypeFormularioSoporte.LISTA_DE_EMAILS && data.getEmails().isEmpty()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogFormularioSoporte.error.emailVacio");
+		if (data.getTipoDestinatario() == TypeFormularioSoporte.LISTA_DE_EMAILS && data.getListaEmails().isEmpty()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogFormularioSoporte.error.emailVacio"));
 			return;
 		}
 
+		// Realizamos alta o update
+		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		switch (acceso) {
+		case ALTA:
+			entidadService.addOpcionFormularioSoporte(UtilJSF.getIdEntidad(), data);
+			break;
+		case EDICION:
+			entidadService.updateOpcionFormularioSoporte(data);
+			break;
+		case CONSULTA:
+			// No hay que hacer nada
+			break;
+		}
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -204,19 +178,28 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 		this.data = data;
 	}
 
-	/**
-	 * @return the iData
-	 */
-	public String getiData() {
-		return iData;
+	public String getTipoIncidencia() {
+		return tipoIncidencia;
 	}
 
-	/**
-	 * @param iData
-	 *            the iData to set
-	 */
-	public void setiData(final String iData) {
-		this.iData = iData;
+	public void setTipoIncidencia(final String tipoIncidencia) {
+		this.tipoIncidencia = tipoIncidencia;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(final String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
 	}
 
 }

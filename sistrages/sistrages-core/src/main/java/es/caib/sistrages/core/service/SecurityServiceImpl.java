@@ -9,13 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.model.types.TypeRoleUser;
 import es.caib.sistrages.core.api.service.ContextService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.EntidadDao;
+import es.caib.sistrages.core.service.repository.dao.RolDao;
 
 @Service
 @Transactional
@@ -25,10 +30,16 @@ public class SecurityServiceImpl implements SecurityService {
 	private final Logger log = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
 	@Autowired
-	ContextService contextService;
+	private ContextService contextService;
 
 	@Autowired
-	EntidadDao entidadDao;
+	private EntidadDao entidadDao;
+
+	@Autowired
+	private AreaDao areaDao;
+
+	@Autowired
+	private RolDao rolDao;
 
 	@Override
 	@NegocioInterceptor
@@ -77,12 +88,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public List<TypeRolePermisos> getPermisosDesarrolladorEntidad(final long codigoArea) {
-		// TODO Auto-generated method stub
-		final List<TypeRolePermisos> permisos = new ArrayList<TypeRolePermisos>();
-		permisos.add(TypeRolePermisos.ALTA_BAJA);
-		permisos.add(TypeRolePermisos.MODIFICACION);
-		permisos.add(TypeRolePermisos.CONSULTA);
-		return permisos;
+		return obtenerPermisosDesarrolladorEntidad(codigoArea);
 	}
 
 	@Override
@@ -102,11 +108,17 @@ public class SecurityServiceImpl implements SecurityService {
 	@NegocioInterceptor
 	public List<Entidad> getEntidadesDesarrollador() {
 		final List<Entidad> listaEntidades = entidadDao.getAll();
-		// TODO Pendiente filtro por role
 		final List<Entidad> res = new ArrayList<Entidad>();
 		for (final Entidad e : listaEntidades) {
 			if (e.isActivo()) {
-				res.add(e);
+				// Verificamos si existe alguna area de la entidad para la que tenga acceso
+				final List<Area> listaAreas = areaDao.getAll(e.getId());
+				for (final Area area : listaAreas) {
+					if (!obtenerPermisosDesarrolladorEntidad(area.getId()).isEmpty()) {
+						res.add(e);
+						break; // Pasamos a siguiente entidad
+					}
+				}
 			}
 		}
 		return res;
@@ -118,4 +130,31 @@ public class SecurityServiceImpl implements SecurityService {
 		return contextService.getUsername();
 	}
 
+	/**
+	 * Obtiene permisos desarrollador para un area.
+	 *
+	 * @param codigoArea
+	 *            Código area
+	 * @return Permisos
+	 */
+	private List<TypeRolePermisos> obtenerPermisosDesarrolladorEntidad(final long codigoArea) {
+		final List<TypeRolePermisos> permisos = new ArrayList<>();
+		final String userName = contextService.getUsername();
+		final List<Rol> rolesArea = rolDao.getAllByArea(codigoArea);
+		for (final Rol r : rolesArea) {
+			if ((r.getTipo() == TypeRoleUser.USUARIO && userName.equals(r.getCodigo()))
+					|| (r.getTipo() == TypeRoleUser.ROL && contextService.hashRole(r.getCodigo()))) {
+				if (r.isAlta() && !permisos.contains(TypeRolePermisos.ALTA_BAJA)) {
+					permisos.add(TypeRolePermisos.ALTA_BAJA);
+				}
+				if (r.isConsulta() && !permisos.contains(TypeRolePermisos.CONSULTA)) {
+					permisos.add(TypeRolePermisos.CONSULTA);
+				}
+				if (r.isModificacion() && !permisos.contains(TypeRolePermisos.MODIFICACION)) {
+					permisos.add(TypeRolePermisos.MODIFICACION);
+				}
+			}
+		}
+		return permisos;
+	}
 }

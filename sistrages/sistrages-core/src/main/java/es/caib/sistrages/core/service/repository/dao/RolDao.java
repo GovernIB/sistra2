@@ -35,6 +35,14 @@ public interface RolDao {
 	void remove(Long id);
 
 	/**
+	 * Elimina roles area.
+	 *
+	 * @param idArea
+	 *            el identificador area
+	 */
+	void removeByArea(final Long idArea);
+
+	/**
 	 * Actualiza rol.
 	 *
 	 * @param rol
@@ -61,5 +69,14 @@ public interface RolDao {
 	 * @return la lista de roles
 	 */
 	List<Rol> getAllByFiltro(Long idEntidad, String filtro);
+
+	/**
+	 * Obtiene lista permisos por area.
+	 *
+	 * @param idArea
+	 *            Id Area
+	 * @return lista permisos
+	 */
+	List<Rol> getAllByArea(Long idArea);
 
 }

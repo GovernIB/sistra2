@@ -1,6 +1,8 @@
 package es.caib.sistrages.core.api.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -14,6 +16,9 @@ public class FuenteFila extends ModelApi {
 
 	/** Id. **/
 	private Long id;
+
+	/** Fuente datos valores. **/
+	FuenteDatosValores fuenteDatosValores;
 
 	/** Lista de fuentes de datos. **/
 	private List<FuenteDatosValor> datos;
@@ -79,18 +84,76 @@ public class FuenteFila extends ModelApi {
 	/**
 	 * Agrega una fuente de datos.
 	 *
-	 * @param dato11
+	 * @param dato
 	 */
-	public void addFuenteDato(final FuenteDatosValor dato11) {
-		this.datos.add(dato11);
+	public void addFuenteDato(final FuenteDatosValor dato) {
+		this.datos.add(dato);
 	}
 
 	/**
 	 * Borra una fuente de datos.
 	 *
-	 * @param dato11
+	 * @param dato
 	 */
-	public void removeFuenteDato(final FuenteDatosValor dato11) {
-		this.datos.remove(dato11);
+	public void removeFuenteDato(final FuenteDatosValor dato) {
+		this.datos.remove(dato);
 	}
+
+	/**
+	 * @return the fuenteDatosValores
+	 */
+	public FuenteDatosValores getFuenteDatosValores() {
+		return fuenteDatosValores;
+	}
+
+	/**
+	 * @param fuenteDatosValores
+	 *            the fuenteDatosValores to set
+	 */
+	public void setFuenteDatosValores(final FuenteDatosValores fuenteDatosValores) {
+		this.fuenteDatosValores = fuenteDatosValores;
+	}
+
+	/**
+	 * Ordena los valores
+	 */
+	public void sortValores() {
+		// Ordenamos los valores según el orden del campo
+		Collections.sort(this.datos, new Comparator<FuenteDatosValor>() {
+
+			@Override
+			public int compare(final FuenteDatosValor valor1, final FuenteDatosValor valor2) {
+				if (valor1 == null || valor1.getOrdenCampo() == null) {
+					return -1;
+				}
+
+				if (valor2 == null || valor1.getOrdenCampo() == null) {
+					return 1;
+				}
+
+				return valor1.getOrdenCampo().compareTo(valor2.getOrdenCampo());
+			}
+
+		});
+	}
+
+	/**
+	 * Devuelve un FuenteDatosValor segun una id.
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public FuenteDatosValor getDato(final Long codigo) {
+		FuenteDatosValor valor = null;
+		if (this.getDatos() != null) {
+			for (final FuenteDatosValor val : this.getDatos()) {
+				if (codigo.compareTo(val.getId()) == 0) {
+					valor = val;
+					break;
+				}
+			}
+		}
+		return valor;
+	}
+
 }

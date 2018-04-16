@@ -23,24 +23,24 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewRolesPermisos.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewRolesPermisos.filtrar()}" process="panelFiltro" update="dataTable growl form:panelBotones" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewRolesPermisos.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewRolesPermisos.nuevo()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable form:panelBotones"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewRolesPermisos.consultar()}" process="@this" update="growl" rendered="#{not viewRolesPermisos.permiteEditar and not viewRolesPermisos.permiteAlta}" />
 
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewRolesPermisos.editar()}" process="@this" update="growl" rendered="#{viewRolesPermisos.permiteEditar or viewRolesPermisos.permiteAlta}">
-		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable form:panelBotones"/>
+		        			<p:ajax event="dialogReturn" listener="#{viewRolesPermisos.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash-o"  update="growl dataTable form:panelBotones" rendered="#{viewRolesPermisos.permiteAlta}" >
-							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{!viewRolesPermisos.filaSeleccionada}" />
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" actionListener="#{viewRolesPermisos.eliminar()}" icon="fa fa-trash-o"  update="growl dataTable" rendered="#{viewRolesPermisos.permiteAlta}" >
+							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" />
 		        		</p:commandButton>
 
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewRolesPermisos.ayudar()}" process="@this" update="growl"/>
@@ -56,11 +56,11 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewRolesPermisos.datoSeleccionado}" rowKey="#{td.codigo}">
+			        	 selectionMode="single" selection="#{viewRolesPermisos.datoSeleccionado}" rowKey="#{td.id}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" update="form:panelBotones"/>
-				<p:ajax event="rowUnselect" update="form:panelBotones"/>
+				<p:ajax event="rowSelect"/>
+				<p:ajax event="rowUnselect"/>
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewRolesPermisos.headerCodigo']}">

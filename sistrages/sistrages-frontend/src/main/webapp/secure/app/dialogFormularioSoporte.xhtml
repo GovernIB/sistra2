@@ -13,70 +13,64 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogFormularioSoporte.titulo']}"/></title>
-
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
 </h:head>
 
 <h:body>
+	<f:facet name="last">
+	    <h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogFormularioSoporte.modoAcceso}"/>
-		<f:viewParam name="DATO" value="#{dialogFormularioSoporte.iData}" />
+		<f:viewParam name="ID" value="#{dialogFormularioSoporte.id}"/>
 		<f:viewAction action="#{dialogFormularioSoporte.init}" />
 	</f:metadata>
+
 	<h:form id="dialogFormularioSoporte" styleClass="margin-top-10">
 
-  				<!-- Growl mensajes -->
-				<p:growl id="growlDialogFormularioSoporte" widgetVar="growlDialogFormularioSoporte" life="2000" sticky="false" />
+  		<!-- Growl mensajes -->
+		<p:growl id="growlDialogFormularioSoporte" widgetVar="growlDialogFormularioSoporte" life="2000" sticky="false" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<h:outputText value="#{msg['dialogFormularioSoporte.headerTipoIncidencia']}" />
-					<p:column>
-						<p:inputText  id="inputTipoIncidencia" value="#{dialogFormularioSoporte.data.tipoIncidencia.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
-						<p:commandButton id="btnTipoIncidencia" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarTipoIncidencia()}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
-		            		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoTipoIncidencia}" update="growlDialogFormularioSoporte inputTipoIncidencia" />
-		        		</p:commandButton>
-					</p:column>
+			<p:outputLabel for="inputTipoIncidenciaHidden" value="#{msg['dialogFormularioSoporte.headerTipoIncidencia']}" />
+			<p:column>
+				<p:inputText  id="inputTipoIncidencia" value="#{dialogFormularioSoporte.tipoIncidencia}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not tipoIncidenciaComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputTipoIncidenciaHidden" value="#{dialogFormularioSoporte.tipoIncidencia}" type="hidden" required="true" binding="#{tipoIncidenciaComponent}"/>
+				<p:commandButton id="btnTipoIncidencia" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarTipoIncidencia}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
+            		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoTipoIncidencia}" update="growlDialogFormularioSoporte inputTipoIncidencia inputTipoIncidenciaHidden" />
+        		</p:commandButton>
 
-					<h:outputText value="#{msg['dialogFormularioSoporte.headerDescripcion']}" />
-					<p:column>
-						<p:inputText id="inputDescripcion"  value="#{dialogFormularioSoporte.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
-						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarDescripcion()}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
-		            		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoDescripcion}" update="growlDialogFormularioSoporte inputDescripcion" />
-		        		</p:commandButton>
-					</p:column>
+			</p:column>
 
+			<p:outputLabel for="inputDescripcionHidden" value="#{msg['dialogFormularioSoporte.headerDescripcion']}" />
+			<p:column>
+				<p:inputText id="inputDescripcion"  value="#{dialogFormularioSoporte.descripcion}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputDescripcionHidden" value="#{dialogFormularioSoporte.descripcion}" type="hidden" required="true" binding="#{descripcionComponent}"/>
+				<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogFormularioSoporte.editarDescripcion}" process="@this" update="growlDialogFormularioSoporte" style="margin-right:5px">
+            		<p:ajax event="dialogReturn" listener="#{dialogFormularioSoporte.returnDialogoDescripcion}" update="growlDialogFormularioSoporte inputDescripcion inputDescripcionHidden" />
+        		</p:commandButton>
+			</p:column>
 
-					<h:outputText value="#{msg['dialogFormularioSoporte.headerTipoDestinatario']}" />
-					<p:selectOneMenu  value="#{dialogFormularioSoporte.data.destinatario}" style="width:200px" required="true">
-					     <f:selectItems value="#{TypeFormularioSoporte.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioSoporte.' += tipo]}" />
-					</p:selectOneMenu >
+			<p:outputLabel for="tipoDestinatario" value="#{msg['dialogFormularioSoporte.headerTipoDestinatario']}" />
+			<p:selectOneMenu id="tipoDestinatario" value="#{dialogFormularioSoporte.data.tipoDestinatario}" style="width:200px" required="true">
+			     <f:selectItems value="#{TypeFormularioSoporte.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioSoporte.' += tipo]}" />
+			</p:selectOneMenu >
 
+			<p:outputLabel value="#{msg['dialogFormularioSoporte.headerEmails']}" />
+			<p:inputText  value="#{dialogFormularioSoporte.data.listaEmails}" size="40" maxlength="4000"/>
 
-					<h:outputText value="#{msg['dialogFormularioSoporte.headerEmails']}" />
-					<p:inputText  value="#{dialogFormularioSoporte.data.emails}" size="40" />
+	 	</h:panelGrid>
 
-			 </h:panelGrid>
-				 <h:outputScript >
-			      function rcEditarPropiedad() {
-			        document.getElementById("form:btnEditarFormulario").click();
-			      }
-			      function  rcBorrarPropiedad() {
-			        document.getElementById("form:btnEliminarFormulario").click();
-			      }
-			    </h:outputScript>
-				  	 <p:outputPanel styleClass="botonera">
-				     	<p:toolbar>
-							<f:facet name="right">
-				        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFormularioSoporte.aceptar()}" process="@form" update="@form growlDialogFormularioSoporte" styleClass="boton-azul" />
-								<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormularioSoporte.cancelar()}" process="@this"/>
-							</f:facet>
-					  </p:toolbar>
-			    </p:outputPanel>
+ 	    <p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+				<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFormularioSoporte.aceptar}" process="@form" update="@form growlDialogFormularioSoporte" styleClass="boton-azul" />
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormularioSoporte.cancelar}" process="@this"/>
+				</f:facet>
+		  </p:toolbar>
+	    </p:outputPanel>
 	</h:form>
 </h:body>
 

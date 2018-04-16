@@ -8,104 +8,86 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
-
 <h:head>
 	<title><h:outputText value="#{msg['viewFormularioSoporte.titulo']}"/></title>
-
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
 </h:head>
 
 <h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{viewFormularioSoporte.modoAcceso}"/>
-		<f:viewParam name="DATO" value="#{viewFormularioSoporte.iData}"/>
 		<f:viewAction action="#{viewFormularioSoporte.init}" />
 	</f:metadata>
 	<h:form id="dialogFormularioSoporte">
-  			<p:outputPanel>
-				<!-- Contenido dialogo -->
-				<!-- Growl mensajes -->
-				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+		<p:outputPanel>
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid columnClasses="padding-left-18,wpx25" columns="2" cellpadding="5" styleClass="w100">
 
-						<p:dataTable  id="dataTableFormularios"
-										 var="td"
-										 value="#{viewFormularioSoporte.data}"
-										 scrollable="true"
-										 scrollHeight="140"
-										 paginator="false"
-										 selectionMode="single"
-										 selection="#{viewFormularioSoporte.dataSeleccionada}"
-										 rowKey="#{td.idString}"
-										 dblClickSelect="true">
+					<p:dataTable id="dataTableFormularios" emptyMessage="#{msg['error.emptyRows']}" var="td" value="#{viewFormularioSoporte.listaDatos}"
+						paginator="false" selectionMode="single" selection="#{viewFormularioSoporte.datoSeleccionado}"
+						rowKey="#{td.id}" >
 
-								<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-								<p:ajax event="rowDblselect" oncomplete="rcEditarValor();"/>
+						<!-- Necesario para actualizar en controlador la fila seleccionada -->
+						<p:ajax event="rowSelect" />
+						<p:ajax event="rowUnselect" />
 
-								<!-- Necesario para actualizar en controlador la fila seleccionada -->
-								<p:ajax event="rowSelect" />
-								<p:ajax event="rowUnselect" />
+						<!-- Columnas -->
+						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoIncidencia']}">
+							<h:outputText value="#{td.tipoIncidencia.getTraduccion(sessionBean.lang)}" />
+						</p:column>
 
-								<!-- Columnas -->
-									<!-- Columnas -->
-								<p:column headerText="#{msg['viewFormularioSoporte.headerTipoIncidencia']}" class="ui-panelgrid-cell">
-									<h:outputText value="#{td.tipoIncidencia.getTraduccion(sessionBean.lang)}" />
-							    </p:column>
+						<p:column headerText="#{msg['viewFormularioSoporte.headerDescripcion']}">
+							<h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
+						</p:column>
 
-							    <p:column headerText="#{msg['viewFormularioSoporte.headerDescripcion']}" class="ui-panelgrid-cell">
-									<h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
-							    </p:column>
+						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoDestinatario']}">
+							<h:outputText value="#{msg['typeFormularioSoporte.' += td.tipoDestinatario]}" />
+						</p:column>
 
-							    <p:column headerText="#{msg['viewFormularioSoporte.headerTipoDestinatario']}" class="ui-panelgrid-cell">
-									<h:outputText value="#{msg['typeFormularioSoporte.' += td.destinatario]}"  />
-							    </p:column>
+						<p:column headerText="#{msg['viewFormularioSoporte.headerEmails']}">
+							<h:outputText value="#{td.listaEmails}" />
+						</p:column>
+					</p:dataTable>
 
-							    <p:column headerText="#{msg['viewFormularioSoporte.headerEmails']}" class="ui-panelgrid-cell">
-									<h:outputText value="#{td.emails}" />
-							    </p:column>
+					<p:column style="width:20px">
+						<p>
+							<p:commandButton id="btnNuevoFormulario" icon="fa fa-plus" alt="#{msg['botones.nuevo']}" actionListener="#{viewFormularioSoporte.nuevoFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
+								<p:ajax event="dialogReturn" listener="#{viewFormularioSoporte.returnDialogo}" update="growlDialog dataTableFormularios" />
+							</p:commandButton>
+						</p>
+						<p>
+							<p:commandButton id="btnEditarFormulario" icon="fa fa-edit" alt="#{msg['botones.editar']}" actionListener="#{viewFormularioSoporte.editarFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
+								<p:ajax event="dialogReturn" listener="#{viewFormularioSoporte.returnDialogo}" update="growlDialog dataTableFormularios" />
+							</p:commandButton>
+						</p>
+						<p>
+							<p:commandButton id="btnEliminarFormulario" icon="fa fa-minus" alt="#{msg['botones.eliminar']}" actionListener="#{viewFormularioSoporte.quitarFormulario}" process="@this" update="growlDialog dataTableFormularios" rendered="#{!viewFormularioSoporte.consulta}"/>
+						</p>
+					</p:column>
 
-				 			</p:dataTable>
-
-					 		 <p:column style="width:20px">
-						     	<p>
-						    		<p:commandButton id="btnNuevoFormulario" icon="fa fa-plus" actionListener="#{viewFormularioSoporte.nuevoFormulario()}" process="@this" update="growlDialog">
-		        						<p:ajax event="dialogReturn" listener="#{viewFormularioSoporte.returnDialogo}" update="growlDialog dataTableFormularios"/>
-		        					</p:commandButton>
-		        				</p>
-		        				<p>
-						    		<p:commandButton id="btnEditarFormulario" icon="fa fa-edit" actionListener="#{viewFormularioSoporte.editarFormulario()}" process="@this" update="growlDialog">
-		        						<p:ajax event="dialogReturn" listener="#{viewFormularioSoporte.returnDialogo}" update="growlDialog dataTableFormularios"/>
-		        					</p:commandButton>
-		        				</p>
-						    	<p>
-						    		<p:commandButton id="btnEliminarFormulario" icon="fa fa-minus" actionListener="#{viewFormularioSoporte.quitarFormulario()}" process="@this" update="growlDialog dataTableFormularios" />
-						    	</p>
-							 </p:column>
-
-				 </h:panelGrid>
-				 <h:outputScript >
-			      function rcEditarPropiedad() {
+			</h:panelGrid>
+			<h:outputScript>
+		      	function rcEditarPropiedad() {
 			        document.getElementById("form:btnEditarFormulario").click();
-			      }
-			      function  rcBorrarPropiedad() {
-			        document.getElementById("form:btnEliminarFormulario").click();
-			      }
-			    </h:outputScript>
-				</p:outputPanel>
-				  	 <p:outputPanel styleClass="botonera">
-				     	<p:toolbar>
-							<f:facet name="right">
-				        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{viewFormularioSoporte.aceptar()}" process="@form" update="@form growlDialog"/>
-								<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{viewFormularioSoporte.cancelar()}" process="@this"/>
-							</f:facet>
-					  </p:toolbar>
-			    </p:outputPanel>
+			    }
+		    	function rcBorrarPropiedad() {
+		        	document.getElementById("form:btnEliminarFormulario").click();
+		      	}
+	    	</h:outputScript>
+		</p:outputPanel>
+		<p:outputPanel styleClass="botonera">
+			<p:toolbar>
+				<f:facet name="right">
+					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{viewFormularioSoporte.cerrar}" process="@form" update="@form growlDialog" />
+				</f:facet>
+			</p:toolbar>
+		</p:outputPanel>
 	</h:form>
 </h:body>
 

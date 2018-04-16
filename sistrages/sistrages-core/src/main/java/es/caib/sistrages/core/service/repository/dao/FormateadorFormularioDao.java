@@ -19,20 +19,41 @@ public interface FormateadorFormularioDao {
 	FormateadorFormulario getById(Long id);
 
 	/**
+	 * Obtiene formateador por código.
+	 * 
+	 * @param idEntidad
+	 *            id entidad
+	 * @param codigo
+	 *            código
+	 * @return formateador
+	 */
+	FormateadorFormulario getByCodigo(Long idEntidad, String codigo);
+
+	/**
 	 * Añade el Formateador de Formulario.
 	 *
+	 * @param idEntidad
+	 *            id entidad
 	 * @param fmt
 	 *            el formateador de formulario
 	 */
-	void add(FormateadorFormulario fmt);
+	void add(final Long idEntidad, FormateadorFormulario fmt);
 
 	/**
-	 * Elimina el Formateador de Formulario..
+	 * Elimina el Formateador de Formulario.
 	 *
 	 * @param id
 	 *            el identificador
 	 */
 	void remove(Long id);
+
+	/**
+	 * Elimina el Formateadores de Formulario de entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador entidad
+	 */
+	void removeByEntidad(Long idEntidad);
 
 	/**
 	 * Actualiza el Formateador de Formulario.
@@ -45,17 +66,21 @@ public interface FormateadorFormularioDao {
 	/**
 	 * Obtiene la lista Formateadores de Formulario.
 	 *
+	 * @param idEntidad
+	 *            el identificador entidad
 	 * @return lista de Formateadores de Formulario
 	 */
-	List<FormateadorFormulario> getAll();
+	List<FormateadorFormulario> getAll(Long idEntidad);
 
 	/**
 	 * Obtiene la lista de Formateadores de Formulario.
 	 *
+	 * @param idEntidad
+	 *            el identificador entidad
 	 * @param filtro
 	 *            filtro
 	 * @return la lista de Formateadores de Formulario
 	 */
-	List<FormateadorFormulario> getAllByFiltro(String filtro);
+	List<FormateadorFormulario> getAllByFiltro(Long idEntidad, String filtro);
 
 }

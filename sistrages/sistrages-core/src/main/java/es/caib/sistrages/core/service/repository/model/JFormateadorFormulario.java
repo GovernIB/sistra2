@@ -2,9 +2,12 @@ package es.caib.sistrages.core.service.repository.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -25,11 +28,26 @@ public class JFormateadorFormulario implements IModelApi {
 	@Column(name = "FMT_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	@Column(name = "FMT_IDENTI", unique = true, nullable = false, length = 20)
+	private String identificador;
+
 	@Column(name = "FMT_CLASS", nullable = false, length = 500)
 	private String classname;
 
 	@Column(name = "FMT_DESCRI", nullable = false)
 	private String descripcion;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "FMT_CODENT", nullable = false)
+	private JEntidad entidad;
+
+	public JEntidad getEntidad() {
+		return entidad;
+	}
+
+	public void setEntidad(final JEntidad entidad) {
+		this.entidad = entidad;
+	}
 
 	public JFormateadorFormulario() {
 	}
@@ -58,12 +76,20 @@ public class JFormateadorFormulario implements IModelApi {
 		this.descripcion = descripcion;
 	}
 
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(final String identificador) {
+		this.identificador = identificador;
+	}
+
 	public FormateadorFormulario toModel() {
 		final FormateadorFormulario fmt = new FormateadorFormulario();
 		fmt.setId(codigo);
+		fmt.setCodigo(identificador);
 		fmt.setClassname(classname);
 		fmt.setDescripcion(descripcion);
-
 		return fmt;
 	}
 
@@ -72,10 +98,10 @@ public class JFormateadorFormulario implements IModelApi {
 		if (model != null) {
 			jModel = new JFormateadorFormulario();
 			jModel.setCodigo(model.getId());
+			jModel.setIdentificador(model.getCodigo());
 			jModel.setClassname(model.getClassname());
 			jModel.setDescripcion(model.getDescripcion());
 		}
-
 		return jModel;
 	}
 

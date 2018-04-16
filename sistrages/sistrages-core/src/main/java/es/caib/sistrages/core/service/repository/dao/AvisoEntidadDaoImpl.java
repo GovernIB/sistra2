@@ -151,7 +151,7 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		if (StringUtils.isNotBlank(filtro)) {
 			sql += "  AND (t.idioma.identificador = :idioma AND LOWER(t.literal) LIKE :filtro) ";
 		}
-		sql += "  order by a.fechaInicio";
+		sql += "  order by a.fechaInicio, a.codigo";
 
 		final Query query = entityManager.createQuery(sql);
 
@@ -169,6 +169,14 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 			}
 		}
 		return listaAvisoEntidad;
+	}
+
+	@Override
+	public void removeByEntidad(final Long idEntidad) {
+		final String sql = "delete from JAvisoEntidad as a where a.entidad.codigo = :idEntidad";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idEntidad", idEntidad);
+		query.executeUpdate();
 	}
 
 }

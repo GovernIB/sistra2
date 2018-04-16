@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -27,7 +28,7 @@ public class FuenteDatos extends ModelApi {
 	private String descripcion;
 
 	/** Campos. **/
-	private List<FuenteDatosCampo> campos;
+	private List<FuenteDatosCampo> campos = new ArrayList<>();
 
 	public String getIdString() {
 		if (codigo == null) {
@@ -118,6 +119,45 @@ public class FuenteDatos extends ModelApi {
 	 */
 	public void setCampos(final List<FuenteDatosCampo> campos) {
 		this.campos = campos;
+	}
+
+	/**
+	 * Metodo para obtener el Campo de fuente de datos segun una id.
+	 *
+	 * @param id
+	 * @return
+	 */
+	public FuenteDatosCampo getCampoById(final Long id) {
+		FuenteDatosCampo campo = null;
+		for (final FuenteDatosCampo campoFD : this.campos) {
+			if (campoFD.getId() != null && campoFD.getId().compareTo(id) == 0) {
+				campo = campoFD;
+				break;
+			}
+		}
+
+		return campo;
+	}
+
+	/**
+	 * Añade un campo.
+	 *
+	 * @param fuenteDatosCampo
+	 */
+	public void addCampo(final FuenteDatosCampo fuenteDatosCampo) {
+		fuenteDatosCampo.setFuenteDatos(this);
+		this.campos.add(fuenteDatosCampo);
+	}
+
+	/**
+	 * Borra un campo.
+	 *
+	 * @param fuenteDatosCampo
+	 */
+	public void removeCampo(final FuenteDatosCampo fuenteDatosCampo) {
+		if (this.campos.contains(fuenteDatosCampo)) {
+			this.campos.remove(fuenteDatosCampo);
+		}
 	}
 
 }

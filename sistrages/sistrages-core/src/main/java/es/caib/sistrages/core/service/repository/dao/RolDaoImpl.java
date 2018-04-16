@@ -158,6 +158,25 @@ public class RolDaoImpl implements RolDao {
 		return listarRoles(idEntidad, null);
 	}
 
+	@Override
+	public List<Rol> getAllByArea(final Long idArea) {
+		final List<Rol> listaRoles = new ArrayList<>();
+		final String sql = "select r from JRolArea as r where r.area.codigo = :idArea";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idArea", idArea);
+		final List<JRolArea> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			for (final JRolArea jRol : results) {
+				final Rol rol = jRol.toModel();
+				if (jRol.getArea() != null) {
+					rol.setArea(jRol.getArea().toModel());
+				}
+				listaRoles.add(rol);
+			}
+		}
+		return listaRoles;
+	}
+
 	/**
 	 * Listar roles.
 	 *
@@ -195,6 +214,14 @@ public class RolDaoImpl implements RolDao {
 			}
 		}
 		return listaRoles;
+	}
+
+	@Override
+	public void removeByArea(final Long idArea) {
+		final String sql = "delete from JRolArea as a where a.area.codigo = :idArea";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idArea", idArea);
+		query.executeUpdate();
 	}
 
 }

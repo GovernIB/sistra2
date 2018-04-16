@@ -38,7 +38,7 @@ public class AvisoEntidadServiceBean implements AvisoEntidadService {
 	 * lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public AvisoEntidad getAvisoEntidad(final Long id) {
 		return avisoEntidadService.getAvisoEntidad(id);
 	}
@@ -94,7 +94,7 @@ public class AvisoEntidadServiceBean implements AvisoEntidadService {
 	 * java.lang.String)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<AvisoEntidad> listAvisoEntidad(final Long idEntidad, final TypeIdioma idioma, final String filtro) {
 		return avisoEntidadService.listAvisoEntidad(idEntidad, idioma, filtro);
 	}

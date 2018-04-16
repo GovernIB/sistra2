@@ -151,7 +151,7 @@ public class PluginsDaoImpl implements PluginsDao {
 			sql += " AND t.entidad.codigo = :idEntidad";
 		}
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " AND lower(t.claseImplementadora) like :pFiltro";
+			sql += " AND ( lower(t.claseImplementadora) like :pFiltro or lower(t.descripcion) like :pFiltro  or lower(t.instancia) like :pFiltro)";
 		}
 		sql += " order by t.tipo";
 		final Query query = entityManager.createQuery(sql);
@@ -173,6 +173,14 @@ public class PluginsDaoImpl implements PluginsDao {
 		}
 
 		return listaPlugin;
+	}
+
+	@Override
+	public void removeByEntidad(final Long idEntidad) {
+		final String sql = "delete from JPlugin as t where t.entidad.codigo = :idEntidad";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idEntidad", idEntidad);
+		query.executeUpdate();
 	}
 
 }

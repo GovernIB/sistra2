@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
+import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
 
 @Repository("entidadDao")
@@ -40,10 +42,10 @@ public class EntidadDaoImpl implements EntidadDao {
 	@Override
 	public Entidad getById(final Long idEntidad) {
 		Entidad entidad = null;
-		final JEntidad hentidad = entityManager.find(JEntidad.class, idEntidad);
-		if (hentidad != null) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad != null) {
 			// Establecemos datos
-			entidad = hentidad.toModel();
+			entidad = jEntidad.toModel();
 		}
 		return entidad;
 	}
@@ -74,11 +76,11 @@ public class EntidadDaoImpl implements EntidadDao {
 	 */
 	@Override
 	public void remove(final Long idEntidad) {
-		final JEntidad hentidad = entityManager.find(JEntidad.class, idEntidad);
-		if (hentidad == null) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
 			throw new NoExisteDato("No existe entidad " + idEntidad);
 		}
-		entityManager.remove(hentidad);
+		entityManager.remove(jEntidad);
 	}
 
 	/*
@@ -114,6 +116,9 @@ public class EntidadDaoImpl implements EntidadDao {
 		if (jEntidad == null) {
 			throw new NoExisteDato("No existe entidad " + entidad.getId());
 		}
+
+		jEntidad.setPiePaginaAsistenteTramitacion(
+				JLiteral.mergeModel(jEntidad.getPiePaginaAsistenteTramitacion(), entidad.getPie()));
 
 		jEntidad.setEmail(entidad.getEmail());
 		jEntidad.setContactoEmail(entidad.isEmailHabilitado());
@@ -183,5 +188,135 @@ public class EntidadDaoImpl implements EntidadDao {
 		}
 
 		return entidades;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#removeLogoGestor(
+	 * java.lang.Long)
+	 */
+	@Override
+	public void removeLogoGestor(final Long idEntidad) {
+
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		final JFichero jFichero = jEntidad.getLogoGestorTramites();
+		if (jFichero != null) {
+			jEntidad.setLogoGestorTramites(null);
+			entityManager.merge(jEntidad);
+			entityManager.remove(jFichero);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#removeLogoAsistente(
+	 * java.lang.Long)
+	 */
+	@Override
+	public void removeLogoAsistente(final Long idEntidad) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		final JFichero jFichero = jEntidad.getLogoAsistenteTramitacion();
+		if (jFichero != null) {
+			jEntidad.setLogoAsistenteTramitacion(null);
+			entityManager.merge(jEntidad);
+			entityManager.remove(jFichero);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#removeCssAsistente(
+	 * java.lang.Long)
+	 */
+	@Override
+	public void removeCssAsistente(final Long idEntidad) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		final JFichero jFichero = jEntidad.getCssAsistenteTramitacion();
+		if (jFichero != null) {
+			jEntidad.setCssAsistenteTramitacion(null);
+			entityManager.merge(jEntidad);
+			entityManager.remove(jFichero);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#uploadLogoGestor(
+	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero)
+	 */
+	@Override
+	public Fichero uploadLogoGestor(final Long idEntidad, final Fichero fichero) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		jEntidad.setLogoGestorTramites(JFichero.fromModel(fichero));
+		entityManager.merge(jEntidad);
+
+		return jEntidad.getLogoGestorTramites().toModel();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#uploadLogoAsistente(
+	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero)
+	 */
+	@Override
+	public Fichero uploadLogoAsistente(final Long idEntidad, final Fichero fichero) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		jEntidad.setLogoAsistenteTramitacion(JFichero.fromModel(fichero));
+		entityManager.merge(jEntidad);
+
+		return jEntidad.getLogoAsistenteTramitacion().toModel();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#uploadCssAsistente(
+	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero)
+	 */
+	@Override
+	public Fichero uploadCssAsistente(final Long idEntidad, final Fichero fichero) {
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad " + idEntidad);
+		}
+
+		jEntidad.setCssAsistenteTramitacion(JFichero.fromModel(fichero));
+		entityManager.merge(jEntidad);
+
+		return jEntidad.getCssAsistenteTramitacion().toModel();
 	}
 }

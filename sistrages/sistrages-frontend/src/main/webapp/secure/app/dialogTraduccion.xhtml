@@ -54,8 +54,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion" styleClass="boton-azul"  />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccion.isAlta() or dialogTraduccion.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"  rendered="#{dialogTraduccion.isAlta() or dialogTraduccion.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"  rendered="#{dialogTraduccion.isConsulta()}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

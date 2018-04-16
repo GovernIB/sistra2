@@ -23,22 +23,23 @@
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewMensajesAvisoEntidad.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewMensajesAvisoEntidad.filtrar()}" process="panelFiltro" update="growl dataTable form:panelBotones" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewMensajesAvisoEntidad.filtrar()}" process="panelFiltro" update="growl dataTable" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewMensajesAvisoEntidad.nuevo()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable form:panelBotones"/>
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewMensajesAvisoEntidad.nuevo()}" process="@this" update="growl" rendered="#{viewMensajesAvisoEntidad.permiteAlta}">
+		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewMensajesAvisoEntidad.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable form:panelBotones"/>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewMensajesAvisoEntidad.editar()}" process="@this" update="growl" rendered="#{viewMensajesAvisoEntidad.permiteEditar}">
+		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewMensajesAvisoEntidad.eliminar()}" process="@this" update="growl dataTable form:panelBotones">
-		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{!viewMensajesAvisoEntidad.filaSeleccionada}"/>
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewMensajesAvisoEntidad.consultar()}" process="@this" update="growl" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}" />
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewMensajesAvisoEntidad.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteAlta}">
+		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewMensajesAvisoEntidad.refrescarCache()}" process="@this" update="growl dataTable form:panelBotones"/>
+		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewMensajesAvisoEntidad.refrescarCache()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteEditar}"/>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewMensajesAvisoEntidad.ayudar()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
@@ -56,8 +57,8 @@
 			        	 selectionMode="single" selection="#{viewMensajesAvisoEntidad.datoSeleccionado}" rowKey="#{td.id}" >
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" update="form:panelBotones" />
-				<p:ajax event="rowUnselect" update="form:panelBotones"/>
+				<p:ajax event="rowSelect"/>
+				<p:ajax event="rowUnselect"/>
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerDescripcion']}">
@@ -88,16 +89,20 @@
 
 			<!-- Context menu -->
 			<p:contextMenu for="dataTable">
-		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditar()"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminar()"/>
+		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditar()" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminar()" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
+		        <p:menuitem value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="rcConsultar()" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}"/>
 		    </p:contextMenu>
 
-			<h:outputScript >
+			<h:outputScript>
 		      function rcEditar() {
 		        document.getElementById("form:btnEditar").click();
 		      }
 		      function rcEliminar() {
 		        document.getElementById("form:btnEliminar").click();
+		      }
+		      function rcConsultar() {
+		        document.getElementById("form:btnConsultar").click();
 		      }
 		    </h:outputScript>
 

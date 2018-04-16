@@ -12,6 +12,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -94,40 +95,21 @@ public class ViewDominios extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
-		if (typeAmbito == TypeAmbito.AREA) {
-			params.put("AREA", id);
-		}
-		if (typeAmbito == TypeAmbito.ENTIDAD) {
-			params.put("ENTIDAD", id);
-		}
-		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.ALTA, params, true, 770, 680);
+		abrirDlg(TypeModoAcceso.ALTA);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
+		abrirDlg(TypeModoAcceso.EDICION);
+	}
 
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
-		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
-
-		if (typeAmbito == TypeAmbito.AREA) {
-			params.put("AREA", id);
-		}
-		if (typeAmbito == TypeAmbito.ENTIDAD) {
-			params.put("ENTIDAD", id);
-		}
-		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.EDICION, params, true, 770, 680);
+	/**
+	 * Abre dialogo para consultar dato.
+	 */
+	public void consultar() {
+		abrirDlg(TypeModoAcceso.CONSULTA);
 	}
 
 	/**
@@ -200,6 +182,54 @@ public class ViewDominios extends ViewControllerBase {
 		return verificarFilaSeleccionada();
 	}
 
+	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean getPermiteAlta() {
+		boolean res = false;
+		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+		switch (ambitoType) {
+		case GLOBAL:
+			// Entra como SuperAdmin
+			res = true;
+			break;
+		case ENTIDAD:
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case AREA:
+			// TODO Pendiente permisos area
+			res = true;
+			break;
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteEditar() {
+		boolean res = false;
+		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+		switch (ambitoType) {
+		case GLOBAL:
+			// Entra como SuperAdmin
+			res = true;
+			break;
+		case ENTIDAD:
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case AREA:
+			// TODO Pendiente permisos area
+			res = true;
+			break;
+		}
+		return res;
+	}
+
 	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Verifica si hay fila seleccionada.
@@ -213,6 +243,35 @@ public class ViewDominios extends ViewControllerBase {
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
+	}
+
+	/**
+	 * Abre dialogo.
+	 * 
+	 * @param modoAccesoDlg
+	 *            Modo acceso
+	 */
+	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
+
+		// Verifica si no hay fila seleccionada
+		if (modoAccesoDlg != TypeModoAcceso.ALTA && !verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		}
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+
+		if (typeAmbito == TypeAmbito.AREA) {
+			params.put("AREA", id);
+		}
+		if (typeAmbito == TypeAmbito.ENTIDAD) {
+			params.put("ENTIDAD", id);
+		}
+		UtilJSF.openDialog(DialogDominio.class, modoAccesoDlg, params, true, 770, 680);
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------

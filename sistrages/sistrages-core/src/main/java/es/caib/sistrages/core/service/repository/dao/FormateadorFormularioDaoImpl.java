@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 
 /**
@@ -60,6 +61,20 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		return fmt;
 	}
 
+	@Override
+	public FormateadorFormulario getByCodigo(final Long idEntidad, final String codigo) {
+		FormateadorFormulario result = null;
+		final String sql = "select f from JFormateadorFormulario f where f.entidad.codigo = :idEntidad and f.identificador = :codigo";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idEntidad", idEntidad);
+		query.setParameter("codigo", codigo);
+		final List<JFormateadorFormulario> list = query.getResultList();
+		if (!list.isEmpty()) {
+			result = list.get(0).toModel();
+		}
+		return result;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -68,12 +83,18 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * .caib.sistrages.core.api.model.FormateadorFormulario)
 	 */
 	@Override
-	public void add(final FormateadorFormulario fmt) {
+	public void add(final Long idEntidad, final FormateadorFormulario fmt) {
 		if (fmt == null) {
 			throw new FaltanDatosException("Falta el formateador de formulario");
 		}
 
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		if (jEntidad == null) {
+			throw new NoExisteDato("No existe entidad con id " + idEntidad);
+		}
+
 		final JFormateadorFormulario jFmt = JFormateadorFormulario.fromModel(fmt);
+		jFmt.setEntidad(jEntidad);
 
 		entityManager.persist(jFmt);
 	}
@@ -121,6 +142,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		// Mergeamos datos
 		final JFormateadorFormulario jFmtNew = JFormateadorFormulario.fromModel(fmt);
 		jFmtNew.setCodigo(jFmt.getCodigo());
+		jFmtNew.setEntidad(jFmt.getEntidad());
 
 		entityManager.merge(jFmtNew);
 	}
@@ -132,8 +154,8 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * getAllByFiltro(java.lang.String)
 	 */
 	@Override
-	public List<FormateadorFormulario> getAllByFiltro(final String filtro) {
-		return listarFmt(filtro);
+	public List<FormateadorFormulario> getAllByFiltro(final Long idEntidad, final String filtro) {
+		return listarFmt(idEntidad, filtro);
 	}
 
 	/*
@@ -144,8 +166,8 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * ()
 	 */
 	@Override
-	public List<FormateadorFormulario> getAll() {
-		return listarFmt(null);
+	public List<FormateadorFormulario> getAll(final Long idEntidad) {
+		return listarFmt(idEntidad, null);
 	}
 
 	/**
@@ -156,30 +178,38 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * @return Listado de formateadores de Formulario
 	 */
 	@SuppressWarnings("unchecked")
-	private List<FormateadorFormulario> listarFmt(final String filtro) {
+	private List<FormateadorFormulario> listarFmt(final long idEntidad, final String filtro) {
 		final List<FormateadorFormulario> listaFmt = new ArrayList<>();
-		String sql = "select f from JFormateadorFormulario f";
+		String sql = "select f from JFormateadorFormulario f where f.entidad.codigo = :idEntidad";
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " where (LOWER(f.descripcion) LIKE :filtro OR LOWER(f.classname) LIKE :filtro)";
+			sql += " AND (LOWER(f.identificador) LIKE :filtro OR LOWER(f.descripcion) LIKE :filtro OR LOWER(f.classname) LIKE :filtro)";
 		}
 		sql += " order by f.classname";
 
 		final Query query = entityManager.createQuery(sql);
 
+		query.setParameter("idEntidad", idEntidad);
 		if (StringUtils.isNotBlank(filtro)) {
 			query.setParameter("filtro", "%".concat(filtro.toLowerCase()).concat("%"));
 		}
-		
+
 		final List<JFormateadorFormulario> results = query.getResultList();
 		if (results != null && !results.isEmpty()) {
 			for (final JFormateadorFormulario jRol : results) {
 				final FormateadorFormulario fmt = jRol.toModel();
-
 				listaFmt.add(fmt);
 			}
 		}
 		return listaFmt;
+	}
+
+	@Override
+	public void removeByEntidad(final Long idEntidad) {
+		final String sql = "delete from JFormateadorFormulario as a where a.entidad.codigo = :idEntidad";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idEntidad", idEntidad);
+		query.executeUpdate();
 	}
 
 }

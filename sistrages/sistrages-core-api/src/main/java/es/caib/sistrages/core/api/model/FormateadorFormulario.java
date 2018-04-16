@@ -13,6 +13,9 @@ public class FormateadorFormulario extends ModelApi {
 	/** Id. */
 	private Long id;
 
+	/** Identificador. **/
+	private String codigo;
+
 	/**
 	 * classname.
 	 */
@@ -85,6 +88,14 @@ public class FormateadorFormulario extends ModelApi {
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(final String codigo) {
+		this.codigo = codigo;
 	}
 
 }

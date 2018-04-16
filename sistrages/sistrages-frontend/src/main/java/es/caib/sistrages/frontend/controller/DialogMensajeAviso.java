@@ -125,12 +125,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 */
 	public void editarMensaje() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		if (data.getMensaje() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					idiomas, idiomas);
-		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getMensaje(), idiomas, idiomas);
-		}
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getMensaje(), idiomas, idiomas);
 	}
 
 	/**

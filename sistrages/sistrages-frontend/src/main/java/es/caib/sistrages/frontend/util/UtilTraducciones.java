@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -42,8 +42,8 @@ public final class UtilTraducciones {
 	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
 	 *            que son los que tenga traducciones.
 	 */
-	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, Literal traducciones,
-			List<String> idiomas, List<String> idiomasObligatorios) {
+	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, Literal traducciones, List<String> idiomas,
+			List<String> idiomasObligatorios) {
 
 		final Map<String, String> params = new HashMap<>();
 
@@ -82,7 +82,7 @@ public final class UtilTraducciones {
 		default:
 			altura = 120;
 		}
-		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 460, altura);
+		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 470, altura);
 
 	}
 

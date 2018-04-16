@@ -1,6 +1,8 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -9,9 +11,11 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.PluginService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -46,12 +50,17 @@ public class DialogPlugin extends DialogControllerBase {
 	/** Propiedad seleccionada. */
 	private Propiedad propiedadSeleccionada;
 
+	/** Tipos de plugin. */
+	private List<TypePlugin> tipos;
+
+	/** Max long propiedades. */
 	private static final int MAXLENGTH_PROPIEDADES = 4000;
 
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
+		tipos = new ArrayList<>();
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Plugin();
@@ -59,11 +68,33 @@ public class DialogPlugin extends DialogControllerBase {
 		} else {
 			data = pluginService.getPlugin(new Long(id));
 		}
-		if (ambito == null || TypeAmbito.fromString(ambito) == TypeAmbito.GLOBAL) {
-			visibleInstancia = false;
-		} else {
-			visibleInstancia = true;
+		if (ambito == null) {
+			ambito = TypeAmbito.GLOBAL.toString();
 		}
+
+		switch (TypeAmbito.fromString(ambito)) {
+		case GLOBAL:
+			// Tipos plugins
+			tipos.add(TypePlugin.LOGIN);
+			tipos.add(TypePlugin.REPRESENTACION);
+			tipos.add(TypePlugin.DOMINIO_REMOTO);
+			// No permite plugins multiinstancia
+			visibleInstancia = false;
+			break;
+		case ENTIDAD:
+			// Tipos plugins
+			tipos.add(TypePlugin.CATALOGO_PROCEDIMIENTOS);
+			tipos.add(TypePlugin.FIRMA);
+			tipos.add(TypePlugin.PAGOS);
+			tipos.add(TypePlugin.FORMULARIOS_EXTERNOS);
+			tipos.add(TypePlugin.REGISTRO);
+			// Permite plugins multiinstancia (pagos)
+			visibleInstancia = true;
+			break;
+		default:
+			throw new FrontException("Tipo ambito no permitido: " + ambito);
+		}
+
 	}
 
 	/**
@@ -103,7 +134,7 @@ public class DialogPlugin extends DialogControllerBase {
 	 * Crea nueva propiedad.
 	 */
 	public void nuevaPropiedad() {
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 140);
 	}
 
 	/**
@@ -324,6 +355,14 @@ public class DialogPlugin extends DialogControllerBase {
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;
+	}
+
+	public List<TypePlugin> getTipos() {
+		return tipos;
+	}
+
+	public void setTipos(final List<TypePlugin> tipos) {
+		this.tipos = tipos;
 	}
 
 }

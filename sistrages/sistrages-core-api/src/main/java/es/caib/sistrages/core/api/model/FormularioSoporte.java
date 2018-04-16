@@ -15,9 +15,6 @@ public class FormularioSoporte extends ModelApi {
 	/** Id. */
 	private Long id;
 
-	/** Entidad. */
-	private Entidad entidad;
-
 	/** Literal tipo de incidencia. */
 	private Literal tipoIncidencia;
 
@@ -25,10 +22,17 @@ public class FormularioSoporte extends ModelApi {
 	private Literal descripcion;
 
 	/** Tipo destinatario, tipo enum. **/
-	private TypeFormularioSoporte destinatario;
+	private TypeFormularioSoporte tipoDestinatario;
 
 	/** Lista emails separados por ; para tipo destinario E */
-	private String emails;
+	private String listaEmails;
+
+	/**
+	 * Crea una nueva instancia de FormularioSoporte.
+	 */
+	public FormularioSoporte() {
+		super();
+	}
 
 	/**
 	 * @return the id
@@ -43,40 +47,6 @@ public class FormularioSoporte extends ModelApi {
 	 */
 	public void setId(final Long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the idString
-	 */
-	public String getIdString() {
-		if (id == null) {
-			return null;
-		} else {
-			return id.toString();
-		}
-	}
-
-	/**
-	 * @param idString
-	 *            the idString to set
-	 */
-	public void setIdString(final String idString) {
-		this.id = Long.valueOf(idString);
-	}
-
-	/**
-	 * @return the entidad
-	 */
-	public Entidad getEntidad() {
-		return entidad;
-	}
-
-	/**
-	 * @param entidad
-	 *            the entidad to set
-	 */
-	public void setEntidad(final Entidad entidad) {
-		this.entidad = entidad;
 	}
 
 	/**
@@ -112,31 +82,31 @@ public class FormularioSoporte extends ModelApi {
 	/**
 	 * @return the emails
 	 */
-	public String getEmails() {
-		return emails;
+	public String getListaEmails() {
+		return listaEmails;
 	}
 
 	/**
 	 * @param emails
 	 *            the emails to set
 	 */
-	public void setEmails(final String emails) {
-		this.emails = emails;
+	public void setListaEmails(final String emails) {
+		this.listaEmails = emails;
 	}
 
 	/**
 	 * @return the destinatario
 	 */
-	public TypeFormularioSoporte getDestinatario() {
-		return destinatario;
+	public TypeFormularioSoporte getTipoDestinatario() {
+		return tipoDestinatario;
 	}
 
 	/**
 	 * @param destinatario
 	 *            the destinatario to set
 	 */
-	public void setDestinatario(final TypeFormularioSoporte destinatario) {
-		this.destinatario = destinatario;
+	public void setTipoDestinatario(final TypeFormularioSoporte destinatario) {
+		this.tipoDestinatario = destinatario;
 	}
 
 }

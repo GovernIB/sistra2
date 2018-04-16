@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -89,22 +90,21 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogMensajeAviso.class, TypeModoAcceso.ALTA, null, true, 530, 250);
+		abrirDlg(TypeModoAcceso.ALTA);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
+		abrirDlg(TypeModoAcceso.EDICION);
+	}
 
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
-		UtilJSF.openDialog(DialogMensajeAviso.class, TypeModoAcceso.EDICION, params, true, 530, 250);
-
+	/**
+	 * Abre dialogo para consultar dato.
+	 */
+	public void consultar() {
+		abrirDlg(TypeModoAcceso.CONSULTA);
 	}
 
 	/**
@@ -153,6 +153,24 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
+	}
+
+	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean getPermiteAlta() {
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteEditar() {
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 	}
 
 	/**
@@ -223,6 +241,25 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 */
 	public void setDatoSeleccionado(final AvisoEntidad datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
+	}
+
+	/**
+	 * Abrir dialogo.
+	 *
+	 * @param modoAccesoDlg
+	 *            Modo acceso
+	 */
+	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
+		// Verifica si no hay fila seleccionada
+		if (modoAccesoDlg != TypeModoAcceso.ALTA && !verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		}
+		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 530, 250);
 	}
 
 }

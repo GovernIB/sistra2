@@ -72,13 +72,14 @@ public class DialogFuente extends DialogControllerBase {
 			case ALTA:
 				// Refrescamos datos
 				final FuenteDatosCampo fuenteDatosCampo = (FuenteDatosCampo) respuesta.getResult();
-				this.data.getCampos().add(fuenteDatosCampo);
-
+				this.data.addCampo(fuenteDatosCampo);
 				break;
 
 			case EDICION:
 				// Actualizamos fila actual
 				final FuenteDatosCampo fuenteDatosCampoEdicion = (FuenteDatosCampo) respuesta.getResult();
+				fuenteDatosCampoEdicion.setFuenteDatos(this.data);
+
 				// Muestra dialogo
 				final int posicion = this.data.getCampos().indexOf(this.valorSeleccionado);
 
@@ -111,7 +112,9 @@ public class DialogFuente extends DialogControllerBase {
 			return;
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.valorSeleccionado));
+		final FuenteDatosCampo campo = this.valorSeleccionado;
+		campo.setFuenteDatos(null);
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(campo));
 		UtilJSF.openDialog(DialogFuenteCampo.class, TypeModoAcceso.EDICION, params, true, 410, 200);
 	}
 
@@ -122,7 +125,7 @@ public class DialogFuente extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		this.data.getCampos().remove(this.valorSeleccionado);
+		this.data.removeCampo(this.valorSeleccionado);
 
 	}
 
@@ -166,6 +169,13 @@ public class DialogFuente extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		if (this.data.getCampos() != null) {
+			int orden = 0;
+			for (final FuenteDatosCampo campo : data.getCampos()) {
+				campo.setOrden(orden);
+				orden++;
+			}
+		}
 		switch (acceso) {
 		case ALTA:
 			this.dominioService.addFuenteDato(this.data, Long.valueOf(idArea));

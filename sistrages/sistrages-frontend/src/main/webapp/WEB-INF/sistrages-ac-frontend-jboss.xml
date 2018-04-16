@@ -8,8 +8,7 @@
 				http://www.springframework.org/schema/context
         		http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<!-- No necesario, se invoca directamente a capa EJB sin pasar por Spring Beans
+	<!--Para invocar directamente a capa EJB pasando por Spring Beans -->
 	<import resource="classpath:sistrages-ejb-core-api.xml" />
-	 -->
 
 </beans>

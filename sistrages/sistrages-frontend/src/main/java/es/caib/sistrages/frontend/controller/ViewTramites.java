@@ -1,7 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +15,11 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.service.AreaService;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -40,108 +40,72 @@ public class ViewTramites extends ViewControllerBase {
 	 * Enlace area.
 	 */
 	@Inject
-	private AreaService areaService;
+	private TramiteService tramiteService;
+
+	/**
+	 * security service.
+	 */
+	@Inject
+	private SecurityService securityService;
+
+	/**
+	 * Filtro (puede venir por parametro).
+	 */
+	private String filtro;
+
+	/**
+	 * Lista de datos.
+	 */
+	private TreeNode areas;
+
+	/**
+	 * Dato seleccionado en la lista.
+	 */
+	private DefaultTreeNode areaSeleccionada;
+
+	/**
+	 * Lista de datos.
+	 */
+	private List<Tramite> tramites;
+
+	/**
+	 * Dato seleccionado en la lista.
+	 */
+	private Tramite tramiteSeleccionada;
 
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-		/*
-		 * areas = new DefaultTreeNode("Root", null);
-		 *
-		 * final Area area1 = new Area(); area1.setId(1l); area1.setCodigo("1");
-		 * area1.setDescripcion("Area 1"); areas.getChildren().add(new
-		 * DefaultTreeNode(area1));
-		 *
-		 * final Area area2 = new Area(); area2.setId(2l); area2.setCodigo("2");
-		 * area2.setDescripcion("Area 2"); areas.getChildren().add(new
-		 * DefaultTreeNode(area2));
-		 *
-		 * final Area area3 = new Area(); area3.setId(3l); area3.setCodigo("3");
-		 * area3.setDescripcion("Area 3"); areas.getChildren().add(new
-		 * DefaultTreeNode(area3));
-		 *
-		 * final Area area4 = new Area(); area4.setId(4l); area4.setCodigo("4");
-		 * area4.setDescripcion("Area 4"); areas.getChildren().add(new
-		 * DefaultTreeNode(area4));
-		 *
-		 * final Area area5 = new Area(); area5.setId(5l); area5.setCodigo("5");
-		 * area5.setDescripcion("Area 5"); areas.getChildren().add(new
-		 * DefaultTreeNode(area5));
-		 *
-		 * final Area area6 = new Area(); area6.setId(6l); area6.setCodigo("6");
-		 * area6.setDescripcion("Area 6"); areas.getChildren().add(new
-		 * DefaultTreeNode(area6));
-		 */
-		tramites = new ArrayList<>();
-		final Tramite tramite1 = new Tramite();
-		tramite1.setId(1l);
-		tramite1.setCodigo("TRAMIT1");
-		final Literal trad1 = new Literal();
-		trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
-		trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
-		tramite1.setDescripcion(trad1);
-		tramite1.setActivo(true);
-		tramite1.setBloqueada(false);
-		final Calendar calendar = Calendar.getInstance();
-		tramite1.setModificacion(calendar.getTime());
-		final Tramite tramite2 = new Tramite();
-		tramite2.setId(2l);
-		tramite2.setCodigo("TRAMIT2");
-		final Literal trad2 = new Literal();
-		trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
-		trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
-		tramite2.setDescripcion(trad2);
-		tramite2.setActivo(false);
-		tramite2.setBloqueada(false);
-		calendar.set(2016, 2, 2);
-		tramite2.setModificacion(calendar.getTime());
-		final Tramite tramite3 = new Tramite();
-		tramite3.setId(3l);
-		tramite3.setCodigo("TRAMIT3");
-		final Literal trad3 = new Literal();
-		trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
-		trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
-		tramite3.setDescripcion(trad3);
-		tramite3.setActivo(true);
-		tramite3.setBloqueada(true);
-		calendar.set(2014, 3, 3);
-		tramite3.setModificacion(calendar.getTime());
-		tramites.add(tramite1);
-		tramites.add(tramite2);
-		tramites.add(tramite3);
 
-		this.buscarAreas();
+		buscarAreas();
 
 	}
 
 	/**
-	 * Abre dialogo para editar dato.
+	 * Abre dialogo para consultar datos de Area.
+	 */
+	public void consultarArea() {
+		abrirArea(TypeModoAcceso.CONSULTA);
+	}
+
+	/**
+	 * Abre dialogo para editar dato de Area.
 	 */
 	public void editarArea() {
-
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaArea())
-			return;
-
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-
-		params.put(TypeParametroVentana.ID.toString(),
-				String.valueOf(((Area) this.areaSeleccionada.getData()).getId()));
-		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.EDICION, params, true, 520, 120);
+		abrirArea(TypeModoAcceso.EDICION);
 	}
 
 	/**
 	 * Abre dialogo de nueva Area.
 	 */
 	public void nuevaArea() {
-		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.ALTA, null, true, 520, 120);
+		UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.ALTA, null, true, 520, 160);
 	}
 
 	/**
-	 * Abre dialogo para eliminar dato.
+	 * Abre dialogo para eliminar area.
 	 */
 	public void eliminarArea() {
 
@@ -150,7 +114,7 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 
 		final Area area = (Area) this.areaSeleccionada.getData();
-		if (this.areaService.removeArea(area.getId())) {
+		if (this.tramiteService.removeArea(area.getId())) {
 			this.buscarAreas();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 		} else {
@@ -184,19 +148,18 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Abre dialogo para editar dato.
+	 * Abre dialogo para consultar datos de tramite.
+	 */
+	public void consultarTramite() {
+		abrirTramite(TypeModoAcceso.CONSULTA);
+	}
+
+	/**
+	 * Abre dialogo para editar tramite.
 	 */
 	public void editarTramite() {
 
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaTramite())
-			return;
-
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
-		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.EDICION, params, true, 540, 220);
+		abrirTramite(TypeModoAcceso.EDICION);
 	}
 
 	/**
@@ -210,32 +173,46 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.tramiteSeleccionada.getCodigo());
+		params.put(TypeParametroVentana.ID.toString(), this.tramiteSeleccionada.getIdentificador());
 		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml");
 
 	}
 
 	/**
-	 * Abre dialogo de nueva Area.
+	 * Abre dialogo de nuevo tramite.
 	 */
-	public void nuevaTramite() {
-		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.ALTA, null, true, 540, 220);
-	}
-
-	/**
-	 * Abre dialogo para eliminar dato.
-	 */
-	public void eliminarTramite() {
-
+	public void nuevoTramite() {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionadaArea())
 			return;
 
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroVentana.AREA.toString(),
+				String.valueOf(((Area) this.areaSeleccionada.getData()).getId()));
+		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.ALTA, params, true, 540, 220);
 	}
 
 	/**
-	 * Retorno dialogo.
+	 * Abre dialogo para eliminar tramite.
+	 */
+	public void eliminarTramite() {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaTramite())
+			return;
+
+		if (tramiteService.removeTramite(tramiteSeleccionada.getId())) {
+			buscarTramites();
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+		}
+
+	}
+
+	/**
+	 * Retorno dialogo area.
 	 *
 	 * @param event
 	 *            respuesta dialogo
@@ -243,42 +220,79 @@ public class ViewTramites extends ViewControllerBase {
 	public void returnDialogoArea(final SelectEvent event) {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		String message = null;
 
-		if (!respuesta.isCanceled()) {
-			switch (respuesta.getModoAcceso()) {
-			case ALTA:
-				this.buscarAreas();
-
-				// Mensaje
-				message = UtilJSF.getLiteral("test.altaOk");
-				break;
-			case EDICION:
-				this.buscarAreas();
-
-				// Mensaje
-				message = "Update realizado";
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
 			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Refrescamos datos
+			buscarAreas();
 		}
 	}
 
 	/**
-	 * Aqui
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
 	 */
-	private void buscarAreas() {
-		areas = new DefaultTreeNode("Root", null);
-		for (final Area area : areaService.listArea(UtilJSF.getSessionBean().getEntidad().getId(), this.filtro)) {
-			areas.getChildren().add(new DefaultTreeNode(area));
+	public boolean getPermiteAltaArea() {
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteEditarArea() {
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+	}
+
+	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean getPermiteAltaTramite() {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			return true;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			if (areaSeleccionada == null) {
+				return false;
+			} else {
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
+
+				return permisos.contains(TypeRolePermisos.ALTA_BAJA);
+			}
 		}
+		return false;
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteEditarTramite() {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			if (areaSeleccionada == null) {
+				return false;
+			} else {
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
+
+				return permisos.contains(TypeRolePermisos.MODIFICACION);
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -294,7 +308,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Retorno dialogo.
+	 * Retorno dialogo tramite.
 	 *
 	 * @param event
 	 *            respuesta dialogo
@@ -303,34 +317,19 @@ public class ViewTramites extends ViewControllerBase {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
-		if (!respuesta.isCanceled()) {
-			switch (respuesta.getModoAcceso()) {
-			case ALTA:
-				// Refrescamos datos
-				// this.filtrar();
-				// Mensaje
-				message = UtilJSF.getLiteral("test.altaOk");
-				break;
-			case EDICION:
-				// Actualizamos fila actual
-				final String id = (String) respuesta.getResult();
-				// final Area dataUpdated = testService.load(id);
-				// this.areaSeleccionada.setDescripcion(dataUpdated.getDescripcion());
-				// Mensaje
-				// TODO Ver acceso literales desde codigo
-				message = "Update realizado";
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
 			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Refrescamos datos
+			buscarTramites();
 		}
 	}
 
@@ -342,7 +341,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Verifica si hay fila seleccionada.
+	 * Verifica si hay fila seleccionada de area.
 	 *
 	 * @return
 	 */
@@ -356,7 +355,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Verifica si hay fila seleccionada.
+	 * Verifica si hay fila seleccionada de tramite.
 	 *
 	 * @return
 	 */
@@ -370,7 +369,7 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Area seleccionada.
+	 * Area deseleccionada.
 	 *
 	 * @param event
 	 */
@@ -385,176 +384,176 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void onRowSelectArea(final NodeSelectEvent event) {
 		this.areaSeleccionada = (DefaultTreeNode) event.getTreeNode();
-		final Area area = (Area) event.getTreeNode().getData();
-		if (area.getDescripcion().contains("1") || area.getDescripcion().contains("3")
-				|| area.getDescripcion().contains("6")) {
-			tramites = new ArrayList<>();
-			final Tramite tramite1 = new Tramite();
-			tramite1.setId(1l);
-			tramite1.setCodigo("TRAMIT1");
-			final Literal trad1 = new Literal();
-			trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
-			trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
-			tramite1.setDescripcion(trad1);
-			tramite1.setActivo(true);
-			final Tramite tramite2 = new Tramite();
-			tramite2.setId(2l);
-			tramite2.setCodigo("TRAMIT2");
-			final Literal trad2 = new Literal();
-			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
-			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
-			tramite2.setDescripcion(trad2);
-			tramite2.setActivo(false);
-			tramites.add(tramite1);
-			tramites.add(tramite2); // org.primefaces.context.RequestContext.getCurrentInstance().update("dataTableTramites");
-		} else if (area.getDescripcion().contains("2") || area.getDescripcion().contains("6")) {
-			tramites = new ArrayList<>();
-			final Tramite tramite1 = new Tramite();
-			tramite1.setId(1l);
-			tramite1.setCodigo("TRAMIT1");
-			final Literal trad1 = new Literal();
-			trad1.add(new Traduccion("ca", "Inscripció a les proves en catalá"));
-			trad1.add(new Traduccion("es", "Inscripció a les proves en catalá"));
-			tramite1.setDescripcion(trad1);
-			tramite1.setActivo(true);
-			final Tramite tramite2 = new Tramite();
-			tramite2.setId(2l);
-			tramite2.setCodigo("TRAMIT2");
-			final Literal trad2 = new Literal();
-			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
-			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
-			tramite2.setDescripcion(trad2);
-			tramite2.setActivo(false);
-			final Tramite tramite3 = new Tramite();
-			tramite3.setId(3l);
-			tramite3.setCodigo("TRAMIT3");
-			final Literal trad3 = new Literal();
-			trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
-			trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
-			tramite3.setDescripcion(trad3);
-			tramite3.setActivo(true);
-			tramites.add(tramite1);
-			tramites.add(tramite2);
-			tramites.add(tramite3);
-		} else {
-			tramites = new ArrayList<>();
-			final Tramite tramite2 = new Tramite();
-			tramite2.setId(2l);
-			tramite2.setCodigo("TRAMIT2");
-			final Literal trad2 = new Literal();
-			trad2.add(new Traduccion("ca", "Solicitud d'admisió de FP a distància"));
-			trad2.add(new Traduccion("es", "Solicitud d'admisió de FP a distància"));
-			tramite2.setDescripcion(trad2);
-			tramite2.setActivo(false);
-			final Tramite tramite3 = new Tramite();
-			tramite3.setId(3l);
-			tramite3.setCodigo("TRAMIT3");
-			final Literal trad3 = new Literal();
-			trad3.add(new Traduccion("ca", "Solicitud d'admisió d'escolarització"));
-			trad3.add(new Traduccion("es", "Solicitud d'admisió d'escolarització"));
-			tramite3.setDescripcion(trad3);
-			tramite3.setActivo(true);
-			tramites.add(tramite2);
-			tramites.add(tramite3);
-		}
 
+		buscarTramites();
 	}
 
 	/**
-	 * Filtro (puede venir por parametro).
+	 * Buscar areas.
 	 */
-	private String filtro;
+	private void buscarAreas() {
+		final List<Area> listaAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getId(),
+				this.filtro);
+		List<Area> listaMostrarAreas = new ArrayList<>();
+
+		// filtramos las areas del desarrollador
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			listaMostrarAreas = listaAreas;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			for (final Area area : listaAreas) {
+				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+
+				if (permisos.contains(TypeRolePermisos.ALTA_BAJA) || permisos.contains(TypeRolePermisos.MODIFICACION)
+						|| permisos.contains(TypeRolePermisos.CONSULTA)) {
+					listaMostrarAreas.add(area);
+				}
+			}
+
+		}
+
+		areas = new DefaultTreeNode("Root", null);
+
+		for (final Area area : listaMostrarAreas) {
+			areas.getChildren().add(new DefaultTreeNode(area));
+		}
+
+		areaSeleccionada = null;
+	}
 
 	/**
-	 * Lista de datos.
+	 * Buscar tramites.
 	 */
-	private TreeNode areas;
+	private void buscarTramites() {
+		if (areaSeleccionada != null) {
+			tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getId(), null);
+			// Quitamos seleccion de dato
+			tramiteSeleccionada = null;
+		}
+	}
 
 	/**
-	 * Dato seleccionado en la lista.
+	 * Abre dialogo para editar dato de Area.
 	 */
-	private DefaultTreeNode areaSeleccionada;
+	private void abrirArea(final TypeModoAcceso modoAcceso) {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaArea())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroVentana.ID.toString(),
+				String.valueOf(((Area) this.areaSeleccionada.getData()).getId()));
+		UtilJSF.openDialog(DialogArea.class, modoAcceso, params, true, 520, 160);
+	}
 
 	/**
-	 * Lista de datos.
+	 * Abre dialogo para editar tramite.
 	 */
-	private List<Tramite> tramites;
+	private void abrirTramite(final TypeModoAcceso modoAcceso) {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaTramite())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
+		UtilJSF.openDialog(DialogTramite.class, modoAcceso, params, true, 540, 220);
+	}
 
 	/**
-	 * Dato seleccionado en la lista.
-	 */
-	private Tramite tramiteSeleccionada;
-
-	/**
-	 * @return the filtro
+	 * Obtiene el valor de filtro.
+	 *
+	 * @return el valor de filtro
 	 */
 	public String getFiltro() {
 		return filtro;
 	}
 
 	/**
+	 * Establece el valor de filtro.
+	 *
 	 * @param filtro
-	 *            the filtro to set
+	 *            el nuevo valor de filtro
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
 	}
 
 	/**
-	 * @return the areas
+	 * Obtiene el valor de areas.
+	 *
+	 * @return el valor de areas
 	 */
 	public TreeNode getAreas() {
 		return areas;
 	}
 
 	/**
+	 * Establece el valor de areas.
+	 *
 	 * @param areas
-	 *            the areas to set
+	 *            el nuevo valor de areas
 	 */
 	public void setAreas(final TreeNode areas) {
 		this.areas = areas;
 	}
 
 	/**
-	 * @return the areaSeleccionada
+	 * Obtiene el valor de areaSeleccionada.
+	 *
+	 * @return el valor de areaSeleccionada
 	 */
 	public DefaultTreeNode getAreaSeleccionada() {
 		return areaSeleccionada;
 	}
 
 	/**
+	 * Establece el valor de areaSeleccionada.
+	 *
 	 * @param areaSeleccionada
-	 *            the areaSeleccionada to set
+	 *            el nuevo valor de areaSeleccionada
 	 */
 	public void setAreaSeleccionada(final DefaultTreeNode areaSeleccionada) {
 		this.areaSeleccionada = areaSeleccionada;
 	}
 
 	/**
-	 * @return the tramites
+	 * Obtiene el valor de tramites.
+	 *
+	 * @return el valor de tramites
 	 */
 	public List<Tramite> getTramites() {
 		return tramites;
 	}
 
 	/**
+	 * Establece el valor de tramites.
+	 *
 	 * @param tramites
-	 *            the tramites to set
+	 *            el nuevo valor de tramites
 	 */
 	public void setTramites(final List<Tramite> tramites) {
 		this.tramites = tramites;
 	}
 
 	/**
-	 * @return the tramiteSeleccionada
+	 * Obtiene el valor de tramiteSeleccionada.
+	 *
+	 * @return el valor de tramiteSeleccionada
 	 */
 	public Tramite getTramiteSeleccionada() {
 		return tramiteSeleccionada;
 	}
 
 	/**
+	 * Establece el valor de tramiteSeleccionada.
+	 *
 	 * @param tramiteSeleccionada
-	 *            the tramiteSeleccionada to set
+	 *            el nuevo valor de tramiteSeleccionada
 	 */
 	public void setTramiteSeleccionada(final Tramite tramiteSeleccionada) {
 		this.tramiteSeleccionada = tramiteSeleccionada;

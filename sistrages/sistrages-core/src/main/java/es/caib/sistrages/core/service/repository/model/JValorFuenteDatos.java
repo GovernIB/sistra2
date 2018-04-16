@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.FuenteDatosValor;
+
 /**
  * JValorFuenteDatos
  */
@@ -70,6 +72,29 @@ public class JValorFuenteDatos implements IModelApi {
 
 	public void setValor(final String vcfValor) {
 		this.valor = vcfValor;
+	}
+
+	public FuenteDatosValor toModel() {
+		final FuenteDatosValor fuenteDatosValor = new FuenteDatosValor();
+		fuenteDatosValor.setId(this.getCodigo());
+		fuenteDatosValor.setValor(this.getValor());
+		fuenteDatosValor.setIdCampo(this.getCampoFuenteDatos().getIdCampo());
+		fuenteDatosValor.setOrdenCampo(this.getCampoFuenteDatos().getOrden());
+		fuenteDatosValor.setCampo(this.getCampoFuenteDatos().toModel());
+		return fuenteDatosValor;
+	}
+
+	public void fromModel(final FuenteDatosValor fila) {
+		if (fila != null) {
+			this.setCodigo(fila.getId());
+			this.setValor(fila.getValor());
+
+			if (fila.getCampo() != null) {
+				final JCampoFuenteDatos campo = new JCampoFuenteDatos();
+				campo.fromModel(fila.getCampo());
+				this.setCampoFuenteDatos(campo);
+			}
+		}
 	}
 
 }

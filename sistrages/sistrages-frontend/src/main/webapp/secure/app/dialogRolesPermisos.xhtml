@@ -63,8 +63,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogRolesPermisos.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogRolesPermisos.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogRolesPermisos.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogRolesPermisos.isAlta() or dialogRolesPermisos.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogRolesPermisos.cancelar()}" process="@this" rendered="#{dialogRolesPermisos.isAlta() or dialogRolesPermisos.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogRolesPermisos.cancelar()}" process="@this"  rendered="#{dialogRolesPermisos.isConsulta()}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

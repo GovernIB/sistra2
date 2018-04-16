@@ -8,6 +8,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -42,11 +43,21 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		final Long idEntidad = UtilJSF.getIdEntidad();
 		switch (acceso) {
 		case ALTA:
-			fmtService.addFormateadorFormulario(data);
+			if (fmtService.getFormateadorFormulario(idEntidad, data.getCodigo()) != null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				return;
+			}
+			fmtService.addFormateadorFormulario(idEntidad, data);
 			break;
 		case EDICION:
+			final FormateadorFormulario f = fmtService.getFormateadorFormulario(idEntidad, data.getCodigo());
+			if (f != null && f.getId().longValue() != data.getId().longValue()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				return;
+			}
 			fmtService.updateFormateadorFormulario(data);
 			break;
 		case CONSULTA:

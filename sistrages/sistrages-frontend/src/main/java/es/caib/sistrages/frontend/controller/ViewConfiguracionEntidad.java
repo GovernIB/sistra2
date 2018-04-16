@@ -3,14 +3,29 @@
  */
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.event.SelectEvent;
+
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
+import es.caib.sistrages.frontend.model.types.TypeCampoFichero;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
  * Mantenimiento de configuracion entidad.
@@ -61,6 +76,91 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	public void cancelar() {
 		// Inicializar datos con los de la base de datos, o llamar a la misma url.
+	}
+
+	/**
+	 * Abre explorar asistente pie.
+	 */
+	public void explorarAssistentPie() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, data.getPie(), idiomas, idiomas);
+	}
+
+	/**
+	 * Gestión de retorno asistente pie.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoAsistentePie(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setPie(literales);
+		}
+	}
+
+	/**
+	 * Retorno dialogo fichero.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoFichero(final SelectEvent event) {
+		// recupera datos entidad activa
+		setData(entidadService.loadEntidad(UtilJSF.getIdEntidad()));
+
+		UtilJSF.getSessionBean().refrescarEntidad();
+	}
+
+	public void abrirFormularioSoporte() {
+		// Muestra dialogo
+		TypeModoAcceso modo = null;
+
+		if (getPermiteEditar()) {
+			modo = TypeModoAcceso.ALTA;
+		} else {
+			modo = TypeModoAcceso.CONSULTA;
+		}
+		UtilJSF.openDialog(ViewFormularioSoporte.class, modo, null, true, 850, 350);
+	}
+
+	public void descargaFichero(final Fichero fichero) {
+		if (fichero != null && fichero.getId() != null) {
+			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getId());
+		}
+	}
+
+	public void gestionFicheroLogoGestor() {
+		gestionFichero(TypeCampoFichero.LOGO_GESTOR_ENTIDAD);
+	}
+
+	public void gestionFicheroLogoAsistente() {
+		gestionFichero(TypeCampoFichero.LOGO_ASISTENTE_ENTIDAD);
+	}
+
+	public void gestionFicheroCssAsistente() {
+		gestionFichero(TypeCampoFichero.CSS_ENTIDAD);
+	}
+
+	private void gestionFichero(final TypeCampoFichero campoFichero) {
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(data.getId()));
+		params.put(TypeParametroVentana.CAMPO_FICHERO.toString(), campoFichero.toString());
+		UtilJSF.openDialog(DialogFichero.class, TypeModoAcceso.EDICION, params, true, 750, 350);
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteEditar() {
+		return (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 
 /**
  * JFormularioSoporte
@@ -30,13 +34,13 @@ public class JFormularioSoporte implements IModelApi {
 	@JoinColumn(name = "FSO_CODENT", nullable = false)
 	private JEntidad entidad;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FSO_TIPINC", nullable = false)
-	private JLiteral literalTipoIncidencia;
+	private JLiteral TipoIncidencia;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FSO_DSCTIP", nullable = false)
-	private JLiteral descripcionTipoIncidencia;
+	private JLiteral descripcion;
 
 	@Column(name = "FSO_TIPDST", nullable = false, length = 1)
 	private String tipoDestinatario;
@@ -45,6 +49,7 @@ public class JFormularioSoporte implements IModelApi {
 	private String listaEmails;
 
 	public JFormularioSoporte() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -63,20 +68,20 @@ public class JFormularioSoporte implements IModelApi {
 		this.entidad = entidad;
 	}
 
-	public JLiteral getLiteralTipoIncidencia() {
-		return this.literalTipoIncidencia;
+	public JLiteral getTipoIncidencia() {
+		return this.TipoIncidencia;
 	}
 
-	public void setLiteralTipoIncidencia(final JLiteral literalTipoIncidencia) {
-		this.literalTipoIncidencia = literalTipoIncidencia;
+	public void setTipoIncidencia(final JLiteral literalTipoIncidencia) {
+		this.TipoIncidencia = literalTipoIncidencia;
 	}
 
-	public JLiteral getDescripcionTipoIncidencia() {
-		return this.descripcionTipoIncidencia;
+	public JLiteral getDescripcion() {
+		return this.descripcion;
 	}
 
-	public void setDescripcionTipoIncidencia(final JLiteral descripcionTipoIncidencia) {
-		this.descripcionTipoIncidencia = descripcionTipoIncidencia;
+	public void setDescripcion(final JLiteral descripcionTipoIncidencia) {
+		this.descripcion = descripcionTipoIncidencia;
 	}
 
 	public String getTipoDestinatario() {
@@ -93,6 +98,29 @@ public class JFormularioSoporte implements IModelApi {
 
 	public void setListaEmails(final String listaEmails) {
 		this.listaEmails = listaEmails;
+	}
+
+	public FormularioSoporte toModel() {
+		final FormularioSoporte fst = new FormularioSoporte();
+		fst.setId(codigo);
+		fst.setTipoIncidencia(TipoIncidencia.toModel());
+		fst.setDescripcion(descripcion.toModel());
+		fst.setTipoDestinatario(TypeFormularioSoporte.fromString(tipoDestinatario));
+		fst.setListaEmails(listaEmails);
+		return fst;
+	}
+
+	public static JFormularioSoporte fromModel(final FormularioSoporte model) {
+		JFormularioSoporte jModel = null;
+		if (model != null) {
+			jModel = new JFormularioSoporte();
+			jModel.setCodigo(model.getId());
+			jModel.setTipoIncidencia(JLiteral.fromModel(model.getTipoIncidencia()));
+			jModel.setDescripcion(JLiteral.fromModel(model.getDescripcion()));
+			jModel.setTipoDestinatario(model.getTipoDestinatario().toString());
+			jModel.setListaEmails(model.getListaEmails());
+		}
+		return jModel;
 	}
 
 }

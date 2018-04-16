@@ -35,7 +35,7 @@ public class RolServiceBean implements RolService {
 	 * @see es.caib.sistrages.core.api.service.RolService#getRol(java. lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public Rol getRol(final Long idRol) {
 		return rolService.getRol(idRol);
 	}
@@ -82,12 +82,12 @@ public class RolServiceBean implements RolService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.RolService#listRol(java.lang.Long,
 	 * java.lang.String)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Rol> listRol(final Long idEntidad, final String filtro) {
 		return rolService.listRol(idEntidad, filtro);
 	}

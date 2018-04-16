@@ -11,7 +11,6 @@ import javax.ejb.Stateless;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ContextService;
 
-
 /**
  * EJB que permite a los SpringBeans acceder al contexto para verificar usuario.
  *
@@ -33,16 +32,16 @@ public class ContextServiceBean implements ContextService {
 
 	@Override
 	@PermitAll
-	public boolean hashRole(String role) {
+	public boolean hashRole(final String role) {
 		return ctx.isCallerInRole(role);
 	}
 
 	@Override
 	@PermitAll
 	public List<TypeRoleAcceso> getRoles() {
-		List<TypeRoleAcceso> lista = new ArrayList<>();
+		final List<TypeRoleAcceso> lista = new ArrayList<>();
 
-		for (TypeRoleAcceso role : TypeRoleAcceso.values()) {
+		for (final TypeRoleAcceso role : TypeRoleAcceso.values()) {
 			if (ctx.isCallerInRole(role.toString())) {
 				lista.add(role);
 			}

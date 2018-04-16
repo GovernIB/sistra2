@@ -32,19 +32,19 @@ public class PluginServiceBean implements PluginService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.PluginService#getPlugin(java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public Plugin getPlugin(final Long id) {
 		return pluginService.getPlugin(id);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.PluginService#addPlugin(es.caib.sistrages.
 	 * core.api.model.Plugin, java.lang.Long)
@@ -57,7 +57,7 @@ public class PluginServiceBean implements PluginService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.PluginService#removePlugin(java.lang.Long)
 	 */
@@ -69,7 +69,7 @@ public class PluginServiceBean implements PluginService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.PluginService#updatePlugin(es.caib.
 	 * sistrages.core.api.model.Plugin)
 	 */
@@ -81,13 +81,13 @@ public class PluginServiceBean implements PluginService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.PluginService#listPlugin(es.caib.sistrages
 	 * .core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
 		return pluginService.listPlugin(ambito, idEntidad, filtro);
 	}

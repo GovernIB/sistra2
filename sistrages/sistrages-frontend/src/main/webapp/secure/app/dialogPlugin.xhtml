@@ -36,8 +36,8 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,,wpx25" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="tipo" value="#{msg['dialogPlugin.headerTipo']}" />
-					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}" style="width:200px" required="true">
-    					 <f:selectItems value="#{TypePlugin.ALL_VALUES}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}" />
+					<p:selectOneMenu id="tipo" value="#{dialogPlugin.data.tipo}"  required="true" disabled="#{dialogPlugin.isConsulta()}">
+    					 <f:selectItems value="#{dialogPlugin.tipos}" var="tipo" itemLabel="#{msg['typePlugin.' += tipo]}"/>
 					</p:selectOneMenu >
 					<p:outputLabel value="" />
 
@@ -60,9 +60,6 @@
 		                          paginator="false"
 		                          selectionMode="single" selection="#{dialogPlugin.propiedadSeleccionada}" rowKey="#{td.codigo}">
 
-						<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-						<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
-
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect" />
 						<p:ajax event="rowUnselect" />
@@ -79,28 +76,28 @@
 		 			</p:dataTable>
 		 			<p:column>
 						    <p>
-					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog">
+					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" alt="#{msg['botones.nuevo']}" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
 	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
 	        					</p:commandButton>
 	        				</p>
 	        				<p>
-					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog">
+					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" alt="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
 	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
 	        					</p:commandButton>
 	        				</p>
 					    	<p>
-					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" alt="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 					    	</p>
 					    	<p>
-					    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+					    		<p:commandButton icon="fa fa-arrow-up" alt="#{msg['botones.subir']}" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 					    	</p>
 					    	<p>
-					    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" />
+					    		<p:commandButton icon="fa fa-arrow-down" alt="#{msg['botones.bajar']}" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 					    	</p>
 					</p:column>
 
 				</h:panelGrid>
-				<h:outputScript >
+				<h:outputScript rendered="#{dialogPlugin.isConsulta()}">
 				      function rcEditarPropiedad() {
 				        document.getElementById("dialogPlugin:btnEditarPropiedad").click();
 				      }
@@ -113,8 +110,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isConsulta()}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

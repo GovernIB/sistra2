@@ -43,33 +43,34 @@ public class FormateadorFormularioServiceImpl implements FormateadorFormularioSe
 		return fmtDao.getById(idFmt);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public FormateadorFormulario getFormateadorFormulario(final Long idEntidad, final String codigo) {
+		return fmtDao.getByCodigo(idEntidad, codigo);
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.FormateadorFormularioService#
 	 * addFormateadorFormulario(es.caib.sistrages.core.api.model.
 	 * FormateadorFormulario)
 	 */
 	@Override
 	@NegocioInterceptor
-	public void addFormateadorFormulario(final FormateadorFormulario fmt) {
-
-		// TODO Pendiente control acceso entidad
-
-		fmtDao.add(fmt);
+	public void addFormateadorFormulario(final Long idEntidad, final FormateadorFormulario fmt) {
+		fmtDao.add(idEntidad, fmt);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.FormateadorFormularioService#
 	 * removeFormateadorFormulario(java.lang.Long)
 	 */
 	@Override
 	@NegocioInterceptor
 	public boolean removeFormateadorFormulario(final Long idFmt) {
-
-		// TODO Pendiente control acceso entidad
 		fmtDao.remove(idFmt);
 		return true;
 	}
@@ -77,22 +78,19 @@ public class FormateadorFormularioServiceImpl implements FormateadorFormularioSe
 	@Override
 	@NegocioInterceptor
 	public void updateFormateadorFormulario(final FormateadorFormulario rol) {
-
-		// TODO Pendiente control acceso entidad
 		fmtDao.update(rol);
-
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.FormateadorFormularioService#
 	 * listFormateadorFormulario(java.lang.String)
 	 */
 	@Override
 	@NegocioInterceptor
-	public List<FormateadorFormulario> listFormateadorFormulario(final String filtro) {
-		return fmtDao.getAllByFiltro(filtro);
+	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro) {
+		return fmtDao.getAllByFiltro(idEntidad, filtro);
 	}
 
 }

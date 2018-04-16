@@ -45,12 +45,6 @@ public class JArea implements IModelApi {
 	private String descripcion;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_AREFUE", joinColumns = {
-			@JoinColumn(name = "FUA_CODAREA", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "FUA_CODFUE", nullable = false, updatable = false) })
-	private Set<JFuenteDatos> fuentesDatos = new HashSet<JFuenteDatos>(0);
-
-	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "STG_AREDOM", joinColumns = {
 			@JoinColumn(name = "DMA_CODARE", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DMA_CODDOM", nullable = false, updatable = false) })
@@ -91,19 +85,11 @@ public class JArea implements IModelApi {
 		this.descripcion = descripcion;
 	}
 
-	public Set<JFuenteDatos> getFuentesDatos() {
-		return this.fuentesDatos;
-	}
-
-	public void setFuentesDatos(final Set<JFuenteDatos> fuentesDatos) {
-		this.fuentesDatos = fuentesDatos;
-	}
-
-	public Set<JDominio> getStgDominis() {
+	public Set<JDominio> getDominios() {
 		return this.dominios;
 	}
 
-	public void setStgDominis(final Set<JDominio> dominios) {
+	public void setDominios(final Set<JDominio> dominios) {
 		this.dominios = dominios;
 	}
 

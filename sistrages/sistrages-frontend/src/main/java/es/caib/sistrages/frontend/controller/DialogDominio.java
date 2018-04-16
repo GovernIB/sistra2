@@ -68,6 +68,9 @@ public class DialogDominio extends DialogControllerBase {
 	/** Lista con las fuentes de datos. **/
 	private List<FuenteDatos> fuentes;
 
+	/** Id de la fuente de datos seleccionada. **/
+	private Long idFuenteDato;
+
 	/**
 	 * Tipos. Es el único enumerado que funciona así, porque el tipo GLOBAL debe
 	 * tener un tipo menos.
@@ -92,6 +95,9 @@ public class DialogDominio extends DialogControllerBase {
 			}
 			if (data.getListaFija() == null) {
 				data.setListaFija(new ArrayList<>());
+			}
+			if (data.getTipo() == TypeDominio.FUENTE_DATOS && data.getFuenteDatos() != null) {
+				idFuenteDato = data.getFuenteDatos().getCodigo();
 			}
 		}
 
@@ -118,17 +124,15 @@ public class DialogDominio extends DialogControllerBase {
 		} else if (this.data.getTipo() == TypeDominio.FUENTE_DATOS) {
 			visibleFuente = true;
 		}
-		fuentes = new ArrayList<>();
-		final FuenteDatos f1 = new FuenteDatos();
-		f1.setIdentificador("Fuente 1");
-		f1.setDescripcion("Descripcion");
-		f1.setCodigo(1l);
-		final FuenteDatos f2 = new FuenteDatos();
-		f2.setIdentificador("Fuente 2");
-		f2.setDescripcion("Descripcion 2");
-		f2.setCodigo(2l);
-		fuentes.add(f1);
-		fuentes.add(f2);
+
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+
+		if (typeAmbito == TypeAmbito.AREA) {
+			fuentes = dominioService.listFuenteDato(TypeAmbito.AREA, Long.valueOf(idArea), null);
+		}
+		if (typeAmbito == TypeAmbito.ENTIDAD) {
+			fuentes = dominioService.listFuenteDato(TypeAmbito.ENTIDAD, Long.valueOf(idEntidad), null);
+		}
 
 	}
 
@@ -205,7 +209,7 @@ public class DialogDominio extends DialogControllerBase {
 		isDialogoPropiedad = true;
 		final Map<String, String> params = new HashMap<>();
 		params.put("OCULTARVALOR", "S");
-		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, null, true, 430, 120);
+		UtilJSF.openDialog(DialogPropiedad.class, TypeModoAcceso.ALTA, params, true, 430, 120);
 	}
 
 	/**
@@ -377,6 +381,14 @@ public class DialogDominio extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+
+		if (this.data.getTipo() == TypeDominio.FUENTE_DATOS) {
+			final FuenteDatos fuenteDato = dominioService.loadFuenteDato(idFuenteDato);
+			this.data.setFuenteDatos(fuenteDato);
+		} else {
+			this.data.setFuenteDatos(null);
+		}
+
 		switch (acceso) {
 		case ALTA:
 			Long lIdEntidad = null;
@@ -387,9 +399,22 @@ public class DialogDominio extends DialogControllerBase {
 			if (idArea != null) {
 				lIdArea = Long.valueOf(idArea);
 			}
+			// Verifica unicidad codigo dominio
+			if (dominioService.loadDominio(this.data.getCodigo()) != null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				return;
+			}
+			// Alta dominio
 			dominioService.addDominio(this.data, lIdEntidad, lIdArea);
 			break;
 		case EDICION:
+			// Verifica unicidad codigo dominio
+			final Dominio d = dominioService.loadDominio(this.data.getCodigo());
+			if (d != null && d.getId().longValue() != this.data.getId().longValue()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				return;
+			}
+			// Realiza update
 			dominioService.updateDominio(this.data);
 			break;
 		case CONSULTA:
@@ -669,6 +694,21 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;
+	}
+
+	/**
+	 * @return the idFuenteDato
+	 */
+	public Long getIdFuenteDato() {
+		return idFuenteDato;
+	}
+
+	/**
+	 * @param idFuenteDato
+	 *            the idFuenteDato to set
+	 */
+	public void setIdFuenteDato(final Long idFuenteDato) {
+		this.idFuenteDato = idFuenteDato;
 	}
 
 }

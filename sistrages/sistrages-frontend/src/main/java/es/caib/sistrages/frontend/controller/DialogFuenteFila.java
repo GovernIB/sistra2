@@ -1,22 +1,28 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValor;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
 public class DialogFuenteFila extends DialogControllerBase {
+
+	/** Enlace servicio. */
+	@Inject
+	private DominioService dominioService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -26,6 +32,9 @@ public class DialogFuenteFila extends DialogControllerBase {
 
 	/** Fuente de campos. **/
 	private List<FuenteDatosCampo> campos;
+
+	/** Id fuente datos. **/
+	private String idFuenteDato;
 
 	/** Datos elemento en JSON. **/
 	private String iData;
@@ -51,18 +60,21 @@ public class DialogFuenteFila extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
+			campos = (List<FuenteDatosCampo>) UtilJSON.fromListJSON(iData, FuenteDatosCampo.class);
 			data = new FuenteFila();
-			campos = (List<FuenteDatosCampo>) UtilJSON.fromListJSON(iCampos, FuenteDatosCampo.class);
-			final List<FuenteDatosValor> fuenteDatos = new ArrayList<>();
-			Long i = 0l;
-			for (final FuenteDatosCampo campo : campos) {
-				fuenteDatos.add(new FuenteDatosValor(i, campo, ""));
-				i++;
+			for (final FuenteDatosCampo campo : this.getCampos()) {
+				final FuenteDatosValor dato = new FuenteDatosValor();
+				dato.setIdCampo(campo.getCodigo());
+				dato.setOrdenCampo(campo.getOrden());
+				dato.setCampo(campo);
+				dato.setValor("");
+				data.addFuenteDato(dato);
 			}
-			data.setDatos(fuenteDatos);
 		} else {
-			data = (FuenteFila) UtilJSON.fromJSON(iData, FuenteFila.class);
+			data = dominioService.loadFuenteDatoFila(Long.valueOf(id));
+			data.sortValores();
 		}
+
 	}
 
 	/**
@@ -70,11 +82,19 @@ public class DialogFuenteFila extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
-		// Retornamos resultado
-		final DialogResult result = new DialogResult();
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
-		UtilJSF.closeDialog(result);
+		if (dominioService.isCorrectoPK(data, Long.valueOf(idFuenteDato))) {
+
+			// Retornamos resultado
+			final DialogResult result = new DialogResult();
+			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+			result.setResult(data);
+			UtilJSF.closeDialog(result);
+
+		} else {
+
+			final String message = UtilJSF.getLiteral("error.fuentedatos.pk");
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
 	}
 
 	/**
@@ -190,6 +210,21 @@ public class DialogFuenteFila extends DialogControllerBase {
 	 */
 	public void setValorSeleccionado(final FuenteFila valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
+	}
+
+	/**
+	 * @return the idFuenteDato
+	 */
+	public String getIdFuenteDato() {
+		return idFuenteDato;
+	}
+
+	/**
+	 * @param idFuenteDato
+	 *            the idFuenteDato to set
+	 */
+	public void setIdFuenteDato(final String idFuenteDato) {
+		this.idFuenteDato = idFuenteDato;
 	}
 
 }

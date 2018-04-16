@@ -11,6 +11,18 @@ import org.springframework.beans.factory.config.Scope;
 /**
  * Implements the JSF View Scope for use by Spring. This class is registered as
  * a Spring bean with the CustomScopeConfigurer.
+ *
+ * PARA PODER INTEGRAR JSF + SPRING SERIA NECESARIO DEFINIR UN SCOPE DE TIPO
+ * VIEW PARA SPRING Y ANOTAR LOS BEANS JSF COMO SPRING BEANS:
+ *
+ * @ Named
+ *
+ * @ Scope("view")
+ *
+ * ENLACE A LOS EJBs COMO @ AutoWired (USANDO EL MAPEO AL EJB DEFINIDO EN
+ * sistrages-ejb-core-api.xml)
+ *
+ *
  */
 public class SpringViewScope implements Scope {
 
@@ -18,15 +30,15 @@ public class SpringViewScope implements Scope {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final Object get(String name, ObjectFactory<?> objectFactory) {
+	public final Object get(final String name, final ObjectFactory<?> objectFactory) {
 		// VIEW ROOT
-		UIViewRoot uiViewRoot = FacesContext.getCurrentInstance().getViewRoot();
+		final UIViewRoot uiViewRoot = FacesContext.getCurrentInstance().getViewRoot();
 
 		Object object = null;
 
 		if (uiViewRoot != null) {
 			// VIEW MAP
-			Map<String, Object> viewMap = uiViewRoot.getViewMap();
+			final Map<String, Object> viewMap = uiViewRoot.getViewMap();
 
 			if (viewMap.containsKey(name)) {
 				object = viewMap.get(name);
@@ -51,7 +63,7 @@ public class SpringViewScope implements Scope {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final void registerDestructionCallback(String name, Runnable callback) {
+	public final void registerDestructionCallback(final String name, final Runnable callback) {
 		// Do nothing
 	}
 
@@ -59,9 +71,9 @@ public class SpringViewScope implements Scope {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final Object remove(String name) {
+	public final Object remove(final String name) {
 		// VIEW ROOT
-		UIViewRoot uiViewRoot = FacesContext.getCurrentInstance().getViewRoot();
+		final UIViewRoot uiViewRoot = FacesContext.getCurrentInstance().getViewRoot();
 
 		Object object = null;
 
@@ -76,7 +88,7 @@ public class SpringViewScope implements Scope {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final Object resolveContextualObject(String key) {
+	public final Object resolveContextualObject(final String key) {
 		return null;
 	}
 }

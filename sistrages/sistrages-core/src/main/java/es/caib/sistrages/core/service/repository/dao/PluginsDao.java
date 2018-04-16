@@ -69,4 +69,12 @@ public interface PluginsDao {
 	 */
 	void remove(Long id);
 
+	/**
+	 * Elimina Plugins de una entidad.
+	 *
+	 * @param idEntidad
+	 *            el identificador de identidad
+	 */
+	void removeByEntidad(Long idEntidad);
+
 }

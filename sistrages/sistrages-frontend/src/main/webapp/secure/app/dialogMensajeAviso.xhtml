@@ -28,7 +28,7 @@
 		<f:viewAction action="#{dialogMensajeAviso.init}" />
 	</f:metadata>
 
-	<h:form id="dialogPlugin" styleClass="margin-top-10">
+	<h:form id="dialogMensajeAviso" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -46,7 +46,7 @@
 					</p:column>
 
 					<p:outputLabel for="tipo" value="#{msg['dialogMensajeAviso.headerTipo']}" />
-					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true">
+					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true" disabled="#{dialogMensajeAviso.isConsulta()}">
 					    <f:selectItems value="#{TypeAvisoEntidad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeMensajeAviso.' += tipo]}" />
 					</p:selectOneMenu>
 
@@ -60,21 +60,14 @@
 					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="8" locale="#{sessionBean.locale}"/>
 
 				</h:panelGrid>
-				<h:outputScript >
-				      function rcEditarPropiedad() {
-				        document.getElementById("form:btnEditarPropiedad").click();
-				      }
 
-				      function  rcBorrarPropiedad() {
-				        document.getElementById("form:btnEliminarPropiedad").click();
-				      }
-			    </h:outputScript>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogMensajeAviso.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogMensajeAviso.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this"  rendered="#{dialogMensajeAviso.isConsulta()}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

@@ -1,4 +1,4 @@
-package es.caib.sistrages.core.service.util;
+package es.caib.sistrages.core.api.util;
 
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;

@@ -13,6 +13,7 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.PluginService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -98,23 +99,21 @@ public class ViewPlugins extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		UtilJSF.openDialog(DialogPlugin.class, TypeModoAcceso.ALTA, params, true, 640, 400);
+		abrirDlgPlugin(TypeModoAcceso.ALTA);
 	}
 
 	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
-		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getId().toString());
-		UtilJSF.openDialog(DialogPlugin.class, TypeModoAcceso.EDICION, params, true, 640, 400);
+		abrirDlgPlugin(TypeModoAcceso.EDICION);
+	}
+
+	/**
+	 * Abre dialogo para consultar dato.
+	 */
+	public void consultar() {
+		abrirDlgPlugin(TypeModoAcceso.CONSULTA);
 	}
 
 	/**
@@ -181,6 +180,31 @@ public class ViewPlugins extends ViewControllerBase {
 		}
 	}
 
+	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean getPermiteAlta() {
+		return getPermiteEditar();
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteEditar() {
+		boolean res = false;
+		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+		if (ambitoType == TypeAmbito.GLOBAL) {
+			res = true;
+		} else if (ambitoType == TypeAmbito.ENTIDAD) {
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+		}
+		return res;
+	}
+
 	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Buscar datos.
@@ -190,6 +214,25 @@ public class ViewPlugins extends ViewControllerBase {
 		listaDatos = pluginService.listPlugin(TypeAmbito.fromString(ambito), idEntidad, filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+	}
+
+	/**
+	 * Abre dialogo.
+	 * 
+	 * @param modoAccesoDlg
+	 *            Modo acceso
+	 */
+	private void abrirDlgPlugin(final TypeModoAcceso modoAccesoDlg) {
+		// Verifica si no hay fila seleccionada
+		if (modoAccesoDlg != TypeModoAcceso.ALTA && !verificarFilaSeleccionada())
+			return;
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
+			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getId().toString());
+		}
+		UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 640, 420);
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------
