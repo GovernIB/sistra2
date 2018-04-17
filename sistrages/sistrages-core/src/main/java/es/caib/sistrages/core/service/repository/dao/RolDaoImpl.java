@@ -56,6 +56,9 @@ public class RolDaoImpl implements RolDao {
 			throw new NoExisteDato(NO_EXISTE_ROL + ": " + id);
 		} else {
 			rol = jRol.toModel();
+			if (jRol.getArea() != null) {
+				rol.setArea(jRol.getArea().toModel());
+			}
 		}
 
 		return rol;
