@@ -76,23 +76,23 @@
 		 			</p:dataTable>
 		 			<p:column>
 						    <p>
-					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" alt="#{msg['botones.nuevo']}" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+					    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPlugin.nuevaPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
 	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
 	        					</p:commandButton>
 	        				</p>
 	        				<p>
-					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" alt="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
+					    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPlugin.editarPropiedad()}" process="@this" update="growlDialog" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}">
 	        						<p:ajax event="dialogReturn" listener="#{dialogPlugin.returnDialogo}" update="growlDialog dataTablePropiedades"/>
 	        					</p:commandButton>
 	        				</p>
 					    	<p>
-					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" alt="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+					    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPlugin.quitarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 					    	</p>
 					    	<p>
-					    		<p:commandButton icon="fa fa-arrow-up" alt="#{msg['botones.subir']}" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+					    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPlugin.subirPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 					    	</p>
 					    	<p>
-					    		<p:commandButton icon="fa fa-arrow-down" alt="#{msg['botones.bajar']}" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
+					    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPlugin.bajarPropiedad()}" process="@this" update="growlDialog dataTablePropiedades" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 					    	</p>
 					</p:column>
 

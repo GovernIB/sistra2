@@ -169,12 +169,24 @@ public class DialogFuente extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		final Map<String, FuenteDatosCampo> codigoCampos = new HashMap<>();
 		if (this.data.getCampos() != null) {
 			int orden = 0;
 			for (final FuenteDatosCampo campo : data.getCampos()) {
 				campo.setOrden(orden);
 				orden++;
+
+				// Checkeamos si hay un campo repetido.
+				if (codigoCampos.containsKey(campo.getCodigo())) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("dialogFuente.error.camposRepes"));
+					return;
+				} else {
+					codigoCampos.put(campo.getCodigo(), campo);
+				}
+
 			}
+
 		}
 		switch (acceso) {
 		case ALTA:

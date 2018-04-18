@@ -35,13 +35,13 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogFormularioExterno.headerCodigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogFormularioExterno.data.codigo}" disabled="#{!dialogFormularioExterno.isAlta()}" required="true" size="40" />
+				 	<p:inputText id="codigo" value="#{dialogFormularioExterno.data.codigo}" disabled="#{!dialogFormularioExterno.alta}" required="true" size="40" />
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogFormularioExterno.headerDescripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogFormularioExterno.data.descripcion}" disabled="#{dialogFormularioExterno.isConsulta()}" required="true" size="40"  />
+				 	<p:inputText id="descripcion" value="#{dialogFormularioExterno.data.descripcion}" disabled="#{dialogFormularioExterno.consulta}" required="true" size="40"  />
 
 					<p:outputLabel for="url" value="#{msg['dialogFormularioExterno.headerUrl']}" />
-				 	<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" disabled="#{dialogFormularioExterno.isConsulta()}" required="true" size="40" />
+				 	<p:inputText id="url" value="#{dialogFormularioExterno.data.url}" disabled="#{dialogFormularioExterno.consulta}" required="true" size="40" />
 
 				</h:panelGrid>
 			</p:outputPanel>

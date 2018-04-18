@@ -20,6 +20,12 @@
 		    <artifactId>jackson-databind</artifactId>
 		    <version>${jackson.version}</version>
 		</dependency>
+		<!--  CSV -->
+		<dependency>
+		    <groupId>net.sourceforge.javacsv</groupId>
+   			<artifactId>javacsv</artifactId>
+		    <version>${opencsv.version}</version>
+		</dependency>
 	</dependencies>
 
 

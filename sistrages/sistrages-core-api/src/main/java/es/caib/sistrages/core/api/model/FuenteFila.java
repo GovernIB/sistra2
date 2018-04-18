@@ -139,7 +139,7 @@ public class FuenteFila extends ModelApi {
 
 	/**
 	 * Devuelve un FuenteDatosValor segun una id.
-	 * 
+	 *
 	 * @param codigo
 	 * @return
 	 */
@@ -151,6 +151,24 @@ public class FuenteFila extends ModelApi {
 					valor = val;
 					break;
 				}
+			}
+		}
+		return valor;
+	}
+
+	public String getValorFuenteDatos(final String identificadorCampo) {
+		String valor = null;
+		if (getDatos() != null) {
+			FuenteDatosValor vfdCampo = null;
+			for (final java.util.Iterator<FuenteDatosValor> it = getDatos().iterator(); it.hasNext();) {
+				final FuenteDatosValor vfd = it.next();
+				if (vfd.getIdCampo().equals(identificadorCampo)) {
+					vfdCampo = vfd;
+					break;
+				}
+			}
+			if (vfdCampo != null) {
+				valor = vfdCampo.getValor();
 			}
 		}
 		return valor;

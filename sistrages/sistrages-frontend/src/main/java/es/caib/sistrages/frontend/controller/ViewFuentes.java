@@ -12,8 +12,10 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
-import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -33,6 +35,12 @@ public class ViewFuentes extends ViewControllerBase {
 	/** Enlace servicio. */
 	@Inject
 	private DominioService dominioService;
+
+	/**
+	 * security service.
+	 */
+	@Inject
+	private SecurityService securityService;
 
 	/** Id. **/
 	private String id;
@@ -86,17 +94,14 @@ public class ViewFuentes extends ViewControllerBase {
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
+		abrirDialogo(TypeModoAcceso.EDICION);
+	}
 
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
-		params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
-		params.put(TypeParametroVentana.AREA.toString(), this.id);
-		UtilJSF.openDialog(DialogFuente.class, TypeModoAcceso.EDICION, params, true, 740, 450);
-
+	/**
+	 * Abre dialogo para editar dato.
+	 */
+	public void consultar() {
+		abrirDialogo(TypeModoAcceso.CONSULTA);
 	}
 
 	/**
@@ -130,9 +135,7 @@ public class ViewFuentes extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
-		final FuenteDatos fuente = dominioService.loadFuenteDato(this.datoSeleccionado.getCodigo());
-		params.put("CAMPOS", UtilJSON.toJSON(fuente.getCampos()));
-		UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.EDICION, params, true, 740, 450);
+		UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.EDICION, params, true, 740, 330);
 	}
 
 	/**
@@ -170,6 +173,72 @@ public class ViewFuentes extends ViewControllerBase {
 		return verificarFilaSeleccionada();
 	}
 
+	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean getPermiteAlta() {
+		boolean res = false;
+		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+		switch (ambitoType) {
+		case GLOBAL:
+			res = false;
+			break;
+		case ENTIDAD:
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case AREA:
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+
+				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+
+			}
+
+			break;
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteEditar() {
+		boolean res = false;
+		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+		switch (ambitoType) {
+		case GLOBAL:
+			res = false;
+			break;
+		case ENTIDAD:
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case AREA:
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+
+				res = permisos.contains(TypeRolePermisos.MODIFICACION);
+
+			}
+
+			break;
+		}
+		return res;
+	}
+
 	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Verifica si hay fila seleccionada.
@@ -193,6 +262,20 @@ public class ViewFuentes extends ViewControllerBase {
 	private void buscar(final String iFiltro) {
 		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
 		listaDatos = dominioService.listFuenteDato(typeAmbito, Long.valueOf(id), iFiltro);
+
+	}
+
+	private void abrirDialogo(final TypeModoAcceso modo) {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
+		params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
+		params.put(TypeParametroVentana.AREA.toString(), this.id);
+		UtilJSF.openDialog(DialogFuente.class, modo, params, true, 740, 450);
 
 	}
 

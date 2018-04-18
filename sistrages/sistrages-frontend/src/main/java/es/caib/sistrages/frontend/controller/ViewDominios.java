@@ -13,7 +13,9 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -33,6 +35,12 @@ public class ViewDominios extends ViewControllerBase {
 	/** Enlace servicio. */
 	@Inject
 	private DominioService dominioService;
+
+	/**
+	 * security service.
+	 */
+	@Inject
+	private SecurityService securityService;
 
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
@@ -193,14 +201,25 @@ public class ViewDominios extends ViewControllerBase {
 		switch (ambitoType) {
 		case GLOBAL:
 			// Entra como SuperAdmin
-			res = true;
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
 			break;
 		case ENTIDAD:
 			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 			break;
 		case AREA:
-			// TODO Pendiente permisos area
-			res = true;
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+
+				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+
+			}
+
 			break;
 		}
 		return res;
@@ -217,14 +236,23 @@ public class ViewDominios extends ViewControllerBase {
 		switch (ambitoType) {
 		case GLOBAL:
 			// Entra como SuperAdmin
-			res = true;
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
 			break;
 		case ENTIDAD:
 			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 			break;
 		case AREA:
-			// TODO Pendiente permisos area
-			res = true;
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+
+				res = permisos.contains(TypeRolePermisos.MODIFICACION);
+
+			}
 			break;
 		}
 		return res;
@@ -247,7 +275,7 @@ public class ViewDominios extends ViewControllerBase {
 
 	/**
 	 * Abre dialogo.
-	 * 
+	 *
 	 * @param modoAccesoDlg
 	 *            Modo acceso
 	 */

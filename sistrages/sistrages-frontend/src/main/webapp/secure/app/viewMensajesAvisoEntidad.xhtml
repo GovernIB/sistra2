@@ -32,14 +32,14 @@
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewMensajesAvisoEntidad.nuevo()}" process="@this" update="growl" rendered="#{viewMensajesAvisoEntidad.permiteAlta}">
 		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewMensajesAvisoEntidad.editar()}" process="@this" update="growl" rendered="#{viewMensajesAvisoEntidad.permiteEditar}">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewMensajesAvisoEntidad.editar()}" process="@this" update="growl" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}">
 		        			<p:ajax event="dialogReturn" listener="#{viewMensajesAvisoEntidad.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewMensajesAvisoEntidad.consultar()}" process="@this" update="growl" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}" />
 		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewMensajesAvisoEntidad.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteAlta}">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewMensajesAvisoEntidad.refrescarCache()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteEditar}"/>
+		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewMensajesAvisoEntidad.refrescarCache()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewMensajesAvisoEntidad.ayudar()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>

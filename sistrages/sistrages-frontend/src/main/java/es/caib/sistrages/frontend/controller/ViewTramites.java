@@ -73,14 +73,21 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	private Tramite tramiteSeleccionada;
 
+	/** Id entidad. */
+	private Long idEntidad;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
+		// Id entidad
+		idEntidad = UtilJSF.getIdEntidad();
+		// Control acceso
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
+		// Recupera areas
 		buscarAreas();
-
 	}
 
 	/**
@@ -261,19 +268,23 @@ public class ViewTramites extends ViewControllerBase {
 	 * @return el valor de permiteAlta
 	 */
 	public boolean getPermiteAltaTramite() {
+		boolean res = false;
+
+		// Admin entidad
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			return true;
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			if (areaSeleccionada == null) {
-				return false;
-			} else {
+			res = true;
+		}
+
+		// Desarrollador
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			if (areaSeleccionada != null) {
 				final List<TypeRolePermisos> permisos = securityService
 						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
-
-				return permisos.contains(TypeRolePermisos.ALTA_BAJA);
+				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
 			}
 		}
-		return false;
+
+		return res;
 	}
 
 	/**
@@ -282,6 +293,32 @@ public class ViewTramites extends ViewControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean getPermiteEditarTramite() {
+		boolean res = false;
+
+		// Admin entidad
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			res = true;
+		}
+
+		// Desarrollador
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			if (areaSeleccionada != null) {
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
+				res = (permisos.contains(TypeRolePermisos.MODIFICACION)
+						|| permisos.contains(TypeRolePermisos.ALTA_BAJA));
+			}
+		}
+
+		return res;
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean getPermiteConsultarTramite() {
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			if (areaSeleccionada == null) {
 				return false;
@@ -289,7 +326,7 @@ public class ViewTramites extends ViewControllerBase {
 				final List<TypeRolePermisos> permisos = securityService
 						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
 
-				return permisos.contains(TypeRolePermisos.MODIFICACION);
+				return (permisos.contains(TypeRolePermisos.CONSULTA));
 			}
 		}
 		return false;

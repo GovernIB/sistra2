@@ -151,7 +151,7 @@ public class PluginsDaoImpl implements PluginsDao {
 			sql += " AND t.entidad.codigo = :idEntidad";
 		}
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " AND ( lower(t.claseImplementadora) like :pFiltro or lower(t.descripcion) like :pFiltro  or lower(t.instancia) like :pFiltro)";
+			sql += " AND ( lower(t.claseImplementadora) like :pFiltro or lower(t.descripcion) like :pFiltro  or lower(t.idInstancia) like :pFiltro)";
 		}
 		sql += " order by t.tipo";
 		final Query query = entityManager.createQuery(sql);

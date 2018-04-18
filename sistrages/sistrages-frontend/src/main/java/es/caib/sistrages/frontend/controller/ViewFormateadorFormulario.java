@@ -38,6 +38,9 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private FormateadorFormulario datoSeleccionado;
 
+	/** Id entidad. */
+	private Long idEntidad;
+
 	/** FormateadorFormularioService. */
 	@Inject
 	private FormateadorFormularioService fmtService;
@@ -46,9 +49,12 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
-
+		// Entidad activa
+		idEntidad = UtilJSF.getIdEntidad();
+		// Control acceso
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
 		// Recupera datos
 		buscar();
 	}
@@ -158,7 +164,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = fmtService.listFormateadorFormulario(UtilJSF.getIdEntidad(), filtro);
+		listaDatos = fmtService.listFormateadorFormulario(idEntidad, filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}

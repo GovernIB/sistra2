@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
+import es.caib.sistrages.core.api.exception.CSVPkException;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -251,6 +254,12 @@ public class DominioServiceImpl implements DominioService {
 	@Override
 	public boolean isCorrectoPK(final FuenteFila fuenteFila, final Long idFuenteDato) {
 		return fuenteDatoDao.isCorrectoPK(fuenteFila, idFuenteDato);
+	}
+
+	@Override
+	public void importarCSV(final Long idFuenteDatos, final CsvDocumento csv)
+			throws CSVNoExisteCampoException, CSVPkException {
+		fuenteDatoDao.importarCSV(idFuenteDatos, csv);
 	}
 
 }

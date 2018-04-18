@@ -482,9 +482,28 @@ public class JFuenteDatos implements IModelApi {
 		}
 
 		if (!encontrado) {
+			fila.setFuenteDatos(this);
 			this.getFilas().add(fila);
 		}
 
 	}
 
+	/***
+	 * Obtiene el campo a partir de su identificador.
+	 *
+	 * @param col
+	 */
+	public JCampoFuenteDatos getJFuenteCampo(final String idCampo) {
+		JCampoFuenteDatos res = null;
+		if (campos != null) {
+			for (final java.util.Iterator<JCampoFuenteDatos> it = campos.iterator(); it.hasNext();) {
+				final JCampoFuenteDatos c = it.next();
+				if (c.getIdCampo().equals(idCampo)) {
+					res = c;
+					break;
+				}
+			}
+		}
+		return res;
+	}
 }

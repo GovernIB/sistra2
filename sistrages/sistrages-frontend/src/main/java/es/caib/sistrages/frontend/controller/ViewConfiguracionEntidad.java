@@ -46,14 +46,21 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/** Datos elemento. */
 	private Entidad data;
 
+	/** Id entidad. */
+	private Long idEntidad;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
+		// Entidad activa
+		idEntidad = UtilJSF.getIdEntidad();
+		// Control acceso
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
 		// recupera datos entidad activa
-		setData(entidadService.loadEntidad(UtilJSF.getIdEntidad()));
+		setData(entidadService.loadEntidad(idEntidad));
 
 	}
 
@@ -111,8 +118,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	public void returnDialogoFichero(final SelectEvent event) {
 		// recupera datos entidad activa
-		setData(entidadService.loadEntidad(UtilJSF.getIdEntidad()));
-
+		setData(entidadService.loadEntidad(idEntidad));
 		UtilJSF.getSessionBean().refrescarEntidad();
 	}
 

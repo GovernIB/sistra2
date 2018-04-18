@@ -33,7 +33,7 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
-			<h:panelGrid styleClass="h95" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTableDatos"
@@ -42,7 +42,8 @@
 						 rows="10"
 						 emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true"
-						 scrollHeight="90%"
+						 scrollHeight="100%"
+						 styleClass="h100"
                          paginator="true"
                          paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -84,10 +85,14 @@
 						    		<p:commandButton id="btnEliminarDato" icon="fa fa-minus" actionListener="#{dialogFuenteDatos.quitarFuenteDato()}" process="@this" update="growlDialog dataTableDatos" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-upload" actionListener="#{dialogFuenteDatos.importarCSV()}" process="@this" update="growlDialog dataTableDatos" />
+						    		<p:commandButton id="btnUploadCSV" icon="fa fa-upload" actionListener="#{dialogFuenteDatos.importarCSV()}" process="@this" update="growlDialog dataTableDatos">
+						    			<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogoUpload}" update="growlDialog dataTableDatos"/>
+		        					</p:commandButton>
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-download" actionListener="#{dialogFuenteDatos.exportarCSV()}" process="@this" update="growlDialog dataTableDatos" />
+						    		<p:commandButton ajax="false" icon="fa fa-download" >
+								        <p:fileDownload value="#{dialogFuenteDatos.exportarCSV()}" />
+								    </p:commandButton>
 						    	</p>
 				 </p:column>
 

@@ -73,25 +73,25 @@
 									        <h:outputText value="#{td.codigo}" />
 									    </p:column>
 				</p:dataTable>
-				<p:column style="width:20px">
+				<p:column style="width:20px" rendered="#{!dialogFuente.consulta}">
 						     	<p>
-						    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogFuente.nuevaFuenteDatosCampo()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnNuevaPropiedad" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFuente.nuevaFuenteDatosCampo()}" process="@this" update="growlDialog">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuente.returnDialogo}" update="growlDialog dataTableParametros"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-						    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogFuente.editarFuenteDatosCampo()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuente.editarFuenteDatosCampo()}" process="@this" update="growlDialog">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuente.returnDialogo}" update="growlDialog dataTableParametros"/>
 		        					</p:commandButton>
 		        				</p>
 						    	<p>
-						    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogFuente.quitarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
+						    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogFuente.quitarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogFuente.subirFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
+						    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogFuente.subirFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogFuente.bajarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
+						    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}"  actionListener="#{dialogFuente.bajarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
 						    	</p>
 				 </p:column>
 
@@ -112,8 +112,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFuente.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFuente.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFuente.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogFuente.alta or dialogFuente.edicion}" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFuente.cancelar()}" process="@this" rendered="#{dialogFuente.alta or dialogFuente.edicion}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFuente.cancelar()}" process="@this"  rendered="#{dialogFuente.consulta}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

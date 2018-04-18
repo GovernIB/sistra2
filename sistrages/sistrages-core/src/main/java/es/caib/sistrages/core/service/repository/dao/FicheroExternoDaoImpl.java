@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -14,6 +15,7 @@ import javax.persistence.Query;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -37,13 +39,18 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	/** LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(FicheroExternoDaoImpl.class);
 
-	public FicheroExternoDaoImpl() {
-		super();
-	}
-
 	/** Entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	/** Path almacenamiento. */
+	private String pathAlmacenamientoFicheros;
+
+	@PostConstruct
+	public void init() {
+		// Recupera path almacenamiento
+		pathAlmacenamientoFicheros = getPathAlmacenamiento();
+	}
 
 	@Override
 	public ContenidoFichero getContentById(final Long id) {
@@ -84,7 +91,7 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 		if (results != null) {
 			for (final JFicheroExterno jFicheroExterno : results) {
 				// Borramos fichero en disco
-				final String pathAbsoluteFichero = getPathAlmacenamiento() + jFicheroExterno.getReferenciaExterna();
+				final String pathAbsoluteFichero = pathAlmacenamientoFicheros + jFicheroExterno.getReferenciaExterna();
 				final File file = new File(pathAbsoluteFichero);
 				final boolean deleted = FileUtils.deleteQuietly(file);
 				if (!deleted) {
@@ -115,7 +122,7 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 		entityManager.persist(jFicheroExternoNew);
 
 		// Almacena fichero
-		final String pathAbsolutoFichero = getPathAlmacenamiento() + "/" + pathFichero;
+		final String pathAbsolutoFichero = pathAlmacenamientoFicheros + "/" + pathFichero;
 		try {
 			final ByteArrayInputStream bis = new ByteArrayInputStream(content);
 			final File file = new File(pathAbsolutoFichero);
@@ -146,16 +153,20 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	 */
 	@SuppressWarnings("unchecked")
 	private String getPathAlmacenamiento() {
-		final Query query = entityManager
-				.createQuery("select p from JConfiguracionGlobal p where p.propiedad = :propiedad");
-		query.setParameter("propiedad", TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS.toString());
-		final List<JConfiguracionGlobal> results = query.getResultList();
-		if (results == null || results.isEmpty() || results.size() > 1) {
-			throw new FicheroExternoException("No existe propiedad de configuracion '"
-					+ TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS.toString() + "'");
+		String path = System.getProperty("es.caib.sistrages." + TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS);
+		if (StringUtils.isBlank(path)) {
+			final Query query = entityManager
+					.createQuery("select p from JConfiguracionGlobal p where p.propiedad = :propiedad");
+			query.setParameter("propiedad", TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS.toString());
+			final List<JConfiguracionGlobal> results = query.getResultList();
+			if (results == null || results.isEmpty() || results.size() > 1) {
+				throw new FicheroExternoException("No existe propiedad de configuracion '"
+						+ TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS.toString() + "'");
+			}
+			final JConfiguracionGlobal jConfiguracionGlobal = results.get(0);
+			path = jConfiguracionGlobal.getValor();
 		}
-		final JConfiguracionGlobal jConfiguracionGlobal = results.get(0);
-		return jConfiguracionGlobal.getValor();
+		return path;
 	}
 
 	/**
@@ -166,12 +177,11 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	 * @return path fichero (nulo si no existe fichero asociado)
 	 */
 	private String getPathAbsolutoFichero(final Long id) {
-		final String pathAlmacenamiento = getPathAlmacenamiento();
 		final JFicheroExterno jFicheroExterno = getById(id);
 		if (jFicheroExterno == null) {
 			throw new FicheroExternoException("No existe fichero externo asociado al fichero");
 		}
-		final String pathFile = pathAlmacenamiento + jFicheroExterno.getReferenciaExterna();
+		final String pathFile = pathAlmacenamientoFicheros + jFicheroExterno.getReferenciaExterna();
 		return pathFile;
 	}
 

@@ -1,5 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.io.ByteArrayInputStream;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -7,11 +9,18 @@ import javax.inject.Inject;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
+import es.caib.sistrages.core.api.exception.CSVPkException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.comun.CsvDocumento;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.util.CsvUtil;
+import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeCampoFichero;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
@@ -24,6 +33,10 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ManagedBean
 @ViewScoped
 public class DialogFichero extends DialogControllerBase {
+
+	/** Enlace servicio. */
+	@Inject
+	private DominioService dominioService;
 
 	/**
 	 * Servicio entidad.
@@ -55,6 +68,11 @@ public class DialogFichero extends DialogControllerBase {
 	private boolean existeFichero;
 
 	/**
+	 * Visualiza una fila si para subir un fichero al tipo entidad.
+	 */
+	private boolean tipoEntidad;
+
+	/**
 	 * nombre fichero.
 	 */
 	private String nombreFichero;
@@ -81,6 +99,12 @@ public class DialogFichero extends DialogControllerBase {
 			} else {
 				entidad = entidadService.loadEntidad(Long.valueOf(id));
 			}
+			tipoEntidad = true;
+			break;
+		case FUENTE_ENTIDAD_CSV:
+			tipoEntidad = false;
+			break;
+		default:
 			break;
 		}
 
@@ -94,8 +118,10 @@ public class DialogFichero extends DialogControllerBase {
 	 *
 	 * @param event
 	 *            el evento
+	 * @throws Exception
+	 * @throws NumberFormatException
 	 */
-	public void upload(final FileUploadEvent event) {
+	public void upload(final FileUploadEvent event) throws Exception {
 		if (event != null && event.getFile() != null) {
 			final UploadedFile file = event.getFile();
 			Fichero fichero = null;
@@ -130,14 +156,35 @@ public class DialogFichero extends DialogControllerBase {
 
 				entidadService.uploadCssEntidad(entidad.getId(), fichero, file.getContents());
 				break;
+			case FUENTE_ENTIDAD_CSV:
+				final byte csvContent[] = file.getContents();
+				final ByteArrayInputStream bis = new ByteArrayInputStream(csvContent);
+				try {
+					final CsvDocumento csv = CsvUtil.importar(bis);
+					dominioService.importarCSV(Long.valueOf(id), csv);
+				} catch (final CSVPkException exception) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
+					return;
+				} catch (final CSVNoExisteCampoException exception) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+							UtilJSF.getLiteral("info.importarCSV.error.campo"));
+					return;
+				}
+
+				break;
 			default:
 				break;
 			}
 
-			entidad = entidadService.loadEntidad(entidad.getId());
-			comprobarFichero();
+			if (tipoCampoFichero == TypeCampoFichero.FUENTE_ENTIDAD_CSV) {
+				this.cerrarCsv();
+			} else {
+				entidad = entidadService.loadEntidad(entidad.getId());
+				comprobarFichero();
 
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
+			}
+
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
 		}
@@ -214,6 +261,9 @@ public class DialogFichero extends DialogControllerBase {
 		case CSS_ENTIDAD:
 			extensiones = Constantes.EXTENSIONES_FICHEROS_CSS;
 			break;
+		case FUENTE_ENTIDAD_CSV:
+			extensiones = Constantes.EXTENSIONES_FICHEROS_CSV;
+			break;
 		default:
 			break;
 		}
@@ -224,6 +274,18 @@ public class DialogFichero extends DialogControllerBase {
 	 */
 	public void cerrar() {
 		UtilJSF.closeDialog(null);
+	}
+
+	/**
+	 * Cerrar.
+	 */
+	public void cerrarCsv() {
+		final DialogResult dialog = new DialogResult();
+		dialog.setCanceled(false);
+		if (modoAcceso != null) {
+			dialog.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		}
+		UtilJSF.closeDialog(dialog);
 	}
 
 	/*** GETTER / SETTERS ***/
@@ -359,6 +421,21 @@ public class DialogFichero extends DialogControllerBase {
 	 */
 	public void setNombreFichero(final String nombreFichero) {
 		this.nombreFichero = nombreFichero;
+	}
+
+	/**
+	 * @return the tipoEntidad
+	 */
+	public boolean isTipoEntidad() {
+		return tipoEntidad;
+	}
+
+	/**
+	 * @param tipoEntidad
+	 *            the tipoEntidad to set
+	 */
+	public void setTipoEntidad(final boolean tipoEntidad) {
+		this.tipoEntidad = tipoEntidad;
 	}
 
 }

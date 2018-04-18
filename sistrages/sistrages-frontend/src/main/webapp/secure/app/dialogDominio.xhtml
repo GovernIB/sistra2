@@ -38,7 +38,7 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta or dialogDominio.isConsulta()}" required="true" maxlength="20"/>
+				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta or dialogDominio.consulta}" required="true" maxlength="20"/>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
 				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />
@@ -102,25 +102,25 @@
 							    </p:column>
 				 			</p:dataTable>
 						</p:column>
-						<p:column id="columnaLista2" rendered="#{dialogDominio.visibleLista and !dialogDominio.isConsulta()}">
+						<p:column id="columnaLista2" rendered="#{dialogDominio.visibleLista and !dialogDominio.consulta}">
 								<p>
-									<p:commandButton id="btnNuevoValor" alt="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevoValor()}" process="@this" update="growlDialog"  >
+									<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevoValor()}" process="@this" update="growlDialog"  >
 		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-		        					<p:commandButton id="btnEditarValor" alt="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  >
+		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarValor()}" process="@this" update="growlDialog"  >
 		        						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog datalistValores"/>
 		        					</p:commandButton>
 		        				</p>
 							    <p>
-							    	<p:commandButton id="btnEliminarValor" alt="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
+							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
 							    </p>
 							    <p>
-						    		<p:commandButton icon="fa fa-arrow-up" alt="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirValor()}" process="@this" update="growlDialog datalistValores" />
+						    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirValor()}" process="@this" update="growlDialog datalistValores" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-down" alt="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarValor()}" process="@this" update="growlDialog datalistValores" />
+						    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarValor()}" process="@this" update="growlDialog datalistValores" />
 						    	</p>
 						</p:column>
 
@@ -173,31 +173,31 @@
 
 
 			 		</p:dataTable>
-			 		<p:column rendered="#{!dialogDominio.isConsulta()}">
+			 		<p:column rendered="#{!dialogDominio.consulta}">
 						<p>
-				    		<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
+				    		<p:commandButton id="btnNuevaPropiedad" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
 	       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
 	       					</p:commandButton>
 	       				</p>
 	       				<p>
-				    		<p:commandButton id="btnEditarPropiedad" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
+				    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
 	       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
 	       					</p:commandButton>
 	       				</p>
 						<p>
-				    		<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+				    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
 				    	</p>
 				    	<p>
-				    		<p:commandButton icon="fa fa-arrow-up" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+				    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
 				    	</p>
 				    	<p>
-				    		<p:commandButton icon="fa fa-arrow-down" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+				    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
 				    	</p>
 					</p:column>
 		 		</h:panelGrid>
 			</h:panelGrid>
 
-			<h:outputScript rendered="#{!dialogDominio.isConsulta()}">
+			<h:outputScript rendered="#{!dialogDominio.consulta}">
 		      function rcEditarPropiedad() {
 		        document.getElementById("form:btnEditarPropiedad").click();
 		      }

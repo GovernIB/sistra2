@@ -7,5 +7,5 @@ package es.caib.sistrages.frontend.model.types;
  *
  */
 public enum TypeCampoFichero {
-	LOGO_GESTOR_ENTIDAD, LOGO_ASISTENTE_ENTIDAD, CSS_ENTIDAD;
+	LOGO_GESTOR_ENTIDAD, LOGO_ASISTENTE_ENTIDAD, CSS_ENTIDAD, FUENTE_ENTIDAD_CSV;
 }

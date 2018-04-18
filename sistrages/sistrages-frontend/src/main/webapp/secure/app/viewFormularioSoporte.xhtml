@@ -57,17 +57,17 @@
 
 					<p:column style="width:20px">
 						<p>
-							<p:commandButton id="btnNuevoFormulario" icon="fa fa-plus" alt="#{msg['botones.nuevo']}" actionListener="#{viewFormularioSoporte.nuevoFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
+							<p:commandButton id="btnNuevoFormulario" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{viewFormularioSoporte.nuevoFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
 								<p:ajax event="dialogReturn" listener="#{viewFormularioSoporte.returnDialogo}" update="growlDialog dataTableFormularios" />
 							</p:commandButton>
 						</p>
 						<p>
-							<p:commandButton id="btnEditarFormulario" icon="fa fa-edit" alt="#{msg['botones.editar']}" actionListener="#{viewFormularioSoporte.editarFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
+							<p:commandButton id="btnEditarFormulario" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{viewFormularioSoporte.editarFormulario}" process="@this" update="growlDialog" rendered="#{!viewFormularioSoporte.consulta}">
 								<p:ajax event="dialogReturn" listener="#{viewFormularioSoporte.returnDialogo}" update="growlDialog dataTableFormularios" />
 							</p:commandButton>
 						</p>
 						<p>
-							<p:commandButton id="btnEliminarFormulario" icon="fa fa-minus" alt="#{msg['botones.eliminar']}" actionListener="#{viewFormularioSoporte.quitarFormulario}" process="@this" update="growlDialog dataTableFormularios" rendered="#{!viewFormularioSoporte.consulta}"/>
+							<p:commandButton id="btnEliminarFormulario" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{viewFormularioSoporte.quitarFormulario}" process="@this" update="growlDialog dataTableFormularios" rendered="#{!viewFormularioSoporte.consulta}"/>
 						</p>
 					</p:column>
 

@@ -47,10 +47,10 @@
 			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
 
-			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarArea and not viewTramites.permiteAltaArea}" />
+			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarArea}" />
 
 
-			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarArea or viewTramites.permiteAltaArea}">
+			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarArea}">
 			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
 			        		<p:menuButton value="Más..">
@@ -120,8 +120,8 @@
 
 
 										<!-- Necesario para actualizar en controlador la fila seleccionada -->
-										<p:ajax event="rowSelect" />
-	                					<p:ajax event="rowUnselect" />
+										<p:ajax event="rowSelect" update=":form:contextMenuTramites"/>
+	                					<p:ajax event="rowUnselect" update=":form:contextMenuTramites" />
 
 										<!-- Columnas -->
 									    <p:column headerText="#{msg['viewTramites.headerCodigo']}">
@@ -142,20 +142,28 @@
 
 
 			<!-- Context menu -->
-			<p:contextMenu for="dataTableTramites">
-		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarTramite()"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarTramite()"/>
+			<p:contextMenu id="contextMenuTramites" for="dataTableTramites">
+				<p:menuitem value="#{msg['botones.consultar']}" icon="ui-icon-folder-open" onclick="rcConsultarTramite()" rendered="#{viewTramites.permiteConsultarTramite}"/>
+		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarTramite()" rendered="#{viewTramites.permiteEditarTramite}"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarTramite()" rendered="#{viewTramites.permiteAltaTramite}"/>
 		    </p:contextMenu>
 
 		    <!-- Context menu -->
 			<p:contextMenu for="arbolArea">
-		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarArea()"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarArea()"/>
+				<p:menuitem value="#{msg['botones.consultar']}" icon="ui-icon-folder-open" onclick="rcConsultarArea()" rendered="#{not viewTramites.permiteEditarArea}"/>
+		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarArea()"  rendered="#{viewTramites.permiteEditarArea}"/>
+		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarArea()" rendered="#{viewTramites.permiteAltaArea}"/>
 		    </p:contextMenu>
 
 			<h:outputScript >
+			 function rcConsultarArea() {
+		        document.getElementById("form:btnConsultarArea").click();
+		      }
 			 function rcEditarArea() {
 		        document.getElementById("form:btnEditarArea").click();
+		      }
+		      function rcConsultarTramite() {
+		        document.getElementById("form:btnConsultarTramite").click();
 		      }
 		      function rcEditarTramite() {
 		        document.getElementById("form:btnEditarTramite").click();

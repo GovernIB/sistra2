@@ -41,7 +41,7 @@
 		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewDominios.nuevo()}" process="@this" update="growl"  rendered="#{viewDominios.permiteAlta}">
 		        			<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewDominios.editar()}" process="@this" update="growl" rendered="#{viewDominios.permiteEditar}">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewDominios.editar()}" process="@this" update="growl" rendered="#{viewDominios.permiteEditar or viewDominios.permiteAlta}">
 		        			<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewDominios.consultar()}" process="@this" update="growl" rendered="#{not viewDominios.permiteEditar and not viewDominios.permiteAlta}" />

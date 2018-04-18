@@ -32,4 +32,9 @@ public final class Constantes {
 	 */
 	public static final String EXTENSIONES_FICHEROS_CSS = "text/css";
 
+	/**
+	 * Constante para las extensiones de los ficheros de csv
+	 */
+	public static final String EXTENSIONES_FICHEROS_CSV = "text/csv";
+
 }

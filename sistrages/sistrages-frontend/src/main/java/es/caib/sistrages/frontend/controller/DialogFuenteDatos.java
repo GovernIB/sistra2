@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +10,20 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
+import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeCampoFichero;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -48,9 +56,13 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		campos = (List<FuenteDatosCampo>) UtilJSON.fromListJSON(this.iCampos, FuenteDatosCampo.class);
-		refreshTabla();
+		final FuenteDatos fuente = dominioService.loadFuenteDato(Long.valueOf(id));
+		campos = fuente.getCampos();
+		if (campos == null || campos.isEmpty()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFuenteDatos.faltanCampos"));
+		} else {
+			refreshTabla();
+		}
 
 	}
 
@@ -106,6 +118,25 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		if (message != null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		}
+	}
+
+	/**
+	 * Retorno dialogo del upload.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoUpload(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+
+			final String message = UtilJSF.getLiteral("info.importarCSV.ok");
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			refreshTabla();
+
+		}
+
 	}
 
 	/**
@@ -190,12 +221,60 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		this.data.getFilas().add(posicion - 1, fuenteFila);
 	}
 
+	/**
+	 * Llamamos al dialog de fichero para que se encarga de importar el csv.
+	 */
 	public void importarCSV() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.data.getCodigo().toString());
+		params.put(TypeParametroVentana.CAMPO_FICHERO.toString(), TypeCampoFichero.FUENTE_ENTIDAD_CSV.toString());
+		UtilJSF.openDialog(DialogFichero.class, TypeModoAcceso.EDICION, params, true, 450, 350);
 	}
 
-	public void exportarCSV() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	/**
+	 * Obtiene el fichero exportado.
+	 *
+	 * @return
+	 */
+	public StreamedContent exportarCSV() {
+		StreamedContent file = null;
+		try {
+
+			final CsvDocumento csv = new CsvDocumento();
+
+			// Primero ponemos los campos
+			final Long idFuenteDato = data.getCodigo();
+			final FuenteDatos fuenteDatos = dominioService.loadFuenteDato(idFuenteDato);
+			final String[] vcampos = new String[fuenteDatos.getCampos().size()];
+			int i = 0;
+			for (final java.util.Iterator<FuenteDatosCampo> it = fuenteDatos.getCampos().iterator(); it.hasNext();) {
+				final FuenteDatosCampo cfd = it.next();
+				vcampos[i] = cfd.getCodigo();
+				i++;
+			}
+			csv.setColumnas(vcampos);
+
+			// Ponemos las filas
+			final FuenteDatosValores fd = dominioService.loadFuenteDatoValores(idFuenteDato);
+			for (final FuenteFila ffd : fd.getFilas()) {
+				final int numFilaCsv = csv.addFila();
+				for (int columna = 0; columna < vcampos.length; columna++) {
+					final String vfd = ffd.getValorFuenteDatos(vcampos[columna]);
+					csv.setValor(numFilaCsv, vcampos[columna], vfd);
+				}
+			}
+
+			final byte[] contents = CsvUtil.exportar(csv);
+			final ByteArrayInputStream bis = new ByteArrayInputStream(contents);
+			file = new DefaultStreamedContent(bis, "csv", "Fichero.csv");
+
+		} catch (final Exception ex) {
+
+			throw new FrontException("No se puede generar el csv", ex);
+		}
+
+		return file;
 	}
 
 	/**

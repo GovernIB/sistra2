@@ -13,11 +13,14 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
+import es.caib.sistrages.core.api.exception.CSVPkException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JCampoFuenteDatos;
@@ -170,7 +173,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		}
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " AND LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro";
+			sql += " AND ( LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro ) ";
 		}
 
 		sql += " ORDER BY d.identificador";
@@ -399,6 +402,56 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 		// Borramos fuente de datos
 		entityManager.remove(hfuenteDato);
+	}
+
+	@Override
+	public void importarCSV(final Long idFuenteDatos, final CsvDocumento csv) {
+		// Borramos filas de datos de la fuente de datos
+		final String sqlValores = "delete from JValorFuenteDatos as a where a.filaFuenteDatos.codigo in (select fila from JFilasFuenteDatos as fila where fila.fuenteDatos.codigo = :idFuenteDato)";
+		final Query queryValores = entityManager.createQuery(sqlValores);
+		queryValores.setParameter("idFuenteDato", idFuenteDatos);
+		queryValores.executeUpdate();
+
+		// Borramos filas de datos de la fuente de datos
+		final String sql = "delete from JFilasFuenteDatos as a where a.fuenteDatos.codigo = :idFuenteDato";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFuenteDato", idFuenteDatos);
+		query.executeUpdate();
+
+		final JFuenteDatos jfuenteDato = entityManager.find(JFuenteDatos.class, idFuenteDatos);
+		// Insertamos nuevas filas
+		for (int fila = 0; fila < csv.getNumeroFilas(); fila++) {
+			final JFilasFuenteDatos jfila = new JFilasFuenteDatos();
+			jfila.setFuenteDatos(jfuenteDato);
+			for (int columna = 0; columna < csv.getColumnas().length; columna++) {
+				final String col = csv.getColumnas()[columna];
+				String valor = null;
+				try {
+					valor = csv.getValor(fila, col);
+				} catch (final Exception exception) {
+					throw new CSVNoExisteCampoException("No existe el campo para fila:" + fila + " col:" + col,
+							exception);
+				}
+
+				final JCampoFuenteDatos campo = jfuenteDato.getJFuenteCampo(col);
+
+				if (campo == null) {
+					throw new CSVNoExisteCampoException("No existe el campo " + col);
+				}
+				final JValorFuenteDatos jvalor = new JValorFuenteDatos();
+				jvalor.setCampoFuenteDatos(campo);
+				jvalor.setFilaFuenteDatos(jfila);
+				jvalor.setValor(valor);
+				jfila.addValor(jvalor);
+				jfila.setFuenteDatos(jfuenteDato);
+				jfuenteDato.getFilas().add(jfila);
+				entityManager.persist(jfila);
+			}
+		}
+
+		if (!this.contraintPK(jfuenteDato)) {
+			throw new CSVPkException("PK repetida");
+		}
 	}
 
 }
