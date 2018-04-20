@@ -14,6 +14,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.TramitePaso;
+
 /**
  * JPasoTramitacion
  */
@@ -208,6 +210,32 @@ public class JPasoTramitacion implements IModelApi {
 
 	public void setPasoAnexar(final JPasoAnexar pasoAnexar) {
 		this.pasoAnexar = pasoAnexar;
+	}
+
+	public TramitePaso toModel() {
+		final TramitePaso paso = new TramitePaso();
+		paso.setCodigo(this.getIdPasoTramitacion());
+		paso.setDescripcion(this.getDescripcion().toModel());
+		paso.setId(this.getCodigo());
+		paso.setOrden(this.getOrden());
+		paso.setPasoFinal(this.isPasoFinal());
+		return paso;
+	}
+
+	public JPasoTramitacion fromModel(final TramitePaso paso) {
+		JPasoTramitacion jpaso = null;
+		if (paso != null) {
+			jpaso = new JPasoTramitacion();
+			jpaso.setIdPasoTramitacion(paso.getCodigo());
+			if (paso.getDescripcion() != null) {
+				final JLiteral jliteral = JLiteral.fromModel(paso.getDescripcion());
+				jpaso.setDescripcion(jliteral);
+			}
+			jpaso.setCodigo(paso.getId());
+			jpaso.setOrden(paso.getOrden());
+			jpaso.setPasoFinal(paso.isPasoFinal());
+		}
+		return jpaso;
 	}
 
 }

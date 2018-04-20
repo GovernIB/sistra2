@@ -35,7 +35,9 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="identificador" value="#{msg['dialogTramite.codigo']}" />
-				 	<p:inputText id="identificador" value="#{dialogTramite.data.identificador}" disabled="#{!dialogTramite.alta}" required="true" size="30" maxlength="20"/>
+				 	<p:inputText id="identificador" value="#{dialogTramite.data.identificador}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+				   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				   	</p:inputText>
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogTramite.descripcion']}" />
 			 		<p:inputTextarea id="descripcion" value="#{dialogTramite.data.descripcion}" disabled="#{dialogTramite.consulta}" required="true" cols="40" autoResize="false" maxlength="1000"/>

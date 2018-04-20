@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 
 /**
  * La interface TramiteDao.
@@ -64,4 +65,22 @@ public interface TramiteDao {
 	 *            Tramite
 	 */
 	void update(final Tramite pTramite);
+
+	/**
+	 * Devuelve las versiones de un trámite.
+	 *
+	 * @param idTramite
+	 * @param filtro
+	 * @return
+	 */
+	List<TramiteVersion> getTramitesVersion(Long idTramite, String filtro);
+
+	/**
+	 * Crea un tramite version.
+	 *
+	 * @param tramiteVersion
+	 * @param idTramite
+	 * @return
+	 */
+	void addTramiteVersion(TramiteVersion tramiteVersion, String idTramite);
 }

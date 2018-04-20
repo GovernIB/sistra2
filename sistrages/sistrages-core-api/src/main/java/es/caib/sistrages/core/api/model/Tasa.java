@@ -209,4 +209,11 @@ public class Tasa extends ModelApi {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * @return the tipo
+	 */
+	public TypePago getTipo() {
+		return tipo;
+	}
+
 }

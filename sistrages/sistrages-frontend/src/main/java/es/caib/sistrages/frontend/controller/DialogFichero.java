@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
-import es.caib.sistrages.core.api.exception.CSVPkException;
+import es.caib.sistrages.core.api.exception.FuenteDatosCSVNoExisteCampoException;
+import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
@@ -162,13 +162,17 @@ public class DialogFichero extends DialogControllerBase {
 				try {
 					final CsvDocumento csv = CsvUtil.importar(bis);
 					dominioService.importarCSV(Long.valueOf(id), csv);
-				} catch (final CSVPkException exception) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
-					return;
-				} catch (final CSVNoExisteCampoException exception) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
-							UtilJSF.getLiteral("info.importarCSV.error.campo"));
-					return;
+				} catch (final Exception ex) {
+					if (ex.getCause() instanceof FuenteDatosPkException) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+								UtilJSF.getLiteral("info.importarCSV.error.pk"));
+						return;
+					}
+					if (ex.getCause() instanceof FuenteDatosCSVNoExisteCampoException) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+								UtilJSF.getLiteral("info.importarCSV.error.campo"));
+						return;
+					}
 				}
 
 				break;

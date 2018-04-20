@@ -53,7 +53,7 @@ public class ViewDefinicionVersionFormulario extends ViewControllerBase {
 	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 *
-	 * 
+	 *
 	 */
 	public void editarDescripcion() {
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, data.getDescripcion(), null, null);
@@ -63,7 +63,7 @@ public class ViewDefinicionVersionFormulario extends ViewControllerBase {
 	/**
 	 * Lo pasa a modo editar.
 	 *
-	 * 
+	 *
 	 */
 	public void editar() {
 		final Map<String, String> params = new HashMap<String, String>();
@@ -77,7 +77,7 @@ public class ViewDefinicionVersionFormulario extends ViewControllerBase {
 	public void editarDisenyo() {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put(TypeParametroVentana.ID.toString(), "1");
-		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1100, 800);
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 720);
 	}
 
 	/**

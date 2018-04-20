@@ -38,7 +38,9 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
-				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" disabled="#{!dialogDominio.alta or dialogDominio.consulta}" required="true" maxlength="20"/>
+				<p:inputText id="codigo" value="#{dialogDominio.data.codigo}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();">
+			   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			   	</p:inputText>
 
 				<p:outputLabel for="descripcion" value="#{msg['dialogDominio.headerDescripcion']}" />
 				<p:inputTextarea id="descripcion" value="#{dialogDominio.data.descripcion}" disabled="#{dialogDominio.isConsulta()}" required="true" rows="4" cols="40" maxlength="255" styleClass="w95" />

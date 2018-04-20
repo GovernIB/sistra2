@@ -13,6 +13,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.service.TramiteService;
 
@@ -121,6 +122,18 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateTramite(final Tramite pTramite) {
 		tramiteService.updateTramite(pTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<TramiteVersion> listTramiteVersion(final Long idTramite, final String filtro) {
+		return tramiteService.listTramiteVersion(idTramite, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
+		tramiteService.addTramiteVersion(tramiteVersion, idTramite);
 	}
 
 }

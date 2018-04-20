@@ -22,9 +22,6 @@ public class FuenteDatosCampo extends ModelApi {
 	/** Orden. **/
 	private Integer orden;
 
-	/** Fuente de datos. */
-	private FuenteDatos fuenteDatos;
-
 	/**
 	 * @return the id
 	 */
@@ -83,21 +80,6 @@ public class FuenteDatosCampo extends ModelApi {
 	 */
 	public void setOrden(final Integer orden) {
 		this.orden = orden;
-	}
-
-	/**
-	 * @return the fuenteDatos
-	 */
-	public FuenteDatos getFuenteDatos() {
-		return fuenteDatos;
-	}
-
-	/**
-	 * @param fuenteDatos
-	 *            the fuenteDatos to set
-	 */
-	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
-		this.fuenteDatos = fuenteDatos;
 	}
 
 }

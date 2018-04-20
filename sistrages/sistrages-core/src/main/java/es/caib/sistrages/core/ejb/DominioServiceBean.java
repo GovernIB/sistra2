@@ -11,8 +11,6 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
-import es.caib.sistrages.core.api.exception.CSVPkException;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
@@ -23,7 +21,6 @@ import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 
-// TODO: Auto-generated Javadoc
 /**
  * La clase DominioServiceBean.
  */
@@ -273,10 +270,15 @@ public class DominioServiceBean implements DominioService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void importarCSV(final Long idFuenteDatos, final CsvDocumento csv)
-			throws CSVNoExisteCampoException, CSVPkException {
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void importarCSV(final Long idFuenteDatos, final CsvDocumento csv) {
 		dominioService.importarCSV(idFuenteDatos, csv);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public FuenteDatos loadFuenteDato(final String idFuenteDato) {
+		return dominioService.loadFuenteDato(idFuenteDato);
 	}
 
 }

@@ -1,6 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -8,16 +7,17 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeFlujo;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -34,126 +34,68 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewTramitesVersion extends ViewControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
+	/** Id del trámite. **/
+	private String id;
+
+	/** Id del area. **/
+	private String idArea;
+
+	/** Breadcrumb. **/
+	private MenuModel breadCrumb;
+
+	/** Filtro (puede venir por parametro). */
+	private String filtro;
+
+	/** Lista de datos. */
+	private List<TramiteVersion> listaDatos;
+
+	/** Dato seleccionado en la lista. */
+	private TramiteVersion datoSeleccionado;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
+
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
+		this.filtrar();
+
+		final Tramite tramite = tramiteService.getTramite(Long.valueOf(id));
+		final Area area = tramiteService.getArea(Long.valueOf(id));
 
 		/* inicializa breadcrum */
 		breadCrumb = new DefaultMenuModel();
 
 		DefaultMenuItem item = null;
 
-		item = new DefaultMenuItem("Area 1");
-		item.setUrl("#");
+		item = new DefaultMenuItem(area.getCodigo());
+		item.setUrl("/secure/app/viewTramites.xhtml");
 		breadCrumb.addElement(item);
 
-		item = new DefaultMenuItem("Tramite 1");
+		item = new DefaultMenuItem(tramite.getIdentificador());
 		item.setUrl("#");
 		breadCrumb.addElement(item);
 
 		breadCrumb.generateUniqueIds();
 
-		final TramiteVersion tramiteVersion1 = new TramiteVersion();
-		tramiteVersion1.setId(Long.valueOf(1));
-		tramiteVersion1.setNumeroVersion(1);
-		tramiteVersion1.setTipoFlujo(TypeFlujo.NORMAL);
-
-		final Literal desc1 = new Literal();
-		desc1.add(new Traduccion("es", "Trámite 1 - Convocatoria de diciembre de 2017"));
-		desc1.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de desembre de 2017"));
-		tramiteVersion1.setDescripcion(desc1);
-
-		tramiteVersion1.setActiva(false);
-		tramiteVersion1.setRelease(5);
-		tramiteVersion1.setCodigoUsuarioBloqueo("usuario1");
-
-		final TramiteVersion tramiteVersion2 = new TramiteVersion();
-		tramiteVersion2.setId(Long.valueOf(2));
-		tramiteVersion2.setNumeroVersion(2);
-		tramiteVersion2.setTipoFlujo(TypeFlujo.NORMAL);
-
-		final Literal desc2 = new Literal();
-		desc2.add(new Traduccion("es", "Trámite 1 - Convocatoria de febrero de 2018"));
-		desc2.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de febrer de 2018"));
-		tramiteVersion2.setDescripcion(desc2);
-
-		tramiteVersion2.setActiva(false);
-		tramiteVersion2.setRelease(20);
-
-		final TramiteVersion tramiteVersion3 = new TramiteVersion();
-		tramiteVersion3.setId(Long.valueOf(3));
-		tramiteVersion3.setNumeroVersion(3);
-		tramiteVersion3.setTipoFlujo(TypeFlujo.PERSONALIZADO);
-
-		final Literal desc3 = new Literal();
-		desc3.add(new Traduccion("es", "Trámite 1 - Convocatoria de junio de 2018"));
-		desc3.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de juny de 2018"));
-		tramiteVersion3.setDescripcion(desc3);
-
-		tramiteVersion3.setActiva(true);
-		tramiteVersion3.setRelease(12);
-
-		listaDatos = new ArrayList<>();
-		listaDatos.add(tramiteVersion1);
-		listaDatos.add(tramiteVersion2);
-		listaDatos.add(tramiteVersion3);
-
-	}
-
-	/**
-	 * Breadcrumb.
-	 **/
-	private MenuModel breadCrumb;
-
-	/**
-	 * Filtro (puede venir por parametro).
-	 */
-	private String filtro;
-
-	/**
-	 * Lista de datos.
-	 */
-	private List<TramiteVersion> listaDatos;
-
-	/**
-	 * Dato seleccionado en la lista.
-	 */
-	private TramiteVersion datoSeleccionado;
-
-	/**
-	 * Recuperacion de datos.
-	 */
-	public void filtrar() {
-
-		if (filtro == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.filtronorelleno"));
-			return;
-		}
-
-		// Filtra
-		final List<TramiteVersion> tramiteVersionesFiltradas = new ArrayList<>();
-		for (final TramiteVersion tramiteVersion : this.listaDatos) {
-			if (tramiteVersion.getDescripcion() != null && tramiteVersion.getDescripcion()
-					.getTraduccion(getSesion().getLang()).toLowerCase().contains(filtro.toLowerCase())) {
-				tramiteVersionesFiltradas.add(tramiteVersion);
-			}
-		}
-
-		this.listaDatos = tramiteVersionesFiltradas;
-		// Quitamos seleccion de dato
-		datoSeleccionado = null;
-		// Muestra mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.filtro.ok"));
 	}
 
 	/**
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.id);
+		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 600, 200);
+
 	}
 
 	/**
@@ -230,10 +172,19 @@ public class ViewTramitesVersion extends ViewControllerBase {
 			return;
 		// Eliminamos
 		listaDatos.remove(this.datoSeleccionado);
+
 		// Refrescamos datos
-		filtrar();
+		this.filtrar();
+
 		// Mostramos mensaje
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+	}
+
+	/**
+	 * Filtrar
+	 */
+	public void filtrar() {
+		listaDatos = tramiteService.listTramiteVersion(Long.valueOf(id), this.filtro);
 	}
 
 	/**
@@ -260,11 +211,20 @@ public class ViewTramitesVersion extends ViewControllerBase {
 
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		final String message = null;
+		String message = null;
 
-		// Mostramos mensaje
-		if (message != null) {
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Refrescamos datos
+			this.filtrar();
 		}
 	}
 
@@ -326,6 +286,36 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	 */
 	public void setBreadCrumb(final MenuModel breadCrumb) {
 		this.breadCrumb = breadCrumb;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public String getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea
+	 *            the idArea to set
+	 */
+	public void setIdArea(final String idArea) {
+		this.idArea = idArea;
 	}
 
 }

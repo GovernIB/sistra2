@@ -33,7 +33,9 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="codigo" value="#{msg['dialogFormateadorFormulario.codigo']}" />
-					<p:inputText id="codigo" value="#{dialogFormateadorFormulario.data.codigo}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="30" maxlength="20"/>
+					<p:inputText id="codigo" value="#{dialogFormateadorFormulario.data.codigo}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+				   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				   	</p:inputText>
 
 					<p:outputLabel for="classname" value="#{msg['dialogFormateadorFormulario.classname']}" />
 					<p:inputText id="classname" value="#{dialogFormateadorFormulario.data.classname}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="500"/>

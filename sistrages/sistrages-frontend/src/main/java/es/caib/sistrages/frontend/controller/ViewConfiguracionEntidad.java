@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Entidad;
@@ -69,11 +70,33 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	public void aceptar() {
 
+		// Verificamos opciones ayuda
+		if (data.isEmailHabilitado() && StringUtils.isBlank(data.getEmail())) {
+			final String message = UtilJSF.getLiteral("viewConfiguracionEntidad.error.faltaEmail");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, message);
+			return;
+		}
+		if (data.isTelefonoHabilitado() && StringUtils.isBlank(data.getTelefono())) {
+			final String message = UtilJSF.getLiteral("viewConfiguracionEntidad.error.faltaTelSuport");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, message);
+			return;
+		}
+		if (data.isUrlSoporteHabilitado() && StringUtils.isBlank(data.getUrlSoporte())) {
+			final String message = UtilJSF.getLiteral("viewConfiguracionEntidad.error.urlSuport");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, message);
+			return;
+		}
+		if (data.isFormularioIncidenciasHabilitado()
+				&& entidadService.listOpcionesFormularioSoporte(idEntidad).isEmpty()) {
+			final String message = UtilJSF.getLiteral("viewConfiguracionEntidad.error.formulariCont");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, message);
+			return;
+		}
+
 		// Guardar cambios de la entidad.
 		entidadService.updateEntidadAdministradorEntidad(data);
 
 		final String message = UtilJSF.getLiteral("info.modificado.ok");
-
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 	}

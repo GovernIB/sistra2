@@ -2,8 +2,6 @@ package es.caib.sistrages.core.api.service;
 
 import java.util.List;
 
-import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
-import es.caib.sistrages.core.api.exception.CSVPkException;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
@@ -88,6 +86,15 @@ public interface DominioService {
 	 * @return fuenteDato
 	 */
 	public FuenteDatos loadFuenteDato(Long idFuenteDato);
+
+	/**
+	 * Obtener fuenteDato.
+	 *
+	 * @param idFuenteDato
+	 *            ID del fuenteDato
+	 * @return fuenteDato
+	 */
+	public FuenteDatos loadFuenteDato(String idFuenteDato);
 
 	/**
 	 * Obtener fuenteDato.
@@ -208,8 +215,7 @@ public interface DominioService {
 	 *
 	 * @param idFuenteDatos
 	 * @param csv
-	 * @throws Exception
 	 */
-	public void importarCSV(Long idFuenteDatos, CsvDocumento csv) throws CSVNoExisteCampoException, CSVPkException;
+	public void importarCSV(Long idFuenteDatos, CsvDocumento csv);
 
 }

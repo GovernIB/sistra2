@@ -26,6 +26,11 @@ public class DialogResult {
 	private Object result;
 
 	/**
+	 * Mensaje a mostrar.
+	 */
+	private DialogResultMessage mensaje;
+
+	/**
 	 * Obtiene el valor del resultado.
 	 *
 	 * @return el valor del resultado
@@ -80,6 +85,14 @@ public class DialogResult {
 	 */
 	public void setModoAcceso(final TypeModoAcceso modoAcceso) {
 		this.modoAcceso = modoAcceso;
+	}
+
+	public DialogResultMessage getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(final DialogResultMessage mensaje) {
+		this.mensaje = mensaje;
 	}
 
 }

@@ -2,6 +2,7 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -44,10 +46,17 @@ public class DialogFuente extends DialogControllerBase {
 	/** Valor seleccionado. **/
 	private FuenteDatosCampo valorSeleccionado;
 
+	/** Id entidad. */
+	private Long idEntidad;
+
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
+
+		// Id entidad
+		idEntidad = UtilJSF.getIdEntidad();
+
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FuenteDatos();
@@ -78,7 +87,6 @@ public class DialogFuente extends DialogControllerBase {
 			case EDICION:
 				// Actualizamos fila actual
 				final FuenteDatosCampo fuenteDatosCampoEdicion = (FuenteDatosCampo) respuesta.getResult();
-				fuenteDatosCampoEdicion.setFuenteDatos(this.data);
 
 				// Muestra dialogo
 				final int posicion = this.data.getCampos().indexOf(this.valorSeleccionado);
@@ -113,7 +121,6 @@ public class DialogFuente extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		final FuenteDatosCampo campo = this.valorSeleccionado;
-		campo.setFuenteDatos(null);
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(campo));
 		UtilJSF.openDialog(DialogFuenteCampo.class, TypeModoAcceso.EDICION, params, true, 410, 200);
 	}
@@ -188,12 +195,44 @@ public class DialogFuente extends DialogControllerBase {
 			}
 
 		}
+
+		// Verifica si hay un campo con codigo repetido
+		final List<String> camposNombre = new ArrayList<>();
+		if (this.data.getCampos() != null) {
+			for (final FuenteDatosCampo fdc : this.data.getCampos()) {
+				if (camposNombre.contains(fdc.getCodigo())) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+					return;
+				}
+				camposNombre.add(fdc.getCodigo());
+			}
+		}
+
 		switch (acceso) {
 		case ALTA:
+			// Verifica unicidad codigo
+			if (dominioService.loadFuenteDato(this.data.getIdentificador()) != null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				return;
+			}
+
 			this.dominioService.addFuenteDato(this.data, Long.valueOf(idArea));
 			break;
 		case EDICION:
-			this.dominioService.updateFuenteDato(this.data);
+			// Verifica unicidad codigo
+			final FuenteDatos d = dominioService.loadFuenteDato(this.data.getIdentificador());
+			if (d != null && d.getCodigo().longValue() != this.data.getCodigo().longValue()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				return;
+			}
+			try {
+				this.dominioService.updateFuenteDato(this.data);
+			} catch (final Exception ex) {
+				if (ex.getCause() instanceof FuenteDatosPkException) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
+					return;
+				}
+			}
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -215,6 +254,15 @@ public class DialogFuente extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	public boolean getPermiteEditar() {
+		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.ALTA
+				|| TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION);
+	}
+
+	public boolean getPermiteConsulta() {
+		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.CONSULTA);
 	}
 
 	// ------- FUNCIONES PRIVADAS ------------------------------

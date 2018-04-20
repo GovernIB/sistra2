@@ -11,144 +11,88 @@ import es.caib.sistrages.core.api.model.types.TypeFlujo;
 @SuppressWarnings("serial")
 public class TramiteVersion extends ModelApi {
 
-	/**
-	 * id.
-	 */
+	/** id. */
 	private Long id;
 
-	/**
-	 * id tramite.
-	 */
+	/** id tramite. */
 	private Long idTramite;
 
-	/**
-	 * numero version.
-	 */
+	/** numero version. */
 	private int numeroVersion;
 
-	/**
-	 * tipo flujo.
-	 */
+	/** tipo flujo. */
 	private TypeFlujo tipoFlujo;
 
-	/**
-	 * descripcion.
-	 */
-	private Literal descripcion;
-
-	/**
-	 * autenticado.
-	 */
+	/** autenticado. */
 	private boolean autenticado;
 
-	/**
-	 * nivel QAA.
-	 */
+	/** No autenticado. **/
+	private boolean noAutenticado;
+
+	/** nivel QAA. */
 	private int nivelQAA;
 
-	/**
-	 * idiomas soportados.
-	 */
+	/** idiomas soportados. */
 	private String idiomasSoportados;
 
-	/**
-	 * persistencia.
-	 */
+	/** persistencia. */
 	private boolean persistencia;
 
-	/**
-	 * persistencia infinita.
-	 */
+	/** persistencia infinita. */
 	private boolean persistenciaInfinita;
 
-	/**
-	 * persistencia dias.
-	 */
+	/** persistencia dias. */
 	private int persistenciaDias;
 
-	/**
-	 * id script personalizacion.
-	 */
+	/** id script personalizacion. */
 	private Long idScriptPersonalizacion;
 
-	/**
-	 * id script inicializacion tramite.
-	 */
+	/** id script inicializacion tramite. */
 	private Long idScriptInicializacionTramite;
 
-	/**
-	 * bloqueada.
-	 */
+	/** bloqueada. */
 	private int bloqueada;
 
-	/**
-	 * codigo usuario bloqueo.
-	 */
+	/** codigo usuario bloqueo. */
 	private String codigoUsuarioBloqueo;
 
-	/**
-	 * datos usuario bloqueo.
-	 */
+	/** datos usuario bloqueo. */
 	private String datosUsuarioBloqueo;
 
-	/**
-	 * release.
-	 */
+	/** release. */
 	private int release;
 
-	/**
-	 * activa.
-	 */
+	/** activa. */
 	private boolean activa;
 
-	/**
-	 * debug.
-	 */
+	/** debug. */
 	private boolean debug;
 
-	/**
-	 * limite tramitacion.
-	 */
+	/** limite tramitacion. */
 	private boolean limiteTramitacion;
 
-	/**
-	 * num limite tramitacion.
-	 */
+	/** num limite tramitacion. */
 	private int numLimiteTramitacion;
 
-	/**
-	 * int limite tramitacion.
-	 */
+	/** int limite tramitacion. */
 	private int intLimiteTramitacion;
 
-	/**
-	 * desactivacion.
-	 */
+	/** desactivacion. */
 	private boolean desactivacion;
 
-	/**
-	 * plazo inicio desactivacion.
-	 */
+	/** plazo inicio desactivacion. */
 	private Date plazoInicioDesactivacion;
 
-	/**
-	 * plazo fin desactivacion.
-	 */
+	/** plazo fin desactivacion. */
 	private Date plazoFinDesactivacion;
 
-	/**
-	 * mensaje desactivacion.
-	 */
+	/** mensaje desactivacion. */
 	private Literal mensajeDesactivacion;
 
-	/**
-	 * Lista de dominios.
-	 */
+	/** Lista de dominios. */
 	private List<Dominio> listaDominios;
 
-	/**
-	 * Pasos de tramite.
-	 */
+	/** Pasos de tramite. */
 	private List<TramitePaso> listaPasos;
 
 	/**
@@ -301,6 +245,21 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setAutenticado(final boolean autenticado) {
 		this.autenticado = autenticado;
+	}
+
+	/**
+	 * @return the noAutenticado
+	 */
+	public boolean isNoAutenticado() {
+		return noAutenticado;
+	}
+
+	/**
+	 * @param noAutenticado
+	 *            the noAutenticado to set
+	 */
+	public void setNoAutenticado(final boolean noAutenticado) {
+		this.noAutenticado = noAutenticado;
 	}
 
 	/**
@@ -575,7 +534,11 @@ public class TramiteVersion extends ModelApi {
 	 * @return el valor de plazoInicioDesactivacion
 	 */
 	public Date getPlazoInicioDesactivacion() {
-		return (Date) plazoInicioDesactivacion.clone();
+		if (this.plazoInicioDesactivacion == null) {
+			return null;
+		} else {
+			return (Date) plazoInicioDesactivacion.clone();
+		}
 	}
 
 	/**
@@ -594,7 +557,11 @@ public class TramiteVersion extends ModelApi {
 	 * @return el valor de plazoFinDesactivacion
 	 */
 	public Date getPlazoFinDesactivacion() {
-		return (Date) plazoFinDesactivacion.clone();
+		if (this.plazoFinDesactivacion == null) {
+			return null;
+		} else {
+			return (Date) plazoFinDesactivacion.clone();
+		}
 	}
 
 	/**
@@ -605,25 +572,6 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setPlazoFinDesactivacion(final Date plazoFinDesactivacion) {
 		this.plazoFinDesactivacion = (Date) plazoFinDesactivacion.clone();
-	}
-
-	/**
-	 * Obtiene el valor de descripcion.
-	 *
-	 * @return el valor de descripcion
-	 */
-	public Literal getDescripcion() {
-		return descripcion;
-	}
-
-	/**
-	 * Establece el valor de descripcion.
-	 *
-	 * @param descripcion
-	 *            el nuevo valor de descripcion
-	 */
-	public void setDescripcion(final Literal descripcion) {
-		this.descripcion = descripcion;
 	}
 
 	/**
@@ -672,9 +620,10 @@ public class TramiteVersion extends ModelApi {
 	}
 
 	/**
-	 * @param listaPasos the listaPasos to set
+	 * @param listaPasos
+	 *            the listaPasos to set
 	 */
-	public void setListaPasos(List<TramitePaso> listaPasos) {
+	public void setListaPasos(final List<TramitePaso> listaPasos) {
 		this.listaPasos = listaPasos;
 	}
 

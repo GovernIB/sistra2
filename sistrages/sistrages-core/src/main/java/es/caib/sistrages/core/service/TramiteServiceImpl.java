@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
@@ -153,6 +154,23 @@ public class TramiteServiceImpl implements TramiteService {
 	public void updateTramite(final Tramite pTramite) {
 		tramiteDao.update(pTramite);
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.TramiteService#getTramitesVersion(Long
+	 * idTramite)
+	 */
+	@Override
+	public List<TramiteVersion> listTramiteVersion(final Long idTramite, final String filtro) {
+		return tramiteDao.getTramitesVersion(idTramite, filtro);
+	}
+
+	@Override
+	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
+		tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
 	}
 
 }

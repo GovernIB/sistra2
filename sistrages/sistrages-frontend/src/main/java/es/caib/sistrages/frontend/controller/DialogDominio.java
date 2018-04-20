@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Dominio;
@@ -19,6 +20,7 @@ import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.DialogResultMessage;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -71,11 +73,17 @@ public class DialogDominio extends DialogControllerBase {
 	/** Id de la fuente de datos seleccionada. **/
 	private Long idFuenteDato;
 
+	/** Identificador original. */
+	private String identificadorOriginal;
+
 	/**
 	 * Tipos. Es el único enumerado que funciona así, porque el tipo GLOBAL debe
 	 * tener un tipo menos.
 	 **/
 	private List<TypeDominio> tipos;
+
+	/** Is Dialogo Propiedad (o dialogo lista valores). **/
+	boolean isDialogoPropiedad;
 
 	/**
 	 * Inicialización.
@@ -90,6 +98,7 @@ public class DialogDominio extends DialogControllerBase {
 			data.setTipo(TypeDominio.CONSULTA_BD);
 		} else {
 			data = dominioService.loadDominio(Long.valueOf(id));
+			identificadorOriginal = data.getCodigo();
 			if (data.getParametros() == null) {
 				data.setParametros(new ArrayList<>());
 			}
@@ -135,9 +144,6 @@ public class DialogDominio extends DialogControllerBase {
 		}
 
 	}
-
-	/** Is Dialogo Propiedad (o dialogo lista valores). **/
-	boolean isDialogoPropiedad;
 
 	/**
 	 * Retorno dialogo de los botones de propiedades.
@@ -382,6 +388,8 @@ public class DialogDominio extends DialogControllerBase {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
+		boolean identificadorCambiado = false;
+
 		if (this.data.getTipo() == TypeDominio.FUENTE_DATOS) {
 			final FuenteDatos fuenteDato = dominioService.loadFuenteDato(idFuenteDato);
 			this.data.setFuenteDatos(fuenteDato);
@@ -414,6 +422,12 @@ public class DialogDominio extends DialogControllerBase {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
+			// En caso de cambio de identificador hay que controlar si se esta usando y
+			// mostrar mensaje
+			if (!StringUtils.equals(this.data.getCodigo(), identificadorOriginal)) {
+				// TODO Pendiente verificar si se puede
+				identificadorCambiado = true;
+			}
 			// Realiza update
 			dominioService.updateDominio(this.data);
 			break;
@@ -426,6 +440,13 @@ public class DialogDominio extends DialogControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data.getCodigo());
+		if (identificadorCambiado) {
+			final DialogResultMessage dm = new DialogResultMessage();
+			dm.setNivel(TypeNivelGravedad.WARNING);
+			dm.setMensaje("TODO:Pendiente controlar si se esta usando dominio para sacar aviso");
+			result.setMensaje(dm);
+		}
+
 		UtilJSF.closeDialog(result);
 	}
 

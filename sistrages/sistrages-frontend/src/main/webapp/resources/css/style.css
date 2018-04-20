@@ -381,6 +381,10 @@ body{
      margin: 0px !important;
 }
 
+.margin-top-3 {
+	margin-top: 0.3em !important;
+}
+
 .margin-top-10 {
 	margin-top: 10px !important;
 }
@@ -457,6 +461,19 @@ label.ui-state-disabled {
 .confirmar_botonera {float:right !important;}
 
 .confirmar_icono {height: auto !important;width: auto !important;}
+
+.outputlabel-nota {font-size:8pt !important;font-style: italic;}
+
+.formulario-frame {width:100%; height:600px; overflow:auto;border: none;}
+
+.formulario-panel {border: solid 2px lightgrey }
+
+.formulario-botonera, .formulario-botonera div{border: none !important; }
+
+.barra-herramientas-disenyo > * {
+	margin-right: 10px !important;
+}
+
 
 /** Para cambiar el fondo a los inputs y se vea blanco. **/
 /* .ui-inputfield { */

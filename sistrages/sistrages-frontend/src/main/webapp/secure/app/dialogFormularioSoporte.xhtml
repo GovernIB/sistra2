@@ -59,7 +59,10 @@
 			</p:selectOneMenu >
 
 			<p:outputLabel value="#{msg['dialogFormularioSoporte.headerEmails']}" />
-			<p:inputText  value="#{dialogFormularioSoporte.data.listaEmails}" size="40" maxlength="4000"/>
+			<p:inputText value="#{dialogFormularioSoporte.data.listaEmails}" size="40" maxlength="4000"/>
+
+			<p:spacer width="5" height="1"/>
+			<p:outputLabel styleClass="outputlabel-nota" value="#{msg['dialogFormularioSoporte.headerEmailsNota']}" />
 
 	 	</h:panelGrid>
 

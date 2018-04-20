@@ -33,15 +33,6 @@
 			<!-- Contenido dialogo -->
 			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
 
-	            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
-	            <p:outputPanel>
-	           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionPropiedades.tramiteVersion.descripcion.getTraduccion(sessionBean.lang)}"/>
-	           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionPropiedades.editarDescripcion()}" styleClass="va-top"
-							process="@this" update="growlDialog">
-						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionPropiedades.returnDialogoDescripcion}" update="growlDialog descripcion" />
-		        	</p:commandButton>
-	       		</p:outputPanel>
-
 	            <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
 				<p:panelGrid styleClass="noBorders">
 					<p:row>

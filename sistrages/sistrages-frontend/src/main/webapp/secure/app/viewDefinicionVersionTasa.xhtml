@@ -34,14 +34,14 @@
 					     </p:selectOneRadio>
 				     </p:column>
 				     <p:column>
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionTasa.editar()}" value="#{msg['viewDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionTasa.editarScript()}" value="#{msg['viewDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
 							process="@this" update="growl"/>
 					</p:column>
 				</p:row>
          	</p:panelGrid>
 
             <p:outputLabel for="scriptdepago" value="#{msg['viewDefinicionVersionTasa.scriptdepago']}" />
-          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionTasa.editar()}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
+          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionTasa.editarScript()}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
 							process="@this" update="growl"/>
 
             <p:outputLabel for="plugindepago" value="#{msg['viewDefinicionVersionTasa.plugindepago']}" />

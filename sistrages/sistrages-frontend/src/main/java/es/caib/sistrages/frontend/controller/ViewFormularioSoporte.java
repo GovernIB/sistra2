@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -91,6 +92,15 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	public void quitarFormulario() {
 		if (!verificarFilaSeleccionada())
 			return;
+
+		// Verificamos que no sea la última y que este habilitado en la entidad el
+		// formulario de soporte
+		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+		if (entidad.isFormularioIncidenciasHabilitado() && listaDatos.size() == 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogFormularioSoporte.error.noOpciones"));
+			return;
+		}
 
 		// Eliminamos
 		if (entidadService.removeOpcionFormularioSoporte(datoSeleccionado.getId())) {

@@ -11,15 +11,12 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -132,11 +129,6 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		tramiteVersion = new TramiteVersion();
 		tramiteVersion.setId(id);
 
-		final Literal desc1 = new Literal();
-		desc1.add(new Traduccion("es", "Trámite 1 - Convocatoria de diciembre de 2017 "));
-		desc1.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de desembre de 2017"));
-		tramiteVersion.setDescripcion(desc1);
-
 		tramiteVersion.setAutenticado(true);
 		tramiteVersion.setNivelQAA(2);
 		tramiteVersion.setIdiomasSoportados("es,ca");
@@ -151,60 +143,6 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		tramiteVersionIdiomaCaSoportado = tramiteVersion.getIdiomasSoportados().contains("ca");
 		tramiteVersionIdiomaEnSoportado = tramiteVersion.getIdiomasSoportados().contains("en");
 		tramiteVersionIdiomaDeSoportado = tramiteVersion.getIdiomasSoportados().contains("de");
-	}
-
-	/**
-	 * Editar descripcion.
-	 *
-	 * 
-	 */
-	public void editarDescripcion() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.tramiteVersion.getDescripcion(), null, null);
-	}
-
-	/**
-	 * Retorno dialogo de la traduccion.
-	 *
-	 * @param event
-	 *            respuesta dialogo
-	 */
-	public void returnDialogoDescripcion(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		if (!respuesta.isCanceled()) {
-
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-
-				final Literal traducciones = (Literal) respuesta.getResult();
-				this.tramiteVersion.setDescripcion(traducciones);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
-			case EDICION:
-
-				final Literal traduccionesMod = (Literal) respuesta.getResult();
-				this.tramiteVersion.setDescripcion(traduccionesMod);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
 	/**

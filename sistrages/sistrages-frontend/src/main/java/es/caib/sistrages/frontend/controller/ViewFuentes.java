@@ -57,16 +57,44 @@ public class ViewFuentes extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private FuenteDatos datoSeleccionado;
 
+	/** Permita alta area. */
+	private boolean permiteAltaArea;
+
+	/** Permita modificar area. */
+	private boolean permiteModificarArea;
+
+	/** Id entidad. */
+	private Long idEntidad;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
+
+		idEntidad = UtilJSF.getIdEntidad();
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
 
 		if (ambito == null) {
 			return;
 		}
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		buscar(null);
+
+		// Permisos area
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			permiteAltaArea = true;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+			permiteAltaArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+		}
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			permiteModificarArea = true;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+			permiteModificarArea = permisos.contains(TypeRolePermisos.MODIFICACION);
+		}
+
 	}
 
 	/**
@@ -132,10 +160,15 @@ public class ViewFuentes extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
+		TypeModoAcceso modoAccesoType = TypeModoAcceso.CONSULTA;
+		if (getPermiteAlta() || getPermiteEditar()) {
+			modoAccesoType = TypeModoAcceso.EDICION;
+		}
+
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
-		UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.EDICION, params, true, 740, 330);
+		UtilJSF.openDialog(DialogFuenteDatos.class, modoAccesoType, params, true, 740, 330);
 	}
 
 	/**
@@ -183,24 +216,13 @@ public class ViewFuentes extends ViewControllerBase {
 		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
 		switch (ambitoType) {
 		case GLOBAL:
-			res = false;
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
 			break;
 		case ENTIDAD:
 			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 			break;
 		case AREA:
-
-			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-				res = true;
-			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
-
-				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-
-			}
-
+			res = permiteAltaArea;
 			break;
 		}
 		return res;
@@ -216,24 +238,13 @@ public class ViewFuentes extends ViewControllerBase {
 		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
 		switch (ambitoType) {
 		case GLOBAL:
-			res = false;
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
 			break;
 		case ENTIDAD:
 			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 			break;
 		case AREA:
-
-			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-				res = true;
-			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
-
-				res = permisos.contains(TypeRolePermisos.MODIFICACION);
-
-			}
-
+			res = permiteModificarArea;
 			break;
 		}
 		return res;

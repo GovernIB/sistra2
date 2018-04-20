@@ -227,4 +227,12 @@ public class DialogFuenteFila extends DialogControllerBase {
 		this.idFuenteDato = idFuenteDato;
 	}
 
+	public boolean getPermiteEditar() {
+		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.ALTA
+				|| TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION);
+	}
+
+	public boolean getPermiteConsulta() {
+		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.CONSULTA);
+	}
 }

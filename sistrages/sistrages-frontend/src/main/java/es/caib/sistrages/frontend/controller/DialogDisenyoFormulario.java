@@ -313,6 +313,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		return componentEdit instanceof ComponenteFormularioCampo;
 	}
 
+	/**
+	 * Cancelar.
+	 */
+	public void cancelar() {
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setCanceled(true);
+		UtilJSF.closeDialog(result);
+	}
+
 	// -- Getters / Setters
 
 	/**

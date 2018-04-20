@@ -14,6 +14,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -90,7 +91,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 			case ALTA:
 				// Refrescamos datos
 				final FuenteFila fuenteFilaAlta = (FuenteFila) respuesta.getResult();
-				dominioService.addFuenteDatoFila(fuenteFilaAlta, this.data.getCodigo());
+				dominioService.addFuenteDatoFila(fuenteFilaAlta, new Long(id));
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
@@ -101,12 +102,21 @@ public class DialogFuenteDatos extends DialogControllerBase {
 			case EDICION:
 				// Actualizamos fila actual
 				final FuenteFila fuenteFilaEdicion = (FuenteFila) respuesta.getResult();
-				dominioService.updateFuenteDatoFila(fuenteFilaEdicion);
 
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				try {
+					dominioService.updateFuenteDatoFila(fuenteFilaEdicion);
+					// Mensaje
+					message = UtilJSF.getLiteral("info.modificado.ok");
+				} catch (final Exception ex) {
+					if (ex.getCause() instanceof FuenteDatosPkException) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+								UtilJSF.getLiteral("info.importarCSV.error.pk"));
+						return;
+					}
+				}
 
 				refreshTabla();
+
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
@@ -129,12 +139,10 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	public void returnDialogoUpload(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		if (!respuesta.isCanceled()) {
-
+		if (respuesta != null && !respuesta.isCanceled()) {
 			final String message = UtilJSF.getLiteral("info.importarCSV.ok");
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 			refreshTabla();
-
 		}
 
 	}
@@ -143,10 +151,11 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 * Crea nueva FuenteDatosCampo.
 	 */
 	public void nuevaFuenteDato() {
-
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.getCampos()));
-		params.put(TypeParametroVentana.DATO2.toString(), UtilJSON.toJSON(this.getData().getCodigo()));
+		// params.put(TypeParametroVentana.DATO2.toString(),
+		// UtilJSON.toJSON(this.getData().getCodigo()));
+		params.put(TypeParametroVentana.DATO2.toString(), id);
 		UtilJSF.openDialog(DialogFuenteFila.class, TypeModoAcceso.ALTA, params, true, 460,
 				calcularY(this.getCampos().size()));
 	}
@@ -161,7 +170,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), UtilJSON.toJSON(this.valorSeleccionado.getId()));
-		params.put(TypeParametroVentana.DATO2.toString(), UtilJSON.toJSON(this.getData().getCodigo()));
+		params.put(TypeParametroVentana.DATO2.toString(), id);
 		UtilJSF.openDialog(DialogFuenteFila.class, TypeModoAcceso.EDICION, params, true, 460,
 				calcularY(this.getCampos().size()));
 	}
@@ -227,7 +236,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	public void importarCSV() {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.data.getCodigo().toString());
+		params.put(TypeParametroVentana.ID.toString(), id);
 		params.put(TypeParametroVentana.CAMPO_FICHERO.toString(), TypeCampoFichero.FUENTE_ENTIDAD_CSV.toString());
 		UtilJSF.openDialog(DialogFichero.class, TypeModoAcceso.EDICION, params, true, 450, 350);
 	}
@@ -244,7 +253,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 			final CsvDocumento csv = new CsvDocumento();
 
 			// Primero ponemos los campos
-			final Long idFuenteDato = data.getCodigo();
+			final Long idFuenteDato = new Long(id);
 			final FuenteDatos fuenteDatos = dominioService.loadFuenteDato(idFuenteDato);
 			final String[] vcampos = new String[fuenteDatos.getCampos().size()];
 			int i = 0;
@@ -375,6 +384,15 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 */
 	public void setiCampos(final String iCampos) {
 		this.iCampos = iCampos;
+	}
+
+	public boolean getPermiteEditar() {
+		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.ALTA
+				|| TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION);
+	}
+
+	public boolean getPermiteConsulta() {
+		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.CONSULTA);
 	}
 
 }

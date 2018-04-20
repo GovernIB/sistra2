@@ -13,8 +13,8 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
-import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
-import es.caib.sistrages.core.api.exception.CSVPkException;
+import es.caib.sistrages.core.api.exception.FuenteDatosCSVNoExisteCampoException;
+import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
@@ -57,13 +57,20 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 	@Override
 	public FuenteDatosValores getValoresById(final Long idFuenteDato) {
-		FuenteDatosValores fuenteDato = null;
-		final JFuenteDatos hfuenteDato = entityManager.find(JFuenteDatos.class, idFuenteDato);
-		if (hfuenteDato != null) {
-			// Establecemos datos
-			fuenteDato = hfuenteDato.toModelV();
+		final List<JFilasFuenteDatos> results = getJFilasFuenteDatos(idFuenteDato);
+		final FuenteDatosValores valores = new FuenteDatosValores();
+		for (final JFilasFuenteDatos f : results) {
+			valores.addFila(f.toModel());
 		}
-		return fuenteDato;
+		return valores;
+	}
+
+	private List<JFilasFuenteDatos> getJFilasFuenteDatos(final Long idFuenteDato) {
+		final String sql = "SELECT d FROM JFilasFuenteDatos d where d.fuenteDatos.codigo = :idFuenteDato  order by d.codigo";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFuenteDato", idFuenteDato);
+		final List<JFilasFuenteDatos> results = query.getResultList();
+		return results;
 	}
 
 	@Override
@@ -202,10 +209,85 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 	@Override
 	public void updateFuenteDato(final FuenteDatos mFuenteDato) {
-		final JFuenteDatos jFuenteDato = entityManager.find(JFuenteDatos.class, mFuenteDato.getCodigo());
-		// jfuenteDato = JFuenteDatos.mergeModel(jfuenteDato, fuenteDato);
 
-		// Borrar campos no pasados en modelo
+		// Obtiene fuente datos almacenada
+		final JFuenteDatos jFuenteDato = entityManager.find(JFuenteDatos.class, mFuenteDato.getCodigo());
+
+		// Obtiene lista campos a borrar
+		final List<JCampoFuenteDatos> listaCamposBorrar = obtieneCamposBorrar(mFuenteDato, jFuenteDato);
+
+		// Obtiene lista campos a anyadir
+		final List<FuenteDatosCampo> listaCamposAnyadir = obtieneCamposAnyadir(mFuenteDato, jFuenteDato);
+
+		// Borra valores campos no existentes
+		borrarValoresCamposNoExistentes(listaCamposBorrar);
+
+		// Actualiza estructura fuente datos
+		actualizaEstructuraFuenteDatos(mFuenteDato, jFuenteDato, listaCamposBorrar);
+
+		// Crea valores nuevos en las filas
+		anyadirValoresCampos(jFuenteDato, listaCamposAnyadir);
+
+		// Verificacion de PK
+		if (!this.contraintPK(jFuenteDato)) {
+			throw new FuenteDatosPkException("PK repetida");
+		}
+
+	}
+
+	private void actualizaEstructuraFuenteDatos(final FuenteDatos mFuenteDato, final JFuenteDatos jFuenteDato,
+			final List<JCampoFuenteDatos> listaCamposBorrar) {
+		// - Propiedades comunes
+		jFuenteDato.setIdentificador(mFuenteDato.getIdentificador());
+		jFuenteDato.setDescripcion(mFuenteDato.getDescripcion());
+		// - Quita campos a borrar
+		for (final JCampoFuenteDatos campo : listaCamposBorrar) {
+			campo.setFuenteDatos(null);
+			jFuenteDato.getCampos().remove(campo);
+		}
+		// - Actualiza y añade campos
+		for (final FuenteDatosCampo campo : mFuenteDato.getCampos()) {
+			// Verificamos si existe el campo
+			JCampoFuenteDatos jcampoFuenteDatos = jFuenteDato.getJFuenteCampo(campo.getId());
+			// Campo no existe: creamos
+			if (jcampoFuenteDatos == null) {
+				jcampoFuenteDatos = new JCampoFuenteDatos();
+				jcampoFuenteDatos.setFuenteDatos(jFuenteDato);
+				jFuenteDato.getCampos().add(jcampoFuenteDatos);
+			} else {
+				jcampoFuenteDatos.setCodigo(campo.getId());
+			}
+			// Actualizamos propiedades campo
+			jcampoFuenteDatos.setClavePrimaria((campo.isClavePrimaria() ? "S" : "N"));
+			jcampoFuenteDatos.setIdCampo(campo.getCodigo());
+			jcampoFuenteDatos.setFuenteDatos(jFuenteDato);
+			jcampoFuenteDatos.setOrden(campo.getOrden());
+
+		}
+
+		// - Persiste informacion estructura (forzamos flush porque luego se vuelve a
+		// recuperar)
+		entityManager.merge(jFuenteDato);
+		entityManager.flush();
+	}
+
+	private void anyadirValoresCampos(final JFuenteDatos jFuenteDato, final List<FuenteDatosCampo> listaCamposAnyadir) {
+		// Establece campos fuente datos
+		// Creamos el campo en las filas
+		final List<JFilasFuenteDatos> results = getJFilasFuenteDatos(jFuenteDato.getCodigo());
+		for (final JFilasFuenteDatos f : results) {
+			for (final FuenteDatosCampo campo : listaCamposAnyadir) {
+				final JCampoFuenteDatos jcampoFuenteDatos = jFuenteDato.getJFuenteCampo(campo.getCodigo());
+				final JValorFuenteDatos valor = new JValorFuenteDatos();
+				valor.setCampoFuenteDatos(jcampoFuenteDatos);
+				valor.setValor("");
+				f.addValor(valor);
+				entityManager.persist(f);
+			}
+		}
+	}
+
+	private List<JCampoFuenteDatos> obtieneCamposBorrar(final FuenteDatos mFuenteDato, final JFuenteDatos jFuenteDato) {
 		final List<JCampoFuenteDatos> camposBorrar = new ArrayList<>();
 		for (final JCampoFuenteDatos jCampo : jFuenteDato.getCampos()) {
 			boolean nocontiene = true;
@@ -215,63 +297,39 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 					break;
 				}
 			}
-
 			if (nocontiene) {
 				camposBorrar.add(jCampo);
 			}
 		}
+		return camposBorrar;
+	}
 
-		// Borramos los campos que han desaparecido en el guardado.
-		for (final JCampoFuenteDatos jCampo : camposBorrar) {
+	private List<FuenteDatosCampo> obtieneCamposAnyadir(final FuenteDatos mFuenteDato, final JFuenteDatos jFuenteDato) {
+		final List<FuenteDatosCampo> camposAnyadir = new ArrayList<>();
+		for (final FuenteDatosCampo mFuenteDatoCampo : mFuenteDato.getCampos()) {
+			boolean nocontiene = true;
+			for (final JCampoFuenteDatos jCampo : jFuenteDato.getCampos()) {
+				if (mFuenteDatoCampo.getId() != null && mFuenteDatoCampo.getId().compareTo(jCampo.getCodigo()) == 0) {
+					nocontiene = false;
+					break;
+				}
+			}
+			if (nocontiene) {
+				camposAnyadir.add(mFuenteDatoCampo);
+			}
+		}
+		return camposAnyadir;
+	}
+
+	private void borrarValoresCamposNoExistentes(final List<JCampoFuenteDatos> listaCamposBorrar) {
+		// Borramos valores los campos que han desaparecido en el guardado.
+		for (final JCampoFuenteDatos jCampo : listaCamposBorrar) {
 			// Borramos en cada fila el valor
-			for (final JFilasFuenteDatos fila : jFuenteDato.getFilas()) {
-				final JValorFuenteDatos valor = fila.removeValor(jCampo.getCodigo());
-				entityManager.remove(valor);
-			}
-			jFuenteDato.getCampos().remove(jCampo);
+			final String sql = "DELETE FROM JValorFuenteDatos d where d.campoFuenteDatos.codigo = :codigoCampo";
+			final Query query = entityManager.createQuery(sql);
+			query.setParameter("codigoCampo", jCampo.getCodigo());
+			query.executeUpdate();
 		}
-
-		// Actualizamos campos pasados en modelo
-		for (final FuenteDatosCampo campo : mFuenteDato.getCampos()) {
-
-			// Obtenemos la fuente de dato (si no la tiene, hay que añadirla)
-			JCampoFuenteDatos jcampoFuenteDatos = jFuenteDato.getJFuenteCampo(campo.getId());
-			if (jcampoFuenteDatos == null) { // No existe el campo de fuente
-				jcampoFuenteDatos = new JCampoFuenteDatos();
-				if (campo.isClavePrimaria()) {
-					jcampoFuenteDatos.setClavePrimaria("S");
-				} else {
-					jcampoFuenteDatos.setClavePrimaria("N");
-				}
-				jcampoFuenteDatos.setIdCampo(campo.getCodigo());
-				jcampoFuenteDatos.setCodigo(campo.getId());
-				jcampoFuenteDatos.setFuenteDatos(jFuenteDato);
-				jcampoFuenteDatos.setOrden(campo.getOrden());
-				jFuenteDato.getCampos().add(jcampoFuenteDatos);
-
-				// Si no existe el campo, eso significa que hay que crearlo.
-				for (final JFilasFuenteDatos fila : jFuenteDato.getFilas()) {
-
-					final JValorFuenteDatos valor = new JValorFuenteDatos();
-					valor.setCampoFuenteDatos(jcampoFuenteDatos);
-					valor.setValor("");
-					fila.addValor(valor);
-				}
-
-			} else {
-
-				if (campo.isClavePrimaria()) {
-					jcampoFuenteDatos.setClavePrimaria("S");
-				} else {
-					jcampoFuenteDatos.setClavePrimaria("N");
-				}
-				jcampoFuenteDatos.setIdCampo(campo.getCodigo());
-				jcampoFuenteDatos.setOrden(campo.getOrden());
-
-			}
-		}
-
-		entityManager.merge(jFuenteDato);
 	}
 
 	@Override
@@ -279,7 +337,6 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		FuenteFila fuenteFila = null;
 		final JFilasFuenteDatos hfuenteFila = entityManager.find(JFilasFuenteDatos.class, idFuenteDatoFila);
 		if (hfuenteFila != null) {
-
 			// Establecemos datos
 			fuenteFila = hfuenteFila.toModel();
 		}
@@ -289,18 +346,15 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	@Override
 	public void addFuenteDatoFila(final FuenteFila fila, final Long idFuente) {
 		final JFuenteDatos jfuenteDato = entityManager.find(JFuenteDatos.class, idFuente);
-		final JFilasFuenteDatos jfila = new JFilasFuenteDatos();
-		jfila.fromModel(fila);
+		final JFilasFuenteDatos jfila = JFilasFuenteDatos.fromModel(fila);
 		jfila.setFuenteDatos(jfuenteDato);
 		entityManager.merge(jfila);
-
 	}
 
 	@Override
 	public void updateFuenteDatoFila(final FuenteFila fila) {
 		final JFilasFuenteDatos jfila = entityManager.find(JFilasFuenteDatos.class, fila.getId());
 		jfila.merge(fila);
-
 		entityManager.merge(jfila);
 	}
 
@@ -315,12 +369,10 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	@Override
 	public boolean isCorrectoPK(final FuenteFila fuenteFila, final Long idFuenteDato) {
 		final JFuenteDatos jFuenteDatos = entityManager.find(JFuenteDatos.class, idFuenteDato);
-
-		final JFilasFuenteDatos fila = new JFilasFuenteDatos();
-		fila.fromModel(fuenteFila);
-		jFuenteDatos.addFila(fila);
-
-		return contraintPK(jFuenteDatos);
+		final JFilasFuenteDatos fila = JFilasFuenteDatos.fromModel(fuenteFila);
+		final boolean result = contraintPK(jFuenteDatos, fila);
+		entityManager.detach(jFuenteDatos);
+		return result;
 	}
 
 	@Override
@@ -331,15 +383,21 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		}
 	}
 
+	private boolean contraintPK(final JFuenteDatos fuenteDatos) {
+		return contraintPK(fuenteDatos, null);
+	}
+
 	/**
 	 * Verifica si tras modificar una Fuente de Datos se mantiene la constraint de
 	 * PK.
 	 *
 	 * @param fuenteDatos
 	 *            Fuente datos
+	 * @param fuenteFila
+	 *            fila adicional o modificada
 	 * @return true en caso de que se cumpla FK
 	 */
-	private boolean contraintPK(final JFuenteDatos fuenteDatos) {
+	private boolean contraintPK(final JFuenteDatos fuenteDatos, final JFilasFuenteDatos fuenteFila) {
 
 		final Set<String> pks = new HashSet<>();
 		if (fuenteDatos != null && fuenteDatos.getCampos() != null) {
@@ -352,15 +410,33 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			}
 			if (!keys.isEmpty()) {
 				final String separador = "@#-#@";
-				for (int i = 0; i < fuenteDatos.getFilas().size(); i++) {
-					final JFilasFuenteDatos fila = fuenteDatos.getFilaFuenteDatos(i + 1);
+
+				final List<JFilasFuenteDatos> filasFD = getJFilasFuenteDatos(fuenteDatos.getCodigo());
+				if (fuenteFila != null) {
+					// Si existe la sustituimos, si no la añadimos
+					boolean existe = false;
+					int i = 0;
+					for (final JFilasFuenteDatos fd : filasFD) {
+						if (fd.getCodigo() == fuenteFila.getCodigo()) {
+							existe = true;
+							break;
+						}
+						i++;
+					}
+					if (existe) {
+						filasFD.set(i, fuenteFila);
+					} else {
+						filasFD.add(fuenteFila);
+					}
+				}
+
+				for (final JFilasFuenteDatos fila : filasFD) {
 					String pk = "";
 					for (final Iterator<JCampoFuenteDatos> it = keys.iterator(); it.hasNext();) {
 						final String idCampoPK = it.next().getIdCampo();
 						pk = pk + separador + StringUtils.defaultString(fila.getValorFuenteDatos(idCampoPK));
 					}
 					if (pks.contains(pk)) {
-						entityManager.detach(fuenteDatos);
 						return false;
 					} else {
 						pks.add(pk);
@@ -419,6 +495,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		query.executeUpdate();
 
 		final JFuenteDatos jfuenteDato = entityManager.find(JFuenteDatos.class, idFuenteDatos);
+
 		// Insertamos nuevas filas
 		for (int fila = 0; fila < csv.getNumeroFilas(); fila++) {
 			final JFilasFuenteDatos jfila = new JFilasFuenteDatos();
@@ -429,14 +506,14 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 				try {
 					valor = csv.getValor(fila, col);
 				} catch (final Exception exception) {
-					throw new CSVNoExisteCampoException("No existe el campo para fila:" + fila + " col:" + col,
-							exception);
+					throw new FuenteDatosCSVNoExisteCampoException(
+							"No existe el campo para fila:" + fila + " col:" + col, exception);
 				}
 
 				final JCampoFuenteDatos campo = jfuenteDato.getJFuenteCampo(col);
 
 				if (campo == null) {
-					throw new CSVNoExisteCampoException("No existe el campo " + col);
+					throw new FuenteDatosCSVNoExisteCampoException("No existe el campo " + col);
 				}
 				final JValorFuenteDatos jvalor = new JValorFuenteDatos();
 				jvalor.setCampoFuenteDatos(campo);
@@ -444,14 +521,27 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 				jvalor.setValor(valor);
 				jfila.addValor(jvalor);
 				jfila.setFuenteDatos(jfuenteDato);
-				jfuenteDato.getFilas().add(jfila);
-				entityManager.persist(jfila);
 			}
+
+			entityManager.persist(jfila);
 		}
 
 		if (!this.contraintPK(jfuenteDato)) {
-			throw new CSVPkException("PK repetida");
+			throw new FuenteDatosPkException("PK repetida");
 		}
+	}
+
+	@Override
+	public FuenteDatos getByIdentificador(final String idFuenteDato) {
+		FuenteDatos result = null;
+		final String sql = "SELECT d FROM JFuenteDatos d where d.identificador = :idFuenteDato";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFuenteDato", idFuenteDato);
+		final List<JFuenteDatos> list = query.getResultList();
+		if (!list.isEmpty()) {
+			result = list.get(0).toModel();
+		}
+		return result;
 	}
 
 }

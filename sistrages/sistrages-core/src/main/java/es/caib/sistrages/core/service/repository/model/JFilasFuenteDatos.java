@@ -76,28 +76,33 @@ public class JFilasFuenteDatos implements IModelApi {
 		fila.setId(this.getCodigo());
 		if (this.valoresFuenteDatos != null) {
 			final List<FuenteDatosValor> valores = new ArrayList<>();
-			for (final JValorFuenteDatos valor : valoresFuenteDatos) {
-				valores.add(valor.toModel());
+			// Hay que recuperarlo en el orden de los campos
+			for (final JCampoFuenteDatos cfd : fuenteDatos.getCampos()) {
+				final JValorFuenteDatos vc = getJValorFuenteDatos(cfd.getCodigo());
+				valores.add(vc.toModel());
 			}
 			fila.setDatos(valores);
 		}
 		return fila;
 	}
 
-	public void fromModel(final FuenteFila fila) {
+	public static JFilasFuenteDatos fromModel(final FuenteFila fila) {
+		JFilasFuenteDatos res = null;
 		if (fila != null) {
-			this.setCodigo(fila.getId());
+			res = new JFilasFuenteDatos();
+			res.setCodigo(fila.getId());
 			if (fila.getDatos() != null) {
 				final Set<JValorFuenteDatos> valores = new HashSet<>();
 				for (final FuenteDatosValor valor : fila.getDatos()) {
 					final JValorFuenteDatos jvalor = new JValorFuenteDatos();
 					jvalor.fromModel(valor);
-					jvalor.setFilaFuenteDatos(this);
+					jvalor.setFilaFuenteDatos(res);
 					valores.add(jvalor);
 				}
-				this.setValoresFuenteDatos(valores);
+				res.setValoresFuenteDatos(valores);
 			}
 		}
+		return res;
 	}
 
 	/**
@@ -151,6 +156,19 @@ public class JFilasFuenteDatos implements IModelApi {
 			}
 			if (vfdCampo != null) {
 				valor = vfdCampo.getValor();
+			}
+		}
+		return valor;
+	}
+
+	public JValorFuenteDatos getJValorFuenteDatos(final Long identificadorCampo) {
+		JValorFuenteDatos valor = null;
+		if (this.getValoresFuenteDatos() != null) {
+			for (final JValorFuenteDatos v : this.getValoresFuenteDatos()) {
+				if (v.getCampoFuenteDatos().getCodigo().longValue() == identificadorCampo.longValue()) {
+					valor = v;
+					break;
+				}
 			}
 		}
 		return valor;

@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,9 +180,12 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 
 		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.tramiteSeleccionada.getIdentificador());
-		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml");
+		final Map<String, List<String>> params = new HashMap<>();
+		params.put(TypeParametroVentana.AREA.toString(),
+				Arrays.asList(((Area) this.areaSeleccionada.getData()).getId().toString()));
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(this.tramiteSeleccionada.getId().toString()));
+		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
+		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml", params);
 
 	}
 

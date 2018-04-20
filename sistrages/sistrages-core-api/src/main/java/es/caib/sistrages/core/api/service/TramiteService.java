@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 
 /**
  * La interface TramiteService.
@@ -103,5 +104,21 @@ public interface TramiteService {
 	 *            tramite
 	 */
 	public void updateTramite(Tramite pTramite);
+
+	/**
+	 * Lista de las versiones de un trámite.
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	public List<TramiteVersion> listTramiteVersion(Long idTramite, String filtro);
+
+	/**
+	 * Crea una versión de trámite.
+	 *
+	 * @param tramiteVersion
+	 * @param id
+	 */
+	public void addTramiteVersion(TramiteVersion tramiteVersion, String id);
 
 }

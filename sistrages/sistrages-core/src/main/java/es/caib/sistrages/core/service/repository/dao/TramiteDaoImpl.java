@@ -14,8 +14,11 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JTramite;
+import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
 /**
  * La clase TramiteDaoImpl.
@@ -190,5 +193,58 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public List<TramiteVersion> getTramitesVersion(final Long idTramite, final String filtro) {
+		final List<TramiteVersion> resultado = new ArrayList<>();
+
+		String sql = "Select t From JVersionTramite t where t.tramite.codigo = :idTramite ";
+		if (filtro != null && !filtro.isEmpty()) {
+			sql += " and lower(t.usuarioDatosBloqueo) like '%" + filtro.toLowerCase() + "%' ";
+		}
+		sql += "order by t.numeroVersion desc";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramite", idTramite);
+
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final TramiteVersion tramiteVersion = new TramiteVersion();
+				tramiteVersion.setId(jTramiteVersion.getCodigo());
+				tramiteVersion.setNumeroVersion(jTramiteVersion.getNumeroVersion());
+				if (jTramiteVersion.getBloqueada()) {
+					tramiteVersion.setBloqueada(1);
+				} else {
+					tramiteVersion.setBloqueada(0);
+				}
+				tramiteVersion.setCodigoUsuarioBloqueo(jTramiteVersion.getUsuarioIdBloqueo());
+				tramiteVersion.setDatosUsuarioBloqueo(jTramiteVersion.getUsuarioDatosBloqueo());
+				tramiteVersion.setActiva(jTramiteVersion.isActiva());
+				tramiteVersion.setTipoFlujo(TypeFlujo.fromString(jTramiteVersion.getTipoflujo()));
+				tramiteVersion.setRelease(jTramiteVersion.getRelease());
+
+				resultado.add(tramiteVersion);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
+
+		if (idTramite == null) {
+			throw new FaltanDatosException("Falta el tramite");
+		}
+
+		final JTramite jTramite = entityManager.find(JTramite.class, Long.valueOf(idTramite));
+		final JVersionTramite jTramiteVersion = new JVersionTramite();
+		jTramiteVersion.fromModel(tramiteVersion);
+		jTramiteVersion.setTramite(jTramite);
+		entityManager.persist(jTramiteVersion);
 	}
 }

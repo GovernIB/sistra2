@@ -175,6 +175,11 @@ public class ViewDominios extends ViewControllerBase {
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
+			// Mensaje dialogo
+			if (respuesta.getMensaje() != null) {
+				UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), respuesta.getMensaje().getMensaje());
+			}
+
 			// Refrescamos datos
 			buscar(filtro);
 		}

@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -161,7 +160,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			if (tramitePaso instanceof TramitePasoDebeSaber) {
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
+								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionDebeSaber", tramitePaso.getId()),
 						tramitePaso));
 
@@ -170,7 +169,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
+								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionRellenar", tramitePaso.getId()),
 						tramitePaso));
 
@@ -191,7 +190,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
+								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexarDocumentos",
 								tramitePaso.getId()),
 						tramitePaso));
@@ -212,7 +211,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
+								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPagarTasas", tramitePaso.getId()),
 						tramitePaso));
 
@@ -231,10 +230,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			} else {
 				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
 						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ UtilJSF.getLiteral(tramitePaso.getDescripcion()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersion" + StringUtils
-								.capitalize(StringUtils.substringAfterLast(tramitePaso.getDescripcion(), ".")))));
-
+								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionRegistrarTramite",
+								tramitePaso.getId()),
+						tramitePaso));
 				nodePasosTramitacion.getChildren().add(nodo);
 			}
 		}
@@ -406,12 +405,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		tramiteVersion = new TramiteVersion();
 		tramiteVersion.setId(id);
 
-		/* propiedades */
-		final Literal desc1 = new Literal();
-		desc1.add(new Traduccion("es", "Trámite 1 - Convocatoria de diciembre de 2017 "));
-		desc1.add(new Traduccion("ca", "Tràmit 1 - Convocatòria de desembre de 2017"));
-		tramiteVersion.setDescripcion(desc1);
-
 		tramiteVersion.setAutenticado(true);
 		tramiteVersion.setNivelQAA(2);
 		tramiteVersion.setIdiomasSoportados("es,ca");
@@ -477,7 +470,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final TramitePasoDebeSaber paso1 = new TramitePasoDebeSaber();
 		paso1.setId(1L);
 		paso1.setCodigo("1");
-		paso1.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.debeSaber");
+		final Literal literal1 = new Literal();
+		literal1.add(new Traduccion("ca", "Debe saber"));
+		literal1.add(new Traduccion("es", "Debe saber"));
+		paso1.setDescripcion(literal1);
 		final Literal tradDebeSaber = new Literal();
 		tradDebeSaber.add(new Traduccion("ca", "<b>Debe saber - ca</b>"));
 		tradDebeSaber.add(new Traduccion("es", "<b>Debe saber - es</b>"));
@@ -486,22 +482,34 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final TramitePasoRellenar paso2 = new TramitePasoRellenar();
 		paso2.setId(2L);
 		paso2.setCodigo("2");
-		paso2.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.rellenar");
+		final Literal literal2 = new Literal();
+		literal2.add(new Traduccion("ca", "Rellenar"));
+		literal2.add(new Traduccion("es", "Rellenar"));
+		paso2.setDescripcion(literal2);
 		paso2.setOrden(2);
 		final TramitePasoAnexar paso3 = new TramitePasoAnexar();
 		paso3.setId(3L);
 		paso3.setCodigo("3");
-		paso3.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.anexarDocumentos");
+		final Literal literal3 = new Literal();
+		literal3.add(new Traduccion("ca", "anexar Documentos"));
+		literal3.add(new Traduccion("es", "anexar Documentos"));
+		paso3.setDescripcion(literal3);
 		paso3.setOrden(3);
 		final TramitePasoTasa paso4 = new TramitePasoTasa();
 		paso4.setId(4L);
 		paso4.setCodigo("4");
-		paso4.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.pagarTasas");
+		final Literal literal4 = new Literal();
+		literal4.add(new Traduccion("ca", "pagar Tasas"));
+		literal4.add(new Traduccion("es", "pagar Tasas"));
+		paso4.setDescripcion(literal4);
 		paso4.setOrden(4);
 		final TramitePaso paso5 = new TramitePaso();
 		paso5.setId(5L);
 		paso5.setCodigo("5");
-		paso5.setDescripcion("viewDefinicionVersion.indice.pasosTramitacion.registrarTramite");
+		final Literal literal5 = new Literal();
+		literal5.add(new Traduccion("ca", "registrar Tramite"));
+		literal5.add(new Traduccion("es", "registrar Tramite"));
+		paso5.setDescripcion(literal5);
 		paso5.setOrden(5);
 
 		final List<TramitePaso> listaPasos = new ArrayList<>();
@@ -780,11 +788,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		 * this.data.getFormulariosTramite().indexOf(this.formularioSeleccionado); if
 		 * (posicion <= 0) { UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 		 * UtilJSF.getLiteral("error.moverarriba")); return; }
-		 * 
+		 *
 		 * final Formulario formulario =
 		 * this.data.getFormulariosTramite().remove(posicion);
 		 * this.data.getFormulariosTramite().add(posicion - 1, formulario);
-		 * 
+		 *
 		 * for (int i = 0; i < this.data.getFormulariosTramite().size(); i++) {
 		 * this.data.getFormulariosTramite().get(i).setOrden(i + 1); }
 		 */
@@ -802,11 +810,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		 * (posicion >= this.data.getFormulariosTramite().size() - 1) {
 		 * UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 		 * UtilJSF.getLiteral("error.moverabajo")); return; }
-		 * 
+		 *
 		 * final Formulario formulario =
 		 * this.data.getFormulariosTramite().remove(posicion);
 		 * this.data.getFormulariosTramite().add(posicion + 1, formulario);
-		 * 
+		 *
 		 * for (int i = 0; i < this.data.getFormulariosTramite().size(); i++) {
 		 * this.data.getFormulariosTramite().get(i).setOrden(i + 1); }
 		 */

@@ -70,27 +70,27 @@
 			</p:dataTable>
 
 
-				<p:column>
+				<p:column rendered="#{dialogFuenteDatos.getPermiteEditar()}">
 						     	<p>
-						    		<p:commandButton id="btnNuevoDato" icon="fa fa-plus" actionListener="#{dialogFuenteDatos.nuevaFuenteDato()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnNuevoDato" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFuenteDatos.nuevaFuenteDato()}" process="@this" update="growlDialog">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogo}" update="growlDialog dataTableDatos"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-						    		<p:commandButton id="btnEditarDato" icon="fa fa-edit" actionListener="#{dialogFuenteDatos.editarFuenteDato()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnEditarDato" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuenteDatos.editarFuenteDato()}" process="@this" update="growlDialog">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogo}" update="growlDialog dataTableDatos"/>
 		        					</p:commandButton>
 		        				</p>
 						    	<p>
-						    		<p:commandButton id="btnEliminarDato" icon="fa fa-minus" actionListener="#{dialogFuenteDatos.quitarFuenteDato()}" process="@this" update="growlDialog dataTableDatos" />
+						    		<p:commandButton id="btnEliminarDato" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogFuenteDatos.quitarFuenteDato()}" process="@this" update="growlDialog dataTableDatos" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton id="btnUploadCSV" icon="fa fa-upload" actionListener="#{dialogFuenteDatos.importarCSV()}" process="@this" update="growlDialog dataTableDatos">
+						    		<p:commandButton id="btnUploadCSV" title="#{msg['botones.importarCSV']}" icon="fa fa-upload" actionListener="#{dialogFuenteDatos.importarCSV()}" process="@this" update="growlDialog dataTableDatos">
 						    			<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogoUpload}" update="growlDialog dataTableDatos"/>
 		        					</p:commandButton>
 						    	</p>
 						    	<p>
-						    		<p:commandButton ajax="false" icon="fa fa-download" >
+						    		<p:commandButton ajax="false" title="#{msg['botones.exportarCSV']}" icon="fa fa-download" >
 								        <p:fileDownload value="#{dialogFuenteDatos.exportarCSV()}" />
 								    </p:commandButton>
 						    	</p>
@@ -98,7 +98,7 @@
 
 			 </h:panelGrid>
 
-			<h:outputScript >
+			<h:outputScript>
 			      function rcEditarPropiedad() {
 			        document.getElementById("form:btnEditarPropiedad").click();
 			      }

@@ -13,26 +13,8 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class FuenteDatosValores extends ModelApi {
 
-	/** Codigo. */
-	private Long codigo;
-
 	/** Campos. **/
 	private List<FuenteFila> filas = new ArrayList<>();
-
-	/**
-	 * @return the codigo
-	 */
-	public Long getCodigo() {
-		return codigo;
-	}
-
-	/**
-	 * @param codigo
-	 *            the codigo to set
-	 */
-	public void setCodigo(final Long codigo) {
-		this.codigo = codigo;
-	}
 
 	/**
 	 * @return the filas

@@ -12,13 +12,6 @@
 
         <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
 
-            <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionPropiedades.descripcion']}" />
-            <p:outputPanel>
-           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramiteVersion.descripcion.getTraduccion(sessionBean.lang)}"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionPropiedades.editarDescripcion(viewDefinicionVersion.tramiteVersion.descripcion)}" styleClass="va-top"
-						process="@this" update="growl"/>
-       		</p:outputPanel>
-
             <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
 			<p:panelGrid styleClass="noBorders">
 				<p:row>

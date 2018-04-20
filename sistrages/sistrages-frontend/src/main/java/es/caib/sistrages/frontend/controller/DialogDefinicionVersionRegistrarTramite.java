@@ -1,15 +1,13 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -21,25 +19,42 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
  */
 @ManagedBean
 @ViewScoped
-public class ViewDefinicionVersionRegistrarTramite extends ViewControllerBase {
+public class DialogDefinicionVersionRegistrarTramite extends ViewControllerBase {
+
+	/** Id. **/
+	private String id;
 
 	/**
-	 * Crea una nueva instancia de ViewDefinicionVersionRegistrarTramite.
+	 * Init.
 	 */
-	public ViewDefinicionVersionRegistrarTramite() {
-		super();
+	public void init() {
+
+	}
+
+	/**
+	 * Guarda los datos y cierra el dialog.
+	 */
+	public void aceptar() {
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setResult(null);
+		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Cierra el dialog sin guardar.
+	 */
+	public void cancelar() {
+		final DialogResult result = new DialogResult();
+		result.setCanceled(true);
+		UtilJSF.closeDialog(result);
 	}
 
 	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 */
 	public void editar() {
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf("1")); // this.data.getId()
-		UtilJSF.openDialog(DialogDefinicionVersionRegistrarTramite.class, TypeModoAcceso.EDICION, params, true, 950,
-				400);
-
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 
 	/**
@@ -58,5 +73,20 @@ public class ViewDefinicionVersionRegistrarTramite extends ViewControllerBase {
 	 */
 	public void editarScript() {
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, null, true, 950, 700);
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final String id) {
+		this.id = id;
 	}
 }

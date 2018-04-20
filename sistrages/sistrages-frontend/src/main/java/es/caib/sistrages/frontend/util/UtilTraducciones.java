@@ -131,4 +131,13 @@ public final class UtilTraducciones {
 		idiomas.add(TypeIdioma.CASTELLANO.toString());
 		return idiomas;
 	}
+
+	/**
+	 * Obtiene los idiomas por defecto.
+	 *
+	 * @return
+	 */
+	public static String getIdiomasPorDefectoTramite() {
+		return TypeIdioma.CATALAN.toString() + "," + TypeIdioma.CASTELLANO.toString();
+	}
 }

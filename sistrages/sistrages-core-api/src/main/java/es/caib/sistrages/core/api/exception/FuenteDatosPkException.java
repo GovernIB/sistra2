@@ -9,22 +9,22 @@ import es.caib.sistrages.core.api.model.comun.ListaPropiedades;
  *
  */
 @SuppressWarnings("serial")
-public class CSVNoExisteCampoException extends ServiceRollbackException {
+public class FuenteDatosPkException extends ServiceRollbackException {
 
-	public CSVNoExisteCampoException(final String messageSNRE, final ListaPropiedades detallesSNRE) {
+	public FuenteDatosPkException(final String messageSNRE, final ListaPropiedades detallesSNRE) {
 		super(messageSNRE, detallesSNRE);
 	}
 
-	public CSVNoExisteCampoException(final String messageSNRE, final Throwable causeSNRE,
+	public FuenteDatosPkException(final String messageSNRE, final Throwable causeSNRE,
 			final ListaPropiedades detallesSNRE) {
 		super(messageSNRE, causeSNRE, detallesSNRE);
 	}
 
-	public CSVNoExisteCampoException(final String messageSNRE, final Throwable causeSNRE) {
+	public FuenteDatosPkException(final String messageSNRE, final Throwable causeSNRE) {
 		super(messageSNRE, causeSNRE);
 	}
 
-	public CSVNoExisteCampoException(final String messageSNRE) {
+	public FuenteDatosPkException(final String messageSNRE) {
 		super(messageSNRE);
 	}
 

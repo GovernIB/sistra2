@@ -27,9 +27,6 @@ public class JSeccionFormulario implements IModelApi {
 	@JoinColumn(name = "FSE_CODIGO")
 	private JElementoFormulario elementoFormulario;
 
-	@Column(name = "FSE_ORDEN", nullable = false, precision = 2, scale = 0)
-	private int orden;
-
 	@Column(name = "FSE_LETRA", length = 2)
 	private String letra;
 
@@ -50,14 +47,6 @@ public class JSeccionFormulario implements IModelApi {
 
 	public void setElementoFormulario(final JElementoFormulario elementoFormulario) {
 		this.elementoFormulario = elementoFormulario;
-	}
-
-	public int getOrden() {
-		return this.orden;
-	}
-
-	public void setOrden(final int orden) {
-		this.orden = orden;
 	}
 
 	public String getLetra() {

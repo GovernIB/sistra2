@@ -14,7 +14,7 @@
 		</p:outputPanel>
 
 		<p:dataTable id="dataTable" var="pasos" styleClass="hide-table-header"
-			value="#{viewDefinicionVersion.listaPasos}" rows="10"
+			value="#{viewDefinicionVersion.tramiteVersion.listaPasos}" rows="10"
 			scrollable="true" paginator="false" rowKey="#{pasos.id}"
 			dblClickSelect="true">
 
@@ -25,7 +25,7 @@
 
 
 			<p:column styleClass="grid-center">
-				<h:outputText value="#{msg[pasos.descripcion]}" />
+				<h:outputText value="#{pasos.descripcion.getTraduccion(sessionBean.lang)}" />
 			</p:column>
 
 		</p:dataTable>

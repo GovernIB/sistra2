@@ -6,6 +6,8 @@
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
+		<f:viewParam name="ID" value="#{viewTramitesVersion.id}"/>
+		<f:viewParam name="AREA" value="#{viewTramitesVersion.idArea}"/>
 		<f:viewAction action="#{viewTramitesVersion.init}" />
 	</f:metadata>
 
@@ -23,7 +25,7 @@
 			<p:toolbar id="toolbar">
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5px">
+		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramitesVersion.filtro}"/>
 	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramitesVersion.filtrar()}" process="panelFiltro" update="growl dataTable" />
 	           		</h:panelGrid>
@@ -79,10 +81,6 @@
 
 			   <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
 			     <h:outputText value="#{msg['typeFlujo.'.concat(td.tipoFlujo)]}" />
-			    </p:column>
-
-			    <p:column headerText="#{msg['viewTramitesVersion.headerDescripcion']}">
-			        <h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
 			    </p:column>
 
  				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}">

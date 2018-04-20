@@ -2,8 +2,6 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
-import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
-import es.caib.sistrages.core.api.exception.CSVPkException;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -51,6 +49,8 @@ public interface FuenteDatoDao {
 
 	boolean isCorrectoPK(FuenteFila fuenteFila, Long idFuenteDato);
 
-	void importarCSV(Long idFuenteDatos, CsvDocumento csv) throws CSVNoExisteCampoException, CSVPkException;
+	void importarCSV(Long idFuenteDatos, CsvDocumento csv);
+
+	FuenteDatos getByIdentificador(String idFuenteDato);
 
 }

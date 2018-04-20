@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistrages.core.api.exception.CSVNoExisteCampoException;
-import es.caib.sistrages.core.api.exception.CSVPkException;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
@@ -113,6 +111,7 @@ public class DominioServiceImpl implements DominioService {
 	 * sistrages.core.api.model.Dominio)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void updateDominio(final Dominio dominio) {
 		dominioDao.updateDominio(dominio);
 	}
@@ -125,6 +124,7 @@ public class DominioServiceImpl implements DominioService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public FuenteDatos loadFuenteDato(final Long idFuenteDato) {
 		return fuenteDatoDao.getById(idFuenteDato);
 	}
@@ -137,6 +137,7 @@ public class DominioServiceImpl implements DominioService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public FuenteDatosValores loadFuenteDatoValores(final Long idFuenteDato) {
 		return fuenteDatoDao.getValoresById(idFuenteDato);
 	}
@@ -148,6 +149,7 @@ public class DominioServiceImpl implements DominioService {
 	 * sistrages.core.api.model.FuenteDatos, java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void addFuenteDato(final FuenteDatos fuenteDato, final Long id) {
 		fuenteDatoDao.add(fuenteDato, id);
 	}
@@ -160,6 +162,7 @@ public class DominioServiceImpl implements DominioService {
 	 * sistrages.core.api.model.FuenteDatos)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void updateFuenteDato(final FuenteDatos fuenteDato) {
 		fuenteDatoDao.updateFuenteDato(fuenteDato);
 	}
@@ -172,6 +175,7 @@ public class DominioServiceImpl implements DominioService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public boolean removeFuenteDato(final Long idFuenteDato) {
 		boolean borrar;
 		if (!dominioDao.getAllByFuenteDatos(idFuenteDato).isEmpty()) {
@@ -191,6 +195,7 @@ public class DominioServiceImpl implements DominioService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void addFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo, final Long idFuente) {
 		fuenteDatoDao.addFuenteDatoCampo(fuenteDatoCampo, idFuente);
 	}
@@ -203,6 +208,7 @@ public class DominioServiceImpl implements DominioService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void updateFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo) {
 		fuenteDatoDao.updateFuenteDatoCampo(fuenteDatoCampo);
 	}
@@ -215,6 +221,7 @@ public class DominioServiceImpl implements DominioService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void removeFuenteDatoCampo(final Long idFuenteDatoCampo) {
 		fuenteDatoDao.removeFuenteDatoCampo(idFuenteDatoCampo);
 	}
@@ -227,39 +234,51 @@ public class DominioServiceImpl implements DominioService {
 	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
 	 */
 	@Override
+	@NegocioInterceptor
 	public List<FuenteDatos> listFuenteDato(final TypeAmbito ambito, final Long id, final String filtro) {
 		return fuenteDatoDao.getAllByFiltro(ambito, id, filtro);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public FuenteFila loadFuenteDatoFila(final Long idFuenteDatoFila) {
 		return fuenteDatoDao.loadFuenteDatoFila(idFuenteDatoFila);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void addFuenteDatoFila(final FuenteFila fila, final Long idFuente) {
 		fuenteDatoDao.addFuenteDatoFila(fila, idFuente);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void updateFuenteDatoFila(final FuenteFila fila) {
 		fuenteDatoDao.updateFuenteDatoFila(fila);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void removeFuenteFila(final Long idFila) {
 		fuenteDatoDao.removeFuenteFila(idFila);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public boolean isCorrectoPK(final FuenteFila fuenteFila, final Long idFuenteDato) {
 		return fuenteDatoDao.isCorrectoPK(fuenteFila, idFuenteDato);
 	}
 
 	@Override
-	public void importarCSV(final Long idFuenteDatos, final CsvDocumento csv)
-			throws CSVNoExisteCampoException, CSVPkException {
+	@NegocioInterceptor
+	public void importarCSV(final Long idFuenteDatos, final CsvDocumento csv) {
 		fuenteDatoDao.importarCSV(idFuenteDatos, csv);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public FuenteDatos loadFuenteDato(final String idFuenteDato) {
+		return fuenteDatoDao.getByIdentificador(idFuenteDato);
 	}
 
 }

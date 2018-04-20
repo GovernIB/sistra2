@@ -29,7 +29,7 @@ public class TramitePaso extends ModelApi {
 	 * Descripción del paso de tramitación. En flujo normalizado será establecido
 	 * automáticamente.
 	 */
-	private String descripcion;
+	private Literal descripcion;
 
 	/** Orden paso. **/
 	private int orden;
@@ -116,7 +116,7 @@ public class TramitePaso extends ModelApi {
 	/**
 	 * @return the descripcion
 	 */
-	public String getDescripcion() {
+	public Literal getDescripcion() {
 		return descripcion;
 	}
 
@@ -124,7 +124,7 @@ public class TramitePaso extends ModelApi {
 	 * @param descripcion
 	 *            the descripcion to set
 	 */
-	public void setDescripcion(final String descripcion) {
+	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 

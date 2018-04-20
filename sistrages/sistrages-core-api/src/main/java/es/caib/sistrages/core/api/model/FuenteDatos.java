@@ -145,7 +145,6 @@ public class FuenteDatos extends ModelApi {
 	 * @param fuenteDatosCampo
 	 */
 	public void addCampo(final FuenteDatosCampo fuenteDatosCampo) {
-		fuenteDatosCampo.setFuenteDatos(this);
 		this.campos.add(fuenteDatosCampo);
 	}
 
