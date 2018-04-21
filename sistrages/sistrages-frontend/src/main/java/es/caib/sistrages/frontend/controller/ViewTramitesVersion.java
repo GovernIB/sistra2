@@ -67,7 +67,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		this.filtrar();
 
 		final Tramite tramite = tramiteService.getTramite(Long.valueOf(id));
-		final Area area = tramiteService.getArea(Long.valueOf(id));
+		final Area area = tramiteService.getArea(Long.valueOf(idArea));
 
 		/* inicializa breadcrum */
 		breadCrumb = new DefaultMenuModel();
@@ -103,12 +103,14 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	 */
 	public void editar() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
-
+		/*
+		 * if (!verificarFilaSeleccionada()) return;
+		 */
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getId().toString()));
+		// params.put(TypeParametroVentana.ID.toString(),
+		// Arrays.asList(datoSeleccionado.getId().toString()));
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList("1"));
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
 
