@@ -9,13 +9,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
+import es.caib.sistrages.core.service.repository.dao.DominioDao;
+import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
+import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
 @Service
 @Transactional
@@ -28,6 +36,17 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Autowired
 	TramiteDao tramiteDao;
+
+	@Autowired
+	TramitePasoDao tramitePasoDao;
+
+	/** DAO Dominios. */
+	@Autowired
+	DominioDao dominiosDao;
+
+	/** DAO Fuente Datos. */
+	@Autowired
+	FuenteDatoDao fuenteDatoDao;
 
 	@Autowired
 	AreaComponent areaComponent;
@@ -79,6 +98,17 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public boolean removeArea(final Long id) {
+
+		// Verifica dependencias
+		if (!tramiteDao.getAll(id).isEmpty()) {
+			return false;
+		}
+
+		// Borrado en cascada: dominios y formateadores
+		dominiosDao.removeByArea(id);
+		fuenteDatoDao.removeByArea(id);
+
+		// Borramos area
 		areaDataDao.remove(id);
 		return true;
 	}
@@ -103,6 +133,7 @@ public class TramiteServiceImpl implements TramiteService {
 	 * java.lang.String)
 	 */
 	@Override
+	@NegocioInterceptor
 	public List<Tramite> listTramite(final Long idArea, final String pFiltro) {
 		return tramiteDao.getAllByFiltro(idArea, pFiltro);
 	}
@@ -114,6 +145,7 @@ public class TramiteServiceImpl implements TramiteService {
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramite(java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public Tramite getTramite(final Long id) {
 		return tramiteDao.getById(id);
 	}
@@ -126,6 +158,7 @@ public class TramiteServiceImpl implements TramiteService {
 	 * es.caib.sistrages.core.api.model.Tramite)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void addTramite(final Long idArea, final Tramite pTramite) {
 		tramiteDao.add(idArea, pTramite);
 
@@ -139,6 +172,7 @@ public class TramiteServiceImpl implements TramiteService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public boolean removeTramite(final Long id) {
 		tramiteDao.remove(id);
 		return true;
@@ -151,6 +185,7 @@ public class TramiteServiceImpl implements TramiteService {
 	 * sistrages.core.api.model.Tramite)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void updateTramite(final Tramite pTramite) {
 		tramiteDao.update(pTramite);
 
@@ -164,13 +199,90 @@ public class TramiteServiceImpl implements TramiteService {
 	 * idTramite)
 	 */
 	@Override
+	@NegocioInterceptor
 	public List<TramiteVersion> listTramiteVersion(final Long idTramite, final String filtro) {
 		return tramiteDao.getTramitesVersion(idTramite, filtro);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
 		tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void updateTramiteVersion(final TramiteVersion tramiteVersion, final boolean borrarScriptPI,
+			final Script scriptParamsIniciales, final boolean borrarScriptPersonalizacion,
+			final Script scriptPersonalizacion) {
+		tramiteDao.updateTramiteVersion(tramiteVersion, borrarScriptPI, scriptParamsIniciales,
+				borrarScriptPersonalizacion, scriptPersonalizacion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removeTramiteVersion(final Long idTramiteVersion) {
+		tramiteDao.removeTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TramiteVersion getTramiteVersion(final Long idTramiteVersion) {
+		return tramiteDao.getTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<TramiteTipo> listTipoTramitePaso() {
+		return tramiteDao.listTipoTramitePaso();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Area getAreaTramite(final Long idTramite) {
+		return tramiteDao.getAreaTramite(idTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<TramitePaso> getTramitePasos(final Long idTramiteVersion) {
+		return tramitePasoDao.getTramitePasos(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void changeAreaTramite(final Long idArea, final Long idTramite) {
+		tramiteDao.changeAreaTramite(idArea, idTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Dominio> getTramiteDominios(final Long idTramiteVersion) {
+		return tramiteDao.getTramiteDominios(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removeFormulario(final Long idTramitePaso, final Long idFormulario) {
+		tramitePasoDao.removeFormulario(idTramitePaso, idFormulario);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void updateTramitePaso(final TramitePaso tramitePasoRellenar) {
+		tramitePasoDao.updateTramitePaso(tramitePasoRellenar);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TramitePaso getTramitePaso(final Long idTramitePaso) {
+		return tramitePasoDao.getTramitePaso(idTramitePaso);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public FormularioTramite getFormulario(final Long idFormularioTramite) {
+		return tramitePasoDao.getFormulario(idFormularioTramite);
 	}
 
 }

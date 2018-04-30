@@ -20,12 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistrages.core.api.exception.FicheroExternoException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.types.TypePropiedadGlobal;
-import es.caib.sistrages.core.api.util.GeneradorId;
 import es.caib.sistrages.core.service.repository.model.JConfiguracionGlobal;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFicheroExterno;

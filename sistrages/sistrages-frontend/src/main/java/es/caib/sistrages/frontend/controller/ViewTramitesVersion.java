@@ -17,6 +17,9 @@ import org.primefaces.model.menu.MenuModel;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -34,15 +37,16 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewTramitesVersion extends ViewControllerBase {
 
+	/** Security service. */
+	@Inject
+	private SecurityService securityService;
+
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
 
 	/** Id del trámite. **/
 	private String id;
-
-	/** Id del area. **/
-	private String idArea;
 
 	/** Breadcrumb. **/
 	private MenuModel breadCrumb;
@@ -56,6 +60,15 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private TramiteVersion datoSeleccionado;
 
+	/** Indica si puede realizar el alta/baja. **/
+	private boolean permiteAlta = false;
+
+	/** Indica si puede realizar la modificación. **/
+	private boolean permiteModificacion = false;
+
+	/** Indica si puede consultar. **/
+	private boolean permiteConsulta = false;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -64,10 +77,15 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
+		// Preparamos permisos
+		checkPermiteAlta();
+		checkPermiteEditar();
+		checkPermiteConsulta();
+
 		this.filtrar();
 
 		final Tramite tramite = tramiteService.getTramite(Long.valueOf(id));
-		final Area area = tramiteService.getArea(Long.valueOf(idArea));
+		final Area area = tramiteService.getAreaTramite(Long.valueOf(id));
 
 		/* inicializa breadcrum */
 		breadCrumb = new DefaultMenuModel();
@@ -83,6 +101,8 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		breadCrumb.addElement(item);
 
 		breadCrumb.generateUniqueIds();
+
+		checkPermiteAlta();
 
 	}
 
@@ -109,9 +129,25 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
 		// params.put(TypeParametroVentana.ID.toString(),
-		// Arrays.asList(datoSeleccionado.getId().toString()));
-		params.put(TypeParametroVentana.ID.toString(), Arrays.asList("1"));
+
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getId().toString()));
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
+		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
+
+	}
+
+	/**
+	 * Abre dialogo para editar dato.
+	 */
+	public void consultar() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, List<String>> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getId().toString()));
+		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.CONSULTA.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
 
 	}
@@ -172,8 +208,9 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
+
 		// Eliminamos
-		listaDatos.remove(this.datoSeleccionado);
+		this.tramiteService.removeTramiteVersion(this.datoSeleccionado.getId());
 
 		// Refrescamos datos
 		this.filtrar();
@@ -190,17 +227,51 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Verifica si hay fila seleccionada.
+	 * Obtiene el valor de permiteAlta.
 	 *
-	 * @return
+	 * @return el valor de permiteAlta
 	 */
-	private boolean verificarFilaSeleccionada() {
-		boolean filaSeleccionada = true;
-		if (this.datoSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
-			filaSeleccionada = false;
+	public void checkPermiteAlta() {
+		this.setPermiteAlta(false);
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+			this.setPermiteAlta(true);
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+
+			this.setPermiteAlta(permisos.contains(TypeRolePermisos.ALTA_BAJA));
 		}
-		return filaSeleccionada;
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public void checkPermiteEditar() {
+		this.setPermiteModificacion(false);
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+
+			this.setPermiteModificacion(true);
+
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+			this.setPermiteModificacion(
+					permisos.contains(TypeRolePermisos.MODIFICACION) || permisos.contains(TypeRolePermisos.ALTA_BAJA));
+
+		}
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public void checkPermiteConsulta() {
+		this.setPermiteConsulta(!this.permiteAlta && !this.permiteModificacion);
 	}
 
 	/**
@@ -230,6 +301,22 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		}
 	}
 
+	// ------- FUNCIONES PRIVADAS ------------------------------
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarFilaSeleccionada() {
+		boolean filaSeleccionada = true;
+		if (this.datoSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	// ------- GETTERS / SETTERS --------------------------------
 	/**
 	 * @return the filtro
 	 */
@@ -306,18 +393,47 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @return the idArea
+	 * @return the permiteAlta
 	 */
-	public String getIdArea() {
-		return idArea;
+	public boolean isPermiteAlta() {
+		return permiteAlta;
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param permiteAlta
+	 *            the permiteAlta to set
 	 */
-	public void setIdArea(final String idArea) {
-		this.idArea = idArea;
+	public void setPermiteAlta(final boolean permiteAlta) {
+		this.permiteAlta = permiteAlta;
 	}
 
+	/**
+	 * @return the permiteModificacion
+	 */
+	public boolean isPermiteModificacion() {
+		return permiteModificacion;
+	}
+
+	/**
+	 * @return the permiteConsulta
+	 */
+	public boolean isPermiteConsulta() {
+		return permiteConsulta;
+	}
+
+	/**
+	 * @param permiteModificacion
+	 *            the permiteModificacion to set
+	 */
+	public void setPermiteModificacion(final boolean permiteModificacion) {
+		this.permiteModificacion = permiteModificacion;
+	}
+
+	/**
+	 * @param permiteConsulta
+	 *            the permiteConsulta to set
+	 */
+	public void setPermiteConsulta(final boolean permiteConsulta) {
+		this.permiteConsulta = permiteConsulta;
+	}
 }

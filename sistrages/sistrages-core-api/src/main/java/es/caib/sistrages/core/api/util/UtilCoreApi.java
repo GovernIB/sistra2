@@ -10,6 +10,8 @@ import java.util.Arrays;
 import es.caib.sistrages.core.api.exception.CloneModelException;
 import es.caib.sistrages.core.api.model.ModelApi;
 
+// TODO Sacar a lib comun
+
 /**
  * Utilidades.
  *
@@ -79,7 +81,7 @@ public final class UtilCoreApi {
 
 			return Arrays.equals(baos1.toByteArray(), baos2.toByteArray());
 		} catch (final IOException e) {
-			throw new RuntimeException(e);
+			throw new CloneModelException(e);
 		}
 	}
 

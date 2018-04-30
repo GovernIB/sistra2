@@ -1,8 +1,11 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +17,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.PaginaFormulario;
 
 /**
  * JFormulario
@@ -34,11 +40,11 @@ public class JFormulario implements IModelApi {
 	@JoinColumn(name = "FOR_CABLOG")
 	private JFichero logoCabecera;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FOR_SCRPLT")
 	private JScript scriptPlantilla;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FOR_CABTXT")
 	private JLiteral textoCabecera;
 
@@ -48,19 +54,14 @@ public class JFormulario implements IModelApi {
 	@Column(name = "FOR_CABFOR", nullable = false, precision = 1, scale = 0)
 	private boolean cabeceraFormulario;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario")
-	private Set<JPlantillaFormulario> plantillas = new HashSet<JPlantillaFormulario>(0);
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = { CascadeType.ALL })
 	private Set<JPaginaFormulario> paginas = new HashSet<JPaginaFormulario>(0);
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario")
-	private Set<JFormularioTramite> tramites = new HashSet<JFormularioTramite>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario")
 	private Set<JAccionPersonalizada> accionesPersonalizadas = new HashSet<JAccionPersonalizada>(0);
 
 	public JFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -111,14 +112,6 @@ public class JFormulario implements IModelApi {
 		this.cabeceraFormulario = cabeceraFormulario;
 	}
 
-	public Set<JPlantillaFormulario> getPlantillas() {
-		return this.plantillas;
-	}
-
-	public void setPlantillas(final Set<JPlantillaFormulario> plantillas) {
-		this.plantillas = plantillas;
-	}
-
 	public Set<JPaginaFormulario> getPaginas() {
 		return this.paginas;
 	}
@@ -127,20 +120,94 @@ public class JFormulario implements IModelApi {
 		this.paginas = paginas;
 	}
 
-	public Set<JFormularioTramite> getTramites() {
-		return this.tramites;
-	}
-
-	public void setTramites(final Set<JFormularioTramite> tramites) {
-		this.tramites = tramites;
-	}
-
 	public Set<JAccionPersonalizada> getAccionesPersonalizadas() {
 		return this.accionesPersonalizadas;
 	}
 
 	public void setAccionesPersonalizadas(final Set<JAccionPersonalizada> accionesPersonalizadas) {
 		this.accionesPersonalizadas = accionesPersonalizadas;
+	}
+
+	public FormularioInterno toModel() {
+		final FormularioInterno formulario = new FormularioInterno();
+		formulario.setId(codigo);
+		formulario.setPermitirAccionesPersonalizadas(permitirAccionesPersonalizadas);
+		if (scriptPlantilla != null) {
+			formulario.setScriptPlantilla(scriptPlantilla.toModel());
+		}
+		formulario.setCabeceraFormulario(cabeceraFormulario);
+		if (textoCabecera != null) {
+			formulario.setTextoCabecera(textoCabecera.toModel());
+		}
+
+		return formulario;
+	}
+
+	public static JFormulario fromModel(final FormularioInterno model) {
+		JFormulario jModel = null;
+		if (model != null) {
+			jModel = new JFormulario();
+			jModel.setCodigo(model.getId());
+			jModel.setPermitirAccionesPersonalizadas(model.isPermitirAccionesPersonalizadas());
+			jModel.setScriptPlantilla(JScript.fromModel(model.getScriptPlantilla()));
+			jModel.setCabeceraFormulario(model.isCabeceraFormulario());
+			jModel.setTextoCabecera(JLiteral.fromModel(model.getTextoCabecera()));
+		}
+		return jModel;
+	}
+
+	public static JFormulario mergePaginasModel(final JFormulario jFormulario, final FormularioInterno pFormInt) {
+		JFormulario jModel = null;
+
+		if (jFormulario != null && !jFormulario.getPaginas().isEmpty() && pFormInt != null
+				&& !pFormInt.getPaginas().isEmpty()) {
+			// Borrar paginas no pasados en modelo
+			final List<JPaginaFormulario> borrar = new ArrayList<JPaginaFormulario>();
+			final List<Long> listPaginas = new ArrayList<>();
+
+			for (final PaginaFormulario pag : pFormInt.getPaginas()) {
+				if (pag.getId() != null) {
+					listPaginas.add(pag.getId());
+				}
+			}
+
+			for (final JPaginaFormulario jPag : jFormulario.getPaginas()) {
+				if (!listPaginas.contains(jPag.getCodigo())) {
+					borrar.add(jPag);
+				}
+			}
+
+			for (final JPaginaFormulario jPag : borrar) {
+				jFormulario.getPaginas().remove(jPag);
+				jPag.setFormulario(null);
+			}
+
+			// Actualizamos pagina pasados en modelo
+			int orden = 0;
+			for (final PaginaFormulario pag : pFormInt.getPaginas()) {
+				orden++;
+
+				if (pag.getId() == null) {
+					final JPaginaFormulario jPagina = JPaginaFormulario.fromModel(pag);
+					jPagina.setCodigo(pag.getId());
+					jPagina.setOrden(orden);
+					jPagina.setFormulario(jFormulario);
+					jFormulario.getPaginas().add(jPagina);
+				} else {
+					for (final JPaginaFormulario jPagForm : jFormulario.getPaginas()) {
+						if (jPagForm.getCodigo().equals(pag.getId())) {
+							jPagForm.setOrden(orden);
+							break;
+						}
+					}
+				}
+
+			}
+
+			jModel = jFormulario;
+		}
+
+		return jModel;
 	}
 
 }

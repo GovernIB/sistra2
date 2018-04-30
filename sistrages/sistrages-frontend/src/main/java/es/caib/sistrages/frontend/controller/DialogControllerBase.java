@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
  * Clase de las que heredan los Dialog.
@@ -79,6 +81,13 @@ public abstract class DialogControllerBase {
 	 */
 	public void setModoAcceso(final String modoAcceso) {
 		this.modoAcceso = modoAcceso;
+	}
+
+	/**
+	 * Ayudar.
+	 */
+	public void ayudar() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Ayuda");
 	}
 
 }

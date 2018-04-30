@@ -30,7 +30,7 @@ public class JElementoFormulario implements IModelApi {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FEL_CODFLS", nullable = false)
-	private JLineaSeccionFormulario lineaSeccionFormulario;
+	private JLineaFormulario lineaSeccionFormulario;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FEL_AYUDA")
@@ -90,11 +90,11 @@ public class JElementoFormulario implements IModelApi {
 		this.codigo = codigo;
 	}
 
-	public JLineaSeccionFormulario getLineaSeccionFormulario() {
+	public JLineaFormulario getLineaSeccionFormulario() {
 		return this.lineaSeccionFormulario;
 	}
 
-	public void setLineaSeccionFormulario(final JLineaSeccionFormulario lineaSeccionFormulario) {
+	public void setLineaSeccionFormulario(final JLineaFormulario lineaSeccionFormulario) {
 		this.lineaSeccionFormulario = lineaSeccionFormulario;
 	}
 

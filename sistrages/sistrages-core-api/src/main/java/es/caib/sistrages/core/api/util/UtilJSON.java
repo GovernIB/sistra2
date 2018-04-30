@@ -9,8 +9,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.exception.JsonException;
+
+
+// TODO Mirar de pasar a lib comun (sacar excepcion checked propia o runtime)
 
 /**
+ * Utilidades conversion JSON.
  *
  * @author Indra
  *
@@ -86,7 +91,7 @@ public class UtilJSON {
 			}
 			return res;
 		} catch (final IOException e) {
-			throw new FrontException("Excepcion convirtiendo desde JSON", e);
+			throw new JsonException(e);
 		}
 	}
 

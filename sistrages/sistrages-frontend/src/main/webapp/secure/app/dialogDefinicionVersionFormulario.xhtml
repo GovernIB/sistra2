@@ -103,12 +103,12 @@
          	</p:panelGrid>
 
          	<p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario']}" />
-			<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script()}" value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario.consultardisenyo']}"
+			<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.editarDisenyo}" value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario.consultardisenyo']}"
 							process="@this" update="growl"/>
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
-					<p:commandButton id="btnEditar" value="#{msg['botones.aceptar']}" styleClass="boton-azul"
+					<p:commandButton id="btnEditar" value="#{msg['botones.guardar']}" styleClass="boton-azul"
 						actionListener="#{dialogDefinicionVersionFormulario.aceptar()}"
 						process="@this" update="growl" />
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionFormulario.cancelar()}" process="@this"/>

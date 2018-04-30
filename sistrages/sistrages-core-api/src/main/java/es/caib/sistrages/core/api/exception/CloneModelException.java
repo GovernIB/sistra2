@@ -10,11 +10,6 @@ package es.caib.sistrages.core.api.exception;
 @SuppressWarnings("serial")
 public final class CloneModelException extends ServiceRollbackException {
 
-	@Override
-	public boolean isNegocioException() {
-		return false;
-	}
-
 	/**
 	 * Constructor ErrorNoControladoException.
 	 *

@@ -13,10 +13,19 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
+import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.service.repository.model.JArea;
+import es.caib.sistrages.core.service.repository.model.JDominio;
+import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
+import es.caib.sistrages.core.service.repository.model.JScript;
+import es.caib.sistrages.core.service.repository.model.JTipoPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
@@ -25,6 +34,11 @@ import es.caib.sistrages.core.service.repository.model.JVersionTramite;
  */
 @Repository("tramiteDao")
 public class TramiteDaoImpl implements TramiteDao {
+
+	/** Literal. no existe el tramite. **/
+	private static final String STRING_NO_EXISTE_TRAMITE = "No existe el tramite: ";
+	/** Literal. falta el tramite. **/
+	private static final String STRING_FALTA_TRAMITE = "Falta el tramite";
 
 	/**
 	 * entity manager.
@@ -57,7 +71,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final JTramite jTramite = entityManager.find(JTramite.class, id);
 
 		if (jTramite == null) {
-			throw new NoExisteDato("No existe el tramite: " + id);
+			throw new NoExisteDato(STRING_NO_EXISTE_TRAMITE + id);
 		} else {
 			tramite = jTramite.toModel();
 		}
@@ -103,7 +117,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		if (pTramite == null) {
-			throw new FaltanDatosException("Falta el tramite");
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
 		}
 
 		final JArea jArea = entityManager.find(JArea.class, idArea);
@@ -127,7 +141,7 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		final JTramite jTramite = entityManager.find(JTramite.class, id);
 		if (jTramite == null) {
-			throw new NoExisteDato("No existe el tramite: " + id);
+			throw new NoExisteDato(STRING_NO_EXISTE_TRAMITE + id);
 		}
 		entityManager.remove(jTramite);
 	}
@@ -141,11 +155,11 @@ public class TramiteDaoImpl implements TramiteDao {
 	@Override
 	public void update(final Tramite pTramite) {
 		if (pTramite == null) {
-			throw new FaltanDatosException("Falta el tramite");
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
 		}
 		final JTramite jTramite = entityManager.find(JTramite.class, pTramite.getId());
 		if (jTramite == null) {
-			throw new NoExisteDato("No existe el tramite: " + pTramite.getId());
+			throw new NoExisteDato(STRING_NO_EXISTE_TRAMITE + pTramite.getId());
 		}
 
 		// Mergeamos datos
@@ -208,6 +222,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idTramite", idTramite);
 
+		@SuppressWarnings("unchecked")
 		final List<JVersionTramite> results = query.getResultList();
 
 		if (results != null && !results.isEmpty()) {
@@ -238,7 +253,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
 
 		if (idTramite == null) {
-			throw new FaltanDatosException("Falta el tramite");
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
 		}
 
 		final JTramite jTramite = entityManager.find(JTramite.class, Long.valueOf(idTramite));
@@ -246,5 +261,125 @@ public class TramiteDaoImpl implements TramiteDao {
 		jTramiteVersion.fromModel(tramiteVersion);
 		jTramiteVersion.setTramite(jTramite);
 		entityManager.persist(jTramiteVersion);
+		entityManager.flush();
+
+		if (tramiteVersion.getListaPasos() != null) {
+			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
+				final JPasoTramitacion jpaso = new JPasoTramitacion();
+				jpaso.fromModel(paso);
+				jpaso.setVersionTramite(jTramiteVersion);
+				entityManager.persist(jpaso);
+			}
+		}
+
 	}
+
+	@Override
+	public void updateTramiteVersion(final TramiteVersion tramiteVersion, final boolean borrarScriptPI,
+			final Script scriptParamsIniciales, final boolean borrarScriptPersonalizacion,
+			final Script scriptPersonalizacion) {
+		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, tramiteVersion.getId());
+		jTramiteVersion.fromModel(tramiteVersion);
+
+		if (borrarScriptPI) {
+			jTramiteVersion.setScriptInicializacionTramite(null);
+		} else {
+			if (scriptParamsIniciales != null) {
+				JScript script = JScript.fromModel(scriptParamsIniciales);
+				script = entityManager.merge(script);
+				jTramiteVersion.setScriptInicializacionTramite(script);
+			}
+		}
+
+		if (borrarScriptPersonalizacion) {
+			jTramiteVersion.setScriptPersonalizacion(null);
+		} else {
+			if (scriptPersonalizacion != null) {
+				JScript script = JScript.fromModel(scriptPersonalizacion);
+				script = entityManager.merge(script);
+				jTramiteVersion.setScriptPersonalizacion(script);
+			}
+		}
+
+		entityManager.merge(jTramiteVersion);
+	}
+
+	@Override
+	public void removeTramiteVersion(final Long idTramiteVersion) {
+		// Borramos filas de datos de la fuente de datos
+		final String sqlValores = "delete from JPasoTramitacion as t where t.versionTramite.id = :idTramiteVersion)";
+		final Query queryValores = entityManager.createQuery(sqlValores);
+		queryValores.setParameter("idTramiteVersion", idTramiteVersion);
+		queryValores.executeUpdate();
+
+		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
+		entityManager.remove(jTramiteVersion);
+	}
+
+	@Override
+	public TramiteVersion getTramiteVersion(final Long idTramiteVersion) {
+		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class,
+				Long.valueOf(idTramiteVersion));
+		return jTramiteVersion.toModel();
+	}
+
+	@Override
+	public List<TramiteTipo> listTipoTramitePaso() {
+		final String sql = "Select t From JTipoPasoTramitacion t order by t.orden asc";
+
+		final Query query = entityManager.createQuery(sql);
+
+		@SuppressWarnings("unchecked")
+		final List<JTipoPasoTramitacion> results = query.getResultList();
+
+		final List<TramiteTipo> resultado = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JTipoPasoTramitacion> iterator = results.iterator(); iterator.hasNext();) {
+				final JTipoPasoTramitacion jTramiteVersion = iterator.next();
+				resultado.add(jTramiteVersion.toModel());
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public Area getAreaTramite(final Long idTramite) {
+		Area area = null;
+		final JTramite jTramite = entityManager.find(JTramite.class, Long.valueOf(idTramite));
+		if (jTramite != null) {
+			area = jTramite.getArea().toModel();
+		}
+		return area;
+	}
+
+	@Override
+	public void changeAreaTramite(final Long idArea, final Long idTramite) {
+		final JArea jArea = entityManager.find(JArea.class, idArea);
+		final JTramite jTramite = entityManager.find(JTramite.class, idTramite);
+		jTramite.setArea(jArea);
+		entityManager.merge(jTramite);
+	}
+
+	@Override
+	public List<Dominio> getTramiteDominios(final Long idTramiteVersion) {
+		final String sql = "Select d From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JDominio> results = query.getResultList();
+
+		final List<Dominio> resultado = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JDominio> iterator = results.iterator(); iterator.hasNext();) {
+				final JDominio jdominio = iterator.next();
+				resultado.add(jdominio.toModel());
+			}
+		}
+
+		return resultado;
+	}
+
 }

@@ -1,14 +1,15 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.sql.Clob;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.Script;
 
 /**
  * JScript
@@ -25,10 +26,12 @@ public class JScript implements IModelApi {
 	@Column(name = "SCR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	@Lob
 	@Column(name = "SCR_SCRIPT")
-	private Clob script;
+	private String script;
 
 	public JScript() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -39,12 +42,29 @@ public class JScript implements IModelApi {
 		this.codigo = codigo;
 	}
 
-	public Clob getScript() {
+	public String getScript() {
 		return this.script;
 	}
 
-	public void setScript(final Clob script) {
+	public void setScript(final String script) {
 		this.script = script;
+	}
+
+	public static JScript fromModel(final Script model) {
+		JScript jModel = null;
+		if (model != null) {
+			jModel = new JScript();
+			jModel.setCodigo(model.getId());
+			jModel.setScript(model.getContenido());
+		}
+		return jModel;
+	}
+
+	public Script toModel() {
+		final Script mScript = new Script();
+		mScript.setId(this.getCodigo());
+		mScript.setContenido(this.getScript());
+		return mScript;
 	}
 
 }

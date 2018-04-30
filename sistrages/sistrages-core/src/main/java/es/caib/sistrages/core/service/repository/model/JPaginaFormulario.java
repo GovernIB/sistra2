@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.PaginaFormulario;
 
 /**
  * JPaginaFormulario
@@ -47,13 +50,11 @@ public class JPaginaFormulario implements IModelApi {
 	@Column(name = "PAF_PAGLEL", nullable = false, precision = 1, scale = 0)
 	private boolean paginaAsociadaListaElementos;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario")
-	private Set<JLineaSeccionFormulario> lineasSeccionFormulario = new HashSet<JLineaSeccionFormulario>(0);
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario", cascade = { CascadeType.ALL })
 	private Set<JListaElementosFormulario> listasElementosFormulario = new HashSet<JListaElementosFormulario>(0);
 
 	public JPaginaFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -104,20 +105,38 @@ public class JPaginaFormulario implements IModelApi {
 		this.paginaAsociadaListaElementos = paginaAsociadaListaElementos;
 	}
 
-	public Set<JLineaSeccionFormulario> getLineasSeccionFormulario() {
-		return this.lineasSeccionFormulario;
-	}
-
-	public void setLineasSeccionFormulario(final Set<JLineaSeccionFormulario> lineasSeccionFormulario) {
-		this.lineasSeccionFormulario = lineasSeccionFormulario;
-	}
-
 	public Set<JListaElementosFormulario> getListasElementosFormulario() {
 		return this.listasElementosFormulario;
 	}
 
 	public void setListasElementosFormulario(final Set<JListaElementosFormulario> listasElementosFormulario) {
 		this.listasElementosFormulario = listasElementosFormulario;
+	}
+
+	public PaginaFormulario toModel() {
+		final PaginaFormulario pagina = new PaginaFormulario();
+		pagina.setId(codigo);
+		if (scriptValidacion != null) {
+			pagina.setScriptValidacion(scriptValidacion.toModel());
+		}
+		pagina.setOrden(orden);
+		pagina.setPaginaFinal(paginaFinal);
+
+		return pagina;
+	}
+
+	public static JPaginaFormulario fromModel(final PaginaFormulario model) {
+		JPaginaFormulario jModel = null;
+		if (model != null) {
+			jModel = new JPaginaFormulario();
+			if (model.getId() != null) {
+				jModel.setCodigo(model.getId());
+			}
+			jModel.setScriptValidacion(JScript.fromModel(model.getScriptValidacion()));
+			jModel.setOrden(model.getOrden());
+			jModel.setPaginaFinal(model.isPaginaFinal());
+		}
+		return jModel;
 	}
 
 }

@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
-import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
@@ -191,45 +190,6 @@ public class DominioServiceImpl implements DominioService {
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
-	 * Long)
-	 */
-	@Override
-	@NegocioInterceptor
-	public void addFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo, final Long idFuente) {
-		fuenteDatoDao.addFuenteDatoCampo(fuenteDatoCampo, idFuente);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
-	 * Long)
-	 */
-	@Override
-	@NegocioInterceptor
-	public void updateFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo) {
-		fuenteDatoDao.updateFuenteDatoCampo(fuenteDatoCampo);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
-	 * Long)
-	 */
-	@Override
-	@NegocioInterceptor
-	public void removeFuenteDatoCampo(final Long idFuenteDatoCampo) {
-		fuenteDatoDao.removeFuenteDatoCampo(idFuenteDatoCampo);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
 	 * es.caib.sistrages.core.api.service.DominioService#listFuenteDato(es.caib.
 	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
 	 */
@@ -279,6 +239,21 @@ public class DominioServiceImpl implements DominioService {
 	@NegocioInterceptor
 	public FuenteDatos loadFuenteDato(final String idFuenteDato) {
 		return fuenteDatoDao.getByIdentificador(idFuenteDato);
+	}
+
+	@Override
+	public boolean tieneTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		return dominioDao.tieneTramiteVersion(idDominio, idTramiteVersion);
+	}
+
+	@Override
+	public void removeTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		dominioDao.removeTramiteVersion(idDominio, idTramiteVersion);
+	}
+
+	@Override
+	public void addTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		dominioDao.addTramiteVersion(idDominio, idTramiteVersion);
 	}
 
 }

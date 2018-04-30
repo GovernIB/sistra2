@@ -11,11 +11,13 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
+import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
 /**
  * La clase DominioDaoImpl.
@@ -196,6 +198,14 @@ public class DominioDaoImpl implements DominioDao {
 		return result;
 	}
 
+	@Override
+	public void removeByArea(final Long idArea) {
+		final List<JDominio> dominios = listarJDominios(TypeAmbito.AREA, idArea, null);
+		for (final JDominio d : dominios) {
+			remove(d.getCodigo());
+		}
+	}
+
 	/**
 	 * Lista dominios.
 	 *
@@ -236,6 +246,65 @@ public class DominioDaoImpl implements DominioDao {
 
 		final List<JDominio> results = query.getResultList();
 		return results;
+	}
+
+	@Override
+	public void addTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		gestionTramiteVersion(idDominio, idTramiteVersion, true);
+	}
+
+	@Override
+	public void removeTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		gestionTramiteVersion(idDominio, idTramiteVersion, false);
+	}
+
+	/**
+	 * Gestiona (anyade/borra) la relación entre un trámite versión y un dominio.
+	 *
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 * @param anyadir
+	 */
+	private void gestionTramiteVersion(final Long idDominio, final Long idTramiteVersion, final boolean anyadir) {
+		final JDominio jdominio = entityManager.find(JDominio.class, idDominio);
+		final JVersionTramite jversionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
+
+		if (jdominio == null) {
+			throw new FaltanDatosException("Falta el dominio");
+		}
+
+		if (jversionTramite == null) {
+			throw new FaltanDatosException("Falta el version tramite");
+		}
+
+		if (anyadir) {
+
+			jdominio.getVersionesTramite().add(jversionTramite);
+
+		} else {
+
+			jdominio.getVersionesTramite().remove(jversionTramite);
+
+		}
+
+		entityManager.merge(jdominio);
+
+	}
+
+	@Override
+	public boolean tieneTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		final JDominio jdominio = entityManager.find(JDominio.class, idDominio);
+		final JVersionTramite jversionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
+
+		if (jdominio == null) {
+			throw new FaltanDatosException("Falta el dominio");
+		}
+
+		if (jversionTramite == null) {
+			throw new FaltanDatosException("Falta el version tramite");
+		}
+
+		return jdominio.getVersionesTramite().contains(jversionTramite);
 	}
 
 }

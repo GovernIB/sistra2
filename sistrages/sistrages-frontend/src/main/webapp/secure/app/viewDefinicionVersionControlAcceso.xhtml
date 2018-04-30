@@ -41,7 +41,7 @@
 		           		<p:spacer width="8" height="1" />
 		           		<p:inputText id="mensajedesactivacion" disabled="true" styleClass="w60" value="#{viewDefinicionVersion.tramiteVersion.mensajeDesactivacion.getTraduccion(sessionBean.lang)}"/>
 
-		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionControlAcceso.editarMensajeDesactivacion(viewDefinicionVersion.tramiteVersion.mensajeDesactivacion)}" styleClass="va-top"
+		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramiteVersion.mensajeDesactivacion)}" styleClass="va-top"
 								process="@this" update="growl"/>
 					</p:column>
 				</p:row>
@@ -78,8 +78,10 @@
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
-						actionListener="#{viewDefinicionVersionControlAcceso.editar()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersion.editarControlAcceso()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionControlAcceso"  />
+					</p:commandButton>
 				</p:outputPanel>
 			</f:facet>
 		</h:panelGrid>

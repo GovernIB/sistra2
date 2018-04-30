@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogPropiedadesFormulario.titulo']}"/></title>
+</h:head>
+
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogPropiedadesFormulario.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogPropiedadesFormulario.id}"/>
+		<f:viewAction action="#{dialogPropiedadesFormulario.init}" />
+	</f:metadata>
+	<h:form styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+				<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="w20 padding-left-18,w80" styleClass="w100" columns="2" cellpadding="5">
+					<p:outputLabel for="permitirAccionesPersonalizadas" value="#{msg['dialogPropiedadesFormulario.permitirAccionesPersonalizadas']}" rendered="false"/>
+				 	<p:selectBooleanCheckbox id="permitirAccionesPersonalizadas" value="#{dialogPropiedadesFormulario.data.permitirAccionesPersonalizadas}" disabled="#{dialogPropiedadesFormulario.consulta}"  rendered="false"/>
+
+				 	<p:outputLabel for="scriptPlantilla" value="#{msg['dialogPropiedadesFormulario.scriptPlantilla']}" />
+					<p:commandButton id="scriptPlantilla" icon="fa fa-bolt"  actionListener="#{dialogPropiedadesFormulario.editarDialogScriptPlantilla}"
+							process="@this" update="growlDialog">
+							<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
+					</p:commandButton>
+
+					<p:outputLabel for="cabeceraFormulario" value="#{msg['dialogPropiedadesFormulario.cabeceraFormulario']}" />
+					<p:outputPanel>
+					 	<p:selectBooleanCheckbox id="cabeceraFormulario" value="#{dialogPropiedadesFormulario.data.cabeceraFormulario}" styleClass="margin-right-10" disabled="#{dialogPropiedadesFormulario.consulta}">
+					 		<p:ajax update="@form" event="change"/>
+					 	</p:selectBooleanCheckbox>
+
+						<p:outputLabel for="textoCabeceraHidden" value="#{msg['dialogPropiedadesFormulario.textoCabecera']}" styleClass="no-display"/>
+						<p:inputText id="textoCabecera" value="#{dialogPropiedadesFormulario.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not textoCabeceraComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="textoCabeceraHidden" value="#{dialogPropiedadesFormulario.literal}" type="hidden" required="#{dialogPropiedadesFormulario.data.cabeceraFormulario}" binding="#{textoCabeceraComponent}"/>
+						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.cabeceraFormulario}" >
+		            		<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogo}" update="growlDialog textoCabecera textoCabeceraHidden" />
+		        		</p:commandButton>
+					</p:outputPanel>
+
+				</h:panelGrid>
+				<h:panelGrid columns="2" columnClasses="w90 padding-left-18,w10">
+					<p:dataTable  id="dataTablePaginas" var="td" value="#{dialogPropiedadesFormulario.data.paginas}"  style="height:180px;"
+									  rows="0" emptyMessage="#{msg['error.emptyRows']}"
+									  scrollable="true" scrollHeight="87%"
+			                          paginator="false"
+			                          selectionMode="single" selection="#{dialogPropiedadesFormulario.paginaSeleccionada}" rowKey="#{td.orden}">
+
+						<!-- Necesario para actualizar en controlador la fila seleccionada -->
+						<p:ajax event="rowSelect" />
+						<p:ajax event="rowUnselect" />
+
+						<!-- Columnas -->
+					    <p:column headerText="Pagina" class="ui-panelgrid-cell">
+					        <h:outputText value="Pagina #{td.orden}" />
+					    </p:column>
+
+			 		</p:dataTable>
+			 		 	<p:outputPanel styleClass="barra-herramientas-vertical">
+					    	<p:commandButton id="btnNuevaPropiedad" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this" update="growlDialog dataTablePaginas" />
+							<br/>
+					    	<p:commandButton id="btnEliminarPropiedad" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPagina}" process="@this" update="growlDialog dataTablePaginas"/>
+							<br/>
+					    	<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogPropiedadesFormulario.subirPagina}" process="@this" update="growlDialog dataTablePaginas" />
+							<br/>
+					    	<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPropiedadesFormulario.bajarPagina}" process="@this" update="growlDialog dataTablePaginas" />
+						</p:outputPanel>
+		 		</h:panelGrid>
+
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPropiedadesFormulario.guardar}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPropiedadesFormulario.cancelar}" process="@this" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPropiedadesFormulario.cancelar}" process="@this"  rendered="#{dialogPropiedadesFormulario.consulta}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

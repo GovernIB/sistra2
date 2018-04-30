@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +17,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.Gestor;
+import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.types.TypeFormulario;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypeInterno;
 
 /**
  * JFormularioTramite
@@ -60,7 +68,7 @@ public class JFormularioTramite implements IModelApi {
 	@JoinColumn(name = "FTR_SCROBL")
 	private JScript scriptObligatoriedad;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FTR_DESCRIP", nullable = false)
 	private JLiteral descripcion;
 
@@ -250,6 +258,101 @@ public class JFormularioTramite implements IModelApi {
 
 	public void setPasosPagos(final Set<JPasoCaptura> pasosPagos) {
 		this.pasosPagos = pasosPagos;
+	}
+
+	public void fromModel(final FormularioTramite formulario) {
+		if (formulario != null) {
+			this.setCodigo(formulario.getId());
+			this.setFirmarDigitalmente(formulario.isDebeFirmarse());
+			if (formulario.getDescripcion() != null) {
+				final JLiteral descripcion = JLiteral.fromModel(formulario.getDescripcion());
+				this.setDescripcion(descripcion);
+			}
+			// this.setFormulario(x);
+			// this.setGestorFormulario(x);
+			this.setIdentificador(formulario.getCodigo());
+			if (formulario.getFormularioGestorExterno() != null) {
+				this.setIdFormularioExterno(formulario.getFormularioGestorInterno().getCodigo());
+			}
+			this.setObligatorio(formulario.getObligatoriedad().toString());
+			this.setOrden(formulario.getOrden());
+			// this.setPasosPagos(pasosPagos);
+			// this.setPasosRellenar(pasosRellenar);
+			this.setPrerregistro(formulario.isDebePrerregistrarse());
+			if (formulario.getScriptDatosIniciales() != null) {
+				final JScript script = JScript.fromModel(formulario.getScriptDatosIniciales());
+				this.setScriptDatosIniciales(script);
+			}
+			if (formulario.getScriptFirma() != null) {
+				final JScript script = JScript.fromModel(formulario.getScriptFirma());
+				this.setScriptDatosIniciales(script);
+			}
+			if (formulario.getScriptObligatoriedad() != null) {
+				final JScript script = JScript.fromModel(formulario.getScriptObligatoriedad());
+				this.setScriptDatosIniciales(script);
+			}
+			if (formulario.getScriptPrerrigistro() != null) {
+				final JScript script = JScript.fromModel(formulario.getScriptPrerrigistro());
+				this.setScriptDatosIniciales(script);
+			}
+			if (formulario.getScriptRetorno() != null) {
+				final JScript script = JScript.fromModel(formulario.getScriptRetorno());
+				this.setScriptDatosIniciales(script);
+			}
+			this.setTipo(formulario.getTipo().toString());
+			this.setTipoFormulario(formulario.getTipoFormulario().toString());
+
+		}
+	}
+
+	public FormularioTramite toModel() {
+		final FormularioTramite mformulario = new FormularioTramite();
+
+		mformulario.setId(this.getCodigo());
+		mformulario.setDebeFirmarse(this.getFirmarDigitalmente());
+		if (this.getDescripcion() != null) {
+			mformulario.setDescripcion(this.getDescripcion().toModel());
+		}
+		// this.setFormulario(x);
+		// this.setGestorFormulario(x);
+		mformulario.setCodigo(this.getIdentificador());
+		if (this.getIdFormularioExterno() != null) {
+			final Gestor form = new Gestor();
+			form.setId(Long.valueOf(this.getIdFormularioExterno()));
+			mformulario.setFormularioGestorInterno(form);
+		}
+		mformulario.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
+		mformulario.setOrden(this.getOrden());
+		mformulario.setDebePrerregistrarse(this.getPrerregistro());
+		if (this.getScriptDatosIniciales() != null) {
+			final Script script = new Script();
+			script.setId(this.getScriptDatosIniciales().getCodigo());
+			mformulario.setScriptDatosIniciales(script);
+		}
+		if (this.getScriptFirmar() != null) {
+			final Script script = new Script();
+			script.setId(this.getScriptFirmar().getCodigo());
+			mformulario.setScriptFirma(script);
+		}
+		if (this.getScriptObligatoriedad() != null) {
+			final Script script = new Script();
+			script.setId(this.getScriptObligatoriedad().getCodigo());
+			mformulario.setScriptObligatoriedad(script);
+		}
+		if (this.getScriptDatosIniciales() != null) {
+			final Script script = new Script();
+			script.setId(this.getScriptDatosIniciales().getCodigo());
+			mformulario.setScriptPrerrigistro(script);
+		}
+		if (this.getScriptRetorno() != null) {
+			final Script script = new Script();
+			script.setId(this.getScriptRetorno().getCodigo());
+			mformulario.setScriptRetorno(script);
+		}
+		mformulario.setTipo(TypeFormulario.fromString(this.getTipo()));
+		mformulario.setTipoFormulario(TypeInterno.fromString(this.getTipoFormulario()));
+
+		return mformulario;
 	}
 
 }

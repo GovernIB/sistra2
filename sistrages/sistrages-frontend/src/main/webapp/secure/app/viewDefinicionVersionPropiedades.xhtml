@@ -9,7 +9,6 @@
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
-
         <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="12" cellspacing="0">
 
             <p:outputLabel for="autenticado" value="#{msg['viewDefinicionVersionPropiedades.autenticacion']}" />
@@ -21,12 +20,12 @@
 					<p:column>
 						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 						<p:spacer width="8" height="1"/>
-						<p:inputText id="nivelQAA" disabled="true" size="2" value="#{viewDefinicionVersion.tramiteVersion.nivelQAA}" />
+						<p:inputText id="nivelQAA" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.nivelQAA}" />
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="sinAutenticacion" disabled="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" />
+						<p:selectBooleanCheckbox id="sinAutenticacion" disabled="true" itemLabel="#{msg['viewDefinicionVersionPropiedades.sinautenticacion']}" value="#{viewDefinicionVersion.tramiteVersion.noAutenticado}"   />
 					</p:column>
 					<p:column>
 					</p:column>
@@ -62,18 +61,23 @@
 			</p:panelGrid>
 
 			<p:outputLabel for="scriptpersonalizacion" value="#{msg['viewDefinicionVersionPropiedades.scriptpersonalizacion']}" />
-			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.idScriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
+			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.idScriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.idScriptPersonalizacion)}"
 						process="@this" update="growl"/>
 
 			<p:outputLabel for="scriptparametrosiniciales" value="#{msg['viewDefinicionVersionPropiedades.scriptparametrosiniciales']}" />
-			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersion.tramiteVersion.idScriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersionPropiedades.editarScript()}"
+			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersion.tramiteVersion.idScriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.idScriptInicializacionTramite)}"
 						process="@this" update="growl"/>
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul" rendered="#{viewDefinicionVersion.isEdicion()}"
-						actionListener="#{viewDefinicionVersionPropiedades.editar(viewDefinicionVersion.tramiteVersion.id)}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersion.editarPropiedades()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionPropiedades"  />
+					</p:commandButton>
+
+
+
 				</p:outputPanel>
 			</f:facet>
 

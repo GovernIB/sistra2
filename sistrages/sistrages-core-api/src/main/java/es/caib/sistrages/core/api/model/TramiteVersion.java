@@ -548,7 +548,11 @@ public class TramiteVersion extends ModelApi {
 	 *            el nuevo valor de plazoInicioDesactivacion
 	 */
 	public void setPlazoInicioDesactivacion(final Date plazoInicioDesactivacion) {
-		this.plazoInicioDesactivacion = (Date) plazoInicioDesactivacion.clone();
+		if (plazoInicioDesactivacion == null) {
+			this.plazoInicioDesactivacion = null;
+		} else {
+			this.plazoInicioDesactivacion = (Date) plazoInicioDesactivacion.clone();
+		}
 	}
 
 	/**
@@ -571,7 +575,11 @@ public class TramiteVersion extends ModelApi {
 	 *            el nuevo valor de plazoFinDesactivacion
 	 */
 	public void setPlazoFinDesactivacion(final Date plazoFinDesactivacion) {
-		this.plazoFinDesactivacion = (Date) plazoFinDesactivacion.clone();
+		if (plazoFinDesactivacion == null) {
+			this.plazoFinDesactivacion = null;
+		} else {
+			this.plazoFinDesactivacion = (Date) plazoFinDesactivacion.clone();
+		}
 	}
 
 	/**

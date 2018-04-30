@@ -55,9 +55,6 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 	@Override
 	@NegocioInterceptor
 	public void addAvisoEntidad(final Long idEntidad, final AvisoEntidad avisoEntidad) {
-
-		// TODO Pendiente control acceso entidad
-
 		avisoEntidadDao.add(idEntidad, avisoEntidad);
 	}
 
@@ -71,9 +68,6 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 	@Override
 	@NegocioInterceptor
 	public boolean removeAvisoEntidad(final Long idAvisoEntidad) {
-
-		// TODO Pendiente control acceso entidad
-
 		avisoEntidadDao.remove(idAvisoEntidad);
 		return true;
 	}
@@ -88,11 +82,7 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 	@Override
 	@NegocioInterceptor
 	public void updateAvisoEntidad(final AvisoEntidad avisoEntidad) {
-
-		// TODO Pendiente control acceso entidad
-
 		avisoEntidadDao.update(avisoEntidad);
-
 	}
 
 	/*

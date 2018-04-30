@@ -3,17 +3,15 @@
  */
 package es.caib.sistrages.frontend.controller;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -30,6 +28,10 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Id elemento a tratar. */
 	private Long id;
 
@@ -42,7 +44,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		recuperaTramiteVersion(Long.valueOf(1));
+		tramiteVersion = tramiteService.getTramiteVersion(id);
 	}
 
 	/**
@@ -102,21 +104,16 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
 		// Realizamos alta o update
-		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		switch (acceso) {
-		case ALTA:
-			break;
-		case EDICION:
-			break;
-		case CONSULTA:
-			// No hay que hacer nada
-			break;
+		if (modoAcceso != null && TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {
+			tramiteService.updateTramiteVersion(tramiteVersion, false, null, false, null);
 		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		// result.setResult(data.getCodigo());
+		result.setResult(this.tramiteVersion);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -166,33 +163,6 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
-	}
-
-	/**
-	 * Recupera tramite version.
-	 *
-	 * @param id
-	 *            el id de tramite version
-	 */
-	private void recuperaTramiteVersion(final Long id) {
-		tramiteVersion = new TramiteVersion();
-		tramiteVersion.setId(id);
-
-		tramiteVersion.setActiva(true);
-		tramiteVersion.setDesactivacion(true);
-		final Calendar dia = Calendar.getInstance();
-		dia.set(2018, 1, 1);
-		tramiteVersion.setPlazoInicioDesactivacion(dia.getTime());
-		tramiteVersion.setPlazoFinDesactivacion(new Date());
-		final Literal desact1 = new Literal();
-		desact1.add(new Traduccion("es", "Mensaje de desactivacion"));
-		desact1.add(new Traduccion("ca", "Missatge de desactivació"));
-		tramiteVersion.setMensajeDesactivacion(desact1);
-		tramiteVersion.setDebug(true);
-		tramiteVersion.setLimiteTramitacion(true);
-		tramiteVersion.setNumLimiteTramitacion(1);
-		tramiteVersion.setIntLimiteTramitacion(2);
-
 	}
 
 }

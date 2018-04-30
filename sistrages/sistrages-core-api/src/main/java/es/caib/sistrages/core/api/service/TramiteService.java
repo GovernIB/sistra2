@@ -3,7 +3,12 @@ package es.caib.sistrages.core.api.service;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 
 /**
@@ -30,6 +35,15 @@ public interface TramiteService {
 	 * @return area
 	 */
 	public Area getArea(Long id);
+
+	/**
+	 * Obtiene el area de un tramite.
+	 *
+	 * @param id
+	 *            identificador tramite
+	 * @return area
+	 */
+	public Area getAreaTramite(Long idTramite);
 
 	/**
 	 * Añade un area.
@@ -89,6 +103,16 @@ public interface TramiteService {
 	public void addTramite(Long idArea, Tramite pTramite);
 
 	/**
+	 * Cambia un trámite de área.
+	 *
+	 * @param idArea
+	 *            id área
+	 * @param idTramite
+	 *            id trámite
+	 */
+	public void changeAreaTramite(Long idArea, Long idTramite);
+
+	/**
 	 * Elimina un Tramite.
 	 *
 	 * @param id
@@ -120,5 +144,90 @@ public interface TramiteService {
 	 * @param id
 	 */
 	public void addTramiteVersion(TramiteVersion tramiteVersion, String id);
+
+	/**
+	 * Actualiza una versión de trámite.
+	 *
+	 * @param tramiteVersion
+	 * @param borrarScriptPI
+	 *            En caso de estar a true, lo marca como nulo el script de params
+	 *            iniciales para que lo borre.
+	 * @param scriptParamsIniciales
+	 * @param borrarScriptPersonalizacion
+	 *            En caso de estar a true, lo marca como nulo el script de
+	 *            personalizacion para que lo borre.
+	 * @param scriptPersonalizacion
+	 */
+	public void updateTramiteVersion(TramiteVersion tramiteVersion, boolean borrarScriptPI,
+			Script scriptParamsIniciales, boolean borrarScriptPersonalizacion, Script scriptPersonalizacion);
+
+	/**
+	 * Borra una versión de tramite.
+	 *
+	 * @param id
+	 */
+	public void removeTramiteVersion(Long id);
+
+	/**
+	 * Obtiene la versión de trámite.
+	 *
+	 * @param id
+	 * @return
+	 */
+	public TramiteVersion getTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Devuelve los tipo de paso de trámite.
+	 *
+	 * @return
+	 */
+	public List<TramiteTipo> listTipoTramitePaso();
+
+	/**
+	 * Devuelve los pasos de una versión de trámite
+	 *
+	 * @param id
+	 * @return
+	 */
+	public List<TramitePaso> getTramitePasos(Long idTramiteVersion);
+
+	/**
+	 * Devuelve los dominios de un trámite.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public List<Dominio> getTramiteDominios(Long idTramiteVersion);
+
+	/**
+	 * Actualiza un paso de trámite.
+	 *
+	 * @param tramitePaso
+	 */
+	public void updateTramitePaso(TramitePaso tramitePaso);
+
+	/**
+	 * Borra un formulario de un paso.
+	 *
+	 * @param idTramitePaso
+	 * @param idFormulario
+	 */
+	public void removeFormulario(Long idTramitePaso, Long idFormulario);
+
+	/**
+	 * Obtiene el tramitePaso.
+	 *
+	 * @param id
+	 * @return
+	 */
+	public TramitePaso getTramitePaso(Long id);
+
+	/**
+	 * Devuelve un formulario trámite.
+	 *
+	 * @param idFormularioTramite
+	 * @return
+	 */
+	public FormularioTramite getFormulario(Long idFormularioTramite);
 
 }

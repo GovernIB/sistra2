@@ -11,68 +11,68 @@ import es.caib.sistrages.core.api.model.types.TypeIdioma;
 public interface AvisoEntidadDao {
 
 	/**
-	 * Obtiene el valor de Aviso Entidad.
+	 * Obtiene el aviso de entidad.
 	 *
-	 * @param id
-	 *            el identificador
-	 * @return el valor de Aviso Entidad
+	 * @param pId
+	 *            identificador de aviso de entidad
+	 * @return el aviso de entidad
 	 */
-	AvisoEntidad getById(Long id);
+	AvisoEntidad getById(Long pId);
 
 	/**
-	 * Añade Aviso Entidad.
+	 * Añade el aviso de entidad.
 	 *
-	 * @param idEntidad
-	 *            Id entidad
-	 * @param avisoEntidad
-	 *            el valor de Aviso Entidad
+	 * @param pIdEntidad
+	 *            identificador de la entidad
+	 * @param pAvisoEntidad
+	 *            aviso de entidad
 	 */
-	void add(final long idEntidad, AvisoEntidad avisoEntidad);
+	void add(final Long pIdEntidad, AvisoEntidad pAvisoEntidad);
 
 	/**
-	 * Elimina Aviso Entidad.
+	 * Elimina el aviso de entidad.
 	 *
-	 * @param id
-	 *            el identificador
+	 * @param pId
+	 *            el identificador de aviso de entidad
 	 */
-	void remove(Long id);
+	void remove(Long pId);
 
 	/**
-	 * Elimina Avisos Entidad.
+	 * Elimina el aviso de entidad.
 	 *
-	 * @param idEntidad
-	 *            el identificador entidad
+	 * @param pIdEntidad
+	 *            identificador de la entidad
 	 */
-	void removeByEntidad(Long idEntidad);
+	void removeByEntidad(Long pIdEntidad);
 
 	/**
-	 * Actualiza Aviso Entidad.
+	 * Actualiza el aviso de entidad.
 	 *
-	 * @param avisoEntidad
-	 *            el valor de Aviso Entidad
+	 * @param pAvisoEntidad
+	 *            el aviso de entidad
 	 */
-	void update(AvisoEntidad avisoEntidad);
+	void update(AvisoEntidad pAvisoEntidad);
 
 	/**
-	 * Lista de Aviso Entidad.
+	 * Lista de avisos de entidad
 	 *
-	 * @param idEntidad
-	 *            id Entidad
-	 * @return la lista de Aviso Entidad
+	 * @param pIdEntidad
+	 *            identificador de la entidad
+	 * @return la lista de avisos de entidad
 	 */
-	List<AvisoEntidad> getAll(Long idEntidad);
+	List<AvisoEntidad> getAll(Long pIdEntidad);
 
 	/**
-	 * Lista de Aviso Entidad.
+	 * Lista de avisos de entidad
 	 *
-	 * @param idEntidad
-	 *            id Entidad
-	 * @param filtro
+	 * @param pIdEntidad
+	 *            identificador de la entidad
+	 * @param pFiltro
 	 *            filtro
-	 * @param idioma
+	 * @param pIdioma
 	 *            idioma
 	 * @return la lista de Aviso Entidad
 	 */
-	List<AvisoEntidad> getAllByFiltro(Long idEntidad, TypeIdioma idioma, String filtro);
+	List<AvisoEntidad> getAllByFiltro(Long pIdEntidad, TypeIdioma pIdioma, String pFiltro);
 
 }

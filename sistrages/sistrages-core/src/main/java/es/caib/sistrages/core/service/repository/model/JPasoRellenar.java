@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 
 /**
  * JPasoRellenar
@@ -32,13 +36,14 @@ public class JPasoRellenar implements IModelApi {
 	@JoinColumn(name = "PRL_CODIGO")
 	private JPasoTramitacion pasoTramitacion;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinTable(name = "STG_PRLFTR", joinColumns = {
 			@JoinColumn(name = "FPR_CODPRL", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "FPR_CODFOR", nullable = false, updatable = false) })
 	private Set<JFormularioTramite> formulariosTramite = new HashSet<JFormularioTramite>(0);
 
 	public JPasoRellenar() {
+		// Constructor vacio.
 	}
 
 	public Long getCodigo() {
@@ -63,6 +68,19 @@ public class JPasoRellenar implements IModelApi {
 
 	public void setFormulariosTramite(final Set<JFormularioTramite> formulariosTramite) {
 		this.formulariosTramite = formulariosTramite;
+	}
+
+	public void fromModel(final TramitePasoRellenar paso) {
+		this.setCodigo(paso.getId());
+		if (paso.getFormulariosTramite() != null) {
+			final Set<JFormularioTramite> jformularios = new HashSet<>();
+			for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
+				final JFormularioTramite jformulario = new JFormularioTramite();
+				jformulario.fromModel(formulario);
+				jformularios.add(jformulario);
+			}
+			this.setFormulariosTramite(jformularios);
+		}
 	}
 
 }

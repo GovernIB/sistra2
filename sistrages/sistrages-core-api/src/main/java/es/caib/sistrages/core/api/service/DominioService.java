@@ -4,7 +4,6 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
-import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
@@ -134,29 +133,6 @@ public interface DominioService {
 	public boolean removeFuenteDato(Long idFuenteDato);
 
 	/**
-	 * Añade campo de la fuente de datos.
-	 *
-	 * @param idFuenteDatoCampo
-	 * @param idFuente
-	 */
-	public void addFuenteDatoCampo(FuenteDatosCampo fuenteDatoCampo, Long idFuente);
-
-	/**
-	 * Actualiza campo de fuente de dato.
-	 *
-	 * @param idFuenteDatoCampo
-	 */
-	void updateFuenteDatoCampo(FuenteDatosCampo fuenteDatoCampo);
-
-	/**
-	 * Borrar campo de fuenteDato.
-	 *
-	 * @param idFuenteDato
-	 *            idFuenteDato
-	 */
-	public void removeFuenteDatoCampo(Long idFuenteDatoCampo);
-
-	/**
 	 * Listar fuenteDatos.
 	 *
 	 * @param ambito
@@ -218,4 +194,28 @@ public interface DominioService {
 	 */
 	public void importarCSV(Long idFuenteDatos, CsvDocumento csv);
 
+	/**
+	 * Comprueba si un tramite versión ya está asignado.
+	 *
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public boolean tieneTramiteVersion(final Long idDominio, Long idTramiteVersion);
+
+	/**
+	 * Borra la relación entre trámite versión y dominio.
+	 *
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 */
+	public void removeTramiteVersion(Long idDominio, Long idTramiteVersion);
+
+	/**
+	 * Añade la relación entre trámite versión y dominio.
+	 *
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 */
+	public void addTramiteVersion(Long idDominio, Long idTramiteVersion);
 }

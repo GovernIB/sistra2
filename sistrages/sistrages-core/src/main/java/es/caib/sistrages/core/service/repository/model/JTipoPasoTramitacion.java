@@ -16,6 +16,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.TramiteTipo;
+
 /**
  * JTipoPasoTramitacion
  */
@@ -85,6 +87,25 @@ public class JTipoPasoTramitacion implements IModelApi {
 
 	public void setPasoTramite(final Set<JPasoTramitacion> pasoTramite) {
 		this.pasoTramite = pasoTramite;
+	}
+
+	public TramiteTipo toModel() {
+		final TramiteTipo tipo = new TramiteTipo();
+		tipo.setCodigo(this.getTipoPaso());
+		tipo.setId(this.getCodigo());
+		tipo.setOrden(this.getOrden());
+		tipo.setDescripcion(this.getDescripcionCorta().toModel());
+		return tipo;
+	}
+
+	public void fromModel(final TramiteTipo tipo) {
+		this.setTipoPaso(tipo.getCodigo());
+		this.setCodigo(tipo.getId());
+		if (tipo.getDescripcion() != null) {
+			final JLiteral desc = JLiteral.fromModel(tipo.getDescripcion());
+			this.setDescripcionCorta(desc);
+		}
+		this.setOrden((byte) tipo.getOrden());
 	}
 
 }

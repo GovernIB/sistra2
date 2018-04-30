@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 
 /**
  * JPasoDebeSaber
@@ -28,11 +31,12 @@ public class JPasoDebeSaber implements IModelApi {
 	@JoinColumn(name = "PDB_CODIGO")
 	private JPasoTramitacion pasoTramitacion;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PDB_INSINI")
 	private JLiteral instruccionesInicio;
 
 	public JPasoDebeSaber() {
+		// Constructor vacio.
 	}
 
 	public Long getCodigo() {
@@ -57,6 +61,14 @@ public class JPasoDebeSaber implements IModelApi {
 
 	public void setInstruccionesInicio(final JLiteral instruccionesInicio) {
 		this.instruccionesInicio = instruccionesInicio;
+	}
+
+	public void fromModel(final TramitePasoDebeSaber mpasoDebeSaber) {
+		this.setCodigo(mpasoDebeSaber.getIdPasoRelacion());
+		if (mpasoDebeSaber.getInstruccionesIniciales() != null) {
+			final JLiteral literal = JLiteral.fromModel(mpasoDebeSaber.getInstruccionesIniciales());
+			this.setInstruccionesInicio(literal);
+		}
 	}
 
 }

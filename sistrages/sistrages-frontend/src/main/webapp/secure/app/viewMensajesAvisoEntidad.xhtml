@@ -71,13 +71,13 @@
 
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerFechaInicio']}">
 			        <h:outputText value="#{td.fechaInicio}">
- 			        	<f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
+ 			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerFechaFin']}">
 			        <h:outputText value="#{td.fechaFin}">
-			        	<f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
+			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
 

@@ -8,13 +8,12 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Formulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -29,7 +28,7 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 	/** Data. **/
-	private Formulario data;
+	private FormularioTramite data;
 
 	/** Id. **/
 	private String id;
@@ -44,18 +43,11 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 	@PostConstruct
 	public void init() {
-		// TODO tendría que obtener el tramitePasoRellenar a partir de la id.
-		setId("1");
-		data = new Formulario();
-		data.setId(66L);
-		data.setCodigo("");
-		// final Traducciones traducciones = new Traducciones();
-		// traducciones.add(new Traduccion("ca", ""));
-		// traducciones.add(new Traduccion("es", ""));
-		// data.setDescripcion(traducciones);
+
+		data = new FormularioTramite();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
 		data.setTipo(TypeFormulario.TRAMITE);
-		// data.setTipoFormulario(TypeInterno.INTERNO);
+
 	}
 
 	/**
@@ -67,40 +59,24 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	public void returnDialogoDescripcion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
 		if (!respuesta.isCanceled()) {
 
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
+			case EDICION:
 
 				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
 
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
 				break;
 
-			case EDICION:
-
-				final Literal traduccionesMod = (Literal) respuesta.getResult();
-				data.setDescripcion(traduccionesMod);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
 			case CONSULTA:
 				// No hay que hacer nada
 				break;
 			}
 		}
 
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
 	/**
@@ -142,7 +118,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public Formulario getData() {
+	public FormularioTramite getData() {
 		return data;
 	}
 
@@ -150,7 +126,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final Formulario data) {
+	public void setData(final FormularioTramite data) {
 		this.data = data;
 	}
 

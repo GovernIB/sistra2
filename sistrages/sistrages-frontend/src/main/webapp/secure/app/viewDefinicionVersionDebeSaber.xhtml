@@ -17,7 +17,7 @@
 			<p:outputPanel>
 				<p:inputTextarea value="#{viewDefinicionVersion.tramitePasoDSSeleccionado.instruccionesIniciales.getTraduccion(sessionBean.lang)}" styleClass="w90" rows="20" id="descripcion" disabled="true" style="margin-right:10px"/>
 				<p:commandButton icon="fa fa-language" styleClass="va-top"
-					actionListener="#{viewDefinicionVersionDebeSaber.editarInstrucciones(viewDefinicionVersion.tramitePasoDSSeleccionado)}"
+					actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoDSSeleccionado.instruccionesIniciales)}"
 					process="@this" update="growl">
 					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoPT}" update="growl formArbol:arbol"/>
 		        </p:commandButton>
@@ -26,8 +26,10 @@
 
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
-						actionListener="#{viewDefinicionVersionDebeSaber.editar(viewDefinicionVersion.tramitePasoDSSeleccionado)}" style="margin-right:20px"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersion.editarPaso()}" style="margin-right:20px"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoPT}" update="growl formArbol:arbol descripcion"  />
+					</p:commandButton>
 				</p:outputPanel>
 
 	</h:form>

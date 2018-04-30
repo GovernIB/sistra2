@@ -11,33 +11,24 @@ package es.caib.sistrages.core.api.exception;
 @SuppressWarnings("serial")
 public final class DatabaseException extends ServiceRollbackException {
 
-
-	@Override
-	public boolean isNegocioException() {
-		return false;
+	/**
+	 * Constructor DatabaseException.
+	 *
+	 * @param cause
+	 *            Causa
+	 */
+	public DatabaseException(final Exception cause) {
+		super("Error en la capa de base de datos: " + cause.getMessage(), cause);
 	}
 
-
-  /**
-   * Constructor DatabaseException.
-   *
-   * @param cause
-   *          Causa
-   */
-  public DatabaseException(final Exception cause) {
-    super("Error en la capa de base de datos: " + cause.getMessage(), cause);
-  }
-
-  /**
-   * Constructor DatabaseException.
-   *
-   * @param cause
-   *          Causa
-   */
-  public DatabaseException(final String cause) {
-    super("Error en la capa de base de datos: " + cause);
-  }
-
-
+	/**
+	 * Constructor DatabaseException.
+	 *
+	 * @param cause
+	 *            Causa
+	 */
+	public DatabaseException(final String cause) {
+		super("Error en la capa de base de datos: " + cause);
+	}
 
 }

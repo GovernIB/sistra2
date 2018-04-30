@@ -110,14 +110,7 @@ public class DialogDominio extends DialogControllerBase {
 			}
 		}
 
-		/** Excepcionalidad pq el tipo global no debe tener el tipo FUENTE DATOS . **/
-		tipos = new ArrayList<>();
-		tipos.add(TypeDominio.CONSULTA_BD);
-		tipos.add(TypeDominio.LISTA_FIJA);
-		tipos.add(TypeDominio.CONSULTA_REMOTA);
-		if (TypeAmbito.fromString(ambito) != TypeAmbito.GLOBAL) {
-			tipos.add(TypeDominio.FUENTE_DATOS);
-		}
+		generarTipos();
 
 		visibleJNDI = false;
 		visibleLista = false;
@@ -140,9 +133,21 @@ public class DialogDominio extends DialogControllerBase {
 			fuentes = dominioService.listFuenteDato(TypeAmbito.AREA, Long.valueOf(idArea), null);
 		}
 		if (typeAmbito == TypeAmbito.ENTIDAD) {
-			fuentes = dominioService.listFuenteDato(TypeAmbito.ENTIDAD, Long.valueOf(idEntidad), null);
+			fuentes = dominioService.listFuenteDato(TypeAmbito.ENTIDAD, UtilJSF.getIdEntidad(), null);
 		}
 
+	}
+
+	/** Genera los tipos dependiendo del ambito puede que quite uno. **/
+	private void generarTipos() {
+		/** Excepcionalidad pq el tipo global no debe tener el tipo FUENTE DATOS . **/
+		tipos = new ArrayList<>();
+		tipos.add(TypeDominio.CONSULTA_BD);
+		tipos.add(TypeDominio.LISTA_FIJA);
+		tipos.add(TypeDominio.CONSULTA_REMOTA);
+		if (TypeAmbito.fromString(ambito) != TypeAmbito.GLOBAL) {
+			tipos.add(TypeDominio.FUENTE_DATOS);
+		}
 	}
 
 	/**

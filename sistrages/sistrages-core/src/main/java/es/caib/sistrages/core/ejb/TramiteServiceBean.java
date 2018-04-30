@@ -12,7 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -134,6 +139,81 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
 		tramiteService.addTramiteVersion(tramiteVersion, idTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateTramiteVersion(final TramiteVersion tramiteVersion, final boolean borrarScriptPI,
+			final Script scriptParamsIniciales, final boolean borrarScriptPersonalizacion,
+			final Script scriptPersonalizacion) {
+		tramiteService.updateTramiteVersion(tramiteVersion, borrarScriptPI, scriptParamsIniciales,
+				borrarScriptPersonalizacion, scriptPersonalizacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removeTramiteVersion(final Long idTramiteVersion) {
+		tramiteService.removeTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public TramiteVersion getTramiteVersion(final Long idTramiteVersion) {
+		return tramiteService.getTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public List<TramiteTipo> listTipoTramitePaso() {
+		return tramiteService.listTipoTramitePaso();
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Area getAreaTramite(final Long idTramite) {
+		return tramiteService.getAreaTramite(idTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public List<TramitePaso> getTramitePasos(final Long idTramiteVersion) {
+		return tramiteService.getTramitePasos(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void changeAreaTramite(final Long idArea, final Long idTramite) {
+		tramiteService.changeAreaTramite(idArea, idTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public List<Dominio> getTramiteDominios(final Long idTramiteVersion) {
+		return tramiteService.getTramiteDominios(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void updateTramitePaso(final TramitePaso tramitePasoRellenar) {
+		tramiteService.updateTramitePaso(tramitePasoRellenar);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void removeFormulario(final Long idTramitePaso, final Long idFormulario) {
+		tramiteService.removeFormulario(idTramitePaso, idFormulario);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public TramitePaso getTramitePaso(final Long id) {
+		return tramiteService.getTramitePaso(id);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public FormularioTramite getFormulario(final Long idFormularioTramite) {
+		return tramiteService.getFormulario(idFormularioTramite);
 	}
 
 }

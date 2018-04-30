@@ -100,7 +100,7 @@
 		<dependency>
 		    <groupId>com.fasterxml.jackson.module</groupId>
 		    <artifactId>jackson-module-jaxb-annotations</artifactId>
-		    <version>2.9.4</version>
+		    <version>${jackson.version}</version>
 		</dependency>
 
 	</dependencies>
@@ -114,7 +114,7 @@
 				<dependency>
 					<groupId>es.caib.sistra2</groupId>
 					<artifactId>sistrages-lib</artifactId>
-					<version>${sistrages.version}</version>
+					<version>${sistra2.version}</version>
 					<scope>provided</scope>
 					<type>pom</type>
 				</dependency>

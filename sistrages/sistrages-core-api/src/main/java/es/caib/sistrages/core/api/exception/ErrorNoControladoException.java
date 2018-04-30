@@ -11,11 +11,6 @@ package es.caib.sistrages.core.api.exception;
 @SuppressWarnings("serial")
 public final class ErrorNoControladoException extends ServiceRollbackException {
 
-	@Override
-	public boolean isNegocioException() {
-		return false;
-	}
-
 	/**
 	 * Constructor ErrorNoControladoException.
 	 *
@@ -23,17 +18,17 @@ public final class ErrorNoControladoException extends ServiceRollbackException {
 	 *            Causa
 	 */
 	public ErrorNoControladoException(final Throwable cause) {
-		super("Error no controlado en la capa de servicio: "
-				+ cause.getMessage(), cause);
+		super("Error no controlado en la capa de servicio: " + cause.getMessage(), cause);
 	}
 
 	/**
 	 * Constructor.
-	 * @param message mensaje
+	 * 
+	 * @param message
+	 *            mensaje
 	 */
-	public ErrorNoControladoException(String message) {
+	public ErrorNoControladoException(final String message) {
 		super(message);
 	}
-
 
 }

@@ -186,6 +186,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void removeLogoGestorEntidad(final Long idEntidad) {
 		borrarLogoGestor(idEntidad);
 	}
@@ -198,6 +199,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void removeLogoAsistenteEntidad(final Long idEntidad) {
 		borrarLogoAsistente(idEntidad);
 	}
@@ -210,6 +212,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void removeCssEntidad(final Long idEntidad) {
 		borrarCssAsistente(idEntidad);
 	}
@@ -222,6 +225,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero, byte[])
 	 */
 	@Override
+	@NegocioInterceptor
 	public void uploadLogoGestorEntidad(final Long idEntidad, final Fichero fichero, final byte[] content) {
 
 		final Fichero newFichero = entidadDao.uploadLogoGestor(idEntidad, fichero);
@@ -238,6 +242,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * java.lang.Long, es.caib.sistrages.core.api.model.Fichero, byte[])
 	 */
 	@Override
+	@NegocioInterceptor
 	public void uploadLogoAsistenteEntidad(final Long idEntidad, final Fichero fichero, final byte[] content) {
 		final Fichero newFichero = entidadDao.uploadLogoAsistente(idEntidad, fichero);
 
@@ -252,6 +257,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * Long, es.caib.sistrages.core.api.model.Fichero, byte[])
 	 */
 	@Override
+	@NegocioInterceptor
 	public void uploadCssEntidad(final Long idEntidad, final Fichero fichero, final byte[] content) {
 		final Fichero newFichero = entidadDao.uploadCssAsistente(idEntidad, fichero);
 
@@ -265,6 +271,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * listOpcionesFormularioSoporte(java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public List<FormularioSoporte> listOpcionesFormularioSoporte(final Long idEntidad) {
 		return formularioSoporteDao.getAll(idEntidad);
 	}
@@ -277,6 +284,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * (java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public FormularioSoporte loadOpcionFormularioSoporte(final Long id) {
 		return formularioSoporteDao.getById(id);
 	}
@@ -289,6 +297,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * java.lang.Long, es.caib.sistrages.core.api.model.FormularioSoporte)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void addOpcionFormularioSoporte(final Long idEntidad, final FormularioSoporte fst) {
 		formularioSoporteDao.add(idEntidad, fst);
 	}
@@ -301,6 +310,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * FormularioSoporte)
 	 */
 	@Override
+	@NegocioInterceptor
 	public void updateOpcionFormularioSoporte(final FormularioSoporte fst) {
 		formularioSoporteDao.update(fst);
 
@@ -313,6 +323,7 @@ public class EntidadServiceImpl implements EntidadService {
 	 * removeOpcionFormularioSoporte(java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public boolean removeOpcionFormularioSoporte(final Long id) {
 		formularioSoporteDao.remove(id);
 		return true;

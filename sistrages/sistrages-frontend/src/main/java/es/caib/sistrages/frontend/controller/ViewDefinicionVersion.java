@@ -1,12 +1,12 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -17,13 +17,14 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.Formulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
-import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
@@ -31,14 +32,18 @@ import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
-import es.caib.sistrages.core.api.model.types.TypeFormulario;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypeInterno;
-import es.caib.sistrages.core.api.model.types.TypePago;
+import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.ScriptService;
+import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.OpcionArbol;
+import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
  * Mantenimiento de definici&oacute;n de versi&oacute;n de tr&aacute;mites.
@@ -50,43 +55,54 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewDefinicionVersion extends ViewControllerBase {
 
-	/**
-	 * id.
-	 */
+	/** Tramite service. */
+	@Inject
+	private ScriptService scriptService;
+
+	/** Security service. */
+	@Inject
+	private SecurityService securityService;
+
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
+	/** Tramite service. */
+	@Inject
+	private DominioService dominioService;
+
+	/** id. */
 	private Long id;
 
-	/**
-	 * Arbol *.
-	 */
+	/** Area del tramite. **/
+	private Area area;
+
+	/** Tramite. **/
+	private Tramite tramite;
+
+	/** Arbol */
 	private TreeNode root;
 
-	/**
-	 * nodo seleccionado.
-	 */
+	/** nodo seleccionado. */
 	private TreeNode selectedNode;
 
-	/**
-	 * miga de pan *.
-	 */
+	/** miga de pan */
 	private MenuModel breadCrumb;
 
-	/**
-	 * raiz de la miga de pan *.
-	 */
+	/** raiz de la miga de pan */
 	private MenuModel breadCrumbRoot;
 
-	/**
-	 * url de la opcion del arbol seleccionada *.
-	 */
+	/** url de la opcion del arbol seleccionada */
 	private String opcionUrl;
 
-	/**
-	 * tramite version.
-	 */
+	/** tramite version. */
 	private TramiteVersion tramiteVersion;
 
 	/** Formulario seleccionado. **/
-	private Formulario formularioSeleccionado;
+	private FormularioTramite formularioSeleccionado;
+
+	/** Dato seleccionado en la lista. */
+	private Dominio dominioSeleccionado;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -102,53 +118,531 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		/* inicializa breadcrum */
+		/** Inicializamos los datos. **/
+		recuperarDatos();
+
+		/* inicializa breadcrum y lo creamos */
 		breadCrumbRoot = new DefaultMenuModel();
 
 		DefaultMenuItem item = null;
 
-		item = new DefaultMenuItem("Area 1");
-		item.setUrl("#");
+		item = new DefaultMenuItem(area.getCodigo());
+		item.setUrl("/secure/app/viewTramites.xhtml?MODO_ACCESO=" + modoAcceso + "&area=" + area.getId());
 		breadCrumbRoot.addElement(item);
 
-		item = new DefaultMenuItem("Tramite 1");
-		item.setUrl("#");
+		item = new DefaultMenuItem(tramite.getDescripcion());
+		item.setUrl("/secure/app/viewTramitesVersion.xhtml?MODO_ACCESO=" + modoAcceso + "&ID=" + tramite.getId());
 		breadCrumbRoot.addElement(item);
 
-		item = new DefaultMenuItem("Version " + id.toString());
+		item = new DefaultMenuItem("Version " + tramiteVersion.getNumeroVersion());
 		item.setUrl("#");
 		breadCrumbRoot.addElement(item);
-
 		breadCrumbRoot.generateUniqueIds();
-
 		breadCrumb = copyMenuModel(breadCrumbRoot);
 
-		/* recuperamos los datos */
-		recuperaTramiteVersion(id);
-
-		/** Inicializamos el arbol. **/
+		/* Inicializamos el arbol. */
 		inicializarArbol();
 	}
+
+	/**
+	 * Abre un di&aacute;logo para editar los datos.
+	 */
+	public void consultarDisenyo() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), "1");
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 720);
+	}
+
+	/**
+	 * Vuelve a recuperar los datos.
+	 */
+	private void recuperarDatos() {
+		/* recuperamos los datos */
+		tramiteVersion = tramiteService.getTramiteVersion(id);
+		area = tramiteService.getAreaTramite(Long.valueOf(tramiteVersion.getIdTramite()));
+		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
+
+		/* obtenemos los pasos del trámite. */
+		final List<TramitePaso> pasos = tramiteService.getTramitePasos(id);
+		tramiteVersion.setListaPasos(pasos);
+		final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
+		tramiteVersion.setListaDominios(dominios);
+	}
+
+	/**
+	 * Consultar Script.
+	 *
+	 * @param iScript
+	 */
+	public void consultarScript(final Long idScript) {
+
+		// Muestra dialogo
+		final Map<String, String> map = new HashMap<>();
+		if (idScript == null) {
+			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
+		} else {
+			final Script script = this.scriptService.getScript(idScript);
+			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
+		}
+		map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 950, 700);
+
+	}
+
+	/**
+	 * Consultar Script.
+	 */
+	public void consultarTraduccion(final Literal literal) {
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, literal, null, null);
+	}
+
+	/**
+	 * Edita el paso seleccionado. Dependiendo del tipo de instancia, abre un tipo o
+	 * no (no todos los pasos necesitan editarse).
+	 */
+	public void editarPaso() {
+		if (this.selectedNode != null) {
+			final TramitePaso paso = ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+			final Map<String, String> map = new HashMap<>();
+			map.put(TypeParametroVentana.ID.toString(), paso.getId().toString());
+
+			if (paso instanceof TramitePasoDebeSaber) {
+
+				UtilJSF.openDialog(DialogDefinicionVersionDebeSaber.class, TypeModoAcceso.EDICION, map, true, 950, 500);
+
+			} else if (paso instanceof TramitePasoTasa) {
+
+				UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, map, true, 950, 700);
+
+			}
+
+		}
+	}
+
+	/**
+	 * Retorno dialogo de un Paso Tramite.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 ***/
+	public void returnDialogoPT(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+
+			switch (respuesta.getModoAcceso()) {
+			case EDICION:
+
+				// Recuperamos el tramite paso y lo actualizamos y damos el mensaje
+				final TramitePaso tramitePasoMod = (TramitePaso) respuesta.getResult();
+				tramiteService.updateTramitePaso(tramitePasoMod);
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+
+				// Podriamos llamar la BBDD o actualizarlo a mano.
+				recuperarDatos();
+				/*
+				 * int posicion = 0; for (TramitePaso tramitePaso :
+				 * tramiteVersion.getListaPasos()) { if
+				 * (tramitePaso.getId().compareTo(tramitePasoMod.getId()) == 0) { break; }
+				 * posicion++; }
+				 *
+				 * if (posicion <= tramiteVersion.getListaPasos().size()) {
+				 * tramiteVersion.getListaPasos().remove(posicion);
+				 * tramiteVersion.getListaPasos().add(posicion, tramitePasoMod); }
+				 */
+
+				// Refrescamos el arbol
+				inicializarArbol();
+
+				break;
+			case ALTA:
+				// Se da por hecho que de alta de momento no existe (ya que los pasos no pueden
+				// ser personalizados)
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+	}
+
+	// ------- VIEW DE EDITAR PROPIEDADES DE TRAMITE VERSION
+
+	/**
+	 * Abre la ventana para editar propiedades.
+	 */
+	public void editarPropiedades() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), id.toString());
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 520);
+	}
+
+	/**
+	 * Cuando vuelve de editar el control de acceso.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoRefrescarTramite(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			tramiteVersion = tramiteService.getTramiteVersion(id);
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+		}
+	}
+
+	// ------- VIEW DE EDITAR CONTROL DE ACCESO DE TRAMITE VERSION
+
+	/**
+	 * Abre la ventana para editar propiedades.
+	 */
+	public void editarControlAcceso() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), id.toString());
+		UtilJSF.openDialog(DialogDefinicionVersionControlAcceso.class, TypeModoAcceso.EDICION, params, true, 950, 520);
+	}
+
+	// ------- VIEW DE DOMINIOS
+
+	/**
+	 * Abre un di&aacute;logo para anyadir los datos.
+	 */
+	public void anyadirDominio() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.tramiteVersion.getId().toString());
+		params.put(TypeParametroVentana.AREA.toString(), this.area.getId().toString());
+		UtilJSF.openDialog(DialogDefinicionVersionDominios.class, TypeModoAcceso.ALTA, params, true, 950, 450);
+	}
+
+	/**
+	 * Abre un di&aacute;logo para anyadir los datos.
+	 */
+	public void quitarDominio() {
+
+		if (!verificarFilaSeleccionada())
+			return;
+
+		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getId(), Long.valueOf(this.id))) {
+
+			dominioService.removeTramiteVersion(this.dominioSeleccionado.getId(), this.tramiteVersion.getId());
+			final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
+			tramiteVersion.setListaDominios(dominios);
+
+		} else {
+
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.relacionInexistente"));
+		}
+
+	}
+
+	/**
+	 * Abre un di&aacute;logo para anyadir los datos.
+	 */
+	public void consultarDominio() {
+
+		if (!verificarFilaSeleccionada())
+			return;
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.getId().toString());
+		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 950, 450);
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoDominio(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.ALTA) {
+			final Dominio dominio = (Dominio) respuesta.getResult();
+			dominioService.addTramiteVersion(dominio.getId(), tramiteVersion.getId());
+
+			final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
+			tramiteVersion.setListaDominios(dominios);
+
+			message = UtilJSF.getLiteral("info.alta.ok");
+
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+	}
+
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarFilaSeleccionada() {
+		boolean filaSeleccionada = true;
+		if (this.dominioSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	// ------- VIEW DE PASO DE RELLENAR ------------------------------
+
+	/**
+	 * Abre un di&aacute;logo para anyadir los datos.
+	 */
+	public void nuevoFormulario() {
+		UtilJSF.openDialog(DialogDefinicionVersionRellenar.class, TypeModoAcceso.ALTA, null, true, 600, 200);
+	}
+
+	/**
+	 * Abre dialogo para editar dato.
+	 */
+	public void editarFormulario() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFormularioSeleccionado())
+			return;
+
+		abrirDialogFormulario(this.formularioSeleccionado);
+	}
+
+	/**
+	 * Abre dialogo para editar dato (desde el arbol).
+	 */
+	public void editarFormularioSeleccionado() {
+
+		abrirDialogFormulario(this.getFormularioTramiteSeleccionado());
+	}
+
+	/**
+	 * Método privado para abrir un formulario.
+	 *
+	 * @param formulario
+	 */
+	private void abrirDialogFormulario(final FormularioTramite formulario) {
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
+		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 500);
+	}
+
+	/**
+	 * Eliminar.
+	 */
+	public void eliminarFormulario() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFormularioSeleccionado())
+			return;
+
+		tramiteService.removeFormulario(this.getTramitePasoRELLSeleccionado().getId(),
+				this.formularioSeleccionado.getId());
+
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
+	}
+
+	/**
+	 * Verifica si hay formulario seleccionado.
+	 *
+	 * @return
+	 */
+	private boolean verificarFormularioSeleccionado() {
+		boolean filaSeleccionada = true;
+		if (this.formularioSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	/**
+	 * Sube el formulario.
+	 */
+	public void subirFormulario() {
+		if (!verificarFormularioSeleccionado())
+			return;
+
+		final TramitePasoRellenar tramitePasoRellenar = this.getTramitePasoRELLSeleccionado();
+		final int posicion = posicionFormulario(this.formularioSeleccionado);
+
+		if (posicion <= 0) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			return;
+		}
+
+		final FormularioTramite formulario = tramitePasoRellenar.getFormulariosTramite().remove(posicion);
+		tramitePasoRellenar.getFormulariosTramite().add(posicion - 1, formulario);
+
+		for (int i = 0; i < tramitePasoRellenar.getFormulariosTramite().size(); i++) {
+			tramitePasoRellenar.getFormulariosTramite().get(i).setOrden(i + 1);
+		}
+
+		tramiteService.updateTramitePaso(tramitePasoRellenar);
+
+	}
+
+	/**
+	 * Baja el formulario.
+	 */
+	public void bajarFormulario() {
+		if (!verificarFormularioSeleccionado())
+			return;
+
+		final TramitePasoRellenar tramitePasoRellenar = this.getTramitePasoRELLSeleccionado();
+
+		final int posicion = posicionFormulario(this.formularioSeleccionado);
+
+		if (posicion >= tramitePasoRellenar.getFormulariosTramite().size() - 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			return;
+		}
+
+		final FormularioTramite formulario = tramitePasoRellenar.getFormulariosTramite().remove(posicion);
+		tramitePasoRellenar.getFormulariosTramite().add(posicion + 1, formulario);
+
+		for (int i = 0; i < tramitePasoRellenar.getFormulariosTramite().size(); i++) {
+			tramitePasoRellenar.getFormulariosTramite().get(i).setOrden(i + 1);
+		}
+
+		tramiteService.updateTramitePaso(tramitePasoRellenar);
+	}
+
+	/**
+	 *
+	 * @param formulario
+	 * @return
+	 */
+	private int posicionFormulario(final FormularioTramite formulario) {
+		int posicion = 0;
+
+		for (final FormularioTramite formTram : this.getTramitePasoRELLSeleccionado().getFormulariosTramite()) {
+			if (formTram.getId().compareTo(formulario.getId()) == 0) {
+				break;
+			}
+			posicion++;
+		}
+		return posicion;
+	}
+
+	/**
+	 * Retorno dialogo de un Paso Tramite.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 ***/
+	public void returnDialogoFormulario(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			final FormularioTramite formulario = (FormularioTramite) respuesta.getResult();
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+
+				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().add(formulario);
+				tramiteService.updateTramitePaso(this.getTramitePasoRELLSeleccionado());
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				final int posicion = this.posicionFormulario(formulario);
+				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().remove(posicion);
+				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().add(posicion, formulario);
+				tramiteService.updateTramitePaso(this.getTramitePasoRELLSeleccionado());
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Si el mensaje está relleno es que ha habido algún cambio
+			recuperarDatos();
+			inicializarArbol();
+		}
+
+	}
+
+	private Long getIdSelectNode() {
+		Long idSelectNode = null;
+		if (this.selectedNode != null && this.selectedNode.getData() != null) {
+			final OpcionArbol opcionArbol = (OpcionArbol) this.selectedNode.getData();
+			if (opcionArbol.getTramitePaso() != null) {
+				idSelectNode = opcionArbol.getTramitePaso().getId();
+			} else if (opcionArbol.getDocumento() != null) {
+				idSelectNode = opcionArbol.getDocumento().getId();
+			} else if (opcionArbol.getFormulario() != null) {
+				idSelectNode = opcionArbol.getFormulario().getId();
+			} else if (opcionArbol.getTasa() != null) {
+				idSelectNode = opcionArbol.getTasa().getId();
+			}
+		}
+
+		return idSelectNode;
+	}
+
+	// ------- FUNCIONES PRIVADAS ------------------------------
 
 	/**
 	 * Método que se encarga de cargar de nuevo el arbol.
 	 */
 	private void inicializarArbol() {
+
+		// Nos guardamos el nodo seleccionado si hiciese falta y se marca a nulo
+		final Long idNodoSeleccionado = this.getIdSelectNode();
+		OpcionArbol nodoSeleccionado = null;
+		if (this.selectedNode != null && this.selectedNode.getData() != null) {
+			nodoSeleccionado = (OpcionArbol) this.selectedNode.getData();
+		}
+		this.selectedNode = null;
+
 		/* inicializa arbol */
 		root = new DefaultTreeNode("Root", null);
 
-		root.getChildren()
-				.add(new DefaultTreeNode(new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.propiedades"),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPropiedades"))));
+		/** Nodo Propiedades. **/
+		final DefaultTreeNode nodoPropiedades = new DefaultTreeNode(
+				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.propiedades"),
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPropiedades")));
+		marcarNodoComoSeleccionado(nodoPropiedades, null, "viewDefinicionVersionPropiedades", nodoSeleccionado,
+				idNodoSeleccionado);
+		root.getChildren().add(nodoPropiedades);
 
-		root.getChildren().add(
-				new DefaultTreeNode(new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.controlAcceso"),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionControlAcceso"))));
+		/** Nodo Control acceso. **/
+		final DefaultTreeNode nodoControlAcceso = new DefaultTreeNode(
+				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.controlAcceso"),
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionControlAcceso")));
+		marcarNodoComoSeleccionado(nodoControlAcceso, null, "viewDefinicionVersionControlAcceso", nodoSeleccionado,
+				idNodoSeleccionado);
+		root.getChildren().add(nodoControlAcceso);
 
-		root.getChildren()
-				.add(new DefaultTreeNode(
-						new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.dominiosEmpleados"),
-								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionDominios"))));
+		/** Nodo Dominios. **/
+		final DefaultTreeNode nodoDominios = new DefaultTreeNode(
+				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.dominiosEmpleados"),
+						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionDominios")));
+		marcarNodoComoSeleccionado(nodoDominios, null, "viewDefinicionVersionDominios", nodoSeleccionado,
+				idNodoSeleccionado);
+		root.getChildren().add(nodoDominios);
 
 		final TreeNode nodePasosTramitacion = new DefaultTreeNode(
 				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.pasosTramitacion"),
@@ -157,88 +651,101 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		for (final TramitePaso tramitePaso : this.tramiteVersion.getListaPasos()) {
 
-			if (tramitePaso instanceof TramitePasoDebeSaber) {
-				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
-						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionDebeSaber", tramitePaso.getId()),
-						tramitePaso));
+			/** Nodo paso. **/
+			final Long idTramite = tramitePaso.getId();
+			final String textoTramite = String.valueOf(tramitePaso.getOrden()) + ". "
+					+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang());
 
-				nodePasosTramitacion.getChildren().add(nodo);
-			} else if (tramitePaso instanceof TramitePasoRellenar) {
+			final String url = UtilJSF.getUrlTramitePaso(tramitePaso);
+			final DefaultTreeNode nodo = new DefaultTreeNode(
+					new OpcionArbol(textoTramite, UtilJSF.getUrlArbolDefinicionVersion(url, idTramite), tramitePaso));
+			marcarNodoComoSeleccionado(nodo, idTramite, url, nodoSeleccionado, idNodoSeleccionado);
 
-				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
-						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionRellenar", tramitePaso.getId()),
-						tramitePaso));
+			if (tramitePaso instanceof TramitePasoRellenar
+					&& ((TramitePasoRellenar) tramitePaso).getFormulariosTramite() != null
+					&& !((TramitePasoRellenar) tramitePaso).getFormulariosTramite().isEmpty()) {
 
-				if (((TramitePasoRellenar) tramitePaso).getFormulariosTramite() != null
-						&& !((TramitePasoRellenar) tramitePaso).getFormulariosTramite().isEmpty()) {
+				for (final FormularioTramite formulario : ((TramitePasoRellenar) tramitePaso).getFormulariosTramite()) {
 
-					for (final Formulario formulario : ((TramitePasoRellenar) tramitePaso).getFormulariosTramite()) {
-						final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(formulario.getCodigo(),
-								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario",
-										formulario.getId()),
-								formulario, tramitePaso));
+					/** Nodo formularios. **/
+					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(new OpcionArbol(formulario.getCodigo(),
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario", formulario.getId()),
+							formulario, tramitePaso));
+					marcarNodoComoSeleccionado(nodoFormulario, formulario.getId(), "viewDefinicionVersionFormulario",
+							nodoSeleccionado, idNodoSeleccionado);
+					nodo.getChildren().add(nodoFormulario);
 
-						nodo.getChildren().add(nodoRellenar);
-					}
 				}
-				nodePasosTramitacion.getChildren().add(nodo);
-			} else if (tramitePaso instanceof TramitePasoAnexar) {
 
-				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
-						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexarDocumentos",
-								tramitePaso.getId()),
-						tramitePaso));
+			} else if (tramitePaso instanceof TramitePasoAnexar
+					&& ((TramitePasoAnexar) tramitePaso).getDocumentos() != null
+					&& !((TramitePasoAnexar) tramitePaso).getDocumentos().isEmpty()) {
 
-				if (((TramitePasoAnexar) tramitePaso).getDocumentos() != null
-						&& !((TramitePasoAnexar) tramitePaso).getDocumentos().isEmpty()) {
+				for (final Documento documento : ((TramitePasoAnexar) tramitePaso).getDocumentos()) {
 
-					for (final Documento documento : ((TramitePasoAnexar) tramitePaso).getDocumentos()) {
-						final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(documento.getCodigo(),
-								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo", documento.getId()),
-								documento, tramitePaso));
+					/** Nodo documento. **/
+					final DefaultTreeNode nodoDocumento = new DefaultTreeNode(new OpcionArbol(documento.getCodigo(),
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo", documento.getId()),
+							documento, tramitePaso));
+					marcarNodoComoSeleccionado(nodoDocumento, documento.getId(), "viewDefinicionVersionAnexo",
+							nodoSeleccionado, idNodoSeleccionado);
+					nodo.getChildren().add(nodoDocumento);
 
-						nodo.getChildren().add(nodoRellenar);
-					}
 				}
-				nodePasosTramitacion.getChildren().add(nodo);
-			} else if (tramitePaso instanceof TramitePasoTasa) {
 
-				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
-						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPagarTasas", tramitePaso.getId()),
-						tramitePaso));
+			} else if (tramitePaso instanceof TramitePasoTasa && ((TramitePasoTasa) tramitePaso).getTasas() != null
+					&& !((TramitePasoTasa) tramitePaso).getTasas().isEmpty()) {
 
-				if (((TramitePasoTasa) tramitePaso).getTasas() != null
-						&& !((TramitePasoTasa) tramitePaso).getTasas().isEmpty()) {
+				for (final Tasa tasa : ((TramitePasoTasa) tramitePaso).getTasas()) {
 
-					for (final Tasa tasa : ((TramitePasoTasa) tramitePaso).getTasas()) {
-						final TreeNode nodoRellenar = new DefaultTreeNode(new OpcionArbol(tasa.getCodigo(),
-								UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa", tasa.getId()), tasa,
-								tramitePaso));
+					/** Nodo Tasa. **/
+					final DefaultTreeNode nodoTasa = new DefaultTreeNode(new OpcionArbol(tasa.getCodigo(),
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa", tasa.getId()), tasa,
+							tramitePaso));
+					marcarNodoComoSeleccionado(nodoTasa, tasa.getId(), "viewDefinicionVersionTasa", nodoSeleccionado,
+							idNodoSeleccionado);
+					nodo.getChildren().add(nodoTasa);
 
-						nodo.getChildren().add(nodoRellenar);
-					}
 				}
-				nodePasosTramitacion.getChildren().add(nodo);
-			} else {
-				final TreeNode nodo = new DefaultTreeNode(new OpcionArbol(
-						String.valueOf(tramitePaso.getOrden()) + ". "
-								+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang()),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionRegistrarTramite",
-								tramitePaso.getId()),
-						tramitePaso));
-				nodePasosTramitacion.getChildren().add(nodo);
+
 			}
+
+			nodePasosTramitacion.getChildren().add(nodo);
+
 		}
 
 		setExpandedRecursively(root, true);
+	}
+
+	/**
+	 * Se encarga de marcar un nodo como seleccionado si era el antiguo nodo
+	 * seleccionado.
+	 *
+	 * @param nodoArbol
+	 * @param idNodoArbol
+	 * @param urlNodoArbol
+	 * @param nodoSeleccionado
+	 * @param idNodoSeleccionado
+	 * @return
+	 */
+	private void marcarNodoComoSeleccionado(final DefaultTreeNode nodoArbol, final Long idNodoArbol,
+			final String urlNodoArbol, final OpcionArbol nodoSeleccionado, final Long idNodoSeleccionado) {
+		// Si el nodo no tiene arbol, hay que ver si por url.
+		if (idNodoArbol == null) {
+
+			if (nodoSeleccionado != null && urlNodoArbol != null && nodoSeleccionado != null
+					&& nodoSeleccionado.getUrl().contains(urlNodoArbol)) {
+				this.selectedNode = nodoArbol;
+				nodoArbol.setSelected(true);
+			}
+
+		} else { // Si tiene id, se tienen que comparar por id
+
+			if (idNodoSeleccionado != null && idNodoSeleccionado.compareTo(idNodoArbol) == 0) {
+				this.selectedNode = nodoArbol;
+				nodoArbol.setSelected(true);
+			}
+		}
 	}
 
 	/**
@@ -257,6 +764,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			node.setExpanded(expanded);
 		}
 	}
+
+	// ------- GETTERS / SETTERS --------------------------------
 
 	/**
 	 * Establece el valor de selectedNode.
@@ -278,6 +787,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return null;
 		} else {
 			return ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
+	}
+
+	/**
+	 * Formulario trámite paso seleccionado.
+	 *
+	 * @return
+	 */
+	public FormularioTramite getFormularioTramiteSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return ((OpcionArbol) this.selectedNode.getData()).getFormulario();
 		}
 	}
 
@@ -396,431 +918,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Recupera tramite version.
-	 *
-	 * @param id
-	 *            el id de tramite version
-	 */
-	private void recuperaTramiteVersion(final Long id) {
-		tramiteVersion = new TramiteVersion();
-		tramiteVersion.setId(id);
-
-		tramiteVersion.setAutenticado(true);
-		tramiteVersion.setNivelQAA(2);
-		tramiteVersion.setIdiomasSoportados("es,ca");
-		tramiteVersion.setPersistencia(true);
-		tramiteVersion.setPersistenciaInfinita(false);
-		tramiteVersion.setPersistenciaDias(15);
-		tramiteVersion.setIdScriptPersonalizacion(Long.valueOf(2));
-		// tramiteVersion.setIdScriptInicializacionTramite(Long.valueOf(3));
-
-		/* control acceso */
-		tramiteVersion.setActiva(true);
-		tramiteVersion.setDesactivacion(true);
-		final Calendar dia = Calendar.getInstance();
-		dia.set(2018, 1, 1);
-		tramiteVersion.setPlazoInicioDesactivacion(dia.getTime());
-		tramiteVersion.setPlazoFinDesactivacion(new Date());
-		final Literal desact1 = new Literal();
-		desact1.add(new Traduccion("es", "Mensaje de desactivacion"));
-		desact1.add(new Traduccion("ca", "Missatge de desactivació"));
-		tramiteVersion.setMensajeDesactivacion(desact1);
-		tramiteVersion.setDebug(true);
-		tramiteVersion.setLimiteTramitacion(true);
-		tramiteVersion.setNumLimiteTramitacion(1);
-		tramiteVersion.setIntLimiteTramitacion(2);
-
-		/* dominio */
-		final Dominio dominio1 = new Dominio();
-		dominio1.setId(1L);
-		dominio1.setCodigo("1");
-		dominio1.setDescripcion("Dominio 1");
-		dominio1.setAmbito(TypeAmbito.GLOBAL);
-		final Dominio dominio2 = new Dominio();
-		dominio2.setId(2L);
-		dominio2.setCodigo("2");
-		dominio2.setDescripcion("Dominio 2");
-		dominio2.setAmbito(TypeAmbito.AREA);
-		final Dominio dominio3 = new Dominio();
-		dominio3.setId(3L);
-		dominio3.setCodigo("3");
-		dominio3.setDescripcion("Dominio 3");
-		dominio3.setAmbito(TypeAmbito.GLOBAL);
-		final Dominio dominio4 = new Dominio();
-		dominio4.setId(4L);
-		dominio4.setCodigo("4");
-		dominio4.setDescripcion("Dominio 4");
-		dominio4.setAmbito(TypeAmbito.ENTIDAD);
-		final Dominio dominio5 = new Dominio();
-		dominio5.setId(5L);
-		dominio5.setCodigo("5");
-		dominio5.setDescripcion("Dominio 5");
-		dominio5.setAmbito(TypeAmbito.GLOBAL);
-
-		final ArrayList<Dominio> listaDominios = new ArrayList<>();
-		listaDominios.add(dominio1);
-		listaDominios.add(dominio2);
-		listaDominios.add(dominio3);
-		listaDominios.add(dominio4);
-		listaDominios.add(dominio5);
-
-		tramiteVersion.setListaDominios(listaDominios);
-
-		/* iniciliza pasos tramite */
-		final TramitePasoDebeSaber paso1 = new TramitePasoDebeSaber();
-		paso1.setId(1L);
-		paso1.setCodigo("1");
-		final Literal literal1 = new Literal();
-		literal1.add(new Traduccion("ca", "Debe saber"));
-		literal1.add(new Traduccion("es", "Debe saber"));
-		paso1.setDescripcion(literal1);
-		final Literal tradDebeSaber = new Literal();
-		tradDebeSaber.add(new Traduccion("ca", "<b>Debe saber - ca</b>"));
-		tradDebeSaber.add(new Traduccion("es", "<b>Debe saber - es</b>"));
-		paso1.setInstruccionesIniciales(tradDebeSaber);
-		paso1.setOrden(1);
-		final TramitePasoRellenar paso2 = new TramitePasoRellenar();
-		paso2.setId(2L);
-		paso2.setCodigo("2");
-		final Literal literal2 = new Literal();
-		literal2.add(new Traduccion("ca", "Rellenar"));
-		literal2.add(new Traduccion("es", "Rellenar"));
-		paso2.setDescripcion(literal2);
-		paso2.setOrden(2);
-		final TramitePasoAnexar paso3 = new TramitePasoAnexar();
-		paso3.setId(3L);
-		paso3.setCodigo("3");
-		final Literal literal3 = new Literal();
-		literal3.add(new Traduccion("ca", "anexar Documentos"));
-		literal3.add(new Traduccion("es", "anexar Documentos"));
-		paso3.setDescripcion(literal3);
-		paso3.setOrden(3);
-		final TramitePasoTasa paso4 = new TramitePasoTasa();
-		paso4.setId(4L);
-		paso4.setCodigo("4");
-		final Literal literal4 = new Literal();
-		literal4.add(new Traduccion("ca", "pagar Tasas"));
-		literal4.add(new Traduccion("es", "pagar Tasas"));
-		paso4.setDescripcion(literal4);
-		paso4.setOrden(4);
-		final TramitePaso paso5 = new TramitePaso();
-		paso5.setId(5L);
-		paso5.setCodigo("5");
-		final Literal literal5 = new Literal();
-		literal5.add(new Traduccion("ca", "registrar Tramite"));
-		literal5.add(new Traduccion("es", "registrar Tramite"));
-		paso5.setDescripcion(literal5);
-		paso5.setOrden(5);
-
-		final List<TramitePaso> listaPasos = new ArrayList<>();
-		// DebeSaber
-		listaPasos.add(paso1);
-
-		final Formulario formulario1 = new Formulario();
-		formulario1.setId(1L);
-		formulario1.setCodigo("Formulario1");
-		final Literal traducciones = new Literal();
-		traducciones.add(new Traduccion("ca", "Datos de la solicitud"));
-		traducciones.add(new Traduccion("es", "Datos de la solicitud"));
-		formulario1.setDescripcion(traducciones);
-		formulario1.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
-		formulario1.setTipo(TypeFormulario.TRAMITE);
-		formulario1.setTipoFormulario(TypeInterno.INTERNO);
-
-		final Formulario formulario2 = new Formulario();
-		formulario2.setCodigo("Formulario2");
-		final Literal traducciones2 = new Literal();
-		traducciones2.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
-		traducciones2.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
-		formulario2.setDescripcion(traducciones2);
-		formulario2.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		formulario2.setDebeFirmarse(true);
-		formulario2.setScriptFirma(new Script());
-		formulario2.setDebePrerregistrarse(true);
-		formulario2.setScriptPrerrigistro(new Script());
-		formulario2.setScriptDatosIniciales(new Script());
-		formulario2.setTipoFormulario(TypeInterno.EXTERNO);
-
-		final Formulario formulario3 = new Formulario();
-		formulario3.setCodigo("Formulario3");
-		final Literal traducciones3 = new Literal();
-		traducciones3.add(new Traduccion("ca", "Dades relacionats a l'interessat per a emplar el formulari"));
-		traducciones3.add(new Traduccion("es", "Datos relacionados con el interesado para rellenar el formulario"));
-		formulario3.setDescripcion(traducciones3);
-		formulario3.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		formulario3.setDebeFirmarse(true);
-		formulario3.setScriptFirma(new Script());
-		formulario3.setDebePrerregistrarse(true);
-		formulario3.setScriptPrerrigistro(new Script());
-		formulario3.setScriptDatosIniciales(new Script());
-		formulario3.setTipoFormulario(TypeInterno.EXTERNO);
-
-		final List<Formulario> formularios = new ArrayList<>();
-		formularios.add(formulario1);
-		formularios.add(formulario2);
-		formularios.add(formulario3);
-		paso2.setFormulariosTramite(formularios);
-
-		// Rellenar
-		listaPasos.add(paso2);
-
-		/* inicializa documentos */
-		final Documento documento1 = new Documento();
-		documento1.setId(1L);
-		documento1.setCodigo("Anexo1");
-		final Literal traduccionesdoc1 = new Literal();
-		traduccionesdoc1.add(new Traduccion("ca", "Certificat de penals"));
-		traduccionesdoc1.add(new Traduccion("es", "Certificado de penales"));
-		documento1.setDescripcion(traduccionesdoc1);
-		documento1.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		final Documento documento2 = new Documento();
-		documento2.setId(2L);
-		documento2.setCodigo("Anexo2");
-		final Literal traduccionesdoc2 = new Literal();
-		traduccionesdoc2.add(new Traduccion("ca", "Titols acadèmics"));
-		traduccionesdoc2.add(new Traduccion("es", "Titulos academicos"));
-		documento2.setDescripcion(traduccionesdoc2);
-		documento2.setObligatoriedad(TypeFormularioObligatoriedad.DEPENDIENTE);
-
-		final List<Documento> listaDocumentos = new ArrayList<>();
-		listaDocumentos.add(documento1);
-		listaDocumentos.add(documento2);
-		paso3.setDocumentos(listaDocumentos);
-
-		listaPasos.add(paso3);
-
-		/* inicializa tasas */
-		final Tasa tasa1 = new Tasa();
-		tasa1.setId(1L);
-		tasa1.setCodigo("Tasa1");
-		final Literal trad1 = new Literal();
-		trad1.add(new Traduccion("ca", "Tasa de inscripció"));
-		trad1.add(new Traduccion("es", "Tasa de inscripción"));
-		tasa1.setDescripcion(trad1);
-		tasa1.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		tasa1.setTipo(TypePago.TELEMATICO);
-		final Tasa tasa2 = new Tasa();
-		tasa2.setId(2L);
-		tasa2.setCodigo("Tasa2");
-		final Literal trad2 = new Literal();
-		trad2.add(new Traduccion("ca", "Tasa de inscripció"));
-		trad2.add(new Traduccion("es", "Tasa de inscripción"));
-		tasa2.setDescripcion(trad2);
-		tasa2.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
-		tasa2.setTipo(TypePago.PRESENCIAL);
-
-		final List<Tasa> listaTasas = new ArrayList<>();
-		listaTasas.add(tasa1);
-		listaTasas.add(tasa2);
-		paso4.setTasas(listaTasas);
-		listaPasos.add(paso4);
-		listaPasos.add(paso5);
-
-		// Prepara los formularios
-		final List<Formulario> listaFormularios = new ArrayList<>();
-		listaFormularios.add(formulario1);
-		listaFormularios.add(formulario2);
-		listaFormularios.add(formulario3);
-
-		tramiteVersion.setListaPasos(listaPasos);
-	}
-
-	/**
-	 * Retorno dialogo de un Paso Tramite.
-	 *
-	 * @param event
-	 *            respuesta dialogo
-	 ***/
-	public void returnDialogoPT(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		if (!respuesta.isCanceled()) {
-
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-
-				final TramitePaso tramitePaso = (TramitePaso) respuesta.getResult();
-				tramiteVersion.getListaPasos().add(tramitePaso);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
-			case EDICION:
-
-				final TramitePaso tramitePasoMod = (TramitePaso) respuesta.getResult();
-				for (int i = 0; i < tramiteVersion.getListaPasos().size(); i++) {
-					if (tramiteVersion.getListaPasos().get(i).getId().compareTo(tramitePasoMod.getId()) == 0) {
-						tramiteVersion.getListaPasos().remove(i);
-						tramiteVersion.getListaPasos().add(i, tramitePasoMod);
-						break;
-					}
-				}
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
-
-		final TreeNode seleccionado = this.selectedNode;
-		inicializarArbol();
-		this.selectedNode = seleccionado;
-	}
-
-	/**
-	 * Retorno dialogo de un Paso Tramite.
-	 *
-	 * @param event
-	 *            respuesta dialogo
-	 ***/
-	public void returnDialogoFormulario(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		if (!respuesta.isCanceled()) {
-
-			final Long idTP = this.getTramitePasoRELLSeleccionado().getId();
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-
-				final Formulario formularioNew = (Formulario) respuesta.getResult();
-
-				// Busca el tramite paso y lo añadimos
-				for (int i = 0; i < tramiteVersion.getListaPasos().size(); i++) {
-					if (tramiteVersion.getListaPasos().get(i).getId().compareTo(idTP) == 0) {
-						((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i)).getFormulariosTramite()
-								.add(formularioNew);
-						break;
-					}
-				}
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
-			case EDICION:
-				final Formulario formularioMod = (Formulario) respuesta.getResult();
-
-				// Busca el tramite paso y lo añadimos
-				for (int i = 0; i < tramiteVersion.getListaPasos().size(); i++) {
-					if (tramiteVersion.getListaPasos().get(i).getId().compareTo(idTP) == 0) {
-						final TramitePasoRellenar tpr = ((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i));
-						for (int j = 0; j < tpr.getFormulariosTramite().size(); j++) {
-							if (tpr.getFormulariosTramite().get(j).getId().compareTo(formularioMod.getId()) == 0) {
-								((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i)).getFormulariosTramite()
-										.remove(j);
-								((TramitePasoRellenar) tramiteVersion.getListaPasos().get(i)).getFormulariosTramite()
-										.add(j, formularioMod);
-								break;
-							}
-						}
-					}
-				}
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
-
-		final TreeNode seleccionado = this.selectedNode;
-		inicializarArbol();
-		this.selectedNode = seleccionado;
-	}
-
-	/**
-	 * Elimina formulario.
-	 */
-	public void eliminar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFormularioSeleccionado())
-			return;
-
-		// this.selectedNode.getFormulariosTramite().remove(this.formularioSeleccionado);
-	}
-
-	/**
-	 * Verifica si hay formulario seleccionado.
-	 *
-	 * @return
-	 */
-	private boolean verificarFormularioSeleccionado() {
-		boolean filaSeleccionada = true;
-		if (this.formularioSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
-			filaSeleccionada = false;
-		}
-		return filaSeleccionada;
-	}
-
-	/**
-	 * Sube el formulario.
-	 */
-	public void subir() {
-		if (!verificarFormularioSeleccionado())
-			return;
-		/*
-		 * final int posicion =
-		 * this.data.getFormulariosTramite().indexOf(this.formularioSeleccionado); if
-		 * (posicion <= 0) { UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-		 * UtilJSF.getLiteral("error.moverarriba")); return; }
-		 *
-		 * final Formulario formulario =
-		 * this.data.getFormulariosTramite().remove(posicion);
-		 * this.data.getFormulariosTramite().add(posicion - 1, formulario);
-		 *
-		 * for (int i = 0; i < this.data.getFormulariosTramite().size(); i++) {
-		 * this.data.getFormulariosTramite().get(i).setOrden(i + 1); }
-		 */
-	}
-
-	/**
-	 * Baja el formulario.
-	 */
-	public void bajarFormulario() {
-		if (!verificarFormularioSeleccionado())
-			return;
-		/*
-		 * final int posicion =
-		 * this.data.getFormulariosTramite().indexOf(this.formularioSeleccionado); if
-		 * (posicion >= this.data.getFormulariosTramite().size() - 1) {
-		 * UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-		 * UtilJSF.getLiteral("error.moverabajo")); return; }
-		 *
-		 * final Formulario formulario =
-		 * this.data.getFormulariosTramite().remove(posicion);
-		 * this.data.getFormulariosTramite().add(posicion + 1, formulario);
-		 *
-		 * for (int i = 0; i < this.data.getFormulariosTramite().size(); i++) {
-		 * this.data.getFormulariosTramite().get(i).setOrden(i + 1); }
-		 */
-	}
-
-	/**
 	 * Obtiene el valor de id.
 	 *
 	 * @return el valor de id
@@ -907,7 +1004,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * @return the formularioSeleccionado
 	 */
-	public Formulario getFormularioSeleccionado() {
+	public FormularioTramite getFormularioSeleccionado() {
 		return formularioSeleccionado;
 	}
 
@@ -915,7 +1012,22 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @param formularioSeleccionado
 	 *            the formularioSeleccionado to set
 	 */
-	public void setFormularioSeleccionado(final Formulario formularioSeleccionado) {
+	public void setFormularioSeleccionado(final FormularioTramite formularioSeleccionado) {
 		this.formularioSeleccionado = formularioSeleccionado;
+	}
+
+	/**
+	 * @return the dominioSeleccionado
+	 */
+	public Dominio getDominioSeleccionado() {
+		return dominioSeleccionado;
+	}
+
+	/**
+	 * @param dominioSeleccionado
+	 *            the dominioSeleccionado to set
+	 */
+	public void setDominioSeleccionado(final Dominio dominioSeleccionado) {
+		this.dominioSeleccionado = dominioSeleccionado;
 	}
 }

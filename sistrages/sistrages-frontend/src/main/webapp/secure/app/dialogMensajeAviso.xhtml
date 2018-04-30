@@ -54,10 +54,16 @@
 					<p:selectBooleanCheckbox id="activo" value="#{dialogMensajeAviso.data.bloqueado}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="40" />
 
 					<p:outputLabel for="fechaInicio" value="#{msg['dialogMensajeAviso.headerFechaInicio']}" />
-					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="8" locale="#{sessionBean.locale}"/>
+					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button"/>
 
 					<p:outputLabel for="fechaFin" value="#{msg['dialogMensajeAviso.headerFechaFin']}" />
-					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="8" locale="#{sessionBean.locale}"/>
+					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button"/>
+
+					<p:outputLabel for="listaTramites" value="#{msg['dialogMensajeAviso.headerListaTramites']}" />
+					<p:inputTextarea  id="listaTramites" value="#{dialogMensajeAviso.data.listaSerializadaTramites}" rows="4" cols="50"/>
+
+					<p:spacer width="5" height="1"/>
+					<p:outputLabel styleClass="outputlabel-nota" value="#{msg['dialogMensajeAviso.headerListaTramitesFormato']}" />
 
 				</h:panelGrid>
 
@@ -65,7 +71,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogMensajeAviso.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogMensajeAviso.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this"  rendered="#{dialogMensajeAviso.isConsulta()}"/>
 					</f:facet>

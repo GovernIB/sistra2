@@ -90,6 +90,14 @@ public interface DominioDao {
 	void removeByEntidad(final Long idEntidad);
 
 	/**
+	 * Elimina dominios area.
+	 *
+	 * @param idArea
+	 *            idArea
+	 */
+	void removeByArea(final Long idArea);
+
+	/**
 	 * Actualiza dominio.
 	 *
 	 * @param dominio
@@ -97,4 +105,28 @@ public interface DominioDao {
 	 */
 	void updateDominio(Dominio dominio);
 
+	/**
+	 * Añade una relación entre dominio y versión trámite.
+	 *
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 */
+	void addTramiteVersion(Long idDominio, Long idTramiteVersion);
+
+	/**
+	 * Elimina una relación entre dominio y versión trámite.
+	 *
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 */
+	void removeTramiteVersion(Long idDominio, Long idTramiteVersion);
+
+	/**
+	 * Comprueba si tiene un tramite versión un dominio.
+	 *
+	 * @param idDominio
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	boolean tieneTramiteVersion(Long idDominio, Long idTramiteVersion);
 }

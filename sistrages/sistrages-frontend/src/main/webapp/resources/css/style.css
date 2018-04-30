@@ -418,6 +418,20 @@ body{
   color: #ffffff !important;
 }
 
+.boton-rojo {
+  border: 1px solid #ff0000 !important ;
+  background: #ff8080 !important;
+  font-weight: normal !important;
+  color: #ffffff !important;
+}
+
+.boton-rojo:hover  {
+  border: 1px solid #ff0000 !important ;
+  background: #ff8080 !important;
+  font-weight: normal !important;
+  color: #ffffff !important;
+}
+
 .boton-con-datos {
   color: #59ACFF !important;
 }
@@ -462,7 +476,7 @@ label.ui-state-disabled {
 
 .confirmar_icono {height: auto !important;width: auto !important;}
 
-.outputlabel-nota {font-size:8pt !important;font-style: italic;}
+.outputlabel-nota {font-size:9pt !important;font-style: italic;}
 
 .formulario-frame {width:100%; height:600px; overflow:auto;border: none;}
 
@@ -474,8 +488,19 @@ label.ui-state-disabled {
 	margin-right: 10px !important;
 }
 
+.barra-herramientas-vertical > * {
+	margin-top: 5px !important;
+}
+
+.no-display {
+	display: none;
+}
 
 /** Para cambiar el fondo a los inputs y se vea blanco. **/
 /* .ui-inputfield { */
 /* 	background: white; */
 /* } */
+
+.CodeMirror {
+	height: 500px !important;
+}

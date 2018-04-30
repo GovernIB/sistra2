@@ -49,7 +49,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogFormateadorFormulario.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFormateadorFormulario.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this"  rendered="#{dialogFormateadorFormulario.isConsulta()}"/>
 					</f:facet>

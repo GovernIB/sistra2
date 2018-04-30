@@ -9,8 +9,8 @@
 
 <h:body>
 
-		<h:form id="formDisenyoTextbox" styleClass="h100">
-			<h3 style="margin-bottom:2px">
+	<h:form id="formDisenyoTextbox" styleClass="h100">
+		<h3 class="margin-top-3 margin-bottom-3">
 			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.' += dialogDisenyoFormulario.componentEdit.tipo]}" />
 		</h3>
 
@@ -18,7 +18,7 @@
 
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
 
-	         <h:panelGrid columns="2" header="Propietats">
+	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}">
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
 	         		<h:inputText value="#{dialogDisenyoFormulario.componentEdit.codigo}">

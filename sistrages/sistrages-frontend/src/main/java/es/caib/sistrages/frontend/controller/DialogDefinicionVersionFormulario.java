@@ -1,22 +1,22 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Formulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeFormulario;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -30,8 +30,12 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Data. **/
-	private Formulario data;
+	private FormularioTramite data;
 
 	/** tramite. **/
 	private TramiteVersion tramite;
@@ -39,24 +43,11 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Id. **/
 	private String id;
 
-	@PostConstruct
+	/** Init. **/
 	public void init() {
-		// TODO tendría que obtener el tramitePasoRellenar a partir de la id.
-		id = "1";
-		data = new Formulario();
-		data.setId(1L);
-		data.setCodigo("Formulario1");
-		final Literal traducciones = new Literal();
-		traducciones.add(new Traduccion("ca", "Datos de la solicitud"));
-		traducciones.add(new Traduccion("es", "Datos de la solicitud"));
-		data.setDescripcion(traducciones);
-		data.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
-		data.setTipo(TypeFormulario.TRAMITE);
-		data.setDebeFirmarse(true);
-		data.setDebePrerregistrarse(true);
 
-		tramite = new TramiteVersion();
-		tramite.setIdiomasSoportados("ca;es;en");
+		data = tramiteService.getFormulario(Long.valueOf(id));
+
 	}
 
 	/**
@@ -68,46 +59,28 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	public void returnDialogo(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
 		if (!respuesta.isCanceled()) {
 
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-
+			case EDICION:
 				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
 				break;
 
-			case EDICION:
-
-				final Literal traduccionesTipoIncid = (Literal) respuesta.getResult();
-				data.setDescripcion(traduccionesTipoIncid);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
 			case CONSULTA:
 				// No hay que hacer nada
 				break;
 			}
 		}
 
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
 	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 *
-	 * 
+	 *
 	 */
 	public void editarDescripcion() {
 		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramite);
@@ -149,6 +122,15 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Abre un di&aacute;logo para editar los datos.
+	 */
+	public void editarDisenyo() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), "1");
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 720);
+	}
+
+	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionFormulario1.
 	 */
 	public DialogDefinicionVersionFormulario() {
@@ -173,7 +155,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public Formulario getData() {
+	public FormularioTramite getData() {
 		return data;
 	}
 
@@ -181,7 +163,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final Formulario data) {
+	public void setData(final FormularioTramite data) {
 		this.data = data;
 	}
 

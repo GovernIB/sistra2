@@ -259,7 +259,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
 		}
-		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 530, 250);
+		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 600, 350);
 	}
 
 }

@@ -23,7 +23,7 @@ public interface FormularioSoporteDao {
 	 *
 	 * @param idEntidad
 	 *            identificador de entidad
-	 * @param fmt
+	 * @param fst
 	 *            el formulario de soporte
 	 */
 	void add(Long idEntidad, FormularioSoporte fst);
@@ -39,7 +39,7 @@ public interface FormularioSoporteDao {
 	/**
 	 * Actualiza el formulario de soporte.
 	 *
-	 * @param fmt
+	 * @param fst
 	 *            el formulario de soporte
 	 */
 	void update(FormularioSoporte fst);

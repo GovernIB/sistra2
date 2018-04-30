@@ -1,12 +1,14 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.primefaces.context.RequestContext;
@@ -17,12 +19,14 @@ import es.caib.sistrages.core.api.exception.ErrorNoControladoException;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
-import es.caib.sistrages.core.api.model.FormularioDisenyo;
+import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.FormularioMockBD;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
@@ -37,53 +41,60 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogDisenyoFormulario extends DialogControllerBase {
 
-	/** Id formulario . */
+	@Inject
+	FormularioInternoService formIntService;
+
+	/** Id formulario **/
 	private String id;
 
-	/** Formulario. */
-	private FormularioDisenyo formulario;
+	/** Formulario. **/
+	private FormularioInterno formulario;
 
-	/** Código Componente seleccionado. */
+	private int paginaActual;
+
+	private String posicionamiento;
+
+	/** quitar: Código Componente seleccionado. */
 	private String componentSelectedCodigo;
 
-	/** Componente editado (copia original). */
+	/** Componente editado (copia original). **/
 	private ComponenteFormulario componentEdit;
 
-	/** Traducciones editado (cuando se llama a editar traducciones). */
+	/** Traducciones editado (cuando se llama a editar traducciones). **/
 	private Literal traduccionesEdit;
 
 	/** Url ventana propiedades **/
 	private String panelPropiedadesUrl;
 
-	/** Url detalle componente. */
+	/** Url detalle componente. **/
 	private String detalleComponenteUrl;
 
-	/** Url iframe. */
+	/** Url iframe. **/
 	private String urlIframe;
 
 	/**
 	 * Indica si esta 'colapsado' el panel de propiedades (a true colapsado).
-	 */
+	 **/
 	private boolean visiblePropiedades = false;
 
 	/**
 	 * Indica si esta 'colapsado' el panel de scripts (a true colapsado).
-	 */
+	 **/
 	private boolean visibleScripts = true;
 
 	/**
 	 * Indica si esta 'colapsado' el panel de estilos (a true colapsado).
-	 */
+	 **/
 	private boolean visibleEstilos = true;
 
 	/**
 	 * Codigo componente destino al pedir confirmacion de cambios.
-	 */
+	 **/
 	private Long codigoComponenteDestino = null;
 
 	/**
 	 * Inicializacion.
-	 */
+	 **/
 	public void init() {
 
 		// TITULO ??
@@ -103,29 +114,32 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		// TODO ¿que campo se selecciona? ninguno?
 		panelPropiedadesUrl = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
 		urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
+		paginaActual = 1;
+		posicionamiento = "D";
 	}
 
 	/**
 	 * Recupera formulario
 	 *
 	 * @param idForm
-	 */
+	 **/
 	private void recuperarFormulario(final String idForm) {
 		// TODO Test
-		formulario = FormularioMockBD.recuperar(Long.parseLong(idForm));
+		// formulario = FormularioMockBD.recuperar(Long.parseLong(idForm));
+		formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(idForm));
 	}
 
 	/**
 	 * Editar.
-	 */
+	 **/
 	public void editarComponente() {
 
 		final FacesContext context = FacesContext.getCurrentInstance();
-		final Map map = context.getExternalContext().getRequestParameterMap();
+		final Map<String, String> map = context.getExternalContext().getRequestParameterMap();
 
 		Long idComponente = null;
 		if (map.get("id") != null) {
-			idComponente = new Long((String) map.get("id"));
+			idComponente = new Long(map.get("id"));
 		}
 
 		// Verificamos si ha habido cambios
@@ -148,6 +162,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	}
 
+	/**
+	 * Cambiar edicion componente.
+	 *
+	 * @param idComponente
+	 *            the id componente
+	 */
 	private void cambiarEdicionComponente(final Long idComponente) {
 		componentEdit = null;
 
@@ -224,6 +244,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	}
 
+	/**
+	 * Confirmacion cambios.
+	 **/
 	public void confirmacionCambios() {
 		// Guarda cambios
 		aplicarCambios();
@@ -232,6 +255,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		codigoComponenteDestino = null;
 	}
 
+	/**
+	 * Aplicar cambios.
+	 **/
 	public void aplicarCambios() {
 
 		if (componentEdit != null) {
@@ -256,6 +282,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 	}
 
+	/**
+	 * Descartar cambios.
+	 **/
 	public void descartarCambios() {
 		// Pasamos a componente destino
 		cambiarEdicionComponente(codigoComponenteDestino);
@@ -315,7 +344,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	/**
 	 * Cancelar.
-	 */
+	 **/
 	public void cancelar() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -323,6 +352,69 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/**
+	 * Abre dialogo para propiedades formulario.
+	 **/
+	public void abrirPropiedadesFormulario() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
+		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 800,
+				340);
+	}
+
+	public int getNumeroPaginas() {
+		return formulario.getPaginas().size();
+	}
+
+	public void moverPaginaIzq() {
+		paginaActual--;
+		if (paginaActual < 1)
+			paginaActual = 1;
+	}
+
+	public void moverPaginaDer() {
+		paginaActual++;
+		if (paginaActual > getNumeroPaginas())
+			paginaActual = getNumeroPaginas();
+	}
+
+	public boolean getHabilitadoBtnPagIzq() {
+		return paginaActual > 1;
+	}
+
+	public boolean getHabilitadoBtnPagDer() {
+		return paginaActual < getNumeroPaginas();
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogo(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			formulario = (FormularioInterno) respuesta.getResult();
+			paginaActual = 1;
+		}
+
+	}
 	// -- Getters / Setters
 
 	/**
@@ -367,18 +459,18 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	public String getUrlIframe() {
-		return urlIframe;
+		return urlIframe + "&id=" + id + "&page=" + paginaActual;
 	}
 
 	public void setUrlIframe(final String urlIframe) {
 		this.urlIframe = urlIframe;
 	}
 
-	public FormularioDisenyo getFormulario() {
+	public FormularioInterno getFormulario() {
 		return formulario;
 	}
 
-	public void setFormulario(final FormularioDisenyo formulario) {
+	public void setFormulario(final FormularioInterno formulario) {
 		this.formulario = formulario;
 	}
 
@@ -449,5 +541,21 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setTraduccionesEdit(final Literal traduccionesEdit) {
 		this.traduccionesEdit = traduccionesEdit;
+	}
+
+	public int getPaginaActual() {
+		return paginaActual;
+	}
+
+	public void setPaginaActual(final int paginaActual) {
+		this.paginaActual = paginaActual;
+	}
+
+	public String getPosicionamiento() {
+		return posicionamiento;
+	}
+
+	public void setPosicionamiento(final String posicionamiento) {
+		this.posicionamiento = posicionamiento;
 	}
 }

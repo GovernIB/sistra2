@@ -15,8 +15,21 @@ public final class PaginaFormulario extends ModelApi {
 	/** Id. */
 	private Long id;
 
+	private Script scriptValidacion;
+
+	private int orden;
+
+	private boolean paginaFinal;
+
 	/** Líneas componentes. */
 	private List<LineaComponentesFormulario> lineas = new ArrayList<LineaComponentesFormulario>();
+
+	/**
+	 * Crea una nueva instancia de PaginaFormulario.
+	 */
+	public PaginaFormulario() {
+		super();
+	}
 
 	public Long getId() {
 		return id;
@@ -32,6 +45,30 @@ public final class PaginaFormulario extends ModelApi {
 
 	public void setLineas(final List<LineaComponentesFormulario> lineas) {
 		this.lineas = lineas;
+	}
+
+	public Script getScriptValidacion() {
+		return scriptValidacion;
+	}
+
+	public void setScriptValidacion(final Script scriptValidacion) {
+		this.scriptValidacion = scriptValidacion;
+	}
+
+	public int getOrden() {
+		return orden;
+	}
+
+	public void setOrden(final int orden) {
+		this.orden = orden;
+	}
+
+	public boolean isPaginaFinal() {
+		return paginaFinal;
+	}
+
+	public void setPaginaFinal(final boolean paginaFinal) {
+		this.paginaFinal = paginaFinal;
 	}
 
 	public ComponenteFormulario getComponente(final String codigoComponente) {
@@ -67,5 +104,4 @@ public final class PaginaFormulario extends ModelApi {
 		}
 		return res;
 	}
-
 }

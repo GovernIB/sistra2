@@ -10,55 +10,55 @@ import es.caib.sistrages.core.api.model.Area;
 public interface AreaDao {
 
 	/**
-	 * Obtiene el area.
+	 * Obtiene un area.
 	 *
-	 * @param pCodigo
-	 *            identificador
-	 * @return el valor area
+	 * @param pId
+	 *            identificador del area
+	 * @return area
 	 */
-	Area getById(final Long pCodigo);
+	Area getById(final Long pId);
+
+	/**
+	 * Obtiene el valor de todas las areas de una entidad.
+	 *
+	 * @param pIdEntidad
+	 *            identificador de la entidad
+	 *
+	 * @return todas las areas de una entidad
+	 */
+	List<Area> getAll(final Long pIdEntidad);
 
 	/**
 	 * Obtiene el valor de todas las areas.
 	 *
-	 * @param idEntidad
-	 *            Id entidad
-	 *
-	 * @return el valor de todas las areas
-	 */
-	List<Area> getAll(final Long idEntidad);
-
-	/**
-	 * Obtiene el valor de todas las areas.
-	 *
-	 * @param idEntidad
-	 *            Id entidad
+	 * @param pIdEntidad
+	 *            identificador de la entidad
 	 * @param pFiltro
 	 *            filtro
-	 * @return el valor de todas las areas
+	 * @return todas las areas de una entidad
 	 */
-	List<Area> getAllByFiltro(final Long idEntidad, final String pFiltro);
+	List<Area> getAllByFiltro(final Long pIdEntidad, final String pFiltro);
 
 	/**
-	 * Añade area.
+	 * Añade un area.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
+	 * @param pIdEntidad
+	 *            identificador de la entidad
 	 * @param pArea
 	 *            area
 	 */
-	void add(Long idEntidad, final Area pArea);
+	void add(Long pIdEntidad, final Area pArea);
 
 	/**
-	 * Elimina area.
+	 * Elimina un area.
 	 *
-	 * @param pCodigo
-	 *            identificador
+	 * @param pId
+	 *            identificador del area
 	 */
-	void remove(final Long pCodigo);
+	void remove(final Long pId);
 
 	/**
-	 * Actualiza area.
+	 * Actualiza un area.
 	 *
 	 * @param pArea
 	 *            area

@@ -13,6 +13,9 @@ public class TramitePaso extends ModelApi {
 	/** Id. */
 	private Long id;
 
+	/** Id de la relacion. **/
+	private Long idPasoRelacion;
+
 	/** Trámite version. **/
 	private TramiteVersion tramiteVersion;
 
@@ -186,6 +189,20 @@ public class TramitePaso extends ModelApi {
 	 */
 	public void setScriptVariables(final Script scriptVariables) {
 		this.scriptVariables = scriptVariables;
+	}
+
+	/**
+	 * @return the idPasoRelacion
+	 */
+	public Long getIdPasoRelacion() {
+		return idPasoRelacion;
+	}
+
+	/**
+	 * @param idPasoRelacion the idPasoRelacion to set
+	 */
+	public void setIdPasoRelacion(Long idPasoRelacion) {
+		this.idPasoRelacion = idPasoRelacion;
 	}
 
 }

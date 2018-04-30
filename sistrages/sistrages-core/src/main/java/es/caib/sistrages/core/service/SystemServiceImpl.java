@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
+import es.caib.sistrages.core.service.repository.dao.ProcesoDao;
 
 @Service
 @Transactional
@@ -17,17 +18,26 @@ public class SystemServiceImpl implements SystemService {
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(SystemServiceImpl.class);
 
+	/** DAO Fichero externo. */
 	@Autowired
-	FicheroExternoDao dao;
+	FicheroExternoDao ficheroExternoDAO;
+
+	/** DAO Procesos. */
+	@Autowired
+	ProcesoDao procesosDAO;
 
 	@Override
 	@NegocioInterceptor
 	public void purgarFicheros(final String appId) {
 
-		// TODO Control maestro/esclavo procesos
+		// Control maestro/esclavo procesos
+		if (procesosDAO.verificarMaestro(appId)) {
+			log.debug("Es maestro. Lanza purga ficheros");
+			ficheroExternoDAO.purgarFicheros();
+		} else {
+			log.debug("No es maestro. No lanza purga ficheros");
+		}
 
-		log.debug("Purga ficheros");
-		dao.purgarFicheros();
 	}
 
 }

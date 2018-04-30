@@ -13,12 +13,12 @@ import java.util.List;
 public class TramitePasoRellenar extends TramitePaso {
 
 	/** Formulario tramite. **/
-	private List<Formulario> formulariosTramite;
+	private List<FormularioTramite> formulariosTramite;
 
 	/**
 	 * @return the formulariosTramite
 	 */
-	public List<Formulario> getFormulariosTramite() {
+	public List<FormularioTramite> getFormulariosTramite() {
 		return formulariosTramite;
 	}
 
@@ -26,7 +26,7 @@ public class TramitePasoRellenar extends TramitePaso {
 	 * @param formulariosTramite
 	 *            the formulariosTramite to set
 	 */
-	public void setFormulariosTramite(final List<Formulario> formulariosTramite) {
+	public void setFormulariosTramite(final List<FormularioTramite> formulariosTramite) {
 		this.formulariosTramite = formulariosTramite;
 	}
 

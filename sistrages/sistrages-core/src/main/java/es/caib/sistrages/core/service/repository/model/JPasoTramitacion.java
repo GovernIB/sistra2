@@ -1,5 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +17,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 
 /**
  * JPasoTramitacion
@@ -60,28 +67,29 @@ public class JPasoTramitacion implements IModelApi {
 	@Column(name = "PTR_FINAL", nullable = false, precision = 1, scale = 0)
 	private boolean pasoFinal;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoRellenar pasoRellenar;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoInformacion pasoInformacion;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoCaptura pasoCaptura;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoDebeSaber pasoDebeSaber;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoPagos pasoPagos;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoRegistrar pasoRegistrar;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoAnexar pasoAnexar;
 
 	public JPasoTramitacion() {
+		// Constructor vacio
 	}
 
 	public Long getCodigo() {
@@ -213,20 +221,56 @@ public class JPasoTramitacion implements IModelApi {
 	}
 
 	public TramitePaso toModel() {
-		final TramitePaso paso = new TramitePaso();
-		paso.setCodigo(this.getIdPasoTramitacion());
-		paso.setDescripcion(this.getDescripcion().toModel());
-		paso.setId(this.getCodigo());
-		paso.setOrden(this.getOrden());
-		paso.setPasoFinal(this.isPasoFinal());
-		return paso;
+		if (this.getPasoRellenar() != null) {
+			final TramitePasoRellenar mpasoRellenar = new TramitePasoRellenar();
+			mpasoRellenar.setCodigo(this.getIdPasoTramitacion());
+			mpasoRellenar.setDescripcion(this.getDescripcion().toModel());
+			mpasoRellenar.setId(this.getCodigo());
+			mpasoRellenar.setIdPasoRelacion(this.getPasoRellenar().getCodigo());
+			mpasoRellenar.setOrden(this.getOrden());
+			mpasoRellenar.setPasoFinal(this.isPasoFinal());
+			if (this.getPasoRellenar().getFormulariosTramite() != null) {
+				final List<FormularioTramite> formularios = new ArrayList<>();
+				for (final JFormularioTramite jformulario : this.getPasoRellenar().getFormulariosTramite()) {
+					final FormularioTramite formulario = jformulario.toModel();
+					formularios.add(formulario);
+				}
+				mpasoRellenar.setFormulariosTramite(formularios);
+			}
+
+			return mpasoRellenar;
+		}
+		if (this.getPasoDebeSaber() != null) {
+			final TramitePasoDebeSaber mpasoDebeSaber = new TramitePasoDebeSaber();
+			mpasoDebeSaber.setIdPasoRelacion(this.getPasoDebeSaber().getCodigo());
+			mpasoDebeSaber.setCodigo(this.getIdPasoTramitacion());
+			mpasoDebeSaber.setDescripcion(this.getDescripcion().toModel());
+			mpasoDebeSaber.setId(this.getCodigo());
+			mpasoDebeSaber.setOrden(this.getOrden());
+			mpasoDebeSaber.setPasoFinal(this.isPasoFinal());
+			if (this.getPasoDebeSaber().getInstruccionesInicio() != null) {
+				final Literal instruccionesIniciales = this.getPasoDebeSaber().getInstruccionesInicio().toModel();
+				mpasoDebeSaber.setInstruccionesIniciales(instruccionesIniciales);
+			}
+			return mpasoDebeSaber;
+		} else {
+			final TramitePaso paso = new TramitePaso();
+			paso.setCodigo(this.getIdPasoTramitacion());
+			paso.setDescripcion(this.getDescripcion().toModel());
+			paso.setId(this.getCodigo());
+			paso.setOrden(this.getOrden());
+			paso.setPasoFinal(this.isPasoFinal());
+			return paso;
+		}
+
 	}
 
-	public JPasoTramitacion fromModel(final TramitePaso paso) {
+	public static JPasoTramitacion fromModel(final TramitePaso paso) {
 		JPasoTramitacion jpaso = null;
 		if (paso != null) {
 			jpaso = new JPasoTramitacion();
 			jpaso.setIdPasoTramitacion(paso.getCodigo());
+
 			if (paso.getDescripcion() != null) {
 				final JLiteral jliteral = JLiteral.fromModel(paso.getDescripcion());
 				jpaso.setDescripcion(jliteral);
@@ -234,6 +278,33 @@ public class JPasoTramitacion implements IModelApi {
 			jpaso.setCodigo(paso.getId());
 			jpaso.setOrden(paso.getOrden());
 			jpaso.setPasoFinal(paso.isPasoFinal());
+			if (paso.getTipo() != null) {
+				final JTipoPasoTramitacion tipo = new JTipoPasoTramitacion();
+				tipo.fromModel(paso.getTipo());
+				jpaso.setTipoPasoTramitacion(tipo);
+			}
+
+			// Generamos los tipos
+			if (paso instanceof TramitePasoRellenar) {
+
+				final TramitePasoRellenar pasoVersionRellenar = (TramitePasoRellenar) paso;
+				if (jpaso.getPasoRellenar() == null) {
+					jpaso.setPasoRellenar(new JPasoRellenar());
+				}
+				jpaso.getPasoRellenar().fromModel(pasoVersionRellenar);
+				jpaso.getPasoRellenar().setPasoTramitacion(jpaso);
+
+			} else if (paso instanceof TramitePasoDebeSaber) {
+
+				final TramitePasoDebeSaber mpasoDebeSaber = (TramitePasoDebeSaber) paso;
+				if (jpaso.getPasoDebeSaber() == null) {
+					jpaso.setPasoDebeSaber(new JPasoDebeSaber());
+				}
+
+				jpaso.getPasoDebeSaber().fromModel(mpasoDebeSaber);
+				jpaso.getPasoDebeSaber().setPasoTramitacion(jpaso);
+
+			}
 		}
 		return jpaso;
 	}

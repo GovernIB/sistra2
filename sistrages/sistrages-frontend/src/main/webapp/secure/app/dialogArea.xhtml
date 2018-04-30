@@ -31,7 +31,9 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogArea.codigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogArea.data.codigo}" disabled="#{!dialogArea.alta}" required="true" size="40" maxlength="20" />
+				 	<p:inputText id="codigo" value="#{dialogArea.data.codigo}" required="true" size="40" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+				   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				   	</p:inputText>
 
 				 	<p:outputLabel for="descripcion" value="#{msg['dialogArea.descripcion']}" />
 				 	<p:inputText id="descripcion" value="#{dialogArea.data.descripcion}" disabled="#{dialogArea.consulta}" required="true" size="40" maxlength="255" />
@@ -41,7 +43,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogArea.aceptar}" process="@form" update="@form growlDialogAreaData"  styleClass="boton-azul" rendered="#{dialogArea.alta or dialogArea.edicion}"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogArea.aceptar}" process="@form" update="@form growlDialogAreaData"  styleClass="boton-azul" rendered="#{dialogArea.alta or dialogArea.edicion}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogArea.cancelar}" process="@this" rendered="#{dialogArea.alta or dialogArea.edicion}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogArea.cancelar}" process="@this"  rendered="#{dialogArea.consulta}"/>
 					</f:facet>

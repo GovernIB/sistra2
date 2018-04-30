@@ -181,8 +181,6 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
-		params.put(TypeParametroVentana.AREA.toString(),
-				Arrays.asList(((Area) this.areaSeleccionada.getData()).getId().toString()));
 		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(this.tramiteSeleccionada.getId().toString()));
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml", params);
@@ -375,6 +373,27 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Retorno dialogo mover tramite.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoMoverTramite(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled()) {
+			// Mensaje
+			String message = null;
+			message = UtilJSF.getLiteral("info.modificado.ok");
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			// Refrescamos datos
+			buscarTramites();
+		}
+	}
+
+	/**
 	 * Procedimientos tramite.
 	 */
 	public void procedimientosTramite() {
@@ -503,6 +522,19 @@ public class ViewTramites extends ViewControllerBase {
 
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
 		UtilJSF.openDialog(DialogTramite.class, modoAcceso, params, true, 540, 220);
+	}
+
+	/**
+	 * Abre dialogo para mover tramite.
+	 */
+	public void moverTramite() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaTramite())
+			return;
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
+		UtilJSF.openDialog(DialogMoverTramite.class, TypeModoAcceso.EDICION, params, true, 540, 120);
 	}
 
 	/**

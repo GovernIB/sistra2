@@ -22,6 +22,13 @@ public class JProceso implements IModelApi {
 	@Column(name = "PROC_IDENT", unique = true, nullable = false)
 	private String identificador;
 
+	@Column(name = "PROC_INSTAN", length = 50)
+	private String instancia;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "PROC_FECHA")
+	private Date fecha;
+
 	public String getIdentificador() {
 		return identificador;
 	}
@@ -44,16 +51,6 @@ public class JProceso implements IModelApi {
 
 	public void setFecha(final Date fecha) {
 		this.fecha = fecha;
-	}
-
-	@Column(name = "PROC_INSTAN", length = 50)
-	private String instancia;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name = "PROC_FECHA", length = 7)
-	private Date fecha;
-
-	public JProceso() {
 	}
 
 }

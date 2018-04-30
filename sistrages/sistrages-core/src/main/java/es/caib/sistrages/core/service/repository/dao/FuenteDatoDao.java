@@ -3,7 +3,6 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.FuenteDatos;
-import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
@@ -41,16 +40,12 @@ public interface FuenteDatoDao {
 
 	void removeFuenteFila(Long idFila);
 
-	void removeFuenteDatoCampo(Long idFuenteDatoCampo);
-
-	void addFuenteDatoCampo(FuenteDatosCampo campo, Long idFuente);
-
-	void updateFuenteDatoCampo(FuenteDatosCampo campo);
-
 	boolean isCorrectoPK(FuenteFila fuenteFila, Long idFuenteDato);
 
 	void importarCSV(Long idFuenteDatos, CsvDocumento csv);
 
 	FuenteDatos getByIdentificador(String idFuenteDato);
+
+	void removeByArea(Long idArea);
 
 }

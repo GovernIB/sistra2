@@ -9,6 +9,8 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.ToggleEvent;
 
+import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -19,9 +21,18 @@ public class DialogScript extends DialogControllerBase {
 
 	private static final long serialVersionUID = 20111020L;
 
-	private String content;
+	/** Id del script. **/
+	private String id;
+	/** Data del script. **/
+	private Script data;
+	/** Data del script en formato JSON. **/
+	private String iData;
+
+	/** Lenguaje de programacion (javascript/css/java..). **/
 	private String mode = "javascript";
+	/** Tema. **/
 	private final String theme = "blackboard";
+	/** Keymap. **/
 	private final String keymap = "default";
 
 	private boolean visibleFormularios = true;
@@ -30,11 +41,20 @@ public class DialogScript extends DialogControllerBase {
 	private boolean visibleDominios = true;
 
 	public DialogScript() {
-		content = "function test() { console.log('test'); }";
+		// Constructor vacio.
 	}
 
 	public void init() {
-		content = "function test() { console.log('test'); }";
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		if (modo == TypeModoAcceso.ALTA) {
+			data = new Script();
+		} else {
+			if (iData == null) {
+				data = new Script();
+			} else {
+				data = (Script) UtilJSON.fromJSON(iData, Script.class);
+			}
+		}
 	}
 
 	public void changeMode() {
@@ -81,31 +101,26 @@ public class DialogScript extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
-		// Realizamos alta o update
-		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		switch (acceso) {
-		case ALTA:
-			/*
-			 * if (areaService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; } areaService.add(data);
-			 */
 
-			break;
-		case EDICION:
-			// areaService.update(data);
-			break;
-		case CONSULTA:
-			// No hay que hacer nada
-			break;
-		}
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		// result.setResult(data);
-		// Se presupone que aquí se habría guardado el script y se devolvería la id
-		result.setResult(Long.valueOf(666l));
+		result.setResult(this.data);
 		UtilJSF.closeDialog(result);
+
+	}
+
+	/**
+	 * Aceptar.
+	 */
+	public void borrar() {
+
+		// Retornamos resultado
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setResult(null);
+		UtilJSF.closeDialog(result);
+
 	}
 
 	/**
@@ -308,21 +323,6 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the content
-	 */
-	public String getContent() {
-		return content;
-	}
-
-	/**
-	 * @param content
-	 *            the content to set
-	 */
-	public void setContent(final String content) {
-		this.content = content;
-	}
-
-	/**
 	 * @return the mode
 	 */
 	public String getMode() {
@@ -416,6 +416,51 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public String getKeymap() {
 		return keymap;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public Script getData() {
+		return data;
+	}
+
+	/**
+	 * @param data
+	 *            the data to set
+	 */
+	public void setData(final Script data) {
+		this.data = data;
+	}
+
+	/**
+	 * @return the iData
+	 */
+	public String getiData() {
+		return iData;
+	}
+
+	/**
+	 * @param iData
+	 *            the iData to set
+	 */
+	public void setiData(final String iData) {
+		this.iData = iData;
 	}
 
 }

@@ -103,59 +103,6 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	}
 
 	@Override
-	public void addFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo, final Long idFuenteDato) {
-
-		final JFuenteDatos jfuenteDato = entityManager.find(JFuenteDatos.class, idFuenteDato);
-		final JCampoFuenteDatos jFuenteDatoCampo = new JCampoFuenteDatos();
-		jFuenteDatoCampo.setFuenteDatos(jfuenteDato);
-		jFuenteDatoCampo.fromModel(fuenteDatoCampo);
-		entityManager.persist(jFuenteDatoCampo);
-
-		/** Creamos los datos extras en las filas. */
-		final Query query = entityManager
-				.createQuery("Select fila from JFilasFuenteDatos fila where fila.fuenteDatos.id = " + idFuenteDato);
-		final List<JFilasFuenteDatos> filas = query.getResultList();
-		if (filas != null) {
-			for (final JFilasFuenteDatos fila : filas) {
-				final JValorFuenteDatos valor = new JValorFuenteDatos();
-				valor.setCampoFuenteDatos(jFuenteDatoCampo);
-				valor.setValor("");
-				fila.addValor(valor);
-				entityManager.merge(fila);
-			}
-		}
-	}
-
-	@Override
-	public void updateFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo) {
-
-		final JCampoFuenteDatos jfuenteDato = entityManager.find(JCampoFuenteDatos.class, fuenteDatoCampo.getId());
-		jfuenteDato.merge(fuenteDatoCampo);
-		entityManager.persist(jfuenteDato);
-	}
-
-	@Override
-	public void removeFuenteDatoCampo(final Long idFuenteDatoCampo) {
-		final JCampoFuenteDatos hfuenteDatoCampo = entityManager.find(JCampoFuenteDatos.class, idFuenteDatoCampo);
-
-		/** Creamos los datos extras en las filas. */
-		final Query query = entityManager
-				.createQuery("Select fila from JFilasFuenteDatos fila where fila.fuenteDatos.id = "
-						+ hfuenteDatoCampo.getFuenteDatos().getCodigo());
-		final List<JFilasFuenteDatos> filas = query.getResultList();
-		if (filas != null) {
-			for (final JFilasFuenteDatos fila : filas) {
-				fila.removeValor(hfuenteDatoCampo.getCodigo());
-				entityManager.merge(fila);
-			}
-		}
-
-		if (hfuenteDatoCampo != null) {
-			entityManager.remove(hfuenteDatoCampo);
-		}
-	}
-
-	@Override
 	public List<FuenteDatos> getAllByFiltro(final TypeAmbito ambito, final Long id, final String filtro) {
 		return listarFuenteDatos(ambito, id, filtro);
 	}
@@ -378,6 +325,14 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	@Override
 	public void removeByEntidad(final Long idEntidad) {
 		final List<FuenteDatos> listaFD = listarFuenteDatos(TypeAmbito.ENTIDAD, idEntidad, null);
+		for (final FuenteDatos fd : listaFD) {
+			borrarFuenteDatos(fd.getCodigo());
+		}
+	}
+
+	@Override
+	public void removeByArea(final Long idArea) {
+		final List<FuenteDatos> listaFD = listarFuenteDatos(TypeAmbito.AREA, idArea, null);
 		for (final FuenteDatos fd : listaFD) {
 			borrarFuenteDatos(fd.getCodigo());
 		}

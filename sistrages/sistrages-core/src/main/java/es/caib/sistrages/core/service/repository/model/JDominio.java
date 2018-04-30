@@ -78,22 +78,22 @@ public class JDominio implements IModelApi {
 	@JoinTable(name = "STG_DOMENT", joinColumns = {
 			@JoinColumn(name = "DEN_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DEN_CODENT", nullable = false, updatable = false) })
-	private Set<JEntidad> entidades = new HashSet<JEntidad>(0);
+	private Set<JEntidad> entidades = new HashSet<>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "dominio")
-	private Set<JCampoFormularioIndexado> camposFormularioIndexado = new HashSet<JCampoFormularioIndexado>(0);
+	private Set<JCampoFormularioIndexado> camposFormularioIndexado = new HashSet<>(0);
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "STG_AREDOM", joinColumns = {
 			@JoinColumn(name = "DMA_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DMA_CODARE", nullable = false, updatable = false) })
-	private Set<JArea> areas = new HashSet<JArea>(0);
+	private Set<JArea> areas = new HashSet<>(0);
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "STG_DOMVER", joinColumns = {
 			@JoinColumn(name = "DVT_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DVT_CODVTR", nullable = false, updatable = false) })
-	private Set<JVersionTramite> versionesTramite = new HashSet<JVersionTramite>(0);
+	private Set<JVersionTramite> versionesTramite = new HashSet<>(0);
 
 	public JDominio() {
 		super();

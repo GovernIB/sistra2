@@ -2,7 +2,11 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 
 /**
@@ -83,4 +87,68 @@ public interface TramiteDao {
 	 * @return
 	 */
 	void addTramiteVersion(TramiteVersion tramiteVersion, String idTramite);
+
+	/**
+	 * Actualiza un tramite versión.
+	 *
+	 * @param tramiteVersion
+	 * @param borrarScriptPI
+	 *            Si borra el script
+	 * @param scriptParamsIniciales
+	 * @param borrarScriptPersonalizacion
+	 *            Si borra el script
+	 * @param scriptPersonalizacion
+	 */
+	void updateTramiteVersion(TramiteVersion tramiteVersion, boolean borrarScriptPI, Script scriptParamsIniciales,
+			boolean borrarScriptPersonalizacion, Script scriptPersonalizacion);
+
+	/**
+	 * Borra un trámite versión.
+	 *
+	 * @param idTramiteVersion
+	 */
+	void removeTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Devuelve versión de trámite.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	TramiteVersion getTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Devuelve la lista de tiops de trámite.
+	 *
+	 * @return
+	 */
+	List<TramiteTipo> listTipoTramitePaso();
+
+	/**
+	 * Obtiene area tramite.
+	 *
+	 * @param idTramite
+	 *            id tramite
+	 * @return
+	 */
+	Area getAreaTramite(Long idTramite);
+
+	/**
+	 * Cambia trámite de área.
+	 *
+	 * @param idArea
+	 *            id área
+	 * @param idTramite
+	 *            id trámite
+	 */
+	void changeAreaTramite(Long idArea, Long idTramite);
+
+	/**
+	 * Devuelve los dominios de una versión de trámite.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<Dominio> getTramiteDominios(Long idTramiteVersion);
+
 }

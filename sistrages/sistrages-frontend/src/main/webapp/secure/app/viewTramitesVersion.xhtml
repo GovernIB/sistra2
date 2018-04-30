@@ -7,7 +7,6 @@
 
 	<f:metadata>
 		<f:viewParam name="ID" value="#{viewTramitesVersion.id}"/>
-		<f:viewParam name="AREA" value="#{viewTramitesVersion.idArea}"/>
 		<f:viewAction action="#{viewTramitesVersion.init}" />
 	</f:metadata>
 
@@ -33,21 +32,20 @@
 
 		        <f:facet name="right">
 		        	<div style="display:-webkit-box">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramitesVersion.nuevo()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewTramitesVersion.returnDialogo}" update="growl dataTable"/>
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramitesVersion.nuevo()}" process="@this" update="growl" rendered="#{viewTramitesVersion.permiteAlta}">
+		        			<p:ajax event="dialogReturn" listener="#{viewTramitesVersion.returnDialogo}" update="growl dataTable" />
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewTramitesVersion.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewTramitesVersion.returnDialogo}" update="growl dataTable"/>
-		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramitesVersion.eliminar()}" process="@this" update="growl dataTable"/>
-		        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewTramitesVersion.bloquear()}" process="@this" update="growl dataTable"/>
-		        		<p:commandButton id="btnDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" actionListener="#{viewTramitesVersion.desbloquear()}" process="@this" update="growl dataTable"/>
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewTramitesVersion.editar()}" process="@this" update="growl" rendered="#{viewTramitesVersion.permiteModificacion}" />
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-edit" actionListener="#{viewTramitesVersion.consultar()}" process="@this" update="growl" rendered="#{viewTramitesVersion.permiteConsulta}" />
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramitesVersion.eliminar()}" process="@this" update="growl dataTable" rendered="#{viewTramitesVersion.permiteAlta}" />
+		        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewTramitesVersion.bloquear()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
+		        		<p:commandButton id="btnDesploquear" value="#{msg['botones.desbloquear']}" icon="fa fa-unlock" actionListener="#{viewTramitesVersion.desbloquear()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
 						<p:menuButton value="Más..">
-        					<p:menuitem id="btnCuaderno" value="#{msg['botones.cuaderno']}" icon="fa fa-book" actionListener="#{viewTramitesVersion.cuaderno()}" process="@this" update="growl dataTable"/>
-				        	<p:menuitem id="btnImportar" value="#{msg['botones.importar']}" icon="fa fa-upload" actionListener="#{viewTramitesVersion.importar()}" process="@this" update="growl dataTable"/>
-				        	<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramitesVersion.refrescar()}" process="@this" update="growl dataTable"/>
-				        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicar']}" icon="fa fa-copy" actionListener="#{viewTramitesVersion.duplicar()}" process="@this" update="growl dataTable"/>
-				        	<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramitesVersion.historial()}" process="@this" update="growl dataTable"/>
+        					<p:menuitem id="btnCuaderno" value="#{msg['botones.cuaderno']}" icon="fa fa-book" actionListener="#{viewTramitesVersion.cuaderno()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
+				        	<p:menuitem id="btnImportar" value="#{msg['botones.importar']}" icon="fa fa-upload" actionListener="#{viewTramitesVersion.importar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
+				        	<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramitesVersion.refrescar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
+				        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicar']}" icon="fa fa-copy" actionListener="#{viewTramitesVersion.duplicar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteAlta}" />
+				        	<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramitesVersion.historial()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
     					</p:menuButton>
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayudar()}" process="@this" />
 					</div>
@@ -60,7 +58,7 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewTramitesVersion.listaDatos}"
-						 rows="10"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"

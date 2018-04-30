@@ -15,6 +15,8 @@ public final class LineaComponentesFormulario extends ModelApi {
 	/** Id. */
 	private Long id;
 
+	private int orden;
+
 	/** Componentes. */
 	private List<ComponenteFormulario> componentes = new ArrayList<ComponenteFormulario>();
 
@@ -32,6 +34,14 @@ public final class LineaComponentesFormulario extends ModelApi {
 
 	public void setComponentes(final List<ComponenteFormulario> componentes) {
 		this.componentes = componentes;
+	}
+
+	public int getOrden() {
+		return orden;
+	}
+
+	public void setOrden(int orden) {
+		this.orden = orden;
 	}
 
 }

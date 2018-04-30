@@ -12,6 +12,8 @@ import com.csvreader.CsvWriter;
 
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 
+// TODO Sacar a lib comun
+
 /**
  * Utilidades para importar/exportar a/de CSV.
  *

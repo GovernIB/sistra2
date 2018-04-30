@@ -36,9 +36,7 @@ public class ViewDominios extends ViewControllerBase {
 	@Inject
 	private DominioService dominioService;
 
-	/**
-	 * security service.
-	 */
+	/** security service. */
 	@Inject
 	private SecurityService securityService;
 
@@ -51,19 +49,13 @@ public class ViewDominios extends ViewControllerBase {
 	/** Ambito. **/
 	private String ambito;
 
-	/**
-	 * Lista de datos.
-	 */
+	/** Lista de datos. */
 	private List<Dominio> listaDatos;
 
-	/**
-	 * Dato seleccionado en la lista.
-	 */
+	/** Dato seleccionado en la lista. */
 	private Dominio datoSeleccionado;
 
-	/**
-	 * Inicializacion.
-	 */
+	/** Inicializacion. */
 	public void init() {
 
 		if (ambito == null) {

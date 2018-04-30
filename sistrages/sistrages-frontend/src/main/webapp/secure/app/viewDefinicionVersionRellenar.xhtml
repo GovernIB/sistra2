@@ -19,31 +19,31 @@
 			<f:facet name="right">
 				<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
-						actionListener="#{viewDefinicionVersionRellenar.nuevo()}" process="@this"
+						actionListener="#{viewDefinicionVersion.nuevoFormulario()}" process="@this"
 						update="growl">
-							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol dataTable formViewDefinicionVersionRellenar:dataTable"  />
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable"  />
 		        	</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
-						actionListener="#{viewDefinicionVersionRellenar.editar()}" process="@this"
+						actionListener="#{viewDefinicionVersion.editarFormulario()}" process="@this"
 						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol dataTable" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
 					</p:commandButton>
 
 					<p:commandButton id="btnEliminar"
 						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
 						actionListener="#{viewDefinicionVersion.eliminarFormulario()}"
-						process="@this" update="growl dataTable" />
+						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
 
 					<p:commandButton id="btnSubir"
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
 						actionListener="#{viewDefinicionVersion.subirFormulario()}"
-						process="@this" update="growl dataTable" />
+						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
 
 					<p:commandButton id="btnBajar"
 						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
 						actionListener="#{viewDefinicionVersion.bajarFormulario()}"
-						process="@this" update="growl dataTable" />
+						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 						icon="fa fa-question-circle-o"
@@ -55,12 +55,12 @@
 
 
 			<p:dataTable  id="dataTable" var="formularios" value="#{viewDefinicionVersion.tramitePasoRELLSeleccionado.formulariosTramite}"
-						 rows="10"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewDefinicionVersionRellenar.datoSeleccionado}" rowKey="#{formularios.idString}" dblClickSelect="true">
+			        	 selectionMode="single" selection="#{viewDefinicionVersion.formularioSeleccionado}" rowKey="#{formularios.idString}" dblClickSelect="true">
 
 			<!-- Necesario para actualizar en controlador la fila seleccionada -->
 			<p:ajax event="rowSelect" />

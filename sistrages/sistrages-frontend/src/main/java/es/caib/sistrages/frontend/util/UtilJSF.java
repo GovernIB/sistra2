@@ -15,8 +15,14 @@ import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 
+import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.frontend.controller.SessionBean;
@@ -31,6 +37,7 @@ import es.caib.sistrages.frontend.controller.ViewPropiedadesConfiguracion;
 import es.caib.sistrages.frontend.controller.ViewRolesPermisos;
 import es.caib.sistrages.frontend.controller.ViewTramites;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
@@ -483,7 +490,7 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getUrlArbolDefinicionVersion(final String opcion, final Long id) {
-		return PATH_VIEWS + opcion + EXTENSION_XHTML; // + "?id=" + id;
+		return PATH_VIEWS + opcion + EXTENSION_XHTML;// + "?ID=" + id;
 	}
 
 	/**
@@ -524,14 +531,41 @@ public final class UtilJSF {
 	 * @return id servlet context
 	 */
 	public static String getIdServletContext() {
-		/*
-		 * final ServletContext servletContext = (ServletContext)
-		 * FacesContext.getCurrentInstance().getExternalContext() .getContext(); String
-		 * id = (String) servletContext.getAttribute(Constantes.SERVLET_CONTEXT_ID); if
-		 * (id == null) { id = "xxx";
-		 * servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id); } return id;
-		 */
-		return "123456";
+		String id = null;
+		final FacesContext currentInstanceFC = FacesContext.getCurrentInstance();
+		if (currentInstanceFC != null) {
+			final ExternalContext externalContext = currentInstanceFC.getExternalContext();
+			if (externalContext != null) {
+				final ServletContext servletContext = (ServletContext) externalContext.getContext();
+				id = (String) servletContext.getAttribute(Constantes.SERVLET_CONTEXT_ID);
+				if (id == null) {
+					id = GeneradorId.generarId();
+					servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
+				}
+			}
+		}
+		return id;
 	}
 
+	/**
+	 * Obtiene la url de una paso a partir del tipo de instancia que es.
+	 *
+	 * @param tramitePaso
+	 * @return
+	 */
+	public static String getUrlTramitePaso(final TramitePaso tramitePaso) {
+		final String url;
+		if (tramitePaso instanceof TramitePasoDebeSaber) {
+			url = "viewDefinicionVersionDebeSaber";
+		} else if (tramitePaso instanceof TramitePasoRellenar) {
+			url = "viewDefinicionVersionRellenar";
+		} else if (tramitePaso instanceof TramitePasoAnexar) {
+			url = "viewDefinicionVersionAnexarDocumentos";
+		} else if (tramitePaso instanceof TramitePasoTasa) {
+			url = "viewDefinicionVersionPagarTasas";
+		} else {
+			url = "viewDefinicionVersionRegistrarTramite";
+		}
+		return url;
+	}
 }

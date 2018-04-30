@@ -23,6 +23,11 @@ import es.caib.sistrages.core.service.repository.model.JEntidad;
 @Repository("areaDao")
 public class AreaDaoImpl implements AreaDao {
 
+	private static final String FALTA_ENTIDAD = "Falta la entidad";
+	private static final String FALTA_AREA = "Falta el area";
+	private static final String NO_EXISTE_EL_AREA = "No existe el area: ";
+	private static final String FALTA_IDENTIFICADOR = "Falta el identificador";
+	private static final String NO_EXISTE_LA_ENTIDAD = "No existe la entidad: ";
 	/**
 	 * entity manager.
 	 */
@@ -43,17 +48,17 @@ public class AreaDaoImpl implements AreaDao {
 	 * es.caib.sistrages.core.service.repository.dao.AreaDao#getById(java.lang.Long)
 	 */
 	@Override
-	public Area getById(final Long pCodigo) {
+	public Area getById(final Long pId) {
 		Area area = null;
 
-		if (pCodigo == null) {
-			throw new FaltanDatosException("Falta el identificador");
+		if (pId == null) {
+			throw new FaltanDatosException(FALTA_IDENTIFICADOR);
 		}
 
-		final JArea jarea = entityManager.find(JArea.class, pCodigo);
+		final JArea jarea = entityManager.find(JArea.class, pId);
 
 		if (jarea == null) {
-			throw new NoExisteDato("No existe el area: " + pCodigo);
+			throw new NoExisteDato(NO_EXISTE_EL_AREA + pId);
 		} else {
 			area = jarea.toModel();
 		}
@@ -69,8 +74,12 @@ public class AreaDaoImpl implements AreaDao {
 	 * lang.Long, java.lang.String)
 	 */
 	@Override
-	public List<Area> getAllByFiltro(final Long idEntidad, final String pFiltro) {
-		return listarAreas(idEntidad, pFiltro);
+	public List<Area> getAllByFiltro(final Long pIdEntidad, final String pFiltro) {
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+
+		return listarAreas(pIdEntidad, pFiltro);
 	}
 
 	/*
@@ -80,8 +89,12 @@ public class AreaDaoImpl implements AreaDao {
 	 * es.caib.sistrages.core.service.repository.dao.AreaDao#getAll(java.lang.Long)
 	 */
 	@Override
-	public List<Area> getAll(final Long idEntidad) {
-		return listarAreas(idEntidad, null);
+	public List<Area> getAll(final Long pIdEntidad) {
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+
+		return listarAreas(pIdEntidad, null);
 	}
 
 	/*
@@ -92,16 +105,20 @@ public class AreaDaoImpl implements AreaDao {
 	 * es.caib.sistrages.core.api.model.Area)
 	 */
 	@Override
-	public void add(final Long idEntidad, final Area pArea) {
+	public void add(final Long pIdEntidad, final Area pArea) {
 		if (pArea == null) {
-			throw new FaltanDatosException("Falta el area");
+			throw new FaltanDatosException(FALTA_AREA);
 		}
 
-		if (idEntidad == null) {
-			throw new FaltanDatosException("Falta la entidad");
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
 		}
 
-		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, pIdEntidad);
+		if (jEntidad == null) {
+			throw new FaltanDatosException(NO_EXISTE_LA_ENTIDAD + pIdEntidad);
+		}
+
 		final JArea jArea = JArea.fromModel(pArea);
 		jArea.setEntidad(jEntidad);
 		entityManager.persist(jArea);
@@ -114,14 +131,14 @@ public class AreaDaoImpl implements AreaDao {
 	 * es.caib.sistrages.core.service.repository.dao.AreaDao#remove(java.lang.Long)
 	 */
 	@Override
-	public void remove(final Long idArea) {
-		if (idArea == null) {
-			throw new FaltanDatosException("Falta el identificador");
+	public void remove(final Long pId) {
+		if (pId == null) {
+			throw new FaltanDatosException(FALTA_IDENTIFICADOR);
 		}
 
-		final JArea jArea = entityManager.find(JArea.class, idArea);
+		final JArea jArea = entityManager.find(JArea.class, pId);
 		if (jArea == null) {
-			throw new NoExisteDato("No existe area: " + idArea);
+			throw new NoExisteDato(NO_EXISTE_EL_AREA + pId);
 		}
 		entityManager.remove(jArea);
 	}
@@ -135,11 +152,11 @@ public class AreaDaoImpl implements AreaDao {
 	@Override
 	public void update(final Area pArea) {
 		if (pArea == null) {
-			throw new FaltanDatosException("Falta el area");
+			throw new FaltanDatosException(FALTA_AREA);
 		}
 		final JArea jArea = entityManager.find(JArea.class, pArea.getId());
 		if (jArea == null) {
-			throw new NoExisteDato("No existe area: " + pArea.getId());
+			throw new NoExisteDato(NO_EXISTE_EL_AREA + pArea.getId());
 		}
 
 		// Mergeamos datos

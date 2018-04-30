@@ -46,7 +46,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTramite.aceptar}" process="@form" update="@form growldialogTramiteData"  styleClass="boton-azul" rendered="#{dialogTramite.alta or dialogTramite.edicion}"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramite.aceptar}" process="@form" update="@form growldialogTramiteData"  styleClass="boton-azul" rendered="#{dialogTramite.alta or dialogTramite.edicion}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramite.cancelar}" process="@this" rendered="#{dialogTramite.alta or dialogTramite.edicion}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramite.cancelar}" process="@this"  rendered="#{dialogTramite.consulta}"/>
 					</f:facet>

@@ -1,11 +1,10 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,8 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -23,8 +20,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 
@@ -43,7 +38,7 @@ public class JVersionTramite implements IModelApi {
 	@Column(name = "VTR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "VTR_SCRINTRA")
 	private JScript scriptInicializacionTramite;
 
@@ -51,7 +46,7 @@ public class JVersionTramite implements IModelApi {
 	@JoinColumn(name = "VTR_SCRPER")
 	private JScript scriptPersonalizacion;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "VTR_DESMEN")
 	private JLiteral mensajeDesactivacion;
 
@@ -69,7 +64,7 @@ public class JVersionTramite implements IModelApi {
 	private boolean autenticado;
 
 	@Column(name = "VTR_AUTQAA", precision = 1, scale = 0)
-	private Boolean nivelQAA;
+	private Integer nivelQAA;
 
 	@Column(name = "VTR_AUTENO", nullable = false, precision = 1, scale = 0)
 	private boolean noAutenticado;
@@ -125,18 +120,10 @@ public class JVersionTramite implements IModelApi {
 	private Date plazoFinDesactivacion;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "versionTramite")
-	private Set<JHistorialVersion> historialVersion = new HashSet<JHistorialVersion>(0);
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_DOMVER", joinColumns = {
-			@JoinColumn(name = "DVT_CODVTR", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "DVT_CODDOM", nullable = false, updatable = false) })
-	private Set<JDominio> dominios = new HashSet<JDominio>(0);
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "versionTramite")
-	private Set<JPasoTramitacion> pasoTramite = new HashSet<JPasoTramitacion>(0);
+	private Set<JHistorialVersion> historialVersion = new HashSet<>(0);
 
 	public JVersionTramite() {
+		// Constructor vacio
 	}
 
 	public Long getCodigo() {
@@ -203,11 +190,11 @@ public class JVersionTramite implements IModelApi {
 		this.autenticado = autenticado;
 	}
 
-	public Boolean getNivelQAA() {
+	public Integer getNivelQAA() {
 		return this.nivelQAA;
 	}
 
-	public void setNivelQAA(final Boolean nivelQAA) {
+	public void setNivelQAA(final Integer nivelQAA) {
 		this.nivelQAA = nivelQAA;
 	}
 
@@ -355,22 +342,6 @@ public class JVersionTramite implements IModelApi {
 		this.historialVersion = historialVersion;
 	}
 
-	public Set<JDominio> getDominios() {
-		return this.dominios;
-	}
-
-	public void setDominios(final Set<JDominio> dominios) {
-		this.dominios = dominios;
-	}
-
-	public Set<JPasoTramitacion> getPasoTramite() {
-		return this.pasoTramite;
-	}
-
-	public void setPasoTramite(final Set<JPasoTramitacion> pasoTramite) {
-		this.pasoTramite = pasoTramite;
-	}
-
 	public TramiteVersion toModel() {
 		final TramiteVersion tramiteVersion = new TramiteVersion();
 		tramiteVersion.setActiva(this.isActiva());
@@ -387,36 +358,24 @@ public class JVersionTramite implements IModelApi {
 		tramiteVersion.setDesactivacion(this.isDesactivacionTemporal());
 
 		tramiteVersion.setId(this.getCodigo());
+		if (this.getTramite() != null) {
+			tramiteVersion.setIdTramite(this.getTramite().getCodigo());
+		}
 		tramiteVersion.setIdiomasSoportados(this.getIdiomasSoportados());
-		tramiteVersion.setIdScriptInicializacionTramite(this.getScriptInicializacionTramite().getCodigo());
-		tramiteVersion.setIdScriptPersonalizacion(this.getScriptPersonalizacion().getCodigo());
+		if (this.getScriptInicializacionTramite() != null) {
+			tramiteVersion.setIdScriptInicializacionTramite(this.getScriptInicializacionTramite().getCodigo());
+		}
+		if (this.getScriptPersonalizacion() != null) {
+			tramiteVersion.setIdScriptPersonalizacion(this.getScriptPersonalizacion().getCodigo());
+		}
 		tramiteVersion.setIntLimiteTramitacion(this.getLimiteTramitacionNumero());
 		tramiteVersion.setLimiteTramitacion(Boolean.valueOf(this.getLimiteTramitacion()));
-		if (this.dominios != null) {
 
-			final List<Dominio> listaDominios = new ArrayList<>();
-			for (final JDominio dominio : this.getDominios()) {
-				listaDominios.add(dominio.toModel());
-			}
-
-			tramiteVersion.setListaDominios(listaDominios);
+		if (this.getMensajeDesactivacion() != null) {
+			tramiteVersion.setMensajeDesactivacion(this.getMensajeDesactivacion().toModel());
 		}
-		if (this.pasoTramite != null) {
 
-			final List<TramitePaso> listaPasos = new ArrayList<>();
-			for (final JPasoTramitacion paso : this.getPasoTramite()) {
-				listaPasos.add(paso.toModel());
-			}
-
-			tramiteVersion.setListaPasos(listaPasos);
-		}
-		tramiteVersion.setMensajeDesactivacion(this.getMensajeDesactivacion().toModel());
-
-		if (this.getNivelQAA()) {
-			tramiteVersion.setNivelQAA(1);
-		} else {
-			tramiteVersion.setNivelQAA(0);
-		}
+		tramiteVersion.setNivelQAA(this.getNivelQAA());
 		tramiteVersion.setNumeroVersion(this.getNumeroVersion());
 		tramiteVersion.setNumLimiteTramitacion(this.getLimiteTramitacionNumero());
 		tramiteVersion.setPersistencia(this.isAdmitePersistencia());
@@ -425,7 +384,9 @@ public class JVersionTramite implements IModelApi {
 		tramiteVersion.setPlazoFinDesactivacion(this.getPlazoFinDesactivacion());
 		tramiteVersion.setPlazoInicioDesactivacion(this.getPlazoInicioDesactivacion());
 		tramiteVersion.setRelease(this.getRelease());
-		tramiteVersion.setTipoFlujo(TypeFlujo.fromString(this.getTipoflujo()));
+		if (this.getTipoflujo() != null) {
+			tramiteVersion.setTipoFlujo(TypeFlujo.fromString(this.getTipoflujo()));
+		}
 		return tramiteVersion;
 	}
 
@@ -456,36 +417,11 @@ public class JVersionTramite implements IModelApi {
 				this.setLimiteTramitacion("0");
 			}
 
-			if (model.getListaDominios() != null) {
-
-				final Set<JDominio> listaDominios = new HashSet<>();
-				for (final Dominio dominio : model.getListaDominios()) {
-					final JDominio jdominio = new JDominio();
-					listaDominios.add(jdominio.fromModel(dominio));
-				}
-
-				this.setDominios(listaDominios);
-			}
-			if (model.getListaPasos() != null) {
-
-				final Set<JPasoTramitacion> listaPasos = new HashSet<>();
-				for (final TramitePaso paso : model.getListaPasos()) {
-					final JPasoTramitacion jpaso = new JPasoTramitacion();
-					listaPasos.add(jpaso.fromModel(paso));
-				}
-
-				this.setPasoTramite(listaPasos);
-			}
 			if (model.getMensajeDesactivacion() != null) {
-				final JLiteral mensaje = JLiteral.fromModel(model.getMensajeDesactivacion());
-				this.setMensajeDesactivacion(mensaje);
+				this.setMensajeDesactivacion(JLiteral.fromModel(model.getMensajeDesactivacion()));
 			}
 
-			if (model.getNivelQAA() == 1) {
-				this.setNivelQAA(true);
-			} else {
-				this.setNivelQAA(false);
-			}
+			this.setNivelQAA(model.getNivelQAA());
 			this.setNumeroVersion(model.getNumeroVersion());
 			this.setLimiteTramitacionNumero(model.getNumLimiteTramitacion());
 			this.setAdmitePersistencia(model.isPersistencia());
@@ -499,4 +435,5 @@ public class JVersionTramite implements IModelApi {
 		}
 
 	}
+
 }

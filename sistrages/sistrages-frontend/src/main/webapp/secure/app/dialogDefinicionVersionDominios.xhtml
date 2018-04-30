@@ -18,6 +18,7 @@
 		<f:metadata>
 			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionDominios.modoAcceso}" />
 			<f:viewParam name="ID" value="#{dialogDefinicionVersionDominios.id}" />
+			<f:viewParam name="AREA" value="#{dialogDefinicionVersionDominios.idArea}" />
 			<f:viewAction action="#{dialogDefinicionVersionDominios.init}" />
 		</f:metadata>
 	</h:head>
@@ -36,14 +37,14 @@
 			<h:panelGrid columns="2" columnClasses="w15 grid-right, w85 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">
 
 				<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.tipos']}" />
-				<p:selectOneMenu value="#{dialogDefinicionVersionDominios.tipo}" id="tipo" >
-				    <f:selectItems value="#{TipoAmbito.ALL_VALUES}"  itemLabel="#{msg['ambito.'+=tipo]}" var="tipo"/>
+				<p:selectOneMenu value="#{dialogDefinicionVersionDominios.tipo}" id="tipo"  update="growlDialog dataTable">
+				    <f:selectItems value="#{TipoAmbito.ALL_VALUES}"  itemLabel="#{msg['ambito.'+=tipo]}" var="tipo" />
 				</p:selectOneMenu>
 
 				<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.filtrar']}" />
 				<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
-	        		<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewEntidades.filtro}" size="50"/>
-	       			<p:commandButton icon="fa fa-search" actionListener="#{viewEntidades.filtrar()}" process="panelFiltro" update="growlDialog" />
+	        		<p:inputText placeholder="#{msg['botones.buscar']}" value="#{dialogDefinicionVersionDominios.filtro}" size="50"/>
+	       			<p:commandButton icon="fa fa-search" actionListener="#{dialogDefinicionVersionDominios.filtrar()}" process="@form" update="growlDialog dataTable" />
 	           	</h:panelGrid>
 
 	           	<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionDominios.resultados']}" />
@@ -69,7 +70,7 @@
 			<p:outputPanel styleClass="botonera">
 				<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton value="#{msg['botones.aceptar']}" styleClass="boton-azul"
+						<p:commandButton value="#{msg['botones.guardar']}" styleClass="boton-azul"
 							actionListener="#{dialogDefinicionVersionDominios.aceptar()}" process="@form"
 							update="@form growlDialog" />
 						<p:commandButton value="#{msg['botones.cancelar']}"

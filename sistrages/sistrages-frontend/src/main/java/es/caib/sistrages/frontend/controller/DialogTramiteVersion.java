@@ -1,10 +1,19 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
+import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -49,6 +58,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 		dataVersion.setLimiteTramitacion(false);
 		dataVersion.setDesactivacion(false);
 		dataVersion.setRelease(1);
+		dataVersion.setNivelQAA(2);
 
 	}
 
@@ -59,8 +69,37 @@ public class DialogTramiteVersion extends DialogControllerBase {
 		if (dataVersion.getTipoFlujo() == TypeFlujo.PERSONALIZADO) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Tipo no implementado");
 			return;
+		} else {
+
+			final List<TramitePaso> listaPasos = new ArrayList<>();
+			/* iniciliza pasos tramite */
+			for (final TramiteTipo tipo : this.tramiteService.listTipoTramitePaso()) {
+
+				TramitePaso paso = null;
+				if (tipo.getCodigo().equals("DebeSaber")) {
+					paso = new TramitePasoDebeSaber();
+				} else if (tipo.getCodigo().equals("Rellenar")) {
+					paso = new TramitePasoRellenar();
+				} else if (tipo.getCodigo().equals("Anexar")) {
+					paso = new TramitePasoAnexar();
+				} else if (tipo.getCodigo().equals("Tasa")) {
+					paso = new TramitePasoTasa();
+				} else if (tipo.getCodigo().equals("Registrar")) {
+					paso = new TramitePaso();
+				}
+
+				paso.setCodigo(tipo.getCodigo());
+				paso.setDescripcion(tipo.getDescripcion());
+				paso.setOrden(tipo.getOrden());
+				paso.setTipo(tipo);
+
+				listaPasos.add(paso);
+			}
+
+			this.dataVersion.setListaPasos(listaPasos);
+
 		}
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Guardado sin implementar");
+		this.tramiteService.addTramiteVersion(this.dataVersion, id);
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();

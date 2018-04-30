@@ -48,12 +48,12 @@ public class JAvisoEntidad implements IModelApi {
 	@Column(name = "AVI_BLOQ", nullable = false, precision = 1, scale = 0)
 	private boolean bloqueado;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "AVI_FCINI", length = 7)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "AVI_FCINI")
 	private Date fechaInicio;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "AVI_FCFIN", length = 7)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "AVI_FCFIN")
 	private Date fechaFin;
 
 	@Column(name = "AVI_LSTTRA", length = 1000)

@@ -48,6 +48,7 @@ public class JPlantillaFormulario implements IModelApi {
 	private Set<JPlantillaIdiomaFormulario> plantillaIdiomaFormulario = new HashSet<JPlantillaIdiomaFormulario>(0);
 
 	public JPlantillaFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {

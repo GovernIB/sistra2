@@ -13,7 +13,6 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
-import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
@@ -163,45 +162,6 @@ public class DominioServiceBean implements DominioService {
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
-	 * Long)
-	 */
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void addFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo, final Long idFuenteDato) {
-		dominioService.addFuenteDatoCampo(fuenteDatoCampo, idFuenteDato);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
-	 * Long)
-	 */
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void updateFuenteDatoCampo(final FuenteDatosCampo fuenteDatoCampo) {
-		dominioService.updateFuenteDatoCampo(fuenteDatoCampo);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * es.caib.sistrages.core.api.service.DominioService#removeFuenteDato(java.lang.
-	 * Long)
-	 */
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void removeFuenteDatoCampo(final Long idFuenteDatoCampo) {
-		dominioService.removeFuenteDatoCampo(idFuenteDatoCampo);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
 	 * es.caib.sistrages.core.api.service.DominioService#listFuenteDato(es.caib.
 	 * sistrages.core.api.model.types.TypeAmbito, java.lang.Long, java.lang.String)
 	 */
@@ -279,6 +239,24 @@ public class DominioServiceBean implements DominioService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public FuenteDatos loadFuenteDato(final String idFuenteDato) {
 		return dominioService.loadFuenteDato(idFuenteDato);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public boolean tieneTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		return dominioService.tieneTramiteVersion(idDominio, idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void removeTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		dominioService.removeTramiteVersion(idDominio, idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void addTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
+		dominioService.addTramiteVersion(idDominio, idTramiteVersion);
 	}
 
 }

@@ -217,7 +217,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.isConsulta()}"/>
 					</f:facet>

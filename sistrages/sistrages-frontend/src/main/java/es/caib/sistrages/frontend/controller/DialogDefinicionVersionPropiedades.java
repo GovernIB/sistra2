@@ -8,10 +8,15 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.service.ScriptService;
+import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -22,60 +27,112 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private ScriptService scriptService;
+
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Id elemento a tratar. */
 	private Long id;
 
-	/**
-	 * tramite version.
-	 */
+	/** Script de parametros iniciales. **/
+	private Script scriptPersonalizacion;
+
+	/** Script de parametros iniciales. **/
+	private Script scriptParamsIniciales;
+
+	/** tramite version. */
 	private TramiteVersion tramiteVersion;
 
-	/**
-	 * tramite version idioma Es soportado.
-	 */
+	/** tramite version idioma Es soportado. */
 	private boolean tramiteVersionIdiomaEsSoportado;
 
-	/**
-	 * tramite version idioma Ca soportado.
-	 */
+	/** tramite version idioma Ca soportado. */
 	private boolean tramiteVersionIdiomaCaSoportado;
 
-	/**
-	 * tramite version idioma En soportado.
-	 */
+	/** tramite version idioma En soportado. */
 	private boolean tramiteVersionIdiomaEnSoportado;
 
-	/**
-	 * tramite version idioma De soportado.
-	 */
+	/** tramite version idioma De soportado. */
 	private boolean tramiteVersionIdiomaDeSoportado;
+
+	/** para borrar la relación con los script. **/
+	private boolean borrarScriptPI = false;
+
+	/** para borrar la relación con los script. **/
+	private boolean borrarScriptPersonalizacion = false;
 
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
-		recuperaTramiteVersion(Long.valueOf(1));
+
+		/* recuperamos los datos */
+		tramiteVersion = tramiteService.getTramiteVersion(id);
+		final String idiomas = tramiteVersion.getIdiomasSoportados();
+		if (idiomas.contains("ca")) {
+			this.tramiteVersionIdiomaCaSoportado = true;
+		}
+		if (idiomas.contains("es")) {
+			this.tramiteVersionIdiomaEsSoportado = true;
+		}
+		if (idiomas.contains("en")) {
+			this.tramiteVersionIdiomaEnSoportado = true;
+		}
+
+		if (this.tramiteVersion.getIdScriptPersonalizacion() != null) {
+			scriptPersonalizacion = this.scriptService.getScript(this.tramiteVersion.getIdScriptPersonalizacion());
+		}
+
+		if (this.tramiteVersion.getIdScriptInicializacionTramite() != null) {
+			scriptParamsIniciales = this.scriptService
+					.getScript(this.tramiteVersion.getIdScriptInicializacionTramite());
+		}
 	}
 
 	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
 		// Realizamos alta o update
-		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		switch (acceso) {
-		case ALTA:
-			break;
-		case EDICION:
-			break;
-		case CONSULTA:
-			// No hay que hacer nada
-			break;
+		if (modoAcceso != null && TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {
+			if (!tramiteVersionIdiomaEsSoportado && !tramiteVersionIdiomaCaSoportado
+					&& !tramiteVersionIdiomaEnSoportado) {
+
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Seleccione un idioma");
+				return;
+			}
+
+			if (!this.getTramiteVersion().isAutenticado() && !this.getTramiteVersion().isNoAutenticado()) {
+
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Seleccione un tipo de autenticación");
+				return;
+			}
+
+			String idiomas = "";
+			if (tramiteVersionIdiomaEsSoportado) {
+				idiomas += "es;";
+			}
+			if (tramiteVersionIdiomaCaSoportado) {
+				idiomas += "ca;";
+			}
+			if (tramiteVersionIdiomaEnSoportado) {
+				idiomas += "en;";
+			}
+			idiomas = idiomas.substring(0, idiomas.length() - 1); // Quitamos el ; del final
+			tramiteVersion.setIdiomasSoportados(idiomas);
+			tramiteService.updateTramiteVersion(tramiteVersion, borrarScriptPI, scriptParamsIniciales,
+					borrarScriptPersonalizacion, scriptPersonalizacion);
 		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		// result.setResult(data.getCodigo());
+		result.setResult(this.tramiteVersion);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -93,56 +150,18 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 * Editar Script.
 	 */
 	public void editarScriptPersonalizacion() {
-		cargarDialogScript(this.tramiteVersion.getIdScriptPersonalizacion());
+
+		cargarDialogScript(scriptPersonalizacion);
+
 	}
 
 	/**
 	 * Editar Script.
 	 */
 	public void editarScriptInicializacion() {
-		cargarDialogScript(this.tramiteVersion.getIdScriptInicializacionTramite());
-	}
 
-	/**
-	 * Método que se encarga de cargar el dialog de carga dependiendo de si existe
-	 * ya el script o no.
-	 *
-	 * @param id
-	 */
-	private void cargarDialogScript(final Long id) {
-		if (id == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
-		} else {
-			final Map<String, String> params = new HashMap<>();
-			params.put(TypeParametroVentana.ID.toString(), id.toString());
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
-		}
-	}
+		cargarDialogScript(scriptParamsIniciales);
 
-	/**
-	 * Recupera tramite version.
-	 *
-	 * @param id
-	 *            el id de tramite version
-	 */
-	private void recuperaTramiteVersion(final Long id) {
-		tramiteVersion = new TramiteVersion();
-		tramiteVersion.setId(id);
-
-		tramiteVersion.setAutenticado(true);
-		tramiteVersion.setNivelQAA(2);
-		tramiteVersion.setIdiomasSoportados("es,ca");
-		tramiteVersion.setPersistencia(true);
-		tramiteVersion.setPersistenciaInfinita(false);
-		tramiteVersion.setPersistenciaDias(15);
-		tramiteVersion.setIdScriptPersonalizacion(Long.valueOf(2));
-		// tramiteVersion.setIdScriptInicializacionTramite(Long.valueOf(3));
-
-		/** tratamiento idiomas para pasarlos de la lista **/
-		tramiteVersionIdiomaEsSoportado = tramiteVersion.getIdiomasSoportados().contains("es");
-		tramiteVersionIdiomaCaSoportado = tramiteVersion.getIdiomasSoportados().contains("ca");
-		tramiteVersionIdiomaEnSoportado = tramiteVersion.getIdiomasSoportados().contains("en");
-		tramiteVersionIdiomaDeSoportado = tramiteVersion.getIdiomasSoportados().contains("de");
 	}
 
 	/**
@@ -154,40 +173,24 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	public void returnDialogoParamsIniciales(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
 		if (!respuesta.isCanceled()) {
 
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-
-				final Long idScript = (Long) respuesta.getResult();
-				this.tramiteVersion.setIdScriptInicializacionTramite(idScript);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
 			case EDICION:
-				// No debería cambiar el id del script
-				final Long idScriptEdicion = (Long) respuesta.getResult();
-				this.tramiteVersion.setIdScriptInicializacionTramite(idScriptEdicion);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				this.scriptParamsIniciales = (Script) respuesta.getResult();
+				if (this.scriptParamsIniciales == null) {
+					this.borrarScriptPI = true;
+				} else {
+					this.borrarScriptPI = false;
+				}
 				break;
-			case CONSULTA:
-				// No hay que hacer nada
+			default:
 				break;
 			}
 		}
 
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
 	/**
@@ -199,42 +202,47 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	public void returnDialogoPersonalizacion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
 		if (!respuesta.isCanceled()) {
 
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-
-				final Long idScript = (Long) respuesta.getResult();
-				this.tramiteVersion.setIdScriptPersonalizacion(idScript);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
 			case EDICION:
-				// No debería cambiar el id del script
-				final Long idScriptEdicion = (Long) respuesta.getResult();
-				this.tramiteVersion.setIdScriptPersonalizacion(idScriptEdicion);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				this.scriptPersonalizacion = (Script) respuesta.getResult();
+				if (this.scriptPersonalizacion == null) {
+					this.borrarScriptPersonalizacion = true;
+				} else {
+					this.borrarScriptPersonalizacion = false;
+				}
 				break;
-			case CONSULTA:
-				// No hay que hacer nada
+			default:
 				break;
 			}
 		}
+	}
 
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+	// ------- FUNCIONES PRIVADAS ------------------------------
+	/**
+	 * Método que se encarga de cargar el dialog de carga dependiendo de si existe
+	 * ya el script o no.
+	 *
+	 * @param id
+	 */
+	private void cargarDialogScript(final Script iScript) {
+		if (id == null) {
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
+		} else {
+			final Map<String, String> params = new HashMap<>();
+			if (iScript == null) {
+				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
+			} else {
+				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(iScript));
+			}
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
 		}
 	}
 
+	// ------- GETTERS / SETTERS --------------------------------
 	/**
 	 * Obtiene el valor de id.
 	 *

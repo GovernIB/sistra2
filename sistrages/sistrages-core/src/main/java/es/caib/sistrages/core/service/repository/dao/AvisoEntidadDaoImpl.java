@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
@@ -22,6 +23,12 @@ import es.caib.sistrages.core.service.repository.model.JLiteral;
  */
 @Repository("avisoEntidadDao")
 public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
+
+	private static final String FALTA_IDENTIFICADOR = "Falta el identificador";
+	private static final String NO_EXISTE_EL_AVISO = "No existe el aviso de entidad: ";
+	private static final String FALTA_ENTIDAD = "Falta la entidad";
+	private static final String FALTA_AVISO = "Falta el aviso de entidad";
+	private static final String NO_EXISTE_LA_ENTIDAD = "No existe la entidad: ";
 
 	/**
 	 * entity manager.
@@ -44,12 +51,21 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 * lang.Long)
 	 */
 	@Override
-	public AvisoEntidad getById(final Long id) {
+	public AvisoEntidad getById(final Long pId) {
 		AvisoEntidad avisoEntidad = null;
-		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, id);
-		if (jAvisoEntidad != null) {
+
+		if (pId == null) {
+			throw new FaltanDatosException(FALTA_IDENTIFICADOR);
+		}
+
+		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, pId);
+
+		if (jAvisoEntidad == null) {
+			throw new NoExisteDato(NO_EXISTE_EL_AVISO + pId);
+		} else {
 			avisoEntidad = jAvisoEntidad.toModel();
 		}
+
 		return avisoEntidad;
 	}
 
@@ -60,9 +76,21 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 * es.caib.sistrages.core.api.model.AvisoEntidad)
 	 */
 	@Override
-	public void add(final long idEntidad, final AvisoEntidad avisoEntidad) {
-		final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
-		final JAvisoEntidad jAvisoEntidad = JAvisoEntidad.fromModel(avisoEntidad);
+	public void add(final Long pIdEntidad, final AvisoEntidad pAvisoEntidad) {
+		if (pAvisoEntidad == null) {
+			throw new FaltanDatosException(FALTA_AVISO);
+		}
+
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, pIdEntidad);
+		if (jEntidad == null) {
+			throw new FaltanDatosException(NO_EXISTE_LA_ENTIDAD + pIdEntidad);
+		}
+
+		final JAvisoEntidad jAvisoEntidad = JAvisoEntidad.fromModel(pAvisoEntidad);
 		jAvisoEntidad.setEntidad(jEntidad);
 		entityManager.persist(jAvisoEntidad);
 	}
@@ -75,10 +103,10 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 * lang.Long)
 	 */
 	@Override
-	public void remove(final Long id) {
-		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, id);
+	public void remove(final Long pId) {
+		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, pId);
 		if (jAvisoEntidad == null) {
-			throw new NoExisteDato("No existe aviso entidad: " + id);
+			throw new NoExisteDato(NO_EXISTE_EL_AVISO + pId);
 		}
 		entityManager.remove(jAvisoEntidad);
 	}
@@ -91,16 +119,20 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 * sistrages.core.api.model.AvisoEntidad)
 	 */
 	@Override
-	public void update(final AvisoEntidad avisoEntidad) {
-		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, avisoEntidad.getId());
+	public void update(final AvisoEntidad pAvisoEntidad) {
+		if (pAvisoEntidad == null) {
+			throw new FaltanDatosException(FALTA_AVISO);
+		}
+
+		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, pAvisoEntidad.getId());
 		if (jAvisoEntidad == null) {
-			throw new NoExisteDato("No existe aviso entidad: " + avisoEntidad.getId());
+			throw new NoExisteDato(NO_EXISTE_EL_AVISO + pAvisoEntidad.getId());
 		}
 		// Mergeamos datos
-		final JAvisoEntidad jAvisoEntidadNew = JAvisoEntidad.fromModel(avisoEntidad);
+		final JAvisoEntidad jAvisoEntidadNew = JAvisoEntidad.fromModel(pAvisoEntidad);
 		jAvisoEntidadNew.setEntidad(jAvisoEntidad.getEntidad());
-		jAvisoEntidadNew.setCodigo(avisoEntidad.getId());
-		jAvisoEntidadNew.setMensaje(JLiteral.mergeModel(jAvisoEntidad.getMensaje(), avisoEntidad.getMensaje()));
+		jAvisoEntidadNew.setCodigo(pAvisoEntidad.getId());
+		jAvisoEntidadNew.setMensaje(JLiteral.mergeModel(jAvisoEntidad.getMensaje(), pAvisoEntidad.getMensaje()));
 		entityManager.merge(jAvisoEntidadNew);
 	}
 
@@ -113,8 +145,11 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 * java.lang.String)
 	 */
 	@Override
-	public List<AvisoEntidad> getAllByFiltro(final Long idEntidad, final TypeIdioma idioma, final String filtro) {
-		return listarAvisos(idEntidad, idioma, filtro);
+	public List<AvisoEntidad> getAllByFiltro(final Long pIdEntidad, final TypeIdioma pIdioma, final String pFiltro) {
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+		return listarAvisos(pIdEntidad, pIdioma, pFiltro);
 	}
 
 	/*
@@ -125,41 +160,44 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 * lang.Long)
 	 */
 	@Override
-	public List<AvisoEntidad> getAll(final Long idEntidad) {
-		return listarAvisos(idEntidad, null, null);
+	public List<AvisoEntidad> getAll(final Long pIdEntidad) {
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+		return listarAvisos(pIdEntidad, null, null);
 	}
 
 	/**
 	 * Listar avisos.
 	 *
-	 * @param idEntidad
+	 * @param pIdEntidad
 	 *            idEntidad
-	 * @param idioma
+	 * @param pIdioma
 	 *            idioma
-	 * @param filtro
+	 * @param pFiltro
 	 *            filtro
 	 * @return Listado de avisos
 	 */
 	@SuppressWarnings("unchecked")
-	private List<AvisoEntidad> listarAvisos(final Long idEntidad, final TypeIdioma idioma, final String filtro) {
+	private List<AvisoEntidad> listarAvisos(final Long pIdEntidad, final TypeIdioma pIdioma, final String pFiltro) {
 		final List<AvisoEntidad> listaAvisoEntidad = new ArrayList<>();
 		String sql = "select a from JAvisoEntidad as a";
-		if (StringUtils.isNotBlank(filtro)) {
+		if (StringUtils.isNotBlank(pFiltro)) {
 			sql += " LEFT JOIN a.mensaje.traduccionLiterales t ";
 		}
 		sql += " where a.entidad.codigo = :idEntidad ";
-		if (StringUtils.isNotBlank(filtro)) {
+		if (StringUtils.isNotBlank(pFiltro)) {
 			sql += "  AND (t.idioma.identificador = :idioma AND LOWER(t.literal) LIKE :filtro) ";
 		}
 		sql += "  order by a.fechaInicio, a.codigo";
 
 		final Query query = entityManager.createQuery(sql);
 
-		query.setParameter("idEntidad", idEntidad);
+		query.setParameter("idEntidad", pIdEntidad);
 
-		if (StringUtils.isNotBlank(filtro)) {
-			query.setParameter("idioma", idioma.toString());
-			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
+		if (StringUtils.isNotBlank(pFiltro)) {
+			query.setParameter("idioma", pIdioma.toString());
+			query.setParameter("filtro", "%" + pFiltro.toLowerCase() + "%");
 		}
 
 		final List<JAvisoEntidad> results = query.getResultList();
@@ -172,10 +210,14 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	}
 
 	@Override
-	public void removeByEntidad(final Long idEntidad) {
-		final String sql = "delete from JAvisoEntidad as a where a.entidad.codigo = :idEntidad";
+	public void removeByEntidad(final Long pIdEntidad) {
+		if (pIdEntidad == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+
+		final String sql = "delete from JAvisoEntidad a where a.entidad.codigo = :idEntidad";
 		final Query query = entityManager.createQuery(sql);
-		query.setParameter("idEntidad", idEntidad);
+		query.setParameter("idEntidad", pIdEntidad);
 		query.executeUpdate();
 	}
 

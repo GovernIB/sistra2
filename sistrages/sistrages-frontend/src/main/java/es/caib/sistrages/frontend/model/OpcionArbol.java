@@ -1,7 +1,7 @@
 package es.caib.sistrages.frontend.model;
 
 import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Formulario;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 
@@ -23,7 +23,7 @@ public class OpcionArbol {
 	private TramitePaso tramitePaso;
 
 	/** Formulario. **/
-	private Formulario formulario;
+	private FormularioTramite formulario;
 
 	/** Documento. **/
 	private Documento documento;
@@ -72,7 +72,7 @@ public class OpcionArbol {
 	 * @param nombre
 	 * @param url
 	 */
-	public OpcionArbol(final String nombre, final String url, final Formulario formulario,
+	public OpcionArbol(final String nombre, final String url, final FormularioTramite formulario,
 			final TramitePaso tramitePaso) {
 		super();
 		this.name = nombre;
@@ -158,7 +158,7 @@ public class OpcionArbol {
 	/**
 	 * @return the formulario
 	 */
-	public Formulario getFormulario() {
+	public FormularioTramite getFormulario() {
 		return formulario;
 	}
 
@@ -166,7 +166,7 @@ public class OpcionArbol {
 	 * @param formulario
 	 *            the formulario to set
 	 */
-	public void setFormulario(final Formulario formulario) {
+	public void setFormulario(final FormularioTramite formulario) {
 		this.formulario = formulario;
 	}
 

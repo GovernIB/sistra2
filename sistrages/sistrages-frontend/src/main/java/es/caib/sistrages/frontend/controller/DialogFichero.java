@@ -70,7 +70,7 @@ public class DialogFichero extends DialogControllerBase {
 	/**
 	 * Visualiza una fila si para subir un fichero al tipo entidad.
 	 */
-	private boolean tipoEntidad;
+	private boolean mostrarQuitar;
 
 	/**
 	 * nombre fichero.
@@ -99,12 +99,13 @@ public class DialogFichero extends DialogControllerBase {
 			} else {
 				entidad = entidadService.loadEntidad(Long.valueOf(id));
 			}
-			tipoEntidad = true;
+			mostrarQuitar = true;
 			break;
 		case FUENTE_ENTIDAD_CSV:
-			tipoEntidad = false;
+			mostrarQuitar = false;
 			break;
 		default:
+			mostrarQuitar = true;
 			break;
 		}
 
@@ -428,18 +429,22 @@ public class DialogFichero extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the tipoEntidad
+	 * Verifica si es mostrar quitar.
+	 *
+	 * @return true, si es mostrar quitar
 	 */
-	public boolean isTipoEntidad() {
-		return tipoEntidad;
+	public boolean isMostrarQuitar() {
+		return mostrarQuitar;
 	}
 
 	/**
+	 * Establece el valor de mostrarQuitar.
+	 *
 	 * @param tipoEntidad
-	 *            the tipoEntidad to set
+	 *            el nuevo valor de mostrarQuitar
 	 */
-	public void setTipoEntidad(final boolean tipoEntidad) {
-		this.tipoEntidad = tipoEntidad;
+	public void setMostrarQuitar(final boolean tipoEntidad) {
+		this.mostrarQuitar = tipoEntidad;
 	}
 
 }
