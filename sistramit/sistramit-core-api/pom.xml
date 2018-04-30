@@ -6,8 +6,54 @@
 		<artifactId>sistramit</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<artifactId>sistramit-core-api</artifactId>
 	<name>sistramit-core-api</name>
+
+	<dependencies>
+
+		<!-- Modulos comunes -->
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistracom-utils</artifactId>
+			<version>${sistra2.version}</version>
+		</dependency>
+
+		<!-- Commons -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons-lang3.version}</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>${commons-codec.version}</version>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+
+		<!--  Spring security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+    		<artifactId>spring-security-core</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+    		<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
