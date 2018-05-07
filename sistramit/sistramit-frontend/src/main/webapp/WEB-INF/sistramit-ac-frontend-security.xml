@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:security="http://www.springframework.org/schema/security"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-4.2.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+   <security:http use-expressions="true">
+
+      <security:intercept-url pattern="/asistente/**" access="isAuthenticated()"/>
+
+      <security:form-login
+         login-page='/login.html'
+         authentication-failure-url="/login.html?error=true" />
+
+	  <!--  TODO: Ver como se hace personalizable x entidad -->
+      <security:logout logout-success-url="/logout.html" />
+
+   </security:http>
+
+   <security:authentication-manager>
+        <security:authentication-provider ref="customAuthenticationProvider" />
+    </security:authentication-manager>
+
+   <bean id="customAuthenticationProvider"
+    	class="es.caib.sistramit.frontend.security.CustomAuthenticationProvider"/>
+
+</beans>

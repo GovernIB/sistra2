@@ -39,7 +39,7 @@ public class JLineaFormulario implements IModelApi {
 	@Column(name = "FLS_ORDEN", nullable = false, precision = 2, scale = 0)
 	private int orden;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lineaSeccionFormulario")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lineaFormulario")
 	private Set<JElementoFormulario> elementoFormulario = new HashSet<JElementoFormulario>(0);
 
 	public JLineaFormulario() {

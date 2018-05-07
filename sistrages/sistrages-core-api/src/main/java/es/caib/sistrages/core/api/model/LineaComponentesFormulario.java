@@ -10,23 +10,12 @@ import java.util.List;
  *
  */
 @SuppressWarnings("serial")
-public final class LineaComponentesFormulario extends ModelApi {
-
-	/** Id. */
-	private Long id;
+public final class LineaComponentesFormulario extends ObjetoFormulario {
 
 	private int orden;
 
 	/** Componentes. */
 	private List<ComponenteFormulario> componentes = new ArrayList<ComponenteFormulario>();
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(final Long id) {
-		this.id = id;
-	}
 
 	public List<ComponenteFormulario> getComponentes() {
 		return componentes;
@@ -40,7 +29,7 @@ public final class LineaComponentesFormulario extends ModelApi {
 		return orden;
 	}
 
-	public void setOrden(int orden) {
+	public void setOrden(final int orden) {
 		this.orden = orden;
 	}
 

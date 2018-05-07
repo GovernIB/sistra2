@@ -9,6 +9,10 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
+import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
+import es.caib.sistrages.core.api.model.types.TypeSeparadorNumero;
+
 /**
  * JCampoFormularioTexto
  */
@@ -34,22 +38,22 @@ public class JCampoFormularioTexto implements IModelApi {
 	private String tipo;
 
 	@Column(name = "CTX_NORTAM", precision = 4, scale = 0)
-	private Short normalTamanyo;
+	private Integer normalTamanyo;
 
 	@Column(name = "CTX_NORMUL", nullable = false, precision = 1, scale = 0)
 	private boolean normalMultilinea;
 
 	@Column(name = "CTX_NORLIN", precision = 3, scale = 0)
-	private Short normalNumeroLineas;
+	private Integer normalNumeroLineas;
 
 	@Column(name = "CTX_NOREXP", length = 4000)
 	private String normalExpresionRegular;
 
 	@Column(name = "CTX_NUMENT", precision = 2, scale = 0)
-	private Byte numeroDigitosEnteros;
+	private Integer numeroDigitosEnteros;
 
 	@Column(name = "CTX_NUMDEC", precision = 1, scale = 0)
-	private Byte numeroDigitosDecimales;
+	private Integer numeroDigitosDecimales;
 
 	@Column(name = "CTX_NUMSEP", length = 2)
 	private String numeroSeparador;
@@ -119,11 +123,11 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.tipo = tipo;
 	}
 
-	public Short getNormalTamanyo() {
+	public Integer getNormalTamanyo() {
 		return this.normalTamanyo;
 	}
 
-	public void setNormalTamanyo(final Short normalTamanyo) {
+	public void setNormalTamanyo(final Integer normalTamanyo) {
 		this.normalTamanyo = normalTamanyo;
 	}
 
@@ -135,11 +139,11 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.normalMultilinea = normalMultilinea;
 	}
 
-	public Short getNormalNumeroLineas() {
+	public Integer getNormalNumeroLineas() {
 		return this.normalNumeroLineas;
 	}
 
-	public void setNormalNumeroLineas(final Short normalNumeroLineas) {
+	public void setNormalNumeroLineas(final Integer normalNumeroLineas) {
 		this.normalNumeroLineas = normalNumeroLineas;
 	}
 
@@ -151,19 +155,19 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.normalExpresionRegular = normalExpresionRegular;
 	}
 
-	public Byte getNumeroDigitosEnteros() {
+	public Integer getNumeroDigitosEnteros() {
 		return this.numeroDigitosEnteros;
 	}
 
-	public void setNumeroDigitosEnteros(final Byte numeroDigitosEnteros) {
+	public void setNumeroDigitosEnteros(final Integer numeroDigitosEnteros) {
 		this.numeroDigitosEnteros = numeroDigitosEnteros;
 	}
 
-	public Byte getNumeroDigitosDecimales() {
+	public Integer getNumeroDigitosDecimales() {
 		return this.numeroDigitosDecimales;
 	}
 
-	public void setNumeroDigitosDecimales(final Byte numeroDigitosDecimales) {
+	public void setNumeroDigitosDecimales(final Integer numeroDigitosDecimales) {
 		this.numeroDigitosDecimales = numeroDigitosDecimales;
 	}
 
@@ -253,6 +257,40 @@ public class JCampoFormularioTexto implements IModelApi {
 
 	public void setPermiteRango(final boolean permiteRango) {
 		this.permiteRango = permiteRango;
+	}
+
+	public ComponenteFormularioCampoTexto toModel() {
+		ComponenteFormularioCampoTexto campoTexto = null;
+
+		if (campoFormulario != null) {
+			campoTexto = (ComponenteFormularioCampoTexto) campoFormulario.toModel(ComponenteFormularioCampoTexto.class);
+			if (campoTexto != null) {
+				campoTexto.setOculto(oculto);
+				campoTexto.setTipoCampoTexto(TypeCampoTexto.valueOf(tipo));
+				campoTexto.setNormalTamanyo(normalTamanyo);
+				campoTexto.setNormalMultilinea(normalMultilinea);
+				campoTexto.setNormalNumeroLineas(normalNumeroLineas);
+				campoTexto.setNormalExpresionRegular(normalExpresionRegular);
+				campoTexto.setNumeroDigitosEnteros(numeroDigitosEnteros);
+				campoTexto.setNumeroDigitosDecimales(numeroDigitosDecimales);
+				if (numeroSeparador != null) {
+					campoTexto.setNumeroSeparador(TypeSeparadorNumero.valueOf(numeroSeparador));
+				}
+				campoTexto.setNumeroRangoMinimo(numeroRangoMinimo);
+				campoTexto.setNumeroRangoMaximo(numeroRangoMaximo);
+				campoTexto.setNumeroConSigno(numeroConSigno);
+				campoTexto.setIdentNif(identNif);
+				campoTexto.setIdentCif(identCif);
+				campoTexto.setIdentNie(identNie);
+				campoTexto.setIdentNss(identNss);
+				campoTexto.setTelefonoMovil(telefonoMovil);
+				campoTexto.setTelefonoFijo(telefonoFijo);
+				campoTexto.setPermiteRango(permiteRango);
+			}
+
+		}
+
+		return campoTexto;
 	}
 
 }

@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import es.caib.sistrages.core.api.model.Tasa;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypePago;
 
 /**
  * JPagoTramite
@@ -39,7 +44,7 @@ public class JPagoTramite implements IModelApi {
 	@JoinColumn(name = "PAG_SCRDPG")
 	private JScript scriptDatosPago;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PAG_DESCRIP", nullable = false)
 	private JLiteral descripcion;
 
@@ -62,6 +67,7 @@ public class JPagoTramite implements IModelApi {
 	private boolean simulado;
 
 	public JPagoTramite() {
+		// Constructor vacio
 	}
 
 	public Long getCodigo() {
@@ -150,6 +156,39 @@ public class JPagoTramite implements IModelApi {
 
 	public void setSimulado(final boolean simulado) {
 		this.simulado = simulado;
+	}
+
+	public static JPagoTramite fromModel(final Tasa tasa) {
+		JPagoTramite pago = null;
+		if (tasa != null) {
+			pago = new JPagoTramite();
+			pago.setCodigo(tasa.getId());
+			if (tasa.getDescripcion() != null) {
+				pago.setDescripcion(JLiteral.fromModel(tasa.getDescripcion()));
+			}
+			pago.setIdentificador(tasa.getCodigo());
+			pago.setObligatorio(tasa.getObligatoriedad().toString());
+			pago.setOrden(tasa.getOrden());
+			pago.setPlugin(tasa.getTipoPlugin());
+			pago.setSimulado(tasa.isSimulado());
+			pago.setTipo(tasa.getTipo().toString());
+		}
+		return pago;
+	}
+
+	public Tasa toModel() {
+		final Tasa tasa = new Tasa();
+		tasa.setId(this.getCodigo());
+		if (tasa.getDescripcion() != null) {
+			tasa.setDescripcion(this.getDescripcion().toModel());
+		}
+		tasa.setCodigo(this.getIdentificador());
+		tasa.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
+		tasa.setOrden(this.getOrden());
+		tasa.setTipoPlugin(this.getPlugin());
+		tasa.setSimulado(this.isSimulado());
+		tasa.setTipo(TypePago.fromString(this.getTipo()));
+		return tasa;
 	}
 
 }

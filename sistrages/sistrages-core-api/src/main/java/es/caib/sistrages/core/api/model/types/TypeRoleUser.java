@@ -18,7 +18,7 @@ public enum TypeRoleUser {
 
 	private String valor;
 
-	TypeRoleUser(final String iValor) {
+	private TypeRoleUser(final String iValor) {
 		this.valor = iValor;
 	}
 

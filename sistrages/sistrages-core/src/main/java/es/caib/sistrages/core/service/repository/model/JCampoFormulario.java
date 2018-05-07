@@ -11,6 +11,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+
 /**
  * JCampoFormulario
  */
@@ -149,6 +151,34 @@ public class JCampoFormulario implements IModelApi {
 
 	public void setCampoFormularioTexto(final JCampoFormularioTexto campoFormularioTexto) {
 		this.campoFormularioTexto = campoFormularioTexto;
+	}
+
+	public <T> ComponenteFormularioCampo toModel(final Class<T> model) {
+		ComponenteFormularioCampo newModel = null;
+
+		if (elementoFormulario != null) {
+			newModel = (ComponenteFormularioCampo) elementoFormulario.toModel(model);
+			if (newModel != null) {
+				newModel.setObligatorio(obligatorio);
+				newModel.setSoloLectura(soloLectura);
+				newModel.setNoModificable(noModificable);
+
+				if (scriptAutocalculado != null) {
+					newModel.setScriptAutorrellenable(scriptAutocalculado.toModel());
+				}
+
+				if (scriptSoloLectura != null) {
+					newModel.setScriptSoloLectura(scriptSoloLectura.toModel());
+				}
+
+				if (scriptValidaciones != null) {
+					newModel.setScriptValidacion(scriptValidaciones.toModel());
+				}
+			}
+		}
+
+		return newModel;
+
 	}
 
 }

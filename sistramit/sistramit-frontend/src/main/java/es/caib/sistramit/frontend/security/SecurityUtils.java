@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.model.comun.ConstantesNumero;
-import es.caib.sistramit.core.api.model.security.UsuarioAutenticado;
 
 /**
  * Utilidades seguridad.

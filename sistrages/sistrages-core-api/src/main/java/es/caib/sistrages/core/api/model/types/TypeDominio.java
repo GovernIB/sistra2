@@ -26,7 +26,7 @@ public enum TypeDominio {
 
 	private String valor;
 
-	TypeDominio(final String iValor) {
+	private TypeDominio(final String iValor) {
 		this.valor = iValor;
 	}
 

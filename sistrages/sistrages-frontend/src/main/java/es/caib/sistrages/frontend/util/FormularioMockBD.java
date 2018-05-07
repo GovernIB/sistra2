@@ -19,8 +19,8 @@ public class FormularioMockBD {
 		formulario2 = new FormularioInterno();
 		formulario2.setId(2L);
 
-		formulario1.setCabeceraFormulario(true);
-		formulario2.setCabeceraFormulario(true);
+		formulario1.setMostrarCabecera(true);
+		formulario2.setMostrarCabecera(true);
 
 		final Literal txtCabecera = new Literal();
 		txtCabecera.add(new Traduccion("es", "Sol·licitud de primera expedició o renovació de llicència"));
@@ -39,8 +39,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctNif = new ComponenteFormularioCampoTexto();
 		ctNif.setId(1L);
-		ctNif.setCodigo("inputNIF");
-		ctNif.setColumnas(1);
+		ctNif.setIdComponente("inputNIF");
+		ctNif.setNumColumnas(1);
 		final Literal txtNif = new Literal();
 		txtNif.add(new Traduccion("es", "NIF"));
 		ctNif.setTexto(txtNif);
@@ -49,8 +49,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctNom = new ComponenteFormularioCampoTexto();
 		ctNom.setId(2L);
-		ctNom.setCodigo("inputNom");
-		ctNom.setColumnas(1);
+		ctNom.setIdComponente("inputNom");
+		ctNom.setNumColumnas(1);
 		final Literal txtNom = new Literal();
 		txtNom.add(new Traduccion("es", "NOMBRE"));
 		ctNom.setTexto(txtNom);
@@ -58,8 +58,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctApe1 = new ComponenteFormularioCampoTexto();
 		ctApe1.setId(3L);
-		ctApe1.setCodigo("inputApellido1");
-		ctApe1.setColumnas(1);
+		ctApe1.setIdComponente("inputApellido1");
+		ctApe1.setNumColumnas(1);
 		final Literal txtApe1 = new Literal();
 		txtApe1.add(new Traduccion("es", "APELLIDO 1"));
 		ctApe1.setTexto(txtApe1);
@@ -67,8 +67,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctApe2 = new ComponenteFormularioCampoTexto();
 		ctApe2.setId(4L);
-		ctApe2.setCodigo("inputApellido2");
-		ctApe2.setColumnas(1);
+		ctApe2.setIdComponente("inputApellido2");
+		ctApe2.setNumColumnas(1);
 		final Literal txtApe2 = new Literal();
 		txtApe2.add(new Traduccion("es", "APELLIDO 2"));
 		ctApe2.setTexto(txtApe2);
@@ -76,8 +76,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctEdad = new ComponenteFormularioCampoTexto();
 		ctEdad.setId(5L);
-		ctEdad.setCodigo("inputEdad");
-		ctEdad.setColumnas(1);
+		ctEdad.setIdComponente("inputEdad");
+		ctEdad.setNumColumnas(1);
 		final Literal txtEdad = new Literal();
 		txtEdad.add(new Traduccion("es", "Edad"));
 		ctEdad.setTexto(txtEdad);
@@ -85,8 +85,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctNick = new ComponenteFormularioCampoTexto();
 		ctNick.setId(6L);
-		ctNick.setCodigo("inputNick");
-		ctNick.setColumnas(1);
+		ctNick.setIdComponente("inputNick");
+		ctNick.setNumColumnas(1);
 		final Literal txtNick = new Literal();
 		txtNick.add(new Traduccion("es", "Nick"));
 		ctNick.setTexto(txtNick);
@@ -99,8 +99,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctEmail = new ComponenteFormularioCampoTexto();
 		ctEmail.setId(7L);
-		ctEmail.setCodigo("inputEmail");
-		ctEmail.setColumnas(2);
+		ctEmail.setIdComponente("inputEmail");
+		ctEmail.setNumColumnas(2);
 		final Literal txtEmail = new Literal();
 		txtEmail.add(new Traduccion("es", "EMAIL"));
 		ctEmail.setTexto(txtEmail);
@@ -113,8 +113,8 @@ public class FormularioMockBD {
 
 		final ComponenteFormularioCampoTexto ctDireccion = new ComponenteFormularioCampoTexto();
 		ctDireccion.setId(8L);
-		ctDireccion.setCodigo("inputDireccion");
-		ctDireccion.setColumnas(3);
+		ctDireccion.setIdComponente("inputDireccion");
+		ctDireccion.setNumColumnas(3);
 		final Literal txtDireccion = new Literal();
 		txtDireccion.add(new Traduccion("es", "DIRECCION"));
 		ctDireccion.setTexto(txtDireccion);

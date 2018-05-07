@@ -96,14 +96,14 @@ public class JFormularioTramite implements IModelApi {
 	@Column(name = "FTR_FEXIDE", length = 20)
 	private String idFormularioExterno;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "STG_PRLFTR", joinColumns = {
 			@JoinColumn(name = "FPR_CODFOR", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "FPR_CODPRL", nullable = false, updatable = false) })
-	private Set<JPasoRellenar> pasosRellenar = new HashSet<JPasoRellenar>(0);
+	private Set<JPasoRellenar> pasosRellenar = new HashSet<>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formularioTramite")
-	private Set<JPasoCaptura> pasosPagos = new HashSet<JPasoCaptura>(0);
+	private Set<JPasoCaptura> pasosPagos = new HashSet<>(0);
 
 	public JFormularioTramite() {
 	}
@@ -260,49 +260,46 @@ public class JFormularioTramite implements IModelApi {
 		this.pasosPagos = pasosPagos;
 	}
 
-	public void fromModel(final FormularioTramite formulario) {
+	public static JFormularioTramite fromModel(final FormularioTramite formulario) {
+		final JFormularioTramite jformularioTramite = new JFormularioTramite();
 		if (formulario != null) {
-			this.setCodigo(formulario.getId());
-			this.setFirmarDigitalmente(formulario.isDebeFirmarse());
+			jformularioTramite.setCodigo(formulario.getId());
+			jformularioTramite.setFirmarDigitalmente(formulario.isDebeFirmarse());
 			if (formulario.getDescripcion() != null) {
-				final JLiteral descripcion = JLiteral.fromModel(formulario.getDescripcion());
-				this.setDescripcion(descripcion);
+				jformularioTramite.setDescripcion(JLiteral.fromModel(formulario.getDescripcion()));
 			}
-			// this.setFormulario(x);
-			// this.setGestorFormulario(x);
-			this.setIdentificador(formulario.getCodigo());
+			jformularioTramite.setIdentificador(formulario.getCodigo());
 			if (formulario.getFormularioGestorExterno() != null) {
-				this.setIdFormularioExterno(formulario.getFormularioGestorInterno().getCodigo());
+				jformularioTramite.setIdFormularioExterno(formulario.getFormularioGestorInterno().getCodigo());
 			}
-			this.setObligatorio(formulario.getObligatoriedad().toString());
-			this.setOrden(formulario.getOrden());
-			// this.setPasosPagos(pasosPagos);
-			// this.setPasosRellenar(pasosRellenar);
-			this.setPrerregistro(formulario.isDebePrerregistrarse());
+			jformularioTramite.setObligatorio(formulario.getObligatoriedad().toString());
+			jformularioTramite.setOrden(formulario.getOrden());
+			jformularioTramite.setPrerregistro(formulario.isDebePrerregistrarse());
 			if (formulario.getScriptDatosIniciales() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptDatosIniciales());
-				this.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptDatosIniciales(script);
 			}
 			if (formulario.getScriptFirma() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptFirma());
-				this.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptDatosIniciales(script);
 			}
 			if (formulario.getScriptObligatoriedad() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptObligatoriedad());
-				this.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptDatosIniciales(script);
 			}
 			if (formulario.getScriptPrerrigistro() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptPrerrigistro());
-				this.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptDatosIniciales(script);
 			}
 			if (formulario.getScriptRetorno() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptRetorno());
-				this.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptDatosIniciales(script);
 			}
-			this.setTipo(formulario.getTipo().toString());
-			this.setTipoFormulario(formulario.getTipoFormulario().toString());
+			jformularioTramite.setTipo(formulario.getTipo().toString());
+			jformularioTramite.setTipoFormulario(formulario.getTipoFormulario().toString());
 
 		}
+		return jformularioTramite;
 	}
 
 	public FormularioTramite toModel() {

@@ -10,6 +10,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
+
 /**
  * JImagenFormulario
  */
@@ -59,4 +61,17 @@ public class JImagenFormulario implements IModelApi {
 		this.elementoFormulario = elementoFormulario;
 	}
 
+	public ComponenteFormularioImagen toModel() {
+		ComponenteFormularioImagen imagen = null;
+
+		if (elementoFormulario != null) {
+			imagen = (ComponenteFormularioImagen) elementoFormulario.toModel(ComponenteFormularioImagen.class);
+			if (imagen != null && fichero != null) {
+				imagen.setFichero(fichero.toModel());
+			}
+
+		}
+
+		return imagen;
+	}
 }

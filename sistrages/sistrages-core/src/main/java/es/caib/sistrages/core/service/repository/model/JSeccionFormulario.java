@@ -9,6 +9,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
+
 /**
  * JSeccionFormulario
  */
@@ -55,6 +57,30 @@ public class JSeccionFormulario implements IModelApi {
 
 	public void setLetra(final String letra) {
 		this.letra = letra;
+	}
+
+	public ComponenteFormularioSeccion toModel() {
+		ComponenteFormularioSeccion seccion = null;
+
+		if (elementoFormulario != null) {
+			seccion = (ComponenteFormularioSeccion) elementoFormulario.toModel(ComponenteFormularioSeccion.class);
+			if (seccion != null) {
+				seccion.setLetra(letra);
+			}
+		}
+
+		return seccion;
+	}
+
+	public static JSeccionFormulario fromModel(final ComponenteFormularioSeccion model) {
+		// TODO
+		JSeccionFormulario jModel = null;
+		if (model != null) {
+			jModel = new JSeccionFormulario();
+			jModel.setCodigo(model.getId());
+			jModel.setLetra(model.getLetra());
+		}
+		return jModel;
 	}
 
 }

@@ -19,13 +19,13 @@ public abstract class ComponenteFormularioCampo extends ComponenteFormulario {
 	private boolean noModificable; // TODO VER SI ES NECESARIO
 
 	/** Script autorrellenable. */
-	private String scriptAutorrellenable;
+	private Script scriptAutorrellenable;
 
 	/** Script solo lectura. */
-	private String scriptSoloLectura;
+	private Script scriptSoloLectura;
 
 	/** Script validacion. */
-	private String scriptValidacion;
+	private Script scriptValidacion;
 
 	public boolean isObligatorio() {
 		return obligatorio;
@@ -51,27 +51,27 @@ public abstract class ComponenteFormularioCampo extends ComponenteFormulario {
 		this.noModificable = noModificable;
 	}
 
-	public String getScriptAutorrellenable() {
+	public Script getScriptAutorrellenable() {
 		return scriptAutorrellenable;
 	}
 
-	public void setScriptAutorrellenable(final String scriptAutorrellenable) {
+	public void setScriptAutorrellenable(final Script scriptAutorrellenable) {
 		this.scriptAutorrellenable = scriptAutorrellenable;
 	}
 
-	public String getScriptSoloLectura() {
+	public Script getScriptSoloLectura() {
 		return scriptSoloLectura;
 	}
 
-	public void setScriptSoloLectura(final String scriptSoloLectura) {
+	public void setScriptSoloLectura(final Script scriptSoloLectura) {
 		this.scriptSoloLectura = scriptSoloLectura;
 	}
 
-	public String getScriptValidacion() {
+	public Script getScriptValidacion() {
 		return scriptValidacion;
 	}
 
-	public void setScriptValidacion(final String scriptValidacion) {
+	public void setScriptValidacion(final Script scriptValidacion) {
 		this.scriptValidacion = scriptValidacion;
 	}
 

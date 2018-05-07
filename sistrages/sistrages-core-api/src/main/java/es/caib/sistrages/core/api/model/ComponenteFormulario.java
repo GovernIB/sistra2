@@ -10,13 +10,10 @@ import es.caib.sistrages.core.api.model.types.TypeComponenteFormulario;
  *
  */
 @SuppressWarnings("serial")
-public abstract class ComponenteFormulario extends ModelApi {
-
-	/** Id. */
-	private Long id;
+public abstract class ComponenteFormulario extends ObjetoFormulario {
 
 	/** Código. */
-	private String codigo;
+	private String idComponente;
 
 	/** Tipo componente. */
 	private TypeComponenteFormulario tipo;
@@ -25,7 +22,7 @@ public abstract class ComponenteFormulario extends ModelApi {
 	private int orden;
 
 	/** Columnas. */
-	private int columnas = 1;
+	private int numColumnas = 1;
 
 	/** Literal texto componente. */
 	private Literal texto;
@@ -39,27 +36,19 @@ public abstract class ComponenteFormulario extends ModelApi {
 	/** Indica alineación texto. */
 	private TypeAlineacionTexto alineacionTexto = TypeAlineacionTexto.IZQUIERDA;
 
-	public Long getId() {
-		return id;
+	public String getIdComponente() {
+		return idComponente;
 	}
 
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setIdComponente(final String codigo) {
+		this.idComponente = codigo;
 	}
 
 	public TypeComponenteFormulario getTipo() {
 		return tipo;
 	}
 
-	protected void setTipo(final TypeComponenteFormulario tipo) {
+	public void setTipo(final TypeComponenteFormulario tipo) {
 		this.tipo = tipo;
 	}
 
@@ -71,12 +60,12 @@ public abstract class ComponenteFormulario extends ModelApi {
 		this.orden = orden;
 	}
 
-	public int getColumnas() {
-		return columnas;
+	public int getNumColumnas() {
+		return numColumnas;
 	}
 
-	public void setColumnas(final int columnas) {
-		this.columnas = columnas;
+	public void setNumColumnas(final int columnas) {
+		this.numColumnas = columnas;
 	}
 
 	public Literal getTexto() {

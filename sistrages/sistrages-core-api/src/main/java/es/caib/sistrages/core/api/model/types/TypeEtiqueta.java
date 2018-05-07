@@ -26,7 +26,7 @@ public enum TypeEtiqueta {
 
 	private String valor;
 
-	TypeEtiqueta(final String iValor) {
+	private TypeEtiqueta(final String iValor) {
 		this.valor = iValor;
 	}
 

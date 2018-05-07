@@ -34,8 +34,8 @@
 
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<h:outputText value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerIdentificador']}" />
-					<p:inputText  value="#{dialogDefinicionVersionAnexarDocumentos.data.codigo}" size="40" />
+					<h:outputText for="identificador" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerIdentificador']}" />
+					<p:inputText  id="identificador" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.codigo}" size="40" />
 
 					<h:outputText value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerDescripcion']}" />
 					<p:column>

@@ -3,9 +3,11 @@ package es.caib.sistrages.core.api.service;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
@@ -229,5 +231,82 @@ public interface TramiteService {
 	 * @return
 	 */
 	public FormularioTramite getFormulario(Long idFormularioTramite);
+
+	/**
+	 * Añade un tramite a un paso.
+	 *
+	 * @param formularioTramite
+	 * @param idTramitePaso
+	 */
+	public void addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
+
+	/**
+	 * Actualiza formulario.
+	 *
+	 * @param formularioTramite
+	 */
+	public void updateFormularioTramite(FormularioTramite formularioTramite);
+
+	/**
+	 * Obtiene un documento.
+	 *
+	 * @param idDocumento
+	 * @return
+	 */
+	public Documento getDocumento(Long idDocumento);
+
+	/**
+	 * Añade un documento a un paso.
+	 *
+	 * @param documento
+	 * @param idTramitePaso
+	 */
+	public void addDocumentoTramite(Documento documento, Long idTramitePaso);
+
+	/**
+	 * Actualiza un documento.
+	 *
+	 * @param documento
+	 */
+	public void updateDocumentoTramite(Documento documento);
+
+	/**
+	 * Borrar documento.
+	 *
+	 * @param idTramitePaso
+	 * @param idDocumento
+	 */
+	public void removeDocumento(Long idTramitePaso, Long idDocumento);
+
+	/**
+	 * Obtiene una tasa.
+	 *
+	 * @param idTasa
+	 * @return
+	 */
+	public Tasa getTasa(Long idTasa);
+
+	/**
+	 * Añade una tasa a un paso.
+	 *
+	 * @param tasa
+	 * @param idTramitePaso
+	 */
+	public void addTasaTramite(Tasa tasa, Long idTramitePaso);
+
+	/**
+	 * Actualiza una tasa.
+	 *
+	 * @param tasa
+	 */
+	public void updateTasaTramite(Tasa tasa);
+
+	/**
+	 * Borra una tasa.
+	 * 
+	 * @param idTramitePaso
+	 * @param idTasa
+	 */
+	public void removeTasa(Long idTramitePaso, Long idTasa);
 
 }

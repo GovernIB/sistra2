@@ -50,6 +50,9 @@ public class JPaginaFormulario implements IModelApi {
 	@Column(name = "PAF_PAGLEL", nullable = false, precision = 1, scale = 0)
 	private boolean paginaAsociadaListaElementos;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario")
+	private Set<JLineaFormulario> lineasFormulario = new HashSet<JLineaFormulario>(0);
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paginaFormulario", cascade = { CascadeType.ALL })
 	private Set<JListaElementosFormulario> listasElementosFormulario = new HashSet<JListaElementosFormulario>(0);
 
@@ -111,6 +114,14 @@ public class JPaginaFormulario implements IModelApi {
 
 	public void setListasElementosFormulario(final Set<JListaElementosFormulario> listasElementosFormulario) {
 		this.listasElementosFormulario = listasElementosFormulario;
+	}
+
+	public Set<JLineaFormulario> getLineasFormulario() {
+		return lineasFormulario;
+	}
+
+	public void setLineasFormulario(final Set<JLineaFormulario> lineasFormulario) {
+		this.lineasFormulario = lineasFormulario;
 	}
 
 	public PaginaFormulario toModel() {

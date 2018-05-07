@@ -15,7 +15,7 @@ public final class ModuleConfig {
 	public static final String entorno = "DES";
 
 	/** Url Sistramit. */
-	public static final String urlSistramit = "http://localhost:8080/sistramit";
+	public static final String urlSistramit = "http://localhost:8080/sistramitfront";
 
 	/** Url excepcion fatal. */ // TODO Ante una excepcion fatal no controlada, hay que ver que se hace
 	public static final String urlExcepcionFatal = "http://www.google.es";

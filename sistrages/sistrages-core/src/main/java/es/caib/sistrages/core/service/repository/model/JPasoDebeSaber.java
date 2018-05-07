@@ -63,12 +63,16 @@ public class JPasoDebeSaber implements IModelApi {
 		this.instruccionesInicio = instruccionesInicio;
 	}
 
-	public void fromModel(final TramitePasoDebeSaber mpasoDebeSaber) {
-		this.setCodigo(mpasoDebeSaber.getIdPasoRelacion());
-		if (mpasoDebeSaber.getInstruccionesIniciales() != null) {
-			final JLiteral literal = JLiteral.fromModel(mpasoDebeSaber.getInstruccionesIniciales());
-			this.setInstruccionesInicio(literal);
+	public static JPasoDebeSaber fromModel(final TramitePasoDebeSaber mpasoDebeSaber) {
+		JPasoDebeSaber jpaso = null;
+		if (mpasoDebeSaber != null) {
+			jpaso = new JPasoDebeSaber();
+			jpaso.setCodigo(mpasoDebeSaber.getIdPasoRelacion());
+			if (mpasoDebeSaber.getInstruccionesIniciales() != null) {
+				jpaso.setInstruccionesInicio(JLiteral.fromModel(mpasoDebeSaber.getInstruccionesIniciales()));
+			}
 		}
+		return jpaso;
 	}
 
 }

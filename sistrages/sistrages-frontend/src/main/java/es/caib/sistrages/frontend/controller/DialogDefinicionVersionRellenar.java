@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -57,8 +58,8 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 *            respuesta dialogo
 	 */
 	public void returnDialogoDescripcion(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
 
+		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled()) {
 
 			switch (respuesta.getModoAcceso()) {
@@ -98,6 +99,12 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (this.data.getDescripcion() == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.descripcion.norelleno"));
+			return;
+		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));

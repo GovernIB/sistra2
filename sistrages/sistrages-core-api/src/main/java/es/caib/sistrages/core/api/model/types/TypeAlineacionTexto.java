@@ -23,7 +23,7 @@ public enum TypeAlineacionTexto {
 
 	private String valor;
 
-	TypeAlineacionTexto(final String iValor) {
+	private TypeAlineacionTexto(final String iValor) {
 		this.valor = iValor;
 	}
 

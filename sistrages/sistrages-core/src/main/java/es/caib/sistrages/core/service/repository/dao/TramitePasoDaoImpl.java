@@ -12,9 +12,13 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
+import es.caib.sistrages.core.service.repository.model.JPagoTramite;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 
 /**
@@ -128,6 +132,83 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	public FormularioTramite getFormulario(final Long idFormularioTramite) {
 		final JFormularioTramite jFormularioTramite = entityManager.find(JFormularioTramite.class, idFormularioTramite);
 		return jFormularioTramite.toModel();
+	}
+
+	@Override
+	public void addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
+		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
+		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		jpasoRellenar.getPasoRellenar().getFormulariosTramite().add(jFormulariotramite);
+		entityManager.merge(jpasoRellenar);
+	}
+
+	@Override
+	public void updateFormularioTramite(final FormularioTramite formularioTramite) {
+		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
+		entityManager.merge(jFormulariotramite);
+	}
+
+	@Override
+	public Documento getDocumento(final Long idDocumento) {
+		final JAnexoTramite jAnexo = entityManager.find(JAnexoTramite.class, idDocumento);
+		return jAnexo.toModel();
+	}
+
+	@Override
+	public void addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
+		final JAnexoTramite janexoTramite = JAnexoTramite.fromModel(documento);
+		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		janexoTramite.setPasoAnexar(jpasoRellenar.getPasoAnexar());
+		jpasoRellenar.getPasoAnexar().getAnexosTramite().add(janexoTramite);
+		entityManager.persist(janexoTramite);
+	}
+
+	@Override
+	public void updateDocumentoTramite(final Documento documento) {
+		final JAnexoTramite jAnexoTramiteOriginal = entityManager.find(JAnexoTramite.class, documento.getId());
+		final JAnexoTramite jAnexoTramite = JAnexoTramite.fromModel(documento);
+		jAnexoTramite.setPasoAnexar(jAnexoTramiteOriginal.getPasoAnexar());
+		jAnexoTramite.setScriptFirmantes(jAnexoTramiteOriginal.getScriptFirmantes());
+		jAnexoTramite.setScriptObligatoriedad(jAnexoTramiteOriginal.getScriptObligatoriedad());
+		jAnexoTramite.setScriptValidacion(jAnexoTramiteOriginal.getScriptValidacion());
+		entityManager.merge(jAnexoTramite);
+	}
+
+	@Override
+	public void removeDocumento(final Long idTramitePaso, final Long idDocumento) {
+		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		final JAnexoTramite janexoTramite = entityManager.find(JAnexoTramite.class, idDocumento);
+		jpasoRellenar.getPasoAnexar().getAnexosTramite().remove(janexoTramite);
+		entityManager.merge(jpasoRellenar);
+	}
+
+	@Override
+	public Tasa getTasa(final Long idTasa) {
+		final JPagoTramite jPagotramite = entityManager.find(JPagoTramite.class, idTasa);
+		return jPagotramite.toModel();
+	}
+
+	@Override
+	public void addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
+		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		final JPagoTramite jpagoTramite = JPagoTramite.fromModel(tasa);
+		jpasoRellenar.getPasoPagos().getPagosTramite().add(jpagoTramite);
+		jpagoTramite.setPasoPagos(jpasoRellenar.getPasoPagos());
+		entityManager.persist(jpagoTramite);
+	}
+
+	@Override
+	public void updateTasaTramite(final Tasa tasa) {
+		final JPagoTramite jpagoTramite = JPagoTramite.fromModel(tasa);
+		entityManager.merge(jpagoTramite);
+	}
+
+	@Override
+	public void removeTasa(final Long idTramitePaso, final Long idTasa) {
+		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		final JPagoTramite jpagoTramite = entityManager.find(JPagoTramite.class, idTasa);
+		jpasoRellenar.getPasoPagos().getPagosTramite().remove(jpagoTramite);
+		entityManager.merge(jpasoRellenar);
 	}
 
 }

@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypePresentacion;
+import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 
 /**
  * JAnexoTramite
@@ -47,11 +53,11 @@ public class JAnexoTramite implements IModelApi {
 	@JoinColumn(name = "ANE_SCROBL")
 	private JScript scriptObligatoriedad;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ANE_DESCRIP", nullable = false)
 	private JLiteral descripcion;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ANE_AYUTXT")
 	private JLiteral textoAyuda;
 
@@ -253,6 +259,62 @@ public class JAnexoTramite implements IModelApi {
 
 	public void setAnexarFirmado(final boolean anexarFirmado) {
 		this.anexarFirmado = anexarFirmado;
+	}
+
+	public static JAnexoTramite fromModel(final Documento doc) {
+		JAnexoTramite janexo = null;
+		if (doc != null) {
+			janexo = new JAnexoTramite();
+			janexo.setAnexarFirmado(doc.isDebeAnexarFirmado());
+			janexo.setCodigo(doc.getId());
+			janexo.setConvertirPdf(doc.isDebeConvertirPDF());
+			if (doc.getDescripcion() != null) {
+				janexo.setDescripcion(JLiteral.fromModel(doc.getDescripcion()));
+			}
+			janexo.setExtensionesPermitidas(doc.getExtensiones());
+			janexo.setFirmar(doc.isDebeFirmarDigitalmente());
+			janexo.setIdentificadorDocumento(doc.getCodigo());
+			janexo.setNumeroInstancia(doc.getNumeroInstancia());
+			janexo.setObligatorio(doc.getObligatoriedad().toString());
+			janexo.setOrden(doc.getOrden());
+			janexo.setPlantillaUrl(doc.getAyudaURL());
+			janexo.setTamanyoMaximo(doc.getTamanyoMaximo());
+			if (doc.getTipoTamanyo() != null) {
+				janexo.setTamanyoUnidad(doc.getTipoTamanyo().toString());
+			}
+			if (doc.getAyudaTexto() != null) {
+				janexo.setTextoAyuda(JLiteral.fromModel(doc.getAyudaTexto()));
+			}
+			if (doc.getTipoPresentacion() != null) {
+				janexo.setTipoPresentacion(doc.getTipoPresentacion().toString());
+			}
+		}
+		return janexo;
+	}
+
+	public Documento toModel() {
+		final Documento mdoc = new Documento();
+
+		mdoc.setDebeAnexarFirmado(this.isAnexarFirmado());
+		mdoc.setId(this.getCodigo());
+		mdoc.setDebeConvertirPDF(this.isConvertirPdf());
+		if (this.getDescripcion() != null) {
+			mdoc.setDescripcion(this.getDescripcion().toModel());
+		}
+		mdoc.setExtensiones(this.getExtensionesPermitidas());
+		mdoc.setDebeFirmarDigitalmente(this.isFirmar());
+		mdoc.setCodigo(this.getIdentificadorDocumento());
+		mdoc.setNumeroInstancia(this.getNumeroInstancia());
+		mdoc.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
+		mdoc.setOrden(this.getOrden());
+		mdoc.setAyudaURL(this.getPlantillaUrl());
+		mdoc.setTamanyoMaximo(this.getTamanyoMaximo());
+		mdoc.setTipoTamanyo(TypeTamanyo.fromString(this.getTamanyoUnidad()));
+		if (this.getTextoAyuda() != null) {
+			mdoc.setAyudaTexto(this.getTextoAyuda().toModel());
+		}
+		mdoc.setTipoPresentacion(TypePresentacion.fromString(this.getTipoPresentacion()));
+		return mdoc;
 	}
 
 }

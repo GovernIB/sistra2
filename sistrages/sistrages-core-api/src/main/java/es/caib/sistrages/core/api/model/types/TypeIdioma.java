@@ -34,7 +34,7 @@ public enum TypeIdioma {
 	 * @param iValor
 	 *            Valor
 	 */
-	TypeIdioma(final String iValor) {
+	private TypeIdioma(final String iValor) {
 		this.valor = iValor;
 	}
 

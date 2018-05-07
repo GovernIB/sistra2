@@ -40,7 +40,7 @@ public class JPasoRellenar implements IModelApi {
 	@JoinTable(name = "STG_PRLFTR", joinColumns = {
 			@JoinColumn(name = "FPR_CODPRL", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "FPR_CODFOR", nullable = false, updatable = false) })
-	private Set<JFormularioTramite> formulariosTramite = new HashSet<JFormularioTramite>(0);
+	private Set<JFormularioTramite> formulariosTramite = new HashSet<>(0);
 
 	public JPasoRellenar() {
 		// Constructor vacio.
@@ -70,17 +70,21 @@ public class JPasoRellenar implements IModelApi {
 		this.formulariosTramite = formulariosTramite;
 	}
 
-	public void fromModel(final TramitePasoRellenar paso) {
-		this.setCodigo(paso.getId());
-		if (paso.getFormulariosTramite() != null) {
-			final Set<JFormularioTramite> jformularios = new HashSet<>();
-			for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
-				final JFormularioTramite jformulario = new JFormularioTramite();
-				jformulario.fromModel(formulario);
-				jformularios.add(jformulario);
+	public static JPasoRellenar fromModel(final TramitePasoRellenar paso) {
+		JPasoRellenar jpasoRellenar = null;
+		if (paso != null) {
+			jpasoRellenar = new JPasoRellenar();
+			jpasoRellenar.setCodigo(paso.getId());
+			if (paso.getFormulariosTramite() != null) {
+				final Set<JFormularioTramite> jformularios = new HashSet<>();
+				for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
+					final JFormularioTramite jformulario = JFormularioTramite.fromModel(formulario);
+					jformularios.add(jformulario);
+				}
+				jpasoRellenar.setFormulariosTramite(jformularios);
 			}
-			this.setFormulariosTramite(jformularios);
 		}
+		return jpasoRellenar;
 	}
 
 }

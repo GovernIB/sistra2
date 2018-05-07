@@ -14,7 +14,7 @@ public enum TypePago {
 
 	private String valor;
 
-	TypePago(final String iValor) {
+	private TypePago(final String iValor) {
 		this.valor = iValor;
 	}
 
@@ -24,7 +24,7 @@ public enum TypePago {
 	 * @param tipo
 	 * @return
 	 */
-	public static TypePago toEnum(final String text) {
+	public static TypePago fromString(final String text) {
 		TypePago respuesta = null;
 		if (text != null) {
 			for (final TypePago b : TypePago.values()) {
@@ -41,4 +41,5 @@ public enum TypePago {
 	public String toString() {
 		return valor;
 	}
+
 }

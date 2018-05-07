@@ -101,6 +101,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Formulario seleccionado. **/
 	private FormularioTramite formularioSeleccionado;
 
+	/** Documento seleccionado. **/
+	private Documento documentoSeleccionado;
+
+	/** Tasa seleccionado. **/
+	private Tasa tasaSeleccionado;
+
 	/** Dato seleccionado en la lista. */
 	private Dominio dominioSeleccionado;
 
@@ -117,6 +123,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void init() {
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
+		// Control acceso
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(UtilJSF.getIdEntidad());
 
 		/** Inicializamos los datos. **/
 		recuperarDatos();
@@ -549,8 +558,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			case ALTA:
 
-				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().add(formulario);
-				tramiteService.updateTramitePaso(this.getTramitePasoRELLSeleccionado());
+				tramiteService.addFormularioTramite(formulario, this.getTramitePasoRELLSeleccionado().getId());
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
@@ -559,10 +567,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			case EDICION:
 
-				final int posicion = this.posicionFormulario(formulario);
-				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().remove(posicion);
-				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().add(posicion, formulario);
-				tramiteService.updateTramitePaso(this.getTramitePasoRELLSeleccionado());
+				tramiteService.updateFormularioTramite(formulario);
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.modificado.ok");
@@ -584,6 +589,304 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	}
 
+	// ------- VIEW DE PASO DE RELLENAR ------------------------------
+
+	/**
+	 * Abre un di&aacute;logo para anyadir los datos.
+	 */
+	public void nuevoDocumento() {
+		UtilJSF.openDialog(DialogDefinicionVersionAnexarDocumentos.class, TypeModoAcceso.ALTA, null, true, 600, 200);
+	}
+
+	/**
+	 * Abre dialogo para editar dato.
+	 */
+	public void editarDocumento() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarDocumentoSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.documentoSeleccionado.getId()));
+		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 575);
+	}
+
+	/**
+	 * Eliminar.
+	 */
+	public void eliminarDocumento() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarDocumentoSeleccionada())
+			return;
+
+		tramiteService.removeDocumento(this.getTramitePasoANEXSeleccionado().getId(),
+				this.documentoSeleccionado.getId());
+
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
+	}
+
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarDocumentoSeleccionada() {
+		boolean filaSeleccionada = true;
+		if (this.documentoSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	/**
+	 * Sube la propiedad de posición.
+	 */
+	public void subirDocumento() {
+		if (!verificarDocumentoSeleccionada())
+			return;
+
+		final TramitePasoAnexar tramitePasoAnexar = this.getTramitePasoANEXSeleccionado();
+		final int posicion = tramitePasoAnexar.getDocumentos().indexOf(this.documentoSeleccionado);
+		if (posicion <= 0) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			return;
+		}
+
+		final Documento documento = tramitePasoAnexar.getDocumentos().remove(posicion);
+		tramitePasoAnexar.getDocumentos().add(posicion - 1, documento);
+
+		for (int i = 0; i < tramitePasoAnexar.getDocumentos().size(); i++) {
+			tramitePasoAnexar.getDocumentos().get(i).setOrden(i + 1);
+		}
+
+		tramiteService.updateTramitePaso(tramitePasoAnexar);
+	}
+
+	/**
+	 * Baja la propiedad de posición.
+	 */
+	public void bajarDocumento() {
+		if (!verificarDocumentoSeleccionada())
+			return;
+
+		final TramitePasoAnexar tramitePasoAnexar = this.getTramitePasoANEXSeleccionado();
+		final int posicion = tramitePasoAnexar.getDocumentos().indexOf(this.documentoSeleccionado);
+		if (posicion >= tramitePasoAnexar.getDocumentos().size() - 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			return;
+		}
+
+		final Documento documento = tramitePasoAnexar.getDocumentos().remove(posicion);
+		tramitePasoAnexar.getDocumentos().add(posicion + 1, documento);
+
+		for (int i = 0; i < tramitePasoAnexar.getDocumentos().size(); i++) {
+			tramitePasoAnexar.getDocumentos().get(i).setOrden(i + 1);
+		}
+
+		tramiteService.updateTramitePaso(tramitePasoAnexar);
+
+	}
+
+	/**
+	 * Retorno dialogo de un Paso Tramite.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 ***/
+	public void returnDialogoDocumento(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			final Documento documento = (Documento) respuesta.getResult();
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+				tramiteService.addDocumentoTramite(documento, this.getTramitePasoANEXSeleccionado().getId());
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				tramiteService.updateDocumentoTramite(documento);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Si el mensaje está relleno es que ha habido algún cambio
+			recuperarDatos();
+			inicializarArbol();
+		}
+
+	}
+
+	// ------- VIEW DE PASO DE RELLENAR ------------------------------
+
+	/**
+	 * Abre un di&aacute;logo para anyadir los datos.
+	 */
+	public void nuevaTasa() {
+		UtilJSF.openDialog(DialogDefinicionVersionPagarTasas.class, TypeModoAcceso.ALTA, null, true, 600, 300);
+	}
+
+	/**
+	 * Abre dialogo para editar dato.
+	 */
+	public void editarTasa() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarTasaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tasaSeleccionado.getId()));
+		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 600, 300);
+
+	}
+
+	/**
+	 * Eliminar.
+	 */
+	public void eliminarTasa() {
+		// Verifica si no hay fila seleccionada
+		if (!verificarTasaSeleccionada())
+			return;
+
+		tramiteService.removeTasa(this.getTramitePasoTSSeleccionado().getId(), this.tasaSeleccionado.getId());
+
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
+	}
+
+	/**
+	 * Verifica si hay fila seleccionada.
+	 *
+	 * @return
+	 */
+	private boolean verificarTasaSeleccionada() {
+		boolean filaSeleccionada = true;
+		if (this.tasaSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	/**
+	 * Sube la propiedad de posición.
+	 */
+	public void subirTasa() {
+		if (!verificarTasaSeleccionada())
+			return;
+
+		final TramitePasoTasa tramitePasoAnexar = this.getTramitePasoTSSeleccionado();
+		final int posicion = tramitePasoAnexar.getTasas().indexOf(this.tasaSeleccionado);
+		if (posicion <= 0) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			return;
+		}
+
+		final Tasa tasa = tramitePasoAnexar.getTasas().remove(posicion);
+		tramitePasoAnexar.getTasas().add(posicion - 1, tasa);
+
+		for (int i = 0; i < tramitePasoAnexar.getTasas().size(); i++) {
+			tramitePasoAnexar.getTasas().get(i).setOrden(i + 1);
+		}
+
+		tramiteService.updateTramitePaso(tramitePasoAnexar);
+
+	}
+
+	/**
+	 * Baja la propiedad de posición.
+	 */
+	public void bajarTasa() {
+		if (!verificarTasaSeleccionada())
+			return;
+
+		final TramitePasoTasa tramitePasoAnexar = this.getTramitePasoTSSeleccionado();
+		final int posicion = tramitePasoAnexar.getTasas().indexOf(this.tasaSeleccionado);
+		if (posicion >= tramitePasoAnexar.getTasas().size() - 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			return;
+		}
+
+		final Tasa tasa = tramitePasoAnexar.getTasas().remove(posicion);
+		tramitePasoAnexar.getTasas().add(posicion + 1, tasa);
+
+		for (int i = 0; i < tramitePasoAnexar.getTasas().size(); i++) {
+			tramitePasoAnexar.getTasas().get(i).setOrden(i + 1);
+		}
+
+		tramiteService.updateTramitePaso(tramitePasoAnexar);
+
+	}
+
+	/**
+	 * Retorno dialogo de los botones de traducciones.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoTasa(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled()) {
+
+			final Tasa tasa = (Tasa) respuesta.getResult();
+			switch (respuesta.getModoAcceso()) {
+
+			case ALTA:
+				tramiteService.addTasaTramite(tasa, this.getTramitePasoTSSeleccionado().getId());
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.alta.ok");
+
+				break;
+
+			case EDICION:
+
+				tramiteService.updateTasaTramite(tasa);
+
+				// Mensaje
+				message = UtilJSF.getLiteral("info.modificado.ok");
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+	}
+
+	// ------- FUNCIONES PRIVADAS ------------------------------
+
 	private Long getIdSelectNode() {
 		Long idSelectNode = null;
 		if (this.selectedNode != null && this.selectedNode.getData() != null) {
@@ -601,8 +904,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		return idSelectNode;
 	}
-
-	// ------- FUNCIONES PRIVADAS ------------------------------
 
 	/**
 	 * Método que se encarga de cargar de nuevo el arbol.
@@ -847,7 +1148,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 *
 	 * @return
 	 */
-	public TramitePasoTasa getTramitePasTSSeleccionado() {
+	public TramitePasoTasa getTramitePasoTSSeleccionado() {
 		if (this.selectedNode == null) {
 			return null;
 		} else {
@@ -1029,5 +1330,21 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setDominioSeleccionado(final Dominio dominioSeleccionado) {
 		this.dominioSeleccionado = dominioSeleccionado;
+	}
+
+	public Documento getDocumentoSeleccionado() {
+		return documentoSeleccionado;
+	}
+
+	public void setDocumentoSeleccionado(final Documento documentoSeleccionado) {
+		this.documentoSeleccionado = documentoSeleccionado;
+	}
+
+	public Tasa getTasaSeleccionado() {
+		return tasaSeleccionado;
+	}
+
+	public void setTasaSeleccionado(final Tasa tasaSeleccionado) {
+		this.tasaSeleccionado = tasaSeleccionado;
 	}
 }

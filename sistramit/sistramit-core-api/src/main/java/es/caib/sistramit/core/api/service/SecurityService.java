@@ -1,6 +1,8 @@
 package es.caib.sistramit.core.api.service;
 
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
+import es.caib.sistramit.core.api.model.security.SesionInfo;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 
 /**
  * Servicio para verificar accesos de seguridad.
@@ -12,7 +14,7 @@ public interface SecurityService {
 
 	/**
 	 * Obtiene información para mostrar el login.
-	 * 
+	 *
 	 * @param codigoTramite
 	 *            código trámite
 	 * @param versionTramite
@@ -49,5 +51,58 @@ public interface SecurityService {
 	 * @return url redireccion a Clave
 	 */
 	String iniciarLogoutSesionClave(String lang, String urlCallback);
+
+	/**
+	 * Valida usuario anónimo.
+	 *
+	 * @param sesionInfo
+	 *            Info sesión
+	 * @return info usuario
+	 */
+	UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo);
+
+	/**
+	 * Valida acceso usuario desde Carpeta Ciudadana.
+	 *
+	 * @param sesionInfo
+	 *            Info sesión
+	 * @param ticket
+	 *            Ticket
+	 * @return info usuario
+	 */
+	UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(SesionInfo sesionInfo, String ticket);
+
+	/**
+	 * Valida acceso usuario desde Clave.
+	 *
+	 * @param sesionInfo
+	 *            Info sesión
+	 * @param ticket
+	 *            Ticket
+	 * @return info usuario
+	 */
+	UsuarioAutenticadoInfo validarTicketClave(SesionInfo sesionInfo, String ticket);
+
+	/**
+	 * Valida acceso usuario desde Gestor Formularios.
+	 *
+	 * @param sesionInfo
+	 *            Info sesión
+	 * @param ticket
+	 *            Ticket
+	 * @return info usuario
+	 */
+	UsuarioAutenticadoInfo validarTicketGestorFormularios(SesionInfo sesionInfo, String ticket);
+
+	/**
+	 * Valida acceso usuario desde Pasarela de Pagos.
+	 *
+	 * @param sesionInfo
+	 *            Info sesión
+	 * @param ticket
+	 *            Ticket
+	 * @return info usuario
+	 */
+	UsuarioAutenticadoInfo validarTicketPasarelaPagos(SesionInfo sesionInfo, String ticket);
 
 }

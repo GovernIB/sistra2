@@ -9,6 +9,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+
 /**
  * JCampoFormularioCasillaVerificacion
  */
@@ -66,6 +68,21 @@ public class JCampoFormularioCasillaVerificacion implements IModelApi {
 
 	public void setValorNoChecked(final String valorNoChecked) {
 		this.valorNoChecked = valorNoChecked;
+	}
+
+	public ComponenteFormularioCampoCheckbox toModel() {
+		ComponenteFormularioCampoCheckbox campoCheckbox = null;
+
+		if (campoFormulario != null) {
+			campoCheckbox = (ComponenteFormularioCampoCheckbox) campoFormulario
+					.toModel(ComponenteFormularioCampoCheckbox.class);
+			if (campoCheckbox != null) {
+				campoCheckbox.setValorChecked(valorChecked);
+				campoCheckbox.setValorNoChecked(valorNoChecked);
+			}
+		}
+
+		return campoCheckbox;
 	}
 
 }

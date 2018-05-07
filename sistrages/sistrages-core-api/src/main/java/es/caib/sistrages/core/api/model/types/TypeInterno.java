@@ -14,7 +14,7 @@ public enum TypeInterno {
 
 	private String valor;
 
-	TypeInterno(final String iValor) {
+	private TypeInterno(final String iValor) {
 		this.valor = iValor;
 	}
 

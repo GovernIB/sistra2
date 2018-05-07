@@ -18,7 +18,7 @@ public enum TypePresentacion {
 
 	private String valor;
 
-	TypePresentacion(final String iValor) {
+	private TypePresentacion(final String iValor) {
 		this.valor = iValor;
 	}
 

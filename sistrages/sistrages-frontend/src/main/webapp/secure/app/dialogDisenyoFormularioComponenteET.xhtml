@@ -9,7 +9,7 @@
 
 <h:column>TIPO ETIQUETA</h:column>
 <h:column>
-	<p:selectOneMenu id="tipoEtiqueta" value="#{dialogDisenyoFormulario.componentEdit.tipoEtiqueta}" style="width:200px" required="true">
+	<p:selectOneMenu id="tipoEtiqueta" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoEtiqueta}" style="width:200px" required="true">
 	    <p:ajax event="blur" process="@this" />
 	    <f:selectItems value="#{TypeEtiqueta.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeEtiqueta.' += tipo]}" />
 	</p:selectOneMenu>

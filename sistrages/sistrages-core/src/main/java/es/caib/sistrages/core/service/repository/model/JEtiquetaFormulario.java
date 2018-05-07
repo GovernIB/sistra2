@@ -9,6 +9,9 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
+import es.caib.sistrages.core.api.model.types.TypeEtiqueta;
+
 /**
  * JEtiquetaFormulario
  */
@@ -55,6 +58,19 @@ public class JEtiquetaFormulario implements IModelApi {
 
 	public void setTipo(final String tipo) {
 		this.tipo = tipo;
+	}
+
+	public ComponenteFormularioEtiqueta toModel() {
+		ComponenteFormularioEtiqueta etiqueta = null;
+
+		if (elementoFormulario != null) {
+			etiqueta = (ComponenteFormularioEtiqueta) elementoFormulario.toModel(ComponenteFormularioEtiqueta.class);
+			if (etiqueta != null) {
+				etiqueta.setTipoEtiqueta(TypeEtiqueta.fromString(tipo));
+			}
+		}
+
+		return etiqueta;
 	}
 
 }

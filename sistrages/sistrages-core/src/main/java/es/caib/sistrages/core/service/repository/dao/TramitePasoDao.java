@@ -2,7 +2,9 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 
 /**
@@ -43,10 +45,87 @@ public interface TramitePasoDao {
 
 	/**
 	 * Devuelve el formulario tramite.
-	 * 
+	 *
 	 * @param idFormularioTramite
 	 * @return
 	 */
 	FormularioTramite getFormulario(Long idFormularioTramite);
+
+	/**
+	 * Añade un formulario a trámite paso.
+	 *
+	 * @param formularioTramite
+	 */
+	void addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
+
+	/**
+	 * Actualiza un formulario a trámite paso.
+	 *
+	 * @param formularioTramite
+	 */
+	void updateFormularioTramite(FormularioTramite formularioTramite);
+
+	/**
+	 * Devuelve un documento.
+	 *
+	 * @param idDocumento
+	 * @return
+	 */
+	Documento getDocumento(Long idDocumento);
+
+	/**
+	 * Añade un documento a trámite paso.
+	 *
+	 * @param documento
+	 * @param idTramitePaso
+	 */
+	void addDocumentoTramite(Documento documento, Long idTramitePaso);
+
+	/**
+	 * Actualiza un documento.
+	 *
+	 * @param documento
+	 */
+	void updateDocumentoTramite(Documento documento);
+
+	/**
+	 * Borrar un documento.
+	 *
+	 * @param idTramitePaso
+	 * @param idDocumento
+	 */
+	void removeDocumento(Long idTramitePaso, Long idDocumento);
+
+	/**
+	 * Obtiene una tasa.
+	 *
+	 * @param idTasa
+	 * @return
+	 */
+	Tasa getTasa(Long idTasa);
+
+	/**
+	 * Añade una tasa a un tramite.
+	 *
+	 * @param tasa
+	 * @param idTramitePaso
+	 * @return
+	 */
+	void addTasaTramite(Tasa tasa, Long idTramitePaso);
+
+	/**
+	 * Actualiza una tasa.
+	 *
+	 * @param tasa
+	 */
+	void updateTasaTramite(Tasa tasa);
+
+	/**
+	 * Borra una tasa.
+	 * 
+	 * @param idTramitePaso
+	 * @param idTasa
+	 */
+	void removeTasa(Long idTramitePaso, Long idTasa);
 
 }

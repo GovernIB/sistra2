@@ -24,6 +24,26 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<!--  Spring security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+    		<artifactId>spring-security-core</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+    		<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<dependency>
+		 	<groupId>org.springframework.security</groupId>
+		 	<artifactId>spring-security-config</artifactId>
+		 	<version>${spring-security.version}</version>
+		 	<type>jar</type>
+		 </dependency>
+
 		<!-- JSTL / Taglibs -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

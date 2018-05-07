@@ -11,7 +11,7 @@
 
 	<h:form id="formDisenyoTextbox" styleClass="h100">
 		<h3 class="margin-top-3 margin-bottom-3">
-			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.' += dialogDisenyoFormulario.componentEdit.tipo]}" />
+			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.' += dialogDisenyoFormulario.objetoFormularioEdit.tipo]}" />
 		</h3>
 
 		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
@@ -21,14 +21,14 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}">
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<h:inputText value="#{dialogDisenyoFormulario.componentEdit.codigo}">
+	         		<h:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}">
 	         			<p:ajax event="blur" process="@this" />
 	         		</h:inputText>
 	         	</h:column>
 
 				<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
 	         	<h:column>
-	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.componentEdit.columnas}" style="width:125px">
+	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" style="width:125px">
 
 	         				<p:ajax event="blur" process="@this" />
 
@@ -43,7 +43,7 @@
 
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column>
-	         		<h:inputText id="texto" value="#{dialogDisenyoFormulario.componentEdit.texto.getTraduccion(sessionBean.lang)}" readonly="true"/>
+	         		<h:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang)}" readonly="true"/>
 	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto()}" process="@this">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraducciones}" update="texto" />
 	        		</p:commandButton>
@@ -51,7 +51,7 @@
 
 				<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.ayudaOnline']}" /></h:column>
 	         	<h:column>
-	         		<h:inputText id="ayuda" value="#{dialogDisenyoFormulario.componentEdit.ayuda.getTraduccion(sessionBean.lang)}" readonly="true"/>
+	         		<h:inputText id="ayuda" value="#{dialogDisenyoFormulario.objetoFormularioEdit.ayuda.getTraduccion(sessionBean.lang)}" readonly="true"/>
 	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda()}" process="@this">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraducciones}" update="ayuda" />
 	        		</p:commandButton>
@@ -59,14 +59,14 @@
 
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.obligatorio']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.componentEdit.obligatorio}">
+	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}">
 	         			<f:ajax event="click" execute="@this" />
 	         		</h:selectBooleanCheckbox>
 	         	</h:column>
 
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}" rendered="false"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.componentEdit.soloLectura}">
+	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}">
 	         			<f:ajax event="click" execute="@this" />
 	         		</h:selectBooleanCheckbox>
 				</h:column>

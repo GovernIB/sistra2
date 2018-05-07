@@ -42,7 +42,7 @@ public enum TypePlugin {
 
 	private String valor;
 
-	TypePlugin(final String iValor) {
+	private TypePlugin(final String iValor) {
 		this.valor = iValor;
 	}
 

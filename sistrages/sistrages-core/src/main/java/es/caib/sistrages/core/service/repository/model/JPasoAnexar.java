@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +14,9 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 
 /**
  * JPasoAnexar
@@ -36,10 +40,11 @@ public class JPasoAnexar implements IModelApi {
 	@JoinColumn(name = "PAN_SCRDIN")
 	private JScript scriptAnexosDinamicos;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoAnexar")
-	private Set<JAnexoTramite> anexosTramite = new HashSet<JAnexoTramite>(0);
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoAnexar", cascade = { CascadeType.ALL })
+	private Set<JAnexoTramite> anexosTramite = new HashSet<>(0);
 
 	public JPasoAnexar() {
+		// Constructor vacio
 	}
 
 	public Long getCodigo() {
@@ -72,6 +77,22 @@ public class JPasoAnexar implements IModelApi {
 
 	public void setAnexosTramite(final Set<JAnexoTramite> anexosTramite) {
 		this.anexosTramite = anexosTramite;
+	}
+
+	public static JPasoAnexar fromModel(final TramitePasoAnexar paso) {
+		JPasoAnexar jpaso = null;
+		if (paso != null) {
+			jpaso = new JPasoAnexar();
+			jpaso.setCodigo(paso.getId());
+			if (paso.getDocumentos() != null) {
+				final Set<JAnexoTramite> anexos = new HashSet<>();
+				for (final Documento doc : paso.getDocumentos()) {
+					anexos.add(JAnexoTramite.fromModel(doc));
+				}
+				jpaso.setAnexosTramite(anexos);
+			}
+		}
+		return jpaso;
 	}
 
 }

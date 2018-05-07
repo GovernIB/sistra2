@@ -77,6 +77,9 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
+		// Control acceso
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(UtilJSF.getIdEntidad());
+
 		// Preparamos permisos
 		checkPermiteAlta();
 		checkPermiteEditar();

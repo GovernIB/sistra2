@@ -43,7 +43,7 @@ public enum TypeComponenteFormulario {
 
 	private String valor;
 
-	TypeComponenteFormulario(final String iValor) {
+	private TypeComponenteFormulario(final String iValor) {
 		this.valor = iValor;
 	}
 

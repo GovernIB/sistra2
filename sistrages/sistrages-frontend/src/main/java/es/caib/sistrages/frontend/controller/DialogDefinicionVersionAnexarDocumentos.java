@@ -2,19 +2,18 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypePresentacion;
+import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -42,19 +41,14 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 
 	}
 
-	@PostConstruct
 	public void init() {
-		// TODO tendría que obtener el tramitePasoRellenar a partir de la id.
-		setId("1");
-
 		data = new Documento();
-		data.setId(1L);
-		data.setCodigo("Anexo1");
-		final Literal traducciones1 = new Literal();
-		traducciones1.add(new Traduccion("ca", "Certificat de penals"));
-		traducciones1.add(new Traduccion("es", "Certificado de penales"));
-		data.setDescripcion(traducciones1);
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
+		data.setTipoTamanyo(TypeTamanyo.KILOBYTES);
+		data.setTipoPresentacion(TypePresentacion.ELECTRONICA);
+		data.setNumeroInstancia(1);
+		data.setExtensiones("pdf;doc");
+		data.setTamanyoMaximo(1024);
 	}
 
 	/**
@@ -66,39 +60,10 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	public void returnDialogoDescripcion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		String message = null;
-
 		if (!respuesta.isCanceled()) {
 
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-
-				final Literal traducciones = (Literal) respuesta.getResult();
-				data.setDescripcion(traducciones);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
-
-				break;
-
-			case EDICION:
-
-				final Literal traduccionesMod = (Literal) respuesta.getResult();
-				data.setDescripcion(traduccionesMod);
-
-				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			final Literal traducciones = (Literal) respuesta.getResult();
+			data.setDescripcion(traducciones);
 		}
 	}
 

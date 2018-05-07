@@ -43,8 +43,7 @@
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexo.identificador']}" />
           	<p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionAnexo.data.codigo}"  />
 
-
-            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionAnexo.descripcion']}" />
+ 			<p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="descripcion" disabled="true" required="true" styleClass="w85" value="#{dialogDefinicionVersionAnexo.data.descripcion.getTraduccion(sessionBean.lang)}" />
            		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexo.editarDescripcion()}"

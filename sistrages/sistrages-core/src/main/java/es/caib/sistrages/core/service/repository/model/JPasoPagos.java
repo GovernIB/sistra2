@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,9 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.Tasa;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
 
 /**
  * JPasoPagos
@@ -31,10 +35,11 @@ public class JPasoPagos implements IModelApi {
 	@JoinColumn(name = "PPG_CODIGO")
 	private JPasoTramitacion pasoTramitacion;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoPagos")
-	private Set<JPagoTramite> pagosTramite = new HashSet<JPagoTramite>(0);
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoPagos", cascade = { CascadeType.ALL })
+	private Set<JPagoTramite> pagosTramite = new HashSet<>(0);
 
 	public JPasoPagos() {
+		// Constructor vacio.
 	}
 
 	public Long getCodigo() {
@@ -59,6 +64,24 @@ public class JPasoPagos implements IModelApi {
 
 	public void setPagosTramite(final Set<JPagoTramite> pagosTramite) {
 		this.pagosTramite = pagosTramite;
+	}
+
+	public static JPasoPagos fromModel(final TramitePasoTasa paso) {
+		JPasoPagos jpaso = null;
+		if (paso != null) {
+			jpaso = new JPasoPagos();
+			jpaso.setCodigo(paso.getId());
+			if (paso.getTasas() != null) {
+				final Set<JPagoTramite> pagos = new HashSet<>(0);
+				for (final Tasa tasa : paso.getTasas()) {
+					final JPagoTramite pago = JPagoTramite.fromModel(tasa);
+					pagos.add(pago);
+				}
+				jpaso.setPagosTramite(pagos);
+			}
+		}
+
+		return jpaso;
 	}
 
 }

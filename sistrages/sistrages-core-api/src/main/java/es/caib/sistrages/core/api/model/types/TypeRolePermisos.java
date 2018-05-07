@@ -27,7 +27,7 @@ public enum TypeRolePermisos {
 
 	private String valor;
 
-	TypeRolePermisos(final String iValor) {
+	private TypeRolePermisos(final String iValor) {
 		this.valor = iValor;
 	}
 

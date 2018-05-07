@@ -20,7 +20,9 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -55,10 +57,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private String posicionamiento;
 
 	/** quitar: Código Componente seleccionado. */
-	private String componentSelectedCodigo;
+	// private String componentSelectedCodigo;
 
 	/** Componente editado (copia original). **/
-	private ComponenteFormulario componentEdit;
+	private ObjetoFormulario objetoFormularioEdit;
 
 	/** Traducciones editado (cuando se llama a editar traducciones). **/
 	private Literal traduccionesEdit;
@@ -90,7 +92,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Codigo componente destino al pedir confirmacion de cambios.
 	 **/
-	private Long codigoComponenteDestino = null;
+	private Long codigoObjFormularioDestino = null;
 
 	/**
 	 * Inicializacion.
@@ -130,7 +132,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * Editar.
+	 * Editar componente.
 	 **/
 	public void editarComponente() {
 
@@ -143,13 +145,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 
 		// Verificamos si ha habido cambios
-		if (componentEdit != null) {
-			final ComponenteFormulario cfOriginal = formulario.getPaginas().get(0).getComponente(componentEdit.getId());
-			if (!UtilCoreApi.equalsModelApi(cfOriginal, componentEdit)) {
+		if (objetoFormularioEdit != null) {
+			final ComponenteFormulario ofOriginal = formulario.getPaginas().get(paginaActual - 1)
+					.getComponente(objetoFormularioEdit.getId());
+			if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit)) {
 				// TODO Pedir confirmacion cambios
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Componente cambiado");
 				// Guardamos componente destino
-				codigoComponenteDestino = idComponente;
+				codigoObjFormularioDestino = idComponente;
 				// Invocamos a boton para que dispare ventana de confirmacion
 				final RequestContext contextReq = RequestContext.getCurrentInstance();
 				contextReq.execute("PF('confirmationButton').jq.click();");
@@ -169,16 +172,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 *            the id componente
 	 */
 	private void cambiarEdicionComponente(final Long idComponente) {
-		componentEdit = null;
+		objetoFormularioEdit = null;
 
 		if (idComponente != null) {
-			final ComponenteFormulario cf = formulario.getPaginas().get(0).getComponente(idComponente);
+			final ComponenteFormulario cf = formulario.getPaginas().get(paginaActual - 1).getComponente(idComponente);
 
 			// Buscamos nuevo componente
 			if (cf != null) {
-				componentEdit = (ComponenteFormulario) UtilCoreApi.cloneModelApi(cf);
+				objetoFormularioEdit = (ComponenteFormulario) UtilCoreApi.cloneModelApi(cf);
 				// TODO PARA QUITAR
-				if (!UtilCoreApi.equalsModelApi(cf, componentEdit)) {
+				if (!UtilCoreApi.equalsModelApi(cf, objetoFormularioEdit)) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Componente clonado no coincide");
 				}
 			}
@@ -187,22 +190,27 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		// TODO Gestion pagina actual,...
 		String pagina = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
 		detalleComponenteUrl = null;
-		if (componentEdit != null) {
-			switch (componentEdit.getTipo()) {
-			case CAMPO_TEXTO:
-				pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
-				break;
-			case SELECTOR:
-				pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
-				break;
-			case ETIQUETA:
-				pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
-				break;
-			// TODO PENDIENTE
-			default:
-				break;
+		if (objetoFormularioEdit != null) {
+			if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				switch (((ComponenteFormulario) objetoFormularioEdit).getTipo()) {
+				case CAMPO_TEXTO:
+					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+					break;
+				case SELECTOR:
+					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+					break;
+				case ETIQUETA:
+					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+					break;
+				// TODO PENDIENTE
+				default:
+					break;
+				}
+				detalleComponenteUrl = "/secure/app/dialogDisenyoFormularioComponente"
+						+ ((ComponenteFormulario) objetoFormularioEdit).getTipo() + ".xhtml";
+			} else if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				// TODO
 			}
-			detalleComponenteUrl = "/secure/app/dialogDisenyoFormularioComponente" + componentEdit.getTipo() + ".xhtml";
 		}
 
 		panelPropiedadesUrl = pagina;
@@ -251,8 +259,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		// Guarda cambios
 		aplicarCambios();
 		// Cambia panel propiedades a nuevo componente seleccionado
-		cambiarEdicionComponente(codigoComponenteDestino);
-		codigoComponenteDestino = null;
+		cambiarEdicionComponente(codigoObjFormularioDestino);
+		codigoObjFormularioDestino = null;
 	}
 
 	/**
@@ -260,15 +268,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	public void aplicarCambios() {
 
-		if (componentEdit != null) {
+		if (objetoFormularioEdit != null) {
 
-			final ComponenteFormulario cfOriginal = formulario.getPaginas().get(0).getComponente(componentEdit.getId());
+			final ComponenteFormulario cfOriginal = formulario.getPaginas().get(paginaActual - 1)
+					.getComponente(objetoFormularioEdit.getId());
 
 			// TODO PENDIENTE GUARDAR (ver como hacerlo, ¿beanutils?¿metodos particulares
 			// por tipo componente?) De momento no dejamos cambiar codigo para permitir
 			// dejar seleccionando
 			try {
-				BeanUtils.copyProperties(cfOriginal, componentEdit);
+				BeanUtils.copyProperties(cfOriginal, objetoFormularioEdit);
 			} catch (final Exception e) {
 				throw new ErrorNoControladoException(e);
 			}
@@ -287,8 +296,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	public void descartarCambios() {
 		// Pasamos a componente destino
-		cambiarEdicionComponente(codigoComponenteDestino);
-		codigoComponenteDestino = null;
+		cambiarEdicionComponente(codigoObjFormularioDestino);
+		codigoObjFormularioDestino = null;
 
 	}
 
@@ -318,10 +327,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void editarTraduccionesTexto() {
 		// TODO COGER IDIOMAS TRAMITE Y VER OBLIGATORIOS
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		if (componentEdit.getTexto() == null) {
-			componentEdit.setTexto(UtilTraducciones.getTraduccionesPorDefecto());
+		if (((ComponenteFormulario) objetoFormularioEdit).getTexto() == null) {
+			((ComponenteFormulario) objetoFormularioEdit).setTexto(UtilTraducciones.getTraduccionesPorDefecto());
 		}
-		traduccionesEdit = componentEdit.getTexto();
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, traduccionesEdit, idiomas, idiomas);
 	}
 
@@ -331,15 +340,15 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void editarTraduccionesAyuda() {
 		// TODO COGER IDIOMAS TRAMITE Y VER OBLIGATORIOS
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		if (componentEdit.getAyuda() == null) {
-			componentEdit.setAyuda(UtilTraducciones.getTraduccionesPorDefecto());
+		if (((ComponenteFormulario) objetoFormularioEdit).getAyuda() == null) {
+			((ComponenteFormulario) objetoFormularioEdit).setAyuda(UtilTraducciones.getTraduccionesPorDefecto());
 		}
-		traduccionesEdit = componentEdit.getAyuda();
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, traduccionesEdit, idiomas, idiomas);
 	}
 
 	public boolean isComponenteCampo() {
-		return componentEdit instanceof ComponenteFormularioCampo;
+		return objetoFormularioEdit instanceof ComponenteFormularioCampo;
 	}
 
 	/**
@@ -362,7 +371,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
 		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 800,
-				340);
+				460);
 	}
 
 	public int getNumeroPaginas() {
@@ -438,17 +447,17 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * @return the nodeId
 	 */
-	public String getComponentSelectedCodigo() {
-		return componentSelectedCodigo;
-	}
+	// public String getComponentSelectedCodigo() {
+	// return componentSelectedCodigo;
+	// }
 
 	/**
 	 * @param nodeId
 	 *            the nodeId to set
 	 */
-	public void setComponentSelectedCodigo(final String nodeId) {
-		this.componentSelectedCodigo = nodeId;
-	}
+	// public void setComponentSelectedCodigo(final String nodeId) {
+	// this.componentSelectedCodigo = nodeId;
+	// }
 
 	public String getId() {
 		return id;
@@ -474,12 +483,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		this.formulario = formulario;
 	}
 
-	public ComponenteFormulario getComponentEdit() {
-		return componentEdit;
+	public ObjetoFormulario getObjetoFormularioEdit() {
+		return objetoFormularioEdit;
 	}
 
-	public void setComponentEdit(final ComponenteFormulario componentEdit) {
-		this.componentEdit = componentEdit;
+	public void setComponentEdit(final ObjetoFormulario objetoFormularioEdit) {
+		this.objetoFormularioEdit = objetoFormularioEdit;
 	}
 
 	/**

@@ -37,13 +37,16 @@
 					<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
 		          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.codigo}" required="true" disabled="true" styleClass="w35"/>
 
-
 		            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionTasa.descripcion']}" />
 		            <p:outputPanel styleClass="ui-inputgroup">
 		           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
 		           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionTasa.editarDescripcion()}"
 								process="@this" update="growl"/>
 		       		</p:outputPanel>
+
+					<p:outputLabel for="identificadorDoc" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
+		          	<p:inputText id="identificadorDoc" value="#{dialogDefinicionVersionTasa.data.codigo}" required="true" disabled="true" styleClass="w35"/>
+
 
 		         	<p:outputLabel value="#{msg['dialogDefinicionVersionTasa.obligatoriedad']}" />
 		         	<p:panelGrid styleClass="noBorders">

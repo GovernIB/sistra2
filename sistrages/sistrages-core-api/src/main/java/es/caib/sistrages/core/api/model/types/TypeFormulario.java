@@ -14,7 +14,7 @@ public enum TypeFormulario {
 
 	private String valor;
 
-	TypeFormulario(final String iValor) {
+	private TypeFormulario(final String iValor) {
 		this.valor = iValor;
 	}
 

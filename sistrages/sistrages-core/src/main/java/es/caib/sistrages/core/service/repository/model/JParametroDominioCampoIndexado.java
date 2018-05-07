@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ParametroDominio;
+import es.caib.sistrages.core.api.model.types.TypeParametroDominio;
+
 /**
  * JParametroDominioCampoIndexado
  */
@@ -82,4 +85,24 @@ public class JParametroDominioCampoIndexado implements IModelApi {
 		this.parametro = parametro;
 	}
 
+	public ParametroDominio toModel() {
+		final ParametroDominio parametroDominio = new ParametroDominio();
+		parametroDominio.setId(codigo);
+		parametroDominio.setTipo(TypeParametroDominio.fromString(tipo));
+		parametroDominio.setValor(valor);
+		parametroDominio.setParametro(parametro);
+		return parametroDominio;
+	}
+
+	public static JParametroDominioCampoIndexado fromModel(final ParametroDominio model) {
+		JParametroDominioCampoIndexado jModel = null;
+		if (model != null) {
+			jModel = new JParametroDominioCampoIndexado();
+			jModel.setCodigo(model.getId());
+			jModel.setTipo(model.getTipo().toString());
+			jModel.setValor(model.getValor());
+			jModel.setParametro(model.getParametro());
+		}
+		return jModel;
+	}
 }

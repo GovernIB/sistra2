@@ -28,7 +28,7 @@ public enum TypeTamanyo {
 	 * @param tipo
 	 * @return
 	 */
-	public static TypeTamanyo toEnum(final String text) {
+	public static TypeTamanyo fromString(final String text) {
 		TypeTamanyo respuesta = null;
 		if (text != null) {
 			for (final TypeTamanyo b : TypeTamanyo.values()) {

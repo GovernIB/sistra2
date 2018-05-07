@@ -12,7 +12,9 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -40,6 +42,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	private PaginaFormulario paginaSeleccionada;
 
 	private String literal;
+
+	private PlantillaFormulario plantillaSeleccionada;
 
 	@Inject
 	FormularioInternoService formIntService;
@@ -166,7 +170,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 * Baja la pagina de posición.
 	 */
 	public void bajarPagina() {
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada(paginaSeleccionada))
 			return;
 
 		final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
@@ -183,7 +187,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 * Sube la pagina de posición.
 	 */
 	public void subirPagina() {
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada(paginaSeleccionada))
 			return;
 
 		final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
@@ -206,7 +210,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 * elimina la pagina de posición.
 	 */
 	public void eliminarPagina() {
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada(paginaSeleccionada))
 			return;
 
 		// siempre tiene que haber una pagina
@@ -221,19 +225,54 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		paginaSeleccionada = null;
 	}
 
+	public void nuevaPlantilla() {
+		final PlantillaFormulario plantilla = new PlantillaFormulario();
+		this.data.getPlantillas().add(plantilla);
+	}
+
+	/**
+	 *
+	 * elimina la plantilla
+	 */
+	public void eliminarPlantilla() {
+		if (!verificarFilaSeleccionada(plantillaSeleccionada))
+			return;
+
+		final int posicion = this.data.getPlantillas().indexOf(this.plantillaSeleccionada);
+
+		this.data.getPlantillas().remove(posicion);
+		plantillaSeleccionada = null;
+	}
+
+	/**
+	 * Deshabilitar script plantilla.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean getDeshabilitarScriptPlantilla() {
+		return data.getPlantillas() != null ? this.data.getPlantillas().size() <= 1 : true;
+	}
+
 	/**
 	 * Verifica si hay fila seleccionada.
 	 *
 	 * @return
 	 */
-	private boolean verificarFilaSeleccionada() {
+	private boolean verificarFilaSeleccionada(final ModelApi filaseleccionada) {
 		boolean filaSeleccionada = true;
 
-		if (this.paginaSeleccionada == null) {
+		if (filaseleccionada == null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
+	}
+
+	/**
+	 * Sin implementar.
+	 */
+	public void sinImplementar() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 
 	/**
@@ -299,6 +338,14 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 	public void setPaginaSeleccionada(final PaginaFormulario paginaSeleccionada) {
 		this.paginaSeleccionada = paginaSeleccionada;
+	}
+
+	public PlantillaFormulario getPlantillaSeleccionada() {
+		return plantillaSeleccionada;
+	}
+
+	public void setPlantillaSeleccionada(final PlantillaFormulario plantillaSeleccionada) {
+		this.plantillaSeleccionada = plantillaSeleccionada;
 	}
 
 }

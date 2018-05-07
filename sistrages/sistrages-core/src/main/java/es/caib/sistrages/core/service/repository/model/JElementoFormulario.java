@@ -13,6 +13,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
+import es.caib.sistrages.core.api.model.types.TypeComponenteFormulario;
+
 /**
  * JElementoFormulario
  */
@@ -30,7 +34,7 @@ public class JElementoFormulario implements IModelApi {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FEL_CODFLS", nullable = false)
-	private JLineaFormulario lineaSeccionFormulario;
+	private JLineaFormulario lineaFormulario;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FEL_AYUDA")
@@ -90,12 +94,12 @@ public class JElementoFormulario implements IModelApi {
 		this.codigo = codigo;
 	}
 
-	public JLineaFormulario getLineaSeccionFormulario() {
-		return this.lineaSeccionFormulario;
+	public JLineaFormulario getLineaFormulario() {
+		return this.lineaFormulario;
 	}
 
-	public void setLineaSeccionFormulario(final JLineaFormulario lineaSeccionFormulario) {
-		this.lineaSeccionFormulario = lineaSeccionFormulario;
+	public void setLineaFormulario(final JLineaFormulario lineaFormulario) {
+		this.lineaFormulario = lineaFormulario;
 	}
 
 	public JLiteral getAyuda() {
@@ -216,6 +220,36 @@ public class JElementoFormulario implements IModelApi {
 
 	public void setImagenFormulario(final JImagenFormulario imagenFormulario) {
 		this.imagenFormulario = imagenFormulario;
+	}
+
+	public <T> ComponenteFormulario toModel(final Class<T> model) {
+		ComponenteFormulario newModel = null;
+
+		try {
+			newModel = (ComponenteFormulario) model.newInstance();
+
+			newModel.setId(codigo);
+			newModel.setIdComponente(identificador);
+			newModel.setTipo(TypeComponenteFormulario.fromString(tipo));
+			newModel.setOrden(orden);
+			newModel.setNumColumnas(numeroColumnas);
+
+			if (texto != null) {
+				newModel.setTexto(texto.toModel());
+			}
+
+			if (ayuda != null) {
+				newModel.setAyuda(ayuda.toModel());
+			}
+
+			newModel.setMostrarTexto(noMostrarTexto);
+			newModel.setAlineacionTexto(TypeAlineacionTexto.fromString(alineacionTexto));
+		} catch (InstantiationException | IllegalAccessException e) {
+			newModel = null;
+		}
+
+		return newModel;
+
 	}
 
 }

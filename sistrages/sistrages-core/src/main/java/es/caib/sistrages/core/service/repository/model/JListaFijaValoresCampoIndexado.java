@@ -12,6 +12,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.ValorListaFija;
+
 /**
  * JListaFijaValoresCampoIndexado
  */
@@ -93,6 +95,32 @@ public class JListaFijaValoresCampoIndexado implements IModelApi {
 
 	public void setOrden(final int orden) {
 		this.orden = orden;
+	}
+
+	public ValorListaFija toModel() {
+		final ValorListaFija valorListaFija = new ValorListaFija();
+		valorListaFija.setId(codigo);
+		if (descripcion != null) {
+			valorListaFija.setDescripcion(descripcion.toModel());
+		}
+		valorListaFija.setValor(valor);
+		valorListaFija.setPorDefecto(porDefecto);
+		valorListaFija.setOrden(orden);
+
+		return valorListaFija;
+	}
+
+	public static JListaFijaValoresCampoIndexado fromModel(final ValorListaFija model) {
+		JListaFijaValoresCampoIndexado jModel = null;
+		if (model != null) {
+			jModel = new JListaFijaValoresCampoIndexado();
+			jModel.setCodigo(model.getId());
+			jModel.setDescripcion(JLiteral.fromModel(model.getDescripcion()));
+			jModel.setValor(model.getValor());
+			jModel.setPorDefecto(model.isPorDefecto());
+			jModel.setOrden(model.getOrden());
+		}
+		return jModel;
 	}
 
 }

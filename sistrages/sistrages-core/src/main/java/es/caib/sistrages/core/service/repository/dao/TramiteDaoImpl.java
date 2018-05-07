@@ -265,8 +265,7 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		if (tramiteVersion.getListaPasos() != null) {
 			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
-				final JPasoTramitacion jpaso = new JPasoTramitacion();
-				jpaso.fromModel(paso);
+				final JPasoTramitacion jpaso = JPasoTramitacion.fromModel(paso);
 				jpaso.setVersionTramite(jTramiteVersion);
 				entityManager.persist(jpaso);
 			}
@@ -306,14 +305,39 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Override
 	public void removeTramiteVersion(final Long idTramiteVersion) {
-		// Borramos filas de datos de la fuente de datos
-		final String sqlValores = "delete from JPasoTramitacion as t where t.versionTramite.id = :idTramiteVersion)";
-		final Query queryValores = entityManager.createQuery(sqlValores);
-		queryValores.setParameter("idTramiteVersion", idTramiteVersion);
-		queryValores.executeUpdate();
 
+		// Paso 0. Obtenemos la versión del trámite.
 		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
+
+		// Paso1. Obtenemos los pasos y los borramos
+		final String sql = "Select t From JPasoTramitacion t where t.versionTramite.id = :idTramiteVersion";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JPasoTramitacion> pasos = query.getResultList();
+		for (final JPasoTramitacion paso : pasos) {
+			entityManager.remove(paso);
+		}
+
+		// Paso 2. Buscamos los dominios que tengan la versión trámite y borramos la
+		// relacion
+		final String sqlDominio = "Select d From JDominio d join d.versionesTramite t where t.id = :idTramiteVersion";
+
+		final Query queryDominio = entityManager.createQuery(sqlDominio);
+		queryDominio.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JDominio> dominios = queryDominio.getResultList();
+		for (final JDominio dominio : dominios) {
+			dominio.getVersionesTramite().remove(jTramiteVersion);
+			entityManager.merge(dominio);
+		}
+
+		// Paso 3. Borramos el tramite versión
 		entityManager.remove(jTramiteVersion);
+
 	}
 
 	@Override

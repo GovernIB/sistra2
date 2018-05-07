@@ -17,11 +17,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
 
 /**
  * JPasoTramitacion
@@ -222,38 +226,22 @@ public class JPasoTramitacion implements IModelApi {
 
 	public TramitePaso toModel() {
 		if (this.getPasoRellenar() != null) {
-			final TramitePasoRellenar mpasoRellenar = new TramitePasoRellenar();
-			mpasoRellenar.setCodigo(this.getIdPasoTramitacion());
-			mpasoRellenar.setDescripcion(this.getDescripcion().toModel());
-			mpasoRellenar.setId(this.getCodigo());
-			mpasoRellenar.setIdPasoRelacion(this.getPasoRellenar().getCodigo());
-			mpasoRellenar.setOrden(this.getOrden());
-			mpasoRellenar.setPasoFinal(this.isPasoFinal());
-			if (this.getPasoRellenar().getFormulariosTramite() != null) {
-				final List<FormularioTramite> formularios = new ArrayList<>();
-				for (final JFormularioTramite jformulario : this.getPasoRellenar().getFormulariosTramite()) {
-					final FormularioTramite formulario = jformulario.toModel();
-					formularios.add(formulario);
-				}
-				mpasoRellenar.setFormulariosTramite(formularios);
-			}
+			return this.toModelRellenar();
 
-			return mpasoRellenar;
-		}
-		if (this.getPasoDebeSaber() != null) {
-			final TramitePasoDebeSaber mpasoDebeSaber = new TramitePasoDebeSaber();
-			mpasoDebeSaber.setIdPasoRelacion(this.getPasoDebeSaber().getCodigo());
-			mpasoDebeSaber.setCodigo(this.getIdPasoTramitacion());
-			mpasoDebeSaber.setDescripcion(this.getDescripcion().toModel());
-			mpasoDebeSaber.setId(this.getCodigo());
-			mpasoDebeSaber.setOrden(this.getOrden());
-			mpasoDebeSaber.setPasoFinal(this.isPasoFinal());
-			if (this.getPasoDebeSaber().getInstruccionesInicio() != null) {
-				final Literal instruccionesIniciales = this.getPasoDebeSaber().getInstruccionesInicio().toModel();
-				mpasoDebeSaber.setInstruccionesIniciales(instruccionesIniciales);
-			}
-			return mpasoDebeSaber;
+		} else if (this.getPasoDebeSaber() != null) {
+
+			return this.toModelDebeSaber();
+
+		} else if (this.getPasoPagos() != null) {
+
+			return this.toModelPagos();
+
+		} else if (this.getPasoAnexar() != null) {
+
+			return this.toModelAnexar();
+
 		} else {
+
 			final TramitePaso paso = new TramitePaso();
 			paso.setCodigo(this.getIdPasoTramitacion());
 			paso.setDescripcion(this.getDescripcion().toModel());
@@ -261,8 +249,81 @@ public class JPasoTramitacion implements IModelApi {
 			paso.setOrden(this.getOrden());
 			paso.setPasoFinal(this.isPasoFinal());
 			return paso;
+
 		}
 
+	}
+
+	private TramitePasoAnexar toModelAnexar() {
+		final TramitePasoAnexar paso = new TramitePasoAnexar();
+		paso.setCodigo(this.getIdPasoTramitacion());
+		paso.setDescripcion(this.getDescripcion().toModel());
+		paso.setId(this.getCodigo());
+		paso.setOrden(this.getOrden());
+		paso.setPasoFinal(this.isPasoFinal());
+
+		if (this.getPasoAnexar().getAnexosTramite() != null) {
+			final List<Documento> docs = new ArrayList<>();
+			for (final JAnexoTramite doc : this.getPasoAnexar().getAnexosTramite()) {
+				docs.add(doc.toModel());
+			}
+			paso.setDocumentos(docs);
+		}
+
+		return paso;
+	}
+
+	private TramitePasoTasa toModelPagos() {
+
+		final TramitePasoTasa pago = new TramitePasoTasa();
+		pago.setCodigo(this.getIdPasoTramitacion());
+		pago.setDescripcion(this.getDescripcion().toModel());
+		pago.setId(this.getCodigo());
+		pago.setOrden(this.getOrden());
+		pago.setPasoFinal(this.isPasoFinal());
+		if (this.getPasoPagos().getPagosTramite() != null) {
+			final List<Tasa> tasas = new ArrayList<>();
+			for (final JPagoTramite jpago : this.getPasoPagos().getPagosTramite()) {
+				tasas.add(jpago.toModel());
+			}
+			pago.setTasas(tasas);
+		}
+		return pago;
+	}
+
+	private TramitePasoRellenar toModelRellenar() {
+		final TramitePasoRellenar mpasoRellenar = new TramitePasoRellenar();
+		mpasoRellenar.setCodigo(this.getIdPasoTramitacion());
+		mpasoRellenar.setDescripcion(this.getDescripcion().toModel());
+		mpasoRellenar.setId(this.getCodigo());
+		mpasoRellenar.setIdPasoRelacion(this.getPasoRellenar().getCodigo());
+		mpasoRellenar.setOrden(this.getOrden());
+		mpasoRellenar.setPasoFinal(this.isPasoFinal());
+		if (this.getPasoRellenar().getFormulariosTramite() != null) {
+			final List<FormularioTramite> formularios = new ArrayList<>();
+			for (final JFormularioTramite jformulario : this.getPasoRellenar().getFormulariosTramite()) {
+				final FormularioTramite formulario = jformulario.toModel();
+				formularios.add(formulario);
+			}
+			mpasoRellenar.setFormulariosTramite(formularios);
+		}
+
+		return mpasoRellenar;
+	}
+
+	private TramitePasoDebeSaber toModelDebeSaber() {
+		final TramitePasoDebeSaber mpasoDebeSaber = new TramitePasoDebeSaber();
+		mpasoDebeSaber.setIdPasoRelacion(this.getPasoDebeSaber().getCodigo());
+		mpasoDebeSaber.setCodigo(this.getIdPasoTramitacion());
+		mpasoDebeSaber.setDescripcion(this.getDescripcion().toModel());
+		mpasoDebeSaber.setId(this.getCodigo());
+		mpasoDebeSaber.setOrden(this.getOrden());
+		mpasoDebeSaber.setPasoFinal(this.isPasoFinal());
+		if (this.getPasoDebeSaber().getInstruccionesInicio() != null) {
+			final Literal instruccionesIniciales = this.getPasoDebeSaber().getInstruccionesInicio().toModel();
+			mpasoDebeSaber.setInstruccionesIniciales(instruccionesIniciales);
+		}
+		return mpasoDebeSaber;
 	}
 
 	public static JPasoTramitacion fromModel(final TramitePaso paso) {
@@ -287,22 +348,27 @@ public class JPasoTramitacion implements IModelApi {
 			// Generamos los tipos
 			if (paso instanceof TramitePasoRellenar) {
 
-				final TramitePasoRellenar pasoVersionRellenar = (TramitePasoRellenar) paso;
-				if (jpaso.getPasoRellenar() == null) {
-					jpaso.setPasoRellenar(new JPasoRellenar());
-				}
-				jpaso.getPasoRellenar().fromModel(pasoVersionRellenar);
+				final JPasoRellenar jpasoRellenar = JPasoRellenar.fromModel((TramitePasoRellenar) paso);
+				jpaso.setPasoRellenar(jpasoRellenar);
 				jpaso.getPasoRellenar().setPasoTramitacion(jpaso);
 
 			} else if (paso instanceof TramitePasoDebeSaber) {
 
-				final TramitePasoDebeSaber mpasoDebeSaber = (TramitePasoDebeSaber) paso;
-				if (jpaso.getPasoDebeSaber() == null) {
-					jpaso.setPasoDebeSaber(new JPasoDebeSaber());
-				}
-
-				jpaso.getPasoDebeSaber().fromModel(mpasoDebeSaber);
+				final JPasoDebeSaber jpasoRellenar = JPasoDebeSaber.fromModel((TramitePasoDebeSaber) paso);
+				jpaso.setPasoDebeSaber(jpasoRellenar);
 				jpaso.getPasoDebeSaber().setPasoTramitacion(jpaso);
+
+			} else if (paso instanceof TramitePasoTasa) {
+
+				final JPasoPagos jpasoPagos = JPasoPagos.fromModel((TramitePasoTasa) paso);
+				jpaso.setPasoPagos(jpasoPagos);
+				jpaso.getPasoPagos().setPasoTramitacion(jpaso);
+
+			} else if (paso instanceof TramitePasoAnexar) {
+
+				final JPasoAnexar jpasoAnexar = JPasoAnexar.fromModel((TramitePasoAnexar) paso);
+				jpaso.setPasoAnexar(jpasoAnexar);
+				jpaso.getPasoAnexar().setPasoTramitacion(jpaso);
 
 			}
 		}

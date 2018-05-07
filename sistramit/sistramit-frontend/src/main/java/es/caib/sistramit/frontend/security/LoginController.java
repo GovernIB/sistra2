@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
@@ -43,6 +45,9 @@ import es.caib.sistramit.frontend.model.RespuestaJSON;
  */
 @Controller
 public final class LoginController {
+
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
 	/** Atributo constante LOGIN de LoginController. */
 	private static final String LOGIN = "login";
@@ -103,25 +108,26 @@ public final class LoginController {
 		// En función del punto de entrada realizamos login
 		ModelAndView login = null;
 		if (ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE.equals(puntoEntrada)) {
+			// Inicio tramite: mostrar pagina login
 			login = autenticarFormLogin(savedRequest);
-		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO.equals(puntoEntrada)) {
-			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM,
-					ConstantesSeguridad.TICKET_GFE_USER);
-		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO.equals(puntoEntrada)) {
-			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM,
-					ConstantesSeguridad.TICKET_PAG_USER);
 		} else if (ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE.equals(puntoEntrada)) {
-			// Si existe ticket CDC autenticamos via ticket
+			// Si existe ticket carpeta autenticamos via ticket, sino autenticamos de forma
+			// anonima automaticamente
 			if (existeTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM)) {
-				login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM,
-						ConstantesSeguridad.TICKET_CDC_USER);
+				login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
+						ConstantesSeguridad.TICKET_PARAM);
 			} else {
-				// sino autenticamos de forma anonima automaticamente
 				login = autenticarFormLoginAnonimo();
 			}
 		} else if (ConstantesSeguridad.PUNTOENTRADA_ACCESO_CLAVE.equals(puntoEntrada)) {
-			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM,
-					ConstantesSeguridad.TICKET_CLAVE_USER);
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CLAVE,
+					ConstantesSeguridad.TICKET_PARAM);
+		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO.equals(puntoEntrada)) {
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_GF,
+					ConstantesSeguridad.TICKET_PARAM);
+		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO.equals(puntoEntrada)) {
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
+					ConstantesSeguridad.TICKET_PARAM);
 		} else {
 			throw new ErrorFrontException("Punto de entrada a la aplicación no válido: " + url);
 		}
@@ -209,8 +215,8 @@ public final class LoginController {
 	 *            Usuario asociado al tipo de ticket
 	 * @return Vista que realiza el login automáticamente
 	 */
-	private ModelAndView autenticarTicket(final SavedRequest pSavedRequest, final String pTicketName,
-			final String pTicketUser) {
+	private ModelAndView autenticarTicket(final SavedRequest pSavedRequest, final String pTicketUser,
+			final String pTicketName) {
 		// Obtenemos ticket de la peticion
 		final String[] tickets = pSavedRequest.getParameterMap().get(pTicketName);
 		if (tickets == null || tickets.length != ConstantesNumero.N1) {
@@ -361,6 +367,9 @@ public final class LoginController {
 	 */
 	@ExceptionHandler({ Exception.class })
 	public ModelAndView handleServiceException(final Exception ex, final HttpServletRequest request) {
+
+		// TODO Auditar ErrorFrontException en login
+		LOGGER.error("Excepcion login", ex);
 
 		// Obtenemos idioma
 		String idioma;

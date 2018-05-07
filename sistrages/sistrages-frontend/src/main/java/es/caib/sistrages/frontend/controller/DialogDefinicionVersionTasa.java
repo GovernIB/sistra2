@@ -2,10 +2,10 @@ package es.caib.sistrages.frontend.controller;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
-import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Traduccion;
-import es.caib.sistrages.core.api.model.TramitePasoTasa;
+import es.caib.sistrages.core.api.model.Tasa;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -21,26 +21,22 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogDefinicionVersionTasa extends ViewControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Id. **/
 	private String id;
 
 	/** Tasa. */
-	private TramitePasoTasa data;
+	private Tasa data;
 
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionTasa1.
 	 */
 	public void init() {
 
-		data = new TramitePasoTasa();
-		data.setId(4L);
-		data.setCodigo("4");
-		final Literal literal4 = new Literal();
-		literal4.add(new Traduccion("ca", "pagar Tasas"));
-		literal4.add(new Traduccion("es", "pagar Tasas"));
-		data.setDescripcion(literal4);
-		data.setOrden(4);
-
+		data = tramiteService.getTasa(Long.valueOf(id));
 	}
 
 	/**
@@ -80,7 +76,7 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	/**
 	 * @return the data
 	 */
-	public TramitePasoTasa getData() {
+	public Tasa getData() {
 		return data;
 	}
 
@@ -103,7 +99,7 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final TramitePasoTasa data) {
+	public void setData(final Tasa data) {
 		this.data = data;
 	}
 

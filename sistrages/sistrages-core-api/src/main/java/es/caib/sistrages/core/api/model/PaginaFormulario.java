@@ -77,7 +77,7 @@ public final class PaginaFormulario extends ModelApi {
 			for (final LineaComponentesFormulario lc : lineas) {
 				if (lc.getComponentes() != null) {
 					for (final ComponenteFormulario cf : lc.getComponentes()) {
-						if (cf.getCodigo().equals(codigoComponente)) {
+						if (cf.getIdComponente().equals(codigoComponente)) {
 							res = cf;
 							break;
 						}

@@ -13,11 +13,63 @@
         http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 
 
-	<context:component-scan base-package="es.caib.sistramit.frontend.controller" />
+	<!-- Configuracion aplicacion -->
+	<context:property-placeholder location="file:#{systemProperties['es.caib.sistramit.properties.path']}"/>
 
-     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-     	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-        <property name="prefix" value="/WEB-INF/jsp/"></property>
-        <property name="suffix" value=".jsp"></property>
-      </bean>
+	<!-- Scans the classpath of this application for @Components to deploy as beans -->
+	<context:component-scan base-package="es.caib.sistramit.frontend" scoped-proxy="interfaces"/>
+
+	<!--  Textos de mensajes (bean accesible desde componente Literales) -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<!-- Preferencia respecto a mvc:default-servlet-handler. Si no se pone asi no hace caso del synchronizeOnSession. -->
+	<!--  TODO Ver si con Spring4 ya no hace falta -->
+    <bean id="annotationUrlMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="order" value="0" />
+    </bean>
+    <bean id="controllerClassNameHandlerMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="order" value="1" />
+    </bean>
+
+
+    <!-- Sincronizacion de sesion para serializar llamadas al service -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="synchronizeOnSession" value="true" />
+	</bean>
+
+	<!--  Interceptores -->
+	<mvc:interceptors>
+		<!-- Añadimos explicitamente headers xa no cache -->
+		<bean id="webContentInterceptor"
+			class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+			<property name="cacheSeconds" value="0" />
+			<property name="useExpiresHeader" value="true" />
+			<property name="useCacheControlHeader" value="true" />
+			<property name="useCacheControlNoStore" value="true" />
+		</bean>
+	</mvc:interceptors>
+
+	<!-- Idioma sesion -->
+	<bean id="localeResolver"
+	    class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+	    <property name="defaultLocale" value="es" />
+	</bean>
+
+	<!-- View resolver -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+       <property name="prefix" value="/WEB-INF/jsp/"></property>
+       <property name="suffix" value=".jsp"></property>
+     </bean>
+
+	<!--  Configura recursos estaticos -->
+	<!--  TODO Pendiente de ver como establecer propiedad. En GTT por BD, tocara pasarla a ficheror props
+	<mvc:resources mapping="/resources/**" location="file:${negocio.repositorioGtt.path.DES}/" />
+	 -->
+	<mvc:default-servlet-handler/>
+
 </beans>

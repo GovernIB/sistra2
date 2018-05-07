@@ -36,28 +36,33 @@ public final class ConstantesSeguridad {
 	 */
 	public static final String AUTOLOGOUT_FROMLOGIN = "AUTOLOGOUT_FROMLOGIN";
 	/**
+	 * Usuario interno de acceso anonimo.
+	 */
+	public static final String ANONIMO_USER = "nobody";
+	/**
+	 * Usuario usado en pagina de login para indicar que es autenticación por ticket
+	 * por Clave.
+	 */
+	public static final String TICKET_USER_CLAVE = "ticket-user-clave";
+	/**
+	 * Usuario usado en pagina de login para indicar que es autenticación por ticket
+	 * por Carpeta Ciudadana.
+	 */
+	public static final String TICKET_USER_CARPETA = "ticket-user-carpeta";
+	/**
+	 * Usuario usado en pagina de login para indicar que es autenticación por ticket
+	 * por Gestor Formularios.
+	 */
+	public static final String TICKET_USER_GF = "ticket-user-gf";
+	/**
+	 * Usuario usado en pagina de login para indicar que es autenticación por ticket
+	 * por Pagos.
+	 */
+	public static final String TICKET_USER_PAGO = "ticket-user-pago";
+	/**
 	 * Parámetro para autenticación con ticket.
 	 */
 	public static final String TICKET_PARAM = "ticket";
-	/**
-	 * Usuario usado en pagina de login para indicar que es un ticket de un gestor
-	 * de formularios externo.
-	 */
-	public static final String TICKET_GFE_USER = "ticketGFE";
-	/**
-	 * Usuario usado en pagina de login para indicar que es un ticket de un modulo
-	 * de pagos.
-	 */
-	public static final String TICKET_PAG_USER = "ticketPAG";
-	/**
-	 * Usuario usado en pagina de login para indicar que es un ticket de clave.
-	 */
-	public static final String TICKET_CLAVE_USER = "ticketClave";
-	/**
-	 * Usuario usado en pagina de login para indicar que es un ticket de la carpeta
-	 * ciudadana.
-	 */
-	public static final String TICKET_CDC_USER = "ticketCDC";
 
 	/**
 	 * Constructor.

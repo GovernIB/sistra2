@@ -24,10 +24,12 @@ public final class FormularioInterno extends ModelApi {
 
 	private boolean permitirAccionesPersonalizadas;
 
-	private boolean cabeceraFormulario;
+	private boolean mostrarCabecera;
 
 	/** Páginas formulario. */
-	private final List<PaginaFormulario> paginas = new ArrayList<PaginaFormulario>();
+	private final List<PaginaFormulario> paginas = new ArrayList<>();
+
+	private final List<PlantillaFormulario> plantillas = new ArrayList<>();
 
 	/**
 	 * Crea una nueva instancia de FormularioDisenyo.
@@ -80,12 +82,16 @@ public final class FormularioInterno extends ModelApi {
 		this.permitirAccionesPersonalizadas = permitirAccionesPersonalizadas;
 	}
 
-	public boolean isCabeceraFormulario() {
-		return cabeceraFormulario;
+	public boolean isMostrarCabecera() {
+		return mostrarCabecera;
 	}
 
-	public void setCabeceraFormulario(final boolean cabeceraFormulario) {
-		this.cabeceraFormulario = cabeceraFormulario;
+	public void setMostrarCabecera(final boolean cabeceraFormulario) {
+		this.mostrarCabecera = cabeceraFormulario;
+	}
+
+	public List<PlantillaFormulario> getPlantillas() {
+		return plantillas;
 	}
 
 }

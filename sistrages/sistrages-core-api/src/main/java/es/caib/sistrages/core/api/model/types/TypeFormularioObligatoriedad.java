@@ -16,7 +16,7 @@ public enum TypeFormularioObligatoriedad {
 
 	private String valor;
 
-	TypeFormularioObligatoriedad(final String iValor) {
+	private TypeFormularioObligatoriedad(final String iValor) {
 		this.valor = iValor;
 	}
 

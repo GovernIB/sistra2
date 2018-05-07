@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
-import es.caib.sistrages.frontend.util.FormularioMockBD;
+import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.service.FormularioInternoService;
 
 /**
  * Servlet renderizador html.
@@ -27,6 +29,9 @@ public class FormRenderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String contexto;
 	private static String lineSeparator;
+
+	@Inject
+	FormularioInternoService formIntService;
 
 	/*
 	 * (non-Javadoc)
@@ -45,11 +50,15 @@ public class FormRenderServlet extends HttpServlet {
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response)
 			throws ServletException, IOException {
 
+		final String idForm = request.getParameter("id");
+		final String page = request.getParameter("page");
+
 		response.setContentType("text/html");
 		final PrintWriter out = response.getWriter();
 		final StringBuilder html = new StringBuilder();
-
-		paginaHTML(html);
+		if (StringUtils.isNotEmpty(idForm) && StringUtils.isNotEmpty(page)) {
+			paginaHTML(html, idForm, page);
+		}
 
 		out.write(html.toString());
 		out.flush();
@@ -57,9 +66,17 @@ public class FormRenderServlet extends HttpServlet {
 
 	}
 
-	private void paginaHTML(final StringBuilder pOut) {
+	private void paginaHTML(final StringBuilder pOut, final String idForm, final String page) {
 
-		final FormularioInterno formulario = FormularioMockBD.recuperar(1L);
+		// final FormularioInterno formulario =
+		// FormularioMockBD.recuperar(Long.parseLong(idForm));
+		// final PaginaFormulario pagina =
+		// FormularioMockBD.recuperarPagina(Long.parseLong(idForm),
+		// Integer.parseInt(page));
+
+		final FormularioInterno formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(idForm));
+		final PaginaFormulario pagina = formIntService
+				.getContenidoPaginaFormulario(formulario.getPaginas().get(Integer.parseInt(page) - 1).getId());
 
 		escribeLinea(pOut, "<!doctype html>", 0);
 		escribeLinea(pOut, "<html>", 0);
@@ -69,13 +86,15 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "<body>", 0);
 		escribeLinea(pOut, "<div id=\"imc-forms-contenidor\" >", 1);
 
-		cabeceraFormulario(pOut, formulario.getTextoCabecera().getTraduccion("es"));
+		if (formulario.isMostrarCabecera()) {
+			cabeceraFormulario(pOut, formulario.getTextoCabecera().getTraduccion("es"));
+		}
 
 		escribeLinea(pOut, "<form>", 2);
 		escribeLinea(pOut, "<div id=\"imc-forms-formulari\" class=\"imc-forms-formulari imc-form\">", 3);
 		escribeLinea(pOut, "<div class=\"imc-form-contingut\">", 4);
 
-		cuerpoHTML(pOut, formulario);
+		cuerpoHTML(pOut, pagina);
 
 		escribeLinea(pOut, "</div>", 4);
 		escribeLinea(pOut, "</div>", 3);
@@ -123,24 +142,34 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "</header>", 2);
 	}
 
-	private void cuerpoHTML(final StringBuilder pOut, final FormularioInterno pFormulario) {
+	private void cuerpoHTML(final StringBuilder pOut, final PaginaFormulario pPagina) {
 
-		for (final LineaComponentesFormulario lc : pFormulario.getPaginas().get(0).getLineas()) {
+		if (pPagina != null) {
+			for (final LineaComponentesFormulario lc : pPagina.getLineas()) {
 
-			for (final ComponenteFormulario cf : lc.getComponentes()) {
+				for (final ComponenteFormulario cf : lc.getComponentes()) {
 
-				switch (cf.getTipo()) {
-				case CAMPO_TEXTO:
-					campoTexto(pOut, cf);
-					break;
-				default:
-					break;
+					switch (cf.getTipo()) {
+					case CAMPO_TEXTO:
+						campoTexto(pOut, cf);
+						break;
+					default:
+						break;
+					}
+
+					// CAMPO_TEXTO("CT"),
+					// SELECTOR("SE"),
+					// SECCION("SC"),
+					// CHECKBOX("CK"),
+					// ETIQUETA("ET"),
+					// CAPTCHA("CP"),
+					// IMAGEN("IM"),
+
 				}
 
+				escribeLinea(pOut, "<div class=\"imc-separador\"></div>", 5);
+
 			}
-
-			escribeLinea(pOut, "<div class=\"imc-separador\"></div>", 5);
-
 		}
 	}
 
@@ -148,16 +177,18 @@ public class FormRenderServlet extends HttpServlet {
 		final StringBuilder estilo = new StringBuilder();
 		estilo.append("imc-el-name-").append(String.valueOf(pCF.getId()));
 
-		if (pCF.getColumnas() > 1) {
-			estilo.append(" imc-el-").append(pCF.getColumnas());
+		if (pCF.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(pCF.getNumColumnas());
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-element ", estilo.toString(), "\" data-type=\"text\">", 5);
 
-		escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(pCF.getId()), "\">",
-				pCF.getTexto().getTraduccion("es"), "</label></div>", 6);
+		if (pCF.isMostrarTexto()) {
+			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(pCF.getId()), "\">",
+					pCF.getTexto().getTraduccion("es"), "</label></div>", 6);
+		}
 		escribeLinea(pOut, "<div class=\"imc-el-control\"><input class=\"editable\" id=\"", String.valueOf(pCF.getId()),
-				"\" name=\"", pCF.getCodigo(), "\" type=\"text\"/></div>", 6);
+				"\" name=\"", pCF.getIdComponente(), "\" type=\"text\"/></div>", 6);
 
 		escribeLinea(pOut, "</div>", 5);
 

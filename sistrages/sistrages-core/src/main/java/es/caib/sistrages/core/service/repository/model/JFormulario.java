@@ -52,13 +52,16 @@ public class JFormulario implements IModelApi {
 	private boolean permitirAccionesPersonalizadas;
 
 	@Column(name = "FOR_CABFOR", nullable = false, precision = 1, scale = 0)
-	private boolean cabeceraFormulario;
+	private boolean mostrarCabecera;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = { CascadeType.ALL })
-	private Set<JPaginaFormulario> paginas = new HashSet<JPaginaFormulario>(0);
+	private Set<JPaginaFormulario> paginas = new HashSet<>(0);
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = { CascadeType.ALL })
+	private Set<JPlantillaFormulario> plantillas = new HashSet<JPlantillaFormulario>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario")
-	private Set<JAccionPersonalizada> accionesPersonalizadas = new HashSet<JAccionPersonalizada>(0);
+	private Set<JAccionPersonalizada> accionesPersonalizadas = new HashSet<>(0);
 
 	public JFormulario() {
 		super();
@@ -104,12 +107,12 @@ public class JFormulario implements IModelApi {
 		this.permitirAccionesPersonalizadas = permitirAccionesPersonalizadas;
 	}
 
-	public boolean isCabeceraFormulario() {
-		return this.cabeceraFormulario;
+	public boolean isMostrarCabecera() {
+		return this.mostrarCabecera;
 	}
 
-	public void setCabeceraFormulario(final boolean cabeceraFormulario) {
-		this.cabeceraFormulario = cabeceraFormulario;
+	public void setMostrarCabecera(final boolean cabeceraFormulario) {
+		this.mostrarCabecera = cabeceraFormulario;
 	}
 
 	public Set<JPaginaFormulario> getPaginas() {
@@ -128,6 +131,14 @@ public class JFormulario implements IModelApi {
 		this.accionesPersonalizadas = accionesPersonalizadas;
 	}
 
+	public Set<JPlantillaFormulario> getPlantillas() {
+		return plantillas;
+	}
+
+	public void setPlantillas(final Set<JPlantillaFormulario> plantillas) {
+		this.plantillas = plantillas;
+	}
+
 	public FormularioInterno toModel() {
 		final FormularioInterno formulario = new FormularioInterno();
 		formulario.setId(codigo);
@@ -135,7 +146,7 @@ public class JFormulario implements IModelApi {
 		if (scriptPlantilla != null) {
 			formulario.setScriptPlantilla(scriptPlantilla.toModel());
 		}
-		formulario.setCabeceraFormulario(cabeceraFormulario);
+		formulario.setMostrarCabecera(mostrarCabecera);
 		if (textoCabecera != null) {
 			formulario.setTextoCabecera(textoCabecera.toModel());
 		}
@@ -150,7 +161,7 @@ public class JFormulario implements IModelApi {
 			jModel.setCodigo(model.getId());
 			jModel.setPermitirAccionesPersonalizadas(model.isPermitirAccionesPersonalizadas());
 			jModel.setScriptPlantilla(JScript.fromModel(model.getScriptPlantilla()));
-			jModel.setCabeceraFormulario(model.isCabeceraFormulario());
+			jModel.setMostrarCabecera(model.isMostrarCabecera());
 			jModel.setTextoCabecera(JLiteral.fromModel(model.getTextoCabecera()));
 		}
 		return jModel;
@@ -162,7 +173,7 @@ public class JFormulario implements IModelApi {
 		if (jFormulario != null && !jFormulario.getPaginas().isEmpty() && pFormInt != null
 				&& !pFormInt.getPaginas().isEmpty()) {
 			// Borrar paginas no pasados en modelo
-			final List<JPaginaFormulario> borrar = new ArrayList<JPaginaFormulario>();
+			final List<JPaginaFormulario> borrar = new ArrayList<>();
 			final List<Long> listPaginas = new ArrayList<>();
 
 			for (final PaginaFormulario pag : pFormInt.getPaginas()) {

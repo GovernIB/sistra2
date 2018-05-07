@@ -18,10 +18,13 @@
  	-->
 	<!-- JBoss 7  -->
 	<jee:local-slsb
-			id="ejemploService"
-			jndi-name="java:app/sistramit-core/EjemploServiceBean"
-			business-interface="es.caib.sistramit.core.api.service.EjemploService"/>
+			id="securityService"
+			jndi-name="java:app/sistramit-core/SecurityServiceBean"
+			business-interface="es.caib.sistramit.core.api.service.SecurityService"/>
 
-
+	<jee:local-slsb
+			id="flujoTramitacionService"
+			jndi-name="java:app/sistramit-core/FlujoTramitacionServiceBean"
+			business-interface="es.caib.sistramit.core.api.service.FlujoTramitacionService"/>
 
 </beans>

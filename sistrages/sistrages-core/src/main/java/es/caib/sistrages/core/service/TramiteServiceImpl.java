@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
@@ -283,6 +285,66 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public FormularioTramite getFormulario(final Long idFormularioTramite) {
 		return tramitePasoDao.getFormulario(idFormularioTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
+		tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void updateFormularioTramite(final FormularioTramite formularioTramite) {
+		tramitePasoDao.updateFormularioTramite(formularioTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
+		tramitePasoDao.addDocumentoTramite(documento, idTramitePaso);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void updateDocumentoTramite(final Documento documento) {
+		tramitePasoDao.updateDocumentoTramite(documento);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Documento getDocumento(final Long idDocumento) {
+		return tramitePasoDao.getDocumento(idDocumento);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removeDocumento(final Long idTramitePaso, final Long idDocumento) {
+		tramitePasoDao.removeDocumento(idTramitePaso, idDocumento);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Tasa getTasa(final Long idTasa) {
+		return tramitePasoDao.getTasa(idTasa);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
+		tramitePasoDao.addTasaTramite(tasa, idTramitePaso);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void updateTasaTramite(final Tasa tasa) {
+		tramitePasoDao.updateTasaTramite(tasa);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removeTasa(final Long idTramitePaso, final Long idTasa) {
+		tramitePasoDao.removeTasa(idTramitePaso, idTasa);
 	}
 
 }

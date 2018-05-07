@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
@@ -56,6 +57,29 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@Override
 	@NegocioInterceptor
 	public FormularioInterno getFormularioInternoPaginas(final Long pId) {
-		return formIntDao.getFormPagById(pId);
+		return formIntDao.getFormularioPaginasById(pId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.FormularioInternoService#
+	 * getPaginaFormulario(java.lang.Long)
+	 */
+	@Override
+	@NegocioInterceptor
+	public PaginaFormulario getPaginaFormulario(final Long pId) {
+		return formIntDao.getPaginaById(pId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.sistrages.core.api.service.FormularioInternoService#
+	 * getContenidoPaginaFormulario(java.lang.Long)
+	 */
+	@Override
+	public PaginaFormulario getContenidoPaginaFormulario(final Long pId) {
+		return formIntDao.getContenidoPaginaById(pId);
 	}
 }

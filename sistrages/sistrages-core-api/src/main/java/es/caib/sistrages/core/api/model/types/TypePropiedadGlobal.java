@@ -15,7 +15,7 @@ public enum TypePropiedadGlobal {
 
 	private String valor;
 
-	TypePropiedadGlobal(final String iValor) {
+	private TypePropiedadGlobal(final String iValor) {
 		this.valor = iValor;
 	}
 

@@ -22,12 +22,6 @@ import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 @Component("errores")
 public final class ErroresImpl implements Errores {
 
-	/**
-	 * Acceso a configuracion modulo.
-	 */
-	@Resource(name = "frontModuleConfig")
-	private ModuleConfig config;
-
 	/** Atributo literales. */
 	@Resource(name = "literalesFront")
 	private LiteralesFront literales;
