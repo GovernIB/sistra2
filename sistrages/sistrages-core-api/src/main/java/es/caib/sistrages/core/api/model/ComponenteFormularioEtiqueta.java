@@ -1,6 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
-import es.caib.sistrages.core.api.model.types.TypeComponenteFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypeEtiqueta;
 
 /**
@@ -16,7 +16,7 @@ public final class ComponenteFormularioEtiqueta extends ComponenteFormulario {
 	private TypeEtiqueta tipoEtiqueta = TypeEtiqueta.INFO;
 
 	public ComponenteFormularioEtiqueta() {
-		this.setTipo(TypeComponenteFormulario.ETIQUETA);
+		this.setTipo(TypeObjetoFormulario.ETIQUETA);
 	}
 
 	public TypeEtiqueta getTipoEtiqueta() {

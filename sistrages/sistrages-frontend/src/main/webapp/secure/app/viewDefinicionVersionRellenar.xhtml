@@ -33,7 +33,9 @@
 					<p:commandButton id="btnEliminar"
 						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
 						actionListener="#{viewDefinicionVersion.eliminarFormulario()}"
-						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable" />
+						process="@this" update="growl formArbol:arbol formViewDefinicionVersionRellenar:dataTable formViewDefinicionVersionRellenar dataTable">
+						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        	</p:commandButton>
 
 					<p:commandButton id="btnSubir"
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
@@ -82,6 +84,12 @@
 
 		</p:dataTable>
 
+				<p:confirmDialog global="true" >
+					<p:outputPanel styleClass="confirmar_botonera">
+			        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+					</p:outputPanel>
+			    </p:confirmDialog>
 
 	</h:form>
 

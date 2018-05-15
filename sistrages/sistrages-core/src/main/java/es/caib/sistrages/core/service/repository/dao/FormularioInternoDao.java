@@ -1,10 +1,10 @@
 package es.caib.sistrages.core.service.repository.dao;
 
-import java.util.List;
-
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * La interface FormularioInternoDao.
@@ -18,7 +18,7 @@ public interface FormularioInternoDao {
 	 *            identificador de formulario
 	 * @return el valor de FormularioInterno
 	 */
-	FormularioInterno getById(Long pId);
+	FormularioInterno getFormularioById(Long pId);
 
 	/**
 	 * Obtiene el valor de formulario y sus paginas.
@@ -57,20 +57,13 @@ public interface FormularioInternoDao {
 	ComponenteFormulario getComponenteById(Long pId);
 
 	/**
-	 * Añade un formulario.
+	 * Crea un formulario con una pagina por defecto.
 	 *
-	 * @param pFormInt
-	 *            formulario
+	 * @param pFormTra
+	 *            formulario tramite
+	 * @return identificador formulario
 	 */
-	void add(FormularioInterno pFormInt);
-
-	/**
-	 * Elimina un formulario.
-	 *
-	 * @param pId
-	 *            identificador de formulario
-	 */
-	void remove(Long pId);
+	Long addFormulario(FormularioTramite pFormTra);
 
 	/**
 	 * Actualiza un formulario.
@@ -78,22 +71,23 @@ public interface FormularioInternoDao {
 	 * @param pFormInt
 	 *            formulario
 	 */
-	void update(FormularioInterno pFormInt);
+	void updateFormulario(FormularioInterno pFormInt);
 
 	/**
-	 * Obtiene el valor de all.
+	 * Añade componente o linea.
 	 *
-	 * @return el valor de all
+	 * @param pTipoObjeto
+	 *            tipo de objeto
+	 * @param pIdLinea
+	 *            identificador de linea
+	 * @param pOrden
+	 *            orden del elemento seleccionado
+	 * @param pPosicion
+	 *            posicion a insertar sobre el elemento seleccionado
+	 * @return TODO
 	 */
-	List<FormularioInterno> getAll();
-
-	/**
-	 * Añade un componente.
-	 *
-	 * @param pFormInt
-	 *            formulario
-	 */
-	void addComponente(FormularioInterno pFormInt);
+	Long addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina, final Long pIdLinea,
+			final Integer pOrden, final String pPosicion);
 
 	/**
 	 * Actualiza un componente de formulario.
@@ -102,5 +96,9 @@ public interface FormularioInternoDao {
 	 *            componente de formulario
 	 */
 	void updateComponente(ComponenteFormulario pComponente);
+
+	void removeLineaFormulario(Long pId);
+
+	void removeComponenteFormulario(Long pId);
 
 }

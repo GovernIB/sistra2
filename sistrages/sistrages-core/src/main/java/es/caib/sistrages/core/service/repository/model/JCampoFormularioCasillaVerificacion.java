@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JCampoFormularioCasillaVerificacion
@@ -54,11 +55,11 @@ public class JCampoFormularioCasillaVerificacion implements IModelApi {
 		this.campoFormulario = campoFormulario;
 	}
 
-	public String getCckValchk() {
+	public String getValorChecked() {
 		return this.valorChecked;
 	}
 
-	public void setCckValchk(final String valorChecked) {
+	public void setValorChecked(final String valorChecked) {
 		this.valorChecked = valorChecked;
 	}
 
@@ -83,6 +84,14 @@ public class JCampoFormularioCasillaVerificacion implements IModelApi {
 		}
 
 		return campoCheckbox;
+	}
+
+	public static JCampoFormularioCasillaVerificacion createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+		final JCampoFormularioCasillaVerificacion jModel = new JCampoFormularioCasillaVerificacion();
+		jModel.setValorChecked("S");
+		jModel.setValorNoChecked("N");
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CHECKBOX, pOrden, pJLinea));
+		return jModel;
 	}
 
 }

@@ -9,9 +9,11 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
 import es.caib.sistrages.core.api.model.types.TypeTamanyo;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -33,6 +35,12 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	/** Id. **/
 	private String id;
 
+	/** JSON tramite version. **/
+	private String jsonTramiteVersion;
+
+	/** Tramite version. **/
+	private TramiteVersion tramiteVersion;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
 	 */
@@ -49,6 +57,9 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		data.setNumeroInstancia(1);
 		data.setExtensiones("pdf;doc");
 		data.setTamanyoMaximo(1024);
+		if (jsonTramiteVersion != null) {
+			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		}
 	}
 
 	/**
@@ -74,9 +85,9 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 		if (data.getDescripcion() == null) {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					idiomas, idiomas);
+					tramiteVersion);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
 	}
 
@@ -129,6 +140,22 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	 */
 	public void setId(final String id) {
 		this.id = id;
+	}
+
+	public String getJsonTramiteVersion() {
+		return jsonTramiteVersion;
+	}
+
+	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
+		this.jsonTramiteVersion = jsonTramiteVersion;
+	}
+
+	public TramiteVersion getTramiteVersion() {
+		return tramiteVersion;
+	}
+
+	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
+		this.tramiteVersion = tramiteVersion;
 	}
 
 }

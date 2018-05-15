@@ -15,7 +15,6 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
@@ -24,7 +23,6 @@ import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
-import es.caib.sistrages.core.service.repository.model.JScript;
 import es.caib.sistrages.core.service.repository.model.JTipoPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
@@ -274,32 +272,11 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public void updateTramiteVersion(final TramiteVersion tramiteVersion, final boolean borrarScriptPI,
-			final Script scriptParamsIniciales, final boolean borrarScriptPersonalizacion,
-			final Script scriptPersonalizacion) {
-		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, tramiteVersion.getId());
-		jTramiteVersion.fromModel(tramiteVersion);
-
-		if (borrarScriptPI) {
-			jTramiteVersion.setScriptInicializacionTramite(null);
-		} else {
-			if (scriptParamsIniciales != null) {
-				JScript script = JScript.fromModel(scriptParamsIniciales);
-				script = entityManager.merge(script);
-				jTramiteVersion.setScriptInicializacionTramite(script);
-			}
-		}
-
-		if (borrarScriptPersonalizacion) {
-			jTramiteVersion.setScriptPersonalizacion(null);
-		} else {
-			if (scriptPersonalizacion != null) {
-				JScript script = JScript.fromModel(scriptPersonalizacion);
-				script = entityManager.merge(script);
-				jTramiteVersion.setScriptPersonalizacion(script);
-			}
-		}
-
+	public void updateTramiteVersion(final TramiteVersion tramiteVersion) {
+		final JVersionTramite jTramiteVersionOld = entityManager.find(JVersionTramite.class, tramiteVersion.getId());
+		final JVersionTramite jTramiteVersion = JVersionTramite.fromModel(tramiteVersion);
+		jTramiteVersion.setTramite(jTramiteVersionOld.getTramite());
+		jTramiteVersion.setHistorialVersion(jTramiteVersion.getHistorialVersion());
 		entityManager.merge(jTramiteVersion);
 	}
 
@@ -342,8 +319,7 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Override
 	public TramiteVersion getTramiteVersion(final Long idTramiteVersion) {
-		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class,
-				Long.valueOf(idTramiteVersion));
+		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
 		return jTramiteVersion.toModel();
 	}
 

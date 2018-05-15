@@ -19,7 +19,6 @@
 				<p:commandButton icon="fa fa-language" styleClass="va-top"
 					actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoDSSeleccionado.instruccionesIniciales)}"
 					process="@this" update="growl">
-					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoPT}" update="growl formArbol:arbol"/>
 		        </p:commandButton>
 			</p:outputPanel>
 		</h:panelGrid>

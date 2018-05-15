@@ -48,23 +48,23 @@ public class JFormularioTramite implements IModelApi {
 	@JoinColumn(name = "FTR_FEXGST")
 	private JGestorFormularios gestorFormulario;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FTR_SCRRET")
 	private JScript scriptRetorno;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FTR_SCRPAR")
 	private JScript scriptParametros;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FTR_SCRINI")
 	private JScript scriptDatosIniciales;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FTR_SCRFIR")
 	private JScript scriptFirmar;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FTR_SCROBL")
 	private JScript scriptObligatoriedad;
 
@@ -106,6 +106,7 @@ public class JFormularioTramite implements IModelApi {
 	private Set<JPasoCaptura> pasosPagos = new HashSet<>(0);
 
 	public JFormularioTramite() {
+		// Constructor vacio
 	}
 
 	public Long getCodigo() {
@@ -281,19 +282,19 @@ public class JFormularioTramite implements IModelApi {
 			}
 			if (formulario.getScriptFirma() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptFirma());
-				jformularioTramite.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptFirmar(script);
 			}
 			if (formulario.getScriptObligatoriedad() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptObligatoriedad());
-				jformularioTramite.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptObligatoriedad(script);
 			}
-			if (formulario.getScriptPrerrigistro() != null) {
-				final JScript script = JScript.fromModel(formulario.getScriptPrerrigistro());
-				jformularioTramite.setScriptDatosIniciales(script);
+			if (formulario.getScriptPrerregistro() != null) {
+				final JScript script = JScript.fromModel(formulario.getScriptPrerregistro());
+				jformularioTramite.setScriptRetorno(script);
 			}
 			if (formulario.getScriptRetorno() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptRetorno());
-				jformularioTramite.setScriptDatosIniciales(script);
+				jformularioTramite.setScriptRetorno(script);
 			}
 			jformularioTramite.setTipo(formulario.getTipo().toString());
 			jformularioTramite.setTipoFormulario(formulario.getTipoFormulario().toString());
@@ -339,7 +340,7 @@ public class JFormularioTramite implements IModelApi {
 		if (this.getScriptDatosIniciales() != null) {
 			final Script script = new Script();
 			script.setId(this.getScriptDatosIniciales().getCodigo());
-			mformulario.setScriptPrerrigistro(script);
+			mformulario.setScriptPrerregistro(script);
 		}
 		if (this.getScriptRetorno() != null) {
 			final Script script = new Script();

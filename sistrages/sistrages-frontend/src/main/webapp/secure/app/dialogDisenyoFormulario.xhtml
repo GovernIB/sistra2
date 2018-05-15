@@ -44,10 +44,11 @@
 
 				<h:panelGroup class="barra-herramientas-disenyo">
 					<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente']}"/>
+					<p:commandButton id="btnLinea" 		    title="#{msg['dialogDisenyoFormulario.componente.LN']}" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnSeccion" 		title="#{msg['dialogDisenyoFormulario.componente.SC']}" icon="fa fa-list-ul" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnEtiqueta" 		title="#{msg['dialogDisenyoFormulario.componente.ET']}" icon="fa fa-font" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnImagen" 		title="#{msg['dialogDisenyoFormulario.componente.IM']}" icon="fa fa-image" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
-		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-square" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
+		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-square" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" process="@this" update="growlDisenyoFormulario, formulario-panel, barra-herramientas-disenyo"/>
 					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-square-o-down" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnCampoCheckbox" 	title="#{msg['dialogDisenyoFormulario.componente.CK']}" icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnCaptcha" 		title="#{msg['dialogDisenyoFormulario.componente.CP']}" icon="fa fa-retweet" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
@@ -118,7 +119,7 @@
 
 			<p:outputPanel>
 				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@this" update="growlDisenyoFormulario, formulario-panel" />
-				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.borrarComponente']}" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario, formulario-panel" />
+				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.borrarComponente']}" actionListener="#{dialogDisenyoFormulario.eliminarObjetoFormulario}" process="@this" update="growlDisenyoFormulario, formulario-panel, barra-herramientas-disenyo" />
 				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario, formulario-panel" />
 			</p:outputPanel>
 

@@ -29,6 +29,23 @@ public final class UtilTraducciones {
 	}
 
 	/**
+	 * Abre un dialog de tipo traduccion, utilizando los idiomas soportados a partir
+	 * del tramite version.
+	 *
+	 * @param modoAcceso
+	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones
+	 *            Dato en formato json de tipo Traducciones
+	 * @param tramiteVersion
+	 *            La versión del trámite
+	 */
+	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, final Literal traducciones,
+			final TramiteVersion tramiteVersion) {
+		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
+		UtilTraducciones.openDialogTraduccion(modoAcceso, traducciones, idiomas, idiomas);
+	}
+
+	/**
 	 * Abre un dialog de tipo traduccion.
 	 *
 	 * @param modoAcceso
@@ -68,19 +85,19 @@ public final class UtilTraducciones {
 		int altura;
 		switch (idiomas.size()) {
 		case 1:
-			altura = 120;
+			altura = 160;
 			break;
 		case 2:
 			altura = 250;
 			break;
 		case 3:
-			altura = 320;
+			altura = 340;
 			break;
 		case 4:
-			altura = 410;
+			altura = 430;
 			break;
 		default:
-			altura = 120;
+			altura = 160;
 		}
 		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 470, altura);
 

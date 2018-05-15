@@ -21,6 +21,7 @@ import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
@@ -554,7 +555,7 @@ public final class UtilJSF {
 	 * @return
 	 */
 	public static String getUrlTramitePaso(final TramitePaso tramitePaso) {
-		final String url;
+		String url = "#";
 		if (tramitePaso instanceof TramitePasoDebeSaber) {
 			url = "viewDefinicionVersionDebeSaber";
 		} else if (tramitePaso instanceof TramitePasoRellenar) {
@@ -563,7 +564,7 @@ public final class UtilJSF {
 			url = "viewDefinicionVersionAnexarDocumentos";
 		} else if (tramitePaso instanceof TramitePasoTasa) {
 			url = "viewDefinicionVersionPagarTasas";
-		} else {
+		} else if (tramitePaso instanceof TramitePasoRegistrar) {
 			url = "viewDefinicionVersionRegistrarTramite";
 		}
 		return url;

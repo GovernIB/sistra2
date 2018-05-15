@@ -1,7 +1,9 @@
 package es.caib.sistrages.core.api.service;
 
+import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * La interface FormularioInternoService.
@@ -51,5 +53,16 @@ public interface FormularioInternoService {
 	 * @return el valor de contenidoPaginaFormulario
 	 */
 	PaginaFormulario getContenidoPaginaFormulario(Long pId);
+
+	Long addComponenteFormulario(TypeObjetoFormulario pTipoObjeto, Long pIdPagina, Long pIdLinea, Integer pOrden,
+			String pPosicion);
+
+	void updateComponenteFormulario(ComponenteFormulario pComponente);
+
+	ComponenteFormulario getComponenteFormulario(final Long pId);
+
+	void removeComponenteFormulario(final Long pId);
+
+	void removeLineaFormulario(final Long pId);
 
 }

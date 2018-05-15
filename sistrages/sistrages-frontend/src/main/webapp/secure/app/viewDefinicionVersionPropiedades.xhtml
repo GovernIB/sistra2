@@ -61,16 +61,16 @@
 			</p:panelGrid>
 
 			<p:outputLabel for="scriptpersonalizacion" value="#{msg['viewDefinicionVersionPropiedades.scriptpersonalizacion']}" />
-			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.idScriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.idScriptPersonalizacion)}"
+			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.scriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.scriptPersonalizacion.id)}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramiteVersion.scriptPersonalizacion)}"
 						process="@this" update="growl"/>
 
 			<p:outputLabel for="scriptparametrosiniciales" value="#{msg['viewDefinicionVersionPropiedades.scriptparametrosiniciales']}" />
-			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersion.tramiteVersion.idScriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.idScriptInicializacionTramite)}"
+			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite.id)}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite)}"
 						process="@this" update="growl"/>
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
-					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul" rendered="#{viewDefinicionVersion.isEdicion()}"
+					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul" rendered="#{viewDefinicionVersion.permiteEditar()}"
 						actionListener="#{viewDefinicionVersion.editarPropiedades()}"
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionPropiedades"  />

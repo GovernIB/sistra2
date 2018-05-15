@@ -9,9 +9,11 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 
 @Stateless
@@ -66,6 +68,38 @@ public class FormularoInternoServiceBean implements FormularioInternoService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public PaginaFormulario getContenidoPaginaFormulario(final Long pId) {
 		return formIntService.getContenidoPaginaFormulario(pId);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Long addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
+			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
+		return formIntService.addComponenteFormulario(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateComponenteFormulario(final ComponenteFormulario pComponente) {
+		formIntService.updateComponenteFormulario(pComponente);
+
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public ComponenteFormulario getComponenteFormulario(final Long pId) {
+		return formIntService.getComponenteFormulario(pId);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removeComponenteFormulario(final Long pId) {
+		formIntService.removeComponenteFormulario(pId);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removeLineaFormulario(final Long pId) {
+		formIntService.removeLineaFormulario(pId);
 	}
 
 }

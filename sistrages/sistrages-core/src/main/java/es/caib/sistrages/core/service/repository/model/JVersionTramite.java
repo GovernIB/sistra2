@@ -42,7 +42,7 @@ public class JVersionTramite implements IModelApi {
 	@JoinColumn(name = "VTR_SCRINTRA")
 	private JScript scriptInicializacionTramite;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "VTR_SCRPER")
 	private JScript scriptPersonalizacion;
 
@@ -79,7 +79,7 @@ public class JVersionTramite implements IModelApi {
 	private boolean persistenciaInfinita;
 
 	@Column(name = "VTR_PERDIA", precision = 2, scale = 0)
-	private Byte persistenciaDias;
+	private Integer persistenciaDias;
 
 	@Column(name = "VTR_BLOQ", precision = 1, scale = 0)
 	private Boolean bloqueada;
@@ -106,7 +106,7 @@ public class JVersionTramite implements IModelApi {
 	private Integer limiteTramitacionNumero;
 
 	@Column(name = "VTR_LIMINT", precision = 2, scale = 0)
-	private Byte limiteTramitacionIntervalo;
+	private Integer limiteTramitacionIntervalo;
 
 	@Column(name = "VTR_DESPLZ", nullable = false, precision = 1, scale = 0)
 	private boolean desactivacionTemporal;
@@ -230,11 +230,11 @@ public class JVersionTramite implements IModelApi {
 		this.persistenciaInfinita = persistenciaInfinita;
 	}
 
-	public Byte getPersistenciaDias() {
+	public Integer getPersistenciaDias() {
 		return this.persistenciaDias;
 	}
 
-	public void setPersistenciaDias(final Byte persistenciaDias) {
+	public void setPersistenciaDias(final Integer persistenciaDias) {
 		this.persistenciaDias = persistenciaDias;
 	}
 
@@ -302,11 +302,11 @@ public class JVersionTramite implements IModelApi {
 		this.limiteTramitacionNumero = limiteTramitacionNumero;
 	}
 
-	public Byte getLimiteTramitacionIntervalo() {
+	public Integer getLimiteTramitacionIntervalo() {
 		return this.limiteTramitacionIntervalo;
 	}
 
-	public void setLimiteTramitacionIntervalo(final Byte limiteTramitacionIntervalo) {
+	public void setLimiteTramitacionIntervalo(final Integer limiteTramitacionIntervalo) {
 		this.limiteTramitacionIntervalo = limiteTramitacionIntervalo;
 	}
 
@@ -363,13 +363,18 @@ public class JVersionTramite implements IModelApi {
 		}
 		tramiteVersion.setIdiomasSoportados(this.getIdiomasSoportados());
 		if (this.getScriptInicializacionTramite() != null) {
-			tramiteVersion.setIdScriptInicializacionTramite(this.getScriptInicializacionTramite().getCodigo());
+			tramiteVersion.setScriptInicializacionTramite(this.getScriptInicializacionTramite().toModel());
 		}
 		if (this.getScriptPersonalizacion() != null) {
-			tramiteVersion.setIdScriptPersonalizacion(this.getScriptPersonalizacion().getCodigo());
+			tramiteVersion.setScriptPersonalizacion(this.getScriptPersonalizacion().toModel());
 		}
-		tramiteVersion.setIntLimiteTramitacion(this.getLimiteTramitacionNumero());
-		tramiteVersion.setLimiteTramitacion(Boolean.valueOf(this.getLimiteTramitacion()));
+		tramiteVersion.setIntLimiteTramitacion(this.getLimiteTramitacionIntervalo());
+		if (this.getLimiteTramitacion() != null && "S".equals(this.getLimiteTramitacion())) {
+			tramiteVersion.setLimiteTramitacion(true);
+		} else {
+			tramiteVersion.setLimiteTramitacion(false);
+		}
+		tramiteVersion.setNumLimiteTramitacion(this.getLimiteTramitacionNumero());
 
 		if (this.getMensajeDesactivacion() != null) {
 			tramiteVersion.setMensajeDesactivacion(this.getMensajeDesactivacion().toModel());
@@ -377,7 +382,6 @@ public class JVersionTramite implements IModelApi {
 
 		tramiteVersion.setNivelQAA(this.getNivelQAA());
 		tramiteVersion.setNumeroVersion(this.getNumeroVersion());
-		tramiteVersion.setNumLimiteTramitacion(this.getLimiteTramitacionNumero());
 		tramiteVersion.setPersistencia(this.isAdmitePersistencia());
 		tramiteVersion.setPersistenciaDias(this.getPersistenciaDias());
 		tramiteVersion.setPersistenciaInfinita(this.isPersistenciaInfinita());
@@ -390,50 +394,46 @@ public class JVersionTramite implements IModelApi {
 		return tramiteVersion;
 	}
 
-	public void fromModel(final TramiteVersion model) {
-
+	public static JVersionTramite fromModel(final TramiteVersion model) {
+		JVersionTramite jversionTramite = null;
 		if (model != null) {
-			this.setActiva(model.isActiva());
-			this.setAutenticado(model.isAutenticado());
-			this.setNoAutenticado(model.isNoAutenticado());
+			jversionTramite = new JVersionTramite();
+			jversionTramite.setActiva(model.isActiva());
+			jversionTramite.setAutenticado(model.isAutenticado());
+			jversionTramite.setNoAutenticado(model.isNoAutenticado());
 			if (model.getBloqueada() == 1) {
-				this.setBloqueada(true);
+				jversionTramite.setBloqueada(true);
 			} else {
-				this.setBloqueada(false);
+				jversionTramite.setBloqueada(false);
 			}
-			this.setUsuarioIdBloqueo(model.getCodigoUsuarioBloqueo());
-			this.setUsuarioDatosBloqueo(model.getDatosUsuarioBloqueo());
-			this.setDebug(model.isDebug());
-			this.setDesactivacionTemporal(model.isDesactivacion());
+			jversionTramite.setUsuarioIdBloqueo(model.getCodigoUsuarioBloqueo());
+			jversionTramite.setUsuarioDatosBloqueo(model.getDatosUsuarioBloqueo());
+			jversionTramite.setDebug(model.isDebug());
+			jversionTramite.setDesactivacionTemporal(model.isDesactivacion());
 
-			this.setCodigo(model.getId());
-			this.setIdiomasSoportados(model.getIdiomasSoportados());
-			// jModel.setIdScriptInicializacionTramite(model.getScriptInicializacionTramite().getCodigo());
-			// jModel.setIdScriptPersonalizacion(model.getScriptPersonalizacion().getCodigo());
-			this.setLimiteTramitacionNumero(model.getIntLimiteTramitacion());
+			jversionTramite.setCodigo(model.getId());
+			jversionTramite.setIdiomasSoportados(model.getIdiomasSoportados());
+			jversionTramite.setScriptInicializacionTramite(JScript.fromModel(model.getScriptInicializacionTramite()));
+			jversionTramite.setScriptPersonalizacion(JScript.fromModel(model.getScriptPersonalizacion()));
 			if (model.isLimiteTramitacion()) {
-				this.setLimiteTramitacion("1");
+				jversionTramite.setLimiteTramitacion("S");
 			} else {
-				this.setLimiteTramitacion("0");
+				jversionTramite.setLimiteTramitacion("N");
 			}
-
-			if (model.getMensajeDesactivacion() != null) {
-				this.setMensajeDesactivacion(JLiteral.fromModel(model.getMensajeDesactivacion()));
-			}
-
-			this.setNivelQAA(model.getNivelQAA());
-			this.setNumeroVersion(model.getNumeroVersion());
-			this.setLimiteTramitacionNumero(model.getNumLimiteTramitacion());
-			this.setAdmitePersistencia(model.isPersistencia());
-			this.setPersistenciaDias((byte) model.getPersistenciaDias());
-			this.setPersistenciaInfinita(model.isPersistenciaInfinita());
-			this.setPlazoFinDesactivacion(model.getPlazoFinDesactivacion());
-			this.setPlazoInicioDesactivacion(model.getPlazoInicioDesactivacion());
-			this.setRelease(model.getRelease());
-			this.setTipoflujo(model.getTipoFlujo().toString());
-
+			jversionTramite.setLimiteTramitacionIntervalo(model.getIntLimiteTramitacion());
+			jversionTramite.setLimiteTramitacionNumero(model.getNumLimiteTramitacion());
+			jversionTramite.setMensajeDesactivacion(JLiteral.fromModel(model.getMensajeDesactivacion()));
+			jversionTramite.setNivelQAA(model.getNivelQAA());
+			jversionTramite.setNumeroVersion(model.getNumeroVersion());
+			jversionTramite.setAdmitePersistencia(model.isPersistencia());
+			jversionTramite.setPersistenciaDias(model.getPersistenciaDias());
+			jversionTramite.setPersistenciaInfinita(model.isPersistenciaInfinita());
+			jversionTramite.setPlazoFinDesactivacion(model.getPlazoFinDesactivacion());
+			jversionTramite.setPlazoInicioDesactivacion(model.getPlazoInicioDesactivacion());
+			jversionTramite.setRelease(model.getRelease());
+			jversionTramite.setTipoflujo(model.getTipoFlujo().toString());
 		}
-
+		return jversionTramite;
 	}
 
 }

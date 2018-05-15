@@ -17,23 +17,25 @@
        	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionAnexo.identificador']}" />
-          	<p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersionAnexo.data.codigo}"  />
+          	<p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.codigo}"  />
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersionAnexo.data.descripcion.getTraduccion(sessionBean.lang)}" />
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionAnexo.editarDescripcion()}"
+           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang)}" />
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.obligatoriedad']}" />
          	<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
-	         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersionAnexo.data.obligatoriedad}">
+	         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.obligatoriedad}">
 		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
 			     </p:selectOneRadio>
 
-		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionAnexo.script()}" value="#{msg['viewDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+					styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad)}"
+					disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad eq null}"
 					process="@this" update="growl"/>
          	</p:panelGrid>
 
@@ -51,15 +53,15 @@
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.url']}" />
 					</p:outputPanel>
-					<p:inputText id="url_input"  disabled="true" styleClass="w85" value="#{viewDefinicionVersionAnexo.data.ayudaURL}" />
+					<p:inputText id="url_input"  disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaURL}" />
 
 					<p:outputPanel>
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
 					</p:outputPanel>
 					<p:outputPanel styleClass="ui-inputgroup">
-	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{viewDefinicionVersionAnexo.data.ayudaTexto.getTraduccion(sessionBean.lang)}" />
-	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionAnexo.editarAyudaTexto()}"
+	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang)}" />
+	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto)}"
 							process="@this" update="growl"/>
 	       			</p:outputPanel>
 
@@ -68,7 +70,7 @@
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion']}" />
         	<p:outputPanel>
-	        	<p:selectOneRadio id="tipopresentacion" disabled="true" value="#{viewDefinicionVersionAnexo.data.tipoPresentacion}" layout="custom">
+	        	<p:selectOneRadio id="tipopresentacion" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tipoPresentacion}" layout="custom">
 		        	     <f:selectItems value="#{TypePresentacion.ALL_VALUES}" var="tipo" itemLabel="#{msg['typePresentacion.' += tipo]}" />
 		        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial']}" itemValue="presencial" />
 	        	</p:selectOneRadio>
@@ -81,7 +83,7 @@
 					<h:panelGrid columns="2" columnClasses="wpx120" styleClass="panel_izq w100">
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.numinstancias']}" for="numinstancias"/>
 						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
-							<p:inputText id="numinstancias" disabled="true" size="3" value="#{viewDefinicionVersionAnexo.data.numeroInstancia}" />
+							<p:inputText id="numinstancias" disabled="true" size="3" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.numeroInstancia}" />
 							<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
 								<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
 								<p:selectOneRadio id="extensiones" disabled="true" value="anexarfirmado">
@@ -95,8 +97,8 @@
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
 						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
-							<p:inputText id="tammaximo" disabled="true" size="3" value="#{viewDefinicionVersionAnexo.data.tamanyoMaximo}"  />
-							<p:selectOneRadio id="tipotam" disabled="true" columns="1" value="#{viewDefinicionVersionAnexo.data.tipoTamanyo}">
+							<p:inputText id="tammaximo" disabled="true" size="3" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tamanyoMaximo}"  />
+							<p:selectOneRadio id="tipotam" disabled="true" columns="1" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tipoTamanyo}">
 						        	<f:selectItems value="#{TypeTamanyo.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTamanyo.' += tipo]}" />
 					        </p:selectOneRadio>
 
@@ -107,17 +109,21 @@
 
 						<p:spacer width="8" height="1"/>
 						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,noPadding-left">
-							<p:selectOneRadio id="firma" disabled="true" value="#{viewDefinicionVersionAnexo.data.debeAnexarFirmado}">
+							<p:selectOneRadio id="firma" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeAnexarFirmado}">
 					        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" itemValue="anexarfirmado" />
 					        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" itemValue="firmar" />
 						     </p:selectOneRadio>
-							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionAnexo.script()}" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.id)}" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"
+									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null}"
 									process="@this" update="growl"/>
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.scriptvalidacion']}" />
-						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionAnexo.script()}"
-									process="@this" update="growl"/>
+						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion.id)}"
+									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion)}"
+									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion eq null}"
+										process="@this" update="growl"/>
 
 					</h:panelGrid>
 
@@ -127,10 +133,10 @@
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel for="presencial" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial']}" />
 					</p:outputPanel>
-					<p:outputPanel>
-						<p:selectBooleanCheckbox id="compulsar" disabled="true" value="#{viewDefinicionVersionAnexo.data.debeCompulsar}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.compulsar']}"/>
-						<p:selectBooleanCheckbox id="presentarfotocopia" disabled="true" value="#{viewDefinicionVersionAnexo.data.debeFotocopiar}"  itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.presentarfotocopia']}"/>
-					</p:outputPanel>
+					<!-- <p:outputPanel>
+						<p:selectBooleanCheckbox id="compulsar" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeCompulsar}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.compulsar']}"/>
+						<p:selectBooleanCheckbox id="presentarfotocopia" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeFotocopiar}"  itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial.presentarfotocopia']}"/>
+					</p:outputPanel> -->
 	         	</h:panelGrid>
 			</p:outputPanel>
 
@@ -138,8 +144,10 @@
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
-						actionListener="#{viewDefinicionVersionAnexo.editar()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersion.editarDocumentoTramite()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexo" />
+					</p:commandButton>
 				</p:outputPanel>
 			</f:facet>
 

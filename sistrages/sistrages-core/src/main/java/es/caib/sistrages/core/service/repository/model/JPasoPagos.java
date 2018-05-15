@@ -75,6 +75,7 @@ public class JPasoPagos implements IModelApi {
 				final Set<JPagoTramite> pagos = new HashSet<>(0);
 				for (final Tasa tasa : paso.getTasas()) {
 					final JPagoTramite pago = JPagoTramite.fromModel(tasa);
+					pago.setPasoPagos(jpaso);
 					pagos.add(pago);
 				}
 				jpaso.setPagosTramite(pagos);

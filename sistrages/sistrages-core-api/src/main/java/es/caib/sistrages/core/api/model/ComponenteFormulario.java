@@ -1,7 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
-import es.caib.sistrages.core.api.model.types.TypeComponenteFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * Componente formulario.
@@ -16,7 +16,7 @@ public abstract class ComponenteFormulario extends ObjetoFormulario {
 	private String idComponente;
 
 	/** Tipo componente. */
-	private TypeComponenteFormulario tipo;
+	private TypeObjetoFormulario tipo;
 
 	/** Orden. */
 	private int orden;
@@ -31,7 +31,7 @@ public abstract class ComponenteFormulario extends ObjetoFormulario {
 	private Literal ayuda;
 
 	/** Indica si se muestra texto componente. */
-	private boolean mostrarTexto = true;
+	private boolean noMostrarTexto = true;
 
 	/** Indica alineación texto. */
 	private TypeAlineacionTexto alineacionTexto = TypeAlineacionTexto.IZQUIERDA;
@@ -44,11 +44,11 @@ public abstract class ComponenteFormulario extends ObjetoFormulario {
 		this.idComponente = codigo;
 	}
 
-	public TypeComponenteFormulario getTipo() {
+	public TypeObjetoFormulario getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(final TypeComponenteFormulario tipo) {
+	public void setTipo(final TypeObjetoFormulario tipo) {
 		this.tipo = tipo;
 	}
 
@@ -84,12 +84,12 @@ public abstract class ComponenteFormulario extends ObjetoFormulario {
 		this.ayuda = ayuda;
 	}
 
-	public boolean isMostrarTexto() {
-		return mostrarTexto;
+	public boolean isNoMostrarTexto() {
+		return noMostrarTexto;
 	}
 
-	public void setMostrarTexto(final boolean mostrarTexto) {
-		this.mostrarTexto = mostrarTexto;
+	public void setNoMostrarTexto(final boolean noMostrarTexto) {
+		this.noMostrarTexto = noMostrarTexto;
 	}
 
 	public TypeAlineacionTexto getAlineacionTexto() {

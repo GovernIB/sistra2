@@ -32,7 +32,7 @@ public class Tasa extends ModelApi {
 	private Script scriptObligatoriedad;
 
 	/** Tipo de plugin. **/
-	private String tipoPlugin;
+	private Plugin tipoPlugin;
 
 	/** Permite establecer dinámicamente los datos del pago */
 	private Script scriptPago;
@@ -159,7 +159,7 @@ public class Tasa extends ModelApi {
 	/**
 	 * @return the tipoPlugin
 	 */
-	public String getTipoPlugin() {
+	public Plugin getTipoPlugin() {
 		return tipoPlugin;
 	}
 
@@ -167,7 +167,7 @@ public class Tasa extends ModelApi {
 	 * @param tipoPlugin
 	 *            the tipoPlugin to set
 	 */
-	public void setTipoPlugin(final String tipoPlugin) {
+	public void setTipoPlugin(final Plugin tipoPlugin) {
 		this.tipoPlugin = tipoPlugin;
 	}
 

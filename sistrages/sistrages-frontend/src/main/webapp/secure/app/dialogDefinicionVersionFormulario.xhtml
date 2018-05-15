@@ -1,123 +1,137 @@
 <!DOCTYPE html>
 <html lang="#{sessionBean.lang}"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
-
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
 
-
 <h:head>
-	<title><h:outputText value="#{msg['dialogDefinicionVersionFormulario.titulo']}"/></title>
-
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
+  <title><h:outputText value="#{msg['dialogDefinicionVersionFormulario.titulo']}"/></title>
 </h:head>
 
 <h:body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
 
-	<!-- Parametros dialogo -->
-	<f:metadata>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionFormulario.modoAcceso}"/>
-		<f:viewParam name="ID" value="#{dialogDefinicionVersionFormulario.id}" />
-		<f:viewAction action="#{dialogDefinicionVersionFormulario.init}" />
-	</f:metadata>
+  <!-- Parametros dialogo -->
+  <f:metadata>
+    <f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionFormulario.modoAcceso}"/>
+    <f:viewParam name="ID" value="#{dialogDefinicionVersionFormulario.id}" />
+    <f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionFormulario.jsonTramiteVersion}" />
+    <f:viewAction action="#{dialogDefinicionVersionFormulario.init}" />
+  </f:metadata>
 
-	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
+  <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
 
-	<h:form id="formDialogDefinicionVersionFormulario" styleClass="h100, margin-top-10">
+  <h:form id="formDialogDefinicionVersionFormulario" styleClass="h100, margin-top-10">
+	<!-- Growl mensajes -->
+    <p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
-		<!-- Growl mensajes -->
-		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+	<p:outputPanel>
 
-		<h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
+
+    <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionFormulario.identificador']}" />
-          	<p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionFormulario.data.codigo}" />
+            <p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionFormulario.data.codigo}" />
 
 
             <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang)}" />
-           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionFormulario.editarDescripcion()}"	process="@this" update="growl">
-           			<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogo}" update="growl descripcion" />
-		        </p:commandButton>
-       		</p:outputPanel>
+               <p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang)}" />
+               <p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionFormulario.editarDescripcion()}"	process="@this" update="growl">
+                 <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogo}" update="growl descripcion" />
+            </p:commandButton>
+           </p:outputPanel>
 
-         	<p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.obligatoriedad']}" />
-         	<p:panelGrid styleClass="noBorders">
-       	  		<p:row>
-	       	  		<p:column styleClass="noPadding-left">
-			         	<p:selectOneRadio id="obligatoriedad" value="#{dialogDefinicionVersionFormulario.data.obligatoriedad}">
-			         		<f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
-					    </p:selectOneRadio>
-				     </p:column>
-				     <p:column>
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script()}" value="#{msg['dialogDefinicionVersionFormulario.obligatoriedad.establecerdependencia']}"
-							process="@this" update="growl"/>
-					</p:column>
-				</p:row>
-         	</p:panelGrid>
+           <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.obligatoriedad']}" />
+           <p:panelGrid styleClass="noBorders">
+               <p:row>
+                 <p:column styleClass="noPadding-left">
+                 <p:selectOneRadio id="obligatoriedad" value="#{dialogDefinicionVersionFormulario.data.obligatoriedad}">
+                   <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
+	              </p:selectOneRadio>
+	             </p:column>
+	             <p:column>
+		               <p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(dialogDefinicionVersionFormulario.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionFormulario.obligatoriedad.establecerdependencia']}"
+		              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptObligatoriedad)}"
+		                      process="@this" update="growl">
+		              <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoObligatoriedad}" update="growl scriptObligatoriedad" />
+		            </p:commandButton>
+		          </p:column>
+		        </p:row>
+           </p:panelGrid>
 
-         	<p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.presentacionelectronica']}" />
-         	<p:panelGrid styleClass="noBorders">
-       	  		<p:row>
-	       	  		<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"/>
-				     </p:column>
-				     <p:column>
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script()}" value="#{msg['dialogDefinicionVersionFormulario.establecerfirmantes']}"
-							process="@this" update="growl"/>
-					</p:column>
-				</p:row>
-         	</p:panelGrid>
+           <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.presentacionelectronica']}" />
+           <p:panelGrid styleClass="noBorders">
+               <p:row>
+                 <p:column styleClass="noPadding-left">
+            <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"/>
+             </p:column>
+             <p:column>
+               <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(dialogDefinicionVersionFormulario.data.scriptFirma)}" value="#{msg['dialogDefinicionVersionFormulario.establecerfirmantes']}"
+              styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptFirma)}"
+                      process="@this" update="growl">
+		                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoFirma}" update="growl scriptFirma" />
+		            </p:commandButton>
+		          </p:column>
+		        </p:row>
+           </p:panelGrid>
 
-			<p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.presentacionpresencial']}" />
-			<p:selectBooleanCheckbox id="presentarprerregistro" value="#{dialogDefinicionVersionFormulario.data.debePrerregistrarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.presentarprerregistro']}"/>
+	      <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.presentacionpresencial']}" />
+	      <p:selectBooleanCheckbox id="presentarprerregistro" value="#{dialogDefinicionVersionFormulario.data.debePrerregistrarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.presentarprerregistro']}"/>
 
-			<p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion']}" />
-         	<p:panelGrid styleClass="noBorders">
-       	  		<p:row>
-	       	  		<p:column styleClass="noPadding-left">
-						<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script()}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.cargadatos']}"
-							process="@this" update="growl"/>
-					</p:column>
-				</p:row>
-				<p:row>
-				     <p:column styleClass="noPadding-left">
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script()}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.parametrosapertura']}"
-							process="@this" update="growl"/>
-					</p:column>
-				</p:row>
-				<p:row>
-				     <p:column styleClass="noPadding-left">
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script()}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.postguardar']}"
-							process="@this" update="growl"/>
-					</p:column>
-				</p:row>
-         	</p:panelGrid>
+	      <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion']}" />
+	           <p:panelGrid styleClass="noBorders">
+	               <p:row>
+	                 <p:column styleClass="noPadding-left">
+	            <p:commandButton id="scriptPrerregistro" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(dialogDefinicionVersionFormulario.data.scriptPrerregistro)}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.cargadatos']}"
+	              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptPrerregistro)}"
+	                      	process="@this" update="growl">
+	                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoPrerregistro}" update="growl scriptPrerregistro" />
+	            </p:commandButton>
+	          </p:column>
+	        </p:row>
+	        <p:row>
+	             <p:column styleClass="noPadding-left">
+	               <p:commandButton id="scriptDatosIniciales" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(dialogDefinicionVersionFormulario.data.scriptDatosIniciales)}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.parametrosapertura']}"
+	              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptDatosIniciales)}"
+	                      process="@this" update="growl">
+	                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoDatosIniciales}" update="growl scriptDatosIniciales" />
+	            </p:commandButton>
+	          </p:column>
+	        </p:row>
+	        <p:row>
+	             <p:column styleClass="noPadding-left">
+	               <p:commandButton id="scriptRetorno" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(dialogDefinicionVersionFormulario.data.scriptRetorno)}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.postguardar']}"
+	              				styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptRetorno)}"
+	             				process="@this" update="growl">
+	              <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoRetorno}" update="growl scriptRetorno" />
+	            </p:commandButton>
+	          </p:column>
+	        </p:row>
+	      	</p:panelGrid>
 
-         	<p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario']}" />
-			<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.editarDisenyo}" value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario.consultardisenyo']}"
-							process="@this" update="growl"/>
+	        <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario']}" />
+	      	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.editarDisenyo}" value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario.consultardisenyo']}"
+	              process="@this" update="growl"/>
 
-			<f:facet name = "footer">
-				<p:outputPanel id="toolbar" styleClass="grid-right">
-					<p:commandButton id="btnEditar" value="#{msg['botones.guardar']}" styleClass="boton-azul"
-						actionListener="#{dialogDefinicionVersionFormulario.aceptar()}"
-						process="@this" update="growl" />
-					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionFormulario.cancelar()}" process="@this"/>
-				</p:outputPanel>
-			</f:facet>
-
-		</h:panelGrid>
-
-	</h:form>
+   	 </h:panelGrid>
+     </p:outputPanel>
+	 <p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+				<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionFormulario.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul"/>
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionFormulario.cancelar()}" process="@this" />
+				</f:facet>
+			</p:toolbar>
+	 </p:outputPanel>
+  </h:form>
 
 </h:body>
 

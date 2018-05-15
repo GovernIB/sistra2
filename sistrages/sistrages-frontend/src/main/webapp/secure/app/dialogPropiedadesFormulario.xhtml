@@ -35,14 +35,14 @@
 
 					<p:outputLabel for="cabeceraFormulario" value="#{msg['dialogPropiedadesFormulario.cabeceraFormulario']}" />
 					<p:outputPanel>
-					 	<p:selectBooleanCheckbox id="cabeceraFormulario" value="#{dialogPropiedadesFormulario.data.cabeceraFormulario}" styleClass="margin-right-10" disabled="#{dialogPropiedadesFormulario.consulta}">
+					 	<p:selectBooleanCheckbox id="cabeceraFormulario" value="#{dialogPropiedadesFormulario.data.mostrarCabecera}" styleClass="margin-right-10" disabled="#{dialogPropiedadesFormulario.consulta}">
 					 		<p:ajax update="@form" event="change"/>
 					 	</p:selectBooleanCheckbox>
 
 						<p:outputLabel for="textoCabeceraHidden" value="#{msg['dialogPropiedadesFormulario.textoCabecera']}" styleClass="no-display"/>
 						<p:inputText id="textoCabecera" value="#{dialogPropiedadesFormulario.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not textoCabeceraComponent.valid ? 'ui-state-error' : ''}"/>
-						<p:inputText id="textoCabeceraHidden" value="#{dialogPropiedadesFormulario.literal}" type="hidden" required="#{dialogPropiedadesFormulario.data.cabeceraFormulario}" binding="#{textoCabeceraComponent}"/>
-						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.cabeceraFormulario}" >
+						<p:inputText id="textoCabeceraHidden" value="#{dialogPropiedadesFormulario.literal}" type="hidden" required="#{dialogPropiedadesFormulario.data.mostrarCabecera}" binding="#{textoCabeceraComponent}"/>
+						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogPropiedadesFormulario.editarTextoCabecera}" process="@this" update="growlDialog" styleClass="va-top" disabled="#{!dialogPropiedadesFormulario.data.mostrarCabecera}" >
 		            		<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogo}" update="growlDialog textoCabecera textoCabeceraHidden" />
 		        		</p:commandButton>
 					</p:outputPanel>

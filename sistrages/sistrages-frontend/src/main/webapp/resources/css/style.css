@@ -504,3 +504,7 @@ label.ui-state-disabled {
 .CodeMirror {
 	height: 500px !important;
 }
+
+.scriptRelleno span.fa-bolt{
+	color:#007fff;
+}

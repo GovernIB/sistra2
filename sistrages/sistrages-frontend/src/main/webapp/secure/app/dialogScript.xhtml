@@ -43,7 +43,7 @@
 
 					</h:panelGrid>
 				</p:panel>
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, padding-right-18 wpx200" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, padding-right-18 wpx200" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<pe:codeMirror id="codeMirror"
         						mode="#{dialogScript.mode}"
@@ -56,12 +56,11 @@
 
     							 />
 
-    				<p:column>
-
+    				<p:column rendered="false">
     					<p:panel id="panelHerramientas" header="#{msg['dialogScript.herramientas.header']}" toggleable="true" widgetVar="panelHerramientas"  collapsed="#{dialogScript.visibleHerramientas}">
 
 								 <p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelHerramientas panelMensajes panelFormularios panelDominios" />
-						         <h:panelGrid columns="2" columnClasses=", wpx25" header="Propietats">
+								 <h:panelGrid columns="2" columnClasses=", wpx25" header="Propietats" rendered="false">
 
 						         	<h:outputText value="DADES PARAMETRE INICIAL" />
 						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
@@ -86,16 +85,18 @@
 
 						         	<h:outputText value="PLUGIN_VALIDACIONS" />
 						         	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogScript.cancelar()}" process="@this"/>
-					        </h:panelGrid>
+
+					      		</h:panelGrid>
 
 							</p:panel>
 							<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}">
 
 								<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelHerramientas panelMensajes panelFormularios panelDominios" />
-
 								<h:panelGrid columns="2" header="Scripts">
-						         	<h:column><h:outputText value="#{msg['dialogScript.scripts.autorelleno']}" /></h:column>
+
+								 	<h:column><h:outputText value="#{msg['dialogScript.scripts.autorelleno']}" /></h:column>
 						         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+
 						        </h:panelGrid>
 
 
@@ -107,7 +108,7 @@
 
 								<h:panelGrid columns="2" header="Scripts">
 
-						         	<h:column><h:outputText value="Estilos" /></h:column>
+									<h:column><h:outputText value="Estilos" /></h:column>
 						         	<h:inputTextarea value="Estilos" />
 
 						        </h:panelGrid>
@@ -119,12 +120,10 @@
 								<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelHerramientas panelMensajes panelFormularios panelDominios" />
 
 								<h:panelGrid columns="2" header="Scripts">
-
-						         	<h:column><h:outputText value="Dominios" /></h:column>
+									<h:column><h:outputText value="Dominios" /></h:column>
 						         	<h:inputText value="Dominios" />
 
 						        </h:panelGrid>
-
 						    </p:panel>
 
     					</p:column>
@@ -134,7 +133,7 @@
 			        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogScript.cancelar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
 							<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}" />
 							<p:commandButton id="btnEliminar" value="#{msg['botones.borrar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.borrar()}" process="@this" update="growlScript" styleClass="boton-rojo" rendered="#{dialogScript.isEdicion()}" >
-		        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        			</p:commandButton>
 							<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogScript.cancelar()}" process="@this"  rendered="#{dialogScript.isEdicion()}"  />
 						</f:facet>

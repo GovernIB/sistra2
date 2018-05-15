@@ -23,13 +23,14 @@ import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
+import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
-import es.caib.sistrages.frontend.util.FormularioMockBD;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -92,7 +93,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/**
 	 * Codigo componente destino al pedir confirmacion de cambios.
 	 **/
-	private Long codigoObjFormularioDestino = null;
+	private String codigoObjFormularioDestino = null;
 
 	/**
 	 * Inicializacion.
@@ -139,15 +140,22 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Map<String, String> map = context.getExternalContext().getRequestParameterMap();
 
-		Long idComponente = null;
+		String idComponente = null;
+
 		if (map.get("id") != null) {
-			idComponente = new Long(map.get("id"));
+			idComponente = map.get("id");
 		}
 
-		// Verificamos si ha habido cambios
+		// Verificamos si ha habido cambios en el componente
 		if (objetoFormularioEdit != null) {
-			final ComponenteFormulario ofOriginal = formulario.getPaginas().get(paginaActual - 1)
-					.getComponente(objetoFormularioEdit.getId());
+			ObjetoFormulario ofOriginal = null;
+
+			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				ofOriginal = formulario.getPaginas().get(paginaActual - 1).getLinea(objetoFormularioEdit.getId());
+			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				ofOriginal = formulario.getPaginas().get(paginaActual - 1).getComponente(objetoFormularioEdit.getId());
+			}
+
 			if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit)) {
 				// TODO Pedir confirmacion cambios
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Componente cambiado");
@@ -171,22 +179,26 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * @param idComponente
 	 *            the id componente
 	 */
-	private void cambiarEdicionComponente(final Long idComponente) {
+	private void cambiarEdicionComponente(final String idComponente) {
 		objetoFormularioEdit = null;
 
 		if (idComponente != null) {
-			final ComponenteFormulario cf = formulario.getPaginas().get(paginaActual - 1).getComponente(idComponente);
+			ObjetoFormulario cf = null;
+			if (idComponente.contains("L")) {
+				cf = formulario.getPaginas().get(paginaActual - 1).getLinea(Long.parseLong(idComponente.substring(1)));
+			} else {
+				cf = formulario.getPaginas().get(paginaActual - 1).getComponente(Long.parseLong(idComponente));
+			}
 
 			// Buscamos nuevo componente
 			if (cf != null) {
-				objetoFormularioEdit = (ComponenteFormulario) UtilCoreApi.cloneModelApi(cf);
+				objetoFormularioEdit = (ObjetoFormulario) UtilCoreApi.cloneModelApi(cf);
 				// TODO PARA QUITAR
 				if (!UtilCoreApi.equalsModelApi(cf, objetoFormularioEdit)) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Componente clonado no coincide");
 				}
 			}
 		}
-
 		// TODO Gestion pagina actual,...
 		String pagina = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
 		detalleComponenteUrl = null;
@@ -202,14 +214,18 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				case ETIQUETA:
 					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
 					break;
+				case SECCION:
+					pagina = "/secure/app/dialogDisenyoFormularioSeccion.xhtml";
+					break;
 				// TODO PENDIENTE
 				default:
 					break;
 				}
+
 				detalleComponenteUrl = "/secure/app/dialogDisenyoFormularioComponente"
 						+ ((ComponenteFormulario) objetoFormularioEdit).getTipo() + ".xhtml";
 			} else if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-				// TODO
+				pagina = "/secure/app/dialogDisenyoFormularioLinea.xhtml";
 			}
 		}
 
@@ -281,7 +297,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			} catch (final Exception e) {
 				throw new ErrorNoControladoException(e);
 			}
-			FormularioMockBD.guardar(formulario);
+
+			formIntService.updateComponenteFormulario(cfOriginal);
+			// FormularioMockBD.guardar(formulario);
 
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Confirmacion cambios pendiente. Se simula cambio");
 
@@ -423,6 +441,59 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			paginaActual = 1;
 		}
 
+	}
+
+	public void insertaCampoTexto() {
+		Long idComponente = null;
+		final Long idPagina = formulario.getPaginas().get(paginaActual - 1).getId();
+
+		if (objetoFormularioEdit == null) {
+			idComponente = formIntService.addComponenteFormulario(TypeObjetoFormulario.CAMPO_TEXTO, idPagina, null,
+					null, null);
+		} else {
+			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				idComponente = formIntService.addComponenteFormulario(TypeObjetoFormulario.CAMPO_TEXTO, idPagina,
+						objetoFormularioEdit.getId(), null, posicionamiento);
+			} else {
+				final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
+				final LineaComponentesFormulario linea = formulario.getPaginas().get(paginaActual - 1)
+						.getLineaComponente(objetoFormularioEdit.getId());
+
+				idComponente = formIntService.addComponenteFormulario(TypeObjetoFormulario.CAMPO_TEXTO, idPagina,
+						linea.getId(), campo.getOrden(), posicionamiento);
+
+			}
+
+		}
+
+		if (idComponente != null) {
+			refrescaPagina();
+		}
+
+	}
+
+	public void eliminarObjetoFormulario() {
+		if (objetoFormularioEdit != null) {
+
+			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				formIntService.removeLineaFormulario(objetoFormularioEdit.getId());
+
+			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				formIntService.removeComponenteFormulario(objetoFormularioEdit.getId());
+			}
+
+			refrescaPagina();
+
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"));
+		}
+	}
+
+	private void refrescaPagina() {
+		final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+		final PaginaFormulario paginaNueva = formIntService.getContenidoPaginaFormulario(pagina.getId());
+		formulario.getPaginas().remove(paginaActual - 1);
+		formulario.getPaginas().add(paginaActual - 1, paginaNueva);
 	}
 	// -- Getters / Setters
 

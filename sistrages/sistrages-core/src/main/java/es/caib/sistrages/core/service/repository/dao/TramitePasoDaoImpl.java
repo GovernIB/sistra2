@@ -13,13 +13,16 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
+import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JPagoTramite;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
+import es.caib.sistrages.core.service.repository.model.JScript;
 
 /**
  * La clase TramitePasoDaoImpl.
@@ -144,7 +147,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 	@Override
 	public void updateFormularioTramite(final FormularioTramite formularioTramite) {
+		final JFormularioTramite jFormulariotramiteOriginal = entityManager.find(JFormularioTramite.class,
+				formularioTramite.getId());
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
+		jFormulariotramite.setPasosRellenar(jFormulariotramiteOriginal.getPasosRellenar());
 		entityManager.merge(jFormulariotramite);
 	}
 
@@ -168,9 +174,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JAnexoTramite jAnexoTramiteOriginal = entityManager.find(JAnexoTramite.class, documento.getId());
 		final JAnexoTramite jAnexoTramite = JAnexoTramite.fromModel(documento);
 		jAnexoTramite.setPasoAnexar(jAnexoTramiteOriginal.getPasoAnexar());
-		jAnexoTramite.setScriptFirmantes(jAnexoTramiteOriginal.getScriptFirmantes());
-		jAnexoTramite.setScriptObligatoriedad(jAnexoTramiteOriginal.getScriptObligatoriedad());
-		jAnexoTramite.setScriptValidacion(jAnexoTramiteOriginal.getScriptValidacion());
 		entityManager.merge(jAnexoTramite);
 	}
 
@@ -179,7 +182,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		final JAnexoTramite janexoTramite = entityManager.find(JAnexoTramite.class, idDocumento);
 		jpasoRellenar.getPasoAnexar().getAnexosTramite().remove(janexoTramite);
-		entityManager.merge(jpasoRellenar);
+		entityManager.remove(janexoTramite);
 	}
 
 	@Override
@@ -199,7 +202,17 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 	@Override
 	public void updateTasaTramite(final Tasa tasa) {
+		final JPagoTramite jpagoTramiteOld = entityManager.find(JPagoTramite.class, tasa.getId());
 		final JPagoTramite jpagoTramite = JPagoTramite.fromModel(tasa);
+		jpagoTramite.setPasoPagos(jpagoTramiteOld.getPasoPagos());
+		if (jpagoTramite.getScriptObligatoriedad() != null) {
+			final JScript script = entityManager.merge(jpagoTramite.getScriptObligatoriedad());
+			jpagoTramite.setScriptObligatoriedad(script);
+		}
+		if (jpagoTramite.getScriptDatosPago() != null) {
+			final JScript script = entityManager.merge(jpagoTramite.getScriptDatosPago());
+			jpagoTramite.setScriptDatosPago(script);
+		}
 		entityManager.merge(jpagoTramite);
 	}
 
@@ -208,7 +221,31 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		final JPagoTramite jpagoTramite = entityManager.find(JPagoTramite.class, idTasa);
 		jpasoRellenar.getPasoPagos().getPagosTramite().remove(jpagoTramite);
-		entityManager.merge(jpasoRellenar);
+		entityManager.remove(jpagoTramite);
+	}
+
+	@Override
+	public Fichero uploadDocAnexo(final Long idDocumento, final Fichero fichero) {
+		final JAnexoTramite jAnexoTramite = entityManager.find(JAnexoTramite.class, idDocumento);
+		if (jAnexoTramite == null) {
+			throw new NoExisteDato("No existe anexo " + idDocumento);
+		}
+
+		jAnexoTramite.setFicheroPlantilla(JFichero.fromModel(fichero));
+		entityManager.merge(jAnexoTramite);
+
+		return jAnexoTramite.getFicheroPlantilla().toModel();
+	}
+
+	@Override
+	public void removeDocAnexo(final Long idDocumento) {
+		final JAnexoTramite janexoTramite = entityManager.find(JAnexoTramite.class, idDocumento);
+		final JFichero fic = janexoTramite.getFicheroPlantilla();
+		if (fic != null) {
+			janexoTramite.setFicheroPlantilla(null);
+			entityManager.merge(janexoTramite);
+			entityManager.remove(fic);
+		}
 	}
 
 }

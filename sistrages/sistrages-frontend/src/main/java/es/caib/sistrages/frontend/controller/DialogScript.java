@@ -6,10 +6,12 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.ToggleEvent;
 
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -20,6 +22,10 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 public class DialogScript extends DialogControllerBase {
 
 	private static final long serialVersionUID = 20111020L;
+
+	/** Script service. */
+	@Inject
+	private ScriptService scriptService;
 
 	/** Id del script. **/
 	private String id;
@@ -35,28 +41,40 @@ public class DialogScript extends DialogControllerBase {
 	/** Keymap. **/
 	private final String keymap = "default";
 
+	/** Visible formulario. **/
 	private boolean visibleFormularios = true;
+	/** Visible herramientas. **/
 	private boolean visibleHerramientas = false;
+	/** Visible mensajes. **/
 	private boolean visibleMensajes = true;
+	/** Visible dominios. **/
 	private boolean visibleDominios = true;
 
+	/**
+	 * Constructor vacio.
+	 */
 	public DialogScript() {
 		// Constructor vacio.
 	}
 
+	/**
+	 * Init
+	 */
 	public void init() {
-		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		if (modo == TypeModoAcceso.ALTA) {
+		if (iData == null && id == null) {
 			data = new Script();
 		} else {
-			if (iData == null) {
-				data = new Script();
-			} else {
+			if (iData != null) {
 				data = (Script) UtilJSON.fromJSON(iData, Script.class);
+			} else { // id!=null
+				data = scriptService.getScript(Long.valueOf(id));
 			}
 		}
 	}
 
+	/**
+	 * Cambia el modo.
+	 */
 	public void changeMode() {
 		if (mode.equals("css")) {
 			mode = "javascript";

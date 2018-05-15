@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -122,10 +123,26 @@ public interface TramitePasoDao {
 
 	/**
 	 * Borra una tasa.
-	 * 
+	 *
 	 * @param idTramitePaso
 	 * @param idTasa
 	 */
 	void removeTasa(Long idTramitePaso, Long idTasa);
+
+	/**
+	 * Sube un documento asociado a un anexo.
+	 *
+	 * @param idDocumento
+	 * @param fichero
+	 * @param contents
+	 */
+	Fichero uploadDocAnexo(Long idDocumento, Fichero fichero);
+
+	/**
+	 * Borrar un doc asociado a un anexo.
+	 *
+	 * @param idDocumento
+	 */
+	void removeDocAnexo(Long idDocumento);
 
 }

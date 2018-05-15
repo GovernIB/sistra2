@@ -14,7 +14,6 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -29,20 +28,10 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	/** Tramite service. */
 	@Inject
-	private ScriptService scriptService;
-
-	/** Tramite service. */
-	@Inject
 	private TramiteService tramiteService;
 
 	/** Id elemento a tratar. */
 	private Long id;
-
-	/** Script de parametros iniciales. **/
-	private Script scriptPersonalizacion;
-
-	/** Script de parametros iniciales. **/
-	private Script scriptParamsIniciales;
 
 	/** tramite version. */
 	private TramiteVersion tramiteVersion;
@@ -58,12 +47,6 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 	/** tramite version idioma De soportado. */
 	private boolean tramiteVersionIdiomaDeSoportado;
-
-	/** para borrar la relación con los script. **/
-	private boolean borrarScriptPI = false;
-
-	/** para borrar la relación con los script. **/
-	private boolean borrarScriptPersonalizacion = false;
 
 	/**
 	 * Inicialización.
@@ -83,14 +66,6 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			this.tramiteVersionIdiomaEnSoportado = true;
 		}
 
-		if (this.tramiteVersion.getIdScriptPersonalizacion() != null) {
-			scriptPersonalizacion = this.scriptService.getScript(this.tramiteVersion.getIdScriptPersonalizacion());
-		}
-
-		if (this.tramiteVersion.getIdScriptInicializacionTramite() != null) {
-			scriptParamsIniciales = this.scriptService
-					.getScript(this.tramiteVersion.getIdScriptInicializacionTramite());
-		}
 	}
 
 	/**
@@ -125,8 +100,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			}
 			idiomas = idiomas.substring(0, idiomas.length() - 1); // Quitamos el ; del final
 			tramiteVersion.setIdiomasSoportados(idiomas);
-			tramiteService.updateTramiteVersion(tramiteVersion, borrarScriptPI, scriptParamsIniciales,
-					borrarScriptPersonalizacion, scriptPersonalizacion);
+			tramiteService.updateTramiteVersion(tramiteVersion);
 		}
 
 		// Retornamos resultado
@@ -147,20 +121,20 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	}
 
 	/**
-	 * Editar Script.
+	 * Editar Script personalizacion.
 	 */
 	public void editarScriptPersonalizacion() {
 
-		cargarDialogScript(scriptPersonalizacion);
+		cargarDialogScript(this.tramiteVersion.getScriptPersonalizacion());
 
 	}
 
 	/**
-	 * Editar Script.
+	 * Editar Script inicialización.
 	 */
 	public void editarScriptInicializacion() {
 
-		cargarDialogScript(scriptParamsIniciales);
+		cargarDialogScript(this.tramiteVersion.getScriptInicializacionTramite());
 
 	}
 
@@ -179,12 +153,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 			case ALTA:
 			case EDICION:
-				this.scriptParamsIniciales = (Script) respuesta.getResult();
-				if (this.scriptParamsIniciales == null) {
-					this.borrarScriptPI = true;
-				} else {
-					this.borrarScriptPI = false;
-				}
+				this.tramiteVersion.setScriptInicializacionTramite((Script) respuesta.getResult());
 				break;
 			default:
 				break;
@@ -208,12 +177,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 			case ALTA:
 			case EDICION:
-				this.scriptPersonalizacion = (Script) respuesta.getResult();
-				if (this.scriptPersonalizacion == null) {
-					this.borrarScriptPersonalizacion = true;
-				} else {
-					this.borrarScriptPersonalizacion = false;
-				}
+				this.tramiteVersion.setScriptPersonalizacion((Script) respuesta.getResult());
 				break;
 			default:
 				break;

@@ -36,7 +36,7 @@ public class Plugin extends ModelApi {
 	private String descripcion;
 
 	/** Propiedades */
-	private List<Propiedad> propiedades = new ArrayList<Propiedad>();
+	private List<Propiedad> propiedades = new ArrayList<>();
 
 	/**
 	 * @return the id

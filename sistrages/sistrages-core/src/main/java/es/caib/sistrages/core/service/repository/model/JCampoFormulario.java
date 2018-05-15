@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JCampoFormulario
@@ -26,20 +27,20 @@ public class JCampoFormulario implements IModelApi {
 	@Column(name = "FCA_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@OneToOne
-	@JoinColumn(name = "FCA_CODIGO")
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@MapsId
+	@JoinColumn(name = "FCA_CODIGO")
 	private JElementoFormulario elementoFormulario;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FCA_SCRAUT")
 	private JScript scriptAutocalculado;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FCA_SCRSLE")
 	private JScript scriptSoloLectura;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FCA_SCRVAL")
 	private JScript scriptValidaciones;
 
@@ -179,6 +180,16 @@ public class JCampoFormulario implements IModelApi {
 
 		return newModel;
 
+	}
+
+	public static JCampoFormulario createDefault(final TypeObjetoFormulario pTipoObjeto, final int pOrden,
+			final JLineaFormulario pJLinea) {
+		final JCampoFormulario jModel = new JCampoFormulario();
+		jModel.setObligatorio(false);
+		jModel.setSoloLectura(false);
+		jModel.setNoModificable(false);
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(pTipoObjeto, pOrden, pJLinea));
+		return jModel;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 
 /**
  * PluginsDao.
@@ -42,6 +43,19 @@ public interface PluginsDao {
 	 * @return la lista de valores de configuracion global
 	 */
 	List<Plugin> getAllByFiltro(TypeAmbito ambito, Long idEntidad, String filtro);
+
+	/**
+	 * Lista plugins.
+	 *
+	 * @param ambito
+	 *            ambito
+	 * @param idEntidad
+	 *            idEntidad
+	 * @param tipo
+	 *            Tipo de plugin
+	 * @return la lista de valores de configuracion global
+	 */
+	List<Plugin> getAllByFiltro(TypeAmbito ambito, Long idEntidad, TypePlugin tipo);
 
 	/**
 	 * Añade plugin.

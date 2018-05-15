@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JPlugin;
 
@@ -61,7 +62,7 @@ public class PluginsDaoImpl implements PluginsDao {
 	 */
 	@Override
 	public List<Plugin> getAll(final TypeAmbito ambito, final Long idEntidad) {
-		return listarPlugins(ambito, idEntidad, null);
+		return listarPlugins(ambito, idEntidad, null, null);
 	}
 
 	/*
@@ -74,7 +75,20 @@ public class PluginsDaoImpl implements PluginsDao {
 	 */
 	@Override
 	public List<Plugin> getAllByFiltro(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
-		return listarPlugins(ambito, idEntidad, filtro);
+		return listarPlugins(ambito, idEntidad, filtro, null);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.PluginsDao#getAllByFiltro(es.
+	 * caib.sistrages.core.api.model.types.TypeAmbito, java.lang.Long,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<Plugin> getAllByFiltro(final TypeAmbito ambito, final Long idEntidad, final TypePlugin tipo) {
+		return listarPlugins(ambito, idEntidad, null, tipo);
 	}
 
 	/*
@@ -143,17 +157,23 @@ public class PluginsDaoImpl implements PluginsDao {
 	 * @return lista de plugins
 	 */
 	@SuppressWarnings("unchecked")
-	private List<Plugin> listarPlugins(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
+	private List<Plugin> listarPlugins(final TypeAmbito ambito, final Long idEntidad, final String filtro,
+			final TypePlugin tipo) {
 		final List<Plugin> listaPlugin = new ArrayList<>();
 
 		String sql = "select t from JPlugin as t where t.ambito = :ambito ";
-		if (ambito == TypeAmbito.ENTIDAD) {
-			sql += " AND t.entidad.codigo = :idEntidad";
-		}
+
 		if (StringUtils.isNotBlank(filtro)) {
 			sql += " AND ( lower(t.claseImplementadora) like :pFiltro or lower(t.descripcion) like :pFiltro  or lower(t.idInstancia) like :pFiltro)";
 		}
+		if (ambito == TypeAmbito.ENTIDAD) {
+			sql += " AND t.entidad.codigo = :idEntidad";
+		}
+		if (tipo != null) {
+			sql += " AND t.tipo = :pTipo";
+		}
 		sql += " order by t.tipo";
+
 		final Query query = entityManager.createQuery(sql);
 
 		query.setParameter("ambito", ambito.toString());
@@ -162,6 +182,9 @@ public class PluginsDaoImpl implements PluginsDao {
 		}
 		if (StringUtils.isNotBlank(filtro)) {
 			query.setParameter("pFiltro", "%".concat(filtro.toLowerCase()).concat("%"));
+		}
+		if (tipo != null) {
+			query.setParameter("pTipo", tipo.toString());
 		}
 
 		final List<JPlugin> results = query.getResultList();

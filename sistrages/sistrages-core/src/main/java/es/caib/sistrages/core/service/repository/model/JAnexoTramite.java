@@ -33,7 +33,7 @@ public class JAnexoTramite implements IModelApi {
 	@Column(name = "ANE_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ANE_AYUFIC")
 	private JFichero ficheroPlantilla;
 
@@ -41,15 +41,15 @@ public class JAnexoTramite implements IModelApi {
 	@JoinColumn(name = "ANE_CODPTR", nullable = false)
 	private JPasoAnexar pasoAnexar;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "ANE_SCRVAL")
 	private JScript scriptValidacion;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "ANE_SCRFIR")
 	private JScript scriptFirmantes;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "ANE_SCROBL")
 	private JScript scriptObligatoriedad;
 
@@ -271,6 +271,9 @@ public class JAnexoTramite implements IModelApi {
 			if (doc.getDescripcion() != null) {
 				janexo.setDescripcion(JLiteral.fromModel(doc.getDescripcion()));
 			}
+			if (doc.getAyudaFichero() != null) {
+				janexo.setFicheroPlantilla(JFichero.fromModel(doc.getAyudaFichero()));
+			}
 			janexo.setExtensionesPermitidas(doc.getExtensiones());
 			janexo.setFirmar(doc.isDebeFirmarDigitalmente());
 			janexo.setIdentificadorDocumento(doc.getCodigo());
@@ -288,6 +291,9 @@ public class JAnexoTramite implements IModelApi {
 			if (doc.getTipoPresentacion() != null) {
 				janexo.setTipoPresentacion(doc.getTipoPresentacion().toString());
 			}
+			janexo.setScriptFirmantes(JScript.fromModel(doc.getScriptFirmarDigitalmente()));
+			janexo.setScriptObligatoriedad(JScript.fromModel(doc.getScriptObligatoriedad()));
+			janexo.setScriptValidacion(JScript.fromModel(doc.getScriptValidacion()));
 		}
 		return janexo;
 	}
@@ -300,6 +306,9 @@ public class JAnexoTramite implements IModelApi {
 		mdoc.setDebeConvertirPDF(this.isConvertirPdf());
 		if (this.getDescripcion() != null) {
 			mdoc.setDescripcion(this.getDescripcion().toModel());
+		}
+		if (this.getFicheroPlantilla() != null) {
+			mdoc.setAyudaFichero(this.getFicheroPlantilla().toModel());
 		}
 		mdoc.setExtensiones(this.getExtensionesPermitidas());
 		mdoc.setDebeFirmarDigitalmente(this.isFirmar());
@@ -314,6 +323,15 @@ public class JAnexoTramite implements IModelApi {
 			mdoc.setAyudaTexto(this.getTextoAyuda().toModel());
 		}
 		mdoc.setTipoPresentacion(TypePresentacion.fromString(this.getTipoPresentacion()));
+		if (this.getScriptFirmantes() != null) {
+			mdoc.setScriptFirmarDigitalmente(this.getScriptFirmantes().toModel());
+		}
+		if (this.getScriptObligatoriedad() != null) {
+			mdoc.setScriptObligatoriedad(this.getScriptObligatoriedad().toModel());
+		}
+		if (this.getScriptValidacion() != null) {
+			mdoc.setScriptValidacion(this.getScriptValidacion().toModel());
+		}
 		return mdoc;
 	}
 

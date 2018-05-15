@@ -150,4 +150,12 @@ public class JPaginaFormulario implements IModelApi {
 		return jModel;
 	}
 
+	public static JPaginaFormulario createDefault(final JFormulario pJFormulario) {
+		final JPaginaFormulario jPagina = new JPaginaFormulario();
+		jPagina.setOrden(1);
+		jPagina.setPaginaFinal(true);
+		jPagina.setPaginaAsociadaListaElementos(false);
+		jPagina.setFormulario(pJFormulario);
+		return jPagina;
+	}
 }

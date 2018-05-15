@@ -28,10 +28,13 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SecurityService;
@@ -121,6 +124,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
+
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
@@ -154,6 +158,73 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean permiteAlta() {
+		boolean res = false;
+
+		// Admin entidad
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			res = true;
+		}
+
+		// Desarrollador
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			if (area != null) {
+				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+			}
+		}
+
+		return res;
+	}
+
+	/**
+	 * Obtiene el valor de permiteEditar.
+	 *
+	 * @return el valor de permiteEditar
+	 */
+	public boolean permiteEditar() {
+		boolean res = false;
+
+		// Admin entidad
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+			res = true;
+		}
+
+		// Desarrollador
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			if (area != null) {
+				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+				res = (permisos.contains(TypeRolePermisos.MODIFICACION)
+						|| permisos.contains(TypeRolePermisos.ALTA_BAJA));
+			}
+		}
+
+		return res;
+	}
+
+	/**
+	 * Obtiene el valor de permiteConsultar.
+	 *
+	 * @return el valor de permiteConsultar
+	 */
+	public boolean permiteConsultar() {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+			if (area == null) {
+				return false;
+			} else {
+				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+
+				return (permisos.contains(TypeRolePermisos.CONSULTA));
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Abre un di&aacute;logo para editar los datos.
 	 */
 	public void consultarDisenyo() {
@@ -168,7 +239,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private void recuperarDatos() {
 		/* recuperamos los datos */
 		tramiteVersion = tramiteService.getTramiteVersion(id);
-		area = tramiteService.getAreaTramite(Long.valueOf(tramiteVersion.getIdTramite()));
+		area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
 
 		/* obtenemos los pasos del trámite. */
@@ -202,7 +273,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Consultar Script.
 	 */
 	public void consultarTraduccion(final Literal literal) {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, literal, null, null);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, literal, tramiteVersion);
 	}
 
 	/**
@@ -214,7 +285,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			final TramitePaso paso = ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
 			final Map<String, String> map = new HashMap<>();
 			map.put(TypeParametroVentana.ID.toString(), paso.getId().toString());
-
+			map.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
 			if (paso instanceof TramitePasoDebeSaber) {
 
 				UtilJSF.openDialog(DialogDefinicionVersionDebeSaber.class, TypeModoAcceso.EDICION, map, true, 950, 500);
@@ -222,6 +293,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			} else if (paso instanceof TramitePasoTasa) {
 
 				UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, map, true, 950, 700);
+
+			} else if (paso instanceof TramitePasoRegistrar) {
+
+				UtilJSF.openDialog(DialogDefinicionVersionRegistrarTramite.class, TypeModoAcceso.EDICION, map, true,
+						950, 450);
 
 			}
 
@@ -249,16 +325,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 				// Podriamos llamar la BBDD o actualizarlo a mano.
 				recuperarDatos();
-				/*
-				 * int posicion = 0; for (TramitePaso tramitePaso :
-				 * tramiteVersion.getListaPasos()) { if
-				 * (tramitePaso.getId().compareTo(tramitePasoMod.getId()) == 0) { break; }
-				 * posicion++; }
-				 *
-				 * if (posicion <= tramiteVersion.getListaPasos().size()) {
-				 * tramiteVersion.getListaPasos().remove(posicion);
-				 * tramiteVersion.getListaPasos().add(posicion, tramitePasoMod); }
-				 */
 
 				// Refrescamos el arbol
 				inicializarArbol();
@@ -269,6 +335,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				// ser personalizados)
 				break;
 			case CONSULTA:
+			default:
 				// No hay que hacer nada
 				break;
 			}
@@ -284,7 +351,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void editarPropiedades() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 520);
+		UtilJSF.openDialog(DialogDefinicionVersionPropiedades.class, TypeModoAcceso.EDICION, params, true, 950, 470);
 	}
 
 	/**
@@ -295,7 +362,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void returnDialogoRefrescarTramite(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled()) {
-			tramiteVersion = tramiteService.getTramiteVersion(id);
+			recuperarDatos();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
 		}
 	}
@@ -308,7 +375,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void editarControlAcceso() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionControlAcceso.class, TypeModoAcceso.EDICION, params, true, 950, 520);
+		UtilJSF.openDialog(DialogDefinicionVersionControlAcceso.class, TypeModoAcceso.EDICION, params, true, 950, 370);
 	}
 
 	// ------- VIEW DE DOMINIOS
@@ -407,7 +474,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 */
 	public void nuevoFormulario() {
-		UtilJSF.openDialog(DialogDefinicionVersionRellenar.class, TypeModoAcceso.ALTA, null, true, 600, 200);
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		UtilJSF.openDialog(DialogDefinicionVersionRellenar.class, TypeModoAcceso.ALTA, params, true, 600, 200);
 	}
 
 	/**
@@ -438,6 +507,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
 		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 500);
 	}
 
@@ -589,13 +659,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	}
 
-	// ------- VIEW DE PASO DE RELLENAR ------------------------------
+	// ------- VIEW DE PASO DE DOCUMENTO ------------------------------
 
 	/**
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 */
 	public void nuevoDocumento() {
-		UtilJSF.openDialog(DialogDefinicionVersionAnexarDocumentos.class, TypeModoAcceso.ALTA, null, true, 600, 200);
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		UtilJSF.openDialog(DialogDefinicionVersionAnexarDocumentos.class, TypeModoAcceso.ALTA, params, true, 600, 200);
 	}
 
 	/**
@@ -606,9 +679,26 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarDocumentoSeleccionada())
 			return;
 
+		this.editarDocumentoDialog(this.getDocumentoSeleccionado().getId());
+	}
+
+	/**
+	 * Abre el dialog para editar dato.
+	 */
+	public void editarDocumentoTramite() {
+		this.editarDocumentoDialog(this.getDocumentoTramiteSeleccionado().getId());
+	}
+
+	/**
+	 * El encargado de abrir el dialog.
+	 *
+	 * @param idDocumento
+	 */
+	private void editarDocumentoDialog(final Long idDocumento) {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.documentoSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idDocumento));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
 		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 575);
 	}
 
@@ -723,6 +813,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				message = UtilJSF.getLiteral("info.modificado.ok");
 				break;
 			case CONSULTA:
+			default:
 				// No hay que hacer nada
 				break;
 			}
@@ -739,13 +830,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	}
 
-	// ------- VIEW DE PASO DE RELLENAR ------------------------------
+	// ------- VIEW DE PASO DE TASA ------------------------------
 
 	/**
 	 * Abre un di&aacute;logo para anyadir los datos.
 	 */
 	public void nuevaTasa() {
-		UtilJSF.openDialog(DialogDefinicionVersionPagarTasas.class, TypeModoAcceso.ALTA, null, true, 600, 300);
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		UtilJSF.openDialog(DialogDefinicionVersionPagarTasas.class, TypeModoAcceso.ALTA, params, true, 600, 150);
 	}
 
 	/**
@@ -756,11 +849,23 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarTasaSeleccionada())
 			return;
 
+		this.editarTasaDialog(this.tasaSeleccionado.getId());
+
+	}
+
+	/**
+	 * Abre dialogo para editar dato.
+	 */
+	public void editarTasaTramite() {
+		this.editarTasaDialog(this.getTasaTramiteSeleccionado().getId());
+	}
+
+	public void editarTasaDialog(final Long idTasa) {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tasaSeleccionado.getId()));
-		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 600, 300);
-
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTasa));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 700, 450);
 	}
 
 	/**
@@ -874,6 +979,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				message = UtilJSF.getLiteral("info.modificado.ok");
 				break;
 			case CONSULTA:
+			default:
 				// No hay que hacer nada
 				break;
 			}
@@ -882,6 +988,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Mostramos mensaje
 		if (message != null) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Si el mensaje está relleno es que ha habido algún cambio
+			recuperarDatos();
+			inicializarArbol();
 		}
 	}
 
@@ -891,14 +1001,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		Long idSelectNode = null;
 		if (this.selectedNode != null && this.selectedNode.getData() != null) {
 			final OpcionArbol opcionArbol = (OpcionArbol) this.selectedNode.getData();
-			if (opcionArbol.getTramitePaso() != null) {
-				idSelectNode = opcionArbol.getTramitePaso().getId();
-			} else if (opcionArbol.getDocumento() != null) {
+			if (opcionArbol.getDocumento() != null) {
 				idSelectNode = opcionArbol.getDocumento().getId();
 			} else if (opcionArbol.getFormulario() != null) {
 				idSelectNode = opcionArbol.getFormulario().getId();
 			} else if (opcionArbol.getTasa() != null) {
 				idSelectNode = opcionArbol.getTasa().getId();
+			} else if (opcionArbol.getTramitePaso() != null) {
+				idSelectNode = opcionArbol.getTramitePaso().getId();
 			}
 		}
 
@@ -1034,7 +1144,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Si el nodo no tiene arbol, hay que ver si por url.
 		if (idNodoArbol == null) {
 
-			if (nodoSeleccionado != null && urlNodoArbol != null && nodoSeleccionado != null
+			if (nodoSeleccionado != null && urlNodoArbol != null && nodoSeleccionado.getUrl() != null
 					&& nodoSeleccionado.getUrl().contains(urlNodoArbol)) {
 				this.selectedNode = nodoArbol;
 				nodoArbol.setSelected(true);
@@ -1153,6 +1263,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return null;
 		} else {
 			return (TramitePasoTasa) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
+		}
+	}
+
+	/**
+	 * Tramite paso registrar seleccionado.
+	 *
+	 * @return
+	 */
+	public TramitePasoRegistrar getTramitePasoREGSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return (TramitePasoRegistrar) ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
 		}
 	}
 
@@ -1336,12 +1459,38 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		return documentoSeleccionado;
 	}
 
+	/**
+	 * Tramite paso anexar seleccionado.
+	 *
+	 * @return
+	 */
+	public Documento getDocumentoTramiteSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return ((OpcionArbol) this.selectedNode.getData()).getDocumento();
+		}
+	}
+
 	public void setDocumentoSeleccionado(final Documento documentoSeleccionado) {
 		this.documentoSeleccionado = documentoSeleccionado;
 	}
 
 	public Tasa getTasaSeleccionado() {
 		return tasaSeleccionado;
+	}
+
+	/**
+	 * Tramite paso anexar seleccionado.
+	 *
+	 * @return
+	 */
+	public Tasa getTasaTramiteSeleccionado() {
+		if (this.selectedNode == null) {
+			return null;
+		} else {
+			return ((OpcionArbol) this.selectedNode.getData()).getTasa();
+		}
 	}
 
 	public void setTasaSeleccionado(final Tasa tasaSeleccionado) {

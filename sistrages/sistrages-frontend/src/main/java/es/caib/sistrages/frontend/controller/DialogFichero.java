@@ -11,11 +11,13 @@ import org.primefaces.model.UploadedFile;
 
 import es.caib.sistrages.core.api.exception.FuenteDatosCSVNoExisteCampoException;
 import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -44,6 +46,12 @@ public class DialogFichero extends DialogControllerBase {
 	@Inject
 	private EntidadService entidadService;
 
+	/**
+	 * Servicio tramite.
+	 */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Id **/
 	private String id;
 
@@ -61,6 +69,11 @@ public class DialogFichero extends DialogControllerBase {
 	 * entidad.
 	 */
 	private Entidad entidad;
+
+	/**
+	 * Documento.
+	 */
+	private Documento documento;
 
 	/**
 	 * existe fichero.
@@ -103,6 +116,9 @@ public class DialogFichero extends DialogControllerBase {
 			break;
 		case FUENTE_ENTIDAD_CSV:
 			mostrarQuitar = false;
+			break;
+		case TRAMITE_DOC:
+			documento = tramiteService.getDocumento(Long.valueOf(id));
 			break;
 		default:
 			mostrarQuitar = true;
@@ -177,12 +193,23 @@ public class DialogFichero extends DialogControllerBase {
 				}
 
 				break;
+			case TRAMITE_DOC:
+				fichero = documento.getAyudaFichero();
+				if (fichero == null) {
+					fichero = new Fichero();
+					fichero.setPublico(true);
+				}
+				fichero.setNombre(file.getFileName());
+				tramiteService.uploadDocAnexo(documento.getId(), fichero, file.getContents());
+				break;
 			default:
 				break;
 			}
 
 			if (tipoCampoFichero == TypeCampoFichero.FUENTE_ENTIDAD_CSV) {
 				this.cerrarCsv();
+			} else if (tipoCampoFichero == TypeCampoFichero.TRAMITE_DOC) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
 			} else {
 				entidad = entidadService.loadEntidad(entidad.getId());
 				comprobarFichero();
@@ -209,6 +236,10 @@ public class DialogFichero extends DialogControllerBase {
 		case CSS_ENTIDAD:
 			entidadService.removeCssEntidad(entidad.getId());
 			break;
+		case TRAMITE_DOC:
+			tramiteService.removeDocAnexo(documento.getId());
+			break;
+		case FUENTE_ENTIDAD_CSV:
 		default:
 			break;
 		}

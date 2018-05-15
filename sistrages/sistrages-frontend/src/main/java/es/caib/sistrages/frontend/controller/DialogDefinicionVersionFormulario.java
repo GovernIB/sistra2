@@ -1,7 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -12,8 +11,10 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -37,8 +38,11 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Data. **/
 	private FormularioTramite data;
 
-	/** tramite. **/
-	private TramiteVersion tramite;
+	/** JSON tramiteVersion version. **/
+	private String jsonTramiteVersion;
+
+	/** tramiteVersion version. **/
+	private TramiteVersion tramiteVersion;
 
 	/** Id. **/
 	private String id;
@@ -47,7 +51,9 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	public void init() {
 
 		data = tramiteService.getFormulario(Long.valueOf(id));
-
+		if (jsonTramiteVersion != null) {
+			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		}
 	}
 
 	/**
@@ -83,12 +89,11 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 *
 	 */
 	public void editarDescripcion() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(tramite);
 		if (data.getDescripcion() == null) {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					idiomas, idiomas);
+					tramiteVersion);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
 	}
 
@@ -115,10 +120,132 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * Script.
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
 	 */
-	public void script() {
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, null, true, 950, 700);
+	public void returnDialogoDatosIniciales(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				final Script script = (Script) respuesta.getResult();
+				data.setScriptDatosIniciales(script);
+				break;
+			case CONSULTA:
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoFirma(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				final Script script = (Script) respuesta.getResult();
+				data.setScriptFirma(script);
+				break;
+			case CONSULTA:
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoObligatoriedad(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				final Script script = (Script) respuesta.getResult();
+				data.setScriptObligatoriedad(script);
+				break;
+			case CONSULTA:
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoPrerregistro(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				final Script script = (Script) respuesta.getResult();
+				data.setScriptPrerregistro(script);
+				break;
+			case CONSULTA:
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoRetorno(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				final Script script = (Script) respuesta.getResult();
+				data.setScriptRetorno(script);
+				break;
+			case CONSULTA:
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Carga el script
+	 *
+	 * @param script
+	 */
+	public void script(final Script script) {
+		if (id == null) {
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
+		} else {
+			final Map<String, String> params = new HashMap<>();
+			if (data.getScriptDatosIniciales() == null) {
+				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
+			} else {
+				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
+			}
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950, 700);
+		}
 	}
 
 	/**
@@ -165,6 +292,24 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void setData(final FormularioTramite data) {
 		this.data = data;
+	}
+
+	/**
+	 * Get jsonTramiteVersion
+	 * 
+	 * @return
+	 */
+	public String getJsonTramiteVersion() {
+		return jsonTramiteVersion;
+	}
+
+	/**
+	 * Set jsonTramiteVersion
+	 * 
+	 * @param jsonTramiteVersion
+	 */
+	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
+		this.jsonTramiteVersion = jsonTramiteVersion;
 	}
 
 }

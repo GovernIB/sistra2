@@ -42,13 +42,13 @@ public class TramiteVersion extends ModelApi {
 	private boolean persistenciaInfinita;
 
 	/** persistencia dias. */
-	private int persistenciaDias;
+	private Integer persistenciaDias;
 
 	/** id script personalizacion. */
-	private Long idScriptPersonalizacion;
+	private Script scriptPersonalizacion;
 
 	/** id script inicializacion tramite. */
-	private Long idScriptInicializacionTramite;
+	private Script scriptInicializacionTramite;
 
 	/** bloqueada. */
 	private int bloqueada;
@@ -72,10 +72,10 @@ public class TramiteVersion extends ModelApi {
 	private boolean limiteTramitacion;
 
 	/** num limite tramitacion. */
-	private int numLimiteTramitacion;
+	private Integer numLimiteTramitacion;
 
 	/** int limite tramitacion. */
-	private int intLimiteTramitacion;
+	private Integer intLimiteTramitacion;
 
 	/** desactivacion. */
 	private boolean desactivacion;
@@ -343,7 +343,7 @@ public class TramiteVersion extends ModelApi {
 	 *
 	 * @return el valor de persistenciaDias
 	 */
-	public int getPersistenciaDias() {
+	public Integer getPersistenciaDias() {
 		return persistenciaDias;
 	}
 
@@ -353,46 +353,24 @@ public class TramiteVersion extends ModelApi {
 	 * @param persistenciaDias
 	 *            el nuevo valor de persistenciaDias
 	 */
-	public void setPersistenciaDias(final int persistenciaDias) {
+	public void setPersistenciaDias(final Integer persistenciaDias) {
 		this.persistenciaDias = persistenciaDias;
 	}
 
-	/**
-	 * Obtiene el valor de idScriptPersonalizacion.
-	 *
-	 * @return el valor de idScriptPersonalizacion
-	 */
-	public Long getIdScriptPersonalizacion() {
-		return idScriptPersonalizacion;
+	public Script getScriptPersonalizacion() {
+		return scriptPersonalizacion;
 	}
 
-	/**
-	 * Establece el valor de idScriptPersonalizacion.
-	 *
-	 * @param idScriptPersonalizacion
-	 *            el nuevo valor de idScriptPersonalizacion
-	 */
-	public void setIdScriptPersonalizacion(final Long idScriptPersonalizacion) {
-		this.idScriptPersonalizacion = idScriptPersonalizacion;
+	public void setScriptPersonalizacion(final Script scriptPersonalizacion) {
+		this.scriptPersonalizacion = scriptPersonalizacion;
 	}
 
-	/**
-	 * Obtiene el valor de idScriptInicializacionTramite.
-	 *
-	 * @return el valor de idScriptInicializacionTramite
-	 */
-	public Long getIdScriptInicializacionTramite() {
-		return idScriptInicializacionTramite;
+	public Script getScriptInicializacionTramite() {
+		return scriptInicializacionTramite;
 	}
 
-	/**
-	 * Establece el valor de idScriptInicializacionTramite.
-	 *
-	 * @param idScriptInicializacionTrámite
-	 *            el nuevo valor de idScriptInicializacionTramite
-	 */
-	public void setIdScriptInicializacionTramite(final Long idScriptInicializacionTrámite) {
-		this.idScriptInicializacionTramite = idScriptInicializacionTrámite;
+	public void setScriptInicializacionTramite(final Script scriptInicializacionTramite) {
+		this.scriptInicializacionTramite = scriptInicializacionTramite;
 	}
 
 	/**
@@ -476,7 +454,7 @@ public class TramiteVersion extends ModelApi {
 	 *
 	 * @return el valor de numLimiteTramitacion
 	 */
-	public int getNumLimiteTramitacion() {
+	public Integer getNumLimiteTramitacion() {
 		return numLimiteTramitacion;
 	}
 
@@ -486,7 +464,7 @@ public class TramiteVersion extends ModelApi {
 	 * @param numLimiteTramitacion
 	 *            el nuevo valor de numLimiteTramitacion
 	 */
-	public void setNumLimiteTramitacion(final int numLimiteTramitacion) {
+	public void setNumLimiteTramitacion(final Integer numLimiteTramitacion) {
 		this.numLimiteTramitacion = numLimiteTramitacion;
 	}
 
@@ -495,7 +473,7 @@ public class TramiteVersion extends ModelApi {
 	 *
 	 * @return el valor de intLimiteTramitacion
 	 */
-	public int getIntLimiteTramitacion() {
+	public Integer getIntLimiteTramitacion() {
 		return intLimiteTramitacion;
 	}
 
@@ -505,7 +483,7 @@ public class TramiteVersion extends ModelApi {
 	 * @param intLimiteTramitacion
 	 *            el nuevo valor de intLimiteTramitacion
 	 */
-	public void setIntLimiteTramitacion(final int intLimiteTramitacion) {
+	public void setIntLimiteTramitacion(final Integer intLimiteTramitacion) {
 		this.intLimiteTramitacion = intLimiteTramitacion;
 	}
 

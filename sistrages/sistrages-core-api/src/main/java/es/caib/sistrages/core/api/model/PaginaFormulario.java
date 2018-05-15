@@ -104,4 +104,34 @@ public final class PaginaFormulario extends ModelApi {
 		}
 		return res;
 	}
+
+	public LineaComponentesFormulario getLinea(final Long idLinea) {
+		LineaComponentesFormulario res = null;
+		if (lineas != null) {
+			for (final LineaComponentesFormulario lc : lineas) {
+				if (lc.getId().equals(idLinea)) {
+					res = lc;
+					break;
+				}
+			}
+		}
+		return res;
+	}
+
+	public LineaComponentesFormulario getLineaComponente(final Long idComponente) {
+		LineaComponentesFormulario res = null;
+		if (lineas != null) {
+			for (final LineaComponentesFormulario lc : lineas) {
+				if (lc.getComponentes() != null) {
+					for (final ComponenteFormulario cf : lc.getComponentes()) {
+						if (cf.getId().equals(idComponente)) {
+							res = lc;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return res;
+	}
 }

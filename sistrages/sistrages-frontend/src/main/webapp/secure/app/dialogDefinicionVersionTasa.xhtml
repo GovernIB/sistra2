@@ -7,7 +7,8 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
-
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="tipoFormularioObligatoriedad" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePago" var="tipoPago" />
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
@@ -22,76 +23,79 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionTasa.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogDefinicionVersionTasa.id}"/>
+		<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionTasa.jsonTramiteVersion}"/>
 		<f:viewAction action="#{dialogDefinicionVersionTasa.init}" />
 	</f:metadata>
 
 	<h:form id="formdialogDefinicionVersionTasa" styleClass="margin-top-10">
-  			<p:outputPanel>
-				<!-- Contenido dialogo -->
-				<!-- Growl mensajes -->
-				<p:growl id="growl" widgetVar="growl" life="2000" sticky="false" />
+ 			<p:outputPanel>
+			<!-- Contenido dialogo -->
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" life="2000" sticky="false" />
+
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+				<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
+	          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.codigo}" required="true" styleClass="w35"/>
+
+	            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionTasa.descripcion']}" />
+	            <p:outputPanel styleClass="ui-inputgroup">
+	           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
+	           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionTasa.editarDescripcion()}"
+							process="@this" update="growl">
+								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoDescripcion}" update="growl descripcion" />
+					</p:commandButton>
+	       		</p:outputPanel>
+
+	         	<p:outputLabel for="obligatoriedad" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad']}" />
+	         	<p:panelGrid styleClass="noBorders">
+	       	  		<p:row>
+		       	  		<p:column styleClass="noPadding-left">
+		       	  			 <p:selectOneMenu id="obligatoriedad" value="#{dialogDefinicionVersionTasa.data.obligatoriedad}" update="growl">
+							    <f:selectItems value="#{tipoFormularioObligatoriedad.ALL_VALUES}"  itemLabel="#{msg['typeFormularioObligatoriedad.'+=tipo]}" var="tipo" />
+							</p:selectOneMenu>
+					     </p:column>
+					     <p:column>
+					     	<p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(dialogDefinicionVersionTasa.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
+								process="@this" update="growl" styleClass="#{dialogDefinicionVersionTasa.getColorScript(dialogDefinicionVersionTasa.data.scriptObligatoriedad)}">
+								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoObligatoriedad}" update="growl scriptObligatoriedad" />
+							</p:commandButton>
+						</p:column>
+					</p:row>
+	         	</p:panelGrid>
+
+	            <p:outputLabel for="scriptdepago" value="#{msg['dialogDefinicionVersionTasa.scriptdepago']}" />
+	          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(dialogDefinicionVersionTasa.data.scriptPago)}" value="#{msg['dialogDefinicionVersionTasa.scriptdepago.establecerdatos']}"
+								process="@this" update="growl" styleClass="#{dialogDefinicionVersionTasa.getColorScript(dialogDefinicionVersionTasa.data.scriptPago)}">
+							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoPago}" update="growl scriptdepago" />
+				</p:commandButton>
+
+	            <p:outputLabel for="plugindepago" value="#{msg['dialogDefinicionVersionTasa.plugindepago']}" />
+	            <p:selectOneMenu id="plugindepago" value="#{dialogDefinicionVersionTasa.idPlugin}"  style="width:200px" >
+				    <f:selectItems value="#{dialogDefinicionVersionTasa.plugins}" var="plugin" itemValue="#{plugin.id}" itemLabel="#{plugin.instancia}" />
+				</p:selectOneMenu >
+
+	          	<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionTasa.tipopago']}" />
+	          	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">
+	          			 <p:selectOneMenu id="tipo" value="#{dialogDefinicionVersionTasa.data.tipo}" update="growl">
+						    <f:selectItems value="#{tipoPago.ALL_VALUES}"  itemLabel="#{msg['typePago.'+=tipo]}" var="tipo" />
+						</p:selectOneMenu>
+				</p:panelGrid>
+
+				<p:outputLabel value="#{msg['dialogDefinicionVersionTasa.simularpago']}" />
+				<p:selectBooleanCheckbox id="simularpago" value="#{dialogDefinicionVersionTasa.data.simulado}" />
 
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
-
-					<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
-		          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.codigo}" required="true" disabled="true" styleClass="w35"/>
-
-		            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionTasa.descripcion']}" />
-		            <p:outputPanel styleClass="ui-inputgroup">
-		           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
-		           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionTasa.editarDescripcion()}"
-								process="@this" update="growl"/>
-		       		</p:outputPanel>
-
-					<p:outputLabel for="identificadorDoc" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
-		          	<p:inputText id="identificadorDoc" value="#{dialogDefinicionVersionTasa.data.codigo}" required="true" disabled="true" styleClass="w35"/>
-
-
-		         	<p:outputLabel value="#{msg['dialogDefinicionVersionTasa.obligatoriedad']}" />
-		         	<p:panelGrid styleClass="noBorders">
-		       	  		<p:row>
-			       	  		<p:column styleClass="noPadding-left">
-					         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="obligatorio">
-						            <f:selectItem itemLabel="#{msg['dialogDefinicionVersionTasa.obligatoriedad.obligatorio']}" itemValue="obligatorio" />
-						            <f:selectItem itemLabel="#{msg['dialogDefinicionVersionTasa.obligatoriedad.opcional']}" itemValue="opcional" />
-						            <f:selectItem itemLabel="#{msg['dialogDefinicionVersionTasa.obligatoriedad.dependiente']}" itemValue="dependiente" />
-							     </p:selectOneRadio>
-						     </p:column>
-						     <p:column>
-						     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript()}" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
-									process="@this" update="growl"/>
-							</p:column>
-						</p:row>
-		         	</p:panelGrid>
-
-		            <p:outputLabel for="scriptdepago" value="#{msg['dialogDefinicionVersionTasa.scriptdepago']}" />
-		          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript()}" value="#{msg['dialogDefinicionVersionTasa.scriptdepago.establecerdatos']}"
-									process="@this" update="growl"/>
-
-		            <p:outputLabel for="plugindepago" value="#{msg['dialogDefinicionVersionTasa.plugindepago']}" />
-		          	<p:inputText id="plugindepago" disabled="true" size="30" />
-
-		          	<p:outputLabel value="#{msg['dialogDefinicionVersionTasa.tipopago']}" />
-		          	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">
-			          	<p:selectBooleanCheckbox id="telematico" disabled="true" value="true" itemLabel="#{msg['dialogDefinicionVersionTasa.tipopago.telematica']}"/>
-			          	<p:selectBooleanCheckbox id="presencial" disabled="true" value="true" itemLabel="#{msg['dialogDefinicionVersionTasa.tipopago.presencial']}"/>
-					</p:panelGrid>
-
-					<p:outputLabel value="#{msg['dialogDefinicionVersionTasa.simularpago']}" />
-					<p:selectBooleanCheckbox id="simularpago" disabled="true" value="true" />
-
-
-				</h:panelGrid>
-			</p:outputPanel>
-			<p:outputPanel styleClass="botonera">
-		     	<p:toolbar>
-					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionTasa.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul"/>
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionTasa.cancelar()}" process="@this" />
-					</f:facet>
-				</p:toolbar>
-		    </p:outputPanel>
+			</h:panelGrid>
+		</p:outputPanel>
+		<p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+				<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionTasa.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul"/>
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionTasa.cancelar()}" process="@this" />
+				</f:facet>
+			</p:toolbar>
+	    </p:outputPanel>
 	</h:form>
 </h:body>
 </f:view>

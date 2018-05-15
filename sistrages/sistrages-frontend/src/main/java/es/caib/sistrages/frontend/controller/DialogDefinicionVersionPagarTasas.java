@@ -1,7 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,8 +8,10 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tasa;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePago;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -33,6 +33,12 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	/** Id. **/
 	private String id;
 
+	/** Tramite version. **/
+	private TramiteVersion tramiteVersion;
+
+	/** JSON tramite version. **/
+	private String jsonTramiteVersion;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
 	 */
@@ -46,9 +52,12 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 		data = new Tasa();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
 		data.setTipo(TypePago.PRESENCIAL);
-		data.setTipoPlugin("Plugin");
+		data.setTipoPlugin(null);
 		data.setSimulado(false);
 		data.setOrden(0);
+		if (jsonTramiteVersion != null) {
+			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		}
 	}
 
 	/**
@@ -75,12 +84,11 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	 *
 	 */
 	public void editarDescripcion() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 		if (data.getDescripcion() == null) {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					idiomas, idiomas);
+					tramiteVersion);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
 	}
 
@@ -133,6 +141,14 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	 */
 	public void setId(final String id) {
 		this.id = id;
+	}
+
+	public String getJsonTramiteVersion() {
+		return jsonTramiteVersion;
+	}
+
+	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
+		this.jsonTramiteVersion = jsonTramiteVersion;
 	}
 
 }

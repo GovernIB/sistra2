@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.PluginService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.repository.dao.PluginsDao;
 
-// TODO: Auto-generated Javadoc
 /**
  * La clase PluginServiceImpl.
  */
@@ -94,6 +94,19 @@ public class PluginServiceImpl implements PluginService {
 	@NegocioInterceptor
 	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
 		return pluginDao.getAllByFiltro(ambito, idEntidad, filtro);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.PluginService#listPlugin(es.caib.sistrages
+	 * .core.api.model.types.TypeAmbito, java.lang.Long, TypePlugin)
+	 */
+	@Override
+	@NegocioInterceptor
+	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final TypePlugin tipo) {
+		return pluginDao.getAllByFiltro(ambito, idEntidad, tipo);
 	}
 
 }

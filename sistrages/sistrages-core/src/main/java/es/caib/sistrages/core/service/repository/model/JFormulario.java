@@ -36,10 +36,6 @@ public class JFormulario implements IModelApi {
 	@Column(name = "FOR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FOR_CABLOG")
-	private JFichero logoCabecera;
-
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FOR_SCRPLT")
 	private JScript scriptPlantilla;
@@ -54,10 +50,10 @@ public class JFormulario implements IModelApi {
 	@Column(name = "FOR_CABFOR", nullable = false, precision = 1, scale = 0)
 	private boolean mostrarCabecera;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = { CascadeType.ALL })
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = CascadeType.ALL)
 	private Set<JPaginaFormulario> paginas = new HashSet<>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = { CascadeType.ALL })
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = CascadeType.ALL)
 	private Set<JPlantillaFormulario> plantillas = new HashSet<JPlantillaFormulario>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario")
@@ -73,14 +69,6 @@ public class JFormulario implements IModelApi {
 
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
-	}
-
-	public JFichero getLogoCabecera() {
-		return this.logoCabecera;
-	}
-
-	public void setLogoCabecera(final JFichero logoCabecera) {
-		this.logoCabecera = logoCabecera;
 	}
 
 	public JScript getScriptPlantilla() {
@@ -167,6 +155,16 @@ public class JFormulario implements IModelApi {
 		return jModel;
 	}
 
+	public static JFormulario createDefault(final JLiteral pJTextoCabecera) {
+		final JFormulario jForm = new JFormulario();
+
+		jForm.setMostrarCabecera(true);
+		jForm.setTextoCabecera(pJTextoCabecera);
+		jForm.setPermitirAccionesPersonalizadas(false);
+
+		return jForm;
+	}
+
 	public static JFormulario mergePaginasModel(final JFormulario jFormulario, final FormularioInterno pFormInt) {
 		JFormulario jModel = null;
 
@@ -200,7 +198,6 @@ public class JFormulario implements IModelApi {
 
 				if (pag.getId() == null) {
 					final JPaginaFormulario jPagina = JPaginaFormulario.fromModel(pag);
-					jPagina.setCodigo(pag.getId());
 					jPagina.setOrden(orden);
 					jPagina.setFormulario(jFormulario);
 					jFormulario.getPaginas().add(jPagina);

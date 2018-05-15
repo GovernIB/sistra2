@@ -14,8 +14,8 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -145,11 +145,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void updateTramiteVersion(final TramiteVersion tramiteVersion, final boolean borrarScriptPI,
-			final Script scriptParamsIniciales, final boolean borrarScriptPersonalizacion,
-			final Script scriptPersonalizacion) {
-		tramiteService.updateTramiteVersion(tramiteVersion, borrarScriptPI, scriptParamsIniciales,
-				borrarScriptPersonalizacion, scriptPersonalizacion);
+	public void updateTramiteVersion(final TramiteVersion tramiteVersion) {
+		tramiteService.updateTramiteVersion(tramiteVersion);
 	}
 
 	@Override
@@ -276,6 +273,18 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void removeTasa(final Long idTramitePaso, final Long idTasa) {
 		tramiteService.removeTasa(idTramitePaso, idTasa);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void uploadDocAnexo(final Long idDocumento, final Fichero fichero, final byte[] contents) {
+		tramiteService.uploadDocAnexo(idDocumento, fichero, contents);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removeDocAnexo(final Long idDocumento) {
+		tramiteService.removeDocAnexo(idDocumento);
 	}
 
 }

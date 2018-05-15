@@ -24,61 +24,86 @@ public class JEntidad implements IModelApi {
 
 	private static final long serialVersionUID = 1L;
 
+	/** Código interno */
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_ENTIDA_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_ENTIDA_SEQ", sequenceName = "STG_ENTIDA_SEQ")
 	@Column(name = "ENT_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	/** Nombre Entidad */
 	@ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_NOMBRE", nullable = false)
 	private JLiteral nombre;
 
+	/** Código DIR3 */
 	@Column(name = "ENT_DIR3", unique = true, nullable = false, length = 10)
 	private String codigoDir3;
 
+	/** Indica si la entidad está activa */
 	@Column(name = "ENT_ACTIVA", nullable = false, precision = 1, scale = 0)
 	private boolean activa;
 
+	/** Role asociado al administrador de la entidad */
 	@Column(name = "ENT_ROLADM", nullable = false, length = 100)
 	private String roleAdministrador;
 
+	/** Logo entidad Gestor Trámites */
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_LOGOTT")
 	private JFichero logoAsistenteTramitacion;
 
+	/** CSS Asistente Tramitación **/
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_CSSTT")
 	private JFichero cssAsistenteTramitacion;
 
+	/** Logo entidad Asistente Tramitación */
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_LOGOTG")
 	private JFichero logoGestorTramites;
 
+	/** Pie de página de contacto para Asistente Tramitación (HTML) */
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_PIETT")
 	private JLiteral piePaginaAsistenteTramitacion;
 
+	/** Email contacto genérico */
 	@Column(name = "ENT_EMAIL", length = 500)
 	private String email;
 
+	/** Habilitado contacto email */
 	@Column(name = "ENT_CNTEMA", nullable = false, precision = 1, scale = 0)
 	private boolean contactoEmail;
 
+	/** Habilitado contacto teléfono */
 	@Column(name = "ENT_CNTTEL", nullable = false, precision = 1, scale = 0)
 	private boolean contactoTelefono;
 
+	/** Habilitado contacto url */
 	@Column(name = "ENT_CNTURL", nullable = false, precision = 1, scale = 0)
 	private boolean contactoUrl;
 
+	/** Habilitado contacto formulario incidencias */
 	@Column(name = "ENT_CNTFOR", nullable = false, precision = 1, scale = 0)
 	private boolean contactoFormularioIncidencias;
 
+	/** Teléfono contacto */
 	@Column(name = "ENT_TELEFO", length = 10)
 	private String telefono;
 
+	/** Url soporte */
 	@Column(name = "ENT_URLSOP", length = 500)
 	private String urlSoporte;
+
+	/** Url Carpeta Ciudadana */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_URLCAR")
+	private JLiteral urlCarpetaCiudadana;
+
+	/** Dias preregistro */
+	@Column(name = "ENT_PRGDIA")
+	private Integer diasPreregistro;
 
 	public Long getCodigo() {
 		return this.codigo;
@@ -206,6 +231,22 @@ public class JEntidad implements IModelApi {
 
 	public void setUrlSoporte(final String urlSoporte) {
 		this.urlSoporte = urlSoporte;
+	}
+
+	public JLiteral getUrlCarpetaCiudadana() {
+		return urlCarpetaCiudadana;
+	}
+
+	public void setUrlCarpetaCiudadana(final JLiteral urlCarpetaCiudadana) {
+		this.urlCarpetaCiudadana = urlCarpetaCiudadana;
+	}
+
+	public Integer getDiasPreregistro() {
+		return diasPreregistro;
+	}
+
+	public void setDiasPreregistro(final Integer diasPreregistro) {
+		this.diasPreregistro = diasPreregistro;
 	}
 
 	public Entidad toModel() {

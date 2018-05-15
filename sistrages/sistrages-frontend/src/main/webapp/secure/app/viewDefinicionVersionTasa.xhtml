@@ -4,6 +4,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="tipoFormularioObligatoriedad" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePago" var="tipoPago" />
+
 	<h:form id="formViewDefinicionVersionTasa" styleClass="h100">
 
 		<!-- Growl mensajes -->
@@ -13,13 +16,13 @@
         <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionTasa.identificador']}" />
-          	<p:inputText id="identificador" value="#{viewDefinicionVersionTasa.data.codigo}" required="true" disabled="true" styleClass="w35"/>
+          	<p:inputText id="identificador" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.codigo}" required="true" disabled="true" styleClass="w35"/>
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionTasa.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" value="#{viewDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersionTasa.editar()}"
+           		<p:inputText id="descripcion" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tasaTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
 
@@ -27,40 +30,46 @@
          	<p:panelGrid styleClass="noBorders">
        	  		<p:row>
 	       	  		<p:column styleClass="noPadding-left">
-			         	<p:selectOneRadio id="obligatoriedad" disabled="true" value="obligatorio">
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionTasa.obligatoriedad.obligatorio']}" itemValue="obligatorio" />
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionTasa.obligatoriedad.opcional']}" itemValue="opcional" />
-				            <f:selectItem itemLabel="#{msg['viewDefinicionVersionTasa.obligatoriedad.dependiente']}" itemValue="dependiente" />
-					     </p:selectOneRadio>
+			         		<p:selectOneMenu id="obligatoriedad" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.obligatoriedad}" disabled="true">
+							    <f:selectItems value="#{tipoFormularioObligatoriedad.ALL_VALUES}"  itemLabel="#{msg['typeFormularioObligatoriedad.'+=tipo]}" var="tipo" />
+							</p:selectOneMenu>
 				     </p:column>
 				     <p:column>
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersionTasa.editarScript()}" value="#{msg['viewDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
-							process="@this" update="growl"/>
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
+							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad eq null}"
+							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad)}" >
+
+						</p:commandButton>
 					</p:column>
 				</p:row>
          	</p:panelGrid>
 
             <p:outputLabel for="scriptdepago" value="#{msg['viewDefinicionVersionTasa.scriptdepago']}" />
-          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersionTasa.editarScript()}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
-							process="@this" update="growl"/>
+          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago.id)}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
+
+							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago eq null}"
+							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago)}" />
 
             <p:outputLabel for="plugindepago" value="#{msg['viewDefinicionVersionTasa.plugindepago']}" />
-          	<p:inputText id="plugindepago" disabled="true" size="30" />
+          	<p:inputText id="plugindepago" disabled="true" size="30" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.tipoPlugin.instancia}"  />
 
           	<p:outputLabel value="#{msg['viewDefinicionVersionTasa.tipopago']}" />
           	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">
-	          	<p:selectBooleanCheckbox id="telematico" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionTasa.tipopago.telematica']}"/>
-	          	<p:selectBooleanCheckbox id="presencial" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionTasa.tipopago.presencial']}"/>
+          		<p:selectOneMenu id="tipo" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.tipo}" disabled="true">
+					<f:selectItems value="#{tipoPago.ALL_VALUES}"  itemLabel="#{msg['typePago.'+=tipo]}" var="tipo" />
+				</p:selectOneMenu>
 			</p:panelGrid>
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionTasa.simularpago']}" />
-			<p:selectBooleanCheckbox id="simularpago" disabled="true" value="true" />
+			<p:selectBooleanCheckbox id="simularpago" disabled="true" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.simulado}" />
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
-						actionListener="#{viewDefinicionVersionTasa.editar()}"
-						process="@this" update="growl" />
+						actionListener="#{viewDefinicionVersion.editarTasaTramite()}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionTasa" />
+			       	</p:commandButton>
 				</p:outputPanel>
 			</f:facet>
 

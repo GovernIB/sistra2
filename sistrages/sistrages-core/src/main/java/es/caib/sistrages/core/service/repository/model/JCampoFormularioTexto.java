@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypeSeparadorNumero;
 
 /**
@@ -26,7 +28,7 @@ public class JCampoFormularioTexto implements IModelApi {
 	@Column(name = "CTX_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@MapsId
 	@JoinColumn(name = "CTX_CODIGO")
 	private JCampoFormulario campoFormulario;
@@ -291,6 +293,25 @@ public class JCampoFormularioTexto implements IModelApi {
 		}
 
 		return campoTexto;
+	}
+
+	public static JCampoFormularioTexto createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+		final JCampoFormularioTexto jModel = new JCampoFormularioTexto();
+		jModel.setOculto(false);
+		jModel.setTipo(TypeCampoTexto.NORMAL.name());
+		jModel.setNormalTamanyo(10);
+		jModel.setNormalMultilinea(false);
+		jModel.setNormalNumeroLineas(1);
+		jModel.setNumeroConSigno(false);
+		jModel.setIdentNif(false);
+		jModel.setIdentCif(false);
+		jModel.setIdentNie(false);
+		jModel.setIdentNss(false);
+		jModel.setTelefonoFijo(false);
+		jModel.setTelefonoMovil(false);
+		jModel.setPermiteRango(false);
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea));
+		return jModel;
 	}
 
 }

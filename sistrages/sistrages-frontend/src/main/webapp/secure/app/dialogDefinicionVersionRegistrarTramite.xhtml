@@ -25,7 +25,8 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionRegistrarTramite.modoAcceso}"/>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionRegistrarTramite.id}"/>
+		<f:viewParam name="ID" value="#{dialogDefinicionVersionRegistrarTramite.id}"/>
+		<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionRegistrarTramite.jsonTramiteVersion}"/>
 		<f:viewAction action="#{dialogDefinicionVersionRegistrarTramite.init}" />
 	</f:metadata>
 	<h:form id="formdialogDefinicionVersionRegistrarTramite" styleClass="margin-top-10">
@@ -44,15 +45,15 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="oficina" disabled="true" size="30"
-							required="true" />
+						<p:inputText id="oficina" size="30"
+							required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}"  />
 					</p:column>
 					<p:column>
 						<p:outputLabel for="libro"
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="libro" disabled="true" size="30" required="true" />
+						<p:inputText id="libro" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" />
 					</p:column>
 				</p:row>
 				<p:row>
@@ -61,63 +62,75 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.tipo']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="tipo" disabled="true" size="30" required="true" />
+						<p:inputText id="tipo" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoTipoAsunto}"  />
 					</p:column>
 					<p:column>
 						<p:outputLabel for="organo"
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.organo']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="organo" disabled="true" size="30" required="true" />
+						<p:inputText id="organo" size="30"  />
 					</p:column>
 
 				</p:row>
 				<p:row>
 					<p:column colspan="4">
-						<p:commandButton icon="fa fa-bolt"
-							actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript()}"
-							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.parametros']}"
-							process="@this" update="growl" />
+						<p:commandButton id="buttonScript1" icon="fa fa-bolt"
+							actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
+							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.parametros']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
+							process="@this" update="growl">
+							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRegistro}" update="growl buttonScript1"/>
+						</p:commandButton>
 					</p:column>
 				</p:row>
 			</p:panelGrid>
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instrucciones']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="instrucciones" required="true" disabled="true" styleClass="w85"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstrucciones()}"
-						process="@this" update="growl"/>
+           		<p:inputText id="instrucciones" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesPresentacion.getTraduccion(sessionBean.lang)}" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstPresentacion()}"
+						process="@this" update="growl">
+					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoPresentacion}" update="growl instrucciones"/>
+				  </p:commandButton>
        		</p:outputPanel>
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.tramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstrucciones()}"
-						process="@this" update="growl"/>
+           		<p:inputText id="tramitacion" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang)}"  styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"
+						process="@this" update="growl">
+					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoInstrucciones}" update="growl tramitacion"/>
+				</p:commandButton>
        		</p:outputPanel>
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.presentacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript()}"
-						process="@this" update="growl" value="#{msg['dialogDefinicionVersionRegistrarTramite.presentacion.establecer']}"/>
+           		<p:commandButton id="buttonScript2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptPresentador)}"
+						process="@this" update="growl" value="#{msg['dialogDefinicionVersionRegistrarTramite.presentacion.establecer']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptPresentador)}">
+						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptPresentador}" update="growl buttonScript2"/>
+				</p:commandButton>
 				<p:spacer width="30" height="1"/>
-				<p:selectBooleanCheckbox id="firmar" disabled="true" value="true" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.presentacion.firmar']}"/>
        		</p:outputPanel>
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.representacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-            <p:selectBooleanCheckbox id="admite" disabled="true" value="true" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}"/>
+            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}"/>
             <p:spacer width="30" height="1"/>
-           		<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript()}"
-						process="@this" update="growl" value="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.establecer']}"/>
+           		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
+						process="@this" update="growl" value="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.establecer']}"
+						styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
+						>
+						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoPresentacion}" update="growl buttonScript3"/>
+				</p:commandButton>
 				<p:spacer width="30" height="1"/>
-				<p:selectBooleanCheckbox id="valida" disabled="true" value="true" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}"/>
+				<p:selectBooleanCheckbox id="valida" value="true" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>
 
        		<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.registrar']}" />
-			<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript()}"
-						process="@this" update="growl"/>
-
+			<p:commandButton id="buttonScript4" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptValidarRegistrar)}"
+						process="@this" update="growl" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptValidarRegistrar)}" >
+					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptValidarRegistro}" update="growl buttonScript4"/>
+			</p:commandButton>
 		</h:panelGrid>
 		</p:outputPanel>
 		<p:outputPanel styleClass="botonera">

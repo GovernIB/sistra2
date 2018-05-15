@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.types.TypeEtiqueta;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JEtiquetaFormulario
@@ -71,6 +72,13 @@ public class JEtiquetaFormulario implements IModelApi {
 		}
 
 		return etiqueta;
+	}
+
+	public static JEtiquetaFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+		final JEtiquetaFormulario jModel = new JEtiquetaFormulario();
+		jModel.setTipo(TypeEtiqueta.NORMAL.toString());
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.ETIQUETA, pOrden, pJLinea));
+		return jModel;
 	}
 
 }

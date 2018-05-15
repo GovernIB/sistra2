@@ -8,8 +8,6 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypePropiedadGlobal {
 
-	/** Path almacenamiento ficheros. */
-	PATH_ALMACENAMIENTO_FICHEROS("ficherosExternos.path"),
 	/** Propiedad test. */
 	TEST("test.propiedad1");
 

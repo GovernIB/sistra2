@@ -1,7 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -10,7 +8,9 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -36,6 +36,12 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	/** Data. **/
 	private TramitePasoDebeSaber data;
 
+	/** JSON tramite version. **/
+	private String jsonTramiteVersion;
+
+	/** Tramite version. **/
+	private TramiteVersion tramiteVersion;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionDebeSaber.
 	 */
@@ -45,6 +51,9 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 	public void init() {
 		data = (TramitePasoDebeSaber) tramiteService.getTramitePaso(Long.valueOf(id));
+		if (jsonTramiteVersion != null) {
+			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		}
 	}
 
 	/**
@@ -80,13 +89,12 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	 *
 	 */
 	public void editar() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasSoportados(data.getTramiteVersion());
 		if (data.getInstruccionesIniciales() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, data.getInstruccionesIniciales(), idiomas,
-					idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, data.getInstruccionesIniciales(),
+					tramiteVersion);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getInstruccionesIniciales(), idiomas,
-					idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getInstruccionesIniciales(),
+					tramiteVersion);
 		}
 	}
 
@@ -141,6 +149,14 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	 */
 	public void setData(final TramitePasoDebeSaber data) {
 		this.data = data;
+	}
+
+	public String getJsonTramiteVersion() {
+		return jsonTramiteVersion;
+	}
+
+	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
+		this.jsonTramiteVersion = jsonTramiteVersion;
 	}
 
 }

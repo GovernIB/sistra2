@@ -1,7 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,8 +8,10 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -34,6 +34,12 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	/** Id. **/
 	private String id;
 
+	/** Json tramite version. **/
+	private String jsonTramiteVersion;
+
+	/** Tramite version. **/
+	private TramiteVersion tramiteVersion;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
 	 */
@@ -48,7 +54,9 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 		data = new FormularioTramite();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
 		data.setTipo(TypeFormulario.TRAMITE);
-
+		if (jsonTramiteVersion != null) {
+			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		}
 	}
 
 	/**
@@ -86,12 +94,11 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 *
 	 */
 	public void editarDescripcion() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 		if (data.getDescripcion() == null) {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, UtilTraducciones.getTraduccionesPorDefecto(),
-					idiomas, idiomas);
+					tramiteVersion);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
 	}
 
@@ -150,6 +157,21 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 */
 	public void setId(final String id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the jsonTramiteVersion
+	 */
+	public String getJsonTramiteVersion() {
+		return jsonTramiteVersion;
+	}
+
+	/**
+	 * @param jsonTramiteVersion
+	 *            the jsonTramiteVersion to set
+	 */
+	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
+		this.jsonTramiteVersion = jsonTramiteVersion;
 	}
 
 }

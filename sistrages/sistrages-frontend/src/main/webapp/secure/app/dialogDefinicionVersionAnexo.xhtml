@@ -16,6 +16,7 @@
 		<f:metadata>
 			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionAnexo.modoAcceso}"/>
 			<f:viewParam name="ID" value="#{dialogDefinicionVersionAnexo.id}" />
+			<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionAnexo.jsonTramiteVersion}"/>
 			<f:viewAction action="#{dialogDefinicionVersionAnexo.init}" />
 		</f:metadata>
 
@@ -58,8 +59,11 @@
 		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
 			     </p:selectOneRadio>
 
-		     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.script()}" value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
-					process="@this" update="growl"/>
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+					styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}"
+					process="@this" update="growl">
+					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoObligatoriedad}" update="growl" />
+				</p:commandButton>
          	</p:panelGrid>
 
         	<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.ayuda']}" />
@@ -70,8 +74,15 @@
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.ayuda.fichero']}" />
 					</p:outputPanel>
-					<p:inputText id="fichero_input"  styleClass="w85" type="file"/>
-
+					<p:column>
+						<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
+		           		<p:commandLink action="#{dialogDefinicionVersionAnexo.descargaFichero(dialogDefinicionVersionAnexo.data.ayudaFichero)}" target="_blank" value="#{dialogDefinicionVersionAnexo.data.ayudaFichero.nombre}" rendered="#{!empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
+		           		<p:spacer width="20" height="1"/>
+		           		<p:commandButton id="btnFichero" icon="fa fa-cog" process="@this" update="growl" actionListener="#{dialogDefinicionVersionAnexo.subirFichero()}" disabled="#{!dialogDefinicionVersionAnexo.permiteEditar}">
+		           			<p:ajax event="dialogReturn" update="formDialogDefinicionVersionAnexo growl"/>
+		           			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.uploadDoc']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		           		</p:commandButton>
+					</p:column>
 					<p:outputPanel>
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.ayuda.url']}" />
@@ -140,13 +151,19 @@
 					        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" itemValue="anexarfirmado" />
 					        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" itemValue="firmar" />
 						     </p:selectOneRadio>
-							<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.script()}" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
-									process="@this" update="growl"/>
+							<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}"
+									process="@this" update="growl">
+										<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFirmarDigitalmente}" update="growl" />
+							</p:commandButton>
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.scriptvalidacion']}" />
-						<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.script()}"
-									process="@this" update="growl"/>
+						<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(dialogDefinicionVersionAnexo.data.scriptValidacion)}"
+									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptValidacion)}"
+									process="@this" update="growl">
+									<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoValidacion}" update="growl" />
+						</p:commandButton>
 
 					</h:panelGrid>
 
@@ -156,10 +173,11 @@
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel for="presencial" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial']}" />
 					</p:outputPanel>
+					<!--
 					<p:outputPanel>
 						<p:selectBooleanCheckbox id="compulsar" value="#{dialogDefinicionVersionAnexo.data.debeCompulsar}" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial.compulsar']}"/>
 						<p:selectBooleanCheckbox id="presentarfotocopia" value="#{dialogDefinicionVersionAnexo.data.debeFotocopiar}"  itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial.presentarfotocopia']}"/>
-					</p:outputPanel>
+					</p:outputPanel> -->
 	         	</h:panelGrid>
 			</p:outputPanel>
 
@@ -171,6 +189,12 @@
 				</p:outputPanel>
 			</f:facet>
 
+				<p:confirmDialog global="true" >
+					<p:outputPanel styleClass="confirmar_botonera">
+			        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+					</p:outputPanel>
+			    </p:confirmDialog>
 		</h:panelGrid>
 	</h:form>
 </h:body>

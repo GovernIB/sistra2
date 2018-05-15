@@ -11,6 +11,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteTipo;
@@ -85,6 +86,8 @@ public class DialogTramiteVersion extends DialogControllerBase {
 				} else if (tipo.getCodigo().equals("Tasa")) {
 					paso = new TramitePasoTasa();
 				} else if (tipo.getCodigo().equals("Registrar")) {
+					paso = new TramitePasoRegistrar();
+				} else {
 					paso = new TramitePaso();
 				}
 

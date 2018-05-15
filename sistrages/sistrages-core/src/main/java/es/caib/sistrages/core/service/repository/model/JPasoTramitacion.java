@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 
@@ -240,6 +241,10 @@ public class JPasoTramitacion implements IModelApi {
 
 			return this.toModelAnexar();
 
+		} else if (this.getPasoRegistrar() != null) {
+
+			return this.toModelRegistrar();
+
 		} else {
 
 			final TramitePaso paso = new TramitePaso();
@@ -252,6 +257,41 @@ public class JPasoTramitacion implements IModelApi {
 
 		}
 
+	}
+
+	private TramitePasoRegistrar toModelRegistrar() {
+		final TramitePasoRegistrar paso = new TramitePasoRegistrar();
+		paso.setCodigo(this.getIdPasoTramitacion());
+		paso.setDescripcion(this.getDescripcion().toModel());
+		paso.setId(this.getCodigo());
+		paso.setOrden(this.getOrden());
+		paso.setPasoFinal(this.isPasoFinal());
+		paso.setAdmiteRepresentacion(this.getPasoRegistrar().isAdmiteRepresentacion());
+		paso.setCodigoLibroRegistro(this.getPasoRegistrar().getCodigoLibroRegistro());
+		paso.setCodigoOficinaRegistro(this.getPasoRegistrar().getCodigoOficinaRegistro());
+		paso.setCodigoTipoAsunto(this.getPasoRegistrar().getCodigoTipoAsunto());
+		if (this.getPasoRegistrar().getInstruccionesFinTramitacion() != null) {
+			paso.setInstruccionesFinTramitacion(this.getPasoRegistrar().getInstruccionesFinTramitacion().toModel());
+		}
+		if (this.getPasoRegistrar().getInstruccionesPresentacion() != null) {
+			paso.setInstruccionesPresentacion(this.getPasoRegistrar().getInstruccionesPresentacion().toModel());
+		}
+		paso.setTipo(this.getTipoPasoTramitacion().toModel());
+		paso.setValidaRepresentacion(this.getPasoRegistrar().isValidaRepresentacion());
+		if (this.getPasoRegistrar().getScriptDestinoRegistro() != null) {
+			paso.setScriptDestinoRegistro(this.getPasoRegistrar().getScriptDestinoRegistro().toModel());
+		}
+		if (this.getPasoRegistrar().getScriptPresentador() != null) {
+			paso.setScriptPresentador(this.getPasoRegistrar().getScriptPresentador().toModel());
+		}
+		if (this.getPasoRegistrar().getScriptRepresentante() != null) {
+			paso.setScriptRepresentante(this.getPasoRegistrar().getScriptRepresentante().toModel());
+		}
+		if (this.getPasoRegistrar().getScriptValidarRegistrar() != null) {
+			paso.setScriptValidarRegistrar(this.getPasoRegistrar().getScriptValidarRegistrar().toModel());
+		}
+
+		return paso;
 	}
 
 	private TramitePasoAnexar toModelAnexar() {
@@ -281,6 +321,7 @@ public class JPasoTramitacion implements IModelApi {
 		pago.setId(this.getCodigo());
 		pago.setOrden(this.getOrden());
 		pago.setPasoFinal(this.isPasoFinal());
+
 		if (this.getPasoPagos().getPagosTramite() != null) {
 			final List<Tasa> tasas = new ArrayList<>();
 			for (final JPagoTramite jpago : this.getPasoPagos().getPagosTramite()) {
@@ -369,6 +410,12 @@ public class JPasoTramitacion implements IModelApi {
 				final JPasoAnexar jpasoAnexar = JPasoAnexar.fromModel((TramitePasoAnexar) paso);
 				jpaso.setPasoAnexar(jpasoAnexar);
 				jpaso.getPasoAnexar().setPasoTramitacion(jpaso);
+
+			} else if (paso instanceof TramitePasoRegistrar) {
+
+				final JPasoRegistrar jpasoRegistrar = JPasoRegistrar.fromModel((TramitePasoRegistrar) paso);
+				jpaso.setPasoRegistrar(jpasoRegistrar);
+				jpaso.getPasoRegistrar().setPasoTramitacion(jpaso);
 
 			}
 		}

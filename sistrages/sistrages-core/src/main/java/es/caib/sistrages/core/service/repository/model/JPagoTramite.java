@@ -57,8 +57,9 @@ public class JPagoTramite implements IModelApi {
 	@Column(name = "PAG_OBLIGA", nullable = false, length = 1)
 	private String obligatorio;
 
-	@Column(name = "PAG_PLUGIN", nullable = false, length = 20)
-	private String plugin;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PAG_PLUGIN")
+	private JPlugin plugin;
 
 	@Column(name = "PAG_TIPO", nullable = false, length = 1)
 	private String tipo;
@@ -70,94 +71,184 @@ public class JPagoTramite implements IModelApi {
 		// Constructor vacio
 	}
 
+	/**
+	 * @return the codigo
+	 */
 	public Long getCodigo() {
-		return this.codigo;
+		return codigo;
 	}
 
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * @return the pasoPagos
+	 */
 	public JPasoPagos getPasoPagos() {
-		return this.pasoPagos;
+		return pasoPagos;
 	}
 
+	/**
+	 * @param pasoPagos
+	 *            the pasoPagos to set
+	 */
 	public void setPasoPagos(final JPasoPagos pasoPagos) {
 		this.pasoPagos = pasoPagos;
 	}
 
+	/**
+	 * @return the scriptObligatoriedad
+	 */
 	public JScript getScriptObligatoriedad() {
-		return this.scriptObligatoriedad;
+		return scriptObligatoriedad;
 	}
 
+	/**
+	 * @param scriptObligatoriedad
+	 *            the scriptObligatoriedad to set
+	 */
 	public void setScriptObligatoriedad(final JScript scriptObligatoriedad) {
 		this.scriptObligatoriedad = scriptObligatoriedad;
 	}
 
+	/**
+	 * @return the scriptDatosPago
+	 */
 	public JScript getScriptDatosPago() {
-		return this.scriptDatosPago;
+		return scriptDatosPago;
 	}
 
+	/**
+	 * @param scriptDatosPago
+	 *            the scriptDatosPago to set
+	 */
 	public void setScriptDatosPago(final JScript scriptDatosPago) {
 		this.scriptDatosPago = scriptDatosPago;
 	}
 
+	/**
+	 * @return the descripcion
+	 */
 	public JLiteral getDescripcion() {
-		return this.descripcion;
+		return descripcion;
 	}
 
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
 	public void setDescripcion(final JLiteral descripcion) {
 		this.descripcion = descripcion;
 	}
 
+	/**
+	 * @return the identificador
+	 */
 	public String getIdentificador() {
-		return this.identificador;
+		return identificador;
 	}
 
+	/**
+	 * @param identificador
+	 *            the identificador to set
+	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
 	}
 
+	/**
+	 * @return the orden
+	 */
 	public int getOrden() {
-		return this.orden;
+		return orden;
 	}
 
+	/**
+	 * @param orden
+	 *            the orden to set
+	 */
 	public void setOrden(final int orden) {
 		this.orden = orden;
 	}
 
+	/**
+	 * @return the obligatorio
+	 */
 	public String getObligatorio() {
-		return this.obligatorio;
+		return obligatorio;
 	}
 
+	/**
+	 * @param obligatorio
+	 *            the obligatorio to set
+	 */
 	public void setObligatorio(final String obligatorio) {
 		this.obligatorio = obligatorio;
 	}
 
-	public String getPlugin() {
-		return this.plugin;
+	/**
+	 * @return the plugin
+	 */
+	public JPlugin getPlugin() {
+		return plugin;
 	}
 
-	public void setPlugin(final String plugin) {
+	/**
+	 * @param plugin
+	 *            the plugin to set
+	 */
+	public void setPlugin(final JPlugin plugin) {
 		this.plugin = plugin;
 	}
 
+	/**
+	 * @return the tipo
+	 */
 	public String getTipo() {
-		return this.tipo;
+		return tipo;
 	}
 
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
 	public void setTipo(final String tipo) {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * @return the simulado
+	 */
 	public boolean isSimulado() {
-		return this.simulado;
+		return simulado;
 	}
 
+	/**
+	 * @param simulado
+	 *            the simulado to set
+	 */
 	public void setSimulado(final boolean simulado) {
 		this.simulado = simulado;
 	}
 
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * FromModel.
+	 *
+	 * @param tasa
+	 * @return
+	 */
 	public static JPagoTramite fromModel(final Tasa tasa) {
 		JPagoTramite pago = null;
 		if (tasa != null) {
@@ -167,27 +258,52 @@ public class JPagoTramite implements IModelApi {
 				pago.setDescripcion(JLiteral.fromModel(tasa.getDescripcion()));
 			}
 			pago.setIdentificador(tasa.getCodigo());
-			pago.setObligatorio(tasa.getObligatoriedad().toString());
+			if (tasa.getObligatoriedad() != null) {
+				pago.setObligatorio(tasa.getObligatoriedad().toString());
+			}
 			pago.setOrden(tasa.getOrden());
-			pago.setPlugin(tasa.getTipoPlugin());
+			if (tasa.getTipoPlugin() != null) {
+				pago.setPlugin(JPlugin.fromModel(tasa.getTipoPlugin()));
+			}
 			pago.setSimulado(tasa.isSimulado());
-			pago.setTipo(tasa.getTipo().toString());
+			if (tasa.getTipo() != null) {
+				pago.setTipo(tasa.getTipo().toString());
+			}
+			if (tasa.getScriptObligatoriedad() != null) {
+				pago.setScriptObligatoriedad(JScript.fromModel(tasa.getScriptObligatoriedad()));
+			}
+			if (tasa.getScriptPago() != null) {
+				pago.setScriptDatosPago(JScript.fromModel(tasa.getScriptPago()));
+			}
 		}
 		return pago;
 	}
 
+	/**
+	 * toModel.
+	 *
+	 * @return
+	 */
 	public Tasa toModel() {
 		final Tasa tasa = new Tasa();
 		tasa.setId(this.getCodigo());
-		if (tasa.getDescripcion() != null) {
+		if (this.getDescripcion() != null) {
 			tasa.setDescripcion(this.getDescripcion().toModel());
 		}
 		tasa.setCodigo(this.getIdentificador());
 		tasa.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		tasa.setOrden(this.getOrden());
-		tasa.setTipoPlugin(this.getPlugin());
+		if (this.getPlugin() != null) {
+			tasa.setTipoPlugin(this.getPlugin().toModel());
+		}
 		tasa.setSimulado(this.isSimulado());
 		tasa.setTipo(TypePago.fromString(this.getTipo()));
+		if (this.getScriptDatosPago() != null) {
+			tasa.setScriptPago(this.getScriptDatosPago().toModel());
+		}
+		if (this.getScriptObligatoriedad() != null) {
+			tasa.setScriptObligatoriedad(this.getScriptObligatoriedad().toModel());
+		}
 		return tasa;
 	}
 

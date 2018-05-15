@@ -15,9 +15,9 @@ import javax.persistence.Query;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistra2.commons.utils.GeneradorId;
@@ -25,8 +25,6 @@ import es.caib.sistrages.core.api.exception.FicheroExternoException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
 import es.caib.sistrages.core.api.model.Fichero;
-import es.caib.sistrages.core.api.model.types.TypePropiedadGlobal;
-import es.caib.sistrages.core.service.repository.model.JConfiguracionGlobal;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFicheroExterno;
 
@@ -44,12 +42,11 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	private EntityManager entityManager;
 
 	/** Path almacenamiento. */
+	@Value("${ficherosExternos.path}")
 	private String pathAlmacenamientoFicheros;
 
 	@PostConstruct
 	public void init() {
-		// Recupera path almacenamiento
-		pathAlmacenamientoFicheros = getPathAlmacenamiento();
 	}
 
 	@Override
@@ -146,28 +143,6 @@ public class FicheroExternoDaoImpl implements FicheroExternoDao {
 	}
 
 	// ----------- PRIVATE ----------------------
-	/**
-	 * Obtiene path almacenamiento.
-	 *
-	 * @return path almacenamiento
-	 */
-	@SuppressWarnings("unchecked")
-	private String getPathAlmacenamiento() {
-		String path = System.getProperty("es.caib.sistrages." + TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS);
-		if (StringUtils.isBlank(path)) {
-			final Query query = entityManager
-					.createQuery("select p from JConfiguracionGlobal p where p.propiedad = :propiedad");
-			query.setParameter("propiedad", TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS.toString());
-			final List<JConfiguracionGlobal> results = query.getResultList();
-			if (results == null || results.isEmpty() || results.size() > 1) {
-				throw new FicheroExternoException("No existe propiedad de configuracion '"
-						+ TypePropiedadGlobal.PATH_ALMACENAMIENTO_FICHEROS.toString() + "'");
-			}
-			final JConfiguracionGlobal jConfiguracionGlobal = results.get(0);
-			path = jConfiguracionGlobal.getValor();
-		}
-		return path;
-	}
 
 	/**
 	 * Obtiene path fichero.

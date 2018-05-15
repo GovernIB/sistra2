@@ -1,6 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
-import es.caib.sistrages.core.api.model.types.TypeComponenteFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * Componente formulario de tipo campo checkbox.
@@ -18,7 +18,7 @@ public final class ComponenteFormularioCampoCheckbox extends ComponenteFormulari
 	private String valorNoChecked;
 
 	public ComponenteFormularioCampoCheckbox() {
-		this.setTipo(TypeComponenteFormulario.CHECKBOX);
+		this.setTipo(TypeObjetoFormulario.CHECKBOX);
 	}
 
 	public String getValorChecked() {

@@ -14,6 +14,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.PluginService;
 
 /**
@@ -90,6 +91,19 @@ public class PluginServiceBean implements PluginService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
 		return pluginService.listPlugin(ambito, idEntidad, filtro);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.PluginService#listPlugin(es.caib.sistrages
+	 * .core.api.model.types.TypeAmbito, java.lang.Long, TypePlugin)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final TypePlugin tipo) {
+		return pluginService.listPlugin(ambito, idEntidad, tipo);
 	}
 
 }

@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.types.TypeCampoIndexado;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JCampoFormularioIndexado
@@ -208,4 +209,13 @@ public class JCampoFormularioIndexado implements IModelApi {
 		return campoSelector;
 	}
 
+	public static JCampoFormularioIndexado createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+		final JCampoFormularioIndexado jModel = new JCampoFormularioIndexado();
+		jModel.setTipoCampoIndexado(TypeCampoIndexado.SELECTOR.name());
+		jModel.setTipoListaValores(TypeListaValores.FIJA.toString());
+		jModel.setIndiceAlfabetico(false);
+		jModel.setCampoFormulario(
+				JCampoFormulario.createDefault(TypeObjetoFormulario.LISTA_ELEMENTOS, pOrden, pJLinea));
+		return jModel;
+	}
 }

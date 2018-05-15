@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JImagenFormulario
@@ -73,5 +74,11 @@ public class JImagenFormulario implements IModelApi {
 		}
 
 		return imagen;
+	}
+
+	public static JImagenFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+		final JImagenFormulario jModel = new JImagenFormulario();
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.IMAGEN, pOrden, pJLinea));
+		return jModel;
 	}
 }

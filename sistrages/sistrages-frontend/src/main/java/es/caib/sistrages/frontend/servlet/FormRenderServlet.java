@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -150,6 +151,9 @@ public class FormRenderServlet extends HttpServlet {
 				for (final ComponenteFormulario cf : lc.getComponentes()) {
 
 					switch (cf.getTipo()) {
+					case SECCION:
+						campoSeccion(pOut, cf);
+						break;
 					case CAMPO_TEXTO:
 						campoTexto(pOut, cf);
 						break;
@@ -167,10 +171,28 @@ public class FormRenderServlet extends HttpServlet {
 
 				}
 
-				escribeLinea(pOut, "<div class=\"imc-separador\"></div>", 5);
+				escribeLinea(pOut, "<div class=\"imc-separador imc-sep-punt editable\" id=\"L",
+						String.valueOf(lc.getId()), "\"></div>", 5);
 
 			}
 		}
+	}
+
+	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF) {
+		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
+		final StringBuilder estilo = new StringBuilder();
+		estilo.append("imc-el-name-").append(String.valueOf(pCF.getId()));
+
+		escribeLinea(pOut, "<h4 class=\"imc-seccio\">", 5);
+
+		escribeLinea(pOut, "<span class=\"imc-se-marca editable\" id=\"", String.valueOf(pCF.getId()), "\">",
+				componente.getLetra(), "</span>", 6);
+		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
+			escribeLinea(pOut, "<span class=\"imc-se-titol\">", pCF.getTexto().getTraduccion("es"), "</span>", 6);
+		}
+
+		escribeLinea(pOut, "</h4>", 5);
+
 	}
 
 	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF) {
@@ -183,7 +205,7 @@ public class FormRenderServlet extends HttpServlet {
 
 		escribeLinea(pOut, "<div class=\"imc-element ", estilo.toString(), "\" data-type=\"text\">", 5);
 
-		if (pCF.isMostrarTexto()) {
+		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
 			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(pCF.getId()), "\">",
 					pCF.getTexto().getTraduccion("es"), "</label></div>", 6);
 		}

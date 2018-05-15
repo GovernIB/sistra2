@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
-import es.caib.sistrages.core.api.model.types.TypeComponenteFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JElementoFormulario
@@ -36,11 +36,11 @@ public class JElementoFormulario implements IModelApi {
 	@JoinColumn(name = "FEL_CODFLS", nullable = false)
 	private JLineaFormulario lineaFormulario;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FEL_AYUDA")
 	private JLiteral ayuda;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FEL_TEXTO")
 	private JLiteral texto;
 
@@ -230,7 +230,7 @@ public class JElementoFormulario implements IModelApi {
 
 			newModel.setId(codigo);
 			newModel.setIdComponente(identificador);
-			newModel.setTipo(TypeComponenteFormulario.fromString(tipo));
+			newModel.setTipo(TypeObjetoFormulario.fromString(tipo));
 			newModel.setOrden(orden);
 			newModel.setNumColumnas(numeroColumnas);
 
@@ -242,7 +242,7 @@ public class JElementoFormulario implements IModelApi {
 				newModel.setAyuda(ayuda.toModel());
 			}
 
-			newModel.setMostrarTexto(noMostrarTexto);
+			newModel.setNoMostrarTexto(noMostrarTexto);
 			newModel.setAlineacionTexto(TypeAlineacionTexto.fromString(alineacionTexto));
 		} catch (InstantiationException | IllegalAccessException e) {
 			newModel = null;
@@ -250,6 +250,20 @@ public class JElementoFormulario implements IModelApi {
 
 		return newModel;
 
+	}
+
+	public static JElementoFormulario createDefault(final TypeObjetoFormulario pTipoObjeto, final int pOrden,
+			final JLineaFormulario pJLinea) {
+		final JElementoFormulario jModel = new JElementoFormulario();
+		jModel.setIdentificador("DEFAULT_" + System.currentTimeMillis());
+		jModel.setTipo(pTipoObjeto.toString());
+		jModel.setOrden(pOrden);
+		jModel.setNumeroColumnas(1);
+		jModel.setNoMostrarTexto(true);
+		jModel.setAlineacionTexto(TypeAlineacionTexto.IZQUIERDA.toString());
+		jModel.setMostrarEnListaElementos(false);
+		jModel.setLineaFormulario(pJLinea);
+		return jModel;
 	}
 
 }

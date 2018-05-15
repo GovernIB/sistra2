@@ -16,8 +16,6 @@ public final class FormularioInterno extends ModelApi {
 	/** Id. */
 	private Long id;
 
-	private Fichero logoCabecera;
-
 	private Script scriptPlantilla;
 
 	private Literal textoCabecera;
@@ -48,14 +46,6 @@ public final class FormularioInterno extends ModelApi {
 
 	public List<PaginaFormulario> getPaginas() {
 		return paginas;
-	}
-
-	public Fichero getLogoCabecera() {
-		return logoCabecera;
-	}
-
-	public void setLogoCabecera(final Fichero logoCabecera) {
-		this.logoCabecera = logoCabecera;
 	}
 
 	public Script getScriptPlantilla() {

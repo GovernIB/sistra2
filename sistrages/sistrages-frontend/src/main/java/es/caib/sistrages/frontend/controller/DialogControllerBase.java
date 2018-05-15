@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -90,4 +91,18 @@ public abstract class DialogControllerBase {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Ayuda");
 	}
 
+	/**
+	 * Sirve para actualizar el style del script, por si tiene que marcarse de
+	 * colorp orque tiene valor.
+	 *
+	 * @param script
+	 * @return
+	 */
+	public String getColorScript(final Script script) {
+		String className = "";
+		if (script != null) {
+			className = "scriptRelleno";
+		}
+		return className;
+	}
 }

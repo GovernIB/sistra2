@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JLineaFormulario
@@ -39,7 +41,7 @@ public class JLineaFormulario implements IModelApi {
 	@Column(name = "FLS_ORDEN", nullable = false, precision = 2, scale = 0)
 	private int orden;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lineaFormulario")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lineaFormulario", cascade = { CascadeType.ALL })
 	private Set<JElementoFormulario> elementoFormulario = new HashSet<JElementoFormulario>(0);
 
 	public JLineaFormulario() {
@@ -94,6 +96,38 @@ public class JLineaFormulario implements IModelApi {
 			jModel.setOrden(model.getOrden());
 		}
 		return jModel;
+	}
+
+	public static JLineaFormulario createDefault(final int pOrden, final JPaginaFormulario pJPagina) {
+		final JLineaFormulario jModel = new JLineaFormulario();
+		jModel.setOrden(pOrden);
+		jModel.setPaginaFormulario(pJPagina);
+		return jModel;
+	}
+
+	public boolean completa() {
+		boolean res = false;
+		int ncolumnas = 0;
+		if (!elementoFormulario.isEmpty()) {
+			for (final JElementoFormulario jElementoFormulario : elementoFormulario) {
+				switch (TypeObjetoFormulario.fromString(jElementoFormulario.getTipo())) {
+				case SECCION:
+					ncolumnas = 6;
+					break;
+				case CAMPO_TEXTO:
+					ncolumnas += jElementoFormulario.getNumeroColumnas();
+					break;
+				default:
+					break;
+				}
+
+				if (ncolumnas >= 6) {
+					res = true;
+					break;
+				}
+			}
+		}
+		return res;
 	}
 
 }

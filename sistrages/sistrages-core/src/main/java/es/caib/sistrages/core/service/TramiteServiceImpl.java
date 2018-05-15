@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -23,6 +23,7 @@ import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
+import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
@@ -33,12 +34,19 @@ public class TramiteServiceImpl implements TramiteService {
 
 	private final Logger log = LoggerFactory.getLogger(TramiteServiceImpl.class);
 
+	/** DAO de area. **/
 	@Autowired
 	AreaDao areaDataDao;
 
+	/** DAO Fichero Externo. */
+	@Autowired
+	FicheroExternoDao ficheroExternoDao;
+
+	/** DAO Tramite. */
 	@Autowired
 	TramiteDao tramiteDao;
 
+	/** DAO Tramite Paso. **/
 	@Autowired
 	TramitePasoDao tramitePasoDao;
 
@@ -214,11 +222,8 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void updateTramiteVersion(final TramiteVersion tramiteVersion, final boolean borrarScriptPI,
-			final Script scriptParamsIniciales, final boolean borrarScriptPersonalizacion,
-			final Script scriptPersonalizacion) {
-		tramiteDao.updateTramiteVersion(tramiteVersion, borrarScriptPI, scriptParamsIniciales,
-				borrarScriptPersonalizacion, scriptPersonalizacion);
+	public void updateTramiteVersion(final TramiteVersion tramiteVersion) {
+		tramiteDao.updateTramiteVersion(tramiteVersion);
 	}
 
 	@Override
@@ -345,6 +350,19 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public void removeTasa(final Long idTramitePaso, final Long idTasa) {
 		tramitePasoDao.removeTasa(idTramitePaso, idTasa);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void uploadDocAnexo(final Long idDocumento, final Fichero fichero, final byte[] contents) {
+		final Fichero newFichero = tramitePasoDao.uploadDocAnexo(idDocumento, fichero);
+		ficheroExternoDao.guardarFichero(idDocumento, newFichero, contents);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removeDocAnexo(final Long idDocumento) {
+		tramitePasoDao.removeDocAnexo(idDocumento);
 	}
 
 }

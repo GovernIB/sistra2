@@ -5,8 +5,8 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -151,17 +151,8 @@ public interface TramiteService {
 	 * Actualiza una versión de trámite.
 	 *
 	 * @param tramiteVersion
-	 * @param borrarScriptPI
-	 *            En caso de estar a true, lo marca como nulo el script de params
-	 *            iniciales para que lo borre.
-	 * @param scriptParamsIniciales
-	 * @param borrarScriptPersonalizacion
-	 *            En caso de estar a true, lo marca como nulo el script de
-	 *            personalizacion para que lo borre.
-	 * @param scriptPersonalizacion
 	 */
-	public void updateTramiteVersion(TramiteVersion tramiteVersion, boolean borrarScriptPI,
-			Script scriptParamsIniciales, boolean borrarScriptPersonalizacion, Script scriptPersonalizacion);
+	public void updateTramiteVersion(TramiteVersion tramiteVersion);
 
 	/**
 	 * Borra una versión de tramite.
@@ -303,10 +294,26 @@ public interface TramiteService {
 
 	/**
 	 * Borra una tasa.
-	 * 
+	 *
 	 * @param idTramitePaso
 	 * @param idTasa
 	 */
 	public void removeTasa(Long idTramitePaso, Long idTasa);
+
+	/**
+	 * Sube un documento asociado a un anexo.
+	 *
+	 * @param idDocumento
+	 * @param fichero
+	 * @param contents
+	 */
+	public void uploadDocAnexo(Long idDocumento, Fichero fichero, byte[] contents);
+
+	/**
+	 * Borra el doc de un anexo.
+	 *
+	 * @param idDocumento
+	 */
+	public void removeDocAnexo(Long idDocumento);
 
 }

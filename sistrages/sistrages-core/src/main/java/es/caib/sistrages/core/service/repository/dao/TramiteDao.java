@@ -4,7 +4,6 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -99,8 +98,7 @@ public interface TramiteDao {
 	 *            Si borra el script
 	 * @param scriptPersonalizacion
 	 */
-	void updateTramiteVersion(TramiteVersion tramiteVersion, boolean borrarScriptPI, Script scriptParamsIniciales,
-			boolean borrarScriptPersonalizacion, Script scriptPersonalizacion);
+	void updateTramiteVersion(TramiteVersion tramiteVersion);
 
 	/**
 	 * Borra un trámite versión.

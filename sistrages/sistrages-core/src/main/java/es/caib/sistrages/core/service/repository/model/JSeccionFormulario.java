@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JSeccionFormulario
@@ -80,6 +81,13 @@ public class JSeccionFormulario implements IModelApi {
 			jModel.setCodigo(model.getId());
 			jModel.setLetra(model.getLetra());
 		}
+		return jModel;
+	}
+
+	public static JSeccionFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea) {
+		final JSeccionFormulario jModel = new JSeccionFormulario();
+		jModel.setLetra("A");
+		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.SECCION, pOrden, pJLinea));
 		return jModel;
 	}
 

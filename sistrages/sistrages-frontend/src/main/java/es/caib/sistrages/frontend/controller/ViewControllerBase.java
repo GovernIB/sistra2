@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -136,7 +137,7 @@ public abstract class ViewControllerBase {
 
 	/**
 	 * Normaliza filtro
-	 * 
+	 *
 	 * @param filtro
 	 *            Filtro
 	 * @return filtro
@@ -148,4 +149,18 @@ public abstract class ViewControllerBase {
 		return filtro;
 	}
 
+	/**
+	 * Sirve para actualizar el style del script, por si tiene que marcarse de
+	 * colorp orque tiene valor.
+	 *
+	 * @param script
+	 * @return
+	 */
+	public String getColorScript(final Script script) {
+		String className = "";
+		if (script != null) {
+			className = "scriptRelleno";
+		}
+		return className;
+	}
 }

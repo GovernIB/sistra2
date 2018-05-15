@@ -1,6 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
-import es.caib.sistrages.core.api.model.types.TypeComponenteFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * Componente formulario de tipo imagen.
@@ -15,7 +15,7 @@ public final class ComponenteFormularioImagen extends ComponenteFormulario {
 	private Fichero fichero;
 
 	public ComponenteFormularioImagen() {
-		this.setTipo(TypeComponenteFormulario.IMAGEN);
+		this.setTipo(TypeObjetoFormulario.IMAGEN);
 	}
 
 	public Fichero getFichero() {
