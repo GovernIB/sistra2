@@ -61,4 +61,21 @@
         <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
+	<!-- Literales capa negocio -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:i3-label" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<!-- EHCache
+	<ehcache:annotation-driven cache-manager="ehCacheManager"
+		create-missing-caches="true" />
+
+	<bean id="ehCacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml" />
+	</bean>
+	-->
+
 </beans>

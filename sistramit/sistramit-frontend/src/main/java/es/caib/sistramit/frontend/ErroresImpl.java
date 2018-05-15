@@ -1,7 +1,6 @@
 package es.caib.sistramit.frontend;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -23,15 +22,9 @@ import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 public final class ErroresImpl implements Errores {
 
 	/** Atributo literales. */
-	@Resource(name = "literalesFront")
+	@Autowired
 	private LiteralesFront literales;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see es.gva.dgm.tra.ctt.att.web.atr.Errores#generarRespuestaJsonExcepcion(
-	 * java.lang.Exception)
-	 */
 	@Override
 	public RespuestaJSON generarRespuestaJsonExcepcion(final Exception pEx, final String idioma) {
 

@@ -5,13 +5,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
@@ -56,15 +56,15 @@ public final class LoginController {
 	private static final String IDIOMA = "idioma";
 
 	/** Informacion de sesion de tramitacion. */
-	@Resource(name = "sesionHttp")
+	@Autowired
 	private SesionHttp sesionHttp;
 
 	/** Generacion errores. */
-	@Resource(name = "errores")
+	@Autowired
 	private Errores errores;
 
 	/** Servicio de seguridad. */
-	@Resource(name = "securityService")
+	@Autowired
 	private SecurityService securityService;
 
 	/**

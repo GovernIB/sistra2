@@ -17,6 +17,7 @@ import es.caib.sistramit.frontend.ModuleConfig;
 import es.caib.sistramit.frontend.SesionHttp;
 
 @Controller
+@RequestMapping(value = "/asistente")
 public class AsistenteTramitacionController {
 
 	@Autowired
@@ -28,7 +29,7 @@ public class AsistenteTramitacionController {
 	/** Url redireccion asistente. */
 	private static final String URL_REDIRIGIR_ASISTENTE = "asistente/redirigirAsistente";
 
-	@RequestMapping(value = "/asistente/iniciarTramite.html")
+	@RequestMapping(value = "/iniciarTramite.html")
 	public ModelAndView iniciarTramite(@RequestParam("tramite") final String tramite,
 			@RequestParam("version") final int version, @RequestParam("idioma") final String idioma,
 			@RequestParam("procedimiento") final String procedimiento,
@@ -52,7 +53,7 @@ public class AsistenteTramitacionController {
 		return mav;
 	}
 
-	@RequestMapping(value = "asistente/asistente.html")
+	@RequestMapping(value = "/asistente.html")
 	public ModelAndView asistente() {
 
 		// TODO Pasar a clase padre
