@@ -1,4 +1,3 @@
-
 create sequence STG_ACCPER_SEQ;
 
 create sequence STG_ANETRA_SEQ;
@@ -520,6 +519,8 @@ create table STG_ENTIDA
    ENT_LOGOTT           NUMBER(18),
    ENT_CSSTT            NUMBER(18),
    ENT_PIETT            NUMBER(18),
+   ENT_URLCAR           NUMBER(18),
+   ENT_PRGDIA           NUMBER(3),
    ENT_EMAIL            VARCHAR2(500 CHAR),
    ENT_CNTEMA           NUMBER(1)            default 0 not null,
    ENT_CNTTEL           NUMBER(1)            default 0 not null,
@@ -558,6 +559,12 @@ comment on column STG_ENTIDA.ENT_CSSTT is
 
 comment on column STG_ENTIDA.ENT_PIETT is
 'Pie de página de contacto para Asistente Tramitación (HTML)';
+
+comment on column STG_ENTIDA.ENT_URLCAR is
+'Url Carpeta Ciudadana';
+
+comment on column STG_ENTIDA.ENT_PRGDIA is
+'Dias preregistro';
 
 comment on column STG_ENTIDA.ENT_EMAIL is
 'Email contacto genérico';
@@ -1102,7 +1109,6 @@ create table STG_FORMUL
    FOR_ACCPER           NUMBER(1)            default 0 not null,
    FOR_SCRPLT           NUMBER(18),
    FOR_CABFOR           NUMBER(1)            default 0 not null,
-   FOR_CABLOG           NUMBER(18),
    FOR_CABTXT           NUMBER(18)
 );
 
@@ -1120,9 +1126,6 @@ comment on column STG_FORMUL.FOR_SCRPLT is
 
 comment on column STG_FORMUL.FOR_CABFOR is
 'Indica si se establece cabecera formulario (logo + título)';
-
-comment on column STG_FORMUL.FOR_CABLOG is
-'Logo cabecera';
 
 comment on column STG_FORMUL.FOR_CABTXT is
 'Texto cabecera';
@@ -1235,7 +1238,6 @@ alter table STG_FORPLT
 create table STG_FORSEC 
 (
    FSE_CODIGO           NUMBER(18)           not null,
-   FSE_ORDEN            NUMBER(2)            not null,
    FSE_LETRA            VARCHAR2(2 CHAR)
 );
 
@@ -1244,9 +1246,6 @@ comment on table STG_FORSEC is
 
 comment on column STG_FORSEC.FSE_CODIGO is
 'Código';
-
-comment on column STG_FORSEC.FSE_ORDEN is
-'Orden';
 
 comment on column STG_FORSEC.FSE_LETRA is
 'Letra de la sección';
@@ -1613,7 +1612,7 @@ create table STG_PAGTRA
    PAG_ORDEN            NUMBER(2)            not null,
    PAG_OBLIGA           VARCHAR2(1 CHAR)     not null,
    PAG_SCROBL           NUMBER(18),
-   PAG_PLUGIN           VARCHAR2(20)         not null,
+   PAG_PLUGIN           NUMBER(18)           not null,
    PAG_SCRDPG           NUMBER(18),
    PAG_TIPO             VARCHAR2(1 CHAR)     not null,
    PAG_SIMULA           NUMBER(1)            default 0 not null
@@ -2504,6 +2503,10 @@ alter table STG_ENTIDA
    add constraint STG_ENTIDA_TRADUC_FK2 foreign key (ENT_PIETT)
       references STG_TRADUC (TRA_CODIGO);
 
+alter table STG_ENTIDA
+   add constraint FK_STG_ENTI_STG_ENTID_STG_TRAD foreign key (ENT_URLCAR)
+      references STG_TRADUC (TRA_CODIGO);
+
 alter table STG_FILFUE
    add constraint STG_FILFUE_FUEDAT_FK foreign key (FIF_CODFUE)
       references STG_FUEDAT (FUE_CODIGO);
@@ -2583,10 +2586,6 @@ alter table STG_FORLEL
 alter table STG_FORLI
    add constraint STG_FORLI_FORPAG_FK foreign key (FLS_CODPAF)
       references STG_FORPAG (PAF_CODIGO);
-
-alter table STG_FORMUL
-   add constraint STG_FORMUL_FICHER_FK foreign key (FOR_CABLOG)
-      references STG_FICHER (FIC_CODIGO);
 
 alter table STG_FORMUL
    add constraint STG_FORMUL_SCRIPT_FK foreign key (FOR_SCRPLT)
@@ -2707,6 +2706,10 @@ alter table STG_LITSCR
 alter table STG_PAGTRA
    add constraint STG_PAGTRA_PASPAG_FK foreign key (PAG_CODPTR)
       references STG_PASPAG (PPG_CODIGO);
+
+alter table STG_PAGTRA
+   add constraint FK_STG_PAGT_STG_PAGTR_STG_PLUG foreign key (PAG_PLUGIN)
+      references STG_PLUGIN (PLG_CODIGO);
 
 alter table STG_PAGTRA
    add constraint STG_PAGTRA_SCRIPT_FK foreign key (PAG_SCROBL)
