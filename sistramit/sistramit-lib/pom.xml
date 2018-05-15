@@ -71,6 +71,13 @@
             <version>${spring.version}</version>
         </dependency>
 
+        <!-- AOPAlliance -->
+        <dependency>
+		    <groupId>aopalliance</groupId>
+		    <artifactId>aopalliance</artifactId>
+		    <version>1.0</version>
+		</dependency>
+
 		<!-- Commons -->
 		<dependency>
 		    <groupId>commons-io</groupId>

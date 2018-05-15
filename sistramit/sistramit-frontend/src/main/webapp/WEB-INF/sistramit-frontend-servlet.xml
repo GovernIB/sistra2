@@ -67,9 +67,7 @@
      </bean>
 
 	<!--  Configura recursos estaticos -->
-	<!--  TODO Pendiente de ver como establecer propiedad. En GTT por BD, tocara pasarla a ficheror props
-	<mvc:resources mapping="/resources/**" location="file:${negocio.repositorioGtt.path.DES}/" />
-	 -->
+	<mvc:resources mapping="/resources/**" location="file:${ficherosExternos.path}/publico" />
 	<mvc:default-servlet-handler/>
 
 </beans>

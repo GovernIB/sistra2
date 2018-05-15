@@ -5,8 +5,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ public final class LiteralesFrontImpl implements LiteralesFront {
 	/**
 	 * Bundle con los literales.
 	 */
-	@Resource(name = "messageSource")
+	@Autowired
 	private MessageSource messageSource;
 
 	@Override
