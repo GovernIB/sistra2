@@ -15,6 +15,9 @@ public class TramitePasoAnexar extends TramitePaso {
 	/** Documentos. **/
 	private List<Documento> documentos;
 
+	/** Script anexos dinámicos. **/
+	private Script scriptAnexosDinamicos;
+
 	/**
 	 * @return the documentos
 	 */
@@ -29,4 +32,20 @@ public class TramitePasoAnexar extends TramitePaso {
 	public void setDocumentos(final List<Documento> documentos) {
 		this.documentos = documentos;
 	}
+
+	/**
+	 * @return the scriptAnexosDinamicos
+	 */
+	public Script getScriptAnexosDinamicos() {
+		return scriptAnexosDinamicos;
+	}
+
+	/**
+	 * @param scriptAnexosDinamicos
+	 *            the scriptAnexosDinamicos to set
+	 */
+	public void setScriptAnexosDinamicos(final Script scriptAnexosDinamicos) {
+		this.scriptAnexosDinamicos = scriptAnexosDinamicos;
+	}
+
 }

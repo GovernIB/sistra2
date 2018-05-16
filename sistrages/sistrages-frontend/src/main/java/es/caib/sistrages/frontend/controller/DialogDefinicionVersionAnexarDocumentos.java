@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
@@ -13,7 +14,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
 import es.caib.sistrages.core.api.model.types.TypeTamanyo;
-import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -29,14 +30,18 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Data. **/
 	private Documento data;
 
 	/** Id. **/
 	private String id;
 
-	/** JSON tramite version. **/
-	private String jsonTramiteVersion;
+	/** ID tramite version. **/
+	private String idTramiteVersion;
 
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
@@ -57,8 +62,8 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		data.setNumeroInstancia(1);
 		data.setExtensiones("pdf;doc");
 		data.setTamanyoMaximo(1024);
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 	}
 
@@ -142,12 +147,12 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		this.id = id;
 	}
 
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 	public TramiteVersion getTramiteVersion() {

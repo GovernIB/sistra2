@@ -357,7 +357,7 @@ public class JVersionTramite implements IModelApi {
 		tramiteVersion.setDebug(this.isDebug());
 		tramiteVersion.setDesactivacion(this.isDesactivacionTemporal());
 
-		tramiteVersion.setId(this.getCodigo());
+		tramiteVersion.setCodigo(this.getCodigo());
 		if (this.getTramite() != null) {
 			tramiteVersion.setIdTramite(this.getTramite().getCodigo());
 		}
@@ -411,7 +411,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setDebug(model.isDebug());
 			jversionTramite.setDesactivacionTemporal(model.isDesactivacion());
 
-			jversionTramite.setCodigo(model.getId());
+			jversionTramite.setCodigo(model.getCodigo());
 			jversionTramite.setIdiomasSoportados(model.getIdiomasSoportados());
 			jversionTramite.setScriptInicializacionTramite(JScript.fromModel(model.getScriptInicializacionTramite()));
 			jversionTramite.setScriptPersonalizacion(JScript.fromModel(model.getScriptPersonalizacion()));

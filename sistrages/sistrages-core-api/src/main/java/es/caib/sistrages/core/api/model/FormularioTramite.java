@@ -29,6 +29,9 @@ public class FormularioTramite extends ModelApi {
 	/** Orden. **/
 	private int orden;
 
+	/** Formulario. **/
+	private FormularioInterno formulario;
+
 	/**
 	 * Obligatorio:
 	 * <ul>
@@ -367,6 +370,14 @@ public class FormularioTramite extends ModelApi {
 	 */
 	public void setFormularioGestorExterno(final Gestor formularioGestorExterno) {
 		this.formularioGestorExterno = formularioGestorExterno;
+	}
+
+	public FormularioInterno getFormulario() {
+		return formulario;
+	}
+
+	public void setFormulario(final FormularioInterno formulario) {
+		this.formulario = formulario;
 	}
 
 }

@@ -296,6 +296,10 @@ public class JFormularioTramite implements IModelApi {
 				final JScript script = JScript.fromModel(formulario.getScriptRetorno());
 				jformularioTramite.setScriptRetorno(script);
 			}
+			if (formulario.getFormulario() != null) {
+				final JFormulario jformulario = JFormulario.fromModel(formulario.getFormulario());
+				jformularioTramite.setFormulario(jformulario);
+			}
 			jformularioTramite.setTipo(formulario.getTipo().toString());
 			jformularioTramite.setTipoFormulario(formulario.getTipoFormulario().toString());
 
@@ -311,7 +315,9 @@ public class JFormularioTramite implements IModelApi {
 		if (this.getDescripcion() != null) {
 			mformulario.setDescripcion(this.getDescripcion().toModel());
 		}
-		// this.setFormulario(x);
+		if (this.getFormulario() != null) {
+			mformulario.setFormulario(this.getFormulario().toModel());
+		}
 		// this.setGestorFormulario(x);
 		mformulario.setCodigo(this.getIdentificador());
 		if (this.getIdFormularioExterno() != null) {

@@ -10,7 +10,6 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
-import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -36,8 +35,8 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	/** Data. **/
 	private TramitePasoDebeSaber data;
 
-	/** JSON tramite version. **/
-	private String jsonTramiteVersion;
+	/** ID tramite version. **/
+	private String idTramiteVersion;
 
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
@@ -51,8 +50,8 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 	public void init() {
 		data = (TramitePasoDebeSaber) tramiteService.getTramitePaso(Long.valueOf(id));
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 	}
 
@@ -151,12 +150,12 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 		this.data = data;
 	}
 
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 }

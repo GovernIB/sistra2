@@ -44,16 +44,16 @@ public class DialogDefinicionVersionRegistrarTramite extends ViewControllerBase 
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
-	/** JSON tramite version. **/
-	private String jsonTramiteVersion;
+	/** ID tramite version. **/
+	private String idTramiteVersion;
 
 	/**
 	 * Init.
 	 */
 	public void init() {
 		data = (TramitePasoRegistrar) tramiteService.getTramitePaso(Long.valueOf(id));
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 	}
 
@@ -261,11 +261,11 @@ public class DialogDefinicionVersionRegistrarTramite extends ViewControllerBase 
 		this.data = data;
 	}
 
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 }

@@ -43,47 +43,84 @@ public class JPasoAnexar implements IModelApi {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoAnexar", cascade = { CascadeType.ALL })
 	private Set<JAnexoTramite> anexosTramite = new HashSet<>(0);
 
+	/**
+	 * Constructor vacio.
+	 */
 	public JPasoAnexar() {
 		// Constructor vacio
 	}
 
+	/**
+	 * @return the codigo
+	 */
 	public Long getCodigo() {
-		return this.codigo;
+		return codigo;
 	}
 
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * @return the pasoTramitacion
+	 */
 	public JPasoTramitacion getPasoTramitacion() {
-		return this.pasoTramitacion;
+		return pasoTramitacion;
 	}
 
+	/**
+	 * @param pasoTramitacion
+	 *            the pasoTramitacion to set
+	 */
 	public void setPasoTramitacion(final JPasoTramitacion pasoTramitacion) {
 		this.pasoTramitacion = pasoTramitacion;
 	}
 
+	/**
+	 * @return the scriptAnexosDinamicos
+	 */
 	public JScript getScriptAnexosDinamicos() {
-		return this.scriptAnexosDinamicos;
+		return scriptAnexosDinamicos;
 	}
 
+	/**
+	 * @param scriptAnexosDinamicos
+	 *            the scriptAnexosDinamicos to set
+	 */
 	public void setScriptAnexosDinamicos(final JScript scriptAnexosDinamicos) {
 		this.scriptAnexosDinamicos = scriptAnexosDinamicos;
 	}
 
+	/**
+	 * @return the anexosTramite
+	 */
 	public Set<JAnexoTramite> getAnexosTramite() {
-		return this.anexosTramite;
+		return anexosTramite;
 	}
 
+	/**
+	 * @param anexosTramite
+	 *            the anexosTramite to set
+	 */
 	public void setAnexosTramite(final Set<JAnexoTramite> anexosTramite) {
 		this.anexosTramite = anexosTramite;
 	}
 
+	/**
+	 * From model.
+	 *
+	 * @param paso
+	 * @return
+	 */
 	public static JPasoAnexar fromModel(final TramitePasoAnexar paso) {
 		JPasoAnexar jpaso = null;
 		if (paso != null) {
 			jpaso = new JPasoAnexar();
-			jpaso.setCodigo(paso.getId());
+			jpaso.setCodigo(paso.getCodigo());
 			if (paso.getDocumentos() != null) {
 				final Set<JAnexoTramite> anexos = new HashSet<>();
 				for (final Documento doc : paso.getDocumentos()) {

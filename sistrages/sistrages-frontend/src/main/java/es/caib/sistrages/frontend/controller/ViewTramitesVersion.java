@@ -133,7 +133,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		final Map<String, List<String>> params = new HashMap<>();
 		// params.put(TypeParametroVentana.ID.toString(),
 
-		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getId().toString()));
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getCodigo().toString()));
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
 
@@ -149,7 +149,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getId().toString()));
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getCodigo().toString()));
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.CONSULTA.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
 
@@ -213,7 +213,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 			return;
 
 		// Eliminamos
-		this.tramiteService.removeTramiteVersion(this.datoSeleccionado.getId());
+		this.tramiteService.removeTramiteVersion(this.datoSeleccionado.getCodigo());
 
 		// Refrescamos datos
 		this.filtrar();

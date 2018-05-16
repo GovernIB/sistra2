@@ -74,7 +74,7 @@ public class JPasoRellenar implements IModelApi {
 		JPasoRellenar jpasoRellenar = null;
 		if (paso != null) {
 			jpasoRellenar = new JPasoRellenar();
-			jpasoRellenar.setCodigo(paso.getId());
+			jpasoRellenar.setCodigo(paso.getCodigo());
 			if (paso.getFormulariosTramite() != null) {
 				final Set<JFormularioTramite> jformularios = new HashSet<>();
 				for (final FormularioTramite formulario : paso.getFormulariosTramite()) {

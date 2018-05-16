@@ -284,8 +284,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (this.selectedNode != null) {
 			final TramitePaso paso = ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
 			final Map<String, String> map = new HashMap<>();
-			map.put(TypeParametroVentana.ID.toString(), paso.getId().toString());
-			map.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+			map.put(TypeParametroVentana.ID.toString(), paso.getCodigo().toString());
+			map.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 			if (paso instanceof TramitePasoDebeSaber) {
 
 				UtilJSF.openDialog(DialogDefinicionVersionDebeSaber.class, TypeModoAcceso.EDICION, map, true, 950, 500);
@@ -385,7 +385,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void anyadirDominio() {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.tramiteVersion.getId().toString());
+		params.put(TypeParametroVentana.ID.toString(), this.tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.AREA.toString(), this.area.getId().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionDominios.class, TypeModoAcceso.ALTA, params, true, 950, 450);
 	}
@@ -400,7 +400,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getId(), Long.valueOf(this.id))) {
 
-			dominioService.removeTramiteVersion(this.dominioSeleccionado.getId(), this.tramiteVersion.getId());
+			dominioService.removeTramiteVersion(this.dominioSeleccionado.getId(), this.tramiteVersion.getCodigo());
 			final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
 			tramiteVersion.setListaDominios(dominios);
 
@@ -439,7 +439,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.ALTA) {
 			final Dominio dominio = (Dominio) respuesta.getResult();
-			dominioService.addTramiteVersion(dominio.getId(), tramiteVersion.getId());
+			dominioService.addTramiteVersion(dominio.getId(), tramiteVersion.getCodigo());
 
 			final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
 			tramiteVersion.setListaDominios(dominios);
@@ -475,7 +475,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void nuevoFormulario() {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionRellenar.class, TypeModoAcceso.ALTA, params, true, 600, 200);
 	}
 
@@ -507,7 +507,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
-		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 500);
 	}
 
@@ -519,7 +519,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarFormularioSeleccionado())
 			return;
 
-		tramiteService.removeFormulario(this.getTramitePasoRELLSeleccionado().getId(),
+		tramiteService.removeFormulario(this.getTramitePasoRELLSeleccionado().getCodigo(),
 				this.formularioSeleccionado.getId());
 
 		// Actualizamos la info
@@ -628,7 +628,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			case ALTA:
 
-				tramiteService.addFormularioTramite(formulario, this.getTramitePasoRELLSeleccionado().getId());
+				tramiteService.addFormularioTramite(formulario, this.getTramitePasoRELLSeleccionado().getCodigo());
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
@@ -667,7 +667,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void nuevoDocumento() {
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionAnexarDocumentos.class, TypeModoAcceso.ALTA, params, true, 600, 200);
 	}
 
@@ -698,7 +698,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idDocumento));
-		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 575);
 	}
 
@@ -710,7 +710,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarDocumentoSeleccionada())
 			return;
 
-		tramiteService.removeDocumento(this.getTramitePasoANEXSeleccionado().getId(),
+		tramiteService.removeDocumento(this.getTramitePasoANEXSeleccionado().getCodigo(),
 				this.documentoSeleccionado.getId());
 
 		// Actualizamos la info
@@ -798,7 +798,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-				tramiteService.addDocumentoTramite(documento, this.getTramitePasoANEXSeleccionado().getId());
+				tramiteService.addDocumentoTramite(documento, this.getTramitePasoANEXSeleccionado().getCodigo());
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
@@ -837,7 +837,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void nuevaTasa() {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionPagarTasas.class, TypeModoAcceso.ALTA, params, true, 600, 150);
 	}
 
@@ -864,7 +864,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTasa));
-		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), UtilJSON.toJSON(tramiteVersion));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 700, 450);
 	}
 
@@ -876,7 +876,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarTasaSeleccionada())
 			return;
 
-		tramiteService.removeTasa(this.getTramitePasoTSSeleccionado().getId(), this.tasaSeleccionado.getId());
+		tramiteService.removeTasa(this.getTramitePasoTSSeleccionado().getCodigo(), this.tasaSeleccionado.getId());
 
 		// Actualizamos la info
 		recuperarDatos();
@@ -964,7 +964,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-				tramiteService.addTasaTramite(tasa, this.getTramitePasoTSSeleccionado().getId());
+				tramiteService.addTasaTramite(tasa, this.getTramitePasoTSSeleccionado().getCodigo());
 
 				// Mensaje
 				message = UtilJSF.getLiteral("info.alta.ok");
@@ -1008,7 +1008,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			} else if (opcionArbol.getTasa() != null) {
 				idSelectNode = opcionArbol.getTasa().getId();
 			} else if (opcionArbol.getTramitePaso() != null) {
-				idSelectNode = opcionArbol.getTramitePaso().getId();
+				idSelectNode = opcionArbol.getTramitePaso().getCodigo();
 			}
 		}
 
@@ -1063,7 +1063,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		for (final TramitePaso tramitePaso : this.tramiteVersion.getListaPasos()) {
 
 			/** Nodo paso. **/
-			final Long idTramite = tramitePaso.getId();
+			final Long idTramite = tramitePaso.getCodigo();
 			final String textoTramite = String.valueOf(tramitePaso.getOrden()) + ". "
 					+ tramitePaso.getDescripcion().getTraduccion(this.getSesion().getLang());
 

@@ -19,6 +19,7 @@ import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JFichero;
+import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JPagoTramite;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
@@ -80,9 +81,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
 		}
 
-		final JPasoTramitacion jTramitePaso = entityManager.find(JPasoTramitacion.class, tramitePaso.getId());
+		final JPasoTramitacion jTramitePaso = entityManager.find(JPasoTramitacion.class, tramitePaso.getCodigo());
 		if (jTramitePaso == null) {
-			throw new NoExisteDato(STRING_NO_EXISTE_TRAMITE_PASO + tramitePaso.getCodigo());
+			throw new NoExisteDato(STRING_NO_EXISTE_TRAMITE_PASO + tramitePaso.getIdPasoTramitacion());
 		}
 
 		// Mergeamos datos
@@ -138,9 +139,12 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
-	public void addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
+	public void addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso,
+			final Long idFormularioInterno) {
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
+		final JFormulario jFormularioInterno = entityManager.find(JFormulario.class, idFormularioInterno);
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		jFormulariotramite.setFormulario(jFormularioInterno);
 		jpasoRellenar.getPasoRellenar().getFormulariosTramite().add(jFormulariotramite);
 		entityManager.merge(jpasoRellenar);
 	}

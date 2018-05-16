@@ -248,9 +248,9 @@ public class JPasoTramitacion implements IModelApi {
 		} else {
 
 			final TramitePaso paso = new TramitePaso();
-			paso.setCodigo(this.getIdPasoTramitacion());
+			paso.setIdPasoTramitacion(this.getIdPasoTramitacion());
 			paso.setDescripcion(this.getDescripcion().toModel());
-			paso.setId(this.getCodigo());
+			paso.setCodigo(this.getCodigo());
 			paso.setOrden(this.getOrden());
 			paso.setPasoFinal(this.isPasoFinal());
 			return paso;
@@ -261,9 +261,9 @@ public class JPasoTramitacion implements IModelApi {
 
 	private TramitePasoRegistrar toModelRegistrar() {
 		final TramitePasoRegistrar paso = new TramitePasoRegistrar();
-		paso.setCodigo(this.getIdPasoTramitacion());
+		paso.setIdPasoTramitacion(this.getIdPasoTramitacion());
 		paso.setDescripcion(this.getDescripcion().toModel());
-		paso.setId(this.getCodigo());
+		paso.setCodigo(this.getCodigo());
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
 		paso.setAdmiteRepresentacion(this.getPasoRegistrar().isAdmiteRepresentacion());
@@ -296,9 +296,9 @@ public class JPasoTramitacion implements IModelApi {
 
 	private TramitePasoAnexar toModelAnexar() {
 		final TramitePasoAnexar paso = new TramitePasoAnexar();
-		paso.setCodigo(this.getIdPasoTramitacion());
+		paso.setIdPasoTramitacion(this.getIdPasoTramitacion());
 		paso.setDescripcion(this.getDescripcion().toModel());
-		paso.setId(this.getCodigo());
+		paso.setCodigo(this.getCodigo());
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
 
@@ -316,9 +316,9 @@ public class JPasoTramitacion implements IModelApi {
 	private TramitePasoTasa toModelPagos() {
 
 		final TramitePasoTasa pago = new TramitePasoTasa();
-		pago.setCodigo(this.getIdPasoTramitacion());
+		pago.setIdPasoTramitacion(this.getIdPasoTramitacion());
 		pago.setDescripcion(this.getDescripcion().toModel());
-		pago.setId(this.getCodigo());
+		pago.setCodigo(this.getCodigo());
 		pago.setOrden(this.getOrden());
 		pago.setPasoFinal(this.isPasoFinal());
 
@@ -334,9 +334,9 @@ public class JPasoTramitacion implements IModelApi {
 
 	private TramitePasoRellenar toModelRellenar() {
 		final TramitePasoRellenar mpasoRellenar = new TramitePasoRellenar();
-		mpasoRellenar.setCodigo(this.getIdPasoTramitacion());
+		mpasoRellenar.setIdPasoTramitacion(this.getIdPasoTramitacion());
 		mpasoRellenar.setDescripcion(this.getDescripcion().toModel());
-		mpasoRellenar.setId(this.getCodigo());
+		mpasoRellenar.setCodigo(this.getCodigo());
 		mpasoRellenar.setIdPasoRelacion(this.getPasoRellenar().getCodigo());
 		mpasoRellenar.setOrden(this.getOrden());
 		mpasoRellenar.setPasoFinal(this.isPasoFinal());
@@ -355,9 +355,9 @@ public class JPasoTramitacion implements IModelApi {
 	private TramitePasoDebeSaber toModelDebeSaber() {
 		final TramitePasoDebeSaber mpasoDebeSaber = new TramitePasoDebeSaber();
 		mpasoDebeSaber.setIdPasoRelacion(this.getPasoDebeSaber().getCodigo());
-		mpasoDebeSaber.setCodigo(this.getIdPasoTramitacion());
+		mpasoDebeSaber.setIdPasoTramitacion(this.getIdPasoTramitacion());
 		mpasoDebeSaber.setDescripcion(this.getDescripcion().toModel());
-		mpasoDebeSaber.setId(this.getCodigo());
+		mpasoDebeSaber.setCodigo(this.getCodigo());
 		mpasoDebeSaber.setOrden(this.getOrden());
 		mpasoDebeSaber.setPasoFinal(this.isPasoFinal());
 		if (this.getPasoDebeSaber().getInstruccionesInicio() != null) {
@@ -371,13 +371,13 @@ public class JPasoTramitacion implements IModelApi {
 		JPasoTramitacion jpaso = null;
 		if (paso != null) {
 			jpaso = new JPasoTramitacion();
-			jpaso.setIdPasoTramitacion(paso.getCodigo());
+			jpaso.setIdPasoTramitacion(paso.getIdPasoTramitacion());
 
 			if (paso.getDescripcion() != null) {
 				final JLiteral jliteral = JLiteral.fromModel(paso.getDescripcion());
 				jpaso.setDescripcion(jliteral);
 			}
-			jpaso.setCodigo(paso.getId());
+			jpaso.setCodigo(paso.getCodigo());
 			jpaso.setOrden(paso.getOrden());
 			jpaso.setPasoFinal(paso.isPasoFinal());
 			if (paso.getTipo() != null) {

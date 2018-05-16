@@ -38,8 +38,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Data. **/
 	private FormularioTramite data;
 
-	/** JSON tramiteVersion version. **/
-	private String jsonTramiteVersion;
+	/** ID tramiteVersion version. **/
+	private String idTramiteVersion;
 
 	/** tramiteVersion version. **/
 	private TramiteVersion tramiteVersion;
@@ -51,8 +51,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	public void init() {
 
 		data = tramiteService.getFormulario(Long.valueOf(id));
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 	}
 
@@ -253,7 +253,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void editarDisenyo() {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), "1");
+		params.put(TypeParametroVentana.ID.toString(), this.data.getFormulario().getId().toString());
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 720);
 	}
 
@@ -295,21 +295,21 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * Get jsonTramiteVersion
-	 * 
+	 * Get idTramiteVersion
+	 *
 	 * @return
 	 */
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
 	/**
-	 * Set jsonTramiteVersion
-	 * 
-	 * @param jsonTramiteVersion
+	 * Set idTramiteVersion
+	 *
+	 * @param idTramiteVersion
 	 */
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 }

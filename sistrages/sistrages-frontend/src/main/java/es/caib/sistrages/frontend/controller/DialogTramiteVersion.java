@@ -91,7 +91,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 					paso = new TramitePaso();
 				}
 
-				paso.setCodigo(tipo.getCodigo());
+				paso.setIdPasoTramitacion(tipo.getCodigo());
 				paso.setDescripcion(tipo.getDescripcion());
 				paso.setOrden(tipo.getOrden());
 				paso.setTipo(tipo);
