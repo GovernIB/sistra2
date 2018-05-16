@@ -6,6 +6,7 @@
 
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="tipoFormularioObligatoriedad" />
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypePago" var="tipoPago" />
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 	<h:form id="formViewDefinicionVersionTasa" styleClass="h100">
 
@@ -35,7 +36,7 @@
 							</p:selectOneMenu>
 				     </p:column>
 				     <p:column>
-				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
+				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
 							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad eq null}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad)}" >
 
@@ -45,8 +46,7 @@
          	</p:panelGrid>
 
             <p:outputLabel for="scriptdepago" value="#{msg['viewDefinicionVersionTasa.scriptdepago']}" />
-          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago.id)}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
-
+          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_PAGO.name(), viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago.id)}" value="#{msg['viewDefinicionVersionTasa.scriptdepago.establecerdatos']}"
 							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago eq null}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago)}" />
 

@@ -162,7 +162,7 @@ public class TramiteServiceBean implements TramiteService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<TramiteTipo> listTipoTramitePaso() {
 		return tramiteService.listTipoTramitePaso();
 	}
@@ -174,7 +174,7 @@ public class TramiteServiceBean implements TramiteService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<TramitePaso> getTramitePasos(final Long idTramiteVersion) {
 		return tramiteService.getTramitePasos(idTramiteVersion);
 	}
@@ -186,7 +186,7 @@ public class TramiteServiceBean implements TramiteService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Dominio> getTramiteDominios(final Long idTramiteVersion) {
 		return tramiteService.getTramiteDominios(idTramiteVersion);
 	}
@@ -204,7 +204,7 @@ public class TramiteServiceBean implements TramiteService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public TramitePaso getTramitePaso(final Long id) {
 		return tramiteService.getTramitePaso(id);
 	}

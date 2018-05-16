@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.controller;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
@@ -11,7 +12,7 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -28,14 +29,18 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
 	/** Data. **/
 	private FormularioTramite data;
 
 	/** Id. **/
 	private String id;
 
-	/** Json tramite version. **/
-	private String jsonTramiteVersion;
+	/** ID tramite version. **/
+	private String idTramiteVersion;
 
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
@@ -54,8 +59,8 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 		data = new FormularioTramite();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
 		data.setTipo(TypeFormulario.TRAMITE);
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 	}
 
@@ -160,18 +165,18 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the jsonTramiteVersion
+	 * @return the idTramiteVersion
 	 */
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
 	/**
-	 * @param jsonTramiteVersion
-	 *            the jsonTramiteVersion to set
+	 * @param idTramiteVersion
+	 *            the idTramiteVersion to set
 	 */
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 }

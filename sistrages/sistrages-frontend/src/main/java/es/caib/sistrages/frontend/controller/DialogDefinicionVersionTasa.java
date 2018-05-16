@@ -53,8 +53,8 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
-	/** JSON tramite version. **/
-	private String jsonTramiteVersion;
+	/** ID tramite version. **/
+	private String idTramiteVersion;
 
 	/** Lista con los plugins. **/
 	private List<Plugin> plugins;
@@ -67,8 +67,8 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	 */
 	public void init() {
 		data = tramiteService.getTasa(Long.valueOf(id));
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 		plugins = pluginService.listPlugin(TypeAmbito.ENTIDAD, UtilJSF.getIdEntidad(), TypePlugin.PAGOS);
 		if (data.getTipoPlugin() != null) {
@@ -87,8 +87,9 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	/**
 	 * Editar script
 	 */
-	public void editarScript(final Script script) {
+	public void editarScript(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
+		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (script != null) {
 			maps.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
 		}
@@ -226,12 +227,12 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 		this.tramiteService = tramiteService;
 	}
 
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 	public List<Plugin> getPlugins() {

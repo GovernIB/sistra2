@@ -56,8 +56,10 @@ public interface TramitePasoDao {
 	 * Añade un formulario a trámite paso.
 	 *
 	 * @param formularioTramite
+	 * @param idTramitePaso
+	 * @param idFormularioInterno
 	 */
-	void addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
+	void addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso, Long idFormularioInterno);
 
 	/**
 	 * Actualiza un formulario a trámite paso.

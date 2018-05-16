@@ -15,12 +15,12 @@
 
 		<p:dataTable id="dataTable" var="pasos" styleClass="hide-table-header"
 			value="#{viewDefinicionVersion.tramiteVersion.listaPasos}" rows="10"
-			scrollable="true" paginator="false" rowKey="#{pasos.id}"
+			scrollable="true" paginator="false" rowKey="#{pasos.codigo}"
 			dblClickSelect="true">
 
 			<!-- Columnas -->
 			<p:column styleClass="grid-center">
-				<h:outputText value="Paso #{pasos.codigo}" />
+				<h:outputText value="Paso #{pasos.idPasoTramitacion}" />
 			</p:column>
 
 

@@ -11,10 +11,10 @@ import es.caib.sistrages.core.api.model.types.TypeFlujo;
 @SuppressWarnings("serial")
 public class TramiteVersion extends ModelApi {
 
-	/** id. */
-	private Long id;
+	/** codigo. */
+	private Long codigo;
 
-	/** id tramite. */
+	/** codigo tramite. */
 	private Long idTramite;
 
 	/** numero version. */
@@ -44,10 +44,10 @@ public class TramiteVersion extends ModelApi {
 	/** persistencia dias. */
 	private Integer persistenciaDias;
 
-	/** id script personalizacion. */
+	/** codigo script personalizacion. */
 	private Script scriptPersonalizacion;
 
-	/** id script inicializacion tramite. */
+	/** codigo script inicializacion tramite. */
 	private Script scriptInicializacionTramite;
 
 	/** bloqueada. */
@@ -96,22 +96,22 @@ public class TramiteVersion extends ModelApi {
 	private List<TramitePaso> listaPasos;
 
 	/**
-	 * Obtiene el valor de id.
+	 * Obtiene el valor de codigo.
 	 *
-	 * @return el valor de id
+	 * @return el valor de codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * Establece el valor de id.
+	 * Establece el valor de codigo.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param codigo
+	 *            el nuevo valor de codigo
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long id) {
+		this.codigo = id;
 	}
 
 	/**

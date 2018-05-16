@@ -279,7 +279,7 @@ public class JPasoRegistrar implements IModelApi {
 		JPasoRegistrar jpaso = null;
 		if (paso != null) {
 			jpaso = new JPasoRegistrar();
-			jpaso.setCodigo(paso.getId());
+			jpaso.setCodigo(paso.getCodigo());
 			jpaso.setAdmiteRepresentacion(paso.isAdmiteRepresentacion());
 			jpaso.setCodigoLibroRegistro(paso.getCodigoLibroRegistro());
 			jpaso.setCodigoOficinaRegistro(paso.getCodigoOficinaRegistro());

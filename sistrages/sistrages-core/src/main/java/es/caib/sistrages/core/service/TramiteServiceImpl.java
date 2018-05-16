@@ -24,6 +24,7 @@ import es.caib.sistrages.core.service.component.AreaComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
+import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
@@ -41,6 +42,10 @@ public class TramiteServiceImpl implements TramiteService {
 	/** DAO Fichero Externo. */
 	@Autowired
 	FicheroExternoDao ficheroExternoDao;
+
+	/** DAO Formulario interno. */
+	@Autowired
+	FormularioInternoDao formularioInternoDao;
 
 	/** DAO Tramite. */
 	@Autowired
@@ -295,7 +300,9 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public void addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
-		tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso);
+		// Primero creamos el formulario interno y luego el formulario tramite.
+		final Long idFormularioInterno = formularioInternoDao.addFormulario(formularioTramite);
+		tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso, idFormularioInterno);
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class JPasoPagos implements IModelApi {
 		JPasoPagos jpaso = null;
 		if (paso != null) {
 			jpaso = new JPasoPagos();
-			jpaso.setCodigo(paso.getId());
+			jpaso.setCodigo(paso.getCodigo());
 			if (paso.getTasas() != null) {
 				final Set<JPagoTramite> pagos = new HashSet<>(0);
 				for (final Tasa tasa : paso.getTasas()) {

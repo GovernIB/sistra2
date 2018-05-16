@@ -7,6 +7,7 @@
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypePresentacion" var="TypePresentacion" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeTamanyo" var="TypeTamanyo" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 
 	<h:form id="formViewDefinicionVersionAnexo" styleClass="h100">
@@ -33,7 +34,7 @@
 		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
 			     </p:selectOneRadio>
 
-		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
 					styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad)}"
 					disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad eq null}"
 					process="@this" update="growl"/>
@@ -113,14 +114,14 @@
 					        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" itemValue="anexarfirmado" />
 					        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" itemValue="firmar" />
 						     </p:selectOneRadio>
-							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.id)}" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.id)}" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
 									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"
 									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null}"
 									process="@this" update="growl"/>
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.scriptvalidacion']}" />
-						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion.id)}"
+						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion.id)}"
 									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion)}"
 									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion eq null}"
 										process="@this" update="growl"/>

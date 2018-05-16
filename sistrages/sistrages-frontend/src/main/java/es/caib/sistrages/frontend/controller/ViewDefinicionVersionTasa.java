@@ -33,8 +33,8 @@ public class ViewDefinicionVersionTasa extends ViewControllerBase {
 		super();
 
 		data = new TramitePasoTasa();
-		data.setId(4L);
-		data.setCodigo("4");
+		data.setCodigo(4L);
+		data.setIdPasoTramitacion("4");
 		final Literal literal4 = new Literal();
 		literal4.add(new Traduccion("ca", "pagar Tasas"));
 		literal4.add(new Traduccion("es", "pagar Tasas"));
@@ -56,7 +56,7 @@ public class ViewDefinicionVersionTasa extends ViewControllerBase {
 	public void editar() {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
 		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 950, 400);
 
 	}

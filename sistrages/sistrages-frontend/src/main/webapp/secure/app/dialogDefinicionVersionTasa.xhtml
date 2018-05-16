@@ -7,8 +7,10 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="tipoFormularioObligatoriedad" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypePago" var="tipoPago" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
@@ -23,7 +25,7 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionTasa.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogDefinicionVersionTasa.id}"/>
-		<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionTasa.jsonTramiteVersion}"/>
+		<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionTasa.idTramiteVersion}"/>
 		<f:viewAction action="#{dialogDefinicionVersionTasa.init}" />
 	</f:metadata>
 
@@ -56,7 +58,7 @@
 							</p:selectOneMenu>
 					     </p:column>
 					     <p:column>
-					     	<p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(dialogDefinicionVersionTasa.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
+					     	<p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionTasa.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
 								process="@this" update="growl" styleClass="#{dialogDefinicionVersionTasa.getColorScript(dialogDefinicionVersionTasa.data.scriptObligatoriedad)}">
 								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoObligatoriedad}" update="growl scriptObligatoriedad" />
 							</p:commandButton>
@@ -65,7 +67,7 @@
 	         	</p:panelGrid>
 
 	            <p:outputLabel for="scriptdepago" value="#{msg['dialogDefinicionVersionTasa.scriptdepago']}" />
-	          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(dialogDefinicionVersionTasa.data.scriptPago)}" value="#{msg['dialogDefinicionVersionTasa.scriptdepago.establecerdatos']}"
+	          	<p:commandButton id="scriptdepago" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(TypeScriptFlujo.SCRIPT_DATOS_PAGO.name(), dialogDefinicionVersionTasa.data.scriptPago)}" value="#{msg['dialogDefinicionVersionTasa.scriptdepago.establecerdatos']}"
 								process="@this" update="growl" styleClass="#{dialogDefinicionVersionTasa.getColorScript(dialogDefinicionVersionTasa.data.scriptPago)}">
 							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoPago}" update="growl scriptdepago" />
 				</p:commandButton>

@@ -15,7 +15,6 @@ import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 
-import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -38,7 +37,6 @@ import es.caib.sistrages.frontend.controller.ViewPropiedadesConfiguracion;
 import es.caib.sistrages.frontend.controller.ViewRolesPermisos;
 import es.caib.sistrages.frontend.controller.ViewTramites;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
@@ -524,28 +522,6 @@ public final class UtilJSF {
 	 */
 	public static String getContextPath() {
 		return FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
-	}
-
-	/**
-	 * Obtiene id servlet context (identifica instancia de aplicación).
-	 *
-	 * @return id servlet context
-	 */
-	public static String getIdServletContext() {
-		String id = null;
-		final FacesContext currentInstanceFC = FacesContext.getCurrentInstance();
-		if (currentInstanceFC != null) {
-			final ExternalContext externalContext = currentInstanceFC.getExternalContext();
-			if (externalContext != null) {
-				final ServletContext servletContext = (ServletContext) externalContext.getContext();
-				id = (String) servletContext.getAttribute(Constantes.SERVLET_CONTEXT_ID);
-				if (id == null) {
-					id = GeneradorId.generarId();
-					servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
-				}
-			}
-		}
-		return id;
 	}
 
 	/**

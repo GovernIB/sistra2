@@ -227,7 +227,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
 				final JVersionTramite jTramiteVersion = iterator.next();
 				final TramiteVersion tramiteVersion = new TramiteVersion();
-				tramiteVersion.setId(jTramiteVersion.getCodigo());
+				tramiteVersion.setCodigo(jTramiteVersion.getCodigo());
 				tramiteVersion.setNumeroVersion(jTramiteVersion.getNumeroVersion());
 				if (jTramiteVersion.getBloqueada()) {
 					tramiteVersion.setBloqueada(1);
@@ -255,8 +255,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		final JTramite jTramite = entityManager.find(JTramite.class, Long.valueOf(idTramite));
-		final JVersionTramite jTramiteVersion = new JVersionTramite();
-		jTramiteVersion.fromModel(tramiteVersion);
+		final JVersionTramite jTramiteVersion = JVersionTramite.fromModel(tramiteVersion);
 		jTramiteVersion.setTramite(jTramite);
 		entityManager.persist(jTramiteVersion);
 		entityManager.flush();
@@ -273,7 +272,8 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Override
 	public void updateTramiteVersion(final TramiteVersion tramiteVersion) {
-		final JVersionTramite jTramiteVersionOld = entityManager.find(JVersionTramite.class, tramiteVersion.getId());
+		final JVersionTramite jTramiteVersionOld = entityManager.find(JVersionTramite.class,
+				tramiteVersion.getCodigo());
 		final JVersionTramite jTramiteVersion = JVersionTramite.fromModel(tramiteVersion);
 		jTramiteVersion.setTramite(jTramiteVersionOld.getTramite());
 		jTramiteVersion.setHistorialVersion(jTramiteVersion.getHistorialVersion());

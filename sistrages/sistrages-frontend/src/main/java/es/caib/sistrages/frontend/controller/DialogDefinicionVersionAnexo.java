@@ -51,8 +51,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
-	/** JSON tramite version. **/
-	private String jsonTramiteVersion;
+	/** ID tramite version. **/
+	private String idTramiteVersion;
 
 	/**
 	 * Obtiene el valor de permiteEditar.
@@ -66,8 +66,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Init. **/
 	public void init() {
 		data = tramiteService.getDocumento(Long.valueOf(id));
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 	}
 
@@ -156,7 +156,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	/**
 	 * Return dialogo.
-	 * 
+	 *
 	 * @param event
 	 */
 	public void returnDialogoObligatoriedad(final SelectEvent event) {
@@ -181,7 +181,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	/**
 	 * Return dialogo.
-	 * 
+	 *
 	 * @param event
 	 */
 	public void returnDialogoFirmarDigitalmente(final SelectEvent event) {
@@ -206,7 +206,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	/**
 	 * Return dialogo.
-	 * 
+	 *
 	 * @param event
 	 */
 	public void returnDialogoValidacion(final SelectEvent event) {
@@ -232,8 +232,9 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/**
 	 * Editar script
 	 */
-	public void editarScript(final Script script) {
+	public void editarScript(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
+		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (script != null) {
 			maps.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
 		}
@@ -331,12 +332,12 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 }

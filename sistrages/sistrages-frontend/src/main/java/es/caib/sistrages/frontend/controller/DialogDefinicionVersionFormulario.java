@@ -38,8 +38,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Data. **/
 	private FormularioTramite data;
 
-	/** JSON tramiteVersion version. **/
-	private String jsonTramiteVersion;
+	/** ID tramiteVersion version. **/
+	private String idTramiteVersion;
 
 	/** tramiteVersion version. **/
 	private TramiteVersion tramiteVersion;
@@ -51,8 +51,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	public void init() {
 
 		data = tramiteService.getFormulario(Long.valueOf(id));
-		if (jsonTramiteVersion != null) {
-			tramiteVersion = (TramiteVersion) UtilJSON.fromJSON(jsonTramiteVersion, TramiteVersion.class);
+		if (idTramiteVersion != null) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
 	}
 
@@ -191,14 +191,14 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 * @param event
 	 *            respuesta dialogo
 	 */
-	public void returnDialogoPrerregistro(final SelectEvent event) {
+	public void returnDialogoParametros(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled()) {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
-				data.setScriptPrerregistro(script);
+				data.setScriptParametros(script);
 				break;
 			case CONSULTA:
 			default:
@@ -234,12 +234,13 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 *
 	 * @param script
 	 */
-	public void script(final Script script) {
+	public void script(final String tipoScript, final Script script) {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (id == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, params, true, 950, 700);
 		} else {
-			final Map<String, String> params = new HashMap<>();
-			if (data.getScriptDatosIniciales() == null) {
+			if (script == null) {
 				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
 			} else {
 				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
@@ -253,7 +254,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void editarDisenyo() {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), "1");
+		params.put(TypeParametroVentana.ID.toString(), this.data.getFormulario().getId().toString());
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 720);
 	}
 
@@ -295,21 +296,21 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * Get jsonTramiteVersion
-	 * 
+	 * Get idTramiteVersion
+	 *
 	 * @return
 	 */
-	public String getJsonTramiteVersion() {
-		return jsonTramiteVersion;
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
 	}
 
 	/**
-	 * Set jsonTramiteVersion
-	 * 
-	 * @param jsonTramiteVersion
+	 * Set idTramiteVersion
+	 *
+	 * @param idTramiteVersion
 	 */
-	public void setJsonTramiteVersion(final String jsonTramiteVersion) {
-		this.jsonTramiteVersion = jsonTramiteVersion;
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 }

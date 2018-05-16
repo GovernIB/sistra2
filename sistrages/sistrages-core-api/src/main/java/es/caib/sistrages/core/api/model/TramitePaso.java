@@ -11,7 +11,7 @@ package es.caib.sistrages.core.api.model;
 public class TramitePaso extends ModelApi {
 
 	/** Id. */
-	private Long id;
+	private Long codigo;
 
 	/** Id de la relacion. **/
 	private Long idPasoRelacion;
@@ -26,7 +26,7 @@ public class TramitePaso extends ModelApi {
 	 * Identificador paso tramitación. Para flujo normalizado será establecido
 	 * automáticamente, para flujo personalizado será establecido por desarrollador.
 	 */
-	private String codigo;
+	private String idPasoTramitacion;
 
 	/**
 	 * Descripción del paso de tramitación. En flujo normalizado será establecido
@@ -57,18 +57,18 @@ public class TramitePaso extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long id) {
+		this.codigo = id;
 	}
 
 	/**
@@ -102,18 +102,18 @@ public class TramitePaso extends ModelApi {
 	}
 
 	/**
-	 * @return the codigo
+	 * @return the idPasoTramitacion
 	 */
-	public String getCodigo() {
-		return codigo;
+	public String getIdPasoTramitacion() {
+		return idPasoTramitacion;
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param idPasoTramitacion
+	 *            the idPasoTramitacion to set
 	 */
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setIdPasoTramitacion(final String codigo) {
+		this.idPasoTramitacion = codigo;
 	}
 
 	/**
