@@ -23,23 +23,24 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogScript.modoAcceso}"/>
+		<f:viewParam name="TIPO_SCRIPT" value="#{dialogScript.tipoScriptParam}"/>
 		<f:viewParam name="DATO" value="#{dialogScript.iData}"/>
 		<f:viewAction action="#{dialogScript.init}" />
 	</f:metadata>
 	<h:form id="dialogScript" styleClass="margin-top-10">
 
 			<p:growl id="growlScript" widgetVar="growlScript" life="2000" sticky="false" />
-				<p:panel id="panelTop" header="Parametres d'inici tràmit" toggleable="false" widgetVar="panel" style="padding:0px">
+				<p:panel id="panelTop" header="#{msg['script.' += dialogScript.tipoScriptParam += '.titulo']}" toggleable="false" widgetVar="panel" style="padding:0px">
 					<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 wpx200, padding-right-18 " columns = "2" cellpadding = "5" cellspacing = "0"  style="padding:0px">
 
-						<h:outputLabel value="#{msg['dialogScript.texto1']}"></h:outputLabel>
-						<h:outputLabel value="#{msg['dialogScript.texto2']}"></h:outputLabel>
+						<h:outputLabel value="#{msg['dialogScript.sirve']}"></h:outputLabel>
+						<h:outputLabel value="#{msg['script.' += dialogScript.tipoScriptParam += '.sirve']}"></h:outputLabel>
 
-						<h:outputLabel value="#{msg['dialogScript.texto3']}"></h:outputLabel>
-						<h:outputLabel value="#{msg['dialogScript.texto4']}"></h:outputLabel>
+						<h:outputLabel value="#{msg['dialogScript.ejecuta']}"></h:outputLabel>
+						<h:outputLabel value="#{msg['script.' += dialogScript.tipoScriptParam += '.ejecuta']}"></h:outputLabel>
 
-						<h:outputLabel value="#{msg['dialogScript.texto5']}"></h:outputLabel>
-						<h:outputLabel value="#{msg['dialogScript.texto6']}"></h:outputLabel>
+						<h:outputLabel value="#{msg['dialogScript.devuelve']}"></h:outputLabel>
+						<h:outputLabel value="#{msg['script.' += dialogScript.tipoScriptParam += '.devuelve']}"></h:outputLabel>
 
 					</h:panelGrid>
 				</p:panel>

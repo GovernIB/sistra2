@@ -31,6 +31,8 @@ public class DialogScript extends DialogControllerBase {
 	private String id;
 	/** Data del script. **/
 	private Script data;
+	/** Tipo script. **/
+	private String tipoScriptParam;
 	/** Data del script en formato JSON. **/
 	private String iData;
 
@@ -61,6 +63,7 @@ public class DialogScript extends DialogControllerBase {
 	 * Init
 	 */
 	public void init() {
+
 		if (iData == null && id == null) {
 			data = new Script();
 		} else {
@@ -479,6 +482,14 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setiData(final String iData) {
 		this.iData = iData;
+	}
+
+	public String getTipoScriptParam() {
+		return tipoScriptParam;
+	}
+
+	public void setTipoScriptParam(final String tipoScriptParam) {
+		this.tipoScriptParam = tipoScriptParam;
 	}
 
 }

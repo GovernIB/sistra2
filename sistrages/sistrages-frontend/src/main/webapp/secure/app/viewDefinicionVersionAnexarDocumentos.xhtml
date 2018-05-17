@@ -4,6 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
 	<h:form id="formViewDefinicionVersionAnexarDocumentos" styleClass="h100">
 
 		<!-- Growl mensajes -->
@@ -83,7 +85,7 @@
 				</p:outputPanel>
 
 				<p:outputLabel for="listadinamica" value="#{msg['viewDefinicionVersionAnexarDocumentos.listadinamica']}" />
-				<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript()}"
+				<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS.name(), viewDefinicionVersion.tramitePasoANEXSeleccionado.scriptAnexosDinamicos.id)}"
 						process="@this" update="growl"/>
 
 				<p:confirmDialog global="true" >

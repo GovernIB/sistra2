@@ -8,8 +8,7 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormulario" var="TypeFormulario" />
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeInterno" var="TypeInterno" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 
 <h:head>
@@ -76,7 +75,7 @@
 				<p:row>
 					<p:column colspan="4">
 						<p:commandButton id="buttonScript1" icon="fa fa-bolt"
-							actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
+							actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.parametros']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptDestinoRegistro)}"
 							process="@this" update="growl">
 							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRegistro}" update="growl buttonScript1"/>
@@ -105,7 +104,7 @@
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.presentacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:commandButton id="buttonScript2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptPresentador)}"
+           		<p:commandButton id="buttonScript2" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptPresentador)}"
 						process="@this" update="growl" value="#{msg['dialogDefinicionVersionRegistrarTramite.presentacion.establecer']}" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptPresentador)}">
 						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptPresentador}" update="growl buttonScript2"/>
 				</p:commandButton>
@@ -116,18 +115,18 @@
             <p:outputPanel styleClass="ui-inputgroup">
             <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}"/>
             <p:spacer width="30" height="1"/>
-           		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
+           		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
 						process="@this" update="growl" value="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.establecer']}"
 						styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
 						>
-						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoPresentacion}" update="growl buttonScript3"/>
+						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRepresentante}" update="growl buttonScript3"/>
 				</p:commandButton>
 				<p:spacer width="30" height="1"/>
 				<p:selectBooleanCheckbox id="valida" value="true" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>
 
        		<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.registrar']}" />
-			<p:commandButton id="buttonScript4" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(dialogDefinicionVersionRegistrarTramite.data.scriptValidarRegistrar)}"
+			<p:commandButton id="buttonScript4" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptValidarRegistrar)}"
 						process="@this" update="growl" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptValidarRegistrar)}" >
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptValidarRegistro}" update="growl buttonScript4"/>
 			</p:commandButton>

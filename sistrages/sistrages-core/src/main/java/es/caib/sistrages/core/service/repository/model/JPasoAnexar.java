@@ -124,7 +124,9 @@ public class JPasoAnexar implements IModelApi {
 			if (paso.getDocumentos() != null) {
 				final Set<JAnexoTramite> anexos = new HashSet<>();
 				for (final Documento doc : paso.getDocumentos()) {
-					anexos.add(JAnexoTramite.fromModel(doc));
+					final JAnexoTramite anexo = JAnexoTramite.fromModel(doc);
+					anexo.setPasoAnexar(jpaso);
+					anexos.add(anexo);
 				}
 				jpaso.setAnexosTramite(anexos);
 			}

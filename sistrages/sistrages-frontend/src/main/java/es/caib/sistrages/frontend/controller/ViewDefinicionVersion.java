@@ -229,7 +229,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void consultarDisenyo() {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), "1");
+		params.put(TypeParametroVentana.ID.toString(),
+				this.getFormularioSeleccionado().getFormulario().getId().toString());
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 720);
 	}
 
@@ -254,10 +255,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 *
 	 * @param iScript
 	 */
-	public void consultarScript(final Long idScript) {
+	public void consultarScript(final String tipoScript, final Long idScript) {
 
 		// Muestra dialogo
 		final Map<String, String> map = new HashMap<>();
+		map.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (idScript == null) {
 			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
 		} else {

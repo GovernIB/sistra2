@@ -55,10 +55,10 @@ public class FormularioTramite extends ModelApi {
 	/** Indica si se debe presentar en preregistro. */
 	private boolean debePrerregistrarse;
 
-	/** Script para establecer datos iniciales formulario. */
-	private Script scriptPrerregistro;
-
 	/** Permite establecer parametros cada vez que se acceda al formulario */
+	private Script scriptParametros;
+
+	/** Script para establecer datos iniciales formulario. */
 	private Script scriptDatosIniciales;
 
 	/**
@@ -285,16 +285,16 @@ public class FormularioTramite extends ModelApi {
 	/**
 	 * @return the scriptPrerrigistro
 	 */
-	public Script getScriptPrerregistro() {
-		return scriptPrerregistro;
+	public Script getScriptParametros() {
+		return scriptParametros;
 	}
 
 	/**
 	 * @param scriptPrerrigistro
 	 *            the scriptPrerrigistro to set
 	 */
-	public void setScriptPrerregistro(final Script scriptPrerrigistro) {
-		this.scriptPrerregistro = scriptPrerrigistro;
+	public void setScriptParametros(final Script scriptPrerrigistro) {
+		this.scriptParametros = scriptPrerrigistro;
 	}
 
 	/**

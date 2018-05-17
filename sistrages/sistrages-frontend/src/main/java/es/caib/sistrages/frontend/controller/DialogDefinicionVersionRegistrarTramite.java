@@ -223,8 +223,9 @@ public class DialogDefinicionVersionRegistrarTramite extends ViewControllerBase 
 	/**
 	 * Editar script
 	 */
-	public void editarScript(final Script script) {
+	public void editarScript(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
+		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (script != null) {
 			maps.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
 		}

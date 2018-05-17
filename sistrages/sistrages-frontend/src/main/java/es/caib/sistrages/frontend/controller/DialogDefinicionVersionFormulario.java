@@ -191,14 +191,14 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 * @param event
 	 *            respuesta dialogo
 	 */
-	public void returnDialogoPrerregistro(final SelectEvent event) {
+	public void returnDialogoParametros(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled()) {
 			switch (respuesta.getModoAcceso()) {
 			case ALTA:
 			case EDICION:
 				final Script script = (Script) respuesta.getResult();
-				data.setScriptPrerregistro(script);
+				data.setScriptParametros(script);
 				break;
 			case CONSULTA:
 			default:
@@ -234,12 +234,13 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 *
 	 * @param script
 	 */
-	public void script(final Script script) {
+	public void script(final String tipoScript, final Script script) {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (id == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, params, true, 950, 700);
 		} else {
-			final Map<String, String> params = new HashMap<>();
-			if (data.getScriptDatosIniciales() == null) {
+			if (script == null) {
 				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
 			} else {
 				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));

@@ -5,6 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 	<h:head>
@@ -59,7 +61,7 @@
 		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
 			     </p:selectOneRadio>
 
-		     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
 					styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}"
 					process="@this" update="growl">
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoObligatoriedad}" update="growl" />
@@ -151,7 +153,7 @@
 					        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" itemValue="anexarfirmado" />
 					        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" itemValue="firmar" />
 						     </p:selectOneRadio>
-							<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+							<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
 									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}"
 									process="@this" update="growl">
 										<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFirmarDigitalmente}" update="growl" />
@@ -159,7 +161,7 @@
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.scriptvalidacion']}" />
-						<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(dialogDefinicionVersionAnexo.data.scriptValidacion)}"
+						<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), dialogDefinicionVersionAnexo.data.scriptValidacion)}"
 									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptValidacion)}"
 									process="@this" update="growl">
 									<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoValidacion}" update="growl" />

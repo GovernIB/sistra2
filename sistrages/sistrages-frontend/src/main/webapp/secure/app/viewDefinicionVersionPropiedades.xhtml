@@ -4,6 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
+
 	<h:form id="formViewDefinicionVersionPropiedades" styleClass="h100">
 
 		<!-- Growl mensajes -->
@@ -61,11 +63,11 @@
 			</p:panelGrid>
 
 			<p:outputLabel for="scriptpersonalizacion" value="#{msg['viewDefinicionVersionPropiedades.scriptpersonalizacion']}" />
-			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.scriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.scriptPersonalizacion.id)}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramiteVersion.scriptPersonalizacion)}"
+			<p:commandButton id="scriptpersonalizacion" icon="fa fa-bolt" disabled="#{viewDefinicionVersion.tramiteVersion.scriptPersonalizacion eq null}" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PERSONALIZACION_TRAMITE.name() ,viewDefinicionVersion.tramiteVersion.scriptPersonalizacion.id)}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramiteVersion.scriptPersonalizacion)}"
 						process="@this" update="growl"/>
 
 			<p:outputLabel for="scriptparametrosiniciales" value="#{msg['viewDefinicionVersionPropiedades.scriptparametrosiniciales']}" />
-			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersion.consultarScript(viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite.id)}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite)}"
+			<p:commandButton id="scriptparametrosiniciales" icon="fa fa-bolt"  disabled="#{viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite eq null}" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_INICIALES.name() ,viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite.id)}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramiteVersion.scriptInicializacionTramite)}"
 						process="@this" update="growl"/>
 
 			<f:facet name = "footer">

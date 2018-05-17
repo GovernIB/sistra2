@@ -155,6 +155,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 				formularioTramite.getId());
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
 		jFormulariotramite.setPasosRellenar(jFormulariotramiteOriginal.getPasosRellenar());
+		jFormulariotramite.setFormulario(jFormulariotramiteOriginal.getFormulario());
 		entityManager.merge(jFormulariotramite);
 	}
 

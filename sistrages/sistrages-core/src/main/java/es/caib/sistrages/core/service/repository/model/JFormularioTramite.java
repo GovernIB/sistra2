@@ -20,7 +20,6 @@ import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Gestor;
-import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeInterno;
@@ -288,9 +287,9 @@ public class JFormularioTramite implements IModelApi {
 				final JScript script = JScript.fromModel(formulario.getScriptObligatoriedad());
 				jformularioTramite.setScriptObligatoriedad(script);
 			}
-			if (formulario.getScriptPrerregistro() != null) {
-				final JScript script = JScript.fromModel(formulario.getScriptPrerregistro());
-				jformularioTramite.setScriptRetorno(script);
+			if (formulario.getScriptParametros() != null) {
+				final JScript script = JScript.fromModel(formulario.getScriptParametros());
+				jformularioTramite.setScriptParametros(script);
 			}
 			if (formulario.getScriptRetorno() != null) {
 				final JScript script = JScript.fromModel(formulario.getScriptRetorno());
@@ -328,30 +327,21 @@ public class JFormularioTramite implements IModelApi {
 		mformulario.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		mformulario.setOrden(this.getOrden());
 		mformulario.setDebePrerregistrarse(this.getPrerregistro());
+
 		if (this.getScriptDatosIniciales() != null) {
-			final Script script = new Script();
-			script.setId(this.getScriptDatosIniciales().getCodigo());
-			mformulario.setScriptDatosIniciales(script);
+			mformulario.setScriptDatosIniciales(this.getScriptDatosIniciales().toModel());
 		}
 		if (this.getScriptFirmar() != null) {
-			final Script script = new Script();
-			script.setId(this.getScriptFirmar().getCodigo());
-			mformulario.setScriptFirma(script);
+			mformulario.setScriptFirma(this.getScriptFirmar().toModel());
 		}
 		if (this.getScriptObligatoriedad() != null) {
-			final Script script = new Script();
-			script.setId(this.getScriptObligatoriedad().getCodigo());
-			mformulario.setScriptObligatoriedad(script);
+			mformulario.setScriptObligatoriedad(this.getScriptObligatoriedad().toModel());
 		}
-		if (this.getScriptDatosIniciales() != null) {
-			final Script script = new Script();
-			script.setId(this.getScriptDatosIniciales().getCodigo());
-			mformulario.setScriptPrerregistro(script);
+		if (this.getScriptParametros() != null) {
+			mformulario.setScriptParametros(this.getScriptParametros().toModel());
 		}
 		if (this.getScriptRetorno() != null) {
-			final Script script = new Script();
-			script.setId(this.getScriptRetorno().getCodigo());
-			mformulario.setScriptRetorno(script);
+			mformulario.setScriptRetorno(this.getScriptRetorno().toModel());
 		}
 		mformulario.setTipo(TypeFormulario.fromString(this.getTipo()));
 		mformulario.setTipoFormulario(TypeInterno.fromString(this.getTipoFormulario()));

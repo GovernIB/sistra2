@@ -14,6 +14,8 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeScript;
+import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -125,7 +127,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 */
 	public void editarScriptPersonalizacion() {
 
-		cargarDialogScript(this.tramiteVersion.getScriptPersonalizacion());
+		cargarDialogScript(TypeScriptFlujo.SCRIPT_PERSONALIZACION_TRAMITE,
+				this.tramiteVersion.getScriptPersonalizacion());
 
 	}
 
@@ -134,7 +137,8 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 */
 	public void editarScriptInicializacion() {
 
-		cargarDialogScript(this.tramiteVersion.getScriptInicializacionTramite());
+		cargarDialogScript(TypeScriptFlujo.SCRIPT_PARAMETROS_INICIALES,
+				this.tramiteVersion.getScriptInicializacionTramite());
 
 	}
 
@@ -192,11 +196,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 *
 	 * @param id
 	 */
-	private void cargarDialogScript(final Script iScript) {
+	private void cargarDialogScript(final TypeScript typeScript, final Script iScript) {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), typeScript.name());
 		if (id == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, params, true, 950, 700);
 		} else {
-			final Map<String, String> params = new HashMap<>();
 			if (iScript == null) {
 				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
 			} else {
