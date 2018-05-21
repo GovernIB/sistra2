@@ -16,7 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import es.caib.sistrages.core.api.model.HistorialVersion;
-import es.caib.sistrages.core.api.model.types.TypeAccion;
+import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 
 /**
  * HistorialVersion
@@ -186,7 +186,7 @@ public class JHistorialVersion implements IModelApi {
 		historialVersion.setDetalleCambio(this.getDetalleCambio());
 		historialVersion.setFecha(this.getFecha());
 		historialVersion.setRelease(this.getRelease());
-		historialVersion.setTipoAccion(TypeAccion.fromString(this.getTipoAccion()));
+		historialVersion.setTipoAccion(TypeAccionHistorial.fromString(this.getTipoAccion()));
 		historialVersion.setUsuario(this.getUsuario());
 		return historialVersion;
 	}

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.HistorialVersion;
-import es.caib.sistrages.core.api.model.types.TypeAccion;
+import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
@@ -99,7 +99,7 @@ public class HistorialVersionDaoImpl implements HistorialVersionDao {
 	 * lang.Long, es.caib.sistrages.core.api.model.Tramite)
 	 */
 	@Override
-	public void add(final Long idTramiteVersion, final String username, final TypeAccion accion,
+	public void add(final Long idTramiteVersion, final String username, final TypeAccionHistorial accion,
 			final String detalleCambio) {
 		if (idTramiteVersion == null) {
 			throw new FaltanDatosException(STRING_FALTA_HISTORIAL_VERSION);

@@ -19,7 +19,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeAccion;
+import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
@@ -383,14 +383,14 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public void bloquearTramiteVersion(final Long idTramiteVersion, final String username) {
 		tramiteDao.bloquearTramiteVersion(idTramiteVersion, username);
-		historialVersionDao.add(idTramiteVersion, username, TypeAccion.BLOQUEAR, "");
+		historialVersionDao.add(idTramiteVersion, username, TypeAccionHistorial.BLOQUEAR, "");
 	}
 
 	@Override
 	@NegocioInterceptor
 	public void desbloquearTramiteVersion(final Long idTramiteVersion, final String username, final String detalle) {
 		tramiteDao.desbloquearTramiteVersion(idTramiteVersion);
-		historialVersionDao.add(idTramiteVersion, username, TypeAccion.BLOQUEAR, detalle);
+		historialVersionDao.add(idTramiteVersion, username, TypeAccionHistorial.BLOQUEAR, detalle);
 	}
 
 	@Override

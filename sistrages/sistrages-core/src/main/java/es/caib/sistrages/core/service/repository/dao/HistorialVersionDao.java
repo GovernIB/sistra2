@@ -3,7 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.HistorialVersion;
-import es.caib.sistrages.core.api.model.types.TypeAccion;
+import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 
 /**
  * La interface HistorialVersionDao.
@@ -50,6 +50,6 @@ public interface HistorialVersionDao {
 	 * @param detalleCambio
 	 *            Detalle del cambio
 	 */
-	void add(Long idTramiteVersion, final String username, final TypeAccion accion, final String detalleCambio);
+	void add(Long idTramiteVersion, final String username, final TypeAccionHistorial accion, final String detalleCambio);
 
 }

@@ -2,7 +2,7 @@ package es.caib.sistrages.core.api.model;
 
 import java.util.Date;
 
-import es.caib.sistrages.core.api.model.types.TypeAccion;
+import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 
 /**
  * Historial Version.
@@ -22,7 +22,7 @@ public class HistorialVersion extends ModelApi {
 	private Date fecha;
 
 	/** Tipo acción: C (Creación) / M (Modificación) / I (Importación) */
-	private TypeAccion tipoAccion;
+	private TypeAccionHistorial tipoAccion;
 
 	/** Release version. **/
 	private int release;
@@ -86,7 +86,7 @@ public class HistorialVersion extends ModelApi {
 	/**
 	 * @return the tipoAccion
 	 */
-	public TypeAccion getTipoAccion() {
+	public TypeAccionHistorial getTipoAccion() {
 		return tipoAccion;
 	}
 
@@ -94,7 +94,7 @@ public class HistorialVersion extends ModelApi {
 	 * @param tipoAccion
 	 *            the tipoAccion to set
 	 */
-	public void setTipoAccion(final TypeAccion tipoAccion) {
+	public void setTipoAccion(final TypeAccionHistorial tipoAccion) {
 		this.tipoAccion = tipoAccion;
 	}
 

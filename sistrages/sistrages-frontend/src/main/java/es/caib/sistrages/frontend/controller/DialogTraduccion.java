@@ -122,37 +122,39 @@ public class DialogTraduccion extends DialogControllerBase {
 
 			final TypeIdioma idiomaType = TypeIdioma.fromString(idioma);
 
-			switch (idiomaType) {
-			case CATALAN:
-				textoCa = data.getTraduccion(idioma);
-				visibleCa = true;
-				if (idiomasObligatorios.contains(idioma)) {
-					requiredCa = true;
+			if (idiomaType != null) {
+				switch (idiomaType) {
+				case CATALAN:
+					textoCa = data.getTraduccion(idioma);
+					visibleCa = true;
+					if (idiomasObligatorios.contains(idioma)) {
+						requiredCa = true;
+					}
+					break;
+				case CASTELLANO:
+					textoEs = data.getTraduccion(idioma);
+					visibleEs = true;
+					if (idiomasObligatorios.contains(idioma)) {
+						requiredEs = true;
+					}
+					break;
+				case INGLES:
+					textoEn = data.getTraduccion(idioma);
+					visibleEn = true;
+					if (idiomasObligatorios.contains(idioma)) {
+						requiredEn = true;
+					}
+					break;
+				case ALEMAN:
+					textoDe = data.getTraduccion(idioma);
+					visibleDe = true;
+					if (idiomasObligatorios.contains(idioma)) {
+						requiredDe = true;
+					}
+					break;
+				default:
+					break;
 				}
-				break;
-			case CASTELLANO:
-				textoEs = data.getTraduccion(idioma);
-				visibleEs = true;
-				if (idiomasObligatorios.contains(idioma)) {
-					requiredEs = true;
-				}
-				break;
-			case INGLES:
-				textoEn = data.getTraduccion(idioma);
-				visibleEn = true;
-				if (idiomasObligatorios.contains(idioma)) {
-					requiredEn = true;
-				}
-				break;
-			case ALEMAN:
-				textoDe = data.getTraduccion(idioma);
-				visibleDe = true;
-				if (idiomasObligatorios.contains(idioma)) {
-					requiredDe = true;
-				}
-				break;
-			default:
-				break;
 			}
 		}
 	}

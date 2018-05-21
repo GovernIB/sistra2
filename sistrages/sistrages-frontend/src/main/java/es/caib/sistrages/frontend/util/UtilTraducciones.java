@@ -155,6 +155,6 @@ public final class UtilTraducciones {
 	 * @return
 	 */
 	public static String getIdiomasPorDefectoTramite() {
-		return TypeIdioma.CATALAN.toString() + "," + TypeIdioma.CASTELLANO.toString();
+		return TypeIdioma.CATALAN.toString() + ";" + TypeIdioma.CASTELLANO.toString();
 	}
 }

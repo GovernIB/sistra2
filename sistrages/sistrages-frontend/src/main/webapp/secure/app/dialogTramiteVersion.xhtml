@@ -36,9 +36,6 @@
 
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-				 	<p:outputLabel for="identificador" value="#{msg['dialogTramiteVersion.codigo']}"  />
-				 	<p:inputText id="identificador" value="#{dialogTramiteVersion.data.identificador}" disabled="#{!dialogTramiteVersion.alta}" required="true" size="30" maxlength="20" readonly="true" />
-
 					<p:outputLabel for="version" value="#{msg['dialogTramiteVersion.version']}" />
 				 	<p:inputText id="version" value="#{dialogTramiteVersion.dataVersion.numeroVersion}" disabled="#{!dialogTramiteVersion.alta}" required="true" size="30" maxlength="20" />
 

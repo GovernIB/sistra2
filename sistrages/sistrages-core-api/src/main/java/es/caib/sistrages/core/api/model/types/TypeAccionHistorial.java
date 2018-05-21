@@ -6,7 +6,7 @@ package es.caib.sistrages.core.api.model.types;
  * @author Indra
  *
  */
-public enum TypeAccion {
+public enum TypeAccionHistorial {
 	/**
 	 * Creación de una versión de trámite.
 	 */
@@ -41,10 +41,10 @@ public enum TypeAccion {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param iValor
 	 */
-	private TypeAccion(final String iValor) {
+	private TypeAccionHistorial(final String iValor) {
 		this.valor = iValor;
 	}
 
@@ -54,10 +54,10 @@ public enum TypeAccion {
 	 * @param tipo
 	 * @return
 	 */
-	public static TypeAccion fromString(final String text) {
-		TypeAccion respuesta = null;
+	public static TypeAccionHistorial fromString(final String text) {
+		TypeAccionHistorial respuesta = null;
 		if (text != null) {
-			for (final TypeAccion b : TypeAccion.values()) {
+			for (final TypeAccionHistorial b : TypeAccionHistorial.values()) {
 				if (text.equalsIgnoreCase(b.toString())) {
 					respuesta = b;
 					break;
@@ -71,4 +71,5 @@ public enum TypeAccion {
 	public String toString() {
 		return valor;
 	}
+
 }
