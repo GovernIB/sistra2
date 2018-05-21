@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="131.000000" height="131.000000" preserveAspectRatio="xMidYMid meet"><rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none"/>
+
+<g class="currentLayer"><title>Layer 1</title><g transform="translate(0,131) scale(0.10000000149011612,-0.10000000149011612) " fill="#ffffff" stroke="none" id="svg_1" class="" fill-opacity="1">
+<path d="M487 1264 c-4 -4 -7 -57 -7 -118 l0 -111 61 -62 c34 -35 65 -63 70 -63 6 0 8 76 7 178 l-3 177 -60 3 c-34 2 -64 0 -68 -4z" id="svg_2" fill="#ffffff" fill-opacity="1"/>
+<path d="M720 1027 l0 -244 56 -53 c35 -33 59 -49 65 -43 5 5 8 125 7 294 l-3 284 -62 3 -63 3 0 -244z" id="svg_3" fill="#ffffff" fill-opacity="1"/>
+<path d="M950 913 l0 -359 53 -52 c29 -29 58 -52 65 -52 9 0 12 90 10 408 l-3 407 -62 3 -63 3 0 -358z" id="svg_4" fill="#ffffff" fill-opacity="1"/>
+<path d="M256 1143 c-3 -3 -6 -173 -6 -377 0 -385 4 -425 45 -506 25 -50 65 -102 76 -98 6 2 10 174 9 443 l0 440 -43 43 c-46 48 -71 65 -81 55z" id="svg_5" fill="#ffffff" fill-opacity="1"/>
+<path d="M487 913 c-4 -3 -7 -195 -7 -425 l0 -419 38 -16 c20 -8 51 -16 67 -17 l30 -1 2 380 3 380 -61 63 c-67 68 -63 65 -72 55z" id="svg_6" fill="#ffffff" fill-opacity="1"/>
+<path d="M720 354 l0 -326 29 5 c17 4 46 13 65 21 l36 15 0 248 0 249 -58 57 c-32 31 -61 57 -65 57 -4 0 -7 -147 -7 -326z" id="svg_7" fill="#ffffff" fill-opacity="1"/>
+<path d="M948 443 c-2 -5 -1 -73 2 -153 l5 -145 24 25 c13 14 39 58 59 98 l35 73 -54 55 c-53 53 -65 61 -71 47z" id="svg_8" fill="#ffffff" fill-opacity="1"/>
+</g><polyline fill="#eb1a1a" stroke="#222222" stroke-width="2" stroke-linejoin="round" stroke-dashoffset="" fill-rule="nonzero" marker-start="" marker-mid="" marker-end="" id="svg_10" points="32.80159018375488,28.35714587386765 32.80159018375488,28.35714587386765 " style="color: rgb(0, 0, 0);"/><path fill="#ffffff" fill-opacity="1" stroke="none" stroke-width="2" stroke-dasharray="none" stroke-linejoin="round" stroke-linecap="butt" stroke-dashoffset="" fill-rule="nonzero" opacity="1" marker-start="" marker-mid="" marker-end="" id="svg_15" d="M25.81746,3.27778L38.4127,3.49206L38.09524,17.46032L26.03175,6.66667L25.81746,3.27778z" style="color: rgb(235, 26, 26);" class="selected"/></g></svg>
