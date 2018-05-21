@@ -2,6 +2,7 @@ package es.caib.sistrages.core.api.service;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
@@ -54,8 +55,8 @@ public interface FormularioInternoService {
 	 */
 	PaginaFormulario getContenidoPaginaFormulario(Long pId);
 
-	Long addComponenteFormulario(TypeObjetoFormulario pTipoObjeto, Long pIdPagina, Long pIdLinea, Integer pOrden,
-			String pPosicion);
+	ObjetoFormulario addComponenteFormulario(TypeObjetoFormulario pTipoObjeto, Long pIdPagina, Long pIdLinea,
+			Integer pOrden, String pPosicion);
 
 	void updateComponenteFormulario(ComponenteFormulario pComponente);
 

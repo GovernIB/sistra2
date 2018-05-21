@@ -35,6 +35,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SecurityService;
@@ -171,11 +172,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 
 		// Desarrollador
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			if (area != null) {
-				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
-				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-			}
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && area != null) {
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+			res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
 		}
 
 		return res;
@@ -195,12 +194,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 
 		// Desarrollador
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			if (area != null) {
-				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
-				res = (permisos.contains(TypeRolePermisos.MODIFICACION)
-						|| permisos.contains(TypeRolePermisos.ALTA_BAJA));
-			}
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && area != null) {
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+			res = (permisos.contains(TypeRolePermisos.MODIFICACION) || permisos.contains(TypeRolePermisos.ALTA_BAJA));
 		}
 
 		return res;
@@ -400,7 +396,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getId(), Long.valueOf(this.id))) {
+		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getId(), this.id)) {
 
 			dominioService.removeTramiteVersion(this.dominioSeleccionado.getId(), this.tramiteVersion.getCodigo());
 			final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
@@ -662,6 +658,60 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	// ------- VIEW DE PASO DE DOCUMENTO ------------------------------
+
+	/**
+	 * Consultar Script.
+	 *
+	 * @param iScript
+	 */
+	public void editarScriptListaDinamica() {
+
+		final Script script = this.getTramitePasoANEXSeleccionado().getScriptAnexosDinamicos();
+		// Muestra dialogo
+		final Map<String, String> map = new HashMap<>();
+		map.put(TypeParametroVentana.TIPO_SCRIPT.toString(), TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS.name());
+		if (script == null) {
+			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
+		} else {
+			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
+		}
+
+		if (this.permiteEditar()) {
+			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.EDICION.toString());
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, map, true, 950, 700);
+		} else {
+			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 950, 700);
+		}
+
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoScriptListaDinamica(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Script script = (Script) respuesta.getResult();
+			this.getTramitePasoANEXSeleccionado().setScriptAnexosDinamicos(script);
+			tramiteService.updateTramitePaso(this.getTramitePasoANEXSeleccionado());
+
+			message = UtilJSF.getLiteral("info.modificado.ok");
+
+		}
+
+		// Mostramos mensaje
+		if (message != null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+		}
+	}
 
 	/**
 	 * Abre un di&aacute;logo para anyadir los datos.
@@ -1071,7 +1121,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			final String url = UtilJSF.getUrlTramitePaso(tramitePaso);
 			final DefaultTreeNode nodo = new DefaultTreeNode(
-					new OpcionArbol(textoTramite, UtilJSF.getUrlArbolDefinicionVersion(url, idTramite), tramitePaso));
+					new OpcionArbol(textoTramite, UtilJSF.getUrlArbolDefinicionVersion(url), tramitePaso));
 			marcarNodoComoSeleccionado(nodo, idTramite, url, nodoSeleccionado, idNodoSeleccionado);
 
 			if (tramitePaso instanceof TramitePasoRellenar
@@ -1082,8 +1132,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 					/** Nodo formularios. **/
 					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(new OpcionArbol(formulario.getCodigo(),
-							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario", formulario.getId()),
-							formulario, tramitePaso));
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario"), formulario,
+							tramitePaso));
 					marcarNodoComoSeleccionado(nodoFormulario, formulario.getId(), "viewDefinicionVersionFormulario",
 							nodoSeleccionado, idNodoSeleccionado);
 					nodo.getChildren().add(nodoFormulario);
@@ -1098,8 +1148,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 					/** Nodo documento. **/
 					final DefaultTreeNode nodoDocumento = new DefaultTreeNode(new OpcionArbol(documento.getCodigo(),
-							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo", documento.getId()),
-							documento, tramitePaso));
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo"), documento,
+							tramitePaso));
 					marcarNodoComoSeleccionado(nodoDocumento, documento.getId(), "viewDefinicionVersionAnexo",
 							nodoSeleccionado, idNodoSeleccionado);
 					nodo.getChildren().add(nodoDocumento);
@@ -1113,8 +1163,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 					/** Nodo Tasa. **/
 					final DefaultTreeNode nodoTasa = new DefaultTreeNode(new OpcionArbol(tasa.getCodigo(),
-							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa", tasa.getId()), tasa,
-							tramitePaso));
+							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa"), tasa, tramitePaso));
 					marcarNodoComoSeleccionado(nodoTasa, tasa.getId(), "viewDefinicionVersionTasa", nodoSeleccionado,
 							idNodoSeleccionado);
 					nodo.getChildren().add(nodoTasa);
@@ -1282,7 +1331,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * M&eacute;todo que se ejecuta cuando se selecciona un nodo del arbol.
+	 * Metodo que se ejecuta cuando se selecciona un nodo del arbol.
 	 *
 	 * @param event
 	 *            evento que se ha producido

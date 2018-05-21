@@ -13,11 +13,13 @@ import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAccion;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
@@ -26,6 +28,7 @@ import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
+import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
@@ -34,6 +37,10 @@ import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 public class TramiteServiceImpl implements TramiteService {
 
 	private final Logger log = LoggerFactory.getLogger(TramiteServiceImpl.class);
+
+	/** DAO de historial version. **/
+	@Autowired
+	HistorialVersionDao historialVersionDao;
 
 	/** DAO de area. **/
 	@Autowired
@@ -370,6 +377,32 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public void removeDocAnexo(final Long idDocumento) {
 		tramitePasoDao.removeDocAnexo(idDocumento);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void bloquearTramiteVersion(final Long idTramiteVersion, final String username) {
+		tramiteDao.bloquearTramiteVersion(idTramiteVersion, username);
+		historialVersionDao.add(idTramiteVersion, username, TypeAccion.BLOQUEAR, "");
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void desbloquearTramiteVersion(final Long idTramiteVersion, final String username, final String detalle) {
+		tramiteDao.desbloquearTramiteVersion(idTramiteVersion);
+		historialVersionDao.add(idTramiteVersion, username, TypeAccion.BLOQUEAR, detalle);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<HistorialVersion> listHistorialVersion(final Long idTramiteVersion, final String filtro) {
+		return historialVersionDao.getAllByFiltro(idTramiteVersion, filtro);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public HistorialVersion getHistorialVersion(final Long idHistorialVersion) {
+		return historialVersionDao.getById(idHistorialVersion);
 	}
 
 }

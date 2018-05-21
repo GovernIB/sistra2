@@ -8,10 +8,6 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypeEtiqueta {
 	/**
-	 * Normal.
-	 */
-	NORMAL("N"),
-	/**
 	 * Info.
 	 */
 	INFO("I"),

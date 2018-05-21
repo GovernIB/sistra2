@@ -19,15 +19,15 @@
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.letra']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" maxlength="2">
-						<p:ajax event="blur" process="@this" />
-					</p:inputText>
+	         			<p:ajax event="blur" process="@this" />
+	         		</p:inputText>
 	         	</h:column>
 
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang)}" styleClass="margin-right-10"  readonly="true"/>
-	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto()}" process="@this" styleClass="va-top">
-	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraducciones}" update="texto" />
+	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto}" process="@this" styleClass="va-top">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>
 
 	         	</h:column>

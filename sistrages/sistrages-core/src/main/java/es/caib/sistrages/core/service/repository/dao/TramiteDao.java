@@ -149,4 +149,20 @@ public interface TramiteDao {
 	 */
 	List<Dominio> getTramiteDominios(Long idTramiteVersion);
 
+	/**
+	 * Bloquea un tramite.
+	 *
+	 * @param idTramiteVersion
+	 * @param username
+	 */
+	void bloquearTramiteVersion(Long idTramiteVersion, String username);
+
+	/**
+	 * Desbloquea un tramite.
+	 *
+	 * @param idTramiteVersion
+	 * @param username
+	 */
+	void desbloquearTramiteVersion(Long idTramiteVersion);
+
 }

@@ -114,7 +114,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 
 		jTramitePaso.getPasoRellenar().getFormulariosTramite().remove(jFormulario);
-		entityManager.merge(jTramitePaso);
+		entityManager.remove(jFormulario);
 	}
 
 	@Override

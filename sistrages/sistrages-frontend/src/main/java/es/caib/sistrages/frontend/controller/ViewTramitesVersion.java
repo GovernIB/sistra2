@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
@@ -126,9 +127,9 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	 */
 	public void editar() {
 		// Verifica si no hay fila seleccionada
-		/*
-		 * if (!verificarFilaSeleccionada()) return;
-		 */
+		if (!verificarFilaSeleccionada())
+			return;
+
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
 		// params.put(TypeParametroVentana.ID.toString(),
@@ -156,23 +157,96 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Bloquear version.
+	 * Bloquear version. Pautas a seguir:
+	 * <ul>
+	 * <li>Revisar si el tramite versión está bloqueado.</li>
+	 * <li>Revisar si tiene permiso de edición.</li>
+	 * <li>Sólo se puede bloquear en el entorno de desarrollo.</li>
+	 * </ul>
 	 */
 	public void bloquear() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+
+		if (!verificarFilaSeleccionada())
+			return;
+
+		if (!checkEntornoDesarrollo()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
+			return;
+		}
+
+		if (this.datoSeleccionado.getBloqueada()) {
+			// Si está bloqueada, entonces no puedes bloquearlo.
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.bloquear.errorYaBloqueado"));
+			return;
+		}
+
+		if (!this.permiteModificacion) {
+			// Si no puedes editar, no puedes bloquear
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
+			return;
+		}
+
+		tramiteService.bloquearTramiteVersion(this.datoSeleccionado.getCodigo(),
+				UtilJSF.getSessionBean().getUserName());
+
+		filtrar();
+		this.datoSeleccionado = null;
 	}
 
 	/**
 	 * Bloquear version.
 	 */
 	public void desbloquear() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+
+		if (!verificarFilaSeleccionada())
+			return;
+
+		if (!checkEntornoDesarrollo()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
+			return;
+		}
+
+		if (!this.datoSeleccionado.getBloqueada()) {
+			// Si está desbloqueada, entonces no puedes bloquearlo.
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.bloquear.errorYaDesbloqueado"));
+			return;
+		}
+
+		if (!this.permiteModificacion) {
+			// Si no puedes editar, no puedes bloquear
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
+
+		// UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION,
+		// params, true, 1200, 720);
+
 	}
 
 	/**
-	 * Cuaderno.
+	 * Comprueba si el entorno es DESARROLLO.
+	 *
+	 * @return
 	 */
-	public void cuaderno() {
+	private boolean checkEntornoDesarrollo() {
+		final String entorno = FacesContext
+				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
+						"#{negocioModuleConfig}", es.caib.sistrages.frontend.model.comun.ModuleConfig.class)
+				.getEntorno();
+		return "des".equals(entorno);
+	}
+
+	/**
+	 * Exportar version.
+	 */
+	public void exportar() {
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 
@@ -187,7 +261,13 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	 * Historial.
 	 */
 	public void historial() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		if (!verificarFilaSeleccionada())
+			return;
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
+
+		UtilJSF.openDialog(DialogHistorialVersion.class, TypeModoAcceso.CONSULTA, params, true, 900, 420);
 	}
 
 	/**

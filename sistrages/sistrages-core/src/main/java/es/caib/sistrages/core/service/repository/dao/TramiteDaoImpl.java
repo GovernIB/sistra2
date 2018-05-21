@@ -229,11 +229,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				final TramiteVersion tramiteVersion = new TramiteVersion();
 				tramiteVersion.setCodigo(jTramiteVersion.getCodigo());
 				tramiteVersion.setNumeroVersion(jTramiteVersion.getNumeroVersion());
-				if (jTramiteVersion.getBloqueada()) {
-					tramiteVersion.setBloqueada(1);
-				} else {
-					tramiteVersion.setBloqueada(0);
-				}
+				tramiteVersion.setBloqueada(jTramiteVersion.getBloqueada());
 				tramiteVersion.setCodigoUsuarioBloqueo(jTramiteVersion.getUsuarioIdBloqueo());
 				tramiteVersion.setDatosUsuarioBloqueo(jTramiteVersion.getUsuarioDatosBloqueo());
 				tramiteVersion.setActiva(jTramiteVersion.isActiva());
@@ -380,6 +376,28 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public void bloquearTramiteVersion(final Long idTramiteVersion, final String username) {
+		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
+		if (!jTramiteVersion.getBloqueada()) {
+			jTramiteVersion.setBloqueada(true);
+			jTramiteVersion.setUsuarioDatosBloqueo(username);
+			entityManager.merge(jTramiteVersion);
+		}
+
+	}
+
+	@Override
+	public void desbloquearTramiteVersion(final Long idTramiteVersion) {
+		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
+		if (jTramiteVersion.getBloqueada()) {
+			jTramiteVersion.setBloqueada(false);
+			jTramiteVersion.setUsuarioDatosBloqueo("");
+			jTramiteVersion.setRelease(jTramiteVersion.getRelease() + 1);
+			entityManager.merge(jTramiteVersion);
+		}
 	}
 
 }

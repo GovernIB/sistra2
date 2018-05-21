@@ -11,6 +11,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
@@ -72,7 +73,7 @@ public class FormularoInternoServiceBean implements FormularioInternoService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Long addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
+	public ObjetoFormulario addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
 			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
 		return formIntService.addComponenteFormulario(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion);
 	}

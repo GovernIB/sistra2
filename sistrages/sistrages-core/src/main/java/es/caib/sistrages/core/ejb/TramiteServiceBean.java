@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -287,4 +288,27 @@ public class TramiteServiceBean implements TramiteService {
 		tramiteService.removeDocAnexo(idDocumento);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void bloquearTramiteVersion(final Long idTramiteVersion, final String username) {
+		tramiteService.bloquearTramiteVersion(idTramiteVersion, username);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void desbloquearTramiteVersion(final Long idTramiteVersion, final String username, final String detalle) {
+		tramiteService.desbloquearTramiteVersion(idTramiteVersion, username, detalle);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<HistorialVersion> listHistorialVersion(final Long idTramiteVersion, final String filtro) {
+		return tramiteService.listHistorialVersion(idTramiteVersion, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public HistorialVersion getHistorialVersion(final Long idHistorialVersion) {
+		return tramiteService.getHistorialVersion(idHistorialVersion);
+	}
 }

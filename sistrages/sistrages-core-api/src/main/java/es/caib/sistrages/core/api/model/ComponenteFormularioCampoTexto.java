@@ -22,7 +22,7 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 
 	private Integer normalNumeroLineas;
 
-	private String normalExpresionRegular;
+	private String expresionRegular;
 
 	private Integer numeroDigitosEnteros;
 
@@ -94,12 +94,12 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 		this.normalNumeroLineas = normalNumeroLineas;
 	}
 
-	public String getNormalExpresionRegular() {
-		return normalExpresionRegular;
+	public String getExpresionRegular() {
+		return expresionRegular;
 	}
 
-	public void setNormalExpresionRegular(final String normalExpresionRegular) {
-		this.normalExpresionRegular = normalExpresionRegular;
+	public void setExpresionRegular(final String normalExpresionRegular) {
+		this.expresionRegular = normalExpresionRegular;
 	}
 
 	public Integer getNumeroDigitosEnteros() {

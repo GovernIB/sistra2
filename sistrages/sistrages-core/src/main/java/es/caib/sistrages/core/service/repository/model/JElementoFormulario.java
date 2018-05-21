@@ -14,6 +14,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
@@ -36,11 +38,11 @@ public class JElementoFormulario implements IModelApi {
 	@JoinColumn(name = "FEL_CODFLS", nullable = false)
 	private JLineaFormulario lineaFormulario;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FEL_AYUDA")
 	private JLiteral ayuda;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FEL_TEXTO")
 	private JLiteral texto;
 
@@ -258,11 +260,37 @@ public class JElementoFormulario implements IModelApi {
 		jModel.setIdentificador("DEFAULT_" + System.currentTimeMillis());
 		jModel.setTipo(pTipoObjeto.toString());
 		jModel.setOrden(pOrden);
-		jModel.setNumeroColumnas(1);
-		jModel.setNoMostrarTexto(true);
+
 		jModel.setAlineacionTexto(TypeAlineacionTexto.IZQUIERDA.toString());
 		jModel.setMostrarEnListaElementos(false);
-		jModel.setLineaFormulario(pJLinea);
+		pJLinea.addElemento(jModel);
+
+		// ponemos texto segun componente
+		final Literal texto = new Literal();
+		switch (pTipoObjeto) {
+		case CAMPO_TEXTO:
+			texto.add(new Traduccion("es", "Campo"));
+			texto.add(new Traduccion("ca", "Camp"));
+			jModel.setNumeroColumnas(1);
+			jModel.setNoMostrarTexto(false);
+			break;
+		case ETIQUETA:
+			texto.add(new Traduccion("es", "Mensaje"));
+			texto.add(new Traduccion("ca", "Missatge"));
+			jModel.setNumeroColumnas(6);
+			jModel.setNoMostrarTexto(false);
+			break;
+		case SECCION:
+			texto.add(new Traduccion("es", "Sección"));
+			texto.add(new Traduccion("ca", "Secció"));
+			jModel.setNumeroColumnas(6);
+			jModel.setNoMostrarTexto(false);
+			break;
+		default:
+			jModel.setNoMostrarTexto(true);
+			jModel.setNumeroColumnas(1);
+		}
+		jModel.setTexto(JLiteral.fromModel(texto));
 		return jModel;
 	}
 

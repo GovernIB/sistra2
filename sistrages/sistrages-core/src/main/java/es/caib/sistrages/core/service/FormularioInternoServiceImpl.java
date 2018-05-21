@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
@@ -86,7 +87,7 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	}
 
 	@Override
-	public Long addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
+	public ObjetoFormulario addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
 			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
 		return formIntDao.addComponente(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion);
 	}

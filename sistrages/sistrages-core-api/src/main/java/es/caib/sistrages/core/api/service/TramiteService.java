@@ -7,6 +7,7 @@ import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -316,4 +317,37 @@ public interface TramiteService {
 	 */
 	public void removeDocAnexo(Long idDocumento);
 
+	/**
+	 * Bloquea un tramite
+	 *
+	 * @param idTramiteVersion
+	 * @param username
+	 */
+	public void bloquearTramiteVersion(Long idTramiteVersion, String username);
+
+	/**
+	 * Desbloquea un tramite.
+	 *
+	 * @param idTramiteVersion
+	 * @param username
+	 * @param detalle
+	 */
+	public void desbloquearTramiteVersion(final Long idTramiteVersion, final String username, final String detalle);
+
+	/**
+	 * Obtiene una lista de historial de un tramite version.
+	 *
+	 * @param idTramiteVersion
+	 * @param filtro
+	 * @return
+	 */
+	public List<HistorialVersion> listHistorialVersion(Long idTramiteVersion, String filtro);
+
+	/**
+	 * Obtiene un historial version.
+	 *
+	 * @param idHistorialVersion
+	 * @return
+	 */
+	public HistorialVersion getHistorialVersion(Long idHistorialVersion);
 }

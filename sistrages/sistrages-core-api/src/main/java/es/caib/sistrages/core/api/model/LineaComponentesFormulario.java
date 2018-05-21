@@ -33,4 +33,62 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 		this.orden = orden;
 	}
 
+	public boolean completa() {
+		boolean res = false;
+		int ncolumnas = 0;
+		if (!componentes.isEmpty()) {
+			for (final ComponenteFormulario elementoFormulario : componentes) {
+				switch (elementoFormulario.getTipo()) {
+				case SECCION:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				case ETIQUETA:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				case CAMPO_TEXTO:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				default:
+					break;
+				}
+
+				if (ncolumnas >= 6) {
+					res = true;
+					break;
+				}
+			}
+		}
+		return res;
+	}
+
+	public boolean cabenComponentes(final ComponenteFormulario pComponente) {
+		boolean res = true;
+		int ncolumnas = pComponente.getNumColumnas();
+		if (!componentes.isEmpty()) {
+			for (final ComponenteFormulario elementoFormulario : componentes) {
+				if (!elementoFormulario.getId().equals(pComponente.getId())) {
+					switch (elementoFormulario.getTipo()) {
+					case SECCION:
+						ncolumnas += elementoFormulario.getNumColumnas();
+						break;
+					case ETIQUETA:
+						ncolumnas += elementoFormulario.getNumColumnas();
+						break;
+					case CAMPO_TEXTO:
+						ncolumnas += elementoFormulario.getNumColumnas();
+						break;
+					default:
+						break;
+					}
+
+					if (ncolumnas > 6) {
+						res = false;
+						break;
+					}
+				}
+			}
+		}
+		return res;
+	}
+
 }

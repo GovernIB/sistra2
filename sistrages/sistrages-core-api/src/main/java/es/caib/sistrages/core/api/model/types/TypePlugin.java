@@ -40,8 +40,10 @@ public enum TypePlugin {
 	 */
 	REGISTRO("E");
 
+	/** Valor. **/
 	private String valor;
 
+	/** Constructor. **/
 	private TypePlugin(final String iValor) {
 		this.valor = iValor;
 	}

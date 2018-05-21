@@ -6,6 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAlineacionTexto" var="TypeAlineacionTexto"/>
 
 <h:body>
 
@@ -14,19 +15,19 @@
 			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.' += dialogDisenyoFormulario.objetoFormularioEdit.tipo]}" />
 		</h3>
 
-		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
+		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades'].concat(' orden:').concat(dialogDisenyoFormulario.objetoFormularioEdit.orden)}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
 
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
 
-	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}">
-	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
+	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" columnClasses="w35,w65" styleClass="w100">
+	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<h:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50">
 	         			<p:ajax event="blur" process="@this" />
-	         		</h:inputText>
+	         		</p:inputText>
 	         	</h:column>
 
-				<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
+				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
 	         	<h:column>
 	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" style="width:125px">
 
@@ -41,37 +42,57 @@
 				        </p:selectOneMenu>
  				</h:column>
 
-	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
+	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column>
-	         		<h:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang)}" readonly="true"/>
-	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto()}" process="@this">
-	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraducciones}" update="texto" />
+	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang)}" readonly="true" styleClass="margin-right-10" />
+	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto}" process="@this" styleClass="va-top">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>
 	         	</h:column>
 
-				<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.ayudaOnline']}" /></h:column>
+				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.Alineacion']}" /></h:column>
+				<h:column>
+					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true">
+					    <p:ajax event="blur" process="@this" />
+					    <f:selectItems value="#{TypeAlineacionTexto.ALL_VALUES}" var="tipoAlineacion" itemLabel="#{msg['typeAlineacionTexto.' += tipoAlineacion]}" />
+					</p:selectOneMenu>
+				</h:column>
+
+	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noMostrarTexto']}"/></h:column>
 	         	<h:column>
-	         		<h:inputText id="ayuda" value="#{dialogDisenyoFormulario.objetoFormularioEdit.ayuda.getTraduccion(sessionBean.lang)}" readonly="true"/>
-	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda()}" process="@this">
-	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraducciones}" update="ayuda" />
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noMostrarTexto}">
+	         			<p:ajax event="change" global="false" />
+	         		</p:selectBooleanCheckbox>
+	         	</h:column>
+
+				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.ayudaOnline']}" /></h:column>
+	         	<h:column>
+	         		<p:inputText id="ayuda" value="#{dialogDisenyoFormulario.objetoFormularioEdit.ayuda.getTraduccion(sessionBean.lang)}" readonly="true" styleClass="margin-right-10"/>
+	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda}" process="@this" styleClass="va-top">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesAyuda}" update="ayuda" />
 	        		</p:commandButton>
 				</h:column>
 
-	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.obligatorio']}"/></h:column>
+				<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.obligatorio']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}">
-	         			<f:ajax event="click" execute="@this" />
-	         		</h:selectBooleanCheckbox>
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}">
+	         			<p:ajax event="change" global="false" />
+	         		</p:selectBooleanCheckbox>
 	         	</h:column>
 
-	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}" rendered="false"/></h:column>
+	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<h:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}">
-	         			<f:ajax event="click" execute="@this" />
-	         		</h:selectBooleanCheckbox>
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}">
+	         			<p:ajax event="change" global="false" />
+	         		</p:selectBooleanCheckbox>
 				</h:column>
 
-
+	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noModificable']}"/></h:column>
+	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noModificable}">
+	         			<p:ajax event="change" global="false" />
+	         		</p:selectBooleanCheckbox>
+				</h:column>
 
 				<ui:include src="#{dialogDisenyoFormulario.detalleComponenteUrl}" />
 
