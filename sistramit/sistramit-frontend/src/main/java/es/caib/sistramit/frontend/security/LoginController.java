@@ -25,12 +25,13 @@ import es.caib.sistra2.commons.utils.UserAgentUtil;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.LoginException;
 import es.caib.sistramit.core.api.model.comun.ConstantesNumero;
+import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.service.SecurityService;
+import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.frontend.Errores;
-import es.caib.sistramit.frontend.ModuleConfig;
 import es.caib.sistramit.frontend.SesionHttp;
 import es.caib.sistramit.frontend.model.ErrorGeneral;
 import es.caib.sistramit.frontend.model.LoginFormInfo;
@@ -54,6 +55,10 @@ public final class LoginController {
 
 	/** Atributo constante IDIOMA de LoginController. */
 	private static final String IDIOMA = "idioma";
+
+	/** Configuracion. */
+	@Autowired
+	private SystemService systemService;
 
 	/** Informacion de sesion de tramitacion. */
 	@Autowired
@@ -147,7 +152,8 @@ public final class LoginController {
 		if (lang == null) {
 			lang = "es";
 		}
-		final String urlCallback = ModuleConfig.urlSistramit + ConstantesSeguridad.PUNTOENTRADA_ACCESO_CLAVE;
+		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.URL_SISTRAMIT)
+				+ ConstantesSeguridad.PUNTOENTRADA_ACCESO_CLAVE;
 		return new ModelAndView("redirect:" + securityService.iniciarSesionClave(lang, urlCallback));
 	}
 
@@ -167,7 +173,8 @@ public final class LoginController {
 		if (lang == null) {
 			lang = "es";
 		}
-		final String urlCallback = ModuleConfig.urlSistramit + ConstantesSeguridad.PUNTOENTRADA_LOGOUT_CLAVE;
+		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.URL_SISTRAMIT)
+				+ ConstantesSeguridad.PUNTOENTRADA_LOGOUT_CLAVE;
 		return new ModelAndView("redirect:" + securityService.iniciarLogoutSesionClave(lang, urlCallback));
 	}
 
@@ -191,7 +198,9 @@ public final class LoginController {
 	 *            Idioma login
 	 */
 	private void sanitizeIdioma(final String pIdiomaSavedRequest) {
-		final String langs[] = ModuleConfig.idiomasSoportados.split(",");
+		final String idiomasSoportados = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+		final String langs[] = idiomasSoportados.split(",");
 		boolean soportado = false;
 		for (final String lang : langs) {
 			if (lang.equals(pIdiomaSavedRequest)) {

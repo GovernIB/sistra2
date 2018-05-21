@@ -23,8 +23,8 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 
 	@Override
 	public String iniciarTramite(final String idTramite, final int version, final String idioma,
-			final String idProcedimiento, final String urlInicio, final Map<String, String> parametrosInicio) {
-		return flujoTramitacionService.iniciarTramite(idTramite, version, idioma, idProcedimiento, urlInicio,
+			final String idTramiteCatalogo, final String urlInicio, final Map<String, String> parametrosInicio) {
+		return flujoTramitacionService.iniciarTramite(idTramite, version, idioma, idTramiteCatalogo, urlInicio,
 				parametrosInicio);
 	}
 

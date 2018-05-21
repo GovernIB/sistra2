@@ -12,16 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.service.FlujoTramitacionService;
-import es.caib.sistramit.frontend.ModuleConfig;
 import es.caib.sistramit.frontend.SesionHttp;
+import es.caib.sistramit.frontend.controller.TramitacionController;
 
 @Controller
 @RequestMapping(value = "/asistente")
-public class AsistenteTramitacionController {
-
-	@Autowired
-	FlujoTramitacionService flujoTramitacionService;
+public class AsistenteTramitacionController extends TramitacionController {
 
 	@Autowired
 	SesionHttp sesionHttp;
@@ -32,21 +28,20 @@ public class AsistenteTramitacionController {
 	@RequestMapping(value = "/iniciarTramite.html")
 	public ModelAndView iniciarTramite(@RequestParam("tramite") final String tramite,
 			@RequestParam("version") final int version, @RequestParam("idioma") final String idioma,
-			@RequestParam("procedimiento") final String procedimiento,
+			@RequestParam("idTramiteCatalogo") final String idTramiteCatalogo,
 			@RequestParam(value = "parametros", required = false) final String parametros,
 			final HttpServletRequest request) {
 
 		// Url inicio
-		final String urlInicio = ModuleConfig.urlSistramit + "/asistente/iniciarTramite.html?"
-				+ request.getQueryString();
+		final String urlInicio = getUrlAsistente() + "/asistente/iniciarTramite.html?" + request.getQueryString();
 
 		// Parametros inicio
 		// TODO Pendiente (como json?)
 		final Map<String, String> parametrosInicio = new HashMap<>();
 
 		// Inicia flujo tramitacion y almacena en la sesion
-		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(tramite, version, idioma,
-				procedimiento, urlInicio, parametrosInicio);
+		final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(tramite, version, idioma,
+				idTramiteCatalogo, urlInicio, parametrosInicio);
 		sesionHttp.setIdSesionTramitacion(idSesionTramitacion);
 
 		final ModelAndView mav = new ModelAndView(URL_REDIRIGIR_ASISTENTE);
@@ -55,10 +50,8 @@ public class AsistenteTramitacionController {
 
 	@RequestMapping(value = "/asistente.html")
 	public ModelAndView asistente() {
-
-		// TODO Pasar a clase padre
-		final String idSesionTramitacion = sesionHttp.getIdSesionTramitacion();
-		final DetalleTramite dt = flujoTramitacionService.obtenerDetalleTramite(idSesionTramitacion);
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
 
 		final ModelAndView mav = new ModelAndView("asistente/asistente");
 		return mav;

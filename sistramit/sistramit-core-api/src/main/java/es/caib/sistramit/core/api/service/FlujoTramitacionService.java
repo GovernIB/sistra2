@@ -21,7 +21,7 @@ public interface FlujoTramitacionService {
 	 *            version tramite
 	 * @param idioma
 	 *            idioma
-	 * @param idProcedimiento
+	 * @param idTramiteCatalogo
 	 *            id procedimiento
 	 * @param urlInicio
 	 *            url inicio
@@ -30,7 +30,7 @@ public interface FlujoTramitacionService {
 	 * @return id sesion tramitacion
 	 */
 	public String iniciarTramite(final String idTramite, final int version, final String idioma,
-			final String idProcedimiento, final String urlInicio, final Map<String, String> parametrosInicio);
+			final String idTramiteCatalogo, final String urlInicio, final Map<String, String> parametrosInicio);
 
 	/**
 	 * Obtiene detalle trámite.

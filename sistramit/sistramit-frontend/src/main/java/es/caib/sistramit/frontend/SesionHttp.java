@@ -56,6 +56,21 @@ public interface SesionHttp {
 	String getIdSesionTramitacion();
 
 	/**
+	 * Indica si de hace debug de la sesión de tramitación
+	 * 
+	 * @param debug
+	 *            Debug
+	 */
+	void setDebugSesionTramitacion(boolean debug);
+
+	/**
+	 * Indica si de hace debug de la sesión de tramitación
+	 * 
+	 * @return debug
+	 */
+	boolean isDebugSesionTramitacion();
+
+	/**
 	 * Url inicio.
 	 *
 	 * @param url

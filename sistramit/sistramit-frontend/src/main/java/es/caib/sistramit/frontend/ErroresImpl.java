@@ -82,10 +82,11 @@ public final class ErroresImpl implements Errores {
 	 */
 	private String devolverUrlExcepcion(final Exception pEx, final String pIdioma, final TypeRespuestaJSON pTipoError) {
 		String url = null;
+
 		// Url estandar para excepciones FATAL
 		if (pTipoError == TypeRespuestaJSON.FATAL) {
-			// TODO Ver como particularizar para entidad
-			url = ModuleConfig.urlExcepcionFatal;
+			// TODO Ver como particularizar para entidad, para redirigir a entidad
+
 		}
 		// Comprobamos si esta particularizado por excepcion
 		if (pEx instanceof ServiceException) {

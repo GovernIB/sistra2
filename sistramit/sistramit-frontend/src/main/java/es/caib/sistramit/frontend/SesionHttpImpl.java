@@ -29,6 +29,11 @@ public final class SesionHttpImpl implements SesionHttp, Serializable {
 	private String idSesionTramitacion;
 
 	/**
+	 * Debug sesión tramitación.
+	 */
+	private boolean debugSesionTramitacion;
+
+	/**
 	 * Idioma de tramitación.
 	 */
 	private String idioma;
@@ -98,6 +103,16 @@ public final class SesionHttpImpl implements SesionHttp, Serializable {
 	@Override
 	public void setUrlInicio(final String pUrlInicio) {
 		urlInicio = pUrlInicio;
+	}
+
+	@Override
+	public boolean isDebugSesionTramitacion() {
+		return debugSesionTramitacion;
+	}
+
+	@Override
+	public void setDebugSesionTramitacion(final boolean debugSesionTramitacion) {
+		this.debugSesionTramitacion = debugSesionTramitacion;
 	}
 
 }

@@ -14,6 +14,11 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 public final class DetalleTramite implements Serializable {
 
 	/**
+	 * Id trámite.
+	 */
+	private String idTramite;
+
+	/**
 	 * Título trámite.
 	 */
 	private String titulo;
@@ -37,6 +42,14 @@ public final class DetalleTramite implements Serializable {
 
 	public void setUsuario(final UsuarioAutenticadoInfo usuario) {
 		this.usuario = usuario;
+	}
+
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	public void setIdTramite(final String idTramite) {
+		this.idTramite = idTramite;
 	}
 
 }

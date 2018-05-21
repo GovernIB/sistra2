@@ -8,14 +8,13 @@
 				http://www.springframework.org/schema/jee
 				http://www.springframework.org/schema/jee/spring-jee-4.3.xsd">
 
-	<!-- TODO: Revisar si es necesario -->
-
 	<!-- JBoss 5
 	<jee:local-slsb
 			id="ejemploService"
 			jndi-name="sistramit/EjemploServiceBean/local"
 			business-interface="es.caib.sistramit.core.api.service.EjemploService"/>
  	-->
+
 	<!-- JBoss 7  -->
 	<jee:local-slsb
 			id="securityService"
@@ -26,5 +25,10 @@
 			id="flujoTramitacionService"
 			jndi-name="java:app/sistramit-core/FlujoTramitacionServiceBean"
 			business-interface="es.caib.sistramit.core.api.service.FlujoTramitacionService"/>
+
+	<jee:local-slsb
+			id="systemService"
+			jndi-name="java:app/sistramit-core/SystemServiceBean"
+			business-interface="es.caib.sistramit.core.api.service.SystemService"/>
 
 </beans>
