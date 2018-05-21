@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
@@ -86,7 +87,7 @@ public interface FormularioInternoDao {
 	 *            posicion a insertar sobre el elemento seleccionado
 	 * @return TODO
 	 */
-	Long addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina, final Long pIdLinea,
+	ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina, final Long pIdLinea,
 			final Integer pOrden, final String pPosicion);
 
 	/**

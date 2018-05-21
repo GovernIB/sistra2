@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<p:importConstants type="es.caib.sistrages.core.api.model.comun.ConstantesDisenyo" var="Constantes" />
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDisenyoFormulario.titulo']}"/></title>
@@ -44,14 +45,12 @@
 
 				<h:panelGroup class="barra-herramientas-disenyo">
 					<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente']}"/>
-					<p:commandButton id="btnLinea" 		    title="#{msg['dialogDisenyoFormulario.componente.LN']}" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
-		       		<p:commandButton id="btnSeccion" 		title="#{msg['dialogDisenyoFormulario.componente.SC']}" icon="fa fa-list-ul" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
-		       		<p:commandButton id="btnEtiqueta" 		title="#{msg['dialogDisenyoFormulario.componente.ET']}" icon="fa fa-font" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
-		       		<p:commandButton id="btnImagen" 		title="#{msg['dialogDisenyoFormulario.componente.IM']}" icon="fa fa-image" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
-		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-square" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" process="@this" update="growlDisenyoFormulario, formulario-panel, barra-herramientas-disenyo"/>
-					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-square-o-down" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
-		       		<p:commandButton id="btnCampoCheckbox" 	title="#{msg['dialogDisenyoFormulario.componente.CK']}" icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
-		       		<p:commandButton id="btnCaptcha" 		title="#{msg['dialogDisenyoFormulario.componente.CP']}" icon="fa fa-retweet" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario"/>
+					<p:commandButton id="btnLinea" 		    title="#{msg['dialogDisenyoFormulario.componente.LN']}" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.insertaLinea}" process="@form" update="growlDisenyoFormulario, formulario-panel"/>
+		       		<p:commandButton id="btnSeccion" 		title="#{msg['dialogDisenyoFormulario.componente.SC']}" icon="fa fa-list-ul" actionListener="#{dialogDisenyoFormulario.insertaSeccion}" process="@form" update="growlDisenyoFormulario, formulario-panel"/>
+		       		<p:commandButton id="btnEtiqueta" 		title="#{msg['dialogDisenyoFormulario.componente.ET']}" icon="fa fa-font" actionListener="#{dialogDisenyoFormulario.insertaEtiqueta}" process="@form" update="growlDisenyoFormulario, formulario-panel"/>
+		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-square" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" process="@form" update="growlDisenyoFormulario, formulario-panel"/>
+					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-square-o-down" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@form" update="growlDisenyoFormulario"/>
+		       		<p:commandButton id="btnCampoCheckbox" 	title="#{msg['dialogDisenyoFormulario.componente.CK']}" icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@form" update="growlDisenyoFormulario"/>
 				</h:panelGroup>
 
 	       		<span class="ui-separator margin-right-10">
@@ -61,8 +60,8 @@
 				<h:panelGroup class="barra-herramientas-disenyo">
 					<p:outputLabel for="posicionamiento" value="#{msg['dialogDisenyoFormulario.posicionamiento']}"/>
 					<p:selectOneButton id="posicionamiento" value="#{dialogDisenyoFormulario.posicionamiento}">
-            			<f:selectItem itemLabel="#{msg['dialogDisenyoFormulario.posicionamiento.previo']}" itemValue="A" />
-            			<f:selectItem itemLabel="#{msg['dialogDisenyoFormulario.posicionamiento.posterior']}" itemValue="D" />
+            			<f:selectItem itemLabel="#{msg['dialogDisenyoFormulario.posicionamiento.previo']}" itemValue="#{Constantes.POSICIONAMIENTO_PREVIO}" />
+            			<f:selectItem itemLabel="#{msg['dialogDisenyoFormulario.posicionamiento.posterior']}" itemValue="#{Constantes.POSICIONAMIENTO_POSTERIOR}" />
             		</p:selectOneButton>
 				</h:panelGroup>
 
@@ -80,13 +79,24 @@
 
 
 		<!-- Dialogo confirmar cambios desde view a traves de boton oculto -->
-	    <p:commandButton value="Confirmation" id="confirmationButton" widgetVar="confirmationButton" onclick="PF('dlgConfirmar').show();" style="display: none"  />
+	    <p:commandButton value="Confirmation" id="confirmationButton" widgetVar="confirmationButton" onclick="PF('dlgConfirmar').show();" styleClass="no-display"  />
 
-	    <p:dialog header="Confirmar cambios" id="dlgConfirmar" widgetVar="dlgConfirmar" modal="true">
-            <h:outputText value="¿Desea confirmar" />
-            <p:commandButton value="Si" actionListener="#{dialogDisenyoFormulario.confirmacionCambios}" onclick="PF('dlgConfirmar').hide();" process="@this"  update="growlDisenyoFormulario, componente-panel, formulario-panel" />
-            <p:commandButton value="No" actionListener="#{dialogDisenyoFormulario.descartarCambios}"  onclick="PF('dlgConfirmar').hide();" process="@this"  update="growlDisenyoFormulario, componente-panel, formulario-panel"  />
-        </p:dialog>
+	    <p:confirmDialog header="Confirmar cambios" id="dlgConfirmar" widgetVar="dlgConfirmar" modal="true" message="¿Desea confirmar?" styleClass="confirmar_ancho">
+	    	<p:outputPanel styleClass="confirmar_botonera">
+            <p:commandButton value="Si" actionListener="#{dialogDisenyoFormulario.confirmacionCambios}" styleClass="boton-azul" icon="ui-icon-check" onclick="PF('dlgConfirmar').hide();" process="@this"  update="growlDisenyoFormulario, componente-panel, formulario-panel" />
+            <p:commandButton value="No" actionListener="#{dialogDisenyoFormulario.descartarCambios}"  icon="ui-icon-close" onclick="PF('dlgConfirmar').hide();" process="@this"  update="growlDisenyoFormulario"  />
+            </p:outputPanel>
+        </p:confirmDialog>
+
+		<!-- Dialogo confirmar eliminar componente desde view a traves de boton oculto -->
+	    <p:commandButton id="confirmarEliminar" widgetVar="confirmarEliminar" onclick="PF('dlgConfirmarEliminar').show();" styleClass="no-display" />
+
+	    <p:confirmDialog header="#{msg['confirm.componente.eliminar.titulo']}" id="dlgConfirmarEliminar" widgetVar="dlgConfirmarEliminar" modal="true" message="#{msg['confirm.componente.eliminar']}" styleClass="confirmar_ancho">
+	    	<p:outputPanel styleClass="confirmar_botonera">
+            <p:commandButton value="Si" actionListener="#{dialogDisenyoFormulario.eliminarObjetoFormulario}" styleClass="boton-azul" icon="ui-icon-check" onclick="PF('dlgConfirmarEliminar').hide();" process="@this"  update="growlDisenyoFormulario, componente-panel, formulario-panel" />
+            <p:commandButton value="No" icon="ui-icon-close" onclick="PF('dlgConfirmarEliminar').hide();" process="@this"/>
+            </p:outputPanel>
+        </p:confirmDialog>
 	</h:form>
 
 	<!-- Workpanel: Iframe HTML + Editor campos  -->
@@ -119,7 +129,7 @@
 
 			<p:outputPanel>
 				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@this" update="growlDisenyoFormulario, formulario-panel" />
-				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.borrarComponente']}" actionListener="#{dialogDisenyoFormulario.eliminarObjetoFormulario}" process="@this" update="growlDisenyoFormulario, formulario-panel, barra-herramientas-disenyo" />
+				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.borrarComponente']}" actionListener="#{dialogDisenyoFormulario.validarEliminarObjetoFormulario}" process="@this" update="growlDisenyoFormulario" />
 				<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario, formulario-panel" />
 			</p:outputPanel>
 

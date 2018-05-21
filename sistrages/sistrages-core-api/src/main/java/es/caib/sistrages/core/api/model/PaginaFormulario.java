@@ -22,7 +22,7 @@ public final class PaginaFormulario extends ModelApi {
 	private boolean paginaFinal;
 
 	/** Líneas componentes. */
-	private List<LineaComponentesFormulario> lineas = new ArrayList<LineaComponentesFormulario>();
+	private List<LineaComponentesFormulario> lineas = new ArrayList<>();
 
 	/**
 	 * Crea una nueva instancia de PaginaFormulario.

@@ -8,7 +8,7 @@
 
 	<h:form id="formDisenyoTextbox" styleClass="h100">
 		<h3 class="margin-top-3 margin-bottom-3">
-			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.LN']}"/>
+			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.LN'].concat('  id:').concat(dialogDisenyoFormulario.objetoFormularioEdit.id).concat(' orden:').concat(dialogDisenyoFormulario.objetoFormularioEdit.orden)}"/>
 		</h3>
 	</h:form>
 </ui:composition>

@@ -86,7 +86,7 @@ public class JSeccionFormulario implements IModelApi {
 
 	public static JSeccionFormulario createDefault(final int pOrden, final JLineaFormulario pJLinea) {
 		final JSeccionFormulario jModel = new JSeccionFormulario();
-		jModel.setLetra("A");
+		jModel.setLetra("?");
 		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.SECCION, pOrden, pJLinea));
 		return jModel;
 	}

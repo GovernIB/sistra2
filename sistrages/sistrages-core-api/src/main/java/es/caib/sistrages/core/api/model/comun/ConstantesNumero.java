@@ -1,7 +1,7 @@
 package es.caib.sistrages.core.api.model.comun;
 
 /**
- * Constantes numéricas.
+ * ConstantesDisenyo numéricas.
  */
 public final class ConstantesNumero {
 
@@ -217,7 +217,7 @@ public final class ConstantesNumero {
   public static final int MILISEGUNDOSMINUTO = 60000;
 
   /**
-   * Atributo constante MINUTOSHORA de Constantes.
+   * Atributo constante MINUTOSHORA de ConstantesDisenyo.
    */
   public static final int MINUTOSHORA = 60;
 

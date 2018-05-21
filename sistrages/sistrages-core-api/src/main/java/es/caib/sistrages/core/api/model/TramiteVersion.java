@@ -51,7 +51,7 @@ public class TramiteVersion extends ModelApi {
 	private Script scriptInicializacionTramite;
 
 	/** bloqueada. */
-	private int bloqueada;
+	private Boolean bloqueada;
 
 	/** codigo usuario bloqueo. */
 	private String codigoUsuarioBloqueo;
@@ -188,25 +188,6 @@ public class TramiteVersion extends ModelApi {
 	 */
 	public void setRelease(final int release) {
 		this.release = release;
-	}
-
-	/**
-	 * Obtiene el valor de bloqueada.
-	 *
-	 * @return el valor de bloqueada
-	 */
-	public int getBloqueada() {
-		return bloqueada;
-	}
-
-	/**
-	 * Establece el valor de bloqueada.
-	 *
-	 * @param bloqueada
-	 *            el nuevo valor de bloqueada
-	 */
-	public void setBloqueada(final int bloqueada) {
-		this.bloqueada = bloqueada;
 	}
 
 	/**
@@ -371,6 +352,21 @@ public class TramiteVersion extends ModelApi {
 
 	public void setScriptInicializacionTramite(final Script scriptInicializacionTramite) {
 		this.scriptInicializacionTramite = scriptInicializacionTramite;
+	}
+
+	/**
+	 * @return the bloqueada
+	 */
+	public Boolean getBloqueada() {
+		return bloqueada;
+	}
+
+	/**
+	 * @param bloqueada
+	 *            the bloqueada to set
+	 */
+	public void setBloqueada(final Boolean bloqueada) {
+		this.bloqueada = bloqueada;
 	}
 
 	/**

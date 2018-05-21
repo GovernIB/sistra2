@@ -128,7 +128,7 @@ public class JLiteral implements IModelApi {
 			jModel = JLiteral.fromModel(mLiteral);
 		} else {
 			// Borrar idiomas no pasados en modelo
-			final List<JTraduccionLiteral> borrar = new ArrayList<JTraduccionLiteral>();
+			final List<JTraduccionLiteral> borrar = new ArrayList<>();
 			for (final JTraduccionLiteral jTrad : jLiteral.getTraduccionLiterales()) {
 				if (!mLiteral.getIdiomas().contains(jTrad.getIdioma().getIdentificador())) {
 					borrar.add(jTrad);

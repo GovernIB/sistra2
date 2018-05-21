@@ -13,10 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
+import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 
 /**
@@ -157,6 +160,9 @@ public class FormRenderServlet extends HttpServlet {
 					case CAMPO_TEXTO:
 						campoTexto(pOut, cf);
 						break;
+					case ETIQUETA:
+						campoEtiqueta(pOut, cf);
+						break;
 					default:
 						break;
 					}
@@ -172,7 +178,7 @@ public class FormRenderServlet extends HttpServlet {
 				}
 
 				escribeLinea(pOut, "<div class=\"imc-separador imc-sep-punt editable\" id=\"L",
-						String.valueOf(lc.getId()), "\"></div>", 5);
+						String.valueOf(lc.getId()), "\">", String.valueOf(lc.getOrden()), "</div>", 5);
 
 			}
 		}
@@ -180,8 +186,6 @@ public class FormRenderServlet extends HttpServlet {
 
 	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
-		final StringBuilder estilo = new StringBuilder();
-		estilo.append("imc-el-name-").append(String.valueOf(pCF.getId()));
 
 		escribeLinea(pOut, "<h4 class=\"imc-seccio\">", 5);
 
@@ -196,24 +200,85 @@ public class FormRenderServlet extends HttpServlet {
 	}
 
 	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF) {
+
+		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) pCF;
+
 		final StringBuilder estilo = new StringBuilder();
-		estilo.append("imc-el-name-").append(String.valueOf(pCF.getId()));
+		estilo.append("imc-el-name-").append(String.valueOf(campo.getId()));
 
-		if (pCF.getNumColumnas() > 1) {
-			estilo.append(" imc-el-").append(pCF.getNumColumnas());
+		String tipo = null;
+		final StringBuilder elemento = new StringBuilder();
+
+		if (campo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(campo.getNumColumnas());
 		}
 
-		escribeLinea(pOut, "<div class=\"imc-element ", estilo.toString(), "\" data-type=\"text\">", 5);
+		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
+			if (TypeAlineacionTexto.CENTRO.equals(campo.getAlineacionTexto())) {
+				estilo.append(" imc-el-centre");
+			} else if (TypeAlineacionTexto.DERECHA.equals(campo.getAlineacionTexto())) {
+				estilo.append(" imc-el-dreta");
+			}
 
-		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
-			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(pCF.getId()), "\">",
-					pCF.getTexto().getTraduccion("es"), "</label></div>", 6);
+			if (campo.isObligatorio()) {
+				estilo.append(" imc-el-obligatori");
+			}
+
 		}
-		escribeLinea(pOut, "<div class=\"imc-el-control\"><input class=\"editable\" id=\"", String.valueOf(pCF.getId()),
-				"\" name=\"", pCF.getIdComponente(), "\" type=\"text\"/></div>", 6);
+
+		if (campo.isNormalMultilinea()) {
+			tipo = "textarea";
+			Integer nfilas = campo.getNormalNumeroLineas();
+			if (nfilas == null) {
+				nfilas = 1;
+			}
+			estilo.append(" imc-el-files-").append(String.valueOf(nfilas));
+
+			elemento.append("<textarea class=\"editable\" id=\"").append(String.valueOf(campo.getId()))
+					.append("\" name=\"").append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"")
+					.append(nfilas).append("\"></textarea>");
+		} else {
+			tipo = "text";
+			elemento.append("<input class=\"editable\" id=\"").append(String.valueOf(campo.getId()))
+					.append("\" name=\"").append(campo.getIdComponente()).append("\" type=\"text\"/>");
+		}
+
+		escribeLinea(pOut, "<div class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
+
+		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
+			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getId()), "\">",
+					campo.getTexto().getTraduccion("es"), "</label></div>", 6);
+		}
+
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", String.valueOf(campo.getOrden()), elemento.toString(),
+				"</div>", 6);
 
 		escribeLinea(pOut, "</div>", 5);
 
+	}
+
+	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF) {
+		final ComponenteFormularioEtiqueta componente = (ComponenteFormularioEtiqueta) pCF;
+		final StringBuilder estilo = new StringBuilder();
+
+		switch (componente.getTipoEtiqueta()) {
+		case INFO:
+			estilo.append("imc-missatge-en-linia-info");
+			break;
+		case WARNING:
+			estilo.append("imc-missatge-en-linia-alerta");
+			break;
+		case ERROR:
+			estilo.append("imc-missatge-en-linia-error");
+			break;
+		}
+
+		escribeLinea(pOut, "<div class=\"imc-missatge-en-linia imc-missatge-en-linia-icona-sup editable ",
+				estilo.toString(), "\" id=\"", String.valueOf(pCF.getId()), "\" >", 5);
+		if (pCF.getTexto() != null) {
+			escribeLinea(pOut, pCF.getTexto().getTraduccion("es"), 6);
+		}
+		escribeLinea(pOut, "</div>", 5);
 	}
 
 	private void scripts(final StringBuilder pOut) {
@@ -245,6 +310,16 @@ public class FormRenderServlet extends HttpServlet {
 	}
 
 	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
+			final String pTexto3, final String pTexto4, final int pNtab) {
+		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		pOut.append(pTexto1);
+		pOut.append(pTexto2);
+		pOut.append(pTexto3);
+		pOut.append(pTexto4);
+		pOut.append(lineSeparator);
+	}
+
+	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
 			final String pTexto3, final String pTexto4, final String pTexto5, final int pNtab) {
 		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
 		pOut.append(pTexto1);
@@ -252,6 +327,20 @@ public class FormRenderServlet extends HttpServlet {
 		pOut.append(pTexto3);
 		pOut.append(pTexto4);
 		pOut.append(pTexto5);
+		pOut.append(lineSeparator);
+	}
+
+	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
+			final String pTexto3, final String pTexto4, final String pTexto5, final String pTexto6,
+			final String pTexto7, final int pNtab) {
+		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		pOut.append(pTexto1);
+		pOut.append(pTexto2);
+		pOut.append(pTexto3);
+		pOut.append(pTexto4);
+		pOut.append(pTexto5);
+		pOut.append(pTexto6);
+		pOut.append(pTexto7);
 		pOut.append(lineSeparator);
 	}
 

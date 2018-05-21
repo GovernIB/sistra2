@@ -85,8 +85,11 @@
 				</p:outputPanel>
 
 				<p:outputLabel for="listadinamica" value="#{msg['viewDefinicionVersionAnexarDocumentos.listadinamica']}" />
-				<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS.name(), viewDefinicionVersion.tramitePasoANEXSeleccionado.scriptAnexosDinamicos.id)}"
-						process="@this" update="growl"/>
+				<p:commandButton id="listadinamica" icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.editarScriptListaDinamica()}"
+						styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoANEXSeleccionado.scriptAnexosDinamicos)}"
+						process="@this" update="growl">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoScriptListaDinamica}" update="growl listadinamica" />
+				</p:commandButton>
 
 				<p:confirmDialog global="true" >
 					<p:outputPanel styleClass="confirmar_botonera">

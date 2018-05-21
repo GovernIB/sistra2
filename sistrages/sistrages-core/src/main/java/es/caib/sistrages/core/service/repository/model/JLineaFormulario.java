@@ -41,7 +41,7 @@ public class JLineaFormulario implements IModelApi {
 	@Column(name = "FLS_ORDEN", nullable = false, precision = 2, scale = 0)
 	private int orden;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lineaFormulario", cascade = { CascadeType.ALL })
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lineaFormulario", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<JElementoFormulario> elementoFormulario = new HashSet<JElementoFormulario>(0);
 
 	public JLineaFormulario() {
@@ -80,11 +80,20 @@ public class JLineaFormulario implements IModelApi {
 		this.elementoFormulario = elementoFormulario;
 	}
 
+	public void addElemento(final JElementoFormulario e) {
+		e.setLineaFormulario(this);
+		this.getElementoFormulario().add(e);
+	}
+
+	public void removeElemento(final JElementoFormulario e) {
+		this.getElementoFormulario().remove(e);
+		e.setLineaFormulario(null);
+	}
+
 	public LineaComponentesFormulario toModel() {
 		final LineaComponentesFormulario pagina = new LineaComponentesFormulario();
 		pagina.setId(codigo);
 		pagina.setOrden(orden);
-
 		return pagina;
 	}
 
@@ -101,7 +110,7 @@ public class JLineaFormulario implements IModelApi {
 	public static JLineaFormulario createDefault(final int pOrden, final JPaginaFormulario pJPagina) {
 		final JLineaFormulario jModel = new JLineaFormulario();
 		jModel.setOrden(pOrden);
-		jModel.setPaginaFormulario(pJPagina);
+		pJPagina.addLinea(jModel);
 		return jModel;
 	}
 

@@ -23,9 +23,9 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
+import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
-import es.caib.sistrages.core.service.repository.model.IModelApi;
 import es.caib.sistrages.core.service.repository.model.JCampoFormulario;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioCasillaVerificacion;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioIndexado;
@@ -211,12 +211,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	}
 
 	@Override
-	public Long addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina, final Long pIdLinea,
-			final Integer pOrden, final String pPosicion) {
-		IModelApi jObjetoFormulario = null;
+	public ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
+			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
 		JLineaFormulario jLineaSeleccionada = null;
-		JLineaFormulario jLinea = null;
-		Long idComponente = null;
+		ObjetoFormulario objetoResultado = null;
 
 		if (pIdPagina != null) {
 			final JPaginaFormulario jPagina = getJPaginaById(pIdPagina);
@@ -227,105 +225,109 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 			switch (pTipoObjeto) {
 			case LINEA:
-				final Integer ordenLinea = ordenInsercionLinea(jPagina, jLineaSeleccionada, pPosicion);
 				// si el orden es inferior o igual al tamaño de la lista de lineas hay que
 				// hacer hueco
-				creaHuecoEnLineas(jPagina, ordenLinea);
-				jObjetoFormulario = JLineaFormulario.createDefault(ordenLinea, jPagina);
+				creaHuecoEnLineas(jPagina, pOrden);
+				final JLineaFormulario jLineaCreada = JLineaFormulario.createDefault(pOrden, jPagina);
+				entityManager.persist(jLineaCreada);
+				entityManager.merge(jPagina);
+				objetoResultado = jLineaCreada.toModel();
 				break;
 			case CAMPO_TEXTO:
-				jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
-				if (jLinea != null) {
-					final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden, pPosicion);
-					jObjetoFormulario = JCampoFormularioTexto.createDefault(ordenComponente, jLinea);
-				}
+				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
+				final JCampoFormularioTexto jObjFormCampoTexto = JCampoFormularioTexto.createDefault(pOrden,
+						jLineaSeleccionada);
+				entityManager.persist(jObjFormCampoTexto);
+				entityManager.merge(jLineaSeleccionada);
+				objetoResultado = jObjFormCampoTexto.toModel();
 				break;
-			case CHECKBOX:
-				jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
-				if (jLinea != null) {
-					final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden, pPosicion);
-					jObjetoFormulario = JCampoFormularioCasillaVerificacion.createDefault(ordenComponente, jLinea);
-				}
-				break;
-			case SELECTOR:
-				jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
-				if (jLinea != null) {
-					final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden, pPosicion);
-					jObjetoFormulario = JCampoFormularioIndexado.createDefault(ordenComponente, jLinea);
+			// case CHECKBOX:
+			// jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
+			// if (jLinea != null) {
+			// final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden,
+			// pPosicion);
+			// jObjetoFormulario =
+			// JCampoFormularioCasillaVerificacion.createDefault(ordenComponente, jLinea);
+			// }
+			// break;
+			// case SELECTOR:
+			// jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
+			// if (jLinea != null) {
+			// final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden,
+			// pPosicion);
+			// jObjetoFormulario = JCampoFormularioIndexado.createDefault(ordenComponente,
+			// jLinea);
+			// }
+			// break;
+
+			case SECCION:
+				creaHuecoEnLineas(jPagina, pOrden);
+				final JLineaFormulario jLineaBloqueCreadaSeccion = JLineaFormulario.createDefault(pOrden, jPagina);
+				if (jLineaBloqueCreadaSeccion != null) {
+					final JSeccionFormulario jObjFormSeccion = JSeccionFormulario.createDefault(1,
+							jLineaBloqueCreadaSeccion);
+
+					entityManager.persist(jLineaBloqueCreadaSeccion);
+					entityManager.persist(jObjFormSeccion);
+					entityManager.merge(jPagina);
+
+					objetoResultado = jLineaBloqueCreadaSeccion.toModel();
+					((LineaComponentesFormulario) objetoResultado).getComponentes().add(jObjFormSeccion.toModel());
 				}
 				break;
 			case ETIQUETA:
-				jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
-				if (jLinea != null) {
-					final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden, pPosicion);
-					jObjetoFormulario = JEtiquetaFormulario.createDefault(ordenComponente, jLinea);
-				}
-				break;
-			case IMAGEN:
-				jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
-				if (jLinea != null) {
-					final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden, pPosicion);
-					jObjetoFormulario = JImagenFormulario.createDefault(ordenComponente, jLinea);
-				}
-				break;
-			case SECCION:
-				jLinea = lineaBloque(jPagina, jLineaSeleccionada, pPosicion);
-				if (jLinea != null) {
-					jObjetoFormulario = JSeccionFormulario.createDefault(1, jLinea);
+				creaHuecoEnLineas(jPagina, pOrden);
+				final JLineaFormulario jLineaBloqueCreadaEtiqueta = JLineaFormulario.createDefault(pOrden, jPagina);
+				if (jLineaBloqueCreadaEtiqueta != null) {
+					final JEtiquetaFormulario jObjFormEtiqueta = JEtiquetaFormulario.createDefault(1,
+							jLineaBloqueCreadaEtiqueta);
+
+					entityManager.persist(jLineaBloqueCreadaEtiqueta);
+					entityManager.persist(jObjFormEtiqueta);
+					entityManager.merge(jPagina);
+
+					objetoResultado = jLineaBloqueCreadaEtiqueta.toModel();
+					((LineaComponentesFormulario) objetoResultado).getComponentes().add(jObjFormEtiqueta.toModel());
 				}
 				break;
 			}
 
-			if (jLinea != null && jLinea.getCodigo() == null) {
-				entityManager.persist(jLinea);
-			}
-			if (jObjetoFormulario != null) {
-				entityManager.persist(jObjetoFormulario);
-
-				if (jObjetoFormulario instanceof JLineaFormulario) {
-					idComponente = ((JLineaFormulario) jObjetoFormulario).getCodigo();
-				} else if (jObjetoFormulario instanceof JCampoFormularioTexto) {
-					idComponente = ((JCampoFormularioTexto) jObjetoFormulario).getCodigo();
-				} else if (jObjetoFormulario instanceof JCampoFormularioCasillaVerificacion) {
-					idComponente = ((JCampoFormularioCasillaVerificacion) jObjetoFormulario).getCodigo();
-				} else if (jObjetoFormulario instanceof JCampoFormularioIndexado) {
-					idComponente = ((JCampoFormularioIndexado) jObjetoFormulario).getCodigo();
-				} else if (jObjetoFormulario instanceof JEtiquetaFormulario) {
-					idComponente = ((JEtiquetaFormulario) jObjetoFormulario).getCodigo();
-				} else if (jObjetoFormulario instanceof JImagenFormulario) {
-					idComponente = ((JImagenFormulario) jObjetoFormulario).getCodigo();
-				} else if (jObjetoFormulario instanceof JSeccionFormulario) {
-					idComponente = ((JSeccionFormulario) jObjetoFormulario).getCodigo();
-				}
-			}
 		}
 
-		return idComponente;
+		return objetoResultado;
+
 	}
 
 	@Override
 	public void removeLineaFormulario(final Long pId) {
-		// TODO:revisar si se borran los elemento en cascada o no
 		final JLineaFormulario jLinea = getJLineaById(pId);
+		final JPaginaFormulario jPagina = jLinea.getPaginaFormulario();
+
 		if (jLinea.getPaginaFormulario().getLineasFormulario().size() > 1
 				&& jLinea.getOrden() < jLinea.getPaginaFormulario().getLineasFormulario().size()) {
 			// hay que reordenar lineas
 			quitaHuecoEnLineas(jLinea.getPaginaFormulario(), jLinea.getOrden() + 1);
 		}
-		entityManager.remove(jLinea);
+
+		jPagina.removeLinea(jLinea);
+
+		entityManager.merge(jPagina);
 	}
 
 	@Override
 	public void removeComponenteFormulario(final Long pId) {
 		final JElementoFormulario jElemento = getJElementoById(pId);
+		final JLineaFormulario jLineaFormulario = jElemento.getLineaFormulario();
 
-		if (jElemento.getLineaFormulario().getElementoFormulario().size() > 1
-				&& jElemento.getOrden() < jElemento.getLineaFormulario().getElementoFormulario().size()) {
+		if (jLineaFormulario.getElementoFormulario().size() > 1
+				&& jElemento.getOrden() < jLineaFormulario.getElementoFormulario().size()) {
 			// hay que reordenar componentes
-			quitaHuecoEnComponentes(jElemento.getLineaFormulario(), jElemento.getOrden() + 1);
+			quitaHuecoEnComponentes(jLineaFormulario, jElemento.getOrden() + 1);
 		}
-		entityManager.remove(jElemento);
 
+		jLineaFormulario.removeElemento(jElemento);
+
+		entityManager.merge(jLineaFormulario);
 	}
 
 	@Override
@@ -386,7 +388,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampoTexto.setNormalTamanyo(campoTexto.getNormalTamanyo());
 					jCampoTexto.setNormalMultilinea(campoTexto.isNormalMultilinea());
 					jCampoTexto.setNormalNumeroLineas(campoTexto.getNormalNumeroLineas());
-					jCampoTexto.setNormalExpresionRegular(campoTexto.getNormalExpresionRegular());
+					jCampoTexto.setNormalExpresionRegular(campoTexto.getExpresionRegular());
 					break;
 				case NUMERO:
 					jCampoTexto.setNumeroDigitosEnteros(campoTexto.getNumeroDigitosEnteros());
@@ -602,190 +604,6 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	private boolean quitaHuecoEnComponentes(final JLineaFormulario pJLineaSeleccionada, final Integer pInicio) {
 		return actualizaEntreComponentes(pJLineaSeleccionada, pInicio, -1);
-	}
-
-	/**
-	 * Obtiene el valor de una linea en base al orden.
-	 *
-	 * @param jPagina
-	 *            pagina
-	 * @param pOrden
-	 *            orden
-	 * @return el valor de la linea
-	 */
-	private JLineaFormulario getLineaByOrden(final JPaginaFormulario jPagina, final Integer pOrden) {
-
-		final String sql = "SELECT d FROM JLineaFormulario d where d.paginaFormulario.codigo = :idPagina and d.orden = :orden";
-
-		final Query query = entityManager.createQuery(sql);
-		query.setParameter("idPagina", jPagina.getCodigo());
-		query.setParameter("orden", pOrden);
-
-		return (JLineaFormulario) query.getResultList().get(0);
-	}
-
-	/**
-	 * Orden de la linea para la insercion .
-	 *
-	 * @param pJPagina
-	 *            pagina
-	 * @param pJLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pPosicion
-	 *            posicion
-	 * @return orden
-	 */
-	private Integer ordenInsercionLinea(final JPaginaFormulario pJPagina, final JLineaFormulario pJLineaSeleccionada,
-			final String pPosicion) {
-		Integer orden = 1;
-
-		if (pJLineaSeleccionada == null) {
-			if (!pJPagina.getLineasFormulario().isEmpty()) {
-				orden += pJPagina.getLineasFormulario().size();
-			}
-		} else {
-			orden = pJLineaSeleccionada.getOrden();
-			if ("D".equals(pPosicion)) {
-				orden++;
-			}
-		}
-		return orden;
-	}
-
-	/**
-	 * gestiona las lineas para los compontentes que van ellos solos en una linea.
-	 *
-	 * @param pJPagina
-	 *            pagina
-	 * @param pJLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pPosicion
-	 *            posicion
-	 * @return linea formulario sobre la que insertar el compontente
-	 */
-	private JLineaFormulario lineaBloque(final JPaginaFormulario pJPagina, final JLineaFormulario pJLineaSeleccionada,
-			final String pPosicion) {
-		JLineaFormulario jLinea = null;
-		JLineaFormulario jUltimaLinea = null;
-		JLineaFormulario jAnteriorLinea = null;
-
-		// pagina vacia, insertamos un linea
-		if (pJPagina.getLineasFormulario().isEmpty()) {
-			jLinea = JLineaFormulario.createDefault(1, pJPagina);
-		} else if (pJLineaSeleccionada == null) {
-			// no hemos seleccionado linea, miramos la ultima
-			if (pJPagina.getLineasFormulario().size() == 1) {
-				jUltimaLinea = (JLineaFormulario) pJPagina.getLineasFormulario().toArray()[0];
-			} else {
-				jUltimaLinea = Collections.max(pJPagina.getLineasFormulario(),
-						(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
-			}
-
-			// miramos si esta vacia de componentes
-			if (jUltimaLinea.getElementoFormulario().isEmpty()) {
-				jLinea = jUltimaLinea;
-			} else {
-				jLinea = JLineaFormulario.createDefault(jUltimaLinea.getOrden() + 1, pJPagina);
-			}
-		} else {
-			if (pJLineaSeleccionada.getElementoFormulario().isEmpty() && "D".equals(pPosicion)) {
-				jLinea = pJLineaSeleccionada;
-			} else if (!pJLineaSeleccionada.getElementoFormulario().isEmpty() && "D".equals(pPosicion)) {
-				creaHuecoEnLineas(pJPagina, pJLineaSeleccionada.getOrden() + 1);
-				jLinea = JLineaFormulario.createDefault(pJLineaSeleccionada.getOrden() + 1, pJPagina);
-			} else if ("A".equals(pPosicion)) {
-				if (pJPagina.getLineasFormulario().size() == 1 || pJLineaSeleccionada.getOrden() == 1) {
-					creaHuecoEnLineas(pJPagina, 1);
-					jLinea = JLineaFormulario.createDefault(1, pJPagina);
-				} else {
-					jAnteriorLinea = getLineaByOrden(pJPagina, pJLineaSeleccionada.getOrden() - 1);
-
-					if (jAnteriorLinea != null) {
-						if (jAnteriorLinea.getElementoFormulario().isEmpty()) {
-							jLinea = jAnteriorLinea;
-						} else {
-							creaHuecoEnLineas(pJPagina, pJLineaSeleccionada.getOrden());
-							jLinea = JLineaFormulario.createDefault(pJLineaSeleccionada.getOrden(), pJPagina);
-						}
-					}
-				}
-			}
-		}
-		return jLinea;
-
-	}
-
-	/**
-	 * gestiona la Linea para insertar componentes.
-	 *
-	 * @param pJPagina
-	 *            pagina
-	 * @param pJLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pPosicion
-	 *            posicion
-	 * @return la linea
-	 */
-	private JLineaFormulario lineaComponentes(final JPaginaFormulario pJPagina,
-			final JLineaFormulario pJLineaSeleccionada, final String pPosicion) {
-		JLineaFormulario jLinea = null;
-		JLineaFormulario jUltimaLinea = null;
-
-		// pagina vacia, insertamos un linea
-		if (pJPagina.getLineasFormulario().isEmpty()) {
-			jLinea = JLineaFormulario.createDefault(1, pJPagina);
-		} else if (pJLineaSeleccionada == null) {
-			// no hemos seleccionado linea, miramos la ultima
-			if (pJPagina.getLineasFormulario().size() == 1) {
-				jUltimaLinea = (JLineaFormulario) pJPagina.getLineasFormulario().toArray()[0];
-			} else {
-				jUltimaLinea = Collections.max(pJPagina.getLineasFormulario(),
-						(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
-			}
-
-			if (!jUltimaLinea.completa()) {
-				jLinea = jUltimaLinea;
-			} else {
-				jLinea = JLineaFormulario.createDefault(jUltimaLinea.getOrden() + 1, pJPagina);
-			}
-		} else if (!pJLineaSeleccionada.completa()) {
-			jLinea = pJLineaSeleccionada;
-		}
-		return jLinea;
-	}
-
-	/**
-	 * Orden del componente para la insercion.
-	 *
-	 * @param pJLineaSeleccionada
-	 *            linea seleccionada
-	 * @param pOrden
-	 *            orden
-	 * @param pPosicion
-	 *            posicion
-	 * @return orden
-	 */
-	private Integer ordenInsercionComponente(final JLineaFormulario pJLineaSeleccionada, final Integer pOrden,
-			final String pPosicion) {
-		Integer orden = null;
-		if (pJLineaSeleccionada != null) {
-			if (pJLineaSeleccionada.getElementoFormulario().isEmpty()) {
-				orden = 1;
-			} else if (pJLineaSeleccionada.getElementoFormulario().size() < 6) {
-				if (pOrden == null) {
-					orden = pJLineaSeleccionada.getElementoFormulario().size() + 1;
-				} else {
-					if ("A".equals(pPosicion)) {
-						orden = pOrden;
-					} else {
-						orden = pOrden + 1;
-					}
-
-					creaHuecoEnComponentes(pJLineaSeleccionada, orden);
-				}
-			}
-		}
-		return orden;
 	}
 
 }

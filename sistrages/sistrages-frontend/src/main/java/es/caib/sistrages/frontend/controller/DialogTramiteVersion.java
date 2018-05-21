@@ -45,7 +45,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		setData(tramiteService.getTramite(Long.valueOf(id)));
+
 		dataVersion = new TramiteVersion();
 		dataVersion.setNumeroVersion(1);
 		dataVersion.setTipoFlujo(TypeFlujo.NORMAL);
@@ -58,8 +58,9 @@ public class DialogTramiteVersion extends DialogControllerBase {
 		dataVersion.setPersistenciaInfinita(false);
 		dataVersion.setLimiteTramitacion(false);
 		dataVersion.setDesactivacion(false);
-		dataVersion.setRelease(1);
+		dataVersion.setRelease(0);
 		dataVersion.setNivelQAA(2);
+		dataVersion.setBloqueada(false);
 
 	}
 

@@ -476,6 +476,8 @@ label.ui-state-disabled {
 
 .confirmar_icono {height: auto !important;width: auto !important;}
 
+.confirmar_ancho {width:450px !important;}
+
 .outputlabel-nota {font-size:9pt !important;font-style: italic;}
 
 .formulario-frame {width:100%; height:600px; overflow:auto;border: none;}

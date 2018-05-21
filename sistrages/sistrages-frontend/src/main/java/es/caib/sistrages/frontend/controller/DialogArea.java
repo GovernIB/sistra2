@@ -88,18 +88,32 @@ public class DialogArea extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/**
+	 * @return the id
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(final String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the data
+	 */
 	public Area getData() {
 		return data;
 	}
 
+	/**
+	 * @param data
+	 *            the data to set
+	 */
 	public void setData(final Area data) {
 		this.data = data;
 	}

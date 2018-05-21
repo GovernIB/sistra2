@@ -347,11 +347,7 @@ public class JVersionTramite implements IModelApi {
 		tramiteVersion.setActiva(this.isActiva());
 		tramiteVersion.setAutenticado(this.isAutenticado());
 		tramiteVersion.setNoAutenticado(this.isNoAutenticado());
-		if (this.getBloqueada()) {
-			tramiteVersion.setBloqueada(1);
-		} else {
-			tramiteVersion.setBloqueada(0);
-		}
+		tramiteVersion.setBloqueada(this.getBloqueada());
 		tramiteVersion.setCodigoUsuarioBloqueo(this.getUsuarioIdBloqueo());
 		tramiteVersion.setDatosUsuarioBloqueo(this.getUsuarioDatosBloqueo());
 		tramiteVersion.setDebug(this.isDebug());
@@ -401,11 +397,7 @@ public class JVersionTramite implements IModelApi {
 			jversionTramite.setActiva(model.isActiva());
 			jversionTramite.setAutenticado(model.isAutenticado());
 			jversionTramite.setNoAutenticado(model.isNoAutenticado());
-			if (model.getBloqueada() == 1) {
-				jversionTramite.setBloqueada(true);
-			} else {
-				jversionTramite.setBloqueada(false);
-			}
+			jversionTramite.setBloqueada(model.getBloqueada());
 			jversionTramite.setUsuarioIdBloqueo(model.getCodigoUsuarioBloqueo());
 			jversionTramite.setUsuarioDatosBloqueo(model.getDatosUsuarioBloqueo());
 			jversionTramite.setDebug(model.isDebug());

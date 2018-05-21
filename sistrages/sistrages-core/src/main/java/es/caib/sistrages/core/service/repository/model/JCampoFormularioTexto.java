@@ -1,6 +1,5 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +27,7 @@ public class JCampoFormularioTexto implements IModelApi {
 	@Column(name = "CTX_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
 	@JoinColumn(name = "CTX_CODIGO")
 	private JCampoFormulario campoFormulario;
@@ -272,11 +271,11 @@ public class JCampoFormularioTexto implements IModelApi {
 				campoTexto.setNormalTamanyo(normalTamanyo);
 				campoTexto.setNormalMultilinea(normalMultilinea);
 				campoTexto.setNormalNumeroLineas(normalNumeroLineas);
-				campoTexto.setNormalExpresionRegular(normalExpresionRegular);
+				campoTexto.setExpresionRegular(normalExpresionRegular);
 				campoTexto.setNumeroDigitosEnteros(numeroDigitosEnteros);
 				campoTexto.setNumeroDigitosDecimales(numeroDigitosDecimales);
 				if (numeroSeparador != null) {
-					campoTexto.setNumeroSeparador(TypeSeparadorNumero.valueOf(numeroSeparador));
+					campoTexto.setNumeroSeparador(TypeSeparadorNumero.fromString(numeroSeparador));
 				}
 				campoTexto.setNumeroRangoMinimo(numeroRangoMinimo);
 				campoTexto.setNumeroRangoMaximo(numeroRangoMaximo);
@@ -299,9 +298,7 @@ public class JCampoFormularioTexto implements IModelApi {
 		final JCampoFormularioTexto jModel = new JCampoFormularioTexto();
 		jModel.setOculto(false);
 		jModel.setTipo(TypeCampoTexto.NORMAL.name());
-		jModel.setNormalTamanyo(10);
 		jModel.setNormalMultilinea(false);
-		jModel.setNormalNumeroLineas(1);
 		jModel.setNumeroConSigno(false);
 		jModel.setIdentNif(false);
 		jModel.setIdentCif(false);

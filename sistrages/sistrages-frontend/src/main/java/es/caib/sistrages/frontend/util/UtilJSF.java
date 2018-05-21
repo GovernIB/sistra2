@@ -14,6 +14,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
@@ -50,6 +52,9 @@ import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
  *
  */
 public final class UtilJSF {
+
+	/** Log. */
+	final static Logger LOG = LoggerFactory.getLogger(UtilJSF.class);
 
 	/** Constructor privado para evitar problema. */
 	private UtilJSF() {
@@ -186,14 +191,8 @@ public final class UtilJSF {
 	 * @return literal
 	 */
 	public static String getLiteral(final String key) {
-		final FacesContext context = FacesContext.getCurrentInstance();
-		// final ResourceBundle text =
-		// context.getApplication().evaluateExpressionGet(context,
-		// "#{msg}",ResourceBundle.class);
-
 		final ResourceBundle text = ResourceBundle.getBundle("i18n.messages", getSessionBean().getLocale());
-		final String result = text.getString(key);
-		return result;
+		return text.getString(key);
 	}
 
 	/**
@@ -202,9 +201,7 @@ public final class UtilJSF {
 	 * @return bean de sesión
 	 */
 	public static SessionBean getSessionBean() {
-		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-				.get("sessionBean");
-		return sb;
+		return (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionBean");
 	}
 
 	/**
@@ -259,7 +256,7 @@ public final class UtilJSF {
 			final String contextPath = servletContext.getContextPath();
 			FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + jsfPage);
 		} catch (final IOException e) {
-			// TODO Gestion Excepciones
+			UtilJSF.LOG.error("Error redirigiendo", e);
 		}
 	}
 
@@ -281,7 +278,7 @@ public final class UtilJSF {
 					.redirect(ec.encodeRedirectURL(contextPath + jsfPage, params));
 			FacesContext.getCurrentInstance().responseComplete();
 		} catch (final IOException e) {
-			// TODO Gestion Excepciones
+			UtilJSF.LOG.error("Error redirigiendo", e);
 		}
 	}
 
@@ -390,11 +387,6 @@ public final class UtilJSF {
 		case PLUGINS_ENTIDAD:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPlugins.class) + EXTENSION_XHTML + ambitoEntidadURL;
 			break;
-		// case GESTORES_FORMULARIOS:
-		// url = PATH_VIEWS +
-		// UtilJSF.getViewNameFromClass(ViewFormulariosExternos.class) +
-		// EXTENSION_XHTML;
-		// break;
 		case FormateadorFormulario:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewFormateadorFormulario.class) + EXTENSION_XHTML;
 			break;
@@ -480,16 +472,6 @@ public final class UtilJSF {
 	 */
 	public static String getUrlArbolDefinicionVersion(final String opcion) {
 		return PATH_VIEWS + opcion + EXTENSION_XHTML;
-	}
-
-	/**
-	 * Get Url Arbol definicion version
-	 *
-	 * @param opcion
-	 * @return
-	 */
-	public static String getUrlArbolDefinicionVersion(final String opcion, final Long id) {
-		return PATH_VIEWS + opcion + EXTENSION_XHTML;// + "?ID=" + id;
 	}
 
 	/**
