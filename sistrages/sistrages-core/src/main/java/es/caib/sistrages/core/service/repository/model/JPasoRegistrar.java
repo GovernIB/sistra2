@@ -20,58 +20,75 @@ import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 @Table(name = "STG_PASREG")
 public class JPasoRegistrar implements IModelApi {
 
+	/** Serial Version UID. **/
 	private static final long serialVersionUID = 1L;
 
+	/** Codigo. **/
 	@Id
 	@Column(name = "PRG_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	/** Paso tramitacion. **/
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
 	@JoinColumn(name = "PRG_CODIGO")
 	private JPasoTramitacion pasoTramitacion;
 
+	/** Script destino registro */
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PRG_SCRREG")
 	private JScript scriptDestinoRegistro;
 
+	/** Script representante. */
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PRG_SCRREP")
 	private JScript scriptRepresentante;
 
+	/** Script validar registrar. **/
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PRG_SCRVAL")
 	private JScript scriptValidarRegistrar;
 
+	/** Script presentador. **/
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PRG_SCRPRE")
 	private JScript scriptPresentador;
 
+	/** Instrucciones fin tramitación */
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PRG_INSFIT")
 	private JLiteral instruccionesFinTramitacion;
 
+	/** Instrucciones presentación */
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PRG_INSPRE")
 	private JLiteral instruccionesPresentacion;
 
+	/** Código oficina registro */
 	@Column(name = "PRG_REGOFI", length = 20)
 	private String codigoOficinaRegistro;
 
+	/** Código libro registro. **/
 	@Column(name = "PRG_REGLIB", length = 20)
 	private String codigoLibroRegistro;
 
+	/** Código tipo asunto. **/
 	@Column(name = "PRG_REGASU", length = 20)
 	private String codigoTipoAsunto;
 
+	/** Admite representacion. **/
 	@Column(name = "PRG_REPADM", nullable = false, precision = 1, scale = 0)
 	private boolean admiteRepresentacion;
 
+	/** Valida representacion. **/
 	@Column(name = "PRG_REPVAL", nullable = false, precision = 1, scale = 0)
 	private boolean validaRepresentacion;
 
+	/**
+	 * Constructor.
+	 */
 	public JPasoRegistrar() {
-		// Constructor vacio
+		super();
 	}
 
 	/**
@@ -284,27 +301,47 @@ public class JPasoRegistrar implements IModelApi {
 			jpaso.setCodigoLibroRegistro(paso.getCodigoLibroRegistro());
 			jpaso.setCodigoOficinaRegistro(paso.getCodigoOficinaRegistro());
 			jpaso.setCodigoTipoAsunto(paso.getCodigoTipoAsunto());
-			if (paso.getInstruccionesFinTramitacion() != null) {
-				jpaso.setInstruccionesFinTramitacion(JLiteral.fromModel(paso.getInstruccionesFinTramitacion()));
-			}
-			if (paso.getInstruccionesPresentacion() != null) {
-				jpaso.setInstruccionesPresentacion(JLiteral.fromModel(paso.getInstruccionesPresentacion()));
-			}
+			jpaso.setInstruccionesFinTramitacion(JLiteral.fromModel(paso.getInstruccionesFinTramitacion()));
+			jpaso.setInstruccionesPresentacion(JLiteral.fromModel(paso.getInstruccionesPresentacion()));
 			jpaso.setValidaRepresentacion(paso.isValidaRepresentacion());
-			if (paso.getScriptDestinoRegistro() != null) {
-				jpaso.setScriptDestinoRegistro(JScript.fromModel(paso.getScriptDestinoRegistro()));
-			}
-			if (paso.getScriptPresentador() != null) {
-				jpaso.setScriptPresentador(JScript.fromModel(paso.getScriptPresentador()));
-			}
-			if (paso.getScriptRepresentante() != null) {
-				jpaso.setScriptRepresentante(JScript.fromModel(paso.getScriptRepresentante()));
-			}
-			if (paso.getScriptValidarRegistrar() != null) {
-				jpaso.setScriptValidarRegistrar(JScript.fromModel(paso.getScriptValidarRegistrar()));
-			}
+			jpaso.setScriptDestinoRegistro(JScript.fromModel(paso.getScriptDestinoRegistro()));
+			jpaso.setScriptPresentador(JScript.fromModel(paso.getScriptPresentador()));
+			jpaso.setScriptRepresentante(JScript.fromModel(paso.getScriptRepresentante()));
+			jpaso.setScriptValidarRegistrar(JScript.fromModel(paso.getScriptValidarRegistrar()));
+
 		}
 		return jpaso;
+	}
+
+	/**
+	 * Clonar.
+	 *
+	 * @param origPasoRegistrar
+	 * @return
+	 */
+	public static JPasoRegistrar clonar(final JPasoRegistrar origPasoRegistrar,
+			final JPasoTramitacion jpasoTramitacion) {
+		JPasoRegistrar jpasoRegistrar = null;
+		if (origPasoRegistrar != null) {
+			jpasoRegistrar = new JPasoRegistrar();
+			jpasoRegistrar.setCodigo(null);
+			jpasoRegistrar.setPasoTramitacion(jpasoTramitacion);
+			jpasoRegistrar.setAdmiteRepresentacion(origPasoRegistrar.isAdmiteRepresentacion());
+			jpasoRegistrar.setCodigoLibroRegistro(origPasoRegistrar.getCodigoLibroRegistro());
+			jpasoRegistrar.setCodigoOficinaRegistro(origPasoRegistrar.getCodigoOficinaRegistro());
+			jpasoRegistrar.setCodigoTipoAsunto(origPasoRegistrar.getCodigoTipoAsunto());
+			jpasoRegistrar.setInstruccionesFinTramitacion(
+					JLiteral.clonar(origPasoRegistrar.getInstruccionesFinTramitacion()));
+			jpasoRegistrar
+					.setInstruccionesPresentacion(JLiteral.clonar(origPasoRegistrar.getInstruccionesPresentacion()));
+			jpasoRegistrar.setValidaRepresentacion(origPasoRegistrar.isValidaRepresentacion());
+			jpasoRegistrar.setScriptDestinoRegistro(JScript.clonar(origPasoRegistrar.getScriptDestinoRegistro()));
+			jpasoRegistrar.setScriptPresentador(JScript.clonar(origPasoRegistrar.getScriptPresentador()));
+			jpasoRegistrar.setScriptRepresentante(JScript.clonar(origPasoRegistrar.getScriptRepresentante()));
+			jpasoRegistrar.setScriptValidarRegistrar(JScript.clonar(origPasoRegistrar.getScriptValidarRegistrar()));
+
+		}
+		return jpasoRegistrar;
 	}
 
 }

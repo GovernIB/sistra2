@@ -28,6 +28,45 @@ public final class UtilCoreApi {
 	}
 
 	/**
+	 * Serializa un objeto ModelApi y lo devuelve en byte[]
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public static byte[] serialize(final ModelApi model) {
+		try {
+			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			final ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject(model);
+			oos.flush();
+			final byte[] content = bos.toByteArray();
+			bos.close();
+			return content;
+		} catch (final IOException ioe) {
+			throw new CloneModelException(ioe);
+		}
+	}
+
+	/**
+	 * Deserializa byte[] y lo devuelve en objeto ModelApi
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public static ModelApi deserialize(final byte[] content) {
+		try {
+			final ByteArrayInputStream bin = new ByteArrayInputStream(content);
+			final ObjectInputStream ois = new ObjectInputStream(bin);
+			final Object clonedObject = ois.readObject();
+			return (ModelApi) clonedObject;
+		} catch (final IOException ioe) {
+			throw new CloneModelException(ioe);
+		} catch (final ClassNotFoundException cne) {
+			throw new CloneModelException(cne);
+		}
+	}
+
+	/**
 	 * Clona objeto del API.
 	 *
 	 * @param model

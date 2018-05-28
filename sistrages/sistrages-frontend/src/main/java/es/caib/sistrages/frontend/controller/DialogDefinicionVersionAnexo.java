@@ -54,6 +54,9 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** ID tramite version. **/
 	private String idTramiteVersion;
 
+	/** Id entidad. **/
+	private String idEntidad;
+
 	/**
 	 * Obtiene el valor de permiteEditar.
 	 *
@@ -94,6 +97,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(data.getId()));
 		params.put(TypeParametroVentana.CAMPO_FICHERO.toString(), TypeCampoFichero.TRAMITE_DOC.toString());
+		params.put(TypeParametroVentana.ENTIDAD.toString(), idEntidad);
 		UtilJSF.openDialog(DialogFichero.class, TypeModoAcceso.EDICION, params, true, 750, 350);
 
 	}
@@ -338,6 +342,21 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad
+	 *            the idEntidad to set
+	 */
+	public void setIdEntidad(final String idEntidad) {
+		this.idEntidad = idEntidad;
 	}
 
 }

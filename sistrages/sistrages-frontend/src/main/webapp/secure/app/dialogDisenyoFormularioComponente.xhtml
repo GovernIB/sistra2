@@ -29,16 +29,9 @@
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
 	         	<h:column>
-	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" style="width:125px">
-
+	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}">
 	         				<p:ajax event="blur" process="@this" />
-
-				            <f:selectItem itemLabel="1" itemValue="1" />
-				            <f:selectItem itemLabel="2" itemValue="2" />
-				            <f:selectItem itemLabel="3" itemValue="3" />
-				            <f:selectItem itemLabel="4" itemValue="4" />
-				            <f:selectItem itemLabel="5" itemValue="5" />
-				            <f:selectItem itemLabel="6" itemValue="6" />
+							<f:selectItems value="#{dialogDisenyoFormulario.ncolumnas}" var="n" itemValue="#{n}" itemLabel="#{n}"/>
 				        </p:selectOneMenu>
  				</h:column>
 
@@ -50,13 +43,7 @@
 	        		</p:commandButton>
 	         	</h:column>
 
-				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.Alineacion']}" /></h:column>
-				<h:column>
-					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true">
-					    <p:ajax event="blur" process="@this" />
-					    <f:selectItems value="#{TypeAlineacionTexto.ALL_VALUES}" var="tipoAlineacion" itemLabel="#{msg['typeAlineacionTexto.' += tipoAlineacion]}" />
-					</p:selectOneMenu>
-				</h:column>
+
 
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noMostrarTexto']}"/></h:column>
 	         	<h:column>
@@ -104,7 +91,7 @@
 
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
 
-			<h:panelGrid columns="2" header="Scripts">
+			<h:panelGrid columns="2" header="Scripts" columnClasses="w35,w65" styleClass="w100">
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.autorelleno']}" /></h:column>
 	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
 
@@ -119,13 +106,19 @@
 
 	    </p:panel>
 
-	    <p:panel id="panelEstilos" header="Estils" toggleable="true" widgetVar="#{msg['dialogDisenyoFormulario.componente.panelEstilos']}" style="margin-bottom:2px" collapsed="#{dialogDisenyoFormulario.visibleEstilos}">
+	    <p:panel id="panelEstilos" header="#{msg['dialogDisenyoFormulario.componente.panelEstilos']}" toggleable="true" widgetVar="#{msg['dialogDisenyoFormulario.componente.panelEstilos']}" style="margin-bottom:2px" collapsed="#{dialogDisenyoFormulario.visibleEstilos}">
 
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
 
-			<h:panelGrid columns="2" header="Scripts">
-	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormularioTextbox.componente.estilos']}" /></h:column>
+			<h:panelGrid columns="2" header="Scripts" columnClasses="w35,w65" styleClass="w100">
 
+				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.Alineacion']}" /></h:column>
+				<h:column>
+					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true">
+					    <p:ajax event="blur" process="@this" />
+					    <f:selectItems value="#{TypeAlineacionTexto.ALL_VALUES}" var="tipoAlineacion" itemLabel="#{msg['typeAlineacionTexto.' += tipoAlineacion]}" />
+					</p:selectOneMenu>
+				</h:column>
 	        </h:panelGrid>
 
 

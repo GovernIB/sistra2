@@ -35,64 +35,82 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 @Table(name = "STG_PASOTR", uniqueConstraints = @UniqueConstraint(columnNames = { "PTR_IDEPTR", "PTR_CODVTR" }))
 public class JPasoTramitacion implements IModelApi {
 
+	/** Serial Version UID. **/
 	private static final long serialVersionUID = 1L;
 
+	/** Codigo. **/
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_PASOTR_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_PASOTR_SEQ", sequenceName = "STG_PASOTR_SEQ")
 	@Column(name = "PTR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	/** Script variables. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PTR_SCRVAR")
 	private JScript scriptVariables;
 
+	/** Script navegacion. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PTR_SCRNVG")
 	private JScript scriptNavegacion;
 
+	/** Tipo paso tramitacion. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PTR_TIPPTR", nullable = false)
 	private JTipoPasoTramitacion tipoPasoTramitacion;
 
+	/** Descripcion. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PTR_DESCRI")
 	private JLiteral descripcion;
 
+	/** Version tramite. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PTR_CODVTR", nullable = false)
 	private JVersionTramite versionTramite;
 
+	/** Id paso tramitacion. **/
 	@Column(name = "PTR_IDEPTR", nullable = false, length = 20)
 	private String idPasoTramitacion;
 
+	/** Orden. **/
 	@Column(name = "PTR_ORDEN", nullable = false, precision = 2, scale = 0)
 	private int orden;
 
+	/** Paso final. **/
 	@Column(name = "PTR_FINAL", nullable = false, precision = 1, scale = 0)
 	private boolean pasoFinal;
 
+	/** Paso rellenar. **/
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoRellenar pasoRellenar;
 
+	/** Paso informacion. **/
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoInformacion pasoInformacion;
 
+	/** Paso captura. **/
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoCaptura pasoCaptura;
 
+	/** Paso debe saber. **/
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoDebeSaber pasoDebeSaber;
 
+	/** Paso pagos. **/
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoPagos pasoPagos;
 
+	/** Paso registrar. **/
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoRegistrar pasoRegistrar;
 
+	/** Paso anexar. **/
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "pasoTramitacion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private JPasoAnexar pasoAnexar;
 
+	/** Constructor. **/
 	public JPasoTramitacion() {
 		// Constructor vacio
 	}
@@ -416,8 +434,38 @@ public class JPasoTramitacion implements IModelApi {
 				final JPasoRegistrar jpasoRegistrar = JPasoRegistrar.fromModel((TramitePasoRegistrar) paso);
 				jpaso.setPasoRegistrar(jpasoRegistrar);
 				jpaso.getPasoRegistrar().setPasoTramitacion(jpaso);
-
 			}
+		}
+		return jpaso;
+	}
+
+	/**
+	 * Clonar
+	 *
+	 * @param origPaso
+	 * @return
+	 */
+	public static JPasoTramitacion clonar(final JPasoTramitacion origPaso, final JVersionTramite jTramiteVersion) {
+		JPasoTramitacion jpaso = null;
+		if (origPaso != null) {
+			jpaso = new JPasoTramitacion();
+			jpaso.setVersionTramite(jTramiteVersion);
+			jpaso.setCodigo(null);
+			jpaso.setDescripcion(origPaso.getDescripcion());
+			jpaso.setIdPasoTramitacion(origPaso.getIdPasoTramitacion());
+			jpaso.setOrden(origPaso.getOrden());
+			jpaso.setPasoFinal(origPaso.isPasoFinal());
+			jpaso.setTipoPasoTramitacion(origPaso.getTipoPasoTramitacion());
+
+			// Los pasos
+			jpaso.setPasoAnexar(JPasoAnexar.clonar(origPaso.getPasoAnexar(), jpaso));
+			jpaso.setPasoCaptura(JPasoCaptura.clonar(origPaso.getPasoCaptura(), jpaso));
+			jpaso.setPasoDebeSaber(JPasoDebeSaber.clonar(origPaso.getPasoDebeSaber(), jpaso));
+			jpaso.setPasoInformacion(JPasoInformacion.clonar(origPaso.getPasoInformacion(), jpaso));
+			jpaso.setPasoPagos(JPasoPagos.clonar(origPaso.getPasoPagos(), jpaso));
+			jpaso.setPasoRegistrar(JPasoRegistrar.clonar(origPaso.getPasoRegistrar(), jpaso));
+			jpaso.setPasoRellenar(JPasoRellenar.clonar(origPaso.getPasoRellenar(), jpaso));
+
 		}
 		return jpaso;
 	}

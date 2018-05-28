@@ -54,7 +54,7 @@ public class JFormulario implements IModelApi {
 	private Set<JPaginaFormulario> paginas = new HashSet<>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario", orphanRemoval = true, cascade = CascadeType.ALL)
-	private Set<JPlantillaFormulario> plantillas = new HashSet<JPlantillaFormulario>(0);
+	private Set<JPlantillaFormulario> plantillas = new HashSet<>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formulario")
 	private Set<JAccionPersonalizada> accionesPersonalizadas = new HashSet<>(0);
@@ -216,6 +216,17 @@ public class JFormulario implements IModelApi {
 		}
 
 		return jModel;
+	}
+
+	/**
+	 * Clonar
+	 *
+	 * @param formulario
+	 * @return
+	 */
+	public static JFormulario clonar(final JFormulario formulario) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

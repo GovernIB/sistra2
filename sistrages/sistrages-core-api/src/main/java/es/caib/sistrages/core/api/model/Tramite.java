@@ -11,12 +11,12 @@ package es.caib.sistrages.core.api.model;
 public class Tramite extends ModelApi {
 
 	/**
-	 * Id.
+	 * Codigo.
 	 */
-	private Long id;
+	private Long codigo;
 
 	/**
-	 * Codigo.
+	 * Identificador.
 	 */
 	private String identificador;
 
@@ -38,18 +38,18 @@ public class Tramite extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long id) {
+		this.codigo = id;
 	}
 
 	/**

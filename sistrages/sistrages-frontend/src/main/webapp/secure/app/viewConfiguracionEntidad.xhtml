@@ -83,7 +83,17 @@
 					    <p:commandButton id="btnFormulariContacte" actionListener="#{viewConfiguracionEntidad.abrirFormularioSoporte}" icon="fa fa-cog" process="@this" update="growl" />
 					</h:panelGrid>
 
+					<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerUrlCarpetaCiudadana']}" />
+	            	<p:column>
+		            	<p:inputText  id="inputUrlCarpetaCiudadana" size="40" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang)}" disabled="true" />
+		            	<p:commandButton id="btnUrlCarpetaCiudadana" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlCarpetaCiudadana}" process="@this" update="growl" style="margin-right:5px">
+		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlCarpetaCiudadana}" update="growl inputUrlCarpetaCiudadana"/>
+		        		</p:commandButton>
+					</p:column>
+
 		        </h:panelGrid>
+
+
 		    </p:panel>
 
 

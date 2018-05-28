@@ -96,4 +96,20 @@ public class JTraduccionLiteral implements IModelApi {
 		}
 		return jModel;
 	}
+
+	/**
+	 * Clonar.
+	 *
+	 * @return
+	 */
+	public static JTraduccionLiteral clonar(final JTraduccionLiteral origTraduccionLiteral) {
+		JTraduccionLiteral jtraduccionLiteral = null;
+		if (origTraduccionLiteral != null) {
+			jtraduccionLiteral = new JTraduccionLiteral();
+			jtraduccionLiteral.setCodigo(null);
+			jtraduccionLiteral.setIdioma(origTraduccionLiteral.getIdioma());
+			jtraduccionLiteral.setLiteral(origTraduccionLiteral.getLiteral());
+		}
+		return jtraduccionLiteral;
+	}
 }

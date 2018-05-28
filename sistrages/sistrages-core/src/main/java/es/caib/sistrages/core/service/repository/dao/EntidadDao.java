@@ -18,6 +18,15 @@ public interface EntidadDao {
 	Entidad getById(final Long idEntidad);
 
 	/**
+	 * Obtiene la entidad.
+	 *
+	 * @param idArea
+	 *            Identificador de area
+	 * @return la entidad
+	 */
+	Entidad getByArea(Long idArea);
+
+	/**
 	 * Obtiene todas las entidades.
 	 *
 	 * @return Lista con todas las entidades

@@ -25,21 +25,26 @@ import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 @Table(name = "STG_PASANE")
 public class JPasoAnexar implements IModelApi {
 
+	/** Serial Version UID. **/
 	private static final long serialVersionUID = 1L;
 
+	/** Codigo. **/
 	@Id
 	@Column(name = "PAN_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	/** Paso de tramitacion. **/
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
 	@JoinColumn(name = "PAN_CODIGO")
 	private JPasoTramitacion pasoTramitacion;
 
+	/** Script para anexos dinámicos. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PAN_SCRDIN")
 	private JScript scriptAnexosDinamicos;
 
+	/** Anexos. **/
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoAnexar", cascade = { CascadeType.ALL })
 	private Set<JAnexoTramite> anexosTramite = new HashSet<>(0);
 
@@ -132,6 +137,33 @@ public class JPasoAnexar implements IModelApi {
 			}
 		}
 		return jpaso;
+	}
+
+	/**
+	 * Clonar.
+	 *
+	 * @param origPasoAnexar
+	 * @return
+	 */
+	public static JPasoAnexar clonar(final JPasoAnexar origPasoAnexar, final JPasoTramitacion jpasoTramitacion) {
+		JPasoAnexar jpasoAnexar = null;
+		if (origPasoAnexar != null) {
+			jpasoAnexar = new JPasoAnexar();
+			jpasoAnexar.setCodigo(null);
+			jpasoAnexar.setPasoTramitacion(jpasoTramitacion);
+			jpasoAnexar.setScriptAnexosDinamicos(JScript.clonar(origPasoAnexar.getScriptAnexosDinamicos()));
+			if (origPasoAnexar.getAnexosTramite() != null) {
+				jpasoAnexar.setAnexosTramite(new HashSet<JAnexoTramite>());
+				for (final JAnexoTramite origAnexo : origPasoAnexar.getAnexosTramite()) {
+					if (origAnexo != null) {
+						final JAnexoTramite janexo = JAnexoTramite.clonar(origAnexo);
+						janexo.setPasoAnexar(jpasoAnexar);
+						jpasoAnexar.getAnexosTramite().add(janexo);
+					}
+				}
+			}
+		}
+		return jpasoAnexar;
 	}
 
 }

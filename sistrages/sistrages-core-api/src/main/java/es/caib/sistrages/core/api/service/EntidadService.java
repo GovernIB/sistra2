@@ -25,6 +25,15 @@ public interface EntidadService {
 	public Entidad loadEntidad(Long idEntidad);
 
 	/**
+	 * Obtener entidad segun area.
+	 *
+	 * @param idArea
+	 *            idArea
+	 * @return entidad
+	 */
+	public Entidad loadEntidadByArea(Long idArea);
+
+	/**
 	 * Añade entidad por parte del superadministrador.
 	 *
 	 * @param entidad

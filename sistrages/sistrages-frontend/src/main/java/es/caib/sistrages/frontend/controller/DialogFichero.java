@@ -55,9 +55,10 @@ public class DialogFichero extends DialogControllerBase {
 	/** Id **/
 	private String id;
 
-	/**
-	 * campo fichero.
-	 */
+	/** Id **/
+	private String idEntidad;
+
+	/** campo fichero. */
 	private String campoFichero;
 
 	/**
@@ -119,6 +120,7 @@ public class DialogFichero extends DialogControllerBase {
 			break;
 		case TRAMITE_DOC:
 			documento = tramiteService.getDocumento(Long.valueOf(id));
+			entidad = entidadService.loadEntidad(Long.valueOf(idEntidad));
 			break;
 		default:
 			mostrarQuitar = true;
@@ -200,7 +202,7 @@ public class DialogFichero extends DialogControllerBase {
 					fichero.setPublico(true);
 				}
 				fichero.setNombre(file.getFileName());
-				tramiteService.uploadDocAnexo(documento.getId(), fichero, file.getContents());
+				tramiteService.uploadDocAnexo(documento.getId(), fichero, file.getContents(), Long.valueOf(idEntidad));
 				break;
 			default:
 				break;
@@ -476,6 +478,21 @@ public class DialogFichero extends DialogControllerBase {
 	 */
 	public void setMostrarQuitar(final boolean tipoEntidad) {
 		this.mostrarQuitar = tipoEntidad;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad
+	 *            the idEntidad to set
+	 */
+	public void setIdEntidad(final String idEntidad) {
+		this.idEntidad = idEntidad;
 	}
 
 }

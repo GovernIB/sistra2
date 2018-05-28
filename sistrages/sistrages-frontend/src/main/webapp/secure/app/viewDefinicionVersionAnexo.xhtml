@@ -48,7 +48,10 @@
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel  value="#{msg['viewDefinicionVersionAnexo.ayuda.fichero']}" />
 					</p:outputPanel>
-					<p:inputText id="fichero_input"  disabled="true" styleClass="w85" type="file"/>
+					<p:column>
+						<h:outputText  id="ficheroVacio" value="#{msg['error.noexistefitxer']}" rendered="#{empty viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero}"/>
+		           		<p:commandLink id="ficheroLink" action="#{dialogDefinicionVersionAnexo.descargaFichero(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero)}" target="_blank" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero.nombre}" rendered="#{!empty viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero}"/>
+		           	</p:column>
 
 					<p:outputPanel>
 						<p:spacer width="8" height="1"/>

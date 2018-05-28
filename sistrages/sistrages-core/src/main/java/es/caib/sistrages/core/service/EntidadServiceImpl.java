@@ -85,6 +85,21 @@ public class EntidadServiceImpl implements EntidadService {
 	/*
 	 * (non-Javadoc)
 	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.EntidadService#loadEntidadByArea(java.lang
+	 * .Long)
+	 */
+	@Override
+	@NegocioInterceptor
+	public Entidad loadEntidadByArea(final Long idArea) {
+		Entidad result = null;
+		result = entidadDao.getByArea(idArea);
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see es.caib.sistrages.core.api.service.EntidadService#addEntidad(es.caib.
 	 * sistrages.core.api.model.Entidad)
 	 */

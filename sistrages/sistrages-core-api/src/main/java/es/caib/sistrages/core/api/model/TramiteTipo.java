@@ -6,7 +6,8 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class TramiteTipo {
+@SuppressWarnings("serial")
+public class TramiteTipo extends ModelApi {
 
 	/** Código tipo certificado */
 	private Long id;

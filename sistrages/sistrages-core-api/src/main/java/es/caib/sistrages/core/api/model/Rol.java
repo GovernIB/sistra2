@@ -8,50 +8,35 @@ import es.caib.sistrages.core.api.model.types.TypeRoleUser;
 @SuppressWarnings("serial")
 public class Rol extends ModelApi {
 
-	/**
-	 * id.
-	 */
+	/** id. */
 	private Long id;
 
-	/**
-	 * tipo.
-	 */
+	/** tipo. */
 	private TypeRoleUser tipo;
 
-	/**
-	 * codigo.
-	 */
+	/** codigo. */
 	private String codigo;
 
-	/**
-	 * descripcion.
-	 */
+	/** descripcion. */
 	private String descripcion;
 
-	/**
-	 * area.
-	 */
+	/** area. */
 	private Area area;
 
-	/**
-	 * alta.
-	 */
+	/** alta. */
 	private boolean alta;
 
-	/**
-	 * modificacion.
-	 */
+	/** modificacion. */
 	private boolean modificacion;
 
-	/**
-	 * consulta.
-	 */
+	/** consulta. */
 	private boolean consulta;
 
-	/**
-	 * helpdesk.
-	 */
+	/** helpdesk. */
 	private boolean helpdesk;
+
+	/** promocionar. */
+	private boolean promocionar;
 
 	/**
 	 * Obtiene el valor de id.
@@ -222,5 +207,20 @@ public class Rol extends ModelApi {
 	 */
 	public void setHelpdesk(final boolean helpdesk) {
 		this.helpdesk = helpdesk;
+	}
+
+	/**
+	 * @return the promocionar
+	 */
+	public boolean isPromocionar() {
+		return promocionar;
+	}
+
+	/**
+	 * @param promocionar
+	 *            the promocionar to set
+	 */
+	public void setPromocionar(final boolean promocionar) {
+		this.promocionar = promocionar;
 	}
 }

@@ -244,8 +244,7 @@ public class DominioDaoImpl implements DominioDao {
 			query.setParameter("id", id);
 		}
 
-		final List<JDominio> results = query.getResultList();
-		return results;
+		return query.getResultList();
 	}
 
 	@Override

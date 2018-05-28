@@ -9,10 +9,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
+import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -20,8 +22,11 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
+import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
+import es.caib.sistrages.core.service.repository.model.JFichero;
+import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JTipoPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JTramite;
@@ -37,6 +42,11 @@ public class TramiteDaoImpl implements TramiteDao {
 	private static final String STRING_NO_EXISTE_TRAMITE = "No existe el tramite: ";
 	/** Literal. falta el tramite. **/
 	private static final String STRING_FALTA_TRAMITE = "Falta el tramite";
+	/** Id tramite version. **/
+	private static final String STRING_ID_TRAMITE_VERSION = "idTramiteVersion";
+
+	@Autowired
+	private FicheroExternoDao ficheroExternoDao;
 
 	/**
 	 * entity manager.
@@ -155,9 +165,9 @@ public class TramiteDaoImpl implements TramiteDao {
 		if (pTramite == null) {
 			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
 		}
-		final JTramite jTramite = entityManager.find(JTramite.class, pTramite.getId());
+		final JTramite jTramite = entityManager.find(JTramite.class, pTramite.getCodigo());
 		if (jTramite == null) {
-			throw new NoExisteDato(STRING_NO_EXISTE_TRAMITE + pTramite.getId());
+			throw new NoExisteDato(STRING_NO_EXISTE_TRAMITE + pTramite.getCodigo());
 		}
 
 		// Mergeamos datos
@@ -244,13 +254,28 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
+	public Long addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
 
 		if (idTramite == null) {
 			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
 		}
 
 		final JTramite jTramite = entityManager.find(JTramite.class, Long.valueOf(idTramite));
+		if (jTramite == null) {
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
+		}
+
+		final StringBuilder sqlCount = new StringBuilder(
+				"Select count(*) From JVersionTramite v where  v.tramite.id = ");
+		sqlCount.append(idTramite);
+		sqlCount.append(" and v.numeroVersion = ");
+		sqlCount.append(tramiteVersion.getRelease());
+		final Query query = entityManager.createQuery(sqlCount.toString());
+		final Long cuantos = (Long) query.getSingleResult();
+		if (cuantos > 0) {
+			throw new TramiteVersionException("Num. versio repetit");
+		}
+
 		final JVersionTramite jTramiteVersion = JVersionTramite.fromModel(tramiteVersion);
 		jTramiteVersion.setTramite(jTramite);
 		entityManager.persist(jTramiteVersion);
@@ -264,6 +289,117 @@ public class TramiteDaoImpl implements TramiteDao {
 			}
 		}
 
+		return jTramiteVersion.getCodigo();
+	}
+
+	@Override
+	public Long clonarTramiteVersion(final Long idTramiteVersion) {
+
+		// Paso 0. Preparamos los datos.
+		if (idTramiteVersion == null) {
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
+		}
+
+		// Paso 1. Clonamos el tramiteVersion
+		final JVersionTramite jVersionTramiteOriginal = entityManager.find(JVersionTramite.class, idTramiteVersion);
+		if (jVersionTramiteOriginal == null) {
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
+		}
+		final int numVersion = this.getTramiteNumVersionMaximo(jVersionTramiteOriginal.getTramite().getCodigo()) + 1;
+		final JVersionTramite jVersionTramite = JVersionTramite.clonar(jVersionTramiteOriginal, numVersion);
+
+		entityManager.persist(jVersionTramite);
+		entityManager.flush();
+
+		// Paso 2. Buscamos las relaciones de dominios y las añadimos
+		final String sqlDominios = "Select d From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+
+		final Query queryDominios = entityManager.createQuery(sqlDominios);
+		queryDominios.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JDominio> jdominios = queryDominios.getResultList();
+		for (final JDominio jdominio : jdominios) {
+			jdominio.getVersionesTramite().add(jVersionTramite);
+			entityManager.merge(jdominio);
+		}
+
+		// Paso 3. Buscamos los pasos y los clonamos y añadimos.
+		final String sqlPasos = "Select p From JPasoTramitacion p where p.versionTramite.id = :idTramiteVersion order by p.orden asc";
+		final Long idEntidad = jVersionTramite.getTramite().getArea().getEntidad().getCodigo();
+		final Query queryPasos = entityManager.createQuery(sqlPasos);
+		queryPasos.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
+		@SuppressWarnings("unchecked")
+		final List<JPasoTramitacion> jpasos = queryPasos.getResultList();
+		for (final JPasoTramitacion origPaso : jpasos) {
+			final JPasoTramitacion jpaso = JPasoTramitacion.clonar(origPaso, jVersionTramite);
+			entityManager.persist(jpaso);
+			checkFicherosPaso(jpaso, origPaso, idEntidad);
+		}
+
+		return jVersionTramite.getCodigo();
+	}
+
+	/**
+	 * Este método privado se encarga de clonar un fichero hacia ficheroexterno.
+	 *
+	 * @param jpaso
+	 * @param origPaso
+	 * @param idEntidad
+	 */
+	private void checkFicherosPaso(final JPasoTramitacion jpaso, final JPasoTramitacion origPaso,
+			final Long idEntidad) {
+
+		if (origPaso.getPasoAnexar() != null) {
+			// Buscamos en el original, si tiene un fichero y lo guardamos en ficheros
+			// externos.
+			for (final JAnexoTramite anexo : origPaso.getPasoAnexar().getAnexosTramite()) {
+				if (anexo.getFicheroPlantilla() != null) {
+					final byte[] content = ficheroExternoDao.getContentById(anexo.getFicheroPlantilla().getCodigo())
+							.getContent();
+					final JFichero fichero = getAnexoTramite(jpaso, anexo.getCodigo());
+					if (fichero != null) {
+						ficheroExternoDao.guardarFichero(idEntidad, fichero.toModel(), content);
+					}
+				}
+			}
+		}
+
+		if (origPaso.getPasoInformacion() != null && origPaso.getPasoInformacion().getFicheroPlantilla() != null) {
+			// Pendiente de hacerlo
+		}
+
+		// Los formularios.
+		if (origPaso.getPasoCaptura() != null && origPaso.getPasoCaptura().getFormularioTramite() != null
+				&& origPaso.getPasoCaptura().getFormularioTramite().getFormulario() != null) {
+			// Pendiente de hacerlo
+		}
+
+		// Los formularios.
+		if (origPaso.getPasoRellenar() != null && origPaso.getPasoRellenar().getFormulariosTramite() != null) {
+			for (final JFormularioTramite formulario : origPaso.getPasoRellenar().getFormulariosTramite()) {
+				// Pendiente de hacerlo
+			}
+		}
+	}
+
+	/**
+	 * Devuelve el anexo.
+	 *
+	 * @param jpaso
+	 * @param ficheroPlantilla
+	 * @return
+	 */
+	private JFichero getAnexoTramite(final JPasoTramitacion jpaso, final Long codigo) {
+		JFichero jfichero = null;
+		for (final JAnexoTramite anexo : jpaso.getPasoAnexar().getAnexosTramite()) {
+			if (anexo.getFicheroPlantilla() != null) {
+				if (anexo.getCodigoClonado().compareTo(codigo) == 0) {
+					jfichero = anexo.getFicheroPlantilla();
+				}
+			}
+		}
+		return jfichero;
 	}
 
 	@Override
@@ -272,7 +408,6 @@ public class TramiteDaoImpl implements TramiteDao {
 				tramiteVersion.getCodigo());
 		final JVersionTramite jTramiteVersion = JVersionTramite.fromModel(tramiteVersion);
 		jTramiteVersion.setTramite(jTramiteVersionOld.getTramite());
-		jTramiteVersion.setHistorialVersion(jTramiteVersion.getHistorialVersion());
 		entityManager.merge(jTramiteVersion);
 	}
 
@@ -286,7 +421,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final String sql = "Select t From JPasoTramitacion t where t.versionTramite.id = :idTramiteVersion";
 
 		final Query query = entityManager.createQuery(sql);
-		query.setParameter("idTramiteVersion", idTramiteVersion);
+		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
 		@SuppressWarnings("unchecked")
 		final List<JPasoTramitacion> pasos = query.getResultList();
@@ -299,7 +434,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final String sqlDominio = "Select d From JDominio d join d.versionesTramite t where t.id = :idTramiteVersion";
 
 		final Query queryDominio = entityManager.createQuery(sqlDominio);
-		queryDominio.setParameter("idTramiteVersion", idTramiteVersion);
+		queryDominio.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
 		@SuppressWarnings("unchecked")
 		final List<JDominio> dominios = queryDominio.getResultList();
@@ -342,7 +477,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	@Override
 	public Area getAreaTramite(final Long idTramite) {
 		Area area = null;
-		final JTramite jTramite = entityManager.find(JTramite.class, Long.valueOf(idTramite));
+		final JTramite jTramite = entityManager.find(JTramite.class, idTramite);
 		if (jTramite != null) {
 			area = jTramite.getArea().toModel();
 		}
@@ -362,7 +497,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final String sql = "Select d From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
-		query.setParameter("idTramiteVersion", idTramiteVersion);
+		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
 		@SuppressWarnings("unchecked")
 		final List<JDominio> results = query.getResultList();
@@ -398,6 +533,78 @@ public class TramiteDaoImpl implements TramiteDao {
 			jTramiteVersion.setRelease(jTramiteVersion.getRelease() + 1);
 			entityManager.merge(jTramiteVersion);
 		}
+	}
+
+	@Override
+	public boolean tieneTramiteVersion(final Long idTramite) {
+		final StringBuilder sqlCount = new StringBuilder(
+				"Select count(*) From JVersionTramite v where v.tramite.id = ");
+		sqlCount.append(idTramite);
+		final Query query = entityManager.createQuery(sqlCount.toString());
+		final Long cuantos = (Long) query.getSingleResult();
+		boolean tiene;
+		if (cuantos == 0) {
+			tiene = false;
+		} else {
+			tiene = true;
+		}
+		return tiene;
+	}
+
+	@Override
+	public boolean tieneTramiteNumVersionRepetido(final Long idTramite, final int release) {
+		final StringBuilder sqlCount = new StringBuilder(
+				"Select count(*) From JVersionTramite v where v.tramite.id = ");
+		sqlCount.append(idTramite);
+		sqlCount.append(" and v.numeroVersion = ");
+		sqlCount.append(release);
+		final Query query = entityManager.createQuery(sqlCount.toString());
+		final Long cuantos = (Long) query.getSingleResult();
+
+		boolean tiene;
+		if (cuantos == 0) {
+			tiene = false;
+		} else {
+			tiene = true;
+		}
+		return tiene;
+	}
+
+	@Override
+	public int getTramiteNumVersionMaximo(final Long idTramite) {
+
+		// Primero comprobamos si tiene, si no tiene, se devuelve el valor por defecto
+		// (0) sino el máximo valor +1
+		final StringBuilder sqlCount = new StringBuilder(
+				"Select count(v) From JVersionTramite v where v.tramite.id = ");
+		sqlCount.append(idTramite);
+		final Query query = entityManager.createQuery(sqlCount.toString());
+		final Long cuantos = (Long) query.getSingleResult();
+
+		int realeaseMax;
+		if (cuantos == 0) {
+			realeaseMax = 0;
+		} else {
+
+			final StringBuilder sqlMax = new StringBuilder(
+					"Select max(v.numeroVersion) From JVersionTramite v where v.tramite.id = ");
+			sqlMax.append(idTramite);
+			final Query queryMax = entityManager.createQuery(sqlMax.toString());
+			realeaseMax = (Integer) queryMax.getSingleResult();
+		}
+		return realeaseMax;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Long> listTramiteVersionActiva(final Long idArea) {
+
+		final String sql = "Select distinct tv.tramite.codigo From JVersionTramite tv where tv.tramite.area.codigo = :idArea and tv.activa = true order by tv.tramite.codigo ASC";
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idArea", idArea);
+		return query.getResultList();
+
 	}
 
 }

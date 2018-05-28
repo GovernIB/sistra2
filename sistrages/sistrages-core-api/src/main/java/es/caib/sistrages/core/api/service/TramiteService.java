@@ -144,9 +144,10 @@ public interface TramiteService {
 	 * Crea una versión de trámite.
 	 *
 	 * @param tramiteVersion
-	 * @param id
+	 * @param idTramite
+	 * @param usuario
 	 */
-	public void addTramiteVersion(TramiteVersion tramiteVersion, String id);
+	public void addTramiteVersion(TramiteVersion tramiteVersion, String idTramite, String usuario);
 
 	/**
 	 * Actualiza una versión de trámite.
@@ -307,8 +308,9 @@ public interface TramiteService {
 	 * @param idDocumento
 	 * @param fichero
 	 * @param contents
+	 * @param idEntidad
 	 */
-	public void uploadDocAnexo(Long idDocumento, Fichero fichero, byte[] contents);
+	public void uploadDocAnexo(Long idDocumento, Fichero fichero, byte[] contents, Long idEntidad);
 
 	/**
 	 * Borra el doc de un anexo.
@@ -350,4 +352,46 @@ public interface TramiteService {
 	 * @return
 	 */
 	public HistorialVersion getHistorialVersion(Long idHistorialVersion);
+
+	/**
+	 * Comprueba si tiene versiones de trámite.
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	public boolean tieneTramiteVersion(Long idTramite);
+
+	/**
+	 * Comprueba si tiene la release repetida.
+	 *
+	 * @param idTramite
+	 * @param release
+	 * @return
+	 */
+	public boolean tieneTramiteNumVersionRepetida(Long idTramite, int release);
+
+	/**
+	 * Obtiene la release máxima de un trámite.
+	 *
+	 * @param idTramite
+	 * @return Release máxima, siendo 0 el valor por defecto.
+	 */
+	public int getTramiteNumVersionMaximo(Long idTramite);
+
+	/**
+	 * Clonar trámite version.
+	 *
+	 * @param idTramiteVersion
+	 * @param usuario
+	 */
+	public void clonadoTramiteVersion(Long idTramiteVersion, final String usuario);
+
+	/**
+	 * Devuelve una lista con el id de los tramites que tengan una versión activa
+	 * dentro de un area.
+	 *
+	 * @param idArea
+	 * @return
+	 */
+	public List<Long> listTramiteVersionActiva(Long idArea);
 }

@@ -6,9 +6,9 @@
 	template="../layout/mainLayout.xhtml">
 
 	<f:metadata>
+		<f:viewAction name="AREA" value="#{viewTramites.idArea}" />
 		<f:viewAction action="#{viewTramites.init}" />
 	</f:metadata>
-
 
 	<ui:define name="content">
 
@@ -48,8 +48,6 @@
 			        		</p:commandButton>
 
 			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarArea}" />
-
-
 			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarArea}">
 			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
@@ -103,7 +101,7 @@
 			        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 			        		</p:commandButton>
 			        		<p:commandButton id="btnMoverTramite" value="#{msg['botones.mover']}" icon="fa fa-exchange" actionListener="#{viewTramites.moverTramite}" process="@this" update="growl :form:dataTableTramites" rendered="#{viewTramites.permiteAltaArea}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl :form:dataTableTramites"/>
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl form:dataTableTramites" />
 			        		</p:commandButton>
 			        		<p:commandButton id="btnVersionesTramite" value="#{msg['viewTramites.botones.versiones']}" icon="fa fa-level-down" actionListener="#{viewTramites.versionesTramite}" process="@this" update="growl"/>
 			        		<p:commandButton id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl"/>
@@ -116,7 +114,7 @@
 						                         paginator="true" paginatorPosition="bottom"
 						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						                         rowsPerPageTemplate="5,10,15,30"
-									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.id}">
+									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.codigo}">
 
 
 										<!-- Necesario para actualizar en controlador la fila seleccionada -->

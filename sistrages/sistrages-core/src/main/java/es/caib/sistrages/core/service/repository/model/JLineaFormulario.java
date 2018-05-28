@@ -17,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
+import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
@@ -121,7 +122,7 @@ public class JLineaFormulario implements IModelApi {
 			for (final JElementoFormulario jElementoFormulario : elementoFormulario) {
 				switch (TypeObjetoFormulario.fromString(jElementoFormulario.getTipo())) {
 				case SECCION:
-					ncolumnas = 6;
+					ncolumnas = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA;
 					break;
 				case CAMPO_TEXTO:
 					ncolumnas += jElementoFormulario.getNumeroColumnas();
@@ -130,7 +131,7 @@ public class JLineaFormulario implements IModelApi {
 					break;
 				}
 
-				if (ncolumnas >= 6) {
+				if (ncolumnas >= ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA) {
 					res = true;
 					break;
 				}

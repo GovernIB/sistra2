@@ -66,4 +66,8 @@ public interface FormularioInternoService {
 
 	void removeLineaFormulario(final Long pId);
 
+	void updateOrdenComponenteFormulario(Long pId, Integer pOrden);
+
+	void updateOrdenLineaFormulario(Long pId, Integer pOrden);
+
 }

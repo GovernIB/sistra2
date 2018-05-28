@@ -112,4 +112,15 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	public void removeLineaFormulario(final Long pId) {
 		formIntDao.removeLineaFormulario(pId);
 	}
+
+	@Override
+	public void updateOrdenComponenteFormulario(final Long pId, final Integer pOrden) {
+		formIntDao.updateOrdenComponente(pId, pOrden);
+	}
+
+	@Override
+	public void updateOrdenLineaFormulario(final Long pId, final Integer pOrden) {
+		formIntDao.updateOrdenLinea(pId, pOrden);
+
+	}
 }

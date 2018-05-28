@@ -26,6 +26,16 @@ public class DialogTramiteDesbloquear extends DialogControllerBase {
 	private String id;
 
 	/**
+	 * Usuario
+	 */
+	private String usuario;
+
+	/**
+	 * Detalle
+	 */
+	private String detalle;
+
+	/**
 	 * Datos elemento.
 	 */
 	private TramiteVersion data;
@@ -35,38 +45,22 @@ public class DialogTramiteDesbloquear extends DialogControllerBase {
 	 */
 	public void init() {
 
-		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		if (modo == TypeModoAcceso.ALTA) {
-			data = new TramiteVersion();
-		} else {
-			data = tramiteService.getTramiteVersion(Long.valueOf(id));
-		}
+		data = tramiteService.getTramiteVersion(Long.valueOf(id));
+		data.setRelease(data.getRelease() + 1);
+		usuario = UtilJSF.getSessionBean().getUserName();
+
 	}
 
 	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
-		// Realizamos alta o update
-		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
-		/*
-		 * switch (acceso) { case ALTA: tramiteService.addArea(idEntidad, data); break;
-		 * case EDICION: tramiteService.updateArea(data); break; case CONSULTA: // No
-		 * hay que hacer nada break; }
-		 */
-
-		/*
-		 * tramiteService.desbloquearTramiteVersion(this.datoSeleccionado.getCodigo(),
-		 * UtilJSF.getSessionBean().getUserName(), "DESBLOQUEO");
-		 *
-		 * filtrar(); this.datoSeleccionado = null;
-		 */
+		tramiteService.desbloquearTramiteVersion(Long.valueOf(this.id), usuario, detalle);
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -108,6 +102,36 @@ public class DialogTramiteDesbloquear extends DialogControllerBase {
 	 */
 	public void setData(final TramiteVersion data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the usuario
+	 */
+	public String getUsuario() {
+		return usuario;
+	}
+
+	/**
+	 * @param usuario
+	 *            the usuario to set
+	 */
+	public void setUsuario(final String usuario) {
+		this.usuario = usuario;
+	}
+
+	/**
+	 * @return the detalle
+	 */
+	public String getDetalle() {
+		return detalle;
+	}
+
+	/**
+	 * @param detalle
+	 *            the detalle to set
+	 */
+	public void setDetalle(final String detalle) {
+		this.detalle = detalle;
 	}
 
 }

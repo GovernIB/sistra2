@@ -207,7 +207,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 	@Override
 	public void updateTasaTramite(final Tasa tasa) {
-		final JPagoTramite jpagoTramiteOld = entityManager.find(JPagoTramite.class, tasa.getId());
+		final JPagoTramite jpagoTramiteOld = entityManager.find(JPagoTramite.class, tasa.getCodigo());
 		final JPagoTramite jpagoTramite = JPagoTramite.fromModel(tasa);
 		jpagoTramite.setPasoPagos(jpagoTramiteOld.getPasoPagos());
 		if (jpagoTramite.getScriptObligatoriedad() != null) {

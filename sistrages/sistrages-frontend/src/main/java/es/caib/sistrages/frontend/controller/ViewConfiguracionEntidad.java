@@ -134,6 +134,31 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre explorar url carpeta ciudadana.
+	 */
+	public void explorarUrlCarpetaCiudadana() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, data.getUrlCarpetaCiudadana(), idiomas, idiomas);
+	}
+
+	/**
+	 * Gestión de retorno url carpeta ciudadana.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoUrlCarpetaCiudadana(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setUrlCarpetaCiudadana(literales);
+		}
+	}
+
+	/**
 	 * Retorno dialogo fichero.
 	 *
 	 * @param event

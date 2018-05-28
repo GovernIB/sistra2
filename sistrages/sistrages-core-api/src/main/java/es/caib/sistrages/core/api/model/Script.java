@@ -6,7 +6,7 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-public class Script {
+public class Script extends ModelApi {
 
 	/** Código. **/
 	private Long id;

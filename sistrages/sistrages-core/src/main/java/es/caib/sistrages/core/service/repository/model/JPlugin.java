@@ -26,103 +26,179 @@ import es.caib.sistrages.core.api.util.UtilJSON;
 @Table(name = "STG_PLUGIN")
 public class JPlugin implements IModelApi {
 
+	/** Serial Version UID. **/
 	private static final long serialVersionUID = 1L;
 
+	/** Codigo. **/
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_PLUGIN_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_PLUGIN_SEQ", sequenceName = "STG_PLUGIN_SEQ")
 	@Column(name = "PLG_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	/** Ámbito: G (Global) , E (Entidad) */
 	@Column(name = "PLG_AMBITO", nullable = false, length = 1)
 	private String ambito;
 
+	/**
+	 * "Tipo plugin: - Global: LOG: Login, REP: Representación, DOM: Dominios
+	 * remotos, FIR: Firma - Entidad: PRO: Catalogo procedimientos, REG: Registro,
+	 * PAG: Pagos"
+	 */
 	@Column(name = "PLG_TIPO", nullable = false, length = 3)
 	private String tipo;
 
+	/** Descripción plugin */
 	@Column(name = "PLG_DESCR", nullable = false)
 	private String descripcion;
 
+	/** Clase implementadora */
 	@Column(name = "PLG_CLASS", nullable = false, length = 500)
 	private String claseImplementadora;
 
+	/** Lista serializada propiedades (codigo - valor) */
 	@Column(name = "PLG_PROPS", length = 4000)
 	private String propiedades;
 
+	/** Id Instancia (para plugins multiinstancia como pagos) */
 	@Column(name = "PLG_IDINST", length = 20)
 	private String idInstancia;
 
+	/** Entidad. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PLG_CODENT", nullable = true)
 	private JEntidad entidad;
 
+	/** Constructor. **/
 	public JPlugin() {
+		super();
 	}
 
+	/**
+	 * @return the codigo
+	 */
 	public Long getCodigo() {
-		return this.codigo;
+		return codigo;
 	}
 
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * @return the ambito
+	 */
 	public String getAmbito() {
-		return this.ambito;
+		return ambito;
 	}
 
-	public void setAmbito(final String plgAmbito) {
-		this.ambito = plgAmbito;
+	/**
+	 * @param ambito
+	 *            the ambito to set
+	 */
+	public void setAmbito(final String ambito) {
+		this.ambito = ambito;
 	}
 
-	public JEntidad getEntidad() {
-		return entidad;
-	}
-
-	public void setEntidad(final JEntidad entidad) {
-		this.entidad = entidad;
-	}
-
+	/**
+	 * @return the tipo
+	 */
 	public String getTipo() {
-		return this.tipo;
+		return tipo;
 	}
 
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
 	public void setTipo(final String tipo) {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * @return the descripcion
+	 */
 	public String getDescripcion() {
-		return this.descripcion;
+		return descripcion;
 	}
 
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
 	}
 
+	/**
+	 * @return the claseImplementadora
+	 */
 	public String getClaseImplementadora() {
-		return this.claseImplementadora;
+		return claseImplementadora;
 	}
 
+	/**
+	 * @param claseImplementadora
+	 *            the claseImplementadora to set
+	 */
 	public void setClaseImplementadora(final String claseImplementadora) {
 		this.claseImplementadora = claseImplementadora;
 	}
 
+	/**
+	 * @return the propiedades
+	 */
 	public String getPropiedades() {
-		return this.propiedades;
+		return propiedades;
 	}
 
+	/**
+	 * @param propiedades
+	 *            the propiedades to set
+	 */
 	public void setPropiedades(final String propiedades) {
 		this.propiedades = propiedades;
 	}
 
+	/**
+	 * @return the idInstancia
+	 */
 	public String getIdInstancia() {
-		return this.idInstancia;
+		return idInstancia;
 	}
 
+	/**
+	 * @param idInstancia
+	 *            the idInstancia to set
+	 */
 	public void setIdInstancia(final String idInstancia) {
 		this.idInstancia = idInstancia;
 	}
 
+	/**
+	 * @return the entidad
+	 */
+	public JEntidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad
+	 *            the entidad to set
+	 */
+	public void setEntidad(final JEntidad entidad) {
+		this.entidad = entidad;
+	}
+
+	/**
+	 * toModel.
+	 *
+	 * @return
+	 */
 	public Plugin toModel() {
 		final Plugin plugin = new Plugin();
 		plugin.setId(this.getCodigo());
@@ -135,15 +211,24 @@ public class JPlugin implements IModelApi {
 		return plugin;
 	}
 
+	/**
+	 * From model.
+	 *
+	 * @param plugin
+	 * @return
+	 */
 	public static JPlugin fromModel(final Plugin plugin) {
-		final JPlugin jPlugin = new JPlugin();
-		jPlugin.setCodigo(plugin.getId());
-		jPlugin.setAmbito(plugin.getAmbito().toString());
-		jPlugin.setClaseImplementadora(plugin.getClassname());
-		jPlugin.setDescripcion(plugin.getDescripcion());
-		jPlugin.setIdInstancia(plugin.getInstancia());
-		jPlugin.setPropiedades(UtilJSON.toJSON(plugin.getPropiedades()));
-		jPlugin.setTipo(plugin.getTipo().toString());
+		JPlugin jPlugin = null;
+		if (plugin != null) {
+			jPlugin = new JPlugin();
+			jPlugin.setCodigo(plugin.getId());
+			jPlugin.setAmbito(plugin.getAmbito().toString());
+			jPlugin.setClaseImplementadora(plugin.getClassname());
+			jPlugin.setDescripcion(plugin.getDescripcion());
+			jPlugin.setIdInstancia(plugin.getInstancia());
+			jPlugin.setPropiedades(UtilJSON.toJSON(plugin.getPropiedades()));
+			jPlugin.setTipo(plugin.getTipo().toString());
+		}
 		return jPlugin;
 	}
 

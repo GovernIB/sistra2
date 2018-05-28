@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
@@ -163,6 +164,9 @@ public class FormRenderServlet extends HttpServlet {
 					case ETIQUETA:
 						campoEtiqueta(pOut, cf);
 						break;
+					case CHECKBOX:
+						campoCheckBox(pOut, cf);
+						break;
 					default:
 						break;
 					}
@@ -255,6 +259,34 @@ public class FormRenderServlet extends HttpServlet {
 
 		escribeLinea(pOut, "</div>", 5);
 
+	}
+
+	private void campoCheckBox(final StringBuilder pOut, final ComponenteFormulario pCF) {
+		final ComponenteFormularioCampoCheckbox campo = (ComponenteFormularioCampoCheckbox) pCF;
+
+		final StringBuilder estilo = new StringBuilder();
+		String texto = "";
+
+		if (campo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(campo.getNumColumnas());
+		}
+
+		estilo.append(" imc-el-name-").append(String.valueOf(campo.getId()));
+
+		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
+			texto = "<label class=\"editable\" for=\"" + campo.getId() + "\">" + campo.getTexto().getTraduccion("es")
+					+ "</label>";
+		}
+		escribeLinea(pOut, "<div class=\"imc-element imc-el-check ", estilo.toString(), "\" data-type=\"check\">", 5);
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
+		escribeLinea(pOut, "<div class=\"imc-input-check\">", 7);
+		escribeLinea(pOut, "<input class=\"editable\" id=\"", String.valueOf(campo.getId()), "\" name=\"",
+				String.valueOf(campo.getId()), "\" type=\"checkbox\">", 8);
+		escribeLinea(pOut, texto, 8);
+
+		escribeLinea(pOut, "</div>", 7);
+		escribeLinea(pOut, "</div>", 6);
+		escribeLinea(pOut, "</div>", 5);
 	}
 
 	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF) {

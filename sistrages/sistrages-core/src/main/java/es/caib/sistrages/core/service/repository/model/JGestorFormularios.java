@@ -45,9 +45,11 @@ public class JGestorFormularios implements IModelApi {
 	private String urlGestorFormularios;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "gestorFormulario")
-	private Set<JFormularioTramite> formulariosTramite = new HashSet<JFormularioTramite>(0);
+	private Set<JFormularioTramite> formulariosTramite = new HashSet<>(0);
 
+	/** Constructor. **/
 	public JGestorFormularios() {
+		super();
 	}
 
 	public Long getCodigo() {

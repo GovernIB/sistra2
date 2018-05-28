@@ -97,7 +97,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		DefaultMenuItem item = null;
 
 		item = new DefaultMenuItem(area.getCodigo());
-		item.setUrl("/secure/app/viewTramites.xhtml");
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getId());
 		breadCrumb.addElement(item);
 
 		item = new DefaultMenuItem(tramite.getIdentificador());
@@ -118,7 +118,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.id);
-		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 600, 200);
+		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 150);
 
 	}
 
@@ -225,9 +225,24 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 
-		// UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION,
-		// params, true, 1200, 720);
+		UtilJSF.openDialog(DialogTramiteDesbloquear.class, TypeModoAcceso.EDICION, params, true, 500, 320);
 
+	}
+
+	/**
+	 * El returnDialog de desbloquear.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoDesbloquear(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled()) {
+			filtrar();
+			this.datoSeleccionado = null;
+		}
 	}
 
 	/**
@@ -247,27 +262,37 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	 * Exportar version.
 	 */
 	public void exportar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		if (!verificarFilaSeleccionada()) {
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteVersionExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
 	}
 
 	/**
 	 * Importar versión.
 	 */
 	public void importar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), id);
+		UtilJSF.openDialog(DialogTramiteVersionImportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
 	}
 
 	/**
 	 * Historial.
 	 */
 	public void historial() {
-		if (!verificarFilaSeleccionada())
+
+		if (!verificarFilaSeleccionada()) {
 			return;
+		}
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
+		UtilJSF.openDialog(DialogHistorialVersion.class, TypeModoAcceso.CONSULTA, params, true, 900, 520);
 
-		UtilJSF.openDialog(DialogHistorialVersion.class, TypeModoAcceso.CONSULTA, params, true, 900, 420);
 	}
 
 	/**
@@ -281,7 +306,23 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	 * Duplicar.
 	 */
 	public void duplicar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Clonamos
+		this.tramiteService.clonadoTramiteVersion(this.datoSeleccionado.getCodigo(),
+				UtilJSF.getSessionBean().getUserName());
+
+		// Refrescamos datos
+		this.datoSeleccionado = null;
+		this.filtrar();
+
+		// Mostramos mensaje
+		// UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+		// UtilJSF.getLiteral("info.clonado.ok"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+				"Se ha clonado pero falta revisar el clonado de ficheros y de formularios interno");
 	}
 
 	/**

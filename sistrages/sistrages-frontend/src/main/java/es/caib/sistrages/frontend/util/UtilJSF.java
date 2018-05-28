@@ -161,9 +161,7 @@ public final class UtilJSF {
 	 *            Mensaje
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message) {
-		final Severity severity = getSeverity(nivel);
-		final FacesContext context = FacesContext.getCurrentInstance();
-		context.addMessage(null, new FacesMessage(severity, message, message));
+		addMessageContext(nivel, message, message);
 	}
 
 	/**
@@ -181,6 +179,45 @@ public final class UtilJSF {
 		final Severity severity = getSeverity(nivel);
 		final FacesContext context = FacesContext.getCurrentInstance();
 		context.addMessage(null, new FacesMessage(severity, message, detail));
+	}
+
+	/**
+	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
+	 * messages,...).
+	 *
+	 * @param nivel
+	 *            Nivel gravedad
+	 * @param message
+	 *            Mensaje
+	 * @param validationFailed
+	 *            añade la marca de error de validacion
+	 */
+	public static void addMessageContext(final TypeNivelGravedad nivel, final String message,
+			final boolean validationFailed) {
+		addMessageContext(nivel, message, message, validationFailed);
+
+	}
+
+	/**
+	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
+	 * messages,...).
+	 *
+	 * @param nivel
+	 *            Nivel gravedad
+	 * @param message
+	 *            Mensaje
+	 * @param detail
+	 *            Detalle
+	 * @param validationFailed
+	 *            añade la marca de error de validacion
+	 */
+	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
+			final boolean validationFailed) {
+		addMessageContext(nivel, message, detail);
+
+		if (validationFailed) {
+			FacesContext.getCurrentInstance().validationFailed();
+		}
 	}
 
 	/**
@@ -527,4 +564,22 @@ public final class UtilJSF {
 		}
 		return url;
 	}
+
+	/**
+	 * Realiza el update desde ajax del componente como desde el xhtml.
+	 *
+	 * @param pIdComponente
+	 *            identificador del componente
+	 */
+	public static void doUpdateComponent(final String pIdComponente) {
+		RequestContext.getCurrentInstance().update(pIdComponente);
+	}
+
+	/**
+	 * Pone el estado validation failed.
+	 */
+	public static void doValidationFailed() {
+		FacesContext.getCurrentInstance().validationFailed();
+	}
+
 }

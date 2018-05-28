@@ -20,49 +20,83 @@ import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 @Table(name = "STG_PASDBS")
 public class JPasoDebeSaber implements IModelApi {
 
+	/** Serial Version UID. **/
 	private static final long serialVersionUID = 1L;
 
+	/** Codigo. **/
 	@Id
 	@Column(name = "PDB_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	/** Paso tramitacion. **/
 	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
 	@JoinColumn(name = "PDB_CODIGO")
 	private JPasoTramitacion pasoTramitacion;
 
+	/** Instrucciones inicio . **/
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PDB_INSINI")
 	private JLiteral instruccionesInicio;
 
+	/**
+	 * Constructor.
+	 */
 	public JPasoDebeSaber() {
-		// Constructor vacio.
+		super();
 	}
 
+	/**
+	 * @return the codigo
+	 */
 	public Long getCodigo() {
-		return this.codigo;
+		return codigo;
 	}
 
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * @return the pasoTramitacion
+	 */
 	public JPasoTramitacion getPasoTramitacion() {
-		return this.pasoTramitacion;
+		return pasoTramitacion;
 	}
 
+	/**
+	 * @param pasoTramitacion
+	 *            the pasoTramitacion to set
+	 */
 	public void setPasoTramitacion(final JPasoTramitacion pasoTramitacion) {
 		this.pasoTramitacion = pasoTramitacion;
 	}
 
+	/**
+	 * @return the instruccionesInicio
+	 */
 	public JLiteral getInstruccionesInicio() {
-		return this.instruccionesInicio;
+		return instruccionesInicio;
 	}
 
+	/**
+	 * @param instruccionesInicio
+	 *            the instruccionesInicio to set
+	 */
 	public void setInstruccionesInicio(final JLiteral instruccionesInicio) {
 		this.instruccionesInicio = instruccionesInicio;
 	}
 
+	/**
+	 * From model.
+	 * 
+	 * @param mpasoDebeSaber
+	 * @return
+	 */
 	public static JPasoDebeSaber fromModel(final TramitePasoDebeSaber mpasoDebeSaber) {
 		JPasoDebeSaber jpaso = null;
 		if (mpasoDebeSaber != null) {
@@ -73,6 +107,24 @@ public class JPasoDebeSaber implements IModelApi {
 			}
 		}
 		return jpaso;
+	}
+
+	/**
+	 * Clonar.
+	 *
+	 * @param origPasoDebeSaber
+	 * @return
+	 */
+	public static JPasoDebeSaber clonar(final JPasoDebeSaber origPasoDebeSaber,
+			final JPasoTramitacion jpasoTramitacion) {
+		JPasoDebeSaber jpasoDebeSaber = null;
+		if (origPasoDebeSaber != null) {
+			jpasoDebeSaber = new JPasoDebeSaber();
+			jpasoDebeSaber.setCodigo(null);
+			jpasoDebeSaber.setPasoTramitacion(jpasoTramitacion);
+			jpasoDebeSaber.setInstruccionesInicio(JLiteral.clonar(origPasoDebeSaber.getInstruccionesInicio()));
+		}
+		return jpasoDebeSaber;
 	}
 
 }

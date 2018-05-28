@@ -21,7 +21,10 @@ public class HistorialVersion extends ModelApi {
 	/** Fecha. **/
 	private Date fecha;
 
-	/** Tipo acción: C (Creación) / M (Modificación) / I (Importación) */
+	/**
+	 * Tipo acción: C (Creación) / B (Bloquear) / D (Desbloquear) / I (Importación)
+	 * / E (Exportacion) / L (Clonado) / O (Objeto desde el que se clona)
+	 */
 	private TypeAccionHistorial tipoAccion;
 
 	/** Release version. **/

@@ -30,41 +30,83 @@ public class JScript implements IModelApi {
 	@Column(name = "SCR_SCRIPT")
 	private String script;
 
+	/** Constructor. **/
 	public JScript() {
 		super();
 	}
 
+	/**
+	 * @return the codigo
+	 */
 	public Long getCodigo() {
-		return this.codigo;
+		return codigo;
 	}
 
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * @return the script
+	 */
 	public String getScript() {
-		return this.script;
+		return script;
 	}
 
+	/**
+	 * @param script
+	 *            the script to set
+	 */
 	public void setScript(final String script) {
 		this.script = script;
 	}
 
-	public static JScript fromModel(final Script model) {
-		JScript jModel = null;
-		if (model != null) {
-			jModel = new JScript();
-			jModel.setCodigo(model.getId());
-			jModel.setScript(model.getContenido());
+	/**
+	 * From model.
+	 *
+	 * @param mScript
+	 * @return
+	 */
+	public static JScript fromModel(final Script mScript) {
+		JScript jScript = null;
+		if (mScript != null) {
+			jScript = new JScript();
+			jScript.setCodigo(mScript.getId());
+			jScript.setScript(mScript.getContenido());
 		}
-		return jModel;
+		return jScript;
 	}
 
+	/**
+	 * To model.
+	 *
+	 * @return
+	 */
 	public Script toModel() {
 		final Script mScript = new Script();
 		mScript.setId(this.getCodigo());
 		mScript.setContenido(this.getScript());
 		return mScript;
+	}
+
+	/**
+	 * Clona el script
+	 *
+	 * @param origScript
+	 * @return
+	 */
+	public static JScript clonar(final JScript origScript) {
+		JScript jscript = null;
+		if (origScript != null) {
+			jscript = new JScript();
+			jscript.setCodigo(null);
+			jscript.setScript(origScript.getScript());
+		}
+		return jscript;
 	}
 
 }

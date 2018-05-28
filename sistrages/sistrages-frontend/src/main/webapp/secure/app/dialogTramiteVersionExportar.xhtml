@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFlujo" var="TypeFlujo" />
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogTramiteVersionExportar.header']}"/></title>
+</h:head>
+
+<h:body>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteVersionExportar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogTramiteVersionExportar.id}"/>
+		<f:viewAction action="#{dialogTramiteVersionExportar.init}" />
+	</f:metadata>
+
+	<h:form id="dialogTramite" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growldialog" widgetVar="growldialog" life="2000" sticky="false" />
+
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+						<p:outputLabel value="Version trámite" />
+                	<p:outputLabel  />
+
+                	<p:outputLabel value="Área:" />
+                	<p:outputLabel value="#{dialogTramiteVersionExportar.area.codigo}" />
+
+                	<p:outputLabel value="Trámite:" />
+                	<p:outputLabel value="#{dialogTramiteVersionExportar.tramite.identificador}"  />
+
+                	<p:outputLabel value="Versión:" />
+                	<p:outputLabel value="#{dialogTramiteVersionExportar.tramiteVersion.numeroVersion}"  />
+
+					<p:outputLabel value="Elementos comunes" />
+                	<p:outputLabel  />
+
+					<p:outputLabel value="Formateadores" />
+                	<p:outputLabel  />
+
+
+
+					<p:commandButton value="prueba1 JSON" actionListener="#{dialogTramiteVersionExportar.pruebaJSON}" process="@form" update="@form growldialog"  styleClass="boton-azul" />
+
+					<p:commandButton value="prueba1 SERIALIZE" actionListener="#{dialogTramiteVersionExportar.pruebaSerialize}" process="@this"  styleClass="boton-azul" />
+
+
+				</h:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteVersionExportar.aceptar}" process="@form" update="@form growldialog"  styleClass="boton-azul" rendered="#{dialogTramiteVersionExportar.alta or dialogTramiteVersionExportar.edicion}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionExportar.cancelar}" process="@this" rendered="#{dialogTramiteVersionExportar.alta or dialogTramiteVersionExportar.edicion}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteVersionExportar.cancelar}" process="@this"  rendered="#{dialogTramiteVersionExportar.consulta}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

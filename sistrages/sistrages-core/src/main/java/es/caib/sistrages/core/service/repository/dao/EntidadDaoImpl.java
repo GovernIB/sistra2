@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
@@ -46,6 +47,24 @@ public class EntidadDaoImpl implements EntidadDao {
 		if (jEntidad != null) {
 			// Establecemos datos
 			entidad = jEntidad.toModel();
+		}
+		return entidad;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#getByArea(java.lang.
+	 * Long)
+	 */
+	@Override
+	public Entidad getByArea(final Long idArea) {
+		Entidad entidad = null;
+		final JArea jarea = entityManager.find(JArea.class, idArea);
+		if (jarea != null) {
+			// Establecemos datos
+			entidad = jarea.getEntidad().toModel();
 		}
 		return entidad;
 	}
@@ -127,6 +146,9 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setContactoUrl(entidad.isUrlSoporteHabilitado());
 		jEntidad.setUrlSoporte(entidad.getUrlSoporte());
 		jEntidad.setContactoFormularioIncidencias(entidad.isFormularioIncidenciasHabilitado());
+		jEntidad.setUrlCarpetaCiudadana(
+				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
+
 		entityManager.merge(jEntidad);
 	}
 

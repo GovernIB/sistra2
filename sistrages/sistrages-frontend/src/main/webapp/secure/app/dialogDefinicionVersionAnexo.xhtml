@@ -19,6 +19,7 @@
 			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionAnexo.modoAcceso}"/>
 			<f:viewParam name="ID" value="#{dialogDefinicionVersionAnexo.id}" />
 			<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionAnexo.idTramiteVersion}"/>
+			<f:viewParam name="ENTIDAD" value="#{dialogDefinicionVersionAnexo.idEntidad}" />
 			<f:viewAction action="#{dialogDefinicionVersionAnexo.init}" />
 		</f:metadata>
 
@@ -77,11 +78,11 @@
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.ayuda.fichero']}" />
 					</p:outputPanel>
 					<p:column>
-						<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
-		           		<p:commandLink action="#{dialogDefinicionVersionAnexo.descargaFichero(dialogDefinicionVersionAnexo.data.ayudaFichero)}" target="_blank" value="#{dialogDefinicionVersionAnexo.data.ayudaFichero.nombre}" rendered="#{!empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
+						<h:outputText  id="ficheroVacio" value="#{msg['error.noexistefitxer']}" rendered="#{empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
+		           		<p:commandLink id="ficheroLink" action="#{dialogDefinicionVersionAnexo.descargaFichero(dialogDefinicionVersionAnexo.data.ayudaFichero)}" target="_blank" value="#{dialogDefinicionVersionAnexo.data.ayudaFichero.nombre}" rendered="#{!empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
 		           		<p:spacer width="20" height="1"/>
 		           		<p:commandButton id="btnFichero" icon="fa fa-cog" process="@this" update="growl" actionListener="#{dialogDefinicionVersionAnexo.subirFichero()}" disabled="#{!dialogDefinicionVersionAnexo.permiteEditar}">
-		           			<p:ajax event="dialogReturn" update="formDialogDefinicionVersionAnexo growl"/>
+		           			<p:ajax event="dialogReturn" update="formDialogDefinicionVersionAnexo ficheroVacio ficheroLink growl "/>
 		           			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.uploadDoc']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		           		</p:commandButton>
 					</p:column>

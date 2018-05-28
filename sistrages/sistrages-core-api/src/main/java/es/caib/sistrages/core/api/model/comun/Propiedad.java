@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model.comun;
 
+import es.caib.sistrages.core.api.model.ModelApi;
+
 /**
  *
  * Clase propiedad básica de codigo por valor.
@@ -7,7 +9,8 @@ package es.caib.sistrages.core.api.model.comun;
  * @author Indra
  *
  */
-public final class Propiedad {
+@SuppressWarnings("serial")
+public final class Propiedad extends ModelApi {
 
 	/**
 	 * Código.

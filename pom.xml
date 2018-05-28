@@ -37,6 +37,7 @@
 		<hibernate-validator.version>5.4.2.Final</hibernate-validator.version>
 		<javassist.version>3.22.0-GA</javassist.version>
 		<commons-lang3.version>3.7</commons-lang3.version>
+		<commons-validator.version>1.5.1</commons-validator.version>
 		<commons-fileupload>1.2</commons-fileupload>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<commons-io.version>2.6</commons-io.version>

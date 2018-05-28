@@ -103,4 +103,18 @@ public class FormularoInternoServiceBean implements FormularioInternoService {
 		formIntService.removeLineaFormulario(pId);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateOrdenComponenteFormulario(final Long pId, final Integer pOrden) {
+		formIntService.updateOrdenComponenteFormulario(pId, pOrden);
+
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateOrdenLineaFormulario(final Long pId, final Integer pOrden) {
+		formIntService.updateOrdenLineaFormulario(pId, pOrden);
+
+	}
+
 }

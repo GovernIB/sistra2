@@ -37,6 +37,7 @@ import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -58,6 +59,10 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ManagedBean
 @ViewScoped
 public class ViewDefinicionVersion extends ViewControllerBase {
+
+	/** Tramite service. */
+	@Inject
+	private EntidadService entidadService;
 
 	/** Tramite service. */
 	@Inject
@@ -141,11 +146,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		DefaultMenuItem item = null;
 
 		item = new DefaultMenuItem(area.getCodigo());
-		item.setUrl("/secure/app/viewTramites.xhtml?MODO_ACCESO=" + modoAcceso + "&area=" + area.getId());
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getId());
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem(tramite.getDescripcion());
-		item.setUrl("/secure/app/viewTramitesVersion.xhtml?MODO_ACCESO=" + modoAcceso + "&ID=" + tramite.getId());
+		item.setUrl("/secure/app/viewTramitesVersion.xhtml?MODO_ACCESO=" + TypeModoAcceso.EDICION + "&ID="
+				+ tramite.getCodigo());
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem("Version " + tramiteVersion.getNumeroVersion());
@@ -226,7 +232,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void consultarDisenyo() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(),
-				this.getFormularioSeleccionado().getFormulario().getId().toString());
+				this.getFormularioSeleccionado().getIdFormularioInterno().toString());
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 720);
 	}
 
@@ -751,6 +757,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idDocumento));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.ENTIDAD.toString(),
+				entidadService.loadEntidadByArea(area.getId()).getId().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 575);
 	}
 
@@ -901,7 +909,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarTasaSeleccionada())
 			return;
 
-		this.editarTasaDialog(this.tasaSeleccionado.getId());
+		this.editarTasaDialog(this.tasaSeleccionado.getCodigo());
 
 	}
 
@@ -909,7 +917,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Abre dialogo para editar dato.
 	 */
 	public void editarTasaTramite() {
-		this.editarTasaDialog(this.getTasaTramiteSeleccionado().getId());
+		this.editarTasaDialog(this.getTasaTramiteSeleccionado().getCodigo());
 	}
 
 	public void editarTasaDialog(final Long idTasa) {
@@ -928,7 +936,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarTasaSeleccionada())
 			return;
 
-		tramiteService.removeTasa(this.getTramitePasoTSSeleccionado().getCodigo(), this.tasaSeleccionado.getId());
+		tramiteService.removeTasa(this.getTramitePasoTSSeleccionado().getCodigo(), this.tasaSeleccionado.getCodigo());
 
 		// Actualizamos la info
 		recuperarDatos();
@@ -1058,7 +1066,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			} else if (opcionArbol.getFormulario() != null) {
 				idSelectNode = opcionArbol.getFormulario().getId();
 			} else if (opcionArbol.getTasa() != null) {
-				idSelectNode = opcionArbol.getTasa().getId();
+				idSelectNode = opcionArbol.getTasa().getCodigo();
 			} else if (opcionArbol.getTramitePaso() != null) {
 				idSelectNode = opcionArbol.getTramitePaso().getCodigo();
 			}
@@ -1162,10 +1170,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				for (final Tasa tasa : ((TramitePasoTasa) tramitePaso).getTasas()) {
 
 					/** Nodo Tasa. **/
-					final DefaultTreeNode nodoTasa = new DefaultTreeNode(new OpcionArbol(tasa.getCodigo(),
+					final DefaultTreeNode nodoTasa = new DefaultTreeNode(new OpcionArbol(tasa.getIdentificador(),
 							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa"), tasa, tramitePaso));
-					marcarNodoComoSeleccionado(nodoTasa, tasa.getId(), "viewDefinicionVersionTasa", nodoSeleccionado,
-							idNodoSeleccionado);
+					marcarNodoComoSeleccionado(nodoTasa, tasa.getCodigo(), "viewDefinicionVersionTasa",
+							nodoSeleccionado, idNodoSeleccionado);
 					nodo.getChildren().add(nodoTasa);
 
 				}

@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -237,7 +238,9 @@ public class JDominio implements IModelApi {
 		dominio.setJndi(this.datasourceJndi);
 		dominio.setListaFija((List<Propiedad>) UtilJSON.fromListJSON(this.listaFijaValores, Propiedad.class));
 		dominio.setParametros((List<Propiedad>) UtilJSON.fromListJSON(this.parametros, Propiedad.class));
-		dominio.setSql(this.sql);
+		if (this.sql != null) {
+			dominio.setSql(Base64.getEncoder().encodeToString(sql.getBytes()));
+		}
 		dominio.setTipo(TypeDominio.fromString(this.tipo));
 		dominio.setAmbito(TypeAmbito.fromString(this.ambito));
 		dominio.setUrl(this.servicioRemotoUrl);
@@ -271,8 +274,9 @@ public class JDominio implements IModelApi {
 			this.setDatasourceJndi(dominio.getJndi());
 			this.setListaFijaValores(UtilJSON.toJSON(dominio.getListaFija()));
 			this.setParametros(UtilJSON.toJSON(dominio.getParametros()));
-
-			this.setSql(dominio.getSql());
+			if (dominio.getSql() != null) {
+				this.setSql(new String(Base64.getDecoder().decode(dominio.getSql())));
+			}
 			this.setTipo(dominio.getTipo().toString());
 			this.setAmbito(dominio.getAmbito().toString());
 			this.setServicioRemotoUrl(dominio.getUrl());

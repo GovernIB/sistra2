@@ -254,7 +254,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void editarDisenyo() {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.data.getFormulario().getId().toString());
+		params.put(TypeParametroVentana.ID.toString(), this.data.getIdFormularioInterno().toString());
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 720);
 	}
 

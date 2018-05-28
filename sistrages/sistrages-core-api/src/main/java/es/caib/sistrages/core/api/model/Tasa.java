@@ -13,11 +13,11 @@ import es.caib.sistrages.core.api.model.types.TypePago;
 @SuppressWarnings("serial")
 public class Tasa extends ModelApi {
 
-	/** Id. */
-	private Long id;
+	/** Codigo. */
+	private Long codigo;
 
-	/** Código. */
-	private String codigo;
+	/** Identificador. */
+	private String identificador;
 
 	/** Descripcion. */
 	private Literal descripcion;
@@ -51,30 +51,11 @@ public class Tasa extends ModelApi {
 	}
 
 	/**
-	 * Obtiene el valor de id.
-	 *
-	 * @return el valor de id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * Establece el valor de id.
-	 *
-	 * @param id
-	 *            el nuevo valor de id
-	 */
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
 	 */
-	public String getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
@@ -84,8 +65,27 @@ public class Tasa extends ModelApi {
 	 * @param codigo
 	 *            el nuevo valor de codigo
 	 */
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setCodigo(final Long id) {
+		this.codigo = id;
+	}
+
+	/**
+	 * Obtiene el valor de identificador.
+	 *
+	 * @return el valor de identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * Establece el valor de identificador.
+	 *
+	 * @param identificador
+	 *            el nuevo valor de identificador
+	 */
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**

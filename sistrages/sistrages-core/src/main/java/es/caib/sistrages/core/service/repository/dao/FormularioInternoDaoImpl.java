@@ -241,15 +241,14 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormCampoTexto.toModel();
 				break;
-			// case CHECKBOX:
-			// jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
-			// if (jLinea != null) {
-			// final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden,
-			// pPosicion);
-			// jObjetoFormulario =
-			// JCampoFormularioCasillaVerificacion.createDefault(ordenComponente, jLinea);
-			// }
-			// break;
+			case CHECKBOX:
+				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
+				final JCampoFormularioCasillaVerificacion jObjFormCasillaVerificacion = JCampoFormularioCasillaVerificacion
+						.createDefault(pOrden, jLineaSeleccionada);
+				entityManager.persist(jObjFormCasillaVerificacion);
+				entityManager.merge(jLineaSeleccionada);
+				objetoResultado = jObjFormCasillaVerificacion.toModel();
+				break;
 			// case SELECTOR:
 			// jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
 			// if (jLinea != null) {
@@ -431,6 +430,20 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 		}
 
+	}
+
+	@Override
+	public void updateOrdenComponente(final Long pId, final Integer pOrden) {
+		final JElementoFormulario jElemento = getJElementoById(pId);
+		jElemento.setOrden(pOrden);
+		entityManager.merge(jElemento);
+	}
+
+	@Override
+	public void updateOrdenLinea(final Long pId, final Integer pOrden) {
+		final JLineaFormulario jLinea = getJLineaById(pId);
+		jLinea.setOrden(pOrden);
+		entityManager.merge(jLinea);
 	}
 
 	private JFormulario getJFormularioById(final Long pId) {

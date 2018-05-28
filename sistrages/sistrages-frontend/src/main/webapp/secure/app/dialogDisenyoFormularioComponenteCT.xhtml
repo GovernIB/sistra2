@@ -33,40 +33,45 @@
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.multilinea']}"/></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalMultilinea}">
-   			<p:ajax event="change" global="false" update="growlDisenyoFormulario, panelPropietats" listener="#{dialogDisenyoFormulario.cambiarCampoTextoMultilinea}"/>
-   		</p:selectBooleanCheckbox>
+   		<p:outputPanel>
+	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalMultilinea}">
+	   			<p:ajax event="change" global="false" update="growlDisenyoFormulario, panelPropietats" listener="#{dialogDisenyoFormulario.cambiarCampoTextoMultilinea}"/>
+	   		</p:selectBooleanCheckbox>
+		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numeroLineas']}" rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.normalMultilinea}" styleClass="padding-left-18"/>
+	   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalNumeroLineas}" decimalPlaces="0" minValue="1" maxValue="999"  rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.normalMultilinea}" styleClass="padding-left-4" inputStyleClass="w8">
+	   			<p:ajax event="blur" process="@this" />
+	   		</p:inputNumber>
+	   	</p:outputPanel>
    	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal and dialogDisenyoFormulario.objetoFormularioEdit.normalMultilinea}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numeroLineas']}" /></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal and dialogDisenyoFormulario.objetoFormularioEdit.normalMultilinea}">
-   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalNumeroLineas}" decimalPlaces="0" minValue="1" maxValue="999">
-   			<p:ajax event="blur" process="@this" />
-   		</p:inputNumber>
-   	</h:column>
+
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.exprRegular']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}">
-   		<p:inputTextarea value="#{dialogDisenyoFormulario.objetoFormularioEdit.expresionRegular}" rows="1" cols="40" autoResize="true" maxlength="4000" >
+   		<p:inputTextarea value="#{dialogDisenyoFormulario.objetoFormularioEdit.expresionRegular}" rows="1" cols="25" autoResize="true" maxlength="4000" >
    			<p:ajax event="blur" process="@this" />
    		</p:inputTextarea>
    	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigEnteros']}" /></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
-   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosEnteros}" decimalPlaces="0" minValue="0" maxValue="99">
-   			<p:ajax event="blur" process="@this" />
-   		</p:inputNumber>
-   	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigDecimales']}" /></h:column>
+   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numPrecision']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
-   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosDecimales}" decimalPlaces="0" minValue="0" maxValue="9">
-   			<p:ajax event="blur" process="@this" />
-   		</p:inputNumber>
-   	</h:column>
+	   	<p:outputPanel>
+		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigEnteros']}" />
 
-	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numSepMilesDec']}" /></h:column>
+		   	<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosEnteros}" decimalPlaces="0" minValue="0" maxValue="99" styleClass="padding-left-4" inputStyleClass="w8">
+		   		<p:ajax event="blur" process="@this" />
+		   	</p:inputNumber>
+
+		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numDigDecimales']}" styleClass="padding-left-18"/>
+	   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroDigitosDecimales}" decimalPlaces="0" minValue="0" maxValue="9" styleClass="padding-left-4" inputStyleClass="w8">
+		   		<p:ajax event="blur" process="@this" />
+		   	</p:inputNumber>
+
+	   	</p:outputPanel>
+	</h:column>
+
+	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numSepMilesDec']}"/></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
 		<p:selectOneMenu id="tipoSeparadorNum" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroSeparador}" required="true">
 		    <p:ajax event="blur" process="@this"/>
@@ -74,19 +79,24 @@
 		</p:selectOneMenu>
 	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" /></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
-   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}" decimalPlaces="0" minValue="0" maxValue="9999999999">
-   			<p:ajax event="blur" process="@this" />
-   		</p:inputNumber>
-   	</h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteRango']}"/></h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
+		<p:outputPanel>
+	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}">
+	   			<p:ajax event="change" global="false" update="growlDisenyoFormulario, panelPropietats"/>
+	   		</p:selectBooleanCheckbox>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numRangoMax']}" /></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
-   		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}" decimalPlaces="0" minValue="0" maxValue="9999999999">
-   			<p:ajax event="blur" process="@this" />
-   		</p:inputNumber>
-   	</h:column>
+    		<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMin']}" styleClass="padding-left-4"/>
+			<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMinimo}" decimalPlaces="0" minValue="0" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20">
+				<p:ajax event="blur" process="@this" />
+			</p:inputNumber>
+
+   			<p:outputLabel rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{msg['dialogDisenyoFormulario.componente.numRangoMax']}" styleClass="padding-left-4"/>
+   			<p:inputNumber rendered="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numeroRangoMaximo}" decimalPlaces="0" minValue="0" maxValue="9999999999" styleClass="padding-left-4" inputStyleClass="w20">
+   				<p:ajax event="blur" process="@this" />
+   			</p:inputNumber>
+   	  	</p:outputPanel>
+	</h:column>
 
     <h:column rendered="#{dialogDisenyoFormulario.campoNumero}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.numAdmiteSigno']}"/></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoNumero}">
@@ -95,53 +105,48 @@
    		</p:selectBooleanCheckbox>
    	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteNif']}"/></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identNif}">
-   			<p:ajax event="change" global="false"/>
-   		</p:selectBooleanCheckbox>
-   	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteCif']}"/></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identCif}">
-   			<p:ajax event="change" global="false"/>
-   		</p:selectBooleanCheckbox>
-   	</h:column>
+   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificacion']}"/></h:column>
+   	 <h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}">
+	   	 <p:outputPanel>
+		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteNif']}"/>
+		  	<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identNif}" styleClass="padding-left-4">
+		  		<p:ajax event="change" global="false"/>
+		  	</p:selectBooleanCheckbox>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteNie']}"/></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identNie}">
-   			<p:ajax event="change" global="false"/>
-   		</p:selectBooleanCheckbox>
-   	</h:column>
+		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteCif']}" styleClass="padding-left-8"/>
+			<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identCif}" styleClass="padding-left-4">
+		   		<p:ajax event="change" global="false"/>
+		   	</p:selectBooleanCheckbox>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteNss']}"/></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoIdentificacion}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identNss}">
-   			<p:ajax event="change" global="false"/>
-   		</p:selectBooleanCheckbox>
-   	</h:column>
+		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteNie']}" styleClass="padding-left-8"/>
+		   	<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identNie}" styleClass="padding-left-4">
+		   		<p:ajax event="change" global="false"/>
+		   	</p:selectBooleanCheckbox>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTelefono}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteMovil']}"/></h:column>
+		   	<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteNss']}" styleClass="padding-left-8"/>
+		   	<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.identNss}" styleClass="padding-left-4">
+		   		<p:ajax event="change" global="false"/>
+		   	</p:selectBooleanCheckbox>
+	   	 </p:outputPanel>
+   	 </h:column>
+
+   	<h:column rendered="#{dialogDisenyoFormulario.campoTelefono}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.telefono']}"/></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoTelefono}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.telefonoMovil}">
-   			<p:ajax event="change" global="false"/>
-   		</p:selectBooleanCheckbox>
+   		<p:outputPanel>
+	   		<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteMovil']}" />
+	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.telefonoMovil}" styleClass="padding-left-4">
+	   			<p:ajax event="change" global="false"/>
+	   		</p:selectBooleanCheckbox>
+
+   			<p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteFijo']}" styleClass="padding-left-18"/>
+	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.telefonoFijo}" styleClass="padding-left-4">
+	   			<p:ajax event="change" global="false"/>
+	   		</p:selectBooleanCheckbox>
+   		</p:outputPanel>
    	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTelefono}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteFijo']}"/></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTelefono}">
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.telefonoFijo}">
-   			<p:ajax event="change" global="false"/>
-   		</p:selectBooleanCheckbox>
-   	</h:column>
 
-   	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.permiteRango']}"/></h:column>
-   	<h:column>
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.permiteRango}">
-   			<p:ajax event="change" global="false"/>
-   		</p:selectBooleanCheckbox>
-   	</h:column>
+
 
 </ui:composition>

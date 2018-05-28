@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import es.caib.sistrages.core.api.model.Documento;
@@ -96,6 +97,9 @@ public class JAnexoTramite implements IModelApi {
 
 	@Column(name = "ANE_FIRMAD", nullable = false, precision = 1, scale = 0)
 	private boolean anexarFirmado;
+
+	@Transient
+	private Long codigoClonado;
 
 	public JAnexoTramite() {
 		super();
@@ -261,6 +265,21 @@ public class JAnexoTramite implements IModelApi {
 		this.anexarFirmado = anexarFirmado;
 	}
 
+	/**
+	 * @return the codigoClonado
+	 */
+	public Long getCodigoClonado() {
+		return codigoClonado;
+	}
+
+	/**
+	 * @param codigoClonado
+	 *            the codigoClonado to set
+	 */
+	public void setCodigoClonado(final Long codigoClonado) {
+		this.codigoClonado = codigoClonado;
+	}
+
 	public static JAnexoTramite fromModel(final Documento doc) {
 		JAnexoTramite janexo = null;
 		if (doc != null) {
@@ -333,6 +352,34 @@ public class JAnexoTramite implements IModelApi {
 			mdoc.setScriptValidacion(this.getScriptValidacion().toModel());
 		}
 		return mdoc;
+	}
+
+	public static JAnexoTramite clonar(final JAnexoTramite origAnexo) {
+		JAnexoTramite janexoTramite = null;
+		if (origAnexo != null) {
+			janexoTramite = new JAnexoTramite();
+			janexoTramite.setCodigo(null);
+			janexoTramite.setCodigoClonado(origAnexo.getCodigo());
+			janexoTramite.setAnexarFirmado(origAnexo.isAnexarFirmado());
+			janexoTramite.setConvertirPdf(origAnexo.isConvertirPdf());
+			janexoTramite.setDescripcion(JLiteral.clonar(origAnexo.getDescripcion()));
+			janexoTramite.setFicheroPlantilla(JFichero.clonar(origAnexo.getFicheroPlantilla()));
+			janexoTramite.setExtensionesPermitidas(origAnexo.getExtensionesPermitidas());
+			janexoTramite.setFirmar(origAnexo.isFirmar());
+			janexoTramite.setIdentificadorDocumento(origAnexo.getIdentificadorDocumento());
+			janexoTramite.setNumeroInstancia(origAnexo.getNumeroInstancia());
+			janexoTramite.setObligatorio(origAnexo.getObligatorio());
+			janexoTramite.setOrden(origAnexo.getOrden());
+			janexoTramite.setPlantillaUrl(origAnexo.getPlantillaUrl());
+			janexoTramite.setTamanyoMaximo(origAnexo.getTamanyoMaximo());
+			janexoTramite.setTamanyoUnidad(origAnexo.getTamanyoUnidad());
+			janexoTramite.setTextoAyuda(JLiteral.clonar(origAnexo.getTextoAyuda()));
+			janexoTramite.setTipoPresentacion(origAnexo.getTipoPresentacion());
+			janexoTramite.setScriptFirmantes(JScript.clonar(origAnexo.getScriptFirmantes()));
+			janexoTramite.setScriptObligatoriedad(JScript.clonar(origAnexo.getScriptObligatoriedad()));
+			janexoTramite.setScriptValidacion(JScript.clonar(origAnexo.getScriptValidacion()));
+		}
+		return janexoTramite;
 	}
 
 }

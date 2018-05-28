@@ -85,7 +85,7 @@ public interface TramiteDao {
 	 * @param idTramite
 	 * @return
 	 */
-	void addTramiteVersion(TramiteVersion tramiteVersion, String idTramite);
+	Long addTramiteVersion(TramiteVersion tramiteVersion, String idTramite);
 
 	/**
 	 * Actualiza un tramite versión.
@@ -164,5 +164,46 @@ public interface TramiteDao {
 	 * @param username
 	 */
 	void desbloquearTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Comprueba si tiene tramite version.
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	boolean tieneTramiteVersion(Long idTramite);
+
+	/**
+	 * Tiene release repetida.
+	 *
+	 * @param idTramite
+	 * @param release
+	 * @return
+	 */
+	boolean tieneTramiteNumVersionRepetido(Long idTramite, int release);
+
+	/**
+	 * Obtiene la release máxima del tramite (por defecto, es 0).
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	int getTramiteNumVersionMaximo(Long idTramite);
+
+	/**
+	 * Clona tramite version.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	Long clonarTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Obtiene el id de los tramites de un area que tienen una versión activa.
+	 * 
+	 * @param idArea
+	 * @return
+	 */
+	List<Long> listTramiteVersionActiva(Long idArea);
 
 }

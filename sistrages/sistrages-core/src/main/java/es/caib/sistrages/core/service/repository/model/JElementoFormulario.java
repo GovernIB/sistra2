@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
+import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
@@ -70,19 +71,19 @@ public class JElementoFormulario implements IModelApi {
 	@Column(name = "FEL_LELCOL", precision = 1, scale = 0)
 	private Boolean listaElementosAnchoColumna;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JListaElementosFormulario listaElementosFormulario;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JEtiquetaFormulario etiquetaFormulario;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JSeccionFormulario seccionFormulario;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JCampoFormulario campoFormulario;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "elementoFormulario", cascade = CascadeType.ALL)
 	private JImagenFormulario imagenFormulario;
 
 	public JElementoFormulario() {
@@ -277,13 +278,19 @@ public class JElementoFormulario implements IModelApi {
 		case ETIQUETA:
 			texto.add(new Traduccion("es", "Mensaje"));
 			texto.add(new Traduccion("ca", "Missatge"));
-			jModel.setNumeroColumnas(6);
+			jModel.setNumeroColumnas(ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
 			jModel.setNoMostrarTexto(false);
 			break;
 		case SECCION:
 			texto.add(new Traduccion("es", "Sección"));
 			texto.add(new Traduccion("ca", "Secció"));
-			jModel.setNumeroColumnas(6);
+			jModel.setNumeroColumnas(ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
+			jModel.setNoMostrarTexto(false);
+			break;
+		case CHECKBOX:
+			texto.add(new Traduccion("es", "Casilla de verificación"));
+			texto.add(new Traduccion("ca", "Casella de verificació"));
+			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
 			break;
 		default:

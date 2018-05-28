@@ -44,7 +44,7 @@ public class JTramite implements IModelApi {
 	private String descripcion;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tramite")
-	private Set<JVersionTramite> versionTramite = new HashSet<JVersionTramite>(0);
+	private Set<JVersionTramite> versionTramite = new HashSet<>(0);
 
 	public JTramite() {
 		super();
@@ -92,7 +92,7 @@ public class JTramite implements IModelApi {
 
 	public Tramite toModel() {
 		final Tramite tramite = new Tramite();
-		tramite.setId(codigo);
+		tramite.setCodigo(codigo);
 		tramite.setDescripcion(descripcion);
 		tramite.setIdentificador(identificador);
 
@@ -103,7 +103,7 @@ public class JTramite implements IModelApi {
 		JTramite jModel = null;
 		if (model != null) {
 			jModel = new JTramite();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setIdentificador(model.getIdentificador());
 			jModel.setDescripcion(model.getDescripcion());
 		}

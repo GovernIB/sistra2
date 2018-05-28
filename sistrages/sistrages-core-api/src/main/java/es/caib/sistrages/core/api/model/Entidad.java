@@ -64,6 +64,9 @@ public class Entidad extends ModelApi {
 	/** Formularios de incidencias. **/
 	private List<FormularioSoporte> formularioIncidencias;
 
+	/** Url carpeta ciudadana. **/
+	private Literal urlCarpetaCiudadana;
+
 	/**
 	 * @return the id
 	 */
@@ -317,6 +320,20 @@ public class Entidad extends ModelApi {
 	 */
 	public void setFormularioIncidencias(final List<FormularioSoporte> formularioIncidencias) {
 		this.formularioIncidencias = formularioIncidencias;
+	}
+
+	/**
+	 * @return the urlCarpetaCiudadana
+	 */
+	public Literal getUrlCarpetaCiudadana() {
+		return urlCarpetaCiudadana;
+	}
+
+	/**
+	 * @param urlCarpetaCiudadana the urlCarpetaCiudadana to set
+	 */
+	public void setUrlCarpetaCiudadana(Literal urlCarpetaCiudadana) {
+		this.urlCarpetaCiudadana = urlCarpetaCiudadana;
 	}
 
 }

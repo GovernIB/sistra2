@@ -36,11 +36,11 @@ public class JPagoTramite implements IModelApi {
 	@JoinColumn(name = "PAG_CODPTR", nullable = false)
 	private JPasoPagos pasoPagos;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PAG_SCROBL")
 	private JScript scriptObligatoriedad;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PAG_SCRDPG")
 	private JScript scriptDatosPago;
 
@@ -253,28 +253,20 @@ public class JPagoTramite implements IModelApi {
 		JPagoTramite pago = null;
 		if (tasa != null) {
 			pago = new JPagoTramite();
-			pago.setCodigo(tasa.getId());
-			if (tasa.getDescripcion() != null) {
-				pago.setDescripcion(JLiteral.fromModel(tasa.getDescripcion()));
-			}
-			pago.setIdentificador(tasa.getCodigo());
+			pago.setCodigo(tasa.getCodigo());
+			pago.setDescripcion(JLiteral.fromModel(tasa.getDescripcion()));
+			pago.setIdentificador(tasa.getIdentificador());
 			if (tasa.getObligatoriedad() != null) {
 				pago.setObligatorio(tasa.getObligatoriedad().toString());
 			}
 			pago.setOrden(tasa.getOrden());
-			if (tasa.getTipoPlugin() != null) {
-				pago.setPlugin(JPlugin.fromModel(tasa.getTipoPlugin()));
-			}
+			pago.setPlugin(JPlugin.fromModel(tasa.getTipoPlugin()));
 			pago.setSimulado(tasa.isSimulado());
 			if (tasa.getTipo() != null) {
 				pago.setTipo(tasa.getTipo().toString());
 			}
-			if (tasa.getScriptObligatoriedad() != null) {
-				pago.setScriptObligatoriedad(JScript.fromModel(tasa.getScriptObligatoriedad()));
-			}
-			if (tasa.getScriptPago() != null) {
-				pago.setScriptDatosPago(JScript.fromModel(tasa.getScriptPago()));
-			}
+			pago.setScriptObligatoriedad(JScript.fromModel(tasa.getScriptObligatoriedad()));
+			pago.setScriptDatosPago(JScript.fromModel(tasa.getScriptPago()));
 		}
 		return pago;
 	}
@@ -286,11 +278,11 @@ public class JPagoTramite implements IModelApi {
 	 */
 	public Tasa toModel() {
 		final Tasa tasa = new Tasa();
-		tasa.setId(this.getCodigo());
+		tasa.setCodigo(this.getCodigo());
 		if (this.getDescripcion() != null) {
 			tasa.setDescripcion(this.getDescripcion().toModel());
 		}
-		tasa.setCodigo(this.getIdentificador());
+		tasa.setIdentificador(this.getIdentificador());
 		tasa.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		tasa.setOrden(this.getOrden());
 		if (this.getPlugin() != null) {
@@ -305,6 +297,32 @@ public class JPagoTramite implements IModelApi {
 			tasa.setScriptObligatoriedad(this.getScriptObligatoriedad().toModel());
 		}
 		return tasa;
+	}
+
+	/**
+	 * Clonar.
+	 *
+	 * @param origPagoTramite
+	 * @param jpasoPagos
+	 * @return
+	 */
+	public static JPagoTramite clonar(final JPagoTramite origPagoTramite, final JPasoPagos jpasoPagos) {
+		JPagoTramite jpagoTramite = null;
+		if (origPagoTramite != null) {
+			jpagoTramite = new JPagoTramite();
+			jpagoTramite.setCodigo(null);
+			jpagoTramite.setPasoPagos(jpasoPagos);
+			jpagoTramite.setDescripcion(JLiteral.clonar(origPagoTramite.getDescripcion()));
+			jpagoTramite.setIdentificador(origPagoTramite.getIdentificador());
+			jpagoTramite.setObligatorio(origPagoTramite.getObligatorio());
+			jpagoTramite.setOrden(origPagoTramite.getOrden());
+			jpagoTramite.setPlugin(origPagoTramite.getPlugin());
+			jpagoTramite.setSimulado(origPagoTramite.isSimulado());
+			jpagoTramite.setTipo(origPagoTramite.getTipo());
+			jpagoTramite.setScriptObligatoriedad(JScript.clonar(origPagoTramite.getScriptObligatoriedad()));
+			jpagoTramite.setScriptDatosPago(JScript.clonar(origPagoTramite.getScriptDatosPago()));
+		}
+		return jpagoTramite;
 	}
 
 }

@@ -8,7 +8,9 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -16,7 +18,10 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.SecurityService;
@@ -55,6 +60,11 @@ public class ViewTramites extends ViewControllerBase {
 	private String filtro;
 
 	/**
+	 * Id Area.
+	 */
+	private String idArea;
+
+	/**
 	 * Lista de datos.
 	 */
 	private TreeNode areas;
@@ -88,7 +98,11 @@ public class ViewTramites extends ViewControllerBase {
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// Recupera areas
+		// Para obtener el idArea
+		idArea = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
+				.getParameter("area");
 		buscarAreas();
+
 	}
 
 	/**
@@ -181,7 +195,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(this.tramiteSeleccionada.getId().toString()));
+		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(this.tramiteSeleccionada.getCodigo().toString()));
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml", params);
 
@@ -211,7 +225,12 @@ public class ViewTramites extends ViewControllerBase {
 		if (!verificarFilaSeleccionadaTramite())
 			return;
 
-		if (tramiteService.removeTramite(tramiteSeleccionada.getId())) {
+		if (tramiteService.tieneTramiteVersion(tramiteSeleccionada.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.errorTramiteVersion"));
+			return;
+		}
+
+		if (tramiteService.removeTramite(tramiteSeleccionada.getCodigo())) {
 			buscarTramites();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 		} else {
@@ -388,6 +407,7 @@ public class ViewTramites extends ViewControllerBase {
 			String message = null;
 			message = UtilJSF.getLiteral("info.modificado.ok");
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
 			// Refrescamos datos
 			buscarTramites();
 		}
@@ -472,12 +492,16 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		areas = new DefaultTreeNode("Root", null);
-
+		areaSeleccionada = null;
 		for (final Area area : listaMostrarAreas) {
-			areas.getChildren().add(new DefaultTreeNode(area));
+			final DefaultTreeNode nodoArea = new DefaultTreeNode(area);
+			areas.getChildren().add(nodoArea);
+			if (idArea != null && area.getId().compareTo(Long.valueOf(idArea)) == 0) {
+				this.areaSeleccionada = nodoArea;
+				buscarTramites();
+			}
 		}
 
-		areaSeleccionada = null;
 	}
 
 	/**
@@ -486,6 +510,18 @@ public class ViewTramites extends ViewControllerBase {
 	private void buscarTramites() {
 		if (areaSeleccionada != null) {
 			tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getId(), null);
+
+			// Obtenemos activa a los tramites que tengan alguna version activa
+			final List<Long> idTramites = tramiteService
+					.listTramiteVersionActiva(((Area) areaSeleccionada.getData()).getId());
+			if (idTramites != null && !idTramites.isEmpty()) {
+				for (final Tramite tramite : tramites) {
+					if (idTramites.contains(tramite.getCodigo())) {
+						tramite.setActivo(true);
+					}
+				}
+			}
+
 			// Quitamos seleccion de dato
 			tramiteSeleccionada = null;
 		}
@@ -520,7 +556,7 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getCodigo()));
 		UtilJSF.openDialog(DialogTramite.class, modoAcceso, params, true, 540, 220);
 	}
 
@@ -528,13 +564,46 @@ public class ViewTramites extends ViewControllerBase {
 	 * Abre dialogo para mover tramite.
 	 */
 	public void moverTramite() {
+
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionadaTramite())
 			return;
+
+		// Verificamos que los dominios que tiene asignado, alguna de sus versiones, no
+		// sea ninguno de ambito area.
+		if (checkDominioArea()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("viewTramites.error.tramiteConDominioAreas"));
+			return;
+		}
+
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getCodigo()));
 		UtilJSF.openDialog(DialogMoverTramite.class, TypeModoAcceso.EDICION, params, true, 540, 120);
+	}
+
+	/**
+	 * Comprobamos que no tiene ningun dominio de tipo area asignado.
+	 *
+	 * @return
+	 */
+	private boolean checkDominioArea() {
+		final List<TramiteVersion> tramitesVersion = tramiteService
+				.listTramiteVersion(this.tramiteSeleccionada.getCodigo(), null);
+		if (tramitesVersion != null) {
+			for (final TramiteVersion tramiteVersion : tramitesVersion) {
+				final List<Dominio> dominios = tramiteService.getTramiteDominios(tramiteVersion.getCodigo());
+				if (dominios != null) {
+					for (final Dominio dominio : dominios) {
+						if (dominio.getAmbito() == TypeAmbito.AREA) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -630,6 +699,21 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void setTramiteSeleccionada(final Tramite tramiteSeleccionada) {
 		this.tramiteSeleccionada = tramiteSeleccionada;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public String getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea
+	 *            the idArea to set
+	 */
+	public void setIdArea(final String idArea) {
+		this.idArea = idArea;
 	}
 
 }

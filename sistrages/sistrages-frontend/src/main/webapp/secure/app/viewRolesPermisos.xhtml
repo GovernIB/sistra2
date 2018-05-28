@@ -75,10 +75,12 @@
 					<h:outputText value="#{msg['typeRolePermisos.A']}" rendered="#{td.alta}" />
 			       	<h:outputText value=" - " rendered="#{td.alta and (td.modificacion or td.consulta or td.helpdesk)}" />
 					<h:outputText value="#{msg['typeRolePermisos.M']}" rendered="#{td.modificacion}" />
-					<h:outputText value=" - " rendered="#{td.modificacion and (td.consulta or td.helpdesk)}" />
+					<h:outputText value=" - " rendered="#{td.modificacion and (td.consulta or td.helpdesk or td.promocionar)}" />
 					<h:outputText value="#{msg['typeRolePermisos.C']}" rendered="#{td.consulta}" />
-					<h:outputText value=" - " rendered="#{td.consulta and td.helpdesk}" />
+					<h:outputText value=" - " rendered="#{td.consulta and (td.helpdesk or td.promocionar)}" />
 					<h:outputText value="#{msg['typeRolePermisos.H']}" rendered="#{td.helpdesk}" />
+					<h:outputText value=" - " rendered="#{td.helpdesk and td.promocionar}" />
+					<h:outputText value="#{msg['typeRolePermisos.P']}" rendered="#{td.promocionar}" />
 			    </p:column>
 
 				<p:column headerText="#{msg['viewRolesPermisos.headerArea']}">

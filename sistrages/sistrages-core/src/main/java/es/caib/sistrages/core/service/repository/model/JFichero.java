@@ -31,6 +31,7 @@ public class JFichero implements IModelApi {
 	@Column(name = "FIC_PUBLIC", nullable = false)
 	private boolean publico;
 
+	/** Constructor. **/
 	public JFichero() {
 		super();
 	}
@@ -73,6 +74,23 @@ public class JFichero implements IModelApi {
 		jFichero.setNombre(fichero.getNombre());
 		jFichero.setPublico(fichero.isPublico());
 		return jFichero;
+	}
+
+	/**
+	 * Clonar.
+	 *
+	 * @param origFichero
+	 * @return
+	 */
+	public static JFichero clonar(final JFichero origFichero) {
+		JFichero jfichero = null;
+		if (origFichero != null) {
+			jfichero = new JFichero();
+			jfichero.setCodigo(null);
+			jfichero.setNombre(origFichero.getNombre());
+			jfichero.setPublico(origFichero.isPublico());
+		}
+		return jfichero;
 	}
 
 }

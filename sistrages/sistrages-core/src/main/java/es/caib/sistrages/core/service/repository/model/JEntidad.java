@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.Entidad;
 @Table(name = "STG_ENTIDA", uniqueConstraints = @UniqueConstraint(columnNames = "ENT_DIR3"))
 public class JEntidad implements IModelApi {
 
+	/** Serial Version UID. **/
 	private static final long serialVersionUID = 1L;
 
 	/** Código interno */
@@ -105,150 +106,279 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_PRGDIA")
 	private Integer diasPreregistro;
 
+	/**
+	 * @return the codigo
+	 */
 	public Long getCodigo() {
-		return this.codigo;
+		return codigo;
 	}
 
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
-	public JFichero getLogoAsistenteTramitacion() {
-		return this.logoAsistenteTramitacion;
-	}
-
-	public void setLogoAsistenteTramitacion(final JFichero logoAsistenteTramitacion) {
-		this.logoAsistenteTramitacion = logoAsistenteTramitacion;
-	}
-
-	public JFichero getCssAsistenteTramitacion() {
-		return this.cssAsistenteTramitacion;
-	}
-
-	public void setCssAsistenteTramitacion(final JFichero cssAsistenteTramitacion) {
-		this.cssAsistenteTramitacion = cssAsistenteTramitacion;
-	}
-
-	public JFichero getLogoGestorTramites() {
-		return this.logoGestorTramites;
-	}
-
-	public void setLogoGestorTramites(final JFichero logoGestorTramites) {
-		this.logoGestorTramites = logoGestorTramites;
-	}
-
+	/**
+	 * @return the nombre
+	 */
 	public JLiteral getNombre() {
-		return this.nombre;
+		return nombre;
 	}
 
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
 	public void setNombre(final JLiteral nombre) {
 		this.nombre = nombre;
 	}
 
-	public JLiteral getPiePaginaAsistenteTramitacion() {
-		return this.piePaginaAsistenteTramitacion;
-	}
-
-	public void setPiePaginaAsistenteTramitacion(final JLiteral piePaginaAsistenteTramitacion) {
-		this.piePaginaAsistenteTramitacion = piePaginaAsistenteTramitacion;
-	}
-
+	/**
+	 * @return the codigoDir3
+	 */
 	public String getCodigoDir3() {
-		return this.codigoDir3;
+		return codigoDir3;
 	}
 
+	/**
+	 * @param codigoDir3
+	 *            the codigoDir3 to set
+	 */
 	public void setCodigoDir3(final String codigoDir3) {
 		this.codigoDir3 = codigoDir3;
 	}
 
+	/**
+	 * @return the activa
+	 */
 	public boolean isActiva() {
-		return this.activa;
+		return activa;
 	}
 
+	/**
+	 * @param activa
+	 *            the activa to set
+	 */
 	public void setActiva(final boolean activa) {
 		this.activa = activa;
 	}
 
+	/**
+	 * @return the roleAdministrador
+	 */
 	public String getRoleAdministrador() {
-		return this.roleAdministrador;
+		return roleAdministrador;
 	}
 
+	/**
+	 * @param roleAdministrador
+	 *            the roleAdministrador to set
+	 */
 	public void setRoleAdministrador(final String roleAdministrador) {
 		this.roleAdministrador = roleAdministrador;
 	}
 
-	public String getEmail() {
-		return this.email;
+	/**
+	 * @return the logoAsistenteTramitacion
+	 */
+	public JFichero getLogoAsistenteTramitacion() {
+		return logoAsistenteTramitacion;
 	}
 
+	/**
+	 * @param logoAsistenteTramitacion
+	 *            the logoAsistenteTramitacion to set
+	 */
+	public void setLogoAsistenteTramitacion(final JFichero logoAsistenteTramitacion) {
+		this.logoAsistenteTramitacion = logoAsistenteTramitacion;
+	}
+
+	/**
+	 * @return the cssAsistenteTramitacion
+	 */
+	public JFichero getCssAsistenteTramitacion() {
+		return cssAsistenteTramitacion;
+	}
+
+	/**
+	 * @param cssAsistenteTramitacion
+	 *            the cssAsistenteTramitacion to set
+	 */
+	public void setCssAsistenteTramitacion(final JFichero cssAsistenteTramitacion) {
+		this.cssAsistenteTramitacion = cssAsistenteTramitacion;
+	}
+
+	/**
+	 * @return the logoGestorTramites
+	 */
+	public JFichero getLogoGestorTramites() {
+		return logoGestorTramites;
+	}
+
+	/**
+	 * @param logoGestorTramites
+	 *            the logoGestorTramites to set
+	 */
+	public void setLogoGestorTramites(final JFichero logoGestorTramites) {
+		this.logoGestorTramites = logoGestorTramites;
+	}
+
+	/**
+	 * @return the piePaginaAsistenteTramitacion
+	 */
+	public JLiteral getPiePaginaAsistenteTramitacion() {
+		return piePaginaAsistenteTramitacion;
+	}
+
+	/**
+	 * @param piePaginaAsistenteTramitacion
+	 *            the piePaginaAsistenteTramitacion to set
+	 */
+	public void setPiePaginaAsistenteTramitacion(final JLiteral piePaginaAsistenteTramitacion) {
+		this.piePaginaAsistenteTramitacion = piePaginaAsistenteTramitacion;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
 	public void setEmail(final String email) {
 		this.email = email;
 	}
 
+	/**
+	 * @return the contactoEmail
+	 */
 	public boolean isContactoEmail() {
-		return this.contactoEmail;
+		return contactoEmail;
 	}
 
+	/**
+	 * @param contactoEmail
+	 *            the contactoEmail to set
+	 */
 	public void setContactoEmail(final boolean contactoEmail) {
 		this.contactoEmail = contactoEmail;
 	}
 
+	/**
+	 * @return the contactoTelefono
+	 */
 	public boolean isContactoTelefono() {
-		return this.contactoTelefono;
+		return contactoTelefono;
 	}
 
+	/**
+	 * @param contactoTelefono
+	 *            the contactoTelefono to set
+	 */
 	public void setContactoTelefono(final boolean contactoTelefono) {
 		this.contactoTelefono = contactoTelefono;
 	}
 
+	/**
+	 * @return the contactoUrl
+	 */
 	public boolean isContactoUrl() {
-		return this.contactoUrl;
+		return contactoUrl;
 	}
 
+	/**
+	 * @param contactoUrl
+	 *            the contactoUrl to set
+	 */
 	public void setContactoUrl(final boolean contactoUrl) {
 		this.contactoUrl = contactoUrl;
 	}
 
+	/**
+	 * @return the contactoFormularioIncidencias
+	 */
 	public boolean isContactoFormularioIncidencias() {
-		return this.contactoFormularioIncidencias;
+		return contactoFormularioIncidencias;
 	}
 
+	/**
+	 * @param contactoFormularioIncidencias
+	 *            the contactoFormularioIncidencias to set
+	 */
 	public void setContactoFormularioIncidencias(final boolean contactoFormularioIncidencias) {
 		this.contactoFormularioIncidencias = contactoFormularioIncidencias;
 	}
 
+	/**
+	 * @return the telefono
+	 */
 	public String getTelefono() {
-		return this.telefono;
+		return telefono;
 	}
 
+	/**
+	 * @param telefono
+	 *            the telefono to set
+	 */
 	public void setTelefono(final String telefono) {
 		this.telefono = telefono;
 	}
 
+	/**
+	 * @return the urlSoporte
+	 */
 	public String getUrlSoporte() {
-		return this.urlSoporte;
+		return urlSoporte;
 	}
 
+	/**
+	 * @param urlSoporte
+	 *            the urlSoporte to set
+	 */
 	public void setUrlSoporte(final String urlSoporte) {
 		this.urlSoporte = urlSoporte;
 	}
 
+	/**
+	 * @return the urlCarpetaCiudadana
+	 */
 	public JLiteral getUrlCarpetaCiudadana() {
 		return urlCarpetaCiudadana;
 	}
 
+	/**
+	 * @param urlCarpetaCiudadana
+	 *            the urlCarpetaCiudadana to set
+	 */
 	public void setUrlCarpetaCiudadana(final JLiteral urlCarpetaCiudadana) {
 		this.urlCarpetaCiudadana = urlCarpetaCiudadana;
 	}
 
+	/**
+	 * @return the diasPreregistro
+	 */
 	public Integer getDiasPreregistro() {
 		return diasPreregistro;
 	}
 
+	/**
+	 * @param diasPreregistro
+	 *            the diasPreregistro to set
+	 */
 	public void setDiasPreregistro(final Integer diasPreregistro) {
 		this.diasPreregistro = diasPreregistro;
 	}
 
+	/**
+	 * toModel.
+	 */
 	public Entidad toModel() {
 		final Entidad entidad = new Entidad();
 		entidad.setId(this.codigo);
@@ -276,7 +406,9 @@ public class JEntidad implements IModelApi {
 		entidad.setTelefonoHabilitado(contactoTelefono);
 		entidad.setUrlSoporte(urlSoporte);
 		entidad.setUrlSoporteHabilitado(contactoUrl);
-
+		if (this.getUrlCarpetaCiudadana() != null) {
+			entidad.setUrlCarpetaCiudadana(this.getUrlCarpetaCiudadana().toModel());
+		}
 		return entidad;
 	}
 

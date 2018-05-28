@@ -140,8 +140,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
-		tramiteService.addTramiteVersion(tramiteVersion, idTramite);
+	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite, final String usuario) {
+		tramiteService.addTramiteVersion(tramiteVersion, idTramite, usuario);
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class TramiteServiceBean implements TramiteService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void changeAreaTramite(final Long idArea, final Long idTramite) {
 		tramiteService.changeAreaTramite(idArea, idTramite);
 	}
@@ -193,13 +193,13 @@ public class TramiteServiceBean implements TramiteService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateTramitePaso(final TramitePaso tramitePasoRellenar) {
 		tramiteService.updateTramitePaso(tramitePasoRellenar);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void removeFormulario(final Long idTramitePaso, final Long idFormulario) {
 		tramiteService.removeFormulario(idTramitePaso, idFormulario);
 	}
@@ -278,8 +278,9 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void uploadDocAnexo(final Long idDocumento, final Fichero fichero, final byte[] contents) {
-		tramiteService.uploadDocAnexo(idDocumento, fichero, contents);
+	public void uploadDocAnexo(final Long idDocumento, final Fichero fichero, final byte[] contents,
+			final Long idEntidad) {
+		tramiteService.uploadDocAnexo(idDocumento, fichero, contents, idEntidad);
 	}
 
 	@Override
@@ -310,5 +311,35 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public HistorialVersion getHistorialVersion(final Long idHistorialVersion) {
 		return tramiteService.getHistorialVersion(idHistorialVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean tieneTramiteVersion(final Long idTramite) {
+		return tramiteService.tieneTramiteVersion(idTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean tieneTramiteNumVersionRepetida(final Long idTramite, final int release) {
+		return tramiteService.tieneTramiteNumVersionRepetida(idTramite, release);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public int getTramiteNumVersionMaximo(final Long idTramite) {
+		return tramiteService.getTramiteNumVersionMaximo(idTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void clonadoTramiteVersion(final Long idTramiteVersion, final String usuario) {
+		tramiteService.clonadoTramiteVersion(idTramiteVersion, usuario);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Long> listTramiteVersionActiva(final Long idArea) {
+		return tramiteService.listTramiteVersionActiva(idArea);
 	}
 }

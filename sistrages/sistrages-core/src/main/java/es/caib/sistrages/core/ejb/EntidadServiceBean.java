@@ -47,6 +47,19 @@ public class EntidadServiceBean implements EntidadService {
 	/*
 	 * (non-Javadoc)
 	 *
+	 * @see
+	 * es.caib.sistrages.core.api.service.EntidadService#loadEntidadByArea(java.lang
+	 * .Long)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Entidad loadEntidadByArea(final Long idArea) {
+		return entidadService.loadEntidadByArea(idArea);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see es.caib.sistrages.core.api.service.EntidadService#listEntidad(es.caib.
 	 * sistrages.core.api.model.types.TypeIdioma, java.lang.String)
 	 */

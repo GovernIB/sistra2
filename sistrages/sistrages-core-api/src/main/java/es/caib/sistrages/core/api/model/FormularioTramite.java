@@ -17,20 +17,20 @@ public class FormularioTramite extends ModelApi {
 	/** Id. */
 	private Long id;
 
-	/** Identificador del formulario. */
+	/** Identificador del idFormularioInterno. */
 	private String codigo;
 
-	/** Descripción formulario. */
+	/** Descripción idFormularioInterno. */
 	private Literal descripcion;
 
-	/** Tipo: formulario trámite (T) o formulario captura (C). */
+	/** Tipo: idFormularioInterno trámite (T) o idFormularioInterno captura (C). */
 	private TypeFormulario tipo;
 
 	/** Orden. **/
 	private int orden;
 
 	/** Formulario. **/
-	private FormularioInterno formulario;
+	private Long idFormularioInterno;
 
 	/**
 	 * Obligatorio:
@@ -44,31 +44,31 @@ public class FormularioTramite extends ModelApi {
 	/** En caso de ser dependiente establece obligatoriedad */
 	private Script scriptObligatoriedad;
 
-	/** Indica si se debe firmar digitalmente (para formulario tipo Tramite) */
+	/** Indica si se debe firmar digitalmente (para idFormularioInterno tipo Tramite) */
 	private boolean debeFirmarse;
 
 	/**
-	 * Permite establecer quién debe firmar el formulario (para formulario tramite)
+	 * Permite establecer quién debe firmar el idFormularioInterno (para idFormularioInterno tramite)
 	 */
 	private Script scriptFirma;
 
 	/** Indica si se debe presentar en preregistro. */
 	private boolean debePrerregistrarse;
 
-	/** Permite establecer parametros cada vez que se acceda al formulario */
+	/** Permite establecer parametros cada vez que se acceda al idFormularioInterno */
 	private Script scriptParametros;
 
-	/** Script para establecer datos iniciales formulario. */
+	/** Script para establecer datos iniciales idFormularioInterno. */
 	private Script scriptDatosIniciales;
 
 	/**
-	 * Este script se ejecutará tras el retorno del gestor de formulario y
-	 * permitirá: - validar el formulario tras el retorno del gestor de formulario -
+	 * Este script se ejecutará tras el retorno del gestor de idFormularioInterno y
+	 * permitirá: - validar el idFormularioInterno tras el retorno del gestor de idFormularioInterno -
 	 * alimentar datos de los otros formularios y cambiar su estado.
 	 */
 	private Script scriptRetorno;
 
-	/** Indica tipo formulario: interno (I) / externo (E) */
+	/** Indica tipo idFormularioInterno: interno (I) / externo (E) */
 	private TypeInterno tipoFormulario;
 
 	/** Formulario gestor interno (si es interno) */
@@ -372,12 +372,12 @@ public class FormularioTramite extends ModelApi {
 		this.formularioGestorExterno = formularioGestorExterno;
 	}
 
-	public FormularioInterno getFormulario() {
-		return formulario;
+	public Long getIdFormularioInterno() {
+		return idFormularioInterno;
 	}
 
-	public void setFormulario(final FormularioInterno formulario) {
-		this.formulario = formulario;
+	public void setIdFormularioInterno(final Long formulario) {
+		this.idFormularioInterno = formulario;
 	}
 
 }

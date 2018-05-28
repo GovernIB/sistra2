@@ -26,15 +26,7 @@ public enum TypeAccionHistorial {
 	/**
 	 * Importación de una versión de trámite
 	 */
-	IMPORTACION("I"),
-	/**
-	 * Creación de un objeto a través de un clonado.
-	 */
-	CLONADO_CREACION("L"),
-	/**
-	 * Objeto clonado a partir del cual se crea otro.
-	 */
-	CLONADO_OBJETO("O");
+	IMPORTACION("I");
 
 	/** Valor. **/
 	private String valor;

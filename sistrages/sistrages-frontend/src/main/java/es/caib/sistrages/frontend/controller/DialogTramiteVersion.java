@@ -47,7 +47,8 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	public void init() {
 
 		dataVersion = new TramiteVersion();
-		dataVersion.setNumeroVersion(1);
+		final int numVersion = tramiteService.getTramiteNumVersionMaximo(Long.valueOf(id)) + 1;
+		dataVersion.setNumeroVersion(numVersion);
 		dataVersion.setTipoFlujo(TypeFlujo.NORMAL);
 		dataVersion.setActiva(true);
 		dataVersion.setDebug(false);
@@ -69,9 +70,17 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	 */
 	public void aceptar() {
 		if (dataVersion.getTipoFlujo() == TypeFlujo.PERSONALIZADO) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Tipo no implementado");
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogTramiteVersion.tipoNoImplementado"));
 			return;
 		} else {
+
+			// Comprobamos que la realease no esté repetida.
+			if (tramiteService.tieneTramiteNumVersionRepetida(Long.valueOf(id), this.dataVersion.getNumeroVersion())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteVersion.numVersionRepetida"));
+				return;
+			}
 
 			final List<TramitePaso> listaPasos = new ArrayList<>();
 			/* iniciliza pasos tramite */
@@ -103,7 +112,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 			this.dataVersion.setListaPasos(listaPasos);
 
 		}
-		this.tramiteService.addTramiteVersion(this.dataVersion, id);
+		this.tramiteService.addTramiteVersion(this.dataVersion, id, UtilJSF.getSessionBean().getUserName());
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();

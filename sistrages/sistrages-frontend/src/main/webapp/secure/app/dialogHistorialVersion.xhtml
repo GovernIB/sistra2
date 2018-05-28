@@ -9,7 +9,7 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogHistorialVersion.header']}"/></title>
+	<title><h:outputText value="#{msg['dialogHistorialVersion.titulo']}"/></title>
 </h:head>
 
 <h:body>
@@ -24,22 +24,23 @@
 		<f:viewAction action="#{dialogHistorialVersion.init}" />
 	</f:metadata>
 	<h:form id="formHistorial" styleClass="margin-top-10">
-  			<p:outputPanel>
+
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlHistorial" widgetVar="growlHistorial" life="2000" sticky="false" />
 			 	<!-- Data table -->
 				<p:dataTable  id="dataTable" var="td" value="#{dialogHistorialVersion.data}"
 							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-							 scrollable="true" scrollHeight="90%"
-	                         paginator="true" paginatorPosition="bottom"
+							 scrollable="true" scrollHeight="75%"
+							 style="width:90%;margin:auto"
+							 paginator="true" paginatorPosition="bottom"
 	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 	                         rowsPerPageTemplate="5,10,15,30"
 				        	 selectionMode="single" selection="#{dialogHistorialVersion.datoSeleccionado}" rowKey="#{td.codigo}">
 
 
 					<!-- Necesario para actualizar en controlador la fila seleccionada -->
-					<p:ajax event="rowSelect"/>
+					<p:ajax event="rowSelect" update="@form:detalleCambio" />
 					<p:ajax event="rowUnselect"/>
 
 					<!-- Columnas -->
@@ -52,7 +53,9 @@
 				    </p:column>
 
 	 				<p:column headerText="#{msg['dialogHistorialVersion.headerFecha']}">
-				         <h:outputText value="#{td.fecha}" />
+				         <h:outputText value="#{td.fecha}">
+	 			        	<f:convertDateTime pattern="dd/MM/yyyy" type="date" timeZone="CET"/>
+				        </h:outputText>
 				    </p:column>
 
 	 				<p:column headerText="#{msg['dialogHistorialVersion.headerUsuario']}">
@@ -60,6 +63,16 @@
 				    </p:column>
 
 				</p:dataTable>
+			<p:outputPanel>
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel value=" " />
+					<p:outputLabel  value=" " />
+
+					<p:outputLabel  value="#{msg['dialogHistorialVersion.headerDetalle']}" />
+				 	<p:inputTextarea readonly="true" cols="50" rows="5" id="detalleCambio" value="#{dialogHistorialVersion.datoSeleccionado.detalleCambio}" size="60" maxlength="255" />
+				</h:panelGrid>
+
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>

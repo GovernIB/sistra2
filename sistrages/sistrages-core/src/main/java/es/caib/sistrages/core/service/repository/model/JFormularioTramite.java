@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Gestor;
@@ -95,6 +96,10 @@ public class JFormularioTramite implements IModelApi {
 	@Column(name = "FTR_FEXIDE", length = 20)
 	private String idFormularioExterno;
 
+	/** Pertenece al id del elemento anteriormente clonado. No se debe guardar!. */
+	@Transient
+	private Long codigoClonado;
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "STG_PRLFTR", joinColumns = {
 			@JoinColumn(name = "FPR_CODFOR", nullable = false, updatable = false) }, inverseJoinColumns = {
@@ -102,10 +107,11 @@ public class JFormularioTramite implements IModelApi {
 	private Set<JPasoRellenar> pasosRellenar = new HashSet<>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formularioTramite")
-	private Set<JPasoCaptura> pasosPagos = new HashSet<>(0);
+	private Set<JPasoCaptura> pasosCaptura = new HashSet<>(0);
 
+	/** Construactor. **/
 	public JFormularioTramite() {
-		// Constructor vacio
+		super();
 	}
 
 	public Long getCodigo() {
@@ -252,22 +258,41 @@ public class JFormularioTramite implements IModelApi {
 		this.pasosRellenar = pasosRellenar;
 	}
 
-	public Set<JPasoCaptura> getPasosPagos() {
-		return this.pasosPagos;
+	public Set<JPasoCaptura> getPasosCaptura() {
+		return this.pasosCaptura;
 	}
 
-	public void setPasosPagos(final Set<JPasoCaptura> pasosPagos) {
-		this.pasosPagos = pasosPagos;
+	public void setPasosCaptura(final Set<JPasoCaptura> pasosPagos) {
+		this.pasosCaptura = pasosPagos;
 	}
 
+	/**
+	 * @return the codigoClonado
+	 */
+	public Long getCodigoClonado() {
+		return codigoClonado;
+	}
+
+	/**
+	 * @param codigoClonado
+	 *            the codigoClonado to set
+	 */
+	public void setCodigoClonado(final Long codigoClonado) {
+		this.codigoClonado = codigoClonado;
+	}
+
+	/**
+	 * fromModel
+	 *
+	 * @param formulario
+	 * @return
+	 */
 	public static JFormularioTramite fromModel(final FormularioTramite formulario) {
 		final JFormularioTramite jformularioTramite = new JFormularioTramite();
 		if (formulario != null) {
 			jformularioTramite.setCodigo(formulario.getId());
 			jformularioTramite.setFirmarDigitalmente(formulario.isDebeFirmarse());
-			if (formulario.getDescripcion() != null) {
-				jformularioTramite.setDescripcion(JLiteral.fromModel(formulario.getDescripcion()));
-			}
+			jformularioTramite.setDescripcion(JLiteral.fromModel(formulario.getDescripcion()));
 			jformularioTramite.setIdentificador(formulario.getCodigo());
 			if (formulario.getFormularioGestorExterno() != null) {
 				jformularioTramite.setIdFormularioExterno(formulario.getFormularioGestorInterno().getCodigo());
@@ -275,30 +300,14 @@ public class JFormularioTramite implements IModelApi {
 			jformularioTramite.setObligatorio(formulario.getObligatoriedad().toString());
 			jformularioTramite.setOrden(formulario.getOrden());
 			jformularioTramite.setPrerregistro(formulario.isDebePrerregistrarse());
-			if (formulario.getScriptDatosIniciales() != null) {
-				final JScript script = JScript.fromModel(formulario.getScriptDatosIniciales());
-				jformularioTramite.setScriptDatosIniciales(script);
-			}
-			if (formulario.getScriptFirma() != null) {
-				final JScript script = JScript.fromModel(formulario.getScriptFirma());
-				jformularioTramite.setScriptFirmar(script);
-			}
-			if (formulario.getScriptObligatoriedad() != null) {
-				final JScript script = JScript.fromModel(formulario.getScriptObligatoriedad());
-				jformularioTramite.setScriptObligatoriedad(script);
-			}
-			if (formulario.getScriptParametros() != null) {
-				final JScript script = JScript.fromModel(formulario.getScriptParametros());
-				jformularioTramite.setScriptParametros(script);
-			}
-			if (formulario.getScriptRetorno() != null) {
-				final JScript script = JScript.fromModel(formulario.getScriptRetorno());
-				jformularioTramite.setScriptRetorno(script);
-			}
-			if (formulario.getFormulario() != null) {
-				final JFormulario jformulario = JFormulario.fromModel(formulario.getFormulario());
-				jformularioTramite.setFormulario(jformulario);
-			}
+
+			jformularioTramite.setScriptDatosIniciales(JScript.fromModel(formulario.getScriptDatosIniciales()));
+			jformularioTramite.setScriptFirmar(JScript.fromModel(formulario.getScriptFirma()));
+			jformularioTramite.setScriptObligatoriedad(JScript.fromModel(formulario.getScriptObligatoriedad()));
+			jformularioTramite.setScriptParametros(JScript.fromModel(formulario.getScriptParametros()));
+			jformularioTramite.setScriptRetorno(JScript.fromModel(formulario.getScriptRetorno()));
+			// jformularioTramite.setFormulario(JFormulario.fromModel(formulario.getFormulario()));
+
 			jformularioTramite.setTipo(formulario.getTipo().toString());
 			jformularioTramite.setTipoFormulario(formulario.getTipoFormulario().toString());
 
@@ -306,6 +315,11 @@ public class JFormularioTramite implements IModelApi {
 		return jformularioTramite;
 	}
 
+	/**
+	 * toModel.
+	 *
+	 * @return
+	 */
 	public FormularioTramite toModel() {
 		final FormularioTramite mformulario = new FormularioTramite();
 
@@ -315,9 +329,8 @@ public class JFormularioTramite implements IModelApi {
 			mformulario.setDescripcion(this.getDescripcion().toModel());
 		}
 		if (this.getFormulario() != null) {
-			mformulario.setFormulario(this.getFormulario().toModel());
+			mformulario.setIdFormularioInterno(this.getFormulario().getCodigo());
 		}
-		// this.setGestorFormulario(x);
 		mformulario.setCodigo(this.getIdentificador());
 		if (this.getIdFormularioExterno() != null) {
 			final Gestor form = new Gestor();
@@ -347,6 +360,40 @@ public class JFormularioTramite implements IModelApi {
 		mformulario.setTipoFormulario(TypeInterno.fromString(this.getTipoFormulario()));
 
 		return mformulario;
+	}
+
+	/**
+	 * Clonar.
+	 *
+	 * @param formularioTramite
+	 * @return
+	 */
+	public static JFormularioTramite clonar(final JFormularioTramite formularioTramite) {
+		JFormularioTramite jformularioTramite = null;
+		if (formularioTramite != null) {
+			jformularioTramite = new JFormularioTramite();
+			jformularioTramite.setCodigo(null);
+			jformularioTramite.setCodigoClonado(formularioTramite.getCodigo());
+			jformularioTramite.setFirmarDigitalmente(formularioTramite.getFirmarDigitalmente());
+			jformularioTramite.setDescripcion(JLiteral.clonar(formularioTramite.getDescripcion()));
+			jformularioTramite.setIdentificador(formularioTramite.getIdentificador());
+			jformularioTramite.setIdFormularioExterno(formularioTramite.getIdFormularioExterno());
+
+			jformularioTramite.setObligatorio(formularioTramite.getObligatorio());
+			jformularioTramite.setOrden(formularioTramite.getOrden());
+			jformularioTramite.setPrerregistro(formularioTramite.getPrerregistro());
+
+			jformularioTramite.setScriptDatosIniciales(JScript.clonar(formularioTramite.getScriptDatosIniciales()));
+			jformularioTramite.setScriptFirmar(JScript.clonar(formularioTramite.getScriptFirmar()));
+			jformularioTramite.setScriptObligatoriedad(JScript.clonar(formularioTramite.getScriptObligatoriedad()));
+			jformularioTramite.setScriptParametros(JScript.clonar(formularioTramite.getScriptParametros()));
+			jformularioTramite.setScriptRetorno(JScript.clonar(formularioTramite.getScriptRetorno()));
+			jformularioTramite.setFormulario(JFormulario.clonar(formularioTramite.getFormulario()));
+
+			jformularioTramite.setTipo(formularioTramite.getTipo());
+			jformularioTramite.setTipoFormulario(formularioTramite.getTipoFormulario());
+		}
+		return jformularioTramite;
 	}
 
 }

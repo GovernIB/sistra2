@@ -228,8 +228,9 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite) {
-		tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
+	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite, final String usuario) {
+		final Long idTramiteVersion = tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
+		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.CREACION, "");
 	}
 
 	@Override
@@ -368,9 +369,10 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void uploadDocAnexo(final Long idDocumento, final Fichero fichero, final byte[] contents) {
+	public void uploadDocAnexo(final Long idDocumento, final Fichero fichero, final byte[] contents,
+			final Long idEntidad) {
 		final Fichero newFichero = tramitePasoDao.uploadDocAnexo(idDocumento, fichero);
-		ficheroExternoDao.guardarFichero(idDocumento, newFichero, contents);
+		ficheroExternoDao.guardarFichero(idEntidad, newFichero, contents);
 	}
 
 	@Override
@@ -390,7 +392,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public void desbloquearTramiteVersion(final Long idTramiteVersion, final String username, final String detalle) {
 		tramiteDao.desbloquearTramiteVersion(idTramiteVersion);
-		historialVersionDao.add(idTramiteVersion, username, TypeAccionHistorial.BLOQUEAR, detalle);
+		historialVersionDao.add(idTramiteVersion, username, TypeAccionHistorial.DESBLOQUEAR, detalle);
 	}
 
 	@Override
@@ -403,6 +405,38 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public HistorialVersion getHistorialVersion(final Long idHistorialVersion) {
 		return historialVersionDao.getById(idHistorialVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean tieneTramiteVersion(final Long idTramite) {
+		return tramiteDao.tieneTramiteVersion(idTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean tieneTramiteNumVersionRepetida(final Long idTramite, final int release) {
+		return tramiteDao.tieneTramiteNumVersionRepetido(idTramite, release);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public int getTramiteNumVersionMaximo(final Long idTramite) {
+		return tramiteDao.getTramiteNumVersionMaximo(idTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void clonadoTramiteVersion(final Long idTramiteVersion, final String usuario) {
+		log.debug("Entrando al clonar idTramiteVersion: {} por el usuario {} ", idTramiteVersion, usuario);
+		final Long idTramiteVersionNuevo = tramiteDao.clonarTramiteVersion(idTramiteVersion);
+		historialVersionDao.add(idTramiteVersionNuevo, usuario, TypeAccionHistorial.CREACION, "");
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Long> listTramiteVersionActiva(final Long idArea) {
+		return tramiteDao.listTramiteVersionActiva(idArea);
 	}
 
 }

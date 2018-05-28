@@ -53,7 +53,7 @@
 
 		<p:dataTable id="dataTable" var="tasas"
 			value="#{viewDefinicionVersion.tramitePasoTSSeleccionado.tasas}" rows="10"
-			scrollable="true" paginator="false" rowKey="#{tasas.id}" selectionMode="single"
+			scrollable="true" paginator="false" rowKey="#{tasas.codigo}" selectionMode="single"
 			 selection="#{viewDefinicionVersion.tasaSeleccionado}" dblClickSelect="true">
 
 			<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -62,9 +62,8 @@
 
 			<!-- Columnas -->
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerIdentificador']}" >
-				<h:outputText value="#{tasas.codigo}" />
+				<h:outputText value="#{tasas.identificador}" />
 			</p:column>
-
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerDescripcion']}">
 				<h:outputText value="#{tasas.descripcion.getTraduccion(sessionBean.lang)}" />

@@ -3,6 +3,8 @@ package es.caib.sistrages.core.api.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
+
 /**
  * Línea componentes para una página de formulario.
  *
@@ -15,7 +17,7 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 	private int orden;
 
 	/** Componentes. */
-	private List<ComponenteFormulario> componentes = new ArrayList<ComponenteFormulario>();
+	private List<ComponenteFormulario> componentes = new ArrayList<>();
 
 	public List<ComponenteFormulario> getComponentes() {
 		return componentes;
@@ -34,7 +36,10 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 	}
 
 	public boolean completa() {
-		boolean res = false;
+		return (!componentes.isEmpty() && columnasComponentes() >= ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
+	}
+
+	public int columnasComponentes() {
 		int ncolumnas = 0;
 		if (!componentes.isEmpty()) {
 			for (final ComponenteFormulario elementoFormulario : componentes) {
@@ -51,14 +56,9 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 				default:
 					break;
 				}
-
-				if (ncolumnas >= 6) {
-					res = true;
-					break;
-				}
 			}
 		}
-		return res;
+		return ncolumnas;
 	}
 
 	public boolean cabenComponentes(final ComponenteFormulario pComponente) {
@@ -81,7 +81,7 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 						break;
 					}
 
-					if (ncolumnas > 6) {
+					if (ncolumnas > ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA) {
 						res = false;
 						break;
 					}

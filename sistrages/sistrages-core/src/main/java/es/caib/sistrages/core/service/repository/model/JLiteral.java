@@ -29,9 +29,7 @@ public class JLiteral implements IModelApi {
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Codigo
-	 */
+	/** Codigo */
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_TRADUC_SEQ")
 	@SequenceGenerator(allocationSize = 1, name = "STG_TRADUC_SEQ", sequenceName = "STG_TRADUC_SEQ")
@@ -39,8 +37,9 @@ public class JLiteral implements IModelApi {
 	private Long codigo;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "traduccion", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<JTraduccionLiteral> traduccionLiterales = new HashSet<JTraduccionLiteral>(0);
+	private Set<JTraduccionLiteral> traduccionLiterales = new HashSet<>(0);
 
+	/** Constructor vacio. **/
 	public JLiteral() {
 		// Constructor vacio.
 	}
@@ -63,14 +62,30 @@ public class JLiteral implements IModelApi {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * Get traducciones.
+	 *
+	 * @return
+	 */
 	public Set<JTraduccionLiteral> getTraduccionLiterales() {
 		return this.traduccionLiterales;
 	}
 
+	/**
+	 * Set traducciones
+	 *
+	 * @param traduccionLiterales
+	 */
 	public void setTraduccionLiterales(final Set<JTraduccionLiteral> traduccionLiterales) {
 		this.traduccionLiterales = traduccionLiterales;
 	}
 
+	/**
+	 * Get traduccion por idioma.
+	 *
+	 * @param idioma
+	 * @return
+	 */
 	public JTraduccionLiteral getJTraduccionLiteral(final String idioma) {
 		JTraduccionLiteral res = null;
 		if (this.traduccionLiterales != null) {
@@ -84,6 +99,11 @@ public class JLiteral implements IModelApi {
 		return res;
 	}
 
+	/**
+	 * ToModel.
+	 *
+	 * @return
+	 */
 	public Literal toModel() {
 		final Literal literal = new Literal();
 		literal.setCodigo(this.codigo);
@@ -96,6 +116,12 @@ public class JLiteral implements IModelApi {
 		return literal;
 	}
 
+	/**
+	 * FromModel.
+	 *
+	 * @param literal
+	 * @return
+	 */
 	public static JLiteral fromModel(final Literal literal) {
 		JLiteral jModel = null;
 		if (literal != null) {
@@ -154,6 +180,30 @@ public class JLiteral implements IModelApi {
 			jModel = jLiteral;
 		}
 		return jModel;
+	}
+
+	/**
+	 * Clona el objeto.
+	 *
+	 * @return
+	 */
+	public static JLiteral clonar(final JLiteral origLiteral) {
+		JLiteral jliteral = null;
+		if (origLiteral != null) {
+			jliteral = new JLiteral();
+			jliteral.setCodigo(null);
+			if (origLiteral.getTraduccionLiterales() != null) {
+				jliteral.setTraduccionLiterales(new HashSet<JTraduccionLiteral>());
+				for (final JTraduccionLiteral traduccionOriginal : origLiteral.getTraduccionLiterales()) {
+					if (traduccionOriginal != null) {
+						final JTraduccionLiteral traduccion = JTraduccionLiteral.clonar(traduccionOriginal);
+						traduccion.setTraduccion(jliteral);
+						jliteral.getTraduccionLiterales().add(traduccion);
+					}
+				}
+			}
+		}
+		return jliteral;
 	}
 
 }

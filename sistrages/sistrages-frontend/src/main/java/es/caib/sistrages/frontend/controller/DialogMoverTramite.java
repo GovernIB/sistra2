@@ -59,7 +59,7 @@ public class DialogMoverTramite extends DialogControllerBase {
 	 */
 	public void aceptar() {
 		// Realizamos update
-		tramiteService.changeAreaTramite(idAreaDestino, data.getId());
+		tramiteService.changeAreaTramite(idAreaDestino, data.getCodigo());
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();

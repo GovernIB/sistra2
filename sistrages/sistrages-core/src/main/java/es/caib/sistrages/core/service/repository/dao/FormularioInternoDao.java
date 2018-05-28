@@ -102,4 +102,8 @@ public interface FormularioInternoDao {
 
 	void removeComponenteFormulario(Long pId);
 
+	void updateOrdenComponente(Long pId, Integer pOrden);
+
+	void updateOrdenLinea(Long pId, Integer pOrden);
+
 }

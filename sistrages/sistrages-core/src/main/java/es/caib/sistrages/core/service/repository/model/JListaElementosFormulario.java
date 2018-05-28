@@ -32,7 +32,9 @@ public class JListaElementosFormulario implements IModelApi {
 	@JoinColumn(name = "LEL_CODPAF", nullable = false)
 	private JPaginaFormulario paginaFormulario;
 
+	/** Constructor. **/
 	public JListaElementosFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {
