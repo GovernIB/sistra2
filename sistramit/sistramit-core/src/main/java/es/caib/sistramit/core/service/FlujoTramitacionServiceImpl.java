@@ -40,6 +40,42 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 		return ft.obtenerDetalleTramite();
 	}
 
+	// -------------------------------------------------------------------------------------------
+	// - Métodos especiales invocados desde el interceptor. No pasan por interceptor
+	// de auditoria.
+	// -------------------------------------------------------------------------------------------
+	@Override
+	public DetalleTramite obtenerFlujoTramitacionInfo(final String idSesionTramitacion) {
+		// ATENCION: NO DEBE PASAR POR INTERCEPTOR. SE USA DESDE EL PROPIO INTERCEPTOR.
+		DetalleTramite dt = null;
+		final FlujoTramitacionComponent ft = flujoTramitacionMap.get(idSesionTramitacion);
+		if (ft != null) {
+			try {
+				dt = ft.obtenerDetalleTramite();
+			} catch (final Exception ex) {
+				// No hacemos nada
+				dt = null;
+			}
+		}
+		return dt;
+	}
+
+	@Override
+	public void invalidarFlujoTramitacion(final String idSesionTramitacion) {
+		final FlujoTramitacionComponent ft = flujoTramitacionMap.get(idSesionTramitacion);
+		if (ft != null) {
+			try {
+				ft.invalidarFlujoTramicacion();
+			} catch (final Exception ex) {
+				// No hacemos nada
+			}
+		}
+	}
+
+	// --------------------------------------------------------------
+	// ---- FUNCIONES INTERNAS
+	// --------------------------------------------------------------
+
 	/**
 	 * Obtiene flujo de tramitación.
 	 *

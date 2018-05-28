@@ -6,7 +6,7 @@ import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramite;
+import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 
 /**
  * Acción de un paso de tramitación.
@@ -35,6 +35,6 @@ public interface AccionPaso {
 	 */
 	RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
 			final TypeAccionPaso pAccionPaso, final ParametrosAccionPaso pParametros,
-			final DefinicionTramite pDefinicionTramite, final VariablesFlujo pVariablesFlujo);
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo);
 
 }

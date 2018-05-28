@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
+import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 
 @Service
 @Transactional
@@ -25,6 +27,10 @@ public class SystemServiceImpl implements SystemService {
 	// TODO Pendiente leer de propiedades e ir consultando periodicamente STG. Ver
 	// cuales deben ir a properties y cuales a STG.
 	private Map<TypePropiedadConfiguracion, String> propiedades;
+
+	/** Componente auditoria. */
+	@Autowired
+	AuditoriaComponent auditoriaComponent;
 
 	@PostConstruct
 	public void init() {
@@ -41,11 +47,13 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void auditarErrorFront(final String idSesionTramitacion, final ErrorFrontException error) {
-		// TODO PENDIENTE
+		auditoriaComponent.auditarErrorFront(idSesionTramitacion, error);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public List<LogEvento> recuperarLogSesionTramitacion(final String idSesionTramitacion, final Date fechaDesde,
 			final Date fechaHasta, final boolean ordenAsc) {
 		// TODO PENDIENTE

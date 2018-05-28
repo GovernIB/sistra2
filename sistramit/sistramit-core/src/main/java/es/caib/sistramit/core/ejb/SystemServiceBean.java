@@ -22,7 +22,7 @@ import es.caib.sistramit.core.api.service.SystemService;
 public class SystemServiceBean implements SystemService {
 
 	@Autowired
-	SystemService systemService;
+	private SystemService systemService;
 
 	@Override
 	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad) {

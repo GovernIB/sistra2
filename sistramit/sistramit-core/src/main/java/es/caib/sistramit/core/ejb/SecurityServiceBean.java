@@ -19,7 +19,7 @@ import es.caib.sistramit.core.api.service.SecurityService;
 public class SecurityServiceBean implements SecurityService {
 
 	@Autowired
-	SecurityService securityService;
+	private SecurityService securityService;
 
 	@Override
 	public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite, final int versionTramite,

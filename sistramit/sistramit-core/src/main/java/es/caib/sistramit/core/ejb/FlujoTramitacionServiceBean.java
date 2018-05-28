@@ -19,7 +19,7 @@ import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 
 	@Autowired
-	FlujoTramitacionService flujoTramitacionService;
+	private FlujoTramitacionService flujoTramitacionService;
 
 	@Override
 	public String iniciarTramite(final String idTramite, final int version, final String idioma,
@@ -31,6 +31,16 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	@Override
 	public DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion) {
 		return flujoTramitacionService.obtenerDetalleTramite(idSesionTramitacion);
+	}
+
+	@Override
+	public DetalleTramite obtenerFlujoTramitacionInfo(final String idSesionTramitacion) {
+		return flujoTramitacionService.obtenerFlujoTramitacionInfo(idSesionTramitacion);
+	}
+
+	@Override
+	public void invalidarFlujoTramitacion(final String idSesionTramitacion) {
+		flujoTramitacionService.invalidarFlujoTramitacion(idSesionTramitacion);
 	}
 
 }

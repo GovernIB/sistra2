@@ -34,11 +34,29 @@ public interface FlujoTramitacionService {
 
 	/**
 	 * Obtiene detalle trámite.
-	 * 
+	 *
 	 * @param idSesionTramitacion
 	 *            id sesión tramitación
 	 * @return detalle trámite
 	 */
 	public DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion);
+
+	// -------------------------------------------------------------------------------------------
+	// - Métodos especiales invocados desde el interceptor. No pasan por interceptor
+	// de auditoria.
+	// -------------------------------------------------------------------------------------------
+	/**
+	 * Función interna que no pasa por interceptor de auditoría. Sirve para obtener
+	 * detalle del flujo desde el propio interceptor (solo debe ser usada desde el
+	 * interceptor).
+	 */
+	public DetalleTramite obtenerFlujoTramitacionInfo(final String idSesionTramitacion);
+
+	/**
+	 * Función interna que no pasa por interceptor de auditoría. Sirve para
+	 * invalidar automáticamente el el flujo desde el propio interceptor (solo debe
+	 * ser usada desde el interceptor).
+	 */
+	public void invalidarFlujoTramitacion(final String idSesionTramitacion);
 
 }

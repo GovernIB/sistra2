@@ -257,11 +257,11 @@ public final class LoginController {
 		final String paramVersionTramite = getParamValue(savedRequest, "version");
 		final String paramIdioma = getParamValue(savedRequest, IDIOMA);
 		final String paramLogin = getParamValue(savedRequest, LOGIN);
-		final String paramIdGuc = getParamValue(savedRequest, "procedimiento");
+		final String paramIdTramiteCP = getParamValue(savedRequest, "idTramiteCatalogo");
 
 		// Obtenemos info login tramite
 		final InfoLoginTramite infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
-				Integer.parseInt(paramVersionTramite), paramIdGuc, paramIdioma, savedRequest.getRedirectUrl());
+				Integer.parseInt(paramVersionTramite), paramIdTramiteCP, paramIdioma, savedRequest.getRedirectUrl());
 
 		// Comprobamos si hay que filtrar el metodo de autenticacion
 		boolean anonimo = false;

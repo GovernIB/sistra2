@@ -11,4 +11,6 @@ public interface FlujoTramitacionComponent {
 
 	DetalleTramite obtenerDetalleTramite();
 
+	void invalidarFlujoTramicacion();
+
 }

@@ -12,28 +12,23 @@ import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 @Scope(value = "prototype")
 public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent {
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see es.caib.sistramit.core.service.component.FlujoTramitacionComponent#
-	 * iniciarTramite(java.lang.String, int, java.lang.String, java.lang.String,
-	 * java.lang.String, java.util.Map)
+	/** Id sesion tramitacion. */
+	private String idSesionTramitacion;
+
+	/**
+	 * Indica si el flujo es invalido. Se marcará como inválido al generarse una
+	 * excepción de tipo FATAL.
 	 */
+	private boolean flujoInvalido;
+
 	@Override
 	public String iniciarTramite(final String idTramite, final int version, final String idioma,
 			final String idTramiteCatalogo, final String urlInicio, final Map<String, String> parametrosInicio) {
-
 		final String idSesionTramitacion = GeneradorId.generarId();
 		return idSesionTramitacion;
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see es.caib.sistramit.core.service.component.FlujoTramitacionComponent#
-	 * obtenerDetalleTramite()
-	 */
 	@Override
 	public DetalleTramite obtenerDetalleTramite() {
 		// TODO Auto-generated method stub
@@ -41,6 +36,11 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		dt.setIdTramite("TRAM1");
 		dt.setTitulo("Tramite 1");
 		return dt;
+	}
+
+	@Override
+	public void invalidarFlujoTramicacion() {
+		flujoInvalido = true;
 	}
 
 }

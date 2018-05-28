@@ -28,6 +28,9 @@ public final class DetalleTramite implements Serializable {
 	 */
 	private UsuarioAutenticadoInfo usuario;
 
+	/** Debug habilitado. */
+	private boolean debug;
+
 	public String getTitulo() {
 		return titulo;
 	}
@@ -50,6 +53,14 @@ public final class DetalleTramite implements Serializable {
 
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
+	}
+
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(final boolean debug) {
+		this.debug = debug;
 	}
 
 }

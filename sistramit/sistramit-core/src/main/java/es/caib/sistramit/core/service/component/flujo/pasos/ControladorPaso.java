@@ -9,7 +9,7 @@ import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramite;
+import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 
 /**
  * Controlador paso de tramitación. Contiene la lógica asociada al paso.
@@ -30,7 +30,7 @@ public interface ControladorPaso {
 	 *            Variables del flujo accesibles desde el trámite (datos sesión,
 	 *            documentos de otros pasos, etc.)
 	 */
-	void inicializarPaso(final DatosPaso datosPaso, final DefinicionTramite definicionTramite,
+	void inicializarPaso(final DatosPaso datosPaso, final DefinicionTramiteSTG definicionTramite,
 			final VariablesFlujo variablesFlujo);
 
 	/**
@@ -44,7 +44,7 @@ public interface ControladorPaso {
 	 *            Variables del flujo accesibles desde el trámite (datos sesión,
 	 *            documentos de otros pasos, etc.)
 	 */
-	void cargarPaso(final DatosPaso datosPaso, final DefinicionTramite definicionTramite,
+	void cargarPaso(final DatosPaso datosPaso, final DefinicionTramiteSTG definicionTramite,
 			final VariablesFlujo variablesFlujo);
 
 	/**
@@ -59,7 +59,7 @@ public interface ControladorPaso {
 	 *            Variables del flujo accesibles desde el trámite (datos sesión,
 	 *            documentos de otros pasos, etc.)
 	 */
-	void revisarPaso(final DatosPaso datosPaso, final DefinicionTramite definicionTramite,
+	void revisarPaso(final DatosPaso datosPaso, final DefinicionTramiteSTG definicionTramite,
 			final VariablesFlujo variablesFlujo);
 
 	/**
@@ -74,7 +74,7 @@ public interface ControladorPaso {
 	 *            documentos de otros pasos, etc.)
 	 *
 	 */
-	void invalidarPaso(final DatosPaso datosPaso, final DefinicionTramite definicionTramite,
+	void invalidarPaso(final DatosPaso datosPaso, final DefinicionTramiteSTG definicionTramite,
 			final VariablesFlujo variablesFlujo);
 
 	/**
@@ -88,7 +88,7 @@ public interface ControladorPaso {
 	 *            Flag de solo lectura.
 	 *
 	 */
-	void establecerSoloLectura(final DatosPaso datosPaso, final DefinicionTramite definicionTramite,
+	void establecerSoloLectura(final DatosPaso datosPaso, final DefinicionTramiteSTG definicionTramite,
 			final boolean soloLectura);
 
 	/**
@@ -109,7 +109,7 @@ public interface ControladorPaso {
 	 *
 	 */
 	RespuestaAccionPaso accionPaso(final DatosPaso datosPaso, final TypeAccionPaso accionPaso,
-			final ParametrosAccionPaso pParametros, final DefinicionTramite definicionTramite,
+			final ParametrosAccionPaso pParametros, final DefinicionTramiteSTG definicionTramite,
 			final VariablesFlujo variablesFlujo);
 
 	/**
@@ -121,7 +121,7 @@ public interface ControladorPaso {
 	 *            Definición del trámite
 	 * @return Detalle del paso preparado para el front.
 	 */
-	DetallePaso detallePaso(final DatosPaso datosPaso, final DefinicionTramite definicionTramite);
+	DetallePaso detallePaso(final DatosPaso datosPaso, final DefinicionTramiteSTG definicionTramite);
 
 	/**
 	 * Obtiene los documentos completados en el paso (el paso debe estar
@@ -134,6 +134,6 @@ public interface ControladorPaso {
 	 *            Definición del trámite
 	 * @return Documentos completados del paso.
 	 */
-	List<DatosDocumento> obtenerDocumentosPaso(final DatosPaso datosPaso, final DefinicionTramite definicionTramite);
+	List<DatosDocumento> obtenerDocumentosPaso(final DatosPaso datosPaso, final DefinicionTramiteSTG definicionTramite);
 
 }
