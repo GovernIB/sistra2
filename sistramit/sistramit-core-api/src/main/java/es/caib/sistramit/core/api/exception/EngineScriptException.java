@@ -2,7 +2,7 @@ package es.caib.sistramit.core.api.exception;
 
 import org.apache.commons.lang3.StringUtils;
 
-import es.caib.sistramit.core.api.model.comun.ConstantesNumero;
+import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 

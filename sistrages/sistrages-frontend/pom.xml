@@ -174,8 +174,7 @@
                                 </executions>
 
                                 <configuration>
-                                		<skip>true</skip>
-                                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                                		<generateGitPropertiesFile>true</generateGitPropertiesFile>
                                         <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
                                 </configuration>
 
