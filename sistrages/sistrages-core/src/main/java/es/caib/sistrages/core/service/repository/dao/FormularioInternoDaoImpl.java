@@ -25,11 +25,13 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JCampoFormulario;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioCasillaVerificacion;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioIndexado;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioTexto;
+import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JElementoFormulario;
 import es.caib.sistrages.core.service.repository.model.JEtiquetaFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
@@ -82,10 +84,37 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 * (non-Javadoc)
 	 *
 	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
-	 * getFormPagById(java.lang.Long)
+	 * getFormularioPaginasById(java.lang.Long)
 	 */
 	@Override
 	public FormularioInterno getFormularioPaginasById(final Long pId) {
+		final JFormulario jForm = getJFormularioById(pId);
+
+		jForm.getPaginas();
+
+		final FormularioInterno formInt = jForm.toModel();
+
+		for (final JPaginaFormulario jPagina : jForm.getPaginas()) {
+			formInt.getPaginas().add(jPagina.toModel());
+		}
+
+		// ordenamos lista de paginas por campo orden
+		if (!formInt.getPaginas().isEmpty() && formInt.getPaginas().size() > 1) {
+			Collections.sort(formInt.getPaginas(),
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+		}
+
+		return formInt;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * getFormPagById(java.lang.Long)
+	 */
+	@Override
+	public FormularioInterno getFormularioCompletoById(final Long pId) {
 		final JFormulario jForm = getJFormularioById(pId);
 
 		final FormularioInterno formInt = jForm.toModel();
@@ -249,16 +278,14 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormCasillaVerificacion.toModel();
 				break;
-			// case SELECTOR:
-			// jLinea = lineaComponentes(jPagina, jLineaSeleccionada, pPosicion);
-			// if (jLinea != null) {
-			// final Integer ordenComponente = ordenInsercionComponente(jLinea, pOrden,
-			// pPosicion);
-			// jObjetoFormulario = JCampoFormularioIndexado.createDefault(ordenComponente,
-			// jLinea);
-			// }
-			// break;
-
+			case SELECTOR:
+				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
+				final JCampoFormularioIndexado jObjFormSelector = JCampoFormularioIndexado.createDefault(pOrden,
+						jLineaSeleccionada);
+				entityManager.persist(jObjFormSelector);
+				entityManager.merge(jLineaSeleccionada);
+				objetoResultado = jObjFormSelector.toModel();
+				break;
 			case SECCION:
 				creaHuecoEnLineas(jPagina, pOrden);
 				final JLineaFormulario jLineaBloqueCreadaSeccion = JLineaFormulario.createDefault(pOrden, jPagina);
@@ -330,8 +357,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	}
 
 	@Override
-	public void updateComponente(final ComponenteFormulario pComponente) {
+	public ObjetoFormulario updateComponente(final ComponenteFormulario pComponente) {
 		// TODO
+		ObjetoFormulario objetoResultado = null;
+
 		if (pComponente != null) {
 			final JElementoFormulario jElemento = getJElementoById(pComponente.getId());
 
@@ -363,17 +392,20 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				final ComponenteFormularioSeccion seccion = (ComponenteFormularioSeccion) pComponente;
 				jSeccion.setLetra(seccion.getLetra());
 				entityManager.merge(jSeccion);
+				objetoResultado = jSeccion.toModel();
 				break;
 			case IMAGEN:
 				final JImagenFormulario jImagen = jElemento.getImagenFormulario();
 				final ComponenteFormularioImagen imagen = (ComponenteFormularioImagen) pComponente;
 				entityManager.merge(jImagen);
+				objetoResultado = jImagen.toModel();
 				break;
 			case ETIQUETA:
 				final JEtiquetaFormulario jEtiqueta = jElemento.getEtiquetaFormulario();
 				final ComponenteFormularioEtiqueta etiqueta = (ComponenteFormularioEtiqueta) pComponente;
 				jEtiqueta.setTipo(etiqueta.getTipoEtiqueta().toString());
 				entityManager.merge(jEtiqueta);
+				objetoResultado = jEtiqueta.toModel();
 				break;
 			case CAMPO_TEXTO:
 				final JCampoFormularioTexto jCampoTexto = jElemento.getCampoFormulario().getCampoFormularioTexto();
@@ -410,6 +442,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 				jCampoTexto.setPermiteRango(campoTexto.isPermiteRango());
 				entityManager.merge(jCampoTexto);
+				objetoResultado = jCampoTexto.toModel();
 				break;
 			case CHECKBOX:
 				final JCampoFormularioCasillaVerificacion jCampoCheckbox = jElemento.getCampoFormulario()
@@ -420,15 +453,41 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				jCampoCheckbox.setValorNoChecked(campoCheckbox.getValorNoChecked());
 
 				entityManager.merge(jCampoCheckbox);
+				objetoResultado = jCampoCheckbox.toModel();
 				break;
 			case SELECTOR:
-				final JCampoFormularioIndexado jCampoIndexado = jElemento.getCampoFormulario()
-						.getCampoFormularioIndexado();
+				JCampoFormularioIndexado jCampoIndexado = jElemento.getCampoFormulario().getCampoFormularioIndexado();
 				final ComponenteFormularioCampoSelector campoIndexado = (ComponenteFormularioCampoSelector) pComponente;
+
+				jCampoIndexado.setTipoCampoIndexado(campoIndexado.getTipoCampoIndexado().name());
+				jCampoIndexado.setTipoListaValores(campoIndexado.getTipoListaValores().toString());
+
+				if (TypeListaValores.FIJA.equals(campoIndexado.getTipoListaValores())) {
+					jCampoIndexado = JCampoFormularioIndexado.mergeListaValoresFijaModel(jCampoIndexado, campoIndexado);
+				} else if (!campoIndexado.getListaValorListaFija().isEmpty()) {
+					// no es fija y hay datos por lo que hay que eliminarlos
+					campoIndexado.getListaValorListaFija().clear();
+					jCampoIndexado = JCampoFormularioIndexado.mergeListaValoresFijaModel(jCampoIndexado, campoIndexado);
+				}
+
+				if (TypeListaValores.DOMINIO.equals(campoIndexado.getTipoListaValores())) {
+					jCampoIndexado.setDominio(JDominio.fromModelStatic(campoIndexado.getDominio()));
+					jCampoIndexado.setCampoDominioCodigo(campoIndexado.getCampoDominioCodigo());
+					jCampoIndexado.setCampoDominioDescripcion(campoIndexado.getCampoDominioDescripcion());
+				} else {
+					jCampoIndexado.setDominio(null);
+					jCampoIndexado.setCampoDominioCodigo(null);
+					jCampoIndexado.setCampoDominioDescripcion(null);
+				}
+
+				entityManager.merge(jCampoIndexado);
+				objetoResultado = jCampoIndexado.toModel();
 				break;
 			}
 
 		}
+
+		return objetoResultado;
 
 	}
 

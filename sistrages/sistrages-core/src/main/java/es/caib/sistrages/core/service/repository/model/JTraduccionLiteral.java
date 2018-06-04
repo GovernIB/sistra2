@@ -28,11 +28,11 @@ public class JTraduccionLiteral implements IModelApi {
 	@Column(name = "TRI_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TRI_IDIOMA", nullable = false)
 	private JIdioma idioma;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TRI_CODTRA", nullable = false)
 	private JLiteral traduccion;
 

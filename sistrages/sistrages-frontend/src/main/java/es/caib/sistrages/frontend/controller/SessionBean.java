@@ -1,7 +1,9 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -102,6 +104,8 @@ public class SessionBean {
 	 */
 	private String logo; // TODO PENDIENTE CAMBIAR
 
+	private Map<String, Object> mochilaDatos;
+
 	/** Inicio sesión. */
 	@PostConstruct
 	public void init() {
@@ -142,6 +146,9 @@ public class SessionBean {
 
 		// Establece logo segun role y entidad
 		cambiarLogo();
+
+		// inicializamos mochila
+		mochilaDatos = new HashMap<>();
 
 	}
 
@@ -326,6 +333,10 @@ public class SessionBean {
 		}
 	}
 
+	public void limpiaMochilaDatos() {
+		mochilaDatos.clear();
+	}
+
 	// --------- PRIVATE METHODS --------------------
 
 	/** Cambiar logo. */
@@ -455,5 +466,13 @@ public class SessionBean {
 
 	public void setEntidadService(final EntidadService entidadService) {
 		this.entidadService = entidadService;
+	}
+
+	public Map<String, Object> getMochilaDatos() {
+		return mochilaDatos;
+	}
+
+	public void setMochilaDatos(final Map<String, Object> mapaDatos) {
+		this.mochilaDatos = mapaDatos;
 	}
 }

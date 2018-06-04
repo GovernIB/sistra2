@@ -36,11 +36,11 @@ public class JFormulario implements IModelApi {
 	@Column(name = "FOR_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FOR_SCRPLT")
 	private JScript scriptPlantilla;
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FOR_CABTXT")
 	private JLiteral textoCabecera;
 

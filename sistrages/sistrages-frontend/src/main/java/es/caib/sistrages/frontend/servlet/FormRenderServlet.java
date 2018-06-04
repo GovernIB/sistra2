@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
@@ -167,6 +168,9 @@ public class FormRenderServlet extends HttpServlet {
 					case CHECKBOX:
 						campoCheckBox(pOut, cf);
 						break;
+					case SELECTOR:
+						campoSelector(pOut, cf);
+						break;
 					default:
 						break;
 					}
@@ -190,13 +194,15 @@ public class FormRenderServlet extends HttpServlet {
 
 	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
+		int n = 0;
 
 		escribeLinea(pOut, "<h4 class=\"imc-seccio\">", 5);
 
-		escribeLinea(pOut, "<span class=\"imc-se-marca editable\" id=\"", String.valueOf(pCF.getId()), "\">",
+		escribeLinea(pOut, "<span ", escribeId(pCF.getId(), ++n), " class=\"imc-se-marca editable\">",
 				componente.getLetra(), "</span>", 6);
 		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
-			escribeLinea(pOut, "<span class=\"imc-se-titol\">", pCF.getTexto().getTraduccion("es"), "</span>", 6);
+			escribeLinea(pOut, "<span ", escribeId(pCF.getId(), ++n), " class=\"imc-se-titol editable\">",
+					pCF.getTexto().getTraduccion("es"), "</span>", 6);
 		}
 
 		escribeLinea(pOut, "</h4>", 5);
@@ -238,13 +244,13 @@ public class FormRenderServlet extends HttpServlet {
 			}
 			estilo.append(" imc-el-files-").append(String.valueOf(nfilas));
 
-			elemento.append("<textarea class=\"editable\" id=\"").append(String.valueOf(campo.getId()))
-					.append("\" name=\"").append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"")
-					.append(nfilas).append("\"></textarea>");
+			elemento.append("<textarea class=\"editable\" ").append(escribeId(campo.getId())).append(" name=\"")
+					.append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"").append(nfilas)
+					.append("\"></textarea>");
 		} else {
 			tipo = "text";
-			elemento.append("<input class=\"editable\" id=\"").append(String.valueOf(campo.getId()))
-					.append("\" name=\"").append(campo.getIdComponente()).append("\" type=\"text\"/>");
+			elemento.append("<input class=\"editable\" ").append(escribeId(campo.getId())).append(" name=\"")
+					.append(campo.getIdComponente()).append("\" type=\"text\"/>");
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
@@ -274,15 +280,50 @@ public class FormRenderServlet extends HttpServlet {
 		estilo.append(" imc-el-name-").append(String.valueOf(campo.getId()));
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			texto = "<label class=\"editable\" for=\"" + campo.getId() + "\">" + campo.getTexto().getTraduccion("es")
-					+ "</label>";
+			texto = "<label for=\"" + campo.getId() + "\">" + campo.getTexto().getTraduccion("es") + "</label>";
 		}
-		escribeLinea(pOut, "<div class=\"imc-element imc-el-check ", estilo.toString(), "\" data-type=\"check\">", 5);
+		escribeLinea(pOut, "<div class=\"imc-element imc-el-check", estilo.toString(), "\" data-type=\"check\">", 5);
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
 		escribeLinea(pOut, "<div class=\"imc-input-check\">", 7);
-		escribeLinea(pOut, "<input class=\"editable\" id=\"", String.valueOf(campo.getId()), "\" name=\"",
-				String.valueOf(campo.getId()), "\" type=\"checkbox\">", 8);
+		escribeLinea(pOut, "<input class=\"editable\" ", escribeId(campo.getId()), "name=\"",
+				String.valueOf(campo.getIdComponente()), "\" type=\"checkbox\">", 8);
 		escribeLinea(pOut, texto, 8);
+
+		escribeLinea(pOut, "</div>", 7);
+		escribeLinea(pOut, "</div>", 6);
+		escribeLinea(pOut, "</div>", 5);
+	}
+
+	private void campoSelector(final StringBuilder pOut, final ComponenteFormulario pCF) {
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) pCF;
+
+		final StringBuilder estilo = new StringBuilder();
+		String texto = "";
+		int n = 0;
+
+		if (campo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(campo.getNumColumnas());
+		}
+
+		estilo.append(" imc-el-name-").append(String.valueOf(campo.getId()));
+
+		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
+			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + campo.getId() + "\">"
+					+ campo.getTexto().getTraduccion("es") + "</label></div>";
+		}
+
+		escribeLinea(pOut, "<div class=\"imc-element imc-el-selector", estilo.toString(), "\" data-type=\"select\">",
+				5);
+
+		escribeLinea(pOut, texto, 6);
+
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", String.valueOf(campo.getOrden()), "", 6);
+		escribeLinea(pOut, "<div ", escribeId(campo.getId(), ++n), " class=\"imc-select imc-opcions editable\">", 7);
+
+		escribeLinea(pOut, "<a ", escribeId(campo.getId(), ++n),
+				" class=\"imc-select\" tabindex=\"0\" href=\"javascript:;\" style=\"\"></a>", 8);
+		escribeLinea(pOut, "<input ", escribeId(campo.getId(), ++n), " name=\"",
+				String.valueOf(campo.getIdComponente()), "\" type=\"hidden\">", 8);
 
 		escribeLinea(pOut, "</div>", 7);
 		escribeLinea(pOut, "</div>", 6);
@@ -306,7 +347,7 @@ public class FormRenderServlet extends HttpServlet {
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-missatge-en-linia imc-missatge-en-linia-icona-sup editable ",
-				estilo.toString(), "\" id=\"", String.valueOf(pCF.getId()), "\" >", 5);
+				estilo.toString(), "\" ", escribeId(pCF.getId()), ">", 5);
 		if (pCF.getTexto() != null) {
 			escribeLinea(pOut, pCF.getTexto().getTraduccion("es"), 6);
 		}
@@ -315,14 +356,17 @@ public class FormRenderServlet extends HttpServlet {
 
 	private void scripts(final StringBuilder pOut) {
 		escribeLinea(pOut, "<script type=\"text/javascript\">", 1);
-		escribeLinea(pOut, "function rcEditarArea(id) { parent.seleccionarElementoCommand([{name:'id', value:id}]);}",
+		escribeLinea(pOut, "function rcEditarArea(id) {parent.seleccionarElementoCommand([{name:'id', value:id}]);}",
 				2);
+
 		escribeLinea(pOut, "var elementos = document.getElementsByClassName(\"editable\");", 2);
 		escribeLinea(pOut, "for(var i = 0 ; i < elementos.length; i++) { ", 2);
 		escribeLinea(pOut, "var element = elementos[i];", 3);
-		escribeLinea(pOut, "element.addEventListener(\"click\", function(event){ rcEditarArea (event.target.id); });",
+		escribeLinea(pOut,
+				"element.addEventListener(\"click\", function(event){rcEditarArea (event.target.id.split(\".\")[0]); });",
 				3);
 		escribeLinea(pOut, "}", 2);
+
 		escribeLinea(pOut, "</script>", 1);
 	}
 
@@ -374,6 +418,20 @@ public class FormRenderServlet extends HttpServlet {
 		pOut.append(pTexto6);
 		pOut.append(pTexto7);
 		pOut.append(lineSeparator);
+	}
+
+	private String escribeId(final Long pId) {
+		return escribeId(pId, null);
+	}
+
+	private String escribeId(final Long pId, final Integer pOrden) {
+		String id = null;
+		if (pOrden == null) {
+			id = "id=\"" + pId + "\"";
+		} else {
+			id = "id=\"" + pId + "." + pOrden + "\"";
+		}
+		return id;
 	}
 
 	public static String getContexto() {

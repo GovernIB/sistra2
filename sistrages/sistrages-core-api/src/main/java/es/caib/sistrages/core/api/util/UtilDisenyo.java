@@ -6,6 +6,11 @@ import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
 
 public class UtilDisenyo {
 
+	/** Constructor. **/
+	private UtilDisenyo() {
+		// Constructor vacio.
+	}
+
 	/**
 	 * Orden de la linea para la insercion .
 	 *

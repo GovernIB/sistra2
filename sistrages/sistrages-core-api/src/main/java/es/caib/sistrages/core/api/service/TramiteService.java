@@ -6,6 +6,8 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -394,4 +396,28 @@ public interface TramiteService {
 	 * @return
 	 */
 	public List<Long> listTramiteVersionActiva(Long idArea);
+
+	/**
+	 * Devuelve los formateadores de un tramite version.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public List<FormateadorFormulario> getFormateadoresTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Devuelve la lista de formularios de un tramite version.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public List<FormularioInterno> getFormulariosTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Devuelve una lista de ficheros de un tramite version.
+	 * 
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public List<Fichero> getFicherosTramiteVersion(Long idTramiteVersion);
 }

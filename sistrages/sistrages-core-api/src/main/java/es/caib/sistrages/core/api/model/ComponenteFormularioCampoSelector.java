@@ -32,6 +32,8 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 
 	private List<ValorListaFija> listaValorListaFija;
 
+	private int altura;
+
 	public ComponenteFormularioCampoSelector() {
 		super();
 	}
@@ -106,6 +108,14 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 
 	public void setListaValorListaFija(final List<ValorListaFija> listaValorListaFija) {
 		this.listaValorListaFija = listaValorListaFija;
+	}
+
+	public int getAltura() {
+		return altura;
+	}
+
+	public void setAltura(final int altura) {
+		this.altura = altura;
 	}
 
 }

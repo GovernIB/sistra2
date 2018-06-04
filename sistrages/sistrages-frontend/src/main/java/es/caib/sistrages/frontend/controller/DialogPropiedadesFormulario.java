@@ -57,7 +57,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		if (id == null) {
 			data = new FormularioInterno();
 		} else {
-			data = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
+			data = formIntService.getFormularioInternoCompleto(Long.valueOf(id));
 			literal = data.getTextoCabecera() != null
 					? data.getTextoCabecera().getTraduccion(UtilJSF.getSessionBean().getLang())
 					: null;

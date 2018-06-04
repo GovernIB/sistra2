@@ -34,6 +34,7 @@ public class JSeccionFormulario implements IModelApi {
 	private String letra;
 
 	public JSeccionFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -74,7 +75,6 @@ public class JSeccionFormulario implements IModelApi {
 	}
 
 	public static JSeccionFormulario fromModel(final ComponenteFormularioSeccion model) {
-		// TODO
 		JSeccionFormulario jModel = null;
 		if (model != null) {
 			jModel = new JSeccionFormulario();

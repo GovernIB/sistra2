@@ -12,6 +12,8 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -437,6 +439,24 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public List<Long> listTramiteVersionActiva(final Long idArea) {
 		return tramiteDao.listTramiteVersionActiva(idArea);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<FormateadorFormulario> getFormateadoresTramiteVersion(final Long idTramiteVersion) {
+		return tramitePasoDao.getFormateadoresTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<FormularioInterno> getFormulariosTramiteVersion(final Long idTramiteVersion) {
+		return tramitePasoDao.getFormulariosTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Fichero> getFicherosTramiteVersion(final Long idTramiteVersion) {
+		return tramitePasoDao.getFicherosTramiteVersion(idTramiteVersion);
 	}
 
 }

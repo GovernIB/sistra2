@@ -8,14 +8,7 @@
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeCampoTexto" var="TypeCampoTexto"/>
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeSeparadorNumero" var="TypeSeparadorNumero"/>
 
-   	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.oculto']}"/></h:column>
-   	<h:column>
-   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.oculto}">
-   			<p:ajax event="change" global="false" />
-   		</p:selectBooleanCheckbox>
-   	</h:column>
-
-	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.Tipo']}" /></h:column>
+	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipo']}" /></h:column>
 	<h:column>
 		<p:selectOneMenu id="tipoCampoTexto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoCampoTexto}" required="true">
 		    <p:ajax event="blur" process="@this"/>

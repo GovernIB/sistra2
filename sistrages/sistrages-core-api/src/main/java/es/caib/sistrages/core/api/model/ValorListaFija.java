@@ -3,7 +3,7 @@ package es.caib.sistrages.core.api.model;
 @SuppressWarnings("serial")
 public class ValorListaFija extends ModelApi {
 
-	private Long id;
+	private Long codigo;
 
 	private Literal descripcion;
 
@@ -17,12 +17,12 @@ public class ValorListaFija extends ModelApi {
 		super();
 	}
 
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long id) {
+		this.codigo = id;
 	}
 
 	public Literal getDescripcion() {

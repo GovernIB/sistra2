@@ -25,6 +25,7 @@ import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.frontend.controller.SessionBean;
@@ -582,4 +583,41 @@ public final class UtilJSF {
 		FacesContext.getCurrentInstance().validationFailed();
 	}
 
+	/**
+	 * Comprueba si el entorno es el mismo (desarrollo, preproduccion y produccion).
+	 *
+	 * @return
+	 */
+	public static boolean checkEntorno(final TypeEntorno tipoEntorno) {
+		final boolean mismo = false;
+		if (tipoEntorno != null) {
+			final String entorno = getEntorno();
+			return tipoEntorno.toString().equals(entorno);
+		}
+		return mismo;
+	}
+
+	/**
+	 * Devuelve el entorno.
+	 *
+	 * @return
+	 */
+	public static String getEntorno() {
+		return FacesContext
+				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
+						"#{negocioModuleConfig}", es.caib.sistrages.frontend.model.comun.ModuleConfig.class)
+				.getEntorno();
+	}
+
+	/**
+	 * Devuelve la version.
+	 *
+	 * @return
+	 */
+	public static String getVersion() {
+		return FacesContext
+				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
+						"#{negocioModuleConfig}", es.caib.sistrages.frontend.model.comun.ModuleConfig.class)
+				.getVersion();
+	}
 }

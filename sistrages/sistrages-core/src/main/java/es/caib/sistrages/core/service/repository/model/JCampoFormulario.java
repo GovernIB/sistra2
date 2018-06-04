@@ -53,16 +53,17 @@ public class JCampoFormulario implements IModelApi {
 	@Column(name = "FCA_NOMODI", nullable = false, precision = 1, scale = 0)
 	private boolean noModificable;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "campoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "campoFormulario", cascade = CascadeType.ALL)
 	private JCampoFormularioCasillaVerificacion campoFormularioCasillaVerificacion;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "campoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "campoFormulario", cascade = CascadeType.ALL)
 	private JCampoFormularioIndexado campoFormularioIndexado;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "campoFormulario", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "campoFormulario", cascade = CascadeType.ALL)
 	private JCampoFormularioTexto campoFormularioTexto;
 
 	public JCampoFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {

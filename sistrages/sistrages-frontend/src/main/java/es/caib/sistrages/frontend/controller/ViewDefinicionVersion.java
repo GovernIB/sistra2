@@ -426,7 +426,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.getId().toString());
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
-		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 950, 450);
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
+
 	}
 
 	/**

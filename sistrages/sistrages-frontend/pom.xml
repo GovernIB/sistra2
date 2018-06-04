@@ -158,6 +158,61 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+
+					<plugin>
+
+                                <!-- Ref: https://github.com/ktoso/maven-git-commit-id-plugin#using-the-plugin -->
+                                <groupId>pl.project13.maven</groupId>
+                                <artifactId>git-commit-id-plugin</artifactId>
+                                <version>2.1.10</version>
+                                <executions>
+                                        <execution>
+                                           <goals>
+                                       		  <goal>revision</goal>
+                                            </goals>
+                                        </execution>
+                                </executions>
+
+                                <configuration>
+                                		<skip>true</skip>
+                                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                                        <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
+                                </configuration>
+
+                        </plugin>
+
+
+
+			<plugin>
+			    <artifactId>maven-antrun-plugin</artifactId>
+			    <version>1.7</version>
+			    <executions>
+			      <execution>
+			      	<phase>package</phase>
+                   	<configuration>
+			      	 <target>
+                            <property name="compile_classpath" refid="maven.compile.classpath" />
+                            <echo message="compile classpath: ${compile_classpath}" />
+                        </target>
+			          <tasks>
+
+			            <replace dir="target/sistrages-frontend/WEB-INF" >
+			              <include name="**/sistrages-ac-frontend.xml"/>
+			             <replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
+			             <replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
+			            </replace>
+
+			          </tasks>
+			        </configuration>
+			        <goals>
+                        <goal>run</goal>
+                    </goals>
+			      </execution>
+			    </executions>
+			  </plugin>
+
+
+
 		</plugins>
 		<finalName>sistrages-frontend</finalName>
 	</build>

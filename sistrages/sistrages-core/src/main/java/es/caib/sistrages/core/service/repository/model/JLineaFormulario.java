@@ -43,7 +43,7 @@ public class JLineaFormulario implements IModelApi {
 	private int orden;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lineaFormulario", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<JElementoFormulario> elementoFormulario = new HashSet<JElementoFormulario>(0);
+	private Set<JElementoFormulario> elementoFormulario = new HashSet<>(0);
 
 	public JLineaFormulario() {
 		super();
@@ -122,9 +122,15 @@ public class JLineaFormulario implements IModelApi {
 			for (final JElementoFormulario jElementoFormulario : elementoFormulario) {
 				switch (TypeObjetoFormulario.fromString(jElementoFormulario.getTipo())) {
 				case SECCION:
-					ncolumnas = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA;
+					ncolumnas += jElementoFormulario.getNumeroColumnas();
+					break;
+				case ETIQUETA:
+					ncolumnas += jElementoFormulario.getNumeroColumnas();
 					break;
 				case CAMPO_TEXTO:
+					ncolumnas += jElementoFormulario.getNumeroColumnas();
+					break;
+				case SELECTOR:
 					ncolumnas += jElementoFormulario.getNumeroColumnas();
 					break;
 				default:

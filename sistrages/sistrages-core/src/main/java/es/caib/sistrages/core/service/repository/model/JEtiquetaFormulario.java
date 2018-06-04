@@ -35,6 +35,7 @@ public class JEtiquetaFormulario implements IModelApi {
 	private String tipo;
 
 	public JEtiquetaFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {

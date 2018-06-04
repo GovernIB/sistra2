@@ -37,4 +37,6 @@ public final class Constantes {
 	 */
 	public static final String EXTENSIONES_FICHEROS_CSV = "text/csv";
 
+	public static final String CLAVE_MOCHILA_LVFCIN = "LVFCIN";
+
 }

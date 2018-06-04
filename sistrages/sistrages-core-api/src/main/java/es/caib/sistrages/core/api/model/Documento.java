@@ -133,7 +133,7 @@ public class Documento extends ModelApi {
 	 * @param id
 	 *            el nuevo valor de id
 	 */
-	public void setId(final String idString) {
+	public void setIdString(final String idString) {
 		if (id == null) {
 			id = null;
 		} else {

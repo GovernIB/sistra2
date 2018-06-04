@@ -10,6 +10,10 @@ import java.io.Writer;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 
+import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.FuenteDatosValores;
+import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 
 // TODO Sacar a lib comun
@@ -17,12 +21,48 @@ import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 /**
  * Utilidades para importar/exportar a/de CSV.
  *
- * @author slromero
+ * @author Indra
  *
  */
 public class CsvUtil {
 
+	/** Constructor. **/
+	private CsvUtil() {
+		// Constructor vacio.
+	}
+
 	private static final char CHAR_DELIMITIER = ';';
+
+	/**
+	 * Devuelve un csv documento a partir de una fuente de datos y su fuente de
+	 * datos valores.
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public static CsvDocumento getCsvDocumento(final FuenteDatos fuenteDatos,
+			final FuenteDatosValores fuenteDatosValores) throws Exception {
+		final CsvDocumento csvDocumento = new CsvDocumento();
+		final String[] vcampos = new String[fuenteDatos.getCampos().size()];
+		int i = 0;
+		for (final java.util.Iterator<FuenteDatosCampo> it = fuenteDatos.getCampos().iterator(); it.hasNext();) {
+			final FuenteDatosCampo cfd = it.next();
+			vcampos[i] = cfd.getCodigo();
+			i++;
+		}
+		csvDocumento.setColumnas(vcampos);
+
+		// Ponemos las filas
+		for (final FuenteFila ffd : fuenteDatosValores.getFilas()) {
+			final int numFilaCsv = csvDocumento.addFila();
+			for (int columna = 0; columna < vcampos.length; columna++) {
+				final String vfd = ffd.getValorFuenteDatos(vcampos[columna]);
+				csvDocumento.setValor(numFilaCsv, vcampos[columna], vfd);
+			}
+		}
+
+		return csvDocumento;
+	}
 
 	/**
 	 * Importa csv.
@@ -88,8 +128,8 @@ public class CsvUtil {
 
 		csvOutput.close();
 
-		final byte[] res = bos.toByteArray();
-		return res;
+		return bos.toByteArray();
+
 	}
 
 }

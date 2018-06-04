@@ -22,13 +22,22 @@ public interface FormularioInternoDao {
 	FormularioInterno getFormularioById(Long pId);
 
 	/**
-	 * Obtiene el valor de formulario y sus paginas.
+	 * Obtiene el valor de formulario y sus paginas sin contenido.
 	 *
 	 * @param pId
 	 *            identificador de formulario
 	 * @return el valor de FormularioInterno
 	 */
 	FormularioInterno getFormularioPaginasById(Long pId);
+
+	/**
+	 * Obtiene el valor de formulario y sus paginas con su contenido.
+	 *
+	 * @param pId
+	 *            identificador de formulario
+	 * @return el valor de FormularioInterno
+	 */
+	FormularioInterno getFormularioCompletoById(Long pId);
 
 	/**
 	 * Obtiene el valor de pagina.
@@ -95,8 +104,9 @@ public interface FormularioInternoDao {
 	 *
 	 * @param pComponente
 	 *            componente de formulario
+	 * @return
 	 */
-	void updateComponente(ComponenteFormulario pComponente);
+	ObjetoFormulario updateComponente(ComponenteFormulario pComponente);
 
 	void removeLineaFormulario(Long pId);
 

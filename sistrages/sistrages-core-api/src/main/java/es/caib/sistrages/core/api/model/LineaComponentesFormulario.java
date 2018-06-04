@@ -53,6 +53,9 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 				case CAMPO_TEXTO:
 					ncolumnas += elementoFormulario.getNumColumnas();
 					break;
+				case SELECTOR:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
 				default:
 					break;
 				}
@@ -75,6 +78,9 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 						ncolumnas += elementoFormulario.getNumColumnas();
 						break;
 					case CAMPO_TEXTO:
+						ncolumnas += elementoFormulario.getNumColumnas();
+						break;
+					case SELECTOR:
 						ncolumnas += elementoFormulario.getNumColumnas();
 						break;
 					default:

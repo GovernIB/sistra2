@@ -15,6 +15,8 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -341,5 +343,23 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Long> listTramiteVersionActiva(final Long idArea) {
 		return tramiteService.listTramiteVersionActiva(idArea);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<FormateadorFormulario> getFormateadoresTramiteVersion(final Long idTramiteVersion) {
+		return tramiteService.getFormateadoresTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<FormularioInterno> getFormulariosTramiteVersion(final Long idTramiteVersion) {
+		return tramiteService.getFormulariosTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Fichero> getFicherosTramiteVersion(final Long idTramiteVersion) {
+		return tramiteService.getFicherosTramiteVersion(idTramiteVersion);
 	}
 }

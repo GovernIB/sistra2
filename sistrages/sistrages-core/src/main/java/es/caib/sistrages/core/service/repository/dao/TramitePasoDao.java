@@ -4,6 +4,8 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -146,5 +148,29 @@ public interface TramitePasoDao {
 	 * @param idDocumento
 	 */
 	void removeDocAnexo(Long idDocumento);
+
+	/**
+	 * Devuelve la lista de formateadores de un tramite version.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<FormateadorFormulario> getFormateadoresTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Devuelve la lista de formularios de un tramite version.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<FormularioInterno> getFormulariosTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Devuelve la lista de ficheros de un tramite version.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<Fichero> getFicherosTramiteVersion(Long idTramiteVersion);
 
 }

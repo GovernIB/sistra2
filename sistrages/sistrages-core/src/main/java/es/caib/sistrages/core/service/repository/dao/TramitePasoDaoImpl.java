@@ -14,11 +14,14 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JFichero;
+import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JPagoTramite;
@@ -251,6 +254,104 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			entityManager.merge(janexoTramite);
 			entityManager.remove(fic);
 		}
+	}
+
+	@Override
+	public List<FormateadorFormulario> getFormateadoresTramiteVersion(final Long idTramiteVersion) {
+
+		final String sql = "Select plan.formateadorFormulario from  JPlantillaFormulario plan inner join plan.formulario fr where fr in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion) ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JFormateadorFormulario> results = query.getResultList();
+
+		final List<FormateadorFormulario> resultado = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JFormateadorFormulario> iterator = results.iterator(); iterator.hasNext();) {
+				final JFormateadorFormulario jformateadorFormulario = iterator.next();
+				resultado.add(jformateadorFormulario.toModel());
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<FormularioInterno> getFormulariosTramiteVersion(final Long idTramiteVersion) {
+		final String sql = "select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JFormulario> results = query.getResultList();
+
+		final List<FormularioInterno> resultado = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JFormulario> iterator = results.iterator(); iterator.hasNext();) {
+				final JFormulario jformulario = iterator.next();
+				resultado.add(jformulario.toModel());
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<Fichero> getFicherosTramiteVersion(final Long idTramiteVersion) {
+		final List<Fichero> resultado = new ArrayList<>();
+
+		// Ficheros en los anexos de tramite.
+		final String sqlAnexoTramite = "select anexo.ficheroPlantilla from JPasoTramitacion pt inner join pt.pasoAnexar ptAnexo inner join ptAnexo.anexosTramite anexo where pt.versionTramite.codigo = :idTramiteVersion and anexo.ficheroPlantilla is not null ";
+
+		final Query queryAnexoTramite = entityManager.createQuery(sqlAnexoTramite);
+		queryAnexoTramite.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JFichero> resultsAnexoTramite = queryAnexoTramite.getResultList();
+
+		if (resultsAnexoTramite != null && !resultsAnexoTramite.isEmpty()) {
+			for (final Iterator<JFichero> iterator = resultsAnexoTramite.iterator(); iterator.hasNext();) {
+				final JFichero jfichero = iterator.next();
+				resultado.add(jfichero.toModel());
+			}
+		}
+
+		// Ficheros en las plantilla de formularios.
+		final String sqlPlantillasIdiomas = "select plaIdi.fichero from JPlantillaIdiomaFormulario plaIdi where plaIdi.plantillaFormulario.formulario in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ) )";
+
+		final Query queryPlantillasIdiomas = entityManager.createQuery(sqlPlantillasIdiomas);
+		queryPlantillasIdiomas.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JFichero> resultsPlantillasIdiomas = queryPlantillasIdiomas.getResultList();
+
+		if (resultsPlantillasIdiomas != null && !resultsPlantillasIdiomas.isEmpty()) {
+			for (final Iterator<JFichero> iterator = resultsPlantillasIdiomas.iterator(); iterator.hasNext();) {
+				final JFichero jfichero = iterator.next();
+				resultado.add(jfichero.toModel());
+			}
+		}
+
+		// Ficheros en las imagen de formularios.
+		final String sqlImagenFormularios = "select imagForm.fichero from JImagenFormulario imagForm where imagForm.elementoFormulario.listaElementosFormulario.paginaFormulario.formulario in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ) )";
+
+		final Query queryImagenFormularios = entityManager.createQuery(sqlImagenFormularios);
+		queryImagenFormularios.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JFichero> resultsImagenFormularios = queryImagenFormularios.getResultList();
+
+		if (resultsImagenFormularios != null && !resultsImagenFormularios.isEmpty()) {
+			for (final Iterator<JFichero> iterator = resultsImagenFormularios.iterator(); iterator.hasNext();) {
+				final JFichero jfichero = iterator.next();
+				resultado.add(jfichero.toModel());
+			}
+		}
+
+		return resultado;
 	}
 
 }

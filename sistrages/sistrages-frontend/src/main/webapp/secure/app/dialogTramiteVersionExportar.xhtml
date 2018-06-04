@@ -36,39 +36,70 @@
 
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-						<p:outputLabel value="Version trámite" />
+					<p:outputLabel value="#{msg['dialogTramiteVersionExportar.vt.info']}" styleClass="titulo-color" style="color:#000" />
                 	<p:outputLabel  />
 
-                	<p:outputLabel value="Área:" />
-                	<p:outputLabel value="#{dialogTramiteVersionExportar.area.codigo}" />
+                	<p:outputLabel value="#{msg['dialogTramiteVersionExportar.vt.area']}" />
+                	<p:outputLabel value="#{dialogTramiteVersionExportar.area.codigo} - #{dialogTramiteVersionExportar.area.descripcion}" />
 
-                	<p:outputLabel value="Trámite:" />
-                	<p:outputLabel value="#{dialogTramiteVersionExportar.tramite.identificador}"  />
+                	<p:outputLabel value="#{msg['dialogTramiteVersionExportar.vt.tramite']}" />
+                	<p:outputLabel value="#{dialogTramiteVersionExportar.tramite.identificador} - #{dialogTramiteVersionExportar.tramite.descripcion}"  />
 
-                	<p:outputLabel value="Versión:" />
-                	<p:outputLabel value="#{dialogTramiteVersionExportar.tramiteVersion.numeroVersion}"  />
-
-					<p:outputLabel value="Elementos comunes" />
-                	<p:outputLabel  />
-
-					<p:outputLabel value="Formateadores" />
-                	<p:outputLabel  />
-
-
-
-					<p:commandButton value="prueba1 JSON" actionListener="#{dialogTramiteVersionExportar.pruebaJSON}" process="@form" update="@form growldialog"  styleClass="boton-azul" />
-
-					<p:commandButton value="prueba1 SERIALIZE" actionListener="#{dialogTramiteVersionExportar.pruebaSerialize}" process="@this"  styleClass="boton-azul" />
-
+                	<p:outputLabel value="#{msg['dialogTramiteVersionExportar.vt.version']}" />
+                	<p:outputLabel value="#{dialogTramiteVersionExportar.tramiteVersion.numeroVersion} - (Release #{dialogTramiteVersionExportar.tramiteVersion.release})"  />
 
 				</h:panelGrid>
+
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 padding-right-18" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel value="#{msg['dialogTramiteVersionExportar.ec.info']}" styleClass="titulo-color" style="color:#000" />
+
+					<p:dataTable  id="dataTable" var="td" value="#{dialogTramiteVersionExportar.dominios}"
+								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+								 scrollable="true" scrollHeight="90%">
+
+						<!-- Columnas -->
+					    <p:column headerText="#{msg['dialogTramiteVersionExportar.ec.headerCodigo']}">
+					        <h:outputText value="#{td.codigo}" />
+					    </p:column>
+
+					   <p:column headerText="#{msg['dialogTramiteVersionExportar.ec.headerAmbito']}">
+					        <h:outputText value="#{msg['ambito.' += td.ambito]}" />
+					    </p:column>
+
+		 				<p:column headerText="#{msg['dialogTramiteVersionExportar.ec.headerTipo']}">
+					        <h:outputText value="#{msg['typeDominio.' += td.tipo]}" />
+					    </p:column>
+
+					</p:dataTable>
+
+					<p:outputLabel value="#{msg['dialogTramiteVersionExportar.form.info']}" styleClass="titulo-color" style="color:#000"  />
+
+					<p:dataTable  id="dataTableF" var="td" value="#{dialogTramiteVersionExportar.formateadores}"
+								 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+								 scrollable="true" scrollHeight="90%">
+
+						<!-- Columnas -->
+					    <p:column headerText="#{msg['dialogTramiteVersionExportar.form.headerCodigo']}">
+					        <h:outputText value="#{td.codigo}" />
+					    </p:column>
+
+					   <p:column headerText="#{msg['dialogTramiteVersionExportar.form.headerDescripcion']}">
+					        <h:outputText value="#{msg['ambito.' += td.ambito]}" />
+					    </p:column>
+
+					</p:dataTable>
+
+				</h:panelGrid>
+
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteVersionExportar.aceptar}" process="@form" update="@form growldialog"  styleClass="boton-azul" rendered="#{dialogTramiteVersionExportar.alta or dialogTramiteVersionExportar.edicion}"/>
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionExportar.cancelar}" process="@this" rendered="#{dialogTramiteVersionExportar.alta or dialogTramiteVersionExportar.edicion}"/>
-						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteVersionExportar.cancelar}" process="@this"  rendered="#{dialogTramiteVersionExportar.consulta}"/>
+						<p:commandButton value="#{msg['botones.exportar']}" ajax="false"  styleClass="boton-azul">
+		        			<p:fileDownload value="#{dialogTramiteVersionExportar.fichero}"></p:fileDownload>
+		        		</p:commandButton>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteVersionExportar.cancelar}" process="@this"  />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

@@ -59,6 +59,18 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	 */
 	@Override
 	@NegocioInterceptor
+	public FormularioInterno getFormularioInternoCompleto(final Long pId) {
+		return formIntDao.getFormularioCompletoById(pId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.FormularioInternoService#
+	 * getFormularioInternoPaginas(java.lang.Long)
+	 */
+	@Override
+	@NegocioInterceptor
 	public FormularioInterno getFormularioInternoPaginas(final Long pId) {
 		return formIntDao.getFormularioPaginasById(pId);
 	}
@@ -93,8 +105,8 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	}
 
 	@Override
-	public void updateComponenteFormulario(final ComponenteFormulario pComponente) {
-		formIntDao.updateComponente(pComponente);
+	public ObjetoFormulario updateComponenteFormulario(final ComponenteFormulario pComponente) {
+		return formIntDao.updateComponente(pComponente);
 
 	}
 

@@ -37,6 +37,7 @@ public class JCampoFormularioCasillaVerificacion implements IModelApi {
 	private String valorNoChecked;
 
 	public JCampoFormularioCasillaVerificacion() {
+		super();
 	}
 
 	public Long getCodigo() {

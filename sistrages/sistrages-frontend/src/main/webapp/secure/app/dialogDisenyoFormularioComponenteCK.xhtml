@@ -5,11 +5,18 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:column>CAMPO SELECTOR</h:column>
-<h:column>
-	<h:inputText>
-		<p:ajax event="blur" process="@this" />
-	</h:inputText>
-</h:column>
+   	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.checked']}" /></h:column>
+   	<h:column>
+   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorChecked}" >
+   			<p:ajax event="blur" process="@this" />
+   		</p:inputText>
+   	</h:column>
+
+   	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noChecked']}" /></h:column>
+   	<h:column>
+   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorNoChecked}">
+   			<p:ajax event="blur" process="@this" />
+   		</p:inputText>
+   	</h:column>
 
 </ui:composition>

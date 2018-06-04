@@ -90,6 +90,7 @@ public class JCampoFormularioTexto implements IModelApi {
 	private boolean permiteRango;
 
 	public JCampoFormularioTexto() {
+		super();
 	}
 
 	public Long getCodigo() {

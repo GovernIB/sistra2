@@ -3,8 +3,10 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
+import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.types.TypeCampoIndexado;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
@@ -62,13 +65,17 @@ public class JCampoFormularioIndexado implements IModelApi {
 	@Column(name = "CIN_INDICE", nullable = false, precision = 1, scale = 0)
 	private boolean indiceAlfabetico;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFormularioIndexado")
-	private Set<JParametroDominioCampoIndexado> parametrosDominio = new HashSet<JParametroDominioCampoIndexado>(0);
+	@Column(name = "CIN_ALTURA", nullable = false, precision = 2, scale = 0)
+	private int altura;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFormularioIndexado")
-	private Set<JListaFijaValoresCampoIndexado> listaFijaValores = new HashSet<JListaFijaValoresCampoIndexado>(0);
+	private Set<JParametroDominioCampoIndexado> parametrosDominio = new HashSet<>(0);
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFormularioIndexado", orphanRemoval = true, cascade = CascadeType.ALL)
+	private Set<JListaFijaValoresCampoIndexado> listaFijaValores = new HashSet<>(0);
 
 	public JCampoFormularioIndexado() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -159,6 +166,14 @@ public class JCampoFormularioIndexado implements IModelApi {
 		this.listaFijaValores = listaFijaValoresCampoIndexado;
 	}
 
+	public int getAltura() {
+		return altura;
+	}
+
+	public void setAltura(final int altura) {
+		this.altura = altura;
+	}
+
 	public ComponenteFormularioCampoSelector toModel() {
 		ComponenteFormularioCampoSelector campoSelector = null;
 
@@ -166,7 +181,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 			campoSelector = (ComponenteFormularioCampoSelector) campoFormulario
 					.toModel(ComponenteFormularioCampoSelector.class);
 			if (campoSelector != null) {
-				campoSelector.setTipoCampoIndexado(TypeCampoIndexado.fromString(tipoCampoIndexado));
+				campoSelector.setTipoCampoIndexado(TypeCampoIndexado.valueOf(tipoCampoIndexado));
 				campoSelector.setTipoListaValores(TypeListaValores.fromString(tipoListaValores));
 				if (scriptValoresPosibles != null) {
 					campoSelector.setScriptValoresPosibles(scriptValoresPosibles.toModel());
@@ -178,6 +193,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 				campoSelector.setCampoDominioCodigo(campoDominioCodigo);
 				campoSelector.setCampoDominioDescripcion(campoDominioDescripcion);
 				campoSelector.setIndiceAlfabetico(indiceAlfabetico);
+				campoSelector.setAltura(altura);
 
 				if (parametrosDominio != null) {
 					if (campoSelector.getListaParametrosDominio() == null) {
@@ -214,8 +230,66 @@ public class JCampoFormularioIndexado implements IModelApi {
 		jModel.setTipoCampoIndexado(TypeCampoIndexado.SELECTOR.name());
 		jModel.setTipoListaValores(TypeListaValores.FIJA.toString());
 		jModel.setIndiceAlfabetico(false);
-		jModel.setCampoFormulario(
-				JCampoFormulario.createDefault(TypeObjetoFormulario.LISTA_ELEMENTOS, pOrden, pJLinea));
+		jModel.setAltura(1);
+		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.SELECTOR, pOrden, pJLinea));
 		return jModel;
 	}
+
+	public static JCampoFormularioIndexado mergeListaValoresFijaModel(final JCampoFormularioIndexado pJCampo,
+			final ComponenteFormularioCampoSelector pCampo) {
+		JCampoFormularioIndexado jModel = null;
+
+		if (pJCampo != null && pCampo != null) {
+			// Borrar paginas no pasados en modelo
+			final List<JListaFijaValoresCampoIndexado> borrar = new ArrayList<>();
+			final List<Long> listaValores = new ArrayList<>();
+
+			for (final ValorListaFija valor : pCampo.getListaValorListaFija()) {
+				if (valor.getCodigo() != null && valor.getCodigo() > 0) {
+					listaValores.add(valor.getCodigo());
+				}
+			}
+
+			for (final JListaFijaValoresCampoIndexado jValor : pJCampo.getListaFijaValores()) {
+				if (!listaValores.contains(jValor.getCodigo())) {
+					borrar.add(jValor);
+				}
+			}
+
+			for (final JListaFijaValoresCampoIndexado jValor : borrar) {
+				pJCampo.getListaFijaValores().remove(jValor);
+				jValor.setCampoFormularioIndexado(null);
+			}
+
+			// Actualizamos valores
+			int orden = 0;
+			for (final ValorListaFija valor : pCampo.getListaValorListaFija()) {
+				orden++;
+
+				if (valor.getCodigo() == null || valor.getCodigo() < 0) {
+					final JListaFijaValoresCampoIndexado jValor = JListaFijaValoresCampoIndexado.fromModel(valor);
+					jValor.setCodigo(null);
+					jValor.setOrden(orden);
+					jValor.setCampoFormularioIndexado(pJCampo);
+					pJCampo.getListaFijaValores().add(jValor);
+				} else {
+					for (final JListaFijaValoresCampoIndexado jValor : pJCampo.getListaFijaValores()) {
+						if (jValor.getCodigo().equals(valor.getCodigo())) {
+							jValor.setDescripcion(JLiteral.fromModel(valor.getDescripcion()));
+							jValor.setValor(valor.getValor());
+							jValor.setPorDefecto(valor.isPorDefecto());
+							jValor.setOrden(orden);
+							break;
+						}
+					}
+				}
+
+			}
+
+			jModel = pJCampo;
+		}
+
+		return jModel;
+	}
+
 }

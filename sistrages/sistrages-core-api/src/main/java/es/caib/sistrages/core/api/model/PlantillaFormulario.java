@@ -5,7 +5,7 @@ public class PlantillaFormulario extends ModelApi {
 
 	private Long id;
 
-	private FormateadorFormulario formateadorFormulario;
+	private Long idFormateadorFormulario;
 
 	private String descripcion;
 
@@ -26,12 +26,12 @@ public class PlantillaFormulario extends ModelApi {
 		this.id = id;
 	}
 
-	public FormateadorFormulario getFormateadorFormulario() {
-		return formateadorFormulario;
+	public Long getIdFormateadorFormulario() {
+		return idFormateadorFormulario;
 	}
 
-	public void setFormateadorFormulario(final FormateadorFormulario formateadorFormulario) {
-		this.formateadorFormulario = formateadorFormulario;
+	public void setIdFormateadorFormulario(final Long formateadorFormulario) {
+		this.idFormateadorFormulario = formateadorFormulario;
 	}
 
 	public String getDescripcion() {
@@ -54,7 +54,7 @@ public class PlantillaFormulario extends ModelApi {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((descripcion == null) ? 0 : descripcion.hashCode());
-		result = prime * result + ((formateadorFormulario == null) ? 0 : formateadorFormulario.hashCode());
+		result = prime * result + ((idFormateadorFormulario == null) ? 0 : idFormateadorFormulario.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (porDefecto ? 1231 : 1237);
 		return result;

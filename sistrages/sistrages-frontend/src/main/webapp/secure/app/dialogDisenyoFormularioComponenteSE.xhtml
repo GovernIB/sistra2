@@ -1,15 +1,57 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:column>CAMPO SELECTOR</h:column>
-<h:column>
-	<h:inputText>
-		<p:ajax event="blur" process="@this" />
-	</h:inputText>
-</h:column>
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeCampoIndexado" var="TypeCampoIndexado"/>
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeListaValores" var="TypeListaValores"/>
 
+	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipo']}" /></h:column>
+	<h:column>
+		<p:selectOneMenu id="tipoCampoIndexado" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoCampoIndexado}" required="true">
+		    <p:ajax event="blur" process="@this"/>
+		    <p:ajax event="change" update="panelPropietats" />
+		    <f:selectItems value="#{TypeCampoIndexado.ALL_VALUES}" var="tipoCampoIndexado" itemLabel="#{msg['typeCampoIndexado.' += tipoCampoIndexado.name()]}" />
+		</p:selectOneMenu>
+	</h:column>
+
+	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipoListaValores']}" /></h:column>
+	<h:column>
+		<p:selectOneMenu id="tipoListaValores" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoListaValores}">
+		    <p:ajax event="blur" process="@this"/>
+		    <p:ajax event="change" update="panelPropietats" />
+		    <f:selectItems value="#{TypeListaValores.ALL_VALUES}" var="tipoListaValores" itemLabel="#{msg['typeListaValores.' += tipoListaValores]}" />
+		</p:selectOneMenu>
+	</h:column>
+
+	<h:column rendered="#{dialogDisenyoFormulario.isLVFija()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.listaValores']}" /></h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.isLVFija()}">
+		<p:commandButton id="btnAbrirLFVCIN" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.abrirListaValoresFijaCIN}" process="@this">
+			<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoListaValoresFijaCIN}" update="growlDisenyoFormulario"/>
+		</p:commandButton>
+	</h:column>
+
+	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominio']}" /></h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}" id="dominio">
+		<p:outputLabel value="#{dialogDisenyoFormulario.objetoFormularioEdit.dominio.codigo}" styleClass="padding-right-8" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.dominio}"/>
+		<p:commandButton id="btnAbrirDominio" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.abrirBusquedaDominio}" process="@this">
+			<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoBusquedaDominio}" update="growlDisenyoFormulario panelPropietats"/>
+		</p:commandButton>
+	</h:column>
+
+	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioCodigo']}" /></h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioCodigo}" maxlength="100">
+			<p:ajax event="blur" process="@this" />
+		</p:inputText>
+	</h:column>
+
+	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioDescripcion']}" /></h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}">
+		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.campoDominioDescripcion}" maxlength="100">
+			<p:ajax event="blur" process="@this" />
+		</p:inputText>
+	</h:column>
 </ui:composition>

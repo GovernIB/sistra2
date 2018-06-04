@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -21,20 +22,25 @@ import es.caib.sistrages.core.api.exception.ErrorNoControladoException;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
+import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.core.api.util.UtilDisenyo;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -63,9 +69,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private int paginaActual;
 
 	private String posicionamiento;
-
-	/** quitar: Código Componente seleccionado. */
-	// private String componentSelectedCodigo;
 
 	/** Componente editado (copia original). **/
 	private ObjetoFormulario objetoFormularioEdit;
@@ -136,7 +139,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * @param idForm
 	 **/
 	private void recuperarFormulario(final String idForm) {
-		formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(idForm));
+		formulario = formIntService.getFormularioInternoCompleto(Long.parseLong(idForm));
 	}
 
 	/**
@@ -154,7 +157,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 
 		// Verificamos si ha habido cambios en el componente
-		if (objetoFormularioEdit != null) {
+		if (objetoFormularioEdit != null && StringUtils.isNotEmpty(idComponente)
+				&& !objetoFormularioEdit.getId().equals(Long.valueOf(idComponente.replace("L", "")))) {
 			ObjetoFormulario ofOriginal = null;
 
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
@@ -174,10 +178,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				contextReq.execute("PF('confirmationButton').jq.click();");
 				return;
 			}
-		}
 
-		// Cambiamos a nuevo componente
-		cambiarEdicionComponente(idComponente);
+			// Cambiamos a nuevo componente
+			cambiarEdicionComponente(idComponente);
+		} else if (objetoFormularioEdit == null) {
+			// Cambiamos a nuevo componente
+			cambiarEdicionComponente(idComponente);
+		}
 
 	}
 
@@ -318,7 +325,15 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					throw new ErrorNoControladoException(e);
 				}
 
-				formIntService.updateComponenteFormulario(cfOriginal);
+				final ComponenteFormulario cfUpdate = (ComponenteFormulario) formIntService
+						.updateComponenteFormulario(cfOriginal);
+
+				try {
+					BeanUtils.copyProperties(objetoFormularioEdit, cfUpdate);
+					BeanUtils.copyProperties(cfOriginal, cfUpdate);
+				} catch (final Exception e) {
+					throw new ErrorNoControladoException(e);
+				}
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("info.modificado.ok"));
 
@@ -435,6 +450,21 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public boolean isCampoTelefono() {
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
 		return TypeCampoTexto.TELEFONO.equals(campo.getTipoCampoTexto());
+	}
+
+	public boolean isLVFija() {
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+		return TypeListaValores.FIJA.equals(campo.getTipoListaValores());
+	}
+
+	public boolean isLVDominio() {
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+		return TypeListaValores.DOMINIO.equals(campo.getTipoListaValores());
+	}
+
+	public boolean isLVScript() {
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+		return TypeListaValores.SCRIPT.equals(campo.getTipoListaValores());
 	}
 
 	/**
@@ -562,6 +592,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void insertaCheckBox() {
 		insertaCampo(TypeObjetoFormulario.CHECKBOX);
+	}
+
+	public void insertaSelector() {
+		insertaCampo(TypeObjetoFormulario.SELECTOR);
 	}
 
 	private void insertaCampo(final TypeObjetoFormulario tipoCampo) {
@@ -867,6 +901,84 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 	}
 
+	public void abrirListaValoresFijaCIN() {
+		if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+			// Muestra dialogo
+			final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+			Map<String, Object> mochilaDatos = null;
+
+			// limpiamos mochila
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+
+			// metemos datos en la mochila
+			if (!campo.getListaValorListaFija().isEmpty()) {
+				mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+				mochilaDatos.put(Constantes.CLAVE_MOCHILA_LVFCIN, campo.getListaValorListaFija().stream()
+						.map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+			}
+			UtilJSF.openDialog(DialogListaValoresFijaCIN.class, TypeModoAcceso.valueOf(modoAcceso), null, true, 800,
+					350);
+		}
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	@SuppressWarnings("unchecked")
+	public void returnDialogoListaValoresFijaCIN(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+				// Muestra dialogo
+				final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+
+				if (respuesta.getResult() == null) {
+					campo.getListaValorListaFija().clear();
+				} else {
+					campo.setListaValorListaFija((List<ValorListaFija>) respuesta.getResult());
+				}
+			}
+		} else {
+			UtilJSF.doValidationFailed();
+		}
+
+	}
+
+	public void abrirBusquedaDominio() {
+		// Muestra dialogo
+		UtilJSF.openDialog(DialogBusquedaDominio.class, TypeModoAcceso.valueOf(modoAcceso), null, true, 800, 440);
+	}
+
+	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	@SuppressWarnings("unchecked")
+	public void returnDialogoBusquedaDominio(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+
+			campo.setDominio((Dominio) respuesta.getResult());
+		} else {
+			UtilJSF.doValidationFailed();
+		}
+
+	}
+
 	// -- Getters / Setters
 
 	/**
@@ -886,21 +998,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void setPanelPropiedadesUrl(final String opcion) {
 		this.panelPropiedadesUrl = opcion;
 	}
-
-	/**
-	 * @return the nodeId
-	 */
-	// public String getComponentSelectedCodigo() {
-	// return componentSelectedCodigo;
-	// }
-
-	/**
-	 * @param nodeId
-	 *            the nodeId to set
-	 */
-	// public void setComponentSelectedCodigo(final String nodeId) {
-	// this.componentSelectedCodigo = nodeId;
-	// }
 
 	public String getId() {
 		return id;

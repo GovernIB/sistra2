@@ -21,13 +21,22 @@ public interface FormularioInternoService {
 	FormularioInterno getFormularioInterno(Long pId);
 
 	/**
-	 * Obtiene el valor de formulario y las paginas.
+	 * Obtiene el valor de formulario y las paginas sin su contenido.
 	 *
 	 * @param pId
 	 *            identificador de formulario
 	 * @return el valor de formulario y las paginas
 	 */
 	FormularioInterno getFormularioInternoPaginas(Long pId);
+
+	/**
+	 * Obtiene el valor de formulario y las paginas con su contenido.
+	 *
+	 * @param pId
+	 *            identificador de formulario
+	 * @return el valor de formulario y las paginas
+	 */
+	FormularioInterno getFormularioInternoCompleto(Long pId);
 
 	/**
 	 * Actualiza formulario.
@@ -58,7 +67,7 @@ public interface FormularioInternoService {
 	ObjetoFormulario addComponenteFormulario(TypeObjetoFormulario pTipoObjeto, Long pIdPagina, Long pIdLinea,
 			Integer pOrden, String pPosicion);
 
-	void updateComponenteFormulario(ComponenteFormulario pComponente);
+	ObjetoFormulario updateComponenteFormulario(ComponenteFormulario pComponente);
 
 	ComponenteFormulario getComponenteFormulario(final Long pId);
 

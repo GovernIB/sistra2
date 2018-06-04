@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ public class JListaFijaValoresCampoIndexado implements IModelApi {
 	@JoinColumn(name = "LFV_CODCIN", nullable = false)
 	private JCampoFormularioIndexado campoFormularioIndexado;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "LFV_DESCRIP", nullable = false)
 	private JLiteral descripcion;
 
@@ -47,6 +48,7 @@ public class JListaFijaValoresCampoIndexado implements IModelApi {
 	private int orden;
 
 	public JListaFijaValoresCampoIndexado() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -99,7 +101,7 @@ public class JListaFijaValoresCampoIndexado implements IModelApi {
 
 	public ValorListaFija toModel() {
 		final ValorListaFija valorListaFija = new ValorListaFija();
-		valorListaFija.setId(codigo);
+		valorListaFija.setCodigo(codigo);
 		if (descripcion != null) {
 			valorListaFija.setDescripcion(descripcion.toModel());
 		}
@@ -114,7 +116,7 @@ public class JListaFijaValoresCampoIndexado implements IModelApi {
 		JListaFijaValoresCampoIndexado jModel = null;
 		if (model != null) {
 			jModel = new JListaFijaValoresCampoIndexado();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setDescripcion(JLiteral.fromModel(model.getDescripcion()));
 			jModel.setValor(model.getValor());
 			jModel.setPorDefecto(model.isPorDefecto());

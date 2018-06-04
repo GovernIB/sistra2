@@ -250,29 +250,11 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		StreamedContent file = null;
 		try {
 
-			final CsvDocumento csv = new CsvDocumento();
-
-			// Primero ponemos los campos
 			final Long idFuenteDato = new Long(id);
 			final FuenteDatos fuenteDatos = dominioService.loadFuenteDato(idFuenteDato);
-			final String[] vcampos = new String[fuenteDatos.getCampos().size()];
-			int i = 0;
-			for (final java.util.Iterator<FuenteDatosCampo> it = fuenteDatos.getCampos().iterator(); it.hasNext();) {
-				final FuenteDatosCampo cfd = it.next();
-				vcampos[i] = cfd.getCodigo();
-				i++;
-			}
-			csv.setColumnas(vcampos);
-
-			// Ponemos las filas
 			final FuenteDatosValores fd = dominioService.loadFuenteDatoValores(idFuenteDato);
-			for (final FuenteFila ffd : fd.getFilas()) {
-				final int numFilaCsv = csv.addFila();
-				for (int columna = 0; columna < vcampos.length; columna++) {
-					final String vfd = ffd.getValorFuenteDatos(vcampos[columna]);
-					csv.setValor(numFilaCsv, vcampos[columna], vfd);
-				}
-			}
+
+			final CsvDocumento csv = CsvUtil.getCsvDocumento(fuenteDatos, fd);
 
 			final byte[] contents = CsvUtil.exportar(csv);
 			final ByteArrayInputStream bis = new ByteArrayInputStream(contents);

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
@@ -18,6 +17,7 @@ import org.primefaces.model.menu.MenuModel;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.SecurityService;
@@ -169,7 +169,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		if (!checkEntornoDesarrollo()) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
 					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
 			return;
@@ -203,7 +203,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		if (!checkEntornoDesarrollo()) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
 					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
 			return;
@@ -243,19 +243,6 @@ public class ViewTramitesVersion extends ViewControllerBase {
 			filtrar();
 			this.datoSeleccionado = null;
 		}
-	}
-
-	/**
-	 * Comprueba si el entorno es DESARROLLO.
-	 *
-	 * @return
-	 */
-	private boolean checkEntornoDesarrollo() {
-		final String entorno = FacesContext
-				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
-						"#{negocioModuleConfig}", es.caib.sistrages.frontend.model.comun.ModuleConfig.class)
-				.getEntorno();
-		return "des".equals(entorno);
 	}
 
 	/**

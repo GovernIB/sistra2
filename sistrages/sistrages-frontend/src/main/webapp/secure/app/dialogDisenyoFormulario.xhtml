@@ -49,7 +49,7 @@
 		       		<p:commandButton id="btnSeccion" 		title="#{msg['dialogDisenyoFormulario.componente.SC']}" icon="fa fa-list-ul" actionListener="#{dialogDisenyoFormulario.insertaSeccion}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnEtiqueta" 		title="#{msg['dialogDisenyoFormulario.componente.ET']}" icon="fa fa-commenting-o" actionListener="#{dialogDisenyoFormulario.insertaEtiqueta}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnCampoTexto" 	title="#{msg['dialogDisenyoFormulario.componente.CT']}" icon="fa fa-pencil-square-o" actionListener="#{dialogDisenyoFormulario.insertaCampoTexto}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" />
-					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-square-o-down" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@form" update="growlDisenyoFormulario"/>
+					<p:commandButton id="btnCampoSelector" 	title="#{msg['dialogDisenyoFormulario.componente.SE']}" icon="fa fa-caret-square-o-down" actionListener="#{dialogDisenyoFormulario.insertaSelector}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
 		       		<p:commandButton id="btnCampoCheckbox" 	title="#{msg['dialogDisenyoFormulario.componente.CK']}" icon="fa fa-check-square" actionListener="#{dialogDisenyoFormulario.insertaCheckBox}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
 				</h:panelGroup>
 
@@ -138,7 +138,7 @@
 				</p:outputPanel>
 
 				<p:outputPanel>
-					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@this" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" />
+					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" />
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.borrarComponente']}" actionListener="#{dialogDisenyoFormulario.validarEliminarObjetoFormulario}" process="@this" update="growlDisenyoFormulario" />
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.sinImplementar}" process="@this" update="growlDisenyoFormulario" />
 				</p:outputPanel>

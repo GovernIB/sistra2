@@ -55,6 +55,12 @@ public class FormularoInternoServiceBean implements FormularioInternoService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public FormularioInterno getFormularioInternoCompleto(final Long pId) {
+		return formIntService.getFormularioInternoCompleto(pId);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public FormularioInterno getFormularioInternoPaginas(final Long pId) {
 		return formIntService.getFormularioInternoPaginas(pId);
 	}
@@ -80,9 +86,8 @@ public class FormularoInternoServiceBean implements FormularioInternoService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void updateComponenteFormulario(final ComponenteFormulario pComponente) {
-		formIntService.updateComponenteFormulario(pComponente);
-
+	public ObjetoFormulario updateComponenteFormulario(final ComponenteFormulario pComponente) {
+		return formIntService.updateComponenteFormulario(pComponente);
 	}
 
 	@Override

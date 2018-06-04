@@ -39,11 +39,11 @@ public class JElementoFormulario implements IModelApi {
 	@JoinColumn(name = "FEL_CODFLS", nullable = false)
 	private JLineaFormulario lineaFormulario;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FEL_AYUDA")
 	private JLiteral ayuda;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FEL_TEXTO")
 	private JLiteral texto;
 
@@ -87,6 +87,7 @@ public class JElementoFormulario implements IModelApi {
 	private JImagenFormulario imagenFormulario;
 
 	public JElementoFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -290,6 +291,12 @@ public class JElementoFormulario implements IModelApi {
 		case CHECKBOX:
 			texto.add(new Traduccion("es", "Casilla de verificación"));
 			texto.add(new Traduccion("ca", "Casella de verificació"));
+			jModel.setNumeroColumnas(1);
+			jModel.setNoMostrarTexto(false);
+			break;
+		case SELECTOR:
+			texto.add(new Traduccion("es", "Selector"));
+			texto.add(new Traduccion("ca", "Selector"));
 			jModel.setNumeroColumnas(1);
 			jModel.setNoMostrarTexto(false);
 			break;

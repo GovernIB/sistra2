@@ -45,7 +45,7 @@ public class JPlantillaFormulario implements IModelApi {
 	private boolean porDefecto;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "plantillaFormulario")
-	private Set<JPlantillaIdiomaFormulario> plantillaIdiomaFormulario = new HashSet<JPlantillaIdiomaFormulario>(0);
+	private Set<JPlantillaIdiomaFormulario> plantillaIdiomaFormulario = new HashSet<>(0);
 
 	public JPlantillaFormulario() {
 		super();
