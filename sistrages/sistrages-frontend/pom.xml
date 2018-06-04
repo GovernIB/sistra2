@@ -187,20 +187,20 @@
 			    <version>1.7</version>
 			    <executions>
 			      <execution>
-			      	<phase>package</phase>
+			      	<phase>compile</phase>
                    	<configuration>
 			      	 <target>
                             <property name="compile_classpath" refid="maven.compile.classpath" />
                             <echo message="compile classpath: ${compile_classpath}" />
                         </target>
-			          <tasks>
-
-			            <replace dir="target/sistrages-frontend/WEB-INF" >
-			              <include name="**/sistrages-ac-frontend.xml"/>
-			             <replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
-			             <replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
+			          <tasks>		
+						<copy file="src/main/webapp/WEB-INF/original/sistrages-ac-frontend.xml" tofile="src/main/webapp/WEB-INF/sistrages-ac-frontend.xml" />
+			            <replace dir="src/main//webapp/WEB-INF" >
+			              	<include name="**/sistrages-ac-frontend.xml"/>
+			             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
+			             	<replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
 			            </replace>
-
+						
 			          </tasks>
 			        </configuration>
 			        <goals>
