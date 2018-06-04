@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.caib.sistramit.core.api.model.comun.ConstantesNumero;
+import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.service.ApplicationContextProvider;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.model.script.PlgLogInt;

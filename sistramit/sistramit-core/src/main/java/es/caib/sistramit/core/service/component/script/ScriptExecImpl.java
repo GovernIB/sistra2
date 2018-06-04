@@ -11,8 +11,8 @@ import javax.script.ScriptException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.EngineScriptException;
-import es.caib.sistramit.core.api.model.comun.ConstantesNumero;
 import es.caib.sistramit.core.service.component.script.plugins.PlgAviso;
 import es.caib.sistramit.core.service.component.script.plugins.PlgDominios;
 import es.caib.sistramit.core.service.component.script.plugins.PlgError;

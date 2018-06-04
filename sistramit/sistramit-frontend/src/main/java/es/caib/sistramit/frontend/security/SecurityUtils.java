@@ -6,8 +6,8 @@ import java.security.SecureRandom;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
-import es.caib.sistramit.core.api.model.comun.ConstantesNumero;
 
 /**
  * Utilidades seguridad.

@@ -8,6 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.exception.NoExisteFlujoTramitacionException;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.flujo.FlujoTramitacionComponent;
@@ -38,6 +42,46 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	public DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion) {
 		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
 		return ft.obtenerDetalleTramite();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoIrAPaso cargarTramite(String idSesionTramitacion) {
+		// Generamos flujo de tramitacion, almacenamos en map y cargamos trámite
+		final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
+						.getApplicationContext().getBean("flujoTramitacionComponent");
+		ResultadoIrAPaso res = ft.cargarTramite(idSesionTramitacion);
+		flujoTramitacionMap.put(idSesionTramitacion, ft);
+		return res;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoIrAPaso recargarTramite(String idSesionTramitacion) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		return ft.recargarTramite();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoIrAPaso irAPaso(String idSesionTramitacion, String idPaso) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		return ft.irAPaso(idPaso);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ResultadoAccionPaso accionPaso(String idSesionTramitacion, String idPaso, TypeAccionPaso accionPaso,
+			ParametrosAccionPaso parametros) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		return ft.accionPaso(idPaso, accionPaso, parametros);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void cancelarTramite(String idSesionTramitacion) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		ft.cancelarTramite();
 	}
 
 	// -------------------------------------------------------------------------------------------

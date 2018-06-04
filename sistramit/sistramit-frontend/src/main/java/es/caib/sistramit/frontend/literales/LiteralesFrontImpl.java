@@ -10,7 +10,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistramit.core.api.model.comun.ConstantesNumero;
+import es.caib.sistra2.commons.utils.ConstantesNumero;
 
 /**
  * Componente para recuperar literales de la capa web.

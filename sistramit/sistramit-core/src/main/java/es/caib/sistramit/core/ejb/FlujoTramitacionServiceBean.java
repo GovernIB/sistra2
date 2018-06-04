@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 
 @Stateless
@@ -41,6 +45,32 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	@Override
 	public void invalidarFlujoTramitacion(final String idSesionTramitacion) {
 		flujoTramitacionService.invalidarFlujoTramitacion(idSesionTramitacion);
+	}
+
+	@Override
+	public ResultadoIrAPaso cargarTramite(String idSesionTramitacion) {
+		return flujoTramitacionService.cargarTramite(idSesionTramitacion);
+	}
+
+	@Override
+	public ResultadoIrAPaso recargarTramite(String idSesionTramitacion) {
+		return flujoTramitacionService.recargarTramite(idSesionTramitacion);
+	}
+
+	@Override
+	public ResultadoIrAPaso irAPaso(String idSesionTramitacion, String idPaso) {
+		return flujoTramitacionService.irAPaso(idSesionTramitacion, idPaso);
+	}
+
+	@Override
+	public ResultadoAccionPaso accionPaso(String idSesionTramitacion, String idPaso, TypeAccionPaso accionPaso,
+			ParametrosAccionPaso parametros) {
+		return flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso, accionPaso, parametros);
+	}
+
+	@Override
+	public void cancelarTramite(String idSesionTramitacion) {
+		flujoTramitacionService.cancelarTramite(idSesionTramitacion);
 	}
 
 }
