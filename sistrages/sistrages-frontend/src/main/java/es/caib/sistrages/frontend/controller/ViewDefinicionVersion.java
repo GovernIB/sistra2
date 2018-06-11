@@ -91,7 +91,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private Tramite tramite;
 
 	/** Dominios. */
-	private List<Dominio> dominios = new ArrayList<>();
+	private List<Dominio> dominios;
 
 	/** Arbol */
 	private TreeNode root;
@@ -166,6 +166,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		/* Inicializamos el arbol. */
 		inicializarArbol();
+		
+		/** Marcamos las propiedades, que es el primer hijo. **/
+		this.opcionUrl = UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPropiedades");
 	}
 
 	/**
@@ -254,6 +257,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final List<TramitePaso> pasos = tramiteService.getTramitePasos(id);
 		tramiteVersion.setListaPasos(pasos);
 		final List<Long> dominiosId = tramiteService.getTramiteDominiosId(id);
+		dominios = new ArrayList<>();
 		for (final Long dominioId : dominiosId) {
 			dominios.add(dominioService.loadDominio(dominioId));
 		}
