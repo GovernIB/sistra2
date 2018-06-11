@@ -31,7 +31,7 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogArea.codigo']}" />
-				 	<p:inputText id="codigo" value="#{dialogArea.data.codigo}" required="true" size="40" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+				 	<p:inputText id="codigo" value="#{dialogArea.data.identificador}" required="true" size="40" maxlength="20" onblur="this.value = this.value.toUpperCase();">
 				   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
 				   	</p:inputText>
 

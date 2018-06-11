@@ -80,7 +80,7 @@ public class RolDaoImpl implements RolDao {
 		final JRolArea jRol = JRolArea.fromModel(rol);
 
 		if (rol.getArea() != null) {
-			final JArea jArea = entityManager.find(JArea.class, rol.getArea().getId());
+			final JArea jArea = entityManager.find(JArea.class, rol.getArea().getCodigo());
 			jRol.setArea(jArea);
 		}
 
@@ -131,7 +131,7 @@ public class RolDaoImpl implements RolDao {
 		jRolNew.setCodigo(jRol.getCodigo());
 
 		if (rol.getArea() != null) {
-			final JArea jArea = entityManager.find(JArea.class, rol.getArea().getId());
+			final JArea jArea = entityManager.find(JArea.class, rol.getArea().getCodigo());
 			jRolNew.setArea(jArea);
 		}
 

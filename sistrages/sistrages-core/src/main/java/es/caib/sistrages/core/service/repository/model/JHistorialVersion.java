@@ -40,7 +40,7 @@ public class JHistorialVersion implements IModelApi {
 	private JVersionTramite versionTramite;
 
 	/** Fecha. **/
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "HVE_FECHA", nullable = false, length = 7)
 	private Date fecha;
 
@@ -193,7 +193,7 @@ public class JHistorialVersion implements IModelApi {
 
 	/**
 	 * Return JHistorial version.
-	 * 
+	 *
 	 * @param historialVersion
 	 * @return
 	 */

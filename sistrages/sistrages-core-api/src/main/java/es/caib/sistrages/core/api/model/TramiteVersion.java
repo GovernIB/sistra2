@@ -90,7 +90,7 @@ public class TramiteVersion extends ModelApi {
 	private Literal mensajeDesactivacion;
 
 	/** Lista de dominios. */
-	private List<Dominio> listaDominios;
+	private List<Long> listaDominios;
 
 	/** Pasos de tramite. */
 	private List<TramitePaso> listaPasos;
@@ -580,7 +580,7 @@ public class TramiteVersion extends ModelApi {
 	 *
 	 * @return el valor de listaDominios
 	 */
-	public List<Dominio> getListaDominios() {
+	public List<Long> getListaDominios() {
 		return listaDominios;
 	}
 
@@ -590,7 +590,7 @@ public class TramiteVersion extends ModelApi {
 	 * @param listaDominios
 	 *            el nuevo valor de listaDominios
 	 */
-	public void setListaDominios(final List<Dominio> listaDominios) {
+	public void setListaDominios(final List<Long> listaDominios) {
 		this.listaDominios = listaDominios;
 	}
 

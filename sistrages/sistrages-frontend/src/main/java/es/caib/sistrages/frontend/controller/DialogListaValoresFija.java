@@ -2,6 +2,7 @@ package es.caib.sistrages.frontend.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -14,6 +15,7 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
@@ -34,10 +36,19 @@ public class DialogListaValoresFija extends DialogControllerBase {
 
 	private Literal traduccionesEdit;
 
+	private List<String> idiomas;
+
 	/**
 	 * Inicialización.
 	 */
+	@SuppressWarnings("unchecked")
 	public void init() {
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+
+		if (!mochilaDatos.isEmpty()) {
+			idiomas = (List<String>) mochilaDatos.get(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
+		}
+
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new ValorListaFija();
@@ -93,7 +104,6 @@ public class DialogListaValoresFija extends DialogControllerBase {
 	 * Editar texto componente.
 	 */
 	public void editarTraducciones() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 
 		if (data.getDescripcion() == null) {
 			setTraduccionesEdit(UtilTraducciones.getTraduccionesPorDefecto());
@@ -140,5 +150,13 @@ public class DialogListaValoresFija extends DialogControllerBase {
 
 	public void setTraduccionesEdit(final Literal traduccionesEdit) {
 		this.traduccionesEdit = traduccionesEdit;
+	}
+
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	public void setIdiomas(final List<String> idiomasXdefecto) {
+		this.idiomas = idiomasXdefecto;
 	}
 }

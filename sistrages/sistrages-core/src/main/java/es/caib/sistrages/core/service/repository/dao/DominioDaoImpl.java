@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
+import es.caib.sistrages.core.service.repository.model.JFuenteDatos;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
 /**
@@ -80,6 +81,11 @@ public class DominioDaoImpl implements DominioDao {
 		// Añade dominio por superadministrador estableciendo datos minimos
 		final JDominio jDominio = new JDominio();
 		jDominio.fromModel(dominio);
+		if (dominio.getIdFuenteDatos() != null) {
+			final JFuenteDatos jFuenteDatos = entityManager.find(JFuenteDatos.class, dominio.getIdFuenteDatos());
+			jDominio.setFuenteDatos(jFuenteDatos);
+		}
+
 		if (idEntidad != null) {
 			final JEntidad jentidad = entityManager.find(JEntidad.class, idEntidad);
 			if (jDominio.getEntidades() == null) {
@@ -123,6 +129,11 @@ public class DominioDaoImpl implements DominioDao {
 	@Override
 	public List<Dominio> getAllByFiltro(final TypeAmbito ambito, final Long id, final String filtro) {
 		return listarDominios(ambito, id, filtro);
+	}
+
+	@Override
+	public List<Dominio> getAllByFiltro(final Long idTramite, final String filtro) {
+		return listarDominios(idTramite, filtro);
 	}
 
 	/*
@@ -172,8 +183,12 @@ public class DominioDaoImpl implements DominioDao {
 	 */
 	@Override
 	public void updateDominio(final Dominio dominio) {
-		final JDominio jdominio = entityManager.find(JDominio.class, dominio.getId());
+		final JDominio jdominio = entityManager.find(JDominio.class, dominio.getCodigo());
 		jdominio.fromModel(dominio);
+		if (dominio.getIdFuenteDatos() != null) {
+			final JFuenteDatos jFuenteDatos = entityManager.find(JFuenteDatos.class, dominio.getIdFuenteDatos());
+			jdominio.setFuenteDatos(jFuenteDatos);
+		}
 		entityManager.merge(jdominio);
 	}
 
@@ -304,6 +319,56 @@ public class DominioDaoImpl implements DominioDao {
 		}
 
 		return jdominio.getVersionesTramite().contains(jversionTramite);
+	}
+
+	private List<Dominio> listarDominios(final Long idTramite, final String filtro) {
+		final List<Dominio> listaDominios = new ArrayList<>();
+
+		final List<JDominio> results = listarJDominios(idTramite, filtro);
+
+		if (results != null && !results.isEmpty()) {
+			for (final JDominio jdominio : results) {
+				final Dominio dominio = jdominio.toModel();
+				listaDominios.add(dominio);
+			}
+		}
+
+		return listaDominios;
+	}
+
+	/**
+	 * Listar dominios.
+	 *
+	 * @param idTramite
+	 *            idtramite
+	 * @param filtro
+	 *            filtro
+	 * @return lista de dominios
+	 */
+	@SuppressWarnings("unchecked")
+	private List<JDominio> listarJDominios(final Long idTramite, final String filtro) {
+		String sql = "select distinct d"
+				+ " from JDominio d LEFT JOIN d.areas area on d.ambito = 'A' left join d.entidades entidad on d.ambito = 'E', JTramite t "
+				+ " where t.codigo = :idTramite and (d.ambito = 'G' or" + " (d.ambito = 'A' and area = t.area ) or"
+				+ " (d.ambito = 'E' and entidad = t.area.entidad) )";
+
+		if (StringUtils.isNotBlank(filtro)) {
+			sql += " AND (LOWER(d.descripcion) LIKE :filtro OR LOWER(d.identificador) LIKE :filtro)";
+		}
+
+		sql += " ORDER BY d.identificador";
+
+		final Query query = entityManager.createQuery(sql);
+
+		if (StringUtils.isNotBlank(filtro)) {
+			query.setParameter("filtro", "%" + filtro.toLowerCase() + "%");
+		}
+
+		if (idTramite != null) {
+			query.setParameter("idTramite", idTramite);
+		}
+
+		return query.getResultList();
 	}
 
 }

@@ -23,7 +23,7 @@ import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 /**
- * Mantenimiento de dominios (ambito global, entidad y area).
+ * Mantenimiento de dominiosId (ambito global, entidad y area).
  *
  * @author Indra
  *
@@ -121,7 +121,7 @@ public class ViewDominios extends ViewControllerBase {
 			return;
 
 		// Eliminamos
-		if (this.dominioService.removeDominio(this.datoSeleccionado.getId())) {
+		if (this.dominioService.removeDominio(this.datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			filtrar();
 
@@ -285,7 +285,7 @@ public class ViewDominios extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
-			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
 		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);

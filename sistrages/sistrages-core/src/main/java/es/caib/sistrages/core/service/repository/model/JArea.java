@@ -48,9 +48,11 @@ public class JArea implements IModelApi {
 	@JoinTable(name = "STG_AREDOM", joinColumns = {
 			@JoinColumn(name = "DMA_CODARE", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "DMA_CODDOM", nullable = false, updatable = false) })
-	private Set<JDominio> dominios = new HashSet<JDominio>(0);
+	private Set<JDominio> dominios = new HashSet<>(0);
 
+	/** Constructor. **/
 	public JArea() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -95,17 +97,17 @@ public class JArea implements IModelApi {
 
 	public Area toModel() {
 		final Area area = new Area();
-		area.setId(this.codigo);
+		area.setCodigo(this.codigo);
 		area.setDescripcion(this.descripcion);
-		area.setCodigo(this.identificador);
+		area.setIdentificador(this.identificador);
 		return area;
 	}
 
 	public static JArea fromModel(final Area area) {
 		final JArea jArea = new JArea();
 		if (area != null) {
-			jArea.setCodigo(area.getId());
-			jArea.setIdentificador(area.getCodigo());
+			jArea.setCodigo(area.getCodigo());
+			jArea.setIdentificador(area.getIdentificador());
 			jArea.setDescripcion(area.getDescripcion());
 		}
 		return jArea;

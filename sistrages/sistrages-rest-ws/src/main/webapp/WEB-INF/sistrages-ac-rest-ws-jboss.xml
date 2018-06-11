@@ -8,8 +8,7 @@
 				http://www.springframework.org/schema/context
         		http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<!--  Accedemos directamente a capa EJB
+	<!-- Enlace entre Spring y EJB -->
 	<import resource="classpath:sistrages-ejb-core-api.xml" />
-	 -->
 
 </beans>

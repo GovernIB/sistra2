@@ -12,7 +12,7 @@ import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.exception.JsonException;
 
 
-// TODO Mirar de pasar a lib comun (sacar excepcion checked propia o runtime)
+// TODO Se ha creado JSONUtil en commons, cambiar para usarla
 
 /**
  * Utilidades conversion JSON.

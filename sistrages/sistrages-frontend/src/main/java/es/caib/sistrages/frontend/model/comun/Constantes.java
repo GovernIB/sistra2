@@ -37,6 +37,25 @@ public final class Constantes {
 	 */
 	public static final String EXTENSIONES_FICHEROS_CSV = "text/csv";
 
+	/** Constante mochila lvfcin. **/
 	public static final String CLAVE_MOCHILA_LVFCIN = "LVFCIN";
+
+	/** Constante area. **/
+	public static final String CLAVE_MOCHILA_AREA = "AREA";
+
+	/** Constante tramite. **/
+	public static final String CLAVE_MOCHILA_TRAMITE = "TRAM";
+
+	/** Constante tramite version. **/
+	public static final String CLAVE_MOCHILA_TRAMITE_VERSION = "TRAMVER";
+
+	/** Constante dominio. **/
+	public static final String CLAVE_MOCHILA_DOMINIO = "DOMINIO";
+
+	public static final String CLAVE_MOCHILA_PRDCIN = "PRDCIN";
+
+	public static final String CLAVE_MOCHILA_PARAMDOM = "PARAMDOM";
+
+	public static final String CLAVE_MOCHILA_IDIOMASXDEFECTO = "IDXDEF";
 
 }

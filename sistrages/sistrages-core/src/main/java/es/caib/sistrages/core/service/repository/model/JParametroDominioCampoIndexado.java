@@ -43,6 +43,7 @@ public class JParametroDominioCampoIndexado implements IModelApi {
 	private String parametro;
 
 	public JParametroDominioCampoIndexado() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -87,7 +88,7 @@ public class JParametroDominioCampoIndexado implements IModelApi {
 
 	public ParametroDominio toModel() {
 		final ParametroDominio parametroDominio = new ParametroDominio();
-		parametroDominio.setId(codigo);
+		parametroDominio.setCodigo(codigo);
 		parametroDominio.setTipo(TypeParametroDominio.fromString(tipo));
 		parametroDominio.setValor(valor);
 		parametroDominio.setParametro(parametro);
@@ -98,7 +99,7 @@ public class JParametroDominioCampoIndexado implements IModelApi {
 		JParametroDominioCampoIndexado jModel = null;
 		if (model != null) {
 			jModel = new JParametroDominioCampoIndexado();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setTipo(model.getTipo().toString());
 			jModel.setValor(model.getValor());
 			jModel.setParametro(model.getParametro());

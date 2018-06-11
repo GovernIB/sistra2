@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -43,7 +44,13 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 public class ViewTramites extends ViewControllerBase {
 
 	/**
-	 * Enlace area.
+	 * Service.
+	 */
+	@Inject
+	private DominioService dominioService;
+
+	/**
+	 * Service.
 	 */
 	@Inject
 	private TramiteService tramiteService;
@@ -136,7 +143,7 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 
 		final Area area = (Area) this.areaSeleccionada.getData();
-		if (this.tramiteService.removeArea(area.getId())) {
+		if (this.tramiteService.removeArea(area.getCodigo())) {
 			this.buscarAreas();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 		} else {
@@ -154,7 +161,7 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 
 		final Area area = (Area) this.areaSeleccionada.getData();
-		UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getId());
+		UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getCodigo());
 	}
 
 	/**
@@ -166,7 +173,7 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 
 		final Area area = (Area) this.areaSeleccionada.getData();
-		UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=" + area.getId());
+		UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=" + area.getCodigo());
 	}
 
 	/**
@@ -202,6 +209,34 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Importar versión.
+	 */
+	public void importar() {
+		final Map<String, String> params = new HashMap<>();
+		UtilJSF.openDialog(DialogTramiteVersionImportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
+	}
+
+	/**
+	 * Return dialogo de importar.
+	 *
+	 * @param event
+	 */
+	public final void returnDialogoImportar(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+
+			// Refrescamos datos
+			this.buscarAreas();
+			this.filtrar();
+		}
+	}
+
+	/**
 	 * Abre dialogo de nuevo tramite.
 	 */
 	public void nuevoTramite() {
@@ -212,7 +247,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 
 		params.put(TypeParametroVentana.AREA.toString(),
-				String.valueOf(((Area) this.areaSeleccionada.getData()).getId()));
+				String.valueOf(((Area) this.areaSeleccionada.getData()).getCodigo()));
 		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.ALTA, params, true, 540, 220);
 	}
 
@@ -300,7 +335,7 @@ public class ViewTramites extends ViewControllerBase {
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			if (areaSeleccionada != null) {
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
+						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getCodigo());
 				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
 			}
 		}
@@ -325,7 +360,7 @@ public class ViewTramites extends ViewControllerBase {
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			if (areaSeleccionada != null) {
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
+						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getCodigo());
 				res = (permisos.contains(TypeRolePermisos.MODIFICACION)
 						|| permisos.contains(TypeRolePermisos.ALTA_BAJA));
 			}
@@ -345,7 +380,7 @@ public class ViewTramites extends ViewControllerBase {
 				return false;
 			} else {
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getId());
+						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getCodigo());
 
 				return (permisos.contains(TypeRolePermisos.CONSULTA));
 			}
@@ -481,7 +516,8 @@ public class ViewTramites extends ViewControllerBase {
 			listaMostrarAreas = listaAreas;
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			for (final Area area : listaAreas) {
-				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(area.getCodigo());
 
 				if (permisos.contains(TypeRolePermisos.ALTA_BAJA) || permisos.contains(TypeRolePermisos.MODIFICACION)
 						|| permisos.contains(TypeRolePermisos.CONSULTA)) {
@@ -496,7 +532,7 @@ public class ViewTramites extends ViewControllerBase {
 		for (final Area area : listaMostrarAreas) {
 			final DefaultTreeNode nodoArea = new DefaultTreeNode(area);
 			areas.getChildren().add(nodoArea);
-			if (idArea != null && area.getId().compareTo(Long.valueOf(idArea)) == 0) {
+			if (idArea != null && area.getCodigo().compareTo(Long.valueOf(idArea)) == 0) {
 				this.areaSeleccionada = nodoArea;
 				buscarTramites();
 			}
@@ -509,11 +545,11 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	private void buscarTramites() {
 		if (areaSeleccionada != null) {
-			tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getId(), null);
+			tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getCodigo(), null);
 
 			// Obtenemos activa a los tramites que tengan alguna version activa
 			final List<Long> idTramites = tramiteService
-					.listTramiteVersionActiva(((Area) areaSeleccionada.getData()).getId());
+					.listTramiteVersionActiva(((Area) areaSeleccionada.getData()).getCodigo());
 			if (idTramites != null && !idTramites.isEmpty()) {
 				for (final Tramite tramite : tramites) {
 					if (idTramites.contains(tramite.getCodigo())) {
@@ -540,7 +576,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 
 		params.put(TypeParametroVentana.ID.toString(),
-				String.valueOf(((Area) this.areaSeleccionada.getData()).getId()));
+				String.valueOf(((Area) this.areaSeleccionada.getData()).getCodigo()));
 		UtilJSF.openDialog(DialogArea.class, modoAcceso, params, true, 520, 160);
 	}
 
@@ -569,7 +605,8 @@ public class ViewTramites extends ViewControllerBase {
 		if (!verificarFilaSeleccionadaTramite())
 			return;
 
-		// Verificamos que los dominios que tiene asignado, alguna de sus versiones, no
+		// Verificamos que los dominiosId que tiene asignado, alguna de sus versiones,
+		// no
 		// sea ninguno de ambito area.
 		if (checkDominioArea()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
@@ -593,9 +630,10 @@ public class ViewTramites extends ViewControllerBase {
 				.listTramiteVersion(this.tramiteSeleccionada.getCodigo(), null);
 		if (tramitesVersion != null) {
 			for (final TramiteVersion tramiteVersion : tramitesVersion) {
-				final List<Dominio> dominios = tramiteService.getTramiteDominios(tramiteVersion.getCodigo());
-				if (dominios != null) {
-					for (final Dominio dominio : dominios) {
+				final List<Long> dominiosId = tramiteService.getTramiteDominiosId(tramiteVersion.getCodigo());
+				if (dominiosId != null) {
+					for (final Long dominioId : dominiosId) {
+						final Dominio dominio = dominioService.loadDominio(dominioId);
 						if (dominio.getAmbito() == TypeAmbito.AREA) {
 							return true;
 						}

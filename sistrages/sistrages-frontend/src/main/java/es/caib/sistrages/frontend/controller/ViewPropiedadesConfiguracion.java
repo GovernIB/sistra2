@@ -87,6 +87,13 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	}
 
 	/**
+	 * Refrescar.
+	 */
+	public void refrescar() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+	}
+
+	/**
 	 * Abre dialogo para editar dato.
 	 */
 	public void editar() {

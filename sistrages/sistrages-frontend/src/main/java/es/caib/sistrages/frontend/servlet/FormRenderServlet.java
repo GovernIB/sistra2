@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
+import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 
 /**
@@ -58,12 +59,13 @@ public class FormRenderServlet extends HttpServlet {
 
 		final String idForm = request.getParameter("id");
 		final String page = request.getParameter("page");
+		final String idComponente = request.getParameter("idComponente");
 
 		response.setContentType("text/html");
 		final PrintWriter out = response.getWriter();
 		final StringBuilder html = new StringBuilder();
 		if (StringUtils.isNotEmpty(idForm) && StringUtils.isNotEmpty(page)) {
-			paginaHTML(html, idForm, page);
+			paginaHTML(html, idForm, page, idComponente);
 		}
 
 		out.write(html.toString());
@@ -72,17 +74,12 @@ public class FormRenderServlet extends HttpServlet {
 
 	}
 
-	private void paginaHTML(final StringBuilder pOut, final String idForm, final String page) {
+	private void paginaHTML(final StringBuilder pOut, final String pIdForm, final String pPage,
+			final String pIdComponente) {
 
-		// final FormularioInterno formulario =
-		// FormularioMockBD.recuperar(Long.parseLong(idForm));
-		// final PaginaFormulario pagina =
-		// FormularioMockBD.recuperarPagina(Long.parseLong(idForm),
-		// Integer.parseInt(page));
-
-		final FormularioInterno formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(idForm));
+		final FormularioInterno formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(pIdForm));
 		final PaginaFormulario pagina = formIntService
-				.getContenidoPaginaFormulario(formulario.getPaginas().get(Integer.parseInt(page) - 1).getId());
+				.getContenidoPaginaFormulario(formulario.getPaginas().get(Integer.parseInt(pPage) - 1).getId());
 
 		escribeLinea(pOut, "<!doctype html>", 0);
 		escribeLinea(pOut, "<html>", 0);
@@ -90,7 +87,7 @@ public class FormRenderServlet extends HttpServlet {
 		cabeceraHTML(pOut);
 
 		escribeLinea(pOut, "<body>", 0);
-		escribeLinea(pOut, "<div id=\"imc-forms-contenidor\" >", 1);
+		escribeLinea(pOut, "<div id=\"imc-contenidor\" class=\"imc-contenidor\" >", 1);
 
 		if (formulario.isMostrarCabecera()) {
 			cabeceraFormulario(pOut, formulario.getTextoCabecera().getTraduccion("es"));
@@ -98,6 +95,7 @@ public class FormRenderServlet extends HttpServlet {
 
 		escribeLinea(pOut, "<form>", 2);
 		escribeLinea(pOut, "<div id=\"imc-forms-formulari\" class=\"imc-forms-formulari imc-form\">", 3);
+
 		escribeLinea(pOut, "<div class=\"imc-form-contingut\">", 4);
 
 		cuerpoHTML(pOut, pagina);
@@ -107,7 +105,7 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "</form>", 2);
 		escribeLinea(pOut, "</div>", 1);
 
-		scripts(pOut);
+		scripts(pOut, pIdComponente);
 
 		escribeLinea(pOut, "</body>", 0);
 		escribeLinea(pOut, "</html>", 0);
@@ -123,21 +121,17 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "<head>", 0);
 		escribeLinea(pOut, "<meta charset=\"utf-8\" />", 1);
 		escribeLinea(pOut, "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />", 1);
+
 		escribeLinea(pOut, urlCssIni, "imc-forms", urlCssFin, 1);
 		escribeLinea(pOut, urlCssIni, "imc-forms-select", urlCssFin, 1);
-		escribeLinea(pOut, urlCssIni, "imc-animate", urlCssFin, 1);
-		escribeLinea(pOut, urlCssIni, "imc-destaca", urlCssFin, 1);
-		escribeLinea(pOut, "<!--[if lt IE 9]>", 1);
-		escribeLinea(pOut, urlJsIni, "html5", urlJsFin, 1);
-		escribeLinea(pOut, urlCssIni, "imc-ie8", urlCssFin, 1);
-		escribeLinea(pOut, "<![endif]-->", 1);
-		escribeLinea(pOut, "<!--[if lt IE 8]>", 1);
-		escribeLinea(pOut, urlCssIni, "imc-ie7", urlCssFin, 1);
-		escribeLinea(pOut, "<![endif]-->", 1);
+		escribeLinea(pOut, urlCssIni, "imc-forms-taula-iframe", urlCssFin, 1);
+		escribeLinea(pOut, urlCssIni, "imc-forms--edicio", urlCssFin, 1);
+
 		escribeLinea(pOut, urlJsIni, "utils/modernizr-imc-0.3", urlJsFin, 1);
 		escribeLinea(pOut, urlJsIni, "utils/jquery-3.3.1.min", urlJsFin, 1);
-		escribeLinea(pOut, urlJsIni, "jquery-imc-forms-inicia", urlJsFin, 1);
+		escribeLinea(pOut, urlJsIni, "imc-forms--edicio", urlJsFin, 1);
 		escribeLinea(pOut, "</head>", 0);
+
 	}
 
 	private void cabeceraFormulario(final StringBuilder pOut, final String textoCabecera) {
@@ -175,18 +169,14 @@ public class FormRenderServlet extends HttpServlet {
 						break;
 					}
 
-					// CAMPO_TEXTO("CT"),
-					// SELECTOR("SE"),
-					// SECCION("SC"),
-					// CHECKBOX("CK"),
-					// ETIQUETA("ET"),
-					// CAPTCHA("CP"),
-					// IMAGEN("IM"),
-
 				}
 
-				escribeLinea(pOut, "<div class=\"imc-separador imc-sep-punt editable\" id=\"L",
-						String.valueOf(lc.getId()), "\">", String.valueOf(lc.getOrden()), "</div>", 5);
+				if (lc.getComponentes().isEmpty()) {
+					escribeLinea(pOut, "<br/><br/>", 6);
+				}
+
+				escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\" id=\"L",
+						String.valueOf(lc.getId()), "\"></div>", 5);
 
 			}
 		}
@@ -194,15 +184,12 @@ public class FormRenderServlet extends HttpServlet {
 
 	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
-		int n = 0;
 
-		escribeLinea(pOut, "<h4 class=\"imc-seccio\">", 5);
+		escribeLinea(pOut, "<h4 ", escribeId(pCF.getId()), "class=\"imc-element imc-seccio\">", 5);
 
-		escribeLinea(pOut, "<span ", escribeId(pCF.getId(), ++n), " class=\"imc-se-marca editable\">",
-				componente.getLetra(), "</span>", 6);
+		escribeLinea(pOut, "<span class=\"imc-se-marca\">", componente.getLetra(), "</span>", 6);
 		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
-			escribeLinea(pOut, "<span ", escribeId(pCF.getId(), ++n), " class=\"imc-se-titol editable\">",
-					pCF.getTexto().getTraduccion("es"), "</span>", 6);
+			escribeLinea(pOut, "<span class=\"imc-se-titol\">", pCF.getTexto().getTraduccion("es"), "</span>", 6);
 		}
 
 		escribeLinea(pOut, "</h4>", 5);
@@ -210,7 +197,6 @@ public class FormRenderServlet extends HttpServlet {
 	}
 
 	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF) {
-
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
@@ -236,32 +222,41 @@ public class FormRenderServlet extends HttpServlet {
 
 		}
 
-		if (campo.isNormalMultilinea()) {
-			tipo = "textarea";
-			Integer nfilas = campo.getNormalNumeroLineas();
-			if (nfilas == null) {
-				nfilas = 1;
-			}
-			estilo.append(" imc-el-files-").append(String.valueOf(nfilas));
+		if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())) {
+			if (campo.isNormalMultilinea()) {
+				tipo = "textarea";
+				Integer nfilas = campo.getNormalNumeroLineas();
+				if (nfilas == null) {
+					nfilas = 1;
+				}
+				estilo.append(" imc-el-files-").append(String.valueOf(nfilas));
 
-			elemento.append("<textarea class=\"editable\" ").append(escribeId(campo.getId())).append(" name=\"")
-					.append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"").append(nfilas)
-					.append("\"></textarea>");
+				elemento.append("<textarea name=\"").append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"")
+						.append(nfilas).append("\"></textarea>");
+			} else {
+				tipo = "text";
+			}
+		} else if (TypeCampoTexto.FECHA.equals(campo.getTipoCampoTexto())) {
+			tipo = "date";
+		} else if (TypeCampoTexto.HORA.equals(campo.getTipoCampoTexto())) {
+			tipo = "time";
 		} else {
 			tipo = "text";
-			elemento.append("<input class=\"editable\" ").append(escribeId(campo.getId())).append(" name=\"")
-					.append(campo.getIdComponente()).append("\" type=\"text\"/>");
 		}
 
-		escribeLinea(pOut, "<div class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
+		if (tipo != null && !"textarea".equals(tipo)) {
+			elemento.append("<input name=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
+		}
+
+		escribeLinea(pOut, "<div ", escribeId(pCF.getId()), " class=\"imc-element ", estilo.toString(),
+				"\" data-type=\"", tipo, "\">", 5);
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
 			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getId()), "\">",
 					campo.getTexto().getTraduccion("es"), "</label></div>", 6);
 		}
 
-		escribeLinea(pOut, "<div class=\"imc-el-control\">", String.valueOf(campo.getOrden()), elemento.toString(),
-				"</div>", 6);
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
 
 		escribeLinea(pOut, "</div>", 5);
 
@@ -282,16 +277,17 @@ public class FormRenderServlet extends HttpServlet {
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
 			texto = "<label for=\"" + campo.getId() + "\">" + campo.getTexto().getTraduccion("es") + "</label>";
 		}
-		escribeLinea(pOut, "<div class=\"imc-element imc-el-check", estilo.toString(), "\" data-type=\"check\">", 5);
+		escribeLinea(pOut, "<div ", escribeId(pCF.getId()), "class=\"imc-element imc-el-check", estilo.toString(),
+				"\" data-type=\"check\">", 5);
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
 		escribeLinea(pOut, "<div class=\"imc-input-check\">", 7);
-		escribeLinea(pOut, "<input class=\"editable\" ", escribeId(campo.getId()), "name=\"",
-				String.valueOf(campo.getIdComponente()), "\" type=\"checkbox\">", 8);
+		escribeLinea(pOut, "<input name=\"", String.valueOf(campo.getIdComponente()), "\" type=\"checkbox\">", 8);
 		escribeLinea(pOut, texto, 8);
 
 		escribeLinea(pOut, "</div>", 7);
 		escribeLinea(pOut, "</div>", 6);
 		escribeLinea(pOut, "</div>", 5);
+
 	}
 
 	private void campoSelector(final StringBuilder pOut, final ComponenteFormulario pCF) {
@@ -299,7 +295,6 @@ public class FormRenderServlet extends HttpServlet {
 
 		final StringBuilder estilo = new StringBuilder();
 		String texto = "";
-		int n = 0;
 
 		if (campo.getNumColumnas() > 1) {
 			estilo.append(" imc-el-").append(campo.getNumColumnas());
@@ -312,18 +307,16 @@ public class FormRenderServlet extends HttpServlet {
 					+ campo.getTexto().getTraduccion("es") + "</label></div>";
 		}
 
-		escribeLinea(pOut, "<div class=\"imc-element imc-el-selector", estilo.toString(), "\" data-type=\"select\">",
-				5);
+		escribeLinea(pOut, "<div ", escribeId(pCF.getId()), "class=\"imc-element imc-el-selector", estilo.toString(),
+				"\" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
 
-		escribeLinea(pOut, "<div class=\"imc-el-control\">", String.valueOf(campo.getOrden()), "", 6);
-		escribeLinea(pOut, "<div ", escribeId(campo.getId(), ++n), " class=\"imc-select imc-opcions editable\">", 7);
+		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
+		escribeLinea(pOut, "<div class=\"imc-select imc-opcions\">", 7);
 
-		escribeLinea(pOut, "<a ", escribeId(campo.getId(), ++n),
-				" class=\"imc-select\" tabindex=\"0\" href=\"javascript:;\" style=\"\"></a>", 8);
-		escribeLinea(pOut, "<input ", escribeId(campo.getId(), ++n), " name=\"",
-				String.valueOf(campo.getIdComponente()), "\" type=\"hidden\">", 8);
+		escribeLinea(pOut, "<a class=\"imc-select\" tabindex=\"0\" href=\"javascript:;\" style=\"\"></a>", 8);
+		escribeLinea(pOut, "<input name=\"", String.valueOf(campo.getIdComponente()), "\" type=\"hidden\">", 8);
 
 		escribeLinea(pOut, "</div>", 7);
 		escribeLinea(pOut, "</div>", 6);
@@ -346,27 +339,20 @@ public class FormRenderServlet extends HttpServlet {
 			break;
 		}
 
-		escribeLinea(pOut, "<div class=\"imc-missatge-en-linia imc-missatge-en-linia-icona-sup editable ",
-				estilo.toString(), "\" ", escribeId(pCF.getId()), ">", 5);
+		escribeLinea(pOut, "<div class=\"imc-element imc-missatge-en-linia imc-missatge-en-linia-icona-sup ",
+				estilo.toString(), "\" ", escribeId(pCF.getId()), "><p>", 5);
 		if (pCF.getTexto() != null) {
 			escribeLinea(pOut, pCF.getTexto().getTraduccion("es"), 6);
 		}
-		escribeLinea(pOut, "</div>", 5);
+		escribeLinea(pOut, "</p></div>", 5);
 	}
 
-	private void scripts(final StringBuilder pOut) {
+	private void scripts(final StringBuilder pOut, final String pIdComponente) {
 		escribeLinea(pOut, "<script type=\"text/javascript\">", 1);
-		escribeLinea(pOut, "function rcEditarArea(id) {parent.seleccionarElementoCommand([{name:'id', value:id}]);}",
-				2);
-
-		escribeLinea(pOut, "var elementos = document.getElementsByClassName(\"editable\");", 2);
-		escribeLinea(pOut, "for(var i = 0 ; i < elementos.length; i++) { ", 2);
-		escribeLinea(pOut, "var element = elementos[i];", 3);
 		escribeLinea(pOut,
-				"element.addEventListener(\"click\", function(event){rcEditarArea (event.target.id.split(\".\")[0]); });",
-				3);
-		escribeLinea(pOut, "}", 2);
+				"function rcEditarComponente(id) {parent.seleccionarElementoCommand([{name:'id', value:id}]);}", 2);
 
+		escribeLinea(pOut, "var idComponente=\"" + pIdComponente + "\"", 2);
 		escribeLinea(pOut, "</script>", 1);
 	}
 

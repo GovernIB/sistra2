@@ -44,28 +44,23 @@
     <servlet-name>Jersey Web Application</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
+  
+   <!-- Securizacion -->
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name>sistrages-rest</web-resource-name>
+      <web-resource-name>sistrages-rest-ws</web-resource-name>
       <url-pattern>/rest/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>STG_SUP</role-name>
-      <role-name>STG_ADM</role-name>
-      <role-name>STG_DES</role-name>
+      <role-name>STG_API</role-name>
     </auth-constraint>
   </security-constraint>
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>Autenticacion</realm-name>
   </login-config>
- <security-role>
-    <role-name>STG_SUP</role-name>
-  </security-role>
   <security-role>
-    <role-name>STG_ADM</role-name>
+    <role-name>STG_API</role-name>
   </security-role>
-  <security-role>
-    <role-name>STG_DES</role-name>
-  </security-role>
+  
 </web-app>

@@ -474,10 +474,15 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampoIndexado.setDominio(JDominio.fromModelStatic(campoIndexado.getDominio()));
 					jCampoIndexado.setCampoDominioCodigo(campoIndexado.getCampoDominioCodigo());
 					jCampoIndexado.setCampoDominioDescripcion(campoIndexado.getCampoDominioDescripcion());
+					jCampoIndexado = JCampoFormularioIndexado.mergeListaParametrosDominioModel(jCampoIndexado,
+							campoIndexado);
 				} else {
 					jCampoIndexado.setDominio(null);
 					jCampoIndexado.setCampoDominioCodigo(null);
 					jCampoIndexado.setCampoDominioDescripcion(null);
+					campoIndexado.getListaParametrosDominio().clear();
+					jCampoIndexado = JCampoFormularioIndexado.mergeListaParametrosDominioModel(jCampoIndexado,
+							campoIndexado);
 				}
 
 				entityManager.merge(jCampoIndexado);

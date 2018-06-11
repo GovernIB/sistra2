@@ -5,95 +5,96 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
+// TODO: Auto-generated Javadoc
 /**
  * La interface DominioDao.
  */
 public interface DominioDao {
 
 	/**
-	 * Obtiene el dominio.
+	 * Obtiene el valor de byId.
 	 *
 	 * @param idDominio
-	 *            idDominio
-	 * @return el valor de dominio
+	 *            the id dominio
+	 * @return el valor de byId
 	 */
 	Dominio getById(final Long idDominio);
 
 	/**
-	 * Obtiene el dominio.
+	 * Obtiene el valor de byCodigo.
 	 *
 	 * @param codigoDominio
-	 *            codigoDominio
-	 * @return el valor de dominio
+	 *            the codigo dominio
+	 * @return el valor de byCodigo
 	 */
 	Dominio getByCodigo(final String codigoDominio);
 
 	/**
-	 * Obtiene la lista de todos los dominios
+	 * Obtiene el valor de all.
 	 *
 	 * @param ambito
-	 *            ambito
+	 *            the ambito
 	 * @param id
-	 *            identificador del ambito correspondiente (Area o Entidad)
-	 * @return lista de todos los dominios
+	 *            the id
+	 * @return el valor de all
 	 */
 	List<Dominio> getAll(TypeAmbito ambito, Long id);
 
 	/**
-	 * Obtiene la lista de todos los dominios
+	 * Obtiene el valor de allByFiltro.
 	 *
 	 * @param ambito
-	 *            ambito
+	 *            the ambito
 	 * @param id
-	 *            identificador del ambito correspondiente (Area o Entidad)
+	 *            the id
 	 * @param filtro
-	 *            filtro
-	 * @return lista de todos los dominios
+	 *            the filtro
+	 * @return el valor de allByFiltro
 	 */
 	List<Dominio> getAllByFiltro(TypeAmbito ambito, Long id, String filtro);
 
 	/**
-	 * Obtiene la lista de todos los dominios asociados a una fuente de datos.
+	 * Obtiene el valor de allByFuenteDatos.
 	 *
 	 * @param idFuenteDatos
-	 *            id fuente datos
-	 * @return lista dominios
+	 *            the id fuente datos
+	 * @return el valor de allByFuenteDatos
 	 */
 	List<Dominio> getAllByFuenteDatos(Long idFuenteDatos);
 
 	/**
-	 * Añade un dominio.
+	 * Añade.
 	 *
 	 * @param entidad
-	 *            entidad
+	 *            the entidad
 	 * @param idEntidad
-	 *            idEntidad
+	 *            the id entidad
 	 * @param idArea
-	 *            idArea
+	 *            the id area
 	 */
 	void add(final Dominio entidad, final Long idEntidad, final Long idArea);
 
 	/**
-	 * Elimina un dominio.
+	 * Elimina.
 	 *
 	 * @param idDominio
-	 *            idDominio
+	 *            the id dominio
 	 */
 	void remove(final Long idDominio);
 
 	/**
-	 * Elimina dominios entidad.
+	 * Elimina by entidad.
 	 *
 	 * @param idEntidad
-	 *            idEntidad
+	 *            the id entidad
 	 */
 	void removeByEntidad(final Long idEntidad);
 
 	/**
-	 * Elimina dominios area.
+	 * Elimina by area.
 	 *
 	 * @param idArea
-	 *            idArea
+	 *            the id area
 	 */
 	void removeByArea(final Long idArea);
 
@@ -101,32 +102,49 @@ public interface DominioDao {
 	 * Actualiza dominio.
 	 *
 	 * @param dominio
-	 *            dominio
+	 *            the dominio
 	 */
 	void updateDominio(Dominio dominio);
 
 	/**
-	 * Añade una relación entre dominio y versión trámite.
+	 * Añade tramite version.
 	 *
 	 * @param idDominio
+	 *            the id dominio
 	 * @param idTramiteVersion
+	 *            the id tramite version
 	 */
 	void addTramiteVersion(Long idDominio, Long idTramiteVersion);
 
 	/**
-	 * Elimina una relación entre dominio y versión trámite.
+	 * Elimina tramite version.
 	 *
 	 * @param idDominio
+	 *            the id dominio
 	 * @param idTramiteVersion
+	 *            the id tramite version
 	 */
 	void removeTramiteVersion(Long idDominio, Long idTramiteVersion);
 
 	/**
-	 * Comprueba si tiene un tramite versión un dominio.
+	 * Tiene tramite version.
 	 *
 	 * @param idDominio
+	 *            the id dominio
 	 * @param idTramiteVersion
-	 * @return
+	 *            the id tramite version
+	 * @return true, if successful
 	 */
 	boolean tieneTramiteVersion(Long idDominio, Long idTramiteVersion);
+
+	/**
+	 * Obtiene lista de dominios.
+	 *
+	 * @param idTramite
+	 *            idtramite
+	 * @param filtro
+	 *            filtro
+	 * @return lista de dominios
+	 */
+	List<Dominio> getAllByFiltro(Long idTramite, String filtro);
 }

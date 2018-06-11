@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -13,10 +15,12 @@ import java.util.zip.ZipFile;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +33,25 @@ import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.FilaImportar;
+import es.caib.sistrages.frontend.model.comun.Constantes;
+import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
+import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
+import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -47,6 +62,10 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 * Log.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportar.class);
+
+	/** Servicio. */
+	@Inject
+	private FormateadorFormularioService formateadorFormularioService;
 
 	/** Servicio. */
 	@Inject
@@ -77,12 +96,15 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 
 	/** Version tramite. **/
 	private TramiteVersion tramiteVersion;
+	private TramiteVersion tramiteVersionActual;
 
 	/** Tramite. **/
 	private Tramite tramite;
+	private Tramite tramiteActual;
 
 	/** Area. **/
 	private Area area;
+	private Area areaActual;
 
 	/** Dominios. **/
 	Map<Long, Dominio> dominios = new HashMap<>();
@@ -104,6 +126,32 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 
 	/** Formateadores. **/
 	Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
+
+	/** Linea 1. **/
+	FilaImportar filaArea;
+
+	/** Linea 2. **/
+	FilaImportar filaTramite;
+
+	/** Linea 3. **/
+	FilaImportar filaTramiteVersion;
+
+	/** Fila dominios. **/
+	final List<FilaImportar> filasDominios = new ArrayList<>();
+
+	/** Filas formateadores. */
+	final List<FilaImportar> filasFormateador = new ArrayList<>();
+
+	/** Mostrar area. **/
+	private boolean mostrarBotonArea = false;
+	/** Mostrar tramite. **/
+	private boolean mostrarBotonTramite = false;
+	/** Mostrar tramite version. **/
+	private boolean mostrarBotonTramiteVersion = false;
+	/** Mostrar botones dominios. **/
+	private final List<Boolean> mostrarBotonDominio = new ArrayList<>();
+	/** Mostrar botones formateadores. **/
+	private Integer posicionDominio;
 
 	/**
 	 * Inicialización.
@@ -190,15 +238,325 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 			return;
 		}
 
-		// Se marca a true el botón importar porque luego, si hay algo mal, desactivará
-		// el botón
-		mostrarBotonImportar = true;
+		// Se muestra ya la info, otra cosa es que el botón se vea o no
+		this.setMostrarPanelInfo(true);
+		this.setMostrarBotonImportar(false);
 
-		// 3. Preparamos la info a mostrar
-		// tramiteService.getAreaByIdentificador(area.getCodigo());
+		// 3. Preparamos la info a mostrar de area/tramite/tramiteVersion
+		areaActual = tramiteService.getAreaByIdentificador(area.getIdentificador(), UtilJSF.getIdEntidad());
+		if (areaActual != null) {
+
+			tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador(),
+					areaActual.getCodigo());
+
+		}
+
+		if (tramiteActual != null) {
+
+			tramiteVersionActual = tramiteService.getTramiteVersionMaxNumVersion(tramiteActual.getCodigo());
+
+		}
+
+		// Paso 3.1. Area.
+		// - Si no existe area, si es administrador entidad entonces se puede crear sino
+		// producir un error.
+		if (areaActual == null) {
+
+			filaArea = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
+					TypeImportarResultado.WARNING);
+			if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
+
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						"No existe el area y tendría que crearla un administrador de entidad.");
+
+				setMostrarBotonImportar(false);
+				return;
+			}
+		} else {
+			final List<TypeRolePermisos> permisos = UtilJSF.getSessionBean().getSecurityService()
+					.getPermisosDesarrolladorEntidad(areaActual.getCodigo());
+			if (!permisos.contains(TypeRolePermisos.PROMOCIONAR)) {
+
+				filaArea = new FilaImportar(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.ERROR);
+
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						"No tienes permisos de promocionar sobre este area.");
+
+				setMostrarBotonImportar(false);
+				return;
+
+			} else if (area.getDescripcion().equals(areaActual.getDescripcion())) {
+
+				filaArea = new FilaImportar(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.INFO);
+
+			} else {
+
+				filaArea = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.WARNING);
+
+			}
+
+		}
+
+		// Paso 3.2. Tramite.
+		if (tramiteActual == null) {
+
+			filaTramite = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
+					TypeImportarResultado.INFO);
+
+		} else {
+
+			if (tramite.getDescripcion().equals(tramiteActual.getDescripcion())) {
+
+				filaTramite = new FilaImportar(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.INFO);
+
+			} else {
+
+				filaTramite = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.WARNING);
+
+			}
+
+		}
+
+		// Paso 3.3. Tramite Version.
+		if (tramiteVersionActual == null) {
+
+			filaTramiteVersion = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
+					TypeImportarResultado.INFO);
+
+		} else {
+
+			if (tramiteVersionActual.getNumeroVersion() < tramiteVersion.getNumeroVersion()) {
+
+				filaTramiteVersion = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.INFO);
+
+			} else if (tramiteVersionActual.getNumeroVersion() == tramiteVersion.getNumeroVersion()) {
+
+				filaTramiteVersion = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.WARNING);
+
+			} else {
+
+				filaTramiteVersion = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.WARNING);
+
+			}
+		}
+
+		// Paso 3.4. Dominio.
+		for (final Map.Entry<Long, Dominio> entry : dominios.entrySet()) {
+			final Dominio dominio = entry.getValue();
+			final Dominio dominioActual = dominioService.loadDominio(dominio.getIdentificador());
+
+			if (dominioActual == null && dominio.getAmbito() == TypeAmbito.GLOBAL) {
+
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "No tienes permisos para crear un dominio global.");
+
+				filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.ERROR, TypeImportarEstado.NO_EXISTE,
+						TypeImportarResultado.ERROR));
+				setMostrarBotonImportar(false);
+				this.mostrarBotonDominio.add(false);
+				return;
+
+			}
+
+			switch (dominio.getTipo()) {
+			case CONSULTA_BD:
+			case CONSULTA_REMOTA:
+			case LISTA_FIJA:
+				if (dominioActual == null) {
+
+					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
+							TypeImportarResultado.WARNING));
+					this.mostrarBotonDominio.add(true);
+				} else {
+
+					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
+							TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+					this.mostrarBotonDominio.add(true);
+				}
+				break;
+			case FUENTE_DATOS:
+
+				if (dominioActual == null) {
+
+					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
+							TypeImportarResultado.WARNING));
+					this.mostrarBotonDominio.add(true);
+				} else {
+
+					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
+							TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+					this.mostrarBotonDominio.add(true);
+				}
+				break;
+
+			}
+
+		}
+
+		// Paso 3.4. Dominio.
+		for (final Map.Entry<Long, FormateadorFormulario> entry : formateadores.entrySet()) {
+			final FormateadorFormulario formateador = entry.getValue();
+			final FormateadorFormulario formateadorActual = formateadorFormularioService
+					.getFormateadorFormulario(UtilJSF.getIdEntidad(), formateador.getCodigo());
+			if (formateadorActual == null) {
+
+				filasFormateador.add(new FilaImportar(formateador, TypeImportarAccion.CREAR,
+						TypeImportarEstado.NO_EXISTE, TypeImportarResultado.INFO));
+			} else {
+
+				filasFormateador.add(new FilaImportar(formateador, TypeImportarAccion.REEMPLAZAR,
+						TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+			}
+
+		}
+
+		this.setMostrarBotonArea(filaArea.getResultado().isWarning());
+		this.setMostrarBotonTramite(filaTramite.getResultado().isWarning());
+		this.setMostrarBotonTramiteVersion(filaTramiteVersion.getResultado().isWarning());
 
 		setMostrarPanelInfo(true);
+		setMostrarBotonImportar(true);
 
+	}
+
+	/**
+	 * Check area.
+	 */
+	public void checkArea() {
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_AREA, UtilJSON.toJSON(area));
+		// UtilJSF.getSessionBean().setMochilaDatos(mochilaDatos);
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.area.getCodigo().toString());
+		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteVersionImportarAR.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+	}
+
+	/**
+	 * Check tramite.
+	 */
+	public void checkTramite() {
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_TRAMITE, UtilJSON.toJSON(tramite));
+		// UtilJSF.getSessionBean().setMochilaDatos(mochilaDatos);
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.tramite.getCodigo().toString());
+		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteVersionImportarTR.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+	}
+
+	/**
+	 * Check tramite version.
+	 */
+	public void checkTramiteVersion() {
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_TRAMITE_VERSION, UtilJSON.toJSON(tramiteVersion));
+		// UtilJSF.getSessionBean().setMochilaDatos(mochilaDatos);
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.tramite.getCodigo().toString());
+		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteVersionImportarTV.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+	}
+
+	/**
+	 * Check dominio.
+	 *
+	 * @param idDominio
+	 */
+	public void checkDominio(final Integer posicion) {
+
+		posicionDominio = posicion - 1;
+		final FilaImportar fila = this.filasDominios.get(posicionDominio);
+		final Dominio dominio = fila.getDominio();
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_DOMINIO, UtilJSON.toJSON(dominio));
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), this.tramite.getCodigo().toString());
+		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
+		UtilJSF.openDialog(DialogTramiteVersionImportarDominio.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo area.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoDominio(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
+		if (accion != TypeImportarAccion.PENDIENTE) {
+			this.filasDominios.get(posicionDominio).setResultado(TypeImportarResultado.INFO);
+			this.filasDominios.get(posicionDominio).setAccion(accion);
+			final FilaImportar fila = this.filasDominios.get(posicionDominio);
+			final Dominio dominio = fila.getDominio();
+			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
+					.add("iconoDominio" + dominio.getCodigo());
+			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
+					.add("labelDominio" + dominio.getCodigo());
+		}
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo area.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoArea(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
+		if (accion != TypeImportarAccion.PENDIENTE) {
+			this.filaArea.setResultado(TypeImportarResultado.INFO);
+			this.filaArea.setAccion(accion);
+		}
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo tramite.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoTramite(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
+		if (accion != TypeImportarAccion.PENDIENTE) {
+			this.filaTramite.setResultado(TypeImportarResultado.INFO);
+			this.filaTramite.setAccion(accion);
+		}
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo tramite version.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoTramiteVersion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
+		if (accion != TypeImportarAccion.PENDIENTE) {
+			this.filaTramiteVersion.setResultado(TypeImportarResultado.INFO);
+			this.filaTramiteVersion.setAccion(accion);
+		}
 	}
 
 	/**
@@ -290,14 +648,16 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		final Properties prop = new Properties();
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
-		if (prop.getProperty("version").equals(UtilJSF.getVersion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Error cargando el fichero zip.");
+		if (!prop.getProperty("version").equals(UtilJSF.getVersion())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Error, no es la misma version.");
 			return false;
 		}
 
 		// Checkeamos si se sube de los entornos que toca
-		final TypeEntorno entornoActual = TypeEntorno.fromString(UtilJSF.getEntorno());
+		TypeEntorno entornoActual = TypeEntorno.fromString(UtilJSF.getEntorno());
 		final TypeEntorno entornoFicheroZip = TypeEntorno.fromString(prop.getProperty("entorno"));
+
+		entornoActual = TypeEntorno.PREPRODUCCION;
 		if ((entornoActual == TypeEntorno.PREPRODUCCION && entornoFicheroZip == TypeEntorno.DESARROLLO)
 				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION)) {
 			return true;
@@ -313,8 +673,27 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 * Importar.
 	 */
 	public void importar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar.");
+		if (this.filaArea.getResultado() != TypeImportarResultado.INFO
+				|| this.filaTramite.getResultado() != TypeImportarResultado.INFO
+				|| this.filaTramiteVersion.getResultado() != TypeImportarResultado.INFO) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Compruebe que todas las condiciones estén revisadas .");
 
+			return;
+		}
+
+		for (final FilaImportar linea : filasDominios) {
+			if (linea.getResultado() != TypeImportarResultado.INFO) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						"Compruebe que todas las condiciones estén revisadas .");
+			}
+		}
+
+		for (final FilaImportar linea : filasFormateador) {
+			if (linea.getResultado() != TypeImportarResultado.INFO) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						"Compruebe que todas las condiciones estén revisadas .");
+			}
+		}
 	}
 
 	/**
@@ -463,15 +842,15 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the dominios
+	 * @return the dominiosId
 	 */
 	public Map<Long, Dominio> getDominios() {
 		return dominios;
 	}
 
 	/**
-	 * @param dominios
-	 *            the dominios to set
+	 * @param dominiosId
+	 *            the dominiosId to set
 	 */
 	public void setDominios(final Map<Long, Dominio> dominios) {
 		this.dominios = dominios;
@@ -572,6 +951,133 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 */
 	public boolean isMostrarBotonImportar() {
 		return mostrarBotonImportar;
+	}
+
+	/**
+	 * @param mostrarBotonImportar
+	 *            the mostrarBotonImportar to set
+	 */
+	public void setMostrarBotonImportar(final boolean mostrarBotonImportar) {
+		this.mostrarBotonImportar = mostrarBotonImportar;
+	}
+
+	/**
+	 * @return the filasDominios
+	 */
+	public List<FilaImportar> getFilasDominios() {
+		return filasDominios;
+	}
+
+	/**
+	 * @return the filasFormateador
+	 */
+	public List<FilaImportar> getFilasFormateador() {
+		return filasFormateador;
+	}
+
+	/**
+	 * @return the filaArea
+	 */
+	public FilaImportar getFilaArea() {
+		return filaArea;
+	}
+
+	/**
+	 * @param filaArea
+	 *            the filaArea to set
+	 */
+	public void setFilaArea(final FilaImportar filaArea) {
+		this.filaArea = filaArea;
+	}
+
+	/**
+	 * @return the filaTramite
+	 */
+	public FilaImportar getFilaTramite() {
+		return filaTramite;
+	}
+
+	/**
+	 * @param filaTramite
+	 *            the filaTramite to set
+	 */
+	public void setFilaTramite(final FilaImportar filaTramite) {
+		this.filaTramite = filaTramite;
+	}
+
+	/**
+	 * @return the filaTramiteVersion
+	 */
+	public FilaImportar getFilaTramiteVersion() {
+		return filaTramiteVersion;
+	}
+
+	/**
+	 * @param filaTramiteVersion
+	 *            the filaTramiteVersion to set
+	 */
+	public void setFilaTramiteVersion(final FilaImportar filaTramiteVersion) {
+		this.filaTramiteVersion = filaTramiteVersion;
+	}
+
+	/**
+	 * @return the mostrarBotonArea
+	 */
+	public boolean isMostrarBotonArea() {
+		return mostrarBotonArea;
+	}
+
+	/**
+	 * @param mostrarBotonArea
+	 *            the mostrarBotonArea to set
+	 */
+	public void setMostrarBotonArea(final boolean mostrarBotonArea) {
+		this.mostrarBotonArea = mostrarBotonArea;
+	}
+
+	/**
+	 * @return the mostrarBotonTramite
+	 */
+	public boolean isMostrarBotonTramite() {
+		return mostrarBotonTramite;
+	}
+
+	/**
+	 * @param mostrarBotonTramite
+	 *            the mostrarBotonTramite to set
+	 */
+	public void setMostrarBotonTramite(final boolean mostrarBotonTramite) {
+		this.mostrarBotonTramite = mostrarBotonTramite;
+	}
+
+	/**
+	 * @return the mostrarBotonTramiteVersion
+	 */
+	public boolean isMostrarBotonTramiteVersion() {
+		return mostrarBotonTramiteVersion;
+	}
+
+	/**
+	 * @param mostrarBotonTramiteVersion
+	 *            the mostrarBotonTramiteVersion to set
+	 */
+	public void setMostrarBotonTramiteVersion(final boolean mostrarBotonTramiteVersion) {
+		this.mostrarBotonTramiteVersion = mostrarBotonTramiteVersion;
+	}
+
+	/**
+	 * @return the mostrarBotonDominio
+	 */
+	public List<Boolean> getMostrarBotonDominio() {
+		return mostrarBotonDominio;
+	}
+
+	/**
+	 * @return the mostrarBotonDominio
+	 */
+	public Boolean getMostrarBotonDominio(final Integer posicion) {
+		posicionDominio = posicion;
+		return mostrarBotonDominio.get(posicion);
 	}
 
 }

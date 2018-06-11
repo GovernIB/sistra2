@@ -64,4 +64,12 @@ public interface AreaDao {
 	 *            area
 	 */
 	void update(final Area pArea);
+
+	/**
+	 * Obtiene un area por identificador.
+	 *
+	 * @param identificador
+	 * @return
+	 */
+	Area getAreaByIdentificador(String identificador, Long idEntidad);
 }

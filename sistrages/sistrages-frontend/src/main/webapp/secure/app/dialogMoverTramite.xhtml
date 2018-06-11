@@ -33,7 +33,7 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 					<p:outputLabel for="fuente" value="#{msg['dialogMoverTramite.area']}" style="margin-right:20px" />
 					<p:selectOneMenu id="fuente" value="#{dialogMoverTramite.idAreaDestino}" style="width:200px">
-					    <f:selectItems value="#{dialogMoverTramite.areas}" var="ad" itemValue="#{ad.id}" itemLabel="#{ad.descripcion}" />
+					    <f:selectItems value="#{dialogMoverTramite.areas}" var="ad" itemValue="#{ad.codigo}" itemLabel="#{ad.descripcion}" />
 					</p:selectOneMenu >
 				</h:panelGrid>
 

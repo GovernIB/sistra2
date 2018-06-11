@@ -20,6 +20,7 @@ import org.primefaces.event.ToggleEvent;
 
 import es.caib.sistrages.core.api.exception.ErrorNoControladoException;
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
@@ -31,12 +32,18 @@ import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.ParametroDominio;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
+import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.core.api.util.UtilDisenyo;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -60,8 +67,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	@Inject
 	FormularioInternoService formIntService;
 
+	@Inject
+	TramiteService tramiteService;
+
+	@Inject
+	DominioService dominioService;
+
 	/** Id formulario **/
 	private String id;
+
+	/**
+	 * id tramite.
+	 */
+	private String idTramiteVersion;
 
 	/** Formulario. **/
 	private FormularioInterno formulario;
@@ -107,6 +125,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	private List<Integer> ncolumnas;
 
+	private TramiteVersion tramiteVersion;
+
+	private List<String> idiomas;
+
 	/**
 	 * Inicializacion.
 	 **/
@@ -125,6 +147,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		// TODO Recuperacion formulario
 		recuperarFormulario(id);
+
+		// recupera tramite version
+		if (StringUtils.isNotEmpty(idTramiteVersion)) {
+			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+			idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
+		}
 
 		// TODO ¿que campo se selecciona? ninguno?
 		panelPropiedadesUrl = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
@@ -328,6 +356,17 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				final ComponenteFormulario cfUpdate = (ComponenteFormulario) formIntService
 						.updateComponenteFormulario(cfOriginal);
 
+				// si es campo selector con dominio damos de alta el dominio si en dominios
+				// empleados no lo está ya
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getDominio() != null
+							&& !dominioService.tieneTramiteVersion(campo.getDominio().getCodigo(),
+									tramiteVersion.getCodigo())) {
+						dominioService.addTramiteVersion(campo.getDominio().getCodigo(), tramiteVersion.getCodigo());
+					}
+				}
+
 				try {
 					BeanUtils.copyProperties(objetoFormularioEdit, cfUpdate);
 					BeanUtils.copyProperties(cfOriginal, cfUpdate);
@@ -388,9 +427,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * Editar texto componente.
 	 */
 	public void editarTraduccionesTexto() {
-		// TODO COGER IDIOMAS TRAMITE Y VER OBLIGATORIOS
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-
 		if (((ComponenteFormulario) objetoFormularioEdit).getTexto() == null) {
 			traduccionesEdit = UtilTraducciones.getTraduccionesPorDefecto();
 		} else {
@@ -412,9 +448,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * Editar ayuda componente.
 	 */
 	public void editarTraduccionesAyuda() {
-		// TODO COGER IDIOMAS TRAMITE Y VER OBLIGATORIOS
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-
 		if (((ComponenteFormulario) objetoFormularioEdit).getAyuda() == null) {
 			traduccionesEdit = UtilTraducciones.getTraduccionesPorDefecto();
 		} else {
@@ -467,6 +500,26 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		return TypeListaValores.SCRIPT.equals(campo.getTipoListaValores());
 	}
 
+	public boolean isDominioLF() {
+		boolean resultado = true;
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+		if (campo.getDominio() != null) {
+			resultado = TypeDominio.LISTA_FIJA.equals(campo.getDominio().getTipo());
+		}
+
+		return resultado;
+	}
+
+	public boolean isDominioTieneParametros() {
+		boolean resultado = false;
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+		if (campo.getDominio() != null) {
+			resultado = !campo.getDominio().getParametros().isEmpty();
+		}
+
+		return resultado;
+	}
+
 	/**
 	 * Cancelar.
 	 **/
@@ -484,8 +537,18 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
+
+		Map<String, Object> mochilaDatos = null;
+
+		// limpiamos mochila
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+
+		// metemos datos en la mochila
+		mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomas);
+
 		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 800,
 				460);
 	}
@@ -911,11 +974,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 
 			// metemos datos en la mochila
+			mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomas);
 			if (!campo.getListaValorListaFija().isEmpty()) {
-				mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 				mochilaDatos.put(Constantes.CLAVE_MOCHILA_LVFCIN, campo.getListaValorListaFija().stream()
 						.map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 			}
+
 			UtilJSF.openDialog(DialogListaValoresFijaCIN.class, TypeModoAcceso.valueOf(modoAcceso), null, true, 800,
 					350);
 		}
@@ -953,7 +1018,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void abrirBusquedaDominio() {
 		// Muestra dialogo
-		UtilJSF.openDialog(DialogBusquedaDominio.class, TypeModoAcceso.valueOf(modoAcceso), null, true, 800, 440);
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(tramiteVersion.getIdTramite()));
+		UtilJSF.openDialog(DialogBusquedaDominio.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 800, 440);
 	}
 
 	/**
@@ -971,14 +1038,96 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
 			final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-
 			campo.setDominio((Dominio) respuesta.getResult());
+
+			campo.setCampoDominioCodigo(null);
+			campo.setCampoDominioDescripcion(null);
+			if (!campo.getListaParametrosDominio().isEmpty()) {
+				campo.getListaParametrosDominio().clear();
+			}
+
+			if (!dominioService.tieneTramiteVersion(campo.getDominio().getCodigo(), tramiteVersion.getCodigo())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
+				return;
+			}
 		} else {
 			UtilJSF.doValidationFailed();
 		}
 
 	}
 
+	public void consultaDominio() {
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(campo.getDominio().getCodigo()));
+		params.put(TypeParametroVentana.AMBITO.toString(), campo.getDominio().getAmbito().toString());
+		if (TypeAmbito.AREA.equals(campo.getDominio().getAmbito())) {
+			final Area area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
+			params.put(TypeParametroVentana.AREA.toString(), area.getCodigo().toString());
+		}
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
+	}
+
+	private String getIdComponente() {
+		String idComponente = null;
+		if (objetoFormularioEdit != null) {
+			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				idComponente = "L" + objetoFormularioEdit.getId();
+			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				idComponente = String.valueOf(objetoFormularioEdit.getId());
+			}
+		}
+		return idComponente;
+	}
+
+	public void abrirParametrosDominioCIN() {
+		if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+			// Muestra dialogo
+			final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+			Map<String, Object> mochilaDatos = null;
+
+			// limpiamos mochila
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+
+			mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_PARAMDOM, campo.getDominio().getParametros().stream()
+					.map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+
+			// metemos datos en la mochila
+			if (!campo.getListaParametrosDominio().isEmpty()) {
+				mochilaDatos.put(Constantes.CLAVE_MOCHILA_PRDCIN, campo.getListaParametrosDominio().stream()
+						.map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+			}
+
+			UtilJSF.openDialog(DialogParametrosDominioCIN.class, TypeModoAcceso.valueOf(modoAcceso), null, true, 800,
+					350);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void returnDialogoParametrosDominioCIN(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+				// Muestra dialogo
+				final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+
+				if (respuesta.getResult() == null) {
+					campo.getListaParametrosDominio().clear();
+				} else {
+					campo.setListaParametrosDominio((List<ParametroDominio>) respuesta.getResult());
+				}
+			}
+		} else {
+			UtilJSF.doValidationFailed();
+		}
+
+	}
 	// -- Getters / Setters
 
 	/**
@@ -1008,7 +1157,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	public String getUrlIframe() {
-		return urlIframe + "&id=" + id + "&page=" + paginaActual;
+		final String idComponente = getIdComponente();
+
+		return urlIframe + "&id=" + id + "&page=" + paginaActual
+				+ (idComponente != null ? "&idComponente=" + idComponente : "");
 	}
 
 	public void setUrlIframe(final String urlIframe) {
@@ -1114,5 +1266,21 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setNcolumnas(final List<Integer> ncolumnas) {
 		this.ncolumnas = ncolumnas;
+	}
+
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
+	}
+
+	public void setIdTramiteVersion(final String idTramite) {
+		this.idTramiteVersion = idTramite;
+	}
+
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 }

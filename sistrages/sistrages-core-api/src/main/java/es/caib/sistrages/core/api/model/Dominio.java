@@ -16,13 +16,13 @@ import es.caib.sistrages.core.api.model.types.TypeDominio;
 public class Dominio extends ModelApi {
 
 	/** Id. */
-	private Long id;
+	private Long codigo;
 
 	/** Ámbito dominio (G : Global / E: Entidad / A: Área) */
 	private TypeAmbito ambito;
 
 	/** Identificador. **/
-	private String codigo;
+	private String identificador;
 
 	/** Descripcion. */
 	private String descripcion;
@@ -43,10 +43,10 @@ public class Dominio extends ModelApi {
 	private String sql;
 
 	/** Para tipo Fuente de datos indica el ID de la Fuente de datos */
-	private FuenteDatos fuenteDatos;
+	private Long idFuenteDatos;
 
 	/**
-	 * JSON con la lista de valores (codigo - valor)
+	 * JSON con la lista de valores (identificador - valor)
 	 */
 	private List<Propiedad> listaFija;
 
@@ -56,7 +56,7 @@ public class Dominio extends ModelApi {
 	 */
 	private String url;
 
-	/** JSON con la lista de parametros (codigo - valor). */
+	/** JSON con la lista de parametros (identificador - valor). */
 	private List<Propiedad> parametros;
 
 	/**
@@ -67,18 +67,18 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long id) {
+		this.codigo = id;
 	}
 
 	/**
@@ -97,41 +97,41 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
 	public String getIdString() {
-		if (id == null) {
+		if (codigo == null) {
 			return null;
 		} else {
-			return String.valueOf(id);
+			return String.valueOf(codigo);
 		}
 	}
 
 	/**
 	 * @param idString
-	 *            the id to set
+	 *            the codigo to set
 	 */
 	public void setIdString(final String idString) {
 		if (idString == null) {
-			this.id = null;
+			this.codigo = null;
 		} else {
-			this.id = Long.valueOf(idString);
+			this.codigo = Long.valueOf(idString);
 		}
 	}
 
 	/**
-	 * @return the codigo
+	 * @return the identificador
 	 */
-	public String getCodigo() {
-		return codigo;
+	public String getIdentificador() {
+		return identificador;
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param identificador
+	 *            the identificador to set
 	 */
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**
@@ -210,18 +210,18 @@ public class Dominio extends ModelApi {
 	}
 
 	/**
-	 * @return the fuenteDatos
+	 * @return the idFuenteDatos
 	 */
-	public FuenteDatos getFuenteDatos() {
-		return fuenteDatos;
+	public Long getIdFuenteDatos() {
+		return idFuenteDatos;
 	}
 
 	/**
-	 * @param fuenteDatos
-	 *            the fuenteDatos to set
+	 * @param idFuenteDatos
+	 *            the idFuenteDatos to set
 	 */
-	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
-		this.fuenteDatos = fuenteDatos;
+	public void setIdFuenteDatos(final Long fuenteDatos) {
+		this.idFuenteDatos = fuenteDatos;
 	}
 
 	/**

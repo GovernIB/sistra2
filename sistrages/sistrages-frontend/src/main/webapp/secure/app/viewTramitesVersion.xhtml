@@ -47,8 +47,7 @@
 		        			<p:ajax event="dialogReturn" listener="#{viewTramitesVersion.returnDialogoDesbloquear}" update="growl dataTable" />
 		        		</p:commandButton>
 						<p:menuButton value="Más..">
-        					<p:menuitem id="btnCuaderno" value="#{msg['botones.exportar']}" icon="fa fa-download" actionListener="#{viewTramitesVersion.exportar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
-				        	<p:menuitem id="btnImportar" value="#{msg['botones.importar']}" icon="fa fa-upload" actionListener="#{viewTramitesVersion.importar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
+        					<p:menuitem id="btnExportar" value="#{msg['botones.exportar']}" icon="fa fa-download" actionListener="#{viewTramitesVersion.exportar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
 				        	<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramitesVersion.refrescar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteModificacion}" />
 				        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicar']}" icon="fa fa-copy" actionListener="#{viewTramitesVersion.duplicar()}" process="@this" update="growl dataTable"  rendered="#{viewTramitesVersion.permiteAlta}">
 				        		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.clonar.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>

@@ -44,7 +44,7 @@
 
 					<p:outputLabel for="area" value="#{msg['dialogRolesPermisos.headerArea']}" />
 					<p:selectOneMenu id="area" value="#{dialogRolesPermisos.data.area}" converter="#{areaConverter}" required="true" disabled="#{dialogRolesPermisos.consulta}">
-            			<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.codigo}" itemValue="#{area}" />
+            			<f:selectItems value="#{dialogRolesPermisos.areas}" var="area" itemLabel="#{area.identificador}" itemValue="#{area}" />
         			</p:selectOneMenu>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />

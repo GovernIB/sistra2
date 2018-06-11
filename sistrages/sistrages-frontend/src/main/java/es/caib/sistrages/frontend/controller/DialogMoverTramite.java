@@ -51,7 +51,7 @@ public class DialogMoverTramite extends DialogControllerBase {
 		data = tramiteService.getTramite(idTramite);
 		final Area area = tramiteService.getAreaTramite(idTramite);
 		areas = tramiteService.listArea(UtilJSF.getIdEntidad(), null);
-		idAreaDestino = area.getId();
+		idAreaDestino = area.getCodigo();
 	}
 
 	/**

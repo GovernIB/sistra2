@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
@@ -46,7 +45,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/** DAO de area. **/
 	@Autowired
-	AreaDao areaDataDao;
+	AreaDao areaDao;
 
 	/** DAO Fichero Externo. */
 	@Autowired
@@ -85,7 +84,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public List<Area> listArea(final Long idEntidad, final String filtro) {
-		return areaDataDao.getAllByFiltro(idEntidad, filtro);
+		return areaDao.getAllByFiltro(idEntidad, filtro);
 	}
 
 	/*
@@ -97,7 +96,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public Area getArea(final Long id) {
-		return areaDataDao.getById(id);
+		return areaDao.getById(id);
 	}
 
 	/*
@@ -110,7 +109,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public void addArea(final Long idEntidad, final Area area) {
-		areaDataDao.add(idEntidad, area);
+		areaDao.add(idEntidad, area);
 	}
 
 	/*
@@ -133,7 +132,7 @@ public class TramiteServiceImpl implements TramiteService {
 		fuenteDatoDao.removeByArea(id);
 
 		// Borramos area
-		areaDataDao.remove(id);
+		areaDao.remove(id);
 		return true;
 	}
 
@@ -146,7 +145,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public void updateArea(final Area area) {
-		areaDataDao.update(area);
+		areaDao.update(area);
 	}
 
 	/*
@@ -279,8 +278,8 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public List<Dominio> getTramiteDominios(final Long idTramiteVersion) {
-		return tramiteDao.getTramiteDominios(idTramiteVersion);
+	public List<Long> getTramiteDominiosId(final Long idTramiteVersion) {
+		return tramiteDao.getTramiteDominiosId(idTramiteVersion);
 	}
 
 	@Override
@@ -457,6 +456,30 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public List<Fichero> getFicherosTramiteVersion(final Long idTramiteVersion) {
 		return tramitePasoDao.getFicherosTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Area getAreaByIdentificador(final String identificador, final Long idEntidad) {
+		return areaDao.getAreaByIdentificador(identificador, idEntidad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea) {
+		return tramiteDao.getTramiteByIdentificador(identificador, idArea);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TramiteVersion getTramiteVersionByNumVersion(final int identificador, final Long idTramite) {
+		return tramiteDao.getTramiteVersionByNumVersion(identificador, idTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TramiteVersion getTramiteVersionMaxNumVersion(final Long idTramite) {
+		return tramiteDao.getTramiteVersionMaxNumVersion(idTramite);
 	}
 
 }

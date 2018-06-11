@@ -23,7 +23,11 @@ public enum TypeRolePermisos {
 	/**
 	 * Helpdesk.
 	 */
-	HELPDESK("H");
+	HELPDESK("H"),
+	/**
+	 * Promocionar entre entornos.
+	 */
+	PROMOCIONAR("P");
 
 	private String valor;
 

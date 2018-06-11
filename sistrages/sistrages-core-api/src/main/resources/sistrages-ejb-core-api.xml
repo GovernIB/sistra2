@@ -43,5 +43,10 @@
 			jndi-name="java:app/sistrages-core/SystemServiceBean"
 			business-interface="es.caib.sistrages.core.api.service.SystemService"/>
 
+	<jee:local-slsb
+			id="restApiService"
+			jndi-name="java:app/sistrages-core/RestApiServiceBean"
+			business-interface="es.caib.sistrages.core.api.service.RestApiService"/>
+
 
 </beans>

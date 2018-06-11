@@ -154,9 +154,9 @@ public class AreaDaoImpl implements AreaDao {
 		if (pArea == null) {
 			throw new FaltanDatosException(FALTA_AREA);
 		}
-		final JArea jArea = entityManager.find(JArea.class, pArea.getId());
+		final JArea jArea = entityManager.find(JArea.class, pArea.getCodigo());
 		if (jArea == null) {
-			throw new NoExisteDato(NO_EXISTE_EL_AREA + pArea.getId());
+			throw new NoExisteDato(NO_EXISTE_EL_AREA + pArea.getCodigo());
 		}
 
 		// Mergeamos datos
@@ -205,5 +205,23 @@ public class AreaDaoImpl implements AreaDao {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public Area getAreaByIdentificador(final String identificador, final Long idEntidad) {
+
+		final String sql = "Select t From JArea t where t.entidad.codigo = :idEntidad and t.identificador = :identificador";
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idEntidad", idEntidad);
+		query.setParameter("identificador", identificador);
+
+		final JArea jarea = (JArea) query.getSingleResult();
+		if (jarea == null) {
+			return null;
+		} else {
+			return jarea.toModel();
+		}
+
 	}
 }

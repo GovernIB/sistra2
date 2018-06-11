@@ -4,7 +4,6 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
@@ -93,7 +92,7 @@ public interface TramiteService {
 	 *
 	 * @param id
 	 *            identificador
-	 * @return tramite
+	 * @return {@link Tramite}
 	 */
 	public Tramite getTramite(Long id);
 
@@ -194,7 +193,7 @@ public interface TramiteService {
 	 * @param idTramiteVersion
 	 * @return
 	 */
-	public List<Dominio> getTramiteDominios(Long idTramiteVersion);
+	public List<Long> getTramiteDominiosId(Long idTramiteVersion);
 
 	/**
 	 * Actualiza un paso de trámite.
@@ -415,9 +414,45 @@ public interface TramiteService {
 
 	/**
 	 * Devuelve una lista de ficheros de un tramite version.
-	 * 
+	 *
 	 * @param idTramiteVersion
 	 * @return
 	 */
 	public List<Fichero> getFicherosTramiteVersion(Long idTramiteVersion);
+
+	/**
+	 * Obtiene area por identificador.
+	 *
+	 * @param identificador
+	 * @param idEntidad
+	 * @return
+	 */
+	public Area getAreaByIdentificador(String identificador, Long idEntidad);
+
+	/**
+	 * Obtiene tramite por identificador.
+	 *
+	 * @param identificador
+	 * @param idArea
+	 * @return
+	 */
+	public Tramite getTramiteByIdentificador(String identificador, Long idArea);
+
+	/**
+	 * Obtiene tramite version por num. version y la id del tramite.
+	 *
+	 * @param numVersion
+	 * @param idTramite
+	 * @return
+	 */
+	public TramiteVersion getTramiteVersionByNumVersion(int numVersion, Long idTramite);
+
+	/**
+	 * Obtiene el tramite version con el num. version más alto.
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	public TramiteVersion getTramiteVersionMaxNumVersion(Long idTramite);
+
 }

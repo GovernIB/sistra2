@@ -49,7 +49,7 @@ public class DialogScript extends DialogControllerBase {
 	private boolean visibleHerramientas = false;
 	/** Visible mensajes. **/
 	private boolean visibleMensajes = true;
-	/** Visible dominios. **/
+	/** Visible dominiosId. **/
 	private boolean visibleDominios = true;
 
 	/**

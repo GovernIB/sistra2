@@ -290,9 +290,13 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 	height: 1em;
 	margin-right: .5em;
 	background: #bbb url() no-repeat center center / .5em auto;
-} 
+}
 
+.imc-input-check input:checked ~ label { color: #368355; }
 .imc-input-check input:checked ~ label::before { background-color: #368355; background-image: url(../imgs/icones/ico_guarda.svg) }
+
+.imc-input-check input:disabled ~ label { color: #999; }
+.imc-input-check input:disabled ~ label::before { background-color: #999; }
 
 /* input radio */
 
@@ -313,5 +317,15 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 	background: #bbb url() no-repeat center center / .5em auto;
 } 
 
+.imc-input-radio input:checked ~ label { color: #368355; }
 .imc-input-radio input:checked ~ label::before { background-color: #368355; background-image: url(../imgs/icones/ico_input_radio.svg) }
 
+.imc-input-radio input:disabled ~ label { color: #999; }
+.imc-input-radio input:disabled ~ label::before { background-color: #999; }
+
+
+
+fieldset.imc-element .imc-input-check label::before,
+fieldset.imc-element .imc-input-radio label::before {
+	margin-left: .3em;
+}

@@ -256,4 +256,9 @@ public class DominioServiceImpl implements DominioService {
 		dominioDao.addTramiteVersion(idDominio, idTramiteVersion);
 	}
 
+	@Override
+	public List<Dominio> listDominio(final Long idTramite, final String filtro) {
+		return dominioDao.getAllByFiltro(idTramite, filtro);
+	}
+
 }

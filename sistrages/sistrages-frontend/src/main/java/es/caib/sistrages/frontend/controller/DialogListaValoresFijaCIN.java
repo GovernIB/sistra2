@@ -43,8 +43,6 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 			data = new ArrayList<>();
 		}
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
-
 	}
 
 	/**
@@ -56,6 +54,8 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
 	}
 
 	/**
@@ -66,6 +66,8 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
 	}
 
 	/**

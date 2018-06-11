@@ -48,7 +48,7 @@ public class DialogDefinicionVersionDominios extends DialogControllerBase {
 	private Dominio datoSeleccionado;
 
 	/**
-	 * lista dominios.
+	 * lista dominiosId.
 	 */
 	private List<Dominio> listaDominios;
 
@@ -82,7 +82,7 @@ public class DialogDefinicionVersionDominios extends DialogControllerBase {
 			return;
 		}
 
-		if (dominioService.tieneTramiteVersion(this.datoSeleccionado.getId(), Long.valueOf(this.id))) {
+		if (dominioService.tieneTramiteVersion(this.datoSeleccionado.getCodigo(), Long.valueOf(this.id))) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.tramiteDominio.yaexiste"));
 			return;
 		}

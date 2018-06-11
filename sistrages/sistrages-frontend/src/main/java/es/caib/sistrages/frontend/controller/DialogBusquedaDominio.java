@@ -18,6 +18,11 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogBusquedaDominio extends DialogControllerBase {
 
+	/**
+	 * id tramite.
+	 */
+	private String idTramite;
+
 	/** Datos elemento. */
 	private List<Dominio> data;
 
@@ -31,7 +36,6 @@ public class DialogBusquedaDominio extends DialogControllerBase {
 	/**
 	 * Inicialización.
 	 */
-	@SuppressWarnings("unchecked")
 	public void init() {
 		if (data == null) {
 			data = new ArrayList<>();
@@ -79,7 +83,7 @@ public class DialogBusquedaDominio extends DialogControllerBase {
 	}
 
 	public void filtrar() {
-		data = dominioService.listDominio(null, null, filtro);
+		data = dominioService.listDominio(Long.valueOf(idTramite), filtro);
 	}
 
 	/**
@@ -111,6 +115,14 @@ public class DialogBusquedaDominio extends DialogControllerBase {
 
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
+	}
+
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	public void setIdTramite(final String idTramite) {
+		this.idTramite = idTramite;
 	}
 
 }

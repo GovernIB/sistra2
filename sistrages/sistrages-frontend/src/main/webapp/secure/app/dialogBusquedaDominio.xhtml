@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAmbito" var="TypeAmbito"/>
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogBusquedaDominio.titulo']}"/></title>
@@ -20,6 +21,7 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogBusquedaDominio.modoAcceso}"/>
+		<f:viewParam name="TRAMITE" value="#{dialogBusquedaDominio.idTramite}"/>
 		<f:viewAction action="#{dialogBusquedaDominio.init}" />
 	</f:metadata>
 
@@ -37,7 +39,7 @@
 								 var="td" emptyMessage="#{msg['error.emptyRows']}"
 								 value="#{dialogBusquedaDominio.data}"
 								 scrollable="true"
-								 scrollHeight="280" rows="10"
+								 scrollHeight="264" rows="10"
 								 paginator="true" paginatorPosition="bottom"
                          		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          		 rowsPerPageTemplate="5,10,15,30"
@@ -56,6 +58,10 @@
 
 					    <p:column headerText="#{msg['dialogBusquedaDominio.descripcion']}" class="ui-panelgrid-cell w55">
 					        <h:outputText value="#{td.descripcion}" />
+					    </p:column>
+
+					    <p:column headerText="#{msg['dialogBusquedaDominio.ambito']}" class="ui-panelgrid-cell w15">
+					        <h:outputText value="#{msg['typeAmbito.' += td.ambito]}" />
 					    </p:column>
 
 		 		</p:dataTable>

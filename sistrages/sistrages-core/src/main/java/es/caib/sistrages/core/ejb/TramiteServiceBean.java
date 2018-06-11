@@ -13,7 +13,6 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
-import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
@@ -190,8 +189,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<Dominio> getTramiteDominios(final Long idTramiteVersion) {
-		return tramiteService.getTramiteDominios(idTramiteVersion);
+	public List<Long> getTramiteDominiosId(final Long idTramiteVersion) {
+		return tramiteService.getTramiteDominiosId(idTramiteVersion);
 	}
 
 	@Override
@@ -361,5 +360,29 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Fichero> getFicherosTramiteVersion(final Long idTramiteVersion) {
 		return tramiteService.getFicherosTramiteVersion(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Area getAreaByIdentificador(final String identificador, final Long idEntidad) {
+		return tramiteService.getAreaByIdentificador(identificador, idEntidad);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea) {
+		return tramiteService.getTramiteByIdentificador(identificador, idArea);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public TramiteVersion getTramiteVersionByNumVersion(final int numVersion, final Long idTramite) {
+		return tramiteService.getTramiteVersionByNumVersion(numVersion, idTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public TramiteVersion getTramiteVersionMaxNumVersion(final Long idTramite) {
+		return tramiteService.getTramiteVersionMaxNumVersion(idTramite);
 	}
 }

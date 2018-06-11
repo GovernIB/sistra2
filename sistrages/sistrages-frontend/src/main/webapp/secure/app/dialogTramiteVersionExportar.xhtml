@@ -40,7 +40,7 @@
                 	<p:outputLabel  />
 
                 	<p:outputLabel value="#{msg['dialogTramiteVersionExportar.vt.area']}" />
-                	<p:outputLabel value="#{dialogTramiteVersionExportar.area.codigo} - #{dialogTramiteVersionExportar.area.descripcion}" />
+                	<p:outputLabel value="#{dialogTramiteVersionExportar.area.identificador} - #{dialogTramiteVersionExportar.area.descripcion}" />
 
                 	<p:outputLabel value="#{msg['dialogTramiteVersionExportar.vt.tramite']}" />
                 	<p:outputLabel value="#{dialogTramiteVersionExportar.tramite.identificador} - #{dialogTramiteVersionExportar.tramite.descripcion}"  />
@@ -60,7 +60,7 @@
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['dialogTramiteVersionExportar.ec.headerCodigo']}">
-					        <h:outputText value="#{td.codigo}" />
+					        <h:outputText value="#{td.identificador}" />
 					    </p:column>
 
 					   <p:column headerText="#{msg['dialogTramiteVersionExportar.ec.headerAmbito']}">

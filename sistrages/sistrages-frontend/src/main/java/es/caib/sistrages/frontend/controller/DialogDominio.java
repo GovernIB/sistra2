@@ -98,15 +98,15 @@ public class DialogDominio extends DialogControllerBase {
 			data.setTipo(TypeDominio.CONSULTA_BD);
 		} else {
 			data = dominioService.loadDominio(Long.valueOf(id));
-			identificadorOriginal = data.getCodigo();
+			identificadorOriginal = data.getIdentificador();
 			if (data.getParametros() == null) {
 				data.setParametros(new ArrayList<>());
 			}
 			if (data.getListaFija() == null) {
 				data.setListaFija(new ArrayList<>());
 			}
-			if (data.getTipo() == TypeDominio.FUENTE_DATOS && data.getFuenteDatos() != null) {
-				idFuenteDato = data.getFuenteDatos().getCodigo();
+			if (data.getTipo() == TypeDominio.FUENTE_DATOS && data.getIdFuenteDatos() != null) {
+				idFuenteDato = data.getIdFuenteDatos();
 			}
 		}
 
@@ -397,9 +397,9 @@ public class DialogDominio extends DialogControllerBase {
 
 		if (this.data.getTipo() == TypeDominio.FUENTE_DATOS) {
 			final FuenteDatos fuenteDato = dominioService.loadFuenteDato(idFuenteDato);
-			this.data.setFuenteDatos(fuenteDato);
+			this.data.setIdFuenteDatos(fuenteDato.getCodigo());
 		} else {
-			this.data.setFuenteDatos(null);
+			this.data.setIdFuenteDatos(null);
 		}
 
 		switch (acceso) {
@@ -413,7 +413,7 @@ public class DialogDominio extends DialogControllerBase {
 				lIdArea = Long.valueOf(idArea);
 			}
 			// Verifica unicidad codigo dominio
-			if (dominioService.loadDominio(this.data.getCodigo()) != null) {
+			if (dominioService.loadDominio(this.data.getIdentificador()) != null) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
@@ -422,14 +422,14 @@ public class DialogDominio extends DialogControllerBase {
 			break;
 		case EDICION:
 			// Verifica unicidad codigo dominio
-			final Dominio d = dominioService.loadDominio(this.data.getCodigo());
-			if (d != null && d.getId().longValue() != this.data.getId().longValue()) {
+			final Dominio d = dominioService.loadDominio(this.data.getIdentificador());
+			if (d != null && d.getCodigo().longValue() != this.data.getCodigo().longValue()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 			// En caso de cambio de identificador hay que controlar si se esta usando y
 			// mostrar mensaje
-			if (!StringUtils.equals(this.data.getCodigo(), identificadorOriginal)) {
+			if (!StringUtils.equals(this.data.getIdentificador(), identificadorOriginal)) {
 				// TODO Pendiente verificar si se puede
 				identificadorCambiado = true;
 			}
@@ -444,7 +444,7 @@ public class DialogDominio extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getCodigo());
+		result.setResult(data.getIdentificador());
 		if (identificadorCambiado) {
 			final DialogResultMessage dm = new DialogResultMessage();
 			dm.setNivel(TypeNivelGravedad.WARNING);

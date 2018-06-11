@@ -77,8 +77,11 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	/** Pasos. **/
 	List<TramitePaso> pasos;
 
+	/** Dominios Id. */
+	List<Long> dominiosId;
+
 	/** Dominios. */
-	List<Dominio> dominios;
+	List<Dominio> dominios = new ArrayList<>();
 
 	/** Formateadores. **/
 	List<FormateadorFormulario> formateadores;
@@ -101,21 +104,36 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(id));
 		pasos = tramiteService.getTramitePasos(Long.valueOf(id));
-		dominios = tramiteService.getTramiteDominios(Long.valueOf(id));
+		dominiosId = tramiteService.getTramiteDominiosId(Long.valueOf(id));
 		tramiteVersion.setListaPasos(pasos);
-		tramiteVersion.setListaDominios(dominios);
+		tramiteVersion.setListaDominios(dominiosId);
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
 		area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
 
 		formateadores = tramiteService.getFormateadoresTramiteVersion(Long.valueOf(id));
 		formularios = tramiteService.getFormulariosTramiteVersion(Long.valueOf(id));
 		ficheros = tramiteService.getFicherosTramiteVersion(Long.valueOf(id));
+
+		for (final Long dominioId : dominiosId) {
+			dominios.add(dominioService.loadDominio(dominioId));
+		}
+
 		for (final Dominio dominio : dominios) {
-			if (dominio.getTipo() == TypeDominio.FUENTE_DATOS && dominio.getFuenteDatos() != null
-					&& !fuenteDatos.contains(dominio.getFuenteDatos())) {
-				fuenteDatos.add(dominio.getFuenteDatos());
+			if (dominio.getTipo() == TypeDominio.FUENTE_DATOS && dominio.getIdFuenteDatos() != null) {
+				final FuenteDatos fuentesDatos = dominioService.loadFuenteDato(dominio.getIdFuenteDatos());
+				if (!fuenteDatos.contains(fuentesDatos)) {
+					fuenteDatos.add(fuentesDatos);
+				}
 			}
 		}
+
+		// El modo debug no se activa al exportar.
+		tramiteVersion.setDebug(false);
+
+		// TODO Faltaría verificar, bien aquí, o bien al exportar una comprobación de
+		// que los datos están correctos.
+		// Es decir, que todos los idiomas del trámite se han rellenado o bine que los
+		// scripts están correctos.
 
 	}
 
@@ -170,7 +188,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 
 		// 5. Incluir los dominios_ID.data
 		for (final Dominio dominio : dominios) {
-			incluirModelApi(zos, dominio, "dominios_" + dominio.getId() + ".data");
+			incluirModelApi(zos, dominio, "dominios_" + dominio.getCodigo() + ".data");
 		}
 
 		// 6. Incluir los formularios_ID.data
@@ -332,18 +350,18 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the dominios
+	 * @return the dominiosId
 	 */
-	public List<Dominio> getDominios() {
-		return dominios;
+	public List<Long> getDominiosId() {
+		return dominiosId;
 	}
 
 	/**
-	 * @param dominios
-	 *            the dominios to set
+	 * @param dominiosId
+	 *            the dominiosId to set
 	 */
-	public void setDominios(final List<Dominio> dominios) {
-		this.dominios = dominios;
+	public void setDominiosId(final List<Long> dominios) {
+		this.dominiosId = dominios;
 	}
 
 	/**
@@ -359,6 +377,66 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	 */
 	public void setFormateadores(final List<FormateadorFormulario> formateadores) {
 		this.formateadores = formateadores;
+	}
+
+	/**
+	 * @return the dominios
+	 */
+	public List<Dominio> getDominios() {
+		return dominios;
+	}
+
+	/**
+	 * @param dominios
+	 *            the dominios to set
+	 */
+	public void setDominios(final List<Dominio> dominios) {
+		this.dominios = dominios;
+	}
+
+	/**
+	 * @return the fuenteDatos
+	 */
+	public List<FuenteDatos> getFuenteDatos() {
+		return fuenteDatos;
+	}
+
+	/**
+	 * @param fuenteDatos
+	 *            the fuenteDatos to set
+	 */
+	public void setFuenteDatos(final List<FuenteDatos> fuenteDatos) {
+		this.fuenteDatos = fuenteDatos;
+	}
+
+	/**
+	 * @return the formularios
+	 */
+	public List<FormularioInterno> getFormularios() {
+		return formularios;
+	}
+
+	/**
+	 * @param formularios
+	 *            the formularios to set
+	 */
+	public void setFormularios(final List<FormularioInterno> formularios) {
+		this.formularios = formularios;
+	}
+
+	/**
+	 * @return the ficheros
+	 */
+	public List<Fichero> getFicheros() {
+		return ficheros;
+	}
+
+	/**
+	 * @param ficheros
+	 *            the ficheros to set
+	 */
+	public void setFicheros(final List<Fichero> ficheros) {
+		this.ficheros = ficheros;
 	}
 
 }

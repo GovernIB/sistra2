@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +90,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Tramite. **/
 	private Tramite tramite;
 
+	/** Dominios. */
+	private List<Dominio> dominios = new ArrayList<>();
+
 	/** Arbol */
 	private TreeNode root;
 
@@ -117,7 +121,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private Tasa tasaSeleccionado;
 
 	/** Dato seleccionado en la lista. */
-	private Dominio dominioSeleccionado;
+	private Long dominioSeleccionado;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -145,8 +149,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		DefaultMenuItem item = null;
 
-		item = new DefaultMenuItem(area.getCodigo());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getId());
+		item = new DefaultMenuItem(area.getIdentificador());
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo());
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem(tramite.getDescripcion());
@@ -179,7 +183,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		// Desarrollador
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && area != null) {
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getCodigo());
 			res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
 		}
 
@@ -201,7 +205,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		// Desarrollador
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && area != null) {
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getCodigo());
 			res = (permisos.contains(TypeRolePermisos.MODIFICACION) || permisos.contains(TypeRolePermisos.ALTA_BAJA));
 		}
 
@@ -218,7 +222,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			if (area == null) {
 				return false;
 			} else {
-				final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getId());
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidad(area.getCodigo());
 
 				return (permisos.contains(TypeRolePermisos.CONSULTA));
 			}
@@ -248,8 +253,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		/* obtenemos los pasos del trámite. */
 		final List<TramitePaso> pasos = tramiteService.getTramitePasos(id);
 		tramiteVersion.setListaPasos(pasos);
-		final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
-		tramiteVersion.setListaDominios(dominios);
+		final List<Long> dominiosId = tramiteService.getTramiteDominiosId(id);
+		for (final Long dominioId : dominiosId) {
+			dominios.add(dominioService.loadDominio(dominioId));
+		}
+		tramiteVersion.setListaDominios(dominiosId);
 	}
 
 	/**
@@ -390,7 +398,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void anyadirDominio() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.tramiteVersion.getCodigo().toString());
-		params.put(TypeParametroVentana.AREA.toString(), this.area.getId().toString());
+		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionDominios.class, TypeModoAcceso.ALTA, params, true, 950, 450);
 	}
 
@@ -402,11 +410,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getId(), this.id)) {
+		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado, this.id)) {
 
-			dominioService.removeTramiteVersion(this.dominioSeleccionado.getId(), this.tramiteVersion.getCodigo());
-			final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
-			tramiteVersion.setListaDominios(dominios);
+			dominioService.removeTramiteVersion(this.dominioSeleccionado, this.tramiteVersion.getCodigo());
+			final List<Long> dominiosId = tramiteService.getTramiteDominiosId(id);
+			for (final Long dominioId : dominiosId) {
+				dominios.add(dominioService.loadDominio(dominioId));
+			}
+			tramiteVersion.setListaDominios(dominiosId);
 
 		} else {
 
@@ -424,7 +435,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return;
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.getId().toString());
+		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.toString());
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
 
@@ -444,10 +455,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.ALTA) {
 			final Dominio dominio = (Dominio) respuesta.getResult();
-			dominioService.addTramiteVersion(dominio.getId(), tramiteVersion.getCodigo());
+			dominioService.addTramiteVersion(dominio.getCodigo(), tramiteVersion.getCodigo());
 
-			final List<Dominio> dominios = tramiteService.getTramiteDominios(id);
-			tramiteVersion.setListaDominios(dominios);
+			final List<Long> dominiosId = tramiteService.getTramiteDominiosId(id);
+			for (final Long dominioId : dominiosId) {
+				dominios.add(dominioService.loadDominio(dominioId));
+			}
+			tramiteVersion.setListaDominios(dominiosId);
 
 			message = UtilJSF.getLiteral("info.alta.ok");
 
@@ -759,7 +773,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idDocumento));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
-				entidadService.loadEntidadByArea(area.getId()).getId().toString());
+				entidadService.loadEntidadByArea(area.getCodigo()).getId().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 575);
 	}
 
@@ -1503,7 +1517,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/**
 	 * @return the dominioSeleccionado
 	 */
-	public Dominio getDominioSeleccionado() {
+	public Long getDominioSeleccionado() {
 		return dominioSeleccionado;
 	}
 
@@ -1511,10 +1525,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @param dominioSeleccionado
 	 *            the dominioSeleccionado to set
 	 */
-	public void setDominioSeleccionado(final Dominio dominioSeleccionado) {
+	public void setDominioSeleccionado(final Long dominioSeleccionado) {
 		this.dominioSeleccionado = dominioSeleccionado;
 	}
 
+	/**
+	 * Documento seleccionado.
+	 *
+	 * @return
+	 */
 	public Documento getDocumentoSeleccionado() {
 		return documentoSeleccionado;
 	}
@@ -1555,5 +1574,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public void setTasaSeleccionado(final Tasa tasaSeleccionado) {
 		this.tasaSeleccionado = tasaSeleccionado;
+	}
+
+	/**
+	 * @return the dominios
+	 */
+	public List<Dominio> getDominios() {
+		return dominios;
+	}
+
+	/**
+	 * @param dominios
+	 *            the dominios to set
+	 */
+	public void setDominios(final List<Dominio> dominios) {
+		this.dominios = dominios;
 	}
 }

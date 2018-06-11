@@ -30,7 +30,7 @@ public class AreaConverter implements Converter {
 	@Override
 	public String getAsString(final FacesContext fc, final UIComponent uic, final Object object) {
 		if (object != null) {
-			return String.valueOf(((Area) object).getId());
+			return String.valueOf(((Area) object).getCodigo());
 		} else {
 			return null;
 		}

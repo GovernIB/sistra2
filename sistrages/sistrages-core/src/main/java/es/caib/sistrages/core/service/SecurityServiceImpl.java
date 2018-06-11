@@ -114,7 +114,7 @@ public class SecurityServiceImpl implements SecurityService {
 				// Verificamos si existe alguna area de la entidad para la que tenga acceso
 				final List<Area> listaAreas = areaDao.getAll(e.getId());
 				for (final Area area : listaAreas) {
-					if (!obtenerPermisosDesarrolladorEntidad(area.getId()).isEmpty()) {
+					if (!obtenerPermisosDesarrolladorEntidad(area.getCodigo()).isEmpty()) {
 						res.add(e);
 						break; // Pasamos a siguiente entidad
 					}
@@ -152,6 +152,12 @@ public class SecurityServiceImpl implements SecurityService {
 				}
 				if (r.isModificacion() && !permisos.contains(TypeRolePermisos.MODIFICACION)) {
 					permisos.add(TypeRolePermisos.MODIFICACION);
+				}
+				if (r.isPromocionar() && !permisos.contains(TypeRolePermisos.PROMOCIONAR)) {
+					permisos.add(TypeRolePermisos.PROMOCIONAR);
+				}
+				if (r.isHelpdesk() && !permisos.contains(TypeRolePermisos.HELPDESK)) {
+					permisos.add(TypeRolePermisos.HELPDESK);
 				}
 			}
 		}

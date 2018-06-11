@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.util;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -231,6 +232,20 @@ public final class UtilJSF {
 	public static String getLiteral(final String key) {
 		final ResourceBundle text = ResourceBundle.getBundle("i18n.messages", getSessionBean().getLocale());
 		return text.getString(key);
+	}
+
+	/**
+	 * Obtiene el valor de literal.
+	 *
+	 * @param key
+	 *            key
+	 * @param parametros
+	 *            parametros para sustituir en el literal
+	 * @return el valor de literal
+	 */
+	public static String getLiteral(final String key, final Object[] parametros) {
+		final ResourceBundle text = ResourceBundle.getBundle("i18n.messages", getSessionBean().getLocale());
+		return MessageFormat.format(text.getString(key), parametros);
 	}
 
 	/**

@@ -100,7 +100,8 @@
 			<!-- Toolbar -->
 			<p:toolbar id="toolbar">
 				<f:facet name="right">
-				 	<p:commandButton id="btnAceptar"  value="#{msg['botones.guardar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@form" update="@form growl" styleClass="boton-azul" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
+				 	<p:commandButton id="btnAceptar"  value="#{msg['botones.guardar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@form" update="@form growl" styleClass="boton-azul" style="margin-right:20px" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
+				 	<p:commandButton id="btnRefrescar"  value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewConfiguracionEntidad.refrescar()}" process="@form" update="@form growl" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
 				</f:facet>
 			</p:toolbar>
 

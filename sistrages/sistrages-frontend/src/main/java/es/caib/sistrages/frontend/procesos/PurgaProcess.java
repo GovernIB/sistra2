@@ -19,45 +19,46 @@ import es.caib.sistrages.frontend.model.comun.Constantes;
 @Component
 public final class PurgaProcess {
 
-	/** Log. */
-	private static Logger log = LoggerFactory.getLogger(PurgaProcess.class);
+    /** Log. */
+    private static Logger log = LoggerFactory.getLogger(PurgaProcess.class);
 
-	@Autowired
-	private SystemService systemService;
+    @Autowired
+    private SystemService systemService;
 
-	@Autowired
-	ServletContext servletContext;
+    @Autowired
+    private ServletContext servletContext;
 
-	/**
-	 * Process (cada 5 min).
-	 */
-	@Scheduled(cron = "0 0/5 * * * ?")
-	public void process() {
-		log.debug("Proceso purgarFicheros");
-		final String instancia = getIdServletContext();
-		if (StringUtils.isNotBlank(instancia)) {
-			log.debug("Lanza purgarFicheros con id instancia: " + instancia);
-			systemService.purgarFicheros(instancia);
-		} else {
-			log.warn("No se ha podido obtener id instancia.");
-		}
-	}
+    /**
+     * Process (cada 5 min).
+     */
+    @Scheduled(cron = "0 0/5 * * * ?")
+    public void process() {
+        log.debug("Proceso purgarFicheros");
+        final String instancia = getIdServletContext();
+        if (StringUtils.isNotBlank(instancia)) {
+            log.debug("Lanza purgarFicheros con id instancia: " + instancia);
+            systemService.purgarFicheros(instancia);
+        } else {
+            log.warn("No se ha podido obtener id instancia.");
+        }
+    }
 
-	/**
-	 * Obtiene id instancia.
-	 * 
-	 * @return id instancia
-	 */
-	private String getIdServletContext() {
-		String id = null;
-		if (servletContext != null) {
-			id = (String) servletContext.getAttribute(Constantes.SERVLET_CONTEXT_ID);
-			if (id == null) {
-				id = GeneradorId.generarId();
-				servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
-			}
-		}
-		return id;
-	}
+    /**
+     * Obtiene id instancia.
+     *
+     * @return id instancia
+     */
+    private String getIdServletContext() {
+        String id = null;
+        if (servletContext != null) {
+            id = (String) servletContext
+                    .getAttribute(Constantes.SERVLET_CONTEXT_ID);
+            if (id == null) {
+                id = GeneradorId.generarId();
+                servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
+            }
+        }
+        return id;
+    }
 
 }

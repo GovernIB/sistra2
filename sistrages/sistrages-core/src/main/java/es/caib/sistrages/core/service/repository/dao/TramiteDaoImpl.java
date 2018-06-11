@@ -16,7 +16,6 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
@@ -492,25 +491,16 @@ public class TramiteDaoImpl implements TramiteDao {
 		entityManager.merge(jTramite);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Dominio> getTramiteDominios(final Long idTramiteVersion) {
-		final String sql = "Select d From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+	public List<Long> getTramiteDominiosId(final Long idTramiteVersion) {
+		final String sql = "Select d.codigo From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
-		@SuppressWarnings("unchecked")
-		final List<JDominio> results = query.getResultList();
+		return query.getResultList();
 
-		final List<Dominio> resultado = new ArrayList<>();
-		if (results != null && !results.isEmpty()) {
-			for (final Iterator<JDominio> iterator = results.iterator(); iterator.hasNext();) {
-				final JDominio jdominio = iterator.next();
-				resultado.add(jdominio.toModel());
-			}
-		}
-
-		return resultado;
 	}
 
 	@Override
@@ -605,6 +595,52 @@ public class TramiteDaoImpl implements TramiteDao {
 		query.setParameter("idArea", idArea);
 		return query.getResultList();
 
+	}
+
+	@Override
+	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea) {
+
+		final String sql = "Select t From JTramite t where t.area.codigo = :idArea and t.identificador = :identificador";
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idArea", idArea);
+		query.setParameter("identificador", identificador);
+
+		final JTramite jtramite = (JTramite) query.getSingleResult();
+
+		if (jtramite == null) {
+			return null;
+		} else {
+			return jtramite.toModel();
+		}
+	}
+
+	@Override
+	public TramiteVersion getTramiteVersionByNumVersion(final int numeroVersion, final Long idTramite) {
+		final String sql = "Select t From JVersionTramite t where t.tramite.codigo = :idTramite and t.numeroVersion = :numeroVersion";
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idTramite", idTramite);
+		query.setParameter("numeroVersion", numeroVersion);
+
+		final JVersionTramite jVersionTramite = (JVersionTramite) query.getSingleResult();
+
+		if (jVersionTramite == null) {
+			return null;
+		} else {
+			return jVersionTramite.toModel();
+		}
+	}
+
+	@Override
+	public TramiteVersion getTramiteVersionMaxNumVersion(final Long idTramite) {
+
+		final int numVersion = this.getTramiteNumVersionMaximo(idTramite);
+		if (numVersion == 0) {
+			return null;
+		} else {
+			return this.getTramiteVersionByNumVersion(numVersion, idTramite);
+		}
 	}
 
 }

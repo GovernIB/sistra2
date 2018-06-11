@@ -259,7 +259,7 @@ public class JElementoFormulario implements IModelApi {
 	public static JElementoFormulario createDefault(final TypeObjetoFormulario pTipoObjeto, final int pOrden,
 			final JLineaFormulario pJLinea) {
 		final JElementoFormulario jModel = new JElementoFormulario();
-		jModel.setIdentificador("DEFAULT_" + System.currentTimeMillis());
+		jModel.setIdentificador("ID_" + System.currentTimeMillis());
 		jModel.setTipo(pTipoObjeto.toString());
 		jModel.setOrden(pOrden);
 

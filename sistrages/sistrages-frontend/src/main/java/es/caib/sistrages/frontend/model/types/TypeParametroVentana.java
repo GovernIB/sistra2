@@ -44,5 +44,9 @@ public enum TypeParametroVentana {
 	 */
 	CAMPO_FICHERO,
 	/** Tipo script para ventana script. */
-	TIPO_SCRIPT;
+	TIPO_SCRIPT,
+	/**
+	 * tramite.
+	 */
+	TRAMITE;
 }

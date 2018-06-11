@@ -96,8 +96,8 @@ public class ViewTramitesVersion extends ViewControllerBase {
 
 		DefaultMenuItem item = null;
 
-		item = new DefaultMenuItem(area.getCodigo());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getId());
+		item = new DefaultMenuItem(area.getIdentificador());
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo());
 		breadCrumb.addElement(item);
 
 		item = new DefaultMenuItem(tramite.getIdentificador());
@@ -256,15 +256,6 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		UtilJSF.openDialog(DialogTramiteVersionExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
-	}
-
-	/**
-	 * Importar versión.
-	 */
-	public void importar() {
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), id);
-		UtilJSF.openDialog(DialogTramiteVersionImportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
 	}
 
 	/**

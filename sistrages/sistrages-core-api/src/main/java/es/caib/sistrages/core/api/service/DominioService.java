@@ -73,9 +73,20 @@ public interface DominioService {
 	 *            Id de la entidad o area
 	 * @param filtro
 	 *            Filro aplicado al código o descripcion.
-	 * @return ambito
+	 * @return lista de dominios
 	 */
 	public List<Dominio> listDominio(final TypeAmbito ambito, final Long id, String filtro);
+
+	/**
+	 * Listar dominios.
+	 *
+	 * @param idTramite
+	 *            Id de la entidad o area
+	 * @param filtro
+	 *            Filro aplicado al código o descripcion.
+	 * @return lista de dominios
+	 */
+	public List<Dominio> listDominio(final Long idTramite, String filtro);
 
 	/**
 	 * Obtener fuenteDato.

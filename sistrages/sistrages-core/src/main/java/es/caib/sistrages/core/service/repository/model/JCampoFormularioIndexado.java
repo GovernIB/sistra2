@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
+import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.types.TypeCampoIndexado;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
@@ -68,7 +69,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 	@Column(name = "CIN_ALTURA", nullable = false, precision = 2, scale = 0)
 	private int altura;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFormularioIndexado")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFormularioIndexado", orphanRemoval = true, cascade = CascadeType.ALL)
 	private Set<JParametroDominioCampoIndexado> parametrosDominio = new HashSet<>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFormularioIndexado", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -279,6 +280,59 @@ public class JCampoFormularioIndexado implements IModelApi {
 							jValor.setValor(valor.getValor());
 							jValor.setPorDefecto(valor.isPorDefecto());
 							jValor.setOrden(orden);
+							break;
+						}
+					}
+				}
+
+			}
+
+			jModel = pJCampo;
+		}
+
+		return jModel;
+	}
+
+	public static JCampoFormularioIndexado mergeListaParametrosDominioModel(final JCampoFormularioIndexado pJCampo,
+			final ComponenteFormularioCampoSelector pCampo) {
+		JCampoFormularioIndexado jModel = null;
+
+		if (pJCampo != null && pCampo != null) {
+			// Borrar paginas no pasados en modelo
+			final List<JParametroDominioCampoIndexado> borrar = new ArrayList<>();
+			final List<Long> listaValores = new ArrayList<>();
+
+			for (final ParametroDominio valor : pCampo.getListaParametrosDominio()) {
+				if (valor.getCodigo() != null && valor.getCodigo() > 0) {
+					listaValores.add(valor.getCodigo());
+				}
+			}
+
+			for (final JParametroDominioCampoIndexado jValor : pJCampo.getParametrosDominio()) {
+				if (!listaValores.contains(jValor.getCodigo())) {
+					borrar.add(jValor);
+				}
+			}
+
+			for (final JParametroDominioCampoIndexado jValor : borrar) {
+				pJCampo.getParametrosDominio().remove(jValor);
+				jValor.setCampoFormularioIndexado(null);
+			}
+
+			// Actualizamos valores
+			for (final ParametroDominio valor : pCampo.getListaParametrosDominio()) {
+
+				if (valor.getCodigo() == null || valor.getCodigo() < 0) {
+					final JParametroDominioCampoIndexado jValor = JParametroDominioCampoIndexado.fromModel(valor);
+					jValor.setCodigo(null);
+					jValor.setCampoFormularioIndexado(pJCampo);
+					pJCampo.getParametrosDominio().add(jValor);
+				} else {
+					for (final JParametroDominioCampoIndexado jValor : pJCampo.getParametrosDominio()) {
+						if (jValor.getCodigo().equals(valor.getCodigo())) {
+							jValor.setValor(valor.getValor());
+							jValor.setParametro(valor.getParametro());
+							jValor.setTipo(valor.getTipo().toString());
 							break;
 						}
 					}

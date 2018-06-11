@@ -5,7 +5,7 @@ import es.caib.sistrages.core.api.model.types.TypeParametroDominio;
 @SuppressWarnings("serial")
 public class ParametroDominio extends ModelApi {
 
-	private Long id;
+	private Long codigo;
 
 	private TypeParametroDominio tipo;
 
@@ -17,12 +17,12 @@ public class ParametroDominio extends ModelApi {
 		super();
 	}
 
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long id) {
+		this.codigo = id;
 	}
 
 	public TypeParametroDominio getTipo() {

@@ -22,14 +22,14 @@ import es.caib.sistrages.core.api.service.SystemService;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class SystemServiceBean implements SystemService {
 
-	/** System service. */
-	@Autowired
-	SystemService systemService;
+    /** System service. */
+    @Autowired
+    private SystemService systemService;
 
-	@Override
-	@PermitAll
-	public void purgarFicheros(final String appId) {
-		systemService.purgarFicheros(appId);
-	}
+    @Override
+    @PermitAll
+    public void purgarFicheros(final String appId) {
+        systemService.purgarFicheros(appId);
+    }
 
 }

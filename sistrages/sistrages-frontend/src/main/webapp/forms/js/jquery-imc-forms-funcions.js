@@ -256,8 +256,8 @@ $.fn.arbre = function(options) {
 		var element = $(this),
 			onClick = function(e) {
 				var elm = $(e.target);
-				if (elm.is("P") || (elm.is("span") && elm.hasClass("imc-arbre-lectura"))) {
-					var p_elm = elm.is("P") ? $(this) : $(this).closest("p"),
+				if (elm.hasClass("imc--titol") || (elm.is("span") && elm.hasClass("imc-arbre-lectura"))) {
+					var p_elm = elm.hasClass("imc--titol") ? $(this) : $(this).closest(".imc--titol"),
 						li_elm = p_elm.parent();
 					li_elm.find("ul:first").slideToggle();
 					p_elm.toggleClass("imc-amb-fills-on");
@@ -270,7 +270,7 @@ $.fn.arbre = function(options) {
 				li_ul_elm_size = li_ul_elm.length;
 			
 			if (li_ul_elm_size > 0) {
-				li_elm.find("p:first").addClass("imc-amb-fills").off('.arbre').on('click.arbre', onClick);
+				li_elm.find(".imc--titol:first").addClass("imc-amb-fills").off('.arbre').on('click.arbre', onClick);
 			}
 			
 		});
@@ -648,13 +648,15 @@ function control_refill(name, valors) {
 	
 		var el_UL = el_element.find("ul:first"),
 			el_input_tipus = (el_tipus === "check-list-scroll") ? "checkbox" : "radio",
+			el_input_tipus_class = (el_tipus === "check-list-scroll") ? "check" : "radio",
 			canvia = function() {
 				el_UL.find("li").remove();
 				$(valors).each(function(i) {
 					var elm = this,
 						elm_input = $("<input>").attr({ type: el_input_tipus, id: name+"_"+i, name: name, value: elm.valor } ),
-						elm_span = $("<span>").text(elm.etiqueta),
-						elm_linea = $("<li>").append( $("<label>").append( elm_input ).append( elm_span ) );
+						elm_label = $("<label>").attr("for", name+"_"+i).text( elm.etiqueta ),
+						elm_tipus = $("<div>").addClass("imc-input-"+el_input_tipus_class).append( elm_input ).append( elm_label ),
+						elm_linea = $("<li>").append( elm_tipus );
 					
 					el_UL.append( elm_linea );
 					
@@ -677,7 +679,8 @@ function control_refill(name, valors) {
 					var elm = this,
 						elm_input = $("<input>").attr({ type: "checkbox", id: name+"_"+i, name: name, value: elm.valor } ),
 						elm_label = $("<label>").attr("for",name+"_"+i).text(elm.etiqueta),
-						elm_linea = $("<li>").html( $("<p>").append( elm_input ).append( elm_label ) ).attr("data-valor", elm.valor);
+						elm_tipus = $("<div>").addClass("imc-input-check").append( elm_input ).append( elm_label ),
+						elm_linea = $("<li>").html( $("<div>").addClass("imc--titol").append( elm_tipus ) ).attr("data-valor", elm.valor);
 					
 					if (typeof elm.parentValor !== "undefined" && elm.parentValor !== "") {
 						elm_LI = el_UL.find("li[data-valor=" + elm.parentValor + "]");
@@ -754,13 +757,15 @@ function control_refill(name, valors) {
 		
 		var el_UL = el_element.find("ul:first"),
 			el_input_tipus = (el_tipus === "check-list") ? "checkbox" : "radio",
+			el_input_tipus_class = (el_tipus === "check-list") ? "check" : "radio",
 			canvia = function() {
 				el_UL.find("li").remove();
 				$(valors).each(function(i) {
 					var elm = this,
 						elm_input = $("<input>").attr({ type: el_input_tipus, id: name+"_"+i, name: name, value: elm.valor } ),
 						elm_label = $("<label>").attr("for",name+"_"+i).text(elm.etiqueta),
-						elm_linea = $("<li>").append( elm_input ).append( elm_label );
+						elm_tipus = $("<div>").addClass("imc-input-"+el_input_tipus_class).append( elm_input ).append( elm_label ),
+						elm_linea = $("<li>").append( elm_tipus );
 					
 					el_UL.append( elm_linea );
 					

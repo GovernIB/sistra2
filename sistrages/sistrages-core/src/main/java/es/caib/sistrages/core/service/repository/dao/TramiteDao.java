@@ -3,7 +3,6 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -147,7 +146,7 @@ public interface TramiteDao {
 	 * @param idTramiteVersion
 	 * @return
 	 */
-	List<Dominio> getTramiteDominios(Long idTramiteVersion);
+	List<Long> getTramiteDominiosId(Long idTramiteVersion);
 
 	/**
 	 * Bloquea un tramite.
@@ -200,10 +199,36 @@ public interface TramiteDao {
 
 	/**
 	 * Obtiene el id de los tramites de un area que tienen una versión activa.
-	 * 
+	 *
 	 * @param idArea
 	 * @return
 	 */
 	List<Long> listTramiteVersionActiva(Long idArea);
+
+	/**
+	 * Obtiene tramite a partir de identificador.
+	 *
+	 * @param identificador
+	 * @param idArea
+	 * @return
+	 */
+	Tramite getTramiteByIdentificador(String identificador, Long idArea);
+
+	/**
+	 * Obtiene tramite version a partir del num version y su id tramite.
+	 *
+	 * @param numVersion
+	 * @param idTramite
+	 * @return
+	 */
+	TramiteVersion getTramiteVersionByNumVersion(int numVersion, Long idTramite);
+
+	/**
+	 * Devuelve el tramite versión con el num version mas alto.
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	TramiteVersion getTramiteVersionMaxNumVersion(Long idTramite);
 
 }

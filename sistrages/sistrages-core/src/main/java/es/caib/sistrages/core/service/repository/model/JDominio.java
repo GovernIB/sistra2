@@ -230,9 +230,9 @@ public class JDominio implements IModelApi {
 
 	public Dominio toModel() {
 		final Dominio dominio = new Dominio();
-		dominio.setId(this.codigo);
+		dominio.setCodigo(this.codigo);
 		dominio.setCacheable(this.cacheo);
-		dominio.setCodigo(this.identificador);
+		dominio.setIdentificador(this.identificador);
 		dominio.setDescripcion(this.descripcion);
 
 		dominio.setJndi(this.datasourceJndi);
@@ -246,7 +246,7 @@ public class JDominio implements IModelApi {
 		dominio.setUrl(this.servicioRemotoUrl);
 
 		if (this.getFuenteDatos() != null) {
-			dominio.setFuenteDatos(this.getFuenteDatos().toModel());
+			dominio.setIdFuenteDatos(this.getFuenteDatos().getCodigo());
 		}
 		return dominio;
 	}
@@ -262,15 +262,10 @@ public class JDominio implements IModelApi {
 
 	public JDominio fromModel(final Dominio dominio) {
 		if (dominio != null) {
-			this.setCodigo(dominio.getId());
+			this.setCodigo(dominio.getCodigo());
 			this.setCacheo(dominio.isCacheable());
-			this.setIdentificador(dominio.getCodigo());
+			this.setIdentificador(dominio.getIdentificador());
 			this.setDescripcion(dominio.getDescripcion());
-			if (dominio.getFuenteDatos() != null) {
-				final JFuenteDatos jfuenteDatos = new JFuenteDatos();
-				jfuenteDatos.fromModel(dominio.getFuenteDatos());
-				this.setFuenteDatos(jfuenteDatos);
-			}
 			this.setDatasourceJndi(dominio.getJndi());
 			this.setListaFijaValores(UtilJSON.toJSON(dominio.getListaFija()));
 			this.setParametros(UtilJSON.toJSON(dominio.getParametros()));

@@ -62,7 +62,7 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewDominios.datoSeleccionado}" rowKey="#{td.codigo}">
+			        	 selectionMode="single" selection="#{viewDominios.datoSeleccionado}" rowKey="#{td.identificador}">
 
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -71,7 +71,7 @@
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewDominios.headerCodigo']}">
-			        <h:outputText value="#{td.codigo}" />
+			        <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewDominios.headerDescripcion']}">

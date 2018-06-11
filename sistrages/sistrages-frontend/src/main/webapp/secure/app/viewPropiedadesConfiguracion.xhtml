@@ -29,9 +29,11 @@
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+
 		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewPropiedadesConfiguracion.editar()}" process="@this" update="growl">
 		        			<p:ajax event="dialogReturn" listener="#{viewPropiedadesConfiguracion.returnDialogo}" update="growl dataTable"/>
 		        		</p:commandButton>
+		        		<p:commandButton id="btnRefrescar"  value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewPropiedadesConfiguracion.refrescar()}" process="@this" update="dataTable growl" />
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPropiedadesConfiguracion.ayudar()}" process="@this" update="growl dataTable"/>
 
 		        	</h:panelGrid>

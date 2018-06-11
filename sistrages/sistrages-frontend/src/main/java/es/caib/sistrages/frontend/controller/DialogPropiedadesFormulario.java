@@ -19,6 +19,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -45,14 +46,23 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 	private PlantillaFormulario plantillaSeleccionada;
 
+	private List<String> idiomas;
+
 	@Inject
 	FormularioInternoService formIntService;
 
 	/**
 	 * Inicialización.
 	 */
+	@SuppressWarnings("unchecked")
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+
+		if (!mochilaDatos.isEmpty()) {
+			idiomas = (List<String>) mochilaDatos.get(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
+		}
 
 		if (id == null) {
 			data = new FormularioInterno();
@@ -86,6 +96,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
 	}
 
 	/**
@@ -96,6 +108,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
 	}
 
 	/**
@@ -119,9 +133,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 *
 	 */
 	public void editarTextoCabecera() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getTextoCabecera(), idiomas,
-				idiomas);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getTextoCabecera(), getIdiomas(),
+				getIdiomas());
 	}
 
 	/**
@@ -346,6 +359,14 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 	public void setPlantillaSeleccionada(final PlantillaFormulario plantillaSeleccionada) {
 		this.plantillaSeleccionada = plantillaSeleccionada;
+	}
+
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

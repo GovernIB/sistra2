@@ -259,4 +259,10 @@ public class DominioServiceBean implements DominioService {
 		dominioService.addTramiteVersion(idDominio, idTramiteVersion);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Dominio> listDominio(final Long idTramite, final String filtro) {
+		return dominioService.listDominio(idTramite, filtro);
+	}
+
 }

@@ -104,8 +104,8 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	/**
 	 * Cancelar.
 	 */
-	public void cancelar() {
-		// Inicializar datos con los de la base de datos, o llamar a la misma url.
+	public void refrescar() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Sin implementar");
 	}
 
 	/**
