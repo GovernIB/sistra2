@@ -18,49 +18,59 @@ import es.caib.sistramit.core.api.service.SecurityService;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class SecurityServiceBean implements SecurityService {
 
-	@Autowired
-	private SecurityService securityService;
+    @Autowired
+    private SecurityService securityService;
 
-	@Override
-	public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite, final int versionTramite,
-			final String idTramiteCatalogo, final String idioma, final String urlInicioTramite) {
-		return securityService.obtenerInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo, idioma,
-				urlInicioTramite);
-	}
+    @Override
+    public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite,
+            final int versionTramite, final String idTramiteCatalogo,
+            final String idioma, final String urlInicioTramite) {
+        return securityService.obtenerInfoLoginTramite(codigoTramite,
+                versionTramite, idTramiteCatalogo, idioma, urlInicioTramite);
+    }
 
-	@Override
-	public String iniciarSesionClave(final String lang, final String urlCallback) {
-		return securityService.iniciarSesionClave(lang, urlCallback);
-	}
+    @Override
+    public String iniciarSesionClave(final String lang,
+            final String urlCallback) {
+        return securityService.iniciarSesionClave(lang, urlCallback);
+    }
 
-	@Override
-	public String iniciarLogoutSesionClave(final String lang, final String urlCallback) {
-		return securityService.iniciarLogoutSesionClave(lang, urlCallback);
-	}
+    @Override
+    public String iniciarLogoutSesionClave(final String lang,
+            final String urlCallback) {
+        return securityService.iniciarLogoutSesionClave(lang, urlCallback);
+    }
 
-	@Override
-	public UsuarioAutenticadoInfo validarUsuarioAnonimo(final SesionInfo sesionInfo) {
-		return securityService.validarUsuarioAnonimo(sesionInfo);
-	}
+    @Override
+    public UsuarioAutenticadoInfo validarUsuarioAnonimo(
+            final SesionInfo sesionInfo) {
+        return securityService.validarUsuarioAnonimo(sesionInfo);
+    }
 
-	@Override
-	public UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(final SesionInfo sesionInfo, final String ticket) {
-		return securityService.validarTicketCarpetaCiudadana(sesionInfo, ticket);
-	}
+    @Override
+    public UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(
+            final SesionInfo sesionInfo, final String ticket) {
+        return securityService.validarTicketCarpetaCiudadana(sesionInfo,
+                ticket);
+    }
 
-	@Override
-	public UsuarioAutenticadoInfo validarTicketClave(final SesionInfo sesionInfo, final String ticket) {
-		return securityService.validarTicketClave(sesionInfo, ticket);
-	}
+    @Override
+    public UsuarioAutenticadoInfo validarTicketClave(
+            final SesionInfo sesionInfo, final String ticket) {
+        return securityService.validarTicketClave(sesionInfo, ticket);
+    }
 
-	@Override
-	public UsuarioAutenticadoInfo validarTicketGestorFormularios(final SesionInfo sesionInfo, final String ticket) {
-		return securityService.validarTicketGestorFormularios(sesionInfo, ticket);
-	}
+    @Override
+    public UsuarioAutenticadoInfo validarTicketGestorFormularios(
+            final SesionInfo sesionInfo, final String ticket) {
+        return securityService.validarTicketGestorFormularios(sesionInfo,
+                ticket);
+    }
 
-	@Override
-	public UsuarioAutenticadoInfo validarTicketPasarelaPagos(final SesionInfo sesionInfo, final String ticket) {
-		return securityService.validarTicketPasarelaPagos(sesionInfo, ticket);
-	}
+    @Override
+    public UsuarioAutenticadoInfo validarTicketPasarelaPagos(
+            final SesionInfo sesionInfo, final String ticket) {
+        return securityService.validarTicketPasarelaPagos(sesionInfo, ticket);
+    }
 
 }

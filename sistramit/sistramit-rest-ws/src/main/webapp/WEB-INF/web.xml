@@ -60,6 +60,23 @@
     <servlet-name>Jersey Web Application</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
-    
- 
+  
+  <!-- Securizacion -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>sistramit-rest-ws</web-resource-name>
+      <url-pattern>/rest/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>STT_API</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Autenticacion</realm-name>
+  </login-config>
+  <security-role>
+    <role-name>STT_API</role-name>
+  </security-role>
+  
 </web-app>

@@ -16,8 +16,7 @@
   </listener>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/sistramit-ac-frontend-jboss.xml
-    			 /WEB-INF/sistramit-ac-frontend.xml
+    <param-value>/WEB-INF/sistramit-ac-frontend-jboss.xml    			 
     			 /WEB-INF/sistramit-ac-frontend-security.xml
     </param-value>
   </context-param>
