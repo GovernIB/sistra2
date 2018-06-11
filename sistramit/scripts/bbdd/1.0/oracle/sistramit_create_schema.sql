@@ -1,4 +1,3 @@
-
 create sequence STT_DOCPTR_SEQ;
 
 create sequence STT_FICPTR_SEQ;
@@ -40,14 +39,14 @@ create table STT_DOCPTR
    DTP_ANEDES           VARCHAR2(100 CHAR),
    DTP_PAGJUS           NUMBER(19),
    DTP_PAGJUC           VARCHAR2(50),
+   DTP_PAGNIF           VARCHAR2(20 CHAR),
+   DTP_PAGIDE           VARCHAR2(100 CHAR),
    DTP_PAGEST           VARCHAR2(1 CHAR),
    DTP_PAGERR           VARCHAR2(100 CHAR),
    DTP_PAGERM           VARCHAR2(4000 CHAR),
-   DTP_REGDPR           NUMBER(19),
-   DTP_REGDPC           VARCHAR2(50),
    DTP_REGNUM           VARCHAR2(500),
-   DTP_REGPRE           VARCHAR2(1),
-   DTP_REGFEC           DATE
+   DTP_REGFEC           DATE,
+   DTP_REGPRE           VARCHAR2(1)
 );
 
 comment on table STT_DOCPTR is
@@ -95,6 +94,12 @@ comment on column STT_DOCPTR.DTP_PAGJUS is
 comment on column STT_DOCPTR.DTP_PAGJUC is
 'En caso de ser un pago puede tener un justificante de pago (clave)';
 
+comment on column STT_DOCPTR.DTP_PAGNIF is
+'En caso de ser un pago indica nif sujeto pasivo';
+
+comment on column STT_DOCPTR.DTP_PAGIDE is
+'En caso de ser un pago indica identificador del pago (numero autoliquidación)';
+
 comment on column STT_DOCPTR.DTP_PAGEST is
 'En caso de ser un pago indica estado incorrecto';
 
@@ -104,20 +109,14 @@ comment on column STT_DOCPTR.DTP_PAGERR is
 comment on column STT_DOCPTR.DTP_PAGERM is
 'En caso de ser un pago indica mensaje error pasarela';
 
-comment on column STT_DOCPTR.DTP_REGDPR is
-'En caso de ser un registro indica el documento de datos propios  (codigo)';
-
-comment on column STT_DOCPTR.DTP_REGDPC is
-'En caso de ser un registro indica el documento de datos propios  (clave)';
-
 comment on column STT_DOCPTR.DTP_REGNUM is
 'En caso de ser un registro indica numero registro';
 
-comment on column STT_DOCPTR.DTP_REGPRE is
-'En caso de ser un registro indica si es un preregistro';
-
 comment on column STT_DOCPTR.DTP_REGFEC is
 'En caso de ser un registro indica fecha registro';
+
+comment on column STT_DOCPTR.DTP_REGPRE is
+'En caso de ser un registro indica si es un preregistro';
 
 alter table STT_DOCPTR
    add constraint STT_DOCPTR_PK primary key (DTP_CODIGO);
@@ -150,13 +149,6 @@ create index STT_DOCPTR_FORPDF_I on STT_DOCPTR (
 /*==============================================================*/
 create index STT_DOCPTR_PAGJUS_I on STT_DOCPTR (
    DTP_PAGJUS ASC
-);
-
-/*==============================================================*/
-/* Index: STT_DOCPTR_REGDPR_I                                   */
-/*==============================================================*/
-create index STT_DOCPTR_REGDPR_I on STT_DOCPTR (
-   DTP_REGDPR ASC
 );
 
 /*==============================================================*/
@@ -303,24 +295,15 @@ create table STT_FORMUL
    SFR_TICKET           VARCHAR2(200 CHAR)   not null,
    SFR_FECINI           DATE                 not null,
    SFR_IDESTR           VARCHAR2(50 CHAR)    not null,
-   SFR_IDPASO           VARCHAR2(20)         not null,
    SFR_IDTRAM           VARCHAR2(20),
    SFR_VERSIO           NUMBER(2),
    SFR_RELESE           NUMBER(8),
+   SFR_IDPASO           VARCHAR2(20)         not null,
    SFR_IDFORM           VARCHAR2(20)         not null,
-   SFR_IDPGUC           VARCHAR2(50 CHAR),
-   SFR_IDCGUC           VARCHAR2(50 CHAR),
-   SFR_IDIOMA           VARCHAR2(2 CHAR)     not null,
-   SFR_NIVAUT           VARCHAR2(1 CHAR)     not null,
-   SFR_USUNIF           VARCHAR2(10 CHAR),
-   SFR_USUNOM           VARCHAR2(1000 CHAR),
-   SFR_USUAPE1          VARCHAR2(255 CHAR),
-   SFR_USUAPE2          VARCHAR2(255 CHAR),
-   SFR_USUEMA           VARCHAR2(400 CHAR),
    SFR_DATFOR           BLOB,
+   SFR_INFAUT           CLOB,
    SFR_PARFOR           CLOB,
-   SFR_INFPRO           BLOB,
-   SFR_INFAUT           BLOB,
+   SFR_INFPRO           CLOB,
    SFR_FECFIN           DATE,
    SFR_CANCEL           NUMBER(1)            default 0,
    SFR_XML              BLOB,
@@ -362,9 +345,6 @@ comment on column STT_FORMUL.SFR_FECINI is
 comment on column STT_FORMUL.SFR_IDESTR is
 'Identificador sesión tramitación';
 
-comment on column STT_FORMUL.SFR_IDPASO is
-'Identificador paso';
-
 comment on column STT_FORMUL.SFR_IDTRAM is
 'Identificador tramite';
 
@@ -374,47 +354,23 @@ comment on column STT_FORMUL.SFR_VERSIO is
 comment on column STT_FORMUL.SFR_RELESE is
 'Release tramite';
 
+comment on column STT_FORMUL.SFR_IDPASO is
+'Identificador paso';
+
 comment on column STT_FORMUL.SFR_IDFORM is
 'Identificador formulario';
-
-comment on column STT_FORMUL.SFR_IDPGUC is
-'Id procedimiento GUC';
-
-comment on column STT_FORMUL.SFR_IDCGUC is
-'Id categoria GUC';
-
-comment on column STT_FORMUL.SFR_IDIOMA is
-'Idioma tramitacion';
-
-comment on column STT_FORMUL.SFR_NIVAUT is
-'Nivel autenticacion';
-
-comment on column STT_FORMUL.SFR_USUNIF is
-'Nif usuario (en caso de autenticado)';
-
-comment on column STT_FORMUL.SFR_USUNOM is
-'Nombreusuario  (en caso de autenticado)';
-
-comment on column STT_FORMUL.SFR_USUAPE1 is
-'Apellido 1 usuario  (en caso de autenticado)';
-
-comment on column STT_FORMUL.SFR_USUAPE2 is
-'Apellido 2 usuario  (en caso de autenticado)';
-
-comment on column STT_FORMUL.SFR_USUEMA is
-'Email usuario (en caso de autenticado)';
 
 comment on column STT_FORMUL.SFR_DATFOR is
 'Datos actuales';
 
+comment on column STT_FORMUL.SFR_INFAUT is
+'Informacion de autenticacion (serializado)';
+
 comment on column STT_FORMUL.SFR_PARFOR is
-'Parametros formulario (serializado en un string)';
+'Parametros formulario (serializado)';
 
 comment on column STT_FORMUL.SFR_INFPRO is
-'Información procedimiento (Para form internos)';
-
-comment on column STT_FORMUL.SFR_INFAUT is
-'Informacion de autenticacion serializada (para vuelta de form externos)';
+'Información procedimiento (serializado)';
 
 comment on column STT_FORMUL.SFR_FECFIN is
 'Fecha de finalización formulario';
@@ -462,7 +418,7 @@ create table STT_INVALI
 (
    INV_CODIGO           NUMBER(19)           not null,
    INV_TIPO             VARCHAR2(1)          not null,
-   INV_IDENTI           VARCHAR2(400)        not null,
+   INV_IDENTI           VARCHAR2(400)        null,
    INV_FECHA            DATE                 not null
 );
 
@@ -473,7 +429,7 @@ comment on column STT_INVALI.INV_CODIGO is
 'Código secuencial interno';
 
 comment on column STT_INVALI.INV_TIPO is
-'Tipo invalidacion: definicion tramite (T) / datos dominio (D) / avisos plataforma (A)';
+'Tipo invalidacion: definicion tramite (T) / datos dominio (D) / avisos plataforma (A) / entidad (E)';
 
 comment on column STT_INVALI.INV_IDENTI is
 'Identificador elemento: para tramite: idtramite-version / para dominio: iddominio / para avisos: TODOS';
@@ -490,13 +446,12 @@ alter table STT_INVALI
 create table STT_LOGINT 
 (
    LOG_CODIGO           NUMBER(19)           not null,
-   LOG_EVETIP           VARCHAR2(100 CHAR)   not null,
-   LOG_CODSES           NUMBER(19)           not null,
+   LOG_EVETIP           VARCHAR2(20)         not null,
    LOG_EVEFEC           TIMESTAMP            not null,
-   LOG_EVEUSU           VARCHAR2(10 CHAR),
    LOG_EVEDES           VARCHAR2(1000 CHAR)  not null,
    LOG_EVERES           VARCHAR2(50 CHAR),
    LOG_EVEDET           VARCHAR2(4000 CHAR),
+   LOG_CODSES           NUMBER(19),
    LOG_ERRCOD           VARCHAR2(500 CHAR),
    LOG_ERRDET           CLOB
 )
@@ -514,14 +469,8 @@ comment on column STT_LOGINT.LOG_CODIGO is
 comment on column STT_LOGINT.LOG_EVETIP is
 'Tipo evento';
 
-comment on column STT_LOGINT.LOG_CODSES is
-'Codigo sesión';
-
 comment on column STT_LOGINT.LOG_EVEFEC is
 'Fecha';
-
-comment on column STT_LOGINT.LOG_EVEUSU is
-'Usuario identificado en la sesión';
 
 comment on column STT_LOGINT.LOG_EVEDES is
 'Descripción evento';
@@ -532,6 +481,9 @@ comment on column STT_LOGINT.LOG_EVERES is
 comment on column STT_LOGINT.LOG_EVEDET is
 'Detalle evento (depende del evento). Permite establecer info adicional mediante una lista de campos de información particulares del evento con formato: propiedad1=valor1#@#propiedad2=valor2';
 
+comment on column STT_LOGINT.LOG_CODSES is
+'Codigo sesión tramitación';
+
 comment on column STT_LOGINT.LOG_ERRCOD is
 'Para evento de tipo error indica el código de error (excepción de negocio)';
 
@@ -540,13 +492,6 @@ comment on column STT_LOGINT.LOG_ERRDET is
 
 alter table STT_LOGINT
    add constraint STT_LOGINT_PK primary key (LOG_CODIGO);
-
-/*==============================================================*/
-/* Index: STT_LOGINT_EVETIP_I                                   */
-/*==============================================================*/
-create index STT_LOGINT_EVETIP_I on STT_LOGINT (
-   LOG_EVETIP ASC
-);
 
 /*==============================================================*/
 /* Index: STT_LOGINT_ERRCOD_I                                   */
@@ -564,20 +509,11 @@ create index STT_LOGINT_EVEFEC_CODIGO_I on STT_LOGINT (
 );
 
 /*==============================================================*/
-/* Index: STT_LOGINT_EVEFEC_EVEUSU_I                            */
+/* Index: STT_LOGINT_EVFC_EVTI_I                                */
 /*==============================================================*/
-create index STT_LOGINT_EVEFEC_EVEUSU_I on STT_LOGINT (
+create index STT_LOGINT_EVFC_EVTI_I on STT_LOGINT (
    LOG_EVEFEC ASC,
-   LOG_EVEUSU ASC
-);
-
-/*==============================================================*/
-/* Index: STT_LOGINT_EVFC_EVTI_EVUS_I                           */
-/*==============================================================*/
-create index STT_LOGINT_EVFC_EVTI_EVUS_I on STT_LOGINT (
-   LOG_EVEFEC ASC,
-   LOG_EVETIP ASC,
-   LOG_EVEUSU ASC
+   LOG_EVETIP ASC
 );
 
 /*==============================================================*/
@@ -749,28 +685,6 @@ create unique index STT_SESION_UK on STT_SESION (
 );
 
 /*==============================================================*/
-/* Table: STT_TIPEVE                                            */
-/*==============================================================*/
-create table STT_TIPEVE 
-(
-   TEV_CODIGO           VARCHAR2(100 CHAR)   not null,
-   TEV_DESCRIP          VARCHAR2(1000 CHAR)  not null
-);
-
-comment on table STT_TIPEVE is
-'Tipo evento. Además de los eventos propios de las aplicaciones debe existir el evento ERROR  para auditar errores
-';
-
-comment on column STT_TIPEVE.TEV_CODIGO is
-'Tipo evento';
-
-comment on column STT_TIPEVE.TEV_DESCRIP is
-'Descripción evento';
-
-alter table STT_TIPEVE
-   add constraint STT_TIPEVE_PK primary key (TEV_CODIGO);
-
-/*==============================================================*/
 /* Table: STT_TRAPER                                            */
 /*==============================================================*/
 create table STT_TRAPER 
@@ -779,9 +693,8 @@ create table STT_TRAPER
    TRP_CODSTR           NUMBER(19)           not null,
    TRP_IDETRA           VARCHAR2(20)         not null,
    TRP_VERTRA           NUMBER(2)            not null,
-   TRP_CODPROC          VARCHAR2(20)         not null,
+   TRP_IDETCP           VARCHAR2(20)         not null,
    TRP_DESTRA           VARCHAR2(1000 CHAR)  not null,
-   TRP_TITPER           VARCHAR2(1000 CHAR),
    TRP_ESTADO           VARCHAR2(1 CHAR)     not null,
    TRP_NIVAUT           VARCHAR2(1 CHAR)     not null,
    TRP_METAUT           VARCHAR2(50 CHAR),
@@ -793,7 +706,6 @@ create table STT_TRAPER
    TRP_IDIOMA           VARCHAR2(2 CHAR)     not null,
    TRP_PARINI           VARCHAR2(4000),
    TRP_PERSIS           NUMBER(1)            default 0 not null,
-   TRP_DUPLIC           NUMBER(1)            default 0 not null,
    TRP_PLZDIN           NUMBER(1)            default 0 not null,
    TRP_FECINI           DATE                 not null,
    TRP_FECACC           DATE,
@@ -803,10 +715,10 @@ create table STT_TRAPER
    TRP_NIFFIN           VARCHAR2(10 CHAR),
    TRP_NOMFIN           VARCHAR2(1000 CHAR),
    TRP_PURGA            NUMBER(1)            default 0 not null,
-   TRP_URLINI           VARCHAR2(4000 CHAR),
    TRP_FCPURG           DATE,
    TRP_PURCHK           NUMBER(1)            default 0 not null,
-   TRP_PURPAG           NUMBER(1)            default 0 not null
+   TRP_PURPAG           NUMBER(1)            default 0 not null,
+   TRP_URLINI           VARCHAR2(4000 CHAR)
 );
 
 comment on table STT_TRAPER is
@@ -824,14 +736,11 @@ comment on column STT_TRAPER.TRP_IDETRA is
 comment on column STT_TRAPER.TRP_VERTRA is
 'Versión  trámite';
 
-comment on column STT_TRAPER.TRP_CODPROC is
-'Codigo del procedimiento asociado con el tramite';
+comment on column STT_TRAPER.TRP_IDETCP is
+'Codigo trámite asociado del Catalogo de Procedimientos';
 
 comment on column STT_TRAPER.TRP_DESTRA is
 'Descripción trámite';
-
-comment on column STT_TRAPER.TRP_TITPER is
-'Titulo persistencia: si se quiere dar una descripcion personalizada al tramite';
 
 comment on column STT_TRAPER.TRP_ESTADO is
 'Estado trámite: 
@@ -843,7 +752,7 @@ comment on column STT_TRAPER.TRP_ESTADO is
 Es calculado en función de los pasos.';
 
 comment on column STT_TRAPER.TRP_NIVAUT is
-'Nivel autenticación: C Autenticado/ Anónimo (A)';
+'Nivel autenticación:  Autenticado (S) / Anónimo (N)';
 
 comment on column STT_TRAPER.TRP_METAUT is
 'Método autenticación inicio trámite:
@@ -876,9 +785,6 @@ comment on column STT_TRAPER.TRP_PARINI is
 comment on column STT_TRAPER.TRP_PERSIS is
 'Indica si el tramite es persistente';
 
-comment on column STT_TRAPER.TRP_DUPLIC is
-'En caso de ser persistente indica si se puede duplicar';
-
 comment on column STT_TRAPER.TRP_PLZDIN is
 'Indica si el plazo se ha establecido de forma dinámica. En este caso se obviarán los plazos de GUC.';
 
@@ -906,9 +812,6 @@ comment on column STT_TRAPER.TRP_NOMFIN is
 comment on column STT_TRAPER.TRP_PURGA is
 'Indica si el tramite se ha prugado';
 
-comment on column STT_TRAPER.TRP_URLINI is
-'Url de inicio del tramite';
-
 comment on column STT_TRAPER.TRP_FCPURG is
 'Fecha purgado';
 
@@ -917,6 +820,9 @@ comment on column STT_TRAPER.TRP_PURCHK is
 
 comment on column STT_TRAPER.TRP_PURPAG is
 'Indica si no se ha podido purgar por tener pagos realizados';
+
+comment on column STT_TRAPER.TRP_URLINI is
+'Url de inicio del tramite';
 
 alter table STT_TRAPER
    add constraint STT_TRAPER_PK primary key (TRP_CODIGO);
@@ -949,7 +855,7 @@ create index STT_TRAPER_PERSIS_NIFINI_I on STT_TRAPER (
 create index STT_TRAPER_IDTR_PERS_PRO_I on STT_TRAPER (
    TRP_IDETRA ASC,
    TRP_PERSIS ASC,
-   TRP_CODPROC ASC
+   TRP_IDETCP ASC
 );
 
 /*==============================================================*/
@@ -983,10 +889,6 @@ alter table STT_DOCPTR
       references STT_FICPTR (FIC_CODIGO);
 
 alter table STT_DOCPTR
-   add constraint STT_DOCPTR_FICPTR_FK4 foreign key (DTP_REGDPR)
-      references STT_FICPTR (FIC_CODIGO);
-
-alter table STT_DOCPTR
    add constraint STT_PASTRP_DOCPTR_FK foreign key (DTP_CODPTR)
       references STT_PASTRP (PTR_CODIGO);
 
@@ -1006,10 +908,6 @@ alter table STT_LOGINT
    add constraint STT_LOGINT_SESION_FK foreign key (LOG_CODSES)
       references STT_SESION (SES_CODIGO);
 
-alter table STT_LOGINT
-   add constraint STT_LOGINT_TIPEVE_FK foreign key (LOG_EVETIP)
-      references STT_TIPEVE (TEV_CODIGO);
-
 alter table STT_PASTRP
    add constraint STT_PASTRP_TRAPER_FK foreign key (PTR_CODTRP)
       references STT_TRAPER (TRP_CODIGO);
@@ -1018,3 +916,28 @@ alter table STT_TRAPER
    add constraint STT_TRAPER_SESION_FK foreign key (TRP_CODSTR)
       references STT_SESION (SES_CODIGO);
 
+      
+      
+create table STT_PROCES 
+(
+   PROC_IDENT           VARCHAR2(20)         not null,
+   PROC_INSTAN          VARCHAR2(50),
+   PROC_FECHA           DATE
+);
+
+comment on table STT_PROCES is
+'Control ejecución procesos background.
+Para que una sola instancia se autoconfigure como maestro.';
+
+comment on column STT_PROCES.PROC_IDENT is
+'Identificador fijo';
+
+comment on column STT_PROCES.PROC_INSTAN is
+'Id instancia';
+
+comment on column STT_PROCES.PROC_FECHA is
+'Fecha ultima verificación';
+
+alter table STT_PROCES
+   add constraint STT_PROCES_PK primary key (PROC_IDENT);
+      
