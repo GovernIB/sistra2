@@ -760,13 +760,14 @@ alter table STG_FORCHK
 create table STG_FORCIN 
 (
    CIN_CODIGO           NUMBER(18)           not null,
-   CIN_TIPO             VARCHAR2(10 CHAR)    not null,
+   CIN_TIPO             VARCHAR2(20 CHAR)    not null,
    CIN_TIPLST           VARCHAR2(1 CHAR)     not null,
    CIN_SCRVAP           NUMBER(18),
    CIN_DOMCOD           NUMBER(18),
    CIN_DOMCCD           VARCHAR2(100 CHAR),
    CIN_DOMCDS           VARCHAR2(100 CHAR),
-   CIN_INDICE           NUMBER(1)            default 0 not null
+   CIN_INDICE           NUMBER(1)            default 0 not null,
+   CIN_ALTURA           NUMBER(2)            default 1 not null
 );
 
 comment on table STG_FORCIN is
@@ -800,6 +801,9 @@ comment on column STG_FORCIN.CIN_DOMCDS is
 comment on column STG_FORCIN.CIN_INDICE is
 'Indica si se tiene que mostrar un índice alfabético en los campos de selección.
 ';
+
+comment on column STG_FORCIN.CIN_ALTURA is
+'Indica altura del selector';
 
 alter table STG_FORCIN
    add constraint STG_FORCIN_PK primary key (CIN_CODIGO);
@@ -2048,7 +2052,8 @@ create table STG_ROLARE
    RLA_PERALT           NUMBER(1)            default 0 not null,
    RLA_PERMOD           NUMBER(1)            default 0 not null,
    RLA_PERCON           NUMBER(1)            default 0 not null,
-   RLA_PERHLP           NUMBER(1)            default 0 not null
+   RLA_PERHLP           NUMBER(1)            default 0 not null,
+   RLA_PERPRO           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_ROLARE is
@@ -2080,6 +2085,9 @@ comment on column STG_ROLARE.RLA_PERCON is
 
 comment on column STG_ROLARE.RLA_PERHLP is
 'Permiso acceso helpdesk';
+
+comment on column STG_ROLARE.RLA_PERPRO is
+'Permiso promocionar trámites';
 
 alter table STG_ROLARE
    add constraint STG_ROLARE_PK primary key (RLA_CODIGO);

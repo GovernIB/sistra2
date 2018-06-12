@@ -1,4 +1,3 @@
-
 drop table STG_ACCPER cascade constraints;
 
 drop table STG_ANETRA cascade constraints;
