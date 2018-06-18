@@ -246,13 +246,14 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
         query.setParameter("tipoAviso",
                 TypeAvisoEntidad.TRAMITE_VERSION.toString());
         query.setParameter("identificadorTramite", identificadorTramite);
-
         AvisoEntidad avisoEntidad = null;
-        final JAvisoEntidad javisoEntidad = (JAvisoEntidad) query
-                .getSingleResult();
-        if (javisoEntidad != null) {
+        
+        final List results = query.getResultList();
+        if (!results.isEmpty()) {
+        	JAvisoEntidad javisoEntidad = (JAvisoEntidad) results.get( 0 );
             avisoEntidad = javisoEntidad.toModel();
         }
+
         return avisoEntidad;
     }
 
