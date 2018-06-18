@@ -246,7 +246,6 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
         query.setParameter("tipoAviso",
                 TypeAvisoEntidad.TRAMITE_VERSION.toString());
         query.setParameter("identificadorTramite", identificadorTramite);
-
         AvisoEntidad avisoEntidad = null;
         final JAvisoEntidad javisoEntidad = (JAvisoEntidad) query
                 .getSingleResult();
