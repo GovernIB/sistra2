@@ -99,4 +99,10 @@ public class AvisoEntidadServiceImpl implements AvisoEntidadService {
 		return avisoEntidadDao.getAllByFiltro(idEntidad, idioma, filtro);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public AvisoEntidad getAvisoEntidadByTramite(final String identificadorTramite) {
+		return avisoEntidadDao.getAvisoEntidadByTramite(identificadorTramite);
+	}
+
 }

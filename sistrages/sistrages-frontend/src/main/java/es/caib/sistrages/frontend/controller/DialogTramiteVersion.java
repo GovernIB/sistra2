@@ -46,6 +46,9 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	 */
 	public void init() {
 
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		UtilJSF.checkSecOpenDialog(modo, id);
+
 		dataVersion = new TramiteVersion();
 		final int numVersion = tramiteService.getTramiteNumVersionMaximo(Long.valueOf(id)) + 1;
 		dataVersion.setNumeroVersion(numVersion);

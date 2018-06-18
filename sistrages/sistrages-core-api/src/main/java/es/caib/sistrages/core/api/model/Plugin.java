@@ -29,9 +29,6 @@ public class Plugin extends ModelApi {
 	/** Classname. */
 	private String classname;
 
-	/** Instancia. */
-	private String instancia;
-
 	/** Descripción. */
 	private String descripcion;
 
@@ -128,18 +125,4 @@ public class Plugin extends ModelApi {
 		this.propiedades = propiedades;
 	}
 
-	/**
-	 * @return the instancia
-	 */
-	public String getInstancia() {
-		return instancia;
-	}
-
-	/**
-	 * @param instancia
-	 *            the instancia to set
-	 */
-	public void setInstancia(final String instancia) {
-		this.instancia = instancia;
-	}
 }

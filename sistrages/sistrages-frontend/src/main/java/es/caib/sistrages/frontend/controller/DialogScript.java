@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -14,6 +15,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
@@ -64,14 +66,16 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void init() {
 
-		if (iData == null && id == null) {
-			data = new Script();
-		} else {
-			if (iData != null) {
-				data = (Script) UtilJSON.fromJSON(iData, Script.class);
-			} else { // id!=null
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+		final Object json = mochila.get(Constantes.CLAVE_MOCHILA_SCRIPT);
+		if (json == null) {
+			if (id == null) {
+				data = new Script();
+			} else {
 				data = scriptService.getScript(Long.valueOf(id));
 			}
+		} else {
+			data = (Script) UtilJSON.fromJSON(json.toString(), Script.class);
 		}
 	}
 

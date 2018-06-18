@@ -147,6 +147,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
 		final JFormulario jFormularioInterno = entityManager.find(JFormulario.class, idFormularioInterno);
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		jFormulariotramite.setOrden(jpasoRellenar.getPasoRellenar().getFormulariosTramite().size());
 		jFormulariotramite.setFormulario(jFormularioInterno);
 		jpasoRellenar.getPasoRellenar().getFormulariosTramite().add(jFormulariotramite);
 		entityManager.merge(jpasoRellenar);
@@ -171,9 +172,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	@Override
 	public void addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
 		final JAnexoTramite janexoTramite = JAnexoTramite.fromModel(documento);
-		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
-		janexoTramite.setPasoAnexar(jpasoRellenar.getPasoAnexar());
-		jpasoRellenar.getPasoAnexar().getAnexosTramite().add(janexoTramite);
+		final JPasoTramitacion jpasoTramitacion = entityManager.find(JPasoTramitacion.class, idTramitePaso);
+		janexoTramite.setOrden(jpasoTramitacion.getPasoAnexar().getAnexosTramite().size());
+		janexoTramite.setPasoAnexar(jpasoTramitacion.getPasoAnexar());
+		jpasoTramitacion.getPasoAnexar().getAnexosTramite().add(janexoTramite);
 		entityManager.persist(janexoTramite);
 	}
 
@@ -203,8 +205,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	public void addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		final JPagoTramite jpagoTramite = JPagoTramite.fromModel(tasa);
-		jpasoRellenar.getPasoPagos().getPagosTramite().add(jpagoTramite);
+		jpagoTramite.setOrden(jpasoRellenar.getPasoPagos().getPagosTramite().size());
 		jpagoTramite.setPasoPagos(jpasoRellenar.getPasoPagos());
+		jpasoRellenar.getPasoPagos().getPagosTramite().add(jpagoTramite);
 		entityManager.persist(jpagoTramite);
 	}
 
@@ -352,6 +355,17 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public void intercambiarFormularios(final Long idFormulario1, final Long idFormulario2) {
+		final JFormularioTramite jformulario1 = entityManager.find(JFormularioTramite.class, idFormulario1);
+		final JFormularioTramite jformulario2 = entityManager.find(JFormularioTramite.class, idFormulario2);
+		final int orden = jformulario1.getOrden();
+		jformulario1.setOrden(jformulario2.getOrden());
+		jformulario2.setOrden(orden);
+		entityManager.merge(jformulario1);
+		entityManager.merge(jformulario2);
 	}
 
 }

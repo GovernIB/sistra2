@@ -51,8 +51,8 @@ public class SecurityServiceBean implements SecurityService {
 
 	@Override
 	@PermitAll
-	public List<TypeRolePermisos> getPermisosDesarrolladorEntidad(final long codigoArea) {
-		return securityService.getPermisosDesarrolladorEntidad(codigoArea);
+	public List<TypeRolePermisos> getPermisosDesarrolladorEntidadByArea(final long codigoArea) {
+		return securityService.getPermisosDesarrolladorEntidadByArea(codigoArea);
 	}
 
 	@Override
@@ -77,6 +77,12 @@ public class SecurityServiceBean implements SecurityService {
 	@PermitAll
 	public String getUsername() {
 		return securityService.getUsername();
+	}
+
+	@Override
+	@PermitAll
+	public boolean tienePermisosDesarrolladorEntidadByArea(final Long codigoArea) {
+		return securityService.tienePermisosDesarrolladorEntidadByArea(codigoArea);
 	}
 
 }

@@ -11,10 +11,10 @@ package es.caib.sistrages.core.api.model;
 public class FormateadorFormulario extends ModelApi {
 
 	/** Id. */
-	private Long id;
+	private Long codigo;
 
 	/** Identificador. **/
-	private String codigo;
+	private String identificador;
 
 	/**
 	 * classname.
@@ -34,22 +34,33 @@ public class FormateadorFormulario extends ModelApi {
 	}
 
 	/**
-	 * Obtiene el valor de id.
+	 * Crea una nueva instancia de Formateador Formulario.
 	 *
-	 * @return el valor de id
+	 * @param pCodigo
+	 *            codigo
 	 */
-	public Long getId() {
-		return id;
+	public FormateadorFormulario(final Long pCodigo) {
+		super();
+		this.codigo = pCodigo;
 	}
 
 	/**
-	 * Establece el valor de id.
+	 * Obtiene el valor de codigo.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @return el valor de codigo
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public Long getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
+	 */
+	public void setCodigo(final Long id) {
+		this.codigo = id;
 	}
 
 	/**
@@ -90,12 +101,12 @@ public class FormateadorFormulario extends ModelApi {
 		this.descripcion = descripcion;
 	}
 
-	public String getCodigo() {
-		return codigo;
+	public String getIdentificador() {
+		return identificador;
 	}
 
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 }

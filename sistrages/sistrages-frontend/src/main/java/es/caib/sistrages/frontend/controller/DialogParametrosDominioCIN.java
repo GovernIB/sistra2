@@ -71,7 +71,8 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PRDCIN);
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PARAMDOM);
 	}
 
 	/**
@@ -83,7 +84,8 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PRDCIN);
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PARAMDOM);
 	}
 
 	/**
@@ -186,11 +188,6 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 				break;
 			case EDICION:
 				final ParametroDominio propiedadEdicion = (ParametroDominio) respuesta.getResult();
-
-				if (parametroDuplicado(propiedadEdicion)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
-					return;
-				}
 
 				// Muestra dialogo
 				final int posicion = this.data.indexOf(this.valorSeleccionado);

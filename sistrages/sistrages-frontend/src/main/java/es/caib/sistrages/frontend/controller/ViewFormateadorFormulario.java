@@ -52,7 +52,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 		// Entidad activa
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// Recupera datos
@@ -98,7 +98,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		if (fmtService.removeFormateadorFormulario(this.datoSeleccionado.getId())) {
+		if (fmtService.removeFormateadorFormulario(this.datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje
@@ -194,7 +194,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		if (modo != TypeModoAcceso.ALTA) {
-			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getId().toString());
+			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		}
 		UtilJSF.openDialog(DialogFormateadorFormulario.class, modo, params, true, 640, 180);
 	}

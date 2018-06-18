@@ -180,12 +180,12 @@ public class AreaDaoImpl implements AreaDao {
 	private List<Area> listarAreas(final Long idEntidad, final String pFiltro) {
 		final List<Area> resultado = new ArrayList<>();
 
-		String sql = "Select t From JArea t where t.entidad.codigo = :idEntidad";
+		String sql = "Select a From JArea a where a.entidad.codigo = :idEntidad";
 
 		if (StringUtils.isNotBlank(pFiltro)) {
-			sql += " AND upper(t.descripcion) like :filtro";
+			sql += " AND a in (select t.area from JTramite t  where upper(t.identificador) like :filtro or upper(t.descripcion) like :filtro  )";
 		}
-		sql += " ORDER BY t.codigo";
+		sql += " ORDER BY a.codigo";
 
 		final Query query = entityManager.createQuery(sql);
 

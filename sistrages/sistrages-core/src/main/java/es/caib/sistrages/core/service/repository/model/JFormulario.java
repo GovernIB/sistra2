@@ -18,8 +18,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormulario;
 
 /**
  * JFormulario
@@ -166,7 +168,6 @@ public class JFormulario implements IModelApi {
 	}
 
 	public static JFormulario mergePaginasModel(final JFormulario jFormulario, final FormularioInterno pFormInt) {
-		JFormulario jModel = null;
 
 		if (jFormulario != null && !jFormulario.getPaginas().isEmpty() && pFormInt != null
 				&& !pFormInt.getPaginas().isEmpty()) {
@@ -212,10 +213,63 @@ public class JFormulario implements IModelApi {
 
 			}
 
-			jModel = jFormulario;
 		}
 
-		return jModel;
+		return jFormulario;
+	}
+
+	public static JFormulario mergePlantillasModel(final JFormulario jFormulario, final FormularioInterno pFormInt) {
+
+		if (jFormulario != null && pFormInt != null && !pFormInt.getPlantillas().isEmpty()) {
+			// Borrar paginas no pasados en modelo
+			final List<JPlantillaFormulario> borrar = new ArrayList<>();
+			final List<Long> listPlantillas = new ArrayList<>();
+
+			for (final PlantillaFormulario pag : pFormInt.getPlantillas()) {
+				if (pag.getCodigo() != null) {
+					listPlantillas.add(pag.getCodigo());
+				}
+			}
+
+			for (final JPlantillaFormulario jPlantilla : jFormulario.getPlantillas()) {
+				if (!listPlantillas.contains(jPlantilla.getCodigo())) {
+					borrar.add(jPlantilla);
+				}
+			}
+
+			for (final JPlantillaFormulario jPlantilla : borrar) {
+				jFormulario.getPlantillas().remove(jPlantilla);
+				jPlantilla.setFormulario(null);
+			}
+
+			// Actualizamos pagina pasados en modelo
+			for (final PlantillaFormulario plantilla : pFormInt.getPlantillas()) {
+				if (plantilla.getCodigo() == null || plantilla.getCodigo() < 0) {
+					final JPlantillaFormulario jPlantilla = JPlantillaFormulario.fromModel(plantilla);
+					jPlantilla.setCodigo(null);
+					jPlantilla.setFormulario(jFormulario);
+					jFormulario.getPlantillas().add(jPlantilla);
+				} else {
+					for (final JPlantillaFormulario jPlantilla : jFormulario.getPlantillas()) {
+						if (jPlantilla.getCodigo().equals(plantilla.getCodigo())) {
+							// TODO:completar
+							jPlantilla.setDescripcion(plantilla.getDescripcion());
+							jPlantilla.setPorDefecto(plantilla.isPorDefecto());
+
+							if (!jPlantilla.getFormateadorFormulario().getCodigo()
+									.equals(plantilla.getIdFormateadorFormulario()))
+								jPlantilla.setFormateadorFormulario(JFormateadorFormulario
+										.fromModel(new FormateadorFormulario(plantilla.getIdFormateadorFormulario())));
+							break;
+						}
+					}
+				}
+
+			}
+
+		}
+
+		return jFormulario;
 	}
 
 	/**

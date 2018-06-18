@@ -133,10 +133,10 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 			throw new FaltanDatosException("Falta el formateador de formulario");
 		}
 
-		final JFormateadorFormulario jFmt = entityManager.find(JFormateadorFormulario.class, fmt.getId());
+		final JFormateadorFormulario jFmt = entityManager.find(JFormateadorFormulario.class, fmt.getCodigo());
 
 		if (jFmt == null) {
-			throw new NoExisteDato(NO_EXISTE_FMT + ": " + fmt.getId());
+			throw new NoExisteDato(NO_EXISTE_FMT + ": " + fmt.getCodigo());
 		}
 
 		// Mergeamos datos

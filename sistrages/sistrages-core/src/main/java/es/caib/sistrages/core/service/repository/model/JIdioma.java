@@ -33,7 +33,4 @@ public class JIdioma implements IModelApi {
 		this.identificador = idiIdenti;
 	}
 
-	public void fromModel(final String texto) {
-		this.identificador = texto;
-	}
 }

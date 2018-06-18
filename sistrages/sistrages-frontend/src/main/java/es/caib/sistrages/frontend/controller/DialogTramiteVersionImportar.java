@@ -274,7 +274,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 			}
 		} else {
 			final List<TypeRolePermisos> permisos = UtilJSF.getSessionBean().getSecurityService()
-					.getPermisosDesarrolladorEntidad(areaActual.getCodigo());
+					.getPermisosDesarrolladorEntidadByArea(areaActual.getCodigo());
 			if (!permisos.contains(TypeRolePermisos.PROMOCIONAR)) {
 
 				filaArea = new FilaImportar(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
@@ -404,7 +404,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		for (final Map.Entry<Long, FormateadorFormulario> entry : formateadores.entrySet()) {
 			final FormateadorFormulario formateador = entry.getValue();
 			final FormateadorFormulario formateadorActual = formateadorFormularioService
-					.getFormateadorFormulario(UtilJSF.getIdEntidad(), formateador.getCodigo());
+					.getFormateadorFormulario(UtilJSF.getIdEntidad(), formateador.getIdentificador());
 			if (formateadorActual == null) {
 
 				filasFormateador.add(new FilaImportar(formateador, TypeImportarAccion.CREAR,

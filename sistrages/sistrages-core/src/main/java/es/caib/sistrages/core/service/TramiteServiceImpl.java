@@ -482,4 +482,10 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getTramiteVersionMaxNumVersion(idTramite);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public void intercambiarFormularios(final Long idFormulario1, final Long idFormulario2) {
+		tramitePasoDao.intercambiarFormularios(idFormulario1, idFormulario2);
+	}
+
 }

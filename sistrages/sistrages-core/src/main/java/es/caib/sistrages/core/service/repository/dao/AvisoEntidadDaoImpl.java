@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.service.repository.model.JAvisoEntidad;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
@@ -211,6 +212,7 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 
 	@Override
 	public void removeByEntidad(final Long pIdEntidad) {
+
 		if (pIdEntidad == null) {
 			throw new FaltanDatosException(FALTA_ENTIDAD);
 		}
@@ -219,6 +221,28 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idEntidad", pIdEntidad);
 		query.executeUpdate();
+	}
+
+	@Override
+	public AvisoEntidad getAvisoEntidadByTramite(final String identificadorTramite) {
+
+		if (identificadorTramite == null || identificadorTramite.isEmpty()) {
+			throw new FaltanDatosException(FALTA_IDENTIFICADOR);
+		}
+
+		final String sql = "select a from JAvisoEntidad as a  where a.tipo = "
+				+ TypeAvisoEntidad.TRAMITE_VERSION.toString()
+				+ " and a.listaSerializadaTramites like :identificadorTramite ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("identificadorTramite", identificadorTramite);
+
+		AvisoEntidad avisoEntidad = null;
+		final JAvisoEntidad javisoEntidad = (JAvisoEntidad) query.getSingleResult();
+		if (javisoEntidad != null) {
+			avisoEntidad = javisoEntidad.toModel();
+		}
+		return avisoEntidad;
 	}
 
 }

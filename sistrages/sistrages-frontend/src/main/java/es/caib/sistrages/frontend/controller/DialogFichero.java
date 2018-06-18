@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -14,9 +15,11 @@ import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -51,6 +54,9 @@ public class DialogFichero extends DialogControllerBase {
 	 */
 	@Inject
 	private TramiteService tramiteService;
+
+	@Inject
+	FormularioInternoService formIntService;
 
 	/** Id **/
 	private String id;
@@ -96,6 +102,10 @@ public class DialogFichero extends DialogControllerBase {
 	 */
 	private String extensiones;
 
+	private PlantillaIdiomaFormulario plantillaIdiomaFormulario;
+
+	private Long idPlantillaFormulario;
+
 	/**
 	 * Inicialización.
 	 *
@@ -121,6 +131,15 @@ public class DialogFichero extends DialogControllerBase {
 		case TRAMITE_DOC:
 			documento = tramiteService.getDocumento(Long.valueOf(id));
 			entidad = entidadService.loadEntidad(Long.valueOf(idEntidad));
+			break;
+		case PLANTILLA_IDIOMA_FORM:
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+			if (!mochilaDatos.isEmpty()) {
+				plantillaIdiomaFormulario = (PlantillaIdiomaFormulario) mochilaDatos
+						.get(Constantes.CLAVE_MOCHILA_PLTIDIOMAFORM);
+			}
+			idPlantillaFormulario = Long.valueOf(id);
+			mostrarQuitar = true;
 			break;
 		default:
 			mostrarQuitar = true;
@@ -202,7 +221,20 @@ public class DialogFichero extends DialogControllerBase {
 					fichero.setPublico(true);
 				}
 				fichero.setNombre(file.getFileName());
+
 				tramiteService.uploadDocAnexo(documento.getId(), fichero, file.getContents(), Long.valueOf(idEntidad));
+				break;
+			case PLANTILLA_IDIOMA_FORM:
+				fichero = plantillaIdiomaFormulario.getFichero();
+				if (fichero == null) {
+					fichero = new Fichero();
+					fichero.setPublico(true);
+					plantillaIdiomaFormulario.setFichero(fichero);
+				}
+				fichero.setNombre(file.getFileName());
+
+				plantillaIdiomaFormulario = formIntService.uploadPlantillaIdiomaFormulario(UtilJSF.getIdEntidad(),
+						idPlantillaFormulario, plantillaIdiomaFormulario, file.getContents());
 				break;
 			default:
 				break;
@@ -211,6 +243,9 @@ public class DialogFichero extends DialogControllerBase {
 			if (tipoCampoFichero == TypeCampoFichero.FUENTE_ENTIDAD_CSV) {
 				this.cerrarCsv();
 			} else if (tipoCampoFichero == TypeCampoFichero.TRAMITE_DOC) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
+			} else if (tipoCampoFichero == TypeCampoFichero.PLANTILLA_IDIOMA_FORM) {
+				comprobarFichero();
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
 			} else {
 				entidad = entidadService.loadEntidad(entidad.getId());
@@ -231,22 +266,29 @@ public class DialogFichero extends DialogControllerBase {
 		switch (tipoCampoFichero) {
 		case LOGO_GESTOR_ENTIDAD:
 			entidadService.removeLogoGestorEntidad(entidad.getId());
+			entidad = entidadService.loadEntidad(entidad.getId());
 			break;
 		case LOGO_ASISTENTE_ENTIDAD:
 			entidadService.removeLogoAsistenteEntidad(entidad.getId());
+			entidad = entidadService.loadEntidad(entidad.getId());
 			break;
 		case CSS_ENTIDAD:
 			entidadService.removeCssEntidad(entidad.getId());
+			entidad = entidadService.loadEntidad(entidad.getId());
 			break;
 		case TRAMITE_DOC:
 			tramiteService.removeDocAnexo(documento.getId());
+			entidad = entidadService.loadEntidad(entidad.getId());
 			break;
 		case FUENTE_ENTIDAD_CSV:
+		case PLANTILLA_IDIOMA_FORM:
+			formIntService.removePlantillaIdiomaFormulario(plantillaIdiomaFormulario);
+			plantillaIdiomaFormulario = null;
+			break;
 		default:
 			break;
 		}
 
-		entidad = entidadService.loadEntidad(entidad.getId());
 		comprobarFichero();
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.quitar"));
 	}
@@ -276,6 +318,14 @@ public class DialogFichero extends DialogControllerBase {
 			existeFichero = entidad.getCss() != null;
 			if (existeFichero) {
 				nombreFichero = entidad.getCss().getNombre();
+			} else {
+				nombreFichero = null;
+			}
+			break;
+		case PLANTILLA_IDIOMA_FORM:
+			existeFichero = plantillaIdiomaFormulario != null && plantillaIdiomaFormulario.getFichero() != null;
+			if (existeFichero) {
+				nombreFichero = plantillaIdiomaFormulario.getFichero().getNombre();
 			} else {
 				nombreFichero = null;
 			}
@@ -493,6 +543,22 @@ public class DialogFichero extends DialogControllerBase {
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;
+	}
+
+	public PlantillaIdiomaFormulario getPlantillaIdiomaFormulario() {
+		return plantillaIdiomaFormulario;
+	}
+
+	public void setPlantillaIdiomaFormulario(final PlantillaIdiomaFormulario plantillaIdiomaFormulario) {
+		this.plantillaIdiomaFormulario = plantillaIdiomaFormulario;
+	}
+
+	public Long getIdPlantillaFormulario() {
+		return idPlantillaFormulario;
+	}
+
+	public void setIdPlantillaFormulario(final Long idPlantillaFormulario) {
+		this.idPlantillaFormulario = idPlantillaFormulario;
 	}
 
 }

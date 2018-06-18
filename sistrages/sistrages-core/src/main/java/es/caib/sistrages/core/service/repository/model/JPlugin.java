@@ -60,10 +60,6 @@ public class JPlugin implements IModelApi {
 	@Column(name = "PLG_PROPS", length = 4000)
 	private String propiedades;
 
-	/** Id Instancia (para plugins multiinstancia como pagos) */
-	@Column(name = "PLG_IDINST", length = 20)
-	private String idInstancia;
-
 	/** Entidad. **/
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PLG_CODENT", nullable = true)
@@ -165,21 +161,6 @@ public class JPlugin implements IModelApi {
 	}
 
 	/**
-	 * @return the idInstancia
-	 */
-	public String getIdInstancia() {
-		return idInstancia;
-	}
-
-	/**
-	 * @param idInstancia
-	 *            the idInstancia to set
-	 */
-	public void setIdInstancia(final String idInstancia) {
-		this.idInstancia = idInstancia;
-	}
-
-	/**
 	 * @return the entidad
 	 */
 	public JEntidad getEntidad() {
@@ -205,7 +186,6 @@ public class JPlugin implements IModelApi {
 		plugin.setAmbito(TypeAmbito.fromString(this.getAmbito()));
 		plugin.setClassname(this.claseImplementadora);
 		plugin.setDescripcion(this.descripcion);
-		plugin.setInstancia(this.idInstancia);
 		plugin.setTipo(TypePlugin.fromString(this.tipo));
 		plugin.setPropiedades((List<Propiedad>) UtilJSON.fromListJSON(propiedades, Propiedad.class));
 		return plugin;
@@ -225,7 +205,6 @@ public class JPlugin implements IModelApi {
 			jPlugin.setAmbito(plugin.getAmbito().toString());
 			jPlugin.setClaseImplementadora(plugin.getClassname());
 			jPlugin.setDescripcion(plugin.getDescripcion());
-			jPlugin.setIdInstancia(plugin.getInstancia());
 			jPlugin.setPropiedades(UtilJSON.toJSON(plugin.getPropiedades()));
 			jPlugin.setTipo(plugin.getTipo().toString());
 		}

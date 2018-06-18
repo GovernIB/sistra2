@@ -56,6 +56,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 
 		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new AvisoEntidad();
 		} else {

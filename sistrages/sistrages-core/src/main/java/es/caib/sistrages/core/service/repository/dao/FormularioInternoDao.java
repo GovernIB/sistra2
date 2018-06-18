@@ -1,10 +1,13 @@
 package es.caib.sistrages.core.service.repository.dao;
 
+import java.util.List;
+
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
@@ -116,4 +119,10 @@ public interface FormularioInternoDao {
 
 	void updateOrdenLinea(Long pId, Integer pOrden);
 
+	List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormularioById(Long pId);
+
+	PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(final Long idPlantilla,
+			PlantillaIdiomaFormulario plantilla);
+
+	void removePlantillaIdiomaFormulario(Long idPlantilla);
 }

@@ -55,7 +55,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_LVFCIN);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_LVFCIN);
 	}
 
 	/**

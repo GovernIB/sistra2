@@ -57,13 +57,11 @@ public class SecurityServiceImpl implements SecurityService {
 	@NegocioInterceptor
 	public boolean isAdministradorEntidad(final long codigoEntidad) {
 		boolean res = false;
-		if (contextService.getRoles().contains(TypeRoleAcceso.SUPER_ADMIN)) {
-			final List<Entidad> entidades = getEntidadesAdministrador();
-			for (final Entidad e : entidades) {
-				if (e.getId().longValue() == codigoEntidad) {
-					res = true;
-					break;
-				}
+		final List<Entidad> entidades = obtenerEntidadesAdministrador();
+		for (final Entidad e : entidades) {
+			if (e.getId().longValue() == codigoEntidad) {
+				res = true;
+				break;
 			}
 		}
 		return res;
@@ -73,13 +71,11 @@ public class SecurityServiceImpl implements SecurityService {
 	@NegocioInterceptor
 	public boolean isDesarrolladorEntidad(final long codigoEntidad) {
 		boolean res = false;
-		if (contextService.getRoles().contains(TypeRoleAcceso.ADMIN_ENT)) {
-			final List<Entidad> entidades = getEntidadesDesarrollador();
-			for (final Entidad e : entidades) {
-				if (e.getId().longValue() == codigoEntidad) {
-					res = true;
-					break;
-				}
+		final List<Entidad> entidades = obtenerEntidadesDesarrollador();
+		for (final Entidad e : entidades) {
+			if (e.getId().longValue() == codigoEntidad) {
+				res = true;
+				break;
 			}
 		}
 		return res;
@@ -87,41 +83,27 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	@NegocioInterceptor
-	public List<TypeRolePermisos> getPermisosDesarrolladorEntidad(final long codigoArea) {
+	public List<TypeRolePermisos> getPermisosDesarrolladorEntidadByArea(final long codigoArea) {
 		return obtenerPermisosDesarrolladorEntidad(codigoArea);
 	}
 
 	@Override
 	@NegocioInterceptor
+	public boolean tienePermisosDesarrolladorEntidadByArea(final Long codigoArea) {
+		final List<TypeRolePermisos> permisos = obtenerPermisosDesarrolladorEntidad(codigoArea);
+		return !permisos.isEmpty();
+	}
+
+	@Override
+	@NegocioInterceptor
 	public List<Entidad> getEntidadesAdministrador() {
-		final List<Entidad> listaEntidades = entidadDao.getAll();
-		final List<Entidad> res = new ArrayList<Entidad>();
-		for (final Entidad e : listaEntidades) {
-			if (e.isActivo() && contextService.hashRole(e.getRol().trim())) {
-				res.add(e);
-			}
-		}
-		return res;
+		return obtenerEntidadesAdministrador();
 	}
 
 	@Override
 	@NegocioInterceptor
 	public List<Entidad> getEntidadesDesarrollador() {
-		final List<Entidad> listaEntidades = entidadDao.getAll();
-		final List<Entidad> res = new ArrayList<Entidad>();
-		for (final Entidad e : listaEntidades) {
-			if (e.isActivo()) {
-				// Verificamos si existe alguna area de la entidad para la que tenga acceso
-				final List<Area> listaAreas = areaDao.getAll(e.getId());
-				for (final Area area : listaAreas) {
-					if (!obtenerPermisosDesarrolladorEntidad(area.getCodigo()).isEmpty()) {
-						res.add(e);
-						break; // Pasamos a siguiente entidad
-					}
-				}
-			}
-		}
-		return res;
+		return obtenerEntidadesDesarrollador();
 	}
 
 	@Override
@@ -163,4 +145,49 @@ public class SecurityServiceImpl implements SecurityService {
 		}
 		return permisos;
 	}
+
+	/**
+	 * Obtiene entidades desarrollador.
+	 *
+	 * @return lista entidades
+	 */
+	private List<Entidad> obtenerEntidadesDesarrollador() {
+		final List<Entidad> res = new ArrayList<Entidad>();
+		if (contextService.getRoles().contains(TypeRoleAcceso.DESAR)) {
+			final List<Entidad> listaEntidades = entidadDao.getAll();
+			for (final Entidad e : listaEntidades) {
+				if (e.isActivo()) {
+					// Verificamos si existe alguna area de la entidad para la
+					// que tenga acceso
+					final List<Area> listaAreas = areaDao.getAll(e.getId());
+					for (final Area area : listaAreas) {
+						if (!obtenerPermisosDesarrolladorEntidad(area.getCodigo()).isEmpty()) {
+							res.add(e);
+							break; // Pasamos a siguiente entidad
+						}
+					}
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Obtener entidades administrador.
+	 *
+	 * @return lista entidades
+	 */
+	private List<Entidad> obtenerEntidadesAdministrador() {
+		final List<Entidad> res = new ArrayList<Entidad>();
+		if (contextService.getRoles().contains(TypeRoleAcceso.ADMIN_ENT)) {
+			final List<Entidad> listaEntidades = entidadDao.getAll();
+			for (final Entidad e : listaEntidades) {
+				if (e.isActivo() && contextService.hashRole(e.getRol().trim())) {
+					res.add(e);
+				}
+			}
+		}
+		return res;
+	}
+
 }

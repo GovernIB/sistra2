@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogPlantillaFormulario.titulo']}"/></title>
+</h:head>
+
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" 	value="#{dialogPlantillaFormulario.modoAcceso}"/>
+		<f:viewParam name="DATO" 			value="#{dialogPlantillaFormulario.iData}"/>
+		<f:viewAction action="#{dialogPlantillaFormulario.init}" />
+	</f:metadata>
+
+	<h:form id="dialogPlantillaFormulario" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
+
+					<h:column><p:outputLabel value="#{msg['dialogPlantillaFormulario.formateador']}" /></h:column>
+					<h:column>
+						<p:selectOneMenu id="formateador" value="#{dialogPlantillaFormulario.data.idFormateadorFormulario}" required="true">
+						    <f:selectItems value="#{dialogPlantillaFormulario.listaFormateadores}" var="campo" itemLabel="#{campo.identificador}" itemValue="#{campo.codigo}"/>
+						</p:selectOneMenu>
+					</h:column>
+
+
+	         		<h:column>
+	         			<p:outputLabel for="descripcion" value="#{msg['dialogPlantillaFormulario.descripcion']}" />
+	         		</h:column>
+	         		<h:column>
+	         			<p:inputText id="descripcion" value="#{dialogPlantillaFormulario.data.descripcion}" required="true" styleClass="margin-right-10" size="30" maxlength="255"/>
+	         		</h:column>
+					<h:column>
+						<p:outputLabel for="porDefecto" value="#{msg['dialogPlantillaFormulario.porDefecto']}"  />
+					</h:column>
+					<h:column>
+						<p:selectBooleanCheckbox id="porDefecto" value="#{dialogPlantillaFormulario.data.porDefecto}"/>
+					</h:column>
+				</h:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaFormulario.aceptar()}" process="@form" update="@form growlDialog"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlantillaFormulario.cancelar()}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

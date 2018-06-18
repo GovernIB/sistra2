@@ -59,7 +59,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		// Id entidad
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// Recupera datos
@@ -259,7 +259,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
 		}
-		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 600, 350);
+		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 600, 430);
 	}
 
 }

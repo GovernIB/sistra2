@@ -72,7 +72,7 @@ public class ViewFuentes extends ViewControllerBase {
 	public void init() {
 
 		idEntidad = UtilJSF.getIdEntidad();
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 
 		if (ambito == null) {
 			return;
@@ -80,21 +80,42 @@ public class ViewFuentes extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		buscar(null);
 
-		// Permisos area
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			permiteAltaArea = true;
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+		checkPermisos();
 
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
-			permiteAltaArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-		}
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			permiteModificarArea = true;
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
-			permiteModificarArea = permisos.contains(TypeRolePermisos.MODIFICACION);
-		}
+	}
 
+	private void checkPermisos() {
+		boolean res = false;
+		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+		switch (ambitoType) {
+		case GLOBAL:
+			// Entra como SuperAdmin
+			permiteAltaArea = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			permiteModificarArea= (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			break;
+		case ENTIDAD:
+			permiteAltaArea = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			permiteModificarArea= (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+
+			break;
+		case AREA:
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				permiteAltaArea = true;
+				permiteModificarArea= true;
+
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
+
+				permiteAltaArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+				permiteAltaArea = permisos.contains(TypeRolePermisos.MODIFICACION);
+			}
+
+			break;
+		}
 	}
 
 	/**

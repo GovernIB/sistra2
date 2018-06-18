@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -296,6 +297,17 @@ public class SessionBean {
 	}
 
 	/**
+	 * Redirige a la URL por defecto para el rol activo.
+	 *
+	 */
+	public String getDefaultUrl() {
+		final ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext()
+				.getContext();
+		final String contextPath = servletContext.getContextPath();
+		return contextPath + UtilJSF.getDefaultUrlRole(activeRole, obtenerIdEntidad());
+	}
+
+	/**
 	 * Obtiene lenguaje opuesto al seleccionado (supone solo castellano/catalan).
 	 *
 	 * @return lang
@@ -333,8 +345,25 @@ public class SessionBean {
 		}
 	}
 
+	/**
+	 * Limpia mochila datos.
+	 */
 	public void limpiaMochilaDatos() {
 		mochilaDatos.clear();
+	}
+
+	public void limpiaMochilaDatos(final String pClave) {
+		mochilaDatos.remove(pClave);
+	}
+
+	/**
+	 * tiene acceso area.
+	 *
+	 * @param idArea
+	 * @return
+	 */
+	public boolean tieneAccesoArea(final Long idArea) {
+		return securityService.tienePermisosDesarrolladorEntidadByArea(idArea);
 	}
 
 	// --------- PRIVATE METHODS --------------------
@@ -475,4 +504,5 @@ public class SessionBean {
 	public void setMochilaDatos(final Map<String, Object> mapaDatos) {
 		this.mochilaDatos = mapaDatos;
 	}
+
 }

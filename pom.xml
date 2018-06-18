@@ -29,8 +29,10 @@
 		<primefaces.version>6.1</primefaces.version>
 		<primefacesExtensions.version>6.1.1</primefacesExtensions.version>
 		<primefaces.allThemes.version>1.0.8</primefaces.allThemes.version>
-		<jersey.version>2.26</jersey.version>
-		<jackson.version>2.9.4</jackson.version> <!-- Da error en listas la version que viene con jersey 2.8.4 (con 2.9.4 devuelve list bien) -->
+		<jersey.version>2.27</jersey.version>
+		<!-- Da error en listas la version que viene con jersey 2.8.4 (con 2.9.4 devuelve list bien) -->
+		<!--  <jackson.version>2.9.4</jackson.version>  -->
+		<jackson.version>2.9.5</jackson.version>
 		<javax.inject.version>1</javax.inject.version>
 		<jersey-gf-cdi.version>2.14</jersey-gf-cdi.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>
@@ -45,9 +47,16 @@
 		<slf4j.version>1.5.8</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<opencsv.version>2.0</opencsv.version>
+		<ehcache.version>2.10.5</ehcache.version>
 	</properties>
   	<modules>
+  		<!-- Modulos comunes -->
   		<module>sistracom</module>
+
+  		<!-- Apis entre modulos -->
+  		<module>sistrages/sistrages-rest-api</module>
+
+  		<!-- Modulos aplicacion -->
 		<module>sistramit</module>
 		<module>sistrages</module>
 		<module>sistrahelp</module>

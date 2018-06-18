@@ -52,10 +52,15 @@ public final class Constantes {
 	/** Constante dominio. **/
 	public static final String CLAVE_MOCHILA_DOMINIO = "DOMINIO";
 
+	/** Constante script. **/
+	public static final String CLAVE_MOCHILA_SCRIPT = "SCRIPT";
+
 	public static final String CLAVE_MOCHILA_PRDCIN = "PRDCIN";
 
 	public static final String CLAVE_MOCHILA_PARAMDOM = "PARAMDOM";
 
 	public static final String CLAVE_MOCHILA_IDIOMASXDEFECTO = "IDXDEF";
+
+	public static final String CLAVE_MOCHILA_PLTIDIOMAFORM = "PLTIDFOR";
 
 }

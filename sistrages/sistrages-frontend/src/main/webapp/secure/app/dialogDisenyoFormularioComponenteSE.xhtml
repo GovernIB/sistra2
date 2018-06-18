@@ -35,7 +35,7 @@
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominio']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}">
-		<p:outputLabel value="#{dialogDisenyoFormulario.objetoFormularioEdit.dominio.codigo}" styleClass="padding-right-8" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.dominio}"/>
+		<p:outputLabel value="#{dialogDisenyoFormulario.objetoFormularioEdit.dominio.identificador}" styleClass="padding-right-8" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.dominio}"/>
 		<p:commandButton id="btnAbrirDominio" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.abrirBusquedaDominio}" process="@this">
 			<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoBusquedaDominio}" update="growlDisenyoFormulario panelPropietats"/>
 		</p:commandButton>

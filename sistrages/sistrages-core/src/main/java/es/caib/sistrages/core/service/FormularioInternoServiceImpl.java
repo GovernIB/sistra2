@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,11 @@ import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 
 @Service
@@ -26,6 +30,10 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 
 	@Autowired
 	FormularioInternoDao formIntDao;
+
+	/** DAO Fichero Externo. */
+	@Autowired
+	FicheroExternoDao ficheroExternoDao;
 
 	/*
 	 * (non-Javadoc)
@@ -94,45 +102,80 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	 * getContenidoPaginaFormulario(java.lang.Long)
 	 */
 	@Override
+	@NegocioInterceptor
 	public PaginaFormulario getContenidoPaginaFormulario(final Long pId) {
 		return formIntDao.getContenidoPaginaById(pId);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ObjetoFormulario addComponenteFormulario(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
 			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
 		return formIntDao.addComponente(pTipoObjeto, pIdPagina, pIdLinea, pOrden, pPosicion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ObjetoFormulario updateComponenteFormulario(final ComponenteFormulario pComponente) {
 		return formIntDao.updateComponente(pComponente);
 
 	}
 
 	@Override
+	@NegocioInterceptor
 	public ComponenteFormulario getComponenteFormulario(final Long pId) {
 		return formIntDao.getComponenteById(pId);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void removeComponenteFormulario(final Long pId) {
 		formIntDao.removeComponenteFormulario(pId);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void removeLineaFormulario(final Long pId) {
 		formIntDao.removeLineaFormulario(pId);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void updateOrdenComponenteFormulario(final Long pId, final Integer pOrden) {
 		formIntDao.updateOrdenComponente(pId, pOrden);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void updateOrdenLineaFormulario(final Long pId, final Integer pOrden) {
 		formIntDao.updateOrdenLinea(pId, pOrden);
+
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormulario(final Long pId) {
+		return formIntDao.getListaPlantillaIdiomaFormularioById(pId);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(final Long idEntidad, final Long idPlantilla,
+			final PlantillaIdiomaFormulario plantilla, final byte[] contents) {
+		final PlantillaIdiomaFormulario newPlantilla = formIntDao.uploadPlantillaIdiomaFormulario(idPlantilla,
+				plantilla);
+		ficheroExternoDao.guardarFichero(idEntidad, newPlantilla.getFichero(), contents);
+
+		return newPlantilla;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removePlantillaIdiomaFormulario(final PlantillaIdiomaFormulario plantillaIdiomaFormulario) {
+		if (plantillaIdiomaFormulario != null && plantillaIdiomaFormulario.getFichero() != null) {
+			ficheroExternoDao.marcarBorrar(plantillaIdiomaFormulario.getFichero().getId());
+			formIntDao.removePlantillaIdiomaFormulario(plantillaIdiomaFormulario.getCodigo());
+		}
 
 	}
 }

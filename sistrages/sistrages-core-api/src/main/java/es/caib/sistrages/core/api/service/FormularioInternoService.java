@@ -1,9 +1,12 @@
 package es.caib.sistrages.core.api.service;
 
+import java.util.List;
+
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
@@ -78,5 +81,12 @@ public interface FormularioInternoService {
 	void updateOrdenComponenteFormulario(Long pId, Integer pOrden);
 
 	void updateOrdenLineaFormulario(Long pId, Integer pOrden);
+
+	List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormulario(Long pId);
+
+	PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(Long idEntidad, final Long idPlantilla,
+			PlantillaIdiomaFormulario plantilla, byte[] contents);
+
+	void removePlantillaIdiomaFormulario(PlantillaIdiomaFormulario plantillaIdiomaFormulario);
 
 }

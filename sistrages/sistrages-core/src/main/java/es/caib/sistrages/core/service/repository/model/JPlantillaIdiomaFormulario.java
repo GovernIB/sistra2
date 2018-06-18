@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 
 /**
  * JPlantillaIdiomaFormulario
@@ -26,7 +29,7 @@ public class JPlantillaIdiomaFormulario implements IModelApi {
 	@Column(name = "PLI_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PLI_CODFIC", nullable = false)
 	private JFichero fichero;
 
@@ -39,6 +42,7 @@ public class JPlantillaIdiomaFormulario implements IModelApi {
 	private JIdioma idioma;
 
 	public JPlantillaIdiomaFormulario() {
+		super();
 	}
 
 	public Long getCodigo() {
@@ -71,6 +75,36 @@ public class JPlantillaIdiomaFormulario implements IModelApi {
 
 	public void setIdioma(final JIdioma idioma) {
 		this.idioma = idioma;
+	}
+
+	public PlantillaIdiomaFormulario toModel() {
+		final PlantillaIdiomaFormulario plantilla = new PlantillaIdiomaFormulario();
+		plantilla.setCodigo(codigo);
+
+		if (fichero != null) {
+			plantilla.setFichero(fichero.toModel());
+		}
+		plantilla.setIdioma(idioma.getIdentificador());
+
+		return plantilla;
+	}
+
+	public static JPlantillaIdiomaFormulario fromModel(final PlantillaIdiomaFormulario model) {
+		JPlantillaIdiomaFormulario jModel = null;
+		if (model != null) {
+			jModel = new JPlantillaIdiomaFormulario();
+			if (model.getCodigo() != null) {
+				jModel.setCodigo(model.getCodigo());
+			}
+
+			if (model.getFichero() != null) {
+				jModel.setFichero(JFichero.fromModel(model.getFichero()));
+			}
+
+			jModel.setIdioma(new JIdioma(model.getIdioma()));
+
+		}
+		return jModel;
 	}
 
 }

@@ -61,7 +61,7 @@ public interface SecurityService {
 	 *            código área
 	 * @return boolean
 	 */
-	public List<TypeRolePermisos> getPermisosDesarrolladorEntidad(long codigoArea);
+	public List<TypeRolePermisos> getPermisosDesarrolladorEntidadByArea(long codigoArea);
 
 	/**
 	 * En caso de ser un administrador de entidad recupera las entidades asociadas.
@@ -76,5 +76,13 @@ public interface SecurityService {
 	 * @return lista entidades
 	 */
 	public List<Entidad> getEntidadesDesarrollador();
+
+	/**
+	 * Comprueba si el usuario tiene permiso al area.
+	 *
+	 * @param codigoArea
+	 * @return
+	 */
+	public boolean tienePermisosDesarrolladorEntidadByArea(Long codigoArea);
 
 }

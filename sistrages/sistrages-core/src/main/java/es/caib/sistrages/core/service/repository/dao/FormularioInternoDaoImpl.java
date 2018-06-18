@@ -1,7 +1,9 @@
 package es.caib.sistrages.core.service.repository.dao;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -25,6 +27,7 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JCampoFormulario;
@@ -34,11 +37,15 @@ import es.caib.sistrages.core.service.repository.model.JCampoFormularioTexto;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JElementoFormulario;
 import es.caib.sistrages.core.service.repository.model.JEtiquetaFormulario;
+import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
+import es.caib.sistrages.core.service.repository.model.JIdioma;
 import es.caib.sistrages.core.service.repository.model.JImagenFormulario;
 import es.caib.sistrages.core.service.repository.model.JLineaFormulario;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
 import es.caib.sistrages.core.service.repository.model.JPaginaFormulario;
+import es.caib.sistrages.core.service.repository.model.JPlantillaFormulario;
+import es.caib.sistrages.core.service.repository.model.JPlantillaIdiomaFormulario;
 import es.caib.sistrages.core.service.repository.model.JScript;
 import es.caib.sistrages.core.service.repository.model.JSeccionFormulario;
 
@@ -55,6 +62,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	private static final String NO_EXISTE_PAGINA = "No existe la pagina: ";
 	private static final String NO_EXISTE_LINEA = "No existe la linea: ";
 	private static final String NO_EXISTE_COMPONENTE = "No existe el componente: ";
+	private static final String NO_EXISTE_PLANTILLA = "No existe la plantilla: ";
 
 	/**
 	 * entity manager.
@@ -102,6 +110,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		if (!formInt.getPaginas().isEmpty() && formInt.getPaginas().size() > 1) {
 			Collections.sort(formInt.getPaginas(),
 					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+		}
+
+		for (final JPlantillaFormulario jPlantilla : jForm.getPlantillas()) {
+			formInt.getPlantillas().add(jPlantilla.toModel());
 		}
 
 		return formInt;
@@ -175,6 +187,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		}
 
 		jForm = JFormulario.mergePaginasModel(jForm, pFormInt);
+
+		jForm = JFormulario.mergePlantillasModel(jForm, pFormInt);
 
 		entityManager.merge(jForm);
 	}
@@ -510,6 +524,55 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		entityManager.merge(jLinea);
 	}
 
+	@Override
+	public List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormularioById(final Long pId) {
+		final List<PlantillaIdiomaFormulario> lista = new ArrayList<>();
+
+		final JPlantillaFormulario jPlantilla = getJPlantillaFormularioById(pId);
+		for (final JPlantillaIdiomaFormulario jPlantillaIdioma : jPlantilla.getPlantillaIdiomaFormulario()) {
+			lista.add(jPlantillaIdioma.toModel());
+		}
+
+		return lista;
+	}
+
+	@Override
+	public PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(final Long idPlantilla,
+			final PlantillaIdiomaFormulario plantilla) {
+		JPlantillaIdiomaFormulario jPlantillaIdioma;
+		final JFichero jFichero;
+
+		if (plantilla.getCodigo() != null) {
+			jPlantillaIdioma = entityManager.find(JPlantillaIdiomaFormulario.class, plantilla.getCodigo());
+			if (plantilla.getFichero() != null) {
+				plantilla.getFichero().setNombre(plantilla.getFichero().getNombre());
+				plantilla.getFichero().setPublico(plantilla.getFichero().isPublico());
+			} else {
+				jPlantillaIdioma.setFichero(JFichero.fromModel(plantilla.getFichero()));
+			}
+			entityManager.merge(jPlantillaIdioma);
+		} else {
+			jPlantillaIdioma = JPlantillaIdiomaFormulario.fromModel(plantilla);
+			jPlantillaIdioma.setPlantillaFormulario(entityManager.find(JPlantillaFormulario.class, idPlantilla));
+			jPlantillaIdioma.setIdioma(entityManager.find(JIdioma.class, plantilla.getIdioma()));
+			entityManager.persist(jPlantillaIdioma);
+		}
+
+		return jPlantillaIdioma.toModel();
+	}
+
+	@Override
+	public void removePlantillaIdiomaFormulario(final Long idPlantilla) {
+		final JPlantillaIdiomaFormulario jPlantillaIdioma = entityManager.find(JPlantillaIdiomaFormulario.class,
+				idPlantilla);
+		if (jPlantillaIdioma == null) {
+			throw new NoExisteDato("No existe plantilla idioma " + idPlantilla);
+		}
+
+		entityManager.remove(jPlantillaIdioma);
+
+	}
+
 	private JFormulario getJFormularioById(final Long pId) {
 		if (pId == null) {
 			throw new FaltanDatosException(FALTA_ID);
@@ -566,6 +629,21 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		}
 
 		return jElemento;
+	}
+
+	private JPlantillaFormulario getJPlantillaFormularioById(final Long pId) {
+
+		if (pId == null) {
+			throw new FaltanDatosException(FALTA_ID);
+		}
+
+		final JPlantillaFormulario jPlantilla = entityManager.find(JPlantillaFormulario.class, pId);
+
+		if (jPlantilla == null) {
+			throw new NoExisteDato(NO_EXISTE_PLANTILLA + pId);
+		}
+
+		return jPlantilla;
 	}
 
 	/**

@@ -211,7 +211,7 @@ public class ViewDominios extends ViewControllerBase {
 			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+						.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
 
 				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
 
@@ -245,7 +245,7 @@ public class ViewDominios extends ViewControllerBase {
 			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+						.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
 
 				res = permisos.contains(TypeRolePermisos.MODIFICACION);
 

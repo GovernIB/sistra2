@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -51,6 +52,9 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	@Inject
 	FormularioInternoService formIntService;
 
+	@Inject
+	private FormateadorFormularioService fmtService;
+
 	/**
 	 * Inicialización.
 	 */
@@ -67,7 +71,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		if (id == null) {
 			data = new FormularioInterno();
 		} else {
-			data = formIntService.getFormularioInternoCompleto(Long.valueOf(id));
+			data = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
 			literal = data.getTextoCabecera() != null
 					? data.getTextoCabecera().getTraduccion(UtilJSF.getSessionBean().getLang())
 					: null;
@@ -97,7 +101,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
 	}
 
 	/**
@@ -109,7 +113,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
 	}
 
 	/**
@@ -145,16 +149,14 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 */
 	public void editarDialogScriptPlantilla() {
 
-		if (id == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, null, true, 950, 700);
+		if (id == null || this.data.getScriptPlantilla() == null) {
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, null, true, 950, 700);
 		} else {
 			final Map<String, String> params = new HashMap<>();
-			if (data.getScriptPlantilla() == null) {
-				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
-			} else {
-				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(data.getScriptPlantilla()));
-			}
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950, 700);
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(this.data.getScriptPlantilla()));
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
 		}
 	}
 
@@ -239,8 +241,64 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	public void nuevaPlantilla() {
-		final PlantillaFormulario plantilla = new PlantillaFormulario();
-		this.data.getPlantillas().add(plantilla);
+		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.ALTA, null, true, 430, 170);
+	}
+
+	/**
+	 * Return dialogo plantilla.
+	 *
+	 * @param event
+	 *            the event
+	 */
+	public void returnDialogoPlantilla(final SelectEvent event) {
+		PlantillaFormulario plantilla = null;
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+				plantilla = (PlantillaFormulario) respuesta.getResult();
+
+				if (formateadorDuplicado(plantilla)) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+					return;
+				}
+
+				if (plantilla.isPorDefecto()) {
+					plantillaLimpiarPorDefecto();
+				}
+
+				this.data.getPlantillas().add(plantilla);
+				break;
+			case EDICION:
+				plantilla = (PlantillaFormulario) respuesta.getResult();
+
+				if (!plantillaSeleccionada.isPorDefecto() && plantilla.isPorDefecto()) {
+					plantillaLimpiarPorDefecto();
+				}
+
+				// Muestra dialogo
+				final int posicion = this.data.getPlantillas().indexOf(this.plantillaSeleccionada);
+				this.data.getPlantillas().remove(posicion);
+				this.data.getPlantillas().add(posicion, plantilla);
+				this.plantillaSeleccionada = plantilla;
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
+	}
+
+	public void editarPlantilla() {
+
+		if (!verificarFilaSeleccionada(plantillaSeleccionada)) {
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.plantillaSeleccionada));
+		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.EDICION, params, true, 430, 170);
 	}
 
 	/**
@@ -258,12 +316,51 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Limpia la propiedad de por defecto.
+	 */
+	private void plantillaLimpiarPorDefecto() {
+
+		for (final PlantillaFormulario plantilla : data.getPlantillas()) {
+			plantilla.setPorDefecto(false);
+		}
+
+	}
+
+	private boolean formateadorDuplicado(final PlantillaFormulario pNuevo) {
+		boolean duplicado = false;
+
+		for (final PlantillaFormulario plantilla : data.getPlantillas()) {
+			if (plantilla.getIdFormateadorFormulario().equals(pNuevo.getIdFormateadorFormulario())) {
+				duplicado = true;
+				break;
+			}
+		}
+
+		return duplicado;
+	}
+
+	/**
 	 * Deshabilitar script plantilla.
 	 *
 	 * @return true, if successful
 	 */
 	public boolean getDeshabilitarScriptPlantilla() {
 		return data.getPlantillas() != null ? this.data.getPlantillas().size() <= 1 : true;
+	}
+
+	public String getDescripcionFormateador(final Long pIdFmt) {
+		return fmtService.getFormateadorFormulario(pIdFmt).getIdentificador();
+	}
+
+	public void editarFicheroPlantilla() {
+
+		if (!verificarFilaSeleccionada(plantillaSeleccionada)) {
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(plantillaSeleccionada.getCodigo()));
+		UtilJSF.openDialog(DialogPlantillaIdiomaFormulario.class, TypeModoAcceso.EDICION, params, true, 430, 170);
 	}
 
 	/**
@@ -367,6 +464,14 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	public FormateadorFormularioService getFmtService() {
+		return fmtService;
+	}
+
+	public void setFmtService(final FormateadorFormularioService fmtService) {
+		this.fmtService = fmtService;
 	}
 
 }

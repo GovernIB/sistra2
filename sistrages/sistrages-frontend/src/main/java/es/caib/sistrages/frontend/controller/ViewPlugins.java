@@ -75,7 +75,7 @@ public class ViewPlugins extends ViewControllerBase {
 			break;
 		case ENTIDAD:
 			// Verificamos acceso
-			UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+			UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 			// Recuperamos datos
 			listaDatos = pluginService.listPlugin(ambitoType, idEntidad, filtro);
 			break;

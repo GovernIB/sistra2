@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormulario;
+
 /**
  * JPlantillaFormulario
  */
@@ -97,6 +100,37 @@ public class JPlantillaFormulario implements IModelApi {
 
 	public void setPlantillaIdiomaFormulario(final Set<JPlantillaIdiomaFormulario> plantillaIdiomaFormulario) {
 		this.plantillaIdiomaFormulario = plantillaIdiomaFormulario;
+	}
+
+	public PlantillaFormulario toModel() {
+		final PlantillaFormulario plantilla = new PlantillaFormulario();
+		plantilla.setCodigo(codigo);
+		plantilla.setDescripcion(descripcion);
+		plantilla.setPorDefecto(porDefecto);
+
+		if (formateadorFormulario != null) {
+			plantilla.setIdFormateadorFormulario(formateadorFormulario.getCodigo());
+		}
+		return plantilla;
+	}
+
+	public static JPlantillaFormulario fromModel(final PlantillaFormulario model) {
+		JPlantillaFormulario jModel = null;
+		if (model != null) {
+			jModel = new JPlantillaFormulario();
+			if (model.getCodigo() != null) {
+				jModel.setCodigo(model.getCodigo());
+			}
+			jModel.setDescripcion(model.getDescripcion());
+			jModel.setPorDefecto(model.isPorDefecto());
+
+			if (model.getIdFormateadorFormulario() != null) {
+				jModel.setFormateadorFormulario(JFormateadorFormulario
+						.fromModel(new FormateadorFormulario(model.getIdFormateadorFormulario())));
+			}
+
+		}
+		return jModel;
 	}
 
 }

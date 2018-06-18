@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.ejb;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +15,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
@@ -119,6 +122,27 @@ public class FormularoInternoServiceBean implements FormularioInternoService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateOrdenLineaFormulario(final Long pId, final Integer pOrden) {
 		formIntService.updateOrdenLineaFormulario(pId, pOrden);
+
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormulario(final Long pId) {
+		return formIntService.getListaPlantillaIdiomaFormulario(pId);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(final Long idEntidad, final Long idPlantilla,
+			final PlantillaIdiomaFormulario plantilla, final byte[] contents) {
+		return formIntService.uploadPlantillaIdiomaFormulario(idEntidad, idPlantilla, plantilla, contents);
+
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removePlantillaIdiomaFormulario(final PlantillaIdiomaFormulario plantillaIdiomaFormulario) {
+		formIntService.removePlantillaIdiomaFormulario(plantillaIdiomaFormulario);
 
 	}
 

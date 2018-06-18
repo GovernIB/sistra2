@@ -455,4 +455,12 @@ public interface TramiteService {
 	 */
 	public TramiteVersion getTramiteVersionMaxNumVersion(Long idTramite);
 
+	/**
+	 * Intercambia el orden de dos formularios.
+	 *
+	 * @param idFormulario1
+	 * @param idFormulario2
+	 */
+	public void intercambiarFormularios(final Long idFormulario1, final Long idFormulario2);
+
 }

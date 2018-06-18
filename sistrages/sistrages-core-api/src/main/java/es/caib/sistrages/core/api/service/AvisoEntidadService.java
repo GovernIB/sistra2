@@ -59,4 +59,12 @@ public interface AvisoEntidadService {
 	 */
 	List<AvisoEntidad> listAvisoEntidad(Long idEntidad, TypeIdioma idioma, String filtro);
 
+	/**
+	 * Obtiene el aviso entidad según el identificador del tramite
+	 * 
+	 * @param identificadorTramite
+	 * @return
+	 */
+	AvisoEntidad getAvisoEntidadByTramite(String identificadorTramite);
+
 }

@@ -23,13 +23,13 @@
 		<f:viewParam name="ID" value="#{dialogPropiedadesFormulario.id}"/>
 		<f:viewAction action="#{dialogPropiedadesFormulario.init}" />
 	</f:metadata>
-	<h:form styleClass="margin-top-10">
+	<h:form styleClass="margin-top-10" id="form">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
-				<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="w30 padding-left-18,w70" styleClass="w100" columns="2" cellpadding="5">
+				<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="w25 padding-left-18,w75" styleClass="w100" columns="2" cellpadding="5">
 					<p:outputLabel for="permitirAccionesPersonalizadas" value="#{msg['dialogPropiedadesFormulario.permitirAccionesPersonalizadas']}" rendered="false"/>
 				 	<p:selectBooleanCheckbox id="permitirAccionesPersonalizadas" value="#{dialogPropiedadesFormulario.data.permitirAccionesPersonalizadas}" disabled="#{dialogPropiedadesFormulario.consulta}"  rendered="false"/>
 
@@ -56,8 +56,8 @@
 				                          selectionMode="single" selection="#{dialogPropiedadesFormulario.paginaSeleccionada}" rowKey="#{td.orden}">
 
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
-							<p:ajax event="rowSelect" />
-							<p:ajax event="rowUnselect" />
+							<p:ajax event="rowSelect"/>
+							<p:ajax event="rowUnselect"/>
 
 							<!-- Columnas -->
 						    <p:column class="ui-panelgrid-cell">
@@ -79,40 +79,54 @@
 			 		<p:outputLabel value="#{msg['dialogPropiedadesFormulario.plantillaPDF']}"/>
 					<h:panelGrid columns="2" columnClasses="w40,w60 va-top">
 						<p:dataTable  id="dataTablePlantillas" var="td" value="#{dialogPropiedadesFormulario.data.plantillas}"
-										  rows="0" emptyMessage="No se han encontrado plantillas"
+										  rows="0" emptyMessage="#{msg['error.emptyRows']}"
 										  scrollable="true" scrollHeight="98%"
-				                          paginator="false" style="height:132px;width:340px" styleClass="hide-table-header"
+				                          paginator="false" style="height:132px;width:520px"
 				                          selectionMode="single" selection="#{dialogPropiedadesFormulario.plantillaSeleccionada}" rowKey="#{td.hashCode}">
 
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
-							<p:ajax event="rowSelect" />
-							<p:ajax event="rowUnselect" />
+							<p:ajax event="rowSelect" update="form:filesPlantilla"/>
+							<p:ajax event="rowUnselect" update="form:filesPlantilla"/>
 
 							<!-- Columnas -->
-						    <p:column class="ui-panelgrid-cell" >
+							<p:column  headerText="#{msg['dialogPropiedadesFormulario.formateador']}" styleClass="ui-panelgrid-cell w30" >
+						        <h:outputText value="#{dialogPropiedadesFormulario.getDescripcionFormateador(td.idFormateadorFormulario)}" />
+						    </p:column>
+						    <p:column  headerText="#{msg['dialogPropiedadesFormulario.descripcion']}" styleClass="ui-panelgrid-cell w55">
 						        <h:outputText value="#{td.descripcion}" />
 						    </p:column>
-		   					<p:column class="ui-panelgrid-cell">
+		   					<p:column headerText="#{msg['dialogPropiedadesFormulario.porDefecto']}" styleClass="ui-panelgrid-cell w15 grid-center">
 						        <p:selectBooleanCheckbox value="#{td.porDefecto}"/>
 						    </p:column>
 
 
 				 		</p:dataTable>
 				 		 	<p:outputPanel styleClass="barra-herramientas-vertical">
-						    	<p:commandButton id="btnNuevaPlantilla" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.sinImplementar}" process="@this" update="growlDialog dataTablePlantillas" />
+						    	<p:commandButton id="btnNuevaPlantilla" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPlantilla}" process="@this" update="growlDialog dataTablePlantillas" >
+						    		<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPlantilla}" update="growlDialog dataTablePlantillas"/>
+						    	</p:commandButton>
+
 								<br/>
-								<p:commandButton id="btnEditarPlantilla" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.sinImplementar}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
-	        						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog dataTablePlantillas"/>
+								<p:commandButton id="btnEditarPlantilla" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPlantilla}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
+	        						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPlantilla}" update="growlDialog dataTablePlantillas"/>
 	        					</p:commandButton>
 	        					<br/>
-						    	<p:commandButton id="btnEliminarPlantilla" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.sinImplementar}" process="@this" update="growlDialog dataTablePlantillas"/>
-								<br/>
-						    	<p:commandButton id="scriptPlantilla" icon="fa fa-bolt"  actionListener="#{dialogPropiedadesFormulario.editarDialogScriptPlantilla}" disabled="#{dialogPropiedadesFormulario.deshabilitarScriptPlantilla}"
-									process="@this" update="growlDialog">
-								<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
+						    	<p:commandButton id="btnEliminarPlantilla" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPlantilla}" process="@this" update="growlDialog dataTablePlantillas"/>
+						    	<br/>
+								<p:commandButton id="filesPlantilla" icon="fa fa-file-o"  actionListener="#{dialogPropiedadesFormulario.editarFicheroPlantilla}"
+												process="@this" update="growlDialog">
+									<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
+									<p:confirm disabled="#{empty dialogPropiedadesFormulario.plantillaSeleccionada or dialogPropiedadesFormulario.plantillaSeleccionada.codigo gt 0}" header="#{msg['warning.titulo']}" message="#{msg['warning.guardar']}" icon="fa fa-exclamation-triangle fa-3x confirmar_icono"/>
 								</p:commandButton>
 							</p:outputPanel>
 			 		</h:panelGrid>
+
+					<p:outputLabel value="#{msg['dialogPropiedadesFormulario.scriptFormateador']}"/>
+
+					<p:commandButton id="scriptPlantilla" icon="fa fa-bolt"  actionListener="#{dialogPropiedadesFormulario.editarDialogScriptPlantilla}" disabled="#{dialogPropiedadesFormulario.deshabilitarScriptPlantilla}"
+									process="@this" update="growlDialog">
+						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
+					</p:commandButton>
 				</h:panelGrid>
 
 			</p:outputPanel>
@@ -125,6 +139,15 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
+			<p:confirmDialog global="true">
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.aceptar']}" type="button" styleClass="ui-confirmdialog-no boton-azul" icon="ui-icon-check" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+
+
+
 	</h:form>
 </h:body>
 

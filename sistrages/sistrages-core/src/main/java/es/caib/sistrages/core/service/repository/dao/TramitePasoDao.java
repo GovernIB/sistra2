@@ -173,4 +173,12 @@ public interface TramitePasoDao {
 	 */
 	List<Fichero> getFicherosTramiteVersion(Long idTramiteVersion);
 
+	/**
+	 * Intercambiar formularios.
+	 *
+	 * @param idFormulario1
+	 * @param idFormulario2
+	 */
+	void intercambiarFormularios(Long idFormulario1, Long idFormulario2);
+
 }

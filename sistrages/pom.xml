@@ -16,4 +16,5 @@
 		<module>sistrages-frontend</module>
 		<module>sistrages-ear</module>
 	</modules>
+
 </project>

@@ -46,6 +46,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 
 		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Rol();
 		} else {

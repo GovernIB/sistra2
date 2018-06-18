@@ -58,6 +58,7 @@ public class DialogFuente extends DialogControllerBase {
 		idEntidad = UtilJSF.getIdEntidad();
 
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FuenteDatos();
 			data.setAmbito(TypeAmbito.fromString(ambito));

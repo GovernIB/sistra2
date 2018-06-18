@@ -224,7 +224,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 
 		// 9. Incluir los formeateadores_ID.data
 		for (final FormateadorFormulario formateador : formateadores) {
-			incluirModelApi(zos, formateador, "formateadores_" + formateador.getId() + ".data");
+			incluirModelApi(zos, formateador, "formateadores_" + formateador.getCodigo() + ".data");
 		}
 
 		zos.closeEntry();

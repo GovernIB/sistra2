@@ -86,8 +86,8 @@ public class JFormateadorFormulario implements IModelApi {
 
 	public FormateadorFormulario toModel() {
 		final FormateadorFormulario fmt = new FormateadorFormulario();
-		fmt.setId(codigo);
-		fmt.setCodigo(identificador);
+		fmt.setCodigo(codigo);
+		fmt.setIdentificador(identificador);
 		fmt.setClassname(classname);
 		fmt.setDescripcion(descripcion);
 		return fmt;
@@ -97,8 +97,8 @@ public class JFormateadorFormulario implements IModelApi {
 		JFormateadorFormulario jModel = null;
 		if (model != null) {
 			jModel = new JFormateadorFormulario();
-			jModel.setCodigo(model.getId());
-			jModel.setIdentificador(model.getCodigo());
+			jModel.setCodigo(model.getCodigo());
+			jModel.setIdentificador(model.getIdentificador());
 			jModel.setClassname(model.getClassname());
 			jModel.setDescripcion(model.getDescripcion());
 		}

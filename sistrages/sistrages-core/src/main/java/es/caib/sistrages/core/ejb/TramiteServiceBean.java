@@ -385,4 +385,10 @@ public class TramiteServiceBean implements TramiteService {
 	public TramiteVersion getTramiteVersionMaxNumVersion(final Long idTramite) {
 		return tramiteService.getTramiteVersionMaxNumVersion(idTramite);
 	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void intercambiarFormularios(final Long idFormulario1, final Long idFormulario2) {
+		tramiteService.intercambiarFormularios(idFormulario1, idFormulario2);
+	}
 }

@@ -44,9 +44,6 @@ public class DialogPlugin extends DialogControllerBase {
 	/** Ambito. */
 	private String ambito;
 
-	/** Visible instancia */
-	private boolean visibleInstancia;
-
 	/** Propiedad seleccionada. */
 	private Propiedad propiedadSeleccionada;
 
@@ -60,8 +57,10 @@ public class DialogPlugin extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		tipos = new ArrayList<>();
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		UtilJSF.checkSecOpenDialog(modo, id);
+		tipos = new ArrayList<>();
+
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Plugin();
 			data.setAmbito(TypeAmbito.fromString(ambito));
@@ -79,7 +78,6 @@ public class DialogPlugin extends DialogControllerBase {
 			tipos.add(TypePlugin.REPRESENTACION);
 			tipos.add(TypePlugin.DOMINIO_REMOTO);
 			// No permite plugins multiinstancia
-			visibleInstancia = false;
 			break;
 		case ENTIDAD:
 			// Tipos plugins
@@ -89,7 +87,6 @@ public class DialogPlugin extends DialogControllerBase {
 			tipos.add(TypePlugin.FORMULARIOS_EXTERNOS);
 			tipos.add(TypePlugin.REGISTRO);
 			// Permite plugins multiinstancia (pagos)
-			visibleInstancia = true;
 			break;
 		default:
 			throw new FrontException("Tipo ambito no permitido: " + ambito);
@@ -328,21 +325,6 @@ public class DialogPlugin extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the visibleInstancia
-	 */
-	public boolean isVisibleInstancia() {
-		return visibleInstancia;
-	}
-
-	/**
-	 * @param visibleInstancia
-	 *            the visibleInstancia to set
-	 */
-	public void setVisibleInstancia(final boolean visibleInstancia) {
-		this.visibleInstancia = visibleInstancia;
-	}
-
-	/**
 	 * @return the iData
 	 */
 	public String getiData() {
@@ -357,10 +339,17 @@ public class DialogPlugin extends DialogControllerBase {
 		this.iData = iData;
 	}
 
+	/**
+	 * @return the tipos
+	 */
 	public List<TypePlugin> getTipos() {
 		return tipos;
 	}
 
+	/**
+	 * @param tipos
+	 *            the tipos to set
+	 */
 	public void setTipos(final List<TypePlugin> tipos) {
 		this.tipos = tipos;
 	}

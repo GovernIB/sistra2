@@ -59,7 +59,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 		// Id entidad
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// Recupera datos

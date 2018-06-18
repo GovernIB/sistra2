@@ -27,6 +27,7 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	 */
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FuenteDatosCampo();
 

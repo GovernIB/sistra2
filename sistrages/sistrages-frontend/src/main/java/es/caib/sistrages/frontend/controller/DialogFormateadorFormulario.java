@@ -30,6 +30,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	 */
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FormateadorFormulario();
 		} else {
@@ -46,15 +47,15 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		final Long idEntidad = UtilJSF.getIdEntidad();
 		switch (acceso) {
 		case ALTA:
-			if (fmtService.getFormateadorFormulario(idEntidad, data.getCodigo()) != null) {
+			if (fmtService.getFormateadorFormulario(idEntidad, data.getIdentificador()) != null) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 			fmtService.addFormateadorFormulario(idEntidad, data);
 			break;
 		case EDICION:
-			final FormateadorFormulario f = fmtService.getFormateadorFormulario(idEntidad, data.getCodigo());
-			if (f != null && f.getId().longValue() != data.getId().longValue()) {
+			final FormateadorFormulario f = fmtService.getFormateadorFormulario(idEntidad, data.getIdentificador());
+			if (f != null && f.getCodigo().longValue() != data.getCodigo().longValue()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}

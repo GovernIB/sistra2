@@ -34,13 +34,14 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
+					<p:outputLabel value="" style="margin-top:10px" />
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="mensajeHidden" value="#{msg['dialogMensajeAviso.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="mensaje" value="#{dialogMensajeAviso.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputTextarea id="mensaje" value="#{dialogMensajeAviso.literal}" disabled="true" required="true" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}" rows="4" cols="50" />
 						<p:inputText id="mensajeHidden" value="#{dialogMensajeAviso.literal}" type="hidden" required="true" binding="#{mensajesComponent}"/>
-						<p:commandButton id="btnMensaje" icon="fa fa-language" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" >
+						<p:commandButton id="btnMensaje" icon="fa fa-language" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" style="margin-bottom: 15px;" >
 	            			<p:ajax event="dialogReturn" listener="#{dialogMensajeAviso.returnDialogo}" update="growlDialog mensaje mensajeHidden" />
 	        			</p:commandButton>
 					</p:column>
@@ -54,10 +55,10 @@
 					<p:selectBooleanCheckbox id="activo" value="#{dialogMensajeAviso.data.bloqueado}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="40" />
 
 					<p:outputLabel for="fechaInicio" value="#{msg['dialogMensajeAviso.headerFechaInicio']}" />
-					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button"/>
+					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  />
 
 					<p:outputLabel for="fechaFin" value="#{msg['dialogMensajeAviso.headerFechaFin']}" />
-					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button"/>
+					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" />
 
 					<p:outputLabel for="listaTramites" value="#{msg['dialogMensajeAviso.headerListaTramites']}" />
 					<p:inputTextarea  id="listaTramites" value="#{dialogMensajeAviso.data.listaSerializadaTramites}" rows="4" cols="50"/>

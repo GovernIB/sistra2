@@ -20,7 +20,9 @@ public enum TypeAvisoEntidad {
 	/** TRÁMITES CON FIRMA. **/
 	FIRMA("FIR"),
 	/** LISTA DE TRÁMITES. **/
-	LISTA("LIS");
+	LISTA("LIS"),
+	/** TRAMITE VERSION. **/
+	TRAMITE_VERSION("TRV");
 
 	/**
 	 * Ambito nombre;

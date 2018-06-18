@@ -54,7 +54,7 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewFormateadorFormulario.datoSeleccionado}" rowKey="#{td.id}">
+			        	 selectionMode="single" selection="#{viewFormateadorFormulario.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect"/>
@@ -62,7 +62,7 @@
 
 				<!-- Columnas -->
 				<p:column headerText="#{msg['viewFormateadorFormulario.headerIdentificador']}">
-			        <h:outputText value="#{td.codigo}" />
+			        <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewFormateadorFormulario.headerClassname']}">
