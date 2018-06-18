@@ -92,12 +92,6 @@
 	    </dependency>
 
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-		    <version>${jackson.version}</version>
-		</dependency>
-
-		<dependency>
 		    <groupId>commons-fileupload</groupId>
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>${commons-fileupload}</version>
@@ -172,7 +166,6 @@
                         </execution>
                 </executions>
                 <configuration>
-                		<skip>true</skip>
                 		<generateGitPropertiesFile>true</generateGitPropertiesFile>
                         <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
                 </configuration>
@@ -192,7 +185,7 @@
                             <echo message="compile classpath: ${compile_classpath}" />
                         </target>
 			          <tasks>
-						<copy file="src/main/webapp/WEB-INF/original/sistrages-ac-frontend.xml" tofile="src/main/webapp/WEB-INF/sistrages-ac-frontend.xml" />
+			            <copy file="src/main/webapp/WEB-INF/sistrages-ac-frontend.original.xml" tofile="src/main/webapp/WEB-INF/sistrages-ac-frontend.xml"  />
 			            <replace dir="src/main//webapp/WEB-INF" >
 			              	<include name="**/sistrages-ac-frontend.xml"/>
 			             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />

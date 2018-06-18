@@ -19,6 +19,7 @@ import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -199,14 +200,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	private void cargarDialogScript(final TypeScript typeScript, final Script iScript) {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), typeScript.name());
-		if (id == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, params, true, 950, 700);
+		if (id == null || iScript == null) {
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
 		} else {
-			if (iScript == null) {
-				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
-			} else {
-				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(iScript));
-			}
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(iScript));
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
 		}
 	}

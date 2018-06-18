@@ -19,10 +19,11 @@
 
 			<!-- Toolbar -->
 			<p:toolbar id="toolbar" styleClass="margin-bottom-3">
+
 				<f:facet name="left">
 		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewTramites.filtro}" />
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="panelFiltro" update="growl" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewTramites.filtrar}" process="panelFiltro" update=":form growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
@@ -88,6 +89,7 @@
 				<p:toolbar id="toolbarTramites">
 					<f:facet name="left">
 							<h:outputText value="#{msg['viewTramites.listadoTramites']}"  />
+							<h:outputText value=" - #{viewTramites.areaSeleccionada.data.identificador}" rendered="#{not empty viewTramites.areaSeleccionada}"  />
 					</f:facet>
 			        <f:facet name="right">
 							<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite}">
@@ -99,7 +101,7 @@
 			        		</p:commandButton>
 			        		<p:commandButton id="btnVersionesTramite" value="#{msg['viewTramites.botones.versiones']}" icon="fa fa-level-down" actionListener="#{viewTramites.versionesTramite}" process="@this" update="growl"/>
 			        		<p:menuButton value="Más..">
-	        					<p:menuitem id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-upload"  onclick="triggerImportarTramite(); return false;"></p:menuitem>
+	        					<p:menuitem id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-upload"  onclick="triggerImportarTramite(); return false;" rendered="#{viewTramites.permiteAltaArea}"></p:menuitem>
 	        					<p:menuitem id="btnMoverTramite" value="#{msg['botones.mover']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.permiteAltaArea}"></p:menuitem>
 			        			<p:menuitem id="btnEliminarTramite" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl :form:dataTableTramites" rendered="#{viewTramites.permiteAltaTramite}">
 			        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
@@ -118,8 +120,11 @@
 									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.codigo}">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
-						<p:ajax event="rowSelect" update=":form:contextMenuTramites"/>
-             					<p:ajax event="rowUnselect" update=":form:contextMenuTramites" />
+						<p:ajax event="rowSelect"  />
+             			<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerEditarTramite();"
+		                        update=":form:dataTableTramites"
+		                        />
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['viewTramites.headerCodigo']}">
@@ -145,50 +150,25 @@
 	        <p:commandButton id="hiddenCommandMover" styleClass="button"  action="#{viewTramites.moverTramite()}"  style="display:none">
       			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl form:dataTableTramites"  />
 	        </p:commandButton>
-	         <h:outputScript >
 
-		    </h:outputScript>
+	        <p:commandButton id="hiddenCommandEditar" styleClass="button"  action="#{viewTramites.onRowDblClickTramites()}"  style="display:none">
+      			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl :form:dataTableTramites"/>
+			</p:commandButton>
 
-			<!-- Context menu -->
-			<p:contextMenu id="contextMenuTramites" for="dataTableTramites">
-				<p:menuitem value="#{msg['botones.consultar']}" icon="ui-icon-folder-open" onclick="rcConsultarTramite()" rendered="#{viewTramites.permiteConsultarTramite}"/>
-		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarTramite()" rendered="#{viewTramites.permiteEditarTramite}"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarTramite()" rendered="#{viewTramites.permiteAltaTramite}"/>
-		    </p:contextMenu>
-
-		    <!-- Context menu -->
-			<p:contextMenu for="arbolArea">
-				<p:menuitem value="#{msg['botones.consultar']}" icon="ui-icon-folder-open" onclick="rcConsultarArea();return false;" rendered="#{not viewTramites.permiteEditarArea}"/>
-		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditarArea()"  rendered="#{viewTramites.permiteEditarArea}"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminarArea()" rendered="#{viewTramites.permiteAltaArea}"/>
-		    </p:contextMenu>
 
 			<h:outputScript >
-			 function triggerImportarTramite() {
-			        document.getElementById("form:hiddenCommandImportar").click();
-			     }
+		 		function triggerImportarTramite() {
+		        	document.getElementById("form:hiddenCommandImportar").click();
+		     	}
 
-	      	  function triggerMoverTramite() {
-	        	document.getElementById("form:hiddenCommandMover").click();
-	      	  }
-			 function rcConsultarArea() {
-		        document.getElementById("form:btnConsultarArea").click();
-		      }
-			 function rcEditarArea() {
-		        document.getElementById("form:btnEditarArea").click();
-		      }
-		      function rcConsultarTramite() {
-		        document.getElementById("form:btnConsultarTramite").click();
-		      }
-		      function rcEditarTramite() {
-		        document.getElementById("form:btnEditarTramite").click();
-		      }
-		      function rcEliminarArea() {
-		        document.getElementById("form:btnEliminarArea").click();
-		      }
-		      function rcEliminarTramite() {
-		        document.getElementById("form:btnEliminarTramite").click();
-		      }
+	      	  	function triggerMoverTramite() {
+	        		document.getElementById("form:hiddenCommandMover").click();
+	      	  	}
+
+	      	  	function triggerEditarTramite() {
+	        		document.getElementById("form:hiddenCommandEditar").click();
+	      	  	}
+
 		    </h:outputScript>
 
 		    <p:confirmDialog global="true" >

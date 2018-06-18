@@ -240,7 +240,9 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (script != null) {
-			maps.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 950, 700);
 	}

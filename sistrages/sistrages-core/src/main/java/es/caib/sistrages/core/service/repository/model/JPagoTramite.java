@@ -57,10 +57,6 @@ public class JPagoTramite implements IModelApi {
 	@Column(name = "PAG_OBLIGA", nullable = false, length = 1)
 	private String obligatorio;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PAG_PLUGIN")
-	private JPlugin plugin;
-
 	@Column(name = "PAG_TIPO", nullable = false, length = 1)
 	private String tipo;
 
@@ -192,21 +188,6 @@ public class JPagoTramite implements IModelApi {
 	}
 
 	/**
-	 * @return the plugin
-	 */
-	public JPlugin getPlugin() {
-		return plugin;
-	}
-
-	/**
-	 * @param plugin
-	 *            the plugin to set
-	 */
-	public void setPlugin(final JPlugin plugin) {
-		this.plugin = plugin;
-	}
-
-	/**
 	 * @return the tipo
 	 */
 	public String getTipo() {
@@ -260,7 +241,6 @@ public class JPagoTramite implements IModelApi {
 				pago.setObligatorio(tasa.getObligatoriedad().toString());
 			}
 			pago.setOrden(tasa.getOrden());
-			pago.setPlugin(JPlugin.fromModel(tasa.getTipoPlugin()));
 			pago.setSimulado(tasa.isSimulado());
 			if (tasa.getTipo() != null) {
 				pago.setTipo(tasa.getTipo().toString());
@@ -285,9 +265,6 @@ public class JPagoTramite implements IModelApi {
 		tasa.setIdentificador(this.getIdentificador());
 		tasa.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		tasa.setOrden(this.getOrden());
-		if (this.getPlugin() != null) {
-			tasa.setTipoPlugin(this.getPlugin().toModel());
-		}
 		tasa.setSimulado(this.isSimulado());
 		tasa.setTipo(TypePago.fromString(this.getTipo()));
 		if (this.getScriptDatosPago() != null) {
@@ -316,7 +293,6 @@ public class JPagoTramite implements IModelApi {
 			jpagoTramite.setIdentificador(origPagoTramite.getIdentificador());
 			jpagoTramite.setObligatorio(origPagoTramite.getObligatorio());
 			jpagoTramite.setOrden(origPagoTramite.getOrden());
-			jpagoTramite.setPlugin(origPagoTramite.getPlugin());
 			jpagoTramite.setSimulado(origPagoTramite.isSimulado());
 			jpagoTramite.setTipo(origPagoTramite.getTipo());
 			jpagoTramite.setScriptObligatoriedad(JScript.clonar(origPagoTramite.getScriptObligatoriedad()));

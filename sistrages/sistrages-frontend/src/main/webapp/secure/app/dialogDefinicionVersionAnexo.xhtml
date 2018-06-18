@@ -121,20 +121,21 @@
 					</p:outputPanel>
 
 
-					<h:panelGrid columns="2" columnClasses="wpx120" styleClass="panel_izq w100">
+					<h:panelGrid columns="2" columnClasses="wpx120 grid-right, padding-left-4" styleClass="panel_izq w100">
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.numinstancias']}" for="numinstancias"/>
 						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,">
 							<p:inputText id="numinstancias" size="3" value="#{dialogDefinicionVersionAnexo.data.numeroInstancia}" />
-							<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
-								<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
+
+						</p:panelGrid>
+
+						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
+						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
 								<p:selectOneRadio id="extensiones" value="anexarfirmado">
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="todas" />
 						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="personalizadas" />
 					        	</p:selectOneRadio>
 					        	<p:inputText id="personalizadas_input" size="15"/>
 						     </p:panelGrid>
-						</p:panelGrid>
-
 
 						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
 						<p:panelGrid styleClass="noBorders" columns="4" columnClasses="noPadding-left,noPadding-left">
@@ -148,7 +149,7 @@
 							<p:selectBooleanCheckbox id="convertirpdf" value="true" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"/>
 						</p:panelGrid>
 
-						<p:spacer width="8" height="1"/>
+						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
 						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,noPadding-left">
 							<p:selectOneRadio id="firma" value="#{dialogDefinicionVersionAnexo.data.debeAnexarFirmado}">
 					        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" itemValue="anexarfirmado" />
@@ -172,15 +173,10 @@
 
 
 					<p:outputPanel>
-						<p:radioButton id="presencial" for="tipopresentacion" itemIndex="1" />
+						<p:radioButton id="presencial" for="tipopresentacion" itemIndex="1"  />
 						<p:spacer width="8" height="1"/>
 						<p:outputLabel for="presencial" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial']}" />
 					</p:outputPanel>
-					<!--
-					<p:outputPanel>
-						<p:selectBooleanCheckbox id="compulsar" value="#{dialogDefinicionVersionAnexo.data.debeCompulsar}" itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial.compulsar']}"/>
-						<p:selectBooleanCheckbox id="presentarfotocopia" value="#{dialogDefinicionVersionAnexo.data.debeFotocopiar}"  itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.presencial.presentarfotocopia']}"/>
-					</p:outputPanel> -->
 	         	</h:panelGrid>
 			</p:outputPanel>
 

@@ -18,7 +18,9 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FormularioTramite;
@@ -34,9 +36,11 @@ import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
+import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.ScriptService;
@@ -45,6 +49,7 @@ import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.OpcionArbol;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -61,11 +66,15 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class ViewDefinicionVersion extends ViewControllerBase {
 
-	/** Tramite service. */
+	/** Service. **/
+	@Inject
+	private AvisoEntidadService avisoEntidadService;
+
+	/** Service. */
 	@Inject
 	private EntidadService entidadService;
 
-	/** Tramite service. */
+	/** Service. */
 	@Inject
 	private ScriptService scriptService;
 
@@ -77,7 +86,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	@Inject
 	private TramiteService tramiteService;
 
-	/** Tramite service. */
+	/** Dominio service. */
 	@Inject
 	private DominioService dominioService;
 
@@ -91,7 +100,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private Tramite tramite;
 
 	/** Dominios. */
-	private List<Dominio> dominios;
+	private List<Dominio> dominios = new ArrayList<>();
 
 	/** Arbol */
 	private TreeNode root;
@@ -108,6 +117,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** url de la opcion del arbol seleccionada */
 	private String opcionUrl;
 
+	/** Aviso entidad. **/
+	private AvisoEntidad avisoEntidad;
+
 	/** tramite version. */
 	private TramiteVersion tramiteVersion;
 
@@ -122,6 +134,22 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	/** Dato seleccionado en la lista. */
 	private Long dominioSeleccionado;
+
+	/** Literal error mover arriba. **/
+	private static final String LITERAL_ERROR_MOVERARRIBA = "error.moverarriba";
+	/** Literal error mover abajo. **/
+	private static final String LITERAL_ERROR_MOVERABAJO = "error.moverabajo";
+	/** Literal info modificado ok. **/
+	private static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
+	/** Literal info alta ok. */
+	private static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
+	/** Literal error fila no seleccionada. **/
+	private static final String LITERAL_ERROR_NOSELECCIONADOFILA = "error.noseleccionadofila";
+
+	/** Permite editar. **/
+	boolean permiteEditar = false;
+	/** Permite consultar. **/
+	boolean permiteConsultar = false;
 
 	/**
 	 * Crea una nueva instancia de view definicion version.
@@ -139,10 +167,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(UtilJSF.getIdEntidad());
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(UtilJSF.getIdEntidad());
 
 		/** Inicializamos los datos. **/
 		recuperarDatos();
+
+		// Verficamos que puedes ver el area
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByArea(area.getCodigo());
+
+		/** Capa extra de seguridad. */
 
 		/* inicializa breadcrum y lo creamos */
 		breadCrumbRoot = new DefaultMenuModel();
@@ -166,31 +199,71 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		/* Inicializamos el arbol. */
 		inicializarArbol();
-		
+
 		/** Marcamos las propiedades, que es el primer hijo. **/
 		this.opcionUrl = UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPropiedades");
+
+		checkPermiteEditar();
+		checkPermiteConsultar();
 	}
 
 	/**
-	 * Obtiene el valor de permiteAlta.
-	 *
-	 * @return el valor de permiteAlta
+	 * Check Permite editar.
 	 */
-	public boolean permiteAlta() {
-		boolean res = false;
+	private void checkPermiteEditar() {
 
-		// Admin entidad
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			res = true;
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			permiteEditar = false;
+			return;
 		}
 
-		// Desarrollador
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && area != null) {
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getCodigo());
-			res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+		if (!this.tramiteVersion.getBloqueada()) {
+			permiteEditar = false;
+			return;
 		}
 
-		return res;
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+
+			permiteEditar = true;
+
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			permiteEditar = this.tramiteVersion.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName());
+
+		} else {
+
+			permiteEditar = false;
+		}
+	}
+
+	/**
+	 * Check Permite editar.
+	 */
+	public boolean permiteEditarArea() {
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+
+			return true;
+
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(this.area.getCodigo());
+			return permisos.contains(TypeRolePermisos.MODIFICACION);
+
+		} else {
+
+			return false;
+		}
+	}
+
+	/**
+	 * Check Permite consultar.
+	 */
+	private void checkPermiteConsultar() {
+		permiteConsultar = !permiteEditar;
 	}
 
 	/**
@@ -199,20 +272,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @return el valor de permiteEditar
 	 */
 	public boolean permiteEditar() {
-		boolean res = false;
 
-		// Admin entidad
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			res = true;
-		}
-
-		// Desarrollador
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && area != null) {
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(area.getCodigo());
-			res = (permisos.contains(TypeRolePermisos.MODIFICACION) || permisos.contains(TypeRolePermisos.ALTA_BAJA));
-		}
-
-		return res;
+		return permiteEditar;
 	}
 
 	/**
@@ -221,17 +282,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @return el valor de permiteConsultar
 	 */
 	public boolean permiteConsultar() {
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			if (area == null) {
-				return false;
-			} else {
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(area.getCodigo());
 
-				return (permisos.contains(TypeRolePermisos.CONSULTA));
-			}
-		}
-		return false;
+		return permiteConsultar;
 	}
 
 	/**
@@ -239,6 +291,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void consultarDisenyo() {
 		final Map<String, String> params = new HashMap<>();
+		if (this.getFormularioSeleccionado().getIdFormularioInterno() == null) {
+			throw new FrontException("No existe diseño formulario");
+		}
 		params.put(TypeParametroVentana.ID.toString(),
 				this.getFormularioSeleccionado().getIdFormularioInterno().toString());
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 720);
@@ -262,6 +317,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			dominios.add(dominioService.loadDominio(dominioId));
 		}
 		tramiteVersion.setListaDominios(dominiosId);
+		avisoEntidad = avisoEntidadService.getAvisoEntidadByTramite(tramite.getIdentificador());
 	}
 
 	/**
@@ -274,11 +330,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> map = new HashMap<>();
 		map.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
-		if (idScript == null) {
-			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
-		} else {
+		if (idScript != null) {
+
 			final Script script = this.scriptService.getScript(idScript);
-			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+
 		}
 		map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 950, 700);
@@ -337,7 +395,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				// Recuperamos el tramite paso y lo actualizamos y damos el mensaje
 				final TramitePaso tramitePasoMod = (TramitePaso) respuesta.getResult();
 				tramiteService.updateTramitePaso(tramitePasoMod);
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK));
 
 				// Podriamos llamar la BBDD o actualizarlo a mano.
 				recuperarDatos();
@@ -379,7 +437,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled()) {
 			recuperarDatos();
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK));
 		}
 	}
 
@@ -467,7 +525,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			}
 			tramiteVersion.setListaDominios(dominiosId);
 
-			message = UtilJSF.getLiteral("info.alta.ok");
+			message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 
 		}
 
@@ -485,7 +543,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.dominioSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_NOSELECCIONADOFILA));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -558,7 +616,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private boolean verificarFormularioSeleccionado() {
 		boolean filaSeleccionada = true;
 		if (this.formularioSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_NOSELECCIONADOFILA));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -571,23 +629,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarFormularioSeleccionado())
 			return;
 
-		final TramitePasoRellenar tramitePasoRellenar = this.getTramitePasoRELLSeleccionado();
 		final int posicion = posicionFormulario(this.formularioSeleccionado);
 
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERARRIBA));
 			return;
 		}
 
-		final FormularioTramite formulario = tramitePasoRellenar.getFormulariosTramite().remove(posicion);
-		tramitePasoRellenar.getFormulariosTramite().add(posicion - 1, formulario);
+		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getId(),
+				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(posicion - 1).getId());
 
-		for (int i = 0; i < tramitePasoRellenar.getFormulariosTramite().size(); i++) {
-			tramitePasoRellenar.getFormulariosTramite().get(i).setOrden(i + 1);
-		}
-
-		tramiteService.updateTramitePaso(tramitePasoRellenar);
-
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
 	}
 
 	/**
@@ -597,23 +651,19 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarFormularioSeleccionado())
 			return;
 
-		final TramitePasoRellenar tramitePasoRellenar = this.getTramitePasoRELLSeleccionado();
-
 		final int posicion = posicionFormulario(this.formularioSeleccionado);
 
-		if (posicion >= tramitePasoRellenar.getFormulariosTramite().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+		if (posicion >= this.getTramitePasoRELLSeleccionado().getFormulariosTramite().size() - 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERABAJO));
 			return;
 		}
 
-		final FormularioTramite formulario = tramitePasoRellenar.getFormulariosTramite().remove(posicion);
-		tramitePasoRellenar.getFormulariosTramite().add(posicion + 1, formulario);
+		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getId(),
+				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(posicion + 1).getId());
 
-		for (int i = 0; i < tramitePasoRellenar.getFormulariosTramite().size(); i++) {
-			tramitePasoRellenar.getFormulariosTramite().get(i).setOrden(i + 1);
-		}
-
-		tramiteService.updateTramitePaso(tramitePasoRellenar);
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
 	}
 
 	/**
@@ -654,7 +704,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				tramiteService.addFormularioTramite(formulario, this.getTramitePasoRELLSeleccionado().getCodigo());
 
 				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 
 				break;
 
@@ -663,7 +713,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				tramiteService.updateFormularioTramite(formulario);
 
 				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
@@ -695,13 +745,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> map = new HashMap<>();
 		map.put(TypeParametroVentana.TIPO_SCRIPT.toString(), TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS.name());
-		if (script == null) {
-			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
-		} else {
-			map.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
+		if (script != null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}
 
 		if (this.permiteEditar()) {
+
 			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.EDICION.toString());
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, map, true, 950, 700);
 		} else {
@@ -728,7 +779,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			this.getTramitePasoANEXSeleccionado().setScriptAnexosDinamicos(script);
 			tramiteService.updateTramitePaso(this.getTramitePasoANEXSeleccionado());
 
-			message = UtilJSF.getLiteral("info.modificado.ok");
+			message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 
 		}
 
@@ -778,7 +829,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
 				entidadService.loadEntidadByArea(area.getCodigo()).getId().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 575);
+		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 645);
 	}
 
 	/**
@@ -805,7 +856,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private boolean verificarDocumentoSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.documentoSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_NOSELECCIONADOFILA));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -821,7 +872,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final TramitePasoAnexar tramitePasoAnexar = this.getTramitePasoANEXSeleccionado();
 		final int posicion = tramitePasoAnexar.getDocumentos().indexOf(this.documentoSeleccionado);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERARRIBA));
 			return;
 		}
 
@@ -833,6 +884,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 
 		tramiteService.updateTramitePaso(tramitePasoAnexar);
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
 	}
 
 	/**
@@ -845,7 +899,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final TramitePasoAnexar tramitePasoAnexar = this.getTramitePasoANEXSeleccionado();
 		final int posicion = tramitePasoAnexar.getDocumentos().indexOf(this.documentoSeleccionado);
 		if (posicion >= tramitePasoAnexar.getDocumentos().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERABAJO));
 			return;
 		}
 
@@ -858,6 +912,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		tramiteService.updateTramitePaso(tramitePasoAnexar);
 
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
 	}
 
 	/**
@@ -880,7 +937,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				tramiteService.addDocumentoTramite(documento, this.getTramitePasoANEXSeleccionado().getCodigo());
 
 				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 
 				break;
 
@@ -889,7 +946,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				tramiteService.updateDocumentoTramite(documento);
 
 				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 				break;
 			case CONSULTA:
 			default:
@@ -970,7 +1027,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private boolean verificarTasaSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.tasaSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_NOSELECCIONADOFILA));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -986,7 +1043,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final TramitePasoTasa tramitePasoAnexar = this.getTramitePasoTSSeleccionado();
 		final int posicion = tramitePasoAnexar.getTasas().indexOf(this.tasaSeleccionado);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERARRIBA));
 			return;
 		}
 
@@ -999,6 +1056,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		tramiteService.updateTramitePaso(tramitePasoAnexar);
 
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
 	}
 
 	/**
@@ -1011,7 +1071,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final TramitePasoTasa tramitePasoAnexar = this.getTramitePasoTSSeleccionado();
 		final int posicion = tramitePasoAnexar.getTasas().indexOf(this.tasaSeleccionado);
 		if (posicion >= tramitePasoAnexar.getTasas().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERABAJO));
 			return;
 		}
 
@@ -1024,6 +1084,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		tramiteService.updateTramitePaso(tramitePasoAnexar);
 
+		// Actualizamos la info
+		recuperarDatos();
+		inicializarArbol();
 	}
 
 	/**
@@ -1046,7 +1109,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				tramiteService.addTasaTramite(tasa, this.getTramitePasoTSSeleccionado().getCodigo());
 
 				// Mensaje
-				message = UtilJSF.getLiteral("info.alta.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 
 				break;
 
@@ -1055,7 +1118,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				tramiteService.updateTasaTramite(tasa);
 
 				// Mensaje
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 				break;
 			case CONSULTA:
 			default:
@@ -1593,5 +1656,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setDominios(final List<Dominio> dominios) {
 		this.dominios = dominios;
+	}
+
+	/**
+	 * @return the avisoEntidad
+	 */
+	public AvisoEntidad getAvisoEntidad() {
+		return avisoEntidad;
+	}
+
+	/**
+	 * @param avisoEntidad
+	 *            the avisoEntidad to set
+	 */
+	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
+		this.avisoEntidad = avisoEntidad;
 	}
 }

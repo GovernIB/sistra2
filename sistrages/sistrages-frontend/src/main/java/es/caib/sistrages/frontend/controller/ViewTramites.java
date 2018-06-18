@@ -101,7 +101,7 @@ public class ViewTramites extends ViewControllerBase {
 		// Id entidad
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// Recupera areas
@@ -203,7 +203,6 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(this.tramiteSeleccionada.getCodigo().toString()));
-		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml", params);
 
 	}
@@ -332,12 +331,10 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		// Desarrollador
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			if (areaSeleccionada != null) {
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getCodigo());
-				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-			}
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && areaSeleccionada != null) {
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(((Area) areaSeleccionada.getData()).getCodigo());
+			res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
 		}
 
 		return res;
@@ -360,7 +357,7 @@ public class ViewTramites extends ViewControllerBase {
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			if (areaSeleccionada != null) {
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getCodigo());
+						.getPermisosDesarrolladorEntidadByArea(((Area) areaSeleccionada.getData()).getCodigo());
 				res = (permisos.contains(TypeRolePermisos.MODIFICACION)
 						|| permisos.contains(TypeRolePermisos.ALTA_BAJA));
 			}
@@ -380,7 +377,7 @@ public class ViewTramites extends ViewControllerBase {
 				return false;
 			} else {
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(((Area) areaSeleccionada.getData()).getCodigo());
+						.getPermisosDesarrolladorEntidadByArea(((Area) areaSeleccionada.getData()).getCodigo());
 
 				return (permisos.contains(TypeRolePermisos.CONSULTA));
 			}
@@ -392,12 +389,8 @@ public class ViewTramites extends ViewControllerBase {
 	 * Método publico de filtrar
 	 */
 	public void filtrar() {
-		if (filtro == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.filtronorelleno"));
-			return;
-		}
-
 		this.buscarAreas();
+
 	}
 
 	/**
@@ -493,6 +486,18 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Double click area.
+	 *
+	 * @param event
+	 */
+	public void onRowDblClickArea(final NodeSelectEvent event) {
+		this.areaSeleccionada = (DefaultTreeNode) event.getTreeNode();
+		if (getPermiteEditarArea()) {
+			this.editarArea();
+		}
+	}
+
+	/**
 	 * Area seleccionada.
 	 *
 	 * @param event
@@ -517,7 +522,7 @@ public class ViewTramites extends ViewControllerBase {
 		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 			for (final Area area : listaAreas) {
 				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidad(area.getCodigo());
+						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
 
 				if (permisos.contains(TypeRolePermisos.ALTA_BAJA) || permisos.contains(TypeRolePermisos.MODIFICACION)
 						|| permisos.contains(TypeRolePermisos.CONSULTA)) {
@@ -529,23 +534,42 @@ public class ViewTramites extends ViewControllerBase {
 
 		areas = new DefaultTreeNode("Root", null);
 		areaSeleccionada = null;
-		for (final Area area : listaMostrarAreas) {
+
+		for (int i = 0; i < listaMostrarAreas.size(); i++) {
+			final Area area = listaMostrarAreas.get(i);
 			final DefaultTreeNode nodoArea = new DefaultTreeNode(area);
 			areas.getChildren().add(nodoArea);
-			if (idArea != null && area.getCodigo().compareTo(Long.valueOf(idArea)) == 0) {
+			// Si el idArea (el que viene por la url) coincide con el id del area
+			// o no se pasa el parámetro y es el primer elemento de la lista
+			// entonces lo buscamos por defecto.
+			if ((idArea != null && area.getCodigo().compareTo(Long.valueOf(idArea)) == 0)
+					|| (idArea == null && i == 0)) {
 				this.areaSeleccionada = nodoArea;
-				buscarTramites();
+				areas.setSelected(true);
+				nodoArea.setSelected(true);
+
 			}
 		}
 
+		// Lo desactivamos
+		idArea = null;
+
+		buscarTramites();
 	}
 
 	/**
 	 * Buscar tramites.
 	 */
 	private void buscarTramites() {
-		if (areaSeleccionada != null) {
-			tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getCodigo(), null);
+		// Quitamos seleccion de dato
+		tramiteSeleccionada = null;
+		if (areaSeleccionada == null) {
+
+			tramites = new ArrayList<>();
+
+		} else {
+
+			tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getCodigo(), this.filtro);
 
 			// Obtenemos activa a los tramites que tengan alguna version activa
 			final List<Long> idTramites = tramiteService
@@ -558,8 +582,36 @@ public class ViewTramites extends ViewControllerBase {
 				}
 			}
 
-			// Quitamos seleccion de dato
-			tramiteSeleccionada = null;
+		}
+	}
+
+	/**
+	 * Double click area.
+	 *
+	 * @param event
+	 */
+	public void onRowDblClickTramites(final NodeSelectEvent event) {
+		if (this.tramiteSeleccionada == null) {
+			return;
+		}
+
+		if (getPermiteEditarTramite()) {
+			this.editarTramite();
+		} else if (getPermiteConsultarTramite()) {
+			this.consultarTramite();
+		}
+
+	}
+
+	public void onRowDblClickTramites() {
+		if (this.tramiteSeleccionada == null) {
+			return;
+		}
+
+		if (getPermiteEditarTramite()) {
+			this.editarTramite();
+		} else if (getPermiteConsultarTramite()) {
+			this.consultarTramite();
 		}
 	}
 

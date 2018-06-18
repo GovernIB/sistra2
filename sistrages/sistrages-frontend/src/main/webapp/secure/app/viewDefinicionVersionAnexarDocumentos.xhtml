@@ -21,12 +21,14 @@
 							<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 								<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
 									actionListener="#{viewDefinicionVersion.nuevoDocumento()}" process="@this"
+									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									update="growl">
 									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
 		        				</p:commandButton>
 
 								<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
 									actionListener="#{viewDefinicionVersion.editarDocumento()}" process="@this"
+									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									update="growl dataTable">
 									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
 		        				</p:commandButton>
@@ -34,6 +36,7 @@
 								<p:commandButton id="btnEliminar"
 									value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
 									actionListener="#{viewDefinicionVersion.eliminarDocumento()}"
+									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									process="@this" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos:dataTable formViewDefinicionVersionAnexarDocumentos dataTable">
 										<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        				</p:commandButton>
@@ -41,10 +44,12 @@
 								<p:commandButton id="btnSubir"
 									value="#{msg['botones.subir']}" icon="fa fa-caret-up"
 									actionListener="#{viewDefinicionVersion.subirDocumento()}"
+									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									process="@this" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos:dataTable formViewDefinicionVersionAnexarDocumentos dataTable"  />
 
 								<p:commandButton id="btnBajar"
 									value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
+									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									actionListener="#{viewDefinicionVersion.bajarDocumento()}"
 									process="@this" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos:dataTable formViewDefinicionVersionAnexarDocumentos dataTable"  />
 

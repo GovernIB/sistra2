@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.Documento;
@@ -46,6 +47,7 @@ public class JPasoAnexar implements IModelApi {
 
 	/** Anexos. **/
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoAnexar", cascade = { CascadeType.ALL })
+	@OrderBy("orden ASC")
 	private Set<JAnexoTramite> anexosTramite = new HashSet<>(0);
 
 	/**

@@ -79,6 +79,7 @@
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
 						actionListener="#{viewDefinicionVersion.editarControlAcceso()}"
+						rendered="#{viewDefinicionVersion.permiteEditarArea()}"
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionControlAcceso"  />
 					</p:commandButton>

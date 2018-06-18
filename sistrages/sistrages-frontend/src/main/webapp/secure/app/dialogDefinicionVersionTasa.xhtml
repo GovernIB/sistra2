@@ -53,9 +53,11 @@
 	         	<p:panelGrid styleClass="noBorders">
 	       	  		<p:row>
 		       	  		<p:column styleClass="noPadding-left">
-		       	  			 <p:selectOneMenu id="obligatoriedad" value="#{dialogDefinicionVersionTasa.data.obligatoriedad}" update="growl">
+
+
+		       	  			 <p:selectOneRadio id="obligatoriedad" value="#{dialogDefinicionVersionTasa.data.obligatoriedad}" update="growl">
 							    <f:selectItems value="#{tipoFormularioObligatoriedad.ALL_VALUES}"  itemLabel="#{msg['typeFormularioObligatoriedad.'+=tipo]}" var="tipo" />
-							</p:selectOneMenu>
+							</p:selectOneRadio>
 					     </p:column>
 					     <p:column>
 					     	<p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionTasa.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
@@ -71,11 +73,6 @@
 								process="@this" update="growl" styleClass="#{dialogDefinicionVersionTasa.getColorScript(dialogDefinicionVersionTasa.data.scriptPago)}">
 							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoPago}" update="growl scriptdepago" />
 				</p:commandButton>
-
-	            <p:outputLabel for="plugindepago" value="#{msg['dialogDefinicionVersionTasa.plugindepago']}" />
-	            <p:selectOneMenu id="plugindepago" value="#{dialogDefinicionVersionTasa.idPlugin}"  style="width:200px" >
-				    <f:selectItems value="#{dialogDefinicionVersionTasa.plugins}" var="plugin" itemValue="#{plugin.id}" itemLabel="#{plugin.instancia}" />
-				</p:selectOneMenu >
 
 	          	<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionTasa.tipopago']}" />
 	          	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">

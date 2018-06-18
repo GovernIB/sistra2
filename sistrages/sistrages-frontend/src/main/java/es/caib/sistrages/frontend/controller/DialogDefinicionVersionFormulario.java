@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
@@ -16,6 +17,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -237,15 +239,17 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	public void script(final String tipoScript, final Script script) {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
-		if (id == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.ALTA, params, true, 950, 700);
+		if (id == null || script == null) {
+
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
+
 		} else {
-			if (script == null) {
-				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(new Script()));
-			} else {
-				params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(script));
-			}
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950, 700);
+
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
+
 		}
 	}
 
@@ -254,9 +258,11 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void editarDisenyo() {
 		final Map<String, String> params = new HashMap<>();
-		if (this.data.getIdFormularioInterno() != null) {
-			params.put(TypeParametroVentana.ID.toString(), this.data.getIdFormularioInterno().toString());
+		if (this.data.getIdFormularioInterno() == null) {
+			throw new FrontException("No existe diseño formulario");
 		}
+		params.put(TypeParametroVentana.ID.toString(), this.data.getIdFormularioInterno().toString());
+
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 720);

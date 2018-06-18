@@ -3,6 +3,7 @@ package es.caib.sistrages.frontend.util;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,12 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -57,6 +60,9 @@ public final class UtilJSF {
 
 	/** Log. */
 	final static Logger LOG = LoggerFactory.getLogger(UtilJSF.class);
+
+	/** Parametro de sesion para securizar apertura dialogs. */
+	private static final String SEC_OPEN_DIALOG = "SEC_OPEN_DIALOG";
 
 	/** Constructor privado para evitar problema. */
 	private UtilJSF() {
@@ -117,16 +123,58 @@ public final class UtilJSF {
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("headerElement", "customheader");
+
 		// Parametros
+		String idParam = "";
 		final Map<String, List<String>> paramsDialog = new HashMap<>();
 		paramsDialog.put(TypeParametroVentana.MODO_ACCESO.toString(), Collections.singletonList(modoAcceso.toString()));
 		if (params != null) {
 			for (final String key : params.keySet()) {
 				paramsDialog.put(key, Collections.singletonList(params.get(key)));
+				if (TypeParametroVentana.ID.toString().equals(key)) {
+					idParam = params.get(key);
+				}
 			}
 		}
+
+		// Metemos en sessionbean un parámetro de seguridad para evitar que se
+		// pueda cambiar el modo de acceso
+		final String secOpenDialog = modoAcceso.toString() + "-" + idParam + "-" + System.currentTimeMillis();
+		getSessionBean().getMochilaDatos().put(SEC_OPEN_DIALOG, secOpenDialog);
+
 		// Abre dialogo
 		RequestContext.getCurrentInstance().openDialog(dialog, options, paramsDialog);
+	}
+
+	/**
+	 * Chequea que no se ha cambiado modo de acceso en apertura dialog.
+	 *
+	 * @param modoAcceso
+	 *            modo acceso
+	 * @param id
+	 *            id
+	 */
+	public static void checkSecOpenDialog(final TypeModoAcceso modoAcceso, final String id) {
+		// Buscamos si existe token
+		final String secOpenDialog = (String) getSessionBean().getMochilaDatos().get(SEC_OPEN_DIALOG);
+		if (secOpenDialog == null) {
+			throw new FrontException("Se han modificado parametros de apertura dialog");
+		}
+		// Verificamos que coincida modo acceso e id
+		final String[] items = secOpenDialog.split("-");
+		final String paramId = StringUtils.defaultString(id);
+		if (items.length != 3 || !modoAcceso.toString().equals(items[0]) || !paramId.equals(items[1])) {
+			throw new FrontException("Se han modificado parametros de apertura dialog");
+		}
+		// Verificamos que no haya pasado mas de 1 min
+		final Date tiempo = new Date(Long.parseLong(items[2]));
+		final Date ahora = new Date();
+		final long diffInMillies = Math.abs(ahora.getTime() - tiempo.getTime());
+		if (diffInMillies > (ConstantesNumero.N60 * ConstantesNumero.N1000)) {
+			throw new FrontException("Se han modificado parametros de apertura dialog");
+		}
+		// Eliminamos token de la sesion para que se pueda reusar
+		getSessionBean().getMochilaDatos().remove(SEC_OPEN_DIALOG);
 	}
 
 	/**
@@ -274,8 +322,9 @@ public final class UtilJSF {
 	 * Verifica si accede el administrador entidad o desarrollador entidad generando
 	 * excepción en caso contrario.
 	 *
+	 * @param idEntidad
 	 */
-	public static void verificarAccesoAdministradorDesarrolladorEntidad(final Long idEntidad) {
+	public static void verificarAccesoAdministradorDesarrolladorEntidadByEntidad(final Long idEntidad) {
 		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionBean");
 		if (sb.getActiveRole() != TypeRoleAcceso.ADMIN_ENT && sb.getActiveRole() != TypeRoleAcceso.DESAR) {
@@ -293,6 +342,28 @@ public final class UtilJSF {
 		}
 		if (!found) {
 			throw new FrontException("No tiene acceso a la entidad");
+		}
+	}
+
+	/**
+	 * Verifica si accede el administrador entidad o desarrollador entidad generando
+	 * excepción en caso contrario.
+	 *
+	 * @param idArea
+	 */
+	public static void verificarAccesoAdministradorDesarrolladorEntidadByArea(final Long idArea) {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.ADMIN_ENT && sb.getActiveRole() != TypeRoleAcceso.DESAR) {
+			throw new FrontException("No se está accediendo con perfil Administrador Entidad o Desarrollador Entidad");
+		}
+		if (idArea == null) {
+			throw new FrontException("No se ha seleccionado ninguna area");
+		}
+		boolean found = false;
+		found = sb.tieneAccesoArea(idArea);
+		if (!found) {
+			throw new FrontException("No tiene acceso al area");
 		}
 	}
 
@@ -404,9 +475,6 @@ public final class UtilJSF {
 			break;
 		case PROPIEDADES_GLOBALES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPropiedadesConfiguracion.class) + EXTENSION_XHTML;
-			break;
-		case TEST:
-			url = "/secure/test/viewTest.xhtml";
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;

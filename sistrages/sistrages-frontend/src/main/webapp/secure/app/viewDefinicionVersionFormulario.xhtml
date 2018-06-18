@@ -96,6 +96,7 @@
         <p:outputPanel id="toolbar" styleClass="grid-right">
           <p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
             actionListener="#{viewDefinicionVersion.editarFormularioSeleccionado()}"
+            rendered="#{viewDefinicionVersion.permiteEditar()}"
             process="@this" update="growl">
                 <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formviewDefinicionVersionFormulario" />
            </p:commandButton>

@@ -15,12 +15,14 @@
 				<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
 					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
 						actionListener="#{viewDefinicionVersion.nuevaTasa()}" process="@this"
+						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
 					</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarTasa()}" process="@this"
+						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
 					</p:commandButton>
@@ -28,6 +30,7 @@
 					<p:commandButton id="btnEliminar"
 						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
 						actionListener="#{viewDefinicionVersion.eliminarTasa()}"
+						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" >
 						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        	</p:commandButton>
@@ -35,11 +38,13 @@
 					<p:commandButton id="btnSubir"
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
 						actionListener="#{viewDefinicionVersion.subirTasa()}"
+						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
 
 					<p:commandButton id="btnBajar"
 						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
 						actionListener="#{viewDefinicionVersion.bajarTasa()}"
+						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"

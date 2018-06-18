@@ -31,9 +31,10 @@
          	<p:panelGrid styleClass="noBorders">
        	  		<p:row>
 	       	  		<p:column styleClass="noPadding-left">
-			         		<p:selectOneMenu id="obligatoriedad" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.obligatoriedad}" disabled="true">
+
+	       	  		<p:selectOneRadio id="obligatoriedad" disabled="true" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.obligatoriedad}">
 							    <f:selectItems value="#{tipoFormularioObligatoriedad.ALL_VALUES}"  itemLabel="#{msg['typeFormularioObligatoriedad.'+=tipo]}" var="tipo" />
-							</p:selectOneMenu>
+					</p:selectOneRadio>
 				     </p:column>
 				     <p:column>
 				     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),viewDefinicionVersion.tasaTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
@@ -50,9 +51,6 @@
 							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago eq null}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago)}" />
 
-            <p:outputLabel for="plugindepago" value="#{msg['viewDefinicionVersionTasa.plugindepago']}" />
-          	<p:inputText id="plugindepago" disabled="true" size="30" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.tipoPlugin.instancia}"  />
-
           	<p:outputLabel value="#{msg['viewDefinicionVersionTasa.tipopago']}" />
           	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">
           		<p:selectOneMenu id="tipo" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.tipo}" disabled="true">
@@ -67,6 +65,7 @@
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
 						actionListener="#{viewDefinicionVersion.editarTasaTramite()}"
+						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionTasa" />
 			       	</p:commandButton>

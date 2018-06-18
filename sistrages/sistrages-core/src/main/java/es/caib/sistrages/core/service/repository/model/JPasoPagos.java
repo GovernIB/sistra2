@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.Tasa;
@@ -40,6 +41,7 @@ public class JPasoPagos implements IModelApi {
 
 	/** Pagos. **/
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pasoPagos", cascade = { CascadeType.ALL })
+	@OrderBy("orden ASC")
 	private Set<JPagoTramite> pagosTramite = new HashSet<>(0);
 
 	/** Constructor. **/

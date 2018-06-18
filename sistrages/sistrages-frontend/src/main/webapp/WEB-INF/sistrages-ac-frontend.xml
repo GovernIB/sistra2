@@ -11,7 +11,6 @@
         		http://www.springframework.org/schema/task
         		http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 
-
 	<context:annotation-config />
 	<context:component-scan base-package="es.caib.sistrages.frontend" />
 
@@ -20,11 +19,10 @@
 	<context:property-placeholder
 		location="file:#{systemProperties['es.caib.sistrages.properties.path']}" />
 
-
 	<bean id="negocioModuleConfig" class="es.caib.sistrages.frontend.model.comun.ModuleConfig">
 		<property name="entorno" value="${entorno}" />
 		<property name="version" value="0.0.1-SNAPSHOT" />
-		<property name="commit" value="d7eb130" />
+		<property name="commit" value="2cae490" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

@@ -57,7 +57,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		// Entidad activa
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(idEntidad);
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// recupera datos entidad activa

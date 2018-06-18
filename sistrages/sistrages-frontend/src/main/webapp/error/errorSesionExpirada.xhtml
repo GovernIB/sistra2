@@ -33,7 +33,11 @@
 					</p:outputPanel>
 				</p:outputPanel>
 				<p:outputPanel styleClass="error_button">
-					<p:button value="#{msg['botones.volver']}" outcome="/index" icon="fa fa-undo" styleClass="boton-azul"/>
+					<p:commandButton id="buttonVolver" value="#{msg['botones.volver']}"
+							styleClass="boton-azul"
+							icon="fa fa-undo"
+							onclick="window.top.location.href ='#{request.contextPath}/';return false;"
+							/>
 				</p:outputPanel>
 			</p:outputPanel>
 		</p:outputPanel>

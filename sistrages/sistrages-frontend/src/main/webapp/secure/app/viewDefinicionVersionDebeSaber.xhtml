@@ -26,6 +26,7 @@
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
 						actionListener="#{viewDefinicionVersion.editarPaso()}" style="margin-right:20px"
+						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoPT}" update="growl formArbol:arbol descripcion"  />
 					</p:commandButton>

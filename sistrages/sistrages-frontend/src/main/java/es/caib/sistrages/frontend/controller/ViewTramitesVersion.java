@@ -61,14 +61,28 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private TramiteVersion datoSeleccionado;
 
-	/** Indica si puede realizar el alta/baja. **/
+	/** Tramite. */
+	private Tramite tramite;
+
+	/** Area. **/
+	private Area area;
+
+	/** Permisos. **/
+	private boolean permiteAltaArea = false;
+	private boolean permiteEliminarArea = false;
+	private boolean permiteEditarArea = false;
+	private boolean permiteConsultarArea = false;
 	private boolean permiteAlta = false;
-
-	/** Indica si puede realizar la modificación. **/
-	private boolean permiteModificacion = false;
-
-	/** Indica si puede consultar. **/
-	private boolean permiteConsulta = false;
+	private boolean permiteEliminar = false;
+	private boolean permiteConsultar = false;
+	private boolean permiteEditar = false;
+	private boolean permiteClonar = false;
+	private boolean permiteBloquear = false;
+	private boolean permiteDesbloquear = false;
+	private boolean permiteProcedimientos = false;
+	private boolean permiteExportar = false;
+	private boolean permiteMover = false;
+	private boolean permiteHistorial = false;
 
 	/**
 	 * Inicializacion.
@@ -79,17 +93,19 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		// Control acceso
-		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidad(UtilJSF.getIdEntidad());
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(UtilJSF.getIdEntidad());
+
+		// Preparamos datos.
+		tramite = tramiteService.getTramite(Long.valueOf(id));
+		area = tramiteService.getAreaTramite(Long.valueOf(id));
+
+		// Verficamos que puedes ver el area
+		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByArea(area.getCodigo());
 
 		// Preparamos permisos
-		checkPermiteAlta();
-		checkPermiteEditar();
-		checkPermiteConsulta();
+		checkPermiteArea();
 
 		this.filtrar();
-
-		final Tramite tramite = tramiteService.getTramite(Long.valueOf(id));
-		final Area area = tramiteService.getAreaTramite(Long.valueOf(id));
 
 		/* inicializa breadcrum */
 		breadCrumb = new DefaultMenuModel();
@@ -106,8 +122,46 @@ public class ViewTramitesVersion extends ViewControllerBase {
 
 		breadCrumb.generateUniqueIds();
 
-		checkPermiteAlta();
+	}
 
+	/**
+	 * Comprueba si para el area, puede editarlo o consultarlo.
+	 */
+	private void checkPermiteArea() {
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+
+			this.permiteAltaArea = true;
+			this.permiteEliminarArea = true;
+			this.permiteEditarArea = true;
+			this.permiteConsultarArea = true;
+
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(this.area.getCodigo());
+			this.permiteAltaArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+			this.permiteEliminarArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+			this.permiteEditarArea = permisos.contains(TypeRolePermisos.MODIFICACION);
+			this.permiteConsultarArea = permisos.contains(TypeRolePermisos.CONSULTA);
+
+		} else {
+			this.permiteAltaArea = false;
+			this.permiteEditarArea = false;
+			this.permiteConsultarArea = false;
+			this.permiteEliminarArea = false;
+		}
+
+		// Si no es desarrollo, desactivar seguro el area para alta y editar.
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			this.permiteAltaArea = false;
+			this.permiteEditarArea = false;
+		}
+
+		permiteAlta = permiteAltaArea;
+		permiteConsultar = permiteConsultarArea;
+		permiteExportar = permiteAltaArea;
 	}
 
 	/**
@@ -135,7 +189,6 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		// params.put(TypeParametroVentana.ID.toString(),
 
 		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(datoSeleccionado.getCodigo().toString()));
-		params.put(TypeParametroVentana.MODO_ACCESO.toString(), Arrays.asList(TypeModoAcceso.EDICION.name()));
 		UtilJSF.redirectJsfPage("/secure/app/viewDefinicionVersion.xhtml", params);
 
 	}
@@ -182,10 +235,15 @@ public class ViewTramitesVersion extends ViewControllerBase {
 			return;
 		}
 
-		if (!this.permiteModificacion) {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(this.area.getCodigo());
 			// Si no puedes editar, no puedes bloquear
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
-			return;
+			if (!permisos.contains(TypeRolePermisos.MODIFICACION) && !permisos.contains(TypeRolePermisos.ALTA_BAJA)) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
+				return;
+			}
 		}
 
 		tramiteService.bloquearTramiteVersion(this.datoSeleccionado.getCodigo(),
@@ -193,6 +251,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 
 		filtrar();
 		this.datoSeleccionado = null;
+		actualizarPermisos();
 	}
 
 	/**
@@ -216,7 +275,8 @@ public class ViewTramitesVersion extends ViewControllerBase {
 			return;
 		}
 
-		if (!this.permiteModificacion) {
+		if (!permiteEditar || (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& !this.datoSeleccionado.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName()))) {
 			// Si no puedes editar, no puedes bloquear
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
 			return;
@@ -242,6 +302,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		if (!respuesta.isCanceled()) {
 			filtrar();
 			this.datoSeleccionado = null;
+			actualizarPermisos();
 		}
 	}
 
@@ -329,51 +390,193 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Obtiene el valor de permiteAlta.
-	 *
-	 * @return el valor de permiteAlta
+	 * Actualiza los permisos según el tramite seleccionado.
 	 */
-	public void checkPermiteAlta() {
-		this.setPermiteAlta(false);
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
-			this.setPermiteAlta(true);
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+	public void actualizarPermisos() {
 
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
+		if (this.datoSeleccionado == null) {
 
-			this.setPermiteAlta(permisos.contains(TypeRolePermisos.ALTA_BAJA));
+			permiteEditar = false;
+			permiteConsultar = false;
+			permiteEliminar = false;
+			permiteBloquear = false;
+			permiteDesbloquear = false;
+			permiteMover = false;
+			permiteClonar = false;
+			permiteProcedimientos = false;
+			permiteExportar = false;
+			permiteHistorial = false;
+
+		} else {
+
+			checkPermiteEditar();
+			checkPermiteConsulta();
+			checkPermiteEliminar();
+			checkPermiteBloquear();
+			checkPermiteDesbloquear();
+			checkPermiteMover();
+			checkPermiteClonar();
+			checkPermiteProcedimientos();
+			checkPermiteExportar();
+			checkPermiteHistorial();
+
 		}
 	}
 
 	/**
-	 * Obtiene el valor de permiteEditar.
+	 * Comprueba si puede editar
 	 *
 	 * @return el valor de permiteEditar
 	 */
 	public void checkPermiteEditar() {
-		this.setPermiteModificacion(false);
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
 
-			this.setPermiteModificacion(true);
+		if (this.datoSeleccionado == null) {
+			permiteEditar = false;
+			return;
+		}
 
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			permiteEditar = false;
+			return;
+		}
 
-			final List<TypeRolePermisos> permisos = securityService.getPermisosDesarrolladorEntidad(Long.valueOf(id));
-			this.setPermiteModificacion(
-					permisos.contains(TypeRolePermisos.MODIFICACION) || permisos.contains(TypeRolePermisos.ALTA_BAJA));
+		if (!this.datoSeleccionado.getBloqueada()) {
+			permiteEditar = false;
+			return;
+		}
 
+		permiteEditar = permiteEditarArea;
+
+	}
+
+	private void checkPermiteExportar() {
+		if (this.datoSeleccionado == null) {
+			this.permiteExportar = false;
+		} else {
+			this.permiteExportar = this.permiteAltaArea;
 		}
 	}
 
 	/**
-	 * Obtiene el valor de permiteEditar.
+	 * Calcula si se puede eliminar.
+	 */
+	public void checkPermiteEliminar() {
+
+		if (this.datoSeleccionado == null) {
+			permiteEliminar = false;
+			return;
+		}
+
+		permiteEliminar = permiteEliminarArea;
+	}
+
+	/**
+	 * Calcula si se puede consultar.
 	 *
-	 * @return el valor de permiteEditar
 	 */
 	public void checkPermiteConsulta() {
-		this.setPermiteConsulta(!this.permiteAlta && !this.permiteModificacion);
+
+		if (this.datoSeleccionado == null) {
+			permiteConsultar = false;
+		} else {
+			permiteConsultar = permiteConsultarArea;
+		}
+	}
+
+	/**
+	 * Calcula si se puede bloquear el tramite o no.
+	 *
+	 */
+	public void checkPermiteBloquear() {
+
+		if (this.datoSeleccionado == null) {
+			this.permiteBloquear = false;
+			return;
+		}
+
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			this.permiteBloquear = false;
+			return;
+		}
+
+		if (this.datoSeleccionado.getBloqueada()) {
+			this.permiteBloquear = false;
+			return;
+		}
+
+		this.permiteBloquear = this.permiteEditarArea;
+
+	}
+
+	/**
+	 * Calcula si se puede bloquear el tramite o no.
+	 *
+	 */
+	public void checkPermiteDesbloquear() {
+
+		if (this.datoSeleccionado == null) {
+			this.permiteDesbloquear = false;
+			return;
+		}
+
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			this.permiteDesbloquear = false;
+			return;
+		}
+
+		if (!this.datoSeleccionado.getBloqueada()) {
+			this.permiteDesbloquear = false;
+			return;
+		}
+
+		this.permiteDesbloquear = this.permiteEditarArea;
+	}
+
+	/**
+	 * Calcula si se permite mover.
+	 */
+	public void checkPermiteMover() {
+		if (this.datoSeleccionado == null) {
+			this.permiteDesbloquear = false;
+			return;
+		}
+
+		permiteMover = permiteEditarArea;
+	}
+
+	/**
+	 * Calcula si se permite mover.
+	 */
+	public void checkPermiteProcedimientos() {
+		if (this.datoSeleccionado == null) {
+			permiteProcedimientos = false;
+		} else {
+			permiteProcedimientos = true;
+		}
+	}
+
+	/**
+	 * Calcula si se puede clonar.
+	 */
+	public void checkPermiteClonar() {
+		if (this.datoSeleccionado == null) {
+			permiteClonar = false;
+		} else {
+			permiteClonar = permiteAltaArea;
+		}
+
+	}
+
+	/**
+	 * Calcula si se puede clonar.
+	 */
+	public void checkPermiteHistorial() {
+		if (this.datoSeleccionado == null) {
+			setPermiteHistorial(false);
+		} else {
+			setPermiteHistorial(true);
+		}
+
 	}
 
 	/**
@@ -510,32 +713,182 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * @return the permiteModificacion
+	 * @return the permiteEliminar
 	 */
-	public boolean isPermiteModificacion() {
-		return permiteModificacion;
+	public boolean isPermiteEliminar() {
+		return permiteEliminar;
 	}
 
 	/**
-	 * @return the permiteConsulta
+	 * @param permiteEliminar
+	 *            the permiteEliminar to set
 	 */
-	public boolean isPermiteConsulta() {
-		return permiteConsulta;
+	public void setPermiteEliminar(final boolean permiteEliminar) {
+		this.permiteEliminar = permiteEliminar;
 	}
 
 	/**
-	 * @param permiteModificacion
-	 *            the permiteModificacion to set
+	 * @return the permiteEditar
 	 */
-	public void setPermiteModificacion(final boolean permiteModificacion) {
-		this.permiteModificacion = permiteModificacion;
+	public boolean isPermiteEditar() {
+		return permiteEditar;
 	}
 
 	/**
-	 * @param permiteConsulta
-	 *            the permiteConsulta to set
+	 * @param permiteEditar
+	 *            the permiteEditar to set
 	 */
-	public void setPermiteConsulta(final boolean permiteConsulta) {
-		this.permiteConsulta = permiteConsulta;
+	public void setPermiteEditar(final boolean permiteEditar) {
+		this.permiteEditar = permiteEditar;
 	}
+
+	/**
+	 * @return the permiteBloquear
+	 */
+	public boolean isPermiteBloquear() {
+		return permiteBloquear;
+	}
+
+	/**
+	 * @param permiteBloquear
+	 *            the permiteBloquear to set
+	 */
+	public void setPermiteBloquear(final boolean permiteBloquear) {
+		this.permiteBloquear = permiteBloquear;
+	}
+
+	/**
+	 * @return the permiteDesbloquear
+	 */
+	public boolean isPermiteDesbloquear() {
+		return permiteDesbloquear;
+	}
+
+	/**
+	 * @param permiteDesbloquear
+	 *            the permiteDesbloquear to set
+	 */
+	public void setPermiteDesbloquear(final boolean permiteDesbloquear) {
+		this.permiteDesbloquear = permiteDesbloquear;
+	}
+
+	/**
+	 * @return the permiteProcedimientos
+	 */
+	public boolean isPermiteProcedimientos() {
+		return permiteProcedimientos;
+	}
+
+	/**
+	 * @param permiteProcedimientos
+	 *            the permiteProcedimientos to set
+	 */
+	public void setPermiteProcedimientos(final boolean permiteProcedimientos) {
+		this.permiteProcedimientos = permiteProcedimientos;
+	}
+
+	/**
+	 * @return the permiteMover
+	 */
+	public boolean isPermiteMover() {
+		return permiteMover;
+	}
+
+	/**
+	 * @param permiteMover
+	 *            the permiteMover to set
+	 */
+	public void setPermiteMover(final boolean permiteMover) {
+		this.permiteMover = permiteMover;
+	}
+
+	/**
+	 * @return the permiteConsultar
+	 */
+	public boolean isPermiteConsultar() {
+		return permiteConsultar;
+	}
+
+	/**
+	 * @return the permiteConsultar
+	 */
+	public boolean getPermiteConsultar() {
+		return permiteConsultar;
+	}
+
+	/**
+	 * @param permiteConsultar
+	 *            the permiteConsultar to set
+	 */
+	public void setPermiteConsultar(final boolean permiteConsultar) {
+		this.permiteConsultar = permiteConsultar;
+	}
+
+	/**
+	 * @return the permiteClonar
+	 */
+	public boolean isPermiteClonar() {
+		return permiteClonar;
+	}
+
+	/**
+	 * @param permiteClonar
+	 *            the permiteClonar to set
+	 */
+	public void setPermiteClonar(final boolean permiteClonar) {
+		this.permiteClonar = permiteClonar;
+	}
+
+	/**
+	 * @return the permiteHistorial
+	 */
+	public boolean isPermiteHistorial() {
+		return permiteHistorial;
+	}
+
+	/**
+	 * @param permiteHistorial
+	 *            the permiteHistorial to set
+	 */
+	public void setPermiteHistorial(final boolean permiteHistorial) {
+		this.permiteHistorial = permiteHistorial;
+	}
+
+	/**
+	 * @return the permiteExportar
+	 */
+	public boolean isPermiteExportar() {
+		return permiteExportar;
+	}
+
+	/**
+	 * @param permiteExportar
+	 *            the permiteExportar to set
+	 */
+	public void setPermiteExportar(final boolean permiteExportar) {
+		this.permiteExportar = permiteExportar;
+	}
+
+	/**
+	 * @return the permiteEliminarArea
+	 */
+	public boolean isPermiteEliminarArea() {
+		return permiteEliminarArea;
+	}
+
+	/**
+	 * @return the permiteEliminarArea
+	 */
+	public boolean getPermiteEliminarArea() {
+		return permiteEliminarArea;
+	}
+
+	/**
+	 * @param permiteEliminarArea
+	 *            the permiteEliminarArea to set
+	 */
+	public void setPermiteEliminarArea(final boolean permiteEliminarArea) {
+		this.permiteEliminarArea = permiteEliminarArea;
+	}
+
 }

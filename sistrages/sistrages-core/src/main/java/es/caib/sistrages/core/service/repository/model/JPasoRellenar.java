@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.FormularioTramite;
@@ -44,6 +45,7 @@ public class JPasoRellenar implements IModelApi {
 	@JoinTable(name = "STG_PRLFTR", joinColumns = {
 			@JoinColumn(name = "FPR_CODPRL", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "FPR_CODFOR", nullable = false, updatable = false) })
+	@OrderBy("orden ASC")
 	private Set<JFormularioTramite> formulariosTramite = new HashSet<>(0);
 
 	/** Constructor. **/

@@ -39,9 +39,11 @@
 
 				</p:outputPanel>
 				<p:outputPanel styleClass="error_button">
-					<p:commandButton value="#{msg['botones.volver']}" styleClass="boton-azul"
-						actionListener="#{sessionBean.redirectDefaultUrl()}" ajax="false"
-						icon="fa fa-undo" />
+					<p:commandButton value="#{msg['botones.volver']}"
+							styleClass="boton-azul"
+							icon="fa fa-undo"
+							onclick="window.top.location.href ='#{sessionBean.getDefaultUrl()}';return false;"
+							/>
 				</p:outputPanel>
 			</p:outputPanel>
 		</p:outputPanel>
