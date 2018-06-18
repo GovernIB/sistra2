@@ -75,4 +75,13 @@ public interface AvisoEntidadDao {
 	 */
 	List<AvisoEntidad> getAllByFiltro(Long pIdEntidad, TypeIdioma pIdioma, String pFiltro);
 
+	/**
+	 * Obtiene el aviso entidad asociado a un tramite según su identificador.
+	 *
+	 * @param identificadorTramite
+	 *            Identificador del tramite.
+	 * @return El aviso de entidad
+	 */
+	AvisoEntidad getAvisoEntidadByTramite(String identificadorTramite);
+
 }

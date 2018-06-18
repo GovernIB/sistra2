@@ -6,6 +6,7 @@
 	xmlns:jee="http://www.springframework.org/schema/jee"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
@@ -16,14 +17,17 @@
 		http://www.springframework.org/schema/aop
 	    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 	    http://www.springframework.org/schema/tx
-	    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
-
-	<!-- Scan anotaciones -->
-	<context:component-scan base-package="es.caib.sistramit.core" />
+	    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+	    http://www.springframework.org/schema/cache
+		http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<!-- Configuracion properties aplicacion -->
 	<context:property-placeholder location="file:#{systemProperties['es.caib.sistramit.properties.path']}"/>
 
+	<!-- Scan anotaciones -->
+	<context:component-scan base-package="es.caib.sistramit.core" />
+	<!-- Anotaciones cache -->
+	<cache:annotation-driven />
 	<!-- Anotaciones AOP -->
 	<context:annotation-config />
 	<aop:aspectj-autoproxy />
@@ -68,14 +72,13 @@
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
-	<!-- EHCache
-	<ehcache:annotation-driven cache-manager="ehCacheManager"
-		create-missing-caches="true" />
-
-	<bean id="ehCacheManager"
-		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+	<!-- EHCache -->
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 		<property name="configLocation" value="classpath:ehcache.xml" />
 	</bean>
-	-->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache" />
+	</bean>
+
 
 </beans>

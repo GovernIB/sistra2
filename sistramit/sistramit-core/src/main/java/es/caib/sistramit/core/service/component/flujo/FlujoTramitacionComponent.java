@@ -7,24 +7,32 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 
 public interface FlujoTramitacionComponent {
 
-	String iniciarTramite(String idTramite, int version, String idioma, String idTramiteCatalogo, String urlInicio,
-			Map<String, String> parametrosInicio);
+    String iniciarTramite(String idTramite, int version, String idioma,
+            String idTramiteCatalogo, String urlInicio,
+            Map<String, String> parametrosInicio,
+            UsuarioAutenticadoInfo usuarioAutenticado);
 
-	ResultadoIrAPaso cargarTramite(String idSesionTramitacion);
+    ResultadoIrAPaso cargarTramite(String idSesionTramitacion,
+            UsuarioAutenticadoInfo usuarioAutenticado);
 
-	DetalleTramite obtenerDetalleTramite();
+    DetalleTramite obtenerDetalleTramite();
 
-	void invalidarFlujoTramicacion();
+    void invalidarFlujoTramicacion();
 
-	ResultadoIrAPaso recargarTramite();
+    ResultadoIrAPaso recargarTramite();
 
-	ResultadoIrAPaso irAPaso(String idPaso);
+    ResultadoIrAPaso irAPaso(String idPaso);
 
-	ResultadoAccionPaso accionPaso(String idPaso, TypeAccionPaso accionPaso, ParametrosAccionPaso parametros);
+    ResultadoAccionPaso accionPaso(String idPaso, TypeAccionPaso accionPaso,
+            ParametrosAccionPaso parametros);
 
-	void cancelarTramite();
+    void cancelarTramite();
+
+    // TODO BORRAR
+    void test(String param);
 
 }

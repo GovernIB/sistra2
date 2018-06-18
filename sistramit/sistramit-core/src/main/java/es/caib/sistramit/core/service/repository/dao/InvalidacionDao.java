@@ -1,6 +1,6 @@
 package es.caib.sistramit.core.service.repository.dao;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.Invalidacion;
@@ -21,13 +21,15 @@ public interface InvalidacionDao {
     void addInvalidacion(Invalidacion invalidacion);
 
     /**
-     * Obtiene lista invalidaciones.
-     * 
+     * Obtiene lista invalidaciones a partir de una fecha.
+     *
      * @param tipo
      *            tipo
+     * @param fecha
+     *            fecha
      * @return Lista de invalidaciones
      */
-    List<Invalidacion> obtenerInvalidaciones(TypeInvalidacion tipo);
+    List<Invalidacion> obtenerInvalidaciones(TypeInvalidacion tipo, Date fecha);
 
     /**
      * Purga invalidaciones.

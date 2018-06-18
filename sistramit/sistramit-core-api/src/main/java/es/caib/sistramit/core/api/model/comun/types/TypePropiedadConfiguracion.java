@@ -15,9 +15,7 @@ public enum TypePropiedadConfiguracion {
     /** Url asistente. */
     URL_SISTRAMIT("sistramit.url"),
     /** Idiomas soportados. */
-    IDIOMAS_SOPORTADOS("sistramit.idiomas"),
-    /** Revision invalidaciones. */
-    REVISION_INVALIDACIONES("sistramit.revisionInvalidaciones");
+    IDIOMAS_SOPORTADOS("sistramit.idiomas");
 
     /**
      * Valor como string.

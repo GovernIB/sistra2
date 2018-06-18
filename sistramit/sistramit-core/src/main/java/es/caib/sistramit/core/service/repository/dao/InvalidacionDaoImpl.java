@@ -1,7 +1,7 @@
 package es.caib.sistramit.core.service.repository.dao;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -36,10 +36,12 @@ public final class InvalidacionDaoImpl implements InvalidacionDao {
     }
 
     @Override
-    public List<Invalidacion> obtenerInvalidaciones(TypeInvalidacion tipo) {
-        final String sql = "SELECT t FROM HInvalidacion t WHERE t.tipo = :tipo ORDER BY t.fecha desc";
+    public List<Invalidacion> obtenerInvalidaciones(TypeInvalidacion tipo,
+            Date fecha) {
+        final String sql = "SELECT t FROM HInvalidacion t WHERE t.tipo = :tipo ORDER and t.fecha > :fecha BY t.fecha desc";
         final Query query = entityManager.createQuery(sql);
         query.setParameter("tipo", tipo.toString());
+        query.setParameter("fecha", fecha);
         final List<HInvalidacion> results = query.getResultList();
 
         final List<Invalidacion> res = new ArrayList<>();
@@ -52,7 +54,7 @@ public final class InvalidacionDaoImpl implements InvalidacionDao {
     @Override
     public void purgarInvalidaciones(Date fechaHasta) {
 
-        // TODO PENDIENTE
+        // TODO PENDIENTE. PURGAR A LAS 24h.
 
     }
 

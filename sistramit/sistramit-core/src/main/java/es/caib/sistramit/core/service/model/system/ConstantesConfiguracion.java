@@ -18,6 +18,6 @@ public class ConstantesConfiguracion {
     /**
      * Intervalo de validación por defecto.
      */
-    public static final int INTERVALO_VALIDACION_DEFECTO = 5;
+    public static final int INTERVALO_REVISION_INVALIDACION_DEFECTO = 5;
 
 }

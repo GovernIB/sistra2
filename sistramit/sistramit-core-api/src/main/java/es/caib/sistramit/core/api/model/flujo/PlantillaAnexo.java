@@ -11,12 +11,17 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePlantillaAnexo;
  *
  */
 @SuppressWarnings("serial")
-public abstract class PlantillaAnexo implements Serializable {
+public final class PlantillaAnexo implements Serializable {
 
     /**
      * Tipo de plantilla.
      */
     private TypePlantillaAnexo tipo;
+
+    /**
+     * Url plantilla externa.
+     */
+    private String url;
 
     /**
      * Método de acceso a tipo.
@@ -33,7 +38,7 @@ public abstract class PlantillaAnexo implements Serializable {
      * @param pTipo
      *            tipo a establecer
      */
-    protected final void setTipo(final TypePlantillaAnexo pTipo) {
+    public final void setTipo(final TypePlantillaAnexo pTipo) {
         tipo = pTipo;
     }
 
@@ -44,6 +49,25 @@ public abstract class PlantillaAnexo implements Serializable {
      */
     public final String print() {
         return "[tipo:]" + getTipo();
+    }
+
+    /**
+     * Método de acceso a url.
+     *
+     * @return url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Método para establecer url.
+     *
+     * @param url
+     *            url a establecer
+     */
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
@@ -30,8 +31,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
     public void add(EventoAuditoria evento, String idSesionTramitacion) {
         HSesionTramitacion hSesion = null;
         if (idSesionTramitacion != null) {
-            hSesion = entityManager.find(HSesionTramitacion.class,
-                    idSesionTramitacion);
+            hSesion = findHSesionTramitacion(idSesionTramitacion);
         }
         final HEventoAuditoria hEvento = HEventoAuditoria.fromModel(evento);
         hEvento.setSesionTramitacion(hSesion);
@@ -50,6 +50,19 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
             Date fechaDesde, Date fechaHasta, boolean ordenAsc) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    private HSesionTramitacion findHSesionTramitacion(
+            String idSesionTramitacion) {
+        HSesionTramitacion hSesion = null;
+        final String sql = "SELECT t FROM HSesionTramitacion t WHERE t.idSesionTramitacion = :idSesionTramitacion";
+        final Query query = entityManager.createQuery(sql);
+        query.setParameter("idSesionTramitacion", idSesionTramitacion);
+        final List results = query.getResultList();
+        if (!results.isEmpty()) {
+            hSesion = (HSesionTramitacion) results.get(0);
+        }
+        return hSesion;
     }
 
 }

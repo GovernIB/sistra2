@@ -15,6 +15,7 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 
 @Stateless
@@ -28,10 +29,11 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
     @Override
     public String iniciarTramite(final String idTramite, final int version,
             final String idioma, final String idTramiteCatalogo,
-            final String urlInicio,
-            final Map<String, String> parametrosInicio) {
+            final String urlInicio, final Map<String, String> parametrosInicio,
+            final UsuarioAutenticadoInfo usuarioAutenticado) {
         return flujoTramitacionService.iniciarTramite(idTramite, version,
-                idioma, idTramiteCatalogo, urlInicio, parametrosInicio);
+                idioma, idTramiteCatalogo, urlInicio, parametrosInicio,
+                usuarioAutenticado);
     }
 
     @Override
@@ -54,8 +56,10 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
     }
 
     @Override
-    public ResultadoIrAPaso cargarTramite(String idSesionTramitacion) {
-        return flujoTramitacionService.cargarTramite(idSesionTramitacion);
+    public ResultadoIrAPaso cargarTramite(String idSesionTramitacion,
+            UsuarioAutenticadoInfo usuarioAutenticado) {
+        return flujoTramitacionService.cargarTramite(idSesionTramitacion,
+                usuarioAutenticado);
     }
 
     @Override
@@ -79,6 +83,12 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
     @Override
     public void cancelarTramite(String idSesionTramitacion) {
         flujoTramitacionService.cancelarTramite(idSesionTramitacion);
+    }
+
+    // TODO BORRAR
+    @Override
+    public void test(String idSesionTramitacion, String param) {
+        flujoTramitacionService.test(idSesionTramitacion, param);
     }
 
 }

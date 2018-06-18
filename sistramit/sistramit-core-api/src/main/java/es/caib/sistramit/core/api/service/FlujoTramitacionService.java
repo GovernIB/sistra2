@@ -7,6 +7,7 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 
 /**
  * Servicio flujo tramitacion.
@@ -16,45 +17,50 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
  */
 public interface FlujoTramitacionService {
 
-	/**
-	 * Iniciar tramite.
-	 *
-	 * @param idTramite
-	 *            id tramite
-	 * @param version
-	 *            version tramite
-	 * @param idioma
-	 *            idioma
-	 * @param idTramiteCatalogo
-	 *            id procedimiento
-	 * @param urlInicio
-	 *            url inicio
-	 * @param parametrosInicio
-	 *            parametros inicio
-	 * @return id sesion tramitacion
-	 */
-	String iniciarTramite(final String idTramite, final int version, final String idioma,
-			final String idTramiteCatalogo, final String urlInicio, final Map<String, String> parametrosInicio);
+    /**
+     * Iniciar tramite.
+     *
+     * @param idTramite
+     *            id tramite
+     * @param version
+     *            version tramite
+     * @param idioma
+     *            idioma
+     * @param idTramiteCatalogo
+     *            id procedimiento
+     * @param urlInicio
+     *            url inicio
+     * @param parametrosInicio
+     *            parametros inicio
+     * @param usuarioAutenticadoInfo
+     *            usuario autenticado
+     * @return id sesion tramitacion
+     */
+    String iniciarTramite(final String idTramite, final int version,
+            final String idioma, final String idTramiteCatalogo,
+            final String urlInicio, final Map<String, String> parametrosInicio,
+            UsuarioAutenticadoInfo usuarioAutenticadoInfo);
 
-	 /**
+    /**
      * Carga un trámite existente de persistencia.
      *
      * @param idSesionTramitacion
      *            Id sesión de tramitación
      * @return Paso actual
      */
-    ResultadoIrAPaso cargarTramite(String idSesionTramitacion);
+    ResultadoIrAPaso cargarTramite(String idSesionTramitacion,
+            UsuarioAutenticadoInfo usuarioAutenticadoInfo);
 
-	/**
-	 * Obtiene detalle trámite.
-	 *
-	 * @param idSesionTramitacion
-	 *            id sesión tramitación
-	 * @return detalle trámite
-	 */
-	DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion);
+    /**
+     * Obtiene detalle trámite.
+     *
+     * @param idSesionTramitacion
+     *            id sesión tramitación
+     * @return detalle trámite
+     */
+    DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion);
 
-	 /**
+    /**
      * Recarga tramite que existe en una sesion de front (vuelta de formularios
      * o recuperacion errores).
      *
@@ -90,9 +96,8 @@ public interface FlujoTramitacionService {
      * @return Devuelve parámetros de retorno del paso (depende del paso y de la
      *         acción).
      */
-    ResultadoAccionPaso accionPaso(String idSesionTramitacion, String idPaso, TypeAccionPaso accionPaso,
-            ParametrosAccionPaso parametros);
-
+    ResultadoAccionPaso accionPaso(String idSesionTramitacion, String idPaso,
+            TypeAccionPaso accionPaso, ParametrosAccionPaso parametros);
 
     /**
      * Cancela el trámite provocando su eliminación.
@@ -102,23 +107,27 @@ public interface FlujoTramitacionService {
      */
     void cancelarTramite(String idSesionTramitacion);
 
+    // TODO Para borrar
+    void test(String idSesionTramitacion, String param);
 
-	// -------------------------------------------------------------------------------------------
-	// - Métodos especiales invocados desde el interceptor. No pasan por interceptor
-	// de auditoria.
-	// -------------------------------------------------------------------------------------------
-	/**
-	 * Función interna que no pasa por interceptor de auditoría. Sirve para obtener
-	 * detalle del flujo desde el propio interceptor (solo debe ser usada desde el
-	 * interceptor).
-	 */
-	DetalleTramite obtenerFlujoTramitacionInfo(final String idSesionTramitacion);
+    // -------------------------------------------------------------------------------------------
+    // - Métodos especiales invocados desde el interceptor. No pasan por
+    // interceptor
+    // de auditoria.
+    // -------------------------------------------------------------------------------------------
+    /**
+     * Función interna que no pasa por interceptor de auditoría. Sirve para
+     * obtener detalle del flujo desde el propio interceptor (solo debe ser
+     * usada desde el interceptor).
+     */
+    DetalleTramite obtenerFlujoTramitacionInfo(
+            final String idSesionTramitacion);
 
-	/**
-	 * Función interna que no pasa por interceptor de auditoría. Sirve para
-	 * invalidar automáticamente el el flujo desde el propio interceptor (solo debe
-	 * ser usada desde el interceptor).
-	 */
-	void invalidarFlujoTramitacion(final String idSesionTramitacion);
+    /**
+     * Función interna que no pasa por interceptor de auditoría. Sirve para
+     * invalidar automáticamente el el flujo desde el propio interceptor (solo
+     * debe ser usada desde el interceptor).
+     */
+    void invalidarFlujoTramitacion(final String idSesionTramitacion);
 
 }
