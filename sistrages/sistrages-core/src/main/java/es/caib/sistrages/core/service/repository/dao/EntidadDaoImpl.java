@@ -83,6 +83,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setNombre(JLiteral.fromModel(entidad.getNombre()));
 		jEntidad.setActiva(entidad.isActivo());
 		jEntidad.setRoleAdministrador(entidad.getRol());
+		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
 		entityManager.persist(jEntidad);
 	}
 
@@ -149,6 +150,7 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setUrlCarpetaCiudadana(
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
 
+		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
 		entityManager.merge(jEntidad);
 	}
 

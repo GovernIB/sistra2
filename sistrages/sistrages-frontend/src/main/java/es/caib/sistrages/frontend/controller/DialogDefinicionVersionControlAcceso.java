@@ -55,7 +55,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	private AvisoEntidad avisoEntidad;
 
 	/**
-	 * Inicialización.
+	 * Inicializacion.
 	 */
 	public void init() {
 		tramiteVersion = tramiteService.getTramiteVersion(id);
@@ -70,7 +70,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	public void consultarMensajeDesactivacion() {
 
 		if (this.avisoEntidad == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "No existeix el missatge d'avís");
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "No existeix el missatge d'avis");
 			return;
 		}
 
@@ -167,6 +167,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 		}
 		params.put(TypeParametroVentana.TRAMITE.toString(), tramite.getIdentificador());
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getNumeroVersion()));
+		params.put(TypeParametroVentana.DATO.toString(), "DVCA");
 		UtilJSF.openDialog(DialogMensajeAviso.class, modo, params, true, 600, 350);
 	}
 
@@ -176,7 +177,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	public void borrarAvisoEntidad() {
 
 		if (this.avisoEntidad == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "No existeix el missatge d'avís");
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "No existeix el missatge d'avis");
 			return;
 		}
 
