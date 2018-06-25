@@ -3,6 +3,8 @@ package es.caib.sistramit.frontend.security;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +36,6 @@ import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.frontend.Errores;
 import es.caib.sistramit.frontend.SesionHttp;
 import es.caib.sistramit.frontend.model.ErrorGeneral;
-import es.caib.sistramit.frontend.model.LoginFormInfo;
 import es.caib.sistramit.frontend.model.LoginTicketInfo;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 
@@ -110,7 +111,7 @@ public final class LoginController {
         final String puntoEntrada = getPuntoEntrada(url);
 
         // Guardamos url original para poder redirigir clave
-        if (!ConstantesSeguridad.PUNTOENTRADA_ACCESO_CLAVE
+        if (!ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN
                 .equals(puntoEntrada)) {
             sesionHttp.setUrlInicio(url);
         }
@@ -132,16 +133,15 @@ public final class LoginController {
         } else if (ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE
                 .equals(puntoEntrada)) {
             // Si existe ticket carpeta autenticamos via ticket, sino
-            // autenticamos de forma
-            // anonima automaticamente
+            // autenticamos de forma anonima automaticamente
             if (existeTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM)) {
                 login = autenticarTicket(savedRequest,
                         ConstantesSeguridad.TICKET_USER_CARPETA,
                         ConstantesSeguridad.TICKET_PARAM);
             } else {
-                login = autenticarFormLoginAnonimo();
+                login = autenticarFormLoginPersistenteAnonimo(savedRequest);
             }
-        } else if (ConstantesSeguridad.PUNTOENTRADA_ACCESO_CLAVE
+        } else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN
                 .equals(puntoEntrada)) {
             login = autenticarTicket(savedRequest,
                     ConstantesSeguridad.TICKET_USER_CLAVE,
@@ -171,45 +171,85 @@ public final class LoginController {
         return login;
     }
 
-    @RequestMapping("/redirigirClave.html")
-    public ModelAndView redirigirClave() {
+    /**
+     * Redirige a componente de autenticacion.
+     *
+     * @param metodosAutenticacion
+     *            metodos autenticacion (separados por ;)
+     * @return redirige a componente de autenticacion.
+     */
+    @RequestMapping("/redirigirAutenticacionLogin.html")
+    public ModelAndView redirigirAutenticacionLogin(
+            @RequestParam("metodosAutenticacion") String metodosAutenticacion,
+            @RequestParam(name = "qaa", required = false) String qaa) {
         String lang = sesionHttp.getIdioma();
         if (lang == null) {
             lang = "es";
         }
+
+        final List<TypeAutenticacion> authList = new ArrayList<>();
+        final String[] auths = metodosAutenticacion.split(";");
+        for (final String a : auths) {
+            authList.add(TypeAutenticacion.fromString(a));
+        }
+
         final String urlCallback = systemService.obtenerPropiedadConfiguracion(
                 TypePropiedadConfiguracion.URL_SISTRAMIT)
-                + ConstantesSeguridad.PUNTOENTRADA_ACCESO_CLAVE;
-        return new ModelAndView("redirect:"
-                + securityService.iniciarSesionClave(lang, urlCallback));
+                + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN;
+        return new ModelAndView("redirect:" + securityService
+                .iniciarSesionAutenticacion(lang, authList, qaa, urlCallback));
     }
 
-    @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_ACCESO_CLAVE)
-    public ModelAndView accesoClave(final HttpServletRequest request,
+    /**
+     * Retorno de componente de autenticacion.
+     *
+     * @return retorno de componente de autenticación redirigiendo a url de
+     *         inicio.
+     */
+    @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN)
+    public ModelAndView retornoAutenticacionLogin(
+            final HttpServletRequest request,
             final HttpServletResponse response) {
         try {
             response.sendRedirect(sesionHttp.getUrlInicio());
         } catch (final IOException e) {
-            throw new LoginException("Error al redirigir tras acceso clave.");
+            throw new LoginException(
+                    "Error al redirigir tras acceso componente autenticacion.");
         }
         return null;
     }
 
-    @RequestMapping("/logout.html")
-    public ModelAndView redirigirLogout() {
+    /**
+     * Redirección a componente autenticación para realizar logout.
+     *
+     * @return Redirección a componente autenticación para realizar logout.
+     */
+    @RequestMapping("/redirigirAutenticacionLogout.html")
+    public ModelAndView redirigirAutenticacionLogout() {
         String lang = sesionHttp.getIdioma();
         if (lang == null) {
             lang = "es";
         }
         final String urlCallback = systemService.obtenerPropiedadConfiguracion(
                 TypePropiedadConfiguracion.URL_SISTRAMIT)
-                + ConstantesSeguridad.PUNTOENTRADA_LOGOUT_CLAVE;
+                + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT;
         return new ModelAndView("redirect:"
                 + securityService.iniciarLogoutSesionClave(lang, urlCallback));
     }
 
-    @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_LOGOUT_CLAVE)
-    public ModelAndView logoutClave(
+    /**
+     * Retorno del componente de autenticación tras logout.
+     *
+     * @param logout
+     *            indica si se ha realizado logout
+     * @param request
+     *            request
+     * @param response
+     *            response
+     * @return redirección cierre sesión
+     */
+    @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT)
+    public ModelAndView retornoAutenticacionLogout(
             final @RequestParam(required = true) boolean logout,
             final HttpServletRequest request,
             final HttpServletResponse response) {
@@ -307,8 +347,6 @@ public final class LoginController {
                         paramIdioma, savedRequest.getRedirectUrl());
 
         // Comprobamos si hay que filtrar el metodo de autenticacion
-        boolean anonimo = false;
-        boolean autenticado = false;
         TypeAutenticacion filtroAutenticacion = null;
         if (paramLogin != null) {
             filtroAutenticacion = TypeAutenticacion.fromString(paramLogin);
@@ -317,26 +355,36 @@ public final class LoginController {
                 filtroAutenticacion = null;
             }
         }
-        if (filtroAutenticacion == TypeAutenticacion.ANONIMO) {
-            anonimo = true;
-        } else if (filtroAutenticacion == TypeAutenticacion.AUTENTICADO) {
-            autenticado = true;
-        } else {
-            autenticado = infoLoginTramite.getNiveles()
-                    .contains(TypeAutenticacion.AUTENTICADO);
-            anonimo = infoLoginTramite.getNiveles()
-                    .contains(TypeAutenticacion.ANONIMO);
+        if (filtroAutenticacion != null) {
+            infoLoginTramite.getNiveles().clear();
+            infoLoginTramite.getNiveles().add(filtroAutenticacion);
         }
 
         // Devolvemos formulario de login
-        final LoginFormInfo li = new LoginFormInfo();
-        li.setTituloTramite(infoLoginTramite.getTitulo());
-        li.setIdioma(StringUtils.defaultIfEmpty(paramIdioma, "es"));
-        li.setLoginAnonimo(anonimo);
-        li.setLoginAutenticado(autenticado);
-        li.setUrlLogout(infoLoginTramite.getUrlEntidad());
-        li.setAvisos(infoLoginTramite.getAvisos());
-        return new ModelAndView(LOGIN, LOGIN, li);
+        return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
+    }
+
+    /**
+     * Autentica via formulario de login persistente anónimo.
+     *
+     * @param savedRequest
+     *            Request
+     *
+     * @return Vista para autenticar con formulario de login
+     */
+    private ModelAndView autenticarFormLoginPersistenteAnonimo(
+            final SavedRequest savedRequest) {
+
+        // Obtenemos parametros inicio tramite
+        final String idSesionTramitacion = getParamValue(savedRequest,
+                "idSesionTramitacion");
+
+        // Obtenemos info login tramite
+        final InfoLoginTramite infoLoginTramite = securityService
+                .obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
+
+        // Devolvemos formulario de login
+        return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
     }
 
     /**
@@ -357,18 +405,6 @@ public final class LoginController {
             param = paramValues[0];
         }
         return param;
-    }
-
-    /**
-     * Autentica via formulario de login de forma anonima (automatico).
-     *
-     * @return Vista para autenticar con formulario de login
-     */
-    private ModelAndView autenticarFormLoginAnonimo() {
-        final LoginFormInfo li = new LoginFormInfo();
-        li.setLoginAnonimo(true);
-        li.setIdioma("es");
-        return new ModelAndView(LOGIN, LOGIN, li);
     }
 
     /**

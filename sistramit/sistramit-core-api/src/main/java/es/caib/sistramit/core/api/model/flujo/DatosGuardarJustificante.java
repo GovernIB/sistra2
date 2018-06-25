@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -12,7 +11,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
  *
  */
 @SuppressWarnings("serial")
-public final class DatosGuardarJustificante implements Serializable {
+public final class DatosGuardarJustificante implements ModelApi {
 
     /**
      * Indica si es preregistro.

@@ -5,7 +5,6 @@ import java.util.List;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
 /**
@@ -16,13 +15,13 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 @SuppressWarnings("serial")
 public final class Anexo extends DocumentoFirmado {
 
-	/** Tipo presentación. */
-	private TypePresentacion presentacion;
+    /** Tipo presentación. */
+    private TypePresentacion presentacion;
 
-	/** Anexar firmado. */
-	private TypeSiNo anexarfirmado;
+    /** Anexar firmado. */
+    private TypeSiNo anexarfirmado = TypeSiNo.NO;
 
-	/**
+    /**
      * Indica el número máximo de instancias que se pueden anexar (si no es
      * genérico será siempre 1).
      */
@@ -36,7 +35,8 @@ public final class Anexo extends DocumentoFirmado {
     private List<Fichero> ficheros = new ArrayList<>();
 
     /**
-     * Lista de extensiones separadas por coma.
+     * Lista de extensiones permitidas separadas por coma. Si no se establecen
+     * se permiten todas.
      */
     private String extensiones;
 
@@ -152,8 +152,8 @@ public final class Anexo extends DocumentoFirmado {
      *            Número de instancia
      */
     public void borrarFichero(final int instancia) {
-        final Fichero f = this.getFicheros().get(
-                instancia - ConstantesNumero.N1);
+        final Fichero f = this.getFicheros()
+                .get(instancia - ConstantesNumero.N1);
         this.getFicheros().remove(f);
     }
 
@@ -174,76 +174,6 @@ public final class Anexo extends DocumentoFirmado {
      */
     public static Anexo createNewAnexo() {
         return new Anexo();
-    }
-
-    /**
-     * Comprueba si el documento ha sido firmado por todos los firmantes.
-     *
-     * @return True si ha sido firmado por todos los firmantes.
-     */
-    public TypeSiNo getFirmado() {
-        TypeSiNo firmado = TypeSiNo.SI;
-        if (this.getFicheros().size() == 0) {
-            firmado = TypeSiNo.NO;
-        }
-        for (final Fichero fichero : this.ficheros) {
-            if (fichero.getFirmas().size() == 0) {
-                firmado = TypeSiNo.NO;
-                break;
-            }
-            for (final Firma f : fichero.getFirmas()) {
-                if (f.getEstadoFirma() != TypeEstadoFirma.FIRMADO) {
-                    firmado = TypeSiNo.NO;
-                    break;
-                }
-            }
-            if (firmado == TypeSiNo.NO) {
-                break;
-            }
-        }
-        return firmado;
-    }
-
-    /**
-     * Comprueba si el documento ha sido firmado por un firmante.
-     *
-     * @param indiceFirmante
-     *            Parámetro indice firmante
-     * @return True si ha sido firmado por todos los firmantes.
-     */
-    public TypeSiNo getFirmado(final int indiceFirmante) {
-        TypeSiNo firmado = TypeSiNo.SI;
-        if (this.ficheros.size() == 0) {
-            firmado = TypeSiNo.NO;
-        }
-        for (final Fichero fichero : this.ficheros) {
-            if (fichero.getFirmas().get(indiceFirmante).getEstadoFirma() != TypeEstadoFirma.FIRMADO) {
-                firmado = TypeSiNo.NO;
-                break;
-            }
-        }
-        return firmado;
-    }
-
-    /**
-     * Comprueba si una instancia del documento ha sido firmado por un firmante.
-     *
-     * @param indiceFirmante
-     *            Parámetro indice firmante
-     * @param instancia
-     *            Parámetro instancia (empieza en 1)
-     * @return True si ha sido firmado por todos los firmantes.
-     */
-    public TypeSiNo getFirmado(final int indiceFirmante, final int instancia) {
-        TypeSiNo firmado = TypeSiNo.NO;
-        if (instancia <= this.ficheros.size()) {
-            final Fichero fichero = this.ficheros.get(instancia
-                    - ConstantesNumero.N1);
-            if (fichero.getFirmas().get(indiceFirmante).getEstadoFirma() == TypeEstadoFirma.FIRMADO) {
-                firmado = TypeSiNo.SI;
-            }
-        }
-        return firmado;
     }
 
     /**
@@ -285,19 +215,19 @@ public final class Anexo extends DocumentoFirmado {
     }
 
     public TypePresentacion getPresentacion() {
-		return presentacion;
-	}
+        return presentacion;
+    }
 
-	public void setPresentacion(TypePresentacion presentacion) {
-		this.presentacion = presentacion;
-	}
+    public void setPresentacion(TypePresentacion presentacion) {
+        this.presentacion = presentacion;
+    }
 
-	public TypeSiNo getAnexarfirmado() {
-		return anexarfirmado;
-	}
+    public TypeSiNo getAnexarfirmado() {
+        return anexarfirmado;
+    }
 
-	public void setAnexarfirmado(TypeSiNo anexarfirmado) {
-		this.anexarfirmado = anexarfirmado;
-	}
+    public void setAnexarfirmado(TypeSiNo anexarfirmado) {
+        this.anexarfirmado = anexarfirmado;
+    }
 
 }

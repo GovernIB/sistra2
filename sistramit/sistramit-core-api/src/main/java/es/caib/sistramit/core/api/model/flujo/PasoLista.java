@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 
@@ -12,7 +10,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
  *
  */
 @SuppressWarnings("serial")
-public final class PasoLista implements Serializable {
+public final class PasoLista implements ModelApi {
 
     /**
      * Identificador paso.

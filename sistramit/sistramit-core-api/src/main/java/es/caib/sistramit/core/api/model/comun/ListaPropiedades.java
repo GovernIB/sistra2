@@ -34,9 +34,9 @@ public final class ListaPropiedades implements Serializable {
     }
 
     /**
-     * Obtiene detalles del error como un Map<String,String>.
+     * Obtiene detalles del error como un Map.
      *
-     * @return Detalles error como un Map<String,String>
+     * @return Detalles error como un Map
      */
     public Map<String, String> getPropiedades() {
         return this.propiedadesError;

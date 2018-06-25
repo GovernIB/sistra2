@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
@@ -67,32 +68,40 @@ public class FlujoTramitacionComponentImpl
     }
 
     @Override
-    public ResultadoIrAPaso cargarTramite(String idSesionTramitacion,
+    public void cargarTramite(String idSesionTramitacion,
             UsuarioAutenticadoInfo pUsuarioAutenticado) {
         // TODO PENDIENTE
         idSesionTramitacion = idSesionTramitacion;
         usuarioAutenticado = pUsuarioAutenticado;
 
-        return null;
+    }
+
+    @Override
+    public void recargarTramite(String idSesionTramitacion,
+            UsuarioAutenticadoInfo pUsuarioAutenticado) {
+        // TODO PENDIENTE
+        idSesionTramitacion = idSesionTramitacion;
+        usuarioAutenticado = pUsuarioAutenticado;
     }
 
     @Override
     public DetalleTramite obtenerDetalleTramite() {
         // TODO PENDIENTE. Mock para simular JSON
-        final DetalleTramite dt = MockFlujo
-                .generarDetalleTramite(usuarioAutenticado, idPasoActual);
+        final DetalleTramite dt = MockFlujo.generarDetalleTramite(
+                idSesionTramitacion, usuarioAutenticado, idPasoActual);
+        return dt;
+    }
+
+    @Override
+    public DetallePasos obtenerDetallePasos() {
+        // TODO PENDIENTE. Mock para simular JSON
+        final DetallePasos dt = MockFlujo.generarDetallePasos(idPasoActual);
         return dt;
     }
 
     @Override
     public void invalidarFlujoTramicacion() {
         flujoInvalido = true;
-    }
-
-    @Override
-    public ResultadoIrAPaso recargarTramite() {
-        // TODO PENDIENTE
-        return null;
     }
 
     @Override
@@ -103,6 +112,16 @@ public class FlujoTramitacionComponentImpl
         r.setIdPasoActual(idPaso);
         r.setIdSesionTramitacion(idSesionTramitacion);
         idPasoActual = idPaso;
+        return r;
+    }
+
+    @Override
+    public ResultadoIrAPaso irAPasoActual() {
+        // TODO PENDIENTE. Mock para simular JSON
+        final ResultadoIrAPaso r = new ResultadoIrAPaso();
+        r.setFinalizadoTrasIrAPaso(false);
+        r.setIdPasoActual(idPasoActual);
+        r.setIdSesionTramitacion(idSesionTramitacion);
         return r;
     }
 

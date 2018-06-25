@@ -12,7 +12,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
  *
  */
 @SuppressWarnings("serial")
-public abstract class Documento implements Serializable {
+public abstract class Documento implements ModelApi {
 
 	/**
 	 * Identificador documento.

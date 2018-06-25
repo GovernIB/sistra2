@@ -6,7 +6,6 @@ import java.util.List;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 
-
 /**
  * Detalle del paso "Anexar".
  *
@@ -48,7 +47,6 @@ public final class DetallePasoAnexar extends DetallePaso {
         anexos = pAnexos;
     }
 
-
     /**
      * Obtiene anexo a partir del id.
      *
@@ -76,8 +74,6 @@ public final class DetallePasoAnexar extends DetallePaso {
 
         strb.append(ident).append("\n");
         strb.append(ident).append("ID paso:" + getId() + "\n");
-        strb.append(ident).append("Titulo:" + getTitulo() + "\n");
-        strb.append(ident).append("Completado:" + getCompletado() + "\n");
         strb.append(ident).append("Sólo lectura:" + getSoloLectura() + "\n");
         strb.append(ident).append("Tipo:" + getTipo() + "\n");
         strb.append(ident).append("Anexos:\n");
@@ -86,37 +82,28 @@ public final class DetallePasoAnexar extends DetallePaso {
                     .append(" Id:" + anexo.getId() + "\n");
             strb.append(identForms).append(ident)
                     .append(" Titulo:" + anexo.getTitulo() + "\n");
-            strb.append(identForms)
-                    .append(ident)
-                    .append(" Max instancias:" + anexo.getMaxInstancias()
-                            + "\n");
+            strb.append(identForms).append(ident).append(
+                    " Max instancias:" + anexo.getMaxInstancias() + "\n");
             strb.append(identForms).append(ident)
                     .append(" Ayuda:" + anexo.getAyuda() + "\n");
             strb.append(identForms).append(ident)
                     .append(" Extensiones:" + anexo.getExtensiones() + "\n");
             if (anexo.getFirmar() != null) {
-                strb.append(identForms)
-                        .append(ident)
-                        .append(" Firmar:" + anexo.getFirmar().toString()
-                                + "\n");
+                strb.append(identForms).append(ident).append(
+                        " Firmar:" + anexo.getFirmar().toString() + "\n");
             }
             if (anexo.getObligatorio() != null) {
-                strb.append(identForms)
-                        .append(ident)
-                        .append(" Obligatorio:"
-                                + anexo.getObligatorio().toString() + "\n");
+                strb.append(identForms).append(ident).append(" Obligatorio:"
+                        + anexo.getObligatorio().toString() + "\n");
             }
             if (anexo.getPlantilla() != null) {
-                strb.append(identForms)
-                        .append(ident)
-                        .append(" Plantilla:" + anexo.getPlantilla().print()
-                                + "\n");
+                strb.append(identForms).append(ident).append(
+                        " Plantilla:" + anexo.getPlantilla().print() + "\n");
             }
             strb.append(identForms).append(ident)
                     .append(" Rellenado:" + anexo.getRellenado() + "\n");
             strb.append(identForms).append(ident).append("  Firmantes:\n");
-            for (final Firmante firmante : anexo.getFirmantes()) {
-
+            for (final Persona firmante : anexo.getFirmantes()) {
                 strb.append(identForms).append(ident).append(ident)
                         .append("   NIF:" + firmante.getNif() + "\n");
                 strb.append(identForms).append(ident).append(ident)
@@ -128,25 +115,6 @@ public final class DetallePasoAnexar extends DetallePaso {
                         .append("   Fichero:" + fichero.getFichero() + "\n");
                 strb.append(identForms).append(ident).append(ident)
                         .append("   Titulo" + fichero.getTitulo() + "\n");
-                strb.append(identForms).append(ident).append(ident)
-                        .append("   FIRMAS\n");
-                for (final Firma firma : fichero.getFirmas()) {
-                    if (firma.getEstadoFirma() != null) {
-                        strb.append(identForms)
-                                .append(ident)
-                                .append(ident)
-                                .append("    Estado firma:"
-                                        + firma.getEstadoFirma().toString()
-                                        + "\n");
-                    }
-                    strb.append(identForms).append(ident).append(ident)
-                            .append("    Rechazo:" + firma.getRechazo() + "\n");
-                    strb.append(identForms)
-                            .append(ident)
-                            .append(ident)
-                            .append("    Fecha firma:" + firma.getFechaFirma()
-                                    + "\n");
-                }
             }
         }
         return strb.toString();

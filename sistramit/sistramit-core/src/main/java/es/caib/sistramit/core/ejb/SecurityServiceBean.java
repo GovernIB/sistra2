@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.ejb;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -11,6 +13,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.service.SecurityService;
 
 @Stateless
@@ -30,21 +33,17 @@ public class SecurityServiceBean implements SecurityService {
     }
 
     @Override
-    public String iniciarSesionClave(final String lang,
+    public String iniciarSesionAutenticacion(final String lang,
+            List<TypeAutenticacion> authList, String qaa,
             final String urlCallback) {
-        return securityService.iniciarSesionClave(lang, urlCallback);
+        return securityService.iniciarSesionAutenticacion(lang, authList, qaa,
+                urlCallback);
     }
 
     @Override
     public String iniciarLogoutSesionClave(final String lang,
             final String urlCallback) {
         return securityService.iniciarLogoutSesionClave(lang, urlCallback);
-    }
-
-    @Override
-    public UsuarioAutenticadoInfo validarUsuarioAnonimo(
-            final SesionInfo sesionInfo) {
-        return securityService.validarUsuarioAnonimo(sesionInfo);
     }
 
     @Override
@@ -55,9 +54,9 @@ public class SecurityServiceBean implements SecurityService {
     }
 
     @Override
-    public UsuarioAutenticadoInfo validarTicketClave(
+    public UsuarioAutenticadoInfo validarTicketAutenticacion(
             final SesionInfo sesionInfo, final String ticket) {
-        return securityService.validarTicketClave(sesionInfo, ticket);
+        return securityService.validarTicketAutenticacion(sesionInfo, ticket);
     }
 
     @Override
@@ -71,6 +70,13 @@ public class SecurityServiceBean implements SecurityService {
     public UsuarioAutenticadoInfo validarTicketPasarelaPagos(
             final SesionInfo sesionInfo, final String ticket) {
         return securityService.validarTicketPasarelaPagos(sesionInfo, ticket);
+    }
+
+    @Override
+    public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(
+            String idSesionTramitacion) {
+        return securityService
+                .obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
     }
 
 }

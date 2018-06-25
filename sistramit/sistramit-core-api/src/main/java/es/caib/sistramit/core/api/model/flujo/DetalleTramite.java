@@ -1,9 +1,9 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 
 /**
@@ -13,10 +13,22 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
  *
  */
 @SuppressWarnings("serial")
-public final class DetalleTramite implements Serializable {
+public final class DetalleTramite implements ModelApi {
+
+    /** Entorno. */
+    private TypeEntorno entorno;
+
+    /** Id trámite. */
+    private String idSesionTramitacion;
 
     /** Id trámite. */
     private String idTramite;
+
+    /** Versión trámite. */
+    private int version;
+
+    /** Fecha recuperacion definicion STG (dd/MM/yyyy hh:mm). */
+    private String fechaDefinicion;
 
     /** Idioma. */
     private String idioma;
@@ -30,70 +42,97 @@ public final class DetalleTramite implements Serializable {
     /** Usuario autenticado. */
     private UsuarioAutenticadoInfo usuario;
 
-    /** Debug habilitado. */
-    private boolean debug;
-
-    /** Fecha recuperacion definicion STG (dd/MM/yyyy hh:mm). */
-    private String fechaDefinicion;
-
     /** Indica si es persistente. */
     private TypeSiNo persistente = TypeSiNo.NO;
 
     /** Dias persistencia. Si 0 persistencia infinita. */
     private int diasPersistencia;
 
-    /** Estado de los pasos del trámite. */
-    private DetallePasos detallePasos;
+    /** Debug habilitado. */
+    private TypeSiNo debug = TypeSiNo.NO;
 
-    public String getTitulo() {
-        return titulo;
+    /** Info entidad. */
+    private Entidad entidad;
+
+    /** Paso actual. */
+    private String idPasoActual;
+
+    /**
+     * Imprime detalle tramite.
+     *
+     * @return Detalle tramite
+     */
+    public String print() {
+        final StringBuffer strb = new StringBuffer(
+                ConstantesNumero.N1000 * ConstantesNumero.N8);
+        strb.append("\nDETALLE TRAMITE\n");
+        strb.append("===============\n");
+        strb.append("Entorno:" + getEntorno() + "\n");
+        strb.append("Usuario:" + getUsuario().print() + "\n");
+        strb.append("Idioma:" + getIdioma() + "\n");
+        strb.append("Titulo:" + getTitulo() + "\n");
+        strb.append("Tipo flujo:" + getTipoFlujo() + "\n");
+        strb.append("Id paso actual:\n" + getIdPasoActual() + "\n");
+        strb.append("===============\n");
+        strb.append("FIN DETALLE TRAMITE\n");
+        return strb.toString();
     }
 
-    public void setTitulo(final String titulo) {
-        this.titulo = titulo;
-    }
-
-    public UsuarioAutenticadoInfo getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(final UsuarioAutenticadoInfo usuario) {
-        this.usuario = usuario;
-    }
-
+    /**
+     * Método de acceso a idTramite.
+     *
+     * @return idTramite
+     */
     public String getIdTramite() {
         return idTramite;
     }
 
-    public void setIdTramite(final String idTramite) {
+    /**
+     * Método para establecer idTramite.
+     *
+     * @param idTramite
+     *            idTramite a establecer
+     */
+    public void setIdTramite(String idTramite) {
         this.idTramite = idTramite;
     }
 
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public void setDebug(final boolean debug) {
-        this.debug = debug;
+    /**
+     * Método de acceso a version.
+     *
+     * @return version
+     */
+    public int getVersion() {
+        return version;
     }
 
     /**
-     * Método de acceso a tipoFlujo.
+     * Método para establecer version.
      *
-     * @return tipoFlujo
+     * @param version
+     *            version a establecer
      */
-    public TypeFlujoTramitacion getTipoFlujo() {
-        return tipoFlujo;
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     /**
-     * Método para establecer tipoFlujo.
+     * Método de acceso a fechaDefinicion.
      *
-     * @param tipoFlujo
-     *            tipoFlujo a establecer
+     * @return fechaDefinicion
      */
-    public void setTipoFlujo(TypeFlujoTramitacion tipoFlujo) {
-        this.tipoFlujo = tipoFlujo;
+    public String getFechaDefinicion() {
+        return fechaDefinicion;
+    }
+
+    /**
+     * Método para establecer fechaDefinicion.
+     *
+     * @param fechaDefinicion
+     *            fechaDefinicion a establecer
+     */
+    public void setFechaDefinicion(String fechaDefinicion) {
+        this.fechaDefinicion = fechaDefinicion;
     }
 
     /**
@@ -116,22 +155,60 @@ public final class DetalleTramite implements Serializable {
     }
 
     /**
-     * Método de acceso a fechaDefinicion.
+     * Método de acceso a titulo.
      *
-     * @return fechaDefinicion
+     * @return titulo
      */
-    public String getFechaDefinicion() {
-        return fechaDefinicion;
+    public String getTitulo() {
+        return titulo;
     }
 
     /**
-     * Método para establecer fechaDefinicion.
+     * Método para establecer titulo.
      *
-     * @param fechaDefinicion
-     *            fechaDefinicion a establecer
+     * @param titulo
+     *            titulo a establecer
      */
-    public void setFechaDefinicion(String fechaDefinicion) {
-        this.fechaDefinicion = fechaDefinicion;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    /**
+     * Método de acceso a tipoFlujo.
+     *
+     * @return tipoFlujo
+     */
+    public TypeFlujoTramitacion getTipoFlujo() {
+        return tipoFlujo;
+    }
+
+    /**
+     * Método para establecer tipoFlujo.
+     *
+     * @param tipoFlujo
+     *            tipoFlujo a establecer
+     */
+    public void setTipoFlujo(TypeFlujoTramitacion tipoFlujo) {
+        this.tipoFlujo = tipoFlujo;
+    }
+
+    /**
+     * Método de acceso a usuario.
+     *
+     * @return usuario
+     */
+    public UsuarioAutenticadoInfo getUsuario() {
+        return usuario;
+    }
+
+    /**
+     * Método para establecer usuario.
+     *
+     * @param usuario
+     *            usuario a establecer
+     */
+    public void setUsuario(UsuarioAutenticadoInfo usuario) {
+        this.usuario = usuario;
     }
 
     /**
@@ -173,41 +250,97 @@ public final class DetalleTramite implements Serializable {
     }
 
     /**
-     * Método de acceso a tramite.
+     * Método de acceso a debug.
      *
-     * @return tramite
+     * @return debug
      */
-    public DetallePasos getDetallePasos() {
-        return detallePasos;
+    public TypeSiNo getDebug() {
+        return debug;
     }
 
     /**
-     * Método para establecer tramite.
+     * Método para establecer debug.
      *
-     * @param tramite
-     *            tramite a establecer
+     * @param debug
+     *            debug a establecer
      */
-    public void setDetallePasos(DetallePasos tramite) {
-        this.detallePasos = tramite;
+    public void setDebug(TypeSiNo debug) {
+        this.debug = debug;
     }
 
     /**
-     * Imprime detalle tramite.
+     * Método de acceso a entidad.
      *
-     * @return Detalle tramite
+     * @return entidad
      */
-    public String print() {
-        final StringBuffer strb = new StringBuffer(
-                ConstantesNumero.N1000 * ConstantesNumero.N8);
-        strb.append("\nDETALLE TRAMITE\n");
-        strb.append("===============\n");
-        strb.append("Usuario:" + getUsuario().print() + "\n");
-        strb.append("Idioma:" + getIdioma() + "\n");
-        strb.append("Titulo:" + getTitulo() + "\n");
-        strb.append("Tipo flujo:" + getTipoFlujo() + "\n");
-        strb.append("Tramite:\n" + getDetallePasos().print() + "\n");
-        strb.append("===============\n");
-        strb.append("FIN DETALLE TRAMITE\n");
-        return strb.toString();
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    /**
+     * Método para establecer entidad.
+     *
+     * @param entidad
+     *            entidad a establecer
+     */
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
+    }
+
+    /**
+     * Método de acceso a idSesionTramitacion.
+     *
+     * @return idSesionTramitacion
+     */
+    public String getIdSesionTramitacion() {
+        return idSesionTramitacion;
+    }
+
+    /**
+     * Método para establecer idSesionTramitacion.
+     *
+     * @param idSesionTramitacion
+     *            idSesionTramitacion a establecer
+     */
+    public void setIdSesionTramitacion(String idSesionTramitacion) {
+        this.idSesionTramitacion = idSesionTramitacion;
+    }
+
+    /**
+     * Método de acceso a idPasoActual.
+     *
+     * @return idPasoActual
+     */
+    public String getIdPasoActual() {
+        return idPasoActual;
+    }
+
+    /**
+     * Método para establecer idPasoActual.
+     *
+     * @param idPasoActual
+     *            idPasoActual a establecer
+     */
+    public void setIdPasoActual(String idPasoActual) {
+        this.idPasoActual = idPasoActual;
+    }
+
+    /**
+     * Método de acceso a entorno.
+     *
+     * @return entorno
+     */
+    public TypeEntorno getEntorno() {
+        return entorno;
+    }
+
+    /**
+     * Método para establecer entorno.
+     *
+     * @param entorno
+     *            entorno a establecer
+     */
+    public void setEntorno(TypeEntorno entorno) {
+        this.entorno = entorno;
     }
 }

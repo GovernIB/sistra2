@@ -3,8 +3,8 @@ package es.caib.sistramit.core.service.component.integracion;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import es.caib.sistrages.rest.api.ConfiguracionEntidad;
-import es.caib.sistrages.rest.api.ConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 
 /**
@@ -24,7 +24,7 @@ public interface SistragesComponent {
      * Recupera configuración global.
      */
     @Cacheable(value = "cacheConfiguracion", key = "'configuracionGlobal'")
-    ConfiguracionGlobal obtenerConfiguracionGlobal();
+    RConfiguracionGlobal obtenerConfiguracionGlobal();
 
     /**
      * Quita de caché configuración global.
@@ -39,7 +39,7 @@ public interface SistragesComponent {
      * @return configuracion entidad.
      */
     @Cacheable(value = "cacheConfiguracion", key = "'configuracionEntidad-' + #idEntidad")
-    ConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad);
+    RConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad);
 
     /**
      * Quita de caché configuracion entidad.

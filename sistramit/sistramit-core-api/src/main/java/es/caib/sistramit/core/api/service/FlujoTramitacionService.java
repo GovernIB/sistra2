@@ -2,6 +2,7 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
@@ -46,10 +47,23 @@ public interface FlujoTramitacionService {
      *
      * @param idSesionTramitacion
      *            Id sesión de tramitación
-     * @return Paso actual
+     * @param usuarioAutenticadoInfo
+     *            info usuario
      */
-    ResultadoIrAPaso cargarTramite(String idSesionTramitacion,
+    void cargarTramite(String idSesionTramitacion,
             UsuarioAutenticadoInfo usuarioAutenticadoInfo);
+
+    /**
+     * Recarga tramite que existe en una sesion de front (vuelta de formularios
+     * o recuperacion errores).
+     *
+     * @param idSesionTramitacion
+     *            Id sesión de tramitación
+     * @param userInfo
+     *            info usuario autenticado
+     */
+    void recargarTramite(String idSesionTramitacion,
+            UsuarioAutenticadoInfo userInfo);
 
     /**
      * Obtiene detalle trámite.
@@ -61,14 +75,13 @@ public interface FlujoTramitacionService {
     DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion);
 
     /**
-     * Recarga tramite que existe en una sesion de front (vuelta de formularios
-     * o recuperacion errores).
+     * Obtiene detalle paso actual.
      *
      * @param idSesionTramitacion
-     *            Id sesión de tramitación
-     * @return Paso actual
+     *            id sesión tramitación
+     * @return detalle trámite
      */
-    ResultadoIrAPaso recargarTramite(String idSesionTramitacion);
+    DetallePasos obtenerDetallePasos(final String idSesionTramitacion);
 
     /**
      * Va al paso indicado.
@@ -77,9 +90,18 @@ public interface FlujoTramitacionService {
      *            Id sesión de tramitación
      * @param idPaso
      *            Identificador de paso.
-     * @return Identificador del paso en el que se queda el trámite.
+     * @return Estado pasos
      */
     ResultadoIrAPaso irAPaso(String idSesionTramitacion, String idPaso);
+
+    /**
+     * Ir a paso actual.
+     *
+     * @param idSesionTramitacion
+     *            Id sesión de tramitación
+     * @return Estado pasos
+     */
+    ResultadoIrAPaso irAPasoActual(String idSesionTramitacion);
 
     /**
      * Realiza la acción indicada en el paso.
@@ -119,6 +141,10 @@ public interface FlujoTramitacionService {
      * Función interna que no pasa por interceptor de auditoría. Sirve para
      * obtener detalle del flujo desde el propio interceptor (solo debe ser
      * usada desde el interceptor).
+     *
+     * @param idSesionTramitacion
+     *            id sesión tramitación
+     * @return detalle trámite
      */
     DetalleTramite obtenerFlujoTramitacionInfo(
             final String idSesionTramitacion);
@@ -127,6 +153,9 @@ public interface FlujoTramitacionService {
      * Función interna que no pasa por interceptor de auditoría. Sirve para
      * invalidar automáticamente el el flujo desde el propio interceptor (solo
      * debe ser usada desde el interceptor).
+     *
+     * @param idSesionTramitacion
+     *            id sesión tramitación
      */
     void invalidarFlujoTramitacion(final String idSesionTramitacion);
 

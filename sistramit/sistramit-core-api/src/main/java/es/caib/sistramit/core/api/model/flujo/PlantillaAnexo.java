@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-
 import es.caib.sistramit.core.api.model.flujo.types.TypePlantillaAnexo;
 
 /**
@@ -11,7 +9,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePlantillaAnexo;
  *
  */
 @SuppressWarnings("serial")
-public final class PlantillaAnexo implements Serializable {
+public final class PlantillaAnexo implements ModelApi {
 
     /**
      * Tipo de plantilla.

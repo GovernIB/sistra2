@@ -1,9 +1,6 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
-
 
 /**
  * Detalle de un pago incorrecto.
@@ -11,7 +8,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
  * @author Indra
  */
 @SuppressWarnings("serial")
-public final class DetalleEstadoPagoIncorrecto implements Serializable {
+public final class DetalleEstadoPagoIncorrecto implements ModelApi {
 
     /**
      * Constructor.
@@ -93,19 +90,19 @@ public final class DetalleEstadoPagoIncorrecto implements Serializable {
         mensaje = pMensaje;
     }
 
-	public String getCodigoErrorPasarela() {
-		return codigoErrorPasarela;
-	}
+    public String getCodigoErrorPasarela() {
+        return codigoErrorPasarela;
+    }
 
-	public void setCodigoErrorPasarela(String codigoErrorPasarela) {
-		this.codigoErrorPasarela = codigoErrorPasarela;
-	}
+    public void setCodigoErrorPasarela(String codigoErrorPasarela) {
+        this.codigoErrorPasarela = codigoErrorPasarela;
+    }
 
-	public String getMensajeErrorPasarela() {
-		return mensajeErrorPasarela;
-	}
+    public String getMensajeErrorPasarela() {
+        return mensajeErrorPasarela;
+    }
 
-	public void setMensajeErrorPasarela(String mensajeErrorPasarela) {
-		this.mensajeErrorPasarela = mensajeErrorPasarela;
-	}
+    public void setMensajeErrorPasarela(String mensajeErrorPasarela) {
+        this.mensajeErrorPasarela = mensajeErrorPasarela;
+    }
 }

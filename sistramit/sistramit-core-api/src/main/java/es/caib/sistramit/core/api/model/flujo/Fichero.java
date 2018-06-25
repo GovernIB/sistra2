@@ -1,9 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Fichero anexado.
  *
@@ -11,7 +7,7 @@ import java.util.List;
  *
  */
 @SuppressWarnings("serial")
-public final class Fichero implements Serializable {
+public final class Fichero implements ModelApi {
 
     /**
      * Nombre del fichero con extensión.
@@ -21,11 +17,6 @@ public final class Fichero implements Serializable {
      * Título particular del fichero (para genéricos).
      */
     private String titulo;
-
-    /**
-     * Firmas del fichero. Se generan según el orden de los firmantes.
-     */
-    private List<Firma> firmas = new ArrayList<>(); // TODO REPENSAR SI SE PASA FIRMA AL PASO DE REGISTRO
 
     /**
      * Indica nombre del fichero con extensión.
@@ -63,25 +54,6 @@ public final class Fichero implements Serializable {
      */
     public void setTitulo(final String pTitulo) {
         titulo = pTitulo;
-    }
-
-    /**
-     * Indica firmas del fichero.
-     *
-     * @return firmas del fichero
-     */
-    public List<Firma> getFirmas() {
-        return firmas;
-    }
-
-    /**
-     * Indica firmas del fichero.
-     *
-     * @param pFirmas
-     *            firmas del fichero
-     */
-    public void setFirmas(final List<Firma> pFirmas) {
-        firmas = pFirmas;
     }
 
 }

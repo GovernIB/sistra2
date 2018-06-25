@@ -48,13 +48,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         UsuarioAutenticadoInfo usuarioAutenticadoInfo = null;
         try {
 
-            if (ConstantesSeguridad.ANONIMO_USER.equals(usuario)) {
-                // Usuario anonimo
-                debug("Obtener user anonimo");
-                usuarioAutenticadoInfo = securityService
-                        .validarUsuarioAnonimo(sesionInfo);
-            } else if (ConstantesSeguridad.TICKET_USER_CARPETA
-                    .equals(usuario)) {
+            if (ConstantesSeguridad.TICKET_USER_CARPETA.equals(usuario)) {
                 // Autenticacion por ticket
                 debug("Autenticacion desde Carpeta: " + passwd);
                 // Validamos ticket
@@ -65,7 +59,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 debug("Autenticacion por Clave: " + passwd);
                 // Validamos ticket
                 usuarioAutenticadoInfo = securityService
-                        .validarTicketClave(sesionInfo, passwd);
+                        .validarTicketAutenticacion(sesionInfo, passwd);
             } else if (ConstantesSeguridad.TICKET_USER_GF.equals(usuario)) {
                 // Autenticacion por ticket
                 debug("Autenticacion desde Gestor Formularios: " + passwd);

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.Invalidacion;
-import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 
 /**
  * DAO para invalidaciones y refresco caché: definicion tramite, datos dominio,
@@ -23,13 +22,11 @@ public interface InvalidacionDao {
     /**
      * Obtiene lista invalidaciones a partir de una fecha.
      *
-     * @param tipo
-     *            tipo
      * @param fecha
      *            fecha
      * @return Lista de invalidaciones
      */
-    List<Invalidacion> obtenerInvalidaciones(TypeInvalidacion tipo, Date fecha);
+    List<Invalidacion> obtenerInvalidaciones(Date fecha);
 
     /**
      * Purga invalidaciones.

@@ -133,52 +133,15 @@ public final class UsuarioAutenticadoInfo implements Serializable {
     }
 
     /**
-     * Obtiene nombre y apellidos.
-     *
-     * @return nombre y apellidos
-     */
-    public String getNombreApellidos() {
-        final StringBuffer res = new StringBuffer(100);
-        if (this.getNombre() != null) {
-            res.append(this.getNombre());
-        }
-        if (this.getApellido1() != null) {
-            res.append(" ").append(this.getApellido1());
-        }
-        if (this.getApellido2() != null) {
-            res.append(" ").append(this.getApellido2());
-        }
-        return res.toString();
-    }
-
-    /**
-     * Obtiene apellidos, nombre.
-     *
-     * @return apellidos, nombre
-     */
-    public String getApellidosNombre() {
-        final StringBuffer res = new StringBuffer(100);
-        if (this.getApellido1() == null) {
-            res.append(this.getNombre());
-        } else {
-            res.append(this.getApellido1());
-            if (this.getApellido2() != null) {
-                res.append(" ").append(this.getApellido2());
-            }
-            res.append(", ").append(this.getNombre());
-        }
-        return res.toString();
-    }
-
-    /**
      * Método para mostrar el contenido.
      *
      * @return el string
      */
     public final String print() {
-        return "[autenticacion=" + autenticacion + ", nif=" + nif
-                + ", nombreApellidos=" + getNombreApellidos()
-                + ", metodoAutenticacion=" + metodoAutenticacion + "]";
+        return "[autenticacion=" + autenticacion + ", nif=" + nif + ", nombre="
+                + nombre + ", apellido1=" + apellido1 + ", apellido2="
+                + apellido2 + ", metodoAutenticacion=" + metodoAutenticacion
+                + "]";
     }
 
 }

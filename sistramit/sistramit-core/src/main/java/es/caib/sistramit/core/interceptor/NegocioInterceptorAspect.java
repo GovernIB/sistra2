@@ -19,6 +19,7 @@ import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.exception.ServiceRollbackException;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.GestorFormulariosInternoService;
@@ -225,7 +226,7 @@ public final class NegocioInterceptorAspect {
                                 idSesionTramitacion);
                 if (infoFlujo != null) {
                     res.setIdSesionTramitacion(idSesionTramitacion);
-                    res.setDebugEnabled(infoFlujo.isDebug());
+                    res.setDebugEnabled(TypeSiNo.SI == infoFlujo.getDebug());
                 } else {
                     idSesionTramitacion = null;
                 }

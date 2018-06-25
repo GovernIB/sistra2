@@ -17,10 +17,6 @@ public enum TypeInvalidacion {
      */
     DOMINIO("D"),
     /**
-     * Avisos.
-     */
-    AVISOS("A"),
-    /**
      * Datos entidad.
      */
     ENTIDAD("E"),

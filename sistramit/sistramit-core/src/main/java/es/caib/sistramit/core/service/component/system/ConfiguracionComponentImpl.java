@@ -10,8 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistrages.rest.api.ConfiguracionGlobal;
-import es.caib.sistrages.rest.api.ValorParametro;
+import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistramit.core.api.exception.CargaConfiguracionException;
 import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
@@ -76,13 +76,13 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
      */
     private String getPropiedadGlobal(TypePropiedadConfiguracion propiedad) {
         String res = null;
-        final ConfiguracionGlobal configuracionGlobal = sistragesComponent
+        final RConfiguracionGlobal configuracionGlobal = sistragesComponent
                 .obtenerConfiguracionGlobal();
         if (configuracionGlobal != null
                 && configuracionGlobal.getPropiedades() != null
                 && configuracionGlobal.getPropiedades()
                         .getParametros() != null) {
-            for (final ValorParametro vp : configuracionGlobal.getPropiedades()
+            for (final RValorParametro vp : configuracionGlobal.getPropiedades()
                     .getParametros()) {
                 if (propiedad.toString().equals(vp.getCodigo())) {
                     res = vp.getValor();

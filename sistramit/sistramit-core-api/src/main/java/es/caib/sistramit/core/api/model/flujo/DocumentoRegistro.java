@@ -1,8 +1,10 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 
 /**
  * Documento mostrado en el paso de registro.
@@ -11,13 +13,17 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
  *
  */
 @SuppressWarnings("serial")
-public final class DocumentoRegistro implements Serializable {
+public final class DocumentoRegistro implements ModelApi {
 
     /**
-     * Identificador documento. Contiene el número de instancia. (id + "-" +
-     * instancia).
+     * Identificador documento
      */
     private String id;
+
+    /**
+     * Instancia documento (para anexos genéricos).
+     */
+    private int instancia = 1;
 
     /**
      * Titulo documento.
@@ -35,14 +41,12 @@ public final class DocumentoRegistro implements Serializable {
     private TypeSiNo firmar = TypeSiNo.NO;
 
     /**
-     * Si se debe firmar indica datos firmante.
+     * Si se debe firmar indica datos firmantes.
      */
-    private Persona firmante;
+    private List<Persona> firmantes = new ArrayList<>();
 
-    /**
-     * Indica si se ha firmado.
-     */
-    private TypeSiNo firmado = TypeSiNo.NO;
+    /** Firmas: generadas en el mismo orden que los firmantes. */
+    private List<Firma> firmas = new ArrayList<>();
 
     /**
      * Método de acceso a id.
@@ -112,7 +116,7 @@ public final class DocumentoRegistro implements Serializable {
 
     /**
      * Método de acceso a firmar.
-     * 
+     *
      * @return firmar
      */
     public TypeSiNo getFirmar() {
@@ -121,7 +125,7 @@ public final class DocumentoRegistro implements Serializable {
 
     /**
      * Método para establecer firmar.
-     * 
+     *
      * @param firmar
      *            firmar a establecer
      */
@@ -130,41 +134,100 @@ public final class DocumentoRegistro implements Serializable {
     }
 
     /**
-     * Método de acceso a firmante.
-     * 
-     * @return firmante
+     * Método de acceso a firmantes.
+     *
+     * @return firmantes
      */
-    public Persona getFirmante() {
-        return firmante;
+    public List<Persona> getFirmantes() {
+        return firmantes;
     }
 
     /**
-     * Método para establecer firmante.
-     * 
-     * @param firmante
-     *            firmante a establecer
+     * Método para establecer firmantes.
+     *
+     * @param firmantes
+     *            firmantes a establecer
      */
-    public void setFirmante(Persona firmante) {
-        this.firmante = firmante;
+    public void setFirmantes(List<Persona> firmantes) {
+        this.firmantes = firmantes;
     }
 
     /**
-     * Método de acceso a firmado.
-     * 
-     * @return firmado
+     * Método de acceso a firmas.
+     *
+     * @return firmas
+     */
+    public List<Firma> getFirmas() {
+        return firmas;
+    }
+
+    /**
+     * Método para establecer firmas.
+     *
+     * @param firmas
+     *            firmas a establecer
+     */
+    public void setFirmas(List<Firma> firmas) {
+        this.firmas = firmas;
+    }
+
+    /**
+     * Comprueba si es true firmado de Formulario.
+     *
+     * @return true, si es firmado
      */
     public TypeSiNo getFirmado() {
+        TypeSiNo firmado = TypeSiNo.SI;
+        if (this.firmas.size() == 0) {
+            firmado = TypeSiNo.NO;
+        }
+
+        for (final Firma f : this.firmas) {
+            if (f.getEstadoFirma() != TypeEstadoFirma.FIRMADO) {
+                firmado = TypeSiNo.NO;
+                break;
+            }
+        }
         return firmado;
     }
 
     /**
-     * Método para establecer firmado.
-     * 
-     * @param firmado
-     *            firmado a establecer
+     * Comprueba si el formulario ha sido firmado por el firmante.
+     *
+     * @param indiceFirmante
+     *            Parámetro indice firmante
+     * @return True si ha sido firmado por todos los firmantes.
      */
-    public void setFirmado(TypeSiNo firmado) {
-        this.firmado = firmado;
+    public TypeSiNo getFirmado(final int indiceFirmante) {
+        TypeSiNo firmado = TypeSiNo.SI;
+        if (this.firmas.size() == 0) {
+            firmado = TypeSiNo.NO;
+        } else {
+            final Firma f = this.firmas.get(indiceFirmante);
+            if (f.getEstadoFirma() != TypeEstadoFirma.FIRMADO) {
+                firmado = TypeSiNo.NO;
+            }
+        }
+        return firmado;
+    }
+
+    /**
+     * Método de acceso a instancia.
+     * 
+     * @return instancia
+     */
+    public int getInstancia() {
+        return instancia;
+    }
+
+    /**
+     * Método para establecer instancia.
+     * 
+     * @param instancia
+     *            instancia a establecer
+     */
+    public void setInstancia(int instancia) {
+        this.instancia = instancia;
     }
 
 }

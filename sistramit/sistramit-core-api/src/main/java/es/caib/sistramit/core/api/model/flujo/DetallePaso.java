@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 
@@ -12,7 +10,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
  *
  */
 @SuppressWarnings("serial")
-public abstract class DetallePaso implements Serializable {
+public abstract class DetallePaso implements ModelApi {
 
     /**
      * Identificador paso.
@@ -23,16 +21,6 @@ public abstract class DetallePaso implements Serializable {
      * Tipo de paso.
      */
     private TypePaso tipo;
-
-    /**
-     * Titulo del paso.
-     */
-    private String titulo; // TODO Ver si eliminar
-
-    /**
-     * Info del paso. Información inicial del paso (contiene HTML).
-     */
-    private String info; // TODO Ver si eliminar
 
     /**
      * Indica si el paso esta completado.
@@ -84,25 +72,6 @@ public abstract class DetallePaso implements Serializable {
     }
 
     /**
-     * Indica titulo del paso.
-     *
-     * @return titulo del paso
-     */
-    public final String getTitulo() {
-        return titulo;
-    }
-
-    /**
-     * Indica titulo del paso.
-     *
-     * @param pTitulo
-     *            titulo del paso
-     */
-    public final void setTitulo(final String pTitulo) {
-        titulo = pTitulo;
-    }
-
-    /**
      * Indica indica que los elementos del paso no se pueden modificar
      * (formularios, anexos, etc.
      *
@@ -150,24 +119,5 @@ public abstract class DetallePaso implements Serializable {
      * @return el string
      */
     public abstract String print();
-
-    /**
-     * Indica informacion del paso.
-     *
-     * @return info del paso
-     */
-    public final String getInfo() {
-        return info;
-    }
-
-    /**
-     * Indica informacion del paso.
-     *
-     * @param pInfo
-     *            info del paso
-     */
-    public final void setInfo(final String pInfo) {
-        info = pInfo;
-    }
 
 }

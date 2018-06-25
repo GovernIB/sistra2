@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
 import es.caib.sistramit.core.api.model.flujo.DatosGuardarJustificante;
@@ -20,15 +21,18 @@ import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
 import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
+import es.caib.sistramit.core.api.model.flujo.Entidad;
+import es.caib.sistramit.core.api.model.flujo.Fichero;
 import es.caib.sistramit.core.api.model.flujo.Formulario;
 import es.caib.sistramit.core.api.model.flujo.Pago;
 import es.caib.sistramit.core.api.model.flujo.PasoLista;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.PlantillaAnexo;
-import es.caib.sistramit.core.api.model.flujo.TypeEstadoTramite;
-import es.caib.sistramit.core.api.model.flujo.TypeFlujoTramitacion;
+import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePlantillaAnexo;
@@ -38,7 +42,27 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 public class MockFlujo {
 
     public static DetalleTramite generarDetalleTramite(
+            String idSesionTramitacion,
             UsuarioAutenticadoInfo usuarioAutenticado, String idPasoActual) {
+
+        final DetalleTramite dt = new DetalleTramite();
+        dt.setEntorno(TypeEntorno.DESARROLLO);
+        dt.setIdSesionTramitacion(idSesionTramitacion);
+        dt.setIdTramite("TRAM1");
+        dt.setTitulo("Tramite 1");
+        dt.setIdioma("es");
+        dt.setPersistente(TypeSiNo.SI);
+        dt.setDiasPersistencia(5);
+        dt.setUsuario(usuarioAutenticado);
+        dt.setTipoFlujo(TypeFlujoTramitacion.NORMALIZADO);
+        dt.setFechaDefinicion((new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"))
+                .format(new Date()));
+        dt.setEntidad(generarConfiguracionEntidad());
+        dt.setIdPasoActual(idPasoActual);
+        return dt;
+    }
+
+    public static DetallePasos generarDetallePasos(String idPasoActual) {
 
         final TypePaso pasoActual = TypePaso.fromString(idPasoActual);
         final TypePaso pasoAnterior = pasoAnterior(pasoActual);
@@ -52,20 +76,34 @@ public class MockFlujo {
                 pasoSiguiente != null ? pasoSiguiente.toString() : null);
         detallePasos.setPasos(generarListaPasos(pasoActual));
         detallePasos.setActual(generarDetallePaso(pasoActual));
+        return detallePasos;
+    }
 
-        final DetalleTramite dt = new DetalleTramite();
-        dt.setIdTramite("TRAM1");
-        dt.setTitulo("Tramite 1");
-        dt.setIdioma("es");
-        dt.setPersistente(TypeSiNo.SI);
-        dt.setDiasPersistencia(5);
-        dt.setUsuario(usuarioAutenticado);
-        dt.setTipoFlujo(TypeFlujoTramitacion.NORMALIZADO);
-        dt.setFechaDefinicion((new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"))
-                .format(new Date()));
-        dt.setDetallePasos(detallePasos);
-
-        return dt;
+    public static Entidad generarConfiguracionEntidad() {
+        final Entidad e = new Entidad();
+        e.setContacto("Contacto <strong>HTML</strong>");
+        e.setCss("http://url/css");
+        e.setLogo("http://url/logo");
+        e.setInfoLOPD("Info <strong>LOPD</strong>");
+        e.setNombre("Entidad 1");
+        e.setSoporteEmail("soporte@entidad.es");
+        final List<SoporteOpcion> soporteOpciones = new ArrayList<>();
+        SoporteOpcion opcion;
+        opcion = new SoporteOpcion();
+        opcion.setCodigo("1");
+        opcion.setTitulo("Problemas con firma");
+        opcion.setDescripcion("Problemas cuando vas a firmar y no va");
+        soporteOpciones.add(opcion);
+        opcion = new SoporteOpcion();
+        opcion.setCodigo("2");
+        opcion.setTitulo("Problemas con registro");
+        opcion.setDescripcion("Problemas cuando vas a registrar y no va");
+        soporteOpciones.add(opcion);
+        e.setSoporteOpciones(soporteOpciones);
+        e.setSoporteTelefono("123");
+        e.setSoporteUrl("http://url/soporte");
+        e.setUrlCarpeta("http://url/carpeta");
+        return e;
     }
 
     private static DetallePaso generarDetallePaso(TypePaso tipoPaso) {
@@ -97,8 +135,6 @@ public class MockFlujo {
     private static DetallePaso generarPasoGU() {
         final DetallePasoGuardar dp = new DetallePasoGuardar();
         dp.setId(TypePaso.GUARDAR.toString());
-        dp.setTitulo("Guardar");
-        dp.setInfo("Deberá guardar <strong>justificante</strong>:");
         dp.setCompletado(TypeSiNo.SI);
         dp.setSoloLectura(TypeSiNo.SI);
 
@@ -111,14 +147,15 @@ public class MockFlujo {
         justificante.setDocumentos(generarDocsRegistro(true));
         dp.setJustificante(justificante);
 
+        dp.setInstruccionesTramitacion(
+                "Instrucciones <strong>fin de tramitación</strong>");
+
         return dp;
     }
 
     private static DetallePaso generarPasoRG() {
         final DetallePasoRegistrar dp = new DetallePasoRegistrar();
         dp.setId(TypePaso.REGISTRAR.toString());
-        dp.setTitulo("Registrar");
-        dp.setInfo("Deberá registrar");
         dp.setCompletado(TypeSiNo.NO);
         dp.setSoloLectura(TypeSiNo.NO);
         dp.setDocumentos(generarDocsRegistro(false));
@@ -131,6 +168,7 @@ public class MockFlujo {
         DocumentosRegistroPorTipo drt;
         final List<DocumentoRegistro> listaDocs;
         DocumentoRegistro dr;
+        List<Persona> firmantes;
 
         // Formularios
         drt = new DocumentosRegistroPorTipo();
@@ -139,24 +177,40 @@ public class MockFlujo {
         dr = new DocumentoRegistro();
         dr.setId("F1-1");
         dr.setFirmar(TypeSiNo.SI);
-        dr.setFirmante(new Persona("11111111H", "Jose García García"));
+        firmantes = new ArrayList<>();
+        firmantes.add(new Persona("11111111H", "Jose García García"));
+        dr.setFirmantes(firmantes);
         dr.setDescargable(TypeSiNo.SI);
         dr.setTitulo("Formulario 1");
-        dr.setFirmado(registrado ? TypeSiNo.SI : TypeSiNo.NO);
         listaDocs.add(dr);
         drt.setListado(listaDocs);
 
         // Anexos
         drt = new DocumentosRegistroPorTipo();
         drt.setTipo(TypeDocumento.ANEXO);
+
         dr = new DocumentoRegistro();
-        dr.setId("A1-1");
+        dr.setId("A1");
+        dr.setInstancia(1);
         dr.setFirmar(TypeSiNo.SI);
-        dr.setFirmante(new Persona("11111111H", "Jose García García"));
-        dr.setFirmado(registrado ? TypeSiNo.SI : TypeSiNo.NO);
+        firmantes = new ArrayList<>();
+        firmantes.add(new Persona("11111111H", "Jose García García"));
+        dr.setFirmantes(firmantes);
         dr.setDescargable(TypeSiNo.SI);
-        dr.setTitulo("Anexo 1");
+        dr.setTitulo("Anexo 1-1");
         listaDocs.add(dr);
+
+        dr = new DocumentoRegistro();
+        dr.setId("A1");
+        dr.setInstancia(2);
+        dr.setFirmar(TypeSiNo.SI);
+        firmantes = new ArrayList<>();
+        firmantes.add(new Persona("11111111H", "Jose García García"));
+        dr.setFirmantes(firmantes);
+        dr.setDescargable(TypeSiNo.SI);
+        dr.setTitulo("Anexo 1-2");
+        listaDocs.add(dr);
+
         drt.setListado(listaDocs);
 
         // Pagos
@@ -176,8 +230,6 @@ public class MockFlujo {
     private static DetallePaso generarPasoPT() {
         final DetallePasoPagar dp = new DetallePasoPagar();
         dp.setId(TypePaso.PAGAR.toString());
-        dp.setTitulo("Pagar");
-        dp.setInfo("Deberá pagar los <strong>pagos</strong>:");
         dp.setCompletado(TypeSiNo.NO);
         dp.setSoloLectura(TypeSiNo.NO);
 
@@ -199,8 +251,6 @@ public class MockFlujo {
     private static DetallePaso generarPasoAN() {
         final DetallePasoAnexar dp = new DetallePasoAnexar();
         dp.setId(TypePaso.ANEXAR.toString());
-        dp.setTitulo("Anexos");
-        dp.setInfo("Deberá rellenar los <strong>anexos</strong>:");
         dp.setCompletado(TypeSiNo.NO);
         dp.setSoloLectura(TypeSiNo.NO);
 
@@ -220,7 +270,18 @@ public class MockFlujo {
         anexo.setPlantilla(plantilla);
         anexo.setConvertirPDF(TypeSiNo.SI);
         anexo.setPresentacion(TypePresentacion.ELECTRONICA);
+
+        final List<Fichero> ficheros = new ArrayList<>();
+        final Fichero f = new Fichero();
+        f.setTitulo("Documento X");
+        f.setFichero("fichero.pdf");
+
+        ficheros.add(f);
+
+        anexo.setFicheros(ficheros);
+
         anexos.add(anexo);
+
         anexo = new Anexo();
         anexo.setId("A2");
         anexo.setMaxInstancias(1);
@@ -242,8 +303,6 @@ public class MockFlujo {
     private static DetallePaso generarPasoRF() {
         final DetallePasoRellenar dp = new DetallePasoRellenar();
         dp.setId(TypePaso.RELLENAR.toString());
-        dp.setTitulo("Rellenar");
-        dp.setInfo("Deberá rellenar los <strong>formularios</strong>:");
         dp.setCompletado(TypeSiNo.NO);
         dp.setSoloLectura(TypeSiNo.NO);
 
@@ -349,11 +408,10 @@ public class MockFlujo {
 
         final DetallePasoDebeSaber ds = new DetallePasoDebeSaber();
         ds.setId(TypePaso.DEBESABER.toString());
-        ds.setTitulo("Debe saber");
-        ds.setInfo("Descripción del paso <strong>Debe saber</strong>:");
         ds.setCompletado(TypeSiNo.NO);
         ds.setSoloLectura(TypeSiNo.NO);
         ds.setPasos(pasos);
+        ds.setInstrucciones("Instrucciones <strong>inicio</strong> trámite");
 
         return ds;
     }
@@ -364,8 +422,6 @@ public class MockFlujo {
         descPaso = new DescripcionPaso();
         descPaso.setId(tipoPaso.toString());
         descPaso.setTipo(tipoPaso);
-        descPaso.setInfo("Desc paso " + tipoPaso.toString());
-        descPaso.setTitulo("Titulo paso " + tipoPaso.toString());
         return descPaso;
     }
 

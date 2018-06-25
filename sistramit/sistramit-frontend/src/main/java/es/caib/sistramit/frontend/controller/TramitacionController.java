@@ -294,16 +294,13 @@ public abstract class TramitacionController {
             res.setUrl(getUrlAsistente() + "/asistente/recargarTramite.html");
         }
 
-        // Peticion por GET: mostramos pagina de error
-        // Peticion por POST: es una llamada ajax y devolvemos json
+        // Diferenciamos si es una llamada json
         ModelAndView view;
-        // TODO Ojo con POST que vengan de sistemas externos y que generen error
-        // (pagos?)
-        if ("POST".equalsIgnoreCase(request.getMethod())) {
-            debug("POST: " + request.getRequestURI());
+        if (request.getRequestURI().endsWith(".json")) {
+            debug("JSON: " + request.getRequestURI());
             view = this.generarJsonView(res);
         } else {
-            debug("GET: " + request.getRequestURI());
+            debug("HMTL: " + request.getRequestURI());
             final ErrorGeneral error = new ErrorGeneral();
             error.setIdioma(getIdioma());
             error.setMensaje(res.getMensaje());
@@ -422,12 +419,12 @@ public abstract class TramitacionController {
             final String mensajeIncorrecto,
             final TypeRespuestaJSON tipoRespuesta) {
         final String textoDetalleError = getLiteralesFront().getLiteralFront(
-                LiteralesFront.ASISTENTE, "detalleError", getIdioma());
+                LiteralesFront.MENSAJES, "detalleError", getIdioma());
         final String tituloMsg = getLiteralesFront().getLiteralFront(
-                LiteralesFront.ASISTENTE, literalTitulo, getIdioma());
+                LiteralesFront.MENSAJES, literalTitulo, getIdioma());
 
         final String textoMsg = getLiteralesFront().getLiteralFront(
-                LiteralesFront.ASISTENTE, literalMensaje, getIdioma());
+                LiteralesFront.MENSAJES, literalMensaje, getIdioma());
         String detalleError = "";
         if (StringUtils.isNotBlank(mensajeIncorrecto)) {
             detalleError += " (" + textoDetalleError + mensajeIncorrecto + ")";

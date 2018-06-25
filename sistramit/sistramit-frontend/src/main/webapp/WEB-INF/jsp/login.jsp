@@ -12,14 +12,8 @@
 
 	<script type="text/javascript">
 
-			function loginAnonimo() {
-				document.getElementById("username").value = "nobody";
-				document.getElementById("password").value = "nobody";
-				document.getElementById("formLogin").submit();
-			}
-
-			function loginClave() {
-				document.location="redirigirClave.html";
+			function login() {
+				document.location="redirigirAutenticacionLogin.html?metodosAutenticacion=${login.nivelesAutenticacionToString()}&qaa=${login.qaa}";
 			}
 
 	</script>
@@ -28,31 +22,41 @@
 
 <body>
 
-	<h1><c:out value="${login.tituloTramite}"/></h1>
+	<h1><c:out value="${login.titulo}"/></h1>
 
+	<p>
+		Avisos plataforma <br/>
+		<c:if test="${empty login.avisos}">
+	    	No hay avisos
+	    </c:if>
+		<ul>
+		<c:forEach var="aviso" items="${login.avisos}">
+			<li>
+    			<c:out value="${aviso.mensaje}"/> - Bloquear: <c:out value="${aviso.bloquearAcceso}"/>
+    		 </li>
+		</c:forEach>
+		</ul>
+	</p>
+
+	<!-- Revisar gestion error: ¿si sale error no hacer nada mas? -->
 	<c:if test="${not empty param.error}">
 		<fmt:message key="login.error.texto" />
 		<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
 	</c:if>
 
 
+	<!-- Deberia lanzarse automaticamente tras revision avisos plataforma -->
+	<p>
+		<a href="javascript:login()"> Redireccion componente autenticacion </a>
+	</p>
+
+	<!-- Form para envio parametros login -->
 	<form name="formLogin" id="formLogin" method="post" action="login">
 		<input type="hidden" name="username" id="username" />
 		<input type="hidden" name="password" id="password" />
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	</form>
 
-	<c:if test="${login.loginAnonimo}">
-		<p>
-			<a href="javascript:loginAnonimo()"> Login anonimo </a>
-		</p>
-	</c:if>
-
-	<c:if test="${login.loginAutenticado}">
-		<p>
-			<a href="javascript:loginClave()"> Login Clave </a>
-		</p>
-	</c:if>
 
 </body>
 </html>

@@ -7,7 +7,6 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 
-
 /**
  * Detalle del paso "Registrar".
  *
@@ -42,16 +41,6 @@ public final class DetallePasoRegistrar extends DetallePaso {
     private TypeSiNo reintentar = TypeSiNo.NO;
 
     /**
-     * Instrucciones de presentación.
-     */
-    private String instrucciones;
-
-    /**
-     * Instrucciones de tramitación.
-     */
-    private String tramitacion;
-
-    /**
      * Constructor.
      */
     public DetallePasoRegistrar() {
@@ -74,7 +63,8 @@ public final class DetallePasoRegistrar extends DetallePaso {
      * @param pDocumentos
      *            documentos a establecer
      */
-    public void setDocumentos(final List<DocumentosRegistroPorTipo> pDocumentos) {
+    public void setDocumentos(
+            final List<DocumentosRegistroPorTipo> pDocumentos) {
         documentos = pDocumentos;
     }
 
@@ -162,51 +152,10 @@ public final class DetallePasoRegistrar extends DetallePaso {
         strb.append(ident).append("\n");
         strb.append(ident).append("ID paso:" + getId() + "\n");
         strb.append(ident).append("Tipo:" + getTipo() + "\n");
-        strb.append(ident).append("Titulo:" + getTitulo() + "\n");
         strb.append(ident).append("Completado:" + getCompletado() + "\n");
         strb.append(ident).append("Sólo lectura:" + getSoloLectura());
         strb.append(ident).append("Reintentar registro:" + getReintentar());
-        // TODO IMPRIMIR TB PRESENTADOR, ETC.
         return strb.toString();
     }
-
-    /**
-     * Método de acceso a instrucciones.
-     *
-     * @return instrucciones
-     */
-    public String getInstrucciones() {
-        return instrucciones;
-    }
-
-    /**
-     * Método para establecer instrucciones.
-     *
-     * @param pInstrucciones
-     *            instrucciones a establecer
-     */
-    public void setInstrucciones(final String pInstrucciones) {
-        instrucciones = pInstrucciones;
-    }
-
-    /**
-     * Método para establecer instrucciones tramitación.
-     *
-     * @return
-     *            instrucciones tramitación
-     */
-	public String getTramitacion() {
-		return tramitacion;
-	}
-
-	 /**
-     * Método para establecer instrucciones tramitación.
-     *
-     * @param tramitacion
-     *            instrucciones tramitación
-     */
-	public void setTramitacion(String tramitacion) {
-		this.tramitacion = tramitacion;
-	}
 
 }

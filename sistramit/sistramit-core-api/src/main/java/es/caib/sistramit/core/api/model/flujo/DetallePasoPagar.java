@@ -79,7 +79,6 @@ public final class DetallePasoPagar extends DetallePaso {
         strb.append("=====================\n");
 
         strb.append("Id paso:" + getId() + "\n");
-        strb.append("Título:" + getTitulo() + "\n");
         strb.append("Completado:" + getCompletado() + "\n");
         strb.append("Solo lectura:" + getSoloLectura() + "\n");
         strb.append("Tipo:" + getTipo() + "\n");

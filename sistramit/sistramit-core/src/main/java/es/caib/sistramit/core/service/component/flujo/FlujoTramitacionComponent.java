@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.flujo;
 
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
@@ -16,16 +17,21 @@ public interface FlujoTramitacionComponent {
             Map<String, String> parametrosInicio,
             UsuarioAutenticadoInfo usuarioAutenticado);
 
-    ResultadoIrAPaso cargarTramite(String idSesionTramitacion,
+    void cargarTramite(String idSesionTramitacion,
             UsuarioAutenticadoInfo usuarioAutenticado);
+
+    void recargarTramite(String idSesionTramitacion,
+            UsuarioAutenticadoInfo userInfo);
 
     DetalleTramite obtenerDetalleTramite();
 
+    DetallePasos obtenerDetallePasos();
+
     void invalidarFlujoTramicacion();
 
-    ResultadoIrAPaso recargarTramite();
-
     ResultadoIrAPaso irAPaso(String idPaso);
+
+    ResultadoIrAPaso irAPasoActual();
 
     ResultadoAccionPaso accionPaso(String idPaso, TypeAccionPaso accionPaso,
             ParametrosAccionPaso parametros);

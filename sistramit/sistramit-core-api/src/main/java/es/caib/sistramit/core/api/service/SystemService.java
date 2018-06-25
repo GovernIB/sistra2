@@ -58,9 +58,15 @@ public interface SystemService {
 
     /**
      * Realiza proceso de purga.
-     * 
+     *
      * @param instancia
+     *            instancia
      */
     void purgar(String instancia);
+
+    /**
+     * Revisa invalidaciones a procesar.
+     */
+    void revisarInvalidaciones();
 
 }

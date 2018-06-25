@@ -49,4 +49,9 @@ public class SystemServiceBean implements SystemService {
         systemService.purgar(instancia);
     }
 
+    @Override
+    public void revisarInvalidaciones() {
+        systemService.revisarInvalidaciones();
+    }
+
 }

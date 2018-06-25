@@ -11,7 +11,6 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistramit.core.api.model.system.Invalidacion;
-import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.service.repository.model.HInvalidacion;
 
 /**
@@ -36,11 +35,9 @@ public final class InvalidacionDaoImpl implements InvalidacionDao {
     }
 
     @Override
-    public List<Invalidacion> obtenerInvalidaciones(TypeInvalidacion tipo,
-            Date fecha) {
-        final String sql = "SELECT t FROM HInvalidacion t WHERE t.tipo = :tipo ORDER and t.fecha > :fecha BY t.fecha desc";
+    public List<Invalidacion> obtenerInvalidaciones(Date fecha) {
+        final String sql = "SELECT t FROM HInvalidacion t WHERE t.fecha > :fecha ORDER BY t.fecha desc";
         final Query query = entityManager.createQuery(sql);
-        query.setParameter("tipo", tipo.toString());
         query.setParameter("fecha", fecha);
         final List<HInvalidacion> results = query.getResultList();
 

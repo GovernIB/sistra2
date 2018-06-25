@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -10,7 +9,7 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("serial")
-public final class ResultadoAccionPaso implements Serializable {
+public final class ResultadoAccionPaso implements ModelApi {
 
     /**
      * Parámetros de retorno específicos de la acción.

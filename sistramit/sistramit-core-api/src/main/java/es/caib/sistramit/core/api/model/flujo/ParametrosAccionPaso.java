@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,36 +10,37 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("serial")
-public final class ParametrosAccionPaso implements Serializable {
+public final class ParametrosAccionPaso implements ModelApi {
 
-	/**
-	 * Parámetros de entrada específicos de la acción.
-	 */
-	private final Map<String, Object> parametrosEntrada = new HashMap<>();
+    /**
+     * Parámetros de entrada específicos de la acción.
+     */
+    private final Map<String, Object> parametrosEntrada = new HashMap<>();
 
-	/**
-	 * Añade un parámetro de entrada.
-	 *
-	 * @param idParametro
-	 *            Id parámetro entrada
-	 * @param parametro
-	 *            Valor parámetro
-	 *
-	 */
-	public void addParametroEntrada(final String idParametro, final Object parametro) {
-		parametrosEntrada.put(idParametro, parametro);
-	}
+    /**
+     * Añade un parámetro de entrada.
+     *
+     * @param idParametro
+     *            Id parámetro entrada
+     * @param parametro
+     *            Valor parámetro
+     *
+     */
+    public void addParametroEntrada(final String idParametro,
+            final Object parametro) {
+        parametrosEntrada.put(idParametro, parametro);
+    }
 
-	/**
-	 * Obtiene un parámetro de entrada.
-	 *
-	 * @param idParametro
-	 *            Id parámetro entrada
-	 * @return Valor parámetro
-	 *
-	 */
-	public Object getParametroEntrada(final String idParametro) {
-		return parametrosEntrada.get(idParametro);
-	}
+    /**
+     * Obtiene un parámetro de entrada.
+     *
+     * @param idParametro
+     *            Id parámetro entrada
+     * @return Valor parámetro
+     *
+     */
+    public Object getParametroEntrada(final String idParametro) {
+        return parametrosEntrada.get(idParametro);
+    }
 
 }

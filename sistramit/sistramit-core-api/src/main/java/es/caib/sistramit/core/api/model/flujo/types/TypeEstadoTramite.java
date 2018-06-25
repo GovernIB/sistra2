@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.api.model.flujo;
+package es.caib.sistramit.core.api.model.flujo.types;
 
 /**
  * Indica estado trámite.

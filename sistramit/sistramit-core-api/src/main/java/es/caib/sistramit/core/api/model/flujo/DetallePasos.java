@@ -1,9 +1,9 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
 import java.util.List;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 
 /**
  * Devuelve la información del estado del trámite: lista de pasos y detalle paso
@@ -13,7 +13,7 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
  *
  */
 @SuppressWarnings("serial")
-public final class DetallePasos implements Serializable {
+public final class DetallePasos implements ModelApi {
 
     /**
      * Estado trámite.

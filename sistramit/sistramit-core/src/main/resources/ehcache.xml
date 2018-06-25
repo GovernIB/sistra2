@@ -4,7 +4,7 @@
 	updateCheck="false">
 	<diskStore path="java.io.tmpdir" />
 
-	<!-- Caché Configuracion (global/entidad): se cachea excepto si se fuerza mediante invalidacion -->
+	<!-- Cache Configuracion (global/entidad): se cachea excepto si se fuerza mediante invalidacion -->
 	<cache
 		name="cacheConfiguracion"
 		maxElementsInMemory="1000"
@@ -15,7 +15,7 @@
 	    memoryStoreEvictionPolicy="LRU"/>
 
 
-	 <!-- Caché definicion trámites: se cachea maximo 24h y entre peticiones 1h (se puede forzar mediante invalidacion)-->
+	 <!-- Cache definicion tramites: se cachea maximo 24h y entre peticiones 1h (se puede forzar mediante invalidacion)-->
 	<cache
 		name="cacheTramites"
 		maxElementsInMemory="100"

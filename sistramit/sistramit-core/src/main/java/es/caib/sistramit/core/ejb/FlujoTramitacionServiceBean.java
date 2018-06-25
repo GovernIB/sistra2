@@ -10,6 +10,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
@@ -44,6 +45,11 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
     }
 
     @Override
+    public DetallePasos obtenerDetallePasos(String idSesionTramitacion) {
+        return flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+    }
+
+    @Override
     public DetalleTramite obtenerFlujoTramitacionInfo(
             final String idSesionTramitacion) {
         return flujoTramitacionService
@@ -56,20 +62,26 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
     }
 
     @Override
-    public ResultadoIrAPaso cargarTramite(String idSesionTramitacion,
+    public void cargarTramite(String idSesionTramitacion,
             UsuarioAutenticadoInfo usuarioAutenticado) {
-        return flujoTramitacionService.cargarTramite(idSesionTramitacion,
+        flujoTramitacionService.cargarTramite(idSesionTramitacion,
                 usuarioAutenticado);
     }
 
     @Override
-    public ResultadoIrAPaso recargarTramite(String idSesionTramitacion) {
-        return flujoTramitacionService.recargarTramite(idSesionTramitacion);
+    public void recargarTramite(String idSesionTramitacion,
+            UsuarioAutenticadoInfo userInfo) {
+        flujoTramitacionService.recargarTramite(idSesionTramitacion, userInfo);
     }
 
     @Override
     public ResultadoIrAPaso irAPaso(String idSesionTramitacion, String idPaso) {
         return flujoTramitacionService.irAPaso(idSesionTramitacion, idPaso);
+    }
+
+    @Override
+    public ResultadoIrAPaso irAPasoActual(String idSesionTramitacion) {
+        return flujoTramitacionService.irAPasoActual(idSesionTramitacion);
     }
 
     @Override

@@ -1,11 +1,9 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
-
 
 /**
  * Documentos mostrado en el paso de registro de un determinado tipo.
@@ -14,7 +12,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
  *
  */
 @SuppressWarnings("serial")
-public final class DocumentosRegistroPorTipo implements Serializable {
+public final class DocumentosRegistroPorTipo implements ModelApi {
 
     /**
      * Tipo documento.

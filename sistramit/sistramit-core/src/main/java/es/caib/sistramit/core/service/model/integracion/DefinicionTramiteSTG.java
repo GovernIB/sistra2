@@ -3,7 +3,7 @@ package es.caib.sistramit.core.service.model.integracion;
 import java.io.Serializable;
 import java.util.Date;
 
-import es.caib.sistrages.rest.api.VersionTramite;
+import es.caib.sistrages.rest.api.interna.RVersionTramite;
 
 /**
  * Definición trámite proveniente del STG.
@@ -18,18 +18,18 @@ public class DefinicionTramiteSTG implements Serializable {
     private Date fechaRecuperacion;
 
     /** Definicion. */
-    private VersionTramite definicionVersion;
+    private RVersionTramite definicionVersion;
 
     /**
      * Constructor.
-     * 
+     *
      * @param fechaRecuperacion
      *            Fecha recuperacion.
      * @param definicionVersion
      *            Definicion version
      */
     public DefinicionTramiteSTG(Date fechaRecuperacion,
-            VersionTramite definicionVersion) {
+            RVersionTramite definicionVersion) {
         super();
         this.fechaRecuperacion = fechaRecuperacion;
         this.definicionVersion = definicionVersion;
@@ -59,7 +59,7 @@ public class DefinicionTramiteSTG implements Serializable {
      *
      * @return definicionVersion
      */
-    public VersionTramite getDefinicionVersion() {
+    public RVersionTramite getDefinicionVersion() {
         return definicionVersion;
     }
 
@@ -69,7 +69,7 @@ public class DefinicionTramiteSTG implements Serializable {
      * @param definicionVersion
      *            definicionVersion a establecer
      */
-    public void setDefinicionVersion(VersionTramite definicionVersion) {
+    public void setDefinicionVersion(RVersionTramite definicionVersion) {
         this.definicionVersion = definicionVersion;
     }
 

@@ -9,8 +9,8 @@ import java.util.Map;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
-import es.caib.sistramit.core.api.model.flujo.TypeEstadoTramite;
-import es.caib.sistramit.core.api.model.flujo.TypeFlujoTramitacion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;

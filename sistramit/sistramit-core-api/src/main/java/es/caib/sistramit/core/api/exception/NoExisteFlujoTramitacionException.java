@@ -10,21 +10,22 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
  *
  */
 @SuppressWarnings("serial")
-public final class NoExisteFlujoTramitacionException extends ServiceRollbackException {
+public final class NoExisteFlujoTramitacionException
+        extends ServiceRollbackException {
 
-	@Override
-	public TypeNivelExcepcion getNivel() {
-		return TypeNivelExcepcion.FATAL;
-	}
+    @Override
+    public TypeNivelExcepcion getNivel() {
+        return TypeNivelExcepcion.FATAL;
+    }
 
-	/**
-	 * Constructor NoExisteFlujoTramitacionException.
-	 *
-	 * @param cause
-	 *            Causa
-	 */
-	public NoExisteFlujoTramitacionException(final String idSesionTramitacion) {
-		super("No existe flujo de tramitación con id: " + idSesionTramitacion);
-	}
+    /**
+     * Constructor NoExisteFlujoTramitacionException.
+     *
+     * @param idSesionTramitacion
+     *            idSesionTramitacion
+     */
+    public NoExisteFlujoTramitacionException(final String idSesionTramitacion) {
+        super("No existe flujo de tramitación con id: " + idSesionTramitacion);
+    }
 
 }

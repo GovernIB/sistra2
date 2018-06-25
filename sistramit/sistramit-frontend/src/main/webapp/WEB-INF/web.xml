@@ -74,6 +74,14 @@
     <url-pattern>*.html</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+    <servlet-name>sistramit-frontend</servlet-name>
+    <url-pattern>*.json</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>sistramit-frontend</servlet-name>
+    <url-pattern>/literales.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
 	<servlet-name>sistramit-frontend</servlet-name>
 	<url-pattern>/</url-pattern>
  </servlet-mapping>

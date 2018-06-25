@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-
 /**
  *
  * Respuesta a la accion de ir a un paso. Indica cual es el paso actual y si al
@@ -11,7 +9,7 @@ import java.io.Serializable;
  *
  */
 @SuppressWarnings("serial")
-public final class ResultadoIrAPaso implements Serializable {
+public final class ResultadoIrAPaso implements ModelApi {
     /**
      * Id sesion tramitacion.
      */

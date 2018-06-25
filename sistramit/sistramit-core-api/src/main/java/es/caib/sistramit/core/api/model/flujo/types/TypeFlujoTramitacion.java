@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.api.model.flujo;
+package es.caib.sistramit.core.api.model.flujo.types;
 
 /**
  * Tipos de flujo de tramitación: normalizado y personalizado.

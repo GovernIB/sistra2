@@ -8,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistrages.rest.api.ConfiguracionEntidad;
-import es.caib.sistrages.rest.api.ConfiguracionGlobal;
-import es.caib.sistrages.rest.api.ListaParametros;
-import es.caib.sistrages.rest.api.ValorParametro;
-import es.caib.sistrages.rest.api.VersionTramite;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RListaParametros;
+import es.caib.sistrages.rest.api.interna.RValorParametro;
+import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.util.XTestJson;
 import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
@@ -30,7 +30,7 @@ public final class SistragesComponentImpl implements SistragesComponent {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public ConfiguracionGlobal obtenerConfiguracionGlobal() {
+    public RConfiguracionGlobal obtenerConfiguracionGlobal() {
         // TODO Pendiente
         return recuperarConfiguracionGlobalFromSTG();
     }
@@ -41,9 +41,9 @@ public final class SistragesComponentImpl implements SistragesComponent {
     }
 
     @Override
-    public ConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad) {
+    public RConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad) {
         // TODO Pendiente recuperar STG
-        final ConfiguracionEntidad c = XTestJson.crearEntidad();
+        final RConfiguracionEntidad c = XTestJson.crearEntidad();
         return c;
     }
 
@@ -56,7 +56,7 @@ public final class SistragesComponentImpl implements SistragesComponent {
     public DefinicionTramiteSTG recuperarDefinicionTramite(String idTramite,
             int version, String idioma) {
         // TODO Pendiente recuperar STG
-        final VersionTramite definicionVersion = XTestJson
+        final RVersionTramite definicionVersion = XTestJson
                 .crearVersionTramite();
         final DefinicionTramiteSTG dt = new DefinicionTramiteSTG(new Date(),
                 definicionVersion);
@@ -78,23 +78,23 @@ public final class SistragesComponentImpl implements SistragesComponent {
      *
      * @return propiedades
      */
-    private ConfiguracionGlobal recuperarConfiguracionGlobalFromSTG() {
+    private RConfiguracionGlobal recuperarConfiguracionGlobalFromSTG() {
 
         // TODO PENDIENTE RECUPERAR SISTRAGES
-        final ConfiguracionGlobal configuracionGlobal = new ConfiguracionGlobal();
+        final RConfiguracionGlobal configuracionGlobal = new RConfiguracionGlobal();
 
-        final List<ValorParametro> parametros = new ArrayList<>();
-        ValorParametro vp;
-        vp = new ValorParametro();
+        final List<RValorParametro> parametros = new ArrayList<>();
+        RValorParametro vp;
+        vp = new RValorParametro();
         vp.setCodigo(TypePropiedadConfiguracion.URL_SISTRAMIT.toString());
         vp.setValor("http://localhost:8080/sistramitfront");
         parametros.add(vp);
-        vp = new ValorParametro();
+        vp = new RValorParametro();
         vp.setCodigo(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS.toString());
         vp.setValor("es,ca,en");
         parametros.add(vp);
 
-        final ListaParametros propiedades = new ListaParametros();
+        final RListaParametros propiedades = new RListaParametros();
         propiedades.setParametros(parametros);
         configuracionGlobal.setPropiedades(propiedades);
 
