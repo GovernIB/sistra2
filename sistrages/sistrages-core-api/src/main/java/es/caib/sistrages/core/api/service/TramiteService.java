@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
@@ -462,5 +463,13 @@ public interface TramiteService {
 	 * @param idFormulario2
 	 */
 	public void intercambiarFormularios(final Long idFormulario1, final Long idFormulario2);
+
+	/**
+	 * Obtiene la lista de tramite versión que tienen ese dominio.
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	public List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
 
 }

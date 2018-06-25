@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
@@ -26,6 +27,7 @@ import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
+import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JTipoPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JTramite;
@@ -428,7 +430,19 @@ public class TramiteDaoImpl implements TramiteDao {
 			entityManager.remove(paso);
 		}
 
-		// Paso 2. Buscamos los dominios que tengan la versión trámite y borramos la
+		// Paso2. Obtenemos los pasos y los borramos
+		final String sqlHistorico = "Select t From JHistorialVersion t where t.versionTramite.id = :idTramiteVersion";
+
+		final Query queryHistorico = entityManager.createQuery(sqlHistorico);
+		queryHistorico.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JHistorialVersion> historiales = queryHistorico.getResultList();
+		for (final JHistorialVersion historial : historiales) {
+			entityManager.remove(historial);
+		}
+
+		// Paso 3. Buscamos los dominios que tengan la versión trámite y borramos la
 		// relacion
 		final String sqlDominio = "Select d From JDominio d join d.versionesTramite t where t.id = :idTramiteVersion";
 
@@ -442,7 +456,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			entityManager.merge(dominio);
 		}
 
-		// Paso 3. Borramos el tramite versión
+		// Paso 4. Borramos el tramite versión
 		entityManager.remove(jTramiteVersion);
 
 	}
@@ -641,6 +655,35 @@ public class TramiteDaoImpl implements TramiteDao {
 		} else {
 			return this.getTramiteVersionByNumVersion(numVersion, idTramite);
 		}
+	}
+
+	@Override
+	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio) {
+		final List<DominioTramite> resultado = new ArrayList<>();
+
+		final String sql = "Select t From JDominio d JOIN d.versionesTramite t where d.codigo = :idDominio  order by t.numeroVersion desc";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idDominio", idDominio);
+
+		@SuppressWarnings("unchecked")
+		final List<JVersionTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JVersionTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JVersionTramite jTramiteVersion = iterator.next();
+				final DominioTramite dominioTramite = new DominioTramite();
+				dominioTramite.setArea(jTramiteVersion.getTramite().getArea().getIdentificador());
+				dominioTramite.setEntidad(jTramiteVersion.getTramite().getArea().getEntidad().getNombre().toModel());
+				dominioTramite.setIdTramiteVersion(jTramiteVersion.getCodigo());
+				dominioTramite.setNumVersion(jTramiteVersion.getNumeroVersion());
+				dominioTramite.setRelease(jTramiteVersion.getRelease());
+				dominioTramite.setTramite(jTramiteVersion.getTramite().getDescripcion());
+				resultado.add(dominioTramite);
+			}
+		}
+
+		return resultado;
 	}
 
 }

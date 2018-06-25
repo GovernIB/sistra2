@@ -14,6 +14,7 @@
 		</p:outputPanel>
 
 		<p:dataTable id="dataTable" var="pasos" styleClass="hide-table-header"
+			emptyMessage="#{msg['error.emptyRows']}"
 			value="#{viewDefinicionVersion.tramiteVersion.listaPasos}" rows="10"
 			scrollable="true" paginator="false" rowKey="#{pasos.codigo}"
 			dblClickSelect="true">

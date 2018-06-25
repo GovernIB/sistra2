@@ -271,6 +271,32 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre dialogo de tramites.
+	 *
+	 * @param modoAccesoDlg
+	 *            Modo acceso
+	 */
+	public void tramites() {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+		final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+		if (typeAmbito == TypeAmbito.AREA) {
+			params.put("AREA", id);
+		}
+		if (typeAmbito == TypeAmbito.ENTIDAD) {
+			params.put("ENTIDAD", id);
+		}
+		UtilJSF.openDialog(DialogDominioTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+	}
+
+	/**
 	 * Abre dialogo.
 	 *
 	 * @param modoAccesoDlg

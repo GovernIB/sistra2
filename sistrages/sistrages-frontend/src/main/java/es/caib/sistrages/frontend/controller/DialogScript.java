@@ -77,6 +77,8 @@ public class DialogScript extends DialogControllerBase {
 		} else {
 			data = (Script) UtilJSON.fromJSON(json.toString(), Script.class);
 		}
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_SCRIPT);
 	}
 
 	/**
@@ -132,7 +134,6 @@ public class DialogScript extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(this.data);
 		UtilJSF.closeDialog(result);
-
 	}
 
 	/**
@@ -145,7 +146,6 @@ public class DialogScript extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(null);
 		UtilJSF.closeDialog(result);
-
 	}
 
 	/**

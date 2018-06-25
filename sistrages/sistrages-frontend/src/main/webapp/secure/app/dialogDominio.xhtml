@@ -2,6 +2,7 @@
 <html lang="#{sessionBean.lang}"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
@@ -29,12 +30,10 @@
 		<f:viewAction action="#{dialogDominio.init}" />
 	</f:metadata>
 	<h:form id="dialogDominio" styleClass="margin-top-10">
-  			<p:outputPanel>
-				<!-- Contenido dialogo -->
-				<!-- Growl mensajes -->
-				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
-
-
+  		<p:outputPanel>
+			<!-- Contenido dialogo -->
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="codigo" value="#{msg['dialogDominio.headerCodigo']}" />
@@ -198,31 +197,27 @@
 					</p:column>
 		 		</h:panelGrid>
 			</h:panelGrid>
+		</p:outputPanel>
+	  	<p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+				<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}">
+	        			<c:if test="#{dialogDominio.mostrarAdvertencia}">
+	        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"  />
+	        			</c:if>
+	        		</p:commandButton>
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
+					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.isConsulta()}"/>
+				</f:facet>
+			</p:toolbar>
+	    </p:outputPanel>
 
-			<h:outputScript rendered="#{!dialogDominio.consulta}">
-		      function rcEditarPropiedad() {
-		        document.getElementById("form:btnEditarPropiedad").click();
-		      }
-		      function rcEditarValor() {
-		        document.getElementById("form:btnEditarValor").click();
-		      }
-		      function  rcBorrarPropiedad() {
-		        document.getElementById("form:btnEliminarPropiedad").click();
-		      }
-		      function  rcBorrarValor() {
-		        document.getElementById("form:btnEliminarValor").click();
-		      }
-		    </h:outputScript>
+	    <p:confirmDialog global="true" >
+			<p:outputPanel styleClass="confirmar_botonera">
+	        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+	        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 			</p:outputPanel>
-		  	 <p:outputPanel styleClass="botonera">
-		     	<p:toolbar>
-					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
-						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.isConsulta()}"/>
-					</f:facet>
-				</p:toolbar>
-		    </p:outputPanel>
+	    </p:confirmDialog>
 	</h:form>
 </h:body>
 

@@ -1,7 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -17,6 +15,7 @@ import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -87,7 +86,7 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	 * Editar descripcion del dominio.
 	 */
 	public void editarDescripcion() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+
 		if (data.getDescripcion() == null) {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
 					tramiteVersion);
@@ -100,6 +99,12 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (this.data.getDescripcion() == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.descripcion.norelleno"));
+			return;
+		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));

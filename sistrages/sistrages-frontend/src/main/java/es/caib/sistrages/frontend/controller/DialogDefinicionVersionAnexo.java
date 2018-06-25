@@ -103,6 +103,17 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	}
 
 	/**
+	 * Retorno dialogo de cuando seleccionas un fichero.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoFichero(final SelectEvent event) {
+
+		data = tramiteService.getDocumento(Long.valueOf(id));
+
+	}
+
+	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
 	 * @param event

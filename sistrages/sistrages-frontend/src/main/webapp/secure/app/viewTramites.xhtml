@@ -122,7 +122,7 @@
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect"  />
              			<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerEditarTramite();"
+		                  		oncomplete="triggerMoverTramite();"
 		                        update=":form:dataTableTramites"
 		                        />
 
@@ -151,11 +151,6 @@
       			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl form:dataTableTramites"  />
 	        </p:commandButton>
 
-	        <p:commandButton id="hiddenCommandEditar" styleClass="button"  action="#{viewTramites.onRowDblClickTramites()}"  style="display:none">
-      			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl :form:dataTableTramites"/>
-			</p:commandButton>
-
-
 			<h:outputScript >
 		 		function triggerImportarTramite() {
 		        	document.getElementById("form:hiddenCommandImportar").click();
@@ -165,8 +160,8 @@
 	        		document.getElementById("form:hiddenCommandMover").click();
 	      	  	}
 
-	      	  	function triggerEditarTramite() {
-	        		document.getElementById("form:hiddenCommandEditar").click();
+	      	  	function triggerMoverTramite() {
+	        		document.getElementById("form:btnVersionesTramite").click();
 	      	  	}
 
 		    </h:outputScript>

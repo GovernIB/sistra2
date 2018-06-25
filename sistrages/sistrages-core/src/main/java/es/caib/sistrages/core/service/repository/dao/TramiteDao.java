@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -231,4 +232,11 @@ public interface TramiteDao {
 	 */
 	TramiteVersion getTramiteVersionMaxNumVersion(Long idTramite);
 
+	/**
+	 * Lista de tramite versión que tengan un dominio.
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
 }

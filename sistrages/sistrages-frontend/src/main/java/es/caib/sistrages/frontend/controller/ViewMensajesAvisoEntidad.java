@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -251,15 +252,16 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 */
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 		// Verifica si no hay fila seleccionada
-		if (modoAccesoDlg != TypeModoAcceso.ALTA && !verificarFilaSeleccionada())
+		if (modoAccesoDlg != TypeModoAcceso.ALTA && !verificarFilaSeleccionada()) {
 			return;
+		}
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
 		}
+
 		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 600, 430);
 	}
-
 }

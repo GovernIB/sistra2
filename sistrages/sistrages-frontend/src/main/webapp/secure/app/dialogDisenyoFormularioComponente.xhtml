@@ -7,7 +7,7 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAlineacionTexto" var="TypeAlineacionTexto"/>
-
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFormulario" var="TypeScriptFormulario" />
 <h:body>
 
 	<h:form id="formDisenyoTextbox" styleClass="h100">
@@ -93,13 +93,25 @@
 
 			<h:panelGrid columns="2" header="Scripts" columnClasses="w35,w65" styleClass="w100">
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.autorelleno']}" /></h:column>
-	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+	         	<h:column>
+	         		<p:commandButton id="scriptAutorelleno" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_AUTORELLENABLE.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" process="@this">
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptAutorrelleno}" />
+					</p:commandButton>
+				</h:column>
 
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.soloLectura']}" /></h:column>
-	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+	         	<h:column>
+	         		<p:commandButton id="scriptSoloLectura" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_ESTADO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" process="@this">
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptSoloLectura}" />
+					</p:commandButton>
+	         	</h:column>
 
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.validacion']}" /></h:column>
-	         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
+	         	<h:column>
+	         		<p:commandButton id="scriptValidacion" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" process="@this">
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptValidacion}" />
+					</p:commandButton>
+	         	</h:column>
 
 	        </h:panelGrid>
 

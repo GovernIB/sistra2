@@ -22,15 +22,24 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
+import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ModelApi;
+import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
@@ -41,7 +50,9 @@ import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -95,7 +106,11 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	/** Formularios. **/
 	List<Fichero> ficheros;
 
-	/** Formularios. **/
+	/** Mostrar botón exportar. **/
+	private boolean mostrarBotonExportar;
+
+	/** Idiomas del tramite version. **/
+	private List<String> idiomasTramiteVersion;
 
 	/**
 	 * Inicialización.
@@ -103,6 +118,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	public void init() {
 
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(id));
+		idiomasTramiteVersion = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
 		pasos = tramiteService.getTramitePasos(Long.valueOf(id));
 		dominiosId = tramiteService.getTramiteDominiosId(Long.valueOf(id));
 		tramiteVersion.setListaPasos(pasos);
@@ -130,11 +146,169 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 		// El modo debug no se activa al exportar.
 		tramiteVersion.setDebug(false);
 
-		// TODO Faltaría verificar, bien aquí, o bien al exportar una comprobación de
-		// que los datos están correctos.
-		// Es decir, que todos los idiomas del trámite se han rellenado o bine que los
-		// scripts están correctos.
+		if (checkTodoCorrecto()) {
+			mostrarBotonExportar = true;
+		} else {
+			mostrarBotonExportar = false;
+		}
 
+	}
+
+	/**
+	 * Comprueba que todo está correcto. Es decir, que los scripts están correctos y
+	 * que los literales están rellenos en todos los idiomas del tramite version.
+	 *
+	 * TODO Faltaría comprobar los scripts.
+	 *
+	 * @return
+	 */
+	private boolean checkTodoCorrecto() {
+
+		boolean todoCorrecto = true;
+
+		for (final TramitePaso paso : this.pasos) {
+
+			boolean continuar = true;
+			if (paso instanceof TramitePasoTasa && checkLiteralIncompleto((TramitePasoTasa) paso)) {
+				continuar = false;
+			} else if (paso instanceof TramitePasoAnexar && checkLiteralIncompleto((TramitePasoAnexar) paso)) {
+				continuar = false;
+			} else if (paso instanceof TramitePasoDebeSaber && checkLiteralIncompleto((TramitePasoDebeSaber) paso)) {
+				continuar = false;
+			} else if (paso instanceof TramitePasoRegistrar && checkLiteralIncompleto((TramitePasoRegistrar) paso)) {
+				continuar = false;
+			} else if (paso instanceof TramitePasoRellenar && checkLiteralIncompleto((TramitePasoRellenar) paso)) {
+				continuar = false;
+			}
+
+			if (!continuar) {
+				todoCorrecto = false;
+				break;
+			}
+		}
+
+		return todoCorrecto;
+
+	}
+
+	/**
+	 * Comprueba que el literal tiene todos los idiomas del idioma indicado por el
+	 * tramite version.
+	 *
+	 * @param literal
+	 * @return
+	 */
+	private boolean literalIncompleto(final Literal literal) {
+		if (literal != null) {
+			for (final String idioma : idiomasTramiteVersion) {
+				if (!literal.contains(idioma) || literal.getTraduccion(idioma).isEmpty()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Comprueba si está incorrecto los literales de paso rellenar.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private boolean checkLiteralIncompleto(final TramitePasoRellenar paso) {
+		if (paso.getFormulariosTramite() != null) {
+			for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
+				if (literalIncompleto(formulario.getDescripcion())) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.formulario.desc"));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Comprueba si está incorrecto los literales de paso registrar.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private boolean checkLiteralIncompleto(final TramitePasoRegistrar paso) {
+		if (literalIncompleto(paso.getInstruccionesFinTramitacion())
+				|| literalIncompleto(paso.getInstruccionesPresentacion())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.registrar.inst"));
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Comprueba si está incorrecto los literales de paso debe saber.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private boolean checkLiteralIncompleto(final TramitePasoDebeSaber paso) {
+		if (literalIncompleto(paso.getInstruccionesIniciales())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.debesaber.instr"));
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Comprueba si está incorrecto los literales de paso anexar.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private boolean checkLiteralIncompleto(final TramitePasoAnexar paso) {
+		if (literalIncompleto(paso.getDescripcion())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.anexar.desc"));
+			return true;
+		}
+
+		if (paso.getDocumentos() != null) {
+			for (final Documento documento : paso.getDocumentos()) {
+				if (literalIncompleto(documento.getAyudaTexto()) || literalIncompleto(documento.getDescripcion())) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.anexo.lit"));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Comprueba si está incorrecto los literales de paso tasa.
+	 *
+	 * @param paso
+	 * @return
+	 */
+	private boolean checkLiteralIncompleto(final TramitePasoTasa paso) {
+		if (literalIncompleto(paso.getDescripcion())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.tasar.desc"));
+			return true;
+		}
+
+		if (paso.getTasas() != null) {
+			for (final Tasa tasa : paso.getTasas()) {
+				if (literalIncompleto(tasa.getDescripcion())) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.tasa.lit"));
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -437,6 +611,21 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	 */
 	public void setFicheros(final List<Fichero> ficheros) {
 		this.ficheros = ficheros;
+	}
+
+	/**
+	 * @return the mostrarBotonExportar
+	 */
+	public boolean isMostrarBotonExportar() {
+		return mostrarBotonExportar;
+	}
+
+	/**
+	 * @param mostrarBotonExportar
+	 *            the mostrarBotonExportar to set
+	 */
+	public void setMostrarBotonExportar(final boolean mostrarBotonExportar) {
+		this.mostrarBotonExportar = mostrarBotonExportar;
 	}
 
 }

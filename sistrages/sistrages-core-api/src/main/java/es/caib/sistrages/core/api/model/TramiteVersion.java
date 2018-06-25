@@ -115,6 +115,33 @@ public class TramiteVersion extends ModelApi {
 	}
 
 	/**
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
+	 */
+	public String getIdString() {
+		if (codigo == null) {
+			return "";
+		} else {
+			return codigo.toString();
+		}
+	}
+
+	/**
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
+	 */
+	public void setIdString(final String idString) {
+		if (idString == null || idString.isEmpty()) {
+			codigo = null;
+		} else {
+			codigo = Long.valueOf(idString);
+		}
+	}
+
+	/**
 	 * Obtiene el valor de numeroVersion.
 	 *
 	 * @return el valor de numeroVersion

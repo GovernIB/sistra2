@@ -52,6 +52,7 @@ public class DialogEntidad extends DialogControllerBase {
 
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new Entidad();
+			data.setDiasPreregistro(30);
 		} else {
 			if (id != null) {
 				data = entidadService.loadEntidad(Long.valueOf(id));

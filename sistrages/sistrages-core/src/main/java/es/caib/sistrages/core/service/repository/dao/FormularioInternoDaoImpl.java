@@ -392,9 +392,24 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				final JCampoFormulario jCampo = jElemento.getCampoFormulario();
 				final ComponenteFormularioCampo campo = (ComponenteFormularioCampo) pComponente;
 
-				jCampo.setScriptAutocalculado(JScript.fromModel(campo.getScriptAutorrellenable()));
-				jCampo.setScriptSoloLectura(JScript.fromModel(campo.getScriptSoloLectura()));
-				jCampo.setScriptValidaciones(JScript.fromModel(campo.getScriptValidacion()));
+				if (campo.getScriptAutorrellenable() == null) {
+					jCampo.setScriptAutocalculado(null);
+				} else {
+					jCampo.setScriptAutocalculado(JScript.fromModel(campo.getScriptAutorrellenable()));
+				}
+
+				if (campo.getScriptSoloLectura() == null) {
+					jCampo.setScriptSoloLectura(null);
+				} else {
+					jCampo.setScriptSoloLectura(JScript.fromModel(campo.getScriptSoloLectura()));
+				}
+
+				if (campo.getScriptValidacion() == null) {
+					jCampo.setScriptValidaciones(null);
+				} else {
+					jCampo.setScriptValidaciones(JScript.fromModel(campo.getScriptValidacion()));
+				}
+
 				jCampo.setObligatorio(campo.isObligatorio());
 				jCampo.setSoloLectura(campo.isSoloLectura());
 				jCampo.setNoModificable(campo.isNoModificable());

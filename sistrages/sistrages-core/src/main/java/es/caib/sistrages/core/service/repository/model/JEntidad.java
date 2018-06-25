@@ -106,6 +106,11 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_PRGDIA")
 	private Integer diasPreregistro;
 
+	/** Texto respecto LOPD. **/
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_LOPD")
+	private JLiteral lopd;
+
 	/**
 	 * @return the codigo
 	 */
@@ -377,6 +382,21 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
+	 * @return the lopd
+	 */
+	public JLiteral getLopd() {
+		return lopd;
+	}
+
+	/**
+	 * @param lopd
+	 *            the lopd to set
+	 */
+	public void setLopd(final JLiteral lopd) {
+		this.lopd = lopd;
+	}
+
+	/**
 	 * toModel.
 	 */
 	public Entidad toModel() {
@@ -409,6 +429,10 @@ public class JEntidad implements IModelApi {
 		if (this.getUrlCarpetaCiudadana() != null) {
 			entidad.setUrlCarpetaCiudadana(this.getUrlCarpetaCiudadana().toModel());
 		}
+		if (this.lopd != null) {
+			entidad.setLopd(this.lopd.toModel());
+		}
+		entidad.setDiasPreregistro(this.diasPreregistro);
 		return entidad;
 	}
 

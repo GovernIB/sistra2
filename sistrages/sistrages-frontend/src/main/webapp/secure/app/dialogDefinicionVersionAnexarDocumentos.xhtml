@@ -30,40 +30,34 @@
 	</f:metadata>
 	<h:form id="dialogDefinicionRellenar" styleClass="margin-top-10">
 
-  				<!-- Growl mensajes -->
-				<p:growl id="growldialogDefinicionRellenar" widgetVar="growldialogDefinicionRellenar" life="2000" sticky="false" />
+ 		<!-- Growl mensajes -->
+		<p:growl id="growldialogDefinicionRellenar" widgetVar="growldialogDefinicionRellenar" life="2000" sticky="false" />
 
-				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<h:outputText for="identificador" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerIdentificador']}" />
-					<p:inputText  id="identificador" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.codigo}" size="40" />
+				<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerIdentificador']}" />
+				<p:inputText  id="identificador" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.codigo}" size="40">
+					<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				</p:inputText>
 
-					<h:outputText value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerDescripcion']}" />
-					<p:column>
-						<p:inputText id="inputDescripcion"  value="#{dialogDefinicionVersionAnexarDocumentos.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
-						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexarDocumentos.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" style="margin-right:5px">
-		            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexarDocumentos.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
-		        		</p:commandButton>
-					</p:column>
+				<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerDescripcion']}" />
+				<p:column>
+					<p:inputText id="inputDescripcion" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
+					<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionAnexarDocumentos.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" style="margin-right:5px">
+	            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexarDocumentos.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
+	        		</p:commandButton>
+				</p:column>
 
 
-			 </h:panelGrid>
-				 <h:outputScript >
-			      function rcEditarPropiedad() {
-			        document.getElementById("form:btnEditarFormulario").click();
-			      }
-			      function  rcBorrarPropiedad() {
-			        document.getElementById("form:btnEliminarFormulario").click();
-			      }
-			    </h:outputScript>
-				  	 <p:outputPanel styleClass="botonera">
-				     	<p:toolbar>
-							<f:facet name="right">
-				        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionAnexarDocumentos.aceptar()}" process="@form" update="@form growldialogDefinicionRellenar" styleClass="boton-azul" />
-								<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionAnexarDocumentos.cancelar()}" process="@this"/>
-							</f:facet>
-					  </p:toolbar>
-			    </p:outputPanel>
+		</h:panelGrid>
+	  	<p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionAnexarDocumentos.aceptar()}" process="@form" update="@form growldialogDefinicionRellenar" styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionAnexarDocumentos.cancelar()}" process="@this"/>
+					</f:facet>
+			  </p:toolbar>
+	    </p:outputPanel>
 	</h:form>
 </h:body>
 

@@ -45,7 +45,9 @@
        	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexo.identificador']}" />
-          	<p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionAnexo.data.codigo}"  />
+          	<p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionAnexo.data.codigo}">
+          		<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+          	</p:inputText>
 
  			<p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
@@ -79,10 +81,10 @@
 					</p:outputPanel>
 					<p:column>
 						<h:outputText  id="ficheroVacio" value="#{msg['error.noexistefitxer']}" rendered="#{empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
-		           		<p:commandLink id="ficheroLink" action="#{dialogDefinicionVersionAnexo.descargaFichero(dialogDefinicionVersionAnexo.data.ayudaFichero)}" target="_blank" value="#{dialogDefinicionVersionAnexo.data.ayudaFichero.nombre}" rendered="#{!empty dialogDefinicionVersionAnexo.data.ayudaFichero}"/>
+		           		<p:commandLink id="ficheroLink" action="#{dialogDefinicionVersionAnexo.descargaFichero(dialogDefinicionVersionAnexo.data.ayudaFichero)}" target="_blank" value="#{dialogDefinicionVersionAnexo.data.ayudaFichero.nombre}" rendered="#{!empty dialogDefinicionVersionAnexo.data.ayudaFichero}" />
 		           		<p:spacer width="20" height="1"/>
 		           		<p:commandButton id="btnFichero" icon="fa fa-cog" process="@this" update="growl" actionListener="#{dialogDefinicionVersionAnexo.subirFichero()}" disabled="#{!dialogDefinicionVersionAnexo.permiteEditar}">
-		           			<p:ajax event="dialogReturn" update="formDialogDefinicionVersionAnexo ficheroVacio ficheroLink growl "/>
+		           			<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFichero}" update="formDialogDefinicionVersionAnexo ficheroVacio ficheroLink growl "/>
 		           			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.uploadDoc']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		           		</p:commandButton>
 					</p:column>

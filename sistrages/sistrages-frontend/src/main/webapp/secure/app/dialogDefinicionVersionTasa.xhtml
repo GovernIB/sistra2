@@ -13,7 +13,7 @@
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
+	<title><h:outputText value="#{msg['dialogDefinicionVersionTasa.titulo']}"/></title>
 </h:head>
 
 <h:body>
@@ -38,7 +38,9 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionTasa.identificador']}" />
-	          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.identificador}" required="true" styleClass="w35"/>
+	          	<p:inputText id="identificador" value="#{dialogDefinicionVersionTasa.data.identificador}" required="true" styleClass="w35">
+	          		<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+	          	</p:inputText>
 
 	            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionTasa.descripcion']}" />
 	            <p:outputPanel styleClass="ui-inputgroup">

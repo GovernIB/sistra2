@@ -131,6 +131,11 @@ public class DialogFichero extends DialogControllerBase {
 		case TRAMITE_DOC:
 			documento = tramiteService.getDocumento(Long.valueOf(id));
 			entidad = entidadService.loadEntidad(Long.valueOf(idEntidad));
+			if (documento == null || documento.getAyudaFichero() == null) {
+				mostrarQuitar = false;
+			} else {
+				mostrarQuitar = true;
+			}
 			break;
 		case PLANTILLA_IDIOMA_FORM:
 			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
@@ -278,7 +283,7 @@ public class DialogFichero extends DialogControllerBase {
 			break;
 		case TRAMITE_DOC:
 			tramiteService.removeDocAnexo(documento.getId());
-			entidad = entidadService.loadEntidad(entidad.getId());
+			documento = tramiteService.getDocumento(Long.valueOf(id));
 			break;
 		case FUENTE_ENTIDAD_CSV:
 		case PLANTILLA_IDIOMA_FORM:
@@ -326,6 +331,14 @@ public class DialogFichero extends DialogControllerBase {
 			existeFichero = plantillaIdiomaFormulario != null && plantillaIdiomaFormulario.getFichero() != null;
 			if (existeFichero) {
 				nombreFichero = plantillaIdiomaFormulario.getFichero().getNombre();
+			} else {
+				nombreFichero = null;
+			}
+			break;
+		case TRAMITE_DOC:
+			existeFichero = documento != null && documento.getAyudaFichero() != null;
+			if (existeFichero) {
+				nombreFichero = documento.getAyudaFichero().getNombre();
 			} else {
 				nombreFichero = null;
 			}

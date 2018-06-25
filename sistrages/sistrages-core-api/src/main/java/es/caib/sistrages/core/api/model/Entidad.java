@@ -67,6 +67,12 @@ public class Entidad extends ModelApi {
 	/** Url carpeta ciudadana. **/
 	private Literal urlCarpetaCiudadana;
 
+	/** Dias de preregistro. **/
+	private Integer diasPreregistro;
+
+	/** Texto respecto lopd. **/
+	private Literal lopd;
+
 	/**
 	 * @return the id
 	 */
@@ -330,10 +336,41 @@ public class Entidad extends ModelApi {
 	}
 
 	/**
-	 * @param urlCarpetaCiudadana the urlCarpetaCiudadana to set
+	 * @param urlCarpetaCiudadana
+	 *            the urlCarpetaCiudadana to set
 	 */
-	public void setUrlCarpetaCiudadana(Literal urlCarpetaCiudadana) {
+	public void setUrlCarpetaCiudadana(final Literal urlCarpetaCiudadana) {
 		this.urlCarpetaCiudadana = urlCarpetaCiudadana;
+	}
+
+	/**
+	 * @return the lopd
+	 */
+	public Literal getLopd() {
+		return lopd;
+	}
+
+	/**
+	 * @param lopd
+	 *            the lopd to set
+	 */
+	public void setLopd(final Literal lopd) {
+		this.lopd = lopd;
+	}
+
+	/**
+	 * @return the diasPreregistro
+	 */
+	public Integer getDiasPreregistro() {
+		return diasPreregistro;
+	}
+
+	/**
+	 * @param diasPreregistro
+	 *            the diasPreregistro to set
+	 */
+	public void setDiasPreregistro(final Integer diasPreregistro) {
+		this.diasPreregistro = diasPreregistro;
 	}
 
 }

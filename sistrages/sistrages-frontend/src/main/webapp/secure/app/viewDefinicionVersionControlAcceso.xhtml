@@ -20,28 +20,28 @@
 			<p:panelGrid styleClass="noBorders w100">
 				<p:row>
 					<p:column styleClass="noPadding-left">
-						<p:selectBooleanCheckbox id="plazodesactivacion" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.desactivacion}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacion']}"/>
+						<p:selectBooleanCheckbox id="plazodesactivacion" disabled="true" value="#{viewDefinicionVersion.avisoEntidad.bloqueado}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.bloqueado']}"/>
 
 						<p:spacer width="20" height="1" />
 
 						<p:outputLabel for="plazodesactivacioninicio" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacioninicio']}" />
 						<p:spacer width="8" height="1" />
-						<p:calendar id="plazodesactivacioninicio" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.plazoInicioDesactivacion}" pattern="dd/MM/yyyy" size="10"/>
+						<p:calendar id="plazodesactivacioninicio" disabled="true" value="#{viewDefinicionVersion.avisoEntidad.fechaInicio}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
 
 						<p:spacer width="40" height="1" />
 
 						<p:outputLabel for="plazodesactivacionfin" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacionfin']}" />
 						<p:spacer width="8"/>
-						<p:calendar id="plazodesactivacionfin" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.plazoFinDesactivacion}" pattern="dd/MM/yyyy" size="10"/>
+						<p:calendar id="plazodesactivacionfin" disabled="true" value="#{viewDefinicionVersion.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column styleClass="ui-inputgroup noPadding-left">
 		           		<p:outputLabel for="mensajedesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.mensajedesactivacion']}" />
 		           		<p:spacer width="8" height="1" />
-		           		<p:inputText id="mensajedesactivacion" disabled="true" styleClass="w60" value="#{viewDefinicionVersion.tramiteVersion.mensajeDesactivacion.getTraduccion(sessionBean.lang)}"/>
+		           		<p:inputText id="mensajedesactivacion" disabled="true" styleClass="w60" value="#{viewDefinicionVersion.avisoEntidad.mensaje.getTraduccion(sessionBean.lang)}"/>
 
-		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramiteVersion.mensajeDesactivacion)}" styleClass="va-top"
+		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.avisoEntidad.mensaje)}" styleClass="va-top"
 								process="@this" update="growl"/>
 					</p:column>
 				</p:row>
@@ -79,7 +79,7 @@
 				<p:outputPanel id="toolbar" styleClass="grid-right">
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" styleClass="boton-azul"
 						actionListener="#{viewDefinicionVersion.editarControlAcceso()}"
-						rendered="#{viewDefinicionVersion.permiteEditarArea()}"
+						rendered="#{viewDefinicionVersion.permiteEditarControlAcceso()}"
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionControlAcceso"  />
 					</p:commandButton>

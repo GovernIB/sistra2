@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<h:head>
+	<title><h:outputText value="#{msg['dialogDominioTramites.titulo']}"/></title>
+
+  	<f:facet name="last">
+	    <h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioTramites.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDominioTramites.id}"/>
+		<f:viewAction action="#{dialogDominioTramites.init}" />
+	</f:metadata>
+	<h:form id="dialogFuenteDatos"  styleClass="margin-top-10">
+
+  			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			<h:panelGrid styleClass="h100" rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, w25px, w10" columns = "1" cellpadding = "5" cellspacing = "0"  width="100%">
+
+			<p:dataTable  id="dataTableDatos"
+						  var="td"
+						  value="#{dialogDominioTramites.campos}"
+						  rows="10"
+						  emptyMessage="#{msg['error.emptyRows']}"
+						  scrollable="true"
+						  scrollHeight="100%"
+						  styleClass="h100"
+                          paginator="true"
+                          paginatorPosition="bottom"
+                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                          rowsPerPageTemplate="5,10,15,30"
+			        	  selectionMode="single"
+			        	  selection="#{dialogDominioTramites.valorSeleccionado}"
+			        	  rowIndexVar="rowIndex"
+			        	  rowKey="#{td.tramiteVersion}">
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" />
+				<p:ajax event="rowUnselect" />
+
+			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}">
+			        <h:outputText value="${td.tramite}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['dialogDominioTramites.headerEntidad']}">
+			        <h:outputText value="${td.entidad.getTraduccion(sessionBean.lang)}" />
+			    </p:column>
+
+			     <p:column headerText="#{msg['dialogDominioTramites.headerArea']}">
+			        <h:outputText value="${td.area}" />
+			    </p:column>
+
+			     <p:column headerText="#{msg['dialogDominioTramites.headerNumVersion']}">
+			        <h:outputText value="${td.numVersion}" />
+			    </p:column>
+
+			     <p:column headerText="#{msg['dialogDominioTramites.headerRelease']}">
+			        <h:outputText value="${td.release}" />
+			    </p:column>
+
+			</p:dataTable>
+			<!-- <p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{dialogDominioTramites.consultarTramite()}" process="@this" update="growlDialog"  /> -->
+
+		 </h:panelGrid>
+	  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominioTramites.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
+					</f:facet>
+				</p:toolbar>
+		 </p:outputPanel>
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

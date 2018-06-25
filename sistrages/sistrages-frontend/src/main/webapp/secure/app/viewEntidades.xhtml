@@ -60,7 +60,10 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect"/>
-				<p:ajax event="rowUnselect"/>
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewEntidades.headerCodigoDIR3']}">
@@ -83,11 +86,8 @@
 			</p:dataTable>
 
 			<h:outputScript >
-		      function rcEditar() {
+		      function triggerDblClick() {
 		        document.getElementById("form:btnEditar").click();
-		      }
-		      function rcEliminar() {
-		        document.getElementById("form:btnEliminar").click();
 		      }
 		    </h:outputScript>
 

@@ -65,23 +65,27 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewTramitesVersion.listaDatos}"
-						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-						 scrollable="true" scrollHeight="90%"
-                         paginator="true" paginatorPosition="bottom"
-                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewTramitesVersion.datoSeleccionado}" rowKey="#{td.codigo}">
+						  rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						  scrollable="true" scrollHeight="90%"
+                          paginator="true" paginatorPosition="bottom"
+                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                          rowsPerPageTemplate="5,10,15,30"
+			        	  selectionMode="single" selection="#{viewTramitesVersion.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect"   listener="#{viewTramitesVersion.actualizarPermisos()}"  update=":form"  />
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}">
 			        <h:outputText value="#{td.numeroVersion}" />
 			    </p:column>
 
-			   <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
-			     <h:outputText value="#{msg['typeFlujo.'.concat(td.tipoFlujo)]}" />
+			    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
+			     	<h:outputText value="#{msg['typeFlujo.'.concat(td.tipoFlujo)]}" />
 			    </p:column>
 
  				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}">
@@ -98,14 +102,9 @@
 
 			</p:dataTable>
 
-
-
 			<h:outputScript >
-		      function rcEditar() {
+		      function triggerDblClick() {
 		        document.getElementById("form:btnEditar").click();
-		      }
-		      function rcEliminar() {
-		        document.getElementById("form:btnEliminar").click();
 		      }
 		    </h:outputScript>
 

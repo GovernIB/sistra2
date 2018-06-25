@@ -7,6 +7,8 @@ package es.caib.sistrages.core.api.model.types;
  *
  */
 public enum TypePago {
+	/** AMBAS. **/
+	AMBOS("A"),
 	/** TELEMÁTICA. **/
 	TELEMATICO("T"),
 	/** PRESENCIAL. **/

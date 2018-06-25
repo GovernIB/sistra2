@@ -8,8 +8,6 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeAvisoEntidad" var="TypeAvisoEntidad"/>
-
 <h:head>
 	<title><h:outputText value="#{msg['dialogMensajeAviso.titulo']}"/></title>
 	<h:outputScript library="primefaces-custom" name="calendar_es.js" />
@@ -25,6 +23,8 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogMensajeAviso.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogMensajeAviso.id}"/>
+		<f:viewParam name="TRAMITE" value="#{dialogMensajeAviso.tramite}"/>
+		<f:viewParam name="TRAMITEVERSION" value="#{dialogMensajeAviso.tramiteVersion}"/>
 		<f:viewAction action="#{dialogMensajeAviso.init}" />
 	</f:metadata>
 
@@ -46,9 +46,9 @@
 	        			</p:commandButton>
 					</p:column>
 
-					<p:outputLabel for="tipo" value="#{msg['dialogMensajeAviso.headerTipo']}" />
-					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true" disabled="#{dialogMensajeAviso.isConsulta()}">
-					    <f:selectItems value="#{TypeAvisoEntidad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeMensajeAviso.' += tipo]}" />
+					<p:outputLabel for="tipo" value="#{msg['dialogMensajeAviso.headerTipo']}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" />
+					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true" disabled="#{dialogMensajeAviso.isConsulta()}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" >
+					    <f:selectItems value="#{dialogMensajeAviso.tipos}" var="tipo" itemLabel="#{msg['typeMensajeAviso.' += tipo]}" />
 					</p:selectOneMenu>
 
 					<p:outputLabel for="activo" value="#{msg['dialogMensajeAviso.headerBloqueado']}" />
@@ -60,11 +60,11 @@
 					<p:outputLabel for="fechaFin" value="#{msg['dialogMensajeAviso.headerFechaFin']}" />
 					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" />
 
-					<p:outputLabel for="listaTramites" value="#{msg['dialogMensajeAviso.headerListaTramites']}" />
-					<p:inputTextarea  id="listaTramites" value="#{dialogMensajeAviso.data.listaSerializadaTramites}" rows="4" cols="50"/>
+					<p:outputLabel for="listaTramites" value="#{msg['dialogMensajeAviso.headerListaTramites']}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}"  />
+					<p:inputTextarea  id="listaTramites" value="#{dialogMensajeAviso.data.listaSerializadaTramites}" rows="4" cols="50" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" disabled="#{dialogMensajeAviso.disabledActivo}" />
 
-					<p:spacer width="5" height="1"/>
-					<p:outputLabel styleClass="outputlabel-nota" value="#{msg['dialogMensajeAviso.headerListaTramitesFormato']}" />
+					<p:spacer width="5" height="1" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" />
+					<p:outputLabel styleClass="outputlabel-nota" value="#{msg['dialogMensajeAviso.headerListaTramitesFormato']}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" />
 
 				</h:panelGrid>
 
@@ -78,6 +78,7 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
 	</h:form>
 </h:body>
 

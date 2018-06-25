@@ -62,6 +62,7 @@
 					</p:toolbar>
 
 					<p:dataTable id="dataTable" var="documentos"
+						emptyMessage="#{msg['error.emptyRows']}"
 						value="#{viewDefinicionVersion.tramitePasoANEXSeleccionado.documentos}" rows="5"
 						scrollable="true" paginator="false" rowKey="#{documentos.idString}" selectionMode="single"
 						 selection="#{viewDefinicionVersion.documentoSeleccionado}" dblClickSelect="true">

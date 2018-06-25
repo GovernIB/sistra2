@@ -51,8 +51,10 @@
 			        	 selectionMode="single" selection="#{viewPropiedadesConfiguracion.datoSeleccionado}" rowKey="#{td.id}">
 
 				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
-
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" />
 				<p:ajax event="rowUnselect" />
@@ -72,17 +74,9 @@
 
 			</p:dataTable>
 
-			<!-- Context menu -->
-			<p:contextMenu for="dataTable">
-		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditar()"/>
-		    </p:contextMenu>
-
 			<h:outputScript >
-		      function rcEditar() {
+		      function triggerDblClick() {
 		        document.getElementById("form:btnEditar").click();
-		      }
-		      function rcEliminar() {
-		        document.getElementById("form:btnEliminar").click();
 		      }
 		    </h:outputScript>
 

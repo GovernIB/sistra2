@@ -228,7 +228,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 
 	public static JCampoFormularioIndexado createDefault(final int pOrden, final JLineaFormulario pJLinea) {
 		final JCampoFormularioIndexado jModel = new JCampoFormularioIndexado();
-		jModel.setTipoCampoIndexado(TypeCampoIndexado.SELECTOR.name());
+		jModel.setTipoCampoIndexado(TypeCampoIndexado.DESPLEGABLE.name());
 		jModel.setTipoListaValores(TypeListaValores.FIJA.toString());
 		jModel.setIndiceAlfabetico(false);
 		jModel.setAltura(1);

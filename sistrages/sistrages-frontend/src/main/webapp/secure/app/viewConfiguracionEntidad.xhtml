@@ -18,7 +18,7 @@
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 			<p:panel header="#{msg['viewConfiguracionEntidad.gestorTramits.titulo']}" columnClasses="w25 right-alignment, w75 left-alignment">
-		        <h:panelGrid columns="2" cellpadding="10">
+		        <h:panelGrid columns="2" cellpadding="5">
 		            <h:outputText value="#{msg['viewConfiguracionEntidad.gestorTramits.headerLog']}" />
 		           	<p:column>
 		           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoGestor}"/>
@@ -32,7 +32,7 @@
 		    </p:panel>
 
     		<p:panel header="#{msg['viewConfiguracionEntidad.assistentTramitacio.titulo']}"  columnClasses="w25 right-alignment, w75 left-alignment">
-		        <h:panelGrid columns="2" cellpadding="10" >
+		        <h:panelGrid columns="2" cellpadding="5" >
 		            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLog']}" />
 		            <p:column>
 		           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoAsistente}"/>
@@ -88,6 +88,17 @@
 		            	<p:inputText  id="inputUrlCarpetaCiudadana" size="40" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.urlCarpetaCiudadana.getTraduccion(sessionBean.lang)}" disabled="true" />
 		            	<p:commandButton id="btnUrlCarpetaCiudadana" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarUrlCarpetaCiudadana}" process="@this" update="growl" style="margin-right:5px">
 		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoUrlCarpetaCiudadana}" update="growl inputUrlCarpetaCiudadana"/>
+		        		</p:commandButton>
+					</p:column>
+
+					<p:outputLabel for="diasPreregistro" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerDiasPreregistro']}" />
+		            <p:inputNumber  id="diasPreregistro" decimalPlaces="0" padControl="false" size="40" value="#{viewConfiguracionEntidad.data.diasPreregistro}" maxValue="999" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+
+					<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopd']}" />
+	            	<p:column>
+		            	<p:inputText  id="inputLopd" size="40" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.lopd.getTraduccion(sessionBean.lang)}" disabled="true" />
+		            	<p:commandButton id="btnLopd" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarLopd}" process="@this" update="growl" style="margin-right:5px">
+		            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoLopd}" update="growl inputLopd"/>
 		        		</p:commandButton>
 					</p:column>
 

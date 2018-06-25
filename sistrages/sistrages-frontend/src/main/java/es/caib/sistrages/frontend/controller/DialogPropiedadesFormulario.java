@@ -142,22 +142,14 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	/**
-	 * Método que se encarga de cargar el dialog de carga dependiendo de si existe
-	 * ya el script o no.
-	 *
-	 * @param id
+	 * Editar script
 	 */
-	public void editarDialogScriptPlantilla() {
-
-		if (id == null || this.data.getScriptPlantilla() == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, null, true, 950, 700);
-		} else {
-			final Map<String, String> params = new HashMap<>();
-			UtilJSF.getSessionBean().limpiaMochilaDatos();
-			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(this.data.getScriptPlantilla()));
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
-		}
+	public void editarDialogScriptPlantilla(final String tipoScript, final Script script) {
+		final Map<String, String> maps = new HashMap<>();
+		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 950, 700);
 	}
 
 	/**

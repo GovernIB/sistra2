@@ -8,7 +8,8 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypeCampoIndexado {
 
-	SELECTOR, DESPLEGABLE, MULTIPLE, UNICA;
+	// SELECTOR,
+	DESPLEGABLE, MULTIPLE, UNICA;
 
 	private String valor;
 

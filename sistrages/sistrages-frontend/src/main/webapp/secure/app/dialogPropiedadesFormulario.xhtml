@@ -7,6 +7,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFormulario" var="TypeScriptFormulario" />
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogPropiedadesFormulario.titulo']}"/></title>
@@ -111,9 +112,9 @@
 	        						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPlantilla}" update="growlDialog dataTablePlantillas"/>
 	        					</p:commandButton>
 	        					<br/>
-						    	<p:commandButton id="btnEliminarPlantilla" icon="fa fa-minus"  title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPlantilla}" process="@this" update="growlDialog dataTablePlantillas"/>
+						    	<p:commandButton id="btnEliminarPlantilla" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{dialogPropiedadesFormulario.eliminarPlantilla}" process="@this" update="growlDialog dataTablePlantillas"/>
 						    	<br/>
-								<p:commandButton id="filesPlantilla" icon="fa fa-file-o"  actionListener="#{dialogPropiedadesFormulario.editarFicheroPlantilla}"
+								<p:commandButton id="filesPlantilla" icon="fa fa-file-o" title="#{msg['dialogPropiedadesFormulario.botonIdioma']}" actionListener="#{dialogPropiedadesFormulario.editarFicheroPlantilla}"
 												process="@this" update="growlDialog">
 									<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
 									<p:confirm disabled="#{empty dialogPropiedadesFormulario.plantillaSeleccionada or dialogPropiedadesFormulario.plantillaSeleccionada.codigo gt 0}" header="#{msg['warning.titulo']}" message="#{msg['warning.guardar']}" icon="fa fa-exclamation-triangle fa-3x confirmar_icono"/>
@@ -123,8 +124,7 @@
 
 					<p:outputLabel value="#{msg['dialogPropiedadesFormulario.scriptFormateador']}"/>
 
-					<p:commandButton id="scriptPlantilla" icon="fa fa-bolt"  actionListener="#{dialogPropiedadesFormulario.editarDialogScriptPlantilla}" disabled="#{dialogPropiedadesFormulario.deshabilitarScriptPlantilla}"
-									process="@this" update="growlDialog">
+					<p:commandButton id="scriptPlantilla" icon="fa fa-bolt"  actionListener="#{dialogPropiedadesFormulario.editarDialogScriptPlantilla(TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA.name(), dialogPropiedadesFormulario.data.scriptPlantilla)}" process="@this" update="growlDialog">
 						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
 					</p:commandButton>
 				</h:panelGrid>

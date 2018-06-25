@@ -33,6 +33,7 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.ParametroDominio;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
@@ -46,6 +47,7 @@ import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.core.api.util.UtilDisenyo;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -641,7 +643,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
-			formulario = (FormularioInterno) respuesta.getResult();
+			final FormularioInterno formularioNuevo = (FormularioInterno) respuesta.getResult();
+			formulario.setMostrarCabecera(formularioNuevo.isMostrarCabecera());
+			formulario.setTextoCabecera(formularioNuevo.getTextoCabecera());
 			paginaActual = 1;
 		} else {
 			UtilJSF.doValidationFailed();
@@ -1128,6 +1132,91 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 
 	}
+
+	/**
+	 * Editar script
+	 */
+	public void editarDialogScript(final String tipoScript, final Script script) {
+		final Map<String, String> maps = new HashMap<>();
+		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 950, 700);
+
+	}
+
+	/**
+	 * Retorno dialogo del script de personalizacion.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoScriptAutorrelleno(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
+					((ComponenteFormularioCampo) objetoFormularioEdit)
+							.setScriptAutorrellenable((Script) respuesta.getResult());
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Retorno dialogo del script de personalizacion.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoScriptSoloLectura(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
+					((ComponenteFormularioCampo) objetoFormularioEdit)
+							.setScriptSoloLectura((Script) respuesta.getResult());
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Retorno dialogo del script de personalizacion.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoScriptValidacion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
+					((ComponenteFormularioCampo) objetoFormularioEdit)
+							.setScriptValidacion((Script) respuesta.getResult());
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	// -- Getters / Setters
 
 	/**

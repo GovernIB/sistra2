@@ -44,6 +44,7 @@
 		</p:toolbar>
 
 		<p:dataTable  id="dataTable" var="dominio" value="#{viewDefinicionVersion.dominios}"
+						 emptyMessage="#{msg['error.emptyRows']}"
 						 rows="10"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
@@ -55,10 +56,9 @@
 			<p:ajax event="rowSelect" />
 			<p:ajax event="rowUnselect" />
 
-
 			<!-- Columnas -->
 		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.codigo}">
-		        <h:outputText value="#{dominio.codigo}" />
+		        <h:outputText value="#{dominio.identificador}" />
 		    </p:column>
 
 		    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerTipo']}" sortBy="#{dominio.ambito}">

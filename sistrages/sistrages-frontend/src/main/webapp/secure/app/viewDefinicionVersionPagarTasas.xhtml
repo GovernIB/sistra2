@@ -57,7 +57,7 @@
 
 
 		<p:dataTable id="dataTable" var="tasas"
-			value="#{viewDefinicionVersion.tramitePasoTSSeleccionado.tasas}" rows="10"
+			emptyMessage="#{msg['error.emptyRows']}" value="#{viewDefinicionVersion.tramitePasoTSSeleccionado.tasas}" rows="10"
 			scrollable="true" paginator="false" rowKey="#{tasas.codigo}" selectionMode="single"
 			 selection="#{viewDefinicionVersion.tasaSeleccionado}" dblClickSelect="true">
 

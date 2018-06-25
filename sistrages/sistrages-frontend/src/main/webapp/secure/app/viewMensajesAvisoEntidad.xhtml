@@ -58,7 +58,10 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect"/>
-				<p:ajax event="rowUnselect"/>
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewMensajesAvisoEntidad.headerDescripcion']}">
@@ -87,22 +90,9 @@
 
 			</p:dataTable>
 
-			<!-- Context menu -->
-			<p:contextMenu for="dataTable">
-		        <p:menuitem value="#{msg['botones.editar']}" icon="ui-icon-folder-open" onclick="rcEditar()" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
-		        <p:menuitem value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" onclick="rcEliminar()" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
-		        <p:menuitem value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="rcConsultar()" rendered="#{not viewMensajesAvisoEntidad.permiteEditar and not viewMensajesAvisoEntidad.permiteAlta}"/>
-		    </p:contextMenu>
-
-			<h:outputScript>
-		      function rcEditar() {
+			<h:outputScript >
+		      function triggerDblClick() {
 		        document.getElementById("form:btnEditar").click();
-		      }
-		      function rcEliminar() {
-		        document.getElementById("form:btnEliminar").click();
-		      }
-		      function rcConsultar() {
-		        document.getElementById("form:btnConsultar").click();
 		      }
 		    </h:outputScript>
 

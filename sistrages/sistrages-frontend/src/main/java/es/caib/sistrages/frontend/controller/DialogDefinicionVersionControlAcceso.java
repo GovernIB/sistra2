@@ -3,17 +3,24 @@
  */
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -27,6 +34,10 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 
+	/** Service. **/
+	@Inject
+	private AvisoEntidadService avisoEntidadService;
+
 	/** Tramite service. */
 	@Inject
 	private TramiteService tramiteService;
@@ -34,50 +45,143 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	/** Id elemento a tratar. */
 	private Long id;
 
+	/** Tramite. **/
+	private Tramite tramite;
+
 	/** Tramite version. */
 	private TramiteVersion tramiteVersion;
 
+	/** Aviso entidad. **/
+	private AvisoEntidad avisoEntidad;
+
 	/**
-	 * InicializaciÃ³n.
+	 * Inicialización.
 	 */
 	public void init() {
 		tramiteVersion = tramiteService.getTramiteVersion(id);
+		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
+		setAvisoEntidad(avisoEntidadService
+				.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion()));
 	}
 
 	/**
 	 * Editar descripcion.
 	 */
-	public void editarMensajeDesactivacion() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.tramiteVersion.getMensajeDesactivacion(),
-				tramiteVersion);
+	public void consultarMensajeDesactivacion() {
+
+		if (this.avisoEntidad == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "No existeix el missatge d'avís");
+			return;
+		}
+
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, this.avisoEntidad.getMensaje(), tramiteVersion);
+
 	}
 
 	/**
-	 * Retorno dialogo de la traduccion.
+	 * Aviso entidad activo.
+	 *
+	 * @return
+	 */
+	public boolean avisoEntidadActivo() {
+		if (avisoEntidad == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * Aviso entidad activo.
+	 *
+	 * @return
+	 */
+	public boolean avisoEntidadInactivo() {
+		if (avisoEntidad == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Crear aviso entidad.
+	 */
+	public void crearAvisoEntidad() {
+		abrirAvisoEntidad(TypeModoAcceso.ALTA);
+	}
+
+	/**
+	 * Modificar aviso entidad.
+	 */
+	public void modificarAvisoEntidad() {
+		abrirAvisoEntidad(TypeModoAcceso.EDICION);
+	}
+
+	/**
+	 * Consultar aviso entidad.
+	 */
+	public void consultarAvisoEntidad() {
+		abrirAvisoEntidad(TypeModoAcceso.CONSULTA);
+	}
+
+	/**
+	 * Retorno dialogo.
 	 *
 	 * @param event
 	 *            respuesta dialogo
 	 */
-	public void returnDialogoMensajeDesactivacion(final SelectEvent event) {
+	public void returnDialogoAvisoEntidad(final SelectEvent event) {
+
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
-		if (!respuesta.isCanceled()) {
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-			case EDICION:
-
-				final Literal traducciones = (Literal) respuesta.getResult();
-				this.tramiteVersion.setMensajeDesactivacion(traducciones);
-
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
+			// Mensaje
+			String message = null;
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
 			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Refrescamos datos
+			setAvisoEntidad(avisoEntidadService
+					.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion()));
+		}
+	}
+
+	/**
+	 * Abre dialog aviso entidad.
+	 *
+	 * @param modo
+	 */
+	private void abrirAvisoEntidad(final TypeModoAcceso modo) {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		if (avisoEntidad != null) {
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.avisoEntidad.getId()));
+		}
+		params.put(TypeParametroVentana.TRAMITE.toString(), tramite.getIdentificador());
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getNumeroVersion()));
+		UtilJSF.openDialog(DialogMensajeAviso.class, modo, params, true, 600, 350);
+	}
+
+	/**
+	 * Borra aviso entidad.
+	 */
+	public void borrarAvisoEntidad() {
+
+		if (this.avisoEntidad == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "No existeix el missatge d'avís");
+			return;
 		}
 
+		avisoEntidadService.removeAvisoEntidad(avisoEntidad.getId());
+		avisoEntidad = null;
 	}
 
 	/**
@@ -143,6 +247,21 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 	 */
 	public void setTramiteVersion(final TramiteVersion tramiteVersion) {
 		this.tramiteVersion = tramiteVersion;
+	}
+
+	/**
+	 * @return the avisoEntidad
+	 */
+	public AvisoEntidad getAvisoEntidad() {
+		return avisoEntidad;
+	}
+
+	/**
+	 * @param avisoEntidad
+	 *            the avisoEntidad to set
+	 */
+	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
+		this.avisoEntidad = avisoEntidad;
 	}
 
 }

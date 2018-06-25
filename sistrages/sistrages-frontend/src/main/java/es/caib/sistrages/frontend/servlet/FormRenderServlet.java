@@ -293,21 +293,38 @@ public class FormRenderServlet extends HttpServlet {
 	private void campoSelector(final StringBuilder pOut, final ComponenteFormulario pCF) {
 		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) pCF;
 
+		switch (campo.getTipoCampoIndexado()) {
+		case DESPLEGABLE:
+			campoSelectorDesplegable(pOut, campo);
+			break;
+		case MULTIPLE:
+			campoSelectorMultiple(pOut, campo);
+			break;
+		case UNICA:
+			campoSelectorUnica(pOut, campo);
+		default:
+			break;
+		}
+
+	}
+
+	private void campoSelectorDesplegable(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo) {
+
 		final StringBuilder estilo = new StringBuilder();
 		String texto = "";
 
-		if (campo.getNumColumnas() > 1) {
-			estilo.append(" imc-el-").append(campo.getNumColumnas());
+		if (pCampo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(campo.getId()));
+		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getId()));
 
-		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + campo.getId() + "\">"
-					+ campo.getTexto().getTraduccion("es") + "</label></div>";
+		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
+			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getId() + "\">"
+					+ pCampo.getTexto().getTraduccion("es") + "</label></div>";
 		}
 
-		escribeLinea(pOut, "<div ", escribeId(pCF.getId()), "class=\"imc-element imc-el-selector", estilo.toString(),
+		escribeLinea(pOut, "<div ", escribeId(pCampo.getId()), "class=\"imc-element imc-el-selector", estilo.toString(),
 				"\" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
@@ -316,11 +333,87 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "<div class=\"imc-select imc-opcions\">", 7);
 
 		escribeLinea(pOut, "<a class=\"imc-select\" tabindex=\"0\" href=\"javascript:;\" style=\"\"></a>", 8);
-		escribeLinea(pOut, "<input name=\"", String.valueOf(campo.getIdComponente()), "\" type=\"hidden\">", 8);
+		escribeLinea(pOut, "<input name=\"", String.valueOf(pCampo.getIdComponente()), "\" type=\"hidden\">", 8);
 
 		escribeLinea(pOut, "</div>", 7);
 		escribeLinea(pOut, "</div>", 6);
 		escribeLinea(pOut, "</div>", 5);
+	}
+
+	private void campoSelectorMultiple(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo) {
+
+		final StringBuilder estilo = new StringBuilder();
+
+		if (pCampo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
+		}
+
+		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getId()));
+
+		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getId()), " class=\"imc-element", estilo.toString(),
+				"\" data-type=\"check-list\">", 6);
+
+		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
+			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion("es"), "</legend>", 7);
+		}
+
+		escribeLinea(pOut, "<ul>", 7);
+		escribeLinea(pOut, "<li>", 7);
+		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getId(), "a"), " name=\"",
+				String.valueOf(pCampo.getId()), "\" checked=\"checked\" type=\"checkbox\"><label for=\"",
+				String.valueOf(pCampo.getId()), ".a\">Opc. A</label></div>", 8);
+		escribeLinea(pOut, "</li>", 7);
+		escribeLinea(pOut, "<li>", 7);
+		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getId(), "b"), " name=\"",
+				String.valueOf(pCampo.getId()), "\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getId()),
+				".b\">Opc. B</label></div>", 8);
+		escribeLinea(pOut, "</li>", 7);
+		escribeLinea(pOut, "<li>", 7);
+		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getId(), "c"), "name=\"",
+				String.valueOf(pCampo.getId()), "\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getId()),
+				".c\">Opc. C</label></div>", 8);
+		escribeLinea(pOut, "</li>", 7);
+		escribeLinea(pOut, "</ul>", 7);
+
+		escribeLinea(pOut, "</fieldset>", 6);
+	}
+
+	private void campoSelectorUnica(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo) {
+
+		final StringBuilder estilo = new StringBuilder();
+
+		if (pCampo.getNumColumnas() > 1) {
+			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
+		}
+
+		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getId()));
+
+		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getId()), " class=\"imc-element imc-el-horizontal",
+				estilo.toString(), "\" data-type=\"radio-list\">", 6);
+
+		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
+			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion("es"), "</legend>", 7);
+		}
+
+		escribeLinea(pOut, "<ul>", 7);
+		escribeLinea(pOut, "<li>", 7);
+		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getId(), "a"), " name=\"",
+				String.valueOf(pCampo.getId()), "\" checked=\"checked\" type=\"radio\"><label for=\"",
+				String.valueOf(pCampo.getId()), ".a\">Opc. A</label></div>", 8);
+		escribeLinea(pOut, "</li>", 7);
+		escribeLinea(pOut, "<li>", 7);
+		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getId(), "b"), " name=\"",
+				String.valueOf(pCampo.getId()), "\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getId()),
+				".b\">Opc. B</label></div>", 8);
+		escribeLinea(pOut, "</li>", 7);
+		escribeLinea(pOut, "<li>", 7);
+		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getId(), "c"), "name=\"",
+				String.valueOf(pCampo.getId()), "\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getId()),
+				".c\">Opc. C</label></div>", 8);
+		escribeLinea(pOut, "</li>", 7);
+		escribeLinea(pOut, "</ul>", 7);
+
+		escribeLinea(pOut, "</fieldset>", 6);
 	}
 
 	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF) {
@@ -410,7 +503,7 @@ public class FormRenderServlet extends HttpServlet {
 		return escribeId(pId, null);
 	}
 
-	private String escribeId(final Long pId, final Integer pOrden) {
+	private String escribeId(final Long pId, final String pOrden) {
 		String id = null;
 		if (pOrden == null) {
 			id = "id=\"" + pId + "\"";

@@ -595,12 +595,7 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 		}
 
-		if (getPermiteEditarTramite()) {
-			this.editarTramite();
-		} else if (getPermiteConsultarTramite()) {
-			this.consultarTramite();
-		}
-
+		this.versionesTramite();
 	}
 
 	public void onRowDblClickTramites() {

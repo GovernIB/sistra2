@@ -479,7 +479,15 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		if (this.datoSeleccionado == null) {
 			permiteConsultar = false;
 		} else {
-			permiteConsultar = permiteConsultarArea;
+			if (permiteConsultarArea) {
+				if (permiteEditar) {
+					permiteConsultar = false;
+				} else {
+					permiteConsultar = true;
+				}
+			} else {
+				permiteConsultar = false;
+			}
 		}
 	}
 
@@ -525,6 +533,12 @@ public class ViewTramitesVersion extends ViewControllerBase {
 		}
 
 		if (!this.datoSeleccionado.getBloqueada()) {
+			this.permiteDesbloquear = false;
+			return;
+		}
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& !this.datoSeleccionado.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName())) {
 			this.permiteDesbloquear = false;
 			return;
 		}

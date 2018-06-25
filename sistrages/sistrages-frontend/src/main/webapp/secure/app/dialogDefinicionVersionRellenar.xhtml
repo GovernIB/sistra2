@@ -35,10 +35,12 @@
 
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<h:outputText for="codigo" value="#{msg['dialogDefinicionVersionRellenar.headerIdentificador']}" />
-					<p:inputText  id="codigo"  value="#{dialogDefinicionVersionRellenar.data.codigo}" size="40" required="true" />
+					<p:outputLabel for="codigo" value="#{msg['dialogDefinicionVersionRellenar.headerIdentificador']}" />
+					<p:inputText  id="codigo"  value="#{dialogDefinicionVersionRellenar.data.codigo}" size="40" required="true">
+						<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+					</p:inputText>
 
-					<h:outputText for="inputDescripcion" value="#{msg['dialogDefinicionVersionRellenar.headerDescripcion']}" />
+					<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionRellenar.headerDescripcion']}" />
 					<p:column>
 						<p:inputText id="inputDescripcion"  value="#{dialogDefinicionVersionRellenar.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" required="true" />
 						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionRellenar.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" style="margin-right:5px">
@@ -46,21 +48,13 @@
 		        		</p:commandButton>
 					</p:column>
 
-					<h:outputText for="tipo" value="#{msg['dialogDefinicionVersionRellenar.headerTipo']}" />
+					<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionRellenar.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogDefinicionVersionRellenar.data.tipoFormulario}" style="width:200px" required="true">
 					     <f:selectItems value="#{TypeInterno.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeInterno.' += tipo]}" />
 					</p:selectOneMenu >
 
 
 			 </h:panelGrid>
-				 <h:outputScript >
-			      function rcEditarPropiedad() {
-			        document.getElementById("form:btnEditarFormulario").click();
-			      }
-			      function  rcBorrarPropiedad() {
-			        document.getElementById("form:btnEliminarFormulario").click();
-			      }
-			    </h:outputScript>
 				  	 <p:outputPanel styleClass="botonera">
 				     	<p:toolbar>
 							<f:facet name="right">

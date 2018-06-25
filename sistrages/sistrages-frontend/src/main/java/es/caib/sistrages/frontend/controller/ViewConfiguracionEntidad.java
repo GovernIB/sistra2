@@ -54,6 +54,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 * Inicializacion.
 	 */
 	public void init() {
+
 		// Entidad activa
 		idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
@@ -89,6 +90,11 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (data.isFormularioIncidenciasHabilitado()
 				&& entidadService.listOpcionesFormularioSoporte(idEntidad).isEmpty()) {
 			final String message = UtilJSF.getLiteral("viewConfiguracionEntidad.error.formulariCont");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, message);
+			return;
+		}
+		if (data.getDiasPreregistro() == null) {
+			final String message = UtilJSF.getLiteral("viewConfiguracionEntidad.error.diasPrereg");
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, message);
 			return;
 		}
@@ -146,6 +152,18 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre explorar lopd.
+	 */
+	public void explorarLopd() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
+		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, data.getLopd(), idiomas, idiomas);
+	}
+
+	/**
 	 * Gestión de retorno url carpeta ciudadana.
 	 *
 	 * @param event
@@ -155,6 +173,19 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final Literal literales = (Literal) respuesta.getResult();
 			data.setUrlCarpetaCiudadana(literales);
+		}
+	}
+
+	/**
+	 * Gestión de retorno lopd.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoLopd(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setLopd(literales);
 		}
 	}
 

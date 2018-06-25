@@ -1,5 +1,8 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -10,6 +13,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -32,6 +36,22 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private String id;
 
 	/**
+	 * El identificador del tramite.
+	 */
+	private String tramite;
+
+	/**
+	 * El identificador del tramite.
+	 */
+	private String tramiteVersion;
+
+	/**
+	 * Indica si viene del viewDialog o del DialogDefVersionControlAcceso. Si está
+	 * relleno y es DialogDef es el segundo sino el primero.
+	 */
+	private String dato;
+
+	/**
 	 * Id entidad.
 	 */
 	private Long idEntidad;
@@ -46,28 +66,71 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 */
 	private String literal;
 
+	/** Tipos. **/
+	private List<TypeAvisoEntidad> tipos;
+
 	/**
-	 * InicializaciÃ³n.
+	 * Es tipo tramite.
+	 */
+	private boolean tipoTramite;
+
+	/** Disabled desactivado. Afecta a tipo y los tramites. **/
+	private boolean disabledActivo = false;
+
+	/**
+	 * Inicialización.
 	 */
 	public void init() {
 
 		// Id entidad
 		idEntidad = UtilJSF.getSessionBean().getEntidad().getId();
 
+		if (tramite == null) {
+			tipoTramite = false;
+			tipos = new LinkedList<>(Arrays.asList(TypeAvisoEntidad.values()));
+			tipos.remove(TypeAvisoEntidad.TRAMITE_VERSION);
+		} else {
+			tipoTramite = true;
+			tipos = new ArrayList<>();
+			tipos.add(TypeAvisoEntidad.TRAMITE_VERSION);
+		}
+
 		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new AvisoEntidad();
+			// Si es tipo tramite versión, ya tiene unos valores por defecto.
+			if (tipoTramite) {
+				data.setTipo(TypeAvisoEntidad.TRAMITE_VERSION);
+				data.setListaSerializadaTramites(tramite);
+			}
 		} else {
 			if (id != null) {
 				data = avisoEntidadService.getAvisoEntidad(Long.valueOf(id));
 				if (data != null && data.getMensaje() != null) {
 					literal = data.getMensaje().getTraduccion(UtilJSF.getSessionBean().getLang());
 				}
+				if (data != null && data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION) {
+					setDisabledActivo(true);
+					tipos = new ArrayList<>();
+					tipos.add(TypeAvisoEntidad.TRAMITE_VERSION);
+				}
 			}
-
+			if (tramite != null) {
+				data = avisoEntidadService.getAvisoEntidadByTramite(tramite + "-" + tramiteVersion);
+			}
 		}
+
+	}
+
+	/**
+	 * Devuelve true si es de tipo tramite.
+	 *
+	 * @return
+	 */
+	public boolean isNotTipoTramite() {
+		return !tipoTramite;
 	}
 
 	/**
@@ -178,6 +241,81 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 */
 	public void setLiteral(final String literal) {
 		this.literal = literal;
+	}
+
+	/**
+	 * @return the tipos
+	 */
+	public List<TypeAvisoEntidad> getTipos() {
+		return tipos;
+	}
+
+	/**
+	 * @param tipos
+	 *            the tipos to set
+	 */
+	public void setTipos(final List<TypeAvisoEntidad> tipos) {
+		this.tipos = tipos;
+	}
+
+	/**
+	 * @return the tramite
+	 */
+	public String getTramite() {
+		return tramite;
+	}
+
+	/**
+	 * @param tramite
+	 *            the tramite to set
+	 */
+	public void setTramite(final String tramite) {
+		this.tramite = tramite;
+	}
+
+	/**
+	 * @return the tramiteVersion
+	 */
+	public String getTramiteVersion() {
+		return tramiteVersion;
+	}
+
+	/**
+	 * @param tramiteVersion
+	 *            the tramiteVersion to set
+	 */
+	public void setTramiteVersion(final String tramiteVersion) {
+		this.tramiteVersion = tramiteVersion;
+	}
+
+	/**
+	 * @return the dato
+	 */
+	public String getDato() {
+		return dato;
+	}
+
+	/**
+	 * @param dato
+	 *            the dato to set
+	 */
+	public void setDato(final String dato) {
+		this.dato = dato;
+	}
+
+	/**
+	 * @return the disabledActivo
+	 */
+	public boolean isDisabledActivo() {
+		return disabledActivo;
+	}
+
+	/**
+	 * @param disabledActivo
+	 *            the disabledActivo to set
+	 */
+	public void setDisabledActivo(final boolean disabledActivo) {
+		this.disabledActivo = disabledActivo;
 	}
 
 }

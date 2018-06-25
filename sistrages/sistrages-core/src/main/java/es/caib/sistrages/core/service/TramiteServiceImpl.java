@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioInterno;
@@ -486,6 +487,12 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public void intercambiarFormularios(final Long idFormulario1, final Long idFormulario2) {
 		tramitePasoDao.intercambiarFormularios(idFormulario1, idFormulario2);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio) {
+		return tramiteDao.getTramiteVersionByDominio(idDominio);
 	}
 
 }

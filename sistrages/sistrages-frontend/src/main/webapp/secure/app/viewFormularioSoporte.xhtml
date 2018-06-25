@@ -35,7 +35,10 @@
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect" />
-						<p:ajax event="rowUnselect" />
+						<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":form:dataTable"
+		                        />
 
 						<!-- Columnas -->
 						<p:column headerText="#{msg['viewFormularioSoporte.headerTipoIncidencia']}">
@@ -72,14 +75,11 @@
 					</p:column>
 
 			</h:panelGrid>
-			<h:outputScript>
-		      	function rcEditarPropiedad() {
-			        document.getElementById("form:btnEditarFormulario").click();
-			    }
-		    	function rcBorrarPropiedad() {
-		        	document.getElementById("form:btnEliminarFormulario").click();
-		      	}
-	    	</h:outputScript>
+			<h:outputScript >
+		      function triggerDblClick() {
+		        document.getElementById("form:btnEditar").click();
+		      }
+		    </h:outputScript>
 		</p:outputPanel>
 		<p:outputPanel styleClass="botonera">
 			<p:toolbar>
