@@ -166,13 +166,10 @@
                         </execution>
                 </executions>
                 <configuration>
-                		<skip>true</skip>
                 		<generateGitPropertiesFile>true</generateGitPropertiesFile>
                         <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
                 </configuration>
             </plugin>
-
-
 
 			<plugin>
 			    <artifactId>maven-antrun-plugin</artifactId>
@@ -181,8 +178,7 @@
 			      <execution>
 			      	<phase>compile</phase>
                    	<configuration>
-			      	 	<skip>true</skip>
-			      		<target>
+			      	 	<target>
                             <property name="compile_classpath" refid="maven.compile.classpath" />
                             <echo message="compile classpath: ${compile_classpath}" />
                         </target>
