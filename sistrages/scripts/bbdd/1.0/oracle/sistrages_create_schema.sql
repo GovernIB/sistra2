@@ -520,6 +520,7 @@ create table STG_ENTIDA
    ENT_CSSTT            NUMBER(18),
    ENT_PIETT            NUMBER(18),
    ENT_URLCAR           NUMBER(18),
+   ENT_LOPD             NUMBER(18),
    ENT_PRGDIA           NUMBER(3),
    ENT_EMAIL            VARCHAR2(500 CHAR),
    ENT_CNTEMA           NUMBER(1)            default 0 not null,
@@ -562,6 +563,9 @@ comment on column STG_ENTIDA.ENT_PIETT is
 
 comment on column STG_ENTIDA.ENT_URLCAR is
 'Url Carpeta Ciudadana';
+
+comment on column STG_ENTIDA.ENT_LOPD is
+'Texto respecto LOPD';
 
 comment on column STG_ENTIDA.ENT_PRGDIA is
 'Dias preregistro';
@@ -714,7 +718,7 @@ comment on column STG_FORCAM.FCA_LECTUR is
 'Sólo lectura';
 
 comment on column STG_FORCAM.FCA_NOMODI is
-'No modificable';
+'No modificable (no permite modificar su valor inicial)';
 
 comment on column STG_FORCAM.FCA_SCRAUT is
 'Permite establecer el valor de un campo en función de otros';
@@ -2513,6 +2517,10 @@ alter table STG_ENTIDA
 
 alter table STG_ENTIDA
    add constraint FK_STG_ENTI_STG_ENTID_STG_TRAD foreign key (ENT_URLCAR)
+      references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_ENTIDA
+   add constraint STG_ENTIDA_TRADUC_FK4 foreign key (ENT_LOPD)
       references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_FILFUE
