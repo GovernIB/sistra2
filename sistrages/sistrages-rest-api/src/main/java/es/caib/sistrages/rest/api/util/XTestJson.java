@@ -3,65 +3,65 @@ package es.caib.sistrages.rest.api.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.caib.sistrages.rest.api.Aviso;
-import es.caib.sistrages.rest.api.AvisosEntidad;
-import es.caib.sistrages.rest.api.Componente;
-import es.caib.sistrages.rest.api.ComponenteSeccion;
-import es.caib.sistrages.rest.api.ComponenteSelector;
-import es.caib.sistrages.rest.api.ComponenteTextbox;
-import es.caib.sistrages.rest.api.ConfiguracionGlobal;
-import es.caib.sistrages.rest.api.ConfiguracionEntidad;
-import es.caib.sistrages.rest.api.FormularioInterno;
-import es.caib.sistrages.rest.api.FormularioTramite;
-import es.caib.sistrages.rest.api.LineaComponentes;
-import es.caib.sistrages.rest.api.ListaParametros;
-import es.caib.sistrages.rest.api.Literal;
-import es.caib.sistrages.rest.api.LiteralIdioma;
-import es.caib.sistrages.rest.api.OpcionFormularioSoporte;
-import es.caib.sistrages.rest.api.PaginaFormulario;
-import es.caib.sistrages.rest.api.PasoTramitacion;
-import es.caib.sistrages.rest.api.PasoTramitacionDebeSaber;
-import es.caib.sistrages.rest.api.PasoTramitacionRellenar;
-import es.caib.sistrages.rest.api.Plugin;
-import es.caib.sistrages.rest.api.ValorParametro;
-import es.caib.sistrages.rest.api.ValoresDominio;
-import es.caib.sistrages.rest.api.VersionTramite;
+import es.caib.sistrages.rest.api.interna.RAviso;
+import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RComponente;
+import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
+import es.caib.sistrages.rest.api.interna.RComponenteSelector;
+import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
+import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RFormularioInterno;
+import es.caib.sistrages.rest.api.interna.RFormularioTramite;
+import es.caib.sistrages.rest.api.interna.RLineaComponentes;
+import es.caib.sistrages.rest.api.interna.RListaParametros;
+import es.caib.sistrages.rest.api.interna.RLiteral;
+import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
+import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
+import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
+import es.caib.sistrages.rest.api.interna.RPlugin;
+import es.caib.sistrages.rest.api.interna.RValorParametro;
+import es.caib.sistrages.rest.api.interna.RValoresDominio;
+import es.caib.sistrages.rest.api.interna.RVersionTramite;
 
 public class XTestJson {
 
     public static void main(final String[] args) throws Exception {
 
-        final VersionTramite vt = crearVersionTramite();
+        final RVersionTramite vt = crearVersionTramite();
 
         final String json = JsonUtil.toJson(vt);
         System.out.println(json);
 
-        final VersionTramite vt2 = (VersionTramite) JsonUtil.fromJson(json,
-                VersionTramite.class);
+        final RVersionTramite vt2 = (RVersionTramite) JsonUtil.fromJson(json,
+                RVersionTramite.class);
 
         System.out.println(vt2.getIdentificador());
     }
 
-    public static ConfiguracionGlobal crearConfiguracionGlobal() {
-        final ConfiguracionGlobal c = new ConfiguracionGlobal();
+    public static RConfiguracionGlobal crearConfiguracionGlobal() {
+        final RConfiguracionGlobal c = new RConfiguracionGlobal();
         c.setPropiedades(crearListaParametros());
         c.setPlugins(crearPlugins());
         return c;
     }
 
-    public static Literal generarLiteral() {
+    public static RLiteral generarLiteral() {
 
-        final Literal li = new Literal();
+        final RLiteral li = new RLiteral();
 
-        final List<LiteralIdioma> literales = new ArrayList<>();
-        LiteralIdioma l = null;
+        final List<RLiteralIdioma> literales = new ArrayList<>();
+        RLiteralIdioma l = null;
 
-        l = new LiteralIdioma();
+        l = new RLiteralIdioma();
         l.setIdioma("es");
         l.setDescripcion("literal es");
         literales.add(l);
 
-        l = new LiteralIdioma();
+        l = new RLiteralIdioma();
         l.setIdioma("ca");
         l.setDescripcion("literal ca");
         literales.add(l);
@@ -71,26 +71,26 @@ public class XTestJson {
         return li;
     }
 
-    public static ConfiguracionEntidad crearEntidad() {
+    public static RConfiguracionEntidad crearEntidad() {
 
-        OpcionFormularioSoporte opc;
+        ROpcionFormularioSoporte opc;
 
-        final List<OpcionFormularioSoporte> opciones = new ArrayList<>();
+        final List<ROpcionFormularioSoporte> opciones = new ArrayList<>();
 
-        opc = new OpcionFormularioSoporte();
+        opc = new ROpcionFormularioSoporte();
         opc.setTipo(generarLiteral());
         opc.setDescripcion(generarLiteral());
         opc.setDestinatario("R");
         opciones.add(opc);
 
-        opc = new OpcionFormularioSoporte();
+        opc = new ROpcionFormularioSoporte();
         opc.setTipo(generarLiteral());
         opc.setDescripcion(generarLiteral());
         opc.setDestinatario("L");
         opc.setListaEmails("email1;email2");
         opciones.add(opc);
 
-        final ConfiguracionEntidad e = new ConfiguracionEntidad();
+        final RConfiguracionEntidad e = new RConfiguracionEntidad();
 
         e.setIdentificador("E1");
         e.setLogo("pathlogo");
@@ -107,18 +107,18 @@ public class XTestJson {
 
     }
 
-    private static List<Plugin> crearPlugins() {
-        final List<Plugin> plugins = new ArrayList<>();
+    private static List<RPlugin> crearPlugins() {
+        final List<RPlugin> plugins = new ArrayList<>();
 
-        Plugin plugin;
+        RPlugin plugin;
 
-        plugin = new Plugin();
+        plugin = new RPlugin();
         plugin.setTipo("Tipo1");
         plugin.setClassname("Clase1");
         plugin.setParametros(crearListaParametros());
         plugins.add(plugin);
 
-        plugin = new Plugin();
+        plugin = new RPlugin();
         plugin.setTipo("Tipo2");
         plugin.setClassname("Clase2");
         plugin.setParametros(crearListaParametros());
@@ -127,11 +127,11 @@ public class XTestJson {
         return plugins;
     }
 
-    public static ListaParametros crearListaParametros() {
-        final ListaParametros params = new ListaParametros();
+    public static RListaParametros crearListaParametros() {
+        final RListaParametros params = new RListaParametros();
         params.setParametros(new ArrayList<>());
         for (int i = 0; i < 5; i++) {
-            final ValorParametro p = new ValorParametro();
+            final RValorParametro p = new RValorParametro();
             p.setCodigo("P" + i);
             p.setValor("V" + i);
             params.getParametros().add(p);
@@ -139,8 +139,8 @@ public class XTestJson {
         return params;
     }
 
-    public static ValoresDominio crearValoresDominio() {
-        final ValoresDominio vd = new ValoresDominio();
+    public static RValoresDominio crearValoresDominio() {
+        final RValoresDominio vd = new RValoresDominio();
         for (int i = 0; i < 5; i++) {
             vd.addFila();
             for (int j = 0; j < 3; j++) {
@@ -150,29 +150,29 @@ public class XTestJson {
         return vd;
     }
 
-    public static VersionTramite crearVersionTramite() {
-        final List<PasoTramitacion> pasos = new ArrayList<>();
+    public static RVersionTramite crearVersionTramite() {
+        final List<RPasoTramitacion> pasos = new ArrayList<>();
         pasos.add(crearPasoDebeSaber());
         pasos.add(crearPasoRellenar());
 
-        final VersionTramite vt = new VersionTramite();
+        final RVersionTramite vt = new RVersionTramite();
         vt.setIdentificador("T1");
         vt.setVersion(1);
         vt.setPasos(pasos);
         return vt;
     }
 
-    private static PasoTramitacionDebeSaber crearPasoDebeSaber() {
-        final PasoTramitacionDebeSaber pd = new PasoTramitacionDebeSaber();
+    private static RPasoTramitacionDebeSaber crearPasoDebeSaber() {
+        final RPasoTramitacionDebeSaber pd = new RPasoTramitacionDebeSaber();
         pd.setIdentificador("P" + System.currentTimeMillis());
         pd.setTipo("DS");
         pd.setInstruccionesInicio("debe saber");
         return pd;
     }
 
-    private static PasoTramitacionRellenar crearPasoRellenar() {
-        final PasoTramitacionRellenar pr = new PasoTramitacionRellenar();
-        final List<FormularioTramite> fl = new ArrayList<>();
+    private static RPasoTramitacionRellenar crearPasoRellenar() {
+        final RPasoTramitacionRellenar pr = new RPasoTramitacionRellenar();
+        final List<RFormularioTramite> fl = new ArrayList<>();
         fl.add(crearFormularioTramite());
         fl.add(crearFormularioTramite());
         pr.setIdentificador("P" + System.currentTimeMillis());
@@ -181,33 +181,33 @@ public class XTestJson {
         return pr;
     }
 
-    private static FormularioTramite crearFormularioTramite() {
-        FormularioTramite f;
-        f = new FormularioTramite();
+    private static RFormularioTramite crearFormularioTramite() {
+        RFormularioTramite f;
+        f = new RFormularioTramite();
         f.setIdentificador("F" + System.currentTimeMillis());
         f.setDescripcion("Formulario");
         f.setFormularioInterno(crearFormularioDisenyo());
         return f;
     }
 
-    private static FormularioInterno crearFormularioDisenyo() {
-        final List<PaginaFormulario> paginas = new ArrayList<>();
+    private static RFormularioInterno crearFormularioDisenyo() {
+        final List<RPaginaFormulario> paginas = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             paginas.add(crearPaginaFormulario());
         }
 
-        final FormularioInterno fd = new FormularioInterno();
+        final RFormularioInterno fd = new RFormularioInterno();
         fd.setPaginas(paginas);
         return fd;
     }
 
-    private static PaginaFormulario crearPaginaFormulario() {
-        PaginaFormulario p;
-        p = new PaginaFormulario();
+    private static RPaginaFormulario crearPaginaFormulario() {
+        RPaginaFormulario p;
+        p = new RPaginaFormulario();
         p.setHtmlB64("HTML PAGINA");
-        final List<LineaComponentes> lineas = new ArrayList<>();
+        final List<RLineaComponentes> lineas = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            final LineaComponentes li = new LineaComponentes();
+            final RLineaComponentes li = new RLineaComponentes();
             li.setComponentes(createLineaComponentes());
             lineas.add(li);
         }
@@ -215,24 +215,24 @@ public class XTestJson {
         return p;
     }
 
-    private static List<Componente> createLineaComponentes() {
-        final List<Componente> lc = new ArrayList<>();
+    private static List<RComponente> createLineaComponentes() {
+        final List<RComponente> lc = new ArrayList<>();
 
-        final ComponenteSeccion ce = new ComponenteSeccion();
+        final RComponenteSeccion ce = new RComponenteSeccion();
         ce.setIdentificador("ID" + System.currentTimeMillis());
         ce.setTipo("ETQ");
         ce.setEtiqueta("Etiqueta");
 
         lc.add(ce);
 
-        final ComponenteTextbox ct = new ComponenteTextbox();
+        final RComponenteTextbox ct = new RComponenteTextbox();
         ct.setIdentificador("ID" + System.currentTimeMillis());
         ct.setTipo("ETQ");
         ct.setEtiqueta("Etiqueta");
 
         lc.add(ct);
 
-        final ComponenteSelector cs = new ComponenteSelector();
+        final RComponenteSelector cs = new RComponenteSelector();
         cs.setIdentificador("ID" + System.currentTimeMillis());
         cs.setTipo("SEL");
         cs.setEtiqueta("Selector");
@@ -241,19 +241,19 @@ public class XTestJson {
         return lc;
     }
 
-    public static AvisosEntidad crearAvisos() {
-        final List<Aviso> lista = new ArrayList<>();
+    public static RAvisosEntidad crearAvisos() {
+        final List<RAviso> lista = new ArrayList<>();
         lista.add(generarAviso());
         lista.add(generarAviso());
         lista.add(generarAviso());
 
-        final AvisosEntidad res = new AvisosEntidad();
+        final RAvisosEntidad res = new RAvisosEntidad();
         res.setAvisos(lista);
         return res;
     }
 
-    private static Aviso generarAviso() {
-        final Aviso a = new Aviso();
+    private static RAviso generarAviso() {
+        final RAviso a = new RAviso();
         a.setMensaje(generarLiteral());
         a.setTipo("L");
         a.setFechaInicio("20180615000000");

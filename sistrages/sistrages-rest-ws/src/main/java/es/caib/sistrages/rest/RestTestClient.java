@@ -12,19 +12,21 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import es.caib.sistrages.rest.api.AvisosEntidad;
-import es.caib.sistrages.rest.api.ConfiguracionGlobal;
-import es.caib.sistrages.rest.api.ConfiguracionEntidad;
-import es.caib.sistrages.rest.api.ListaParametros;
-import es.caib.sistrages.rest.api.ValoresDominio;
-import es.caib.sistrages.rest.api.VersionTramite;
+
+import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RListaParametros;
+import es.caib.sistrages.rest.api.interna.RValoresDominio;
+import es.caib.sistrages.rest.api.interna.RVersionTramite;
+
 import es.caib.sistrages.rest.api.util.JsonException;
 import es.caib.sistrages.rest.api.util.JsonUtil;
 import es.caib.sistrages.rest.api.util.XTestJson;
 
 public class RestTestClient {
 
-    private final static String urlBase = "http://localhost:8080/sistrages/api/rest/asistente";
+    private final static String urlBase = "http://localhost:8080/sistrages/api/rest/interna";
 
     public static void main(String[] args) throws JsonException {
 
@@ -47,11 +49,11 @@ public class RestTestClient {
         headers.add("Authorization", "Basic " + base64Creds);
 
         final HttpEntity<String> request = new HttpEntity<String>(headers);
-        final ResponseEntity<VersionTramite> response = restTemplate.exchange(
+        final ResponseEntity<RVersionTramite> response = restTemplate.exchange(
                 urlBase + "/dominioFuenteDatos/D1", HttpMethod.POST, request,
-                VersionTramite.class);
+                RVersionTramite.class);
 
-        final VersionTramite vt = response.getBody();
+        final RVersionTramite vt = response.getBody();
         System.out.println(vt.getIdentificador());
     }
 
@@ -62,24 +64,24 @@ public class RestTestClient {
                 .add(new BasicAuthorizationInterceptor("api-stg", "1234"));
 
         // Configuracion global
-        final ConfiguracionGlobal c = restTemplate.getForObject(
-                urlBase + "/configuracionGlobal", ConfiguracionGlobal.class);
+        final RConfiguracionGlobal c = restTemplate.getForObject(
+                urlBase + "/configuracionGlobal", RConfiguracionGlobal.class);
         System.out.println("ConfiguracionGlobal: props "
                 + c.getPropiedades().getParametros().size());
 
         // Definicion entidad
-        final ConfiguracionEntidad e = restTemplate.getForObject(urlBase + "/entidad/E1",
-                ConfiguracionEntidad.class);
+        final RConfiguracionEntidad e = restTemplate.getForObject(
+                urlBase + "/entidad/E1", RConfiguracionEntidad.class);
         System.out.println("Entidad: " + e.getIdentificador());
 
         // Avisos entidad
-        final AvisosEntidad avisos = restTemplate.getForObject(
-                urlBase + "/entidad/E1/avisos", AvisosEntidad.class);
+        final RAvisosEntidad avisos = restTemplate.getForObject(
+                urlBase + "/entidad/E1/avisos", RAvisosEntidad.class);
         System.out.println("Avisos Entidad: " + avisos.getAvisos().size());
 
         // Definicion version
-        final VersionTramite vt = restTemplate.getForObject(
-                urlBase + "/tramite/ID1/1/es", VersionTramite.class);
+        final RVersionTramite vt = restTemplate.getForObject(
+                urlBase + "/tramite/ID1/1/es", RVersionTramite.class);
         System.out.println("Version tramite: " + vt.getIdentificador());
 
         // Fuente datos
@@ -97,7 +99,7 @@ public class RestTestClient {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        final ListaParametros lp = XTestJson.crearListaParametros();
+        final RListaParametros lp = XTestJson.crearListaParametros();
         final String parametrosJSON = JsonUtil.toJson(lp);
 
         final MultiValueMap<String, String> map = new LinkedMultiValueMap();
@@ -106,11 +108,11 @@ public class RestTestClient {
         final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
                 map, headers);
 
-        final ResponseEntity<ValoresDominio> response = restTemplate
+        final ResponseEntity<RValoresDominio> response = restTemplate
                 .postForEntity(urlBase + "/dominioFuenteDatos/D1", request,
-                        ValoresDominio.class);
+                        RValoresDominio.class);
 
-        final ValoresDominio vd = response.getBody();
+        final RValoresDominio vd = response.getBody();
 
         System.out.println("Valores dominio: filas " + vd.getNumeroFilas());
 
