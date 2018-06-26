@@ -46,7 +46,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private String tramiteVersion;
 
 	/**
-	 * Indica si viene del viewDialog o del DialogDefVersionControlAcceso. Si está
+	 * Indica si viene del viewDialog o del DialogDefVersionControlAcceso. Si esta
 	 * relleno y es DialogDef es el segundo sino el primero.
 	 */
 	private String dato;
@@ -78,7 +78,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private boolean disabledActivo = false;
 
 	/**
-	 * Inicialización.
+	 * Inicializacion.
 	 */
 	public void init() {
 
@@ -100,10 +100,10 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new AvisoEntidad();
-			// Si es tipo tramite versión, ya tiene unos valores por defecto.
+			// Si es tipo tramite version, ya tiene unos valores por defecto.
 			if (tipoTramite) {
 				data.setTipo(TypeAvisoEntidad.TRAMITE_VERSION);
-				data.setListaSerializadaTramites(tramite);
+				data.setListaSerializadaTramites(tramite + "-" + tramiteVersion);
 			}
 		} else {
 			if (id != null) {
