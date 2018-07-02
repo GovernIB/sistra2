@@ -129,6 +129,9 @@ public interface FlujoTramitacionService {
      */
     void cancelarTramite(String idSesionTramitacion);
 
+    /** Realiza purga flujos tramitación. */
+    void purgar();
+
     // TODO Para borrar
     void test(String idSesionTramitacion, String param);
 

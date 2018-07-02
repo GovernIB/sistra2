@@ -97,6 +97,11 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
         flujoTramitacionService.cancelarTramite(idSesionTramitacion);
     }
 
+    @Override
+    public void purgar() {
+        flujoTramitacionService.purgar();
+    }
+
     // TODO BORRAR
     @Override
     public void test(String idSesionTramitacion, String param) {

@@ -22,13 +22,24 @@ public interface AuditoriaDao {
     void add(final EventoAuditoria evento, String idSesionTramitacion);
 
     /**
-     * Borra log interno hasta la fecha indicada (no incluida).
+     * Borra log interno los eventos no asociados a una sesión hasta la fecha
+     * indicada (no incluida).
      *
      * @param toDate
      *            Fecha hasta la cual se debe borrar.
      * @return numero de errores borrados
      */
-    int purgar(final Date toDate);
+    int purgarEventosSinSesion(final Date toDate);
+
+    /**
+     * Borra log interno los eventos asociados una sesión hasta la fecha
+     * indicada (no incluida).
+     *
+     * @param toDate
+     *            Fecha hasta la cual se debe borrar.
+     * @return numero de errores borrados
+     */
+    int purgarEventosSesion(String idSesion);
 
     /**
      * Permite recuperar la lista de eventos internos parametrizada por fecha e

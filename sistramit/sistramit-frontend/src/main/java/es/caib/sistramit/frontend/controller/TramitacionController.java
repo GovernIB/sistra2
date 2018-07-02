@@ -21,7 +21,7 @@ import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
 import es.caib.sistramit.core.api.exception.WarningFrontException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
-import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.frontend.Errores;

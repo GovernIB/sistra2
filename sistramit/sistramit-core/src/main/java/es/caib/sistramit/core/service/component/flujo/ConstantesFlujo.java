@@ -8,15 +8,15 @@ package es.caib.sistramit.core.service.component.flujo;
  */
 public final class ConstantesFlujo {
 
-	/**
-	 * Constructor.
-	 */
-	private ConstantesFlujo() {
-	}
+    /**
+     * Constructor.
+     */
+    private ConstantesFlujo() {
+    }
 
-	/**
-	 * Id paso Guardar (paso virtual).
-	 */
-	public static final String ID_PASO_GUARDAR = "gu";
+    /**
+     * Id paso Guardar (paso virtual tras registro).
+     */
+    public static final String ID_PASO_GUARDAR = "gu";
 
 }

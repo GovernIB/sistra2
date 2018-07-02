@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
-import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 
 @Stateless

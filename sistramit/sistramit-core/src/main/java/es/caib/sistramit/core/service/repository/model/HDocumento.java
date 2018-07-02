@@ -20,6 +20,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
+import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
+import es.caib.sistramit.core.service.model.flujo.types.TypeDocumentoPersistencia;
 
 /**
  * Mapea tabla STT_DOCPTR.
@@ -597,6 +603,118 @@ public class HDocumento implements IModelApi {
     public void setPagoNumAutoliquidacion(
             final String pPagoNumAutoliquidacion) {
         pagoNumAutoliquidacion = pPagoNumAutoliquidacion;
+    }
+
+    public static DocumentoPasoPersistencia toModel(final HDocumento hDocumento,
+            final int pInstancia) {
+        final DocumentoPasoPersistencia documento = new DocumentoPasoPersistencia();
+        documento.setAnexoDescripcionInstancia(
+                hDocumento.getAnexoDescripcionInstancia());
+        documento.setEstado(
+                TypeEstadoDocumento.fromString(hDocumento.getEstado()));
+        documento.setId(hDocumento.getId());
+        documento.setInstancia(pInstancia);
+        documento.setPagoEstadoIncorrecto(TypeEstadoPagoIncorrecto
+                .fromString(hDocumento.getPagoEstadoIncorrecto()));
+
+        documento.setPagoErrorPasarela(hDocumento.getPagoErrorPasarela());
+        documento.setPagoMensajeErrorPasarela(
+                hDocumento.getPagoMensajeErrorPasarela());
+        documento.setPagoNifSujetoPasivo(hDocumento.getPagoNifSujetoPasivo());
+        documento.setPagoNumeroAutoliquidacion(
+                hDocumento.getPagoNumAutoliquidacion());
+        documento.setTipo(
+                TypeDocumentoPersistencia.fromString(hDocumento.getTipo()));
+
+        documento.setAnexoNombreFichero(hDocumento.getAnexoNombreFichero());
+
+        if (hDocumento.getFichero() != null) {
+            documento.setFichero(new ReferenciaFichero(hDocumento.getFichero(),
+                    hDocumento.getFicheroClave()));
+        }
+        if (hDocumento.getFormularioPdf() != null) {
+            documento.setFormularioPdf(
+                    new ReferenciaFichero(hDocumento.getFormularioPdf(),
+                            hDocumento.getFormularioPdfClave()));
+        }
+        if (hDocumento.getPagoJustificantePdf() != null) {
+            documento.setPagoJustificantePdf(
+                    new ReferenciaFichero(hDocumento.getPagoJustificantePdf(),
+                            hDocumento.getPagoJustificantePdfClave()));
+        }
+
+        documento.setRegistroPreregistro(
+                TypeSiNo.fromString(hDocumento.getRegistroPreregistro()));
+        documento.setRegistroNumeroRegistro(
+                hDocumento.getRegistroNumeroRegistro());
+        documento.setRegistroFechaRegistro(
+                hDocumento.getRegistroFechaRegistro());
+
+        return documento;
+
+    }
+
+    public static HDocumento fromModel(
+            final DocumentoPasoPersistencia documento) {
+        final HDocumento d = new HDocumento();
+        establecerCamposDocumento(documento, d);
+        return d;
+    }
+
+    public static void fromModel(HDocumento d,
+            final DocumentoPasoPersistencia documento) {
+        establecerCamposDocumento(documento, d);
+    }
+
+    private static void establecerCamposDocumento(
+            final DocumentoPasoPersistencia documento, final HDocumento d) {
+        d.setAnexoDescripcionInstancia(
+                documento.getAnexoDescripcionInstancia());
+        d.setEstado(documento.getEstado().toString());
+        d.setId(documento.getId());
+        d.setAnexoNombreFichero(documento.getAnexoNombreFichero());
+        if (documento.getPagoEstadoIncorrecto() != null) {
+            d.setPagoEstadoIncorrecto(
+                    documento.getPagoEstadoIncorrecto().toString());
+        } else {
+            d.setPagoEstadoIncorrecto(null);
+        }
+        d.setPagoErrorPasarela(documento.getPagoErrorPasarela());
+        d.setPagoMensajeErrorPasarela(documento.getPagoMensajeErrorPasarela());
+        d.setTipo(documento.getTipo().toString());
+        if (documento.getFichero() != null) {
+            d.setFichero(documento.getFichero().getId());
+            d.setFicheroClave(documento.getFichero().getClave());
+        } else {
+            d.setFichero(null);
+            d.setFicheroClave("");
+        }
+        if (documento.getFormularioPdf() != null) {
+            d.setFormularioPdf(documento.getFormularioPdf().getId());
+            d.setFormularioPdfClave(documento.getFormularioPdf().getClave());
+        } else {
+            d.setFormularioPdf(null);
+            d.setFormularioPdfClave(null);
+        }
+        if (documento.getPagoJustificantePdf() != null) {
+            d.setPagoJustificantePdf(
+                    documento.getPagoJustificantePdf().getId());
+            d.setPagoJustificantePdfClave(
+                    documento.getPagoJustificantePdf().getClave());
+        } else {
+            d.setPagoJustificantePdf(null);
+            d.setPagoJustificantePdfClave(null);
+        }
+        d.setPagoNifSujetoPasivo(documento.getPagoNifSujetoPasivo());
+        d.setPagoNumAutoliquidacion(documento.getPagoNumeroAutoliquidacion());
+        if (documento.getRegistroPreregistro() != null) {
+            d.setRegistroPreregistro(
+                    documento.getRegistroPreregistro().toString());
+        } else {
+            d.setRegistroPreregistro(null);
+        }
+        d.setRegistroNumeroRegistro(documento.getRegistroNumeroRegistro());
+        d.setRegistroFechaRegistro(documento.getRegistroFechaRegistro());
     }
 
 }

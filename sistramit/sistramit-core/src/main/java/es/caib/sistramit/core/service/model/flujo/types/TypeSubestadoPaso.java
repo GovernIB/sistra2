@@ -9,6 +9,4 @@ package es.caib.sistramit.core.service.model.flujo.types;
  */
 public interface TypeSubestadoPaso {
 
-	// TODO Pendiente definir subestados necesarios pasos que lo requieran
-
 }

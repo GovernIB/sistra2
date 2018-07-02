@@ -1,8 +1,8 @@
 package es.caib.sistramit.core.service;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,15 +16,16 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
+import es.caib.sistramit.core.service.component.flujo.FlujoTramitacionCacheComponent;
 import es.caib.sistramit.core.service.component.flujo.FlujoTramitacionComponent;
 
 @Service
 @Transactional
 public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 
-    /** Map con con los flujos de tramitacion. */
-    // TODO Ver como purgar el map
-    private final Map<String, FlujoTramitacionComponent> flujoTramitacionMap = new HashMap<>();
+    /** Caché con con los flujos de tramitacion. */
+    @Autowired
+    private FlujoTramitacionCacheComponent flujoTramitacionCache;
 
     @Override
     @NegocioInterceptor
@@ -38,7 +39,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
         final String idSesionTramitacion = ft.iniciarTramite(idTramite, version,
                 idioma, idTramiteCatalogo, urlInicio, parametrosInicio,
                 usuarioAutenticado);
-        flujoTramitacionMap.put(idSesionTramitacion, ft);
+        flujoTramitacionCache.put(idSesionTramitacion, ft);
         return idSesionTramitacion;
     }
 
@@ -66,7 +67,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
         // Generamos flujo de tramitacion, almacenamos en map y cargamos trámite
         final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
                 .getApplicationContext().getBean("flujoTramitacionComponent");
-        flujoTramitacionMap.put(idSesionTramitacion, ft);
+        flujoTramitacionCache.put(idSesionTramitacion, ft);
         ft.cargarTramite(idSesionTramitacion, usuarioAutenticado);
     }
 
@@ -77,7 +78,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
         // Generamos flujo de tramitacion, almacenamos en map y cargamos trámite
         final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
                 .getApplicationContext().getBean("flujoTramitacionComponent");
-        flujoTramitacionMap.put(idSesionTramitacion, ft);
+        flujoTramitacionCache.put(idSesionTramitacion, ft);
         ft.recargarTramite(idSesionTramitacion, userInfo);
     }
 
@@ -115,6 +116,12 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
         ft.cancelarTramite();
     }
 
+    @Override
+    @NegocioInterceptor
+    public void purgar() {
+        flujoTramitacionCache.purgar();
+    }
+
     // TODO BORRAR
     @Override
     @NegocioInterceptor
@@ -135,7 +142,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
         // ATENCION: NO DEBE PASAR POR INTERCEPTOR. SE USA DESDE EL PROPIO
         // INTERCEPTOR.
         DetalleTramite dt = null;
-        final FlujoTramitacionComponent ft = flujoTramitacionMap
+        final FlujoTramitacionComponent ft = flujoTramitacionCache
                 .get(idSesionTramitacion);
         if (ft != null) {
             try {
@@ -150,7 +157,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 
     @Override
     public void invalidarFlujoTramitacion(final String idSesionTramitacion) {
-        final FlujoTramitacionComponent ft = flujoTramitacionMap
+        final FlujoTramitacionComponent ft = flujoTramitacionCache
                 .get(idSesionTramitacion);
         if (ft != null) {
             try {
@@ -174,7 +181,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
      */
     private FlujoTramitacionComponent obtenerFlujoTramitacion(
             final String idSesionTramitacion) {
-        final FlujoTramitacionComponent ft = flujoTramitacionMap
+        final FlujoTramitacionComponent ft = flujoTramitacionCache
                 .get(idSesionTramitacion);
         if (ft == null) {
             throw new NoExisteFlujoTramitacionException(idSesionTramitacion);

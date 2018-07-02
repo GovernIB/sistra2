@@ -8,13 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.util.XTestJson;
-import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 
 /**
@@ -68,7 +69,17 @@ public final class SistragesComponentImpl implements SistragesComponent {
             String idioma) {
         log.debug("evictDefinicionTramite: " + idTramite + "-" + version + "-"
                 + idioma);
+    }
 
+    @Override
+    public RAvisosEntidad obtenerAvisosEntidad(String idEntidad) {
+        final RAvisosEntidad avisos = XTestJson.crearAvisos();
+        return avisos;
+    }
+
+    @Override
+    public void evictAvisosEntidad(String idEntidad) {
+        log.debug("evictAvisosEntidad: " + idEntidad);
     }
 
     // ------------- FUNCIONES PRIVADAS ---------------------------------

@@ -1,18 +1,22 @@
 package es.caib.sistramit.core.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
-import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
@@ -42,6 +46,10 @@ public class SystemServiceImpl implements SystemService {
 
     /** Fecha revision invalidaciones. */
     private Date fcRevisionInvalidaciones;
+
+    /** Log. */
+    private static Logger log = LoggerFactory
+            .getLogger(SystemServiceImpl.class);
 
     @PostConstruct
     public void init() {
@@ -78,6 +86,9 @@ public class SystemServiceImpl implements SystemService {
         // TODO PENDIENTE. VER SI SE DEBE SEPARAR EN VARIOS PROCESOS POR TEMA DE
         // DURACION DE TX.
 
+        // Purga invalidaciones
+        purgarInvalidaciones();
+
     }
 
     @Override
@@ -107,6 +118,19 @@ public class SystemServiceImpl implements SystemService {
             }
         }
 
+    }
+
+    /**
+     * Purga invalidaciones.
+     */
+    private void purgarInvalidaciones() {
+        log.debug("Purga invalidaciones: inicio...");
+        // Añadimos 1 día
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, ConstantesNumero.N1);
+        invalidacionDAO.purgarInvalidaciones(cal.getTime());
+        log.debug("Purga invalidaciones: fin");
     }
 
 }

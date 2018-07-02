@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistramit.core.api.exception.CargaConfiguracionException;
-import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 
 @Component("configuracionComponent")

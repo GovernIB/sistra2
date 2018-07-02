@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.api.model.comun.types;
+package es.caib.sistramit.core.api.model.system.types;
 
 /**
  * Propiedades configuración.
@@ -15,7 +15,13 @@ public enum TypePropiedadConfiguracion {
     /** Url asistente. */
     URL_SISTRAMIT("sistramit.url"),
     /** Idiomas soportados. */
-    IDIOMAS_SOPORTADOS("sistramit.idiomas");
+    IDIOMAS_SOPORTADOS("sistramit.idiomas"),
+    /**
+     * Realiza chequeo de si los datos de persistencia del paso se corresponden
+     * con los almacenados en BBDD (true/false). Una vez depurada la aplicacion
+     * se puede deshabilitar
+     */
+    CHECK_PERSISTENCIA_POSTACCION("sistramit.checkPersistenciaPostAccion");
 
     /**
      * Valor como string.

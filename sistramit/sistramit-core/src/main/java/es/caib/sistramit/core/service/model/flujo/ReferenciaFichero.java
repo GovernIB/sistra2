@@ -11,126 +11,97 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public final class ReferenciaFichero implements Serializable {
 
-	/**
-	 * Identificador fichero.
-	 */
-	private long id;
+    /**
+     * Identificador fichero.
+     */
+    private long id;
 
-	/**
-	 * Clave acceso.
-	 */
-	private String clave;
+    /**
+     * Clave acceso.
+     */
+    private String clave;
 
-	/**
-	 * Nombre fichero con extensión.
-	 */
-	private String nombre;
+    /**
+     * Constructor.
+     */
+    public ReferenciaFichero() {
+        super();
+    }
 
-	/**
-	 * Constructor.
-	 */
-	public ReferenciaFichero() {
-		super();
-	}
+    /**
+     * Constructor.
+     *
+     * @param pId
+     *            Identificador fichero
+     * @param pClave
+     *            Parámetro clave
+     */
+    public ReferenciaFichero(final long pId, final String pClave) {
+        super();
+        id = pId;
+        clave = pClave;
+    }
 
-	/**
-	 * Constructor.
-	 *
-	 * @param pId
-	 *            Identificador fichero
-	 * @param pClave
-	 *            Parámetro clave
-	 * @param pNombre
-	 *            Nombre fichero
-	 */
-	public ReferenciaFichero(final long pId, final String pClave, final String pNombre) {
-		super();
-		id = pId;
-		clave = pClave;
-		nombre = pNombre;
-	}
+    /**
+     * Método de acceso a id.
+     *
+     * @return id
+     */
+    public long getId() {
+        return id;
+    }
 
-	/**
-	 * Método de acceso a id.
-	 *
-	 * @return id
-	 */
-	public long getId() {
-		return id;
-	}
+    /**
+     * Método para establecer id.
+     *
+     * @param pId
+     *            id a establecer
+     */
+    public void setId(final long pId) {
+        id = pId;
+    }
 
-	/**
-	 * Método para establecer id.
-	 *
-	 * @param pId
-	 *            id a establecer
-	 */
-	public void setId(final long pId) {
-		id = pId;
-	}
+    /**
+     * Método de acceso a clave.
+     *
+     * @return clave
+     */
+    public String getClave() {
+        return clave;
+    }
 
-	/**
-	 * Método de acceso a nombre.
-	 *
-	 * @return nombre
-	 */
-	public String getNombre() {
-		return nombre;
-	}
+    /**
+     * Método para establecer clave.
+     *
+     * @param pClave
+     *            clave a establecer
+     */
+    public void setClave(final String pClave) {
+        clave = pClave;
+    }
 
-	/**
-	 * Método para establecer nombre.
-	 *
-	 * @param pNombre
-	 *            nombre a establecer
-	 */
-	public void setNombre(final String pNombre) {
-		nombre = pNombre;
-	}
+    /**
+     * Método para Crea new referencia fichero de la clase ReferenciaFichero.
+     *
+     * @return el referencia fichero
+     */
+    public static ReferenciaFichero createNewReferenciaFichero() {
+        return new ReferenciaFichero();
+    }
 
-	/**
-	 * Método de acceso a clave.
-	 *
-	 * @return clave
-	 */
-	public String getClave() {
-		return clave;
-	}
-
-	/**
-	 * Método para establecer clave.
-	 *
-	 * @param pClave
-	 *            clave a establecer
-	 */
-	public void setClave(final String pClave) {
-		clave = pClave;
-	}
-
-	/**
-	 * Método para Crea new referencia fichero de la clase ReferenciaFichero.
-	 *
-	 * @return el referencia fichero
-	 */
-	public static ReferenciaFichero createNewReferenciaFichero() {
-		return new ReferenciaFichero();
-	}
-
-	/**
-	 * Método para Crea new referencia fichero de la clase ReferenciaFichero.
-	 * * @param
-	 *
-	 * @param pId
-	 *            Identificador fichero
-	 * @param pClave
-	 *            Parámetro clave
-	 * @param pNombre
-	 *            Nombre fichero
-	 * @return el referencia fichero
-	 */
-	public static ReferenciaFichero createNewReferenciaFichero(final long pId, final String pClave,
-			final String pNombre) {
-		return new ReferenciaFichero(pId, pClave, pNombre);
-	}
+    /**
+     * Método para Crea new referencia fichero de la clase ReferenciaFichero.
+     * * @param
+     *
+     * @param pId
+     *            Identificador fichero
+     * @param pClave
+     *            Parámetro clave
+     * @return el referencia fichero
+     */
+    public static ReferenciaFichero createNewReferenciaFichero(final long pId,
+            final String pClave) {
+        return new ReferenciaFichero(pId, pClave);
+    }
 
 }

@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 
 @Path("/ejemploRest")

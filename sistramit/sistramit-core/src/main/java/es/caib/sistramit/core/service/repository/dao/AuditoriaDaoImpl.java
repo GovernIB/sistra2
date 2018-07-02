@@ -40,9 +40,19 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
     }
 
     @Override
-    public int purgar(Date toDate) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int purgarEventosSinSesion(Date fechaHasta) {
+        final String sql = "DELETE FROM HEventoAuditoria t WHERE t.fecha < :fecha AND t.sesionTramitacion is null";
+        final Query query = entityManager.createQuery(sql);
+        query.setParameter("fecha", fechaHasta);
+        return query.executeUpdate();
+    }
+
+    @Override
+    public int purgarEventosSesion(String idSesionTramitacion) {
+        final String sql = "DELETE FROM HEventoAuditoria t WHERE t.sesionTramitacion.idSesionTramitacion = :idSesionTramitacion";
+        final Query query = entityManager.createQuery(sql);
+        query.setParameter("idSesionTramitacion", idSesionTramitacion);
+        return query.executeUpdate();
     }
 
     @Override

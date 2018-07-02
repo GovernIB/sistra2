@@ -214,7 +214,7 @@ public final class NegocioInterceptorAspect {
         if (jp.getTarget() instanceof FlujoTramitacionService) {
             // Operaciones previas a estar creada la sesión. El resto tendrá
             // como primer parámetro la sesión.
-            final String[] operacionesPrevias = {"iniciarTramite"};
+            final String[] operacionesPrevias = {"iniciarTramite", "purgar"};
             if (!ArrayUtils.contains(operacionesPrevias,
                     jp.getSignature().getName())) {
                 idSesionTramitacion = (String) jp.getArgs()[0];

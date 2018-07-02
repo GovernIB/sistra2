@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.integracion;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
+import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
@@ -15,10 +16,6 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
  *
  */
 public interface SistragesComponent {
-
-    // TODO Pendiente Obtener pluging global / Obtener definicion entidad
-    // (¿Obtener plugin entidad?) / Obtener avisos
-    //
 
     /**
      * Recupera configuración global.
@@ -49,6 +46,24 @@ public interface SistragesComponent {
      */
     @CacheEvict(value = "cacheConfiguracion", key = "'configuracionEntidad-' + #idEntidad")
     void evictConfiguracionEntidad(String idEntidad);
+
+    /**
+     * Recupera avisos entidad.
+     *
+     * @param idEntidad
+     * @return configuracion entidad.
+     */
+    @Cacheable(value = "cacheConfiguracion", key = "'avisosEntidad-' + #idEntidad")
+    RAvisosEntidad obtenerAvisosEntidad(String idEntidad);
+
+    /**
+     * Quita de caché avisos entidad.
+     *
+     * @param idEntidad
+     * @return configuracion entidad.
+     */
+    @CacheEvict(value = "cacheConfiguracion", key = "'avisosEntidad-' + #idEntidad")
+    void evictAvisosEntidad(String idEntidad);
 
     /**
      * Recupera definición versión de trámite.

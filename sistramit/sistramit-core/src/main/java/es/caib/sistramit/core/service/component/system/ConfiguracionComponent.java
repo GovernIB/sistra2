@@ -1,6 +1,6 @@
 package es.caib.sistramit.core.service.component.system;
 
-import es.caib.sistramit.core.api.model.comun.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 
 /**
  * Componente para acceder a configuracion.

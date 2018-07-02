@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.repository.model;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistra2.commons.utils.JSONUtil;
+import es.caib.sistra2.commons.utils.JSONUtilException;
+import es.caib.sistramit.core.api.exception.ErrorJsonException;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 
 /**
  * Mapeo tabla STT_TRAPER.
@@ -50,6 +58,14 @@ public final class HTramite implements IModelApi {
     /** Atributo trámite Catálogo Procedimientos. */
     @Column(name = "TRP_IDETCP")
     private String idTramiteCP;
+
+    /** Atributo procedimiento Catálogo Procedimientos. */
+    @Column(name = "TRP_IDETCP")
+    private String idProcedimientoCP;
+
+    /** Atributo procedimiento SIA. */
+    @Column(name = "TRP_PROSIA")
+    private String idProcedimientoSIA;
 
     /** Atributo descripcion tramite. */
     @Column(name = "TRP_DESTRA")
@@ -94,7 +110,7 @@ public final class HTramite implements IModelApi {
 
     /** Atributo parametros iniciales. */
     @Column(name = "TRP_PARINI")
-    private String parametrosIniciales;
+    private String parametrosInicio;
 
     /** Atributo persistente. */
     @Column(name = "TRP_PERSIS")
@@ -352,8 +368,8 @@ public final class HTramite implements IModelApi {
      *
      * @return el atributo parametros iniciales
      */
-    public String getParametrosIniciales() {
-        return parametrosIniciales;
+    public String getParametrosInicio() {
+        return parametrosInicio;
     }
 
     /**
@@ -362,8 +378,8 @@ public final class HTramite implements IModelApi {
      * @param pParametrosIniciales
      *            el nuevo valor para parametros iniciales
      */
-    public void setParametrosIniciales(final String pParametrosIniciales) {
-        parametrosIniciales = pParametrosIniciales;
+    public void setParametrosInicio(final String pParametrosIniciales) {
+        parametrosInicio = pParametrosIniciales;
     }
 
     /**
@@ -716,6 +732,166 @@ public final class HTramite implements IModelApi {
 
     public void setIdTramiteCP(String idTramiteCP) {
         this.idTramiteCP = idTramiteCP;
+    }
+
+    /**
+     * Método de acceso a idProcedimientoCP.
+     *
+     * @return idProcedimientoCP
+     */
+    public String getIdProcedimientoCP() {
+        return idProcedimientoCP;
+    }
+
+    /**
+     * Método para establecer idProcedimientoCP.
+     *
+     * @param idProcedimientoCP
+     *            idProcedimientoCP a establecer
+     */
+    public void setIdProcedimientoCP(String idProcedimientoCP) {
+        this.idProcedimientoCP = idProcedimientoCP;
+    }
+
+    /**
+     * Método de acceso a idProcedimientoSIA.
+     *
+     * @return idProcedimientoSIA
+     */
+    public String getIdProcedimientoSIA() {
+        return idProcedimientoSIA;
+    }
+
+    /**
+     * Método para establecer idProcedimientoSIA.
+     *
+     * @param idProcedimientoSIA
+     *            idProcedimientoSIA a establecer
+     */
+    public void setIdProcedimientoSIA(String idProcedimientoSIA) {
+        this.idProcedimientoSIA = idProcedimientoSIA;
+    }
+
+    /**
+     * Convierte objeto de la capa negocio a la capa de repositorio.
+     *
+     * @param m
+     *            objeto modelo
+     * @return objeto repositorio
+     */
+    public static HTramite fromModel(DatosPersistenciaTramite m) {
+        final HTramite hTramite = new HTramite();
+        hTramite.setAutenticacion(m.getAutenticacion().toString());
+        hTramite.setMetodoAutenticacion(
+                m.getMetodoAutenticacionInicio().toString());
+        hTramite.setNifIniciador(m.getNifIniciador());
+        hTramite.setNombreIniciador(m.getNombreIniciador());
+        hTramite.setApellido1Iniciador(m.getApellido1Iniciador());
+        hTramite.setApellido2Iniciador(m.getApellido2Iniciador());
+
+        hTramite.setEstado(m.getEstado().toString());
+        hTramite.setFechaCaducidad(m.getFechaCaducidad());
+        hTramite.setFechaInicio(m.getFechaInicio());
+        hTramite.setFechaFin(m.getFechaFin());
+        hTramite.setFechaUltimoAcceso(m.getFechaUltimoAcceso());
+        hTramite.setTimestamp(new Date(m.getTimestamp()));
+        hTramite.setCancelado(m.isCancelado());
+
+        hTramite.setIdTramite(m.getIdTramite());
+        hTramite.setVersionTramite(m.getVersionTramite());
+        hTramite.setDescripcionTramite(m.getDescripcionTramite());
+        hTramite.setIdTramiteCP(m.getIdTramiteCP());
+        hTramite.setIdProcedimientoCP(m.getIdProcedimientoCP());
+        hTramite.setIdProcedimientoSIA(m.getIdProcedimientoSIA());
+
+        hTramite.setIdioma(m.getIdioma());
+        hTramite.setUrlInicio(m.getUrlInicio());
+        try {
+            hTramite.setParametrosInicio(
+                    JSONUtil.toJSON(m.getParametrosInicio()));
+        } catch (final JSONUtilException e) {
+            throw new ErrorJsonException(e);
+        }
+        hTramite.setPersistente(m.isPersistente());
+        hTramite.setPlazoDinamico(m.isPlazoDinamico());
+
+        hTramite.setNifPresentador(m.getNifPresentador());
+        hTramite.setNombrePresentador(m.getNombreCompletoPresentador());
+
+        hTramite.setPurgar(m.isMarcadoPurgar());
+        hTramite.setPurgado(m.isPurgado());
+        hTramite.setFechaPurgado(m.getFechaPurgado());
+        hTramite.setPurgaPendientePorPagoRealizado(
+                m.isPurgaPendientePorPagoRealizado());
+
+        return hTramite;
+    }
+
+    /**
+     * Convierte a objeto de modelo.
+     *
+     * @param h
+     *            Objeto repositorio
+     * @return Objeto modelo
+     */
+    public static DatosPersistenciaTramite toModel(HTramite h) {
+        DatosPersistenciaTramite m = null;
+        if (h != null) {
+            m = new DatosPersistenciaTramite();
+
+            m.setIdSesionTramitacion(
+                    h.getSesionTramitacion().getIdSesionTramitacion());
+
+            m.setAutenticacion(
+                    TypeAutenticacion.fromString(h.getAutenticacion()));
+            m.setMetodoAutenticacionInicio(TypeMetodoAutenticacion
+                    .fromString(h.getMetodoAutenticacion()));
+            m.setNifIniciador(h.getNifIniciador());
+            m.setNombreIniciador(h.getNombreIniciador());
+            m.setApellido1Iniciador(h.getApellido1Iniciador());
+            m.setApellido2Iniciador(h.getApellido2Iniciador());
+
+            m.setEstado(TypeEstadoTramite.fromString(h.getEstado()));
+            m.setFechaCaducidad(h.getFechaCaducidad());
+            m.setFechaInicio(h.getFechaInicio());
+            m.setFechaFin(h.getFechaFin());
+            m.setFechaUltimoAcceso(h.getFechaUltimoAcceso());
+            m.setCancelado(h.isCancelado());
+            if (h.getTimestamp() != null) {
+                m.setTimestamp(h.getTimestamp().getTime());
+            } else {
+                m.setTimestamp(null);
+            }
+
+            m.setIdTramite(h.getIdTramite());
+            m.setVersionTramite(h.getVersionTramite());
+            m.setDescripcionTramite(h.getDescripcionTramite());
+            m.setIdTramiteCP(h.getIdTramiteCP());
+            m.setIdProcedimientoCP(h.getIdProcedimientoCP());
+            m.setIdProcedimientoSIA(h.getIdProcedimientoSIA());
+
+            m.setIdioma(h.getIdioma());
+            m.setUrlInicio(h.getUrlInicio());
+            try {
+                m.setParametrosInicio((Map<String, String>) JSONUtil
+                        .fromJSON(h.getParametrosInicio(), Map.class));
+            } catch (final JSONUtilException e) {
+                throw new ErrorJsonException(e);
+            }
+            m.setPersistente(h.isPersistente());
+            m.setPlazoDinamico(h.isPlazoDinamico());
+
+            m.setNifPresentador(h.getNifPresentador());
+            m.setNombreCompletoPresentador(h.getNombrePresentador());
+
+            m.setMarcadoPurgar(h.isPurgar());
+            m.setPurgado(h.isPurgado());
+            m.setFechaPurgado(h.getFechaPurgado());
+            m.setPurgaPendientePorPagoRealizado(
+                    h.isPurgaPendientePorPagoRealizado());
+
+        }
+        return m;
     }
 
 }

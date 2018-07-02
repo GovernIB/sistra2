@@ -49,10 +49,11 @@ public final class InvalidacionDaoImpl implements InvalidacionDao {
     }
 
     @Override
-    public void purgarInvalidaciones(Date fechaHasta) {
-
-        // TODO PENDIENTE. PURGAR A LAS 24h.
-
+    public int purgarInvalidaciones(Date fechaHasta) {
+        final String sql = "DELETE FROM HInvalidacion t WHERE t.fecha < :fecha";
+        final Query query = entityManager.createQuery(sql);
+        query.setParameter("fecha", fechaHasta);
+        return query.executeUpdate();
     }
 
 }

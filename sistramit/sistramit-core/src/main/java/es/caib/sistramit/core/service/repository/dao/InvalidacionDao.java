@@ -33,7 +33,8 @@ public interface InvalidacionDao {
      *
      * @param fechaHasta
      *            Borra invalidaciones hasta la fecha indicada
+     * @return invalidaciones purgadas
      */
-    void purgarInvalidaciones(Date fechaHasta);
+    int purgarInvalidaciones(Date fechaHasta);
 
 }
