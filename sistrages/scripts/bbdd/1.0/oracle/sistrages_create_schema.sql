@@ -2056,8 +2056,7 @@ create table STG_ROLARE
    RLA_PERALT           NUMBER(1)            default 0 not null,
    RLA_PERMOD           NUMBER(1)            default 0 not null,
    RLA_PERCON           NUMBER(1)            default 0 not null,
-   RLA_PERHLP           NUMBER(1)            default 0 not null,
-   RLA_PERPRO           NUMBER(1)            default 0 not null
+   RLA_PERHLP           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_ROLARE is
@@ -2079,19 +2078,16 @@ comment on column STG_ROLARE.RLA_DESCR is
 'Descripción';
 
 comment on column STG_ROLARE.RLA_PERALT is
-'Permiso alta-baja trámites';
+'Permiso administrador área';
 
 comment on column STG_ROLARE.RLA_PERMOD is
-'Permiso modificación trámites';
+'Permiso desarrollador área';
 
 comment on column STG_ROLARE.RLA_PERCON is
-'Permiso consulta trámites';
+'Permiso consulta';
 
 comment on column STG_ROLARE.RLA_PERHLP is
 'Permiso acceso helpdesk';
-
-comment on column STG_ROLARE.RLA_PERPRO is
-'Permiso promocionar trámites';
 
 alter table STG_ROLARE
    add constraint STG_ROLARE_PK primary key (RLA_CODIGO);
