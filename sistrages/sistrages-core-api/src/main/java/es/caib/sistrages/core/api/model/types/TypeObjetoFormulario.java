@@ -43,7 +43,12 @@ public enum TypeObjetoFormulario {
 	/**
 	 * Linea
 	 */
-	LINEA("LN");
+	LINEA("LN"),
+
+	/**
+	 * pagina.
+	 */
+	PAGINA("PG");
 
 	private String valor;
 

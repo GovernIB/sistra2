@@ -3,28 +3,34 @@ package es.caib.sistrages.core.api.model;
 import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 
 /**
- *
- * Formulario de soporte.
- *
- * @author Indra
- *
+ * La clase FormularioSoporte.
  */
 @SuppressWarnings("serial")
 public class FormularioSoporte extends ModelApi {
 
-	/** Id. */
-	private Long id;
+	/**
+	 * codigo.
+	 */
+	private Long codigo;
 
-	/** Literal tipo de incidencia. */
+	/**
+	 * tipo de incidencia.
+	 */
 	private Literal tipoIncidencia;
 
-	/** Literal descripción tipo de incidencia. */
+	/**
+	 * descripcion.
+	 */
 	private Literal descripcion;
 
-	/** Tipo destinatario, tipo enum. **/
+	/**
+	 * tipo destinatario.
+	 */
 	private TypeFormularioSoporte tipoDestinatario;
 
-	/** Lista emails separados por ; para tipo destinario E */
+	/**
+	 * lista de emails.
+	 */
 	private String listaEmails;
 
 	/**
@@ -35,75 +41,95 @@ public class FormularioSoporte extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
-	 * @return the tipoIncidencia
+	 * Obtiene el valor de tipoIncidencia.
+	 *
+	 * @return el valor de tipoIncidencia
 	 */
 	public Literal getTipoIncidencia() {
 		return tipoIncidencia;
 	}
 
 	/**
+	 * Establece el valor de tipoIncidencia.
+	 *
 	 * @param tipoIncidencia
-	 *            the tipoIncidencia to set
+	 *            el nuevo valor de tipoIncidencia
 	 */
 	public void setTipoIncidencia(final Literal tipoIncidencia) {
 		this.tipoIncidencia = tipoIncidencia;
 	}
 
 	/**
-	 * @return the descripcion
+	 * Obtiene el valor de descripcion.
+	 *
+	 * @return el valor de descripcion
 	 */
 	public Literal getDescripcion() {
 		return descripcion;
 	}
 
 	/**
+	 * Establece el valor de descripcion.
+	 *
 	 * @param descripcion
-	 *            the descripcion to set
+	 *            el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final Literal descripcion) {
 		this.descripcion = descripcion;
 	}
 
 	/**
-	 * @return the emails
+	 * Obtiene el valor de listaEmails.
+	 *
+	 * @return el valor de listaEmails
 	 */
 	public String getListaEmails() {
 		return listaEmails;
 	}
 
 	/**
+	 * Establece el valor de listaEmails.
+	 *
 	 * @param emails
-	 *            the emails to set
+	 *            el nuevo valor de listaEmails
 	 */
 	public void setListaEmails(final String emails) {
 		this.listaEmails = emails;
 	}
 
 	/**
-	 * @return the destinatario
+	 * Obtiene el valor de tipoDestinatario.
+	 *
+	 * @return el valor de tipoDestinatario
 	 */
 	public TypeFormularioSoporte getTipoDestinatario() {
 		return tipoDestinatario;
 	}
 
 	/**
+	 * Establece el valor de tipoDestinatario.
+	 *
 	 * @param destinatario
-	 *            the destinatario to set
+	 *            el nuevo valor de tipoDestinatario
 	 */
 	public void setTipoDestinatario(final TypeFormularioSoporte destinatario) {
 		this.tipoDestinatario = destinatario;

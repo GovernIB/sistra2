@@ -177,7 +177,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				entidadService.uploadLogoGestorEntidad(entidad.getId(), fichero, file.getContents());
+				entidadService.uploadLogoGestorEntidad(entidad.getCodigo(), fichero, file.getContents());
 				break;
 			case LOGO_ASISTENTE_ENTIDAD:
 				fichero = entidad.getLogoAsistente();
@@ -187,7 +187,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				entidadService.uploadLogoAsistenteEntidad(entidad.getId(), fichero, file.getContents());
+				entidadService.uploadLogoAsistenteEntidad(entidad.getCodigo(), fichero, file.getContents());
 				break;
 			case CSS_ENTIDAD:
 				fichero = entidad.getCss();
@@ -197,7 +197,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				entidadService.uploadCssEntidad(entidad.getId(), fichero, file.getContents());
+				entidadService.uploadCssEntidad(entidad.getCodigo(), fichero, file.getContents());
 				break;
 			case FUENTE_ENTIDAD_CSV:
 				final byte csvContent[] = file.getContents();
@@ -227,7 +227,7 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				tramiteService.uploadDocAnexo(documento.getId(), fichero, file.getContents(), Long.valueOf(idEntidad));
+				tramiteService.uploadDocAnexo(documento.getCodigo(), fichero, file.getContents(), Long.valueOf(idEntidad));
 				break;
 			case PLANTILLA_IDIOMA_FORM:
 				fichero = plantillaIdiomaFormulario.getFichero();
@@ -253,7 +253,7 @@ public class DialogFichero extends DialogControllerBase {
 				comprobarFichero();
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
 			} else {
-				entidad = entidadService.loadEntidad(entidad.getId());
+				entidad = entidadService.loadEntidad(entidad.getCodigo());
 				comprobarFichero();
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
@@ -270,19 +270,19 @@ public class DialogFichero extends DialogControllerBase {
 	public void eliminar() {
 		switch (tipoCampoFichero) {
 		case LOGO_GESTOR_ENTIDAD:
-			entidadService.removeLogoGestorEntidad(entidad.getId());
-			entidad = entidadService.loadEntidad(entidad.getId());
+			entidadService.removeLogoGestorEntidad(entidad.getCodigo());
+			entidad = entidadService.loadEntidad(entidad.getCodigo());
 			break;
 		case LOGO_ASISTENTE_ENTIDAD:
-			entidadService.removeLogoAsistenteEntidad(entidad.getId());
-			entidad = entidadService.loadEntidad(entidad.getId());
+			entidadService.removeLogoAsistenteEntidad(entidad.getCodigo());
+			entidad = entidadService.loadEntidad(entidad.getCodigo());
 			break;
 		case CSS_ENTIDAD:
-			entidadService.removeCssEntidad(entidad.getId());
-			entidad = entidadService.loadEntidad(entidad.getId());
+			entidadService.removeCssEntidad(entidad.getCodigo());
+			entidad = entidadService.loadEntidad(entidad.getCodigo());
 			break;
 		case TRAMITE_DOC:
-			tramiteService.removeDocAnexo(documento.getId());
+			tramiteService.removeDocAnexo(documento.getCodigo());
 			documento = tramiteService.getDocumento(Long.valueOf(id));
 			break;
 		case FUENTE_ENTIDAD_CSV:

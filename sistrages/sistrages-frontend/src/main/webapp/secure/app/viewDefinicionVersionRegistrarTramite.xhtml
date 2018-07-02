@@ -47,7 +47,7 @@
 					<p:column colspan="4">
 						<p:commandButton id="scriptButton1" icon="fa fa-bolt"
 							disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro eq null}"
-							actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(),viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro.id)}"
+							actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(),viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro.codigo)}"
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.parametros']}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro)}" />
 					</p:column>
@@ -72,7 +72,7 @@
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:commandButton id="scriptButton2"
            				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador eq null}"
-						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador.id)}"
+						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador.codigo)}"
 						process="@this" update="growl" value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion.establecer']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador)}" />
 				<p:spacer width="30" height="1"/>
        		</p:outputPanel>
@@ -83,7 +83,7 @@
             <p:spacer width="30" height="1"/>
            		<p:commandButton id="scriptButton3"
            				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante eq null}"
-						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.id)}"
+						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
 						process="@this" update="growl" value="#{msg['viewDefinicionVersionRegistrarTramite.representacion.establecer']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
 				<p:spacer width="30" height="1"/>
 				<p:selectBooleanCheckbox id="valida" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
@@ -92,7 +92,7 @@
        		<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.registrar']}" />
 			<p:commandButton id="scriptButton4"
 						disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar eq null}"
-						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar.id)}"
+						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar.codigo)}"
 						process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar)}"/>
 
 			<f:facet name = "footer">

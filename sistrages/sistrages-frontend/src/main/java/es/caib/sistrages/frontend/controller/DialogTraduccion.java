@@ -22,31 +22,31 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogTraduccion extends DialogControllerBase {
 
-	/** Texto Catalán. **/
+	/** Texto Catalan. **/
 	private String textoCa;
 	/** Texto Espanyol. **/
 	private String textoEs;
-	/** Texto inglés. **/
+	/** Texto ingles. **/
 	private String textoEn;
-	/** Texto Alemán. **/
+	/** Texto Aleman. **/
 	private String textoDe;
 
-	/** Visible Catalán. **/
+	/** Visible Cataan. **/
 	private boolean visibleCa = false;
-	/** Visible Español. **/
+	/** Visible Espanyol. **/
 	private boolean visibleEs = false;
-	/** Visible Inglés. **/
+	/** Visible Ingles. **/
 	private boolean visibleEn = false;
-	/** Visible Alemán. **/
+	/** Visible Aleman. **/
 	private boolean visibleDe = false;
 
 	/** Obligatorio catalan. **/
 	private boolean requiredCa = false;
-	/** Obligatorio español. **/
+	/** Obligatorio espanyol. **/
 	private boolean requiredEs = false;
-	/** Obligatorio inglés. **/
+	/** Obligatorio ingles. **/
 	private boolean requiredEn = false;
-	/** Obligatorio alemán. **/
+	/** Obligatorio aleman. **/
 	private boolean requiredDe = false;
 
 	/** Data en formato JSON. **/
@@ -70,7 +70,7 @@ public class DialogTraduccion extends DialogControllerBase {
 	private List<String> idiomasPosibles;
 
 	/**
-	 * Inicialización.
+	 * Inicializacion.
 	 *
 	 */
 	public void init() {
@@ -78,7 +78,7 @@ public class DialogTraduccion extends DialogControllerBase {
 			final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 			// if (modo == TypeModoAcceso.ALTA && data == null) {
 			if (iData == null || iData.isEmpty()) {
-				// Borrar, sólo de prueba.
+				// Borrar, solo de prueba.
 				data = UtilTraducciones.getTraduccionesPorDefecto();
 			} else {
 				data = (Literal) UtilJSON.fromJSON(iData, Literal.class);
@@ -100,8 +100,8 @@ public class DialogTraduccion extends DialogControllerBase {
 				idiomasPosibles = mapper.readValue(iIdiomasPosibles, List.class);
 			}
 
-			// Si en los posibles, no está alguno de los idiomasObligatorios, hay que
-			// añadirlo
+			// Si en los posibles, no esa alguno de los idiomasObligatorios, hay que
+			// anyadirlo
 			for (final String idiomaObligatorio : idiomasObligatorios) {
 				if (!idiomasPosibles.contains(idiomaObligatorio)) {
 					idiomasPosibles.add(idiomaObligatorio);

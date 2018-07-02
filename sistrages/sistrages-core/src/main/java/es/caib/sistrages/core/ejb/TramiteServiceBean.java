@@ -398,4 +398,16 @@ public class TramiteServiceBean implements TramiteService {
 	public List<DominioTramite> getTramiteVersionByDominio(final Long idDominio) {
 		return tramiteService.getTramiteVersionByDominio(idDominio);
 	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean checkTasaRepetida(final Long idTramiteVersion, final String identificador, final Long idTasa) {
+		return tramiteService.checkTasaRepetida(idTramiteVersion, identificador, idTasa);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean checkAnexoRepetido(final Long idTramiteVersion, final String identificador, final Long idAnexo) {
+		return tramiteService.checkAnexoRepetido(idTramiteVersion, identificador, idAnexo);
+	}
 }

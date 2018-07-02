@@ -42,7 +42,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	 */
 	public void init() {
 
-		areas = areaService.listArea(UtilJSF.getSessionBean().getEntidad().getId(), null);
+		areas = areaService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(), null);
 
 		// Modo acceso
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
@@ -83,7 +83,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getId());
+		result.setResult(data.getCodigo());
 		UtilJSF.closeDialog(result);
 	}
 

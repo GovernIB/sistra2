@@ -16,7 +16,7 @@ public class FicheroConverter implements Converter {
 	public Object getAsObject(final FacesContext fc, final UIComponent uic, final String value) {
 		if (value != null && value.trim().length() > 0) {
 			final Fichero fichero = new Fichero();
-			fichero.setId(Long.valueOf(value));
+			fichero.setCodigo(Long.valueOf(value));
 			return fichero;
 
 		} else {
@@ -27,7 +27,7 @@ public class FicheroConverter implements Converter {
 	@Override
 	public String getAsString(final FacesContext fc, final UIComponent uic, final Object object) {
 		if (object != null) {
-			return String.valueOf(((Fichero) object).getId());
+			return String.valueOf(((Fichero) object).getCodigo());
 		} else {
 			return null;
 		}

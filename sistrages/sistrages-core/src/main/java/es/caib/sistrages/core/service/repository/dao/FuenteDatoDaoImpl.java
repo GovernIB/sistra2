@@ -195,18 +195,18 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		// - Actualiza y añade campos
 		for (final FuenteDatosCampo campo : mFuenteDato.getCampos()) {
 			// Verificamos si existe el campo
-			JCampoFuenteDatos jcampoFuenteDatos = jFuenteDato.getJFuenteCampo(campo.getId());
+			JCampoFuenteDatos jcampoFuenteDatos = jFuenteDato.getJFuenteCampo(campo.getCodigo());
 			// Campo no existe: creamos
 			if (jcampoFuenteDatos == null) {
 				jcampoFuenteDatos = new JCampoFuenteDatos();
 				jcampoFuenteDatos.setFuenteDatos(jFuenteDato);
 				jFuenteDato.getCampos().add(jcampoFuenteDatos);
 			} else {
-				jcampoFuenteDatos.setCodigo(campo.getId());
+				jcampoFuenteDatos.setCodigo(campo.getCodigo());
 			}
 			// Actualizamos propiedades campo
 			jcampoFuenteDatos.setClavePrimaria((campo.isClavePrimaria() ? "S" : "N"));
-			jcampoFuenteDatos.setIdCampo(campo.getCodigo());
+			jcampoFuenteDatos.setIdCampo(campo.getIdentificador());
 			jcampoFuenteDatos.setFuenteDatos(jFuenteDato);
 			jcampoFuenteDatos.setOrden(campo.getOrden());
 
@@ -224,7 +224,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		final List<JFilasFuenteDatos> results = getJFilasFuenteDatos(jFuenteDato.getCodigo());
 		for (final JFilasFuenteDatos f : results) {
 			for (final FuenteDatosCampo campo : listaCamposAnyadir) {
-				final JCampoFuenteDatos jcampoFuenteDatos = jFuenteDato.getJFuenteCampo(campo.getCodigo());
+				final JCampoFuenteDatos jcampoFuenteDatos = jFuenteDato.getJFuenteCampo(campo.getIdentificador());
 				final JValorFuenteDatos valor = new JValorFuenteDatos();
 				valor.setCampoFuenteDatos(jcampoFuenteDatos);
 				valor.setValor("");
@@ -239,7 +239,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		for (final JCampoFuenteDatos jCampo : jFuenteDato.getCampos()) {
 			boolean nocontiene = true;
 			for (final FuenteDatosCampo mFuenteDatoCampo : mFuenteDato.getCampos()) {
-				if (mFuenteDatoCampo.getId() != null && mFuenteDatoCampo.getId().compareTo(jCampo.getCodigo()) == 0) {
+				if (mFuenteDatoCampo.getCodigo() != null && mFuenteDatoCampo.getCodigo().compareTo(jCampo.getCodigo()) == 0) {
 					nocontiene = false;
 					break;
 				}
@@ -256,7 +256,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		for (final FuenteDatosCampo mFuenteDatoCampo : mFuenteDato.getCampos()) {
 			boolean nocontiene = true;
 			for (final JCampoFuenteDatos jCampo : jFuenteDato.getCampos()) {
-				if (mFuenteDatoCampo.getId() != null && mFuenteDatoCampo.getId().compareTo(jCampo.getCodigo()) == 0) {
+				if (mFuenteDatoCampo.getCodigo() != null && mFuenteDatoCampo.getCodigo().compareTo(jCampo.getCodigo()) == 0) {
 					nocontiene = false;
 					break;
 				}
@@ -300,7 +300,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 	@Override
 	public void updateFuenteDatoFila(final FuenteFila fila) {
-		final JFilasFuenteDatos jfila = entityManager.find(JFilasFuenteDatos.class, fila.getId());
+		final JFilasFuenteDatos jfila = entityManager.find(JFilasFuenteDatos.class, fila.getCodigo());
 		jfila.merge(fila);
 		entityManager.merge(jfila);
 	}

@@ -31,13 +31,13 @@
 
 					<p:dataTable id="dataTableFormularios" emptyMessage="#{msg['error.emptyRows']}" var="td" value="#{viewFormularioSoporte.listaDatos}"
 						paginator="false" selectionMode="single" selection="#{viewFormularioSoporte.datoSeleccionado}"
-						rowKey="#{td.id}" >
+						rowKey="#{td.codigo}" >
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect" />
 						<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
+		                        update=":dialogFormularioSoporte"
 		                        />
 
 						<!-- Columnas -->

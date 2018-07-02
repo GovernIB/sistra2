@@ -14,14 +14,14 @@ public enum TypeImportarAccion {
 	NADA("N"),
 	/** CREAR. **/
 	CREAR("C"),
+	/** REVISADO. */
+	REVISADO("V"),
 	/** REEMPLAZAR. **/
 	REEMPLAZAR("R"),
 	/** ERROR **/
 	ERROR("E"),
 	/** Pendiente. **/
-	PENDIENTE("P"),
-	/** Mantener. **/
-	MANTENER("M");
+	PENDIENTE("P"),;
 
 	/** valor. **/
 	private String valor;

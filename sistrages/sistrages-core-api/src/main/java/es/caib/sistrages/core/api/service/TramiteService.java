@@ -174,6 +174,15 @@ public interface TramiteService {
 	public TramiteVersion getTramiteVersion(Long idTramiteVersion);
 
 	/**
+	 * Obtiene una version de tramite a partir de un num version y un tramite.
+	 *
+	 * @param identificador
+	 * @param idTramite
+	 * @return
+	 */
+	public TramiteVersion getTramiteVersionByNumVersion(final int identificador, final Long idTramite);
+
+	/**
 	 * Devuelve los tipo de paso de trámite.
 	 *
 	 * @return
@@ -440,15 +449,6 @@ public interface TramiteService {
 	public Tramite getTramiteByIdentificador(String identificador, Long idArea);
 
 	/**
-	 * Obtiene tramite version por num. version y la id del tramite.
-	 *
-	 * @param numVersion
-	 * @param idTramite
-	 * @return
-	 */
-	public TramiteVersion getTramiteVersionByNumVersion(int numVersion, Long idTramite);
-
-	/**
 	 * Obtiene el tramite version con el num. version más alto.
 	 *
 	 * @param idTramite
@@ -471,5 +471,27 @@ public interface TramiteService {
 	 * @return
 	 */
 	public List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
+
+	/**
+	 * Mira si la tasa esta repetida.
+	 *
+	 * @param idTramiteVersion
+	 * @param identificador
+	 * @param idTasa
+	 *            Puede ser nulo en caso de alta
+	 * @return
+	 */
+	public boolean checkTasaRepetida(Long idTramiteVersion, String identificador, Long idTasa);
+
+	/**
+	 * Mira si el anexo esta repetido.
+	 *
+	 * @param idTramiteVersion
+	 * @param identificador
+	 * @param idAnexo
+	 *            Puede ser nulo en caso de alta
+	 * @return
+	 */
+	public boolean checkAnexoRepetido(Long idTramiteVersion, String identificador, Long idAnexo);
 
 }

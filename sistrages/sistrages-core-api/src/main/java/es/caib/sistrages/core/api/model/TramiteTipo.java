@@ -10,10 +10,10 @@ package es.caib.sistrages.core.api.model;
 public class TramiteTipo extends ModelApi {
 
 	/** Código tipo certificado */
-	private Long id;
+	private Long codigo;
 
 	/** Identificador tipo de paso */
-	private String codigo;
+	private String identificador;
 
 	/** Descripción corta **/
 	private Literal descripcion;
@@ -22,24 +22,9 @@ public class TramiteTipo extends ModelApi {
 	private int orden;
 
 	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	/**
 	 * @return the codigo
 	 */
-	public String getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
@@ -47,8 +32,23 @@ public class TramiteTipo extends ModelApi {
 	 * @param codigo
 	 *            the codigo to set
 	 */
-	public void setCodigo(final String codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * @param identificador
+	 *            the identificador to set
+	 */
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**

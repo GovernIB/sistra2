@@ -239,4 +239,5 @@ public interface TramiteDao {
 	 * @return
 	 */
 	List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
+
 }

@@ -4,17 +4,13 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.service.TramiteService;
-import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.FilaImportar;
 import es.caib.sistrages.frontend.model.comun.Constantes;
-import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
@@ -25,56 +21,59 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 	/** Log. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportarTV.class);
 
-	/** Servicio. */
-	@Inject
-	private TramiteService tramiteService;
+	/** FilaImportar. */
+	private FilaImportar data;
 
-	/** Id elemento a tratar. */
-	private String id;
+	/** Mensaje. **/
+	private String mensaje;
 
-	/** Id elemento a tratar. */
-	private String idArea;
+	/** Para el paso de registro. **/
+	private String oficina;
 
-	/** Dato. **/
-	private String dato;
+	/** Para el paso de registro. **/
+	private String libro;
 
-	/** Tramite version. */
-	private TramiteVersion data;
-
-	/** Tramite version. */
-	private TramiteVersion dataActual;
+	/** Para el paso de registro. **/
+	private String tipo;
 
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
+		setData((FilaImportar) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR));
+
+		if (data.getTramiteVersionActual() == null) {
+
+			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.noexiste"));
+
+		} else if (data.getTramiteVersionActual().getNumeroVersion() < data.getTramiteVersion().getNumeroVersion()) {
+
+			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.existemayor"));
+
+		} else if (data.getTramiteVersionActual().getNumeroVersion() == data.getTramiteVersion().getNumeroVersion()) {
+
+			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.existeigual"));
+
+		} else {
+
+			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.existemenor"));
+		}
+
+	}
+
+	/**
+	 * Guardar.
+	 */
+	public void guardar() {
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-		final String json = (String) mochilaDatos.get(Constantes.CLAVE_MOCHILA_TRAMITE_VERSION);
-		data = (TramiteVersion) UtilJSON.fromJSON(json, TramiteVersion.class);
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.data);
 
-		dataActual = tramiteService.getTramiteVersionMaxNumVersion(Long.valueOf(id));
-
-	}
-
-	/**
-	 * Cancelar.
-	 */
-	public void mantener() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
-		result.setResult(TypeImportarAccion.MANTENER);
-		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * Cancelar.
-	 */
-	public void remplazar() {
-		final DialogResult result = new DialogResult();
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setCanceled(false);
-		result.setResult(TypeImportarAccion.REEMPLAZAR);
+		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -85,29 +84,13 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
-		result.setResult(TypeImportarAccion.PENDIENTE);
 		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(final String id) {
-		this.id = id;
 	}
 
 	/**
 	 * @return the data
 	 */
-	public TramiteVersion getData() {
+	public FilaImportar getData() {
 		return data;
 	}
 
@@ -115,53 +98,68 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final TramiteVersion data) {
+	public void setData(final FilaImportar data) {
 		this.data = data;
 	}
 
 	/**
-	 * @return the dato
+	 * @return the mensaje
 	 */
-	public String getDato() {
-		return dato;
+	public String getMensaje() {
+		return mensaje;
 	}
 
 	/**
-	 * @param dato
-	 *            the dato to set
+	 * @param mensaje
+	 *            the mensaje to set
 	 */
-	public void setDato(final String dato) {
-		this.dato = dato;
+	public void setMensaje(final String mensaje) {
+		this.mensaje = mensaje;
 	}
 
 	/**
-	 * @return the idArea
+	 * @return the oficina
 	 */
-	public String getIdArea() {
-		return idArea;
+	public String getOficina() {
+		return oficina;
 	}
 
 	/**
-	 * @param idArea
-	 *            the idArea to set
+	 * @param oficina
+	 *            the oficina to set
 	 */
-	public void setIdArea(final String idArea) {
-		this.idArea = idArea;
+	public void setOficina(final String oficina) {
+		this.oficina = oficina;
 	}
 
 	/**
-	 * @return the dataActual
+	 * @return the libro
 	 */
-	public TramiteVersion getDataActual() {
-		return dataActual;
+	public String getLibro() {
+		return libro;
 	}
 
 	/**
-	 * @param dataActual
-	 *            the dataActual to set
+	 * @param libro
+	 *            the libro to set
 	 */
-	public void setDataActual(final TramiteVersion dataActual) {
-		this.dataActual = dataActual;
+	public void setLibro(final String libro) {
+		this.libro = libro;
+	}
+
+	/**
+	 * @return the tipo
+	 */
+	public String getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
+	public void setTipo(final String tipo) {
+		this.tipo = tipo;
 	}
 
 }

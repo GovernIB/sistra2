@@ -22,14 +22,14 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" columnClasses="w35,w65" styleClass="w100">
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="blur" process="@this" />
 	         		</p:inputText>
 	         	</h:column>
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.columnasOcupadas']}" /></h:column>
 	         	<h:column>
-	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}">
+	         		<p:selectOneMenu id="columnas" value="#{dialogDisenyoFormulario.objetoFormularioEdit.numColumnas}" disabled="#{dialogDisenyoFormulario.consulta}">
 	         				<p:ajax event="blur" process="@this" />
 							<f:selectItems value="#{dialogDisenyoFormulario.ncolumnas}" var="n" itemValue="#{n}" itemLabel="#{n}"/>
 				        </p:selectOneMenu>
@@ -47,7 +47,7 @@
 
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noMostrarTexto']}"/></h:column>
 	         	<h:column>
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noMostrarTexto}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noMostrarTexto}" disabled="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="change" global="false" />
 	         		</p:selectBooleanCheckbox>
 	         	</h:column>
@@ -62,21 +62,21 @@
 
 				<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.obligatorio']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.obligatorio}" disabled="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="change" global="false" />
 	         		</p:selectBooleanCheckbox>
 	         	</h:column>
 
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}" disabled="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="change" global="false" />
 	         		</p:selectBooleanCheckbox>
 				</h:column>
 
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noModificable']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noModificable}">
+	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noModificable}" disabled="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="change" global="false" />
 	         		</p:selectBooleanCheckbox>
 				</h:column>
@@ -94,21 +94,24 @@
 			<h:panelGrid columns="2" header="Scripts" columnClasses="w35,w65" styleClass="w100">
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.autorelleno']}" /></h:column>
 	         	<h:column>
-	         		<p:commandButton id="scriptAutorelleno" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_AUTORELLENABLE.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" process="@this">
+	         		<p:commandButton id="scriptAutorelleno" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_AUTORELLENABLE.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" process="@this"
+	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" >
 						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptAutorrelleno}" />
 					</p:commandButton>
 				</h:column>
 
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.soloLectura']}" /></h:column>
 	         	<h:column>
-	         		<p:commandButton id="scriptSoloLectura" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_ESTADO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" process="@this">
+	         		<p:commandButton id="scriptSoloLectura" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_ESTADO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" process="@this"
+	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" >
 						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptSoloLectura}" />
 					</p:commandButton>
 	         	</h:column>
 
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.validacion']}" /></h:column>
 	         	<h:column>
-	         		<p:commandButton id="scriptValidacion" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" process="@this">
+	         		<p:commandButton id="scriptValidacion" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" process="@this"
+	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" >
 						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptValidacion}" />
 					</p:commandButton>
 	         	</h:column>
@@ -126,7 +129,7 @@
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.alineacion']}" /></h:column>
 				<h:column>
-					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true">
+					<p:selectOneMenu id="tipoAlineacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.alineacionTexto}" required="true" disabled="#{dialogDisenyoFormulario.consulta}">
 					    <p:ajax event="blur" process="@this" />
 					    <f:selectItems value="#{TypeAlineacionTexto.ALL_VALUES}" var="tipoAlineacion" itemLabel="#{msg['typeAlineacionTexto.' += tipoAlineacion]}" />
 					</p:selectOneMenu>

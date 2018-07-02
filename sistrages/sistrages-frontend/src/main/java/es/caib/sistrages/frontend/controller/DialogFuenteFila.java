@@ -64,7 +64,7 @@ public class DialogFuenteFila extends DialogControllerBase {
 			data = new FuenteFila();
 			for (final FuenteDatosCampo campo : this.getCampos()) {
 				final FuenteDatosValor dato = new FuenteDatosValor();
-				dato.setIdCampo(campo.getCodigo());
+				dato.setIdCampo(campo.getIdentificador());
 				dato.setOrdenCampo(campo.getOrden());
 				dato.setCampo(campo);
 				dato.setValor("");

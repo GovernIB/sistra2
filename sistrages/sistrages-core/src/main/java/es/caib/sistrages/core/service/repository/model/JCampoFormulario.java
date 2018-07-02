@@ -32,15 +32,15 @@ public class JCampoFormulario implements IModelApi {
 	@JoinColumn(name = "FCA_CODIGO")
 	private JElementoFormulario elementoFormulario;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FCA_SCRAUT")
 	private JScript scriptAutocalculado;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FCA_SCRSLE")
 	private JScript scriptSoloLectura;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FCA_SCRVAL")
 	private JScript scriptValidaciones;
 

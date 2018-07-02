@@ -59,13 +59,14 @@ public class FormRenderServlet extends HttpServlet {
 
 		final String idForm = request.getParameter("id");
 		final String page = request.getParameter("page");
+		final String lang = request.getParameter("lang");
 		final String idComponente = request.getParameter("idComponente");
 
 		response.setContentType("text/html");
 		final PrintWriter out = response.getWriter();
 		final StringBuilder html = new StringBuilder();
 		if (StringUtils.isNotEmpty(idForm) && StringUtils.isNotEmpty(page)) {
-			paginaHTML(html, idForm, page, idComponente);
+			paginaHTML(html, idForm, page, idComponente, lang);
 		}
 
 		out.write(html.toString());
@@ -75,11 +76,11 @@ public class FormRenderServlet extends HttpServlet {
 	}
 
 	private void paginaHTML(final StringBuilder pOut, final String pIdForm, final String pPage,
-			final String pIdComponente) {
+			final String pIdComponente, final String pLang) {
 
 		final FormularioInterno formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(pIdForm));
 		final PaginaFormulario pagina = formIntService
-				.getContenidoPaginaFormulario(formulario.getPaginas().get(Integer.parseInt(pPage) - 1).getId());
+				.getContenidoPaginaFormulario(formulario.getPaginas().get(Integer.parseInt(pPage) - 1).getCodigo());
 
 		escribeLinea(pOut, "<!doctype html>", 0);
 		escribeLinea(pOut, "<html>", 0);
@@ -90,7 +91,7 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "<div id=\"imc-contenidor\" class=\"imc-contenidor\" >", 1);
 
 		if (formulario.isMostrarCabecera()) {
-			cabeceraFormulario(pOut, formulario.getTextoCabecera().getTraduccion("es"));
+			cabeceraFormulario(pOut, formulario.getTextoCabecera().getTraduccion(pLang));
 		}
 
 		escribeLinea(pOut, "<form>", 2);
@@ -98,7 +99,7 @@ public class FormRenderServlet extends HttpServlet {
 
 		escribeLinea(pOut, "<div class=\"imc-form-contingut\">", 4);
 
-		cuerpoHTML(pOut, pagina);
+		cuerpoHTML(pOut, pagina, pLang);
 
 		escribeLinea(pOut, "</div>", 4);
 		escribeLinea(pOut, "</div>", 3);
@@ -142,7 +143,7 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "</header>", 2);
 	}
 
-	private void cuerpoHTML(final StringBuilder pOut, final PaginaFormulario pPagina) {
+	private void cuerpoHTML(final StringBuilder pOut, final PaginaFormulario pPagina, final String pLang) {
 
 		if (pPagina != null) {
 			for (final LineaComponentesFormulario lc : pPagina.getLineas()) {
@@ -151,19 +152,19 @@ public class FormRenderServlet extends HttpServlet {
 
 					switch (cf.getTipo()) {
 					case SECCION:
-						campoSeccion(pOut, cf);
+						campoSeccion(pOut, cf, pLang);
 						break;
 					case CAMPO_TEXTO:
-						campoTexto(pOut, cf);
+						campoTexto(pOut, cf, pLang);
 						break;
 					case ETIQUETA:
-						campoEtiqueta(pOut, cf);
+						campoEtiqueta(pOut, cf, pLang);
 						break;
 					case CHECKBOX:
-						campoCheckBox(pOut, cf);
+						campoCheckBox(pOut, cf, pLang);
 						break;
 					case SELECTOR:
-						campoSelector(pOut, cf);
+						campoSelector(pOut, cf, pLang);
 						break;
 					default:
 						break;
@@ -176,31 +177,31 @@ public class FormRenderServlet extends HttpServlet {
 				}
 
 				escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\" id=\"L",
-						String.valueOf(lc.getId()), "\"></div>", 5);
+						String.valueOf(lc.getCodigo()), "\"></div>", 5);
 
 			}
 		}
 	}
 
-	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF) {
+	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
 
-		escribeLinea(pOut, "<h4 ", escribeId(pCF.getId()), "class=\"imc-element imc-seccio\">", 5);
+		escribeLinea(pOut, "<h4 ", escribeId(pCF.getCodigo()), "class=\"imc-element imc-seccio\">", 5);
 
 		escribeLinea(pOut, "<span class=\"imc-se-marca\">", componente.getLetra(), "</span>", 6);
 		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
-			escribeLinea(pOut, "<span class=\"imc-se-titol\">", pCF.getTexto().getTraduccion("es"), "</span>", 6);
+			escribeLinea(pOut, "<span class=\"imc-se-titol\">", pCF.getTexto().getTraduccion(pLang), "</span>", 6);
 		}
 
 		escribeLinea(pOut, "</h4>", 5);
 
 	}
 
-	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF) {
+	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
-		estilo.append("imc-el-name-").append(String.valueOf(campo.getId()));
+		estilo.append("imc-el-name-").append(String.valueOf(campo.getCodigo()));
 
 		String tipo = null;
 		final StringBuilder elemento = new StringBuilder();
@@ -248,12 +249,12 @@ public class FormRenderServlet extends HttpServlet {
 			elemento.append("<input name=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
 		}
 
-		escribeLinea(pOut, "<div ", escribeId(pCF.getId()), " class=\"imc-element ", estilo.toString(),
+		escribeLinea(pOut, "<div ", escribeId(pCF.getCodigo()), " class=\"imc-element ", estilo.toString(),
 				"\" data-type=\"", tipo, "\">", 5);
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getId()), "\">",
-					campo.getTexto().getTraduccion("es"), "</label></div>", 6);
+			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getCodigo()), "\">",
+					campo.getTexto().getTraduccion(pLang), "</label></div>", 6);
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
@@ -262,7 +263,7 @@ public class FormRenderServlet extends HttpServlet {
 
 	}
 
-	private void campoCheckBox(final StringBuilder pOut, final ComponenteFormulario pCF) {
+	private void campoCheckBox(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
 		final ComponenteFormularioCampoCheckbox campo = (ComponenteFormularioCampoCheckbox) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
@@ -272,12 +273,12 @@ public class FormRenderServlet extends HttpServlet {
 			estilo.append(" imc-el-").append(campo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(campo.getId()));
+		estilo.append(" imc-el-name-").append(String.valueOf(campo.getCodigo()));
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			texto = "<label for=\"" + campo.getId() + "\">" + campo.getTexto().getTraduccion("es") + "</label>";
+			texto = "<label for=\"" + campo.getCodigo() + "\">" + campo.getTexto().getTraduccion(pLang) + "</label>";
 		}
-		escribeLinea(pOut, "<div ", escribeId(pCF.getId()), "class=\"imc-element imc-el-check", estilo.toString(),
+		escribeLinea(pOut, "<div ", escribeId(pCF.getCodigo()), "class=\"imc-element imc-el-check", estilo.toString(),
 				"\" data-type=\"check\">", 5);
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
 		escribeLinea(pOut, "<div class=\"imc-input-check\">", 7);
@@ -290,25 +291,26 @@ public class FormRenderServlet extends HttpServlet {
 
 	}
 
-	private void campoSelector(final StringBuilder pOut, final ComponenteFormulario pCF) {
+	private void campoSelector(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
 		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) pCF;
 
 		switch (campo.getTipoCampoIndexado()) {
 		case DESPLEGABLE:
-			campoSelectorDesplegable(pOut, campo);
+			campoSelectorDesplegable(pOut, campo, pLang);
 			break;
 		case MULTIPLE:
-			campoSelectorMultiple(pOut, campo);
+			campoSelectorMultiple(pOut, campo, pLang);
 			break;
 		case UNICA:
-			campoSelectorUnica(pOut, campo);
+			campoSelectorUnica(pOut, campo, pLang);
 		default:
 			break;
 		}
 
 	}
 
-	private void campoSelectorDesplegable(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo) {
+	private void campoSelectorDesplegable(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
+			final String pLang) {
 
 		final StringBuilder estilo = new StringBuilder();
 		String texto = "";
@@ -317,15 +319,15 @@ public class FormRenderServlet extends HttpServlet {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getId()));
+		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
-			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getId() + "\">"
-					+ pCampo.getTexto().getTraduccion("es") + "</label></div>";
+			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getCodigo() + "\">"
+					+ pCampo.getTexto().getTraduccion(pLang) + "</label></div>";
 		}
 
-		escribeLinea(pOut, "<div ", escribeId(pCampo.getId()), "class=\"imc-element imc-el-selector", estilo.toString(),
-				"\" data-type=\"select\">", 5);
+		escribeLinea(pOut, "<div ", escribeId(pCampo.getCodigo()), "class=\"imc-element imc-el-selector",
+				estilo.toString(), "\" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
 
@@ -340,7 +342,8 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "</div>", 5);
 	}
 
-	private void campoSelectorMultiple(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo) {
+	private void campoSelectorMultiple(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
+			final String pLang) {
 
 		final StringBuilder estilo = new StringBuilder();
 
@@ -348,37 +351,38 @@ public class FormRenderServlet extends HttpServlet {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getId()));
+		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
-		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getId()), " class=\"imc-element", estilo.toString(),
+		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getCodigo()), " class=\"imc-element", estilo.toString(),
 				"\" data-type=\"check-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
-			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion("es"), "</legend>", 7);
+			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion(pLang), "</legend>", 7);
 		}
 
 		escribeLinea(pOut, "<ul>", 7);
 		escribeLinea(pOut, "<li>", 7);
-		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getId(), "a"), " name=\"",
-				String.valueOf(pCampo.getId()), "\" checked=\"checked\" type=\"checkbox\"><label for=\"",
-				String.valueOf(pCampo.getId()), ".a\">Opc. A</label></div>", 8);
+		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getCodigo(), "a"), " name=\"",
+				String.valueOf(pCampo.getCodigo()), "\" checked=\"checked\" type=\"checkbox\"><label for=\"",
+				String.valueOf(pCampo.getCodigo()), ".a\">Opc. A</label></div>", 8);
 		escribeLinea(pOut, "</li>", 7);
 		escribeLinea(pOut, "<li>", 7);
-		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getId(), "b"), " name=\"",
-				String.valueOf(pCampo.getId()), "\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getId()),
-				".b\">Opc. B</label></div>", 8);
+		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getCodigo(), "b"), " name=\"",
+				String.valueOf(pCampo.getCodigo()), "\" type=\"checkbox\"><label for=\"",
+				String.valueOf(pCampo.getCodigo()), ".b\">Opc. B</label></div>", 8);
 		escribeLinea(pOut, "</li>", 7);
 		escribeLinea(pOut, "<li>", 7);
-		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getId(), "c"), "name=\"",
-				String.valueOf(pCampo.getId()), "\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getId()),
-				".c\">Opc. C</label></div>", 8);
+		escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getCodigo(), "c"), "name=\"",
+				String.valueOf(pCampo.getCodigo()), "\" type=\"checkbox\"><label for=\"",
+				String.valueOf(pCampo.getCodigo()), ".c\">Opc. C</label></div>", 8);
 		escribeLinea(pOut, "</li>", 7);
 		escribeLinea(pOut, "</ul>", 7);
 
 		escribeLinea(pOut, "</fieldset>", 6);
 	}
 
-	private void campoSelectorUnica(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo) {
+	private void campoSelectorUnica(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
+			final String pLang) {
 
 		final StringBuilder estilo = new StringBuilder();
 
@@ -386,37 +390,37 @@ public class FormRenderServlet extends HttpServlet {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getId()));
+		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
-		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getId()), " class=\"imc-element imc-el-horizontal",
+		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getCodigo()), " class=\"imc-element imc-el-horizontal",
 				estilo.toString(), "\" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
-			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion("es"), "</legend>", 7);
+			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion(pLang), "</legend>", 7);
 		}
 
 		escribeLinea(pOut, "<ul>", 7);
 		escribeLinea(pOut, "<li>", 7);
-		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getId(), "a"), " name=\"",
-				String.valueOf(pCampo.getId()), "\" checked=\"checked\" type=\"radio\"><label for=\"",
-				String.valueOf(pCampo.getId()), ".a\">Opc. A</label></div>", 8);
+		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getCodigo(), "a"), " name=\"",
+				String.valueOf(pCampo.getCodigo()), "\" checked=\"checked\" type=\"radio\"><label for=\"",
+				String.valueOf(pCampo.getCodigo()), ".a\">Opc. A</label></div>", 8);
 		escribeLinea(pOut, "</li>", 7);
 		escribeLinea(pOut, "<li>", 7);
-		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getId(), "b"), " name=\"",
-				String.valueOf(pCampo.getId()), "\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getId()),
-				".b\">Opc. B</label></div>", 8);
+		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getCodigo(), "b"), " name=\"",
+				String.valueOf(pCampo.getCodigo()), "\" type=\"radio\"><label for=\"",
+				String.valueOf(pCampo.getCodigo()), ".b\">Opc. B</label></div>", 8);
 		escribeLinea(pOut, "</li>", 7);
 		escribeLinea(pOut, "<li>", 7);
-		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getId(), "c"), "name=\"",
-				String.valueOf(pCampo.getId()), "\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getId()),
-				".c\">Opc. C</label></div>", 8);
+		escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getCodigo(), "c"), "name=\"",
+				String.valueOf(pCampo.getCodigo()), "\" type=\"radio\"><label for=\"",
+				String.valueOf(pCampo.getCodigo()), ".c\">Opc. C</label></div>", 8);
 		escribeLinea(pOut, "</li>", 7);
 		escribeLinea(pOut, "</ul>", 7);
 
 		escribeLinea(pOut, "</fieldset>", 6);
 	}
 
-	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF) {
+	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
 		final ComponenteFormularioEtiqueta componente = (ComponenteFormularioEtiqueta) pCF;
 		final StringBuilder estilo = new StringBuilder();
 
@@ -433,9 +437,9 @@ public class FormRenderServlet extends HttpServlet {
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-element imc-missatge-en-linia imc-missatge-en-linia-icona-sup ",
-				estilo.toString(), "\" ", escribeId(pCF.getId()), "><p>", 5);
+				estilo.toString(), "\" ", escribeId(pCF.getCodigo()), "><p>", 5);
 		if (pCF.getTexto() != null) {
-			escribeLinea(pOut, pCF.getTexto().getTraduccion("es"), 6);
+			escribeLinea(pOut, pCF.getTexto().getTraduccion(pLang), 6);
 		}
 		escribeLinea(pOut, "</p></div>", 5);
 	}

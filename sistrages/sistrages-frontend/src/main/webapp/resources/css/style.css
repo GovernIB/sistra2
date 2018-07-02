@@ -397,8 +397,24 @@ body{
 	margin-bottom: 0.3em !important;
 }
 
+.margin-bottom-10 {
+	margin-bottom: 10px !important;
+}
+
+.margin-right-3 {
+	margin-right: 0.3em !important;
+}
+
 .margin-right-10 {
 	margin-right: 10px !important;
+}
+
+.margin-left-3 {
+	margin-left: 0.3em !important;
+}
+
+.margin-left-10 {
+	margin-left: 10px !important;
 }
 
 .noBackground,.noBackground div {

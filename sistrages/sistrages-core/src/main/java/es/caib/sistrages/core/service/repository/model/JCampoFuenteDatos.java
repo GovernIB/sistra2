@@ -95,13 +95,13 @@ public class JCampoFuenteDatos implements IModelApi {
 
 	public void fromModel(final FuenteDatosCampo campo) {
 		if (campo != null) {
-			this.setCodigo(campo.getId());
+			this.setCodigo(campo.getCodigo());
 			if (campo.isClavePrimaria()) {
 				this.setClavePrimaria("S");
 			} else {
 				this.setClavePrimaria("N");
 			}
-			this.setIdCampo(campo.getCodigo());
+			this.setIdCampo(campo.getIdentificador());
 			this.setOrden(campo.getOrden());
 		}
 	}
@@ -113,8 +113,8 @@ public class JCampoFuenteDatos implements IModelApi {
 		} else {
 			fuenteDatosCampo.setClavePrimaria(false);
 		}
-		fuenteDatosCampo.setCodigo(this.getIdCampo());
-		fuenteDatosCampo.setId(this.getCodigo());
+		fuenteDatosCampo.setIdentificador(this.getIdCampo());
+		fuenteDatosCampo.setCodigo(this.getCodigo());
 		fuenteDatosCampo.setOrden(this.getOrden());
 		return fuenteDatosCampo;
 	}
@@ -125,7 +125,7 @@ public class JCampoFuenteDatos implements IModelApi {
 		} else {
 			this.setClavePrimaria("N");
 		}
-		this.setIdCampo(fuenteDatoCampo.getCodigo());
+		this.setIdCampo(fuenteDatoCampo.getIdentificador());
 	}
 
 }

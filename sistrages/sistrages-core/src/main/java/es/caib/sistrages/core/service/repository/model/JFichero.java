@@ -62,7 +62,7 @@ public class JFichero implements IModelApi {
 
 	public Fichero toModel() {
 		final Fichero f = new Fichero();
-		f.setId(this.codigo);
+		f.setCodigo(this.codigo);
 		f.setNombre(this.nombre);
 		f.setPublico(publico);
 		return f;
@@ -70,7 +70,7 @@ public class JFichero implements IModelApi {
 
 	public static JFichero fromModel(final Fichero fichero) {
 		final JFichero jFichero = new JFichero();
-		jFichero.setCodigo(fichero.getId());
+		jFichero.setCodigo(fichero.getCodigo());
 		jFichero.setNombre(fichero.getNombre());
 		jFichero.setPublico(fichero.isPublico());
 		return jFichero;

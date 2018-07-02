@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -134,11 +136,14 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 			dominios.add(dominioService.loadDominio(dominioId));
 		}
 
+		final Map<Long, Boolean> idFuenteDatos = new HashMap<>();
+
 		for (final Dominio dominio : dominios) {
 			if (dominio.getTipo() == TypeDominio.FUENTE_DATOS && dominio.getIdFuenteDatos() != null) {
 				final FuenteDatos fuentesDatos = dominioService.loadFuenteDato(dominio.getIdFuenteDatos());
-				if (!fuenteDatos.contains(fuentesDatos)) {
+				if (!idFuenteDatos.containsKey(fuentesDatos.getCodigo())) {
 					fuenteDatos.add(fuentesDatos);
+					idFuenteDatos.put(fuentesDatos.getCodigo(), true);
 				}
 			}
 		}
@@ -367,16 +372,16 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 
 		// 6. Incluir los formularios_ID.data
 		for (final FormularioInterno formulario : formularios) {
-			incluirModelApi(zos, formulario, "formularios_" + formulario.getId() + ".data");
+			incluirModelApi(zos, formulario, "formularios_" + formulario.getCodigo() + ".data");
 		}
 
 		// 7. Incluir los ficheros_ID.data y ficherosContent_ID.data
 		for (final Fichero fichero : ficheros) {
-			incluirModelApi(zos, fichero, "ficheros_" + fichero.getId() + ".data");
+			incluirModelApi(zos, fichero, "ficheros_" + fichero.getCodigo() + ".data");
 
 			// El contenido del fichero se hace manual
-			final ContenidoFichero contenido = gestorFicherosService.obtenerContenidoFichero(fichero.getId());
-			final ZipEntry zeTramiteVersion = new ZipEntry("ficherosContent_" + fichero.getId() + ".data");
+			final ContenidoFichero contenido = gestorFicherosService.obtenerContenidoFichero(fichero.getCodigo());
+			final ZipEntry zeTramiteVersion = new ZipEntry("ficherosContent_" + fichero.getCodigo() + ".data");
 			zos.putNextEntry(zeTramiteVersion);
 			zos.write(contenido.getContent());
 

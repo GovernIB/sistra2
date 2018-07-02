@@ -12,6 +12,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -36,9 +37,7 @@ public class ViewFuentes extends ViewControllerBase {
 	@Inject
 	private DominioService dominioService;
 
-	/**
-	 * security service.
-	 */
+	/** security service. */
 	@Inject
 	private SecurityService securityService;
 
@@ -57,12 +56,6 @@ public class ViewFuentes extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private FuenteDatos datoSeleccionado;
 
-	/** Permita alta area. */
-	private boolean permiteAltaArea;
-
-	/** Permita modificar area. */
-	private boolean permiteModificarArea;
-
 	/** Id entidad. */
 	private Long idEntidad;
 
@@ -80,42 +73,6 @@ public class ViewFuentes extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		buscar(null);
 
-		checkPermisos();
-
-	}
-
-	private void checkPermisos() {
-		boolean res = false;
-		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
-		switch (ambitoType) {
-		case GLOBAL:
-			// Entra como SuperAdmin
-			permiteAltaArea = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
-			permiteModificarArea= (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
-			break;
-		case ENTIDAD:
-			permiteAltaArea = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-			permiteModificarArea= (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-
-			break;
-		case AREA:
-
-			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
-				permiteAltaArea = true;
-				permiteModificarArea= true;
-
-			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
-
-				permiteAltaArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-				permiteAltaArea = permisos.contains(TypeRolePermisos.MODIFICACION);
-			}
-
-			break;
-		}
 	}
 
 	/**
@@ -133,6 +90,11 @@ public class ViewFuentes extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
+		// Verifica si tiene permisos
+		if (!checkPermisosEntorno()) {
+			return;
+		}
+
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AREA.toString(), this.id);
 		params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
@@ -161,6 +123,11 @@ public class ViewFuentes extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
+		// Verifica si tiene permisos
+		if (!checkPermisos()) {
+			return;
+		}
+
 		// Eliminamos
 		if (!dominioService.removeFuenteDato(this.datoSeleccionado.getCodigo())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
@@ -181,9 +148,11 @@ public class ViewFuentes extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		TypeModoAcceso modoAccesoType = TypeModoAcceso.CONSULTA;
-		if (getPermiteAlta() || getPermiteEditar()) {
+		TypeModoAcceso modoAccesoType;
+		if (checkPermisos()) {
 			modoAccesoType = TypeModoAcceso.EDICION;
+		} else {
+			modoAccesoType = TypeModoAcceso.CONSULTA;
 		}
 
 		// Muestra dialogo
@@ -228,45 +197,64 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * Obtiene el valor de permiteAlta.
+	 * Checkea los permisos. Se puede crear/borrar/modificar si:<br />
+	 * - El ambito es global, sólo si tienes permiso superadmin.<br />
+	 * - El ambito es entidad, sólo si tienes permisos gestor de entidad.<br />
+	 * - Si el ambito es area, sólo si eres superadmin, gestor de entidad o, en caso
+	 * de desarrollador, tener el permiso de adm.area o des. area sobre dicha area.
+	 * <br />
 	 *
-	 * @return el valor de permiteAlta
+	 * @return el valor de check permisos
 	 */
-	public boolean getPermiteAlta() {
+	public boolean checkPermisos() {
 		boolean res = false;
 		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
 		switch (ambitoType) {
 		case GLOBAL:
+			// Entra como SuperAdmin
 			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
 			break;
 		case ENTIDAD:
 			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
 			break;
 		case AREA:
-			res = permiteAltaArea;
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					final List<TypeRolePermisos> permisos = securityService
+							.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
+
+					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+				} else {
+					res = false;
+				}
+			}
+
 			break;
 		}
 		return res;
 	}
 
 	/**
-	 * Obtiene el valor de permiteEditar.
+	 * Es lo mismo que checkPermisos pero con la restricción del entorno.
 	 *
-	 * @return el valor de permiteEditar
+	 * Si es entorno preproducción o producción, sólo puedes consultar sino lo que
+	 * diga permisos.
+	 *
+	 * @return el valor de check permisos con restricción de entorno
 	 */
-	public boolean getPermiteEditar() {
+	public boolean checkPermisosEntorno() {
 		boolean res = false;
-		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
-		switch (ambitoType) {
-		case GLOBAL:
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
-			break;
-		case ENTIDAD:
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-			break;
-		case AREA:
-			res = permiteModificarArea;
-			break;
+
+		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+			res = false;
+		} else {
+			res = checkPermisos();
 		}
 		return res;
 	}
@@ -301,6 +289,11 @@ public class ViewFuentes extends ViewControllerBase {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
+
+		// Verifica si tiene permisos
+		if (modo == TypeModoAcceso.EDICION && !checkPermisos()) {
+			return;
+		}
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();

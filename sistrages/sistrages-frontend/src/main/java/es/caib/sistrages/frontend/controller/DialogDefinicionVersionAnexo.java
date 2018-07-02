@@ -21,6 +21,7 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeCampoFichero;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
@@ -80,8 +81,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 * @param fichero
 	 */
 	public void descargaFichero(final Fichero fichero) {
-		if (fichero != null && fichero.getId() != null) {
-			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getId());
+		if (fichero != null && fichero.getCodigo() != null) {
+			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getCodigo());
 		}
 	}
 
@@ -95,7 +96,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(data.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(data.getCodigo()));
 		params.put(TypeParametroVentana.CAMPO_FICHERO.toString(), TypeCampoFichero.TRAMITE_DOC.toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(), idEntidad);
 		UtilJSF.openDialog(DialogFichero.class, TypeModoAcceso.EDICION, params, true, 750, 350);
@@ -286,6 +287,12 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (tramiteService.checkAnexoRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
+				this.data.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			return;
+		}
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();

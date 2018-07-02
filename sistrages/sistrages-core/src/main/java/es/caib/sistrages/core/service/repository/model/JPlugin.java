@@ -182,7 +182,7 @@ public class JPlugin implements IModelApi {
 	 */
 	public Plugin toModel() {
 		final Plugin plugin = new Plugin();
-		plugin.setId(this.getCodigo());
+		plugin.setCodigo(this.getCodigo());
 		plugin.setAmbito(TypeAmbito.fromString(this.getAmbito()));
 		plugin.setClassname(this.claseImplementadora);
 		plugin.setDescripcion(this.descripcion);
@@ -201,7 +201,7 @@ public class JPlugin implements IModelApi {
 		JPlugin jPlugin = null;
 		if (plugin != null) {
 			jPlugin = new JPlugin();
-			jPlugin.setCodigo(plugin.getId());
+			jPlugin.setCodigo(plugin.getCodigo());
 			jPlugin.setAmbito(plugin.getAmbito().toString());
 			jPlugin.setClaseImplementadora(plugin.getClassname());
 			jPlugin.setDescripcion(plugin.getDescripcion());

@@ -67,8 +67,8 @@ public class TramitePaso extends ModelApi {
 	 * @param codigo
 	 *            the codigo to set
 	 */
-	public void setCodigo(final Long id) {
-		this.codigo = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

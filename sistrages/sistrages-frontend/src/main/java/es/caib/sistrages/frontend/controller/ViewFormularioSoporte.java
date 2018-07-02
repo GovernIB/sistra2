@@ -82,7 +82,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 			return;
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(datoSeleccionado.getCodigo()));
 		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.EDICION, params, true, 600, 250);
 	}
 
@@ -103,7 +103,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 		}
 
 		// Eliminamos
-		if (entidadService.removeOpcionFormularioSoporte(datoSeleccionado.getId())) {
+		if (entidadService.removeOpcionFormularioSoporte(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje

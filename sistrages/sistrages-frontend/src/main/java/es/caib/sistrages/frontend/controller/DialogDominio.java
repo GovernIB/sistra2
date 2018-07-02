@@ -18,7 +18,10 @@ import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -31,6 +34,10 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ManagedBean
 @ViewScoped
 public class DialogDominio extends DialogControllerBase {
+
+	/** security service. */
+	@Inject
+	private SecurityService securityService;
 
 	/** Enlace servicio. */
 	@Inject
@@ -157,6 +164,47 @@ public class DialogDominio extends DialogControllerBase {
 				mostrarAdvertencia = true;
 			}
 		}
+	}
+
+	public boolean permiteGuardar() {
+
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		if (modo != null && modo == TypeModoAcceso.CONSULTA) {
+			return false;
+		}
+
+		boolean res = false;
+		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+		switch (ambitoType) {
+		case GLOBAL:
+			// Entra como SuperAdmin
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			break;
+		case ENTIDAD:
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case AREA:
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				if (data.getAreas() == null || data.getAreas().isEmpty()) {
+					res = false;
+				} else {
+					final List<TypeRolePermisos> permisos = securityService
+							.getPermisosDesarrolladorEntidadByArea((Long) data.getAreas().toArray()[0]);
+
+					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+				}
+			}
+
+			break;
+		}
+		return res;
+
 	}
 
 	/** Genera los tipos dependiendo del ambito puede que quite uno. **/

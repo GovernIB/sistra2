@@ -47,7 +47,7 @@ public class CsvUtil {
 		int i = 0;
 		for (final java.util.Iterator<FuenteDatosCampo> it = fuenteDatos.getCampos().iterator(); it.hasNext();) {
 			final FuenteDatosCampo cfd = it.next();
-			vcampos[i] = cfd.getCodigo();
+			vcampos[i] = cfd.getIdentificador();
 			i++;
 		}
 		csvDocumento.setColumnas(vcampos);

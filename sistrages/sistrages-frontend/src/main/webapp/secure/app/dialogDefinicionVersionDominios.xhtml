@@ -56,8 +56,8 @@
 		             rowKey="#{dominio.idString}" dblClickSelect="true">
 
 					<!-- Columnas -->
-				    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.codigo}">
-				        <h:outputText value="#{dominio.codigo}" />
+				    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.identificador}">
+				        <h:outputText value="#{dominio.identificador}" />
 				    </p:column>
 
 				    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerDescripcion']}"  sortBy="#{dominio.descripcion}">

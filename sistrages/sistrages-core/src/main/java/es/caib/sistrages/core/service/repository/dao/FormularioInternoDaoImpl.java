@@ -167,7 +167,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	public void updateFormulario(final FormularioInterno pFormInt) {
 		// TODO: revisar
 
-		JFormulario jForm = getJFormularioById(pFormInt.getId());
+		JFormulario jForm = getJFormularioById(pFormInt.getCodigo());
 
 		// Mergeamos datos
 		jForm.setPermitirAccionesPersonalizadas(pFormInt.isPermitirAccionesPersonalizadas());
@@ -175,7 +175,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		if (pFormInt.getScriptPlantilla() == null) {
 			jForm.setScriptPlantilla(null);
 		} else {
-			jForm.setScriptPlantilla(JScript.fromModel(pFormInt.getScriptPlantilla()));
+			if (pFormInt.getScriptPlantilla().getCodigo() != null) {
+				final JScript script = jForm.getScriptPlantilla();
+				script.setScript(pFormInt.getScriptPlantilla().getContenido());
+			} else {
+				jForm.setScriptPlantilla(JScript.fromModel(pFormInt.getScriptPlantilla()));
+			}
 		}
 
 		jForm.setMostrarCabecera(pFormInt.isMostrarCabecera());
@@ -376,7 +381,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		ObjetoFormulario objetoResultado = null;
 
 		if (pComponente != null) {
-			final JElementoFormulario jElemento = getJElementoById(pComponente.getId());
+			final JElementoFormulario jElemento = getJElementoById(pComponente.getCodigo());
 
 			jElemento.setAyuda(JLiteral.mergeModel(jElemento.getAyuda(), pComponente.getAyuda()));
 			jElemento.setTexto(JLiteral.mergeModel(jElemento.getTexto(), pComponente.getTexto()));
@@ -395,19 +400,34 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				if (campo.getScriptAutorrellenable() == null) {
 					jCampo.setScriptAutocalculado(null);
 				} else {
-					jCampo.setScriptAutocalculado(JScript.fromModel(campo.getScriptAutorrellenable()));
+					if (campo.getScriptAutorrellenable().getCodigo() != null) {
+						final JScript scriptAuto = jCampo.getScriptAutocalculado();
+						scriptAuto.setScript(campo.getScriptAutorrellenable().getContenido());
+					} else {
+						jCampo.setScriptAutocalculado(JScript.fromModel(campo.getScriptAutorrellenable()));
+					}
 				}
 
 				if (campo.getScriptSoloLectura() == null) {
 					jCampo.setScriptSoloLectura(null);
 				} else {
-					jCampo.setScriptSoloLectura(JScript.fromModel(campo.getScriptSoloLectura()));
+					if (campo.getScriptSoloLectura().getCodigo() != null) {
+						final JScript scriptSoloLectura = jCampo.getScriptSoloLectura();
+						scriptSoloLectura.setScript(campo.getScriptSoloLectura().getContenido());
+					} else {
+						jCampo.setScriptSoloLectura(JScript.fromModel(campo.getScriptSoloLectura()));
+					}
 				}
 
 				if (campo.getScriptValidacion() == null) {
 					jCampo.setScriptValidaciones(null);
 				} else {
-					jCampo.setScriptValidaciones(JScript.fromModel(campo.getScriptValidacion()));
+					if (campo.getScriptValidacion().getCodigo() != null) {
+						final JScript scriptValidacion = jCampo.getScriptValidaciones();
+						scriptValidacion.setScript(campo.getScriptValidacion().getContenido());
+					} else {
+						jCampo.setScriptValidaciones(JScript.fromModel(campo.getScriptValidacion()));
+					}
 				}
 
 				jCampo.setObligatorio(campo.isObligatorio());
@@ -500,7 +520,11 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				}
 
 				if (TypeListaValores.DOMINIO.equals(campoIndexado.getTipoListaValores())) {
-					jCampoIndexado.setDominio(JDominio.fromModelStatic(campoIndexado.getDominio()));
+					JDominio dominio = null;
+					if (campoIndexado.getCodDominio() != null) {
+						dominio = entityManager.find(JDominio.class, campoIndexado.getCodDominio());
+					}
+					jCampoIndexado.setDominio(dominio);
 					jCampoIndexado.setCampoDominioCodigo(campoIndexado.getCampoDominioCodigo());
 					jCampoIndexado.setCampoDominioDescripcion(campoIndexado.getCampoDominioDescripcion());
 					jCampoIndexado = JCampoFormularioIndexado.mergeListaParametrosDominioModel(jCampoIndexado,

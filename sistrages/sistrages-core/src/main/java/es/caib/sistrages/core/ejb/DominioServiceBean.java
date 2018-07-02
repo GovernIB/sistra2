@@ -42,14 +42,14 @@ public class DominioServiceBean implements DominioService {
 	 */
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Dominio loadDominio(final Long idDominio) {
-		return dominioService.loadDominio(idDominio);
+	public Dominio loadDominio(final Long codDominio) {
+		return dominioService.loadDominio(codDominio);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Dominio loadDominio(final String codigoDominio) {
-		return dominioService.loadDominio(codigoDominio);
+	public Dominio loadDominio(final String identificadorDominio) {
+		return dominioService.loadDominio(identificadorDominio);
 	}
 
 	/*

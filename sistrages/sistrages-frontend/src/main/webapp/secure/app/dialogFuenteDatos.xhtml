@@ -70,9 +70,9 @@
 			</p:dataTable>
 
 
-				<p:column rendered="#{dialogFuenteDatos.getPermiteEditar()}">
+				<p:column rendered="#{dialogFuenteDatos.permiteEdicion}">
 						     	<p>
-						    		<p:commandButton id="btnNuevoDato" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFuenteDatos.nuevaFuenteDato()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnNuevoDato" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFuenteDatos.nuevaFuenteDato()}" process="@this" update="growlDialog" >
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogo}" update="growlDialog dataTableDatos"/>
 		        					</p:commandButton>
 		        				</p>
@@ -101,17 +101,6 @@
 
 			 </h:panelGrid>
 
-			<h:outputScript>
-			      function rcEditarPropiedad() {
-			        document.getElementById("form:btnEditarPropiedad").click();
-			      }
-			      function rcEditarValor() {
-			        document.getElementById("form:btnEditarPropiedad").click();
-			      }
-			      function  rcBorrarPropiedad() {
-			        document.getElementById("form:btnEliminarPropiedad").click();
-			      }
-		    </h:outputScript>
 
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>

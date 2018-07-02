@@ -98,7 +98,7 @@ public class ViewEntidades extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true, 570, 190);
 	}
 
@@ -110,7 +110,7 @@ public class ViewEntidades extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos si no tiene dependencias
-		if (entidadService.removeEntidad(datoSeleccionado.getId())) {
+		if (entidadService.removeEntidad(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje

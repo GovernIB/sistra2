@@ -19,7 +19,7 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" >
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="blur" process="@this" />
 	         		</p:inputText>
 	         	</h:column>
@@ -34,7 +34,7 @@
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipo']}" /></h:column>
 				<h:column>
-					<p:selectOneMenu id="tipoEtiqueta" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoEtiqueta}" style="width:200px" required="true">
+					<p:selectOneMenu id="tipoEtiqueta" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoEtiqueta}" style="width:200px" required="true" disabled="#{dialogDisenyoFormulario.consulta}">
 					    <p:ajax event="blur" process="@this" />
 					    <f:selectItems value="#{TypeEtiqueta.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeEtiqueta.' += tipo]}" />
 					</p:selectOneMenu>

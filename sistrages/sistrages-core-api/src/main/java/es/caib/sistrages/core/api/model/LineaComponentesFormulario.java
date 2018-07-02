@@ -6,39 +6,73 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
 
 /**
- * Línea componentes para una página de formulario.
- *
- * @author Indra
- *
+ * La clase LineaComponentesFormulario.
  */
 @SuppressWarnings("serial")
 public final class LineaComponentesFormulario extends ObjetoFormulario {
 
+	/**
+	 * orden.
+	 */
 	private int orden;
 
-	/** Componentes. */
+	/**
+	 * componentes.
+	 */
 	private List<ComponenteFormulario> componentes = new ArrayList<>();
 
+	/**
+	 * Obtiene el valor de componentes.
+	 *
+	 * @return el valor de componentes
+	 */
 	public List<ComponenteFormulario> getComponentes() {
 		return componentes;
 	}
 
+	/**
+	 * Establece el valor de componentes.
+	 *
+	 * @param componentes
+	 *            el nuevo valor de componentes
+	 */
 	public void setComponentes(final List<ComponenteFormulario> componentes) {
 		this.componentes = componentes;
 	}
 
+	/**
+	 * Obtiene el valor de orden.
+	 *
+	 * @return el valor de orden
+	 */
 	public int getOrden() {
 		return orden;
 	}
 
+	/**
+	 * Establece el valor de orden.
+	 *
+	 * @param orden
+	 *            el nuevo valor de orden
+	 */
 	public void setOrden(final int orden) {
 		this.orden = orden;
 	}
 
+	/**
+	 * Evalua si la linea está completa.
+	 *
+	 * @return true, si está completa
+	 */
 	public boolean completa() {
 		return (!componentes.isEmpty() && columnasComponentes() >= ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA);
 	}
 
+	/**
+	 * Devuelve el número de columnas que ocupan los componentes de una línea.
+	 *
+	 * @return Número de columnas
+	 */
 	public int columnasComponentes() {
 		int ncolumnas = 0;
 		if (!componentes.isEmpty()) {
@@ -64,12 +98,19 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 		return ncolumnas;
 	}
 
+	/**
+	 * Evalua si cabe el componente en la linea.
+	 *
+	 * @param pComponente
+	 *            componente
+	 * @return true, si cabe
+	 */
 	public boolean cabenComponentes(final ComponenteFormulario pComponente) {
 		boolean res = true;
 		int ncolumnas = pComponente.getNumColumnas();
 		if (!componentes.isEmpty()) {
 			for (final ComponenteFormulario elementoFormulario : componentes) {
-				if (!elementoFormulario.getId().equals(pComponente.getId())) {
+				if (!elementoFormulario.getCodigo().equals(pComponente.getCodigo())) {
 					switch (elementoFormulario.getTipo()) {
 					case SECCION:
 						ncolumnas += elementoFormulario.getNumColumnas();

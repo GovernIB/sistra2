@@ -11,10 +11,10 @@ package es.caib.sistrages.core.api.model;
 public class FuenteDatosCampo extends ModelApi {
 
 	/** Id. */
-	private Long id;
+	private Long codigo;
 
 	/** Id campo **/
-	private String codigo;
+	private String identificador;
 
 	/** Indica si el campo forma parte de la clave primaria **/
 	private boolean clavePrimaria;
@@ -23,24 +23,9 @@ public class FuenteDatosCampo extends ModelApi {
 	private Integer orden;
 
 	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	/**
 	 * @return the codigo
 	 */
-	public String getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
@@ -48,8 +33,46 @@ public class FuenteDatosCampo extends ModelApi {
 	 * @param codigo
 	 *            the codigo to set
 	 */
-	public void setCodigo(final String codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+	
+	/**
+	 * @return the codigo
+	 */
+	public String getIdString() {
+		if (codigo == null) {
+			return "";
+		} else {
+			return String.valueOf(codigo);
+		}
+	}
+
+	/**
+	 * @param icodigo
+	 *            the codigo to set
+	 */
+	public void setIdString(final String icodigo) {
+		if (icodigo == null) {
+			this.codigo = null;
+		} else {
+			this.codigo = Long.valueOf(icodigo);
+		}
+	}
+
+	/**
+	 * @return the identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * @param identificador
+	 *            the identificador to set
+	 */
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**

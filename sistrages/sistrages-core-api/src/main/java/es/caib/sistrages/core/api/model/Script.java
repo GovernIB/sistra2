@@ -1,44 +1,50 @@
 package es.caib.sistrages.core.api.model;
 
 /**
- * Script.
- *
- * @author Indra
- *
+ * La clase Script.
  */
+@SuppressWarnings("serial")
 public class Script extends ModelApi {
 
-	/** Código. **/
-	private Long id;
+	/** Codigo. */
+	private Long codigo;
 
-	/** Script. **/
+	/** Contenido. */
 	private String contenido;
 
 	/**
-	 * @return the id
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
-	 * @return the contenido
+	 * Obtiene el valor de contenido.
+	 *
+	 * @return el valor de contenido
 	 */
 	public String getContenido() {
 		return contenido;
 	}
 
 	/**
+	 * Establece el valor de contenido.
+	 *
 	 * @param contenido
-	 *            the contenido to set
+	 *            el nuevo valor de contenido
 	 */
 	public void setContenido(final String contenido) {
 		this.contenido = contenido;

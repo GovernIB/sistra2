@@ -401,7 +401,7 @@ public class JEntidad implements IModelApi {
 	 */
 	public Entidad toModel() {
 		final Entidad entidad = new Entidad();
-		entidad.setId(this.codigo);
+		entidad.setCodigo(this.codigo);
 		entidad.setCodigoDIR3(this.codigoDir3);
 		entidad.setNombre(this.nombre.toModel());
 		entidad.setEmail(this.email);

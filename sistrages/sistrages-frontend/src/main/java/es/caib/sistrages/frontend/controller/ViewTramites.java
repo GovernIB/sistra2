@@ -334,7 +334,7 @@ public class ViewTramites extends ViewControllerBase {
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && areaSeleccionada != null) {
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(((Area) areaSeleccionada.getData()).getCodigo());
-			res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
+			res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
 		}
 
 		return res;
@@ -358,8 +358,8 @@ public class ViewTramites extends ViewControllerBase {
 			if (areaSeleccionada != null) {
 				final List<TypeRolePermisos> permisos = securityService
 						.getPermisosDesarrolladorEntidadByArea(((Area) areaSeleccionada.getData()).getCodigo());
-				res = (permisos.contains(TypeRolePermisos.MODIFICACION)
-						|| permisos.contains(TypeRolePermisos.ALTA_BAJA));
+				res = (permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+						|| permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA));
 			}
 		}
 
@@ -512,7 +512,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * Buscar areas.
 	 */
 	private void buscarAreas() {
-		final List<Area> listaAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getId(),
+		final List<Area> listaAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(),
 				this.filtro);
 		List<Area> listaMostrarAreas = new ArrayList<>();
 
@@ -524,7 +524,8 @@ public class ViewTramites extends ViewControllerBase {
 				final List<TypeRolePermisos> permisos = securityService
 						.getPermisosDesarrolladorEntidadByArea(area.getCodigo());
 
-				if (permisos.contains(TypeRolePermisos.ALTA_BAJA) || permisos.contains(TypeRolePermisos.MODIFICACION)
+				if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
 						|| permisos.contains(TypeRolePermisos.CONSULTA)) {
 					listaMostrarAreas.add(area);
 				}
@@ -596,6 +597,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		this.versionesTramite();
+
 	}
 
 	public void onRowDblClickTramites() {

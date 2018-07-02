@@ -10,24 +10,16 @@ package es.caib.sistrages.core.api.model;
 @SuppressWarnings("serial")
 public class Tramite extends ModelApi {
 
-	/**
-	 * Codigo.
-	 */
+	/** Codigo. */
 	private Long codigo;
 
-	/**
-	 * Identificador.
-	 */
+	/** Identificador. */
 	private String identificador;
 
-	/**
-	 * Descripcion.
-	 */
+	/** Descripcion. */
 	private String descripcion;
 
-	/**
-	 * Activo
-	 */
+	/** Activo */
 	private boolean activo;
 
 	/**
@@ -48,8 +40,8 @@ public class Tramite extends ModelApi {
 	 * @param codigo
 	 *            the codigo to set
 	 */
-	public void setCodigo(final Long id) {
-		this.codigo = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

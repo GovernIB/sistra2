@@ -1,12 +1,24 @@
 package es.caib.sistrages.core.api.model;
 
+/**
+ * La clase PlantillaIdiomaFormulario.
+ */
 @SuppressWarnings("serial")
 public class PlantillaIdiomaFormulario extends ModelApi {
 
+	/**
+	 * codigo.
+	 */
 	private Long codigo;
 
+	/**
+	 * fichero.
+	 */
 	private Fichero fichero;
 
+	/**
+	 * idioma.
+	 */
 	private String idioma;
 
 	/**
@@ -16,31 +28,70 @@ public class PlantillaIdiomaFormulario extends ModelApi {
 		super();
 	}
 
+	/**
+	 * Crea una nueva instancia de PlantillaIdiomaFormulario.
+	 *
+	 * @param pIdioma
+	 *            idioma
+	 */
 	public PlantillaIdiomaFormulario(final String pIdioma) {
 		super();
 		setIdioma(pIdioma);
 	}
 
+	/**
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
+	 */
 	public Long getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(final Long id) {
-		this.codigo = id;
+	/**
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
+	 */
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
+	/**
+	 * Obtiene el valor de fichero.
+	 *
+	 * @return el valor de fichero
+	 */
 	public Fichero getFichero() {
 		return fichero;
 	}
 
+	/**
+	 * Establece el valor de fichero.
+	 *
+	 * @param fichero
+	 *            el nuevo valor de fichero
+	 */
 	public void setFichero(final Fichero fichero) {
 		this.fichero = fichero;
 	}
 
+	/**
+	 * Obtiene el valor de idioma.
+	 *
+	 * @return el valor de idioma
+	 */
 	public String getIdioma() {
 		return idioma;
 	}
 
+	/**
+	 * Establece el valor de idioma.
+	 *
+	 * @param idioma
+	 *            el nuevo valor de idioma
+	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}

@@ -59,26 +59,27 @@
 			 		</p:column>
 			 		<p:column>
 						<p>
-							<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogListaValoresFijaCIN.nuevoValor}" process="@this" update="growlDialogListaValoresFijaCIN"  >
+							<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogListaValoresFijaCIN.nuevoValor}" process="@this" update="growlDialogListaValoresFijaCIN"   rendered="#{dialogListaValoresFijaCIN.isNotConsulta()}">
         						<p:ajax event="dialogReturn" listener="#{dialogListaValoresFijaCIN.returnDialogo}" update="growlDialogListaValoresFijaCIN datalistValores"/>
         					</p:commandButton>
         				</p>
         				<p>
-        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogListaValoresFijaCIN.editarValor}" process="@this" update="growlDialogListaValoresFijaCIN"  >
+        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogListaValoresFijaCIN.editarValor}" process="@this" update="growlDialogListaValoresFijaCIN"   rendered="#{dialogListaValoresFijaCIN.isNotConsulta()}">
         						<p:ajax event="dialogReturn" listener="#{dialogListaValoresFijaCIN.returnDialogo}" update="growlDialogListaValoresFijaCIN datalistValores"/>
         					</p:commandButton>
         				</p>
 					    <p>
-					    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogListaValoresFijaCIN.quitarValor}" process="@this" update="growlDialogListaValoresFijaCIN datalistValores"   />
+					    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogListaValoresFijaCIN.quitarValor}" process="@this" update="growlDialogListaValoresFijaCIN datalistValores"    rendered="#{dialogListaValoresFijaCIN.isNotConsulta()}"/>
 					    </p>
 					    <p>
-				    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogListaValoresFijaCIN.subirValor}" process="@this" update="growlDialogListaValoresFijaCIN datalistValores" />
+				    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogListaValoresFijaCIN.subirValor}" process="@this" update="growlDialogListaValoresFijaCIN datalistValores"  rendered="#{dialogListaValoresFijaCIN.isNotConsulta()}"/>
 				    	</p>
 				    	<p>
-				    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogListaValoresFijaCIN.bajarValor}" process="@this" update="growlDialogListaValoresFijaCIN datalistValores" />
+				    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogListaValoresFijaCIN.bajarValor}" process="@this" update="growlDialogListaValoresFijaCIN datalistValores"  rendered="#{dialogListaValoresFijaCIN.isNotConsulta()}"/>
 				    	</p>
 
 			 		</p:column>
+
 				</h:panelGrid>
 			</p:outputPanel>
 
@@ -86,8 +87,9 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogListaValoresFijaCIN.aceptar}" process="@form" update="@form growlDialogListaValoresFijaCIN" styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogListaValoresFijaCIN.cancelar}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogListaValoresFijaCIN.aceptar}" process="@form" update="@form growlDialogListaValoresFijaCIN" styleClass="boton-azul" rendered="#{dialogListaValoresFijaCIN.isNotConsulta()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogListaValoresFijaCIN.cancelar}" process="@this" rendered="#{dialogListaValoresFijaCIN.isNotConsulta()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogListaValoresFijaCIN.cancelar}" process="@this" rendered="#{dialogListaValoresFijaCIN.consulta}" styleClass="boton-azul"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

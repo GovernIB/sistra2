@@ -36,7 +36,7 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="codigo" value="#{msg['dialogDefinicionVersionRellenar.headerIdentificador']}" />
-					<p:inputText  id="codigo"  value="#{dialogDefinicionVersionRellenar.data.codigo}" size="40" required="true">
+					<p:inputText  id="codigo"  value="#{dialogDefinicionVersionRellenar.data.identificador}" size="40" required="true">
 						<p:keyFilter regEx="/[a-z0-9_-]/i"/>
 					</p:inputText>
 

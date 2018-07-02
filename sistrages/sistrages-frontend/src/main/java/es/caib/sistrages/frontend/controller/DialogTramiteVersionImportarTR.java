@@ -4,18 +4,16 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.service.TramiteService;
-import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.FilaImportar;
 import es.caib.sistrages.frontend.model.comun.Constantes;
-import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
+import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -27,55 +25,42 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportarTR.class);
 
-	/** Servicio. */
-	@Inject
-	private TramiteService tramiteService;
+	/** Fila Importar. */
+	private FilaImportar data;
 
-	/** Id elemento a tratar. */
-	private String id;
-
-	/** Id elemento a tratar. */
-	private String idArea;
-
-	/** Dato. **/
-	private String dato;
-
-	/** Tramite version. */
-	private Tramite data;
-
-	/** Tramite version. */
-	private Tramite dataActual;
+	/** Mensaje. **/
+	private String mensaje;
 
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
+		data = (FilaImportar) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
+		if (data.getEstado() == TypeImportarEstado.EXISTE) {
+			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTR.estado.existedistinto"));
+		} else {
+			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTR.estado.noexiste"));
+		}
+	}
+
+	/**
+	 * Guardar.
+	 */
+	public void guardar() {
+
+		if (data.getTramiteResultado().isEmpty()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Rellena el valor");
+			return;
+		}
+
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-		final String json = (String) mochilaDatos.get(Constantes.CLAVE_MOCHILA_TRAMITE);
-		data = (Tramite) UtilJSON.fromJSON(json, Tramite.class);
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.data);
 
-		dataActual = tramiteService.getTramiteByIdentificador(data.getIdentificador(), Long.valueOf(idArea));
-	}
-
-	/**
-	 * Cancelar.
-	 */
-	public void mantener() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
-		result.setResult(TypeImportarAccion.MANTENER);
-		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * Cancelar.
-	 */
-	public void remplazar() {
-		final DialogResult result = new DialogResult();
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setCanceled(false);
-		result.setResult(TypeImportarAccion.REEMPLAZAR);
+		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -86,83 +71,36 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
-		result.setResult(TypeImportarAccion.PENDIENTE);
 		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the data
-	 */
-	public Tramite getData() {
-		return data;
 	}
 
 	/**
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final Tramite data) {
+	public void setData(final FilaImportar data) {
 		this.data = data;
 	}
 
 	/**
-	 * @return the dato
+	 * @return the data
 	 */
-	public String getDato() {
-		return dato;
+	public FilaImportar getData() {
+		return data;
 	}
 
 	/**
-	 * @param dato
-	 *            the dato to set
+	 * @return the mensaje
 	 */
-	public void setDato(final String dato) {
-		this.dato = dato;
+	public String getMensaje() {
+		return mensaje;
 	}
 
 	/**
-	 * @return the idArea
+	 * @param mensaje
+	 *            the mensaje to set
 	 */
-	public String getIdArea() {
-		return idArea;
+	public void setMensaje(final String mensaje) {
+		this.mensaje = mensaje;
 	}
-
-	/**
-	 * @param idArea
-	 *            the idArea to set
-	 */
-	public void setIdArea(final String idArea) {
-		this.idArea = idArea;
-	}
-
-	/**
-	 * @return the dataActual
-	 */
-	public Tramite getDataActual() {
-		return dataActual;
-	}
-
-	/**
-	 * @param dataActual
-	 *            the dataActual to set
-	 */
-	public void setDataActual(final Tramite dataActual) {
-		this.dataActual = dataActual;
-	}
-
 }

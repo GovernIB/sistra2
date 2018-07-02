@@ -173,7 +173,7 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@NegocioInterceptor
 	public void removePlantillaIdiomaFormulario(final PlantillaIdiomaFormulario plantillaIdiomaFormulario) {
 		if (plantillaIdiomaFormulario != null && plantillaIdiomaFormulario.getFichero() != null) {
-			ficheroExternoDao.marcarBorrar(plantillaIdiomaFormulario.getFichero().getId());
+			ficheroExternoDao.marcarBorrar(plantillaIdiomaFormulario.getFichero().getCodigo());
 			formIntDao.removePlantillaIdiomaFormulario(plantillaIdiomaFormulario.getCodigo());
 		}
 

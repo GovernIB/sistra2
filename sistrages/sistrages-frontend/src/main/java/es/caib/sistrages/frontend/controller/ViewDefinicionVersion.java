@@ -222,8 +222,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return;
 		}
 
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 
 			permiteEditar = true;
 
@@ -242,8 +241,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public boolean permiteEditarControlAcceso() {
 
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 
 			return true;
 
@@ -251,7 +249,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(this.area.getCodigo());
-			return permisos.contains(TypeRolePermisos.ALTA_BAJA);
+			if (UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+
+				return permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+
+			} else {
+
+				return permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
+
+			}
 
 		} else {
 
@@ -297,6 +304,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 		params.put(TypeParametroVentana.ID.toString(),
 				this.getFormularioTramiteSeleccionado().getIdFormularioInterno().toString());
+
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
+
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 720);
 	}
 
@@ -318,7 +328,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			dominios.add(dominioService.loadDominio(dominioId));
 		}
 		tramiteVersion.setListaDominios(dominiosId);
-		avisoEntidad = avisoEntidadService.getAvisoEntidadByTramite(tramite.getIdentificador()+"-"+tramiteVersion.getNumeroVersion());
+		avisoEntidad = avisoEntidadService
+				.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion());
 	}
 
 	/**
@@ -440,7 +451,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			recuperarDatos();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK));
 		}
-		avisoEntidad = avisoEntidadService.getAvisoEntidadByTramite(tramite.getIdentificador()+"-"+tramiteVersion.getNumeroVersion());
+		avisoEntidad = avisoEntidadService
+				.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion());
 	}
 
 	// ------- VIEW DE EDITAR CONTROL DE ACCESO DE TRAMITE VERSION
@@ -592,7 +604,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private void abrirDialogFormulario(final FormularioTramite formulario) {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getCodigo()));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 500);
 	}
@@ -606,7 +618,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return;
 
 		tramiteService.removeFormulario(this.getTramitePasoRELLSeleccionado().getCodigo(),
-				this.formularioSeleccionado.getId());
+				this.formularioSeleccionado.getCodigo());
 
 		// Actualizamos la info
 		recuperarDatos();
@@ -641,8 +653,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return;
 		}
 
-		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getId(),
-				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(posicion - 1).getId());
+		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getCodigo(),
+				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(posicion - 1).getCodigo());
 
 		// Actualizamos la info
 		recuperarDatos();
@@ -663,8 +675,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return;
 		}
 
-		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getId(),
-				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(posicion + 1).getId());
+		tramiteService.intercambiarFormularios(this.formularioSeleccionado.getCodigo(),
+				this.getTramitePasoRELLSeleccionado().getFormulariosTramite().get(posicion + 1).getCodigo());
 
 		// Actualizamos la info
 		recuperarDatos();
@@ -680,7 +692,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		int posicion = 0;
 
 		for (final FormularioTramite formTram : this.getTramitePasoRELLSeleccionado().getFormulariosTramite()) {
-			if (formTram.getId().compareTo(formulario.getId()) == 0) {
+			if (formTram.getCodigo().compareTo(formulario.getCodigo()) == 0) {
 				break;
 			}
 			posicion++;
@@ -812,14 +824,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (!verificarDocumentoSeleccionada())
 			return;
 
-		this.editarDocumentoDialog(this.getDocumentoSeleccionado().getId());
+		this.editarDocumentoDialog(this.getDocumentoSeleccionado().getCodigo());
 	}
 
 	/**
 	 * Abre el dialog para editar dato.
 	 */
 	public void editarDocumentoTramite() {
-		this.editarDocumentoDialog(this.getDocumentoTramiteSeleccionado().getId());
+		this.editarDocumentoDialog(this.getDocumentoTramiteSeleccionado().getCodigo());
 	}
 
 	/**
@@ -833,7 +845,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idDocumento));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
-				entidadService.loadEntidadByArea(area.getCodigo()).getId().toString());
+				entidadService.loadEntidadByArea(area.getCodigo()).getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 645);
 	}
 
@@ -846,7 +858,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return;
 
 		tramiteService.removeDocumento(this.getTramitePasoANEXSeleccionado().getCodigo(),
-				this.documentoSeleccionado.getId());
+				this.documentoSeleccionado.getCodigo());
 
 		// Actualizamos la info
 		recuperarDatos();
@@ -1149,9 +1161,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		if (this.selectedNode != null && this.selectedNode.getData() != null) {
 			final OpcionArbol opcionArbol = (OpcionArbol) this.selectedNode.getData();
 			if (opcionArbol.getDocumento() != null) {
-				idSelectNode = opcionArbol.getDocumento().getId();
+				idSelectNode = opcionArbol.getDocumento().getCodigo();
 			} else if (opcionArbol.getFormulario() != null) {
-				idSelectNode = opcionArbol.getFormulario().getId();
+				idSelectNode = opcionArbol.getFormulario().getCodigo();
 			} else if (opcionArbol.getTasa() != null) {
 				idSelectNode = opcionArbol.getTasa().getCodigo();
 			} else if (opcionArbol.getTramitePaso() != null) {
@@ -1226,11 +1238,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				for (final FormularioTramite formulario : ((TramitePasoRellenar) tramitePaso).getFormulariosTramite()) {
 
 					/** Nodo formularios. **/
-					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(new OpcionArbol(formulario.getCodigo(),
-							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario"), formulario,
-							tramitePaso));
-					marcarNodoComoSeleccionado(nodoFormulario, formulario.getId(), "viewDefinicionVersionFormulario",
-							nodoSeleccionado, idNodoSeleccionado);
+					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(
+							new OpcionArbol(formulario.getIdentificador(),
+									UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario"), formulario,
+									tramitePaso));
+					marcarNodoComoSeleccionado(nodoFormulario, formulario.getCodigo(),
+							"viewDefinicionVersionFormulario", nodoSeleccionado, idNodoSeleccionado);
 					nodo.getChildren().add(nodoFormulario);
 
 				}
@@ -1242,10 +1255,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				for (final Documento documento : ((TramitePasoAnexar) tramitePaso).getDocumentos()) {
 
 					/** Nodo documento. **/
-					final DefaultTreeNode nodoDocumento = new DefaultTreeNode(new OpcionArbol(documento.getCodigo(),
-							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo"), documento,
-							tramitePaso));
-					marcarNodoComoSeleccionado(nodoDocumento, documento.getId(), "viewDefinicionVersionAnexo",
+					final DefaultTreeNode nodoDocumento = new DefaultTreeNode(
+							new OpcionArbol(documento.getIdentificador(),
+									UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo"), documento,
+									tramitePaso));
+					marcarNodoComoSeleccionado(nodoDocumento, documento.getCodigo(), "viewDefinicionVersionAnexo",
 							nodoSeleccionado, idNodoSeleccionado);
 					nodo.getChildren().add(nodoDocumento);
 
@@ -1446,8 +1460,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			}
 
 			// El aviso entidad se pregunta cada vez por si se actualiza fuera
-			avisoEntidad = avisoEntidadService.getAvisoEntidadByTramite(tramite.getIdentificador()+"-"+tramiteVersion.getNumeroVersion());
-
+			avisoEntidad = avisoEntidadService
+					.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion());
 		}
 	}
 

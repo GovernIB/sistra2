@@ -43,13 +43,13 @@
 							<p:selectBooleanCheckbox id="plazodesactivacion" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.bloqueado}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.bloqueado']}"/>
 							<p:outputLabel for="plazodesactivacioninicio" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacioninicio']}" />
 							<p:spacer width="8" height="1" />
-							<p:calendar id="plazodesactivacioninicio" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaInicio}" pattern="dd/MM/yyyy HH:mm:ss" size="17" />
+							<p:calendar id="plazodesactivacioninicio" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaInicio}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
 
 							<p:spacer width="40" height="1" />
 
 							<p:outputLabel for="plazodesactivacionfin" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacionfin']}" />
 							<p:spacer width="8"/>
-							<p:calendar id="plazodesactivacionfin" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss" size="17" />
+							<p:calendar id="plazodesactivacionfin" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
 					</p:column>
 					<p:column>
 							<p:commandButton id="buttonAvisoEntidadCrear" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogDefinicionVersionControlAcceso.crearAvisoEntidad()}" styleClass="va-top"

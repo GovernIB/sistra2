@@ -91,16 +91,16 @@ public class JTipoPasoTramitacion implements IModelApi {
 
 	public TramiteTipo toModel() {
 		final TramiteTipo tipo = new TramiteTipo();
-		tipo.setCodigo(this.getTipoPaso());
-		tipo.setId(this.getCodigo());
+		tipo.setIdentificador(this.getTipoPaso());
+		tipo.setCodigo(this.getCodigo());
 		tipo.setOrden(this.getOrden());
 		tipo.setDescripcion(this.getDescripcionCorta().toModel());
 		return tipo;
 	}
 
 	public void fromModel(final TramiteTipo tipo) {
-		this.setTipoPaso(tipo.getCodigo());
-		this.setCodigo(tipo.getId());
+		this.setTipoPaso(tipo.getIdentificador());
+		this.setCodigo(tipo.getCodigo());
 		if (tipo.getDescripcion() != null) {
 			final JLiteral desc = JLiteral.fromModel(tipo.getDescripcion());
 			this.setDescripcionCorta(desc);

@@ -8,14 +8,14 @@ import es.caib.sistrages.core.api.model.types.TypeRoleUser;
 @SuppressWarnings("serial")
 public class Rol extends ModelApi {
 
-	/** id. */
-	private Long id;
+	/** codigo. */
+	private Long codigo;
 
 	/** tipo. */
 	private TypeRoleUser tipo;
 
-	/** codigo. */
-	private String codigo;
+	/** valor. */
+	private String valor;
 
 	/** descripcion. */
 	private String descripcion;
@@ -35,26 +35,23 @@ public class Rol extends ModelApi {
 	/** helpdesk. */
 	private boolean helpdesk;
 
-	/** promocionar. */
-	private boolean promocionar;
-
 	/**
-	 * Obtiene el valor de id.
+	 * Obtiene el valor de codigo.
 	 *
-	 * @return el valor de id
+	 * @return el valor de codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * Establece el valor de id.
+	 * Establece el valor de codigo.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param codigo
+	 *            el nuevo valor de codigo
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
@@ -77,22 +74,22 @@ public class Rol extends ModelApi {
 	}
 
 	/**
-	 * Obtiene el valor de codigo.
+	 * Obtiene el valor de valor.
 	 *
-	 * @return el valor de codigo
+	 * @return el valor de valor
 	 */
-	public String getCodigo() {
-		return codigo;
+	public String getValor() {
+		return valor;
 	}
 
 	/**
-	 * Establece el valor de codigo.
+	 * Establece el valor de valor.
 	 *
-	 * @param codigo
-	 *            el nuevo valor de codigo
+	 * @param valor
+	 *            el nuevo valor de valor
 	 */
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setValor(final String codigo) {
+		this.valor = codigo;
 	}
 
 	/**
@@ -209,18 +206,4 @@ public class Rol extends ModelApi {
 		this.helpdesk = helpdesk;
 	}
 
-	/**
-	 * @return the promocionar
-	 */
-	public boolean isPromocionar() {
-		return promocionar;
-	}
-
-	/**
-	 * @param promocionar
-	 *            the promocionar to set
-	 */
-	public void setPromocionar(final boolean promocionar) {
-		this.promocionar = promocionar;
-	}
 }

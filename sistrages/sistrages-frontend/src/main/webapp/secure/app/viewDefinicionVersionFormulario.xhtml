@@ -16,7 +16,7 @@
         <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['viewDefinicionVersionFormulario.identificador']}" />
-            <p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.codigo}" />
+            <p:inputText id="identificador" required="true" disabled="true" styleClass="w35" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.identificador}" />
 
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario.descripcion']}" />
@@ -34,7 +34,7 @@
               </p:selectOneRadio>
              </p:column>
              <p:column>
-               <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad.id)}" value="#{msg['viewDefinicionVersionFormulario.obligatoriedad.establecerdependencia']}"
+               <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['viewDefinicionVersionFormulario.obligatoriedad.establecerdependencia']}"
               		disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad eq null}"
               		styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad)}"
               		process="@this" update="growl"/>
@@ -49,7 +49,7 @@
             <p:selectBooleanCheckbox id="firmardigitalmente" disabled="true" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.debeFirmarse}" itemLabel="#{msg['viewDefinicionVersionFormulario.firmardigitalmente']}"/>
              </p:column>
              <p:column>
-               <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma.id)}" value="#{msg['viewDefinicionVersionFormulario.establecerfirmantes']}"
+               <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma.codigo)}" value="#{msg['viewDefinicionVersionFormulario.establecerfirmantes']}"
               		disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma eq null}"
               		styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma)}"
               		process="@this" update="growl"/>
@@ -64,7 +64,7 @@
            <p:panelGrid styleClass="noBorders">
                <p:row>
                  <p:column styleClass="noPadding-left">
-           		 <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales.id)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.parametrosapertura']}"
+           		 <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales.codigo)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.parametrosapertura']}"
               			disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales eq null}"
               			styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales)}"
               			process="@this" update="growl"/>
@@ -72,7 +72,7 @@
         </p:row>
         <p:row>
              <p:column styleClass="noPadding-left">
-             <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros.id)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.cargadatos']}"
+             <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros.codigo)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.cargadatos']}"
              			disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros eq null}"
               			styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros)}"
               			 process="@this" update="growl"/>
@@ -80,7 +80,7 @@
         </p:row>
         <p:row>
              <p:column styleClass="noPadding-left">
-               <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno.id)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.postguardar']}"
+               <p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno.codigo)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.postguardar']}"
              			disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno eq null}"
               			styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno)}"
               			process="@this" update="growl"/>

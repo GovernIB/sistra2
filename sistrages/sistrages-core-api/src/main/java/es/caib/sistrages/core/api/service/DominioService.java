@@ -20,20 +20,20 @@ public interface DominioService {
 	/**
 	 * Obtener dominio.
 	 *
-	 * @param idDominio
-	 *            ID del dominio
+	 * @param codDominio
+	 *            codigo del dominio
 	 * @return dominio
 	 */
-	public Dominio loadDominio(Long idDominio);
+	public Dominio loadDominio(Long codDominio);
 
 	/**
 	 * Obtener dominio.
 	 *
-	 * @param codigoDominio
-	 *            codigo del dominio
+	 * @param identificador
+	 *            identificador del dominio
 	 * @return dominio
 	 */
-	public Dominio loadDominio(String codigoDominio);
+	public Dominio loadDominio(String identificador);
 
 	/**
 	 * Añade dominio.

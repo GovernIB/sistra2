@@ -108,7 +108,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 			return;
 
 		// Eliminamos
-		if (rolService.removeRol(datoSeleccionado.getId())) {
+		if (rolService.removeRol(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje
@@ -198,7 +198,7 @@ public class ViewRolesPermisos extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		UtilJSF.openDialog(DialogRolesPermisos.class, modoAcceso, params, true, 700, 240);
 	}
 

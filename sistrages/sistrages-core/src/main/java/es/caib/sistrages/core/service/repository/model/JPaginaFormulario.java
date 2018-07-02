@@ -37,7 +37,7 @@ public class JPaginaFormulario implements IModelApi {
 	@JoinColumn(name = "PAF_CODFOR", nullable = false)
 	private JFormulario formulario;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PAF_SCRVAL")
 	private JScript scriptValidacion;
 
@@ -136,7 +136,7 @@ public class JPaginaFormulario implements IModelApi {
 
 	public PaginaFormulario toModel() {
 		final PaginaFormulario pagina = new PaginaFormulario();
-		pagina.setId(codigo);
+		pagina.setCodigo(codigo);
 		if (scriptValidacion != null) {
 			pagina.setScriptValidacion(scriptValidacion.toModel());
 		}
@@ -150,8 +150,8 @@ public class JPaginaFormulario implements IModelApi {
 		JPaginaFormulario jModel = null;
 		if (model != null) {
 			jModel = new JPaginaFormulario();
-			if (model.getId() != null) {
-				jModel.setCodigo(model.getId());
+			if (model.getCodigo() != null) {
+				jModel.setCodigo(model.getCodigo());
 			}
 			jModel.setScriptValidacion(JScript.fromModel(model.getScriptValidacion()));
 			jModel.setOrden(model.getOrden());

@@ -14,11 +14,11 @@ import es.caib.sistrages.core.api.model.types.TypeInterno;
 @SuppressWarnings("serial")
 public class FormularioTramite extends ModelApi {
 
-	/** Id. */
-	private Long id;
+	/** Codigo. */
+	private Long codigo;
 
 	/** Identificador del idFormularioInterno. */
-	private String codigo;
+	private String identificador;
 
 	/** Descripción idFormularioInterno. */
 	private Literal descripcion;
@@ -44,18 +44,23 @@ public class FormularioTramite extends ModelApi {
 	/** En caso de ser dependiente establece obligatoriedad */
 	private Script scriptObligatoriedad;
 
-	/** Indica si se debe firmar digitalmente (para idFormularioInterno tipo Tramite) */
+	/**
+	 * Indica si se debe firmar digitalmente (para idFormularioInterno tipo Tramite)
+	 */
 	private boolean debeFirmarse;
 
 	/**
-	 * Permite establecer quién debe firmar el idFormularioInterno (para idFormularioInterno tramite)
+	 * Permite establecer quién debe firmar el idFormularioInterno (para
+	 * idFormularioInterno tramite)
 	 */
 	private Script scriptFirma;
 
 	/** Indica si se debe presentar en preregistro. */
 	private boolean debePrerregistrarse;
 
-	/** Permite establecer parametros cada vez que se acceda al idFormularioInterno */
+	/**
+	 * Permite establecer parametros cada vez que se acceda al idFormularioInterno
+	 */
 	private Script scriptParametros;
 
 	/** Script para establecer datos iniciales idFormularioInterno. */
@@ -63,8 +68,9 @@ public class FormularioTramite extends ModelApi {
 
 	/**
 	 * Este script se ejecutará tras el retorno del gestor de idFormularioInterno y
-	 * permitirá: - validar el idFormularioInterno tras el retorno del gestor de idFormularioInterno -
-	 * alimentar datos de los otros formularios y cambiar su estado.
+	 * permitirá: - validar el idFormularioInterno tras el retorno del gestor de
+	 * idFormularioInterno - alimentar datos de los otros formularios y cambiar su
+	 * estado.
 	 */
 	private Script scriptRetorno;
 
@@ -85,58 +91,11 @@ public class FormularioTramite extends ModelApi {
 	}
 
 	/**
-	 * Obtiene el valor de id.
-	 *
-	 * @return el valor de id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * Establece el valor de id.
-	 *
-	 * @param id
-	 *            el nuevo valor de id
-	 */
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * Obtiene el valor de idString.
-	 *
-	 * @return el valor de idString
-	 */
-	public String getIdString() {
-		if (id == null) {
-			return "";
-		} else {
-			return id.toString();
-		}
-	}
-
-	/**
-	 * Establece el valor de id.
-	 *
-	 * @param id
-	 *            el nuevo valor de id
-	 */
-	public void setIdString(final String id) {
-		if (id == null) {
-			this.id = null;
-		} else {
-			this.id = Long.valueOf(id);
-		}
-
-	}
-
-	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
 	 */
-	public String getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
@@ -146,8 +105,55 @@ public class FormularioTramite extends ModelApi {
 	 * @param codigo
 	 *            el nuevo valor de codigo
 	 */
-	public void setCodigo(final String codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * Obtiene el valor de idString.
+	 *
+	 * @return el valor de idString
+	 */
+	public String getIdString() {
+		if (codigo == null) {
+			return "";
+		} else {
+			return codigo.toString();
+		}
+	}
+
+	/**
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
+	 */
+	public void setIdString(final String id) {
+		if (id == null) {
+			this.codigo = null;
+		} else {
+			this.codigo = Long.valueOf(id);
+		}
+
+	}
+
+	/**
+	 * Obtiene el valor de identificador.
+	 *
+	 * @return el valor de identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * Establece el valor de identificador.
+	 *
+	 * @param identificador
+	 *            el nuevo valor de identificador
+	 */
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**

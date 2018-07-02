@@ -14,10 +14,10 @@ public class FormularioMockBD {
 
 	private static void init() {
 		formulario1 = new FormularioInterno();
-		formulario1.setId(1L);
+		formulario1.setCodigo(1L);
 
 		formulario2 = new FormularioInterno();
-		formulario2.setId(2L);
+		formulario2.setCodigo(2L);
 
 		formulario1.setMostrarCabecera(true);
 		formulario2.setMostrarCabecera(true);
@@ -29,7 +29,7 @@ public class FormularioMockBD {
 
 		// Pagina 1
 		final PaginaFormulario pagina = new PaginaFormulario();
-		pagina.setId(1L);
+		pagina.setCodigo(1L);
 		pagina.setOrden(1);
 		formulario1.getPaginas().add(pagina);
 		formulario2.getPaginas().add(pagina);
@@ -38,7 +38,7 @@ public class FormularioMockBD {
 		final LineaComponentesFormulario linea1 = new LineaComponentesFormulario();
 
 		final ComponenteFormularioCampoTexto ctNif = new ComponenteFormularioCampoTexto();
-		ctNif.setId(1L);
+		ctNif.setCodigo(1L);
 		ctNif.setIdComponente("inputNIF");
 		ctNif.setNumColumnas(1);
 		final Literal txtNif = new Literal();
@@ -48,7 +48,7 @@ public class FormularioMockBD {
 		linea1.getComponentes().add(ctNif);
 
 		final ComponenteFormularioCampoTexto ctNom = new ComponenteFormularioCampoTexto();
-		ctNom.setId(2L);
+		ctNom.setCodigo(2L);
 		ctNom.setIdComponente("inputNom");
 		ctNom.setNumColumnas(1);
 		final Literal txtNom = new Literal();
@@ -57,7 +57,7 @@ public class FormularioMockBD {
 		linea1.getComponentes().add(ctNom);
 
 		final ComponenteFormularioCampoTexto ctApe1 = new ComponenteFormularioCampoTexto();
-		ctApe1.setId(3L);
+		ctApe1.setCodigo(3L);
 		ctApe1.setIdComponente("inputApellido1");
 		ctApe1.setNumColumnas(1);
 		final Literal txtApe1 = new Literal();
@@ -66,7 +66,7 @@ public class FormularioMockBD {
 		linea1.getComponentes().add(ctApe1);
 
 		final ComponenteFormularioCampoTexto ctApe2 = new ComponenteFormularioCampoTexto();
-		ctApe2.setId(4L);
+		ctApe2.setCodigo(4L);
 		ctApe2.setIdComponente("inputApellido2");
 		ctApe2.setNumColumnas(1);
 		final Literal txtApe2 = new Literal();
@@ -75,7 +75,7 @@ public class FormularioMockBD {
 		linea1.getComponentes().add(ctApe2);
 
 		final ComponenteFormularioCampoTexto ctEdad = new ComponenteFormularioCampoTexto();
-		ctEdad.setId(5L);
+		ctEdad.setCodigo(5L);
 		ctEdad.setIdComponente("inputEdad");
 		ctEdad.setNumColumnas(1);
 		final Literal txtEdad = new Literal();
@@ -84,7 +84,7 @@ public class FormularioMockBD {
 		linea1.getComponentes().add(ctEdad);
 
 		final ComponenteFormularioCampoTexto ctNick = new ComponenteFormularioCampoTexto();
-		ctNick.setId(6L);
+		ctNick.setCodigo(6L);
 		ctNick.setIdComponente("inputNick");
 		ctNick.setNumColumnas(1);
 		final Literal txtNick = new Literal();
@@ -98,7 +98,7 @@ public class FormularioMockBD {
 		final LineaComponentesFormulario linea2 = new LineaComponentesFormulario();
 
 		final ComponenteFormularioCampoTexto ctEmail = new ComponenteFormularioCampoTexto();
-		ctEmail.setId(7L);
+		ctEmail.setCodigo(7L);
 		ctEmail.setIdComponente("inputEmail");
 		ctEmail.setNumColumnas(2);
 		final Literal txtEmail = new Literal();
@@ -112,7 +112,7 @@ public class FormularioMockBD {
 		final LineaComponentesFormulario linea3 = new LineaComponentesFormulario();
 
 		final ComponenteFormularioCampoTexto ctDireccion = new ComponenteFormularioCampoTexto();
-		ctDireccion.setId(8L);
+		ctDireccion.setCodigo(8L);
 		ctDireccion.setIdComponente("inputDireccion");
 		ctDireccion.setNumColumnas(3);
 		final Literal txtDireccion = new Literal();
@@ -124,7 +124,7 @@ public class FormularioMockBD {
 
 		// pagina 2
 		final PaginaFormulario pagina2 = new PaginaFormulario();
-		pagina2.setId(2L);
+		pagina2.setCodigo(2L);
 		pagina2.setOrden(2);
 		formulario2.getPaginas().add(pagina2);
 		pagina2.getLineas().add(linea2);
@@ -163,9 +163,9 @@ public class FormularioMockBD {
 	}
 
 	public static void guardar(final FormularioInterno form) {
-		if (form.getId() == 1) {
+		if (form.getCodigo() == 1) {
 			formulario1 = form;
-		} else if (form.getId() == 2) {
+		} else if (form.getCodigo() == 2) {
 			formulario2 = form;
 		}
 	}

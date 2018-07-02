@@ -1,82 +1,102 @@
 package es.caib.sistrages.core.api.model;
 
 /**
- *
- * Propiedad de configuracion global.
- *
- * @author Indra
- *
+ * La clase ConfiguracionGlobal.
  */
 @SuppressWarnings("serial")
 public class ConfiguracionGlobal extends ModelApi {
 
-	/** Id. */
-	private Long id;
+	/**
+	 * codigo.
+	 */
+	private Long codigo;
 
-	/** Propiedad. **/
+	/**
+	 * propiedad.
+	 */
 	private String propiedad;
 
-	/** Valor. */
+	/**
+	 * valor.
+	 */
 	private String valor;
 
-	/** Descripcion. */
+	/**
+	 * descripcion.
+	 */
 	private String descripcion;
 
 	/**
-	 * @return the id
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
-	 * @return the propiedad
+	 * Obtiene el valor de propiedad.
+	 *
+	 * @return el valor de propiedad
 	 */
 	public String getPropiedad() {
 		return propiedad;
 	}
 
 	/**
-	 * @param propiedad
-	 *            the propiedad to set
+	 * Establece el valor de propiedad.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de propiedad
 	 */
 	public void setPropiedad(final String codigo) {
 		this.propiedad = codigo;
 	}
 
 	/**
-	 * @return the valor
+	 * Obtiene el valor de valor.
+	 *
+	 * @return el valor de valor
 	 */
 	public String getValor() {
 		return valor;
 	}
 
 	/**
+	 * Establece el valor de valor.
+	 *
 	 * @param valor
-	 *            the valor to set
+	 *            el nuevo valor de valor
 	 */
 	public void setValor(final String valor) {
 		this.valor = valor;
 	}
 
 	/**
-	 * @return the descripcion
+	 * Obtiene el valor de descripcion.
+	 *
+	 * @return el valor de descripcion
 	 */
 	public String getDescripcion() {
 		return descripcion;
 	}
 
 	/**
+	 * Establece el valor de descripcion.
+	 *
 	 * @param descripcion
-	 *            the descripcion to set
+	 *            el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;

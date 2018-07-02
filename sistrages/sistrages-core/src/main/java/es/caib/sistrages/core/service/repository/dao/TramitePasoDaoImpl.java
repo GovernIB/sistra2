@@ -156,7 +156,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	@Override
 	public void updateFormularioTramite(final FormularioTramite formularioTramite) {
 		final JFormularioTramite jFormulariotramiteOriginal = entityManager.find(JFormularioTramite.class,
-				formularioTramite.getId());
+				formularioTramite.getCodigo());
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
 		jFormulariotramite.setPasosRellenar(jFormulariotramiteOriginal.getPasosRellenar());
 		jFormulariotramite.setFormulario(jFormulariotramiteOriginal.getFormulario());
@@ -181,7 +181,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 	@Override
 	public void updateDocumentoTramite(final Documento documento) {
-		final JAnexoTramite jAnexoTramiteOriginal = entityManager.find(JAnexoTramite.class, documento.getId());
+		final JAnexoTramite jAnexoTramiteOriginal = entityManager.find(JAnexoTramite.class, documento.getCodigo());
 		final JAnexoTramite jAnexoTramite = JAnexoTramite.fromModel(documento);
 		jAnexoTramite.setPasoAnexar(jAnexoTramiteOriginal.getPasoAnexar());
 		entityManager.merge(jAnexoTramite);
@@ -366,6 +366,62 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		jformulario2.setOrden(orden);
 		entityManager.merge(jformulario1);
 		entityManager.merge(jformulario2);
+	}
+
+	@Override
+	public boolean checkTasaRepetida(final Long idTramiteVersion, final String identificador, final Long idTasa) {
+
+		if (idTramiteVersion == null || identificador == null) {
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
+		}
+
+		final StringBuilder sqlCount = new StringBuilder(
+				"Select count(*) From JPagoTramite p where  p.pasoPagos.pasoTramitacion.versionTramite.codigo = ");
+		sqlCount.append(idTramiteVersion);
+		sqlCount.append(" and p.identificador = '");
+		sqlCount.append(identificador);
+		sqlCount.append("' ");
+		if (idTasa != null) {
+			sqlCount.append(" and p.codigo != " + idTasa);
+		}
+
+		final Query query = entityManager.createQuery(sqlCount.toString());
+		final Long cuantos = (Long) query.getSingleResult();
+		boolean repetido;
+		if (cuantos == 0) {
+			repetido = false;
+		} else {
+			repetido = true;
+		}
+		return repetido;
+	}
+
+	@Override
+	public boolean checkAnexoRepetido(final Long idTramiteVersion, final String identificador, final Long idAnexo) {
+
+		if (idTramiteVersion == null || identificador == null) {
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
+		}
+
+		final StringBuilder sqlCount = new StringBuilder(
+				"Select count(*) From JAnexoTramite p where p.pasoAnexar.pasoTramitacion.versionTramite.codigo = ");
+		sqlCount.append(idTramiteVersion);
+		sqlCount.append(" and p.identificadorDocumento = '");
+		sqlCount.append(identificador);
+		sqlCount.append("' ");
+		if (idAnexo != null) {
+			sqlCount.append(" and p.codigo != " + idAnexo);
+		}
+
+		final Query query = entityManager.createQuery(sqlCount.toString());
+		final Long cuantos = (Long) query.getSingleResult();
+		boolean repetido;
+		if (cuantos == 0) {
+			repetido = false;
+		} else {
+			repetido = true;
+		}
+		return repetido;
 	}
 
 }

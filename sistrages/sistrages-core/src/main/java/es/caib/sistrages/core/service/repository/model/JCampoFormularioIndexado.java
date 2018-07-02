@@ -188,7 +188,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 					campoSelector.setScriptValoresPosibles(scriptValoresPosibles.toModel());
 				}
 				if (dominio != null) {
-					campoSelector.setDominio(dominio.toModel());
+					campoSelector.setCodDominio(dominio.getCodigo());
 				}
 
 				campoSelector.setCampoDominioCodigo(campoDominioCodigo);

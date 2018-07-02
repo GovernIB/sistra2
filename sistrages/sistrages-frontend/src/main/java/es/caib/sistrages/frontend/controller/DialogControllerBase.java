@@ -66,6 +66,15 @@ public abstract class DialogControllerBase {
 	}
 
 	/**
+	 * Indica si el dialogo no se abre en modo consulta.
+	 *
+	 * @return boolean
+	 */
+	public boolean isNotConsulta() {
+		return !isConsulta();
+	}
+
+	/**
 	 * Obtiene modo acceso.
 	 *
 	 * @return modo acceso

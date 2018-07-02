@@ -109,9 +109,9 @@ public class ConfiguracionGlobalDaoImpl implements ConfiguracionGlobalDao {
 	@Override
 	public void update(final ConfiguracionGlobal configuracionGlobal) {
 		final JConfiguracionGlobal jConfiguracionGlobal = entityManager.find(JConfiguracionGlobal.class,
-				configuracionGlobal.getId());
+				configuracionGlobal.getCodigo());
 		if (jConfiguracionGlobal == null) {
-			throw new NoExisteDato("No existe configuracion global: " + configuracionGlobal.getId());
+			throw new NoExisteDato("No existe configuracion global: " + configuracionGlobal.getCodigo());
 		}
 		final JConfiguracionGlobal jConfiguracionGlobalNew = JConfiguracionGlobal.fromModel(configuracionGlobal);
 		entityManager.merge(jConfiguracionGlobalNew);

@@ -75,7 +75,7 @@ public class JScript implements IModelApi {
 		JScript jScript = null;
 		if (mScript != null) {
 			jScript = new JScript();
-			jScript.setCodigo(mScript.getId());
+			jScript.setCodigo(mScript.getCodigo());
 			jScript.setScript(mScript.getContenido());
 		}
 		return jScript;
@@ -88,7 +88,7 @@ public class JScript implements IModelApi {
 	 */
 	public Script toModel() {
 		final Script mScript = new Script();
-		mScript.setId(this.getCodigo());
+		mScript.setCodigo(this.getCodigo());
 		mScript.setContenido(this.getScript());
 		return mScript;
 	}

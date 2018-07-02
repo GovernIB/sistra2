@@ -124,7 +124,7 @@ public class ViewPlugins extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		if (pluginService.removePlugin(this.datoSeleccionado.getId())) {
+		if (pluginService.removePlugin(this.datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje
@@ -230,7 +230,7 @@ public class ViewPlugins extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
-			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getId().toString());
+			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		}
 		UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 640, 420);
 	}

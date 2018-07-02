@@ -10,7 +10,7 @@ package es.caib.sistrages.core.api.model;
 public class Fichero extends ModelApi {
 
 	/** Código interno. **/
-	private Long id;
+	private Long codigo;
 
 	/** Nombre del fichero. */
 	private String nombre;
@@ -24,18 +24,18 @@ public class Fichero extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

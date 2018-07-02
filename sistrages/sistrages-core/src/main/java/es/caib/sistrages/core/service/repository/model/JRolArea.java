@@ -64,10 +64,6 @@ public class JRolArea implements IModelApi {
 	@Column(name = "RLA_PERHLP", nullable = false, precision = 1, scale = 0)
 	private boolean permisoAccesoHelpdesk;
 
-	/** Permiso para promocionar trámites entre entorno. */
-	@Column(name = "RLA_PERPRO", nullable = false, precision = 1, scale = 0)
-	private boolean permisoPromocionar;
-
 	/** Constructor */
 	public JRolArea() {
 		super();
@@ -209,36 +205,20 @@ public class JRolArea implements IModelApi {
 	}
 
 	/**
-	 * @return the permisoPromocionar
-	 */
-	public boolean isPermisoPromocionar() {
-		return permisoPromocionar;
-	}
-
-	/**
-	 * @param permisoPromocionar
-	 *            the permisoPromocionar to set
-	 */
-	public void setPermisoPromocionar(final boolean permisoPromocionar) {
-		this.permisoPromocionar = permisoPromocionar;
-	}
-
-	/**
 	 * toModel.
 	 *
 	 * @return
 	 */
 	public Rol toModel() {
 		final Rol rol = new Rol();
-		rol.setId(codigo);
+		rol.setCodigo(codigo);
 		rol.setTipo(TypeRoleUser.fromString(tipo));
-		rol.setCodigo(valor);
+		rol.setValor(valor);
 		rol.setDescripcion(descripcion);
 		rol.setAlta(permisoAltaBajaTramites);
 		rol.setModificacion(permisoModificacionTramites);
 		rol.setConsulta(permisoConsultaTramites);
 		rol.setHelpdesk(permisoAccesoHelpdesk);
-		rol.setPromocionar(permisoPromocionar);
 		return rol;
 	}
 
@@ -252,15 +232,14 @@ public class JRolArea implements IModelApi {
 		JRolArea jModel = null;
 		if (model != null) {
 			jModel = new JRolArea();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setTipo(model.getTipo().toString());
-			jModel.setValor(model.getCodigo());
+			jModel.setValor(model.getValor());
 			jModel.setDescripcion(model.getDescripcion());
 			jModel.setPermisoAltaBajaTramites(model.isAlta());
 			jModel.setPermisoModificacionTramites(model.isModificacion());
 			jModel.setPermisoConsultaTramites(model.isConsulta());
 			jModel.setPermisoAccesoHelpdesk(model.isHelpdesk());
-			jModel.setPermisoPromocionar(model.isPromocionar());
 		}
 		return jModel;
 	}

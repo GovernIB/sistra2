@@ -154,6 +154,9 @@ public class JFuenteDatos implements IModelApi {
 			}
 			fuenteDato.setCampos(lcampos);
 		}
+		if (this.getArea() != null) {
+			fuenteDato.setIdArea(this.getArea().getCodigo());
+		}
 		return fuenteDato;
 	}
 

@@ -253,8 +253,11 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 
 		if (tramiteActual != null) {
 
-			tramiteVersionActual = tramiteService.getTramiteVersionMaxNumVersion(tramiteActual.getCodigo());
-
+			tramiteVersionActual = tramiteService.getTramiteVersionByNumVersion(tramiteVersion.getNumeroVersion(),
+					tramiteActual.getCodigo());
+			if (tramiteVersionActual != null) {
+				tramiteVersionActual.setListaPasos(tramiteService.getTramitePasos(tramiteVersionActual.getCodigo()));
+			}
 		}
 
 		// Paso 3.1. Area.
@@ -263,7 +266,8 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		if (areaActual == null) {
 
 			filaArea = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-					TypeImportarResultado.WARNING);
+					TypeImportarResultado.WARNING, area, areaActual);
+
 			if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
@@ -272,13 +276,16 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 				setMostrarBotonImportar(false);
 				return;
 			}
+
 		} else {
+
 			final List<TypeRolePermisos> permisos = UtilJSF.getSessionBean().getSecurityService()
 					.getPermisosDesarrolladorEntidadByArea(areaActual.getCodigo());
-			if (!permisos.contains(TypeRolePermisos.PROMOCIONAR)) {
+			if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+					&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
 
 				filaArea = new FilaImportar(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.ERROR);
+						TypeImportarResultado.ERROR, area, areaActual);
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 						"No tienes permisos de promocionar sobre este area.");
@@ -289,12 +296,12 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 			} else if (area.getDescripcion().equals(areaActual.getDescripcion())) {
 
 				filaArea = new FilaImportar(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.INFO);
+						TypeImportarResultado.INFO, area, areaActual);
 
 			} else {
 
 				filaArea = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.WARNING);
+						TypeImportarResultado.WARNING, area, areaActual);
 
 			}
 
@@ -304,19 +311,19 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		if (tramiteActual == null) {
 
 			filaTramite = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-					TypeImportarResultado.INFO);
+					TypeImportarResultado.INFO, tramite, tramiteActual);
 
 		} else {
 
 			if (tramite.getDescripcion().equals(tramiteActual.getDescripcion())) {
 
 				filaTramite = new FilaImportar(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.INFO);
+						TypeImportarResultado.INFO, tramite, tramiteActual);
 
 			} else {
 
 				filaTramite = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.WARNING);
+						TypeImportarResultado.WARNING, tramite, tramiteActual);
 
 			}
 
@@ -326,26 +333,13 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		if (tramiteVersionActual == null) {
 
 			filaTramiteVersion = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-					TypeImportarResultado.INFO);
+					TypeImportarResultado.INFO, tramiteVersion, tramiteVersionActual);
 
 		} else {
 
-			if (tramiteVersionActual.getNumeroVersion() < tramiteVersion.getNumeroVersion()) {
+			filaTramiteVersion = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
+					TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
 
-				filaTramiteVersion = new FilaImportar(TypeImportarAccion.CREAR, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.INFO);
-
-			} else if (tramiteVersionActual.getNumeroVersion() == tramiteVersion.getNumeroVersion()) {
-
-				filaTramiteVersion = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.WARNING);
-
-			} else {
-
-				filaTramiteVersion = new FilaImportar(TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.WARNING);
-
-			}
 		}
 
 		// Paso 3.4. Dominio.
@@ -353,7 +347,8 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 			final Dominio dominio = entry.getValue();
 			final Dominio dominioActual = dominioService.loadDominio(dominio.getIdentificador());
 
-			if (dominioActual == null && dominio.getAmbito() == TypeAmbito.GLOBAL) {
+			if (dominioActual == null
+					&& (dominio.getAmbito() == TypeAmbito.GLOBAL || dominio.getAmbito() == TypeAmbito.ENTIDAD)) {
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "No tienes permisos para crear un dominio global.");
 
@@ -432,13 +427,9 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	public void checkArea() {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-		mochilaDatos.put(Constantes.CLAVE_MOCHILA_AREA, UtilJSON.toJSON(area));
-		// UtilJSF.getSessionBean().setMochilaDatos(mochilaDatos);
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.filaArea);
 
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.area.getCodigo().toString());
-		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
-		UtilJSF.openDialog(DialogTramiteVersionImportarAR.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+		UtilJSF.openDialog(DialogTramiteVersionImportarAR.class, TypeModoAcceso.EDICION, null, true, 770, 220);
 	}
 
 	/**
@@ -447,13 +438,9 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	public void checkTramite() {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-		mochilaDatos.put(Constantes.CLAVE_MOCHILA_TRAMITE, UtilJSON.toJSON(tramite));
-		// UtilJSF.getSessionBean().setMochilaDatos(mochilaDatos);
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.filaTramite);
 
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.tramite.getCodigo().toString());
-		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
-		UtilJSF.openDialog(DialogTramiteVersionImportarTR.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+		UtilJSF.openDialog(DialogTramiteVersionImportarTR.class, TypeModoAcceso.EDICION, null, true, 770, 220);
 	}
 
 	/**
@@ -462,13 +449,9 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	public void checkTramiteVersion() {
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-		mochilaDatos.put(Constantes.CLAVE_MOCHILA_TRAMITE_VERSION, UtilJSON.toJSON(tramiteVersion));
-		// UtilJSF.getSessionBean().setMochilaDatos(mochilaDatos);
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.filaTramiteVersion);
 
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.tramite.getCodigo().toString());
-		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
-		UtilJSF.openDialog(DialogTramiteVersionImportarTV.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+		UtilJSF.openDialog(DialogTramiteVersionImportarTV.class, TypeModoAcceso.EDICION, null, true, 770, 470);
 	}
 
 	/**
@@ -522,10 +505,11 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 */
 	public void returnDialogoArea(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
-		if (accion != TypeImportarAccion.PENDIENTE) {
+		if (!respuesta.isCanceled()) {
+
+			this.filaArea = (FilaImportar) respuesta.getResult();
+			this.filaArea.setAccion(TypeImportarAccion.REVISADO);
 			this.filaArea.setResultado(TypeImportarResultado.INFO);
-			this.filaArea.setAccion(accion);
 		}
 	}
 
@@ -537,10 +521,10 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 */
 	public void returnDialogoTramite(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
-		if (accion != TypeImportarAccion.PENDIENTE) {
+		if (!respuesta.isCanceled()) {
+			this.filaTramite = (FilaImportar) respuesta.getResult();
+			this.filaTramite.setAccion(TypeImportarAccion.REVISADO);
 			this.filaTramite.setResultado(TypeImportarResultado.INFO);
-			this.filaTramite.setAccion(accion);
 		}
 	}
 
@@ -552,10 +536,10 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 */
 	public void returnDialogoTramiteVersion(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
-		if (accion != TypeImportarAccion.PENDIENTE) {
+		if (!respuesta.isCanceled()) {
+			this.filaTramiteVersion = (FilaImportar) respuesta.getResult();
+			this.filaTramiteVersion.setAccion(TypeImportarAccion.REVISADO);
 			this.filaTramiteVersion.setResultado(TypeImportarResultado.INFO);
-			this.filaTramiteVersion.setAccion(accion);
 		}
 	}
 

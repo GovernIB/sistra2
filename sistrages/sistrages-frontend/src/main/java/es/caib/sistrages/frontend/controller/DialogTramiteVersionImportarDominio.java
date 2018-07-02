@@ -55,24 +55,13 @@ public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * Cancelar.
+	 * Guardar.
 	 */
-	public void mantener() {
+	public void guardar() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
-		result.setResult(TypeImportarAccion.MANTENER);
-		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * Cancelar.
-	 */
-	public void remplazar() {
-		final DialogResult result = new DialogResult();
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setCanceled(false);
-		result.setResult(TypeImportarAccion.REEMPLAZAR);
+		result.setResult(TypeImportarAccion.REVISADO);
 		UtilJSF.closeDialog(result);
 	}
 

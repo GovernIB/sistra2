@@ -13,7 +13,7 @@ import java.util.List;
 public class Entidad extends ModelApi {
 
 	/** Código interno. */
-	private Long id;
+	private Long codigo;
 
 	/** Código DIR3. **/
 	private String codigoDIR3;
@@ -74,18 +74,18 @@ public class Entidad extends ModelApi {
 	private Literal lopd;
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

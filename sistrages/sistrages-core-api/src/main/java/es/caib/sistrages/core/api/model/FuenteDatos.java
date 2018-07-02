@@ -27,9 +27,17 @@ public class FuenteDatos extends ModelApi {
 	/** Descripcion. */
 	private String descripcion;
 
+	/** Id area. **/
+	private Long idArea;
+
 	/** Campos. **/
 	private List<FuenteDatosCampo> campos = new ArrayList<>();
 
+	/**
+	 * Get idString.
+	 * 
+	 * @return
+	 */
 	public String getIdString() {
 		if (codigo == null) {
 			return null;
@@ -38,6 +46,11 @@ public class FuenteDatos extends ModelApi {
 		}
 	}
 
+	/**
+	 * Set idstring.
+	 * 
+	 * @param idString
+	 */
 	public void setIdString(final String idString) {
 		if (idString == null) {
 			this.codigo = null;
@@ -130,7 +143,7 @@ public class FuenteDatos extends ModelApi {
 	public FuenteDatosCampo getCampoById(final Long id) {
 		FuenteDatosCampo campo = null;
 		for (final FuenteDatosCampo campoFD : this.campos) {
-			if (campoFD.getId() != null && campoFD.getId().compareTo(id) == 0) {
+			if (campoFD.getCodigo() != null && campoFD.getCodigo().compareTo(id) == 0) {
 				campo = campoFD;
 				break;
 			}
@@ -157,6 +170,21 @@ public class FuenteDatos extends ModelApi {
 		if (this.campos.contains(fuenteDatosCampo)) {
 			this.campos.remove(fuenteDatosCampo);
 		}
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public Long getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea
+	 *            the idArea to set
+	 */
+	public void setIdArea(final Long idArea) {
+		this.idArea = idArea;
 	}
 
 }

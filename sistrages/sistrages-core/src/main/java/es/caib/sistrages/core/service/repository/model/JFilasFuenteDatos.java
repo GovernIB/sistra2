@@ -73,7 +73,7 @@ public class JFilasFuenteDatos implements IModelApi {
 
 	public FuenteFila toModel() {
 		final FuenteFila fila = new FuenteFila();
-		fila.setId(this.getCodigo());
+		fila.setCodigo(this.getCodigo());
 		if (this.valoresFuenteDatos != null) {
 			final List<FuenteDatosValor> valores = new ArrayList<>();
 			// Hay que recuperarlo en el orden de los campos
@@ -90,7 +90,7 @@ public class JFilasFuenteDatos implements IModelApi {
 		JFilasFuenteDatos res = null;
 		if (fila != null) {
 			res = new JFilasFuenteDatos();
-			res.setCodigo(fila.getId());
+			res.setCodigo(fila.getCodigo());
 			if (fila.getDatos() != null) {
 				final Set<JValorFuenteDatos> valores = new HashSet<>();
 				for (final FuenteDatosValor valor : fila.getDatos()) {

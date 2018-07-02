@@ -103,7 +103,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.EDICION, params, true, 550, 250);
 	}
 
@@ -115,7 +115,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		configuracionGlobalService.removeConfiguracionGlobal(datoSeleccionado.getId());
+		configuracionGlobalService.removeConfiguracionGlobal(datoSeleccionado.getCodigo());
 		// Refrescamos datos
 		buscar();
 		// Mostramos mensaje

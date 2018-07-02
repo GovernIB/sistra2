@@ -12,6 +12,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -95,6 +96,14 @@ public class ViewDominios extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
+
+		// Si es modo alta, verificamos por si acaso si hay permisos (no debería entrar
+		// por aqui)
+		if (!checkPermisosEntorno()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin permisos");
+			return;
+		}
+
 		abrirDlg(TypeModoAcceso.ALTA);
 	}
 
@@ -116,6 +125,13 @@ public class ViewDominios extends ViewControllerBase {
 	 * Elimina dato seleccionado.
 	 */
 	public void eliminar() {
+
+		// Verificamos por si acaso si hay permisos
+		if (!checkPermisosEntorno()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin permisos");
+			return;
+		}
+
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
@@ -188,11 +204,16 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * Obtiene el valor de permiteAlta.
+	 * Checkea los permisos. Se puede crear/borrar/modificar si:<br />
+	 * - El ambito es global, sólo si tienes permiso superadmin.<br />
+	 * - El ambito es entidad, sólo si tienes permisos gestor de entidad.<br />
+	 * - Si el ambito es area, sólo si eres superadmin, gestor de entidad o, en caso
+	 * de desarrollador, tener el permiso de adm.area o des. area sobre dicha area.
+	 * <br />
 	 *
-	 * @return el valor de permiteAlta
+	 * @return el valor de check permisos
 	 */
-	public boolean getPermiteAlta() {
+	public boolean checkPermisos() {
 		boolean res = false;
 		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
 		switch (ambitoType) {
@@ -210,11 +231,15 @@ public class ViewDominios extends ViewControllerBase {
 				res = true;
 			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					final List<TypeRolePermisos> permisos = securityService
+							.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
 
-				res = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-
+					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+				} else {
+					res = false;
+				}
 			}
 
 			break;
@@ -223,34 +248,20 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
-	 * Obtiene el valor de permiteEditar.
+	 * Es lo mismo que checkPermisos pero con la restricción del entorno.
 	 *
-	 * @return el valor de permiteEditar
+	 * Si es entorno preproducción o producción, sólo puedes consultar sino lo que
+	 * diga permisos.
+	 *
+	 * @return el valor de check permisos con restricción de entorno
 	 */
-	public boolean getPermiteEditar() {
+	public boolean checkPermisosEntorno() {
 		boolean res = false;
-		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
-		switch (ambitoType) {
-		case GLOBAL:
-			// Entra como SuperAdmin
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
-			break;
-		case ENTIDAD:
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-			break;
-		case AREA:
-			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
-				res = true;
-			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
-
-				res = permisos.contains(TypeRolePermisos.MODIFICACION);
-
-			}
-			break;
+		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+			res = false;
+		} else {
+			res = checkPermisos();
 		}
 		return res;
 	}
@@ -305,8 +316,9 @@ public class ViewDominios extends ViewControllerBase {
 	private void abrirDlg(final TypeModoAcceso modoAccesoDlg) {
 
 		// Verifica si no hay fila seleccionada
-		if (modoAccesoDlg != TypeModoAcceso.ALTA && !verificarFilaSeleccionada())
+		if (modoAccesoDlg != TypeModoAcceso.ALTA && !verificarFilaSeleccionada()) {
 			return;
+		}
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();

@@ -90,21 +90,21 @@ public class DialogTramiteVersion extends DialogControllerBase {
 			for (final TramiteTipo tipo : this.tramiteService.listTipoTramitePaso()) {
 
 				TramitePaso paso = null;
-				if (tipo.getCodigo().equals("DebeSaber")) {
+				if (tipo.getIdentificador().equals("DebeSaber")) {
 					paso = new TramitePasoDebeSaber();
-				} else if (tipo.getCodigo().equals("Rellenar")) {
+				} else if (tipo.getIdentificador().equals("Rellenar")) {
 					paso = new TramitePasoRellenar();
-				} else if (tipo.getCodigo().equals("Anexar")) {
+				} else if (tipo.getIdentificador().equals("Anexar")) {
 					paso = new TramitePasoAnexar();
-				} else if (tipo.getCodigo().equals("Tasa")) {
+				} else if (tipo.getIdentificador().equals("Tasa")) {
 					paso = new TramitePasoTasa();
-				} else if (tipo.getCodigo().equals("Registrar")) {
+				} else if (tipo.getIdentificador().equals("Registrar")) {
 					paso = new TramitePasoRegistrar();
 				} else {
 					paso = new TramitePaso();
 				}
 
-				paso.setIdPasoTramitacion(tipo.getCodigo());
+				paso.setIdPasoTramitacion(tipo.getIdentificador());
 				paso.setDescripcion(tipo.getDescripcion());
 				paso.setOrden(tipo.getOrden());
 				paso.setTipo(tipo);

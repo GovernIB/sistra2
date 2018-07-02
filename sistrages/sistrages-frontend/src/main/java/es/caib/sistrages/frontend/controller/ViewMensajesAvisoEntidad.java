@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.AvisoEntidad;
-import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -116,7 +115,7 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 		// Eliminamos
-		if (avisoEntidadService.removeAvisoEntidad(datoSeleccionado.getId())) {
+		if (avisoEntidadService.removeAvisoEntidad(datoSeleccionado.getCodigo())) {
 			// Refrescamos datos
 			buscar();
 			// Mostramos mensaje
@@ -259,9 +258,10 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
-			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		}
 
 		UtilJSF.openDialog(DialogMensajeAviso.class, modoAccesoDlg, params, true, 600, 430);
 	}
+
 }

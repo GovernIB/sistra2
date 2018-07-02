@@ -20,7 +20,11 @@ import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -36,6 +40,10 @@ public class DialogFuenteDatos extends DialogControllerBase {
 
 	/** Id elemento a tratar. */
 	private String id;
+
+	/** security service. */
+	@Inject
+	private SecurityService securityService;
 
 	/** Enlace servicio. */
 	@Inject
@@ -53,11 +61,18 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	/** Fila seleccionada. **/
 	private FuenteFila valorSeleccionado;
 
+	/** Ambito. **/
+	private TypeAmbito ambito;
+
+	/** Fuente. **/
+	private FuenteDatos fuente;
+
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
-		final FuenteDatos fuente = dominioService.loadFuenteDato(Long.valueOf(id));
+		fuente = dominioService.loadFuenteDato(Long.valueOf(id));
+		ambito = fuente.getAmbito();
 		campos = fuente.getCampos();
 		if (campos == null || campos.isEmpty()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFuenteDatos.faltanCampos"));
@@ -169,7 +184,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 			return;
 
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), UtilJSON.toJSON(this.valorSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), UtilJSON.toJSON(this.valorSeleccionado.getCodigo()));
 		params.put(TypeParametroVentana.DATO2.toString(), id);
 		UtilJSF.openDialog(DialogFuenteFila.class, TypeModoAcceso.EDICION, params, true, 460,
 				calcularY(this.getCampos().size()));
@@ -192,7 +207,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		dominioService.removeFuenteFila(this.valorSeleccionado.getId());
+		dominioService.removeFuenteFila(this.valorSeleccionado.getCodigo());
 		this.refreshTabla();
 	}
 
@@ -294,6 +309,50 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	}
 
 	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean getPermiteEdicion() {
+		boolean res = false;
+		switch (ambito) {
+		case GLOBAL:
+			// Entra como SuperAdmin
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			break;
+		case ENTIDAD:
+			// Entra como adm. entidad
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case AREA:
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				final List<TypeRolePermisos> permisos = securityService
+						.getPermisosDesarrolladorEntidadByArea(fuente.getIdArea());
+
+				res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
+
+			}
+
+			break;
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene si permite consulta.
+	 *
+	 * @return
+	 */
+	public boolean getPermiteConsulta() {
+		return !getPermiteEdicion();
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -366,15 +425,6 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 */
 	public void setiCampos(final String iCampos) {
 		this.iCampos = iCampos;
-	}
-
-	public boolean getPermiteEditar() {
-		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.ALTA
-				|| TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION);
-	}
-
-	public boolean getPermiteConsulta() {
-		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.CONSULTA);
 	}
 
 }

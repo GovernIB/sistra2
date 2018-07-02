@@ -120,9 +120,9 @@ public class PluginsDaoImpl implements PluginsDao {
 	 */
 	@Override
 	public void update(final Plugin plugin) {
-		final JPlugin jPlugin = entityManager.find(JPlugin.class, plugin.getId());
+		final JPlugin jPlugin = entityManager.find(JPlugin.class, plugin.getCodigo());
 		if (jPlugin == null) {
-			throw new NoExisteDato("No existe plugin " + plugin.getId());
+			throw new NoExisteDato("No existe plugin " + plugin.getCodigo());
 		}
 		final JPlugin jPluginNew = JPlugin.fromModel(plugin);
 		jPluginNew.setEntidad(jPlugin.getEntidad());

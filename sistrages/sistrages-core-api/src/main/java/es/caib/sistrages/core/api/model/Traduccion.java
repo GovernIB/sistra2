@@ -9,19 +9,13 @@ package es.caib.sistrages.core.api.model;
 @SuppressWarnings("serial")
 public class Traduccion extends ModelApi {
 
-	/**
-	 * id.
-	 */
-	private Long id;
+	/** codigo. */
+	private Long codigo;
 
-	/**
-	 * idioma.
-	 */
+	/** idioma. */
 	private String idioma;
 
-	/**
-	 * literal.
-	 */
+	/** literal. */
 	private String literal;
 
 	/** Constructor. **/
@@ -42,22 +36,22 @@ public class Traduccion extends ModelApi {
 	}
 
 	/**
-	 * Obtiene el valor de id.
+	 * Obtiene el valor de codigo.
 	 *
-	 * @return el valor de id
+	 * @return el valor de codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * Establece el valor de id.
+	 * Establece el valor de codigo.
 	 *
-	 * @param id
-	 *            el nuevo valor de id
+	 * @param codigo
+	 *            el nuevo valor de codigo
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

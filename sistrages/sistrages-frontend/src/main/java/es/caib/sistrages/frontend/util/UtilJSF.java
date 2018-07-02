@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -297,6 +298,20 @@ public final class UtilJSF {
 	}
 
 	/**
+	 * Obtiene el valor de literal.
+	 *
+	 * @param key
+	 *            key
+	 * @param lang
+	 *            lang
+	 * @return el valor de literal
+	 */
+	public static String getLiteral(final String key, final String lang) {
+		final ResourceBundle text = ResourceBundle.getBundle("i18n.messages", new Locale(lang));
+		return text.getString(key);
+	}
+
+	/**
 	 * Obtiene bean de sesión.
 	 *
 	 * @return bean de sesión
@@ -335,7 +350,7 @@ public final class UtilJSF {
 		}
 		boolean found = false;
 		for (final Entidad e : sb.getListaEntidades()) {
-			if (e.getId().longValue() == idEntidad) {
+			if (e.getCodigo().longValue() == idEntidad) {
 				found = true;
 				break;
 			}
@@ -566,18 +581,23 @@ public final class UtilJSF {
 	 */
 	public static String getDefaultUrlRole(final TypeRoleAcceso role, final Long idEntidad) {
 		String url = null;
-		switch (role) {
-		case SUPER_ADMIN:
-			url = getUrlOpcionMenuSuperadministrador(getDefaultOpcionSuperadministrador());
-			break;
-		case ADMIN_ENT:
-			url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper(), idEntidad);
-			break;
-		case DESAR:
-			url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper(), idEntidad);
-			break;
-		default:
-			break;
+		if (role == null) {
+			url = "/error/errorUsuarioSinRol.xhtml";
+		} else {
+			switch (role) {
+			case SUPER_ADMIN:
+				url = getUrlOpcionMenuSuperadministrador(getDefaultOpcionSuperadministrador());
+				break;
+			case ADMIN_ENT:
+				url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper(), idEntidad);
+				break;
+			case DESAR:
+				url = getUrlOpcionMenuAdmOper(getDefaultOpcionAdmOper(), idEntidad);
+				break;
+			default:
+				url = "/error/errorUsuarioSinRol.xhtml";
+				break;
+			}
 		}
 		return url;
 	}
@@ -620,7 +640,7 @@ public final class UtilJSF {
 		Long idEntidad = null;
 		final Entidad entidad = UtilJSF.getSessionBean().getEntidad();
 		if (entidad != null) {
-			idEntidad = entidad.getId();
+			idEntidad = entidad.getCodigo();
 		}
 		return idEntidad;
 	}

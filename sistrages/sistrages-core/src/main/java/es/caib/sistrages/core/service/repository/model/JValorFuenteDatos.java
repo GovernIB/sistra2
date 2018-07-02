@@ -76,7 +76,7 @@ public class JValorFuenteDatos implements IModelApi {
 
 	public FuenteDatosValor toModel() {
 		final FuenteDatosValor fuenteDatosValor = new FuenteDatosValor();
-		fuenteDatosValor.setId(this.getCodigo());
+		fuenteDatosValor.setCodigo(this.getCodigo());
 		fuenteDatosValor.setValor(this.getValor());
 		fuenteDatosValor.setIdCampo(this.getCampoFuenteDatos().getIdCampo());
 		fuenteDatosValor.setOrdenCampo(this.getCampoFuenteDatos().getOrden());
@@ -86,7 +86,7 @@ public class JValorFuenteDatos implements IModelApi {
 
 	public void fromModel(final FuenteDatosValor fila) {
 		if (fila != null) {
-			this.setCodigo(fila.getId());
+			this.setCodigo(fila.getCodigo());
 			this.setValor(fila.getValor());
 
 			if (fila.getCampo() != null) {

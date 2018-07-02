@@ -14,8 +14,8 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class FuenteFila extends ModelApi {
 
-	/** Id. **/
-	private Long id;
+	/** Codigo interno. **/
+	private Long codigo;
 
 	/** Fuente datos valores. **/
 	FuenteDatosValores fuenteDatosValores;
@@ -29,40 +29,40 @@ public class FuenteFila extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
 	 * @return the idString
 	 */
 	public String getIdString() {
-		if (id == null) {
+		if (codigo == null) {
 			return null;
 		} else {
-			return id.toString();
+			return codigo.toString();
 		}
 	}
 
 	/**
 	 * @param idString
-	 *            the id to set
+	 *            the codigo to set
 	 */
 	public void setIdString(final String idString) {
-		if (id == null) {
-			this.id = null;
+		if (codigo == null) {
+			this.codigo = null;
 		} else {
-			this.id = Long.valueOf(idString);
+			this.codigo = Long.valueOf(idString);
 		}
 	}
 
@@ -138,7 +138,7 @@ public class FuenteFila extends ModelApi {
 	}
 
 	/**
-	 * Devuelve un FuenteDatosValor segun una id.
+	 * Devuelve un FuenteDatosValor segun una codigo.
 	 *
 	 * @param codigo
 	 * @return
@@ -147,7 +147,7 @@ public class FuenteFila extends ModelApi {
 		FuenteDatosValor valor = null;
 		if (this.getDatos() != null) {
 			for (final FuenteDatosValor val : this.getDatos()) {
-				if (codigo.compareTo(val.getId()) == 0) {
+				if (codigo.compareTo(val.getCodigo()) == 0) {
 					valor = val;
 					break;
 				}

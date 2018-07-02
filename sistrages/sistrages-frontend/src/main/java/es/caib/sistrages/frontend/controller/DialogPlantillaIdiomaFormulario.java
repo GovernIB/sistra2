@@ -103,8 +103,8 @@ public class DialogPlantillaIdiomaFormulario extends DialogControllerBase {
 	}
 
 	public void descargaFichero(final Fichero fichero) {
-		if (fichero != null && fichero.getId() != null) {
-			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getId());
+		if (fichero != null && fichero.getCodigo() != null) {
+			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getCodigo());
 		}
 	}
 

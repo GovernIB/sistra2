@@ -181,4 +181,24 @@ public interface TramitePasoDao {
 	 */
 	void intercambiarFormularios(Long idFormulario1, Long idFormulario2);
 
+	/**
+	 * Comprueba si una tasa se repite.
+	 *
+	 * @param idTramiteVersion
+	 * @param identificador
+	 * @param idTasa
+	 * @return
+	 */
+	boolean checkTasaRepetida(Long idTramiteVersion, String identificador, Long idTasa);
+
+	/**
+	 * Comprueba si un anexo se repite.
+	 * 
+	 * @param idTramiteVersion
+	 * @param identificador
+	 * @param idAnexo
+	 * @return
+	 */
+	boolean checkAnexoRepetido(Long idTramiteVersion, String identificador, Long idAnexo);
+
 }

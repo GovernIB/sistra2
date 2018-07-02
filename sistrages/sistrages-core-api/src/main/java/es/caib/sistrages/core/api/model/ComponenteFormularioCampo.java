@@ -1,76 +1,151 @@
 package es.caib.sistrages.core.api.model;
 
 /**
- * Componente formulario de tipo campo.
- *
- * @author Indra
- *
+ * La clase ComponenteFormularioCampo.
  */
 @SuppressWarnings("serial")
 public abstract class ComponenteFormularioCampo extends ComponenteFormulario {
 
-	/** Indica si es obligatorio. */
+	/**
+	 * obligatorio.
+	 */
 	private boolean obligatorio;
 
-	/** Indica si es solo lectura. */
+	/**
+	 * solo lectura.
+	 */
 	private boolean soloLectura;
 
-	/** Indica si es no modificable. */
+	/**
+	 * no modificable.
+	 */
 	private boolean noModificable; // TODO VER SI ES NECESARIO
 
-	/** Script autorrellenable. */
+	/**
+	 * script autorrellenable.
+	 */
 	private Script scriptAutorrellenable;
 
-	/** Script solo lectura. */
+	/**
+	 * script solo lectura.
+	 */
 	private Script scriptSoloLectura;
 
-	/** Script validacion. */
+	/**
+	 * script validacion.
+	 */
 	private Script scriptValidacion;
 
+	/**
+	 * Verifica si es obligatorio.
+	 *
+	 * @return true, si es obligatorio
+	 */
 	public boolean isObligatorio() {
 		return obligatorio;
 	}
 
+	/**
+	 * Establece el valor de obligatorio.
+	 *
+	 * @param obligatorio
+	 *            el nuevo valor de obligatorio
+	 */
 	public void setObligatorio(final boolean obligatorio) {
 		this.obligatorio = obligatorio;
 	}
 
+	/**
+	 * Verifica si es solo lectura.
+	 *
+	 * @return true, si es solo lectura
+	 */
 	public boolean isSoloLectura() {
 		return soloLectura;
 	}
 
+	/**
+	 * Establece el valor de soloLectura.
+	 *
+	 * @param soloLectura
+	 *            el nuevo valor de soloLectura
+	 */
 	public void setSoloLectura(final boolean soloLectura) {
 		this.soloLectura = soloLectura;
 	}
 
+	/**
+	 * Verifica si es no modificable.
+	 *
+	 * @return true, si es no modificable
+	 */
 	public boolean isNoModificable() {
 		return noModificable;
 	}
 
+	/**
+	 * Establece el valor de noModificable.
+	 *
+	 * @param noModificable
+	 *            el nuevo valor de noModificable
+	 */
 	public void setNoModificable(final boolean noModificable) {
 		this.noModificable = noModificable;
 	}
 
+	/**
+	 * Obtiene el valor de scriptAutorrellenable.
+	 *
+	 * @return el valor de scriptAutorrellenable
+	 */
 	public Script getScriptAutorrellenable() {
 		return scriptAutorrellenable;
 	}
 
+	/**
+	 * Establece el valor de scriptAutorrellenable.
+	 *
+	 * @param scriptAutorrellenable
+	 *            el nuevo valor de scriptAutorrellenable
+	 */
 	public void setScriptAutorrellenable(final Script scriptAutorrellenable) {
 		this.scriptAutorrellenable = scriptAutorrellenable;
 	}
 
+	/**
+	 * Obtiene el valor de scriptSoloLectura.
+	 *
+	 * @return el valor de scriptSoloLectura
+	 */
 	public Script getScriptSoloLectura() {
 		return scriptSoloLectura;
 	}
 
+	/**
+	 * Establece el valor de scriptSoloLectura.
+	 *
+	 * @param scriptSoloLectura
+	 *            el nuevo valor de scriptSoloLectura
+	 */
 	public void setScriptSoloLectura(final Script scriptSoloLectura) {
 		this.scriptSoloLectura = scriptSoloLectura;
 	}
 
+	/**
+	 * Obtiene el valor de scriptValidacion.
+	 *
+	 * @return el valor de scriptValidacion
+	 */
 	public Script getScriptValidacion() {
 		return scriptValidacion;
 	}
 
+	/**
+	 * Establece el valor de scriptValidacion.
+	 *
+	 * @param scriptValidacion
+	 *            el nuevo valor de scriptValidacion
+	 */
 	public void setScriptValidacion(final Script scriptValidacion) {
 		this.scriptValidacion = scriptValidacion;
 	}

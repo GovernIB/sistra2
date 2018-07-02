@@ -93,7 +93,7 @@ public class JLineaFormulario implements IModelApi {
 
 	public LineaComponentesFormulario toModel() {
 		final LineaComponentesFormulario pagina = new LineaComponentesFormulario();
-		pagina.setId(codigo);
+		pagina.setCodigo(codigo);
 		pagina.setOrden(orden);
 		return pagina;
 	}
@@ -102,7 +102,7 @@ public class JLineaFormulario implements IModelApi {
 		JLineaFormulario jModel = null;
 		if (model != null) {
 			jModel = new JLineaFormulario();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setOrden(model.getOrden());
 		}
 		return jModel;

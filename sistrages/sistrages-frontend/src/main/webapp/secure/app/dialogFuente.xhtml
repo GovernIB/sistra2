@@ -35,7 +35,7 @@
 
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, w25px" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
-			  	<p:outputLabel value="#{msg['dialogFuente.headerCodigo']}" />
+			  	<p:outputLabel for="codigo" value="#{msg['dialogFuente.headerCodigo']}" />
 			   	<p:inputText id="codigo" value="#{dialogFuente.data.identificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();">
 			   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
 			   	</p:inputText>
@@ -47,53 +47,54 @@
 
 				<p:outputLabel value="#{msg['dialogFuente.headerCampos']}" />
 				<p:dataTable  id="dataTableParametros"
-												 var="td" emptyMessage="#{msg['error.emptyRows']}"
-												 value="#{dialogFuente.data.campos}"
-												 width="100%"
-												 height="100%"
-												 scrollable="true"
-												 scrollHeight="100%"
-												 scrollWidth="100%"
-												 paginator="false"
-												 selection="#{dialogFuente.valorSeleccionado}"
-												 selectionMode="single"
-												 rowKey="#{td.codigo}">
+							  var="td" emptyMessage="#{msg['error.emptyRows']}"
+							  value="#{dialogFuente.data.campos}"
+							  width="100%"
+							  height="100%"
+							  scrollable="true"
+							  scrollHeight="100%"
+							  scrollWidth="100%"
+							  paginator="false"
+							  selection="#{dialogFuente.valorSeleccionado}"
+							  selectionMode="single"
+							  rowKey="#{td.idString}">
 
-										<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-										<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
+							<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
+							<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
 
-										<!-- Necesario para actualizar en controlador la fila seleccionada -->
-										<p:ajax event="rowSelect" />
-										<p:ajax event="rowUnselect" />
+							<!-- Necesario para actualizar en controlador la fila seleccionada -->
+							<p:ajax event="rowSelect" />
+							<p:ajax event="rowUnselect" />
 
-										<!-- Columnas -->
-										<p:column headerText="#{msg['dialogFuente.headerCampos.clavePrimaria']}" class="ui-panelgrid-cell">
-											<p:selectBooleanCheckbox id="clavePrimaria" value="#{td.clavePrimaria}" disabled="true" />
-									    </p:column>
+							<!-- Columnas -->
+							<p:column headerText="#{msg['dialogFuente.headerCampos.clavePrimaria']}" class="ui-panelgrid-cell">
+								<p:selectBooleanCheckbox id="clavePrimaria" value="#{td.clavePrimaria}" disabled="true" />
+							</p:column>
 
-									    <p:column headerText="#{msg['dialogFuente.headerCampos.nombreCampo']}" class="ui-panelgrid-cell">
-									        <h:outputText value="#{td.codigo}" />
-									    </p:column>
+							<p:column headerText="#{msg['dialogFuente.headerCampos.nombreCampo']}" class="ui-panelgrid-cell">
+							     <h:outputText value="#{td.identificador}" />
+							</p:column>
+
 				</p:dataTable>
 				<p:column style="width:20px" rendered="#{!dialogFuente.consulta}">
 						     	<p>
-						    		<p:commandButton id="btnNuevaPropiedad" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFuente.nuevaFuenteDatosCampo()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnNuevaPropiedad" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogFuente.nuevaFuenteDatosCampo()}" process="@this" update="growlDialog" rendered="#{dialogFuente.permiteEdicion}">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuente.returnDialogo}" update="growlDialog dataTableParametros"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
-						    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuente.editarFuenteDatosCampo()}" process="@this" update="growlDialog">
+						    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuente.editarFuenteDatosCampo()}" process="@this" update="growlDialog" rendered="#{dialogFuente.permiteEdicion}">
 		        						<p:ajax event="dialogReturn" listener="#{dialogFuente.returnDialogo}" update="growlDialog dataTableParametros"/>
 		        					</p:commandButton>
 		        				</p>
 						    	<p>
-						    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogFuente.quitarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
+						    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogFuente.quitarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" rendered="#{dialogFuente.permiteEdicion}" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogFuente.subirFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
+						    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogFuente.subirFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" rendered="#{dialogFuente.permiteEdicion}" />
 						    	</p>
 						    	<p>
-						    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}"  actionListener="#{dialogFuente.bajarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" />
+						    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}"  actionListener="#{dialogFuente.bajarFuenteDatosCampo()}" process="@this" update="growlDialog dataTableParametros" rendered="#{dialogFuente.permiteEdicion}" />
 						    	</p>
 				 </p:column>
 
@@ -114,7 +115,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFuente.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogFuente.alta or dialogFuente.edicion}" />
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFuente.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogFuente.permiteEdicion}" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFuente.cancelar()}" process="@this" rendered="#{dialogFuente.alta or dialogFuente.edicion}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFuente.cancelar()}" process="@this"  rendered="#{dialogFuente.consulta}"/>
 					</f:facet>

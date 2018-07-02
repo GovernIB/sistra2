@@ -1,19 +1,19 @@
 package es.caib.sistrages.core.api.model;
 
 /**
- *
- * Formateador Formulario.
- *
- * @author Indra
- *
+ * La clase FormateadorFormulario.
  */
 @SuppressWarnings("serial")
 public class FormateadorFormulario extends ModelApi {
 
-	/** Id. */
+	/**
+	 * codigo.
+	 */
 	private Long codigo;
 
-	/** Identificador. **/
+	/**
+	 * identificador.
+	 */
 	private String identificador;
 
 	/**
@@ -27,17 +27,17 @@ public class FormateadorFormulario extends ModelApi {
 	private String descripcion;
 
 	/**
-	 * Crea una nueva instancia de Formateador Formulario.
+	 * Crea una nueva instancia de FormateadorFormulario.
 	 */
 	public FormateadorFormulario() {
 		super();
 	}
 
 	/**
-	 * Crea una nueva instancia de Formateador Formulario.
+	 * Crea una nueva instancia de FormateadorFormulario.
 	 *
 	 * @param pCodigo
-	 *            codigo
+	 *            the codigo
 	 */
 	public FormateadorFormulario(final Long pCodigo) {
 		super();
@@ -59,8 +59,8 @@ public class FormateadorFormulario extends ModelApi {
 	 * @param codigo
 	 *            el nuevo valor de codigo
 	 */
-	public void setCodigo(final Long id) {
-		this.codigo = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
@@ -101,10 +101,21 @@ public class FormateadorFormulario extends ModelApi {
 		this.descripcion = descripcion;
 	}
 
+	/**
+	 * Obtiene el valor de identificador.
+	 *
+	 * @return el valor de identificador
+	 */
 	public String getIdentificador() {
 		return identificador;
 	}
 
+	/**
+	 * Establece el valor de identificador.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de identificador
+	 */
 	public void setIdentificador(final String codigo) {
 		this.identificador = codigo;
 	}

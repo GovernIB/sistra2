@@ -10,8 +10,8 @@ package es.caib.sistrages.core.api.model;
 @SuppressWarnings("serial")
 public class FuenteDatosValor extends ModelApi {
 
-	/** Id. **/
-	private Long id;
+	/** Codigo interno. **/
+	private Long codigo;
 
 	/** Codigo del Campo. **/
 	private String idCampo;
@@ -29,34 +29,34 @@ public class FuenteDatosValor extends ModelApi {
 	 * Constructor básico.
 	 */
 	public FuenteDatosValor() {
-		id = null;
+		codigo = null;
 	}
 
 	/**
 	 * Constructor .
 	 *
-	 * @param id
+	 * @param codigo
 	 * @param codigo
 	 */
-	public FuenteDatosValor(final Long id, final String idCampo, final String valor) {
-		this.id = id;
+	public FuenteDatosValor(final Long codigo, final String idCampo, final String valor) {
+		this.codigo = codigo;
 		this.setIdCampo(idCampo);
 		this.valor = valor;
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

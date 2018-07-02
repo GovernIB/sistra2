@@ -290,12 +290,12 @@ public class JFormularioTramite implements IModelApi {
 	public static JFormularioTramite fromModel(final FormularioTramite formulario) {
 		final JFormularioTramite jformularioTramite = new JFormularioTramite();
 		if (formulario != null) {
-			jformularioTramite.setCodigo(formulario.getId());
+			jformularioTramite.setCodigo(formulario.getCodigo());
 			jformularioTramite.setFirmarDigitalmente(formulario.isDebeFirmarse());
 			jformularioTramite.setDescripcion(JLiteral.fromModel(formulario.getDescripcion()));
-			jformularioTramite.setIdentificador(formulario.getCodigo());
+			jformularioTramite.setIdentificador(formulario.getIdentificador());
 			if (formulario.getFormularioGestorExterno() != null) {
-				jformularioTramite.setIdFormularioExterno(formulario.getFormularioGestorInterno().getCodigo());
+				jformularioTramite.setIdFormularioExterno(formulario.getFormularioGestorInterno().getIdentificador());
 			}
 			jformularioTramite.setObligatorio(formulario.getObligatoriedad().toString());
 			jformularioTramite.setOrden(formulario.getOrden());
@@ -323,7 +323,7 @@ public class JFormularioTramite implements IModelApi {
 	public FormularioTramite toModel() {
 		final FormularioTramite mformulario = new FormularioTramite();
 
-		mformulario.setId(this.getCodigo());
+		mformulario.setCodigo(this.getCodigo());
 		mformulario.setDebeFirmarse(this.getFirmarDigitalmente());
 		if (this.getDescripcion() != null) {
 			mformulario.setDescripcion(this.getDescripcion().toModel());
@@ -331,10 +331,10 @@ public class JFormularioTramite implements IModelApi {
 		if (this.getFormulario() != null) {
 			mformulario.setIdFormularioInterno(this.getFormulario().getCodigo());
 		}
-		mformulario.setCodigo(this.getIdentificador());
+		mformulario.setIdentificador(this.getIdentificador());
 		if (this.getIdFormularioExterno() != null) {
 			final Gestor form = new Gestor();
-			form.setId(Long.valueOf(this.getIdFormularioExterno()));
+			form.setCodigo(Long.valueOf(this.getIdFormularioExterno()));
 			mformulario.setFormularioGestorInterno(form);
 		}
 		mformulario.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));

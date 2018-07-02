@@ -201,13 +201,13 @@
 	  	<p:outputPanel styleClass="botonera">
 	     	<p:toolbar>
 				<f:facet name="right">
-	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}">
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar()}">
 	        			<c:if test="#{dialogDominio.mostrarAdvertencia}">
 	        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"  />
 	        			</c:if>
 	        		</p:commandButton>
-					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.isAlta() or dialogDominio.isEdicion()}"/>
-					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.isConsulta()}"/>
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.permiteGuardar()}"/>
+					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.permiteGuardar() == false}"/>
 				</f:facet>
 			</p:toolbar>
 	    </p:outputPanel>

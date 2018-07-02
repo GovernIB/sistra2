@@ -18,7 +18,7 @@ public interface DominioDao {
 	 *            the id dominio
 	 * @return el valor de byId
 	 */
-	Dominio getById(final Long idDominio);
+	Dominio getByCodigo(final Long idDominio);
 
 	/**
 	 * Obtiene el valor de byCodigo.
@@ -27,7 +27,7 @@ public interface DominioDao {
 	 *            the codigo dominio
 	 * @return el valor de byCodigo
 	 */
-	Dominio getByCodigo(final String codigoDominio);
+	Dominio getByIdentificador(final String codigoDominio);
 
 	/**
 	 * Obtiene el valor de all.

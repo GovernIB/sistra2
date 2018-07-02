@@ -394,10 +394,8 @@ public class TramiteDaoImpl implements TramiteDao {
 	private JFichero getAnexoTramite(final JPasoTramitacion jpaso, final Long codigo) {
 		JFichero jfichero = null;
 		for (final JAnexoTramite anexo : jpaso.getPasoAnexar().getAnexosTramite()) {
-			if (anexo.getFicheroPlantilla() != null) {
-				if (anexo.getCodigoClonado().compareTo(codigo) == 0) {
-					jfichero = anexo.getFicheroPlantilla();
-				}
+			if (anexo.getFicheroPlantilla() != null && anexo.getCodigoClonado().compareTo(codigo) == 0) {
+				jfichero = anexo.getFicheroPlantilla();
 			}
 		}
 		return jfichero;
@@ -637,13 +635,14 @@ public class TramiteDaoImpl implements TramiteDao {
 		query.setParameter("idTramite", idTramite);
 		query.setParameter("numeroVersion", numeroVersion);
 
-		final JVersionTramite jVersionTramite = (JVersionTramite) query.getSingleResult();
+		TramiteVersion tramiteVersion = null;
+		final List<JVersionTramite> resultado = query.getResultList();
 
-		if (jVersionTramite == null) {
-			return null;
-		} else {
-			return jVersionTramite.toModel();
+		if (!resultado.isEmpty()) {
+			tramiteVersion = resultado.get(0).toModel();
 		}
+
+		return tramiteVersion;
 	}
 
 	@Override

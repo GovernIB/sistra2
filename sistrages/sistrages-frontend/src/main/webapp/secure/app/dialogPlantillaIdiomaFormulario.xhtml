@@ -24,7 +24,7 @@
 		<f:viewAction action="#{dialogPlantillaIdiomaFormulario.init}" />
 	</f:metadata>
 
-	<h:form id="dialogPlantillaIdiomaFormulario" styleClass="margin-top-10" >
+	<h:form id="formDialogPlantillaIdiomaFormulario" styleClass="margin-top-10" >
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -38,7 +38,7 @@
 						<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty plantilla.fichero}"/>
 						<p:commandLink process="@this" actionListener="#{dialogPlantillaIdiomaFormulario.descargaFichero(plantilla.fichero)}" target="_blank" value="#{plantilla.fichero.nombre}" rendered="#{!empty plantilla.fichero}"/>
 						<p:spacer width="20" height="1"/>
-		           		<p:commandButton icon="fa fa-cog" process="@this" actionListener="#{dialogPlantillaIdiomaFormulario.gestionFichero(plantilla)}" >
+		           		<p:commandButton icon="fa fa-cog" process="@this" actionListener="#{dialogPlantillaIdiomaFormulario.gestionFichero(plantilla)}" rendered="#{dialogPlantillaIdiomaFormulario.alta or dialogPlantillaIdiomaFormulario.edicion}">
 							<p:ajax event="dialogReturn" listener="#{dialogPlantillaIdiomaFormulario.returnDialogoFichero}" update="@form"/>
 		           		</p:commandButton>
 						<h:inputHidden id="idioma" required="#{dialogPlantillaIdiomaFormulario.requerido(plantilla.idioma)}" value="#{plantilla.fichero}" converter="#{ficheroConverter}"/>
@@ -49,7 +49,8 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaIdiomaFormulario.aceptar()}" process="@form" update="@form growlDialogPlantillaIdiomaFormulario"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaIdiomaFormulario.aceptar}" process="@form" update="@form growlDialogPlantillaIdiomaFormulario" rendered="#{dialogPlantillaIdiomaFormulario.alta or dialogPlantillaIdiomaFormulario.edicion}"/>
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlantillaIdiomaFormulario.cancelar}" process="@this" rendered="#{dialogPlantillaIdiomaFormulario.consulta}"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

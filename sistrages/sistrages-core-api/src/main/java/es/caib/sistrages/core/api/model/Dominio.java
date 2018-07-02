@@ -1,6 +1,8 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -59,6 +61,9 @@ public class Dominio extends ModelApi {
 	/** JSON con la lista de parametros (identificador - valor). */
 	private List<Propiedad> parametros;
 
+	/** Areas. **/
+	private Set<Long> areas = new HashSet<>(0);
+
 	/**
 	 * Crea una nueva instancia de Dominio.
 	 */
@@ -77,8 +82,8 @@ public class Dominio extends ModelApi {
 	 * @param codigo
 	 *            the codigo to set
 	 */
-	public void setCodigo(final Long id) {
-		this.codigo = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
@@ -267,6 +272,21 @@ public class Dominio extends ModelApi {
 	 */
 	public void setParametros(final List<Propiedad> parametros) {
 		this.parametros = parametros;
+	}
+
+	/**
+	 * @return the areas
+	 */
+	public Set<Long> getAreas() {
+		return areas;
+	}
+
+	/**
+	 * @param areas
+	 *            the areas to set
+	 */
+	public void setAreas(final Set<Long> areas) {
+		this.areas = areas;
 	}
 
 }

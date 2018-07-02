@@ -214,8 +214,8 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	public void descargaFichero(final Fichero fichero) {
-		if (fichero != null && fichero.getId() != null) {
-			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getId());
+		if (fichero != null && fichero.getCodigo() != null) {
+			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getCodigo());
 		}
 	}
 
@@ -234,7 +234,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	private void gestionFichero(final TypeCampoFichero campoFichero) {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(data.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(data.getCodigo()));
 		params.put(TypeParametroVentana.CAMPO_FICHERO.toString(), campoFichero.toString());
 		UtilJSF.openDialog(DialogFichero.class, TypeModoAcceso.EDICION, params, true, 750, 350);
 	}

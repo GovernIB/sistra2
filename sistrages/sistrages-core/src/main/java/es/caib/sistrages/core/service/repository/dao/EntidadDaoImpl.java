@@ -112,9 +112,9 @@ public class EntidadDaoImpl implements EntidadDao {
 	@Override
 	public void updateSuperAdministrador(final Entidad entidad) {
 		// Update entidad por superadministrador estableciendo datos minimos
-		final JEntidad jEntidad = entityManager.find(JEntidad.class, entidad.getId());
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, entidad.getCodigo());
 		if (jEntidad == null) {
-			throw new NoExisteDato("No existe entidad " + entidad.getId());
+			throw new NoExisteDato("No existe entidad " + entidad.getCodigo());
 		}
 		jEntidad.setCodigoDir3(entidad.getCodigoDIR3());
 		jEntidad.setNombre(JLiteral.mergeModel(jEntidad.getNombre(), entidad.getNombre()));
@@ -132,9 +132,9 @@ public class EntidadDaoImpl implements EntidadDao {
 	@Override
 	public void updateAdministradorEntidad(final Entidad entidad) {
 
-		final JEntidad jEntidad = entityManager.find(JEntidad.class, entidad.getId());
+		final JEntidad jEntidad = entityManager.find(JEntidad.class, entidad.getCodigo());
 		if (jEntidad == null) {
-			throw new NoExisteDato("No existe entidad " + entidad.getId());
+			throw new NoExisteDato("No existe entidad " + entidad.getCodigo());
 		}
 
 		jEntidad.setPiePaginaAsistenteTramitacion(
@@ -149,8 +149,8 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setContactoFormularioIncidencias(entidad.isFormularioIncidenciasHabilitado());
 		jEntidad.setUrlCarpetaCiudadana(
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
-
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
+
 		entityManager.merge(jEntidad);
 	}
 

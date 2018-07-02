@@ -163,7 +163,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		if (avisoEntidad != null) {
-			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.avisoEntidad.getId()));
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.avisoEntidad.getCodigo()));
 		}
 		params.put(TypeParametroVentana.TRAMITE.toString(), tramite.getIdentificador());
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getNumeroVersion()));
@@ -181,7 +181,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 			return;
 		}
 
-		avisoEntidadService.removeAvisoEntidad(avisoEntidad.getId());
+		avisoEntidadService.removeAvisoEntidad(avisoEntidad.getCodigo());
 		avisoEntidad = null;
 	}
 

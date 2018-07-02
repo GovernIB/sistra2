@@ -16,10 +16,10 @@ import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 public class Documento extends ModelApi {
 
 	/** Id. */
-	private Long id;
+	private Long codigo;
 
 	/** Código. */
-	private String codigo;
+	private String identificador;
 
 	/** Descripción. */
 	private Literal descripcion;
@@ -96,57 +96,11 @@ public class Documento extends ModelApi {
 	}
 
 	/**
-	 * Obtiene el valor de id.
-	 *
-	 * @return el valor de id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * Establece el valor de id.
-	 *
-	 * @param id
-	 *            el nuevo valor de id
-	 */
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * Obtiene el valor de id.
-	 *
-	 * @return el valor de id
-	 */
-	public String getIdString() {
-		if (id == null) {
-			return null;
-		} else {
-			return id.toString();
-		}
-	}
-
-	/**
-	 * Establece el valor de id.
-	 *
-	 * @param id
-	 *            el nuevo valor de id
-	 */
-	public void setIdString(final String idString) {
-		if (id == null) {
-			id = null;
-		} else {
-			id = Long.valueOf(idString);
-		}
-	}
-
-	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
 	 */
-	public String getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
@@ -156,8 +110,54 @@ public class Documento extends ModelApi {
 	 * @param codigo
 	 *            el nuevo valor de codigo
 	 */
-	public void setCodigo(final String codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
+	 */
+	public String getIdString() {
+		if (codigo == null) {
+			return null;
+		} else {
+			return codigo.toString();
+		}
+	}
+
+	/**
+	 * Establece el valor de codigo.
+	 *
+	 * @param codigo
+	 *            el nuevo valor de codigo
+	 */
+	public void setIdString(final String idString) {
+		if (codigo == null) {
+			codigo = null;
+		} else {
+			codigo = Long.valueOf(idString);
+		}
+	}
+
+	/**
+	 * Obtiene el valor de identificador.
+	 *
+	 * @return el valor de identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	/**
+	 * Establece el valor de identificador.
+	 *
+	 * @param identificador
+	 *            el nuevo valor de identificador
+	 */
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**

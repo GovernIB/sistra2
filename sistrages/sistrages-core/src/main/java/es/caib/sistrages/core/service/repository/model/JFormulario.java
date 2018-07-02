@@ -131,7 +131,7 @@ public class JFormulario implements IModelApi {
 
 	public FormularioInterno toModel() {
 		final FormularioInterno formulario = new FormularioInterno();
-		formulario.setId(codigo);
+		formulario.setCodigo(codigo);
 		formulario.setPermitirAccionesPersonalizadas(permitirAccionesPersonalizadas);
 		if (scriptPlantilla != null) {
 			formulario.setScriptPlantilla(scriptPlantilla.toModel());
@@ -148,7 +148,7 @@ public class JFormulario implements IModelApi {
 		JFormulario jModel = null;
 		if (model != null) {
 			jModel = new JFormulario();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setPermitirAccionesPersonalizadas(model.isPermitirAccionesPersonalizadas());
 			jModel.setScriptPlantilla(JScript.fromModel(model.getScriptPlantilla()));
 			jModel.setMostrarCabecera(model.isMostrarCabecera());
@@ -176,8 +176,8 @@ public class JFormulario implements IModelApi {
 			final List<Long> listPaginas = new ArrayList<>();
 
 			for (final PaginaFormulario pag : pFormInt.getPaginas()) {
-				if (pag.getId() != null) {
-					listPaginas.add(pag.getId());
+				if (pag.getCodigo() != null) {
+					listPaginas.add(pag.getCodigo());
 				}
 			}
 
@@ -197,15 +197,28 @@ public class JFormulario implements IModelApi {
 			for (final PaginaFormulario pag : pFormInt.getPaginas()) {
 				orden++;
 
-				if (pag.getId() == null) {
+				if (pag.getCodigo() == null) {
 					final JPaginaFormulario jPagina = JPaginaFormulario.fromModel(pag);
 					jPagina.setOrden(orden);
 					jPagina.setFormulario(jFormulario);
 					jFormulario.getPaginas().add(jPagina);
 				} else {
 					for (final JPaginaFormulario jPagForm : jFormulario.getPaginas()) {
-						if (jPagForm.getCodigo().equals(pag.getId())) {
+						if (jPagForm.getCodigo().equals(pag.getCodigo())) {
 							jPagForm.setOrden(orden);
+							jPagForm.setPaginaFinal(pag.isPaginaFinal());
+
+							if (pag.getScriptValidacion() == null) {
+								jPagForm.setScriptValidacion(null);
+							} else {
+								if (pag.getScriptValidacion().getCodigo() != null) {
+									final JScript scriptValidacion = jPagForm.getScriptValidacion();
+									scriptValidacion.setScript(pag.getScriptValidacion().getContenido());
+								} else {
+									jPagForm.setScriptValidacion(JScript.fromModel(pag.getScriptValidacion()));
+								}
+							}
+
 							break;
 						}
 					}

@@ -10,14 +10,14 @@ package es.caib.sistrages.core.api.model;
 @SuppressWarnings("serial")
 public class Gestor extends ModelApi {
 
-	/** Id. */
-	private Long id;
+	/** Codigo interno. */
+	private Long codigo;
 
 	/** Entidad. **/
 	private Entidad entidad;
 
 	/** Identificador. **/
-	private String codigo;
+	private String identificador;
 
 	/** Descripción **/
 	private String descripcion;
@@ -26,18 +26,18 @@ public class Gestor extends ModelApi {
 	private String url;
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
@@ -56,18 +56,18 @@ public class Gestor extends ModelApi {
 	}
 
 	/**
-	 * @return the codigo
+	 * @return the identificador
 	 */
-	public String getCodigo() {
-		return codigo;
+	public String getIdentificador() {
+		return identificador;
 	}
 
 	/**
-	 * @param codigo
-	 *            the codigo to set
+	 * @param identificador
+	 *            the identificador to set
 	 */
-	public void setCodigo(final String codigo) {
-		this.codigo = codigo;
+	public void setIdentificador(final String codigo) {
+		this.identificador = codigo;
 	}
 
 	/**

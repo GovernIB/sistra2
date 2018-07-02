@@ -72,7 +72,7 @@ public class JConfiguracionGlobal implements IModelApi {
 
 	public ConfiguracionGlobal toModel() {
 		final ConfiguracionGlobal model = new ConfiguracionGlobal();
-		model.setId(codigo);
+		model.setCodigo(codigo);
 		model.setPropiedad(propiedad);
 		model.setValor(valor);
 		model.setDescripcion(descripcion);
@@ -81,7 +81,7 @@ public class JConfiguracionGlobal implements IModelApi {
 
 	public static JConfiguracionGlobal fromModel(final ConfiguracionGlobal model) {
 		final JConfiguracionGlobal jConfiguracionglobal = new JConfiguracionGlobal();
-		jConfiguracionglobal.setCodigo(model.getId());
+		jConfiguracionglobal.setCodigo(model.getCodigo());
 		jConfiguracionglobal.setDescripcion(model.getDescripcion());
 		jConfiguracionglobal.setPropiedad(model.getPropiedad());
 		jConfiguracionglobal.setValor(model.getValor());

@@ -78,7 +78,7 @@ public class JSeccionFormulario implements IModelApi {
 		JSeccionFormulario jModel = null;
 		if (model != null) {
 			jModel = new JSeccionFormulario();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setLetra(model.getLetra());
 		}
 		return jModel;

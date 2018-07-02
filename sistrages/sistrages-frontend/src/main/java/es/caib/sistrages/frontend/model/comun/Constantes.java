@@ -22,20 +22,17 @@ public final class Constantes {
 	/** Url descarga ficheros. */
 	public static final String DESCARGA_FICHEROS_URL = "/secure/app/GestorFicherosServlet";
 
-	/**
-	 * Constante para las extensiones de los ficheros de logo.
-	 */
+	/** Constante para las extensiones de los ficheros de logo. */
 	public static final String EXTENSIONES_FICHEROS_LOGO = "image/*";
 
-	/**
-	 * Constante para las extensiones de los ficheros de css.
-	 */
+	/** Constante para las extensiones de los ficheros de css. */
 	public static final String EXTENSIONES_FICHEROS_CSS = "text/css";
 
-	/**
-	 * Constante para las extensiones de los ficheros de csv
-	 */
+	/** Constante para las extensiones de los ficheros de csv. */
 	public static final String EXTENSIONES_FICHEROS_CSV = "text/csv";
+
+	/** Constante importar. **/
+	public static final String CLAVE_MOCHILA_IMPORTAR = "IMPORTAR";
 
 	/** Constante mochila lvfcin. **/
 	public static final String CLAVE_MOCHILA_LVFCIN = "LVFCIN";

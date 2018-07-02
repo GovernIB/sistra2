@@ -8,26 +8,14 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypeRolePermisos {
 
-	/**
-	 * Alta/Baja.
-	 */
-	ALTA_BAJA("A"),
-	/**
-	 * Modificación.
-	 */
-	MODIFICACION("M"),
-	/**
-	 * Consulta.
-	 */
+	/** Administrador área. */
+	ADMINISTRADOR_AREA("A"),
+	/** Desarrollador área. */
+	DESARROLLADOR_AREA("M"),
+	/** Consulta. */
 	CONSULTA("C"),
-	/**
-	 * Helpdesk.
-	 */
-	HELPDESK("H"),
-	/**
-	 * Promocionar entre entornos.
-	 */
-	PROMOCIONAR("P");
+	/** Helpdesk.*/
+	HELPDESK("H");
 
 	private String valor;
 

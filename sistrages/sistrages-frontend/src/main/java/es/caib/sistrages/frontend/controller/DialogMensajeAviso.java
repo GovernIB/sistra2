@@ -83,7 +83,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	public void init() {
 
 		// Id entidad
-		idEntidad = UtilJSF.getSessionBean().getEntidad().getId();
+		idEntidad = UtilJSF.getSessionBean().getEntidad().getCodigo();
 
 		if (tramite == null) {
 			tipoTramite = false;
@@ -153,7 +153,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getId());
+		result.setResult(data.getCodigo());
 		UtilJSF.closeDialog(result);
 	}
 

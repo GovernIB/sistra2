@@ -13,12 +13,12 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.service.PluginService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
@@ -32,10 +32,6 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ManagedBean
 @ViewScoped
 public class DialogDefinicionVersionTasa extends ViewControllerBase {
-
-	/** Tramite service. */
-	@Inject
-	private PluginService pluginService;
 
 	/** Tramite service. */
 	@Inject
@@ -61,12 +57,6 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 		if (idTramiteVersion != null) {
 			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
-
-		/*
-		 * plugins = pluginService.listPlugin(TypeAmbito.ENTIDAD,
-		 * UtilJSF.getIdEntidad(), TypePlugin.PAGOS); if (data.getTipoPlugin() != null)
-		 * { idPlugin = data.getTipoPlugin().getId(); }
-		 */
 	}
 
 	/**
@@ -158,6 +148,13 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	 * Guarda los datos y cierra el dialog.
 	 */
 	public void aceptar() {
+
+		if (tramiteService.checkTasaRepetida(tramiteVersion.getCodigo(), this.data.getIdentificador(),
+				this.data.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			return;
+		}
+
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);

@@ -120,10 +120,10 @@ public class RolDaoImpl implements RolDao {
 			throw new FaltanDatosException("Falta el rol");
 		}
 
-		final JRolArea jRol = entityManager.find(JRolArea.class, rol.getId());
+		final JRolArea jRol = entityManager.find(JRolArea.class, rol.getCodigo());
 
 		if (jRol == null) {
-			throw new NoExisteDato("No existe rol: " + rol.getId());
+			throw new NoExisteDato("No existe rol: " + rol.getCodigo());
 		}
 
 		// Mergeamos datos

@@ -36,26 +36,26 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		final FormularioExterno formularioExterno1 = new FormularioExterno();
-		formularioExterno1.setId(1l);
-		formularioExterno1.setCodigo("SADPERDOC");
+		formularioExterno1.setCodigo(1l);
+		formularioExterno1.setIdentificador("SADPERDOC");
 		formularioExterno1.setDescripcion("Gestión de formularios para trámites de Personal Docent.");
 		formularioExterno1.setUrl("http://host:port/sadperdocfront/iniciFormulari");
 
 		final FormularioExterno formularioExterno2 = new FormularioExterno();
-		formularioExterno2.setId(2l);
-		formularioExterno2.setCodigo("XESTIB");
+		formularioExterno2.setCodigo(2l);
+		formularioExterno2.setIdentificador("XESTIB");
 		formularioExterno2.setDescripcion("Gestión de formularios para trámites d'escolarització.");
 		formularioExterno2.setUrl("http://host:port/xestib/iniciFormulari");
 
 		final FormularioExterno formularioExterno3 = new FormularioExterno();
-		formularioExterno3.setId(3l);
-		formularioExterno3.setCodigo("OPOSEDU");
+		formularioExterno3.setCodigo(3l);
+		formularioExterno3.setIdentificador("OPOSEDU");
 		formularioExterno3.setDescripcion("Gestión de formularios para trámites d'inscripció de oposiciones");
 		formularioExterno3.setUrl("http://host:port/oposeduFront/tramit/inscripció/iniciFormulari");
 
 		final FormularioExterno formularioExterno4 = new FormularioExterno();
-		formularioExterno4.setId(4l);
-		formularioExterno4.setCodigo("SADPERDOC2");
+		formularioExterno4.setCodigo(4l);
+		formularioExterno4.setIdentificador("SADPERDOC2");
 		formularioExterno4.setDescripcion("Gestión de formularios para trámites 2");
 		formularioExterno4.setUrl("http://host:port/sadperdocfrontNuevo/iniciFormulari");
 
@@ -126,7 +126,7 @@ public class ViewFormulariosExternos extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.datoSeleccionado));
 		UtilJSF.openDialog(DialogFormularioExterno.class, TypeModoAcceso.EDICION, params, true, 540, 180);
 	}

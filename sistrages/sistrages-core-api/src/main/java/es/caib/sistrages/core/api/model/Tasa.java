@@ -65,8 +65,8 @@ public class Tasa extends ModelApi {
 	 * @param codigo
 	 *            el nuevo valor de codigo
 	 */
-	public void setCodigo(final Long id) {
-		this.codigo = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

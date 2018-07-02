@@ -110,8 +110,8 @@ public class TramiteVersion extends ModelApi {
 	 * @param codigo
 	 *            el nuevo valor de codigo
 	 */
-	public void setCodigo(final Long id) {
-		this.codigo = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
@@ -636,4 +636,21 @@ public class TramiteVersion extends ModelApi {
 		this.listaPasos = listaPasos;
 	}
 
+	/**
+	 * OBtiene el paso de registrar, si lo tiene.
+	 * 
+	 * @return
+	 */
+	public TramitePasoRegistrar getPasoRegistrar() {
+		TramitePasoRegistrar pasoRegistrar = null;
+		if (listaPasos != null) {
+			for (final TramitePaso paso : this.listaPasos) {
+				if (paso instanceof TramitePasoRegistrar) {
+					pasoRegistrar = (TramitePasoRegistrar) paso;
+					break;
+				}
+			}
+		}
+		return pasoRegistrar;
+	}
 }

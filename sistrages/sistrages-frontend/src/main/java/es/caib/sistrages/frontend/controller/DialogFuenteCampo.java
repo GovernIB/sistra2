@@ -42,27 +42,10 @@ public class DialogFuenteCampo extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		switch (acceso) {
-		case ALTA:
-			/*
-			 * if (FuenteDatosGlobalService.load(data.getCodigo()) != null) {
-			 * UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-			 * "Ya existe dato con ese codigo"); return; }
-			 * FuenteDatosGlobalService.add(data);
-			 */
-
-			break;
-		case EDICION:
-			// FuenteDatosGlobalService.update(data);
-			break;
-		case CONSULTA:
-			// No hay que hacer nada
-			break;
-		}
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setModoAcceso(acceso);
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 	}

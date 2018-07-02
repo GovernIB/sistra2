@@ -49,7 +49,7 @@ public class Literal extends ModelApi {
 	 * Obtiene el valor de traduccion.
 	 *
 	 * @param idioma
-	 *            the idioma
+	 *            idioma
 	 * @return el valor de traduccion
 	 */
 	public String getTraduccion(final String idioma) {
@@ -113,9 +113,9 @@ public class Literal extends ModelApi {
 	}
 
 	/**
-	 * Devuelve los idiomas que tiene este traducciones.
+	 * Obtiene el valor de idiomas.
 	 *
-	 * @return
+	 * @return el valor de idiomas
 	 */
 	public List<String> getIdiomas() {
 		final List<String> idiomas = new ArrayList<>();
@@ -128,30 +128,38 @@ public class Literal extends ModelApi {
 	}
 
 	/**
-	 * @return the traducciones
+	 * Obtiene el valor de traducciones.
+	 *
+	 * @return el valor de traducciones
 	 */
 	public List<Traduccion> getTraducciones() {
 		return trads;
 	}
 
 	/**
+	 * Establece el valor de traducciones.
+	 *
 	 * @param traducciones
-	 *            the traducciones to set
+	 *            el nuevo valor de traducciones
 	 */
 	public void setTraducciones(final List<Traduccion> traducciones) {
 		this.trads = traducciones;
 	}
 
 	/**
-	 * @return the codigo
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
 	 */
 	public Long getCodigo() {
 		return codigo;
 	}
 
 	/**
+	 * Establece el valor de codigo.
+	 *
 	 * @param codigo
-	 *            the codigo to set
+	 *            el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;

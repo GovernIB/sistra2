@@ -130,6 +130,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private TramiteVersion tramiteVersion;
 
 	private List<String> idiomas;
+	private String idioma;
 
 	/**
 	 * Inicializacion.
@@ -154,6 +155,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (StringUtils.isNotEmpty(idTramiteVersion)) {
 			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 			idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
+			if (!idiomas.isEmpty()) {
+				idioma = idiomas.get(0);
+			}
 		}
 
 		// TODO ¿que campo se selecciona? ninguno?
@@ -170,6 +174,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	private void recuperarFormulario(final String idForm) {
 		formulario = formIntService.getFormularioInternoCompleto(Long.parseLong(idForm));
+
+		// formulario =
+		// formIntService.getFormularioInternoPaginas(Long.parseLong(idForm));
+		// formulario.getPaginas().set(0,
+		// formIntService.getContenidoPaginaFormulario(formulario.getPaginas().get(0).getCodigo()));
 	}
 
 	/**
@@ -188,13 +197,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		// Verificamos si ha habido cambios en el componente
 		if (objetoFormularioEdit != null && StringUtils.isNotEmpty(idComponente)
-				&& !objetoFormularioEdit.getId().equals(Long.valueOf(idComponente.replace("L", "")))) {
+				&& !objetoFormularioEdit.getCodigo().equals(Long.valueOf(idComponente.replace("L", "")))) {
 			ObjetoFormulario ofOriginal = null;
 
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-				ofOriginal = formulario.getPaginas().get(paginaActual - 1).getLinea(objetoFormularioEdit.getId());
+				ofOriginal = formulario.getPaginas().get(paginaActual - 1).getLinea(objetoFormularioEdit.getCodigo());
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-				ofOriginal = formulario.getPaginas().get(paginaActual - 1).getComponente(objetoFormularioEdit.getId());
+				ofOriginal = formulario.getPaginas().get(paginaActual - 1)
+						.getComponente(objetoFormularioEdit.getCodigo());
 			}
 
 			if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit)) {
@@ -335,7 +345,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		if (objetoFormularioEdit != null) {
 			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
-			final LineaComponentesFormulario linea = pagina.getLineaComponente(objetoFormularioEdit.getId());
+			final LineaComponentesFormulario linea = pagina.getLineaComponente(objetoFormularioEdit.getCodigo());
 
 			if (objetoFormularioEdit instanceof ComponenteFormulario) {
 				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit)) {
@@ -344,7 +354,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					return;
 				}
 
-				final ComponenteFormulario cfOriginal = pagina.getComponente(objetoFormularioEdit.getId());
+				final ComponenteFormulario cfOriginal = pagina.getComponente(objetoFormularioEdit.getCodigo());
 
 				// TODO PENDIENTE GUARDAR (ver como hacerlo, ¿beanutils?¿metodos particulares
 				// por tipo componente?) De momento no dejamos cambiar codigo para permitir
@@ -362,10 +372,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				// empleados no lo está ya
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
 					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getDominio() != null
-							&& !dominioService.tieneTramiteVersion(campo.getDominio().getCodigo(),
-									tramiteVersion.getCodigo())) {
-						dominioService.addTramiteVersion(campo.getDominio().getCodigo(), tramiteVersion.getCodigo());
+					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() != null
+							&& !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
+						dominioService.addTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo());
 					}
 				}
 
@@ -434,7 +443,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		} else {
 			traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		}
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION,
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso),
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
 	}
 
@@ -455,7 +464,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		} else {
 			traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
 		}
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, traduccionesEdit, idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas);
 	}
 
 	public boolean isComponenteCampo() {
@@ -505,8 +514,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public boolean isDominioLF() {
 		boolean resultado = true;
 		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-		if (campo.getDominio() != null) {
-			resultado = TypeDominio.LISTA_FIJA.equals(campo.getDominio().getTipo());
+		if (campo.getCodDominio() != null) {
+			final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
+			resultado = TypeDominio.LISTA_FIJA.equals(dominio.getTipo());
 		}
 
 		return resultado;
@@ -515,8 +525,22 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public boolean isDominioTieneParametros() {
 		boolean resultado = false;
 		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-		if (campo.getDominio() != null) {
-			resultado = !campo.getDominio().getParametros().isEmpty();
+		if (campo.getCodDominio() != null) {
+			final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
+			resultado = !dominio.getParametros().isEmpty();
+		}
+
+		return resultado;
+	}
+
+	public String getIdentificadorDominio() {
+		String resultado = null;
+
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+
+		if (campo.getCodDominio() != null) {
+			final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
+			resultado = dominio.getIdentificador();
 		}
 
 		return resultado;
@@ -539,7 +563,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getId()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getCodigo()));
 
 		Map<String, Object> mochilaDatos = null;
 
@@ -551,7 +575,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomas);
 
-		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 800,
+		UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950,
 				460);
 	}
 
@@ -616,7 +640,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				numObj = pagina.getLineas().size();
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-				numObj = pagina.getLineaComponente(objetoFormularioEdit.getId()).getComponentes().size();
+				numObj = pagina.getLineaComponente(objetoFormularioEdit.getCodigo()).getComponentes().size();
 			}
 		}
 		return numObj;
@@ -667,7 +691,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	private void insertaCampo(final TypeObjetoFormulario tipoCampo) {
 		final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
-		final Long idPagina = pagina.getId();
+		final Long idPagina = pagina.getCodigo();
 		LineaComponentesFormulario linea = null;
 		Integer ordenSeleccionado = null;
 		Integer orden = null;
@@ -681,7 +705,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				linea = (LineaComponentesFormulario) objetoFormularioEdit;
 			} else {
 				final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
-				linea = pagina.getLineaComponente(campo.getId());
+				linea = pagina.getLineaComponente(campo.getCodigo());
 				ordenSeleccionado = campo.getOrden();
 			}
 
@@ -689,7 +713,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			if (orden != null) {
 				final ObjetoFormulario componente = formIntService.addComponenteFormulario(tipoCampo, idPagina,
-						linea.getId(), orden, posicionamiento);
+						linea.getCodigo(), orden, posicionamiento);
 
 				// actualizamos modelo
 				pagina.getLineas().get(linea.getOrden() - 1).getComponentes().add(orden - 1,
@@ -738,16 +762,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 					lineaSeleccionada = (LineaComponentesFormulario) objetoFormularioEdit;
 				} else {
-					lineaSeleccionada = pagina.getLineaComponente(objetoFormularioEdit.getId());
+					lineaSeleccionada = pagina.getLineaComponente(objetoFormularioEdit.getCodigo());
 				}
 
-				idLineaSeleccionada = lineaSeleccionada.getId();
+				idLineaSeleccionada = lineaSeleccionada.getCodigo();
 
 			}
 
 			ordenLinea = UtilDisenyo.ordenInsercionLinea(pagina, lineaSeleccionada, posicionamiento);
 
-			final ObjetoFormulario componente = formIntService.addComponenteFormulario(tipoCampo, pagina.getId(),
+			final ObjetoFormulario componente = formIntService.addComponenteFormulario(tipoCampo, pagina.getCodigo(),
 					idLineaSeleccionada, ordenLinea, posicionamiento);
 
 			// actualizamos modelo
@@ -774,7 +798,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void eliminarObjetoFormulario() {
 		if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-			formIntService.removeLineaFormulario(objetoFormularioEdit.getId());
+			formIntService.removeLineaFormulario(objetoFormularioEdit.getCodigo());
 
 			// actualizamos modelo
 			final List<LineaComponentesFormulario> lineasPagina = formulario.getPaginas().get(paginaActual - 1)
@@ -788,13 +812,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 
 		} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-			formIntService.removeComponenteFormulario(objetoFormularioEdit.getId());
+			formIntService.removeComponenteFormulario(objetoFormularioEdit.getCodigo());
 
 			// actualizamos modelo
 			final ComponenteFormulario componenteSeleccionado = (ComponenteFormulario) objetoFormularioEdit;
 
 			final LineaComponentesFormulario linea = formulario.getPaginas().get(paginaActual - 1)
-					.getLineaComponente(componenteSeleccionado.getId());
+					.getLineaComponente(componenteSeleccionado.getCodigo());
 			linea.getComponentes().remove(componenteSeleccionado.getOrden() - 1);
 			for (int i = componenteSeleccionado.getOrden(); i <= linea.getComponentes().size(); i++) {
 				linea.getComponentes().get(i - 1).setOrden(i);
@@ -814,7 +838,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
 		if (campo.isNormalMultilinea()) {
 			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
-			final LineaComponentesFormulario linea = pagina.getLineaComponente(objetoFormularioEdit.getId());
+			final LineaComponentesFormulario linea = pagina.getLineaComponente(objetoFormularioEdit.getCodigo());
 			final ComponenteFormularioCampoTexto campoNuevo = new ComponenteFormularioCampoTexto();
 			try {
 				BeanUtils.copyProperties(campoNuevo, campo);
@@ -847,7 +871,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
 				int inicio = 1;
 				int fin = ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA
-						- pagina.getLineaComponente(objetoFormularioEdit.getId()).columnasComponentes()
+						- pagina.getLineaComponente(objetoFormularioEdit.getCodigo()).columnasComponentes()
 						+ ((ComponenteFormulario) objetoFormularioEdit).getNumColumnas();
 
 				if (objetoFormularioEdit instanceof ComponenteFormularioSeccion) {
@@ -916,8 +940,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				final LineaComponentesFormulario lineaSeleccionado = pagina.getLineas().get(ordenSeleccionado - 1);
 				final LineaComponentesFormulario lineaCambiable = pagina.getLineas().get(orden - 1);
 
-				formIntService.updateOrdenLineaFormulario(lineaSeleccionado.getId(), orden);
-				formIntService.updateOrdenLineaFormulario(lineaCambiable.getId(), ordenSeleccionado);
+				formIntService.updateOrdenLineaFormulario(lineaSeleccionado.getCodigo(), orden);
+				formIntService.updateOrdenLineaFormulario(lineaCambiable.getCodigo(), ordenSeleccionado);
 
 				// actualizamos modelo
 				pagina.getLineas().remove(lineaSeleccionado);
@@ -941,7 +965,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					true);
 		} else {
 			final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
-			linea = pagina.getLineaComponente(campo.getId());
+			linea = pagina.getLineaComponente(campo.getCodigo());
 			ordenSeleccionado = campo.getOrden();
 
 			orden = UtilDisenyo.ordenMoverComponente(linea, ordenSeleccionado, pPosicion);
@@ -950,8 +974,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				final ComponenteFormulario componenteSeleccionado = linea.getComponentes().get(ordenSeleccionado - 1);
 				final ComponenteFormulario componenteCambiable = linea.getComponentes().get(orden - 1);
 
-				formIntService.updateOrdenComponenteFormulario(componenteSeleccionado.getId(), orden);
-				formIntService.updateOrdenComponenteFormulario(componenteCambiable.getId(), ordenSeleccionado);
+				formIntService.updateOrdenComponenteFormulario(componenteSeleccionado.getCodigo(), orden);
+				formIntService.updateOrdenComponenteFormulario(componenteCambiable.getCodigo(), ordenSeleccionado);
 
 				// actualizamos modelo
 				linea.getComponentes().remove(componenteSeleccionado);
@@ -1024,7 +1048,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TRAMITE.toString(), String.valueOf(tramiteVersion.getIdTramite()));
-		UtilJSF.openDialog(DialogBusquedaDominio.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 800, 440);
+		UtilJSF.openDialog(DialogBusquedaDominio.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 1200, 420);
 	}
 
 	/**
@@ -1042,7 +1066,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
 			final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-			campo.setDominio((Dominio) respuesta.getResult());
+			campo.setCodDominio(((Dominio) respuesta.getResult()).getCodigo());
 
 			campo.setCampoDominioCodigo(null);
 			campo.setCampoDominioDescripcion(null);
@@ -1050,9 +1074,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				campo.getListaParametrosDominio().clear();
 			}
 
-			if (!dominioService.tieneTramiteVersion(campo.getDominio().getCodigo(), tramiteVersion.getCodigo())) {
+			if (!dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
-				return;
 			}
 		} else {
 			UtilJSF.doValidationFailed();
@@ -1063,10 +1086,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void consultaDominio() {
 		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
 
+		final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
+
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(campo.getDominio().getCodigo()));
-		params.put(TypeParametroVentana.AMBITO.toString(), campo.getDominio().getAmbito().toString());
-		if (TypeAmbito.AREA.equals(campo.getDominio().getAmbito())) {
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(campo.getCodDominio()));
+		params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
+		if (TypeAmbito.AREA.equals(dominio.getAmbito())) {
 			final Area area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
 			params.put(TypeParametroVentana.AREA.toString(), area.getCodigo().toString());
 		}
@@ -1077,9 +1102,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		String idComponente = null;
 		if (objetoFormularioEdit != null) {
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
-				idComponente = "L" + objetoFormularioEdit.getId();
+				idComponente = "L" + objetoFormularioEdit.getCodigo();
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-				idComponente = String.valueOf(objetoFormularioEdit.getId());
+				idComponente = String.valueOf(objetoFormularioEdit.getCodigo());
 			}
 		}
 		return idComponente;
@@ -1094,8 +1119,10 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			// limpiamos mochila
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 
+			final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
+
 			mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-			mochilaDatos.put(Constantes.CLAVE_MOCHILA_PARAMDOM, campo.getDominio().getParametros().stream()
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_PARAMDOM, dominio.getParametros().stream()
 					.map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
 			// metemos datos en la mochila
@@ -1141,7 +1168,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 950, 700);
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), maps, true, 950, 700);
 
 	}
 
@@ -1217,6 +1244,15 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 	}
 
+	public void abrirDialogoEstructura() {
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getCodigo()));
+
+		UtilJSF.openDialog(DialogEstructuraFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 450,
+				460);
+	}
+
 	// -- Getters / Setters
 
 	/**
@@ -1248,7 +1284,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public String getUrlIframe() {
 		final String idComponente = getIdComponente();
 
-		return urlIframe + "&id=" + id + "&page=" + paginaActual
+		return urlIframe + "&id=" + id + "&page=" + paginaActual + "&lang=" + idioma
 				+ (idComponente != null ? "&idComponente=" + idComponente : "");
 	}
 
@@ -1371,5 +1407,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	public String getIdioma() {
+		return idioma;
+	}
+
+	public void setIdioma(final String idioma) {
+		this.idioma = idioma;
 	}
 }

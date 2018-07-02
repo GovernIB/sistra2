@@ -102,7 +102,7 @@ public class JFormularioSoporte implements IModelApi {
 
 	public FormularioSoporte toModel() {
 		final FormularioSoporte fst = new FormularioSoporte();
-		fst.setId(codigo);
+		fst.setCodigo(codigo);
 		fst.setTipoIncidencia(TipoIncidencia.toModel());
 		fst.setDescripcion(descripcion.toModel());
 		fst.setTipoDestinatario(TypeFormularioSoporte.fromString(tipoDestinatario));
@@ -114,7 +114,7 @@ public class JFormularioSoporte implements IModelApi {
 		JFormularioSoporte jModel = null;
 		if (model != null) {
 			jModel = new JFormularioSoporte();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setTipoIncidencia(JLiteral.fromModel(model.getTipoIncidencia()));
 			jModel.setDescripcion(JLiteral.fromModel(model.getDescripcion()));
 			jModel.setTipoDestinatario(model.getTipoDestinatario().toString());

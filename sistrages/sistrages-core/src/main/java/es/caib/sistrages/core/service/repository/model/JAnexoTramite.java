@@ -285,7 +285,7 @@ public class JAnexoTramite implements IModelApi {
 		if (doc != null) {
 			janexo = new JAnexoTramite();
 			janexo.setAnexarFirmado(doc.isDebeAnexarFirmado());
-			janexo.setCodigo(doc.getId());
+			janexo.setCodigo(doc.getCodigo());
 			janexo.setConvertirPdf(doc.isDebeConvertirPDF());
 			if (doc.getDescripcion() != null) {
 				janexo.setDescripcion(JLiteral.fromModel(doc.getDescripcion()));
@@ -295,7 +295,7 @@ public class JAnexoTramite implements IModelApi {
 			}
 			janexo.setExtensionesPermitidas(doc.getExtensiones());
 			janexo.setFirmar(doc.isDebeFirmarDigitalmente());
-			janexo.setIdentificadorDocumento(doc.getCodigo());
+			janexo.setIdentificadorDocumento(doc.getIdentificador());
 			janexo.setNumeroInstancia(doc.getNumeroInstancia());
 			janexo.setObligatorio(doc.getObligatoriedad().toString());
 			janexo.setOrden(doc.getOrden());
@@ -321,7 +321,7 @@ public class JAnexoTramite implements IModelApi {
 		final Documento mdoc = new Documento();
 
 		mdoc.setDebeAnexarFirmado(this.isAnexarFirmado());
-		mdoc.setId(this.getCodigo());
+		mdoc.setCodigo(this.getCodigo());
 		mdoc.setDebeConvertirPDF(this.isConvertirPdf());
 		if (this.getDescripcion() != null) {
 			mdoc.setDescripcion(this.getDescripcion().toModel());
@@ -331,7 +331,7 @@ public class JAnexoTramite implements IModelApi {
 		}
 		mdoc.setExtensiones(this.getExtensionesPermitidas());
 		mdoc.setDebeFirmarDigitalmente(this.isFirmar());
-		mdoc.setCodigo(this.getIdentificadorDocumento());
+		mdoc.setIdentificador(this.getIdentificadorDocumento());
 		mdoc.setNumeroInstancia(this.getNumeroInstancia());
 		mdoc.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		mdoc.setOrden(this.getOrden());

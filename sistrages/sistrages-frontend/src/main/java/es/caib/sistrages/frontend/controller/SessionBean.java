@@ -140,9 +140,8 @@ public class SessionBean {
 			listaEntidades = listaEntidadesDesarrollador;
 			entidad = listaEntidades.get(0);
 		} else {
-			// TODO VER GESTION EXCEPCION. GENERAR EXCEPCION PARTICULARIZADA PARA SACAR
-			// MENSAJE PARTICULAR Y NO EXCEPCION
-			throw new FrontException("No tiene ningún role de acceso o entidad asociada");
+			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
+			return;
 		}
 
 		// Establece logo segun role y entidad
@@ -207,7 +206,7 @@ public class SessionBean {
 	public void cambiarEntidadActivo(final long idEntidad) {
 		// Cambia entidad
 		for (final Entidad e : listaEntidades) {
-			if (e.getId().longValue() == idEntidad) {
+			if (e.getCodigo().longValue() == idEntidad) {
 				entidad = e;
 			}
 		}
@@ -226,7 +225,7 @@ public class SessionBean {
 			for (final Entidad newEntidad : listaEntidades) {
 				if (!entidad.equals(newEntidad)) {
 					final DefaultMenuItem item3 = new DefaultMenuItem(newEntidad.getNombre().getTraduccion(this.lang));
-					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getId() + ")}");
+					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getCodigo() + ")}");
 					item3.setIcon("fa-li fa fa-institution");
 					entidadSubmenu.addElement(item3);
 				}
@@ -278,7 +277,7 @@ public class SessionBean {
 
 			for (final TypeOpcionMenuAdmOper opcion : TypeOpcionMenuAdmOper.values()) {
 				item = new DefaultMenuItem(UtilJSF.getLiteral("cabecera.opciones." + opcion.name().toLowerCase()));
-				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getId()));
+				item.setUrl(UtilJSF.getUrlOpcionMenuAdmOper(opcion, entidad.getCodigo()));
 				model.addElement(item);
 			}
 
@@ -328,11 +327,11 @@ public class SessionBean {
 	public void refrescarEntidad() {
 		int i = 0;
 		if (entidad != null) {
-			entidad = entidadService.loadEntidad(entidad.getId());
+			entidad = entidadService.loadEntidad(entidad.getCodigo());
 
 			// Cambia entidad
 			for (final Entidad e : listaEntidades) {
-				if (e.getId().longValue() == entidad.getId()) {
+				if (e.getCodigo().longValue() == entidad.getCodigo()) {
 					break;
 				}
 				i++;
@@ -375,7 +374,7 @@ public class SessionBean {
 			logo = url + Constantes.SUPER_ADMIN_LOGO;
 		} else {
 			if (entidad.getLogoGestor() != null) {
-				logo = Constantes.DESCARGA_FICHEROS_URL + "?id=" + entidad.getLogoGestor().getId();
+				logo = Constantes.DESCARGA_FICHEROS_URL + "?id=" + entidad.getLogoGestor().getCodigo();
 			} else {
 				logo = url + Constantes.ENTIDAD_NO_LOGO;
 			}
@@ -386,7 +385,7 @@ public class SessionBean {
 	private Long obtenerIdEntidad() {
 		Long idEntidad = null;
 		if (entidad != null) {
-			idEntidad = entidad.getId();
+			idEntidad = entidad.getCodigo();
 		}
 		return idEntidad;
 	}

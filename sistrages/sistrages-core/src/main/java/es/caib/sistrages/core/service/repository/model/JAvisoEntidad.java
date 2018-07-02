@@ -129,7 +129,7 @@ public class JAvisoEntidad implements IModelApi {
 
 	public AvisoEntidad toModel() {
 		final AvisoEntidad avisoEntidad = new AvisoEntidad();
-		avisoEntidad.setId(codigo);
+		avisoEntidad.setCodigo(codigo);
 		avisoEntidad.setTipo(TypeAvisoEntidad.fromString(tipo));
 		avisoEntidad.setMensaje(mensaje.toModel());
 		avisoEntidad.setBloqueado(bloqueado);
@@ -143,7 +143,7 @@ public class JAvisoEntidad implements IModelApi {
 		JAvisoEntidad jModel = null;
 		if (model != null) {
 			jModel = new JAvisoEntidad();
-			jModel.setCodigo(model.getId());
+			jModel.setCodigo(model.getCodigo());
 			jModel.setMensaje(JLiteral.fromModel(model.getMensaje()));
 			jModel.setTipo(model.getTipo().toString());
 			jModel.setBloqueado(model.isBloqueado());

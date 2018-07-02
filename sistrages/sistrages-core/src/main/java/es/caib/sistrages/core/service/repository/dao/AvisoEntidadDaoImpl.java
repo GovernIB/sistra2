@@ -122,14 +122,14 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 			throw new FaltanDatosException(FALTA_AVISO);
 		}
 
-		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, pAvisoEntidad.getId());
+		final JAvisoEntidad jAvisoEntidad = entityManager.find(JAvisoEntidad.class, pAvisoEntidad.getCodigo());
 		if (jAvisoEntidad == null) {
-			throw new NoExisteDato(NO_EXISTE_EL_AVISO + pAvisoEntidad.getId());
+			throw new NoExisteDato(NO_EXISTE_EL_AVISO + pAvisoEntidad.getCodigo());
 		}
 		// Mergeamos datos
 		final JAvisoEntidad jAvisoEntidadNew = JAvisoEntidad.fromModel(pAvisoEntidad);
 		jAvisoEntidadNew.setEntidad(jAvisoEntidad.getEntidad());
-		jAvisoEntidadNew.setCodigo(pAvisoEntidad.getId());
+		jAvisoEntidadNew.setCodigo(pAvisoEntidad.getCodigo());
 		jAvisoEntidadNew.setMensaje(JLiteral.mergeModel(jAvisoEntidad.getMensaje(), pAvisoEntidad.getMensaje()));
 		entityManager.merge(jAvisoEntidadNew);
 	}

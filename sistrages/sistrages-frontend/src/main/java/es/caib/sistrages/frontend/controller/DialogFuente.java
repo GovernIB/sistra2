@@ -15,7 +15,11 @@ import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -26,6 +30,10 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ManagedBean
 @ViewScoped
 public class DialogFuente extends DialogControllerBase {
+
+	/** security service. */
+	@Inject
+	private SecurityService securityService;
 
 	/** Enlace servicio. */
 	@Inject
@@ -40,22 +48,19 @@ public class DialogFuente extends DialogControllerBase {
 	/** Ambito. **/
 	private String ambito;
 
+	/** Type ambito. **/
+	TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
+
 	/** Datos elemento. */
 	private FuenteDatos data;
 
 	/** Valor seleccionado. **/
 	private FuenteDatosCampo valorSeleccionado;
 
-	/** Id entidad. */
-	private Long idEntidad;
-
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
-
-		// Id entidad
-		idEntidad = UtilJSF.getIdEntidad();
 
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		UtilJSF.checkSecOpenDialog(modo, id);
@@ -63,8 +68,10 @@ public class DialogFuente extends DialogControllerBase {
 			data = new FuenteDatos();
 			data.setAmbito(TypeAmbito.fromString(ambito));
 			data.setCampos(new ArrayList<>());
+			ambitoType = TypeAmbito.fromString(ambito);
 		} else {
 			data = dominioService.loadFuenteDato(Long.valueOf(id));
+			ambitoType = data.getAmbito();
 		}
 	}
 
@@ -185,12 +192,12 @@ public class DialogFuente extends DialogControllerBase {
 				orden++;
 
 				// Checkeamos si hay un campo repetido.
-				if (codigoCampos.containsKey(campo.getCodigo())) {
+				if (codigoCampos.containsKey(campo.getIdentificador())) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("dialogFuente.error.camposRepes"));
 					return;
 				} else {
-					codigoCampos.put(campo.getCodigo(), campo);
+					codigoCampos.put(campo.getIdentificador(), campo);
 				}
 
 			}
@@ -201,11 +208,11 @@ public class DialogFuente extends DialogControllerBase {
 		final List<String> camposNombre = new ArrayList<>();
 		if (this.data.getCampos() != null) {
 			for (final FuenteDatosCampo fdc : this.data.getCampos()) {
-				if (camposNombre.contains(fdc.getCodigo())) {
+				if (camposNombre.contains(fdc.getIdentificador())) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 					return;
 				}
-				camposNombre.add(fdc.getCodigo());
+				camposNombre.add(fdc.getIdentificador());
 			}
 		}
 
@@ -257,13 +264,50 @@ public class DialogFuente extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
-	public boolean getPermiteEditar() {
-		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.ALTA
-				|| TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION);
-	}
+	/**
+	 * Obtiene el valor de permiteAlta.
+	 *
+	 * @return el valor de permiteAlta
+	 */
+	public boolean getPermiteEdicion() {
+		boolean res = false;
 
-	public boolean getPermiteConsulta() {
-		return (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.CONSULTA);
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		if (modo != null && modo == TypeModoAcceso.CONSULTA) {
+			return false;
+		}
+
+		switch (TypeAmbito.fromString(ambito)) {
+		case GLOBAL:
+			// Entra como SuperAdmin
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			break;
+		case ENTIDAD:
+			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case AREA:
+
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+				res = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					final List<TypeRolePermisos> permisos = securityService
+							.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
+
+					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+				} else {
+					res = false;
+				}
+			}
+
+			break;
+		default:
+			break;
+		}
+		return res;
 	}
 
 	// ------- FUNCIONES PRIVADAS ------------------------------

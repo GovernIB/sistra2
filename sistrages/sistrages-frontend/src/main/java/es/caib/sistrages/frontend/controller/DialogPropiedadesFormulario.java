@@ -149,7 +149,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 950, 700);
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), maps, true, 950, 700);
 	}
 
 	/**
@@ -211,6 +211,51 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		final PaginaFormulario pagina = new PaginaFormulario();
 		pagina.setOrden(data.getPaginas().size() + 1);
 		this.data.getPaginas().add(pagina);
+	}
+
+	public void editarPagina() {
+
+		if (!verificarFilaSeleccionada(paginaSeleccionada)) {
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.paginaSeleccionada));
+		UtilJSF.openDialog(DialogPaginaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 170);
+	}
+
+	/**
+	 * Return dialogo pagina.
+	 *
+	 * @param event
+	 *            the event
+	 */
+	public void returnDialogoPagina(final SelectEvent event) {
+		PaginaFormulario pagina = null;
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				pagina = (PaginaFormulario) respuesta.getResult();
+
+				if (!paginaSeleccionada.isPaginaFinal() && pagina.isPaginaFinal()) {
+					paginaLimpiarPaginafinal();
+				}
+
+				// Muestra dialogo
+				final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
+				this.data.getPaginas().get(posicion).setPaginaFinal(pagina.isPaginaFinal());
+				this.data.getPaginas().get(posicion).setScriptValidacion(pagina.getScriptValidacion());
+				paginaSeleccionada.setPaginaFinal(pagina.isPaginaFinal());
+				paginaSeleccionada.setScriptValidacion(pagina.getScriptValidacion());
+				break;
+			case CONSULTA:
+				// No hay que hacer nada
+				break;
+			}
+		}
 	}
 
 	/**
@@ -290,7 +335,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.plantillaSeleccionada));
-		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.EDICION, params, true, 430, 170);
+		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 170);
 	}
 
 	/**
@@ -305,6 +350,13 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		this.data.getPlantillas().remove(posicion);
 		plantillaSeleccionada = null;
+	}
+
+	private void paginaLimpiarPaginafinal() {
+		for (final PaginaFormulario pagina : data.getPaginas()) {
+			pagina.setPaginaFinal(false);
+		}
+
 	}
 
 	/**
@@ -352,7 +404,8 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(plantillaSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogPlantillaIdiomaFormulario.class, TypeModoAcceso.EDICION, params, true, 430, 170);
+		UtilJSF.openDialog(DialogPlantillaIdiomaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430,
+				170);
 	}
 
 	/**

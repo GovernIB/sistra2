@@ -80,7 +80,7 @@ public class JTraduccionLiteral implements IModelApi {
 
 	public Traduccion toModel() {
 		final Traduccion traduc = new Traduccion();
-		traduc.setId(this.codigo);
+		traduc.setCodigo(this.codigo);
 		traduc.setIdioma(this.idioma.getIdentificador());
 		traduc.setLiteral(this.literal);
 		return traduc;
@@ -90,7 +90,7 @@ public class JTraduccionLiteral implements IModelApi {
 		JTraduccionLiteral jModel = null;
 		if (traduc != null) {
 			jModel = new JTraduccionLiteral();
-			jModel.setCodigo(traduc.getId());
+			jModel.setCodigo(traduc.getCodigo());
 			jModel.setIdioma(new JIdioma(traduc.getIdioma()));
 			jModel.setLiteral(traduc.getLiteral());
 		}

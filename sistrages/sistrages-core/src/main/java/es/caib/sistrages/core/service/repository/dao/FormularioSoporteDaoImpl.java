@@ -126,10 +126,10 @@ public class FormularioSoporteDaoImpl implements FormularioSoporteDao {
 			throw new FaltanDatosException(FALTA_FST);
 		}
 
-		final JFormularioSoporte jFst = entityManager.find(JFormularioSoporte.class, fmt.getId());
+		final JFormularioSoporte jFst = entityManager.find(JFormularioSoporte.class, fmt.getCodigo());
 
 		if (jFst == null) {
-			throw new NoExisteDato(NO_EXISTE_FST + ": " + fmt.getId());
+			throw new NoExisteDato(NO_EXISTE_FST + ": " + fmt.getCodigo());
 		}
 
 		// Mergeamos datos

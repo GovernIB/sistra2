@@ -59,7 +59,7 @@ public class SecurityServiceImpl implements SecurityService {
 		boolean res = false;
 		final List<Entidad> entidades = obtenerEntidadesAdministrador();
 		for (final Entidad e : entidades) {
-			if (e.getId().longValue() == codigoEntidad) {
+			if (e.getCodigo().longValue() == codigoEntidad) {
 				res = true;
 				break;
 			}
@@ -73,7 +73,7 @@ public class SecurityServiceImpl implements SecurityService {
 		boolean res = false;
 		final List<Entidad> entidades = obtenerEntidadesDesarrollador();
 		for (final Entidad e : entidades) {
-			if (e.getId().longValue() == codigoEntidad) {
+			if (e.getCodigo().longValue() == codigoEntidad) {
 				res = true;
 				break;
 			}
@@ -124,19 +124,16 @@ public class SecurityServiceImpl implements SecurityService {
 		final String userName = contextService.getUsername();
 		final List<Rol> rolesArea = rolDao.getAllByArea(codigoArea);
 		for (final Rol r : rolesArea) {
-			if ((r.getTipo() == TypeRoleUser.USUARIO && userName.equals(r.getCodigo()))
-					|| (r.getTipo() == TypeRoleUser.ROL && contextService.hashRole(r.getCodigo()))) {
-				if (r.isAlta() && !permisos.contains(TypeRolePermisos.ALTA_BAJA)) {
-					permisos.add(TypeRolePermisos.ALTA_BAJA);
+			if ((r.getTipo() == TypeRoleUser.USUARIO && userName.equals(r.getValor()))
+					|| (r.getTipo() == TypeRoleUser.ROL && contextService.hashRole(r.getValor()))) {
+				if (r.isAlta() && !permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+					permisos.add(TypeRolePermisos.ADMINISTRADOR_AREA);
+				}
+				if (r.isModificacion() && !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+					permisos.add(TypeRolePermisos.DESARROLLADOR_AREA);
 				}
 				if (r.isConsulta() && !permisos.contains(TypeRolePermisos.CONSULTA)) {
 					permisos.add(TypeRolePermisos.CONSULTA);
-				}
-				if (r.isModificacion() && !permisos.contains(TypeRolePermisos.MODIFICACION)) {
-					permisos.add(TypeRolePermisos.MODIFICACION);
-				}
-				if (r.isPromocionar() && !permisos.contains(TypeRolePermisos.PROMOCIONAR)) {
-					permisos.add(TypeRolePermisos.PROMOCIONAR);
 				}
 				if (r.isHelpdesk() && !permisos.contains(TypeRolePermisos.HELPDESK)) {
 					permisos.add(TypeRolePermisos.HELPDESK);
@@ -159,7 +156,7 @@ public class SecurityServiceImpl implements SecurityService {
 				if (e.isActivo()) {
 					// Verificamos si existe alguna area de la entidad para la
 					// que tenga acceso
-					final List<Area> listaAreas = areaDao.getAll(e.getId());
+					final List<Area> listaAreas = areaDao.getAll(e.getCodigo());
 					for (final Area area : listaAreas) {
 						if (!obtenerPermisosDesarrolladorEntidad(area.getCodigo()).isEmpty()) {
 							res.add(e);

@@ -34,173 +34,197 @@ import es.caib.sistrages.core.service.repository.model.JFicheroExterno;
 @Repository("ficheroExternoDao")
 public class FicheroExternoDaoImpl implements FicheroExternoDao {
 
-	/** LOG. */
-	private static final Logger LOG = LoggerFactory.getLogger(FicheroExternoDaoImpl.class);
+    /** LOG. */
+    private static final Logger LOG = LoggerFactory
+            .getLogger(FicheroExternoDaoImpl.class);
 
-	/** Entity manager. */
-	@PersistenceContext
-	private EntityManager entityManager;
+    /** Entity manager. */
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	/** Path almacenamiento. */
-	@Value("${ficherosExternos.path}")
-	private String pathAlmacenamientoFicheros;
+    /** Path almacenamiento. */
+    @Value("${ficherosExternos.path}")
+    private String pathAlmacenamientoFicheros;
 
-	@PostConstruct
-	public void init() {
-	}
+    @PostConstruct
+    public void init() {
+    }
 
-	@Override
-	public ContenidoFichero getContentById(final Long id) {
-		// Obtiene metadatos fichero
-		final JFichero fic = entityManager.find(JFichero.class, id);
-		if (fic == null) {
-			throw new NoExisteDato("No existe fichero con id: " + id);
-		}
+    @Override
+    public ContenidoFichero getContentById(final Long id) {
+        // Obtiene metadatos fichero
+        final JFichero fic = entityManager.find(JFichero.class, id);
+        if (fic == null) {
+            throw new NoExisteDato("No existe fichero con id: " + id);
+        }
 
-		// Obtiene path fichero
-		final String pathFile = getPathAbsolutoFichero(id);
-		// Obtiene contenido fichero
-		try {
-			final FileInputStream fis = new FileInputStream(pathFile);
-			final byte[] content = IOUtils.toByteArray(fis);
-			fis.close();
+        // Obtiene path fichero
+        final String pathFile = getPathAbsolutoFichero(id);
+        // Obtiene contenido fichero
+        try {
+            final FileInputStream fis = new FileInputStream(pathFile);
+            final byte[] content = IOUtils.toByteArray(fis);
+            fis.close();
 
-			final ContenidoFichero cf = new ContenidoFichero();
-			cf.setFilename(fic.getNombre());
-			cf.setContent(content);
+            final ContenidoFichero cf = new ContenidoFichero();
+            cf.setFilename(fic.getNombre());
+            cf.setContent(content);
 
-			return cf;
-		} catch (final IOException e) {
-			throw new FicheroExternoException("Error al acceder al fichero " + id + " con path " + pathFile, e);
-		}
-	}
+            return cf;
+        } catch (final IOException e) {
+            throw new FicheroExternoException("Error al acceder al fichero "
+                    + id + " con path " + pathFile, e);
+        }
+    }
 
-	@Override
-	public String getPathById(final Long id) {
-		return getPathAbsolutoFichero(id);
-	}
+    @Override
+    public String getPathById(final Long id) {
+        return getPathAbsolutoFichero(id);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void purgarFicheros() {
-		final Query query = entityManager.createQuery("select f from JFicheroExterno f where f.borrar = TRUE");
-		final List<JFicheroExterno> results = query.getResultList();
-		if (results != null) {
-			for (final JFicheroExterno jFicheroExterno : results) {
-				// Borramos fichero en disco
-				final String pathAbsoluteFichero = pathAlmacenamientoFicheros + jFicheroExterno.getReferenciaExterna();
-				final File file = new File(pathAbsoluteFichero);
-				final boolean deleted = FileUtils.deleteQuietly(file);
-				if (!deleted) {
-					LOG.warn("No se ha podido borrar fichero " + pathAbsoluteFichero);
-				}
-				// Borramos fichero en BD
-				entityManager.remove(jFicheroExterno);
-			}
-		}
-	}
+    @Override
+    public String getReferenciaById(Long id) {
+        final JFicheroExterno jFicheroExterno = getById(id);
+        if (jFicheroExterno == null) {
+            throw new FicheroExternoException(
+                    "No existe fichero externo asociado al fichero");
+        }
+        return jFicheroExterno.getReferenciaExterna();
+    }
 
-	@Override
-	public void guardarFichero(final Long idEntidad, final Fichero fichero, final byte[] content) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void purgarFicheros() {
+        final Query query = entityManager.createQuery(
+                "select f from JFicheroExterno f where f.borrar = TRUE");
+        final List<JFicheroExterno> results = query.getResultList();
+        if (results != null) {
+            for (final JFicheroExterno jFicheroExterno : results) {
+                // Borramos fichero en disco
+                final String pathAbsoluteFichero = pathAlmacenamientoFicheros
+                        + jFicheroExterno.getReferenciaExterna();
+                final File file = new File(pathAbsoluteFichero);
+                final boolean deleted = FileUtils.deleteQuietly(file);
+                if (!deleted) {
+                    LOG.warn("No se ha podido borrar fichero "
+                            + pathAbsoluteFichero);
+                }
+                // Borramos fichero en BD
+                entityManager.remove(jFicheroExterno);
+            }
+        }
+    }
 
-		// Si existe fichero anterior, lo marca a borrado
-		final JFicheroExterno jFicheroExterno = getById(fichero.getId());
-		if (jFicheroExterno != null) {
-			jFicheroExterno.setBorrar(true);
-			entityManager.merge(jFicheroExterno);
-		}
+    @Override
+    public void guardarFichero(final Long idEntidad, final Fichero fichero,
+            final byte[] content) {
 
-		// Crea nuevo fichero
-		final String pathFichero = calcularPathRelativoFichero(idEntidad, fichero);
-		final JFicheroExterno jFicheroExternoNew = new JFicheroExterno();
-		jFicheroExternoNew.setCodigoFichero(fichero.getId());
-		jFicheroExternoNew.setFechaReferencia(new Date());
-		jFicheroExternoNew.setReferenciaExterna(pathFichero);
-		entityManager.persist(jFicheroExternoNew);
+        // Si existe fichero anterior, lo marca a borrado
+        final JFicheroExterno jFicheroExterno = getById(fichero.getCodigo());
+        if (jFicheroExterno != null) {
+            jFicheroExterno.setBorrar(true);
+            entityManager.merge(jFicheroExterno);
+        }
 
-		// Almacena fichero
-		final String pathAbsolutoFichero = pathAlmacenamientoFicheros + "/" + pathFichero;
-		try {
-			final ByteArrayInputStream bis = new ByteArrayInputStream(content);
-			final File file = new File(pathAbsolutoFichero);
-			FileUtils.copyInputStreamToFile(bis, file);
-			bis.close();
-		} catch (final IOException ex) {
-			throw new FicheroExternoException(
-					"Error al crear fichero externo " + fichero.getId() + " con path " + pathAbsolutoFichero, ex);
-		}
+        // Crea nuevo fichero
+        final String pathFichero = calcularPathRelativoFichero(idEntidad,
+                fichero);
+        final JFicheroExterno jFicheroExternoNew = new JFicheroExterno();
+        jFicheroExternoNew.setCodigoFichero(fichero.getCodigo());
+        jFicheroExternoNew.setFechaReferencia(new Date());
+        jFicheroExternoNew.setReferenciaExterna(pathFichero);
+        entityManager.persist(jFicheroExternoNew);
 
-	}
+        // Almacena fichero
+        final String pathAbsolutoFichero = pathAlmacenamientoFicheros + "/"
+                + pathFichero;
+        try {
+            final ByteArrayInputStream bis = new ByteArrayInputStream(content);
+            final File file = new File(pathAbsolutoFichero);
+            FileUtils.copyInputStreamToFile(bis, file);
+            bis.close();
+        } catch (final IOException ex) {
+            throw new FicheroExternoException("Error al crear fichero externo "
+                    + fichero.getCodigo() + " con path " + pathAbsolutoFichero,
+                    ex);
+        }
 
-	@Override
-	public void marcarBorrar(final Long id) {
-		// Si existe fichero anterior, lo marca a borrado
-		final JFicheroExterno jFicheroExterno = getById(id);
-		if (jFicheroExterno != null) {
-			jFicheroExterno.setBorrar(true);
-			entityManager.merge(jFicheroExterno);
-		}
-	}
+    }
 
-	// ----------- PRIVATE ----------------------
+    @Override
+    public void marcarBorrar(final Long id) {
+        // Si existe fichero anterior, lo marca a borrado
+        final JFicheroExterno jFicheroExterno = getById(id);
+        if (jFicheroExterno != null) {
+            jFicheroExterno.setBorrar(true);
+            entityManager.merge(jFicheroExterno);
+        }
+    }
 
-	/**
-	 * Obtiene path fichero.
-	 *
-	 * @param id
-	 *            id fichero
-	 * @return path fichero (nulo si no existe fichero asociado)
-	 */
-	private String getPathAbsolutoFichero(final Long id) {
-		final JFicheroExterno jFicheroExterno = getById(id);
-		if (jFicheroExterno == null) {
-			throw new FicheroExternoException("No existe fichero externo asociado al fichero");
-		}
-		final String pathFile = pathAlmacenamientoFicheros + jFicheroExterno.getReferenciaExterna();
-		return pathFile;
-	}
+    // ----------- PRIVATE ----------------------
 
-	/**
-	 * Calcula path fichero.
-	 *
-	 * @param idEntidad
-	 *            Id entidad
-	 * @param fichero
-	 *            fichero
-	 * @return path fichero
-	 */
-	private String calcularPathRelativoFichero(final Long idEntidad, final Fichero fichero) {
-		String path;
-		if (fichero.isPublico()) {
-			path = "/publico";
-		} else {
-			path = "/interno";
-		}
-		path += "/" + idEntidad + "/" + GeneradorId.generarId() + "." + FilenameUtils.getExtension(fichero.getNombre());
-		return path;
-	}
+    /**
+     * Obtiene path fichero.
+     *
+     * @param id
+     *            id fichero
+     * @return path fichero (nulo si no existe fichero asociado)
+     */
+    private String getPathAbsolutoFichero(final Long id) {
+        final JFicheroExterno jFicheroExterno = getById(id);
+        if (jFicheroExterno == null) {
+            throw new FicheroExternoException(
+                    "No existe fichero externo asociado al fichero");
+        }
+        final String pathFile = pathAlmacenamientoFicheros
+                + jFicheroExterno.getReferenciaExterna();
+        return pathFile;
+    }
 
-	/**
-	 * Obtiene fichero externo.
-	 *
-	 * @param id
-	 *            id
-	 * @return fichero externo
-	 */
-	@SuppressWarnings("unchecked")
-	private JFicheroExterno getById(final Long id) {
-		final Query query = entityManager
-				.createQuery("select f from JFicheroExterno f where f.codigoFichero = :id and f.borrar = FALSE");
-		query.setParameter("id", id);
+    /**
+     * Calcula path fichero.
+     *
+     * @param idEntidad
+     *            Id entidad
+     * @param fichero
+     *            fichero
+     * @return path fichero
+     */
+    private String calcularPathRelativoFichero(final Long idEntidad,
+            final Fichero fichero) {
+        String path;
+        if (fichero.isPublico()) {
+            path = "/publico";
+        } else {
+            path = "/interno";
+        }
+        path += "/" + idEntidad + "/" + GeneradorId.generarId() + "."
+                + FilenameUtils.getExtension(fichero.getNombre());
+        return path;
+    }
 
-		final List<JFicheroExterno> results = query.getResultList();
-		if (results == null || results.isEmpty()) {
-			return null;
-		}
-		if (results.size() > 1) {
-			throw new FicheroExternoException("Existe mas de un fichero externo asociado al fichero");
-		}
-		return results.get(0);
-	}
+    /**
+     * Obtiene fichero externo.
+     *
+     * @param id
+     *            id
+     * @return fichero externo
+     */
+    @SuppressWarnings("unchecked")
+    private JFicheroExterno getById(final Long id) {
+        final Query query = entityManager.createQuery(
+                "select f from JFicheroExterno f where f.codigoFichero = :id and f.borrar = FALSE");
+        query.setParameter("id", id);
+
+        final List<JFicheroExterno> results = query.getResultList();
+        if (results == null || results.isEmpty()) {
+            return null;
+        }
+        if (results.size() > 1) {
+            throw new FicheroExternoException(
+                    "Existe mas de un fichero externo asociado al fichero");
+        }
+        return results.get(0);
+    }
 
 }

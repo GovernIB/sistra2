@@ -47,9 +47,9 @@ public class DominioDaoImpl implements DominioDao {
 	 * Long)
 	 */
 	@Override
-	public Dominio getById(final Long idDominio) {
+	public Dominio getByCodigo(final Long codDominio) {
 		Dominio dominio = null;
-		final JDominio hdominio = entityManager.find(JDominio.class, idDominio);
+		final JDominio hdominio = entityManager.find(JDominio.class, codDominio);
 		if (hdominio != null) {
 			// Establecemos datos
 			dominio = hdominio.toModel();
@@ -57,12 +57,13 @@ public class DominioDaoImpl implements DominioDao {
 		return dominio;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Dominio getByCodigo(final String codigoDominio) {
+	public Dominio getByIdentificador(final String identificadorDominio) {
 		Dominio result = null;
 		final String sql = "SELECT d FROM JDominio d where d.identificador = :codigoDominio";
 		final Query query = entityManager.createQuery(sql);
-		query.setParameter("codigoDominio", codigoDominio);
+		query.setParameter("codigoDominio", identificadorDominio);
 		final List<JDominio> list = query.getResultList();
 		if (!list.isEmpty()) {
 			result = list.get(0).toModel();
@@ -158,7 +159,6 @@ public class DominioDaoImpl implements DominioDao {
 	 *            filtro
 	 * @return lista de dominios
 	 */
-	@SuppressWarnings("unchecked")
 	private List<Dominio> listarDominios(final TypeAmbito ambito, final Long id, final String filtro) {
 		final List<Dominio> dominioes = new ArrayList<>();
 
@@ -200,6 +200,7 @@ public class DominioDaoImpl implements DominioDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dominio> getAllByFuenteDatos(final Long idFuenteDatos) {
 		final List<Dominio> result = new ArrayList<>();
@@ -232,6 +233,7 @@ public class DominioDaoImpl implements DominioDao {
 	 *            filtro
 	 * @return dominios
 	 */
+	@SuppressWarnings("unchecked")
 	private List<JDominio> listarJDominios(final TypeAmbito ambito, final Long id, final String filtro) {
 		String sql = "SELECT DISTINCT d FROM JDominio d ";
 

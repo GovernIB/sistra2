@@ -51,17 +51,17 @@ public class DominioServiceImpl implements DominioService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public Dominio loadDominio(final Long idDominio) {
+	public Dominio loadDominio(final Long codDominio) {
 		Dominio result = null;
-		result = dominioDao.getById(idDominio);
+		result = dominioDao.getByCodigo(codDominio);
 		return result;
 	}
 
 	@Override
 	@NegocioInterceptor
-	public Dominio loadDominio(final String codigoDominio) {
+	public Dominio loadDominio(final String identificadorDominio) {
 		Dominio result = null;
-		result = dominioDao.getByCodigo(codigoDominio);
+		result = dominioDao.getByIdentificador(identificadorDominio);
 		return result;
 	}
 

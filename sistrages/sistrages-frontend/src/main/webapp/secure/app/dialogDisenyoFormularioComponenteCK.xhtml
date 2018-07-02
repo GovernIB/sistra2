@@ -7,14 +7,14 @@
 
    	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.checked']}" /></h:column>
    	<h:column>
-   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorChecked}" >
+   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorChecked}" disabled="#{dialogDisenyoFormulario.consulta}">
    			<p:ajax event="blur" process="@this" />
    		</p:inputText>
    	</h:column>
 
    	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noChecked']}" /></h:column>
    	<h:column>
-   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorNoChecked}">
+   		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.valorNoChecked}" disabled="#{dialogDisenyoFormulario.consulta}">
    			<p:ajax event="blur" process="@this" />
    		</p:inputText>
    	</h:column>

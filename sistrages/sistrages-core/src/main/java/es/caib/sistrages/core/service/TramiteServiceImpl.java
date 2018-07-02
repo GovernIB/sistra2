@@ -495,4 +495,16 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getTramiteVersionByDominio(idDominio);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public boolean checkTasaRepetida(final Long idTramiteVersion, final String identificador, final Long idTasa) {
+		return tramitePasoDao.checkTasaRepetida(idTramiteVersion, identificador, idTasa);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean checkAnexoRepetido(final Long idTramiteVersion, final String identificador, final Long idAnexo) {
+		return tramitePasoDao.checkAnexoRepetido(idTramiteVersion, identificador, idAnexo);
+	}
+
 }

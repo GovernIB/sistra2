@@ -129,8 +129,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
 	 */
 	private void checkPermiteArea() {
 
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 
 			this.permiteAltaArea = true;
 			this.permiteEliminarArea = true;
@@ -141,22 +140,42 @@ public class ViewTramitesVersion extends ViewControllerBase {
 
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(this.area.getCodigo());
-			this.permiteAltaArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-			this.permiteEliminarArea = permisos.contains(TypeRolePermisos.ALTA_BAJA);
-			this.permiteEditarArea = permisos.contains(TypeRolePermisos.MODIFICACION);
-			this.permiteConsultarArea = permisos.contains(TypeRolePermisos.CONSULTA);
+
+			// Si no es desarrollo, desactivar seguro el area para alta y editar.
+			if (UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+
+				this.permiteAltaArea = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+
+				this.permiteEliminarArea = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+				this.permiteEditarArea = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
+				this.permiteConsultarArea = permisos.contains(TypeRolePermisos.CONSULTA);
+			} else {
+
+				if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+
+					this.permiteEditarArea = true;
+					this.permiteConsultarArea = true;
+
+				} else {
+
+					this.permiteEditarArea = false;
+					this.permiteConsultarArea = true;
+
+				}
+
+				this.permiteAltaArea = false;
+				this.permiteEliminarArea = false;
+
+			}
 
 		} else {
 			this.permiteAltaArea = false;
 			this.permiteEditarArea = false;
 			this.permiteConsultarArea = false;
 			this.permiteEliminarArea = false;
-		}
-
-		// Si no es desarrollo, desactivar seguro el area para alta y editar.
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
-			this.permiteAltaArea = false;
-			this.permiteEditarArea = false;
 		}
 
 		permiteAlta = permiteAltaArea;
@@ -240,7 +259,8 @@ public class ViewTramitesVersion extends ViewControllerBase {
 			final List<TypeRolePermisos> permisos = securityService
 					.getPermisosDesarrolladorEntidadByArea(this.area.getCodigo());
 			// Si no puedes editar, no puedes bloquear
-			if (!permisos.contains(TypeRolePermisos.MODIFICACION) && !permisos.contains(TypeRolePermisos.ALTA_BAJA)) {
+			if (!permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+					&& !permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
 				return;
 			}

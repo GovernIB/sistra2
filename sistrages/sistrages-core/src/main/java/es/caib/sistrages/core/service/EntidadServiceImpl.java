@@ -347,7 +347,7 @@ public class EntidadServiceImpl implements EntidadService {
 	private void borrarCssAsistente(final Long idEntidad) {
 		final Entidad entidad = entidadDao.getById(idEntidad);
 		if (entidad != null && entidad.getCss() != null) {
-			ficheroExternoDao.marcarBorrar(entidad.getCss().getId());
+			ficheroExternoDao.marcarBorrar(entidad.getCss().getCodigo());
 			entidadDao.removeCssAsistente(idEntidad);
 		}
 	}
@@ -355,7 +355,7 @@ public class EntidadServiceImpl implements EntidadService {
 	private void borrarLogoAsistente(final Long idEntidad) {
 		final Entidad entidad = entidadDao.getById(idEntidad);
 		if (entidad != null && entidad.getLogoAsistente() != null) {
-			ficheroExternoDao.marcarBorrar(entidad.getLogoAsistente().getId());
+			ficheroExternoDao.marcarBorrar(entidad.getLogoAsistente().getCodigo());
 			entidadDao.removeLogoAsistente(idEntidad);
 		}
 	}
@@ -363,7 +363,7 @@ public class EntidadServiceImpl implements EntidadService {
 	private void borrarLogoGestor(final Long idEntidad) {
 		final Entidad entidad = entidadDao.getById(idEntidad);
 		if (entidad != null && entidad.getLogoGestor() != null) {
-			ficheroExternoDao.marcarBorrar(entidad.getLogoGestor().getId());
+			ficheroExternoDao.marcarBorrar(entidad.getLogoGestor().getCodigo());
 			entidadDao.removeLogoGestor(idEntidad);
 		}
 	}

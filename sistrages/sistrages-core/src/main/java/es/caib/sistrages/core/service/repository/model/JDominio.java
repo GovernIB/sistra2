@@ -248,6 +248,13 @@ public class JDominio implements IModelApi {
 		if (this.getFuenteDatos() != null) {
 			dominio.setIdFuenteDatos(this.getFuenteDatos().getCodigo());
 		}
+		if (this.getAreas() != null) {
+			final Set<Long> idAreas = new HashSet<>();
+			for (final JArea area : this.areas) {
+				idAreas.add(area.getCodigo());
+			}
+			dominio.setAreas(idAreas);
+		}
 		return dominio;
 	}
 

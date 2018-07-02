@@ -18,7 +18,7 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
 public class Plugin extends ModelApi {
 
 	/** Id. */
-	private Long id;
+	private Long codigo;
 
 	/** Ámbito (G:Global / E:Entidad) */
 	private TypeAmbito ambito;
@@ -36,18 +36,18 @@ public class Plugin extends ModelApi {
 	private List<Propiedad> propiedades = new ArrayList<>();
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

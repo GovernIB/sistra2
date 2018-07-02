@@ -232,7 +232,7 @@ public class JElementoFormulario implements IModelApi {
 		try {
 			newModel = (ComponenteFormulario) model.newInstance();
 
-			newModel.setId(codigo);
+			newModel.setCodigo(codigo);
 			newModel.setIdComponente(identificador);
 			newModel.setTipo(TypeObjetoFormulario.fromString(tipo));
 			newModel.setOrden(orden);

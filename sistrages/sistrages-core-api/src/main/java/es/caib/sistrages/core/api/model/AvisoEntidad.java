@@ -15,7 +15,7 @@ import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 public class AvisoEntidad extends ModelApi {
 
 	/** Id. */
-	private Long id;
+	private Long codigo;
 
 	/** Descripción. */
 	private Literal mensaje;
@@ -40,18 +40,18 @@ public class AvisoEntidad extends ModelApi {
 	}
 
 	/**
-	 * @return the id
+	 * @return the codigo
 	 */
-	public Long getId() {
-		return id;
+	public Long getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param codigo
+	 *            the codigo to set
 	 */
-	public void setId(final Long id) {
-		this.id = id;
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
