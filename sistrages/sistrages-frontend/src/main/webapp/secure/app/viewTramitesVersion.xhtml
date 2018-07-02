@@ -104,9 +104,11 @@
 
 			<h:outputScript >
 		      function triggerDblClick() {
-		        document.getElementById("form:btnEditar").click();
+		       rcDobleClick();
 		      }
 		    </h:outputScript>
+
+		    <p:remoteCommand name="rcDobleClick" actionListener="#{viewTramitesVersion.rcDobleClick}" />
 
 			<!-- dialogo para confirmar -->
 		    <p:confirmDialog global="true" >
