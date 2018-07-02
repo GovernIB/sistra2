@@ -1,5 +1,3 @@
-drop table STT_PROCES cascade constraints;
-
 drop table STT_DOCPTR cascade constraints;
 
 drop table STT_FICPTR cascade constraints;
@@ -15,6 +13,8 @@ drop table STT_LOGINT cascade constraints;
 drop table STT_PAGEXT cascade constraints;
 
 drop table STT_PASTRP cascade constraints;
+
+drop table STT_PROCES cascade constraints;
 
 drop table STT_SESION cascade constraints;
 

@@ -418,8 +418,8 @@ create table STT_INVALI
 (
    INV_CODIGO           NUMBER(19)           not null,
    INV_TIPO             VARCHAR2(1)          not null,
-   INV_IDENTI           VARCHAR2(400)        null,
-   INV_FECHA            DATE                 not null
+   INV_FECHA            DATE                 not null,
+   INV_IDENTI           VARCHAR2(400)
 );
 
 comment on table STT_INVALI is
@@ -429,13 +429,13 @@ comment on column STT_INVALI.INV_CODIGO is
 'Código secuencial interno';
 
 comment on column STT_INVALI.INV_TIPO is
-'Tipo invalidacion: definicion tramite (T) / datos dominio (D) / avisos plataforma (A) / entidad (E)';
-
-comment on column STT_INVALI.INV_IDENTI is
-'Identificador elemento: para tramite: idtramite-version / para dominio: iddominio / para avisos: TODOS';
+'Tipo invalidacion: definicion tramite (T) / datos dominio (D) / entidad (E) / configuracion (C)';
 
 comment on column STT_INVALI.INV_FECHA is
 'Fecha invalidación';
+
+comment on column STT_INVALI.INV_IDENTI is
+'Identificador elemento dependiendo del elemento: para tramite: idtramite-version / para dominio: iddominio / para entidad: identidad';
 
 alter table STT_INVALI
    add constraint STT_INVALI_PK primary key (INV_CODIGO);
@@ -653,6 +653,32 @@ create unique index STT_PASTRP_UK on STT_PASTRP (
 );
 
 /*==============================================================*/
+/* Table: STT_PROCES                                            */
+/*==============================================================*/
+create table STT_PROCES 
+(
+   PROC_IDENT           VARCHAR2(20)         not null,
+   PROC_INSTAN          VARCHAR2(50),
+   PROC_FECHA           DATE
+);
+
+comment on table STT_PROCES is
+'Control ejecución procesos background.
+Para que una sola instancia se autoconfigure como maestro.';
+
+comment on column STT_PROCES.PROC_IDENT is
+'Identificador fijo';
+
+comment on column STT_PROCES.PROC_INSTAN is
+'Id instancia';
+
+comment on column STT_PROCES.PROC_FECHA is
+'Fecha ultima verificación';
+
+alter table STT_PROCES
+   add constraint STT_PROCES_PK primary key (PROC_IDENT);
+
+/*==============================================================*/
 /* Table: STT_SESION                                            */
 /*==============================================================*/
 create table STT_SESION 
@@ -693,8 +719,10 @@ create table STT_TRAPER
    TRP_CODSTR           NUMBER(19)           not null,
    TRP_IDETRA           VARCHAR2(20)         not null,
    TRP_VERTRA           NUMBER(2)            not null,
-   TRP_IDETCP           VARCHAR2(20)         not null,
    TRP_DESTRA           VARCHAR2(1000 CHAR)  not null,
+   TRP_IDETCP           VARCHAR2(20)         not null,
+   TRP_IDEPCP           VARCHAR2(20)         not null,
+   TRP_PROSIA           VARCHAR2(20)         not null,
    TRP_ESTADO           VARCHAR2(1 CHAR)     not null,
    TRP_NIVAUT           VARCHAR2(1 CHAR)     not null,
    TRP_METAUT           VARCHAR2(50 CHAR),
@@ -704,6 +732,7 @@ create table STT_TRAPER
    TRP_APE2INI          VARCHAR2(255 CHAR),
    TRP_TSFLUJO          TIMESTAMP,
    TRP_IDIOMA           VARCHAR2(2 CHAR)     not null,
+   TRP_URLINI           VARCHAR2(4000 CHAR),
    TRP_PARINI           VARCHAR2(4000),
    TRP_PERSIS           NUMBER(1)            default 0 not null,
    TRP_PLZDIN           NUMBER(1)            default 0 not null,
@@ -717,8 +746,7 @@ create table STT_TRAPER
    TRP_PURGA            NUMBER(1)            default 0 not null,
    TRP_FCPURG           DATE,
    TRP_PURCHK           NUMBER(1)            default 0 not null,
-   TRP_PURPAG           NUMBER(1)            default 0 not null,
-   TRP_URLINI           VARCHAR2(4000 CHAR)
+   TRP_PURPAG           NUMBER(1)            default 0 not null
 );
 
 comment on table STT_TRAPER is
@@ -736,11 +764,17 @@ comment on column STT_TRAPER.TRP_IDETRA is
 comment on column STT_TRAPER.TRP_VERTRA is
 'Versión  trámite';
 
+comment on column STT_TRAPER.TRP_DESTRA is
+'Descripción trámite';
+
 comment on column STT_TRAPER.TRP_IDETCP is
 'Codigo trámite asociado del Catalogo de Procedimientos';
 
-comment on column STT_TRAPER.TRP_DESTRA is
-'Descripción trámite';
+comment on column STT_TRAPER.TRP_IDEPCP is
+'Codigo procedimiento asociado del Catalogo de Procedimientos';
+
+comment on column STT_TRAPER.TRP_PROSIA is
+'Código SIA procedimiento';
 
 comment on column STT_TRAPER.TRP_ESTADO is
 'Estado trámite: 
@@ -778,6 +812,9 @@ comment on column STT_TRAPER.TRP_TSFLUJO is
 
 comment on column STT_TRAPER.TRP_IDIOMA is
 'Idioma tramitación';
+
+comment on column STT_TRAPER.TRP_URLINI is
+'Url de inicio del tramite';
 
 comment on column STT_TRAPER.TRP_PARINI is
 'Parámetros iniciales trámite';
@@ -820,9 +857,6 @@ comment on column STT_TRAPER.TRP_PURCHK is
 
 comment on column STT_TRAPER.TRP_PURPAG is
 'Indica si no se ha podido purgar por tener pagos realizados';
-
-comment on column STT_TRAPER.TRP_URLINI is
-'Url de inicio del tramite';
 
 alter table STT_TRAPER
    add constraint STT_TRAPER_PK primary key (TRP_CODIGO);
@@ -916,28 +950,3 @@ alter table STT_TRAPER
    add constraint STT_TRAPER_SESION_FK foreign key (TRP_CODSTR)
       references STT_SESION (SES_CODIGO);
 
-      
-      
-create table STT_PROCES 
-(
-   PROC_IDENT           VARCHAR2(20)         not null,
-   PROC_INSTAN          VARCHAR2(50),
-   PROC_FECHA           DATE
-);
-
-comment on table STT_PROCES is
-'Control ejecución procesos background.
-Para que una sola instancia se autoconfigure como maestro.';
-
-comment on column STT_PROCES.PROC_IDENT is
-'Identificador fijo';
-
-comment on column STT_PROCES.PROC_INSTAN is
-'Id instancia';
-
-comment on column STT_PROCES.PROC_FECHA is
-'Fecha ultima verificación';
-
-alter table STT_PROCES
-   add constraint STT_PROCES_PK primary key (PROC_IDENT);
-      
