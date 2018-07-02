@@ -60,7 +60,7 @@
 							  rowKey="#{td.idString}">
 
 							<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-							<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();"/>
+							<p:ajax event="rowDblselect" oncomplete="rcEditarPropiedad();" delay="500"/>
 
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
 							<p:ajax event="rowSelect" />

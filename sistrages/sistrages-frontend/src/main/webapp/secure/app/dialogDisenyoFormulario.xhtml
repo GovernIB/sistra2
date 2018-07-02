@@ -34,7 +34,7 @@
 		<p:toolbar>
 			<p:toolbarGroup align="left">
 
-				<p:commandButton id="btnFormulario" value="#{msg['dialogDisenyoFormulario.formulario']}" icon="fa fa-file-text-o" actionListener="#{dialogDisenyoFormulario.abrirPropiedadesFormulario}" process="@this" update="growlDisenyoFormulario">
+				<p:commandButton id="btnFormulario" value="#{msg['dialogDisenyoFormulario.formulario']}" icon="fa fa-file-text-o" actionListener="#{dialogDisenyoFormulario.abrirPropiedadesFormulario}" process="@this" update="growlDisenyoFormulario" title="#{msg['dialogDisenyoFormulario.title.formulario']}">
 					<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogo}" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario"/>
 				</p:commandButton>
 
@@ -70,8 +70,8 @@
 
 				<h:panelGroup id="bh-mover" class="barra-herramientas-disenyo" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
 					<p:outputLabel for="posicionamiento" value="#{msg['dialogDisenyoFormulario.mover']}"/>
-					<p:commandButton icon="fa fa-chevron-left"  id="MoverObjIzq" actionListener="#{dialogDisenyoFormulario.moverObjetoIzq}" process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjIzq}"/>
-					<p:commandButton icon="fa fa-chevron-right" id="MoverObjDer" actionListener="#{dialogDisenyoFormulario.moverObjetoDer}" process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDer}"/>
+					<p:commandButton icon="fa fa-chevron-left"  id="MoverObjIzq" actionListener="#{dialogDisenyoFormulario.moverObjetoIzq}" process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjIzq}" title="#{msg['dialogDisenyoFormulario.title.moverIzq']}"/>
+					<p:commandButton icon="fa fa-chevron-right" id="MoverObjDer" actionListener="#{dialogDisenyoFormulario.moverObjetoDer}" process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDer}" title="#{msg['dialogDisenyoFormulario.title.moverDer']}"/>
 				</h:panelGroup>
 
 			</p:toolbarGroup>
@@ -130,9 +130,9 @@
 			<p:panelGrid columns="4" columnClasses="w20,w35 grid-right,w15 grid-left,w30" layout="grid" styleClass="formulario-botonera">
 
 				<p:outputPanel styleClass="barra-herramientas-disenyo" id="bh-paginas">
-					<p:commandButton icon="fa fa-chevron-left"  id="izq" actionListener="#{dialogDisenyoFormulario.moverPaginaIzq}" process="@this" update="growlDisenyoFormulario componente-panel formulario-panel bh-mover botonera" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagIzq}"/>
+					<p:commandButton icon="fa fa-chevron-left"  id="izq" actionListener="#{dialogDisenyoFormulario.moverPaginaIzq}" process="@this" update="growlDisenyoFormulario componente-panel formulario-panel bh-mover botonera" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagIzq}"  title="#{msg['dialogDisenyoFormulario.title.pagAnterior']}"/>
 					<p:outputLabel value="Pag" /><p:outputLabel id="paginaActual" value="#{dialogDisenyoFormulario.paginaActual}" /><p:outputLabel value="/" /><p:outputLabel value="#{dialogDisenyoFormulario.numeroPaginas}" />
-					<p:commandButton icon="fa fa-chevron-right" id="der" actionListener="#{dialogDisenyoFormulario.moverPaginaDer}" process="@this" update="growlDisenyoFormulario componente-panel formulario-panel bh-mover botonera" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagDer}"/>
+					<p:commandButton icon="fa fa-chevron-right" id="der" actionListener="#{dialogDisenyoFormulario.moverPaginaDer}" process="@this" update="growlDisenyoFormulario componente-panel formulario-panel bh-mover botonera" disabled="#{!dialogDisenyoFormulario.habilitadoBtnPagDer}"  title="#{msg['dialogDisenyoFormulario.title.pagPosterior']}"/>
 				</p:outputPanel>
 
 				<p:outputPanel>

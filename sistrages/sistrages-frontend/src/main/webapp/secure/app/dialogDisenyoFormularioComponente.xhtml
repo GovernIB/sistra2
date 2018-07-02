@@ -116,6 +116,14 @@
 					</p:commandButton>
 	         	</h:column>
 
+	         	<h:column rendered="#{dialogDisenyoFormulario.isLVScript()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.valoresPosibles']}" /></h:column>
+	         	<h:column rendered="#{dialogDisenyoFormulario.isLVScript()}">
+	         		<p:commandButton id="scriptValores" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALORES_POSIBLES.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValoresPosibles)}" process="@this"
+	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptValoresPosibles)}" >
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptValores}" />
+					</p:commandButton>
+	         	</h:column>
+
 	        </h:panelGrid>
 
 

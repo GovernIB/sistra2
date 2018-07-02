@@ -58,11 +58,8 @@
                          rowsPerPageTemplate="5,10,15,30"
 			        	 selectionMode="single" selection="#{viewFormulariosExternos.datoSeleccionado}" rowKey="#{td.codigo}" dblClickSelect="true">
 
-				<!--  Doble click (selecciona fila y llama al finalizar al click del boton editar -->
-				<p:ajax event="rowDblselect" oncomplete="rcEditar();"/>
-
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" />
+				<p:ajax event="rowSelect" delay="500"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"

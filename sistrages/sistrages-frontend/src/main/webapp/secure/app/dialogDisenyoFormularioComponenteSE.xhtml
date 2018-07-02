@@ -36,11 +36,11 @@
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominio']}" /></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio()}">
 		<p:outputLabel value="#{dialogDisenyoFormulario.identificadorDominio}" styleClass="padding-right-8" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.codDominio}"/>
-		<p:commandButton id="btnAbrirDominio" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.abrirBusquedaDominio}" process="@this" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
+		<p:commandButton id="btnAbrirDominio" icon="fa fa-ellipsis-h" actionListener="#{dialogDisenyoFormulario.abrirBusquedaDominio}" process="@this" rendered="#{dialogDisenyoFormulario.isNotConsulta()}" title="#{msg['dialogDisenyoFormulario.title.dominio.seleccionar']}">
 			<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoBusquedaDominio}" update="growlDisenyoFormulario panelPropietats"/>
 		</p:commandButton>
-		<p:commandButton id="btnConsultarDominio" icon="fa fa-search" actionListener="#{dialogDisenyoFormulario.consultaDominio}" process="@this" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.codDominio}"/>
-		<p:commandButton id="btnPingDominio" icon="fa fa-arrow-up" actionListener="#{dialogDisenyoFormulario.pingDominio}" process="@this" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.codDominio}"/>
+		<p:commandButton id="btnConsultarDominio" icon="fa fa-search" actionListener="#{dialogDisenyoFormulario.consultaDominio}" process="@this" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.codDominio}" title="#{msg['dialogDisenyoFormulario.title.dominio.consultar']}"/>
+		<p:commandButton id="btnPingDominio" icon="fa fa-arrow-up" actionListener="#{dialogDisenyoFormulario.pingDominio}" process="@this" rendered="#{not empty dialogDisenyoFormulario.objetoFormularioEdit.codDominio}" title="#{msg['dialogDisenyoFormulario.title.dominio.probar']}"/>
 	</h:column>
 
 	<h:column rendered="#{dialogDisenyoFormulario.isLVDominio() and not dialogDisenyoFormulario.isDominioLF()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.dominioCodigo']}" /></h:column>

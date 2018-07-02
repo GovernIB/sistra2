@@ -21,8 +21,6 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteVersionImportarDominio.modoAcceso}"/>
-		<f:viewParam name="ID" value="#{dialogTramiteVersionImportarDominio.id}"/>
-		<f:viewParam name="AREA" value="#{dialogTramiteVersionImportarDominio.idArea}"/>
 		<f:viewAction action="#{dialogTramiteVersionImportarDominio.init}" />
 	</f:metadata>
 	<h:form id="dialogEntidad" styleClass="margin-top-10">
@@ -30,22 +28,37 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<p>
+					<p:outputLabel value="#{dialogTramiteVersionImportarTV.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
+				</p>
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w10, padding-left-18,padding-right-18 padding-left-18, padding-right-18" columns = "4" cellpadding = "5" cellspacing = "0"  width="100%">
 
+					<p:outputLabel value=" " />
 					<p:outputLabel value="#{msg['dialogTramiteVersionImportarDominio.headerDescripcionNuevo']}" />
 					<p:outputLabel value="#{msg['dialogTramiteVersionImportarDominio.headerDescripcionActual']}" />
+					<p:outputLabel value="" />
 
-					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.data.descripcion}" required="true" size="40" maxlength="10" readonly="true" />
-					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.dataActual.descripcion}" required="true" size="40" maxlength="10" readonly="true" />
+					<p:outputLabel value="JNDI:" />
+					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.data.dominio.jndi}"  size="40" rows="5"  readonly="true" />
+					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.data.dominioActual.jndi}"   size="40" rows="5"  readonly="true" />
+					<p:outputLabel value="" />
 
+					<p:outputLabel value="SQL:" />
+					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.data.dominio.sql}"  size="40" rows="5"  readonly="true" />
+					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.data.dominioActual.sql}"   size="40" rows="5"  readonly="true" />
+					<p:outputLabel value="" />
+
+					<p:outputLabel value="URL:" />
+					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.data.dominio.url}"  size="40" rows="5"  readonly="true" />
+					<p:inputTextarea value="#{dialogTramiteVersionImportarDominio.data.dominioActual.url}"   size="40" rows="5"  readonly="true" />
+					<p:outputLabel value="" />
 
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.reemplazar']}" actionListener="#{dialogTramiteVersionImportarDominio.remplazar()}" process="@this" styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.mantener']}" actionListener="#{dialogTramiteVersionImportarDominio.mantener()}" process="@this"   />
+		        		<p:commandButton value="#{msg['botones.reemplazar']}" actionListener="#{dialogTramiteVersionImportarDominio.guardar()}" process="@this" styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionImportarDominio.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

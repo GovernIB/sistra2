@@ -59,7 +59,7 @@
 			        	 selectionMode="single" selection="#{viewRolesPermisos.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect"/>
+				<p:ajax event="rowSelect" delay="500"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"
@@ -82,7 +82,7 @@
 					<h:outputText value="#{msg['typeRolePermisos.C']}" rendered="#{td.consulta}" />
 					<h:outputText value=" - " rendered="#{td.consulta and td.helpdesk}" />
 					<h:outputText value="#{msg['typeRolePermisos.H']}" rendered="#{td.helpdesk}" />
-					
+
 			    </p:column>
 
 				<p:column headerText="#{msg['viewRolesPermisos.headerArea']}">

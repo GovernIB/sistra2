@@ -63,7 +63,7 @@
 
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" update="form:panelBotones"/>
+				<p:ajax event="rowSelect" update="form:panelBotones" delay="500"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"

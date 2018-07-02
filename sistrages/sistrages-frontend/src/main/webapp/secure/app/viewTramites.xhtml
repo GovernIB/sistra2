@@ -120,9 +120,9 @@
 									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.codigo}">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
-						<p:ajax event="rowSelect"  />
+						<p:ajax event="rowSelect" delay="500" />
              			<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerMoverTramite();"
+		                  		oncomplete="triggerDoubleClick();"
 		                        update=":form:dataTableTramites"
 		                        />
 
@@ -160,8 +160,12 @@
 	        		document.getElementById("form:hiddenCommandMover").click();
 	      	  	}
 
-	      	  	function triggerMoverTramite() {
+	      	  	function triggerVersionesTramite() {
 	        		document.getElementById("form:btnVersionesTramite").click();
+	      	  	}
+
+	      	  	function triggerDoubleClick() {
+	      	  		document.getElementById("form:btnEditarTramite").click();
 	      	  	}
 
 		    </h:outputScript>
