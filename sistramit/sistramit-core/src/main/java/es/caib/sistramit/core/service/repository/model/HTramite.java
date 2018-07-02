@@ -60,7 +60,7 @@ public final class HTramite implements IModelApi {
     private String idTramiteCP;
 
     /** Atributo procedimiento Catálogo Procedimientos. */
-    @Column(name = "TRP_IDETCP")
+    @Column(name = "TRP_IDEPCP")
     private String idProcedimientoCP;
 
     /** Atributo procedimiento SIA. */
