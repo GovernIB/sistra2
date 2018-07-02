@@ -1,5 +1,8 @@
 package es.caib.sistrages.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,11 +11,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.caib.sistrages.core.api.service.RestApiService;
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+import es.caib.sistrages.core.api.model.Plugin;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
+import es.caib.sistrages.rest.api.interna.RPlugin;
+import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.util.JsonException;
@@ -32,7 +41,7 @@ public class ApiInternaRestController {
 
     /** Servicio negocio. */
     @Autowired
-    private RestApiService restApiService;
+    private RestApiInternaService restApiService;
 
     // TODO Hacer que todas las clases del modelo api rest empiecen con "R" para
     // evitar conflictos con modelo core? RENOMBRAMOS QUE EMPIECEN CON "R"
@@ -48,9 +57,56 @@ public class ApiInternaRestController {
      */
     @RequestMapping(value = "/configuracionGlobal", method = RequestMethod.GET)
     public RConfiguracionGlobal obtenerConfiguracionGlobal() {
-        restApiService.test("hola");
-        return XTestJson.crearConfiguracionGlobal();
+        List <ConfiguracionGlobal> cg= restApiService.listConfiguracionGlobal(null);
+        List <Plugin> pg= restApiService.listPlugin(TypeAmbito.GLOBAL, (long) 0, null);
+
+
+        final RConfiguracionGlobal c = new RConfiguracionGlobal();
+        c.setPropiedades(toListaParametrosCG(cg));
+        c.setPlugins(crearPlugins(pg));
+        return c;
+
     }
+
+    private static RListaParametros toListaParametrosCG(List <ConfiguracionGlobal> cg) {
+        final RListaParametros params = new RListaParametros();
+        params.setParametros(new ArrayList<>());
+        for (ConfiguracionGlobal c : cg) {
+            final RValorParametro p = new RValorParametro();
+            p.setCodigo(c.getCodigo()+"");
+            p.setValor(c.getValor());
+            params.getParametros().add(p);
+        }
+        return params;
+    }
+
+    private static RListaParametros toListaParametrosP(List <Propiedad> lp) {
+        final RListaParametros params = new RListaParametros();
+        params.setParametros(new ArrayList<>());
+        for (Propiedad p : lp) {
+            final RValorParametro vp = new RValorParametro();
+            vp.setCodigo(p.getCodigo()+"");
+            vp.setValor(p.getValor());
+            params.getParametros().add(vp);
+        }
+        return params;
+    }
+
+    private static List<RPlugin> crearPlugins(List<Plugin> lpg) {
+        final List<RPlugin> plugins = new ArrayList<>();
+
+        for(Plugin p : lpg) {
+	        RPlugin plugin;
+	        plugin = new RPlugin();
+	        plugin.setTipo(p.getTipo().name());
+	        plugin.setClassname(p.getClassname());
+	        plugin.setParametros(toListaParametrosP(p.getPropiedades()));
+	        plugins.add(plugin);
+        }
+        return plugins;
+    }
+
+
 
     /**
      * Recupera configuración entidad.

@@ -10,6 +10,9 @@ public class RVersionTramite {
     /** Versión trámite. */
     private int version;
 
+    /** Id entidad. */
+    private String idEntidad;
+
     /** Lista dominios utilizados. */
     private List<RDominio> dominios;
 
@@ -134,6 +137,25 @@ public class RVersionTramite {
      */
     public void setDominios(List<RDominio> dominios) {
         this.dominios = dominios;
+    }
+
+    /**
+     * Método de acceso a idEntidad.
+     * 
+     * @return idEntidad
+     */
+    public String getIdEntidad() {
+        return idEntidad;
+    }
+
+    /**
+     * Método para establecer idEntidad.
+     * 
+     * @param idEntidad
+     *            idEntidad a establecer
+     */
+    public void setIdEntidad(String idEntidad) {
+        this.idEntidad = idEntidad;
     }
 
 }

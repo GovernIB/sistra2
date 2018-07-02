@@ -13,6 +13,9 @@ public class RConfiguracionEntidad {
     /** Identificador. */
     private String identificador;
 
+    /** Descripción. */
+    private RLiteral descripcion;
+
     /** Referencia logo. */
     private String logo;
 
@@ -295,6 +298,25 @@ public class RConfiguracionEntidad {
      */
     public void setDiasPreregistro(int diasPreregistro) {
         this.diasPreregistro = diasPreregistro;
+    }
+
+    /**
+     * Método de acceso a descripcion.
+     *
+     * @return descripcion
+     */
+    public RLiteral getDescripcion() {
+        return descripcion;
+    }
+
+    /**
+     * Método para establecer descripcion.
+     *
+     * @param descripcion
+     *            descripcion a establecer
+     */
+    public void setDescripcion(RLiteral descripcion) {
+        this.descripcion = descripcion;
     }
 
 }

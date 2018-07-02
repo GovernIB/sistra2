@@ -5,6 +5,9 @@ package es.caib.sistrages.rest.api.interna;
  */
 public class ROpcionFormularioSoporte {
 
+    /** Codigo. */
+    private Long codigo;
+
     /** Tipo incidencia. */
     private RLiteral tipo;
 
@@ -93,6 +96,25 @@ public class ROpcionFormularioSoporte {
      */
     public void setListaEmails(String listaEmails) {
         this.listaEmails = listaEmails;
+    }
+
+    /**
+     * Método de acceso a codigo.
+     * 
+     * @return codigo
+     */
+    public Long getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * Método para establecer codigo.
+     * 
+     * @param codigo
+     *            codigo a establecer
+     */
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
     }
 
 }

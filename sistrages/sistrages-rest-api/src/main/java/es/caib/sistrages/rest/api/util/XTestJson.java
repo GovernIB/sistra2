@@ -9,8 +9,8 @@ import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
-import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
@@ -247,9 +247,9 @@ public class XTestJson {
         lista.add(generarAviso());
         lista.add(generarAviso());
 
-        final RAvisosEntidad res = new RAvisosEntidad();
-        res.setAvisos(lista);
-        return res;
+        final RAvisosEntidad ra = new RAvisosEntidad();
+        ra.setAvisos(lista);
+        return ra;
     }
 
     private static RAviso generarAviso() {

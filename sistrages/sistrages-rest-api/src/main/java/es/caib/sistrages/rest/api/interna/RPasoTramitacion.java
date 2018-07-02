@@ -25,6 +25,9 @@ public abstract class RPasoTramitacion {
     /** Tipo de paso. */
     private String tipo;
 
+    /** Indica si es paso final. */
+    private boolean pasoFinal;
+
     /**
      * Método de acceso a id.
      *
@@ -61,6 +64,25 @@ public abstract class RPasoTramitacion {
      */
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    /**
+     * Método de acceso a pasoFinal.
+     * 
+     * @return pasoFinal
+     */
+    public boolean isPasoFinal() {
+        return pasoFinal;
+    }
+
+    /**
+     * Método para establecer pasoFinal.
+     * 
+     * @param pasoFinal
+     *            pasoFinal a establecer
+     */
+    public void setPasoFinal(boolean pasoFinal) {
+        this.pasoFinal = pasoFinal;
     }
 
 }
