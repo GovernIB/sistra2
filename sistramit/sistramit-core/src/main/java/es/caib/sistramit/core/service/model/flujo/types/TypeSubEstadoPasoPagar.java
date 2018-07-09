@@ -1,6 +1,4 @@
-package es.gva.dgm.tra.ctt.att.negocio.model.flujo.internal.types;
-
-import es.caib.sistramit.core.service.model.flujo.types.TypeSubestadoPaso;
+package es.caib.sistramit.core.service.model.flujo.types;
 
 /**
  * Subestados para el paso Pagar.

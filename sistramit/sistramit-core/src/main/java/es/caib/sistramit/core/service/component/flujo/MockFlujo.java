@@ -38,7 +38,14 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePlantillaAnexo;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
+/**
+ * Mock para generar datos flujo de test.
+ *
+ * @author Indra
+ *
+ */
 public class MockFlujo {
 
     public static DetalleTramite generarDetalleTramite(
@@ -53,7 +60,7 @@ public class MockFlujo {
         dt.setIdioma("es");
         dt.setPersistente(TypeSiNo.SI);
         dt.setDiasPersistencia(5);
-        dt.setUsuario(usuarioAutenticado);
+        dt.setUsuario(UtilsFlujo.getDatosUsuario(usuarioAutenticado));
         dt.setTipoFlujo(TypeFlujoTramitacion.NORMALIZADO);
         dt.setFechaDefinicion((new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"))
                 .format(new Date()));

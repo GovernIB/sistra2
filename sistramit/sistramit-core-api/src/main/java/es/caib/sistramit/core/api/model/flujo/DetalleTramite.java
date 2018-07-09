@@ -4,7 +4,8 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
-import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 
 /**
  * Detalle tramite.
@@ -39,8 +40,21 @@ public final class DetalleTramite implements ModelApi {
     /** Tipo flujo tramitación. */
     private TypeFlujoTramitacion tipoFlujo;
 
+    /**
+     * Tipo autenticacion.
+     */
+    private TypeAutenticacion autenticacion;
+
+    /**
+     * Metodo Autenticacion.
+     */
+    private TypeMetodoAutenticacion metodoAutenticacion;
+
     /** Usuario autenticado. */
-    private UsuarioAutenticadoInfo usuario;
+    private DatosUsuario usuario;
+
+    /** Indica si es nuevo o se ha cargado de persistencia. */
+    private TypeSiNo nuevo = TypeSiNo.NO;
 
     /** Indica si es persistente. */
     private TypeSiNo persistente = TypeSiNo.NO;
@@ -68,7 +82,9 @@ public final class DetalleTramite implements ModelApi {
         strb.append("\nDETALLE TRAMITE\n");
         strb.append("===============\n");
         strb.append("Entorno:" + getEntorno() + "\n");
-        strb.append("Usuario:" + getUsuario().print() + "\n");
+        if (getUsuario() != null) {
+            strb.append("Usuario:" + getUsuario().print() + "\n");
+        }
         strb.append("Idioma:" + getIdioma() + "\n");
         strb.append("Titulo:" + getTitulo() + "\n");
         strb.append("Tipo flujo:" + getTipoFlujo() + "\n");
@@ -190,25 +206,6 @@ public final class DetalleTramite implements ModelApi {
      */
     public void setTipoFlujo(TypeFlujoTramitacion tipoFlujo) {
         this.tipoFlujo = tipoFlujo;
-    }
-
-    /**
-     * Método de acceso a usuario.
-     *
-     * @return usuario
-     */
-    public UsuarioAutenticadoInfo getUsuario() {
-        return usuario;
-    }
-
-    /**
-     * Método para establecer usuario.
-     *
-     * @param usuario
-     *            usuario a establecer
-     */
-    public void setUsuario(UsuarioAutenticadoInfo usuario) {
-        this.usuario = usuario;
     }
 
     /**
@@ -342,5 +339,82 @@ public final class DetalleTramite implements ModelApi {
      */
     public void setEntorno(TypeEntorno entorno) {
         this.entorno = entorno;
+    }
+
+    /**
+     * Método de acceso a nuevo.
+     *
+     * @return nuevo
+     */
+    public TypeSiNo getNuevo() {
+        return nuevo;
+    }
+
+    /**
+     * Método para establecer nuevo.
+     *
+     * @param nuevo
+     *            nuevo a establecer
+     */
+    public void setNuevo(TypeSiNo nuevo) {
+        this.nuevo = nuevo;
+    }
+
+    /**
+     * Método de acceso a autenticacion.
+     *
+     * @return autenticacion
+     */
+    public TypeAutenticacion getAutenticacion() {
+        return autenticacion;
+    }
+
+    /**
+     * Método para establecer autenticacion.
+     *
+     * @param autenticacion
+     *            autenticacion a establecer
+     */
+    public void setAutenticacion(TypeAutenticacion autenticacion) {
+        this.autenticacion = autenticacion;
+    }
+
+    /**
+     * Método de acceso a metodoAutenticacion.
+     *
+     * @return metodoAutenticacion
+     */
+    public TypeMetodoAutenticacion getMetodoAutenticacion() {
+        return metodoAutenticacion;
+    }
+
+    /**
+     * Método para establecer metodoAutenticacion.
+     *
+     * @param metodoAutenticacion
+     *            metodoAutenticacion a establecer
+     */
+    public void setMetodoAutenticacion(
+            TypeMetodoAutenticacion metodoAutenticacion) {
+        this.metodoAutenticacion = metodoAutenticacion;
+    }
+
+    /**
+     * Método de acceso a usuario.
+     *
+     * @return usuario
+     */
+    public DatosUsuario getUsuario() {
+        return usuario;
+    }
+
+    /**
+     * Método para establecer usuario.
+     *
+     * @param usuario
+     *            usuario a establecer
+     */
+    public void setUsuario(DatosUsuario usuario) {
+        this.usuario = usuario;
     }
 }

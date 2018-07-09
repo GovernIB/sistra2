@@ -11,11 +11,11 @@ package es.caib.sistramit.core.service.component.flujo;
  */
 public interface SesionTramitacion {
 
-	/**
-	 * Genera sesion de tramitacion.
-	 *
-	 * @return Id sesion tramitacion
-	 */
-	String generarSesionTramitacion();
+    /**
+     * Genera sesion de tramitacion.
+     *
+     * @return Id sesion tramitacion
+     */
+    String generarSesionTramitacion();
 
 }

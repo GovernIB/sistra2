@@ -12,6 +12,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
@@ -50,7 +51,7 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
     }
 
     @Override
-    public DetalleTramite obtenerFlujoTramitacionInfo(
+    public FlujoTramitacionInfo obtenerFlujoTramitacionInfo(
             final String idSesionTramitacion) {
         return flujoTramitacionService
                 .obtenerFlujoTramitacionInfo(idSesionTramitacion);

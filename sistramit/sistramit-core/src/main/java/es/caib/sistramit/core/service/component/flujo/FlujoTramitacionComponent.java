@@ -4,6 +4,7 @@ import java.util.Map;
 
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
@@ -37,6 +38,8 @@ public interface FlujoTramitacionComponent {
             ParametrosAccionPaso parametros);
 
     void cancelarTramite();
+
+    FlujoTramitacionInfo obtenerFlujoTramitacionInfo();
 
     // TODO BORRAR
     void test(String param);

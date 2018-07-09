@@ -6,9 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
+import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
-import es.caib.sistramit.core.service.model.comun.DatosUsuario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteCP;
 
 /**
@@ -22,199 +23,226 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteCP;
 @SuppressWarnings("serial")
 public final class VariablesFlujo implements Serializable {
 
-	/**
-	 * Identificador de sesión de tramitación.
-	 */
-	private String idSesionTramitacion;
+    /**
+     * Entorno.
+     */
+    private TypeEntorno entorno;
 
-	/**
-	 * Nivel autenticación del usuario actualmente autenticado.
-	 */
-	private TypeAutenticacion nivelAutenticacion;
+    /**
+     * Identificador de sesión de tramitación.
+     */
+    private String idSesionTramitacion;
 
-	/**
-	 * Metodo autenticación iniciador.
-	 */
-	private TypeMetodoAutenticacion metodoAutenticacion;
+    /**
+     * Nivel autenticación del usuario actualmente autenticado.
+     */
+    private TypeAutenticacion nivelAutenticacion;
 
-	/**
-	 * Datos del usuario que esta actualmente autenticado.
-	 */
-	private DatosUsuario usuario;
+    /**
+     * Metodo autenticación iniciador.
+     */
+    private TypeMetodoAutenticacion metodoAutenticacion;
 
-	/**
-	 * Idioma de tramitación.
-	 */
-	private String idioma;
+    /**
+     * Datos del usuario que esta actualmente autenticado.
+     */
+    private DatosUsuario usuario;
 
-	/**
-	 * Url inicio tramite.
-	 */
-	private String urlInicioTramite;
+    /**
+     * Idioma de tramitación.
+     */
+    private String idioma;
 
-	/**
-	 * Id tramite.
-	 */
-	private String idTramite;
+    /**
+     * Url inicio tramite.
+     */
+    private String urlInicioTramite;
 
-	/**
-	 * Versión tramite.
-	 */
-	private int versionTramite;
+    /**
+     * Id tramite.
+     */
+    private String idTramite;
 
-	/**
-	 * Titulo del trámite.
-	 */
-	private String tituloTramite;
+    /**
+     * Versión tramite.
+     */
+    private int versionTramite;
 
-	/**
-	 * Parámetros de inicio.
-	 */
-	private Map<String, String> parametrosInicio;
+    /**
+     * Titulo del trámite.
+     */
+    private String tituloTramite;
 
-	/**
-	 * Datos provenientes de catálogo de procedimientos.
-	 */
-	private DefinicionTramiteCP datosTramiteCP;
+    /**
+     * Parámetros de inicio.
+     */
+    private Map<String, String> parametrosInicio;
 
-	/**
-	 * Documentos accesibles desde el paso pertenecientes a pasos anteriores.
-	 */
-	private List<DatosDocumento> documentos = new ArrayList<>();
+    /**
+     * Datos provenientes de catálogo de procedimientos.
+     */
+    private DefinicionTramiteCP datosTramiteCP;
 
-	/**
-	 * Inicio plazo del trámite.
-	 */
-	private Date fechaInicioPlazo;
+    /**
+     * Documentos accesibles desde el paso pertenecientes a pasos anteriores.
+     */
+    private List<DatosDocumento> documentos = new ArrayList<>();
 
-	/**
-	 * Fin plazo del tramite.
-	 */
-	private Date fechaFinPlazo;
+    /**
+     * Inicio plazo del trámite.
+     */
+    private Date fechaInicioPlazo;
 
-	/**
-	 * Indica si se debe debugear el trámite.
-	 */
-	private boolean debugEnabled;
+    /**
+     * Fin plazo del tramite.
+     */
+    private Date fechaFinPlazo;
 
-	public String getIdSesionTramitacion() {
-		return idSesionTramitacion;
-	}
+    /**
+     * Indica si se debe debugear el trámite.
+     */
+    private boolean debugEnabled;
 
-	public void setIdSesionTramitacion(final String idSesionTramitacion) {
-		this.idSesionTramitacion = idSesionTramitacion;
-	}
+    public String getIdSesionTramitacion() {
+        return idSesionTramitacion;
+    }
 
-	public TypeAutenticacion getNivelAutenticacion() {
-		return nivelAutenticacion;
-	}
+    public void setIdSesionTramitacion(final String idSesionTramitacion) {
+        this.idSesionTramitacion = idSesionTramitacion;
+    }
 
-	public void setNivelAutenticacion(final TypeAutenticacion nivelAutenticacion) {
-		this.nivelAutenticacion = nivelAutenticacion;
-	}
+    public TypeAutenticacion getNivelAutenticacion() {
+        return nivelAutenticacion;
+    }
 
-	public TypeMetodoAutenticacion getMetodoAutenticacion() {
-		return metodoAutenticacion;
-	}
+    public void setNivelAutenticacion(
+            final TypeAutenticacion nivelAutenticacion) {
+        this.nivelAutenticacion = nivelAutenticacion;
+    }
 
-	public void setMetodoAutenticacion(final TypeMetodoAutenticacion metodoAutenticacion) {
-		this.metodoAutenticacion = metodoAutenticacion;
-	}
+    public TypeMetodoAutenticacion getMetodoAutenticacion() {
+        return metodoAutenticacion;
+    }
 
-	public DatosUsuario getUsuario() {
-		return usuario;
-	}
+    public void setMetodoAutenticacion(
+            final TypeMetodoAutenticacion metodoAutenticacion) {
+        this.metodoAutenticacion = metodoAutenticacion;
+    }
 
-	public void setUsuario(final DatosUsuario usuario) {
-		this.usuario = usuario;
-	}
+    public DatosUsuario getUsuario() {
+        return usuario;
+    }
 
-	public String getIdioma() {
-		return idioma;
-	}
+    public void setUsuario(final DatosUsuario usuario) {
+        this.usuario = usuario;
+    }
 
-	public void setIdioma(final String idioma) {
-		this.idioma = idioma;
-	}
+    public String getIdioma() {
+        return idioma;
+    }
 
-	public String getUrlInicioTramite() {
-		return urlInicioTramite;
-	}
+    public void setIdioma(final String idioma) {
+        this.idioma = idioma;
+    }
 
-	public void setUrlInicioTramite(final String urlInicioTramite) {
-		this.urlInicioTramite = urlInicioTramite;
-	}
+    public String getUrlInicioTramite() {
+        return urlInicioTramite;
+    }
 
-	public String getIdTramite() {
-		return idTramite;
-	}
+    public void setUrlInicioTramite(final String urlInicioTramite) {
+        this.urlInicioTramite = urlInicioTramite;
+    }
 
-	public void setIdTramite(final String idTramite) {
-		this.idTramite = idTramite;
-	}
+    public String getIdTramite() {
+        return idTramite;
+    }
 
-	public int getVersionTramite() {
-		return versionTramite;
-	}
+    public void setIdTramite(final String idTramite) {
+        this.idTramite = idTramite;
+    }
 
-	public void setVersionTramite(final int versionTramite) {
-		this.versionTramite = versionTramite;
-	}
+    public int getVersionTramite() {
+        return versionTramite;
+    }
 
-	public String getTituloTramite() {
-		return tituloTramite;
-	}
+    public void setVersionTramite(final int versionTramite) {
+        this.versionTramite = versionTramite;
+    }
 
-	public void setTituloTramite(final String tituloTramite) {
-		this.tituloTramite = tituloTramite;
-	}
+    public String getTituloTramite() {
+        return tituloTramite;
+    }
 
-	public Map<String, String> getParametrosInicio() {
-		return parametrosInicio;
-	}
+    public void setTituloTramite(final String tituloTramite) {
+        this.tituloTramite = tituloTramite;
+    }
 
-	public void setParametrosInicio(final Map<String, String> parametrosInicio) {
-		this.parametrosInicio = parametrosInicio;
-	}
+    public Map<String, String> getParametrosInicio() {
+        return parametrosInicio;
+    }
 
-	public DefinicionTramiteCP getDatosTramiteCP() {
-		return datosTramiteCP;
-	}
+    public void setParametrosInicio(
+            final Map<String, String> parametrosInicio) {
+        this.parametrosInicio = parametrosInicio;
+    }
 
-	public void setDatosTramiteCP(final DefinicionTramiteCP datosTramiteCP) {
-		this.datosTramiteCP = datosTramiteCP;
-	}
+    public DefinicionTramiteCP getDatosTramiteCP() {
+        return datosTramiteCP;
+    }
 
-	public List<DatosDocumento> getDocumentos() {
-		return documentos;
-	}
+    public void setDatosTramiteCP(final DefinicionTramiteCP datosTramiteCP) {
+        this.datosTramiteCP = datosTramiteCP;
+    }
 
-	public void setDocumentos(final List<DatosDocumento> documentos) {
-		this.documentos = documentos;
-	}
+    public List<DatosDocumento> getDocumentos() {
+        return documentos;
+    }
 
-	public Date getFechaInicioPlazo() {
-		return fechaInicioPlazo;
-	}
+    public void setDocumentos(final List<DatosDocumento> documentos) {
+        this.documentos = documentos;
+    }
 
-	public void setFechaInicioPlazo(final Date fechaInicioPlazo) {
-		this.fechaInicioPlazo = fechaInicioPlazo;
-	}
+    public Date getFechaInicioPlazo() {
+        return fechaInicioPlazo;
+    }
 
-	public Date getFechaFinPlazo() {
-		return fechaFinPlazo;
-	}
+    public void setFechaInicioPlazo(final Date fechaInicioPlazo) {
+        this.fechaInicioPlazo = fechaInicioPlazo;
+    }
 
-	public void setFechaFinPlazo(final Date fechaFinPlazo) {
-		this.fechaFinPlazo = fechaFinPlazo;
-	}
+    public Date getFechaFinPlazo() {
+        return fechaFinPlazo;
+    }
 
-	public boolean isDebugEnabled() {
-		return debugEnabled;
-	}
+    public void setFechaFinPlazo(final Date fechaFinPlazo) {
+        this.fechaFinPlazo = fechaFinPlazo;
+    }
 
-	public void setDebugEnabled(final boolean debugEnabled) {
-		this.debugEnabled = debugEnabled;
-	}
+    public boolean isDebugEnabled() {
+        return debugEnabled;
+    }
+
+    public void setDebugEnabled(final boolean debugEnabled) {
+        this.debugEnabled = debugEnabled;
+    }
+
+    /**
+     * Método de acceso a entorno.
+     * 
+     * @return entorno
+     */
+    public TypeEntorno getEntorno() {
+        return entorno;
+    }
+
+    /**
+     * Método para establecer entorno.
+     * 
+     * @param entorno
+     *            entorno a establecer
+     */
+    public void setEntorno(TypeEntorno entorno) {
+        this.entorno = entorno;
+    }
 
 }

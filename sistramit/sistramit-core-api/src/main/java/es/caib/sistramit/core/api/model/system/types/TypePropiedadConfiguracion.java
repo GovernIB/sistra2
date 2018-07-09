@@ -21,7 +21,9 @@ public enum TypePropiedadConfiguracion {
      * con los almacenados en BBDD (true/false). Una vez depurada la aplicacion
      * se puede deshabilitar
      */
-    CHECK_PERSISTENCIA_POSTACCION("sistramit.checkPersistenciaPostAccion");
+    CHECK_PERSISTENCIA_POSTACCION("sistramit.checkPersistenciaPostAccion"),
+    /** Timeout cache flujo tramitación (segundos). */
+    TIMEOUT_CACHE_FLUJO("sistramit.cacheFlujo.timeout");
 
     /**
      * Valor como string.

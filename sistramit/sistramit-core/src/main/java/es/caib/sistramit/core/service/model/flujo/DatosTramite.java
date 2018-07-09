@@ -9,12 +9,12 @@ import java.util.Map;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
+import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
-import es.caib.sistramit.core.service.model.comun.DatosUsuario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteCP;
 
 /**
@@ -85,11 +85,6 @@ public final class DatosTramite implements Serializable {
      * Datos del usuario que ha iniciado el trámite.
      */
     private DatosUsuario iniciador;
-
-    /**
-     * Nivel autenticación del usuario actualmente autenticado.
-     */
-    private TypeAutenticacion nivelAutenticacionFlujo;
 
     /**
      * Idioma de tramitación.
@@ -598,26 +593,6 @@ public final class DatosTramite implements Serializable {
      */
     public void setPlazoDinamico(final boolean pPlazoDinamico) {
         plazoDinamico = pPlazoDinamico;
-    }
-
-    /**
-     * Método de acceso a nivelAutenticacionFlujo.
-     *
-     * @return nivelAutenticacionFlujo
-     */
-    public TypeAutenticacion getNivelAutenticacionFlujo() {
-        return nivelAutenticacionFlujo;
-    }
-
-    /**
-     * Método para establecer nivelAutenticacionFlujo.
-     *
-     * @param pNivelAutenticacionFlujo
-     *            nivelAutenticacionFlujo a establecer
-     */
-    public void setNivelAutenticacionFlujo(
-            final TypeAutenticacion pNivelAutenticacionFlujo) {
-        nivelAutenticacionFlujo = pNivelAutenticacionFlujo;
     }
 
     /**

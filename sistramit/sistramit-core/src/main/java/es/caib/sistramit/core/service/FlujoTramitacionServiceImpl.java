@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistramit.core.api.exception.NoExisteFlujoTramitacionException;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
@@ -33,6 +34,10 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
             final String idioma, final String idTramiteCatalogo,
             final String urlInicio, final Map<String, String> parametrosInicio,
             UsuarioAutenticadoInfo usuarioAutenticado) {
+
+        // TODO SEPARAR CREARSESION Y INICIARTRAMITE, PARA QUE LOS
+        // ERRORES/EVENTOS EN INICIARTRAMITE SE PUEDAN ASOCIAR A LA SESION
+
         // Generamos flujo de tramitacion y almacenamos en map
         final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
                 .getApplicationContext().getBean("flujoTramitacionComponent");
@@ -137,16 +142,16 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
     // de auditoria.
     // -------------------------------------------------------------------------------------------
     @Override
-    public DetalleTramite obtenerFlujoTramitacionInfo(
+    public FlujoTramitacionInfo obtenerFlujoTramitacionInfo(
             final String idSesionTramitacion) {
         // ATENCION: NO DEBE PASAR POR INTERCEPTOR. SE USA DESDE EL PROPIO
         // INTERCEPTOR.
-        DetalleTramite dt = null;
+        FlujoTramitacionInfo dt = null;
         final FlujoTramitacionComponent ft = flujoTramitacionCache
                 .get(idSesionTramitacion);
         if (ft != null) {
             try {
-                dt = ft.obtenerDetalleTramite();
+                dt = ft.obtenerFlujoTramitacionInfo();
             } catch (final Exception ex) {
                 // No hacemos nada
                 dt = null;

@@ -6,21 +6,26 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.FlujoTramitacionCache;
 
 @Component("flujoTramitacionCacheComponent")
 public class FlujoTramitacionCacheComponentImpl
         implements FlujoTramitacionCacheComponent {
 
-    /** Caché timeout: 60 min. */
-    private final long TIMEOUT_SECONDS = 3600L;
+    /** Configuracion. */
+    @Autowired
+    private ConfiguracionComponent configuracionComponent;
 
     /** Log. */
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    /** Map con las sesiones de tramitación activas. */
     private final Map<String, FlujoTramitacionCache> flujoTramitacionMap = new HashMap<>();
 
     @Override
@@ -66,9 +71,12 @@ public class FlujoTramitacionCacheComponentImpl
 
     private boolean isTimeout(Date fecha) {
         final Date ahora = new Date();
+        final int timeout = Integer
+                .parseInt(configuracionComponent.obtenerPropiedadConfiguracion(
+                        TypePropiedadConfiguracion.TIMEOUT_CACHE_FLUJO));
         final long secs = (ahora.getTime() - fecha.getTime())
-                / (ConstantesNumero.N60 * ConstantesNumero.N1000);
-        return (secs > TIMEOUT_SECONDS);
+                / ConstantesNumero.N1000;
+        return (secs > timeout);
     }
 
 }

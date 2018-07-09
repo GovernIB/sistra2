@@ -1,8 +1,11 @@
 package es.caib.sistramit.core.service.component.flujo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 
 /**
  * Componente que permite generar una sesion.
@@ -14,10 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public final class SesionTramitacionImpl implements SesionTramitacion {
 
-	@Override
-	public String generarSesionTramitacion() {
-		// TODO PENDIENTE
-		return null;
-	}
+    /** Dao para acceso a bbdd. */
+    @Autowired
+    private FlujoTramiteDao dao;
+
+    
+    @Override
+    public String generarSesionTramitacion() {
+        return dao.crearSesionTramitacion();
+    }
 
 }

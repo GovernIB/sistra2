@@ -12,7 +12,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -157,7 +156,7 @@ public class AsistenteTramitacionController extends TramitacionController {
         // Devolvemos informacion asistente
         final AsistenteInfo ai = new AsistenteInfo();
         ai.setIdSesionTramitacion(idSesionTramitacion);
-        ai.setIdioma(detalleTramite.getUsuario().getSesionInfo().getIdioma());
+        ai.setIdioma(detalleTramite.getIdioma());
         // TODO Pendiente ver info a pasar
         return new ModelAndView("asistente/asistente", "datos", ai);
     }
@@ -168,7 +167,9 @@ public class AsistenteTramitacionController extends TramitacionController {
      * @return Devuelve JSON indicando que se ha cancelado.
      *
      */
-    @RequestMapping(value = "/cancelarTramite.json", method = RequestMethod.POST)
+    // @RequestMapping(value = "/cancelarTramite.json", method =
+    // RequestMethod.POST)
+    @RequestMapping(value = "/cancelarTramite.json")
     public ModelAndView cancelarTramite() {
 
         debug("Cancelar tramite");
@@ -404,10 +405,10 @@ public class AsistenteTramitacionController extends TramitacionController {
         registraSesionTramitacion(pIdSesion, dt.getDebug() == TypeSiNo.SI);
 
         // Comprobamos que sea el iniciador (en caso de autenticado)
-        if (dt.getUsuario().getAutenticacion() != userInfo.getAutenticacion()) {
+        if (dt.getAutenticacion() != userInfo.getAutenticacion()) {
             throw new WarningFrontException("No coincide nivel autenticacion");
         }
-        if (dt.getUsuario().getAutenticacion() != TypeAutenticacion.ANONIMO) {
+        if (dt.getAutenticacion() != TypeAutenticacion.ANONIMO) {
             if (!StringUtils.equals(dt.getUsuario().getNif(),
                     userInfo.getNif())) {
                 throw new WarningFrontException(

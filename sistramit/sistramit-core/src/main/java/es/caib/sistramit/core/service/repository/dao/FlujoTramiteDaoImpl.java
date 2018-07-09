@@ -135,6 +135,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
         hPaso.setOrden(orden);
 
         entityManager.persist(hPaso);
+        entityManager.flush();
 
     }
 

@@ -95,8 +95,9 @@ public class SecurityServiceImpl implements SecurityService {
     @NegocioInterceptor
     public UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(
             final SesionInfo sesionInfo, final String ticket) {
-        // TODO Auto-generated method stub
-        return null;
+
+        // TODO PENDIENTE
+        return generarUserMock(sesionInfo);
     }
 
     @Override

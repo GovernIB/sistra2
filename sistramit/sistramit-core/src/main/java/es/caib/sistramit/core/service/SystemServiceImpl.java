@@ -111,8 +111,18 @@ public class SystemServiceImpl implements SystemService {
                 break;
             case TRAMITE:
                 final String[] codigos = inv.getIdentificador().split("#");
-                sistragesComponent.evictDefinicionTramite(codigos[0],
-                        Integer.parseInt(codigos[1]), codigos[2]);
+                final String idTramite = codigos[0];
+                final int version = Integer.parseInt(codigos[1]);
+
+                // Invalidamos para todos los idiomas posibles
+                final String idiomasSoportados = configuracionComponent
+                        .obtenerPropiedadConfiguracion(
+                                TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+                final String[] idiomas = idiomasSoportados.split(",");
+                for (final String idioma : idiomas) {
+                    sistragesComponent.evictDefinicionTramite(idTramite,
+                            version, idioma);
+                }
             default:
                 break;
             }
