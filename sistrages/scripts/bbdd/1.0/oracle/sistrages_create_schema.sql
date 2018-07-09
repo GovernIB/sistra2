@@ -1214,6 +1214,7 @@ create table STG_FORPLT
 (
    PLT_CODIGO           NUMBER(18)           not null,
    PLT_CODFOR           NUMBER(18)           not null,
+   PLT_IDENTI           VARCHAR2(20)         not null,
    PLT_CODFMT           NUMBER(18)           not null,
    PLT_DESCRI           VARCHAR2(255 CHAR)   not null,
    PLT_DEFECT           NUMBER(1)            default 0 not null
@@ -1228,6 +1229,9 @@ comment on column STG_FORPLT.PLT_CODIGO is
 comment on column STG_FORPLT.PLT_CODFOR is
 'Código formulario';
 
+comment on column STG_FORPLT.PLT_IDENTI is
+'Identificador plantilla';
+
 comment on column STG_FORPLT.PLT_CODFMT is
 'Código formateador';
 
@@ -1239,6 +1243,14 @@ comment on column STG_FORPLT.PLT_DEFECT is
 
 alter table STG_FORPLT
    add constraint STG_FORPLT_PK primary key (PLT_CODIGO);
+
+/*==============================================================*/
+/* Index: STG_FORPLT_IDENTI_UK                                  */
+/*==============================================================*/
+create unique index STG_FORPLT_IDENTI_UK on STG_FORPLT (
+   PLT_CODFOR ASC,
+   PLT_IDENTI ASC
+);
 
 /*==============================================================*/
 /* Table: STG_FORSEC                                            */
@@ -2344,7 +2356,7 @@ comment on column STG_VERTRA.VTR_AUTENO is
 'Indica si no es autenticado';
 
 comment on column STG_VERTRA.VTR_IDISOP is
-'Idiomas soportados (lista de idiomas separados por coma)';
+'Idiomas soportados (lista de idiomas separados por punto y coma)';
 
 comment on column STG_VERTRA.VTR_PERSIS is
 'Indica si admite persistencia';
