@@ -2,10 +2,10 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -59,9 +59,10 @@ public interface TramitePasoDao {
 	 *
 	 * @param formularioTramite
 	 * @param idTramitePaso
-	 * @param idFormularioInterno
+	 * @param FormularioInterno
 	 */
-	void addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso, Long idFormularioInterno);
+	FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso,
+			Long idFormularioInterno);
 
 	/**
 	 * Actualiza un formulario a trámite paso.
@@ -84,7 +85,7 @@ public interface TramitePasoDao {
 	 * @param documento
 	 * @param idTramitePaso
 	 */
-	void addDocumentoTramite(Documento documento, Long idTramitePaso);
+	Documento addDocumentoTramite(Documento documento, Long idTramitePaso);
 
 	/**
 	 * Actualiza un documento.
@@ -114,9 +115,9 @@ public interface TramitePasoDao {
 	 *
 	 * @param tasa
 	 * @param idTramitePaso
-	 * @return
+	 * @return Tasa
 	 */
-	void addTasaTramite(Tasa tasa, Long idTramitePaso);
+	Tasa addTasaTramite(Tasa tasa, Long idTramitePaso);
 
 	/**
 	 * Actualiza una tasa.
@@ -163,7 +164,7 @@ public interface TramitePasoDao {
 	 * @param idTramiteVersion
 	 * @return
 	 */
-	List<FormularioInterno> getFormulariosTramiteVersion(Long idTramiteVersion);
+	List<DisenyoFormulario> getFormulariosTramiteVersion(Long idTramiteVersion);
 
 	/**
 	 * Devuelve la lista de ficheros de un tramite version.
@@ -193,7 +194,7 @@ public interface TramitePasoDao {
 
 	/**
 	 * Comprueba si un anexo se repite.
-	 * 
+	 *
 	 * @param idTramiteVersion
 	 * @param identificador
 	 * @param idAnexo

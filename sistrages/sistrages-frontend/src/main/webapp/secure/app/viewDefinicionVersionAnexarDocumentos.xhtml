@@ -23,7 +23,7 @@
 									actionListener="#{viewDefinicionVersion.nuevoDocumento()}" process="@this"
 									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									update="growl">
-									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" oncomplete="$('#formViewDefinicionVersionAnexarDocumentos\\:btnEditarHidden').click();" />
 		        				</p:commandButton>
 
 								<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
@@ -63,14 +63,16 @@
 
 					<p:dataTable id="dataTable" var="documentos"
 						emptyMessage="#{msg['error.emptyRows']}"
-						value="#{viewDefinicionVersion.tramitePasoANEXSeleccionado.documentos}" rows="5"
+						value="#{viewDefinicionVersion.tramitePasoANEXSeleccionado.documentos}"
 						scrollable="true" paginator="false" rowKey="#{documentos.idString}" selectionMode="single"
 						 selection="#{viewDefinicionVersion.documentoSeleccionado}" dblClickSelect="true">
 
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
-						<p:ajax event="rowSelect" />
-						<p:ajax event="rowUnselect" />
+						<p:ajax event="rowSelect" delay="500"/>
+						<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        />
 
 						<!-- Columnas -->
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerIdentificador']}" >
@@ -103,6 +105,25 @@
 			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 					</p:outputPanel>
 			    </p:confirmDialog>
+
+			   	<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+								actionListener="#{viewDefinicionVersion.editarDocumentoAlta()}" process="@this"
+								update="growl" style="display: none">
+					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+		        </p:commandButton>
+
+		        <h:outputScript >
+			      function triggerDblClick() {
+			       	$('#formViewDefinicionVersionAnexarDocumentos\\:btnEditarDblClickHidden').click();
+			      }
+			    </h:outputScript>
+
+				<p:commandButton id="btnEditarDblClickHidden"
+					 	value="#{msg['botones.editar']}" icon="fa fa-edit"
+						actionListener="#{viewDefinicionVersion.editarDocumentoDblClick()}" process="@this"
+						update="growl dataTable" style="display:none">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+       			</p:commandButton>
 		</h:panelGrid>
 
 	</h:form>

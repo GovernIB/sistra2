@@ -22,6 +22,12 @@ public class Tramite extends ModelApi {
 	/** Activo */
 	private boolean activo;
 
+	/** Id area. */
+	private Long idArea;
+
+	/** Id entidad. */
+	private Long idEntidad;
+
 	/**
 	 * Crea una nueva instancia de Tramite.
 	 */
@@ -87,6 +93,35 @@ public class Tramite extends ModelApi {
 	 */
 	public void setActivo(final boolean activo) {
 		this.activo = activo;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public Long getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea
+	 *            the idArea to set
+	 */
+	public void setIdArea(final Long idArea) {
+		this.idArea = idArea;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	public Long getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad the idEntidad to set
+	 */
+	public void setIdEntidad(Long idEntidad) {
+		this.idEntidad = idEntidad;
 	}
 
 }

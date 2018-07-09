@@ -33,6 +33,9 @@ public class JPlantillaFormulario implements IModelApi {
 	@Column(name = "PLT_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
+	@Column(name = "PLT_IDENTI", nullable = false, length = 20)
+	private String identificador;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PLT_CODFMT", nullable = false)
 	private JFormateadorFormulario formateadorFormulario;
@@ -102,9 +105,18 @@ public class JPlantillaFormulario implements IModelApi {
 		this.plantillaIdiomaFormulario = plantillaIdiomaFormulario;
 	}
 
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(final String identificador) {
+		this.identificador = identificador;
+	}
+
 	public PlantillaFormulario toModel() {
 		final PlantillaFormulario plantilla = new PlantillaFormulario();
 		plantilla.setCodigo(codigo);
+		plantilla.setIdentificador(identificador);
 		plantilla.setDescripcion(descripcion);
 		plantilla.setPorDefecto(porDefecto);
 
@@ -121,6 +133,7 @@ public class JPlantillaFormulario implements IModelApi {
 			if (model.getCodigo() != null) {
 				jModel.setCodigo(model.getCodigo());
 			}
+			jModel.setIdentificador(model.getIdentificador());
 			jModel.setDescripcion(model.getDescripcion());
 			jModel.setPorDefecto(model.isPorDefecto());
 

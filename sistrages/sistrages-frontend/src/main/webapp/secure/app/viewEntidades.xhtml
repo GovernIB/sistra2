@@ -87,9 +87,13 @@
 
 			<h:outputScript >
 		      function triggerDblClick() {
-		        document.getElementById("form:btnEditar").click();
+		        	$('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewEntidades.rcDobleClick()}" process="@this" update="growl" style="display:none">
+       			<p:ajax event="dialogReturn" listener="#{viewEntidades.returnDialogo}" update="growl dataTable"/>
+       		</p:commandButton>
+
 
 			<!-- dialogo para confirmar -->
 		    <p:confirmDialog global="true" >

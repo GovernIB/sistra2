@@ -20,10 +20,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import es.caib.sistrages.core.api.model.FormularioTramite;
-import es.caib.sistrages.core.api.model.Gestor;
+import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypeInterno;
+import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 
 /**
  * JFormularioTramite
@@ -333,7 +333,7 @@ public class JFormularioTramite implements IModelApi {
 		}
 		mformulario.setIdentificador(this.getIdentificador());
 		if (this.getIdFormularioExterno() != null) {
-			final Gestor form = new Gestor();
+			final GestorExternoFormularios form = new GestorExternoFormularios();
 			form.setCodigo(Long.valueOf(this.getIdFormularioExterno()));
 			mformulario.setFormularioGestorInterno(form);
 		}
@@ -357,7 +357,7 @@ public class JFormularioTramite implements IModelApi {
 			mformulario.setScriptRetorno(this.getScriptRetorno().toModel());
 		}
 		mformulario.setTipo(TypeFormulario.fromString(this.getTipo()));
-		mformulario.setTipoFormulario(TypeInterno.fromString(this.getTipoFormulario()));
+		mformulario.setTipoFormulario(TypeFormularioGestor.fromString(this.getTipoFormulario()));
 
 		return mformulario;
 	}

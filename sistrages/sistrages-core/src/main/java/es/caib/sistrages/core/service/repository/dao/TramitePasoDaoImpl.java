@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -142,15 +142,17 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
-	public void addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso,
+	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso,
 			final Long idFormularioInterno) {
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
 		final JFormulario jFormularioInterno = entityManager.find(JFormulario.class, idFormularioInterno);
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		jFormulariotramite.setOrden(jpasoRellenar.getPasoRellenar().getFormulariosTramite().size());
 		jFormulariotramite.setFormulario(jFormularioInterno);
+		entityManager.persist(jFormulariotramite);
 		jpasoRellenar.getPasoRellenar().getFormulariosTramite().add(jFormulariotramite);
-		entityManager.merge(jpasoRellenar);
+		// entityManager.merge(jpasoRellenar);
+		return jFormulariotramite.toModel();
 	}
 
 	@Override
@@ -170,13 +172,14 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
-	public void addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
+	public Documento addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
 		final JAnexoTramite janexoTramite = JAnexoTramite.fromModel(documento);
 		final JPasoTramitacion jpasoTramitacion = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		janexoTramite.setOrden(jpasoTramitacion.getPasoAnexar().getAnexosTramite().size());
 		janexoTramite.setPasoAnexar(jpasoTramitacion.getPasoAnexar());
-		jpasoTramitacion.getPasoAnexar().getAnexosTramite().add(janexoTramite);
 		entityManager.persist(janexoTramite);
+		jpasoTramitacion.getPasoAnexar().getAnexosTramite().add(janexoTramite);
+		return janexoTramite.toModel();
 	}
 
 	@Override
@@ -202,13 +205,14 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
-	public void addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
+	public Tasa addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		final JPagoTramite jpagoTramite = JPagoTramite.fromModel(tasa);
 		jpagoTramite.setOrden(jpasoRellenar.getPasoPagos().getPagosTramite().size());
 		jpagoTramite.setPasoPagos(jpasoRellenar.getPasoPagos());
-		jpasoRellenar.getPasoPagos().getPagosTramite().add(jpagoTramite);
 		entityManager.persist(jpagoTramite);
+		jpasoRellenar.getPasoPagos().getPagosTramite().add(jpagoTramite);
+		return jpagoTramite.toModel();
 	}
 
 	@Override
@@ -282,7 +286,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	@Override
-	public List<FormularioInterno> getFormulariosTramiteVersion(final Long idTramiteVersion) {
+	public List<DisenyoFormulario> getFormulariosTramiteVersion(final Long idTramiteVersion) {
 		final String sql = "select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion ";
 
 		final Query query = entityManager.createQuery(sql);
@@ -291,7 +295,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		@SuppressWarnings("unchecked")
 		final List<JFormulario> results = query.getResultList();
 
-		final List<FormularioInterno> resultado = new ArrayList<>();
+		final List<DisenyoFormulario> resultado = new ArrayList<>();
 		if (results != null && !results.isEmpty()) {
 			for (final Iterator<JFormulario> iterator = results.iterator(); iterator.hasNext();) {
 				final JFormulario jformulario = iterator.next();

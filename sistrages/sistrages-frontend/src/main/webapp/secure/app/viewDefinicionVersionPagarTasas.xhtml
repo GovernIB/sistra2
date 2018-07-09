@@ -17,7 +17,7 @@
 						actionListener="#{viewDefinicionVersion.nuevaTasa()}" process="@this"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" oncomplete="$('#formViewDefinicionVersionPagarTasas\\:btnEditarHidden').click();" />
 					</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
@@ -62,8 +62,10 @@
 			 selection="#{viewDefinicionVersion.tasaSeleccionado}" dblClickSelect="true">
 
 			<!-- Necesario para actualizar en controlador la fila seleccionada -->
-			<p:ajax event="rowSelect" />
-			<p:ajax event="rowUnselect" />
+			<p:ajax event="rowSelect"  delay="500"/>
+			<p:ajax event="rowDblselect"
+                 		oncomplete="triggerDblClick();"
+                       />
 
 			<!-- Columnas -->
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerIdentificador']}" >
@@ -90,6 +92,26 @@
 			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 					</p:outputPanel>
 			    </p:confirmDialog>
+
+
+			    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+						actionListener="#{viewDefinicionVersion.editarTasaAlta()}" process="@this"
+						update="growl" style="display:none">
+					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+				</p:commandButton>
+
+				 <h:outputScript >
+			      function triggerDblClick() {
+			       	$('#formViewDefinicionVersionPagarTasas\\:btnEditarDblClickHidden').click();
+			      }
+			    </h:outputScript>
+
+				<p:commandButton id="btnEditarDblClickHidden"
+					 	value="#{msg['botones.editar']}" icon="fa fa-edit"
+						actionListener="#{viewDefinicionVersion.editarTasaDblClick()}" process="@this"
+						update="growl" style="display:none">
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+					</p:commandButton>
 	</h:form>
 
 </ui:composition>

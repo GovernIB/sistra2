@@ -12,6 +12,11 @@ public class PlantillaFormulario extends ModelApi {
 	private Long codigo;
 
 	/**
+	 * identificador.
+	 */
+	private String identificador;
+
+	/**
 	 * identificador del formateador de formulario.
 	 */
 	private Long idFormateadorFormulario;
@@ -120,6 +125,14 @@ public class PlantillaFormulario extends ModelApi {
 		this.porDefecto = porDefecto;
 	}
 
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(final String identificador) {
+		this.identificador = identificador;
+	}
+
 	/**
 	 * Obtiene el valor de hashCode.
 	 *
@@ -128,9 +141,10 @@ public class PlantillaFormulario extends ModelApi {
 	public int getHashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((descripcion == null) ? 0 : descripcion.hashCode());
 		result = prime * result + ((idFormateadorFormulario == null) ? 0 : idFormateadorFormulario.hashCode());
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((identificador == null) ? 0 : identificador.hashCode());
 		result = prime * result + (porDefecto ? 1231 : 1237);
 		return result;
 	}

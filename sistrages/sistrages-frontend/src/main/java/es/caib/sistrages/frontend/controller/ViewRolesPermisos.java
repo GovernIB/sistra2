@@ -144,6 +144,17 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	}
 
 	/**
+	 * Dbl click.
+	 */
+	public void rcDobleClick() {
+		if (getPermiteEditar()) {
+			editar();
+		} else {
+			consultar();
+		}
+	}
+
+	/**
 	 * Obtiene el valor de permiteAlta.
 	 *
 	 * @return el valor de permiteAlta

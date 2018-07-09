@@ -3,7 +3,7 @@ package es.caib.sistrages.core.api.service;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
 
 /**
- * Gestor fichero Service.
+ * GestorExternoFormularios fichero Service.
  */
 public interface GestorFicherosService {
 

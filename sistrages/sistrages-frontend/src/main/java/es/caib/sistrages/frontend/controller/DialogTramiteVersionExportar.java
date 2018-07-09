@@ -28,7 +28,7 @@ import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -103,7 +103,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	List<FuenteDatos> fuenteDatos = new ArrayList<>();
 
 	/** Formularios. **/
-	List<FormularioInterno> formularios;
+	List<DisenyoFormulario> formularios;
 
 	/** Formularios. **/
 	List<Fichero> ficheros;
@@ -371,7 +371,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 		}
 
 		// 6. Incluir los formularios_ID.data
-		for (final FormularioInterno formulario : formularios) {
+		for (final DisenyoFormulario formulario : formularios) {
 			incluirModelApi(zos, formulario, "formularios_" + formulario.getCodigo() + ".data");
 		}
 
@@ -591,7 +591,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	/**
 	 * @return the formularios
 	 */
-	public List<FormularioInterno> getFormularios() {
+	public List<DisenyoFormulario> getFormularios() {
 		return formularios;
 	}
 
@@ -599,7 +599,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 	 * @param formularios
 	 *            the formularios to set
 	 */
-	public void setFormularios(final List<FormularioInterno> formularios) {
+	public void setFormularios(final List<DisenyoFormulario> formularios) {
 		this.formularios = formularios;
 	}
 

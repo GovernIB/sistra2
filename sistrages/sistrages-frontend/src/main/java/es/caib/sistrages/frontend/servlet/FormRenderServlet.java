@@ -18,7 +18,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
@@ -78,7 +78,7 @@ public class FormRenderServlet extends HttpServlet {
 	private void paginaHTML(final StringBuilder pOut, final String pIdForm, final String pPage,
 			final String pIdComponente, final String pLang) {
 
-		final FormularioInterno formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(pIdForm));
+		final DisenyoFormulario formulario = formIntService.getFormularioInternoPaginas(Long.parseLong(pIdForm));
 		final PaginaFormulario pagina = formIntService
 				.getContenidoPaginaFormulario(formulario.getPaginas().get(Integer.parseInt(pPage) - 1).getCodigo());
 
@@ -91,7 +91,7 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "<div id=\"imc-contenidor\" class=\"imc-contenidor\" >", 1);
 
 		if (formulario.isMostrarCabecera()) {
-			cabeceraFormulario(pOut, formulario.getTextoCabecera().getTraduccion(pLang));
+			cabeceraFormulario(pOut, trataLiteral(formulario.getTextoCabecera().getTraduccion(pLang)));
 		}
 
 		escribeLinea(pOut, "<form>", 2);
@@ -190,7 +190,8 @@ public class FormRenderServlet extends HttpServlet {
 
 		escribeLinea(pOut, "<span class=\"imc-se-marca\">", componente.getLetra(), "</span>", 6);
 		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
-			escribeLinea(pOut, "<span class=\"imc-se-titol\">", pCF.getTexto().getTraduccion(pLang), "</span>", 6);
+			escribeLinea(pOut, "<span class=\"imc-se-titol\">", trataLiteral(pCF.getTexto().getTraduccion(pLang)),
+					"</span>", 6);
 		}
 
 		escribeLinea(pOut, "</h4>", 5);
@@ -254,7 +255,7 @@ public class FormRenderServlet extends HttpServlet {
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
 			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getCodigo()), "\">",
-					campo.getTexto().getTraduccion(pLang), "</label></div>", 6);
+					trataLiteral(campo.getTexto().getTraduccion(pLang)), "</label></div>", 6);
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
@@ -276,7 +277,8 @@ public class FormRenderServlet extends HttpServlet {
 		estilo.append(" imc-el-name-").append(String.valueOf(campo.getCodigo()));
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			texto = "<label for=\"" + campo.getCodigo() + "\">" + campo.getTexto().getTraduccion(pLang) + "</label>";
+			texto = "<label for=\"" + campo.getCodigo() + "\">" + trataLiteral(campo.getTexto().getTraduccion(pLang))
+					+ "</label>";
 		}
 		escribeLinea(pOut, "<div ", escribeId(pCF.getCodigo()), "class=\"imc-element imc-el-check", estilo.toString(),
 				"\" data-type=\"check\">", 5);
@@ -323,7 +325,7 @@ public class FormRenderServlet extends HttpServlet {
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
 			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getCodigo() + "\">"
-					+ pCampo.getTexto().getTraduccion(pLang) + "</label></div>";
+					+ trataLiteral(pCampo.getTexto().getTraduccion(pLang)) + "</label></div>";
 		}
 
 		escribeLinea(pOut, "<div ", escribeId(pCampo.getCodigo()), "class=\"imc-element imc-el-selector",
@@ -357,7 +359,8 @@ public class FormRenderServlet extends HttpServlet {
 				"\" data-type=\"check-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
-			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion(pLang), "</legend>", 7);
+			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
+					"</legend>", 7);
 		}
 
 		escribeLinea(pOut, "<ul>", 7);
@@ -396,7 +399,8 @@ public class FormRenderServlet extends HttpServlet {
 				estilo.toString(), "\" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
-			escribeLinea(pOut, "<legend class=\"imc-label\">", pCampo.getTexto().getTraduccion(pLang), "</legend>", 7);
+			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
+					"</legend>", 7);
 		}
 
 		escribeLinea(pOut, "<ul>", 7);
@@ -439,7 +443,7 @@ public class FormRenderServlet extends HttpServlet {
 		escribeLinea(pOut, "<div class=\"imc-element imc-missatge-en-linia imc-missatge-en-linia-icona-sup ",
 				estilo.toString(), "\" ", escribeId(pCF.getCodigo()), "><p>", 5);
 		if (pCF.getTexto() != null) {
-			escribeLinea(pOut, pCF.getTexto().getTraduccion(pLang), 6);
+			escribeLinea(pOut, trataLiteral(pCF.getTexto().getTraduccion(pLang)), 6);
 		}
 		escribeLinea(pOut, "</p></div>", 5);
 	}
@@ -515,6 +519,10 @@ public class FormRenderServlet extends HttpServlet {
 			id = "id=\"" + pId + "." + pOrden + "\"";
 		}
 		return id;
+	}
+
+	private String trataLiteral(final String pLiteral) {
+		return (pLiteral == null ? "?" : pLiteral);
 	}
 
 	public static String getContexto() {

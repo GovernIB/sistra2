@@ -28,6 +28,7 @@ import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.TramiteVersiones;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
@@ -84,22 +85,25 @@ public class ViewTramites extends ViewControllerBase {
 	/**
 	 * Lista de datos.
 	 */
-	private List<Tramite> tramites;
+	// private List<Tramite> tramites;
 
 	/**
 	 * Dato seleccionado en la lista.
 	 */
-	private Tramite tramiteSeleccionada;
+	private TramiteVersiones tramiteSeleccionada;
 
-	/** Id entidad. */
-	private Long idEntidad;
+	/** Lista de datos. */
+	private List<TramiteVersiones> listaTramiteVersiones;
+
+	/** Dato seleccionado en la lista. */
+	private TramiteVersion versionSeleccionada;
 
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
 		// Id entidad
-		idEntidad = UtilJSF.getIdEntidad();
+		final Long idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 		// Titulo pantalla
@@ -202,7 +206,8 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, List<String>> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), Arrays.asList(this.tramiteSeleccionada.getCodigo().toString()));
+		params.put(TypeParametroVentana.ID.toString(),
+				Arrays.asList(this.tramiteSeleccionada.getTramite().getCodigo().toString()));
 		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml", params);
 
 	}
@@ -259,12 +264,12 @@ public class ViewTramites extends ViewControllerBase {
 		if (!verificarFilaSeleccionadaTramite())
 			return;
 
-		if (tramiteService.tieneTramiteVersion(tramiteSeleccionada.getCodigo())) {
+		if (tramiteService.tieneTramiteVersion(tramiteSeleccionada.getTramite().getCodigo())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.errorTramiteVersion"));
 			return;
 		}
 
-		if (tramiteService.removeTramite(tramiteSeleccionada.getCodigo())) {
+		if (tramiteService.removeTramite(tramiteSeleccionada.getTramite().getCodigo())) {
 			buscarTramites();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 		} else {
@@ -564,23 +569,29 @@ public class ViewTramites extends ViewControllerBase {
 	private void buscarTramites() {
 		// Quitamos seleccion de dato
 		tramiteSeleccionada = null;
+		versionSeleccionada = null;
+
 		if (areaSeleccionada == null) {
-
-			tramites = new ArrayList<>();
-
+			listaTramiteVersiones = new ArrayList<>();
 		} else {
+			listaTramiteVersiones = new ArrayList<>();
 
-			tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getCodigo(), this.filtro);
+			final List<Tramite> tramites = tramiteService.listTramite(((Area) areaSeleccionada.getData()).getCodigo(),
+					this.filtro);
 
 			// Obtenemos activa a los tramites que tengan alguna version activa
 			final List<Long> idTramites = tramiteService
 					.listTramiteVersionActiva(((Area) areaSeleccionada.getData()).getCodigo());
-			if (idTramites != null && !idTramites.isEmpty()) {
-				for (final Tramite tramite : tramites) {
-					if (idTramites.contains(tramite.getCodigo())) {
-						tramite.setActivo(true);
-					}
+
+			for (final Tramite tramite : tramites) {
+				if (idTramites.contains(tramite.getCodigo())) {
+					tramite.setActivo(true);
 				}
+
+				final List<TramiteVersion> listaVersiones = tramiteService.listTramiteVersion(tramite.getCodigo(),
+						null);
+
+				listaTramiteVersiones.add(new TramiteVersiones(tramite, listaVersiones));
 			}
 
 		}
@@ -641,7 +652,8 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getCodigo()));
+		params.put(TypeParametroVentana.ID.toString(),
+				String.valueOf(this.tramiteSeleccionada.getTramite().getCodigo()));
 		UtilJSF.openDialog(DialogTramite.class, modoAcceso, params, true, 540, 220);
 	}
 
@@ -665,7 +677,8 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.tramiteSeleccionada.getCodigo()));
+		params.put(TypeParametroVentana.ID.toString(),
+				String.valueOf(this.tramiteSeleccionada.getTramite().getCodigo()));
 		UtilJSF.openDialog(DialogMoverTramite.class, TypeModoAcceso.EDICION, params, true, 540, 120);
 	}
 
@@ -676,7 +689,7 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	private boolean checkDominioArea() {
 		final List<TramiteVersion> tramitesVersion = tramiteService
-				.listTramiteVersion(this.tramiteSeleccionada.getCodigo(), null);
+				.listTramiteVersion(this.tramiteSeleccionada.getTramite().getCodigo(), null);
 		if (tramitesVersion != null) {
 			for (final TramiteVersion tramiteVersion : tramitesVersion) {
 				final List<Long> dominiosId = tramiteService.getTramiteDominiosId(tramiteVersion.getCodigo());
@@ -691,6 +704,53 @@ public class ViewTramites extends ViewControllerBase {
 			}
 		}
 		return false;
+	}
+
+	public void unSelectTramite() {
+		tramiteSeleccionada = null;
+	}
+
+	public void unSelectVersionTramite() {
+		versionSeleccionada = null;
+	}
+
+	/**
+	 * Abre dialogo para nueva version.
+	 */
+	public void nuevaVersion() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteSeleccionada.getTramite().getCodigo()));
+		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 150);
+
+	}
+
+	/**
+	 * Retorno dialogo nueva version.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoNuevaVersion(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		String message = null;
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
+				message = UtilJSF.getLiteral("info.alta.ok");
+			} else {
+				message = UtilJSF.getLiteral("info.modificado.ok");
+			}
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Refrescamos datos
+			buscarTramites();
+		}
 	}
 
 	/**
@@ -755,9 +815,9 @@ public class ViewTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de tramites
 	 */
-	public List<Tramite> getTramites() {
-		return tramites;
-	}
+	// public List<Tramite> getTramites() {
+	// return tramites;
+	// }
 
 	/**
 	 * Establece el valor de tramites.
@@ -765,16 +825,16 @@ public class ViewTramites extends ViewControllerBase {
 	 * @param tramites
 	 *            el nuevo valor de tramites
 	 */
-	public void setTramites(final List<Tramite> tramites) {
-		this.tramites = tramites;
-	}
+	// public void setTramites(final List<Tramite> tramites) {
+	// this.tramites = tramites;
+	// }
 
 	/**
 	 * Obtiene el valor de tramiteSeleccionada.
 	 *
 	 * @return el valor de tramiteSeleccionada
 	 */
-	public Tramite getTramiteSeleccionada() {
+	public TramiteVersiones getTramiteSeleccionada() {
 		return tramiteSeleccionada;
 	}
 
@@ -784,7 +844,7 @@ public class ViewTramites extends ViewControllerBase {
 	 * @param tramiteSeleccionada
 	 *            el nuevo valor de tramiteSeleccionada
 	 */
-	public void setTramiteSeleccionada(final Tramite tramiteSeleccionada) {
+	public void setTramiteSeleccionada(final TramiteVersiones tramiteSeleccionada) {
 		this.tramiteSeleccionada = tramiteSeleccionada;
 	}
 
@@ -801,6 +861,22 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void setIdArea(final String idArea) {
 		this.idArea = idArea;
+	}
+
+	public TramiteVersion getVersionSeleccionada() {
+		return versionSeleccionada;
+	}
+
+	public void setVersionSeleccionada(final TramiteVersion versionSeleccionado) {
+		this.versionSeleccionada = versionSeleccionado;
+	}
+
+	public List<TramiteVersiones> getListaTramiteVersiones() {
+		return listaTramiteVersiones;
+	}
+
+	public void setListaTramiteVersiones(final List<TramiteVersiones> listaTramiteVersiones) {
+		this.listaTramiteVersiones = listaTramiteVersiones;
 	}
 
 }

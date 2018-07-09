@@ -22,7 +22,7 @@
 						actionListener="#{viewDefinicionVersion.nuevoFormulario()}" process="@this"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
-							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable"  />
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" process="@this" oncomplete="$('#formViewDefinicionVersionRellenar\\:btnEditarHidden').click();" />
 		        	</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
@@ -70,8 +70,10 @@
 			        	 selectionMode="single" selection="#{viewDefinicionVersion.formularioSeleccionado}" rowKey="#{formularios.idString}" dblClickSelect="true">
 
 			<!-- Necesario para actualizar en controlador la fila seleccionada -->
-			<p:ajax event="rowSelect" />
-			<p:ajax event="rowUnselect" />
+			<p:ajax event="rowSelect" delay="500"/>
+			<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        />
 
 			<!-- Columnas -->
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerIdentificador']}" >
@@ -87,6 +89,8 @@
 				<h:outputText value="#{formularios.tipoFormulario}" />
 			</p:column>
 
+
+
 		</p:dataTable>
 
 				<p:confirmDialog global="true" >
@@ -95,6 +99,25 @@
 			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 					</p:outputPanel>
 			    </p:confirmDialog>
+
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+				actionListener="#{viewDefinicionVersion.editarFormularioAlta()}" process="@this"
+				update="growl" style="display: none">
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+			</p:commandButton>
+
+			<h:outputScript >
+		      function triggerDblClick() {
+		       	$('#formViewDefinicionVersionRellenar\\:btnEditarDblClickHidden').click();
+		      }
+		    </h:outputScript>
+
+			<p:commandButton id="btnEditarDblClickHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+				actionListener="#{viewDefinicionVersion.editarFormularioDblClick()}" process="@this"
+				style="display:none"
+				update="growl">
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+			</p:commandButton>
 
 	</h:form>
 

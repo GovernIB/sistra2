@@ -174,6 +174,17 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Dbl click.
+	 */
+	public void rcDobleClick() {
+		if (getPermiteEditar()) {
+			editar();
+		} else {
+			consultar();
+		}
+	}
+
+	/**
 	 * Retorno dialogo.
 	 *
 	 * @param event

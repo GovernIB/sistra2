@@ -22,7 +22,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
 import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
@@ -84,7 +84,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 * getFormularioById(java.lang.Long)
 	 */
 	@Override
-	public FormularioInterno getFormularioById(final Long pId) {
+	public DisenyoFormulario getFormularioById(final Long pId) {
 		return getJFormularioById(pId).toModel();
 	}
 
@@ -95,12 +95,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 * getFormularioPaginasById(java.lang.Long)
 	 */
 	@Override
-	public FormularioInterno getFormularioPaginasById(final Long pId) {
+	public DisenyoFormulario getFormularioPaginasById(final Long pId) {
 		final JFormulario jForm = getJFormularioById(pId);
 
 		jForm.getPaginas();
 
-		final FormularioInterno formInt = jForm.toModel();
+		final DisenyoFormulario formInt = jForm.toModel();
 
 		for (final JPaginaFormulario jPagina : jForm.getPaginas()) {
 			formInt.getPaginas().add(jPagina.toModel());
@@ -126,10 +126,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 * getFormPagById(java.lang.Long)
 	 */
 	@Override
-	public FormularioInterno getFormularioCompletoById(final Long pId) {
+	public DisenyoFormulario getFormularioCompletoById(final Long pId) {
 		final JFormulario jForm = getJFormularioById(pId);
 
-		final FormularioInterno formInt = jForm.toModel();
+		final DisenyoFormulario formInt = jForm.toModel();
 
 		for (final JPaginaFormulario jPagina : jForm.getPaginas()) {
 			formInt.getPaginas().add(getContenidoPaginaById(jPagina.getCodigo()));
@@ -164,7 +164,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	}
 
 	@Override
-	public void updateFormulario(final FormularioInterno pFormInt) {
+	public void updateFormulario(final DisenyoFormulario pFormInt) {
 		// TODO: revisar
 
 		JFormulario jForm = getJFormularioById(pFormInt.getCodigo());
@@ -536,6 +536,20 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					campoIndexado.getListaParametrosDominio().clear();
 					jCampoIndexado = JCampoFormularioIndexado.mergeListaParametrosDominioModel(jCampoIndexado,
 							campoIndexado);
+				}
+
+				if (TypeListaValores.SCRIPT.equals(campoIndexado.getTipoListaValores())) {
+					if (campoIndexado.getScriptValoresPosibles() == null) {
+						jCampoIndexado.setScriptValoresPosibles(null);
+					} else {
+						if (campoIndexado.getScriptValoresPosibles().getCodigo() != null) {
+							final JScript scriptValores = jCampoIndexado.getScriptValoresPosibles();
+							scriptValores.setScript(campoIndexado.getScriptValoresPosibles().getContenido());
+						} else {
+							jCampoIndexado.setScriptValoresPosibles(
+									JScript.fromModel(campoIndexado.getScriptValoresPosibles()));
+						}
+					}
 				}
 
 				entityManager.merge(jCampoIndexado);

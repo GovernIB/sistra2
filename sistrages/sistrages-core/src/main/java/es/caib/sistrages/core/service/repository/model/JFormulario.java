@@ -18,8 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 
@@ -129,8 +129,8 @@ public class JFormulario implements IModelApi {
 		this.plantillas = plantillas;
 	}
 
-	public FormularioInterno toModel() {
-		final FormularioInterno formulario = new FormularioInterno();
+	public DisenyoFormulario toModel() {
+		final DisenyoFormulario formulario = new DisenyoFormulario();
 		formulario.setCodigo(codigo);
 		formulario.setPermitirAccionesPersonalizadas(permitirAccionesPersonalizadas);
 		if (scriptPlantilla != null) {
@@ -144,7 +144,7 @@ public class JFormulario implements IModelApi {
 		return formulario;
 	}
 
-	public static JFormulario fromModel(final FormularioInterno model) {
+	public static JFormulario fromModel(final DisenyoFormulario model) {
 		JFormulario jModel = null;
 		if (model != null) {
 			jModel = new JFormulario();
@@ -167,7 +167,7 @@ public class JFormulario implements IModelApi {
 		return jForm;
 	}
 
-	public static JFormulario mergePaginasModel(final JFormulario jFormulario, final FormularioInterno pFormInt) {
+	public static JFormulario mergePaginasModel(final JFormulario jFormulario, final DisenyoFormulario pFormInt) {
 
 		if (jFormulario != null && !jFormulario.getPaginas().isEmpty() && pFormInt != null
 				&& !pFormInt.getPaginas().isEmpty()) {
@@ -231,7 +231,7 @@ public class JFormulario implements IModelApi {
 		return jFormulario;
 	}
 
-	public static JFormulario mergePlantillasModel(final JFormulario jFormulario, final FormularioInterno pFormInt) {
+	public static JFormulario mergePlantillasModel(final JFormulario jFormulario, final DisenyoFormulario pFormInt) {
 
 		if (jFormulario != null && pFormInt != null && !pFormInt.getPlantillas().isEmpty()) {
 			// Borrar paginas no pasados en modelo
@@ -266,6 +266,7 @@ public class JFormulario implements IModelApi {
 					for (final JPlantillaFormulario jPlantilla : jFormulario.getPlantillas()) {
 						if (jPlantilla.getCodigo().equals(plantilla.getCodigo())) {
 							// TODO:completar
+							jPlantilla.setIdentificador(plantilla.getIdentificador());
 							jPlantilla.setDescripcion(plantilla.getDescripcion());
 							jPlantilla.setPorDefecto(plantilla.isPorDefecto());
 

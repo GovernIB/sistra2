@@ -49,7 +49,7 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_ROLADM", nullable = false, length = 100)
 	private String roleAdministrador;
 
-	/** Logo entidad Gestor Trámites */
+	/** Logo entidad GestorExternoFormularios Trámites */
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "ENT_LOGOTT")
 	private JFichero logoAsistenteTramitacion;

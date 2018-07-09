@@ -3,7 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -20,27 +20,27 @@ public interface FormularioInternoDao {
 	 *
 	 * @param pId
 	 *            identificador de formulario
-	 * @return el valor de FormularioInterno
+	 * @return el valor de DisenyoFormulario
 	 */
-	FormularioInterno getFormularioById(Long pId);
+	DisenyoFormulario getFormularioById(Long pId);
 
 	/**
 	 * Obtiene el valor de formulario y sus paginas sin contenido.
 	 *
 	 * @param pId
 	 *            identificador de formulario
-	 * @return el valor de FormularioInterno
+	 * @return el valor de DisenyoFormulario
 	 */
-	FormularioInterno getFormularioPaginasById(Long pId);
+	DisenyoFormulario getFormularioPaginasById(Long pId);
 
 	/**
 	 * Obtiene el valor de formulario y sus paginas con su contenido.
 	 *
 	 * @param pId
 	 *            identificador de formulario
-	 * @return el valor de FormularioInterno
+	 * @return el valor de DisenyoFormulario
 	 */
-	FormularioInterno getFormularioCompletoById(Long pId);
+	DisenyoFormulario getFormularioCompletoById(Long pId);
 
 	/**
 	 * Obtiene el valor de pagina.
@@ -84,7 +84,7 @@ public interface FormularioInternoDao {
 	 * @param pFormInt
 	 *            formulario
 	 */
-	void updateFormulario(FormularioInterno pFormInt);
+	void updateFormulario(DisenyoFormulario pFormInt);
 
 	/**
 	 * Añade componente o linea.

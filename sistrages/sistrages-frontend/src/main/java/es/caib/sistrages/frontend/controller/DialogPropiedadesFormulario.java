@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
@@ -39,7 +39,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	/**
 	 * Datos elemento.
 	 */
-	private FormularioInterno data;
+	private DisenyoFormulario data;
 
 	private PaginaFormulario paginaSeleccionada;
 
@@ -69,7 +69,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		}
 
 		if (id == null) {
-			data = new FormularioInterno();
+			data = new DisenyoFormulario();
 		} else {
 			data = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
 			literal = data.getTextoCabecera() != null
@@ -278,7 +278,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	public void nuevaPlantilla() {
-		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.ALTA, null, true, 430, 170);
+		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.ALTA, null, true, 430, 230);
 	}
 
 	/**
@@ -335,7 +335,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.plantillaSeleccionada));
-		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 170);
+		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 230);
 	}
 
 	/**
@@ -454,7 +454,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 *
 	 * @return el valor de data
 	 */
-	public FormularioInterno getData() {
+	public DisenyoFormulario getData() {
 		return data;
 	}
 
@@ -464,7 +464,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 * @param data
 	 *            el nuevo valor de data
 	 */
-	public void setData(final FormularioInterno data) {
+	public void setData(final DisenyoFormulario data) {
 		this.data = data;
 	}
 

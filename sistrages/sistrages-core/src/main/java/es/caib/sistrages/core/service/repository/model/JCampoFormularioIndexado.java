@@ -47,7 +47,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 	@JoinColumn(name = "CIN_CODIGO")
 	private JCampoFormulario campoFormulario;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "CIN_SCRVAP")
 	private JScript scriptValoresPosibles;
 

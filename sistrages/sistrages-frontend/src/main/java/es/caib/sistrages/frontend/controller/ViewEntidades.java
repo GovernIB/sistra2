@@ -118,7 +118,13 @@ public class ViewEntidades extends ViewControllerBase {
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
+	}
 
+	/**
+	 * Dbl click.
+	 */
+	public void rcDobleClick() {
+		editar();
 	}
 
 	/**

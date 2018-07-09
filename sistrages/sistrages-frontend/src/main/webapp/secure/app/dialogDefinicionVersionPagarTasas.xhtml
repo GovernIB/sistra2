@@ -8,10 +8,6 @@
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormulario" var="TypeFormulario" />
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeInterno" var="TypeInterno" />
-
-
 <h:head>
 	<title><h:outputText value="#{msg['dialogDefinicionVersionPagarTasas.titulo']}"/></title>
 
@@ -36,7 +32,9 @@
 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:outputLabel for="inputIdentificador" value="#{msg['dialogDefinicionVersionPagarTasas.headerIdentificador']}" />
-			<p:inputText   id="inputIdentificador" required="true" value="#{dialogDefinicionVersionPagarTasas.data.identificador}" size="40" />
+			<p:inputText   id="inputIdentificador" required="true" value="#{dialogDefinicionVersionPagarTasas.data.identificador}" size="40"  onblur="this.value = this.value.toUpperCase();">
+          		<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+          	</p:inputText>
 
 			<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionPagarTasas.headerDescripcion']}" />
 			<p:column>

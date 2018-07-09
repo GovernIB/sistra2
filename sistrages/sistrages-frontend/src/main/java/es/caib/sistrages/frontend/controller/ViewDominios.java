@@ -337,6 +337,17 @@ public class ViewDominios extends ViewControllerBase {
 		UtilJSF.openDialog(DialogDominio.class, modoAccesoDlg, params, true, 770, 680);
 	}
 
+	/**
+	 * Dbl click.
+	 */
+	public void rcDobleClick() {
+		if (checkPermisosEntorno()) {
+			editar();
+		} else {
+			consultar();
+		}
+	}
+
 	// ------- GETTERS / SETTERS --------------------------------
 	/**
 	 * @return the filtro

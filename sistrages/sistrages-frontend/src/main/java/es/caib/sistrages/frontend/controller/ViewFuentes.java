@@ -188,6 +188,17 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
+	 * Dbl click.
+	 */
+	public void rcDobleClick() {
+		if (checkPermisosEntorno()) {
+			editar();
+		} else {
+			consultar();
+		}
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada

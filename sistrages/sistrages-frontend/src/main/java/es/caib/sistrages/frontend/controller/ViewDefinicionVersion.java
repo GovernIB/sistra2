@@ -126,11 +126,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Formulario seleccionado. **/
 	private FormularioTramite formularioSeleccionado;
 
+	/** Formulario alta. **/
+	private FormularioTramite formularioAlta;
+
 	/** Documento seleccionado. **/
 	private Documento documentoSeleccionado;
 
+	/** Documento akta. **/
+	private Documento documentoAlta;
+
 	/** Tasa seleccionado. **/
 	private Tasa tasaSeleccionado;
+
+	/** Tasa alta. **/
+	private Tasa tasaAlta;
 
 	/** Dato seleccionado en la lista. */
 	private Dominio dominioSeleccionado;
@@ -264,6 +273,47 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			return false;
 		}
+	}
+
+	public void rcDobleClickTree() {
+
+		if (this.selectedNode != null) {
+			final OpcionArbol opc = (OpcionArbol) this.selectedNode.getData();
+
+			// Editar propiedades, paso, formulario, anexo o tasa
+			if (permiteEditar()) {
+
+				if (opc.getUrl() != null && opc.getUrl()
+						.equals(UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPropiedades"))) {
+					editarPropiedades();
+				}
+
+				if (opc.getTramitePaso() != null) {
+					editarPaso();
+				}
+
+				if (opc.getFormulario() != null) {
+					editarFormularioSeleccionado();
+				}
+
+				if (opc.getDocumento() != null) {
+					editarDocumentoTramite();
+				}
+
+				if (opc.getTasa() != null) {
+					editarTasaTramite();
+				}
+
+			}
+
+			// Editar propiedades
+			if (this.selectedNode != null && permiteEditarControlAcceso() && opc.getUrl() != null && opc.getUrl()
+					.equals(UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionControlAcceso"))) {
+				editarControlAcceso();
+			}
+
+		}
+
 	}
 
 	/**
@@ -404,7 +454,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			switch (respuesta.getModoAcceso()) {
 			case EDICION:
 
-				// Recuperamos el tramite paso y lo actualizamos y damos el mensaje
+				// Recuperamos el tramite paso y lo actualizamos y damos el
+				// mensaje
 				final TramitePaso tramitePasoMod = (TramitePaso) respuesta.getResult();
 				tramiteService.updateTramitePaso(tramitePasoMod);
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK));
@@ -417,7 +468,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 				break;
 			case ALTA:
-				// Se da por hecho que de alta de momento no existe (ya que los pasos no pueden
+				// Se da por hecho que de alta de momento no existe (ya que los
+				// pasos no pueden
 				// ser personalizados)
 				break;
 			case CONSULTA:
@@ -589,6 +641,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
+	 * Edita formulario a través del doble click.
+	 */
+	public void editarFormularioDblClick() {
+		if (permiteEditar()) {
+			this.editarFormulario();
+		}
+	}
+
+	/**
 	 * Abre dialogo para editar dato (desde el arbol).
 	 */
 	public void editarFormularioSeleccionado() {
@@ -711,14 +772,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		String message = null;
 
+		FormularioTramite formulario = null;
 		if (!respuesta.isCanceled()) {
 
-			final FormularioTramite formulario = (FormularioTramite) respuesta.getResult();
+			formulario = (FormularioTramite) respuesta.getResult();
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-
-				tramiteService.addFormularioTramite(formulario, this.getTramitePasoRELLSeleccionado().getCodigo());
+				formularioAlta = null;
+				formularioAlta = tramiteService.addFormularioTramite(formulario,
+						this.getTramitePasoRELLSeleccionado().getCodigo());
 
 				// Mensaje
 				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
@@ -747,6 +810,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			inicializarArbol();
 		}
 
+	}
+
+	/** Evento para editar formulario después de crear un alta. */
+	public void editarFormularioAlta() {
+
+		this.formularioSeleccionado = formularioAlta;
+		this.editarFormulario();
+		formularioAlta = null;
 	}
 
 	// ------- VIEW DE PASO DE DOCUMENTO ------------------------------
@@ -825,6 +896,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			return;
 
 		this.editarDocumentoDialog(this.getDocumentoSeleccionado().getCodigo());
+	}
+
+	/** Edita documento a través del doble click. **/
+	public void editarDocumentoDblClick() {
+		if (permiteEditar()) {
+			this.editarDocumento();
+		}
 	}
 
 	/**
@@ -944,14 +1022,16 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		String message = null;
-
+		Documento documento = null;
 		if (!respuesta.isCanceled()) {
 
-			final Documento documento = (Documento) respuesta.getResult();
+			documento = (Documento) respuesta.getResult();
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-				tramiteService.addDocumentoTramite(documento, this.getTramitePasoANEXSeleccionado().getCodigo());
+				documentoAlta = null;
+				documentoAlta = tramiteService.addDocumentoTramite(documento,
+						this.getTramitePasoANEXSeleccionado().getCodigo());
 
 				// Mensaje
 				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
@@ -983,6 +1063,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	}
 
+	/** Evento para editar documento después de crear un alta. */
+	public void editarDocumentoAlta() {
+
+		this.documentoSeleccionado = documentoAlta;
+		this.editarDocumento();
+		documentoAlta = null;
+	}
+
 	// ------- VIEW DE PASO DE TASA ------------------------------
 
 	/**
@@ -1004,6 +1092,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		this.editarTasaDialog(this.tasaSeleccionado.getCodigo());
 
+	}
+
+	/** Edita tasa a través del doble click. **/
+	public void editarTasaDblClick() {
+		if (permiteEditar()) {
+			this.editarTasa();
+		}
 	}
 
 	/**
@@ -1116,20 +1211,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 
 		String message = null;
-
+		Tasa tasa = null;
 		if (!respuesta.isCanceled()) {
 
-			final Tasa tasa = (Tasa) respuesta.getResult();
+			tasa = (Tasa) respuesta.getResult();
 			switch (respuesta.getModoAcceso()) {
 
 			case ALTA:
-				tramiteService.addTasaTramite(tasa, this.getTramitePasoTSSeleccionado().getCodigo());
+				tasaAlta = null;
+				tasaAlta = tramiteService.addTasaTramite(tasa, this.getTramitePasoTSSeleccionado().getCodigo());
 
 				// Mensaje
 				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 
 				break;
-
 			case EDICION:
 
 				tramiteService.updateTasaTramite(tasa);
@@ -1152,6 +1247,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			recuperarDatos();
 			inicializarArbol();
 		}
+
+	}
+
+	/** Evento para editar alta después de crear un alta. */
+	public void editarTasaAlta() {
+
+		this.tasaSeleccionado = tasaAlta;
+		this.editarTasa();
+		tasaAlta = null;
 	}
 
 	// ------- FUNCIONES PRIVADAS ------------------------------

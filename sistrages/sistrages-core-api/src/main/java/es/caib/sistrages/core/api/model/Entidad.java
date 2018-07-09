@@ -27,7 +27,7 @@ public class Entidad extends ModelApi {
 	/** Role asociado al administrador de la entidad . */
 	private String rol;
 
-	/** Logo entidad Gestor Trámites. */
+	/** Logo entidad GestorExternoFormularios Trámites. */
 	private Fichero logoGestor;
 
 	/** Logo entidad Asistente Tramitación. */

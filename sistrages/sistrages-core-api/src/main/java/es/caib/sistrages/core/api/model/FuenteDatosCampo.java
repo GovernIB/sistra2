@@ -36,7 +36,7 @@ public class FuenteDatosCampo extends ModelApi {
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
-	
+
 	/**
 	 * @return the codigo
 	 */

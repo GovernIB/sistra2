@@ -94,9 +94,13 @@
 
 			<h:outputScript >
 		      function triggerDblClick() {
-		        document.getElementById("form:btnEditar").click();
+		       	$('#form\\:btnEditarHidden').click();
 		      }
 		    </h:outputScript>
+
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewDominios.rcDobleClick}" process="@this" update="growl" style="display: none">
+		    	<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogo}" update="growl dataTable"/>
+		    </p:commandButton>
 
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">

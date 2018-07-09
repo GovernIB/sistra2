@@ -6,7 +6,7 @@ package es.caib.sistrages.core.api.model.types;
  * @author Indra
  *
  */
-public enum TypeInterno {
+public enum TypeFormularioGestor {
 	/** INTERNO. **/
 	INTERNO("I"),
 	/** EXTERNO. **/
@@ -14,7 +14,7 @@ public enum TypeInterno {
 
 	private String valor;
 
-	private TypeInterno(final String iValor) {
+	private TypeFormularioGestor(final String iValor) {
 		this.valor = iValor;
 	}
 
@@ -24,10 +24,10 @@ public enum TypeInterno {
 	 * @param tipo
 	 * @return
 	 */
-	public static TypeInterno fromString(final String text) {
-		TypeInterno respuesta = null;
+	public static TypeFormularioGestor fromString(final String text) {
+		TypeFormularioGestor respuesta = null;
 		if (text != null) {
-			for (final TypeInterno b : TypeInterno.values()) {
+			for (final TypeFormularioGestor b : TypeFormularioGestor.values()) {
 				if (text.equalsIgnoreCase(b.toString())) {
 					respuesta = b;
 					break;

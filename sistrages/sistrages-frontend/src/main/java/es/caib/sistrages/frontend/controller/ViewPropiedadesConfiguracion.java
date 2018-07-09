@@ -163,6 +163,13 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	}
 
 	/**
+	 * Dbl click.
+	 */
+	public void rcDobleClick() {
+		editar();
+	}
+
+	/**
 	 * @return the filtro
 	 */
 	public String getFiltro() {

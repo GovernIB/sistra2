@@ -45,7 +45,7 @@
        	<h:panelGrid columns="2"  rowClasses=", ui-datatable-odd"  columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="0">
 
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexo.identificador']}" />
-          	<p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionAnexo.data.identificador}">
+          	<p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionAnexo.data.identificador}" onblur="this.value = this.value.toUpperCase();">
           		<p:keyFilter regEx="/[a-z0-9_-]/i"/>
           	</p:inputText>
 

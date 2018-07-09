@@ -27,13 +27,16 @@
 
 					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">
 						<h:form id="formArbol">
-							<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w80">
+							<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w80" onNodeClick="javascript:triggerDblClickTree();">
 								<p:treeNode>
 									<h:outputText value="#{node}" />
 								</p:treeNode>
 
-								<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}" update=":workDefinicionVersion :breadDefinicionVersion"/>
+								<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}" update=":workDefinicionVersion :breadDefinicionVersion" delay="500"/>
 							</p:tree>
+
+							<p:remoteCommand name="rcDobleClickTree" actionListener="#{viewDefinicionVersion.rcDobleClickTree}" />
+
 						</h:form>
 					</p:layoutUnit>
 
@@ -46,6 +49,27 @@
 				</p:layout>
 
 		</p:outputPanel>
+
+		<h:outputScript >
+
+		  var timestampDblClick = 0;
+
+	      function triggerDblClickTree()
+	       {
+	       		// console.log('triggerDblClickTree');
+
+	       		var ahora = Date.now();
+
+	       		if (ahora - timestampDblClick &lt; 500) {
+	       			// console.log('dblClick');
+	       			rcDobleClickTree();
+	       		}
+
+	       		timestampDblClick = ahora;
+	      }
+	    </h:outputScript>
+
 	</ui:define>
+
 
 </ui:composition>

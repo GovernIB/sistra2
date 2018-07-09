@@ -135,6 +135,17 @@ public class ViewPlugins extends ViewControllerBase {
 	}
 
 	/**
+	 * Dbl click.
+	 */
+	public void rcDobleClick() {
+		if (getPermiteEditar()) {
+			editar();
+		} else {
+			consultar();
+		}
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada
@@ -218,7 +229,7 @@ public class ViewPlugins extends ViewControllerBase {
 
 	/**
 	 * Abre dialogo.
-	 * 
+	 *
 	 * @param modoAccesoDlg
 	 *            Modo acceso
 	 */

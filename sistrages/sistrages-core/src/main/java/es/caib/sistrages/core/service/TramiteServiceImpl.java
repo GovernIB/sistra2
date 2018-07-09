@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -309,10 +309,10 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
+	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
 		// Primero creamos el formulario interno y luego el formulario tramite.
 		final Long idFormularioInterno = formularioInternoDao.addFormulario(formularioTramite);
-		tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso, idFormularioInterno);
+		return tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso, idFormularioInterno);
 	}
 
 	@Override
@@ -323,8 +323,8 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
-		tramitePasoDao.addDocumentoTramite(documento, idTramitePaso);
+	public Documento addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
+		return tramitePasoDao.addDocumentoTramite(documento, idTramitePaso);
 	}
 
 	@Override
@@ -353,8 +353,8 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public void addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
-		tramitePasoDao.addTasaTramite(tasa, idTramitePaso);
+	public Tasa addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
+		return tramitePasoDao.addTasaTramite(tasa, idTramitePaso);
 	}
 
 	@Override
@@ -449,7 +449,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public List<FormularioInterno> getFormulariosTramiteVersion(final Long idTramiteVersion) {
+	public List<DisenyoFormulario> getFormulariosTramiteVersion(final Long idTramiteVersion) {
 		return tramitePasoDao.getFormulariosTramiteVersion(idTramiteVersion);
 	}
 

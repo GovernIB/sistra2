@@ -2,7 +2,7 @@ package es.caib.sistrages.core.api.model;
 
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypeInterno;
+import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
 
 /**
  *
@@ -75,13 +75,13 @@ public class FormularioTramite extends ModelApi {
 	private Script scriptRetorno;
 
 	/** Indica tipo idFormularioInterno: interno (I) / externo (E) */
-	private TypeInterno tipoFormulario;
+	private TypeFormularioGestor tipoFormulario;
 
 	/** Formulario gestor interno (si es interno) */
-	private Gestor formularioGestorInterno;
+	private GestorExternoFormularios formularioGestorInterno;
 
 	/** Formulario gestor externo (si es externo) */
-	private Gestor formularioGestorExterno;
+	private GestorExternoFormularios formularioGestorExterno;
 
 	/**
 	 * Crea una nueva instancia de Dominio.
@@ -336,7 +336,7 @@ public class FormularioTramite extends ModelApi {
 	/**
 	 * @return the tipoFormulario
 	 */
-	public TypeInterno getTipoFormulario() {
+	public TypeFormularioGestor getTipoFormulario() {
 		return tipoFormulario;
 	}
 
@@ -344,14 +344,14 @@ public class FormularioTramite extends ModelApi {
 	 * @param tipoFormulario
 	 *            the tipoFormulario to set
 	 */
-	public void setTipoFormulario(final TypeInterno tipoFormulario) {
+	public void setTipoFormulario(final TypeFormularioGestor tipoFormulario) {
 		this.tipoFormulario = tipoFormulario;
 	}
 
 	/**
 	 * @return the formularioGestorInterno
 	 */
-	public Gestor getFormularioGestorInterno() {
+	public GestorExternoFormularios getFormularioGestorInterno() {
 		return formularioGestorInterno;
 	}
 
@@ -359,14 +359,14 @@ public class FormularioTramite extends ModelApi {
 	 * @param formularioGestorInterno
 	 *            the formularioGestorInterno to set
 	 */
-	public void setFormularioGestorInterno(final Gestor formularioGestorInterno) {
+	public void setFormularioGestorInterno(final GestorExternoFormularios formularioGestorInterno) {
 		this.formularioGestorInterno = formularioGestorInterno;
 	}
 
 	/**
 	 * @return the formularioGestorExterno
 	 */
-	public Gestor getFormularioGestorExterno() {
+	public GestorExternoFormularios getFormularioGestorExterno() {
 		return formularioGestorExterno;
 	}
 
@@ -374,7 +374,7 @@ public class FormularioTramite extends ModelApi {
 	 * @param formularioGestorExterno
 	 *            the formularioGestorExterno to set
 	 */
-	public void setFormularioGestorExterno(final Gestor formularioGestorExterno) {
+	public void setFormularioGestorExterno(final GestorExternoFormularios formularioGestorExterno) {
 		this.formularioGestorExterno = formularioGestorExterno;
 	}
 

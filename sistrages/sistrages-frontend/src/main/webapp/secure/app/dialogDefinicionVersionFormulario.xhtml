@@ -39,9 +39,9 @@
     <h:panelGrid rowClasses=", ui-datatable-odd" columns="2" columnClasses="w10 padding-left-18, w90 grid-left" styleClass="w100 h100" cellpadding = "5" cellspacing = "0">
 
             <p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionFormulario.identificador']}" />
-            <p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionFormulario.data.identificador}">
-            	<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-            </p:inputText>
+            <p:inputText id="identificador" required="true" styleClass="w35" value="#{dialogDefinicionVersionFormulario.data.identificador}" onblur="this.value = this.value.toUpperCase();">
+	          		<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+	          	</p:inputText>
 
             <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">

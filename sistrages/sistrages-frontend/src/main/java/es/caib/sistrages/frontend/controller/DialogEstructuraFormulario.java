@@ -8,7 +8,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
@@ -34,7 +34,7 @@ public class DialogEstructuraFormulario extends DialogControllerBase {
 	private String id;
 
 	/** Formulario. **/
-	private FormularioInterno formulario;
+	private DisenyoFormulario formulario;
 
 	/** Url ventana propiedades **/
 	private String panelPropiedadesUrl;
@@ -160,11 +160,11 @@ public class DialogEstructuraFormulario extends DialogControllerBase {
 		this.id = id;
 	}
 
-	public FormularioInterno getFormulario() {
+	public DisenyoFormulario getFormulario() {
 		return formulario;
 	}
 
-	public void setFormulario(final FormularioInterno formulario) {
+	public void setFormulario(final DisenyoFormulario formulario) {
 		this.formulario = formulario;
 	}
 

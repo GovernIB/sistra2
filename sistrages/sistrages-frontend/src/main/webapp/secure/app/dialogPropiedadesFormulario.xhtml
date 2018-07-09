@@ -93,7 +93,7 @@
 						<p:dataTable  id="dataTablePlantillas" var="td" value="#{dialogPropiedadesFormulario.data.plantillas}"
 										  rows="0" emptyMessage="#{msg['error.emptyRows']}" sortBy="#{dialogPropiedadesFormulario.getDescripcionFormateador(td.idFormateadorFormulario)}"
 										  scrollable="true" scrollHeight="98%"
-				                          paginator="false" style="height:132px;width:520px"
+				                          paginator="false" style="height:132px;width:620px"
 				                          selectionMode="single" selection="#{dialogPropiedadesFormulario.plantillaSeleccionada}" rowKey="#{td.hashCode}">
 
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -101,10 +101,13 @@
 							<p:ajax event="rowUnselect" update="form:filesPlantilla"/>
 
 							<!-- Columnas -->
-							<p:column headerText="#{msg['dialogPropiedadesFormulario.formateador']}" styleClass="ui-panelgrid-cell w30" >
+							<p:column headerText="#{msg['dialogPropiedadesFormulario.formateador']}" styleClass="ui-panelgrid-cell w20" >
 						        <h:outputText value="#{dialogPropiedadesFormulario.getDescripcionFormateador(td.idFormateadorFormulario)}" />
 						    </p:column>
-						    <p:column  headerText="#{msg['dialogPropiedadesFormulario.descripcion']}" styleClass="ui-panelgrid-cell w55">
+							<p:column headerText="#{msg['dialogPropiedadesFormulario.identificador']}" styleClass="ui-panelgrid-cell w20" >
+						        <h:outputText value="#{td.identificador}" />
+						    </p:column>
+						    <p:column  headerText="#{msg['dialogPropiedadesFormulario.descripcion']}" styleClass="ui-panelgrid-cell w45">
 						        <h:outputText value="#{td.descripcion}" />
 						    </p:column>
 		   					<p:column headerText="#{msg['dialogPropiedadesFormulario.porDefecto']}" styleClass="ui-panelgrid-cell w15 grid-center">

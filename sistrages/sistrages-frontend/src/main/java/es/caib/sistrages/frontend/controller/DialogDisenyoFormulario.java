@@ -27,7 +27,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.Dominio;
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
@@ -84,7 +84,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private String idTramiteVersion;
 
 	/** Formulario. **/
-	private FormularioInterno formulario;
+	private DisenyoFormulario formulario;
 
 	private int paginaActual;
 
@@ -502,8 +502,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	}
 
 	public boolean isLVDominio() {
-		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-		return TypeListaValores.DOMINIO.equals(campo.getTipoListaValores());
+		boolean resultado = false;
+
+		if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+			final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+			resultado = TypeListaValores.DOMINIO.equals(campo.getTipoListaValores());
+		}
+
+		return resultado;
 	}
 
 	public boolean isLVScript() {
@@ -667,7 +673,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
-			final FormularioInterno formularioNuevo = (FormularioInterno) respuesta.getResult();
+			final DisenyoFormulario formularioNuevo = (DisenyoFormulario) respuesta.getResult();
 			formulario.setMostrarCabecera(formularioNuevo.isMostrarCabecera());
 			formulario.setTextoCabecera(formularioNuevo.getTextoCabecera());
 			paginaActual = 1;
@@ -1244,6 +1250,29 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		}
 	}
 
+	/*
+	 * Retorno dialogo del script de valores posibles.
+	 *
+	 * @param event respuesta dialogo
+	 */
+	public void returnDialogoScriptValores(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+					((ComponenteFormularioCampoSelector) objetoFormularioEdit)
+							.setScriptValoresPosibles((Script) respuesta.getResult());
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	public void abrirDialogoEstructura() {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
@@ -1292,11 +1321,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		this.urlIframe = urlIframe;
 	}
 
-	public FormularioInterno getFormulario() {
+	public DisenyoFormulario getFormulario() {
 		return formulario;
 	}
 
-	public void setFormulario(final FormularioInterno formulario) {
+	public void setFormulario(final DisenyoFormulario formulario) {
 		this.formulario = formulario;
 	}
 

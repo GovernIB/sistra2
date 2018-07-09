@@ -2,13 +2,13 @@ package es.caib.sistrages.core.api.model;
 
 /**
  *
- * Gestor de formularios.
+ * GestorExternoFormularios de formularios.
  *
  * @author Indra
  *
  */
 @SuppressWarnings("serial")
-public class Gestor extends ModelApi {
+public class GestorExternoFormularios extends ModelApi {
 
 	/** Codigo interno. */
 	private Long codigo;

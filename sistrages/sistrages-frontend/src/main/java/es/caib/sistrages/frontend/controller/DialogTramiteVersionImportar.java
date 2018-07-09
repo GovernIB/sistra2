@@ -29,10 +29,11 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
@@ -42,7 +43,6 @@ import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
-import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.FilaImportar;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -51,7 +51,6 @@ import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -110,7 +109,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	Map<Long, Dominio> dominios = new HashMap<>();
 
 	/** Formularios internos. **/
-	Map<Long, FormularioInterno> formularios = new HashMap<>();
+	Map<Long, DisenyoFormulario> formularios = new HashMap<>();
 
 	/** Ficheros. **/
 	Map<Long, Fichero> ficheros = new HashMap<>();
@@ -360,42 +359,98 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 
 			}
 
-			switch (dominio.getTipo()) {
-			case CONSULTA_BD:
-			case CONSULTA_REMOTA:
-			case LISTA_FIJA:
-				if (dominioActual == null) {
+			// Si no existe, directamente hay que crearlo.
+			if (dominioActual == null) {
 
-					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-							TypeImportarResultado.WARNING));
-					this.mostrarBotonDominio.add(true);
-				} else {
+				filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
+						TypeImportarResultado.WARNING));
+				this.mostrarBotonDominio.add(false);
 
-					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
-							TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
-					this.mostrarBotonDominio.add(true);
+			} else if (dominio.getTipo() != dominioActual.getTipo()) { // Si son distintos tipos.
+
+				filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.WARNING));
+				this.mostrarBotonDominio.add(true);
+
+			} else { // Son el mismo tipo
+
+				switch (dominio.getTipo()) {
+				case CONSULTA_BD:
+
+					if (mismosValores(dominioActual.getJndi(), dominio.getJndi())
+							&& mismosValores(dominioActual.getSql(), dominio.getSql())) {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+								TypeImportarResultado.INFO));
+						this.mostrarBotonDominio.add(false);
+
+					} else {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
+								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+						this.mostrarBotonDominio.add(true);
+
+					}
+					break;
+
+				case CONSULTA_REMOTA:
+
+					if (mismosValores(dominioActual.getUrl(), dominio.getUrl())) {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+								TypeImportarResultado.INFO));
+						this.mostrarBotonDominio.add(false);
+
+					} else {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
+								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+						this.mostrarBotonDominio.add(true);
+
+					}
+					break;
+
+				case LISTA_FIJA:
+
+					if (mismosValores(dominioActual.getListaFija(), dominio.getListaFija())) {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+								TypeImportarResultado.INFO));
+						this.mostrarBotonDominio.add(false);
+
+					} else {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
+								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+						this.mostrarBotonDominio.add(true);
+
+					}
+					break;
+
+				case FUENTE_DATOS:
+
+					if (dominioActual.getIdFuenteDatos().compareTo(dominio.getIdFuenteDatos()) == 0
+							&& mismosValores(dominioActual.getSql(), dominio.getSql())) {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+								TypeImportarResultado.INFO));
+						this.mostrarBotonDominio.add(false);
+
+					} else {
+
+						filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
+								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+						this.mostrarBotonDominio.add(true);
+
+					}
+					break;
 				}
-				break;
-			case FUENTE_DATOS:
-
-				if (dominioActual == null) {
-
-					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-							TypeImportarResultado.WARNING));
-					this.mostrarBotonDominio.add(true);
-				} else {
-
-					filasDominios.add(new FilaImportar(dominio, TypeImportarAccion.REEMPLAZAR,
-							TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
-					this.mostrarBotonDominio.add(true);
-				}
-				break;
 
 			}
 
 		}
 
-		// Paso 3.4. Dominio.
+		// Paso 3.5. Formateadores.
 		for (final Map.Entry<Long, FormateadorFormulario> entry : formateadores.entrySet()) {
 			final FormateadorFormulario formateador = entry.getValue();
 			final FormateadorFormulario formateadorActual = formateadorFormularioService
@@ -463,16 +518,11 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 
 		posicionDominio = posicion - 1;
 		final FilaImportar fila = this.filasDominios.get(posicionDominio);
-		final Dominio dominio = fila.getDominio();
-
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-		mochilaDatos.put(Constantes.CLAVE_MOCHILA_DOMINIO, UtilJSON.toJSON(dominio));
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
 
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), this.tramite.getCodigo().toString());
-		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
-		UtilJSF.openDialog(DialogTramiteVersionImportarDominio.class, TypeModoAcceso.EDICION, params, true, 770, 300);
+		UtilJSF.openDialog(DialogTramiteVersionImportarDominio.class, TypeModoAcceso.EDICION, null, true, 770, 300);
 
 	}
 
@@ -568,7 +618,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 
 		} else if (nombreFichero.startsWith("formularios_")) {
 			final Long codigo = obtenerId(nombreFichero);
-			final FormularioInterno formularioInterno = (FormularioInterno) UtilCoreApi.deserialize(contenidoFile);
+			final DisenyoFormulario formularioInterno = (DisenyoFormulario) UtilCoreApi.deserialize(contenidoFile);
 			formularios.put(codigo, formularioInterno);
 
 		} else if (nombreFichero.startsWith("ficheros_")) {
@@ -688,6 +738,91 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Comprueba si son el mismo valor.
+	 *
+	 * @param texto1
+	 * @param texto2
+	 * @return
+	 */
+	private boolean mismosValores(final String texto1, final String texto2) {
+		boolean iguales;
+		if (texto1 == null) {
+			if (texto2 == null) {
+				iguales = true;
+			} else {
+				iguales = false;
+			}
+		} else {
+			if (texto2 == null) {
+				iguales = false;
+			} else {
+				iguales = texto1.equals(texto2);
+			}
+		}
+		return iguales;
+	}
+
+	/**
+	 * Comprueba si son el mismo valor.
+	 *
+	 * @param valor1
+	 * @param valor2
+	 * @return
+	 */
+	private boolean mismosValores(final Integer valor1, final Integer valor2) {
+		boolean iguales;
+		if (valor1 == null) {
+			if (valor2 == null) {
+				iguales = true;
+			} else {
+				iguales = false;
+			}
+		} else {
+			if (valor2 == null) {
+				iguales = false;
+			} else {
+				iguales = valor1.compareTo(valor2) == 0;
+			}
+		}
+		return iguales;
+	}
+
+	/**
+	 * Comprueba si son el mismo valor.
+	 *
+	 * @param propiedades1
+	 * @param propiedades2
+	 * @return
+	 */
+	private boolean mismosValores(final List<Propiedad> propiedades1, final List<Propiedad> propiedades2) {
+		boolean iguales;
+		if (propiedades1 == null) {
+			if (propiedades2 == null) {
+				iguales = true;
+			} else {
+				iguales = false;
+			}
+		} else {
+			if (propiedades2 == null) {
+				iguales = false;
+			} else {
+				iguales = true;
+				for (final Propiedad propiedad1 : propiedades1) {
+					for (final Propiedad propiedad2 : propiedades2) {
+						if (!mismosValores(propiedad1.getCodigo(), propiedad2.getCodigo())
+								|| !mismosValores(propiedad1.getValor(), propiedad2.getValor())
+								|| !mismosValores(propiedad1.getOrden(), propiedad2.getOrden())) {
+							iguales = false;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return iguales;
 	}
 
 	/**
@@ -843,7 +978,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	/**
 	 * @return the formularios
 	 */
-	public Map<Long, FormularioInterno> getFormularios() {
+	public Map<Long, DisenyoFormulario> getFormularios() {
 		return formularios;
 	}
 
@@ -851,7 +986,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 * @param formularios
 	 *            the formularios to set
 	 */
-	public void setFormularios(final Map<Long, FormularioInterno> formularios) {
+	public void setFormularios(final Map<Long, DisenyoFormulario> formularios) {
 		this.formularios = formularios;
 	}
 

@@ -3,11 +3,11 @@ package es.caib.sistrages.core.api.service;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioInterno;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -241,8 +241,9 @@ public interface TramiteService {
 	 *
 	 * @param formularioTramite
 	 * @param idTramitePaso
+	 * @return Id del formulario
 	 */
-	public void addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
+	public FormularioTramite addFormularioTramite(FormularioTramite formularioTramite, Long idTramitePaso);
 
 	/**
 	 * Actualiza formulario.
@@ -264,8 +265,9 @@ public interface TramiteService {
 	 *
 	 * @param documento
 	 * @param idTramitePaso
+	 * @return Id del documento
 	 */
-	public void addDocumentoTramite(Documento documento, Long idTramitePaso);
+	public Documento addDocumentoTramite(Documento documento, Long idTramitePaso);
 
 	/**
 	 * Actualiza un documento.
@@ -295,8 +297,9 @@ public interface TramiteService {
 	 *
 	 * @param tasa
 	 * @param idTramitePaso
+	 * @return Id de la tasa
 	 */
-	public void addTasaTramite(Tasa tasa, Long idTramitePaso);
+	public Tasa addTasaTramite(Tasa tasa, Long idTramitePaso);
 
 	/**
 	 * Actualiza una tasa.
@@ -420,7 +423,7 @@ public interface TramiteService {
 	 * @param idTramiteVersion
 	 * @return
 	 */
-	public List<FormularioInterno> getFormulariosTramiteVersion(Long idTramiteVersion);
+	public List<DisenyoFormulario> getFormulariosTramiteVersion(Long idTramiteVersion);
 
 	/**
 	 * Devuelve una lista de ficheros de un tramite version.

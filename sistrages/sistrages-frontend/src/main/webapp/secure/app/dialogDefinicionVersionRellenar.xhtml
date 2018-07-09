@@ -9,7 +9,7 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormulario" var="TypeFormulario" />
-<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeInterno" var="TypeInterno" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioGestor" var="TypeFormularioGestor" />
 
 
 <h:head>
@@ -36,9 +36,9 @@
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="codigo" value="#{msg['dialogDefinicionVersionRellenar.headerIdentificador']}" />
-					<p:inputText  id="codigo"  value="#{dialogDefinicionVersionRellenar.data.identificador}" size="40" required="true">
-						<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-					</p:inputText>
+					<p:inputText  id="codigo"  value="#{dialogDefinicionVersionRellenar.data.identificador}" size="40" required="true" onblur="this.value = this.value.toUpperCase();">
+				   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				   	</p:inputText>
 
 					<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionRellenar.headerDescripcion']}" />
 					<p:column>
@@ -50,7 +50,7 @@
 
 					<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionRellenar.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogDefinicionVersionRellenar.data.tipoFormulario}" style="width:200px" required="true">
-					     <f:selectItems value="#{TypeInterno.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeInterno.' += tipo]}" />
+					     <f:selectItems value="#{TypeFormularioGestor.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeInterno.' += tipo]}" />
 					</p:selectOneMenu >
 
 

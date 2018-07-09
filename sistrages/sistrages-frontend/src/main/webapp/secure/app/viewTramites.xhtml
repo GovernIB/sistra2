@@ -52,12 +52,15 @@
 			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarArea}">
 			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl arbolArea"/>
 			        		</p:commandButton>
+					        <p:commandButton id="btnNuevoTramite"  value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite}">
+				     		     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl :form:dataTableTramites"/>
+			   		        </p:commandButton>
 			        		<p:menuButton value="Más..">
 	        					<p:menuitem id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="growl arbolArea" rendered="#{viewTramites.permiteAltaArea}">
 	        						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 	        					</p:menuitem>
-					        	<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl "/>
-					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuente']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl "/>
+					        	<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl"/>
+					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuente']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl"/>
 	    					</p:menuButton>
 					</f:facet>
 				</p:toolbar>
@@ -92,12 +95,12 @@
 							<h:outputText value=" - #{viewTramites.areaSeleccionada.data.identificador}" rendered="#{not empty viewTramites.areaSeleccionada}"  />
 					</f:facet>
 			        <f:facet name="right">
-							<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite}">
+			        		<p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarTramite and not viewTramites.permiteAltaTramite}" />
+			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editarTramite']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarTramite or viewTramites.permiteAltaTramite}">
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl :form:dataTableTramites"/>
 			        		</p:commandButton>
-			        		<p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarTramite and not viewTramites.permiteAltaTramite}" />
-			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarTramite or viewTramites.permiteAltaTramite}">
-			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl :form:dataTableTramites"/>
+			        		<p:commandButton value="#{msg['botones.nuevaVersion']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaVersion}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite and viewTramites.tramiteSeleccionada ne null}">
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl @form:dataTableTramites" />
 			        		</p:commandButton>
 			        		<p:commandButton id="btnVersionesTramite" value="#{msg['viewTramites.botones.versiones']}" icon="fa fa-level-down" actionListener="#{viewTramites.versionesTramite}" process="@this" update="growl"/>
 			        		<p:menuButton value="Más..">
@@ -111,33 +114,71 @@
 					</f:facet>
 				</p:toolbar>
 
-				<p:dataTable  id="dataTableTramites" var="td" value="#{viewTramites.tramites}"
-												 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+				<p:dataTable  id="dataTableTramites" var="td" value="#{viewTramites.listaTramiteVersiones}"
+												 rows="10" emptyMessage="#{msg['error.emptyRows']}" rowExpandMode="single"
 												 scrollable="true" scrollHeight="100%"
 						                         paginator="true" paginatorPosition="bottom"
 						                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						                         rowsPerPageTemplate="5,10,15,30"
-									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.codigo}">
+									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.tramite.codigo}">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
-						<p:ajax event="rowSelect" delay="500" />
-             			<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDoubleClick();"
-		                        update=":form:dataTableTramites"
-		                        />
+						<p:ajax event="rowSelect" delay="500" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites"/>
+<!--              			<p:ajax event="rowDblselect" -->
+<!-- 		                  		oncomplete="triggerDoubleClick();" -->
+<!-- 		                        update=":form:dataTableTramites" -->
+<!-- 		                        /> -->
+
+				       <p:column style="width:16px">
+				            <p:rowToggler />
+				        </p:column>
 
 						<!-- Columnas -->
 					    <p:column headerText="#{msg['viewTramites.headerCodigo']}">
-					        <h:outputText value="#{td.identificador}" />
+					        <h:outputText value="#{td.tramite.identificador}" />
 					    </p:column>
 
 					    <p:column headerText="#{msg['viewTramites.headerDescripcion']}">
-					        <h:outputText value="#{td.descripcion}" />
+					        <h:outputText value="#{td.tramite.descripcion}" />
 					    </p:column>
 
 		 				<p:column headerText="#{msg['viewTramites.headerActivo']}">
-					        <p:selectBooleanCheckbox value="#{td.activo}" disabled="true" />
+					        <p:selectBooleanCheckbox value="#{td.tramite.activo}" disabled="true" />
 					    </p:column>
+
+						<p:rowExpansion>
+							<!-- Data table -->
+							<p:dataTable  id="dataTable" var="tdVersiones" value="#{td.listaVersiones}"
+										  rows="10" emptyMessage="#{msg['error.emptyRows']}"
+										  styleClass="w95"
+							        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}">
+
+								<!-- Necesario para actualizar en controlador la fila seleccionada -->
+								<p:ajax event="rowSelect" delay="500" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites"/>
+
+								<!-- Columnas -->
+							    <p:column headerText="#{msg['viewTramitesVersion.headerVersion']}">
+							        <h:outputText value="#{tdVersiones.numeroVersion}" />
+							    </p:column>
+
+							    <p:column headerText="#{msg['viewTramitesVersion.headerFlujo']}">
+							     	<h:outputText value="#{msg['typeFlujo.'.concat(tdVersiones.tipoFlujo)]}" />
+							    </p:column>
+
+				 				<p:column headerText="#{msg['viewTramitesVersion.headerActiva']}">
+							        <p:selectBooleanCheckbox value="#{tdVersiones.activa}" disabled="true" />
+							    </p:column>
+
+								<p:column headerText="#{msg['viewTramitesVersion.headerRelease']}">
+							        <h:outputText value="#{tdVersiones.release}" />
+							    </p:column>
+
+								<p:column headerText="#{msg['viewTramitesVersion.headerBloqueado']}">
+							        <h:outputText value="#{tdVersiones.datosUsuarioBloqueo}" />
+							    </p:column>
+
+							</p:dataTable>
+						</p:rowExpansion>
 
 					</p:dataTable>
 				</div>
