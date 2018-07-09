@@ -28,6 +28,9 @@ public abstract class RPasoTramitacion {
     /** Indica si es paso final. */
     private boolean pasoFinal;
 
+    /** Script navegacion. */
+    private RScript scriptNavegacion;
+
     /**
      * Método de acceso a id.
      *
@@ -68,7 +71,7 @@ public abstract class RPasoTramitacion {
 
     /**
      * Método de acceso a pasoFinal.
-     * 
+     *
      * @return pasoFinal
      */
     public boolean isPasoFinal() {
@@ -77,12 +80,31 @@ public abstract class RPasoTramitacion {
 
     /**
      * Método para establecer pasoFinal.
-     * 
+     *
      * @param pasoFinal
      *            pasoFinal a establecer
      */
     public void setPasoFinal(boolean pasoFinal) {
         this.pasoFinal = pasoFinal;
+    }
+
+    /**
+     * Método de acceso a scriptNavegacion.
+     * 
+     * @return scriptNavegacion
+     */
+    public RScript getScriptNavegacion() {
+        return scriptNavegacion;
+    }
+
+    /**
+     * Método para establecer scriptNavegacion.
+     * 
+     * @param scriptNavegacion
+     *            scriptNavegacion a establecer
+     */
+    public void setScriptNavegacion(RScript scriptNavegacion) {
+        this.scriptNavegacion = scriptNavegacion;
     }
 
 }

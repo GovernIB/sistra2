@@ -4,6 +4,9 @@ import java.util.List;
 
 public class RVersionTramite {
 
+    /** Timestamp recuperacion. */
+    private String timestamp;
+
     /** Identificador tramite. */
     private String identificador;
 
@@ -12,6 +15,12 @@ public class RVersionTramite {
 
     /** Id entidad. */
     private String idEntidad;
+
+    /** Idioma. */
+    private String idioma;
+
+    /** Tipo flujo: Normalizado (N) / Personalizado (P). */
+    private String tipoFlujo;
 
     /** Lista dominios utilizados. */
     private List<RDominio> dominios;
@@ -141,7 +150,7 @@ public class RVersionTramite {
 
     /**
      * Método de acceso a idEntidad.
-     * 
+     *
      * @return idEntidad
      */
     public String getIdEntidad() {
@@ -150,12 +159,69 @@ public class RVersionTramite {
 
     /**
      * Método para establecer idEntidad.
-     * 
+     *
      * @param idEntidad
      *            idEntidad a establecer
      */
     public void setIdEntidad(String idEntidad) {
         this.idEntidad = idEntidad;
+    }
+
+    /**
+     * Método de acceso a idioma.
+     *
+     * @return idioma
+     */
+    public String getIdioma() {
+        return idioma;
+    }
+
+    /**
+     * Método para establecer idioma.
+     *
+     * @param idioma
+     *            idioma a establecer
+     */
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
+    }
+
+    /**
+     * Método de acceso a tipoFlujo.
+     *
+     * @return tipoFlujo
+     */
+    public String getTipoFlujo() {
+        return tipoFlujo;
+    }
+
+    /**
+     * Método para establecer tipoFlujo.
+     *
+     * @param tipoFlujo
+     *            tipoFlujo a establecer
+     */
+    public void setTipoFlujo(String tipoFlujo) {
+        this.tipoFlujo = tipoFlujo;
+    }
+
+    /**
+     * Método de acceso a timestamp.
+     * 
+     * @return timestamp
+     */
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * Método para establecer timestamp.
+     * 
+     * @param timestamp
+     *            timestamp a establecer
+     */
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

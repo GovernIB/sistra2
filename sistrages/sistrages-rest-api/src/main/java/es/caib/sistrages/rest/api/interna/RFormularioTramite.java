@@ -17,8 +17,8 @@ public class RFormularioTramite {
     /** Obligatoriedad: Si (S) / No (N) / Depende (D). */
     private String obligatoriedad;
 
-    /** Script dependencia. */
-    private RScript scriptDependencia;
+    /** Script obligatoriedad. */
+    private RScript scriptObligatoriedad;
 
     /**
      * Indica si hay que firmar electrónicamente (para presentación
@@ -111,22 +111,22 @@ public class RFormularioTramite {
     }
 
     /**
-     * Método de acceso a scriptDependencia.
+     * Método de acceso a scriptObligatoriedad.
      *
      * @return scriptDependencia
      */
-    public RScript getScriptDependencia() {
-        return scriptDependencia;
+    public RScript getScriptObligatoriedad() {
+        return scriptObligatoriedad;
     }
 
     /**
      * Método para establecer scriptDependencia.
      *
-     * @param scriptDependencia
+     * @param scriptObligatoriedad
      *            scriptDependencia a establecer
      */
-    public void setScriptDependencia(RScript scriptDependencia) {
-        this.scriptDependencia = scriptDependencia;
+    public void setScriptObligatoriedad(RScript scriptObligatoriedad) {
+        this.scriptObligatoriedad = scriptObligatoriedad;
     }
 
     /**

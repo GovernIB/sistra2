@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class RConfiguracionGlobal {
 
+    /** Timestamp recuperacion. */
+    private String timestamp;
+
     /** Propiedades. */
     private RListaParametros propiedades;
 
@@ -52,6 +55,25 @@ public class RConfiguracionGlobal {
      */
     public void setPlugins(List<RPlugin> plugins) {
         this.plugins = plugins;
+    }
+
+    /**
+     * Método de acceso a timestamp.
+     * 
+     * @return timestamp
+     */
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * Método para establecer timestamp.
+     * 
+     * @param timestamp
+     *            timestamp a establecer
+     */
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

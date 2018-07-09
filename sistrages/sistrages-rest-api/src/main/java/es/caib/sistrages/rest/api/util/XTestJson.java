@@ -2,6 +2,7 @@ package es.caib.sistrages.rest.api.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
@@ -11,6 +12,7 @@ import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
@@ -21,11 +23,16 @@ import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RPlugin;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
+import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
+import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
+
+// TODO Pasar a carpeta test
 
 public class XTestJson {
 
@@ -78,12 +85,14 @@ public class XTestJson {
         final List<ROpcionFormularioSoporte> opciones = new ArrayList<>();
 
         opc = new ROpcionFormularioSoporte();
+        opc.setCodigo(1L);
         opc.setTipo(generarLiteral());
         opc.setDescripcion(generarLiteral());
         opc.setDestinatario("R");
         opciones.add(opc);
 
         opc = new ROpcionFormularioSoporte();
+        opc.setCodigo(2L);
         opc.setTipo(generarLiteral());
         opc.setDescripcion(generarLiteral());
         opc.setDestinatario("L");
@@ -91,7 +100,7 @@ public class XTestJson {
         opciones.add(opc);
 
         final RConfiguracionEntidad e = new RConfiguracionEntidad();
-
+        e.setTimestamp(generateTimestamp());
         e.setIdentificador("E1");
         e.setLogo("pathlogo");
         e.setCss("pathCss");
@@ -154,17 +163,39 @@ public class XTestJson {
         final List<RPasoTramitacion> pasos = new ArrayList<>();
         pasos.add(crearPasoDebeSaber());
         pasos.add(crearPasoRellenar());
+        pasos.add(crearPasoRegistrar());
 
         final RVersionTramite vt = new RVersionTramite();
+        vt.setTimestamp(generateTimestamp());
         vt.setIdentificador("T1");
         vt.setVersion(1);
+        vt.setIdioma("es");
+        vt.setTipoFlujo("N");
+        vt.setPropiedades(crearPropiedadesVT());
+        vt.setControlAcceso(crearControlAcceso());
         vt.setPasos(pasos);
         return vt;
     }
 
+    private static RVersionTramitePropiedades crearPropiedadesVT() {
+        final RVersionTramitePropiedades p = new RVersionTramitePropiedades();
+        p.setAutenticado(true);
+        p.setNoAutenticado(true);
+        p.setNivelQAA(2);
+        p.setPersistente(true);
+        return p;
+    }
+
+    private static RVersionTramiteControlAcceso crearControlAcceso() {
+        final RVersionTramiteControlAcceso c = new RVersionTramiteControlAcceso();
+        c.setActivo(true);
+        c.setDebug(true);
+        return c;
+    }
+
     private static RPasoTramitacionDebeSaber crearPasoDebeSaber() {
         final RPasoTramitacionDebeSaber pd = new RPasoTramitacionDebeSaber();
-        pd.setIdentificador("P" + System.currentTimeMillis());
+        pd.setIdentificador("DS1");
         pd.setTipo("DS");
         pd.setInstruccionesInicio("debe saber");
         return pd;
@@ -175,16 +206,28 @@ public class XTestJson {
         final List<RFormularioTramite> fl = new ArrayList<>();
         fl.add(crearFormularioTramite());
         fl.add(crearFormularioTramite());
-        pr.setIdentificador("P" + System.currentTimeMillis());
+        pr.setIdentificador("RF1");
         pr.setTipo("RF");
         pr.setFormularios(fl);
+        return pr;
+    }
+
+    private static RPasoTramitacionRegistrar crearPasoRegistrar() {
+        final RPasoTramitacionRegistrar pr = new RPasoTramitacionRegistrar();
+        pr.setIdentificador("RT1");
+        pr.setTipo("RT");
+        final RDestinoRegistro destino = new RDestinoRegistro();
+        destino.setOficinaRegistro("OF1");
+        destino.setLibroRegistro("LIB1");
+        destino.setTipoAsunto("AS1");
+        pr.setDestino(destino);
         return pr;
     }
 
     private static RFormularioTramite crearFormularioTramite() {
         RFormularioTramite f;
         f = new RFormularioTramite();
-        f.setIdentificador("F" + System.currentTimeMillis());
+        f.setIdentificador("F1");
         f.setDescripcion("Formulario");
         f.setFormularioInterno(crearFormularioDisenyo());
         return f;
@@ -248,6 +291,7 @@ public class XTestJson {
         lista.add(generarAviso());
 
         final RAvisosEntidad ra = new RAvisosEntidad();
+        ra.setTimestamp(generateTimestamp());
         ra.setAvisos(lista);
         return ra;
     }
@@ -255,12 +299,17 @@ public class XTestJson {
     private static RAviso generarAviso() {
         final RAviso a = new RAviso();
         a.setMensaje(generarLiteral());
-        a.setTipo("L");
+        a.setTipo("LIS");
         a.setFechaInicio("20180615000000");
         a.setFechaFin("20180620000000");
         a.setBloquear(true);
         a.setListaVersiones("TRAM1-1;TRAM2-2");
         return a;
+    }
+
+    private static String generateTimestamp() {
+        final Random rand = new Random();
+        return System.currentTimeMillis() + "-" + rand.nextInt();
     }
 
 }

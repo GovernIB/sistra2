@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class RConfiguracionEntidad {
 
+    /** Timestamp recuperacion. */
+    private String timestamp;
+
     /** Identificador. */
     private String identificador;
 
@@ -317,6 +320,25 @@ public class RConfiguracionEntidad {
      */
     public void setDescripcion(RLiteral descripcion) {
         this.descripcion = descripcion;
+    }
+
+    /**
+     * Método de acceso a timestamp.
+     * 
+     * @return timestamp
+     */
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * Método para establecer timestamp.
+     * 
+     * @param timestamp
+     *            timestamp a establecer
+     */
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

@@ -8,19 +8,25 @@ package es.caib.sistrages.rest.api.interna;
  */
 public class RPlantillaFormulario {
 
-    /** Identificador formateador. */
-    private String formateador;
+    /** Identificador plantilla. */
+    private String identificador;
 
-    /** Plantilla (path). */
-    private String plantilla;
+    /** Clase formateador (classname). */
+    private String claseFormateador;
+
+    /** Plantilla (path fichero). */
+    private String ficheroPlantilla;
+
+    /** Plantilla defecto. */
+    private boolean defecto;
 
     /**
      * Método de acceso a formateador.
      *
      * @return formateador
      */
-    public String getFormateador() {
-        return formateador;
+    public String getClaseFormateador() {
+        return claseFormateador;
     }
 
     /**
@@ -29,8 +35,8 @@ public class RPlantillaFormulario {
      * @param formateador
      *            formateador a establecer
      */
-    public void setFormateador(String formateador) {
-        this.formateador = formateador;
+    public void setClaseFormateador(String formateador) {
+        this.claseFormateador = formateador;
     }
 
     /**
@@ -38,8 +44,8 @@ public class RPlantillaFormulario {
      *
      * @return plantilla
      */
-    public String getPlantilla() {
-        return plantilla;
+    public String getFicheroPlantilla() {
+        return ficheroPlantilla;
     }
 
     /**
@@ -48,8 +54,46 @@ public class RPlantillaFormulario {
      * @param plantilla
      *            plantilla a establecer
      */
-    public void setPlantilla(String plantilla) {
-        this.plantilla = plantilla;
+    public void setFicheroPlantilla(String plantilla) {
+        this.ficheroPlantilla = plantilla;
+    }
+
+    /**
+     * Método de acceso a identificador.
+     *
+     * @return identificador
+     */
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    /**
+     * Método para establecer identificador.
+     *
+     * @param identificador
+     *            identificador a establecer
+     */
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
+    }
+
+    /**
+     * Método de acceso a defecto.
+     * 
+     * @return defecto
+     */
+    public boolean isDefecto() {
+        return defecto;
+    }
+
+    /**
+     * Método para establecer defecto.
+     * 
+     * @param defecto
+     *            defecto a establecer
+     */
+    public void setDefecto(boolean defecto) {
+        this.defecto = defecto;
     }
 
 }

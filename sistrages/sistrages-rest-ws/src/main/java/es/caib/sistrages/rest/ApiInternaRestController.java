@@ -1,6 +1,5 @@
 package es.caib.sistrages.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,16 +11,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Plugin;
-import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
+import es.caib.sistrages.rest.adapter.RConfiguracionEntidadAdapter;
+import es.caib.sistrages.rest.adapter.RConfiguracionGlobalAdapter;
+import es.caib.sistrages.rest.adapter.RVersionTramiteAdapter;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
-import es.caib.sistrages.rest.api.interna.RPlugin;
-import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.util.JsonException;
@@ -59,51 +60,8 @@ public class ApiInternaRestController {
     public RConfiguracionGlobal obtenerConfiguracionGlobal() {
         List <ConfiguracionGlobal> cg= restApiService.listConfiguracionGlobal(null);
         List <Plugin> pg= restApiService.listPlugin(TypeAmbito.GLOBAL, (long) 0, null);
-
-
-        final RConfiguracionGlobal c = new RConfiguracionGlobal();
-        c.setPropiedades(toListaParametrosCG(cg));
-        c.setPlugins(crearPlugins(pg));
-        return c;
-
-    }
-
-    private static RListaParametros toListaParametrosCG(List <ConfiguracionGlobal> cg) {
-        final RListaParametros params = new RListaParametros();
-        params.setParametros(new ArrayList<>());
-        for (ConfiguracionGlobal c : cg) {
-            final RValorParametro p = new RValorParametro();
-            p.setCodigo(c.getCodigo()+"");
-            p.setValor(c.getValor());
-            params.getParametros().add(p);
-        }
-        return params;
-    }
-
-    private static RListaParametros toListaParametrosP(List <Propiedad> lp) {
-        final RListaParametros params = new RListaParametros();
-        params.setParametros(new ArrayList<>());
-        for (Propiedad p : lp) {
-            final RValorParametro vp = new RValorParametro();
-            vp.setCodigo(p.getCodigo()+"");
-            vp.setValor(p.getValor());
-            params.getParametros().add(vp);
-        }
-        return params;
-    }
-
-    private static List<RPlugin> crearPlugins(List<Plugin> lpg) {
-        final List<RPlugin> plugins = new ArrayList<>();
-
-        for(Plugin p : lpg) {
-	        RPlugin plugin;
-	        plugin = new RPlugin();
-	        plugin.setTipo(p.getTipo().name());
-	        plugin.setClassname(p.getClassname());
-	        plugin.setParametros(toListaParametrosP(p.getPropiedades()));
-	        plugins.add(plugin);
-        }
-        return plugins;
+        final RConfiguracionGlobalAdapter adapter = new RConfiguracionGlobalAdapter(cg,pg);
+        return adapter.getrConfiguracionGlobal();
     }
 
 
@@ -118,8 +76,11 @@ public class ApiInternaRestController {
     @RequestMapping(value = "/entidad/{id}", method = RequestMethod.GET)
     public RConfiguracionEntidad obtenerConfiguracionEntidad(
             @PathVariable("id") String id) {
-        return XTestJson.crearEntidad();
+    	Entidad entidad = restApiService.loadEntidad(Long.parseLong(id));
+    	RConfiguracionEntidadAdapter adapter = new RConfiguracionEntidadAdapter(entidad, restApiService);
+    	return adapter.getrConfiguracionEntidad();
     }
+
 
     /**
      * Recupera definición versión de trámite.
@@ -137,8 +98,15 @@ public class ApiInternaRestController {
             @PathVariable("idTramite") String idtramite,
             @PathVariable("version") int version,
             @PathVariable("idioma") String idioma) {
-        return XTestJson.crearVersionTramite();
+
+    	final String idiomaDefecto = restApiService.getValorConfiguracionGlobal("definicionTramite.lenguajeDefecto");
+    	TramiteVersion tv = new TramiteVersion();
+    	RVersionTramiteAdapter adapter = new RVersionTramiteAdapter(tv,idioma,idiomaDefecto, restApiService);
+    	return adapter.getrVersionTramite();
     }
+
+
+
 
     /**
      * Obtiene avisos activos entidad.
