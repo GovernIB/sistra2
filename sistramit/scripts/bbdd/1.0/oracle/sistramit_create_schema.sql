@@ -27,26 +27,26 @@ create table STT_DOCPTR
 (
    DTP_CODIGO           NUMBER(19)           not null,
    DTP_CODPTR           NUMBER(19)           not null,
-   DTP_DOCIDE           VARCHAR2(20)         not null,
+   DTP_DOCIDE           VARCHAR2(20 CHAR)    not null,
    DTP_DOCINS           TIMESTAMP            not null,
    DTP_DOCTIP           VARCHAR2(1 CHAR)     not null,
    DTP_ESTADO           VARCHAR2(1 CHAR)     not null,
    DTP_FICHERO          NUMBER(19),
-   DTP_FICCLA           VARCHAR2(50),
+   DTP_FICCLA           VARCHAR2(50 CHAR),
    DTP_FORPDF           NUMBER(19),
-   DTP_FORPDC           VARCHAR2(50),
+   DTP_FORPDC           VARCHAR2(50 CHAR),
    DTP_ANENFI           VARCHAR2(500 CHAR),
    DTP_ANEDES           VARCHAR2(100 CHAR),
    DTP_PAGJUS           NUMBER(19),
-   DTP_PAGJUC           VARCHAR2(50),
+   DTP_PAGJUC           VARCHAR2(50 CHAR),
    DTP_PAGNIF           VARCHAR2(20 CHAR),
    DTP_PAGIDE           VARCHAR2(100 CHAR),
    DTP_PAGEST           VARCHAR2(1 CHAR),
    DTP_PAGERR           VARCHAR2(100 CHAR),
    DTP_PAGERM           VARCHAR2(4000 CHAR),
-   DTP_REGNUM           VARCHAR2(500),
+   DTP_REGNUM           VARCHAR2(500 CHAR),
    DTP_REGFEC           DATE,
-   DTP_REGPRE           VARCHAR2(1)
+   DTP_REGPRE           VARCHAR2(1 CHAR)
 );
 
 comment on table STT_DOCPTR is
@@ -157,8 +157,8 @@ create index STT_DOCPTR_PAGJUS_I on STT_DOCPTR (
 create table STT_FICPTR 
 (
    FIC_CODIGO           NUMBER(19)           not null,
-   FIC_CLAVE            VARCHAR2(50)         not null,
-   FIC_NOMFIC           VARCHAR2(500)        not null,
+   FIC_CLAVE            VARCHAR2(50 CHAR)    not null,
+   FIC_NOMFIC           VARCHAR2(500 CHAR)   not null,
    FIC_DATFIC           BLOB                 not null,
    FIC_BORRAR           NUMBER(1)            default 0 not null,
    FIC_CODTRP           NUMBER(19),
@@ -220,7 +220,7 @@ create table STT_FIRDPT
    FDP_FECFIR           DATE                 not null,
    FDP_TIPFIR           VARCHAR2(4 CHAR)     not null,
    FDP_FIRMA            NUMBER(19)           not null,
-   FDP_FIRMAC           VARCHAR2(50)         not null
+   FDP_FIRMAC           VARCHAR2(50 CHAR)    not null
 );
 
 comment on table STT_FIRDPT is
@@ -295,11 +295,11 @@ create table STT_FORMUL
    SFR_TICKET           VARCHAR2(200 CHAR)   not null,
    SFR_FECINI           DATE                 not null,
    SFR_IDESTR           VARCHAR2(50 CHAR)    not null,
-   SFR_IDTRAM           VARCHAR2(20),
+   SFR_IDTRAM           VARCHAR2(20 CHAR),
    SFR_VERSIO           NUMBER(2),
    SFR_RELESE           NUMBER(8),
-   SFR_IDPASO           VARCHAR2(20)         not null,
-   SFR_IDFORM           VARCHAR2(20)         not null,
+   SFR_IDPASO           VARCHAR2(20 CHAR)    not null,
+   SFR_IDFORM           VARCHAR2(20 CHAR)    not null,
    SFR_DATFOR           BLOB,
    SFR_INFAUT           CLOB,
    SFR_PARFOR           CLOB,
@@ -417,9 +417,9 @@ create index STT_FORMUL_FECFIN_I on STT_FORMUL (
 create table STT_INVALI 
 (
    INV_CODIGO           NUMBER(19)           not null,
-   INV_TIPO             VARCHAR2(1)          not null,
+   INV_TIPO             VARCHAR2(1 CHAR)     not null,
    INV_FECHA            DATE                 not null,
-   INV_IDENTI           VARCHAR2(400)
+   INV_IDENTI           VARCHAR2(400 CHAR)
 );
 
 comment on table STT_INVALI is
@@ -446,7 +446,7 @@ alter table STT_INVALI
 create table STT_LOGINT 
 (
    LOG_CODIGO           NUMBER(19)           not null,
-   LOG_EVETIP           VARCHAR2(20)         not null,
+   LOG_EVETIP           VARCHAR2(20 CHAR)    not null,
    LOG_EVEFEC           TIMESTAMP            not null,
    LOG_EVEDES           VARCHAR2(1000 CHAR)  not null,
    LOG_EVERES           VARCHAR2(50 CHAR),
@@ -525,8 +525,8 @@ create table STT_PAGEXT
    PAE_TICKET           VARCHAR2(200 CHAR)   not null,
    PAE_FECINI           DATE                 not null,
    PAE_IDESTR           VARCHAR2(50 CHAR)    not null,
-   PAE_IDPASO           VARCHAR2(20)         not null,
-   PAE_IDPAGO           VARCHAR2(20)         not null,
+   PAE_IDPASO           VARCHAR2(20 CHAR)    not null,
+   PAE_IDPAGO           VARCHAR2(20 CHAR)    not null,
    PAE_NIVAUT           VARCHAR2(1 CHAR)     not null,
    PAE_INFAUT           BLOB,
    PAE_FECFIN           DATE,
@@ -601,7 +601,7 @@ create table STT_PASTRP
 (
    PTR_CODIGO           NUMBER(19)           not null,
    PTR_CODTRP           NUMBER(19)           not null,
-   PTR_IDEPTR           VARCHAR2(20)         not null,
+   PTR_IDEPTR           VARCHAR2(20 CHAR)    not null,
    PTR_TIPO             VARCHAR2(2 CHAR)     not null,
    PTR_ESTADO           VARCHAR2(1 CHAR)     not null,
    PTR_ORDEN            NUMBER(2)            not null
@@ -657,8 +657,8 @@ create unique index STT_PASTRP_UK on STT_PASTRP (
 /*==============================================================*/
 create table STT_PROCES 
 (
-   PROC_IDENT           VARCHAR2(20)         not null,
-   PROC_INSTAN          VARCHAR2(50),
+   PROC_IDENT           VARCHAR2(20 CHAR)    not null,
+   PROC_INSTAN          VARCHAR2(50 CHAR),
    PROC_FECHA           DATE
 );
 
@@ -717,12 +717,12 @@ create table STT_TRAPER
 (
    TRP_CODIGO           NUMBER(19)           not null,
    TRP_CODSTR           NUMBER(19)           not null,
-   TRP_IDETRA           VARCHAR2(20)         not null,
+   TRP_IDETRA           VARCHAR2(20 CHAR)    not null,
    TRP_VERTRA           NUMBER(2)            not null,
    TRP_DESTRA           VARCHAR2(1000 CHAR)  not null,
-   TRP_IDETCP           VARCHAR2(20)         not null,
-   TRP_IDEPCP           VARCHAR2(20)         not null,
-   TRP_PROSIA           VARCHAR2(20)         not null,
+   TRP_IDETCP           VARCHAR2(20 CHAR)    not null,
+   TRP_IDEPCP           VARCHAR2(20 CHAR)    not null,
+   TRP_PROSIA           VARCHAR2(20 CHAR)    not null,
    TRP_ESTADO           VARCHAR2(1 CHAR)     not null,
    TRP_NIVAUT           VARCHAR2(1 CHAR)     not null,
    TRP_METAUT           VARCHAR2(50 CHAR),
@@ -733,7 +733,7 @@ create table STT_TRAPER
    TRP_TSFLUJO          TIMESTAMP,
    TRP_IDIOMA           VARCHAR2(2 CHAR)     not null,
    TRP_URLINI           VARCHAR2(4000 CHAR),
-   TRP_PARINI           VARCHAR2(4000),
+   TRP_PARINI           VARCHAR2(4000 CHAR),
    TRP_PERSIS           NUMBER(1)            default 0 not null,
    TRP_PLZDIN           NUMBER(1)            default 0 not null,
    TRP_FECINI           DATE                 not null,
