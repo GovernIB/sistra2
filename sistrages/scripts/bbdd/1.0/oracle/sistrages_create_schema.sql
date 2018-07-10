@@ -77,7 +77,7 @@ create table STG_ACCPER
 (
    ACP_CODIGO           NUMBER(18)           not null,
    ACP_CODFOR           NUMBER(18)           not null,
-   ACP_ACCION           VARCHAR2(20)         not null,
+   ACP_ACCION           VARCHAR2(20 CHAR)    not null,
    ACP_DESCRI           NUMBER(18)           not null,
    ACP_VALIDA           NUMBER(1)            default 0 not null
 );
@@ -118,7 +118,7 @@ create table STG_ANETRA
 (
    ANE_CODIGO           NUMBER(18)           not null,
    ANE_CODPTR           NUMBER(18)           not null,
-   ANE_IDEDOC           VARCHAR2(20)         not null,
+   ANE_IDEDOC           VARCHAR2(20 CHAR)    not null,
    ANE_DESCRIP          NUMBER(18)           not null,
    ANE_ORDEN            NUMBER(2)            not null,
    ANE_OBLIGA           VARCHAR2(1 CHAR)     not null,
@@ -130,7 +130,7 @@ create table STG_ANETRA
    ANE_NUMINS           NUMBER(2)            not null,
    ANE_EXTPER           VARCHAR2(1000 CHAR)  not null,
    ANE_TAMMAX           NUMBER(4)            not null,
-   ANE_TAMUNI           VARCHAR2(2)          default 'KB' not null,
+   ANE_TAMUNI           VARCHAR2(2 CHAR)     default 'KB' not null,
    ANE_CNVPDF           NUMBER(1)            default 0 not null,
    ANE_FIRMAR           NUMBER(1)            default 0 not null,
    ANE_SCRFIR           NUMBER(18),
@@ -223,7 +223,7 @@ create table STG_AREA
 (
    ARE_CODIGO           NUMBER(18)           not null,
    ARE_CODENT           NUMBER(18)           not null,
-   ARE_IDENTI           VARCHAR2(20)         not null,
+   ARE_IDENTI           VARCHAR2(20 CHAR)    not null,
    ARE_DESCR            VARCHAR2(255 CHAR)   not null
 );
 
@@ -332,8 +332,8 @@ create table STG_CAMFUE
 (
    CFU_CODIGO           NUMBER(18)           not null,
    CFU_CODFUE           NUMBER(18)           not null,
-   CFU_IDENT            VARCHAR2(20)         not null,
-   CFU_ESPK             VARCHAR2(1)          default 'N' not null,
+   CFU_IDENT            VARCHAR2(20 CHAR)    not null,
+   CFU_ESPK             VARCHAR2(1 CHAR)     default 'N' not null,
    CFU_ORDEN            NUMBER(2)            default 0 not null
 );
 
@@ -423,7 +423,7 @@ create table STG_DOMINI
 (
    DOM_CODIGO           NUMBER(18)           not null,
    DOM_AMBITO           VARCHAR2(1 CHAR)     not null,
-   DOM_IDENTI           VARCHAR2(20)         not null,
+   DOM_IDENTI           VARCHAR2(20 CHAR)    not null,
    DOM_DESCR            VARCHAR2(255 CHAR)   not null,
    DOM_CACHE            NUMBER(1)            default 0 not null,
    DOM_TIPO             VARCHAR2(1 CHAR)     not null,
@@ -511,7 +511,7 @@ alter table STG_DOMVER
 create table STG_ENTIDA 
 (
    ENT_CODIGO           NUMBER(18)           not null,
-   ENT_DIR3             VARCHAR2(10)         not null,
+   ENT_DIR3             VARCHAR2(10 CHAR)    not null,
    ENT_NOMBRE           NUMBER(18)           not null,
    ENT_ACTIVA           NUMBER(1)            default 0 not null,
    ENT_ROLADM           VARCHAR2(100 CHAR)   not null,
@@ -606,7 +606,7 @@ create unique index STG_ENTIDA_DIR3_UK on STG_ENTIDA (
 /*==============================================================*/
 create table STG_FICEXT 
 (
-   FIE_REFDOC           VARCHAR2(1000)       not null,
+   FIE_REFDOC           VARCHAR2(1000 CHAR)  not null,
    FIE_REFFEC           TIMESTAMP            not null,
    FIE_CODFIC           NUMBER(18)           not null,
    FIE_BORRAR           NUMBER(1)            default 0 not null
@@ -739,8 +739,8 @@ alter table STG_FORCAM
 create table STG_FORCHK 
 (
    CCK_CODIGO           NUMBER(18)           not null,
-   CCK_VALCHK           VARCHAR2(100)        not null,
-   CCK_VALNCH           VARCHAR2(100)        not null
+   CCK_VALCHK           VARCHAR2(100 CHAR)   not null,
+   CCK_VALNCH           VARCHAR2(100 CHAR)   not null
 );
 
 comment on table STG_FORCHK is
@@ -1006,7 +1006,7 @@ alter table STG_FORETQ
 create table STG_FORFMT 
 (
    FMT_CODIGO           NUMBER(18)           not null,
-   FMT_IDENTI           VARCHAR2(20)         not null,
+   FMT_IDENTI           VARCHAR2(20 CHAR)    not null,
    FMT_CODENT           NUMBER(18)           not null,
    FMT_CLASS            VARCHAR2(500 CHAR)   not null,
    FMT_DESCRI           VARCHAR2(255 CHAR)   not null
@@ -1214,7 +1214,7 @@ create table STG_FORPLT
 (
    PLT_CODIGO           NUMBER(18)           not null,
    PLT_CODFOR           NUMBER(18)           not null,
-   PLT_IDENTI           VARCHAR2(20)         not null,
+   PLT_IDENTI           VARCHAR2(20 CHAR)    not null,
    PLT_CODFMT           NUMBER(18)           not null,
    PLT_DESCRI           VARCHAR2(255 CHAR)   not null,
    PLT_DEFECT           NUMBER(1)            default 0 not null
@@ -1316,9 +1316,9 @@ alter table STG_FORSOP
 create table STG_FORTRA 
 (
    FTR_CODIGO           NUMBER(18)           not null,
-   FTR_IDENTI           VARCHAR2(20)         not null,
+   FTR_IDENTI           VARCHAR2(20 CHAR)    not null,
    FTR_DESCRIP          NUMBER(18)           not null,
-   FTR_TIPO             VARCHAR2(1)          not null,
+   FTR_TIPO             VARCHAR2(1 CHAR)     not null,
    FTR_ORDEN            NUMBER(2)            not null,
    FTR_OBLIGA           VARCHAR2(1 CHAR)     not null,
    FTR_SCROBL           NUMBER(18),
@@ -1331,7 +1331,7 @@ create table STG_FORTRA
    FTR_TIPFOR           VARCHAR2(1 CHAR)     not null,
    FTR_CODFOR           NUMBER(18),
    FTR_FEXGST           NUMBER(18),
-   FTR_FEXIDE           VARCHAR2(20)
+   FTR_FEXIDE           VARCHAR2(20 CHAR)
 );
 
 comment on table STG_FORTRA is
@@ -1403,7 +1403,7 @@ create table STG_FUEDAT
 (
    FUE_CODIGO           NUMBER(18)           not null,
    FUE_AMBITO           VARCHAR2(1 CHAR)     not null,
-   FUE_IDENT            VARCHAR2(20)         not null,
+   FUE_IDENT            VARCHAR2(20 CHAR)    not null,
    FUE_DESCR            VARCHAR2(255 CHAR)   not null,
    FUE_CODENT           NUMBER(18),
    FUE_CODARE           NUMBER(18)
@@ -1447,7 +1447,7 @@ create table STG_GESFOR
 (
    GFE_CODIGO           NUMBER(18)           not null,
    GFE_CODENT           NUMBER(18)           not null,
-   GFE_IDENTI           VARCHAR2(20)         not null,
+   GFE_IDENTI           VARCHAR2(20 CHAR)    not null,
    GFE_DESCR            VARCHAR2(255 CHAR)   not null,
    GFE_URL              VARCHAR2(100 CHAR)   not null
 );
@@ -1590,7 +1590,7 @@ create table STG_LITSCR
 (
    LSC_CODIGO           NUMBER(18)           not null,
    LSC_CODSCR           NUMBER(18)           not null,
-   LSC_IDENTI           VARCHAR2(20)         not null,
+   LSC_IDENTI           VARCHAR2(20 CHAR)    not null,
    LSC_CODTRA           NUMBER(18)           not null
 );
 
@@ -1627,7 +1627,7 @@ create table STG_PAGTRA
 (
    PAG_CODIGO           NUMBER(18)           not null,
    PAG_CODPTR           NUMBER(18)           not null,
-   PAG_IDENTI           VARCHAR2(20)         not null,
+   PAG_IDENTI           VARCHAR2(20 CHAR)    not null,
    PAG_DESCRIP          NUMBER(18)           not null,
    PAG_ORDEN            NUMBER(2)            not null,
    PAG_OBLIGA           VARCHAR2(1 CHAR)     not null,
@@ -1856,9 +1856,9 @@ alter table STG_PASPAG
 create table STG_PASREG 
 (
    PRG_CODIGO           NUMBER(18)           not null,
-   PRG_REGOFI           VARCHAR2(20),
-   PRG_REGLIB           VARCHAR2(20),
-   PRG_REGASU           VARCHAR2(20),
+   PRG_REGOFI           VARCHAR2(20 CHAR),
+   PRG_REGLIB           VARCHAR2(20 CHAR),
+   PRG_REGASU           VARCHAR2(20 CHAR),
    PRG_SCRREG           NUMBER(18),
    PRG_INSPRE           NUMBER(18),
    PRG_INSFIT           NUMBER(18),
@@ -1940,7 +1940,7 @@ create table STG_PLUGIN
    PLG_DESCR            VARCHAR2(255 CHAR)   not null,
    PLG_CLASS            VARCHAR2(500 CHAR)   not null,
    PLG_PROPS            VARCHAR2(4000 CHAR),
-   PLG_IDINST           VARCHAR2(20)
+   PLG_IDINST           VARCHAR2(20 CHAR)
 );
 
 comment on table STG_PLUGIN is
@@ -2034,8 +2034,8 @@ alter table STG_PRLFTR
 /*==============================================================*/
 create table STG_PROCES 
 (
-   PROC_IDENT           VARCHAR2(20)         not null,
-   PROC_INSTAN          VARCHAR2(50),
+   PROC_IDENT           VARCHAR2(20 CHAR)    not null,
+   PROC_INSTAN          VARCHAR2(50 CHAR),
    PROC_FECHA           DATE
 );
 
@@ -2135,7 +2135,7 @@ alter table STG_SCRIPT
 create table STG_TIPPTR 
 (
    TIP_CODIGO           NUMBER(18)           not null,
-   TIP_PASO             VARCHAR2(20)         not null,
+   TIP_PASO             VARCHAR2(20 CHAR)    not null,
    TIP_DESCOR           NUMBER(18)           not null,
    TIP_ORDEN            NUMBER(2)
 );
@@ -2240,7 +2240,7 @@ create table STG_TRAMIT
 (
    TRM_CODIGO           NUMBER(18)           not null,
    TRM_CODARE           NUMBER(18)           not null,
-   TRM_IDENTI           VARCHAR2(20)         not null,
+   TRM_IDENTI           VARCHAR2(20 CHAR)    not null,
    TRM_DESCR            VARCHAR2(1000 CHAR)  not null
 );
 
@@ -2277,7 +2277,7 @@ create table STG_VALCFU
    VCF_CODIGO           NUMBER(18)           not null,
    VCF_CODFIF           NUMBER(18)           not null,
    VCF_CODCFU           NUMBER(18)           not null,
-   VCF_VALOR            VARCHAR2(4000)
+   VCF_VALOR            VARCHAR2(4000 CHAR)
 );
 
 comment on table STG_VALCFU is
@@ -2306,11 +2306,11 @@ create table STG_VERTRA
    VTR_CODIGO           NUMBER(18)           not null,
    VTR_CODTRM           NUMBER(18)           not null,
    VTR_NUMVER           NUMBER(2)            not null,
-   VTR_TIPFLU           VARCHAR2(1)          not null,
+   VTR_TIPFLU           VARCHAR2(1 CHAR)     not null,
    VTR_AUTENT           NUMBER(1)            default 0 not null,
    VTR_AUTQAA           NUMBER(1),
    VTR_AUTENO           NUMBER(1)            default 0 not null,
-   VTR_IDISOP           VARCHAR2(50)         not null,
+   VTR_IDISOP           VARCHAR2(50 CHAR)    not null,
    VTR_PERSIS           NUMBER(1)            default 0 not null,
    VTR_PERINF           NUMBER(1)            default 0 not null,
    VTR_PERDIA           NUMBER(2),
