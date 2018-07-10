@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.service.test;
 
+import java.io.File;
+
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -22,8 +24,13 @@ public class BaseDbUnit extends AbstractTransactionalJUnit4SpringContextTests {
      * Propiedades equivalentes a las establecidas en standalone-full.xml.
      */
     static {
+
+        final ClassLoader classLoader = BaseDbUnit.class.getClassLoader();
+        final File file = new File(
+                classLoader.getResource("sistramit-test.properties").getFile());
+
         System.setProperty("es.caib.sistramit.properties.path",
-                "/conf/sistramit/sistramit-test.properties");
+                file.getAbsolutePath());
     }
 
     /** DataSource. */

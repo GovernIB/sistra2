@@ -44,6 +44,25 @@ public abstract class ReglasFlujoImpl implements ReglasFlujo {
         reglasFase.add(rt);
     }
 
+    /**
+     * Añade regla de tramitación al flujo.
+     *
+     * @param idRegla
+     *            Id regla
+     * @param fase
+     *            Fase
+     */
+    protected final void addRegla(final ReglaTramitacion reglaTramitacion,
+            final TypeFaseEjecucion fase) {
+        List<ReglaTramitacion> reglasFase = reglas.get(fase);
+        if (reglasFase == null) {
+            reglasFase = new ArrayList<ReglaTramitacion>();
+            reglas.put(fase, reglasFase);
+        }
+
+        reglasFase.add(reglaTramitacion);
+    }
+
     @Override
     public final List<ReglaTramitacion> getReglasTramitacion(
             final TypeFaseEjecucion pFaseEjecucion) {
