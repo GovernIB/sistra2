@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportar;
+import es.caib.sistrages.frontend.model.FilaImportarDominio;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -27,13 +27,13 @@ public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
 	private DominioService dominioService;
 
 	/** Dominio. */
-	private FilaImportar data;
+	private FilaImportarDominio data;
 
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
-		data = (FilaImportar) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
+		data = (FilaImportarDominio) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
 
 	}
 
@@ -62,7 +62,7 @@ public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public FilaImportar getData() {
+	public FilaImportarDominio getData() {
 		return data;
 	}
 
@@ -70,7 +70,7 @@ public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FilaImportar data) {
+	public void setData(final FilaImportarDominio data) {
 		this.data = data;
 	}
 

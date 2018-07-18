@@ -84,4 +84,14 @@ public interface AvisoEntidadDao {
 	 */
 	AvisoEntidad getAvisoEntidadByTramite(String identificadorTramite);
 
+	
+	/**
+	 * Lista de avisos de entidad
+	 *
+	 * @param codDir3
+	 *            codigo Dir3
+	 * @return la lista de avisos de entidad
+	 */
+	List<AvisoEntidad> getAll(String codDir3);
+
 }

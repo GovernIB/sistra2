@@ -45,8 +45,14 @@
   </p:layout>
 
 
-  <!-- Para que commandButton con global=true mostraran icono cargando -->
-  <p:ajaxStatus id="startAjax" onstart="PF('loading').show();" oncomplete="PF('loading').hide();" />
+  <!-- Para que elementos con global=true mostraran icono cargando (commandbutton, events, ...) -->
+  <!--
+
+  		Deshabilitamos a peticion de CAIB. Para que funcione correctamente los clicks/dobleclicks en
+  		los datatables simplemente hay que establecer en los eventos rowselect el global=false
+
+  <p:ajaxStatus id="startAjax" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"  />
+ -->
 
   <!-- Inclusion popups genericos -->
   <h:form id="formPopUps">

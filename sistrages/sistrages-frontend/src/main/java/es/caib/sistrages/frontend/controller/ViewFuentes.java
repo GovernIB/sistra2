@@ -56,21 +56,25 @@ public class ViewFuentes extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private FuenteDatos datoSeleccionado;
 
-	/** Id entidad. */
-	private Long idEntidad;
+	/** Permite editar. **/
+	private Boolean permiteEditar = false;
+
+	/** Permite consultar. **/
+	private Boolean permiteConsultar = false;
 
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
 
-		idEntidad = UtilJSF.getIdEntidad();
+		final Long idEntidad = UtilJSF.getIdEntidad();
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(idEntidad);
 
 		if (ambito == null) {
 			return;
 		}
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
+		checkPermisos();
 		buscar(null);
 
 	}
@@ -91,7 +95,7 @@ public class ViewFuentes extends ViewControllerBase {
 	 */
 	public void nuevo() {
 		// Verifica si tiene permisos
-		if (!checkPermisosEntorno()) {
+		if (!permiteEditar) {
 			return;
 		}
 
@@ -124,7 +128,7 @@ public class ViewFuentes extends ViewControllerBase {
 			return;
 
 		// Verifica si tiene permisos
-		if (!checkPermisos()) {
+		if (!permiteEditar) {
 			return;
 		}
 
@@ -149,7 +153,7 @@ public class ViewFuentes extends ViewControllerBase {
 			return;
 
 		TypeModoAcceso modoAccesoType;
-		if (checkPermisos()) {
+		if (permiteEditar) {
 			modoAccesoType = TypeModoAcceso.EDICION;
 		} else {
 			modoAccesoType = TypeModoAcceso.CONSULTA;
@@ -191,9 +195,9 @@ public class ViewFuentes extends ViewControllerBase {
 	 * Dbl click.
 	 */
 	public void rcDobleClick() {
-		if (checkPermisosEntorno()) {
+		if (permiteEditar) {
 			editar();
-		} else {
+		} else if (permiteConsultar) {
 			consultar();
 		}
 	}
@@ -208,66 +212,66 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
-	 * Checkea los permisos. Se puede crear/borrar/modificar si:<br />
-	 * - El ambito es global, sólo si tienes permiso superadmin.<br />
-	 * - El ambito es entidad, sólo si tienes permisos gestor de entidad.<br />
-	 * - Si el ambito es area, sólo si eres superadmin, gestor de entidad o, en caso
-	 * de desarrollador, tener el permiso de adm.area o des. area sobre dicha area.
+	 * Método global que prepara las variables permiteEditar o permiteConsultar.
 	 * <br />
-	 *
-	 * @return el valor de check permisos
+	 * - El ambito es global, sólo si tienes permiso superadmin.<br />
+	 * - El ambito es entidad, revisar el metodo para ver como se controla los
+	 * permisos. - El ambito es area, revisar el metodo para ver como se controla
+	 * los permisos.
 	 */
-	public boolean checkPermisos() {
-		boolean res = false;
+	public void checkPermisos() {
+
+		permiteEditar = false;
+		permiteConsultar = false;
 		final TypeAmbito ambitoType = TypeAmbito.fromString(ambito);
 		switch (ambitoType) {
 		case GLOBAL:
-			// Entra como SuperAdmin
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			permiteEditar = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
 			break;
 		case ENTIDAD:
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			permiteEditar = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			permiteConsultar = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR);
 			break;
 		case AREA:
-
-			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
-				res = true;
-			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-
-				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-					final List<TypeRolePermisos> permisos = securityService
-							.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
-
-					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-							|| permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA);
-				} else {
-					res = false;
-				}
-			}
-
+			checkPermisosArea();
 			break;
 		}
-		return res;
+
 	}
 
 	/**
-	 * Es lo mismo que checkPermisos pero con la restricción del entorno.
+	 * Checkea permisos area. Las reglas son las siguientes: <br />
+	 * - Si eres administrador de entidad, puedes editar en cualquier entorno.
+	 * <br />
+	 * - Si eres desarrollador de entidad, depende del entorno y tus permisos:
+	 * <br />
+	 * ---> Permiso admin. area en des/pre/pro puedes tot <br />
+	 * ---> Permiso desa. area en desarrollo puedes tot mientras que en pre/pro
+	 * puede consultar <br />
+	 * ---> Permiso consulta en des/pre/pro solo consulta.
 	 *
-	 * Si es entorno preproducción o producción, sólo puedes consultar sino lo que
-	 * diga permisos.
-	 *
-	 * @return el valor de check permisos con restricción de entorno
 	 */
-	public boolean checkPermisosEntorno() {
-		boolean res = false;
+	private void checkPermisosArea() {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+				|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+			permiteEditar = true;
+		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
-		if (!UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-			res = false;
-		} else {
-			res = checkPermisos();
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(Long.valueOf(id));
+
+			if (permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+				permiteEditar = true;
+			} else if (permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					permiteEditar = true;
+				} else {
+					permiteConsultar = true;
+				}
+			} else if (permisos.contains(TypeRolePermisos.CONSULTA)) {
+				permiteConsultar = true;
+			}
 		}
-		return res;
 	}
 
 	// ------- FUNCIONES PRIVADAS ------------------------------
@@ -302,7 +306,7 @@ public class ViewFuentes extends ViewControllerBase {
 			return;
 
 		// Verifica si tiene permisos
-		if (modo == TypeModoAcceso.EDICION && !checkPermisos()) {
+		if (modo == TypeModoAcceso.EDICION && !permiteEditar) {
 			return;
 		}
 
@@ -389,6 +393,36 @@ public class ViewFuentes extends ViewControllerBase {
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
+	}
+
+	/**
+	 * @return the permiteEditar
+	 */
+	public Boolean getPermiteEditar() {
+		return permiteEditar;
+	}
+
+	/**
+	 * @param permiteEditar
+	 *            the permiteEditar to set
+	 */
+	public void setPermiteEditar(final Boolean permiteEditar) {
+		this.permiteEditar = permiteEditar;
+	}
+
+	/**
+	 * @return the permiteConsultar
+	 */
+	public Boolean getPermiteConsultar() {
+		return permiteConsultar;
+	}
+
+	/**
+	 * @param permiteConsultar
+	 *            the permiteConsultar to set
+	 */
+	public void setPermiteConsultar(final Boolean permiteConsultar) {
+		this.permiteConsultar = permiteConsultar;
 	}
 
 }

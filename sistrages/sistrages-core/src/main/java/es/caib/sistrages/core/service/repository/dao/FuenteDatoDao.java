@@ -5,6 +5,8 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
@@ -47,5 +49,8 @@ public interface FuenteDatoDao {
 	FuenteDatos getByIdentificador(String idFuenteDato);
 
 	void removeByArea(Long idArea);
+
+	ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros);
+	
 
 }

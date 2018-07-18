@@ -162,6 +162,22 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		}
 		return listarAvisos(pIdEntidad, null, null);
 	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao#getAll(
+	 * java. lang.String)
+	 */
+	@Override
+	public List<AvisoEntidad> getAll(final String codDir3) {
+		if (codDir3 == null) {
+			throw new FaltanDatosException(FALTA_ENTIDAD);
+		}
+		return listarAvisos(codDir3);
+	}
+	
 
 	/**
 	 * Listar avisos.
@@ -204,6 +220,39 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		}
 		return listaAvisoEntidad;
 	}
+	
+	
+	/**
+	 * Listar avisos por cod DIR3
+	 *
+	 * @param codDir3
+	 *            idEntidad
+	 * @param pIdioma
+	 *            idioma
+	 * @param pFiltro
+	 *            filtro
+	 * @return Listado de avisos
+	 */
+	@SuppressWarnings("unchecked")	
+	private List<AvisoEntidad> listarAvisos(final String codDir3) {
+		final List<AvisoEntidad> listaAvisoEntidad = new ArrayList<>();
+		String sql = "select a from JAvisoEntidad as a";
+		sql += " where a.entidad.codigoDir3 = :idEntidad ";
+		sql += "  order by a.fechaInicio, a.codigo";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idEntidad", codDir3);
+		final List<JAvisoEntidad> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			for (final JAvisoEntidad jAvisoEntidad : results) {
+				listaAvisoEntidad.add(jAvisoEntidad.toModel());
+			}
+		}
+		return listaAvisoEntidad;
+	}
+	
+	
+	
 
 	@Override
 	public void removeByEntidad(final Long pIdEntidad) {

@@ -11,6 +11,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
@@ -20,6 +21,10 @@ import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
@@ -82,7 +87,13 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	public Tramite loadTramite(Long idTramite) {
 		return restApiService.loadTramite(idTramite);
 	}
-
+	
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public TramiteVersion loadTramiteVersion(String idTramite, int version) {
+		return restApiService.loadTramiteVersion(idTramite, version);
+	}
+	
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
@@ -126,5 +137,31 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiService.getPaginaFormularioHTMLAsistente(pIdPage, pLang);
 	}
 
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<TramitePaso> getTramitePasos(Long idTramiteVersion) {
+	   return restApiService.getTramitePasos(idTramiteVersion);
+	}
+	
+   @Override
+   @RolesAllowed(ConstantesRolesAcceso.REST)
+   public DisenyoFormulario getDisenyoFormularioById(Long idForm) {
+	   return restApiService.getDisenyoFormularioById(idForm);
+   }
+
+   
+   @Override
+   @RolesAllowed(ConstantesRolesAcceso.REST)
+   public List<AvisoEntidad> getAvisosEntidad(final String pIdEntidad) {
+	   return restApiService.getAvisosEntidad(pIdEntidad);
+   }
+   
+   @Override
+   @RolesAllowed(ConstantesRolesAcceso.REST)
+   
+   public ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros) {
+	   return restApiService.realizarConsultaFuenteDatos(idDominio, parametros);
+   }
+    
 
 }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportar;
+import es.caib.sistrages.frontend.model.FilaImportarTramite;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -26,7 +26,7 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportarTR.class);
 
 	/** Fila Importar. */
-	private FilaImportar data;
+	private FilaImportarTramite data;
 
 	/** Mensaje. **/
 	private String mensaje;
@@ -35,7 +35,7 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		data = (FilaImportar) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
+		data = (FilaImportarTramite) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
 		if (data.getEstado() == TypeImportarEstado.EXISTE) {
 			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTR.estado.existedistinto"));
 		} else {
@@ -78,14 +78,14 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FilaImportar data) {
+	public void setData(final FilaImportarTramite data) {
 		this.data = data;
 	}
 
 	/**
 	 * @return the data
 	 */
-	public FilaImportar getData() {
+	public FilaImportarTramite getData() {
 		return data;
 	}
 

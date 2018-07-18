@@ -33,257 +33,270 @@ import es.caib.sistrages.core.api.util.UtilJSON;
 @Table(name = "STG_DOMINI", uniqueConstraints = @UniqueConstraint(columnNames = "DOM_IDENTI"))
 public class JDominio implements IModelApi {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_DOMINI_SEQ")
-	@SequenceGenerator(allocationSize = 1, name = "STG_DOMINI_SEQ", sequenceName = "STG_DOMINI_SEQ")
-	@Column(name = "DOM_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
-	private Long codigo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STG_DOMINI_SEQ")
+    @SequenceGenerator(allocationSize = 1, name = "STG_DOMINI_SEQ", sequenceName = "STG_DOMINI_SEQ")
+    @Column(name = "DOM_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
+    private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DOM_FDIDFD")
-	private JFuenteDatos fuenteDatos;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DOM_FDIDFD")
+    private JFuenteDatos fuenteDatos;
 
-	@Column(name = "DOM_AMBITO", nullable = false, length = 1)
-	private String ambito;
+    @Column(name = "DOM_AMBITO", nullable = false, length = 1)
+    private String ambito;
 
-	@Column(name = "DOM_IDENTI", unique = true, nullable = false, length = 20)
-	private String identificador;
+    @Column(name = "DOM_IDENTI", unique = true, nullable = false, length = 20)
+    private String identificador;
 
-	@Column(name = "DOM_DESCR", nullable = false)
-	private String descripcion;
+    @Column(name = "DOM_DESCR", nullable = false)
+    private String descripcion;
 
-	@Column(name = "DOM_CACHE", nullable = false, precision = 1, scale = 0)
-	private boolean cacheo;
+    @Column(name = "DOM_CACHE", nullable = false, precision = 1, scale = 0)
+    private boolean cacheo;
 
-	@Column(name = "DOM_TIPO", nullable = false, length = 1)
-	private String tipo;
+    @Column(name = "DOM_TIPO", nullable = false, length = 1)
+    private String tipo;
 
-	@Column(name = "DOM_BDJNDI", length = 500)
-	private String datasourceJndi;
+    @Column(name = "DOM_BDJNDI", length = 500)
+    private String datasourceJndi;
 
-	@Column(name = "DOM_BDSQL", length = 2000)
-	private String sql;
+    @Column(name = "DOM_BDSQL", length = 2000)
+    private String sql;
 
-	@Column(name = "DOM_LFVALS", length = 4000)
-	private String listaFijaValores;
+    @Column(name = "DOM_LFVALS", length = 4000)
+    private String listaFijaValores;
 
-	@Column(name = "DOM_REURL", length = 500)
-	private String servicioRemotoUrl;
+    @Column(name = "DOM_REURL", length = 500)
+    private String servicioRemotoUrl;
 
-	@Column(name = "DOM_PARAMS", length = 4000)
-	private String parametros;
+    @Column(name = "DOM_PARAMS", length = 4000)
+    private String parametros;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_DOMENT", joinColumns = {
-			@JoinColumn(name = "DEN_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "DEN_CODENT", nullable = false, updatable = false) })
-	private Set<JEntidad> entidades = new HashSet<>(0);
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "STG_DOMENT", joinColumns = {
+            @JoinColumn(name = "DEN_CODDOM", nullable = false, updatable = false)}, inverseJoinColumns = {
+                    @JoinColumn(name = "DEN_CODENT", nullable = false, updatable = false)})
+    private Set<JEntidad> entidades = new HashSet<>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "dominio")
-	private Set<JCampoFormularioIndexado> camposFormularioIndexado = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dominio")
+    private Set<JCampoFormularioIndexado> camposFormularioIndexado = new HashSet<>(
+            0);
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_AREDOM", joinColumns = {
-			@JoinColumn(name = "DMA_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "DMA_CODARE", nullable = false, updatable = false) })
-	private Set<JArea> areas = new HashSet<>(0);
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "STG_AREDOM", joinColumns = {
+            @JoinColumn(name = "DMA_CODDOM", nullable = false, updatable = false)}, inverseJoinColumns = {
+                    @JoinColumn(name = "DMA_CODARE", nullable = false, updatable = false)})
+    private Set<JArea> areas = new HashSet<>(0);
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "STG_DOMVER", joinColumns = {
-			@JoinColumn(name = "DVT_CODDOM", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "DVT_CODVTR", nullable = false, updatable = false) })
-	private Set<JVersionTramite> versionesTramite = new HashSet<>(0);
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "STG_DOMVER", joinColumns = {
+            @JoinColumn(name = "DVT_CODDOM", nullable = false, updatable = false)}, inverseJoinColumns = {
+                    @JoinColumn(name = "DVT_CODVTR", nullable = false, updatable = false)})
+    private Set<JVersionTramite> versionesTramite = new HashSet<>(0);
 
-	public JDominio() {
-		super();
-	}
+    public JDominio() {
+        super();
+    }
 
-	public Long getCodigo() {
-		return this.codigo;
-	}
+    public Long getCodigo() {
+        return this.codigo;
+    }
 
-	public void setCodigo(final Long codigo) {
-		this.codigo = codigo;
-	}
+    public void setCodigo(final Long codigo) {
+        this.codigo = codigo;
+    }
 
-	public JFuenteDatos getFuenteDatos() {
-		return this.fuenteDatos;
-	}
+    public JFuenteDatos getFuenteDatos() {
+        return this.fuenteDatos;
+    }
 
-	public void setFuenteDatos(final JFuenteDatos fuenteDatos) {
-		this.fuenteDatos = fuenteDatos;
-	}
+    public void setFuenteDatos(final JFuenteDatos fuenteDatos) {
+        this.fuenteDatos = fuenteDatos;
+    }
 
-	public String getAmbito() {
-		return this.ambito;
-	}
+    public String getAmbito() {
+        return this.ambito;
+    }
 
-	public void setAmbito(final String ambito) {
-		this.ambito = ambito;
-	}
+    public void setAmbito(final String ambito) {
+        this.ambito = ambito;
+    }
 
-	public String getIdentificador() {
-		return this.identificador;
-	}
+    public String getIdentificador() {
+        return this.identificador;
+    }
 
-	public void setIdentificador(final String identificador) {
-		this.identificador = identificador;
-	}
+    public void setIdentificador(final String identificador) {
+        this.identificador = identificador;
+    }
 
-	public String getDescripcion() {
-		return this.descripcion;
-	}
+    public String getDescripcion() {
+        return this.descripcion;
+    }
 
-	public void setDescripcion(final String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setDescripcion(final String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public boolean isCacheo() {
-		return this.cacheo;
-	}
+    public boolean isCacheo() {
+        return this.cacheo;
+    }
 
-	public void setCacheo(final boolean cacheo) {
-		this.cacheo = cacheo;
-	}
+    public void setCacheo(final boolean cacheo) {
+        this.cacheo = cacheo;
+    }
 
-	public String getTipo() {
-		return this.tipo;
-	}
+    public String getTipo() {
+        return this.tipo;
+    }
 
-	public void setTipo(final String tipo) {
-		this.tipo = tipo;
-	}
+    public void setTipo(final String tipo) {
+        this.tipo = tipo;
+    }
 
-	public String getDatasourceJndi() {
-		return this.datasourceJndi;
-	}
+    public String getDatasourceJndi() {
+        return this.datasourceJndi;
+    }
 
-	public void setDatasourceJndi(final String datasourceJndi) {
-		this.datasourceJndi = datasourceJndi;
-	}
+    public void setDatasourceJndi(final String datasourceJndi) {
+        this.datasourceJndi = datasourceJndi;
+    }
 
-	public String getSql() {
-		return this.sql;
-	}
+    public String getSql() {
+        return this.sql;
+    }
 
-	public void setSql(final String sql) {
-		this.sql = sql;
-	}
+    public void setSql(final String sql) {
+        this.sql = sql;
+    }
 
-	public String getListaFijaValores() {
-		return this.listaFijaValores;
-	}
+    public String getListaFijaValores() {
+        return this.listaFijaValores;
+    }
 
-	public void setListaFijaValores(final String listaFijaValores) {
-		this.listaFijaValores = listaFijaValores;
-	}
+    public void setListaFijaValores(final String listaFijaValores) {
+        this.listaFijaValores = listaFijaValores;
+    }
 
-	public String getServicioRemotoUrl() {
-		return this.servicioRemotoUrl;
-	}
+    public String getServicioRemotoUrl() {
+        return this.servicioRemotoUrl;
+    }
 
-	public void setServicioRemotoUrl(final String servicioRemotoUrl) {
-		this.servicioRemotoUrl = servicioRemotoUrl;
-	}
+    public void setServicioRemotoUrl(final String servicioRemotoUrl) {
+        this.servicioRemotoUrl = servicioRemotoUrl;
+    }
 
-	public String getParametros() {
-		return this.parametros;
-	}
+    public String getParametros() {
+        return this.parametros;
+    }
 
-	public void setParametros(final String parametros) {
-		this.parametros = parametros;
-	}
+    public void setParametros(final String parametros) {
+        this.parametros = parametros;
+    }
 
-	public Set<JEntidad> getEntidades() {
-		return this.entidades;
-	}
+    public Set<JEntidad> getEntidades() {
+        return this.entidades;
+    }
 
-	public void setEntidades(final Set<JEntidad> entidades) {
-		this.entidades = entidades;
-	}
+    public void setEntidades(final Set<JEntidad> entidades) {
+        this.entidades = entidades;
+    }
 
-	public Set<JCampoFormularioIndexado> getCamposFormularioIndexado() {
-		return this.camposFormularioIndexado;
-	}
+    public Set<JCampoFormularioIndexado> getCamposFormularioIndexado() {
+        return this.camposFormularioIndexado;
+    }
 
-	public void setCamposFormularioIndexado(final Set<JCampoFormularioIndexado> camposFormularioIndexado) {
-		this.camposFormularioIndexado = camposFormularioIndexado;
-	}
+    public void setCamposFormularioIndexado(
+            final Set<JCampoFormularioIndexado> camposFormularioIndexado) {
+        this.camposFormularioIndexado = camposFormularioIndexado;
+    }
 
-	public Set<JArea> getAreas() {
-		return this.areas;
-	}
+    public Set<JArea> getAreas() {
+        return this.areas;
+    }
 
-	public void setAreas(final Set<JArea> areas) {
-		this.areas = areas;
-	}
+    public void setAreas(final Set<JArea> areas) {
+        this.areas = areas;
+    }
 
-	public Set<JVersionTramite> getVersionesTramite() {
-		return this.versionesTramite;
-	}
+    public Set<JVersionTramite> getVersionesTramite() {
+        return this.versionesTramite;
+    }
 
-	public void setVersionesTramite(final Set<JVersionTramite> versionesTramite) {
-		this.versionesTramite = versionesTramite;
-	}
+    public void setVersionesTramite(
+            final Set<JVersionTramite> versionesTramite) {
+        this.versionesTramite = versionesTramite;
+    }
 
-	public Dominio toModel() {
-		final Dominio dominio = new Dominio();
-		dominio.setCodigo(this.codigo);
-		dominio.setCacheable(this.cacheo);
-		dominio.setIdentificador(this.identificador);
-		dominio.setDescripcion(this.descripcion);
+    public Dominio toModel() {
+        final Dominio dominio = new Dominio();
+        dominio.setCodigo(this.codigo);
+        dominio.setCacheable(this.cacheo);
+        dominio.setIdentificador(this.identificador);
+        dominio.setDescripcion(this.descripcion);
 
-		dominio.setJndi(this.datasourceJndi);
-		dominio.setListaFija((List<Propiedad>) UtilJSON.fromListJSON(this.listaFijaValores, Propiedad.class));
-		dominio.setParametros((List<Propiedad>) UtilJSON.fromListJSON(this.parametros, Propiedad.class));
-		if (this.sql != null) {
-			dominio.setSql(Base64.getEncoder().encodeToString(sql.getBytes()));
-		}
-		dominio.setTipo(TypeDominio.fromString(this.tipo));
-		dominio.setAmbito(TypeAmbito.fromString(this.ambito));
-		dominio.setUrl(this.servicioRemotoUrl);
+        dominio.setJndi(this.datasourceJndi);
+        dominio.setListaFija((List<Propiedad>) UtilJSON
+                .fromListJSON(this.listaFijaValores, Propiedad.class));
+        dominio.setParametros((List<Propiedad>) UtilJSON
+                .fromListJSON(this.parametros, Propiedad.class));
+        if (this.sql != null) {
+            dominio.setSql(encodeSql(this.sql));
+        }
+        dominio.setTipo(TypeDominio.fromString(this.tipo));
+        dominio.setAmbito(TypeAmbito.fromString(this.ambito));
+        dominio.setUrl(this.servicioRemotoUrl);
 
-		if (this.getFuenteDatos() != null) {
-			dominio.setIdFuenteDatos(this.getFuenteDatos().getCodigo());
-		}
-		if (this.getAreas() != null) {
-			final Set<Long> idAreas = new HashSet<>();
-			for (final JArea area : this.areas) {
-				idAreas.add(area.getCodigo());
-			}
-			dominio.setAreas(idAreas);
-		}
-		return dominio;
-	}
+        if (this.getFuenteDatos() != null) {
+            dominio.setIdFuenteDatos(this.getFuenteDatos().getCodigo());
+        }
+        if (this.getAreas() != null) {
+            final Set<Long> idAreas = new HashSet<>();
+            for (final JArea area : this.areas) {
+                idAreas.add(area.getCodigo());
+            }
+            dominio.setAreas(idAreas);
+        }
+        return dominio;
+    }
 
-	public static JDominio fromModelStatic(final Dominio dominio) {
-		JDominio jdominio = null;
-		if (dominio != null) {
-			jdominio = new JDominio();
-			jdominio.fromModel(dominio);
-		}
-		return jdominio;
-	}
+    public static JDominio fromModelStatic(final Dominio dominio) {
+        JDominio jdominio = null;
+        if (dominio != null) {
+            jdominio = new JDominio();
+            jdominio.fromModel(dominio);
+        }
+        return jdominio;
+    }
 
-	public JDominio fromModel(final Dominio dominio) {
-		if (dominio != null) {
-			this.setCodigo(dominio.getCodigo());
-			this.setCacheo(dominio.isCacheable());
-			this.setIdentificador(dominio.getIdentificador());
-			this.setDescripcion(dominio.getDescripcion());
-			this.setDatasourceJndi(dominio.getJndi());
-			this.setListaFijaValores(UtilJSON.toJSON(dominio.getListaFija()));
-			this.setParametros(UtilJSON.toJSON(dominio.getParametros()));
-			if (dominio.getSql() != null) {
-				this.setSql(new String(Base64.getDecoder().decode(dominio.getSql())));
-			}
-			this.setTipo(dominio.getTipo().toString());
-			this.setAmbito(dominio.getAmbito().toString());
-			this.setServicioRemotoUrl(dominio.getUrl());
-		}
-		return this;
-	}
+    public JDominio fromModel(final Dominio dominio) {
+        if (dominio != null) {
+            this.setCodigo(dominio.getCodigo());
+            this.setCacheo(dominio.isCacheable());
+            this.setIdentificador(dominio.getIdentificador());
+            this.setDescripcion(dominio.getDescripcion());
+            this.setDatasourceJndi(dominio.getJndi());
+            this.setListaFijaValores(UtilJSON.toJSON(dominio.getListaFija()));
+            this.setParametros(UtilJSON.toJSON(dominio.getParametros()));
+            if (dominio.getSql() != null) {
+                this.setSql(decodeSql(dominio.getSql()));
+            }
+            this.setTipo(dominio.getTipo().toString());
+            this.setAmbito(dominio.getAmbito().toString());
+            this.setServicioRemotoUrl(dominio.getUrl());
+        }
+        return this;
+    }
+
+    public static String encodeSql(String sqlPlain) {
+        return Base64.getEncoder().encodeToString(sqlPlain.getBytes());
+    }
+
+    public static String decodeSql(String sqlEncoded) {
+        return new String(Base64.getDecoder().decode(sqlEncoded));
+    }
 
 }

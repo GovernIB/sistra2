@@ -35,7 +35,7 @@
 								<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}" update=":workDefinicionVersion :breadDefinicionVersion" delay="500"/>
 							</p:tree>
 
-							<p:remoteCommand name="rcDobleClickTree" actionListener="#{viewDefinicionVersion.rcDobleClickTree}" />
+							<p:remoteCommand name="rcDobleClickTree" actionListener="#{viewDefinicionVersion.rcDobleClickTree()}" />
 
 						</h:form>
 					</p:layoutUnit>
@@ -53,19 +53,28 @@
 		<h:outputScript >
 
 		  var timestampDblClick = 0;
+		  var lastSelected = "";
 
 	      function triggerDblClickTree()
 	       {
-	       		// console.log('triggerDblClickTree');
+	       		// console.log("triggerDblClickTree");
 
+				var newSelected = $(".ui-state-highlight").text();
+
+				// console.log(lastSelected + "-" + newSelected);
+
+	       		// console.log('triggerDblClickTree');
 	       		var ahora = Date.now();
 
-	       		if (ahora - timestampDblClick &lt; 500) {
-	       			// console.log('dblClick');
-	       			rcDobleClickTree();
-	       		}
+				if (newSelected == lastSelected) {
+		       		if ( (ahora - timestampDblClick &lt; 500)) {
+		       			// console.log('dblClick');
+		       			rcDobleClickTree();
+		       		}
+		       	}
 
 	       		timestampDblClick = ahora;
+	       		lastSelected = newSelected;
 	      }
 	    </h:outputScript>
 
