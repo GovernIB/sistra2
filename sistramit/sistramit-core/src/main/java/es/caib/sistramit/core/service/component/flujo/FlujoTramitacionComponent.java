@@ -13,10 +13,11 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 
 public interface FlujoTramitacionComponent {
 
-    String iniciarTramite(String idTramite, int version, String idioma,
+    String crearSesionTramitacion(UsuarioAutenticadoInfo pUsuarioAutenticado);
+
+    void iniciarTramite(String idTramite, int version, String idioma,
             String idTramiteCatalogo, String urlInicio,
-            Map<String, String> parametrosInicio,
-            UsuarioAutenticadoInfo usuarioAutenticado);
+            Map<String, String> parametrosInicio);
 
     void cargarTramite(String idSesionTramitacion,
             UsuarioAutenticadoInfo usuarioAutenticado);
@@ -40,8 +41,5 @@ public interface FlujoTramitacionComponent {
     void cancelarTramite();
 
     FlujoTramitacionInfo obtenerFlujoTramitacionInfo();
-
-    // TODO BORRAR
-    void test(String param);
 
 }

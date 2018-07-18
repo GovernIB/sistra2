@@ -81,12 +81,16 @@ public class AsistenteTramitacionController extends TramitacionController {
         final UsuarioAutenticado usuarioAutenticado = SecurityUtils
                 .obtenerUsuarioAutenticado();
 
-        // Inicia flujo tramitacion y almacena en la sesion
+        // Crea sesion tramitacion
         final String idSesionTramitacion = getFlujoTramitacionService()
-                .iniciarTramite(tramite, version, idioma, idTramiteCatalogo,
-                        urlInicio, parametrosInicio,
-                        usuarioAutenticado.getUsuario());
+                .crearSesionTramitacion(usuarioAutenticado.getUsuario());
 
+        // Inicia tramite
+        getFlujoTramitacionService().iniciarTramite(idSesionTramitacion,
+                tramite, version, idioma, idTramiteCatalogo, urlInicio,
+                parametrosInicio);
+
+        // Almacena en la sesion
         final DetalleTramite dt = getFlujoTramitacionService()
                 .obtenerDetalleTramite(idSesionTramitacion);
         registraSesionTramitacion(idSesionTramitacion,
@@ -156,7 +160,7 @@ public class AsistenteTramitacionController extends TramitacionController {
         // Devolvemos informacion asistente
         final AsistenteInfo ai = new AsistenteInfo();
         ai.setIdSesionTramitacion(idSesionTramitacion);
-        ai.setIdioma(detalleTramite.getIdioma());
+        ai.setIdioma(detalleTramite.getTramite().getIdioma());
         // TODO Pendiente ver info a pasar
         return new ModelAndView("asistente/asistente", "datos", ai);
     }
@@ -362,17 +366,6 @@ public class AsistenteTramitacionController extends TramitacionController {
         return null;
     }
 
-    // TODO TEST PARA PRUEBAS. BORRAR.
-    @RequestMapping(value = "/test.html")
-    public ModelAndView test(@RequestParam("param") final String param) {
-
-        final String idSesionTramitacion = getIdSesionTramitacionActiva();
-        getFlujoTramitacionService().test(idSesionTramitacion, param);
-
-        final ModelAndView mav = new ModelAndView("asistente/asistente");
-        return mav;
-    }
-
     /**
      * Carga el tramite y lo registra en sesion.
      *
@@ -405,10 +398,10 @@ public class AsistenteTramitacionController extends TramitacionController {
         registraSesionTramitacion(pIdSesion, dt.getDebug() == TypeSiNo.SI);
 
         // Comprobamos que sea el iniciador (en caso de autenticado)
-        if (dt.getAutenticacion() != userInfo.getAutenticacion()) {
+        if (dt.getTramite().getAutenticacion() != userInfo.getAutenticacion()) {
             throw new WarningFrontException("No coincide nivel autenticacion");
         }
-        if (dt.getAutenticacion() != TypeAutenticacion.ANONIMO) {
+        if (dt.getTramite().getAutenticacion() != TypeAutenticacion.ANONIMO) {
             if (!StringUtils.equals(dt.getUsuario().getNif(),
                     userInfo.getNif())) {
                 throw new WarningFrontException(

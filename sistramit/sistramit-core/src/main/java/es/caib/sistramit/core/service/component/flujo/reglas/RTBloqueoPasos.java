@@ -2,8 +2,6 @@ package es.caib.sistramit.core.service.component.flujo.reglas;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
@@ -18,7 +16,6 @@ import es.caib.sistramit.core.service.model.flujo.types.TypeSubEstadoPasoPagar;
  * @author Indra
  *
  */
-@Component("reglaBloqueoPasos")
 public final class RTBloqueoPasos implements ReglaTramitacion {
 
     @Override

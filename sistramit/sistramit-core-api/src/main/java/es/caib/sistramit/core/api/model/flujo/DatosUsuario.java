@@ -34,7 +34,7 @@ public final class DatosUsuario implements ModelApi {
     /**
      * Email.
      */
-    private String email;
+    private String correo;
 
     /**
      * Constructor.
@@ -160,8 +160,8 @@ public final class DatosUsuario implements ModelApi {
      *
      * @return email
      */
-    public String getEmail() {
-        return email;
+    public String getCorreo() {
+        return correo;
     }
 
     public String getApellido1() {
@@ -174,8 +174,8 @@ public final class DatosUsuario implements ModelApi {
      * @param pEmail
      *            email a establecer
      */
-    public void setEmail(final String pEmail) {
-        email = pEmail;
+    public void setCorreo(final String pEmail) {
+        correo = pEmail;
     }
 
     public String print() {

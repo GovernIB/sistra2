@@ -20,8 +20,19 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 public interface FlujoTramitacionService {
 
     /**
+     * Genera sesón de tramitación.
+     *
+     * @param usuarioAutenticado
+     *            usuario autenticado
+     * @return id sesion tramitacion
+     */
+    String crearSesionTramitacion(UsuarioAutenticadoInfo usuarioAutenticado);
+
+    /**
      * Iniciar tramite.
      *
+     * @param idSesionTramitacion
+     *            id Sesion Tramitacion
      * @param idTramite
      *            id tramite
      * @param version
@@ -34,14 +45,12 @@ public interface FlujoTramitacionService {
      *            url inicio
      * @param parametrosInicio
      *            parametros inicio
-     * @param usuarioAutenticadoInfo
-     *            usuario autenticado
      * @return id sesion tramitacion
      */
-    String iniciarTramite(final String idTramite, final int version,
-            final String idioma, final String idTramiteCatalogo,
-            final String urlInicio, final Map<String, String> parametrosInicio,
-            UsuarioAutenticadoInfo usuarioAutenticadoInfo);
+    void iniciarTramite(String idSesionTramitacion, final String idTramite,
+            final int version, final String idioma,
+            final String idTramiteCatalogo, final String urlInicio,
+            final Map<String, String> parametrosInicio);
 
     /**
      * Carga un trámite existente de persistencia.
@@ -132,9 +141,6 @@ public interface FlujoTramitacionService {
 
     /** Realiza purga flujos tramitación. */
     void purgar();
-
-    // TODO Para borrar
-    void test(String idSesionTramitacion, String param);
 
     // -------------------------------------------------------------------------------------------
     // - Métodos especiales invocados desde el interceptor. No pasan por

@@ -30,22 +30,27 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 
     @Override
     @NegocioInterceptor
-    public String iniciarTramite(final String idTramite, final int version,
-            final String idioma, final String idTramiteCatalogo,
-            final String urlInicio, final Map<String, String> parametrosInicio,
+    public String crearSesionTramitacion(
             UsuarioAutenticadoInfo usuarioAutenticado) {
-
-        // TODO SEPARAR CREARSESION Y INICIARTRAMITE, PARA QUE LOS
-        // ERRORES/EVENTOS EN INICIARTRAMITE SE PUEDAN ASOCIAR A LA SESION
-
         // Generamos flujo de tramitacion y almacenamos en map
         final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
                 .getApplicationContext().getBean("flujoTramitacionComponent");
-        final String idSesionTramitacion = ft.iniciarTramite(idTramite, version,
-                idioma, idTramiteCatalogo, urlInicio, parametrosInicio,
-                usuarioAutenticado);
+        final String idSesionTramitacion = ft
+                .crearSesionTramitacion(usuarioAutenticado);
         flujoTramitacionCache.put(idSesionTramitacion, ft);
         return idSesionTramitacion;
+    }
+
+    @Override
+    @NegocioInterceptor
+    public void iniciarTramite(String idSesionTramitacion,
+            final String idTramite, final int version, final String idioma,
+            final String idTramiteCatalogo, final String urlInicio,
+            final Map<String, String> parametrosInicio) {
+        final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(
+                idSesionTramitacion);
+        ft.iniciarTramite(idTramite, version, idioma, idTramiteCatalogo,
+                urlInicio, parametrosInicio);
     }
 
     @Override
@@ -125,15 +130,6 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
     @NegocioInterceptor
     public void purgar() {
         flujoTramitacionCache.purgar();
-    }
-
-    // TODO BORRAR
-    @Override
-    @NegocioInterceptor
-    public void test(String idSesionTramitacion, String param) {
-        final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(
-                idSesionTramitacion);
-        ft.test(param);
     }
 
     // -------------------------------------------------------------------------------------------

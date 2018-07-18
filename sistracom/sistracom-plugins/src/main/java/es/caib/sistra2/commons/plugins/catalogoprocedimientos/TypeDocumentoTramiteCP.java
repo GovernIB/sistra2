@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.model.integracion.types;
+package es.caib.sistra2.commons.plugins.catalogoprocedimientos;
 
 /**
  * Tipo documento trámite catálogo procedimientos.

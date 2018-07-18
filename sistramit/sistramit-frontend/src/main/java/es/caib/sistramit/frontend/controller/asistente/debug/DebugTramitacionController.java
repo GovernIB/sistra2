@@ -77,7 +77,7 @@ public final class DebugTramitacionController extends TramitacionController {
             // Devuelve datos debug
             final DebugSesionTramitacion datosDebug = new DebugSesionTramitacion();
             datosDebug.setIdSesionTramitacion(idSesionTramitacion);
-            datosDebug.setIdTramite(detalleTramite.getIdTramite());
+            datosDebug.setIdTramite(detalleTramite.getTramite().getId());
             datosDebug.setEntorno(this.getEntorno().toString());
             datosDebug.setEventos(eventos);
             res.setDatos(datosDebug);

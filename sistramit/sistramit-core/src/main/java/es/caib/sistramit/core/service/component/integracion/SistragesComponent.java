@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import es.caib.sistrages.rest.api.interna.RVersionTramite;
 
 /**
  * Acceso a componente SISTRAGES para obtener configuración realizando cacheo de
@@ -77,8 +77,8 @@ public interface SistragesComponent {
      * @return Definición versión trámite
      */
     @Cacheable(value = "cacheTramites", key = "#idTramite + '-' + #version + '-' + #idioma")
-    DefinicionTramiteSTG recuperarDefinicionTramite(String idTramite,
-            int version, String idioma);
+    RVersionTramite recuperarDefinicionTramite(String idTramite, int version,
+            String idioma);
 
     /**
      * Quita de cache definición versión de trámite.

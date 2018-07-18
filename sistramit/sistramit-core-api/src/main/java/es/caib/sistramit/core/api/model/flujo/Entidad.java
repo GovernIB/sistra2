@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.util.List;
-
 /**
  * Entidad.
  *
@@ -9,6 +7,9 @@ import java.util.List;
  */
 @SuppressWarnings("serial")
 public final class Entidad implements ModelApi {
+
+    /** Id entidad. */
+    private String id;
 
     /** Logo (path). */
     private String logo;
@@ -19,26 +20,14 @@ public final class Entidad implements ModelApi {
     /** Nombre. */
     private String nombre;
 
-    /** Info LOPD. */
-    private String infoLOPD;
-
     /** Contacto (HTML). */
     private String contacto;
 
     /** Url carpeta. */
     private String urlCarpeta;
 
-    /** Telefono soporte. */
-    private String soporteTelefono;
-
-    /** Email soporte. */
-    private String soporteEmail;
-
-    /** Url soporte. */
-    private String soporteUrl;
-
-    /** Formulario soporte. */
-    private List<SoporteOpcion> soporteOpciones;
+    /** Soporte. */
+    private EntidadSoporte soporte;
 
     /**
      * Método de acceso a logo.
@@ -98,25 +87,6 @@ public final class Entidad implements ModelApi {
     }
 
     /**
-     * Método de acceso a infoLOPD.
-     *
-     * @return infoLOPD
-     */
-    public String getInfoLOPD() {
-        return infoLOPD;
-    }
-
-    /**
-     * Método para establecer infoLOPD.
-     *
-     * @param infoLOPD
-     *            infoLOPD a establecer
-     */
-    public void setInfoLOPD(String infoLOPD) {
-        this.infoLOPD = infoLOPD;
-    }
-
-    /**
      * Método de acceso a contacto.
      *
      * @return contacto
@@ -155,79 +125,41 @@ public final class Entidad implements ModelApi {
     }
 
     /**
-     * Método de acceso a soporteTelefono.
+     * Método de acceso a soporte.
      *
-     * @return soporteTelefono
+     * @return soporte
      */
-    public String getSoporteTelefono() {
-        return soporteTelefono;
+    public EntidadSoporte getSoporte() {
+        return soporte;
     }
 
     /**
-     * Método para establecer soporteTelefono.
+     * Método para establecer soporte.
      *
-     * @param soporteTelefono
-     *            soporteTelefono a establecer
+     * @param soporte
+     *            soporte a establecer
      */
-    public void setSoporteTelefono(String soporteTelefono) {
-        this.soporteTelefono = soporteTelefono;
+    public void setSoporte(EntidadSoporte soporte) {
+        this.soporte = soporte;
     }
 
     /**
-     * Método de acceso a soporteEmail.
-     *
-     * @return soporteEmail
+     * Método de acceso a id.
+     * 
+     * @return id
      */
-    public String getSoporteEmail() {
-        return soporteEmail;
+    public String getId() {
+        return id;
     }
 
     /**
-     * Método para establecer soporteEmail.
-     *
-     * @param soporteEmail
-     *            soporteEmail a establecer
+     * Método para establecer id.
+     * 
+     * @param id
+     *            id a establecer
      */
-    public void setSoporteEmail(String soporteEmail) {
-        this.soporteEmail = soporteEmail;
-    }
-
-    /**
-     * Método de acceso a soporteUrl.
-     *
-     * @return soporteUrl
-     */
-    public String getSoporteUrl() {
-        return soporteUrl;
-    }
-
-    /**
-     * Método para establecer soporteUrl.
-     *
-     * @param soporteUrl
-     *            soporteUrl a establecer
-     */
-    public void setSoporteUrl(String soporteUrl) {
-        this.soporteUrl = soporteUrl;
-    }
-
-    /**
-     * Método de acceso a soporteOpciones.
-     *
-     * @return soporteOpciones
-     */
-    public List<SoporteOpcion> getSoporteOpciones() {
-        return soporteOpciones;
-    }
-
-    /**
-     * Método para establecer soporteOpciones.
-     *
-     * @param soporteOpciones
-     *            soporteOpciones a establecer
-     */
-    public void setSoporteOpciones(List<SoporteOpcion> soporteOpciones) {
-        this.soporteOpciones = soporteOpciones;
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteCP;
 
 /**
  * Variables accesibles desde un paso de tramitación. Permiten el acceso desde

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
 import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
@@ -29,11 +30,9 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
-import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteCP;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -54,17 +53,9 @@ public class FlujoTramitacionComponentImpl
     @Autowired
     private ConfiguracionComponent configuracionComponent;
 
-    /** SistragesComponent. */
-    @Autowired
-    private SistragesComponent sistragesComponent;
-
     /** CatalogoProcedimientosComponent. */
     @Autowired
     private CatalogoProcedimientosComponent catalogoProcedimientosComponent;
-
-    /** Componente para creacion sesion tramitacion. */
-    @Autowired
-    private SesionTramitacion sesionTramitacion;
 
     /** Acceso a persistencia. */
     @Autowired
@@ -82,46 +73,53 @@ public class FlujoTramitacionComponentImpl
     /** Usuario autenticado. */
     private UsuarioAutenticadoInfo usuarioAutenticadoInfo;
 
-    @Override
-    public String iniciarTramite(final String idTramite, final int version,
-            final String idioma, final String idTramiteCatalogo,
-            final String urlInicio, final Map<String, String> parametrosInicio,
-            UsuarioAutenticadoInfo pUsuarioAutenticado) {
+    /** Id sesion tramitacion. */
+    private String idSesionTramitacion;
 
-        // Estabelecemos info usuario
+    @Override
+    public String crearSesionTramitacion(
+            UsuarioAutenticadoInfo pUsuarioAutenticado) {
+        // Establecemos info usuario
         usuarioAutenticadoInfo = pUsuarioAutenticado;
+        // Generamos id de sesión
+        idSesionTramitacion = dao.crearSesionTramitacion();
+        // Retornamos id sesion
+        return idSesionTramitacion;
+    }
+
+    @Override
+    public void iniciarTramite(final String idTramite, final int version,
+            final String idioma, final String idTramiteCatalogo,
+            final String urlInicio,
+            final Map<String, String> parametrosInicio) {
 
         // Control de si el flujo es válido
         controlFlujoInvalido();
-
-        // Generamos id de sesión
-        final String idSesionTramitacion = sesionTramitacion
-                .generarSesionTramitacion();
 
         // Inicializa datos generales sesión recuperando info GTT, GSE y GUC.
         this.datosSesion = generarDatosSesion(idSesionTramitacion,
                 TypeEstadoTramite.RELLENANDO, idTramite, version, idioma,
                 idTramiteCatalogo, urlInicio, parametrosInicio,
-                pUsuarioAutenticado, null);
+                usuarioAutenticadoInfo, null);
 
         // Realizamos operacion de iniciar
         controladorFlujo.iniciarTramite(datosSesion);
 
-        return idSesionTramitacion;
-
     }
 
     @Override
-    public void cargarTramite(String idSesionTramitacion,
+    public void cargarTramite(String pIdSesionTramitacion,
             UsuarioAutenticadoInfo pUsuarioAutenticado) {
         usuarioAutenticadoInfo = pUsuarioAutenticado;
+        idSesionTramitacion = pIdSesionTramitacion;
         cargarImpl(idSesionTramitacion, false);
     }
 
     @Override
-    public void recargarTramite(String idSesionTramitacion,
+    public void recargarTramite(String pIdSesionTramitacion,
             UsuarioAutenticadoInfo pUsuarioAutenticado) {
         usuarioAutenticadoInfo = pUsuarioAutenticado;
+        idSesionTramitacion = pIdSesionTramitacion;
         cargarImpl(idSesionTramitacion, true);
     }
 
@@ -184,42 +182,6 @@ public class FlujoTramitacionComponentImpl
         return f;
     }
 
-    // TODO BORRAR
-    @Override
-    public void test(String param) {
-
-        final String[] params = param.split("@");
-
-        final String accion = params[0];
-
-        if ("RCG".equals(accion)) {
-            configuracionComponent.obtenerPropiedadConfiguracion(
-                    TypePropiedadConfiguracion.URL_SISTRAMIT);
-        }
-
-        if ("ECG".equals(accion)) {
-            sistragesComponent.evictConfiguracionGlobal();
-        }
-
-        if ("RCE".equals(accion)) {
-            sistragesComponent.obtenerConfiguracionEntidad(params[1]);
-        }
-
-        if ("ECE".equals(accion)) {
-            sistragesComponent.evictConfiguracionEntidad(params[1]);
-        }
-
-        if ("RDT".equals(accion)) {
-            sistragesComponent.recuperarDefinicionTramite(params[1],
-                    Integer.parseInt(params[2]), params[3]);
-        }
-
-        if ("EDT".equals(accion)) {
-            sistragesComponent.evictDefinicionTramite(params[1],
-                    Integer.parseInt(params[2]), params[3]);
-        }
-    }
-
     // -------------------------------------------------------
     // FUNCIONES PRIVADAS
     // -------------------------------------------------------
@@ -269,7 +231,7 @@ public class FlujoTramitacionComponentImpl
         // Obtenemos la definición del trámite del GTT (si no está el idioma
         // disponible, se coge el idioma por defecto o bien el primero
         // disponible)
-        final DefinicionTramiteSTG defTramGTT = sistragesComponent
+        final DefinicionTramiteSTG defTramGTT = configuracionComponent
                 .recuperarDefinicionTramite(pIdTramite, pVersion, pIdioma);
 
         // El idioma puede variar según los idiomas disponibles
@@ -282,7 +244,9 @@ public class FlujoTramitacionComponentImpl
         // Obtenemos las propiedades del trámite en el Catalogo de
         // Procedimientos
         final DefinicionTramiteCP tramiteCP = catalogoProcedimientosComponent
-                .obtenerDefinicionTramite(pIdTramiteCP, pIdioma);
+                .obtenerDefinicionTramite(
+                        defTramGTT.getDefinicionVersion().getIdEntidad(),
+                        pIdTramiteCP, pIdioma);
 
         // Props tipo flujo y entorno
         final TypeFlujoTramitacion tipoFlujo = TypeFlujoTramitacion
@@ -365,7 +329,7 @@ public class FlujoTramitacionComponentImpl
      * @return id sesion tramitacion
      */
     private String getIdSesionTramitacion() {
-        return datosSesion.getDatosTramite().getIdSesionTramitacion();
+        return idSesionTramitacion;
     }
 
     /**
@@ -374,8 +338,12 @@ public class FlujoTramitacionComponentImpl
      * @return si esta habilitado debug
      */
     private boolean isDebugEnabled() {
-        return datosSesion.getDefinicionTramite().getDefinicionVersion()
-                .getControlAcceso().isDebug();
+        boolean res = false;
+        if (datosSesion != null && datosSesion.getDefinicionTramite() != null) {
+            res = datosSesion.getDefinicionTramite().getDefinicionVersion()
+                    .getControlAcceso().isDebug();
+        }
+        return res;
     }
 
     /**

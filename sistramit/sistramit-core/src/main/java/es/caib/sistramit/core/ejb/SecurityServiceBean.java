@@ -33,17 +33,18 @@ public class SecurityServiceBean implements SecurityService {
     }
 
     @Override
-    public String iniciarSesionAutenticacion(final String lang,
-            List<TypeAutenticacion> authList, String qaa,
-            final String urlCallback) {
-        return securityService.iniciarSesionAutenticacion(lang, authList, qaa,
-                urlCallback);
+    public String iniciarSesionAutenticacion(final String entidad,
+            final String lang, List<TypeAutenticacion> authList, String qaa,
+            final String urlCallback, final boolean debug) {
+        return securityService.iniciarSesionAutenticacion(entidad, lang,
+                authList, qaa, urlCallback, debug);
     }
 
     @Override
-    public String iniciarLogoutSesionClave(final String lang,
-            final String urlCallback) {
-        return securityService.iniciarLogoutSesionClave(lang, urlCallback);
+    public String iniciarLogoutSesion(final String idEntidad, final String lang,
+            final String urlCallback, final boolean debug) {
+        return securityService.iniciarLogoutSesion(idEntidad, lang, urlCallback,
+                debug);
     }
 
     @Override
@@ -77,6 +78,11 @@ public class SecurityServiceBean implements SecurityService {
             String idSesionTramitacion) {
         return securityService
                 .obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
+    }
+
+    @Override
+    public UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo) {
+        return securityService.validarUsuarioAnonimo(sesionInfo);
     }
 
 }

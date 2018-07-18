@@ -168,8 +168,8 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
                     .getApellido1());
             du.setApellido2(pDatosSesion.getDatosTramite().getIniciador()
                     .getApellido2());
-            du.setEmail(
-                    pDatosSesion.getDatosTramite().getIniciador().getEmail());
+            du.setCorreo(
+                    pDatosSesion.getDatosTramite().getIniciador().getCorreo());
         }
 
         vf.setUsuario(du);

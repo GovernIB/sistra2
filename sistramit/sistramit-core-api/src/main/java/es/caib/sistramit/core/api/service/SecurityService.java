@@ -48,6 +48,8 @@ public interface SecurityService {
     /**
      * Inicio sesión en Clave.
      *
+     * @param idEntidad
+     *            codigo entidad
      * @param lang
      *            idioma
      * @param authList
@@ -56,21 +58,29 @@ public interface SecurityService {
      *            QAA
      * @param urlCallback
      *            url callback asistente
+     * @param debug
+     *            debug
      * @return url redireccion a Clave
      */
-    String iniciarSesionAutenticacion(String lang,
-            List<TypeAutenticacion> authList, String qaa, String urlCallback);
+    String iniciarSesionAutenticacion(final String idEntidad, final String lang,
+            List<TypeAutenticacion> authList, String qaa,
+            final String urlCallback, final boolean debug);
 
     /**
      * Cierre sesión en Clave.
      *
+     * @param idEntidad
+     *            codigo entidad
      * @param lang
      *            idioma
      * @param urlCallback
      *            url callback asistente
+     * @param debug
+     *            debug
      * @return url redireccion a Clave
      */
-    String iniciarLogoutSesionClave(String lang, String urlCallback);
+    String iniciarLogoutSesion(final String idEntidad, final String lang,
+            final String urlCallback, final boolean debug);
 
     /**
      * Valida acceso usuario desde Carpeta Ciudadana.
@@ -119,5 +129,14 @@ public interface SecurityService {
      */
     UsuarioAutenticadoInfo validarTicketPasarelaPagos(SesionInfo sesionInfo,
             String ticket);
+
+    /**
+     * Crea datos usuario info para login anonimo automatico.
+     *
+     * @param sesionInfo
+     *            Sesion info
+     * @return info usuario
+     */
+    UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo);
 
 }

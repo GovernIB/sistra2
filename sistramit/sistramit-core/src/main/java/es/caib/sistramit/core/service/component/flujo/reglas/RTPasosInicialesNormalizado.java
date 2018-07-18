@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
@@ -20,7 +19,6 @@ import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
  * @author Indra
  *
  */
-@Component("reglaPasosInicialesNormalizado")
 public final class RTPasosInicialesNormalizado implements ReglaTramitacion {
     @Override
     public boolean execute(final ContextoReglaTramitacion pCtx,

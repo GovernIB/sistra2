@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
@@ -28,12 +27,10 @@ import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
 import es.caib.sistramit.core.api.model.flujo.DetallePaso;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.PasoLista;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
-import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAccion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
@@ -44,10 +41,10 @@ import es.caib.sistramit.core.service.ApplicationContextProvider;
 import es.caib.sistramit.core.service.component.flujo.reglas.ContextoReglaTramitacion;
 import es.caib.sistramit.core.service.component.flujo.reglas.ReglaTramitacion;
 import es.caib.sistramit.core.service.component.flujo.reglas.ReglasFlujo;
-import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersonalizacionTramite;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
 import es.caib.sistramit.core.service.model.flujo.NavegacionPaso;
@@ -78,9 +75,9 @@ public final class ControladorFlujoTramitacionImpl
     @Autowired
     private ModificacionesFlujo modificacionesFlujo;
 
-    /** Acceso a STG (avisos entidad). */
+    /** Configuracion. */
     @Autowired
-    private SistragesComponent stgComponent;
+    private ConfiguracionComponent configuracionComponent;
 
     /** Atributo constante logger. */
     private static final Logger LOGGER = LoggerFactory
@@ -383,52 +380,15 @@ public final class ControladorFlujoTramitacionImpl
     public DetalleTramite detalleTramite(
             final DatosSesionTramitacion pDatosSesion) {
 
-        final DetalleTramite detalleTramite = new DetalleTramite();
+        // Recupera info entidad
+        final RConfiguracionEntidad entidadInfo = configuracionComponent
+                .obtenerConfiguracionEntidad(pDatosSesion.getDefinicionTramite()
+                        .getDefinicionVersion().getIdEntidad());
 
-        // Datos generales
-        detalleTramite.setFechaDefinicion(UtilsFlujo.formateaFechaFront(
-                pDatosSesion.getDefinicionTramite().getFechaRecuperacion()));
-        detalleTramite.setIdSesionTramitacion(
-                pDatosSesion.getDatosTramite().getIdSesionTramitacion());
-        detalleTramite
-                .setIdTramite(pDatosSesion.getDatosTramite().getIdTramite());
-        detalleTramite
-                .setVersion(pDatosSesion.getDatosTramite().getVersionTramite());
-        detalleTramite.setDebug(TypeSiNo.fromBoolean(
-                UtilsSTG.isDebugEnabled(pDatosSesion.getDefinicionTramite())));
-        detalleTramite.setEntorno(pDatosSesion.getDatosTramite().getEntorno());
-        // Indicamos si el tramite esta recien abierto (en el primer paso)
-        if (esTramiteNuevo(pDatosSesion)) {
-            detalleTramite.setNuevo(TypeSiNo.SI);
-        } else {
-            detalleTramite.setNuevo(TypeSiNo.NO);
-        }
-        detalleTramite.setIdioma(pDatosSesion.getDatosTramite().getIdioma());
-        detalleTramite
-                .setTitulo(pDatosSesion.getDatosTramite().getTituloTramite());
-        if (pDatosSesion.getDefinicionTramite().getDefinicionVersion()
-                .getPropiedades().isPersistente()) {
-            detalleTramite.setPersistente(TypeSiNo.SI);
-            detalleTramite.setDiasPersistencia(
-                    pDatosSesion.getDefinicionTramite().getDefinicionVersion()
-                            .getPropiedades().getDiasPersistencia());
-        } else {
-            detalleTramite.setPersistente(TypeSiNo.NO);
-        }
-        detalleTramite
-                .setTipoFlujo(pDatosSesion.getDatosTramite().getTipoFlujo());
-        detalleTramite.setAutenticacion(
-                pDatosSesion.getDatosTramite().getNivelAutenticacion());
-        detalleTramite.setMetodoAutenticacion(
-                pDatosSesion.getDatosTramite().getMetodoAutenticacionInicio());
-        detalleTramite
-                .setUsuario(pDatosSesion.getDatosTramite().getIniciador());
-        detalleTramite.setIdPasoActual(
-                pDatosSesion.getDatosTramite().getIdPasoActual());
-        detalleTramite.setEntidad(recuperaDatosEntidad(
-                pDatosSesion.getDefinicionTramite().getDefinicionVersion()
-                        .getIdEntidad(),
-                pDatosSesion.getDatosTramite().getIdioma()));
+        // Establece detalle tramite
+        final DetalleTramite detalleTramite = UtilsFlujo
+                .detalleTramite(pDatosSesion, entidadInfo);
+
         return detalleTramite;
     }
 
@@ -556,7 +516,7 @@ public final class ControladorFlujoTramitacionImpl
             final DatosSesionTramitacion pDatosSesion) {
 
         // Obtenemos avisos plataforma
-        final RAvisosEntidad avisosPlataforma = stgComponent
+        final RAvisosEntidad avisosPlataforma = configuracionComponent
                 .obtenerAvisosEntidad(pDatosSesion.getDefinicionTramite()
                         .getDefinicionVersion().getIdEntidad());
 
@@ -844,78 +804,6 @@ public final class ControladorFlujoTramitacionImpl
             LOGGER.debug(pDatosSesion.getDatosTramite().getIdSesionTramitacion()
                     + " - " + message);
         }
-    }
-
-    /**
-     * Indicamos si el tramite esta recien abierto (en el primer paso).
-     *
-     * @param pDatosSesion
-     *            Datos sesion
-     * @return indica si es nuevo
-     */
-    private boolean esTramiteNuevo(final DatosSesionTramitacion pDatosSesion) {
-        boolean nuevo = false;
-        // Miramos si estamos en el primer paso
-        if (pDatosSesion.getDatosTramite().getIndiceDatosPasoActual() == 0) {
-            // Si no hay mas pasos, consideramos que es nuevo
-            if (pDatosSesion.getDatosTramite().getDatosPasos()
-                    .size() == ConstantesNumero.N1) {
-                nuevo = true;
-            } else {
-                // Si hay mas pasos y el siguiente no esta inicializado,
-                // consideramos que es nuevo
-                if (pDatosSesion.getDatosTramite().getDatosPasos()
-                        .get(ConstantesNumero.N1)
-                        .getEstado() == TypeEstadoPaso.NO_INICIALIZADO) {
-                    nuevo = true;
-                }
-            }
-        }
-        return nuevo;
-    }
-
-    /**
-     * Recupera datos entidad
-     *
-     * @param idEntidad
-     *            id entidad
-     * @return entidad
-     */
-    private Entidad recuperaDatosEntidad(String idEntidad, String idioma) {
-
-        final RConfiguracionEntidad entidad = stgComponent
-                .obtenerConfiguracionEntidad(idEntidad);
-
-        final Entidad e = new Entidad();
-        e.setNombre(UtilsSTG.obtenerLiteral(entidad.getDescripcion(), idioma));
-        e.setLogo(entidad.getLogo());
-        e.setCss(entidad.getCss());
-        e.setContacto(
-                UtilsSTG.obtenerLiteral(entidad.getContactoHTML(), idioma));
-        e.setInfoLOPD(
-                UtilsSTG.obtenerLiteral(entidad.getInfoLopdHTML(), idioma));
-        e.setSoporteEmail(entidad.getEmail());
-        e.setSoporteTelefono(entidad.getAyudaTelefono());
-        e.setSoporteUrl(entidad.getAyudaUrl());
-        e.setUrlCarpeta(
-                UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), idioma));
-
-        final List<SoporteOpcion> soporteOpciones = new ArrayList<>();
-        if (entidad.getAyudaFormulario() != null
-                && !entidad.getAyudaFormulario().isEmpty()) {
-            for (final ROpcionFormularioSoporte ro : entidad
-                    .getAyudaFormulario()) {
-                final SoporteOpcion so = new SoporteOpcion();
-                so.setCodigo(ro.getCodigo().toString());
-                so.setTitulo(UtilsSTG.obtenerLiteral(ro.getTipo(), idioma));
-                so.setDescripcion(
-                        UtilsSTG.obtenerLiteral(ro.getDescripcion(), idioma));
-                soporteOpciones.add(so);
-            }
-        }
-        e.setSoporteOpciones(soporteOpciones);
-
-        return e;
     }
 
 }

@@ -19,6 +19,9 @@ public final class DetallePasoDebeSaber extends DetallePaso {
      */
     private String instrucciones;
 
+    /** Info LOPD (HTML). */
+    private String infoLOPD;
+
     /**
      * Lista de pasos con su descripcion.
      */
@@ -89,6 +92,25 @@ public final class DetallePasoDebeSaber extends DetallePaso {
      */
     public void setInstrucciones(String instrucciones) {
         this.instrucciones = instrucciones;
+    }
+
+    /**
+     * Método de acceso a infoLOPD.
+     * 
+     * @return infoLOPD
+     */
+    public String getInfoLOPD() {
+        return infoLOPD;
+    }
+
+    /**
+     * Método para establecer infoLOPD.
+     * 
+     * @param infoLOPD
+     *            infoLOPD a establecer
+     */
+    public void setInfoLOPD(String infoLOPD) {
+        this.infoLOPD = infoLOPD;
     }
 
 }

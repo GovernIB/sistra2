@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.service.component.integracion;
 
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 
 /**
  * Implementación acceso SISTRAGES.
@@ -49,13 +46,11 @@ public final class SistragesComponentImpl implements SistragesComponent {
     }
 
     @Override
-    public DefinicionTramiteSTG recuperarDefinicionTramite(String idTramite,
+    public RVersionTramite recuperarDefinicionTramite(String idTramite,
             int version, String idioma) {
         final RVersionTramite definicionVersion = sistragesApiComponent
                 .recuperarDefinicionTramite(idTramite, version, idioma);
-        final DefinicionTramiteSTG dt = new DefinicionTramiteSTG(new Date(),
-                definicionVersion);
-        return dt;
+        return definicionVersion;
     }
 
     @Override

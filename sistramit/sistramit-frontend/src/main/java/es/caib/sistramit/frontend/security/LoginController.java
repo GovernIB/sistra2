@@ -180,8 +180,10 @@ public final class LoginController {
      */
     @RequestMapping("/redirigirAutenticacionLogin.html")
     public ModelAndView redirigirAutenticacionLogin(
+            @RequestParam("entidad") String idEntidad,
             @RequestParam("metodosAutenticacion") String metodosAutenticacion,
-            @RequestParam(name = "qaa", required = false) String qaa) {
+            @RequestParam(name = "qaa", required = false) String qaa,
+            @RequestParam(name = "debug", required = false) boolean debug) {
         String lang = sesionHttp.getIdioma();
         if (lang == null) {
             lang = "es";
@@ -196,8 +198,9 @@ public final class LoginController {
         final String urlCallback = systemService.obtenerPropiedadConfiguracion(
                 TypePropiedadConfiguracion.URL_SISTRAMIT)
                 + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN;
-        return new ModelAndView("redirect:" + securityService
-                .iniciarSesionAutenticacion(lang, authList, qaa, urlCallback));
+        return new ModelAndView(
+                "redirect:" + securityService.iniciarSesionAutenticacion(
+                        idEntidad, lang, authList, qaa, urlCallback, debug));
     }
 
     /**
@@ -225,7 +228,9 @@ public final class LoginController {
      * @return Redirección a componente autenticación para realizar logout.
      */
     @RequestMapping("/redirigirAutenticacionLogout.html")
-    public ModelAndView redirigirAutenticacionLogout() {
+    public ModelAndView redirigirAutenticacionLogout(
+            @RequestParam("entidad") String idEntidad,
+            @RequestParam(name = "debug", required = false) boolean debug) {
         String lang = sesionHttp.getIdioma();
         if (lang == null) {
             lang = "es";
@@ -233,8 +238,8 @@ public final class LoginController {
         final String urlCallback = systemService.obtenerPropiedadConfiguracion(
                 TypePropiedadConfiguracion.URL_SISTRAMIT)
                 + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT;
-        return new ModelAndView("redirect:"
-                + securityService.iniciarLogoutSesionClave(lang, urlCallback));
+        return new ModelAndView("redirect:" + securityService
+                .iniciarLogoutSesion(idEntidad, lang, urlCallback, debug));
     }
 
     /**

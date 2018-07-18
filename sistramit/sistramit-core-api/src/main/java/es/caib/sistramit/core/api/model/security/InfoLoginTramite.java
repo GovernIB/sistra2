@@ -48,6 +48,16 @@ public final class InfoLoginTramite implements Serializable {
     private String qaa;
 
     /**
+     * Debug.
+     */
+    private boolean debug;
+
+    /**
+     * Login auto automático.
+     */
+    private boolean loginAnonimoAuto;
+
+    /**
      * Método de acceso a titulo.
      *
      * @return titulo
@@ -179,6 +189,44 @@ public final class InfoLoginTramite implements Serializable {
             }
         }
         return res;
+    }
+
+    /**
+     * Método de acceso a debug.
+     *
+     * @return debug
+     */
+    public boolean isDebug() {
+        return debug;
+    }
+
+    /**
+     * Método para establecer debug.
+     *
+     * @param debug
+     *            debug a establecer
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    /**
+     * Método de acceso a loginAnonimoAuto.
+     *
+     * @return loginAnonimoAuto
+     */
+    public boolean isLoginAnonimoAuto() {
+        return loginAnonimoAuto;
+    }
+
+    /**
+     * Método para establecer loginAnonimoAuto.
+     *
+     * @param loginAnonimoAuto
+     *            loginAnonimoAuto a establecer
+     */
+    public void setLoginAnonimoAuto(boolean loginAnonimoAuto) {
+        this.loginAnonimoAuto = loginAnonimoAuto;
     }
 
 }

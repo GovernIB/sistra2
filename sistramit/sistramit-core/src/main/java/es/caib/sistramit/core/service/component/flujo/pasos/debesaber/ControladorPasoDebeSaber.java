@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
@@ -110,6 +111,7 @@ public final class ControladorPasoDebeSaber
     private DetallePasoDebeSaber calcularDetallePaso(
             DatosInternosPasoDebeSaber dipa,
             DefinicionTramiteSTG definicionTramite) {
+
         final RPasoTramitacionDebeSaber defPaso = (RPasoTramitacionDebeSaber) UtilsSTG
                 .devuelveDefinicionPaso(dipa.getIdPaso(), definicionTramite);
 
@@ -132,10 +134,17 @@ public final class ControladorPasoDebeSaber
             descripcionesPaso.add(d);
         }
 
+        final RConfiguracionEntidad entidadInfo = getConfig()
+                .obtenerConfiguracionEntidad(definicionTramite
+                        .getDefinicionVersion().getIdEntidad());
+
         final DetallePasoDebeSaber dpds = new DetallePasoDebeSaber();
         dpds.setId(dipa.getIdPaso());
         dpds.setCompletado(TypeSiNo.SI);
         dpds.setInstrucciones(defPaso.getInstruccionesInicio());
+        dpds.setInstrucciones(
+                UtilsSTG.obtenerLiteral(entidadInfo.getInfoLopdHTML(),
+                        definicionTramite.getDefinicionVersion().getIdioma()));
         dpds.setPasos(descripcionesPaso);
         return dpds;
     }

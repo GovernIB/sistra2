@@ -48,7 +48,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         UsuarioAutenticadoInfo usuarioAutenticadoInfo = null;
         try {
 
-            if (ConstantesSeguridad.TICKET_USER_CARPETA.equals(usuario)) {
+            if (ConstantesSeguridad.ANONIMO_USER.equals(usuario)) {
+                // Usuario anonimo: autenticacion automatica carga persistencia
+                LOGGER.trace("Obtener user anonimo");
+                usuarioAutenticadoInfo = securityService
+                        .validarUsuarioAnonimo(sesionInfo);
+            } else if (ConstantesSeguridad.TICKET_USER_CARPETA
+                    .equals(usuario)) {
                 // Autenticacion por ticket
                 debug("Autenticacion desde Carpeta: " + passwd);
                 // Validamos ticket

@@ -1,6 +1,6 @@
 package es.caib.sistramit.core.service.component.integracion;
 
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
 
 /**
  * Acceso a componente Catálogo de procedimientos.
@@ -12,13 +12,16 @@ public interface CatalogoProcedimientosComponent {
 
     /**
      * Recupera configuración trámite.
-     * 
+     *
+     * @param idEntidad
+     *            id entidad
+     *
      * @param idTramiteCP
      *            id trámite
      * @param idioma
      *            idioma
      */
-    DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP,
-            String idioma);
+    DefinicionTramiteCP obtenerDefinicionTramite(String idEntidad,
+            String idTramiteCP, String idioma);
 
 }

@@ -2,19 +2,30 @@ package es.caib.sistramit.core.service.component.system;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fundaciobit.plugins.IPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RPlugin;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
+import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.exception.CargaConfiguracionException;
+import es.caib.sistramit.core.api.exception.PluginErrorException;
+import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
+import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
+import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 
 @Component("configuracionComponent")
 public class ConfiguracionComponentImpl implements ConfiguracionComponent {
@@ -42,6 +53,41 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
             prop = getPropiedadGlobal(propiedad);
         }
         return prop;
+    }
+
+    @Override
+    public DefinicionTramiteSTG recuperarDefinicionTramite(String idTramite,
+            int version, String idioma) {
+        final RVersionTramite definicionVersion = sistragesComponent
+                .recuperarDefinicionTramite(idTramite, version, idioma);
+        final DefinicionTramiteSTG dt = new DefinicionTramiteSTG(new Date(),
+                definicionVersion);
+        return dt;
+    }
+
+    @Override
+    public RConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad) {
+        return sistragesComponent.obtenerConfiguracionEntidad(idEntidad);
+    }
+
+    @Override
+    public RAvisosEntidad obtenerAvisosEntidad(String idEntidad) {
+        return sistragesComponent.obtenerAvisosEntidad(idEntidad);
+    }
+
+    @Override
+    public IPlugin obtenerPluginGlobal(TypePluginGlobal tipoPlugin) {
+        final RConfiguracionGlobal confGlobal = sistragesComponent
+                .obtenerConfiguracionGlobal();
+        return createPlugin(confGlobal.getPlugins(), tipoPlugin.toString());
+    }
+
+    @Override
+    public IPlugin obtenerPluginEntidad(TypePluginEntidad tipoPlugin,
+            String idEntidad) {
+        final RConfiguracionEntidad confEntidad = sistragesComponent
+                .obtenerConfiguracionEntidad(idEntidad);
+        return createPlugin(confEntidad.getPlugins(), tipoPlugin.toString());
     }
 
     // ----------------------------------------------------------------------
@@ -93,4 +139,31 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
         return res;
     }
 
+    private IPlugin createPlugin(final List<RPlugin> plugins,
+            final String plgTipo) {
+        IPlugin plg = null;
+        String className = null;
+        try {
+            for (final RPlugin p : plugins) {
+                if (p.getTipo().equals(plgTipo)) {
+                    className = p.getClassname();
+                    break;
+                }
+            }
+
+            if (className == null) {
+                throw new PluginErrorException(
+                        "No existe plugin de tipo " + plgTipo);
+            }
+
+            // TODO Revisar creación y establecer props
+            plg = (IPlugin) Class.forName(className).newInstance();
+
+        } catch (InstantiationException | IllegalAccessException
+                | ClassNotFoundException e) {
+            throw new PluginErrorException("Error al instanciar plugin "
+                    + plgTipo + " con classname " + className, e);
+        }
+        return plg;
+    }
 }

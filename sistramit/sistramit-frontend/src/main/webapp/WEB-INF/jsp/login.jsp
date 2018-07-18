@@ -12,8 +12,14 @@
 
 	<script type="text/javascript">
 
-			function login() {
-				document.location="redirigirAutenticacionLogin.html?metodosAutenticacion=${login.nivelesAutenticacionToString()}&qaa=${login.qaa}";
+			function loginComponenteAutenticacion() {
+				document.location="redirigirAutenticacionLogin.html?entidad=${entidad.id}&metodosAutenticacion=${login.nivelesAutenticacionToString()}&qaa=${login.qaa}&debug=${login.debug}";
+			}
+
+			function loginAnonimoAuto() {
+				document.getElementById("username").value = "<%=es.caib.sistramit.core.api.model.security.ConstantesSeguridad.ANONIMO_USER%>";
+				document.getElementById("password").value = "<%=es.caib.sistramit.core.api.model.security.ConstantesSeguridad.ANONIMO_USER%>";
+				document.getElementById("formLogin").submit();
 			}
 
 	</script>
@@ -46,9 +52,16 @@
 
 
 	<!-- Deberia lanzarse automaticamente tras revision avisos plataforma -->
+	<c:if test="${not login.loginAnonimoAuto}">
 	<p>
-		<a href="javascript:login()"> Redireccion componente autenticacion </a>
+		<a href="javascript:loginComponenteAutenticacion()"> Redireccion componente autenticacion (deberia lanzarse automaticamente tras revision avisos plataforma) </a>
 	</p>
+	</c:if>
+	<c:if test="${login.loginAnonimoAuto}">
+	<p>
+		<a href="javascript:loginAnonimoAuto()"> Autenticación anónima automática (deberia lanzarse automaticamente tras revision avisos plataforma) </a>
+	</p>
+	</c:if>
 
 	<!-- Form para envio parametros login -->
 	<form name="formLogin" id="formLogin" method="post" action="login">

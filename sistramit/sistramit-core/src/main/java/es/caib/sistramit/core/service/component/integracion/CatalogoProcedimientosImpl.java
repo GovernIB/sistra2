@@ -2,10 +2,13 @@ package es.caib.sistramit.core.service.component.integracion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistramit.core.service.model.integracion.DefinicionProcedimientoCP;
-import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.ICatalogoProcedimientosPlugin;
+import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 
 /**
  * Implementación acceso SISTRAGES.
@@ -20,24 +23,30 @@ public final class CatalogoProcedimientosImpl
     /** Log. */
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    /** Configuracion. */
+    @Autowired
+    private ConfiguracionComponent configuracionComponent;
+
     @Override
-    public DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP,
-            String idioma) {
+    public DefinicionTramiteCP obtenerDefinicionTramite(String idEntidad,
+            String idTramiteCP, String idioma) {
+        final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
+        return plgCP.obtenerDefinicionTramite(idTramiteCP, idioma);
+    }
 
-        // TODO PENDIENTE
-        final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
-        dp.setIdentificador("PROC1");
-        dp.setDescripcion("Procedimiento 1");
-        dp.setIdProcedimientoSIA("SIA1");
-        dp.setOrganoResponsableDir3("RespDIR3");
-
-        final DefinicionTramiteCP dt = new DefinicionTramiteCP();
-        dt.setIdentificador(idTramiteCP);
-        dt.setDescripcion("Tramite 1");
-        dt.setProcedimiento(dp);
-        dt.setVigente(true);
-
-        return dt;
+    /**
+     * Obtiene plugin
+     *
+     * @param idEntidad
+     *            idEntidad
+     *
+     * @return plugin
+     */
+    private ICatalogoProcedimientosPlugin getPlugin(String idEntidad) {
+        final ICatalogoProcedimientosPlugin plgCP = (ICatalogoProcedimientosPlugin) configuracionComponent
+                .obtenerPluginEntidad(TypePluginEntidad.CATALOGO_PROCEDIMIENTOS,
+                        idEntidad);
+        return plgCP;
     }
 
 }
