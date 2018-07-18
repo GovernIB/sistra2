@@ -371,8 +371,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea) {
-		return tramiteService.getTramiteByIdentificador(identificador, idArea);
+	public Tramite getTramiteByIdentificador(final String identificador) {
+		return tramiteService.getTramiteByIdentificador(identificador);
 	}
 
 	@Override
@@ -409,5 +409,11 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean checkAnexoRepetido(final Long idTramiteVersion, final String identificador, final Long idAnexo) {
 		return tramiteService.checkAnexoRepetido(idTramiteVersion, identificador, idAnexo);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo) {
+		return tramiteService.checkIdentificadorRepetido(identificador, codigo);
 	}
 }

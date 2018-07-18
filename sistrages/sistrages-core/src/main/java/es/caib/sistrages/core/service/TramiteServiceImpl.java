@@ -467,8 +467,8 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Override
 	@NegocioInterceptor
-	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea) {
-		return tramiteDao.getTramiteByIdentificador(identificador, idArea);
+	public Tramite getTramiteByIdentificador(final String identificador) {
+		return tramiteDao.getTramiteByIdentificador(identificador);
 	}
 
 	@Override
@@ -505,6 +505,12 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public boolean checkAnexoRepetido(final Long idTramiteVersion, final String identificador, final Long idAnexo) {
 		return tramitePasoDao.checkAnexoRepetido(idTramiteVersion, identificador, idAnexo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo) {
+		return tramiteDao.checkIdentificadorRepetido(identificador, codigo);
 	}
 
 }

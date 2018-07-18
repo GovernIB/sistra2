@@ -417,6 +417,10 @@ body{
 	margin-left: 10px !important;
 }
 
+.margin-left-25 {
+	margin-left: 25px !important;
+}
+
 .noBackground,.noBackground div {
    background: none !important;
 }

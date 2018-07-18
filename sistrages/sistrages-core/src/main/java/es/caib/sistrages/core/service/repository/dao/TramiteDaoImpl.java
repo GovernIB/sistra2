@@ -610,12 +610,11 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public Tramite getTramiteByIdentificador(final String identificador, final Long idArea) {
+	public Tramite getTramiteByIdentificador(final String identificador) {
 
-		final String sql = "Select t From JTramite t where t.area.codigo = :idArea and t.identificador = :identificador";
+		final String sql = "Select t From JTramite t where t.identificador = :identificador";
 		final Query query = entityManager.createQuery(sql);
 
-		query.setParameter("idArea", idArea);
 		query.setParameter("identificador", identificador);
 
 		final JTramite jtramite = (JTramite) query.getSingleResult();
@@ -630,6 +629,24 @@ public class TramiteDaoImpl implements TramiteDao {
 	@Override
 	public TramiteVersion getTramiteVersionByNumVersion(final int numeroVersion, final Long idTramite) {
 		final String sql = "Select t From JVersionTramite t where t.tramite.codigo = :idTramite and t.numeroVersion = :numeroVersion";
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idTramite", idTramite);
+		query.setParameter("numeroVersion", numeroVersion);
+
+		TramiteVersion tramiteVersion = null;
+		final List<JVersionTramite> resultado = query.getResultList();
+
+		if (!resultado.isEmpty()) {
+			tramiteVersion = resultado.get(0).toModel();
+		}
+
+		return tramiteVersion;
+	}
+	
+	@Override
+	public TramiteVersion getTramiteVersionByNumVersion( final String idTramite, final int numeroVersion) {
+		final String sql = "Select t From JVersionTramite t where t.tramite.identificador = :idTramite and t.numeroVersion = :numeroVersion";
 		final Query query = entityManager.createQuery(sql);
 
 		query.setParameter("idTramite", idTramite);
@@ -683,6 +700,30 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo) {
+		String sql = "Select count(t) From JTramite t where t.identificador = :identificador";
+		if (codigo != null) {
+			sql += " and t.codigo != :codigo";
+		}
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("identificador", identificador);
+		if (codigo != null) {
+			query.setParameter("codigo", codigo);
+		}
+
+		final Long cuantos = (Long) query.getSingleResult();
+
+		boolean repetido;
+		if (cuantos == 0) {
+			repetido = false;
+		} else {
+			repetido = true;
+		}
+		return repetido;
 	}
 
 }

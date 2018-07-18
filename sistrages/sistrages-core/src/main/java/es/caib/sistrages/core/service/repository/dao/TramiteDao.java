@@ -210,10 +210,9 @@ public interface TramiteDao {
 	 * Obtiene tramite a partir de identificador.
 	 *
 	 * @param identificador
-	 * @param idArea
 	 * @return
 	 */
-	Tramite getTramiteByIdentificador(String identificador, Long idArea);
+	Tramite getTramiteByIdentificador(String identificador);
 
 	/**
 	 * Obtiene tramite version a partir del num version y su id tramite.
@@ -239,5 +238,23 @@ public interface TramiteDao {
 	 * @return
 	 */
 	List<DominioTramite> getTramiteVersionByDominio(Long idDominio);
+
+	/**
+	 * Comprueba si el identificador está repetido.
+	 * 
+	 * @param identificador
+	 * @param codigo
+	 * @return
+	 */
+	boolean checkIdentificadorRepetido(String identificador, Long codigo);
+
+	/**
+	 *  Recupera el tramite Version dado el identificador logico
+	 * @param idTramite
+	 * @param numeroVersion
+	 * @return
+	 */
+	TramiteVersion getTramiteVersionByNumVersion(String idTramite, int numeroVersion);
+
 
 }

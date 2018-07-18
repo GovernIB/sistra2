@@ -446,10 +446,9 @@ public interface TramiteService {
 	 * Obtiene tramite por identificador.
 	 *
 	 * @param identificador
-	 * @param idArea
 	 * @return
 	 */
-	public Tramite getTramiteByIdentificador(String identificador, Long idArea);
+	public Tramite getTramiteByIdentificador(String identificador);
 
 	/**
 	 * Obtiene el tramite version con el num. version más alto.
@@ -496,5 +495,14 @@ public interface TramiteService {
 	 * @return
 	 */
 	public boolean checkAnexoRepetido(Long idTramiteVersion, String identificador, Long idAnexo);
+
+	/**
+	 * Comprueba si el identificador está repetido.
+	 * 
+	 * @param identificador
+	 * @param codigo
+	 * @return
+	 */
+	public boolean checkIdentificadorRepetido(String identificador, Long codigo);
 
 }

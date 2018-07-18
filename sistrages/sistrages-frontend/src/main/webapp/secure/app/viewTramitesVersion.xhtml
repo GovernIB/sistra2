@@ -73,7 +73,7 @@
 			        	  selectionMode="single" selection="#{viewTramitesVersion.datoSeleccionado}" rowKey="#{td.codigo}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect"   listener="#{viewTramitesVersion.actualizarPermisos()}"  update=":form" delay="500" />
+				<p:ajax event="rowSelect"   listener="#{viewTramitesVersion.actualizarPermisos()}"  update=":form"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"
