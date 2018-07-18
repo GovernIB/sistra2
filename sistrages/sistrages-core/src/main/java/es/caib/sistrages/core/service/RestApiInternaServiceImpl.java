@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistrages.core.api.service.DominioService;
-import es.caib.sistrages.core.api.service.RestApiInternaService;
-import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.api.exception.FaltanDatosException;
+import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
@@ -19,7 +18,15 @@ import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.service.RestApiInternaService;
+import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.component.FuenteDatosComponent;
+import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
 import es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.EntidadDao;
@@ -29,6 +36,7 @@ import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioSoporteDao;
 import es.caib.sistrages.core.service.repository.dao.PluginsDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
+import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
 
 @Service
@@ -69,6 +77,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	/** DAO Tramite. */
 	@Autowired
 	TramiteDao tramiteDao;
+	
+	/** DAO Tramite Paso. **/
+	@Autowired
+	TramitePasoDao tramitePasoDao;
 
 	/**
 	 * dominio service.
@@ -83,7 +95,20 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	 * FormateadorFormulario
 	 */
 	@Autowired
-	FormateadorFormularioDao fmtDao;
+	FormateadorFormularioDao fmtDao;	
+	
+	/**
+	 * aviso entidad dao.
+	 */
+	@Autowired
+	AvisoEntidadDao avisoEntidadDao;
+	
+	
+	/**
+	 * Componente fuente de datos
+	 */
+	@Autowired
+	FuenteDatosComponent fuenteDatosComponent;
 
 
     @Override
@@ -136,6 +161,14 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public Tramite loadTramite(Long idTramite) {
 		return tramiteDao.getById(idTramite);
 	}
+	
+	@Override
+	@NegocioInterceptor
+	public TramiteVersion loadTramiteVersion(String idTramite, int version) {
+		return tramiteDao.getTramiteVersionByNumVersion(idTramite, version);
+	}
+	
+	
 
 
 	@Override
@@ -174,14 +207,39 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormularioById(final Long idPlantillaFormulario) {
 		return formIntDao.getListaPlantillaIdiomaFormularioById(idPlantillaFormulario);
 	}
+	
+	
+    @Override
+    @NegocioInterceptor
+    public DisenyoFormulario getDisenyoFormularioById(Long idForm) {
+	   return formIntDao.getFormularioCompletoById(idForm);
+    }
 
-
+    
     @Override
     @NegocioInterceptor
     public String getPaginaFormularioHTMLAsistente(Long pIdPage, String pLang) {
         // TODO PENDIENTE
         return "<html/>";
     }
+    
+    @Override
+	@NegocioInterceptor
+	public List<TramitePaso> getTramitePasos(final Long idTramiteVersion) {
+		return tramitePasoDao.getTramitePasos(idTramiteVersion);
+	}
+    
+    @Override
+	@NegocioInterceptor
+	public List<AvisoEntidad> getAvisosEntidad(final String pIdEntidad) {
+		return avisoEntidadDao.getAll(pIdEntidad);
+	}
 
 
+    @Override
+	@NegocioInterceptor
+	public ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros) {
+		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
+	}
+    
 }

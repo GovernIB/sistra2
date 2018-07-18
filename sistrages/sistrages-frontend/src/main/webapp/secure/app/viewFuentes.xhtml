@@ -32,18 +32,18 @@
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
-		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewFuentes.consultar()}" process="@this" update="growl" rendered="#{viewFuentes.checkPermisos() == false}" />
+		        		<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewFuentes.consultar()}" process="@this" update="growl" rendered="#{viewFuentes.getPermiteConsultar()}" />
 
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewFuentes.nuevo()}" process="@this" update="growl" rendered="#{viewFuentes.checkPermisosEntorno()}">
+		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewFuentes.nuevo()}" process="@this" update="growl" rendered="#{viewFuentes.getPermiteEditar()}">
 		        			<p:ajax event="dialogReturn" listener="#{viewFuentes.returnDialogo}" update="growl dataTable form:panelBotones"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewFuentes.editar()}" process="@this" update="growl" rendered="#{viewFuentes.checkPermisos()}">
+		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewFuentes.editar()}" process="@this" update="growl" rendered="#{viewFuentes.getPermiteEditar()}">
 		        			<p:ajax event="dialogReturn" listener="#{viewFuentes.returnDialogo}" update="growl dataTable form:panelBotones"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewFuentes.eliminar()}" process="@this" update="growl dataTable form:panelBotones"  rendered="#{viewFuentes.checkPermisosEntorno()}">
+		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewFuentes.eliminar()}" process="@this" update="growl dataTable form:panelBotones"  rendered="#{viewFuentes.getPermiteEditar()}">
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{!viewFuentes.filaSeleccionada}"/>
 		        		</p:commandButton>
-		        		<p:commandButton id="btnDatos" value="#{msg['botones.datos']}" icon="fa fa-table" actionListener="#{viewFuentes.datos()}" process="@this" update="growl dataTable form:panelBotones" rendered="#{viewFuentes.checkPermisos()}" />
+		        		<p:commandButton id="btnDatos" value="#{msg['botones.datos']}" icon="fa fa-table" actionListener="#{viewFuentes.datos()}" process="@this" update="growl dataTable form:panelBotones" rendered="#{viewFuentes.getPermiteEditar()}" />
 		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFuentes.ayudar()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
@@ -63,7 +63,7 @@
 
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" update="form:panelBotones" delay="500"/>
+				<p:ajax event="rowSelect" update="form:panelBotones"/>
 				<p:ajax event="rowDblselect"
 		                  		oncomplete="triggerDblClick();"
 		                        update=":form:dataTable"

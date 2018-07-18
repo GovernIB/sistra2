@@ -166,6 +166,7 @@
                         </execution>
                 </executions>
                 <configuration>
+                		<skip>true</skip>
                 		<generateGitPropertiesFile>true</generateGitPropertiesFile>
                         <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
                 </configuration>
@@ -180,19 +181,20 @@
 			      <execution>
 			      	<phase>compile</phase>
                    	<configuration>
-			      	 	<target>
+			      	 	<skip>true</skip>
+			      		<target>
                             <property name="compile_classpath" refid="maven.compile.classpath" />
                             <echo message="compile classpath: ${compile_classpath}" />
-                      	</target>
-			          	<tasks>
-							<copy file="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.original.xml" tofile="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.xml" overwrite="true"  />
-							<replace dir="src/main/webapp/WEB-INF" >
-				              	<include name="**/sistrages-ac-frontend.xml"/>
-				             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
-				             	<replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
-				            </replace>
-	
-				        </tasks>
+                        </target>
+			          <tasks>
+						<copy file="src/main/webapp/WEB-INF/sistrages-ac-frontend.original.xml" tofile="src/main/webapp/WEB-INF/sistrages-ac-frontend.xml" />
+			            <replace dir="src/main//webapp/WEB-INF" >
+			              	<include name="**/sistrages-ac-frontend.xml"/>
+			             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
+			             	<replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
+			            </replace>
+
+			          </tasks>
 			        </configuration>
 			        <goals>
                         <goal>run</goal>

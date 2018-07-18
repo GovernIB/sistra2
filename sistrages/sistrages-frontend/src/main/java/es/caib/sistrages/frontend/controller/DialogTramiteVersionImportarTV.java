@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportar;
+import es.caib.sistrages.frontend.model.FilaImportarTramiteVersion;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -22,7 +22,7 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportarTV.class);
 
 	/** FilaImportar. */
-	private FilaImportar data;
+	private FilaImportarTramiteVersion data;
 
 	/** Mensaje. **/
 	private String mensaje;
@@ -40,7 +40,8 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		setData((FilaImportar) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR));
+		setData((FilaImportarTramiteVersion) UtilJSF.getSessionBean().getMochilaDatos()
+				.get(Constantes.CLAVE_MOCHILA_IMPORTAR));
 
 		if (data.getTramiteVersionActual() == null) {
 
@@ -90,7 +91,7 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public FilaImportar getData() {
+	public FilaImportarTramiteVersion getData() {
 		return data;
 	}
 
@@ -98,7 +99,7 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FilaImportar data) {
+	public void setData(final FilaImportarTramiteVersion data) {
 		this.data = data;
 	}
 

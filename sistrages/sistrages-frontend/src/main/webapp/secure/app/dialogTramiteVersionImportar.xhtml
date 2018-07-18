@@ -88,9 +88,12 @@
 				</h:panelGrid>
 
 				<br />
-				<p:outputLabel value="#{msg['dialogTramiteVersionImportar.headerElementosComunes']}" style="margin-top:30px;text-decoration: underline;font-weight: bold" />
+				<p:outputLabel value="#{msg['dialogTramiteVersionImportar.headerElementosComunes']}" style="margin-left:5px;margin-top:30px;text-decoration: underline;font-weight: bold" />
+				<br />
 				<br />
 				<p:outputLabel value="Dominios" rendered="#{!empty dialogTramiteVersionImportar.filasDominios}"  style="padding-left:30px;text-decoration: underline;font-weight: bold" />
+				<br />
+				<br />
 				<h:dataTable headerClass="grid-left" value="#{dialogTramiteVersionImportar.filasDominios}" var="fila" width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status">
 
 					<h:column>
@@ -104,11 +107,6 @@
 					</h:column>
 
 					<h:column>
-						 <f:facet name = "header">tipo</f:facet>
-      					#{fila.dominio.tipo}
-					</h:column>
-
-					<h:column>
 						 <f:facet name = "header">estado</f:facet>
 						 <p:outputLabel id="labelDominio${fila.dominio.codigo}" value="#{fila.estado.literal}" />
 					</h:column>
@@ -116,7 +114,7 @@
 					<h:column>
 						 <f:facet name = "header">accion</f:facet>
       					#{fila.accion.literal}
-      					<p:commandButton value="..." renderer="#{dialogTramiteVersionImportar.mostrarBotonDominio(index)}" actionListener="#{dialogTramiteVersionImportar.checkDominio(fila.dominio.codigo)}" style="margin-left:5px" >
+      					<p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogTramiteVersionImportar.checkDominio(fila.dominio.codigo)}" style="margin-left:5px" >
       							<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionImportar.returnDialogoDominio}" />
 						</p:commandButton>
 					</h:column>
@@ -129,15 +127,18 @@
 				</h:dataTable>
 
 
-				<h:outputText value="Formateadores" rendered="#{!empty dialogTramiteVersionImportar.filasFormateador}" />
-				<h:dataTable value="#{dialogTramiteVersionImportar.filasFormateador}" var="fila" rendered="#{!empty dialogTramiteVersionImportar.filasFormateador}" width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove">
-					<h:column>
-						 <f:facet name = "header" style="text-align: left;">ID</f:facet>
+				<br />
+				<h:outputText value="Formateadores" rendered="#{!empty dialogTramiteVersionImportar.filasFormateador}" style="padding-left:30px;text-decoration: underline;font-weight: bold" />
+				<br />
+				<br />
+				<h:dataTable headerClass="grid-left" value="#{dialogTramiteVersionImportar.filasFormateador}" var="fila" rendered="#{!empty dialogTramiteVersionImportar.filasFormateador}"  width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" >
+					<h:column style="text-align:left">
+						 <f:facet name = "header">ID</f:facet>
       					#{fila.formateadorFormulario.identificador}
 					</h:column>
 
 					<h:column>
-						 <f:facet name = "header" style="text-align: left;">descripcion</f:facet>
+						 <f:facet name = "header">descripcion</f:facet>
       					#{fila.formateadorFormulario.descripcion}
 					</h:column>
 
@@ -157,6 +158,11 @@
 					</h:column>
 
 				</h:dataTable>
+
+				<br />
+				<br />
+				<br />
+				<br />
 
 			</p:outputPanel>
 

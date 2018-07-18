@@ -50,7 +50,16 @@
 		<opencsv.version>2.0</opencsv.version>
 		<ehcache.version>2.10.5</ehcache.version>
 		<h2.database.version>1.4.179</h2.database.version>
-	</properties>
+		<swagger.version>2.7.0</swagger.version>
+		<plugins-ib.version>1.0.0</plugins-ib.version>	</properties>
+
+	<repositories>
+	    <repository>
+	      <id>governIB</id>
+	      <url>https://governIB.github.io/maven/maven/</url>
+   		</repository>
+   	</repositories>
+
   	<modules>
   		<!-- Modulos comunes -->
   		<module>sistracom</module>

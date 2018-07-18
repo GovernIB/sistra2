@@ -8,6 +8,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -49,6 +50,13 @@ public class DialogTramite extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (isIdentificadorRepetido()) {
+			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+					UtilJSF.getLiteral("dialogTramite.error.identificadorDuplicado"));
+			return;
+		}
+
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
@@ -62,11 +70,21 @@ public class DialogTramite extends DialogControllerBase {
 			// No hay que hacer nada
 			break;
 		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data.getIdentificador());
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Comprueba si el identificador esta repetido.
+	 * 
+	 * @return
+	 */
+	private boolean isIdentificadorRepetido() {
+		return tramiteService.checkIdentificadorRepetido(data.getIdentificador(), data.getCodigo());
 	}
 
 	/**

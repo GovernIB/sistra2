@@ -18,5 +18,4 @@ public class AreaComponentImpl implements AreaComponent {
 	public void add(final Long idEntidad, final Area area) {
 		areaDao.add(idEntidad, area);
 	}
-
 }
