@@ -10,5 +10,8 @@
 
 	<modules>
 		<module>sistracom-utils</module>
+		<module>sistracom-plugins</module>
+		<module>sistracom-plugins-mock</module>
 	</modules>
+
 </project>
