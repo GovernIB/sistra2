@@ -28,5 +28,9 @@
        <property name="suffix" value=".jsp"></property>
      </bean>
 
+	<!-- Mapeo resources requeridos por swagger -->
+	<mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
+	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+
 
 </beans>

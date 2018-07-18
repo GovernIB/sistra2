@@ -32,22 +32,6 @@
     <url-pattern>*</url-pattern>
   </filter-mapping>
   
-  <!-- Jersey Rest
-  <servlet>
-    <servlet-name>Jersey Web Application</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    <init-param>
-      <param-name>jersey.config.server.provider.packages</param-name>
-      <param-value>es.caib.sistrages.rest</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Jersey Web Application</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
-  </servlet-mapping>
-  -->
-  
   <!-- Spring servlet -->
   <servlet>
     <servlet-name>sistrages-rest</servlet-name>
@@ -55,11 +39,11 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-	<servlet-name>sistrages-rest</servlet-name>
-	<url-pattern>/rest/*</url-pattern>
+	 <servlet-name>sistrages-rest</servlet-name>
+	 <url-pattern>/rest/*</url-pattern>
  </servlet-mapping>
   
-   <!-- Securizacion -->
+   <!-- Securizacion --> 
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>sistrages-rest-ws</web-resource-name>

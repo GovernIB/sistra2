@@ -2,21 +2,28 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Configuracion global.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RConfiguracionGlobal", description = "Descripcion de RConfiguracionGlobal")
 public class RConfiguracionGlobal {
 
     /** Timestamp recuperacion. */
+	@ApiModelProperty(value = "timestamp", required = false)
     private String timestamp;
 
     /** Propiedades. */
+	@ApiModelProperty(value = "lista de parametros", required = false)
     private RListaParametros propiedades;
 
     /** Plugins. */
+	@ApiModelProperty(value = "lista de plugins", required = false)
     private List<RPlugin> plugins;
 
     /**

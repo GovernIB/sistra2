@@ -27,6 +27,7 @@ public class AdapterUtils {
 	private final static String literalDefectoError= "?err?";
 	public final static String SEPARADOR_IDIOMAS= ";";
 	public static final String SEPARADOR_EXTENSIONES = SEPARADOR_IDIOMAS;
+	public static final String FORMATO_FECHA = "yyyyMMddHHmmss";
 
 
 
@@ -51,7 +52,7 @@ public class AdapterUtils {
 	/**
 	 * retorna el idioma especicficado. si se indica el idi por defecto, si no se
 	 * encuentra el idioma esperado se retorna el idioma por defecto, si no retorna
-	 * el primer idioma
+	 * el primer idioma. si el literal "ori" es null retorna "literalDefectoError"
 	 *
 	 * @param ori
 	 * @param idioma
@@ -61,12 +62,12 @@ public class AdapterUtils {
 	public static String generarLiteralIdioma(Literal ori, String idioma) {
 		try {
 			for (Traduccion t : ori.getTraducciones()) {
-				if (t.getIdioma().equals(idioma)) {
+				if (idioma.equals(t.getIdioma())) {
 					return t.getLiteral();
 				}
 			}
 		} catch (Exception e) {
-			return literalDefectoError;
+			return literalDefectoError; // si el literal es null por ejemplo.
 		}
 		return literalDefecto;
 	}
@@ -93,7 +94,7 @@ public class AdapterUtils {
 			for (Plugin p : lpg) {
 				RPlugin plugin;
 				plugin = new RPlugin();
-				plugin.setTipo(p.getTipo().name());
+				plugin.setTipo(p.getTipo()==null?null:p.getTipo().toString());
 				plugin.setClassname(p.getClassname());
 				plugin.setParametros(toListaParametrosFromPropiedad(p.getPropiedades()));
 				plugins.add(plugin);
@@ -105,10 +106,16 @@ public class AdapterUtils {
 	}
 
 	public static RScript generaScript(Script origen) {
-		RScript s = new RScript();
-		s.setScript(origen.getContenido());
-		//TODO: añadir los literales
-		return s;
+		
+		if(origen!=null) {
+			RScript s = new RScript();
+			s.setScript(origen.getContenido());
+			//TODO: añadir los literales	
+			return s;
+		}else {
+			return null;
+		}		
+		
 	}
 
 }
