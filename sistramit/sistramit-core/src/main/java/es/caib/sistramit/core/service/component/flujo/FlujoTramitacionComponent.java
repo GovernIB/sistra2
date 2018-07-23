@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.flujo;
 
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
@@ -41,5 +42,29 @@ public interface FlujoTramitacionComponent {
     void cancelarTramite();
 
     FlujoTramitacionInfo obtenerFlujoTramitacionInfo();
+
+    /**
+     * Envío formulario de soporte.
+     *
+     * @param idSesionTramitacion
+     *            id sesión tramitación
+     * @param nif
+     *            nif
+     * @param nombre
+     *            nombre
+     * @param telefono
+     *            telefono
+     * @param email
+     *            email
+     * @param problemaTipo
+     *            problema tipo
+     * @param problemaDesc
+     *            problema descripción
+     * @param anexo
+     *            anexo
+     */
+    void envioFormularioSoporte(String nif, String nombre, String telefono,
+            String email, String problemaTipo, String problemaDesc,
+            AnexoFichero anexo);
 
 }

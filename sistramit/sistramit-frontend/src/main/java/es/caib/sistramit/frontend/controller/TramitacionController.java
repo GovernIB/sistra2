@@ -437,10 +437,20 @@ public abstract class TramitacionController {
         return ma;
     }
 
+    /**
+     * Obtiene tramitacion service.
+     * 
+     * @return tramitacion service.
+     */
     protected FlujoTramitacionService getFlujoTramitacionService() {
         return flujoTramitacionService;
     }
 
+    /**
+     * Obtiene system service.
+     * 
+     * @return system service.
+     */
     protected SystemService getSystemService() {
         return systemService;
     }

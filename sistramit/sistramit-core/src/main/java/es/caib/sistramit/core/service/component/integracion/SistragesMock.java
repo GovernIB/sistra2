@@ -163,6 +163,13 @@ public class SistragesMock {
         plugin.setParametros(crearListaParametros());
         plugins.add(plugin);
 
+        plugin = new RPlugin();
+        plugin.setTipo(TypePluginGlobal.EMAIL.toString());
+        plugin.setClassname(
+                "es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock");
+        plugin.setParametros(crearListaParametros());
+        plugins.add(plugin);
+
         return plugins;
     }
 

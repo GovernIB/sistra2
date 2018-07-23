@@ -10,6 +10,8 @@
 		<sistra2.version>0.0.1-SNAPSHOT</sistra2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+		<schema.generate.databaseProductName>Oracle</schema.generate.databaseProductName>
+		<schema.generate.databaseVersion>12</schema.generate.databaseVersion>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
 		<maven.jar.version>3.0.2</maven.jar.version>
 		<maven.war.version>3.2.0</maven.war.version>
@@ -37,6 +39,7 @@
 		<jersey-gf-cdi.version>2.14</jersey-gf-cdi.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>
 		<hibernate-validator.version>5.4.2.Final</hibernate-validator.version>
+		<hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
 		<javassist.version>3.22.0-GA</javassist.version>
 		<commons-lang3.version>3.7</commons-lang3.version>
 		<commons-text.version>1.4</commons-text.version>

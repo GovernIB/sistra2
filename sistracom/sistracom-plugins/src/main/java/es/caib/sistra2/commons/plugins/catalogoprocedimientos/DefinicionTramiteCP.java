@@ -19,6 +19,9 @@ public class DefinicionTramiteCP implements Serializable {
     /** Título trámite. */
     private String descripcion;
 
+    /** Email soporte incidencias. */
+    private String emailSoporte;
+
     /** Procedimiento asociado. */
     private DefinicionProcedimientoCP procedimiento;
 
@@ -45,7 +48,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a identificador.
-     * 
+     *
      * @return identificador
      */
     public String getIdentificador() {
@@ -54,7 +57,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer identificador.
-     * 
+     *
      * @param identificador
      *            identificador a establecer
      */
@@ -64,7 +67,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a descripcion.
-     * 
+     *
      * @return descripcion
      */
     public String getDescripcion() {
@@ -73,7 +76,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer descripcion.
-     * 
+     *
      * @param descripcion
      *            descripcion a establecer
      */
@@ -83,7 +86,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a procedimiento.
-     * 
+     *
      * @return procedimiento
      */
     public DefinicionProcedimientoCP getProcedimiento() {
@@ -92,7 +95,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer procedimiento.
-     * 
+     *
      * @param procedimiento
      *            procedimiento a establecer
      */
@@ -102,7 +105,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a vigente.
-     * 
+     *
      * @return vigente
      */
     public boolean isVigente() {
@@ -111,7 +114,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer vigente.
-     * 
+     *
      * @param vigente
      *            vigente a establecer
      */
@@ -121,7 +124,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a plazoInicio.
-     * 
+     *
      * @return plazoInicio
      */
     public Date getPlazoInicio() {
@@ -130,7 +133,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer plazoInicio.
-     * 
+     *
      * @param plazoInicio
      *            plazoInicio a establecer
      */
@@ -140,7 +143,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a plazoFin.
-     * 
+     *
      * @return plazoFin
      */
     public Date getPlazoFin() {
@@ -149,7 +152,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer plazoFin.
-     * 
+     *
      * @param plazoFin
      *            plazoFin a establecer
      */
@@ -159,7 +162,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a urlInformacion.
-     * 
+     *
      * @return urlInformacion
      */
     public String getUrlInformacion() {
@@ -168,7 +171,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer urlInformacion.
-     * 
+     *
      * @param urlInformacion
      *            urlInformacion a establecer
      */
@@ -178,7 +181,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a organoDestinoDir3.
-     * 
+     *
      * @return organoDestinoDir3
      */
     public String getOrganoDestinoDir3() {
@@ -187,7 +190,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer organoDestinoDir3.
-     * 
+     *
      * @param organoDestinoDir3
      *            organoDestinoDir3 a establecer
      */
@@ -197,7 +200,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a documentos.
-     * 
+     *
      * @return documentos
      */
     public List<DefinicionDocumentoTramiteCP> getDocumentos() {
@@ -206,7 +209,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer documentos.
-     * 
+     *
      * @param documentos
      *            documentos a establecer
      */
@@ -216,7 +219,7 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método de acceso a tasas.
-     * 
+     *
      * @return tasas
      */
     public List<DefinicionTasaTramiteCP> getTasas() {
@@ -225,12 +228,31 @@ public class DefinicionTramiteCP implements Serializable {
 
     /**
      * Método para establecer tasas.
-     * 
+     *
      * @param tasas
      *            tasas a establecer
      */
     public void setTasas(List<DefinicionTasaTramiteCP> tasas) {
         this.tasas = tasas;
+    }
+
+    /**
+     * Método de acceso a emailSoporte.
+     * 
+     * @return emailSoporte
+     */
+    public String getEmailSoporte() {
+        return emailSoporte;
+    }
+
+    /**
+     * Método para establecer emailSoporte.
+     * 
+     * @param emailSoporte
+     *            emailSoporte a establecer
+     */
+    public void setEmailSoporte(String emailSoporte) {
+        this.emailSoporte = emailSoporte;
     }
 
 }

@@ -8,33 +8,54 @@ package es.caib.sistramit.core.api.model.flujo.types;
  */
 public enum TypeAccionPasoRellenar implements TypeAccionPaso {
 
-	// TODO Pendiente definir accciones
+    /**
+     * Abrir formulario. Parámetros entrada: idFormulario. Parámetros salida:
+     * referencia (AbrirFormulario).
+     */
+    ABRIR_FORMULARIO,
 
-	ABRIR_FORMULARIO, GUARDAR_FORMULARIO, DESCARGAR_FORMULARIO(false), DESCARGAR_XML(false);
+    /**
+     * Guardar formulario. Parámetros entrada: idFormulario / ticket /
+     * borrarOpcional (TypeSiNo). Parámetros salida: cancelado (TypeSiNo) /
+     * correcto (TypeSiNo) / mensajeIncorrecto.
+     */
+    GUARDAR_FORMULARIO,
 
-	/**
-	 * Indica si la acción modifica datos del paso.
-	 */
-	private boolean modificaPasoRelenar = true;
+    /**
+     * Descargar formulario. Parámetros entrada: idFormulario Parámetros salida:
+     * nombreFichero, datosFichero (byte[])
+     */
+    DESCARGAR_FORMULARIO(false),
 
-	/**
-	 * Constructor.
-	 *
-	 * @param pmodificaPaso
-	 *            Indica si modifica el paso.
-	 */
-	private TypeAccionPasoRellenar(final boolean pmodificaPaso) {
-		modificaPasoRelenar = pmodificaPaso;
-	}
+    /**
+     * Descargar xml para debug. Parámetros entrada: idFormulario Parámetros
+     * salida: xml (byte[])
+     */
+    DESCARGAR_XML(false);
 
-	/**
-	 * Constructor.
-	 */
-	private TypeAccionPasoRellenar() {
-	}
+    /**
+     * Indica si la acción modifica datos del paso.
+     */
+    private boolean modificaPasoRelenar = true;
 
-	@Override
-	public boolean isModificaPaso() {
-		return modificaPasoRelenar;
-	}
+    /**
+     * Constructor.
+     *
+     * @param pmodificaPaso
+     *            Indica si modifica el paso.
+     */
+    private TypeAccionPasoRellenar(final boolean pmodificaPaso) {
+        modificaPasoRelenar = pmodificaPaso;
+    }
+
+    /**
+     * Constructor.
+     */
+    private TypeAccionPasoRellenar() {
+    }
+
+    @Override
+    public boolean isModificaPaso() {
+        return modificaPasoRelenar;
+    }
 }

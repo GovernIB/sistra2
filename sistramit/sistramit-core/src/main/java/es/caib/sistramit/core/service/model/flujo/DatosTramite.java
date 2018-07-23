@@ -119,6 +119,11 @@ public final class DatosTramite implements Serializable {
     private Date ultimoAcceso;
 
     /**
+     * Fecha de inicio.
+     */
+    private Date fechaInicio;
+
+    /**
      * Fecha de caducidad (en caso de ser persistente con días de persistencia).
      */
     private Date fechaCaducidad;
@@ -790,6 +795,25 @@ public final class DatosTramite implements Serializable {
      */
     public void setTimestampFlujo(final Date pTimestampFlujo) {
         timestampFlujo = pTimestampFlujo;
+    }
+
+    /**
+     * Método de acceso a fechaInicio.
+     * 
+     * @return fechaInicio
+     */
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    /**
+     * Método para establecer fechaInicio.
+     * 
+     * @param fechaInicio
+     *            fechaInicio a establecer
+     */
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
 }

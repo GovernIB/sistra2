@@ -16,6 +16,7 @@ import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
@@ -281,6 +282,48 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         Assert.isTrue(dp.getActual().getTipo() == TypePaso.DEBESABER,
                 "Paso inicial no es debe saber");
         this.logger.info("Detalle paso: " + dp.print());
+
+    }
+
+    /** Verificación soporte incidencias. */
+    @Test
+    public void test7_soporteIncidencias() {
+
+        final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
+                TypeAutenticacion.AUTENTICADO);
+
+        // Generar sesion tramitacion
+        final String idSesionTramitacion = flujoTramitacionService
+                .crearSesionTramitacion(usuarioAutenticadoInfo);
+
+        // Iniciar trámite
+        final Map<String, String> parametrosInicio = new HashMap<>();
+        flujoTramitacionService.iniciarTramite(idSesionTramitacion, ID_TRAMITE,
+                VERSION_TRAMITE, IDIOMA, ID_TRAMITE_CP, URL_INICIO,
+                parametrosInicio);
+        Assert.isTrue(idSesionTramitacion != null,
+                "No se devuelve id sesion tramitacion");
+        this.logger.info("Tramite iniciado: " + idSesionTramitacion);
+
+        // Detalle tramite
+        final DetalleTramite dt = flujoTramitacionService
+                .obtenerDetalleTramite(idSesionTramitacion);
+        Assert.isTrue(idSesionTramitacion.equals(dt.getTramite().getIdSesion()),
+                "No coincide id sesion tramitacion");
+        this.logger.info("Detalle Tramite: " + dt.print());
+
+        final AnexoFichero anexo = new AnexoFichero();
+        anexo.setFileName("fichero.txt");
+        anexo.setFileContent("Hola".getBytes());
+        anexo.setFileContentType("text/plain");
+        flujoTramitacionService.envioFormularioSoporte(idSesionTramitacion,
+                usuarioAutenticadoInfo.getNif(),
+                usuarioAutenticadoInfo.getNombre(), "961234567",
+                "usu@correo.es",
+                dt.getEntidad().getSoporte().getProblemas().get(0).getCodigo(),
+                "Problema", anexo);
+
+        this.logger.info("Email enviado");
 
     }
 

@@ -26,8 +26,20 @@ public final class Entidad implements ModelApi {
     /** Url carpeta. */
     private String urlCarpeta;
 
+    /** Url mapa web. */
+    private String urlMapaWeb;
+
+    /** Url aviso legal. */
+    private String urlAvisoLegal;
+
+    /** Url rss. */
+    private String urlRss;
+
     /** Soporte. */
     private EntidadSoporte soporte;
+
+    /** Redes sociales. */
+    private EntidadRedesSociales redes;
 
     /**
      * Método de acceso a logo.
@@ -145,7 +157,7 @@ public final class Entidad implements ModelApi {
 
     /**
      * Método de acceso a id.
-     * 
+     *
      * @return id
      */
     public String getId() {
@@ -154,12 +166,88 @@ public final class Entidad implements ModelApi {
 
     /**
      * Método para establecer id.
-     * 
+     *
      * @param id
      *            id a establecer
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * Método de acceso a urlMapaWeb.
+     * 
+     * @return urlMapaWeb
+     */
+    public String getUrlMapaWeb() {
+        return urlMapaWeb;
+    }
+
+    /**
+     * Método para establecer urlMapaWeb.
+     * 
+     * @param urlMapaWeb
+     *            urlMapaWeb a establecer
+     */
+    public void setUrlMapaWeb(String urlMapaWeb) {
+        this.urlMapaWeb = urlMapaWeb;
+    }
+
+    /**
+     * Método de acceso a urlAvisoLegal.
+     * 
+     * @return urlAvisoLegal
+     */
+    public String getUrlAvisoLegal() {
+        return urlAvisoLegal;
+    }
+
+    /**
+     * Método para establecer urlAvisoLegal.
+     * 
+     * @param urlAvisoLegal
+     *            urlAvisoLegal a establecer
+     */
+    public void setUrlAvisoLegal(String urlAvisoLegal) {
+        this.urlAvisoLegal = urlAvisoLegal;
+    }
+
+    /**
+     * Método de acceso a urlRss.
+     * 
+     * @return urlRss
+     */
+    public String getUrlRss() {
+        return urlRss;
+    }
+
+    /**
+     * Método para establecer urlRss.
+     * 
+     * @param urlRss
+     *            urlRss a establecer
+     */
+    public void setUrlRss(String urlRss) {
+        this.urlRss = urlRss;
+    }
+
+    /**
+     * Método de acceso a redes.
+     * 
+     * @return redes
+     */
+    public EntidadRedesSociales getRedes() {
+        return redes;
+    }
+
+    /**
+     * Método para establecer redes.
+     * 
+     * @param redes
+     *            redes a establecer
+     */
+    public void setRedes(EntidadRedesSociales redes) {
+        this.redes = redes;
     }
 
 }

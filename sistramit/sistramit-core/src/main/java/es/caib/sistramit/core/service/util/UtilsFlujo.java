@@ -18,6 +18,7 @@ import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramiteInfo;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
+import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
 import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
@@ -262,6 +263,15 @@ public final class UtilsFlujo {
                 UtilsSTG.obtenerLiteral(entidad.getContactoHTML(), idioma));
         e.setUrlCarpeta(
                 UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), idioma));
+
+        // TODO PENDIENTE
+        e.setUrlMapaWeb("http://pendiente.es");
+        e.setUrlAvisoLegal("http://pendiente.es");
+        e.setUrlRss("http://pendiente.es");
+        final EntidadRedesSociales redes = new EntidadRedesSociales();
+        redes.setFacebook("facebook");
+        redes.setInstagram("instagram");
+        e.setRedes(redes);
 
         final List<SoporteOpcion> soporteOpciones = new ArrayList<>();
         if (entidad.getAyudaFormulario() != null

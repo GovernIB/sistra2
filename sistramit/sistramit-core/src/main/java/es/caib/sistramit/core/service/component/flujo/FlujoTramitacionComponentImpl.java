@@ -1,6 +1,8 @@
 package es.caib.sistramit.core.service.component.flujo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -10,12 +12,17 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.email.AnexoEmail;
+import es.caib.sistra2.commons.plugins.email.IEmailPlugin;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
+import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
 import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
@@ -28,14 +35,18 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
+import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.model.flujo.DatosFormularioSoporte;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
+import es.caib.sistramit.core.service.util.UtilsFormularioSoporte;
 
 @Component("flujoTramitacionComponent")
 @Scope(value = "prototype")
@@ -60,6 +71,10 @@ public class FlujoTramitacionComponentImpl
     /** Acceso a persistencia. */
     @Autowired
     private FlujoTramiteDao dao;
+
+    /** Acceso a literales. */
+    @Autowired
+    private Literales literalesComponent;
 
     /**
      * Indica si el flujo es invalido. Se marcará como inválido al generarse una
@@ -100,7 +115,7 @@ public class FlujoTramitacionComponentImpl
         this.datosSesion = generarDatosSesion(idSesionTramitacion,
                 TypeEstadoTramite.RELLENANDO, idTramite, version, idioma,
                 idTramiteCatalogo, urlInicio, parametrosInicio,
-                usuarioAutenticadoInfo, null);
+                usuarioAutenticadoInfo, new Date(), null);
 
         // Realizamos operacion de iniciar
         controladorFlujo.iniciarTramite(datosSesion);
@@ -182,6 +197,55 @@ public class FlujoTramitacionComponentImpl
         return f;
     }
 
+    @Override
+    public void envioFormularioSoporte(String nif, String nombre,
+            String telefono, String email, String problemaTipo,
+            String problemaDesc, AnexoFichero anexo) {
+
+        // Obtenemos entidad
+        final RConfiguracionEntidad entidad = configuracionComponent
+                .obtenerConfiguracionEntidad(datosSesion.getDefinicionTramite()
+                        .getDefinicionVersion().getIdEntidad());
+
+        // Datos form soporte
+        final DatosFormularioSoporte datosFormSoporte = new DatosFormularioSoporte();
+        datosFormSoporte.setNif(nif);
+        datosFormSoporte.setNombre(nombre);
+        datosFormSoporte.setEmail(email);
+        datosFormSoporte.setTelefono(telefono);
+        datosFormSoporte.setProblemaTipo(problemaTipo);
+        datosFormSoporte.setProblemaDesc(problemaDesc);
+
+        // Generamos destinatarios, asunto y mensaje
+        final List<String> destinatarios = UtilsFormularioSoporte
+                .obtenerDestinatariosFormularioSoporte(datosFormSoporte,
+                        entidad, datosSesion);
+        final String asunto = UtilsFormularioSoporte
+                .obtenerAsuntoFormularioSoporte(literalesComponent,
+                        datosSesion);
+        final String mensaje = UtilsFormularioSoporte
+                .construyeMensajeSoporteIncidencias(literalesComponent,
+                        datosFormSoporte, entidad, datosSesion);
+
+        // Anexo
+        final List<AnexoEmail> anexos = new ArrayList<>();
+        if (anexo != null) {
+            final AnexoEmail a = new AnexoEmail();
+            a.setFileName(anexo.getFileName());
+            a.setContent(anexo.getFileContent());
+            a.setContentType(anexo.getFileContentType());
+            anexos.add(a);
+        }
+
+        // Enviamos mail
+        final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent
+                .obtenerPluginGlobal(TypePluginGlobal.EMAIL);
+        if (!plgEmail.envioEmail(destinatarios, asunto, mensaje, anexos)) {
+            throw new ErrorFormularioSoporteException("Error enviando mail");
+        }
+
+    }
+
     // -------------------------------------------------------
     // FUNCIONES PRIVADAS
     // -------------------------------------------------------
@@ -226,7 +290,7 @@ public class FlujoTramitacionComponentImpl
             final String pIdTramiteCP, final String pUrlInicio,
             final Map<String, String> pParametrosInicio,
             final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo,
-            final Date pFechaCaducidad) {
+            final Date pFechaInicio, final Date pFechaCaducidad) {
 
         // Obtenemos la definición del trámite del GTT (si no está el idioma
         // disponible, se coge el idioma por defecto o bien el primero
@@ -289,6 +353,7 @@ public class FlujoTramitacionComponentImpl
         st.getDatosTramite().setPlazoInicio(tramiteCP.getPlazoInicio());
         st.getDatosTramite().setPlazoFin(tramiteCP.getPlazoFin());
         st.getDatosTramite().setFechaCaducidad(pFechaCaducidad);
+        st.getDatosTramite().setFechaInicio(pFechaInicio);
 
         return st;
     }
@@ -385,7 +450,7 @@ public class FlujoTramitacionComponentImpl
                 tram.getIdTramite(), tram.getVersionTramite(), tram.getIdioma(),
                 tram.getIdTramiteCP(), tram.getUrlInicio(),
                 tram.getParametrosInicio(), usuarioAutenticadoInfo,
-                tram.getFechaCaducidad());
+                tram.getFechaInicio(), tram.getFechaCaducidad());
 
         // Lanzamos operación de cargar
         controladorFlujo.cargarTramite(datosSesion);

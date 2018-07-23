@@ -2,6 +2,7 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
@@ -141,6 +142,34 @@ public interface FlujoTramitacionService {
 
     /** Realiza purga flujos tramitación. */
     void purgar();
+
+    /**
+     * Envío formulario de soporte.
+     *
+     * @param idSesionTramitacion
+     *            id sesión tramitación
+     * @param nif
+     *            nif
+     * @param nombre
+     *            nombre
+     * @param telefono
+     *            telefono
+     * @param email
+     *            email
+     * @param problemaTipo
+     *            problema tipo
+     * @param problemaDesc
+     *            problema descripción
+     * @param fileName
+     *            nombre fichero
+     * @param fileContent
+     *            contenido fichero
+     * @param fileContentType
+     *            contenType
+     */
+    void envioFormularioSoporte(String idSesionTramitacion, String nif,
+            String nombre, String telefono, String email, String problemaTipo,
+            String problemaDesc, AnexoFichero anexo);
 
     // -------------------------------------------------------------------------------------------
     // - Métodos especiales invocados desde el interceptor. No pasan por

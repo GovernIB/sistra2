@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.exception.NoExisteFlujoTramitacionException;
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
@@ -130,6 +131,17 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
     @NegocioInterceptor
     public void purgar() {
         flujoTramitacionCache.purgar();
+    }
+
+    @Override
+    @NegocioInterceptor
+    public void envioFormularioSoporte(String idSesionTramitacion, String nif,
+            String nombre, String telefono, String email, String problemaTipo,
+            String problemaDesc, AnexoFichero anexo) {
+        final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(
+                idSesionTramitacion);
+        ft.envioFormularioSoporte(nif, nombre, telefono, email, problemaTipo,
+                problemaDesc, anexo);
     }
 
     // -------------------------------------------------------------------------------------------

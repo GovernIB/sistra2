@@ -103,129 +103,6 @@ public final class VariablesFlujo implements Serializable {
      */
     private boolean debugEnabled;
 
-    public String getIdSesionTramitacion() {
-        return idSesionTramitacion;
-    }
-
-    public void setIdSesionTramitacion(final String idSesionTramitacion) {
-        this.idSesionTramitacion = idSesionTramitacion;
-    }
-
-    public TypeAutenticacion getNivelAutenticacion() {
-        return nivelAutenticacion;
-    }
-
-    public void setNivelAutenticacion(
-            final TypeAutenticacion nivelAutenticacion) {
-        this.nivelAutenticacion = nivelAutenticacion;
-    }
-
-    public TypeMetodoAutenticacion getMetodoAutenticacion() {
-        return metodoAutenticacion;
-    }
-
-    public void setMetodoAutenticacion(
-            final TypeMetodoAutenticacion metodoAutenticacion) {
-        this.metodoAutenticacion = metodoAutenticacion;
-    }
-
-    public DatosUsuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(final DatosUsuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getIdioma() {
-        return idioma;
-    }
-
-    public void setIdioma(final String idioma) {
-        this.idioma = idioma;
-    }
-
-    public String getUrlInicioTramite() {
-        return urlInicioTramite;
-    }
-
-    public void setUrlInicioTramite(final String urlInicioTramite) {
-        this.urlInicioTramite = urlInicioTramite;
-    }
-
-    public String getIdTramite() {
-        return idTramite;
-    }
-
-    public void setIdTramite(final String idTramite) {
-        this.idTramite = idTramite;
-    }
-
-    public int getVersionTramite() {
-        return versionTramite;
-    }
-
-    public void setVersionTramite(final int versionTramite) {
-        this.versionTramite = versionTramite;
-    }
-
-    public String getTituloTramite() {
-        return tituloTramite;
-    }
-
-    public void setTituloTramite(final String tituloTramite) {
-        this.tituloTramite = tituloTramite;
-    }
-
-    public Map<String, String> getParametrosInicio() {
-        return parametrosInicio;
-    }
-
-    public void setParametrosInicio(
-            final Map<String, String> parametrosInicio) {
-        this.parametrosInicio = parametrosInicio;
-    }
-
-    public DefinicionTramiteCP getDatosTramiteCP() {
-        return datosTramiteCP;
-    }
-
-    public void setDatosTramiteCP(final DefinicionTramiteCP datosTramiteCP) {
-        this.datosTramiteCP = datosTramiteCP;
-    }
-
-    public List<DatosDocumento> getDocumentos() {
-        return documentos;
-    }
-
-    public void setDocumentos(final List<DatosDocumento> documentos) {
-        this.documentos = documentos;
-    }
-
-    public Date getFechaInicioPlazo() {
-        return fechaInicioPlazo;
-    }
-
-    public void setFechaInicioPlazo(final Date fechaInicioPlazo) {
-        this.fechaInicioPlazo = fechaInicioPlazo;
-    }
-
-    public Date getFechaFinPlazo() {
-        return fechaFinPlazo;
-    }
-
-    public void setFechaFinPlazo(final Date fechaFinPlazo) {
-        this.fechaFinPlazo = fechaFinPlazo;
-    }
-
-    public boolean isDebugEnabled() {
-        return debugEnabled;
-    }
-
-    public void setDebugEnabled(final boolean debugEnabled) {
-        this.debugEnabled = debugEnabled;
-    }
-
     /**
      * Método de acceso a entorno.
      * 
@@ -243,6 +120,292 @@ public final class VariablesFlujo implements Serializable {
      */
     public void setEntorno(TypeEntorno entorno) {
         this.entorno = entorno;
+    }
+
+    /**
+     * Método de acceso a idSesionTramitacion.
+     * 
+     * @return idSesionTramitacion
+     */
+    public String getIdSesionTramitacion() {
+        return idSesionTramitacion;
+    }
+
+    /**
+     * Método para establecer idSesionTramitacion.
+     * 
+     * @param idSesionTramitacion
+     *            idSesionTramitacion a establecer
+     */
+    public void setIdSesionTramitacion(String idSesionTramitacion) {
+        this.idSesionTramitacion = idSesionTramitacion;
+    }
+
+    /**
+     * Método de acceso a nivelAutenticacion.
+     * 
+     * @return nivelAutenticacion
+     */
+    public TypeAutenticacion getNivelAutenticacion() {
+        return nivelAutenticacion;
+    }
+
+    /**
+     * Método para establecer nivelAutenticacion.
+     * 
+     * @param nivelAutenticacion
+     *            nivelAutenticacion a establecer
+     */
+    public void setNivelAutenticacion(TypeAutenticacion nivelAutenticacion) {
+        this.nivelAutenticacion = nivelAutenticacion;
+    }
+
+    /**
+     * Método de acceso a metodoAutenticacion.
+     * 
+     * @return metodoAutenticacion
+     */
+    public TypeMetodoAutenticacion getMetodoAutenticacion() {
+        return metodoAutenticacion;
+    }
+
+    /**
+     * Método para establecer metodoAutenticacion.
+     * 
+     * @param metodoAutenticacion
+     *            metodoAutenticacion a establecer
+     */
+    public void setMetodoAutenticacion(
+            TypeMetodoAutenticacion metodoAutenticacion) {
+        this.metodoAutenticacion = metodoAutenticacion;
+    }
+
+    /**
+     * Método de acceso a usuario.
+     * 
+     * @return usuario
+     */
+    public DatosUsuario getUsuario() {
+        return usuario;
+    }
+
+    /**
+     * Método para establecer usuario.
+     * 
+     * @param usuario
+     *            usuario a establecer
+     */
+    public void setUsuario(DatosUsuario usuario) {
+        this.usuario = usuario;
+    }
+
+    /**
+     * Método de acceso a idioma.
+     * 
+     * @return idioma
+     */
+    public String getIdioma() {
+        return idioma;
+    }
+
+    /**
+     * Método para establecer idioma.
+     * 
+     * @param idioma
+     *            idioma a establecer
+     */
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
+    }
+
+    /**
+     * Método de acceso a urlInicioTramite.
+     * 
+     * @return urlInicioTramite
+     */
+    public String getUrlInicioTramite() {
+        return urlInicioTramite;
+    }
+
+    /**
+     * Método para establecer urlInicioTramite.
+     * 
+     * @param urlInicioTramite
+     *            urlInicioTramite a establecer
+     */
+    public void setUrlInicioTramite(String urlInicioTramite) {
+        this.urlInicioTramite = urlInicioTramite;
+    }
+
+    /**
+     * Método de acceso a idTramite.
+     * 
+     * @return idTramite
+     */
+    public String getIdTramite() {
+        return idTramite;
+    }
+
+    /**
+     * Método para establecer idTramite.
+     * 
+     * @param idTramite
+     *            idTramite a establecer
+     */
+    public void setIdTramite(String idTramite) {
+        this.idTramite = idTramite;
+    }
+
+    /**
+     * Método de acceso a versionTramite.
+     * 
+     * @return versionTramite
+     */
+    public int getVersionTramite() {
+        return versionTramite;
+    }
+
+    /**
+     * Método para establecer versionTramite.
+     * 
+     * @param versionTramite
+     *            versionTramite a establecer
+     */
+    public void setVersionTramite(int versionTramite) {
+        this.versionTramite = versionTramite;
+    }
+
+    /**
+     * Método de acceso a tituloTramite.
+     * 
+     * @return tituloTramite
+     */
+    public String getTituloTramite() {
+        return tituloTramite;
+    }
+
+    /**
+     * Método para establecer tituloTramite.
+     * 
+     * @param tituloTramite
+     *            tituloTramite a establecer
+     */
+    public void setTituloTramite(String tituloTramite) {
+        this.tituloTramite = tituloTramite;
+    }
+
+    /**
+     * Método de acceso a parametrosInicio.
+     * 
+     * @return parametrosInicio
+     */
+    public Map<String, String> getParametrosInicio() {
+        return parametrosInicio;
+    }
+
+    /**
+     * Método para establecer parametrosInicio.
+     * 
+     * @param parametrosInicio
+     *            parametrosInicio a establecer
+     */
+    public void setParametrosInicio(Map<String, String> parametrosInicio) {
+        this.parametrosInicio = parametrosInicio;
+    }
+
+    /**
+     * Método de acceso a datosTramiteCP.
+     * 
+     * @return datosTramiteCP
+     */
+    public DefinicionTramiteCP getDatosTramiteCP() {
+        return datosTramiteCP;
+    }
+
+    /**
+     * Método para establecer datosTramiteCP.
+     * 
+     * @param datosTramiteCP
+     *            datosTramiteCP a establecer
+     */
+    public void setDatosTramiteCP(DefinicionTramiteCP datosTramiteCP) {
+        this.datosTramiteCP = datosTramiteCP;
+    }
+
+    /**
+     * Método de acceso a documentos.
+     * 
+     * @return documentos
+     */
+    public List<DatosDocumento> getDocumentos() {
+        return documentos;
+    }
+
+    /**
+     * Método para establecer documentos.
+     * 
+     * @param documentos
+     *            documentos a establecer
+     */
+    public void setDocumentos(List<DatosDocumento> documentos) {
+        this.documentos = documentos;
+    }
+
+    /**
+     * Método de acceso a fechaInicioPlazo.
+     * 
+     * @return fechaInicioPlazo
+     */
+    public Date getFechaInicioPlazo() {
+        return fechaInicioPlazo;
+    }
+
+    /**
+     * Método para establecer fechaInicioPlazo.
+     * 
+     * @param fechaInicioPlazo
+     *            fechaInicioPlazo a establecer
+     */
+    public void setFechaInicioPlazo(Date fechaInicioPlazo) {
+        this.fechaInicioPlazo = fechaInicioPlazo;
+    }
+
+    /**
+     * Método de acceso a fechaFinPlazo.
+     * 
+     * @return fechaFinPlazo
+     */
+    public Date getFechaFinPlazo() {
+        return fechaFinPlazo;
+    }
+
+    /**
+     * Método para establecer fechaFinPlazo.
+     * 
+     * @param fechaFinPlazo
+     *            fechaFinPlazo a establecer
+     */
+    public void setFechaFinPlazo(Date fechaFinPlazo) {
+        this.fechaFinPlazo = fechaFinPlazo;
+    }
+
+    /**
+     * Método de acceso a debugEnabled.
+     * 
+     * @return debugEnabled
+     */
+    public boolean isDebugEnabled() {
+        return debugEnabled;
+    }
+
+    /**
+     * Método para establecer debugEnabled.
+     * 
+     * @param debugEnabled
+     *            debugEnabled a establecer
+     */
+    public void setDebugEnabled(boolean debugEnabled) {
+        this.debugEnabled = debugEnabled;
     }
 
 }

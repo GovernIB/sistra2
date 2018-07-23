@@ -10,6 +10,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
@@ -108,6 +109,14 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
     @Override
     public void purgar() {
         flujoTramitacionService.purgar();
+    }
+
+    @Override
+    public void envioFormularioSoporte(String idSesionTramitacion, String nif,
+            String nombre, String telefono, String email, String problemaTipo,
+            String problemaDesc, AnexoFichero anexo) {
+        flujoTramitacionService.envioFormularioSoporte(idSesionTramitacion, nif,
+                nombre, telefono, email, problemaTipo, problemaDesc, anexo);
     }
 
 }

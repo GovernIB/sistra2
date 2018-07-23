@@ -1,5 +1,6 @@
 package es.caib.sistramit.frontend.controller.asistente;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -12,24 +13,33 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.sistra2.commons.utils.CifradoUtil;
+import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.WarningFrontException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.frontend.SesionHttp;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
+import es.caib.sistramit.frontend.model.AsistenteConfig;
 import es.caib.sistramit.frontend.model.AsistenteInfo;
 import es.caib.sistramit.frontend.model.MensajeAsistente;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
+import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 import es.caib.sistramit.frontend.security.SecurityUtils;
 import es.caib.sistramit.frontend.security.UsuarioAutenticado;
 
@@ -55,7 +65,8 @@ public class AsistenteTramitacionController extends TramitacionController {
      * @param idTramiteCatalogo
      *            Id trámite en catálogo de servicios
      * @param parametros
-     *            Parameros de inicio
+     *            Parameros de inicio del trámite. Lista separada por -_- (p.e.:
+     *            param1-_-valor1-_-param2-_-valor2)
      * @param request
      *            request
      * @return Redireccion a mostrar asistente
@@ -73,9 +84,22 @@ public class AsistenteTramitacionController extends TramitacionController {
         final String urlInicio = getUrlAsistente()
                 + "/asistente/iniciarTramite.html?" + request.getQueryString();
 
-        // Parametros inicio
-        // TODO Pendiente (como json?)
+        // Parametros inicio (convertimos parametros a map)
         final Map<String, String> parametrosInicio = new HashMap<>();
+        if (!StringUtils.isBlank(parametros)) {
+            String key;
+            String value;
+            final String[] params = parametros.split("-_-");
+            for (int i = 0; i < params.length; i = i + ConstantesNumero.N2) {
+                key = params[i];
+                if ((i + ConstantesNumero.N1) < params.length) {
+                    value = params[i + ConstantesNumero.N1];
+                } else {
+                    value = "";
+                }
+                parametrosInicio.put(key, value);
+            }
+        }
 
         // Obtiene usuario autenticado
         final UsuarioAutenticado usuarioAutenticado = SecurityUtils
@@ -325,6 +349,21 @@ public class AsistenteTramitacionController extends TramitacionController {
     }
 
     /**
+     * Devuelve configuración aplicación.
+     *
+     * @return configuración aplicación
+     */
+    @RequestMapping("/configuracion.js")
+    public ModelAndView obtenerConfiguracionAplicacion() {
+        final AsistenteConfig conf = new AsistenteConfig();
+        conf.setUrl(getSystemService().obtenerPropiedadConfiguracion(
+                TypePropiedadConfiguracion.URL_SISTRAMIT));
+        conf.setIdioma(this.getIdioma());
+        return new ModelAndView("asistente/configuracion", "configuracion",
+                conf);
+    }
+
+    /**
      * Retorno gestor pago externo.
      *
      * @param ticket
@@ -365,6 +404,78 @@ public class AsistenteTramitacionController extends TramitacionController {
         // TODO PENDIENTE
         return null;
     }
+
+    /**
+     * Petición ayuda mediante formulario soporte.
+     *
+     * @param nif
+     *            Nif
+     * @param nombre
+     *            Nombre
+     * @param telefono
+     *            Teléfono
+     * @param email
+     *            Email
+     * @param problemaTipo
+     *            Tipo problema
+     * @param problemaDesc
+     *            Descripción problema
+     * @param request
+     *            request
+     * @return
+     */
+    @RequestMapping(value = "/formularioSoporte.json", method = RequestMethod.POST)
+    public ModelAndView formularioSoporte(
+            @RequestParam(value = "nif", required = false) final String nif,
+            @RequestParam(value = "nom", required = false) final String nombre,
+            @RequestParam("telefono") final String telefono,
+            @RequestParam("email") final String email,
+            @RequestParam("problemaTipo") final String problemaTipo,
+            @RequestParam("problemaDesc") final String problemaDesc,
+            final HttpServletRequest request) {
+
+        // TODO VER SI PONEMOS LIMITE FICHERO
+
+        debug("Formulario soporte ");
+
+        final RespuestaJSON res = new RespuestaJSON();
+
+        if (request instanceof MultipartHttpServletRequest) {
+
+            // Obtiene fichero
+            final MultipartHttpServletRequest mp = (MultipartHttpServletRequest) request;
+            final MultipartFile fic = mp.getFile("anexo");
+
+            // Invocamos al flujo para envio a soporte
+            final String idSesionTramitacion = getIdSesionTramitacionActiva();
+            try {
+                AnexoFichero anexo = null;
+                if (fic != null) {
+                    anexo = new AnexoFichero();
+                    anexo.setFileName(fic.getOriginalFilename());
+                    anexo.setFileContent(fic.getBytes());
+                    anexo.setFileContentType(fic.getContentType());
+                }
+
+                getFlujoTramitacionService().envioFormularioSoporte(
+                        idSesionTramitacion, nif, nombre, telefono, email,
+                        problemaTipo, problemaDesc, anexo);
+
+            } catch (final ErrorFormularioSoporteException | IOException efs) {
+                res.setEstado(TypeRespuestaJSON.ERROR);
+            }
+
+        } else {
+            res.setEstado(TypeRespuestaJSON.ERROR);
+        }
+
+        return generarJsonView(res);
+
+    }
+
+    // -------------------------------------------------------------------
+    // FUNCIONES PRIVADAS
+    // -------------------------------------------------------------------
 
     /**
      * Carga el tramite y lo registra en sesion.
