@@ -45,10 +45,58 @@
 		<dependency>
 		    <groupId>org.hibernate.javax.persistence</groupId>
 		    <artifactId>hibernate-jpa-2.1-api</artifactId>
-		    <version>1.0.0.Final</version>
+		    <version>${hibernate-jpa-2.1-api.version}</version>
 		    <scope>provided</scope>
 		</dependency>
 
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>${junit.version}</version>
+		    <scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>oracle</artifactId>
+			<version>11.2.0.3</version>
+			<scope>test</scope>
+		</dependency>
+
+   		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>commons-dbcp</groupId>
+		    <artifactId>commons-dbcp</artifactId>
+		    <version>1.4</version>
+		    <scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		     <scope>test</scope>
+		</dependency>
 
 	</dependencies>
 
@@ -72,6 +120,53 @@
 					<compilerVersion>${java.version}</compilerVersion>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>io.github.divinespear</groupId>
+				<artifactId>jpa-schema-maven-plugin</artifactId>
+				<version>0.2.1</version>
+				<configuration>
+					<databaseProductName>${schema.generate.databaseProductName}</databaseProductName>
+					<vendor>hibernate</vendor>
+					<databaseMinorVersion>${schema.generate.databaseVersion}</databaseMinorVersion>
+					<databaseMajorVersion>${schema.generate.databaseVersion}</databaseMajorVersion>
+					<packageToScan>es.caib.sistrages.core.service.repository.model</packageToScan>
+					<scriptAction>create</scriptAction>
+					<format>true</format>
+					<persistenceUnitName>sistrages-PU</persistenceUnitName>
+					<persistenceXml>META-INF/persistence.xml</persistenceXml>
+					<scanTestClasses>false</scanTestClasses>
+					<outputDirectory>${project.build.directory}/../../../target/generated-schema</outputDirectory>
+					<createOutputFileName>create-sistrages.sql</createOutputFileName>
+				</configuration>
+				<executions>
+					<execution>
+						<id>divinespear-generate-schema-from-jpa-entities</id>
+						<phase>package</phase>
+						<goals>
+							 <goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.hibernate.javax.persistence</groupId>
+						<artifactId>hibernate-jpa-2.1-api</artifactId>
+						<version>${hibernate-jpa-2.1-api.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-entitymanager</artifactId>
+						<version>${hibernate.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>es.caib.sistra2</groupId>
+						<artifactId>sistrages-lib</artifactId>
+						<version>${sistra2.version}</version>
+						<type>pom</type>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

@@ -52,7 +52,7 @@
 		<dependency>
 		    <groupId>org.hibernate.javax.persistence</groupId>
 		    <artifactId>hibernate-jpa-2.1-api</artifactId>
-		    <version>1.0.0.Final</version>
+		    <version>${hibernate-jpa-2.1-api.version}</version>
 		    <scope>provided</scope>
 		</dependency>
 
@@ -128,6 +128,53 @@
 					<compilerVersion>${java.version}</compilerVersion>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>io.github.divinespear</groupId>
+				<artifactId>jpa-schema-maven-plugin</artifactId>
+				<version>0.2.1</version>
+				<configuration>
+					<databaseProductName>${schema.generate.databaseProductName}</databaseProductName>
+					<vendor>hibernate</vendor>
+					<databaseMinorVersion>${schema.generate.databaseVersion}</databaseMinorVersion>
+					<databaseMajorVersion>${schema.generate.databaseVersion}</databaseMajorVersion>
+					<packageToScan>es.caib.sistramit.core.service.repository.model</packageToScan>
+					<scriptAction>create</scriptAction>
+					<format>true</format>
+					<persistenceUnitName>sistramit-PU</persistenceUnitName>
+					<persistenceXml>META-INF/persistence.xml</persistenceXml>
+					<scanTestClasses>false</scanTestClasses>
+					<outputDirectory>${project.build.directory}/../../../target/generated-schema</outputDirectory>
+					<createOutputFileName>create-sistramit.sql</createOutputFileName>
+				</configuration>
+				<executions>
+					<execution>
+						<id>divinespear-generate-schema-from-jpa-entities</id>
+						<phase>package</phase>
+						<goals>
+							 <goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.hibernate.javax.persistence</groupId>
+						<artifactId>hibernate-jpa-2.1-api</artifactId>
+						<version>${hibernate-jpa-2.1-api.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-entitymanager</artifactId>
+						<version>${hibernate.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>es.caib.sistra2</groupId>
+						<artifactId>sistramit-lib</artifactId>
+						<version>${sistra2.version}</version>
+						<type>pom</type>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
