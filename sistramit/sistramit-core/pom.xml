@@ -139,11 +139,12 @@
 					<vendor>hibernate</vendor>
 					<databaseMinorVersion>${schema.generate.databaseVersion}</databaseMinorVersion>
 					<databaseMajorVersion>${schema.generate.databaseVersion}</databaseMajorVersion>
-					<packageToScan>es.caib.sistramit.core.service.repository.model</packageToScan>
 					<scriptAction>create</scriptAction>
 					<format>true</format>
 					<persistenceUnitName>sistramit-PU</persistenceUnitName>
-					<persistenceXml>META-INF/persistence.xml</persistenceXml>
+					<packageToScan>
+						<value>es.caib.sistramit.core.service.repository.model</value>
+					</packageToScan>
 					<scanTestClasses>false</scanTestClasses>
 					<outputDirectory>${project.build.directory}/../../../target/generated-schema</outputDirectory>
 					<createOutputFileName>create-sistramit.sql</createOutputFileName>

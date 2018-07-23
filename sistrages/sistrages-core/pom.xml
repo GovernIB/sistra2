@@ -63,13 +63,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>oracle</artifactId>
-			<version>11.2.0.3</version>
-			<scope>test</scope>
-		</dependency>
-
    		<dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -131,11 +124,12 @@
 					<vendor>hibernate</vendor>
 					<databaseMinorVersion>${schema.generate.databaseVersion}</databaseMinorVersion>
 					<databaseMajorVersion>${schema.generate.databaseVersion}</databaseMajorVersion>
-					<packageToScan>es.caib.sistrages.core.service.repository.model</packageToScan>
 					<scriptAction>create</scriptAction>
 					<format>true</format>
 					<persistenceUnitName>sistrages-PU</persistenceUnitName>
-					<persistenceXml>META-INF/persistence.xml</persistenceXml>
+					<packageToScan>
+						<value>es.caib.sistrages.core.service.repository.model</value>
+					</packageToScan>
 					<scanTestClasses>false</scanTestClasses>
 					<outputDirectory>${project.build.directory}/../../../target/generated-schema</outputDirectory>
 					<createOutputFileName>create-sistrages.sql</createOutputFileName>
