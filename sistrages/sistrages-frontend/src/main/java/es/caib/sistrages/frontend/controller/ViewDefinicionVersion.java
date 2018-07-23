@@ -195,9 +195,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo());
 		breadCrumbRoot.addElement(item);
 
-		item = new DefaultMenuItem(tramite.getDescripcion());
-		item.setUrl("/secure/app/viewTramitesVersion.xhtml?MODO_ACCESO=" + TypeModoAcceso.EDICION + "&ID="
-				+ tramite.getCodigo());
+		item = new DefaultMenuItem(tramite.getIdentificador());
+		// item.setUrl("/secure/app/viewTramitesVersion.xhtml?MODO_ACCESO=" +
+		// TypeModoAcceso.EDICION + "&ID="
+		// + tramite.getCodigo());
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo());
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem("Version " + tramiteVersion.getNumeroVersion());

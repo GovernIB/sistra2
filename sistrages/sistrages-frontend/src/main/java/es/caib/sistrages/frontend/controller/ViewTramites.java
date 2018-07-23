@@ -118,7 +118,6 @@ public class ViewTramites extends ViewControllerBase {
 		idArea = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("area");
 		buscarAreas();
-
 	}
 
 	/**
@@ -154,6 +153,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Area area = listaAreasSeleccionadas.get(0);
 		if (tramiteService.removeArea(area.getCodigo())) {
+			listaAreasSeleccionadas.clear();
 			this.buscarAreas();
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 		} else {
@@ -341,7 +341,7 @@ public class ViewTramites extends ViewControllerBase {
 		boolean res = false;
 
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaArea()) {
+		if (!verificarFilasSeleccionadasArea()) {
 			return false;
 		}
 
@@ -370,7 +370,7 @@ public class ViewTramites extends ViewControllerBase {
 		boolean res = false;
 
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaArea()) {
+		if (!verificarFilasSeleccionadasArea()) {
 			return false;
 		}
 
@@ -502,6 +502,10 @@ public class ViewTramites extends ViewControllerBase {
 		return filaSeleccionada;
 	}
 
+	public boolean getSeleccionadasAreas() {
+		return verificarFilasSeleccionadasArea();
+	}
+
 	public boolean getSeleccionadaArea() {
 		return verificarFilaSeleccionadaArea();
 	}
@@ -603,6 +607,17 @@ public class ViewTramites extends ViewControllerBase {
 		//
 		// }
 		// }
+
+		if (StringUtils.isNotEmpty(idArea)) {
+			for (final Area area : getListaAreas()) {
+				if (area.getCodigo().compareTo(Long.valueOf(idArea)) == 0) {
+					if (listaAreasSeleccionadas == null) {
+						listaAreasSeleccionadas = new ArrayList<>();
+					}
+					listaAreasSeleccionadas.add(area);
+				}
+			}
+		}
 
 		// Lo desactivamos
 		idArea = null;
