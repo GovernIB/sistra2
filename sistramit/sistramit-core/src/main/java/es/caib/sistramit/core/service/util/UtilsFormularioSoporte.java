@@ -236,6 +236,7 @@ public final class UtilsFormularioSoporte {
         try {
             if (plantillaHtml == null) {
                 final InputStream isHtml = UtilsFormularioSoporte.class
+                        .getClassLoader()
                         .getResourceAsStream("mailIncidencia.html");
                 final byte[] content = IOUtils.toByteArray(isHtml);
                 plantillaHtml = new String(content, "UTF-8");
