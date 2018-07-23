@@ -12,6 +12,10 @@ public enum TypePlugin {
 	 */
 	LOGIN("L"),
 	/**
+         * Plugin de email (Global).
+         */
+        EMAIL("M"),
+	/**
 	 * Plugin de representacion (Global).
 	 */
 	REPRESENTACION("R"),
