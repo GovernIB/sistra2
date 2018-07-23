@@ -48,7 +48,6 @@
 						<p:outputLabel value="#{dialogTramiteVersionImportar.area.identificador} - #{dialogTramiteVersionImportar.area.descripcion}" />
 						<p:outputLabel value="#{dialogTramiteVersionImportar.filaArea.estado.literal}" />
 						<p:column>
-								<p:outputLabel id="areaAccion" value="#{dialogTramiteVersionImportar.filaArea.accion.literal}" />
 								<p:commandButton value="..." rendered="#{dialogTramiteVersionImportar.mostrarBotonArea}" process="@form" actionListener="#{dialogTramiteVersionImportar.checkArea()}" style="margin-left:5px" >
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionImportar.returnDialogoArea}" update="areaAccion areaIcon"/>
 								</p:commandButton>
@@ -62,9 +61,8 @@
 						<p:outputLabel value="#{dialogTramiteVersionImportar.filaTramite.estado.literal}" />
 
 						<p:column>
-								<p:outputLabel id="tramiteAccion" value="#{dialogTramiteVersionImportar.filaTramite.accion.literal}" />
 								<p:commandButton value="..." rendered="#{dialogTramiteVersionImportar.mostrarBotonTramite}" actionListener="#{dialogTramiteVersionImportar.checkTramite()}" style="margin-left:5px" >
-									<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionImportar.returnDialogoTramite}" update="tramiteAccion tramiteIcon"/>
+									<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionImportar.returnDialogoTramite}" update="tramiteIcon"/>
 								</p:commandButton>
 						</p:column>
 
@@ -76,9 +74,8 @@
 						<p:outputLabel value="#{dialogTramiteVersionImportar.tramiteVersion.numeroVersion} (release #{dialogTramiteVersionImportar.tramiteVersion.release})" />
 						<p:outputLabel value="#{dialogTramiteVersionImportar.filaTramiteVersion.estado.literal}" />
 						<p:column>
-								<p:outputLabel id="tramiteVersionAccion" value="#{dialogTramiteVersionImportar.filaTramiteVersion.accion.literal}" />
 								<p:commandButton value="..." rendered="#{dialogTramiteVersionImportar.mostrarBotonTramiteVersion}" actionListener="#{dialogTramiteVersionImportar.checkTramiteVersion()}" style="margin-left:5px" >
-									<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionImportar.returnDialogoTramiteVersion}" update="tramiteVersionAccion tramiteVersionIcon"/>
+									<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionImportar.returnDialogoTramiteVersion}" update="tramiteVersionIcon"/>
 								</p:commandButton>
 						</p:column>
 						<p:outputLabel id="tramiteVersionIcon" value="" >
@@ -94,7 +91,7 @@
 				<p:outputLabel value="Dominios" rendered="#{!empty dialogTramiteVersionImportar.filasDominios}"  style="padding-left:30px;text-decoration: underline;font-weight: bold" />
 				<br />
 				<br />
-				<h:dataTable headerClass="grid-left" value="#{dialogTramiteVersionImportar.filasDominios}" var="fila" width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status">
+				<h:dataTable columnClasses=",,,w50," id="dataTablaDominios" headerClass="grid-left" value="#{dialogTramiteVersionImportar.filasDominios}" var="fila" width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status">
 
 					<h:column>
 						 <f:facet name = "header">ID</f:facet>
@@ -108,13 +105,13 @@
 
 					<h:column>
 						 <f:facet name = "header">estado</f:facet>
-						 <p:outputLabel id="labelDominio${fila.dominio.codigo}" value="#{fila.estado.literal}" />
+						 <p:outputLabel id="labelDominio${fila.dominioActual.codigo}" value="#{fila.estado.literal}" />
 					</h:column>
 
 					<h:column>
 						 <f:facet name = "header">accion</f:facet>
-      					#{fila.accion.literal}
-      					<p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogTramiteVersionImportar.checkDominio(fila.dominio.codigo)}" style="margin-left:5px" >
+						 <p:outputLabel  value="#{fila.mensaje}"  rendered="#{fila.visibleBoton == false}"/>
+      					 <p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogTramiteVersionImportar.checkDominio(fila.dominioActual.codigo)}" style="margin-left:5px" >
       							<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionImportar.returnDialogoDominio}" />
 						</p:commandButton>
 					</h:column>
@@ -140,11 +137,6 @@
 					<h:column>
 						 <f:facet name = "header">descripcion</f:facet>
       					#{fila.formateadorFormulario.descripcion}
-					</h:column>
-
-					<h:column>
-						 <f:facet name = "header" style="text-align: left;">tipo</f:facet>
-      					#{fila.dominio.tipo}
 					</h:column>
 
 					<h:column>

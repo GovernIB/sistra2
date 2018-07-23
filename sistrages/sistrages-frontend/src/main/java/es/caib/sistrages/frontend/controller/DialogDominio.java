@@ -108,6 +108,8 @@ public class DialogDominio extends DialogControllerBase {
 
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 
+		// No se puede comprobar antes porque puede que el dominio no tenga id (al ser
+		// de mochila si viene de otra BBDD).
 		UtilJSF.checkSecOpenDialog(modo, id);
 
 		if (modo == TypeModoAcceso.ALTA) {
@@ -128,6 +130,7 @@ public class DialogDominio extends DialogControllerBase {
 			if (data.getTipo() == TypeDominio.FUENTE_DATOS && data.getIdFuenteDatos() != null) {
 				idFuenteDato = data.getIdFuenteDatos();
 			}
+
 		}
 
 		generarTipos();
@@ -164,10 +167,17 @@ public class DialogDominio extends DialogControllerBase {
 				mostrarAdvertencia = true;
 			}
 		}
+
 	}
 
+	/**
+	 * Comprueba si puede guardar.
+	 * 
+	 * @return
+	 */
 	public boolean permiteGuardar() {
 
+		// Si está en modo consulta, no permite guardar
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo != null && modo == TypeModoAcceso.CONSULTA) {
 			return false;

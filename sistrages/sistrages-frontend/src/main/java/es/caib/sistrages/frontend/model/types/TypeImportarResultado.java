@@ -8,6 +8,8 @@ package es.caib.sistrages.frontend.model.types;
  */
 public enum TypeImportarResultado {
 
+	/** OK **/
+	OK("fa fa-check fa-2x", "0, 204, 0"),
 	/** INFO **/
 	INFO("fa fa-info-circle fa-2x", "69, 69, 255"),
 	/** WARNING. **/
@@ -52,7 +54,7 @@ public enum TypeImportarResultado {
 
 	/**
 	 * Is warning.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isWarning() {

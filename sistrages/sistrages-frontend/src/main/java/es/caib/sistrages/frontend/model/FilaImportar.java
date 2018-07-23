@@ -1,5 +1,7 @@
 package es.caib.sistrages.frontend.model;
 
+import java.util.List;
+
 import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
 import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
@@ -14,6 +16,9 @@ public class FilaImportar {
 
 	/** Accion. **/
 	protected TypeImportarAccion accion;
+
+	/** Acciones que se pueden realizar. **/
+	protected List<TypeImportarAccion> acciones;
 
 	/** Estado. **/
 	protected TypeImportarEstado estado;
@@ -69,6 +74,21 @@ public class FilaImportar {
 	 */
 	public void setResultado(final TypeImportarResultado typeAccion) {
 		this.resultado = typeAccion;
+	}
+
+	/**
+	 * @return the acciones
+	 */
+	public List<TypeImportarAccion> getAcciones() {
+		return acciones;
+	}
+
+	/**
+	 * @param acciones
+	 *            the acciones to set
+	 */
+	public void setAcciones(final List<TypeImportarAccion> acciones) {
+		this.acciones = acciones;
 	}
 
 }

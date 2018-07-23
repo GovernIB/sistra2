@@ -33,8 +33,6 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.comun.Propiedad;
-import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
@@ -144,7 +142,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	final List<FilaImportarDominio> filasDominios = new ArrayList<>();
 
 	/** Filas formateadores. */
-	final List<FilaImportar> filasFormateador = new ArrayList<>();
+	final List<FilaImportarFormateador> filasFormateador = new ArrayList<>();
 
 	/** Mostrar area. **/
 	private boolean mostrarBotonArea = false;
@@ -352,96 +350,12 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 			final Dominio dominio = entry.getValue();
 			final Dominio dominioActual = dominioService.loadDominio(dominio.getIdentificador());
 
-			if (dominioActual == null
-					&& (dominio.getAmbito() == TypeAmbito.GLOBAL || dominio.getAmbito() == TypeAmbito.ENTIDAD)) {
-
+			final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual);
+			if (fila.getResultado() == TypeImportarResultado.ERROR) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "No tienes permisos para crear un dominio global.");
-
-				filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.ERROR,
-						TypeImportarEstado.NO_EXISTE, TypeImportarResultado.ERROR, false));
 				return;
-
 			}
-
-			// Si no existe, directamente hay que crearlo.
-			if (dominioActual == null) {
-
-				filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.CREAR,
-						TypeImportarEstado.NO_EXISTE, TypeImportarResultado.WARNING, false));
-
-			} else if (dominio.getTipo() != dominioActual.getTipo()) { // Si son distintos tipos.
-
-				filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.REEMPLAZAR,
-						TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, true));
-
-			} else { // Son el mismo tipo
-
-				switch (dominio.getTipo()) {
-				case CONSULTA_BD:
-
-					if (mismosValores(dominioActual.getJndi(), dominio.getJndi())
-							&& mismosValores(dominioActual.getSql(), dominio.getSql())) {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.NADA,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.INFO, false));
-
-					} else {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.REEMPLAZAR,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, true));
-
-					}
-					break;
-
-				case CONSULTA_REMOTA:
-
-					if (mismosValores(dominioActual.getUrl(), dominio.getUrl())) {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.NADA,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.INFO, false));
-
-					} else {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.REEMPLAZAR,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, true));
-
-					}
-					break;
-
-				case LISTA_FIJA:
-
-					if (mismosValores(dominioActual.getListaFija(), dominio.getListaFija())) {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.NADA,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.INFO, false));
-
-					} else {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.REEMPLAZAR,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, true));
-
-					}
-					break;
-
-				case FUENTE_DATOS:
-
-					if (dominioActual.getIdFuenteDatos().compareTo(dominio.getIdFuenteDatos()) == 0
-							&& mismosValores(dominioActual.getSql(), dominio.getSql())) {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.NADA,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.INFO, false));
-
-					} else {
-
-						filasDominios.add(new FilaImportarDominio(dominio, dominioActual, TypeImportarAccion.REEMPLAZAR,
-								TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, true));
-
-					}
-					break;
-				}
-
-			}
-
+			this.filasDominios.add(fila);
 		}
 
 		// Paso 3.5. Formateadores.
@@ -456,7 +370,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 			} else {
 
 				filasFormateador.add(new FilaImportarFormateador(formateador, TypeImportarAccion.REEMPLAZAR,
-						TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING));
+						TypeImportarEstado.EXISTE, TypeImportarResultado.INFO));
 			}
 
 		}
@@ -508,16 +422,25 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 *
 	 * @param idDominio
 	 */
-	public void checkDominio(final Integer posicion) {
+	public void checkDominio(final Long codigo) {
 
-		posicionDominio = posicion - 1;
-		final FilaImportar fila = this.filasDominios.get(posicionDominio);
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
-		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
-		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
+		posicionDominio = null;
+		for (int posicion = 0; posicion < filasDominios.size(); posicion++) {
+			if (filasDominios.get(posicion).getDominioActual() != null
+					&& filasDominios.get(posicion).getDominioActual().getCodigo().compareTo(codigo) == 0) {
+				posicionDominio = posicion;
+				break;
+			}
+		}
 
-		UtilJSF.openDialog(DialogTramiteVersionImportarDominio.class, TypeModoAcceso.EDICION, null, true, 770, 300);
-
+		if (posicionDominio != null) {
+			final FilaImportarDominio fila = this.filasDominios.get(posicionDominio);
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, fila);
+			UtilJSF.openDialog(DialogTramiteVersionImportarDominio.class, TypeModoAcceso.EDICION, null, true,
+					fila.getAnchura(), fila.getAltura());
+		}
 	}
 
 	/**
@@ -528,16 +451,13 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	 */
 	public void returnDialogoDominio(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
-		final TypeImportarAccion accion = (TypeImportarAccion) respuesta.getResult();
-		if (accion != TypeImportarAccion.PENDIENTE) {
-			this.filasDominios.get(posicionDominio).setResultado(TypeImportarResultado.INFO);
-			this.filasDominios.get(posicionDominio).setAccion(accion);
-			final FilaImportarDominio fila = this.filasDominios.get(posicionDominio);
-			final Dominio dominio = fila.getDominio();
+		final FilaImportarDominio dato = (FilaImportarDominio) respuesta.getResult();
+		if (!respuesta.isCanceled()) {
+			this.filasDominios.remove(this.filasDominios.get(posicionDominio));
+			dato.setResultado(TypeImportarResultado.OK);
+			this.filasDominios.add(posicionDominio, dato);
 			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
-					.add("iconoDominio" + dominio.getCodigo());
-			FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
-					.add("labelDominio" + dominio.getCodigo());
+					.add("formTramite:dataTablaDominios");
 		}
 	}
 
@@ -553,7 +473,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 
 			this.filaArea = (FilaImportarArea) respuesta.getResult();
 			this.filaArea.setAccion(TypeImportarAccion.REVISADO);
-			this.filaArea.setResultado(TypeImportarResultado.INFO);
+			this.filaArea.setResultado(TypeImportarResultado.OK);
 		}
 	}
 
@@ -568,7 +488,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		if (!respuesta.isCanceled()) {
 			this.filaTramite = (FilaImportarTramite) respuesta.getResult();
 			this.filaTramite.setAccion(TypeImportarAccion.REVISADO);
-			this.filaTramite.setResultado(TypeImportarResultado.INFO);
+			this.filaTramite.setResultado(TypeImportarResultado.OK);
 		}
 	}
 
@@ -583,7 +503,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 		if (!respuesta.isCanceled()) {
 			this.filaTramiteVersion = (FilaImportarTramiteVersion) respuesta.getResult();
 			this.filaTramiteVersion.setAccion(TypeImportarAccion.REVISADO);
-			this.filaTramiteVersion.setResultado(TypeImportarResultado.INFO);
+			this.filaTramiteVersion.setResultado(TypeImportarResultado.OK);
 		}
 	}
 
@@ -754,71 +674,6 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 				iguales = false;
 			} else {
 				iguales = texto1.equals(texto2);
-			}
-		}
-		return iguales;
-	}
-
-	/**
-	 * Comprueba si son el mismo valor.
-	 *
-	 * @param valor1
-	 * @param valor2
-	 * @return
-	 */
-	private boolean mismosValores(final Integer valor1, final Integer valor2) {
-		boolean iguales;
-		if (valor1 == null) {
-			if (valor2 == null) {
-				iguales = true;
-			} else {
-				iguales = false;
-			}
-		} else {
-			if (valor2 == null) {
-				iguales = false;
-			} else {
-				iguales = valor1.compareTo(valor2) == 0;
-			}
-		}
-		return iguales;
-	}
-
-	/**
-	 * Comprueba si son el mismo valor.
-	 *
-	 * @param propiedades1
-	 * @param propiedades2
-	 * @return
-	 */
-	private boolean mismosValores(final List<Propiedad> propiedades1, final List<Propiedad> propiedades2) {
-		boolean iguales;
-		if (propiedades1 == null) {
-			if (propiedades2 == null) {
-				iguales = true;
-			} else {
-				iguales = false;
-			}
-		} else {
-			if (propiedades2 == null) {
-				iguales = false;
-			} else {
-				iguales = true;
-				for (final Propiedad propiedad1 : propiedades1) {
-					boolean encontrado = false;
-					for (final Propiedad propiedad2 : propiedades2) {
-						if (mismosValores(propiedad1.getCodigo(), propiedad2.getCodigo())
-								&& mismosValores(propiedad1.getValor(), propiedad2.getValor())
-								&& mismosValores(propiedad1.getOrden(), propiedad2.getOrden())) {
-							encontrado = true;
-							break;
-						}
-					}
-					if (!encontrado) {
-						iguales = false;
-						break;
-					}
-				}
 			}
 		}
 		return iguales;
@@ -1089,7 +944,7 @@ public class DialogTramiteVersionImportar extends DialogControllerBase {
 	/**
 	 * @return the filasFormateador
 	 */
-	public List<FilaImportar> getFilasFormateador() {
+	public List<FilaImportarFormateador> getFilasFormateador() {
 		return filasFormateador;
 	}
 
