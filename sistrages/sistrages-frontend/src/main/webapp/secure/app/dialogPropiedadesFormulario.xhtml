@@ -57,7 +57,7 @@
 				                          selectionMode="single" selection="#{dialogPropiedadesFormulario.paginaSeleccionada}" rowKey="#{td.orden}">
 
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
-							<p:ajax event="rowSelect"/>
+							<p:ajax event="rowSelect" global="false"/>
 							<p:ajax event="rowUnselect"/>
 
 							<!-- Columnas -->
@@ -97,7 +97,7 @@
 				                          selectionMode="single" selection="#{dialogPropiedadesFormulario.plantillaSeleccionada}" rowKey="#{td.hashCode}">
 
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
-							<p:ajax event="rowSelect" update="form:filesPlantilla"/>
+							<p:ajax event="rowSelect" global="false" update="form:filesPlantilla"/>
 							<p:ajax event="rowUnselect" update="form:filesPlantilla"/>
 
 							<!-- Columnas -->

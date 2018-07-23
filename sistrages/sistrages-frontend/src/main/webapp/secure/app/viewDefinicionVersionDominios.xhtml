@@ -53,7 +53,7 @@
 			        	 selectionMode="single" selection="#{viewDefinicionVersion.dominioSeleccionado}" rowKey="#{dominio.idString}" dblClickSelect="true">
 
 			<!-- Necesario para actualizar en controlador la fila seleccionada -->
-			<p:ajax event="rowSelect" />
+			<p:ajax event="rowSelect" global="false" />
 			<p:ajax event="rowUnselect" />
 
 			<!-- Columnas -->

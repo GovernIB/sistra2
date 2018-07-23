@@ -49,7 +49,7 @@
 			        	  rowKey="#{td.tramiteVersion}">
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
-				<p:ajax event="rowSelect" />
+				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowUnselect" />
 
 			    <p:column headerText="#{msg['dialogDominioTramites.headerTramite']}">
