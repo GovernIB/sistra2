@@ -14,7 +14,7 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 
 @FacesValidator("CodigoValidator")
 public class CodigoValidator implements Validator {
-	private static final String CODIGO_PATTERN = "/[a-z0-9_-]/i";
+	private static final String CODIGO_PATTERN = "[A-Z0-9_-]*";
 
 	private final Pattern pattern;
 	private Matcher matcher;
