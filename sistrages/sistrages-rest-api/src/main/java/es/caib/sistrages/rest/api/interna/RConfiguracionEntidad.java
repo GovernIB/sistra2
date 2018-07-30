@@ -2,15 +2,20 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Configuración entidad.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RConfiguracionEntidad", description = "Descripcion de RConfiguracionEntidad")
 public class RConfiguracionEntidad {
 
     /** Timestamp recuperacion. */
+	@ApiModelProperty(value = "timestamp", required = false)
     private String timestamp;
 
     /** Identificador. */
@@ -54,6 +59,49 @@ public class RConfiguracionEntidad {
 
     /** Plugins entidad. */
     private List<RPlugin> plugins;
+    
+    /** Mapa web */
+    private RLiteral mapaWeb;
+    /** Aviso legal */
+    private RLiteral avisoLegal;
+    /** RSS */
+    private RLiteral rss;
+    /** url de Facebook */
+    private String urlFacebook;
+    /** url de Instagram */
+    private String urlInstagram;
+    /** url de  Twiter */
+    private String urlTwitter;
+    /** url de Youtube */
+    private String urlYoutube;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * Método de acceso a logo.
@@ -340,5 +388,63 @@ public class RConfiguracionEntidad {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+	public RLiteral getMapaWeb() {
+		return mapaWeb;
+	}
+
+	public void setMapaWeb(RLiteral mapaWeb) {
+		this.mapaWeb = mapaWeb;
+	}
+
+	public RLiteral getAvisoLegal() {
+		return avisoLegal;
+	}
+
+	public void setAvisoLegal(RLiteral avisoLegal) {
+		this.avisoLegal = avisoLegal;
+	}
+
+	public RLiteral getRss() {
+		return rss;
+	}
+
+	public void setRss(RLiteral rss) {
+		this.rss = rss;
+	}
+
+	public String getUrlFacebook() {
+		return urlFacebook;
+	}
+
+	public void setUrlFacebook(String urlFacebook) {
+		this.urlFacebook = urlFacebook;
+	}
+
+	public String getUrlInstagram() {
+		return urlInstagram;
+	}
+
+	public void setUrlInstagram(String urlInstagram) {
+		this.urlInstagram = urlInstagram;
+	}
+
+	public String getUrlTwitter() {
+		return urlTwitter;
+	}
+
+	public void setUrlTwitter(String urlTwitter) {
+		this.urlTwitter = urlTwitter;
+	}
+
+	public String getUrlYoutube() {
+		return urlYoutube;
+	}
+
+	public void setUrlYoutube(String urlYoutube) {
+		this.urlYoutube = urlYoutube;
+	}
+
+
 
 }

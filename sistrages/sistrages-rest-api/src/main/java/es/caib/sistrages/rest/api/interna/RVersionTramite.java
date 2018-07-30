@@ -2,9 +2,14 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "RVersionTramite", description = "Descripcion de RVersionTramite")
 public class RVersionTramite {
 
     /** Timestamp recuperacion. */
+	@ApiModelProperty(value = "timestamp", required = false)
     private String timestamp;
 
     /** Identificador tramite. */

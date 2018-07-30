@@ -84,6 +84,7 @@ public class ApiInternaRestController {
      *            id entidad
      * @return Entidad
      */
+    @ApiOperation(value = "Lista de Propiedades de configuracion de entidad", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
     @RequestMapping(value = "/entidad/{id}", method = RequestMethod.GET)
     public RConfiguracionEntidad obtenerConfiguracionEntidad(
             @PathVariable("id") String id) {
@@ -105,6 +106,7 @@ public class ApiInternaRestController {
      * @return versión de trámite
      * @throws Exception
      */
+    @ApiOperation(value = "Obtiene la definición de la versión del tramite", notes = "Obtiene la definición de la versión del tramite", response = RVersionTramite.class)    
     @RequestMapping(value = "/tramite/{idTramite}/{version}/{idioma}", method = RequestMethod.GET)
     public RVersionTramite obtenerDefinicionVersionTramite(
             @PathVariable("idTramite") String idtramite,
@@ -130,6 +132,7 @@ public class ApiInternaRestController {
      *            Id entidad
      * @return avisos
      */
+    @ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)        
     @RequestMapping(value = "/entidad/{id}/avisos", method = RequestMethod.GET)
     public RAvisosEntidad obtenerAvisosEntidad(
             @PathVariable("id") String idEntidad) {
@@ -147,6 +150,7 @@ public class ApiInternaRestController {
      *            parametros (en formato JSON)
      * @return Valores dominio
      */
+    @ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores de un dominio", response = RValoresDominio.class)
     @RequestMapping(value = "/dominioFuenteDatos/{idDominio}", method = RequestMethod.POST)
     public RValoresDominio obtenerValoresDominioFD(
             @PathVariable("idDominio") String idDominio,

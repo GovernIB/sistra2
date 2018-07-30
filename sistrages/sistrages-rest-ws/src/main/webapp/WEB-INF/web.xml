@@ -46,19 +46,36 @@
    <!-- Securizacion --> 
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name>sistrages-rest-ws</web-resource-name>
-      <url-pattern>/rest/*</url-pattern>
+      <web-resource-name>sistrages-restint-ws</web-resource-name>
+      <url-pattern>/rest/interna/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>STG_API</role-name>
+      <role-name>STG_API_INT</role-name>
     </auth-constraint>
   </security-constraint>
+  
+    <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>sistrages-restext-ws</web-resource-name>
+      <url-pattern>/rest/externa/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>STG_API_INT</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+  
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>Autenticacion</realm-name>
   </login-config>
+  
   <security-role>
-    <role-name>STG_API</role-name>
+    <role-name>STG_API_INT</role-name>
+  </security-role>
+ 
+  <security-role>
+    <role-name>STG_API_EXT</role-name>
   </security-role>
   
 </web-app>

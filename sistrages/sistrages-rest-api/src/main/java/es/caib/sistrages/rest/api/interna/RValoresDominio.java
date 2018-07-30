@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.annotations.ApiModel;
+
 /**
  * Modela datos de un dominio.
  *
@@ -13,6 +15,7 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("serial")
+@ApiModel(value = "RValoresDominio", description = "Descripcion de RValoresDominio")
 public final class RValoresDominio implements Serializable {
 
     /** Constante numérica. */

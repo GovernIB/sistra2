@@ -2,15 +2,20 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Avisos entidad.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RAvisosEntidad", description = "Descripcion de RAvisosEntidad")
 public class RAvisosEntidad {
 
     /** Timestamp recuperacion. */
+	@ApiModelProperty(value = "timestamp", required = false)
     private String timestamp;
 
     /** Avisos. */
