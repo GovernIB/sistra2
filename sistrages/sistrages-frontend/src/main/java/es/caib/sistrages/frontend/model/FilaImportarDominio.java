@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
@@ -18,7 +20,7 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 /**
  * Fila dominio importar.
  *
- * @author slromero
+ * @author Indra
  *
  */
 public class FilaImportarDominio extends FilaImportar {
@@ -51,7 +53,7 @@ public class FilaImportarDominio extends FilaImportar {
 	private Integer altura = 330;
 
 	/** Altura. **/
-	private Integer anchura = 900;
+	private Integer anchura = 850;
 
 	/** Resultado jdni. */
 	private String resultadoJndi;
@@ -74,6 +76,15 @@ public class FilaImportarDominio extends FilaImportar {
 	/** Mensaje. **/
 	private String mensaje;
 
+	/** Fuente datos. **/
+	private FuenteDatos fuenteDatos;
+
+	/** Fuente datos actual. **/
+	private FuenteDatos fuenteDatosActual;
+
+	/** Fuente Datos content. */
+	private byte[] fuenteDatosContent;
+
 	/**
 	 * Constructor basico.
 	 */
@@ -87,115 +98,41 @@ public class FilaImportarDominio extends FilaImportar {
 	 * @param iDominio
 	 * @param iDominioActual
 	 */
-	public FilaImportarDominio(final Dominio iDominio, final Dominio iDominioActual) {
+	public FilaImportarDominio(final Dominio iDominio, final Dominio iDominioActual, final FuenteDatos fd,
+			final byte[] fdContent, final FuenteDatos fdActual) {
 		this.dominio = iDominio;
 		this.dominioActual = iDominioActual;
+		this.setFuenteDatos(fd);
+		this.setFuenteDatosContent(fdContent);
+		this.setFuenteDatosActual(fdActual);
 		this.checkDominios();
 		this.rellenarDatosPorDefecto();
-	}
-
-	/**
-	 * @return the dominio
-	 */
-	public Dominio getDominio() {
-		return dominio;
-	}
-
-	/**
-	 * @param dominio
-	 *            the dominio to set
-	 */
-	public void setDominio(final Dominio dominio) {
-		this.dominio = dominio;
-	}
-
-	/**
-	 * @return the visibleBoton
-	 */
-	public boolean isVisibleBoton() {
-		return visibleBoton;
-	}
-
-	/**
-	 * @return the visibleBoton
-	 */
-	public boolean getVisibleBoton() {
-		return isVisibleBoton();
-	}
-
-	/**
-	 * @param visibleBoton
-	 *            the visibleBoton to set
-	 */
-	public void setVisibleBoton(final boolean visibleBoton) {
-		this.visibleBoton = visibleBoton;
-	}
-
-	/**
-	 * @return the dominioActual
-	 */
-	public Dominio getDominioActual() {
-		return dominioActual;
-	}
-
-	/**
-	 * @param dominioActual
-	 *            the dominioActual to set
-	 */
-	public void setDominioActual(final Dominio dominioActual) {
-		this.dominioActual = dominioActual;
-	}
-
-	/**
-	 * @return the mismoTipo
-	 */
-	public boolean isMismoTipo() {
-		return mismoTipo;
-	}
-
-	/**
-	 * @return the mismoTipo
-	 */
-	public boolean getMismoTipo() {
-		return isMismoTipo();
-	}
-
-	/**
-	 * @param mismoTipo
-	 *            the mismoTipo to set
-	 */
-	public void setMismoTipo(final boolean mismoTipo) {
-		this.mismoTipo = mismoTipo;
 	}
 
 	/**
 	 * Rellena los tipos por defecto. Valores seleccionados y la altura/anchura.
 	 */
 	private void rellenarDatosPorDefecto() {
-		if (mismoTipo) {
-			if (dominio != null) {
-				switch (dominio.getTipo()) {
-				case CONSULTA_BD:
-					this.jndi = dominio.getJndi();
-					this.sql = dominio.getSql();
-					altura = 300;
-					break;
-				case CONSULTA_REMOTA:
-					this.url = dominio.getUrl();
-					altura = 200;
-					break;
-				case FUENTE_DATOS:
-					this.sql = dominio.getSql();
-					altura = 200;
-					break;
-				case LISTA_FIJA:
-					altura = 400;
-					break;
-				}
-
+		if (dominio != null) {
+			switch (dominio.getTipo()) {
+			case CONSULTA_BD:
+				this.jndi = dominio.getJndi();
+				this.sql = dominio.getSql();
+				altura = 400;
+				break;
+			case CONSULTA_REMOTA:
+				this.url = dominio.getUrl();
+				altura = 300;
+				break;
+			case FUENTE_DATOS:
+				this.sql = dominio.getSql();
+				altura = 350;
+				break;
+			case LISTA_FIJA:
+				altura = 400;
+				break;
 			}
-		} else {
-			altura = 200;
+
 		}
 	}
 
@@ -324,10 +261,42 @@ public class FilaImportarDominio extends FilaImportar {
 	 * @return
 	 */
 	private boolean mismaEstructura() {
-		if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
-			return mismosValores(dominio.getParametros(), dominioActual.getParametros());
+		if (dominio.getTipo() == TypeDominio.FUENTE_DATOS
+				|| (dominioActual != null && dominioActual.getTipo() == TypeDominio.FUENTE_DATOS)) {
+			return mismosValores(dominio.getParametros(), dominioActual.getParametros()) && mismosValoresFD();
 		} else {
 			return mismosValores(dominio.getParametros(), dominioActual.getParametros());
+		}
+	}
+
+	/**
+	 * Comprueba si 2 fuente de datos tienen la misma estructura.
+	 *
+	 * @param fuenteDatos2
+	 * @param fuenteDatosActual2
+	 * @return
+	 */
+	private boolean mismosValoresFD() {
+		if (this.fuenteDatos == null || this.fuenteDatosActual == null) {
+			return false;
+		} else {
+			if (this.fuenteDatos.getCampos().size() == this.fuenteDatosActual.getCampos().size()) {
+				boolean retorno = true;
+				for (final FuenteDatosCampo campo : this.fuenteDatos.getCampos()) {
+					for (final FuenteDatosCampo campo2 : this.fuenteDatosActual.getCampos()) {
+						if (campo.getIdentificador().equals(campo2.getIdentificador())
+								&& campo.isClavePrimaria() == campo2.isClavePrimaria()) {
+							break;
+						}
+					}
+					// Solo llegará aquí si no entre por el if del bucle.
+					retorno = false;
+				}
+				return retorno;
+
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -606,6 +575,125 @@ public class FilaImportarDominio extends FilaImportar {
 		if (literal != null) {
 			this.mensaje = UtilJSF.getLiteral(literal);
 		}
+	}
+
+	/**
+	 * @return the fuenteDatos
+	 */
+	public FuenteDatos getFuenteDatos() {
+		return fuenteDatos;
+	}
+
+	/**
+	 * @param fuenteDatos
+	 *            the fuenteDatos to set
+	 */
+	public void setFuenteDatos(final FuenteDatos fuenteDatos) {
+		this.fuenteDatos = fuenteDatos;
+	}
+
+	/**
+	 * @return the fuenteDatosContent
+	 */
+	public byte[] getFuenteDatosContent() {
+		return fuenteDatosContent;
+	}
+
+	/**
+	 * @param fuenteDatosContent
+	 *            the fuenteDatosContent to set
+	 */
+	public void setFuenteDatosContent(final byte[] fuenteDatosContent) {
+		this.fuenteDatosContent = fuenteDatosContent;
+	}
+
+	/**
+	 * @return the dominio
+	 */
+	public Dominio getDominio() {
+		return dominio;
+	}
+
+	/**
+	 * @param dominio
+	 *            the dominio to set
+	 */
+	public void setDominio(final Dominio dominio) {
+		this.dominio = dominio;
+	}
+
+	/**
+	 * @return the visibleBoton
+	 */
+	public boolean isVisibleBoton() {
+		return visibleBoton;
+	}
+
+	/**
+	 * @return the visibleBoton
+	 */
+	public boolean getVisibleBoton() {
+		return isVisibleBoton();
+	}
+
+	/**
+	 * @param visibleBoton
+	 *            the visibleBoton to set
+	 */
+	public void setVisibleBoton(final boolean visibleBoton) {
+		this.visibleBoton = visibleBoton;
+	}
+
+	/**
+	 * @return the dominioActual
+	 */
+	public Dominio getDominioActual() {
+		return dominioActual;
+	}
+
+	/**
+	 * @param dominioActual
+	 *            the dominioActual to set
+	 */
+	public void setDominioActual(final Dominio dominioActual) {
+		this.dominioActual = dominioActual;
+	}
+
+	/**
+	 * @return the mismoTipo
+	 */
+	public boolean isMismoTipo() {
+		return mismoTipo;
+	}
+
+	/**
+	 * @return the mismoTipo
+	 */
+	public boolean getMismoTipo() {
+		return isMismoTipo();
+	}
+
+	/**
+	 * @param mismoTipo
+	 *            the mismoTipo to set
+	 */
+	public void setMismoTipo(final boolean mismoTipo) {
+		this.mismoTipo = mismoTipo;
+	}
+
+	/**
+	 * @return the fuenteDatosActual
+	 */
+	public FuenteDatos getFuenteDatosActual() {
+		return fuenteDatosActual;
+	}
+
+	/**
+	 * @param fuenteDatosActual
+	 *            the fuenteDatosActual to set
+	 */
+	public void setFuenteDatosActual(final FuenteDatos fuenteDatosActual) {
+		this.fuenteDatosActual = fuenteDatosActual;
 	}
 
 }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportarTramite;
+import es.caib.sistrages.frontend.model.FilaImportarArea;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -18,15 +18,13 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
-public class DialogTramiteVersionImportarTR extends DialogControllerBase {
+public class DialogTramiteImportarAR extends DialogControllerBase {
 
-	/**
-	 * Log.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportarTR.class);
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteImportarAR.class);
 
-	/** Fila Importar. */
-	private FilaImportarTramite data;
+	/** Fila importar. */
+	private FilaImportarArea data;
 
 	/** Mensaje. **/
 	private String mensaje;
@@ -35,20 +33,20 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 	 * Inicialización.
 	 */
 	public void init() {
-		data = (FilaImportarTramite) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
+		data = (FilaImportarArea) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_IMPORTAR);
 		if (data.getEstado() == TypeImportarEstado.EXISTE) {
-			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTR.estado.existedistinto"));
+			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarAR.estado.existedistinto"));
 		} else {
-			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTR.estado.noexiste"));
+			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarAR.estado.noexiste"));
 		}
 	}
 
 	/**
-	 * Guardar.
+	 * Guardar resultado.
 	 */
 	public void guardar() {
 
-		if (data.getTramiteResultado().isEmpty()) {
+		if (data.getAreaResultado().isEmpty()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Rellena el valor");
 			return;
 		}
@@ -75,18 +73,18 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * @return the data
 	 */
-	public void setData(final FilaImportarTramite data) {
-		this.data = data;
+	public FilaImportarArea getData() {
+		return data;
 	}
 
 	/**
-	 * @return the data
+	 * @param data
+	 *            the data to set
 	 */
-	public FilaImportarTramite getData() {
-		return data;
+	public void setData(final FilaImportarArea data) {
+		this.data = data;
 	}
 
 	/**
@@ -103,4 +101,5 @@ public class DialogTramiteVersionImportarTR extends DialogControllerBase {
 	public void setMensaje(final String mensaje) {
 		this.mensaje = mensaje;
 	}
+
 }

@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
+import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
@@ -51,6 +51,7 @@ import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -58,10 +59,10 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
-public class DialogTramiteVersionExportar extends DialogControllerBase {
+public class DialogTramiteExportar extends DialogControllerBase {
 
 	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionExportar.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteExportar.class);
 
 	/** Servicio. **/
 	@Inject
@@ -431,6 +432,7 @@ public class DialogTramiteVersionExportar extends DialogControllerBase {
 		prop.setProperty("version", UtilJSF.getVersion());
 		prop.setProperty("fecha", Calendar.getInstance().getTime().toString());
 		prop.setProperty("usuario", UtilJSF.getSessionBean().getUserName());
+		prop.setProperty("tipo", TypeImportarTipo.TRAMITE.toString());
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		prop.store(output, null);
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFlujo" var="TypeFlujo" />
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDominioExportar.titulo']}"/></title>
+</h:head>
+
+<h:body>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioExportar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDominioExportar.id}"/>
+		<f:viewAction action="#{dialogDominioExportar.init}" />
+	</f:metadata>
+
+	<h:form id="dialogDominioExportar" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growldialog" widgetVar="growldialog" life="8000" sticky="false" />
+
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel value="#{msg['dialogDominioExportar.identificador']}" styleClass="titulo-color" style="color:#000" />
+                	<p:outputLabel value="#{dialogDominioExportar.data.identificador}" />
+
+                	<p:outputLabel value="#{msg['dialogDominioExportar.ambito']}" />
+                	<p:outputLabel value="#{msg['ambito.' += dialogDominioExportar.data.ambito]}" />
+
+                	<p:outputLabel value="#{msg['dialogDominioExportar.tipo']}" />
+                	<p:outputLabel value="#{msg['typeDominio.' += dialogDominioExportar.data.tipo]}" />
+
+				</h:panelGrid>
+
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.exportar']}" ajax="false"  styleClass="boton-azul" rendered="#{dialogDominioExportar.mostrarBotonExportar}">
+		        			<p:fileDownload value="#{dialogDominioExportar.fichero}"></p:fileDownload>
+		        		</p:commandButton>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominioExportar.cancelar}" process="@this"  />
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

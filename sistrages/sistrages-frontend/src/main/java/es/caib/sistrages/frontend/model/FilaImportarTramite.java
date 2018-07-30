@@ -8,7 +8,7 @@ import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 /**
  * Fila importar tramite.
  *
- * @author slromero
+ * @author Indra
  *
  */
 public class FilaImportarTramite extends FilaImportar {

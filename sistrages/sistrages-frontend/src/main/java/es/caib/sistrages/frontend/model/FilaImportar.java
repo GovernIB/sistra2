@@ -9,7 +9,7 @@ import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 /**
  * Fila importar básico.
  *
- * @author slromero
+ * @author Indra
  *
  */
 public class FilaImportar {

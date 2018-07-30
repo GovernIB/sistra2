@@ -213,6 +213,30 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
+	 * Importar un dominio.
+	 */
+	public void importar() {
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
+		UtilJSF.openDialog(DialogDominioImportar.class, TypeModoAcceso.ALTA, params, true, 770, 280);
+	}
+
+	/**
+	 * Exportar un dominio.
+	 */
+	public void exportar() {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
+		UtilJSF.openDialog(DialogDominioExportar.class, TypeModoAcceso.ALTA, params, true, 500, 200);
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada
@@ -249,6 +273,7 @@ public class ViewDominios extends ViewControllerBase {
 
 	}
 
+	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Checkea permisos area. Las reglas son las siguientes: <br />
 	 * - Si eres administrador de entidad, puedes editar en cualquier entorno.
@@ -284,7 +309,6 @@ public class ViewDominios extends ViewControllerBase {
 		}
 	}
 
-	// ------- FUNCIONES PRIVADAS ------------------------------
 	/**
 	 * Verifica si hay fila seleccionada.
 	 *

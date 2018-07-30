@@ -8,7 +8,7 @@ import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 /**
  * Fila importar area.
  *
- * @author slromero
+ * @author Indra
  *
  */
 public class FilaImportarArea extends FilaImportar {

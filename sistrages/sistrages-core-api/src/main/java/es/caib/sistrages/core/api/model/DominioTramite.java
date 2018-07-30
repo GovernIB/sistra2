@@ -3,7 +3,7 @@ package es.caib.sistrages.core.api.model;
 /**
  * Dominio tramite.
  *
- * @author slromero
+ * @author Indra
  */
 public class DominioTramite {
 

@@ -5,10 +5,12 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ValueChangeEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.FilaImportarDominio;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -19,10 +21,10 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
-public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
+public class DialogTramiteImportarDominio extends DialogControllerBase {
 
 	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportarDominio.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteImportarDominio.class);
 
 	/** Dominio. */
 	private FilaImportarDominio data;
@@ -59,6 +61,7 @@ public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
 		} else {
 			accion = data.getAccion().toString();
 		}
+		this.mostrarReemplazar = accion.equals(TypeImportarAccion.REEMPLAZAR.toString());
 	}
 
 	/**
@@ -110,8 +113,8 @@ public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
 	 * El evento del combo. Cuando se actualiza a reemplazar, se ven los valores o
 	 * sino, se ocultan.
 	 */
-	public void eventoChangeResultado() {
-		this.mostrarReemplazar = (this.accion == TypeImportarAccion.REEMPLAZAR.toString());
+	public void eventoChangeResultado(final ValueChangeEvent event) {
+		this.mostrarReemplazar = event.getNewValue().equals(TypeImportarAccion.REEMPLAZAR.toString());
 	}
 
 	/**
@@ -121,7 +124,37 @@ public class DialogTramiteVersionImportarDominio extends DialogControllerBase {
 		if (data.getDominioActual() != null) {
 			final Map<String, String> params = new HashMap<>();
 			params.put(TypeParametroVentana.ID.toString(), data.getDominioActual().getCodigo().toString());
+			params.put(TypeParametroVentana.AMBITO.toString(), data.getDominioActual().getAmbito().toString());
+			if (data.getDominioActual().getAreas() != null && !data.getDominioActual().getAreas().isEmpty()) {
+				params.put(TypeParametroVentana.AREA.toString(),
+						data.getDominioActual().getAreas().toArray()[0].toString());
+			}
 			UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+		}
+	}
+
+	/**
+	 * Consultar estructura FD.
+	 */
+	public void consultarEstructura() {
+		if (data.getDominio() != null & data.getDominio().getIdFuenteDatos() != null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEDATOS, UtilJSON.toJSON(data.getFuenteDatos()));
+			UtilJSF.openDialog(DialogTramiteImportarFDE.class, TypeModoAcceso.CONSULTA, null, true, 770, 400);
+		}
+	}
+
+	/**
+	 * Consultar datos FD.
+	 */
+	public void consultarDatos() {
+		if (data.getDominio() != null & data.getDominio().getIdFuenteDatos() != null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEDATOS, UtilJSON.toJSON(data.getFuenteDatos()));
+			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEVALORES, data.getFuenteDatosContent());
+			UtilJSF.openDialog(DialogTramiteImportarFDD.class, TypeModoAcceso.CONSULTA, null, true, 770, 400);
 		}
 	}
 

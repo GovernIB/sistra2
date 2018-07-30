@@ -167,12 +167,11 @@ public class DialogDominio extends DialogControllerBase {
 				mostrarAdvertencia = true;
 			}
 		}
-
 	}
 
 	/**
 	 * Comprueba si puede guardar.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean permiteGuardar() {
@@ -564,6 +563,65 @@ public class DialogDominio extends DialogControllerBase {
 		} else if (TypeDominio.FUENTE_DATOS == this.data.getTipo()) {
 			visibleFuente = true;
 		}
+	}
+
+	/**
+	 * Abre dialogo de tramites.
+	 *
+	 * @param modoAccesoDlg
+	 *            Modo acceso
+	 */
+	public void tramites() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getCodigo()));
+		if (ambito != null) {
+			params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+			final TypeAmbito typeAmbito = TypeAmbito.fromString(ambito);
+			if (typeAmbito == TypeAmbito.AREA) {
+				params.put("AREA", id);
+			}
+			if (typeAmbito == TypeAmbito.ENTIDAD) {
+				params.put("ENTIDAD", id);
+			}
+		}
+		UtilJSF.openDialog(DialogDominioTramites.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+	}
+
+	/**
+	 * Ver la estructura de la fuente de datos en modo consulta.
+	 */
+	public void fuentedatosEST() {
+
+		if (this.idFuenteDato == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+		} else {
+
+			// Muestra dialogo
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.ID.toString(), this.idFuenteDato.toString());
+			params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
+			params.put(TypeParametroVentana.AREA.toString(), this.id);
+			UtilJSF.openDialog(DialogFuente.class, TypeModoAcceso.CONSULTA, params, true, 740, 450);
+		}
+
+	}
+
+	/**
+	 * Ver los datos de la fuente de datos en modo consulta.
+	 */
+	public void fuentedatosDAT() {
+		if (this.idFuenteDato == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+		} else {
+
+			// Muestra dialogo
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.ID.toString(), this.idFuenteDato.toString());
+			UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.CONSULTA, params, true, 740, 330);
+		}
+
 	}
 
 	/**

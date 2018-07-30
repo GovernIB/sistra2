@@ -16,10 +16,10 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
-public class DialogTramiteVersionImportarTV extends DialogControllerBase {
+public class DialogTramiteImportarTV extends DialogControllerBase {
 
 	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteVersionImportarTV.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteImportarTV.class);
 
 	/** FilaImportar. */
 	private FilaImportarTramiteVersion data;
@@ -45,19 +45,19 @@ public class DialogTramiteVersionImportarTV extends DialogControllerBase {
 
 		if (data.getTramiteVersionActual() == null) {
 
-			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.noexiste"));
+			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarTV.estado.noexiste"));
 
 		} else if (data.getTramiteVersionActual().getNumeroVersion() < data.getTramiteVersion().getNumeroVersion()) {
 
-			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.existemayor"));
+			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarTV.estado.existemayor"));
 
 		} else if (data.getTramiteVersionActual().getNumeroVersion() == data.getTramiteVersion().getNumeroVersion()) {
 
-			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.existeigual"));
+			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarTV.estado.existeigual"));
 
 		} else {
 
-			setMensaje(UtilJSF.getLiteral("dialogTramiteVersionImportarTV.estado.existemenor"));
+			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarTV.estado.existemenor"));
 		}
 
 	}

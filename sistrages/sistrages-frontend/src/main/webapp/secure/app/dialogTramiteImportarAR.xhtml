@@ -11,7 +11,7 @@
 <p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogTramiteVersionImportarAR.titulo']}"/></title>
+	<title><h:outputText value="#{msg['dialogTramiteImportarAR.titulo']}"/></title>
 </h:head>
 <h:body>
   	<f:facet name="last">
@@ -20,8 +20,8 @@
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteVersionImportarAR.modoAcceso}"/>
-		<f:viewAction action="#{dialogTramiteVersionImportarAR.init}" />
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteImportarAR.modoAcceso}"/>
+		<f:viewAction action="#{dialogTramiteImportarAR.init}" />
 	</f:metadata>
 	<h:form id="dialogEntidad" styleClass="margin-top-10">
   			<p:outputPanel>
@@ -29,25 +29,25 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 				<p>
-					<p:outputLabel value="#{dialogTramiteVersionImportarAR.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
+					<p:outputLabel value="#{dialogTramiteImportarAR.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
 				</p>
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 ,padding-left-18 padding-right-18, padding-right-18" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel value="#{msg['dialogTramiteVersionImportarAR.headerDescripcionNuevo']}" />
-					<p:outputLabel value="#{msg['dialogTramiteVersionImportarAR.headerDescripcionActual']}" />
+					<p:outputLabel value="#{msg['dialogTramiteImportarAR.headerDescripcionNuevo']}" />
+					<p:outputLabel value="#{msg['dialogTramiteImportarAR.headerDescripcionActual']}" />
 					<p:outputLabel value="" />
 
-					<p:inputTextarea value="#{dialogTramiteVersionImportarAR.data.area.descripcion}" size="40" rows="5" readonly="true" />
-					<p:inputTextarea value="#{dialogTramiteVersionImportarAR.data.areaActual.descripcion}" size="40" rows="5"  readonly="true" />
-					<p:inputTextarea value="#{dialogTramiteVersionImportarAR.data.areaResultado}" required="true" rows="5"  size="40" style="background:white" requiredMessage="#{msg['error.obligatorio']}" />
+					<p:inputTextarea value="#{dialogTramiteImportarAR.data.area.descripcion}" size="40" rows="5" readonly="true" />
+					<p:inputTextarea value="#{dialogTramiteImportarAR.data.areaActual.descripcion}" size="40" rows="5"  readonly="true" />
+					<p:inputTextarea value="#{dialogTramiteImportarAR.data.areaResultado}" required="true" rows="5"  size="40" style="background:white" requiredMessage="#{msg['error.obligatorio']}" />
 
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteVersionImportarAR.guardar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionImportarAR.cancelar()}" process="@this"/>
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteImportarAR.guardar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteImportarAR.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

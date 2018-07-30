@@ -8,7 +8,7 @@ import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 /**
  * Fila formateador importar.
  *
- * @author slromero
+ * @author Indra
  *
  */
 public class FilaImportarFormateador extends FilaImportar {

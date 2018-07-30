@@ -47,24 +47,33 @@ public class RConfiguracionEntidadAdapter {
         rConfiguracionEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
         rConfiguracionEntidad.setInfoLopdHTML(
                 AdapterUtils.generarLiteral(entidad.getLopd()));
-
+        
+        rConfiguracionEntidad.setMapaWeb( AdapterUtils.generarLiteral(entidad.getMapaWeb()));
+        rConfiguracionEntidad.setAvisoLegal( AdapterUtils.generarLiteral(entidad.getAvisoLegal()));
+        rConfiguracionEntidad.setRss( AdapterUtils.generarLiteral(entidad.getRss()));
+        rConfiguracionEntidad.setUrlFacebook( entidad.getUrlFacebook());
+        rConfiguracionEntidad.setUrlInstagram( entidad.getUrlInstagram());
+        rConfiguracionEntidad.setUrlTwitter( entidad.getUrlTwitter());
+        rConfiguracionEntidad.setUrlYoutube( entidad.getUrlYoutube());
     }
 
     private List<ROpcionFormularioSoporte> generaFormularios(
             List<FormularioSoporte> formularioIncidencias) {
         ROpcionFormularioSoporte opc;
         final List<ROpcionFormularioSoporte> opciones = new ArrayList<>();
-        for (final FormularioSoporte fs : formularioIncidencias) {
-            opc = new ROpcionFormularioSoporte();
-            opc.setTipo(AdapterUtils.generarLiteral(fs.getTipoIncidencia()));
-            opc.setDescripcion(
-                    AdapterUtils.generarLiteral(fs.getDescripcion()));
-            opc.setDestinatario(fs.getTipoDestinatario() != null
-                    ? fs.getTipoDestinatario().toString()
-                    : null);
-            opc.setListaEmails(fs.getListaEmails());
-            opc.setCodigo(fs.getCodigo());
-            opciones.add(opc);
+        if(formularioIncidencias!=null) {
+	        for (final FormularioSoporte fs : formularioIncidencias) {
+	            opc = new ROpcionFormularioSoporte();
+	            opc.setTipo(AdapterUtils.generarLiteral(fs.getTipoIncidencia()));
+	            opc.setDescripcion(
+	                    AdapterUtils.generarLiteral(fs.getDescripcion()));
+	            opc.setDestinatario(fs.getTipoDestinatario() != null
+	                    ? fs.getTipoDestinatario().toString()
+	                    : null);
+	            opc.setListaEmails(fs.getListaEmails());
+	            opc.setCodigo(fs.getCodigo());
+	            opciones.add(opc);
+	        }
         }
         return opciones;
     }
