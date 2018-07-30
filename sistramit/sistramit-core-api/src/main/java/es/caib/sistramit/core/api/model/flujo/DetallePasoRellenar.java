@@ -18,7 +18,7 @@ public final class DetallePasoRellenar extends DetallePaso {
     /**
      * Lista de formularios.
      */
-    private List<Formulario> formularios = new ArrayList<Formulario>();
+    private List<Formulario> formularios = new ArrayList<>();
 
     /**
      * Constructor.

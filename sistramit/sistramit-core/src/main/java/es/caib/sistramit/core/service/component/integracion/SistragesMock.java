@@ -130,7 +130,15 @@ public class SistragesMock {
         e.setAyudaFormulario(opciones);
         e.setAyudaTelefono("012");
         e.setAyudaUrl("url ayuda");
+        e.setAvisoLegal(generarLiteral());
+        e.setMapaWeb(generarLiteral());
+        e.setRss(generarLiteral());
+        e.setUrlFacebook("http://facebook");
+        e.setUrlInstagram("http://instagram");
+        e.setUrlTwitter("http://twitter");
+        e.setUrlYoutube("http://youtube");
         e.setPlugins(crearPluginsEntidad());
+        e.setInfoLopdHTML(generarLiteral());
 
         return e;
 
@@ -242,7 +250,7 @@ public class SistragesMock {
         final RPasoTramitacionRellenar pr = new RPasoTramitacionRellenar();
         final List<RFormularioTramite> fl = new ArrayList<>();
         fl.add(crearFormularioTramite());
-        fl.add(crearFormularioTramite());
+        // fl.add(crearFormularioTramite());
         pr.setIdentificador("RF1");
         pr.setTipo("RF");
         pr.setFormularios(fl);
@@ -266,6 +274,7 @@ public class SistragesMock {
         f = new RFormularioTramite();
         f.setIdentificador("F1");
         f.setDescripcion("Formulario");
+        f.setObligatoriedad("S");
         f.setFormularioInterno(crearFormularioDisenyo());
         return f;
     }

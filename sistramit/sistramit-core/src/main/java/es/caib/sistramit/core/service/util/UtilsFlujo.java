@@ -6,10 +6,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
+import es.caib.sistrages.rest.api.interna.RScript;
+import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.FormatoInvalidoFechaFrontException;
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
@@ -22,11 +27,18 @@ import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
 import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
+import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.service.component.script.RespuestaScript;
+import es.caib.sistramit.core.service.component.script.ScriptExec;
+import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
+import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
+import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 
 /**
  * Clase de utilidades para flujo de tramitación.
@@ -263,14 +275,15 @@ public final class UtilsFlujo {
                 UtilsSTG.obtenerLiteral(entidad.getContactoHTML(), idioma));
         e.setUrlCarpeta(
                 UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), idioma));
-
-        // TODO PENDIENTE
-        e.setUrlMapaWeb("http://pendiente.es");
-        e.setUrlAvisoLegal("http://pendiente.es");
-        e.setUrlRss("http://pendiente.es");
+        e.setUrlMapaWeb(UtilsSTG.obtenerLiteral(entidad.getMapaWeb(), idioma));
+        e.setUrlAvisoLegal(
+                UtilsSTG.obtenerLiteral(entidad.getAvisoLegal(), idioma));
+        e.setUrlRss(UtilsSTG.obtenerLiteral(entidad.getRss(), idioma));
         final EntidadRedesSociales redes = new EntidadRedesSociales();
-        redes.setFacebook("facebook");
-        redes.setInstagram("instagram");
+        redes.setFacebook(entidad.getUrlFacebook());
+        redes.setInstagram(entidad.getUrlInstagram());
+        redes.setTwiter(entidad.getUrlTwitter());
+        redes.setYoutube(entidad.getUrlYoutube());
         e.setRedes(redes);
 
         final List<SoporteOpcion> soporteOpciones = new ArrayList<>();
@@ -366,6 +379,75 @@ public final class UtilsFlujo {
         detalleTramite.setEntidad(detalleTramiteEntidad(entidadInfo,
                 pDatosSesion.getDatosTramite().getIdioma()));
         return detalleTramite;
+    }
+
+    /**
+     * Ejecuta script de dependencia de un documento.
+     *
+     * @param script
+     *            Script
+     * @param idDocumento
+     *            Id documento
+     * @param pVariablesFlujo
+     *            Variables flujo
+     * @param pFormulariosCompletadosPaso
+     *            Formularios anteriores completados en el paso actual
+     * @param scriptFlujo
+     *            Engine script
+     * @param pDefinicionTramite
+     *            Definicion tramite
+     *
+     * @return Obligatoriedad
+     */
+    public static TypeObligatoriedad ejecutarScriptDependenciaDocumento(
+            final RScript script, final String idDocumento,
+            final VariablesFlujo pVariablesFlujo,
+            final List<DatosDocumento> pFormulariosCompletadosPaso,
+            final ScriptExec scriptFlujo,
+            final DefinicionTramiteSTG pDefinicionTramite) {
+
+        // Si es dependiente ejecutamos script de dependencia
+        final Map<String, String> codigosError = UtilsSTG
+                .convertLiteralesToMap(script.getLiterales());
+
+        final RespuestaScript rs = scriptFlujo.executeScriptFlujo(
+                TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO, idDocumento,
+                script.getScript(), pVariablesFlujo, null,
+                pFormulariosCompletadosPaso, codigosError, pDefinicionTramite);
+        if (rs.isError()) {
+            throw new ErrorScriptException(
+                    TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),
+                    pVariablesFlujo.getIdSesionTramitacion(), idDocumento,
+                    rs.getMensajeError());
+        }
+
+        // El resultado nos tiene que devolver:
+        // s (obligatorio)/n(opcional)/d(no tienes que rellenarlo)
+        String dependencia = ((String) rs.getResultado());
+        if (StringUtils.isBlank(dependencia)) {
+            throw new ErrorScriptException(
+                    TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),
+                    pVariablesFlujo.getIdSesionTramitacion(), idDocumento,
+                    "El script de dependencia no ha devuelto valor");
+        }
+        dependencia = dependencia.toLowerCase();
+        TypeObligatoriedad obligatorio;
+        if (TypeObligatoriedad.OBLIGATORIO.toString().equals(dependencia)) {
+            obligatorio = TypeObligatoriedad.OBLIGATORIO;
+        } else if (TypeObligatoriedad.OPCIONAL.toString().equals(dependencia)) {
+            obligatorio = TypeObligatoriedad.OPCIONAL;
+        } else if (TypeObligatoriedad.DEPENDIENTE.toString()
+                .equals(dependencia)) {
+            obligatorio = TypeObligatoriedad.DEPENDIENTE;
+        } else {
+            throw new ErrorScriptException(
+                    TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),
+                    pVariablesFlujo.getIdSesionTramitacion(), idDocumento,
+                    "El script de dependencia no ha devuelto un valor válido: "
+                            + dependencia);
+        }
+
+        return obligatorio;
     }
 
     /**

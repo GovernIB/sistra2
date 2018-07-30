@@ -1,7 +1,9 @@
 package es.caib.sistramit.core.service.model.flujo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
@@ -92,8 +94,18 @@ public final class DocumentoPasoPersistencia implements Serializable {
     private Date registroFechaRegistro;
 
     /**
+     * Crea clase vacía (uso en bucles).
+     *
+     * @return DocumentoPasoPersistencia
+     */
+    public static DocumentoPasoPersistencia createDocumentoPersistencia() {
+        final DocumentoPasoPersistencia doc = new DocumentoPasoPersistencia();
+        return doc;
+    }
+
+    /**
      * Método de acceso a id.
-     * 
+     *
      * @return id
      */
     public String getId() {
@@ -102,7 +114,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer id.
-     * 
+     *
      * @param id
      *            id a establecer
      */
@@ -112,7 +124,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a instancia.
-     * 
+     *
      * @return instancia
      */
     public int getInstancia() {
@@ -121,7 +133,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer instancia.
-     * 
+     *
      * @param instancia
      *            instancia a establecer
      */
@@ -131,7 +143,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a tipo.
-     * 
+     *
      * @return tipo
      */
     public TypeDocumentoPersistencia getTipo() {
@@ -140,7 +152,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer tipo.
-     * 
+     *
      * @param tipo
      *            tipo a establecer
      */
@@ -150,7 +162,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a estado.
-     * 
+     *
      * @return estado
      */
     public TypeEstadoDocumento getEstado() {
@@ -159,7 +171,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer estado.
-     * 
+     *
      * @param estado
      *            estado a establecer
      */
@@ -169,7 +181,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a fichero.
-     * 
+     *
      * @return fichero
      */
     public ReferenciaFichero getFichero() {
@@ -178,7 +190,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer fichero.
-     * 
+     *
      * @param fichero
      *            fichero a establecer
      */
@@ -188,7 +200,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a formularioPdf.
-     * 
+     *
      * @return formularioPdf
      */
     public ReferenciaFichero getFormularioPdf() {
@@ -197,7 +209,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer formularioPdf.
-     * 
+     *
      * @param formularioPdf
      *            formularioPdf a establecer
      */
@@ -207,7 +219,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a anexoNombreFichero.
-     * 
+     *
      * @return anexoNombreFichero
      */
     public String getAnexoNombreFichero() {
@@ -216,7 +228,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer anexoNombreFichero.
-     * 
+     *
      * @param anexoNombreFichero
      *            anexoNombreFichero a establecer
      */
@@ -226,7 +238,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a anexoDescripcionInstancia.
-     * 
+     *
      * @return anexoDescripcionInstancia
      */
     public String getAnexoDescripcionInstancia() {
@@ -235,7 +247,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer anexoDescripcionInstancia.
-     * 
+     *
      * @param anexoDescripcionInstancia
      *            anexoDescripcionInstancia a establecer
      */
@@ -245,7 +257,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a pagoJustificantePdf.
-     * 
+     *
      * @return pagoJustificantePdf
      */
     public ReferenciaFichero getPagoJustificantePdf() {
@@ -254,7 +266,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer pagoJustificantePdf.
-     * 
+     *
      * @param pagoJustificantePdf
      *            pagoJustificantePdf a establecer
      */
@@ -264,7 +276,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a pagoNifSujetoPasivo.
-     * 
+     *
      * @return pagoNifSujetoPasivo
      */
     public String getPagoNifSujetoPasivo() {
@@ -273,7 +285,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer pagoNifSujetoPasivo.
-     * 
+     *
      * @param pagoNifSujetoPasivo
      *            pagoNifSujetoPasivo a establecer
      */
@@ -283,7 +295,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a pagoNumeroAutoliquidacion.
-     * 
+     *
      * @return pagoNumeroAutoliquidacion
      */
     public String getPagoNumeroAutoliquidacion() {
@@ -292,7 +304,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer pagoNumeroAutoliquidacion.
-     * 
+     *
      * @param pagoNumeroAutoliquidacion
      *            pagoNumeroAutoliquidacion a establecer
      */
@@ -302,7 +314,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a pagoEstadoIncorrecto.
-     * 
+     *
      * @return pagoEstadoIncorrecto
      */
     public TypeEstadoPagoIncorrecto getPagoEstadoIncorrecto() {
@@ -311,7 +323,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer pagoEstadoIncorrecto.
-     * 
+     *
      * @param pagoEstadoIncorrecto
      *            pagoEstadoIncorrecto a establecer
      */
@@ -322,7 +334,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a pagoErrorPasarela.
-     * 
+     *
      * @return pagoErrorPasarela
      */
     public String getPagoErrorPasarela() {
@@ -331,7 +343,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer pagoErrorPasarela.
-     * 
+     *
      * @param pagoErrorPasarela
      *            pagoErrorPasarela a establecer
      */
@@ -341,7 +353,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a pagoMensajeErrorPasarela.
-     * 
+     *
      * @return pagoMensajeErrorPasarela
      */
     public String getPagoMensajeErrorPasarela() {
@@ -350,7 +362,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer pagoMensajeErrorPasarela.
-     * 
+     *
      * @param pagoMensajeErrorPasarela
      *            pagoMensajeErrorPasarela a establecer
      */
@@ -360,7 +372,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a registroPreregistro.
-     * 
+     *
      * @return registroPreregistro
      */
     public TypeSiNo getRegistroPreregistro() {
@@ -369,7 +381,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer registroPreregistro.
-     * 
+     *
      * @param registroPreregistro
      *            registroPreregistro a establecer
      */
@@ -379,7 +391,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a registroNumeroRegistro.
-     * 
+     *
      * @return registroNumeroRegistro
      */
     public String getRegistroNumeroRegistro() {
@@ -388,7 +400,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer registroNumeroRegistro.
-     * 
+     *
      * @param registroNumeroRegistro
      *            registroNumeroRegistro a establecer
      */
@@ -398,7 +410,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método de acceso a registroFechaRegistro.
-     * 
+     *
      * @return registroFechaRegistro
      */
     public Date getRegistroFechaRegistro() {
@@ -407,12 +419,33 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
     /**
      * Método para establecer registroFechaRegistro.
-     * 
+     *
      * @param registroFechaRegistro
      *            registroFechaRegistro a establecer
      */
     public void setRegistroFechaRegistro(Date registroFechaRegistro) {
         this.registroFechaRegistro = registroFechaRegistro;
+    }
+
+    /**
+     * Obtiene ficheros de persistencia para el formulario: xml y pdf.
+     *
+     * @param pXml
+     *            Indica si se obtiene el fichero correspondiente al xml
+     * @param pPdf
+     *            Indica si se obtiene el fichero correspondiente al pdf
+     * @return Lista de referencias de fichero
+     */
+    public List<ReferenciaFichero> obtenerReferenciasFicherosFormulario(
+            final boolean pXml, final boolean pPdf) {
+        final List<ReferenciaFichero> res = new ArrayList<>();
+        if (pXml && this.getFichero() != null) {
+            res.add(this.getFichero());
+        }
+        if (pPdf && this.getFormularioPdf() != null) {
+            res.add(this.getFormularioPdf());
+        }
+        return res;
     }
 
 }

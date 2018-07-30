@@ -618,7 +618,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
             final String script = propiedadesTramite.getScriptPersonalizacion()
                     .getScript();
             final Map<String, String> codigosError = UtilsSTG
-                    .convertWCodigosValorToMap(propiedadesTramite
+                    .convertLiteralesToMap(propiedadesTramite
                             .getScriptPersonalizacion().getLiterales());
 
             final VariablesFlujo variablesFlujo = this
@@ -644,7 +644,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
                     .getScriptParametrosIniciales();
             final String script = scriptParam.getScript();
             final Map<String, String> codigosError = UtilsSTG
-                    .convertWCodigosValorToMap(scriptParam.getLiterales());
+                    .convertLiteralesToMap(scriptParam.getLiterales());
 
             final VariablesFlujo variablesFlujo = this
                     .generarVariablesFlujo(pDatosSesion, null);
@@ -792,7 +792,7 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
             final String script = defPasoActual.getScriptNavegacion()
                     .getScript();
             final Map<String, String> codigosError = UtilsSTG
-                    .convertWCodigosValorToMap(
+                    .convertLiteralesToMap(
                             defPasoActual.getScriptNavegacion().getLiterales());
 
             final DatosPaso dp = pDatosSesion.getDatosTramite()

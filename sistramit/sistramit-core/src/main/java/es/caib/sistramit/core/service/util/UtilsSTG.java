@@ -327,7 +327,7 @@ public final class UtilsSTG {
      *            mensajes script
      * @return map
      */
-    public static Map<String, String> convertWCodigosValorToMap(
+    public static Map<String, String> convertLiteralesToMap(
             List<RLiteralScript> mensajesScript) {
         Map<String, String> res = null;
         if (mensajesScript != null && !mensajesScript.isEmpty()) {
@@ -335,6 +335,28 @@ public final class UtilsSTG {
             for (final RLiteralScript m : mensajesScript) {
                 res.put(m.getIdentificador(),
                         StringUtils.defaultString(m.getLiteral()));
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Método para recuperar la definición de un formulario de un paso rellenar.
+     *
+     * @param definicionPaso
+     *            Parámetro definicion paso
+     * @param idFormulario
+     *            Parámetro id formulario
+     * @return Definición del paso
+     */
+    public static RFormularioTramite devuelveDefinicionFormulario(
+            final RPasoTramitacionRellenar definicionPaso,
+            final String idFormulario) {
+        RFormularioTramite res = null;
+        for (final RFormularioTramite form : definicionPaso.getFormularios()) {
+            if (form.getIdentificador().equals(idFormulario)) {
+                res = form;
+                break;
             }
         }
         return res;

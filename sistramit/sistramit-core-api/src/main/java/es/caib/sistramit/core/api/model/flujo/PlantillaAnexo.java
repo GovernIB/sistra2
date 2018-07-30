@@ -17,7 +17,8 @@ public final class PlantillaAnexo implements ModelApi {
     private TypePlantillaAnexo tipo;
 
     /**
-     * Url plantilla externa.
+     * Url plantilla (para externa será url externa, para interna será url
+     * interna).
      */
     private String url;
 
