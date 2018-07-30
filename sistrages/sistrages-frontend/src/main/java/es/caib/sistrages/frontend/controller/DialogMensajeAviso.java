@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
@@ -133,10 +134,27 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		return !tipoTramite;
 	}
 
+	public boolean validasFechas() {
+		boolean resultado = true;
+
+		if (data.getFechaInicio() != null && data.getFechaFin() != null
+				&& data.getFechaInicio().compareTo(data.getFechaFin()) > 0) {
+			resultado = false;
+		}
+		return resultado;
+	}
+
 	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (!validasFechas()) {
+			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+					UtilJSF.getLiteral("dialogMensajeAviso.error.fechaInicialPosterior"));
+			return;
+		}
+
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {

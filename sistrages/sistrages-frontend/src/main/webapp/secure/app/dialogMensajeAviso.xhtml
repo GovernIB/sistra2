@@ -52,7 +52,7 @@
 					</p:selectOneMenu>
 
 					<p:outputLabel for="activo" value="#{msg['dialogMensajeAviso.headerBloqueado']}" />
-					<p:selectBooleanCheckbox id="activo" value="#{dialogMensajeAviso.data.bloqueado}" disabled="#{dialogMensajeAviso.isConsulta()}" required="true" size="40" />
+					<p:selectBooleanCheckbox id="activo" value="#{dialogMensajeAviso.data.bloqueado}" disabled="#{dialogMensajeAviso.isConsulta()}" required="false" size="40" />
 
 					<p:outputLabel for="fechaInicio" value="#{msg['dialogMensajeAviso.headerFechaInicio']}" />
 					<p:calendar id="fechaInicio" value="#{dialogMensajeAviso.data.fechaInicio}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"  />

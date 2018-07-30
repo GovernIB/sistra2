@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.DominioTramite;
@@ -150,6 +151,13 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateTramiteVersion(final TramiteVersion tramiteVersion) {
 		tramiteService.updateTramiteVersion(tramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateTramiteVersionControlAcceso(final TramiteVersion tramiteVersion, final AvisoEntidad avisoEntidad,
+			final Long idEntidad) {
+		tramiteService.updateTramiteVersionControlAcceso(tramiteVersion, avisoEntidad, idEntidad);
 	}
 
 	@Override
@@ -415,5 +423,11 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo) {
 		return tramiteService.checkIdentificadorRepetido(identificador, codigo);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean checkIdentificadorAreaRepetido(final String identificador, final Long codigo) {
+		return tramiteService.checkIdentificadorAreaRepetido(identificador, codigo);
 	}
 }

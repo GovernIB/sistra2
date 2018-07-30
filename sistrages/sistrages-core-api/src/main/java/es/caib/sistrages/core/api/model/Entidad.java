@@ -2,375 +2,583 @@ package es.caib.sistrages.core.api.model;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
- *
- * Entidad.
- *
- * @author Indra
- *
+ * La clase Entidad.
  */
 @SuppressWarnings("serial")
 public class Entidad extends ModelApi {
 
-	/** Código interno. */
+	/**
+	 * codigo.
+	 */
 	private Long codigo;
 
-	/** Código DIR3. **/
+	/**
+	 * codigo DIR 3.
+	 */
 	private String codigoDIR3;
 
-	/** Nombre entidad. **/
+	/**
+	 * nombre.
+	 */
 	private Literal nombre;
 
-	/** Indica si la entidad está activa. */
+	/**
+	 * activo.
+	 */
 	private boolean activo;
 
-	/** Role asociado al administrador de la entidad . */
+	/**
+	 * rol.
+	 */
 	private String rol;
 
-	/** Logo entidad GestorExternoFormularios Trámites. */
+	/**
+	 * logo gestor.
+	 */
 	private Fichero logoGestor;
 
-	/** Logo entidad Asistente Tramitación. */
+	/**
+	 * logo asistente.
+	 */
 	private Fichero logoAsistente;
 
-	/** CSS Asistente Tramitación. */
+	/**
+	 * css.
+	 */
 	private Fichero css;
 
-	/** Pie de página de contacto para Asistente Tramitación (HTML). */
+	/**
+	 * pie.
+	 */
 	private Literal pie;
 
-	/** Email contacto genérico. */
+	/**
+	 * email.
+	 */
 	private String email;
 
-	/** Habilitado contacto email. **/
+	/**
+	 * email habilitado.
+	 */
 	private boolean emailHabilitado;
 
-	/** Teléfono contacto. */
+	/**
+	 * telefono.
+	 */
 	private String telefono;
 
-	/** Habilitado contacto teléfono. **/
+	/**
+	 * telefono habilitado.
+	 */
 	private boolean telefonoHabilitado;
 
-	/** Url soporte. */
+	/**
+	 * url soporte.
+	 */
 	private String urlSoporte;
 
-	/** Habilitado url soporte. **/
+	/**
+	 * url soporte habilitado.
+	 */
 	private boolean urlSoporteHabilitado;
 
-	/** Habilitado contacto formulario incidencias . **/
+	/**
+	 * formulario incidencias habilitado.
+	 */
 	private boolean formularioIncidenciasHabilitado;
 
 	// TODO Gestionarlo mejor fuera de la entidad
-	/** Formularios de incidencias. **/
+	/**
+	 * formulario incidencias.
+	 */
 	private List<FormularioSoporte> formularioIncidencias;
 
-	/** Url carpeta ciudadana. **/
+	/**
+	 * url carpeta ciudadana.
+	 */
 	private Literal urlCarpetaCiudadana;
 
-	/** Dias de preregistro. **/
+	/**
+	 * dias preregistro.
+	 */
 	private Integer diasPreregistro;
 
-	/** Texto respecto lopd. **/
+	/**
+	 * lopd.
+	 */
 	private Literal lopd;
 
 	/**
-	 * @return the codigo
+	 * mapa web.
+	 */
+	private Literal mapaWeb;
+
+	/**
+	 * aviso legal.
+	 */
+	private Literal avisoLegal;
+
+	/**
+	 * rss.
+	 */
+	private Literal rss;
+
+	/**
+	 * url youtube.
+	 */
+	private String urlYoutube;
+
+	/**
+	 * url instagram.
+	 */
+	private String urlInstagram;
+
+	/**
+	 * url twitter.
+	 */
+	private String urlTwitter;
+
+	/**
+	 * url facebook.
+	 */
+	private String urlFacebook;
+
+	/**
+	 * Obtiene el valor de codigo.
+	 *
+	 * @return el valor de codigo
 	 */
 	public Long getCodigo() {
 		return codigo;
 	}
 
 	/**
+	 * Establece el valor de codigo.
+	 *
 	 * @param codigo
-	 *            the codigo to set
+	 *            el nuevo valor de codigo
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
 	/**
-	 * @return the codigoDIR3
+	 * Obtiene el valor de codigoDIR3.
+	 *
+	 * @return el valor de codigoDIR3
 	 */
 	public String getCodigoDIR3() {
 		return codigoDIR3;
 	}
 
 	/**
+	 * Establece el valor de codigoDIR3.
+	 *
 	 * @param codigoDIR3
-	 *            the codigoDIR3 to set
+	 *            el nuevo valor de codigoDIR3
 	 */
 	public void setCodigoDIR3(final String codigoDIR3) {
 		this.codigoDIR3 = codigoDIR3;
 	}
 
 	/**
-	 * @return the nombre
+	 * Obtiene el valor de nombre.
+	 *
+	 * @return el valor de nombre
 	 */
 	public Literal getNombre() {
 		return nombre;
 	}
 
 	/**
+	 * Establece el valor de nombre.
+	 *
 	 * @param nombre
-	 *            the nombre to set
+	 *            el nuevo valor de nombre
 	 */
 	public void setNombre(final Literal nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
-	 * @return the activo
+	 * Verifica si es activo.
+	 *
+	 * @return true, si es activo
 	 */
 	public boolean isActivo() {
 		return activo;
 	}
 
 	/**
+	 * Establece el valor de activo.
+	 *
 	 * @param activo
-	 *            the activo to set
+	 *            el nuevo valor de activo
 	 */
 	public void setActivo(final boolean activo) {
 		this.activo = activo;
 	}
 
 	/**
-	 * @return the rol
+	 * Obtiene el valor de rol.
+	 *
+	 * @return el valor de rol
 	 */
 	public String getRol() {
 		return rol;
 	}
 
 	/**
+	 * Establece el valor de rol.
+	 *
 	 * @param rol
-	 *            the rol to set
+	 *            el nuevo valor de rol
 	 */
 	public void setRol(final String rol) {
 		this.rol = rol;
 	}
 
 	/**
-	 * @return the logoGestor
+	 * Obtiene el valor de logoGestor.
+	 *
+	 * @return el valor de logoGestor
 	 */
 	public Fichero getLogoGestor() {
 		return logoGestor;
 	}
 
 	/**
+	 * Establece el valor de logoGestor.
+	 *
 	 * @param logoGestor
-	 *            the logoGestor to set
+	 *            el nuevo valor de logoGestor
 	 */
 	public void setLogoGestor(final Fichero logoGestor) {
 		this.logoGestor = logoGestor;
 	}
 
 	/**
-	 * @return the logoAsistente
+	 * Obtiene el valor de logoAsistente.
+	 *
+	 * @return el valor de logoAsistente
 	 */
 	public Fichero getLogoAsistente() {
 		return logoAsistente;
 	}
 
 	/**
+	 * Establece el valor de logoAsistente.
+	 *
 	 * @param logoAsistente
-	 *            the logoAsistente to set
+	 *            el nuevo valor de logoAsistente
 	 */
 	public void setLogoAsistente(final Fichero logoAsistente) {
 		this.logoAsistente = logoAsistente;
 	}
 
 	/**
-	 * @return the css
+	 * Obtiene el valor de css.
+	 *
+	 * @return el valor de css
 	 */
 	public Fichero getCss() {
 		return css;
 	}
 
 	/**
+	 * Establece el valor de css.
+	 *
 	 * @param css
-	 *            the css to set
+	 *            el nuevo valor de css
 	 */
 	public void setCss(final Fichero css) {
 		this.css = css;
 	}
 
 	/**
-	 * @return the pie
+	 * Obtiene el valor de pie.
+	 *
+	 * @return el valor de pie
 	 */
 	public Literal getPie() {
 		return pie;
 	}
 
 	/**
+	 * Establece el valor de pie.
+	 *
 	 * @param pie
-	 *            the pie to set
+	 *            el nuevo valor de pie
 	 */
 	public void setPie(final Literal pie) {
 		this.pie = pie;
 	}
 
 	/**
-	 * @return the email
+	 * Obtiene el valor de email.
+	 *
+	 * @return el valor de email
 	 */
 	public String getEmail() {
 		return email;
 	}
 
 	/**
+	 * Establece el valor de email.
+	 *
 	 * @param email
-	 *            the email to set
+	 *            el nuevo valor de email
 	 */
 	public void setEmail(final String email) {
 		this.email = email;
 	}
 
 	/**
-	 * @return the emailHabilitado
+	 * Verifica si es email habilitado.
+	 *
+	 * @return true, si es email habilitado
 	 */
 	public boolean isEmailHabilitado() {
 		return emailHabilitado;
 	}
 
 	/**
+	 * Establece el valor de emailHabilitado.
+	 *
 	 * @param emailHabilitado
-	 *            the emailHabilitado to set
+	 *            el nuevo valor de emailHabilitado
 	 */
 	public void setEmailHabilitado(final boolean emailHabilitado) {
 		this.emailHabilitado = emailHabilitado;
 	}
 
 	/**
-	 * @return the telefono
+	 * Obtiene el valor de telefono.
+	 *
+	 * @return el valor de telefono
 	 */
 	public String getTelefono() {
 		return telefono;
 	}
 
 	/**
+	 * Establece el valor de telefono.
+	 *
 	 * @param telefono
-	 *            the telefono to set
+	 *            el nuevo valor de telefono
 	 */
 	public void setTelefono(final String telefono) {
 		this.telefono = telefono;
 	}
 
 	/**
-	 * @return the telefonoHabilitado
+	 * Verifica si es telefono habilitado.
+	 *
+	 * @return true, si es telefono habilitado
 	 */
 	public boolean isTelefonoHabilitado() {
 		return telefonoHabilitado;
 	}
 
 	/**
+	 * Establece el valor de telefonoHabilitado.
+	 *
 	 * @param telefonoHabilitado
-	 *            the telefonoHabilitado to set
+	 *            el nuevo valor de telefonoHabilitado
 	 */
 	public void setTelefonoHabilitado(final boolean telefonoHabilitado) {
 		this.telefonoHabilitado = telefonoHabilitado;
 	}
 
 	/**
-	 * @return the urlSoporte
+	 * Obtiene el valor de urlSoporte.
+	 *
+	 * @return el valor de urlSoporte
 	 */
 	public String getUrlSoporte() {
 		return urlSoporte;
 	}
 
 	/**
+	 * Establece el valor de urlSoporte.
+	 *
 	 * @param urlSoporte
-	 *            the urlSoporte to set
+	 *            el nuevo valor de urlSoporte
 	 */
 	public void setUrlSoporte(final String urlSoporte) {
 		this.urlSoporte = urlSoporte;
 	}
 
 	/**
-	 * @return the urlSoporteHabilitado
+	 * Verifica si es url soporte habilitado.
+	 *
+	 * @return true, si es url soporte habilitado
 	 */
 	public boolean isUrlSoporteHabilitado() {
 		return urlSoporteHabilitado;
 	}
 
 	/**
+	 * Establece el valor de urlSoporteHabilitado.
+	 *
 	 * @param urlSoporteHabilitado
-	 *            the urlSoporteHabilitado to set
+	 *            el nuevo valor de urlSoporteHabilitado
 	 */
 	public void setUrlSoporteHabilitado(final boolean urlSoporteHabilitado) {
 		this.urlSoporteHabilitado = urlSoporteHabilitado;
 	}
 
 	/**
-	 * @return the formularioIncidenciasHabilitado
+	 * Verifica si es formulario incidencias habilitado.
+	 *
+	 * @return true, si es formulario incidencias habilitado
 	 */
 	public boolean isFormularioIncidenciasHabilitado() {
 		return formularioIncidenciasHabilitado;
 	}
 
 	/**
+	 * Establece el valor de formularioIncidenciasHabilitado.
+	 *
 	 * @param formularioIncidenciasHabilitado
-	 *            the formularioIncidenciasHabilitado to set
+	 *            el nuevo valor de formularioIncidenciasHabilitado
 	 */
 	public void setFormularioIncidenciasHabilitado(final boolean formularioIncidenciasHabilitado) {
 		this.formularioIncidenciasHabilitado = formularioIncidenciasHabilitado;
 	}
 
 	/**
-	 * @return the formularioIncidencias
+	 * Obtiene el valor de formularioIncidencias.
+	 *
+	 * @return el valor de formularioIncidencias
 	 */
 	public List<FormularioSoporte> getFormularioIncidencias() {
 		return formularioIncidencias;
 	}
 
 	/**
+	 * Establece el valor de formularioIncidencias.
+	 *
 	 * @param formularioIncidencias
-	 *            the formularioIncidencias to set
+	 *            el nuevo valor de formularioIncidencias
 	 */
 	public void setFormularioIncidencias(final List<FormularioSoporte> formularioIncidencias) {
 		this.formularioIncidencias = formularioIncidencias;
 	}
 
 	/**
-	 * @return the urlCarpetaCiudadana
+	 * Obtiene el valor de urlCarpetaCiudadana.
+	 *
+	 * @return el valor de urlCarpetaCiudadana
 	 */
 	public Literal getUrlCarpetaCiudadana() {
 		return urlCarpetaCiudadana;
 	}
 
 	/**
+	 * Establece el valor de urlCarpetaCiudadana.
+	 *
 	 * @param urlCarpetaCiudadana
-	 *            the urlCarpetaCiudadana to set
+	 *            el nuevo valor de urlCarpetaCiudadana
 	 */
 	public void setUrlCarpetaCiudadana(final Literal urlCarpetaCiudadana) {
 		this.urlCarpetaCiudadana = urlCarpetaCiudadana;
 	}
 
 	/**
-	 * @return the lopd
+	 * Obtiene el valor de lopd.
+	 *
+	 * @return el valor de lopd
 	 */
 	public Literal getLopd() {
 		return lopd;
 	}
 
 	/**
+	 * Establece el valor de lopd.
+	 *
 	 * @param lopd
-	 *            the lopd to set
+	 *            el nuevo valor de lopd
 	 */
 	public void setLopd(final Literal lopd) {
 		this.lopd = lopd;
 	}
 
 	/**
-	 * @return the diasPreregistro
+	 * Obtiene el valor de diasPreregistro.
+	 *
+	 * @return el valor de diasPreregistro
 	 */
 	public Integer getDiasPreregistro() {
 		return diasPreregistro;
 	}
 
 	/**
+	 * Establece el valor de diasPreregistro.
+	 *
 	 * @param diasPreregistro
-	 *            the diasPreregistro to set
+	 *            el nuevo valor de diasPreregistro
 	 */
 	public void setDiasPreregistro(final Integer diasPreregistro) {
 		this.diasPreregistro = diasPreregistro;
+	}
+
+	public Literal getMapaWeb() {
+		return mapaWeb;
+	}
+
+	public void setMapaWeb(Literal mapaWeb) {
+		this.mapaWeb = mapaWeb;
+	}
+
+	public Literal getAvisoLegal() {
+		return avisoLegal;
+	}
+
+	public void setAvisoLegal(Literal avisoLegal) {
+		this.avisoLegal = avisoLegal;
+	}
+
+	public Literal getRss() {
+		return rss;
+	}
+
+	public void setRss(Literal rss) {
+		this.rss = rss;
+	}
+
+	public String getUrlYoutube() {
+		return urlYoutube;
+	}
+
+	public void setUrlYoutube(String urlYoutube) {
+		this.urlYoutube = urlYoutube;
+	}
+
+	public String getUrlInstagram() {
+		return urlInstagram;
+	}
+
+	public void setUrlInstagram(String urlInstagram) {
+		this.urlInstagram = urlInstagram;
+	}
+
+	public String getUrlTwitter() {
+		return urlTwitter;
+	}
+
+	public void setUrlTwitter(String urlTwitter) {
+		this.urlTwitter = urlTwitter;
+	}
+
+	public String getUrlFacebook() {
+		return urlFacebook;
+	}
+
+	public void setUrlFacebook(String urlFacebook) {
+		this.urlFacebook = urlFacebook;
 	}
 
 }

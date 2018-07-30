@@ -19,6 +19,16 @@
          	<p:outputLabel for="plazodesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.desactivacion']}" />
 			<p:panelGrid styleClass="noBorders w100">
 				<p:row>
+					<p:column styleClass="ui-inputgroup noPadding-left">
+		           		<p:outputLabel for="mensajedesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.mensajedesactivacion']}" />
+		           		<p:spacer width="8" height="1" />
+		           		<p:inputTextarea id="mensajedesactivacion" disabled="true" styleClass="w60" value="#{viewDefinicionVersion.avisoEntidad.mensaje.getTraduccion(sessionBean.lang)}"/>
+
+		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.avisoEntidad.mensaje)}" styleClass="va-top"
+								process="@this" update="growl"/>
+					</p:column>
+				</p:row>
+				<p:row>
 					<p:column styleClass="noPadding-left">
 						<p:selectBooleanCheckbox id="plazodesactivacion" disabled="true" value="#{viewDefinicionVersion.avisoEntidad.bloqueado}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.bloqueado']}"/>
 
@@ -35,16 +45,7 @@
 						<p:calendar id="plazodesactivacionfin" disabled="true" value="#{viewDefinicionVersion.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss" size="15"/>
 					</p:column>
 				</p:row>
-				<p:row>
-					<p:column styleClass="ui-inputgroup noPadding-left">
-		           		<p:outputLabel for="mensajedesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.mensajedesactivacion']}" />
-		           		<p:spacer width="8" height="1" />
-		           		<p:inputText id="mensajedesactivacion" disabled="true" styleClass="w60" value="#{viewDefinicionVersion.avisoEntidad.mensaje.getTraduccion(sessionBean.lang)}"/>
 
-		           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.avisoEntidad.mensaje)}" styleClass="va-top"
-								process="@this" update="growl"/>
-					</p:column>
-				</p:row>
 			</p:panelGrid>
 
             <p:outputLabel for="habilitardebug" value="#{msg['viewDefinicionVersionControlAcceso.habilitardebug']}" />

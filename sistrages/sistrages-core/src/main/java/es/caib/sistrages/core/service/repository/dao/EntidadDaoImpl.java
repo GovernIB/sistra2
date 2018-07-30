@@ -151,6 +151,13 @@ public class EntidadDaoImpl implements EntidadDao {
 				JLiteral.mergeModel(jEntidad.getUrlCarpetaCiudadana(), entidad.getUrlCarpetaCiudadana()));
 		jEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
 
+		jEntidad.setMapaWeb(JLiteral.mergeModel(jEntidad.getMapaWeb(), entidad.getMapaWeb()));
+		jEntidad.setAvisoLegal(JLiteral.mergeModel(jEntidad.getAvisoLegal(), entidad.getAvisoLegal()));
+		jEntidad.setRss(JLiteral.mergeModel(jEntidad.getRss(), entidad.getRss()));
+		jEntidad.setUrlYoutube(entidad.getUrlYoutube());
+		jEntidad.setUrlInstagram(entidad.getUrlInstagram());
+		jEntidad.setUrlTwitter(entidad.getUrlTwitter());
+		jEntidad.setUrlFacebook(entidad.getUrlFacebook());
 		entityManager.merge(jEntidad);
 	}
 

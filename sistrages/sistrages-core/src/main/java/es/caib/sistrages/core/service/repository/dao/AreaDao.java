@@ -72,4 +72,15 @@ public interface AreaDao {
 	 * @return
 	 */
 	Area getAreaByIdentificador(String identificador, Long idEntidad);
+
+	/**
+	 * Comprueba si el identificador está repetido.
+	 *
+	 * @param pIdentificador
+	 *            identificador de area
+	 * @param pCodigo
+	 *            codigo del area
+	 * @return true, si existe
+	 */
+	boolean checkIdentificadorRepetido(String pIdentificador, Long pCodigo);
 }

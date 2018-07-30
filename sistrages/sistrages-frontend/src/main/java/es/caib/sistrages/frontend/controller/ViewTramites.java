@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Area;
@@ -205,28 +204,11 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Abre dialogo para editar versiones de tramite.
-	 */
-	public void versionesTramite() {
-
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaTramite())
-			return;
-
-		// Muestra dialogo
-		final Map<String, List<String>> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(),
-				Arrays.asList(this.tramiteSeleccionada.getTramite().getCodigo().toString()));
-		UtilJSF.redirectJsfPage("/secure/app/viewTramitesVersion.xhtml", params);
-
-	}
-
-	/**
 	 * Importar versión.
 	 */
 	public void importar() {
 		final Map<String, String> params = new HashMap<>();
-		UtilJSF.openDialog(DialogTramiteVersionImportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
+		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
 	}
 
 	/**
@@ -687,32 +669,6 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Double click area.
-	 *
-	 * @param event
-	 */
-	public void onRowDblClickTramites(final NodeSelectEvent event) {
-		if (this.tramiteSeleccionada == null) {
-			return;
-		}
-
-		this.versionesTramite();
-
-	}
-
-	public void onRowDblClickTramites() {
-		if (this.tramiteSeleccionada == null) {
-			return;
-		}
-
-		if (getPermiteEditarTramite()) {
-			this.editarTramite();
-		} else if (getPermiteConsultarTramite()) {
-			this.consultarTramite();
-		}
-	}
-
-	/**
 	 * Abre dialogo para editar dato de Area.
 	 */
 	private void abrirArea(final TypeModoAcceso modoAcceso) {
@@ -940,7 +896,8 @@ public class ViewTramites extends ViewControllerBase {
 		tramiteService.bloquearTramiteVersion(this.versionSeleccionada.getCodigo(),
 				UtilJSF.getSessionBean().getUserName());
 
-		buscarTramites();
+		editarVersion();
+		// buscarTramites();
 
 	}
 
@@ -1048,7 +1005,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
-		UtilJSF.openDialog(DialogTramiteVersionExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
+		UtilJSF.openDialog(DialogTramiteExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
 	}
 
 	/**

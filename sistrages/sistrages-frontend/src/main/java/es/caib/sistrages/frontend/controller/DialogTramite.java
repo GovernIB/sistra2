@@ -21,16 +21,13 @@ public class DialogTramite extends DialogControllerBase {
 	@Inject
 	private TramiteService tramiteService;
 
-	/**
-	 * Id elemento a tratar.
-	 */
+	/** Id elemento a tratar. */
 	private String id;
 
+	/** Id area. **/
 	private String idArea;
 
-	/**
-	 * Datos elemento.
-	 */
+	/** Datos elemento. */
 	private Tramite data;
 
 	/**
@@ -80,7 +77,7 @@ public class DialogTramite extends DialogControllerBase {
 
 	/**
 	 * Comprueba si el identificador esta repetido.
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean isIdentificadorRepetido() {

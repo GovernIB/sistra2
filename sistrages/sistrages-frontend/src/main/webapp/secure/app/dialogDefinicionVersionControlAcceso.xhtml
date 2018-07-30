@@ -39,42 +39,36 @@
 	         	<p:outputLabel for="plazodesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.desactivacion']}" />
 				<h:panelGrid styleClass="noBorders w100" columns="2" columnClasses="w85 grid-left, w15 grid-left">
 
-					<p:column styleClass="noPadding-left">
-							<p:selectBooleanCheckbox id="plazodesactivacion" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.bloqueado}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.bloqueado']}"/>
-							<p:outputLabel for="plazodesactivacioninicio" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacioninicio']}" />
-							<p:spacer width="8" height="1" />
-							<p:calendar id="plazodesactivacioninicio" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaInicio}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
-
-							<p:spacer width="40" height="1" />
-
-							<p:outputLabel for="plazodesactivacionfin" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacionfin']}" />
-							<p:spacer width="8"/>
-							<p:calendar id="plazodesactivacionfin" disabled="true" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
-					</p:column>
-					<p:column>
-							<p:commandButton id="buttonAvisoEntidadCrear" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogDefinicionVersionControlAcceso.crearAvisoEntidad()}" styleClass="va-top"
-									process="@this" update="growlDialog" rendered="#{dialogDefinicionVersionControlAcceso.avisoEntidadInactivo()}">
-									<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionControlAcceso.returnDialogoAvisoEntidad}" update="growlDialog :formDialogDefinicionVersionControlAcceso" />
-							</p:commandButton>
-							<p:commandButton id="buttonAvisoEntidadEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDefinicionVersionControlAcceso.modificarAvisoEntidad()}" styleClass="va-top"
-									process="@this" update="growlDialog" rendered="#{dialogDefinicionVersionControlAcceso.avisoEntidadActivo()}">
-									<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionControlAcceso.returnDialogoAvisoEntidad}" update="growlDialog :formDialogDefinicionVersionControlAcceso" />
-							</p:commandButton>
-							<p:commandButton id="buttonAvisoEntidadBorrar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogDefinicionVersionControlAcceso.borrarAvisoEntidad()}" styleClass="va-top"
-									process="@this" update="growlDialog :formDialogDefinicionVersionControlAcceso" rendered="#{dialogDefinicionVersionControlAcceso.avisoEntidadActivo()}">
-									<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-							</p:commandButton>
-					</p:column>
-
 					<p:column styleClass="ui-inputgroup noPadding-left">
 			           		<p:outputLabel for="mensajedesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.mensajedesactivacion']}" />
 			           		<p:spacer width="3" height="1" />
 			           		<p:inputTextarea  id="mensajedesactivacion" disabled="true" styleClass="w75" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang)}"/>
 
-			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionControlAcceso.consultarMensajeDesactivacion()}" styleClass="va-top"
-									process="@this" update="growlDialog" rendered="#{dialogDefinicionVersionControlAcceso.avisoEntidadActivo()}" style="margin-left:5px">
-							</p:commandButton>
+			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top"
+									process="@this" update="growlDialog" style="margin-left:5px">
+								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionControlAcceso.returnDialogo}" update="growlDialog mensajedesactivacion" />
+	        				</p:commandButton>
 					</p:column>
+					<p:column>
+						<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogDefinicionVersionControlAcceso.eliminarAvisoEntidad()}" process="@this" update="growlDialog formDialogDefinicionVersionControlAcceso" >
+		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['dialogDefinicionVersionControlAcceso.confirm.mensajeAviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        		</p:commandButton>
+					</p:column>
+					<p:column styleClass="noPadding-left">
+							<p:selectBooleanCheckbox id="plazodesactivacion" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.bloqueado}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.bloqueado']}"/>
+							<p:outputLabel for="plazodesactivacioninicio" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacioninicio']}" />
+							<p:spacer width="8" height="1" />
+							<p:calendar id="plazodesactivacioninicio" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaInicio}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
+
+							<p:spacer width="40" height="1" />
+
+							<p:outputLabel for="plazodesactivacionfin" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacionfin']}" />
+							<p:spacer width="8"/>
+							<p:calendar id="plazodesactivacionfin" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
+					</p:column>
+					<p:column></p:column>
+
+
 					<p:column></p:column>
 				</h:panelGrid>
 

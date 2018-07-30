@@ -8,6 +8,7 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -59,7 +60,11 @@ public class DialogArea extends DialogControllerBase {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
-		// TODO Verificar unicidad dir3
+		if (areaService.checkIdentificadorAreaRepetido(data.getIdentificador(), data.getCodigo())) {
+			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+					UtilJSF.getLiteral("dialogArea.error.identificadorDuplicado"));
+			return;
+		}
 
 		switch (acceso) {
 		case ALTA:

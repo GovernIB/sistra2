@@ -3,6 +3,7 @@ package es.caib.sistrages.core.api.service;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.DominioTramite;
@@ -157,6 +158,16 @@ public interface TramiteService {
 	 * @param tramiteVersion
 	 */
 	public void updateTramiteVersion(TramiteVersion tramiteVersion);
+
+	/**
+	 * Actualiza control de acceso.
+	 *
+	 * @param tramiteVersion
+	 * @param avisoEntidad
+	 * @param idEntidad
+	 */
+	public void updateTramiteVersionControlAcceso(TramiteVersion tramiteVersion, AvisoEntidad avisoEntidad,
+			final Long idEntidad);
 
 	/**
 	 * Borra una versión de tramite.
@@ -498,11 +509,20 @@ public interface TramiteService {
 
 	/**
 	 * Comprueba si el identificador está repetido.
-	 * 
+	 *
 	 * @param identificador
 	 * @param codigo
-	 * @return
+	 * @return true, si existe
 	 */
 	public boolean checkIdentificadorRepetido(String identificador, Long codigo);
+
+	/**
+	 * Comprueba si el identificador de area está repetido.
+	 *
+	 * @param identificador
+	 * @param codigo
+	 * @return true, si existe
+	 */
+	public boolean checkIdentificadorAreaRepetido(String identificador, Long codigo);
 
 }

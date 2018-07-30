@@ -375,7 +375,7 @@ public class ViewTramitesVersion extends ViewControllerBase {
         final Map<String, String> params = new HashMap<>();
         params.put(TypeParametroVentana.ID.toString(),
                 this.datoSeleccionado.getCodigo().toString());
-        UtilJSF.openDialog(DialogTramiteVersionExportar.class,
+        UtilJSF.openDialog(DialogTramiteExportar.class,
                 TypeModoAcceso.EDICION, params, true, 900, 520);
     }
 

@@ -27,30 +27,23 @@
 		           	</f:facet>
 		           	<f:facet name="right">
 		           			<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewTramites.nuevaArea}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaArea}">
-			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl @form"/>
 			        		</p:commandButton>
 			        		<p:commandButton id="btnConsultarArea" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarArea}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarArea and viewTramites.seleccionadaArea}" />
 			        		<p:commandButton id="btnEditarArea" value="#{msg['botones.editar']}" icon="fa fa-edit ui-btn-icon-bottom" actionListener="#{viewTramites.editarArea}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarArea and viewTramites.seleccionadaArea}">
-			        				<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl areas"/>
+			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoArea}" update="growl areas"/>
 			        		</p:commandButton>
 
-			        		<p:menuButton value="Más.." rendered="#{viewTramites.seleccionadaArea}">
-	        					<p:menuitem id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.permiteAltaArea}">
-	        						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-	        					</p:menuitem>
-					        	<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl"/>
-					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuente']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl"/>
+			        		<p:commandButton id="btnEliminarArea" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarArea}" process="@this" update="@form growl" rendered="#{viewTramites.permiteAltaArea and viewTramites.seleccionadaArea}">
+	        					<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+	        				</p:commandButton>
 
-					        	<p:menuitem id="btnNuevoTramiteMenu" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" process="@this" update="growl" onclick="triggerNuevoTramite(); return false;" rendered="#{viewTramites.permiteAltaTramite}" />
-	    					</p:menuButton>
 
-	    					<p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  styleClass="no-display">
-				     		     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
-			   		        </p:commandButton>
 					</f:facet>
 				</p:toolbar>
 
-			    <p:dataTable id="areas" var="area" value="#{viewTramites.listaAreas}"  emptyMessage="#{msg['error.emptyRows']}"
+			    <p:dataTable id="areas" var="area" value="#{viewTramites.listaAreas}" emptyMessage="#{msg['error.emptyRows']}"
+			    	 scrollable="true" scrollHeight="100%"
 			   		selection="#{viewTramites.listaAreasSeleccionadas}" rowKey="#{area.codigo}">
 					<p:ajax event="rowSelectCheckbox" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
 					<p:ajax event="rowSelect" global="false" listener="#{viewTramites.filtrar}" update="@form:dataTableTramites @form:toolbarArea @form:toolbarTramites"/>
@@ -75,6 +68,10 @@
 					</f:facet>
 			        <f:facet name="right">
 			        	 <h:panelGroup rendered="#{viewTramites.seleccionadasAreas}">
+			        	 	<p:commandButton id="btnNuevoTramite" value="#{msg['botones.nuevoTramite']}" icon="fa fa-file" actionListener="#{viewTramites.nuevoTramite}" process="@this" update="growl"  rendered="#{viewTramites.permiteAltaTramite and viewTramites.seleccionadaArea}">
+				     		     <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
+			   		        </p:commandButton>
+
 			        		<p:commandButton id="btnConsultarTramite" value="#{msg['botones.consultarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.consultarTramite}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarTramite and not viewTramites.permiteAltaTramite}" />
 			        		<p:commandButton id="btnEditarTramite" value="#{msg['botones.editarTramite']}" icon="fa fa-edit" actionListener="#{viewTramites.editarTramite}" process="@this" update="growl" rendered="#{(viewTramites.permiteEditarTramite or viewTramites.permiteAltaTramite) and viewTramites.tramiteSeleccionada ne null}">
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoTramite}" update="growl @form"/>
@@ -114,6 +111,11 @@
 	        					<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramites.historialVersion}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
 
 			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaArea and viewTramites.tramiteSeleccionada ne null}"/>
+
+			        			<p:separator rendered="#{viewTramites.permiteAltaArea and viewTramites.seleccionadaArea}"/>
+			        			<p:menuitem id="btnDominioArea" value="#{msg['botones.dominios']}" icon="fa fa-database" actionListener="#{viewTramites.dominioArea}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaArea and viewTramites.seleccionadaArea}"/>
+					        	<p:menuitem id="btnDatosArea" value="#{msg['botones.datosFuente']}" icon="fa fa-table" actionListener="#{viewTramites.datosArea}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaArea and viewTramites.seleccionadaArea}"/>
+
 			        			<p:separator />
 			        			<p:menuitem id="btnHelp2" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayudar()}" process="@this" update="growl" iconPos="top"/>
 			        		</p:menuButton>
@@ -213,16 +215,8 @@
 	        		document.getElementById("form:hiddenCommandMover").click();
 	      	  	}
 
-	      	  	function triggerVersionesTramite() {
-	        		document.getElementById("form:btnVersionesTramite").click();
-	      	  	}
-
 	      	  	function triggerDoubleClick() {
 	      	  		document.getElementById("form:btnEditarTramite").click();
-	      	  	}
-
-		      	 function triggerNuevoTramite() {
-	      	  		document.getElementById("form:btnNuevoTramite").click();
 	      	  	}
 		    </h:outputScript>
 

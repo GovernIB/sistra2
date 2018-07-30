@@ -207,6 +207,13 @@ public class AreaDaoImpl implements AreaDao {
 		return resultado;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.AreaDao#getAreaByIdentificador(
+	 * java.lang.String, java.lang.Long)
+	 */
 	@Override
 	public Area getAreaByIdentificador(final String identificador, final Long idEntidad) {
 
@@ -223,5 +230,38 @@ public class AreaDaoImpl implements AreaDao {
 			return jarea.toModel();
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.sistrages.core.service.repository.dao.AreaDao#
+	 * checkIdentificadorRepetido(java.lang.String, java.lang.Long)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean checkIdentificadorRepetido(final String pIdentificador, final Long pCodigo) {
+		boolean repetido = false;
+
+		String sql = "Select t From JArea t where t.identificador = :identificador";
+		if (pCodigo != null) {
+			sql += " and t.codigo != :codigo";
+		}
+
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("identificador", pIdentificador);
+		if (pCodigo != null) {
+			query.setParameter("codigo", pCodigo);
+		}
+
+		final List<JArea> listaAreas = query.getResultList();
+
+		if (listaAreas == null || listaAreas.isEmpty()) {
+			repetido = false;
+		} else {
+			repetido = true;
+		}
+		return repetido;
 	}
 }

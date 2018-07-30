@@ -56,8 +56,15 @@ public final class Constantes {
 
 	public static final String CLAVE_MOCHILA_PARAMDOM = "PARAMDOM";
 
+	/** Constante idiomas por defecto. **/
 	public static final String CLAVE_MOCHILA_IDIOMASXDEFECTO = "IDXDEF";
 
 	public static final String CLAVE_MOCHILA_PLTIDIOMAFORM = "PLTIDFOR";
+
+	/** Constante fuente datos. **/
+	public static final String CLAVE_MOCHILA_FUENTEDATOS = "FUENTEDATOS";
+
+	/** Constante fuente datos valores. **/
+	public static final String CLAVE_MOCHILA_FUENTEVALORES = "FUENTEVALORES";
 
 }

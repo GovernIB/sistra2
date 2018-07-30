@@ -91,12 +91,6 @@ public interface TramiteDao {
 	 * Actualiza un tramite versión.
 	 *
 	 * @param tramiteVersion
-	 * @param borrarScriptPI
-	 *            Si borra el script
-	 * @param scriptParamsIniciales
-	 * @param borrarScriptPersonalizacion
-	 *            Si borra el script
-	 * @param scriptPersonalizacion
 	 */
 	void updateTramiteVersion(TramiteVersion tramiteVersion);
 
@@ -241,7 +235,7 @@ public interface TramiteDao {
 
 	/**
 	 * Comprueba si el identificador está repetido.
-	 * 
+	 *
 	 * @param identificador
 	 * @param codigo
 	 * @return
@@ -249,12 +243,12 @@ public interface TramiteDao {
 	boolean checkIdentificadorRepetido(String identificador, Long codigo);
 
 	/**
-	 *  Recupera el tramite Version dado el identificador logico
+	 * Recupera el tramite Version dado el identificador logico
+	 *
 	 * @param idTramite
 	 * @param numeroVersion
 	 * @return
 	 */
 	TramiteVersion getTramiteVersionByNumVersion(String idTramite, int numeroVersion);
-
 
 }

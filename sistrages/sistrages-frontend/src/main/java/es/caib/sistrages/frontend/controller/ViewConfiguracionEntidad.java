@@ -114,16 +114,20 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Sin implementar");
 	}
 
-	/**
-	 * Abre explorar asistente pie.
-	 */
-	public void explorarAssistentPie() {
+	private void explorarLiteral(final Literal pLiteral) {
 		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
 		if (getPermiteEditar()) {
 			modoAccesoDlg = TypeModoAcceso.EDICION;
 		}
 		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, data.getPie(), idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, pLiteral, idiomas, idiomas);
+	}
+
+	/**
+	 * Abre explorar asistente pie.
+	 */
+	public void explorarAssistentPie() {
+		explorarLiteral(data.getPie());
 	}
 
 	/**
@@ -143,24 +147,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 * Abre explorar url carpeta ciudadana.
 	 */
 	public void explorarUrlCarpetaCiudadana() {
-		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
-		if (getPermiteEditar()) {
-			modoAccesoDlg = TypeModoAcceso.EDICION;
-		}
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, data.getUrlCarpetaCiudadana(), idiomas, idiomas);
-	}
-
-	/**
-	 * Abre explorar lopd.
-	 */
-	public void explorarLopd() {
-		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
-		if (getPermiteEditar()) {
-			modoAccesoDlg = TypeModoAcceso.EDICION;
-		}
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, data.getLopd(), idiomas, idiomas);
+		explorarLiteral(data.getUrlCarpetaCiudadana());
 	}
 
 	/**
@@ -177,6 +164,13 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre explorar lopd.
+	 */
+	public void explorarLopd() {
+		explorarLiteral(data.getLopd());
+	}
+
+	/**
 	 * Gestión de retorno lopd.
 	 *
 	 * @param event
@@ -186,6 +180,66 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final Literal literales = (Literal) respuesta.getResult();
 			data.setLopd(literales);
+		}
+	}
+
+	/**
+	 * Abre explorar MapaWeb.
+	 */
+	public void explorarMapaWeb() {
+		explorarLiteral(data.getMapaWeb());
+	}
+
+	/**
+	 * Gestión de retorno MapaWeb.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoMapaWeb(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setMapaWeb(literales);
+		}
+	}
+
+	/**
+	 * Abre explorar AvisoLegal.
+	 */
+	public void explorarAvisoLegal() {
+		explorarLiteral(data.getAvisoLegal());
+	}
+
+	/**
+	 * Gestión de retorno AvisoLegal.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoAvisoLegal(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setAvisoLegal(literales);
+		}
+	}
+
+	/**
+	 * Abre explorar AvisoLegal.
+	 */
+	public void explorarRss() {
+		explorarLiteral(data.getRss());
+	}
+
+	/**
+	 * Gestión de retorno AvisoLegal.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoRss(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setRss(literales);
 		}
 	}
 

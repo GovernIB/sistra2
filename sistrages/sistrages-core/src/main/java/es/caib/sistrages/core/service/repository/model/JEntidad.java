@@ -111,6 +111,30 @@ public class JEntidad implements IModelApi {
 	@JoinColumn(name = "ENT_LOPD")
 	private JLiteral lopd;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_MAPAW")
+	private JLiteral mapaWeb;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_AVISOL")
+	private JLiteral avisoLegal;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_RSS")
+	private JLiteral rss;
+
+	@Column(name = "ENT_YOUTUB", length = 255)
+	private String urlYoutube;
+
+	@Column(name = "ENT_INSTAG", length = 255)
+	private String urlInstagram;
+
+	@Column(name = "ENT_TWITTR", length = 255)
+	private String urlTwitter;
+
+	@Column(name = "ENT_FACEBK", length = 255)
+	private String urlFacebook;
+
 	/**
 	 * @return the codigo
 	 */
@@ -396,6 +420,62 @@ public class JEntidad implements IModelApi {
 		this.lopd = lopd;
 	}
 
+	public JLiteral getMapaWeb() {
+		return mapaWeb;
+	}
+
+	public void setMapaWeb(final JLiteral mapaWeb) {
+		this.mapaWeb = mapaWeb;
+	}
+
+	public JLiteral getAvisoLegal() {
+		return avisoLegal;
+	}
+
+	public void setAvisoLegal(final JLiteral avisoLegal) {
+		this.avisoLegal = avisoLegal;
+	}
+
+	public JLiteral getRss() {
+		return rss;
+	}
+
+	public void setRss(final JLiteral rss) {
+		this.rss = rss;
+	}
+
+	public String getUrlYoutube() {
+		return urlYoutube;
+	}
+
+	public void setUrlYoutube(final String urlYoutube) {
+		this.urlYoutube = urlYoutube;
+	}
+
+	public String getUrlInstagram() {
+		return urlInstagram;
+	}
+
+	public void setUrlInstagram(final String urlInstagram) {
+		this.urlInstagram = urlInstagram;
+	}
+
+	public String getUrlTwitter() {
+		return urlTwitter;
+	}
+
+	public void setUrlTwitter(final String urlTwitter) {
+		this.urlTwitter = urlTwitter;
+	}
+
+	public String getUrlFacebook() {
+		return urlFacebook;
+	}
+
+	public void setUrlFacebook(final String urlFacebook) {
+		this.urlFacebook = urlFacebook;
+	}
+
 	/**
 	 * toModel.
 	 */
@@ -433,7 +513,26 @@ public class JEntidad implements IModelApi {
 			entidad.setLopd(this.lopd.toModel());
 		}
 		entidad.setDiasPreregistro(this.diasPreregistro);
+
+		if (this.mapaWeb != null) {
+			entidad.setMapaWeb(this.mapaWeb.toModel());
+		}
+
+		if (this.avisoLegal != null) {
+			entidad.setAvisoLegal(this.avisoLegal.toModel());
+		}
+
+		if (this.rss != null) {
+			entidad.setRss(this.rss.toModel());
+		}
+
+		entidad.setUrlYoutube(urlYoutube);
+		entidad.setUrlInstagram(urlInstagram);
+		entidad.setUrlTwitter(urlTwitter);
+		entidad.setUrlFacebook(urlFacebook);
+
 		return entidad;
+
 	}
 
 }
