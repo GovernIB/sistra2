@@ -521,6 +521,9 @@ create table STG_ENTIDA
    ENT_PIETT            NUMBER(18),
    ENT_URLCAR           NUMBER(18),
    ENT_LOPD             NUMBER(18),
+   ENT_MAPAW            NUMBER(18),
+   ENT_AVISOL           NUMBER(18),
+   ENT_RSS              NUMBER(18),
    ENT_PRGDIA           NUMBER(3),
    ENT_EMAIL            VARCHAR2(500 CHAR),
    ENT_CNTEMA           NUMBER(1)            default 0 not null,
@@ -528,7 +531,11 @@ create table STG_ENTIDA
    ENT_CNTURL           NUMBER(1)            default 0 not null,
    ENT_CNTFOR           NUMBER(1)            default 0 not null,
    ENT_TELEFO           VARCHAR2(10 CHAR),
-   ENT_URLSOP           VARCHAR2(500 CHAR)
+   ENT_URLSOP           VARCHAR2(500 CHAR),
+   ENT_YOUTUB           VARCHAR2(255 CHAR),
+   ENT_INSTAG           VARCHAR2(255 CHAR),
+   ENT_TWITTR           VARCHAR2(255 CHAR),
+   ENT_FACEBK           VARCHAR2(255 CHAR)
 );
 
 comment on table STG_ENTIDA is
@@ -567,6 +574,15 @@ comment on column STG_ENTIDA.ENT_URLCAR is
 comment on column STG_ENTIDA.ENT_LOPD is
 'Texto respecto LOPD';
 
+comment on column STG_ENTIDA.ENT_MAPAW is
+'Mapa web';
+
+comment on column STG_ENTIDA.ENT_AVISOL is
+'Aviso legal';
+
+comment on column STG_ENTIDA.ENT_RSS is
+'RSS';
+
 comment on column STG_ENTIDA.ENT_PRGDIA is
 'Dias preregistro';
 
@@ -590,6 +606,18 @@ comment on column STG_ENTIDA.ENT_TELEFO is
 
 comment on column STG_ENTIDA.ENT_URLSOP is
 'Url soporte';
+
+comment on column STG_ENTIDA.ENT_YOUTUB is
+'Youtube';
+
+comment on column STG_ENTIDA.ENT_INSTAG is
+'Instagram';
+
+comment on column STG_ENTIDA.ENT_TWITTR is
+'Twitter';
+
+comment on column STG_ENTIDA.ENT_FACEBK is
+'Facebook';
 
 alter table STG_ENTIDA
    add constraint STG_ENTIDA_PK primary key (ENT_CODIGO);
@@ -2524,11 +2552,23 @@ alter table STG_ENTIDA
       references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_ENTIDA
-   add constraint FK_STG_ENTI_STG_ENTID_STG_TRAD foreign key (ENT_URLCAR)
+   add constraint STG_ENTIDA_TRADUC_FK3 foreign key (ENT_URLCAR)
       references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_ENTIDA
    add constraint STG_ENTIDA_TRADUC_FK4 foreign key (ENT_LOPD)
+      references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_ENTIDA
+   add constraint STG_ENTIDA_TRADUC_FK5 foreign key (ENT_MAPAW)
+      references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_ENTIDA
+   add constraint STG_ENTIDA_TRADUC_FK6 foreign key (ENT_AVISOL)
+      references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_ENTIDA
+   add constraint STG_ENTIDA_TRADUC_FK7 foreign key (ENT_RSS)
       references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_FILFUE
