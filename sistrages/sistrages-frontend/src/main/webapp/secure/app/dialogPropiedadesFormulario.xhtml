@@ -123,7 +123,7 @@
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
 								<p:commandButton id="btnEditarPlantilla" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogPropiedadesFormulario.editarPlantilla}" process="@this" update="growlDialog" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
-	        						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPlantilla}" update="growlDialog dataTablePlantillas"/>
+	        						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoPlantilla}" update="growlDialog"/>
 	        					</p:commandButton>
 	        					<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
@@ -132,9 +132,15 @@
 
 								<p:commandButton id="filesPlantilla" icon="fa fa-file-o" title="#{msg['dialogPropiedadesFormulario.botonIdioma']}" actionListener="#{dialogPropiedadesFormulario.editarFicheroPlantilla}"
 												process="@this" update="growlDialog">
-									<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
-									<p:confirm disabled="#{empty dialogPropiedadesFormulario.plantillaSeleccionada or dialogPropiedadesFormulario.plantillaSeleccionada.codigo gt 0}" header="#{msg['warning.titulo']}" message="#{msg['warning.guardar']}" icon="fa fa-exclamation-triangle fa-3x confirmar_icono"/>
+									<p:confirm disabled="#{empty dialogPropiedadesFormulario.plantillaSeleccionada or dialogPropiedadesFormulario.plantillaSeleccionada.codigo gt 0}" header="#{msg['warning.titulo']}" message="#{msg['dialogPropiedadesFormulario.debeAplicar']}" icon="fa fa-exclamation-triangle fa-3x confirmar_icono"/>
+									<p:ajax event="dialogReturn" update="@form growlDialog"/>
 								</p:commandButton>
+
+								<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							        <p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							        <p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+							    </p:confirmDialog>
+
 							</p:outputPanel>
 			 		</h:panelGrid>
 
@@ -159,7 +165,8 @@
 
 			<p:confirmDialog global="true">
 				<p:outputPanel styleClass="confirmar_botonera">
-		        	<p:commandButton value="#{msg['botones.aceptar']}" type="button" styleClass="ui-confirmdialog-no boton-azul" icon="ui-icon-check" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+					<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 				</p:outputPanel>
 		    </p:confirmDialog>
 

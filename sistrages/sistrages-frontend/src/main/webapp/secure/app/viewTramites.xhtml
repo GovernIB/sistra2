@@ -134,7 +134,7 @@
 									        	 selectionMode="single" selection="#{viewTramites.tramiteSeleccionada}" rowKey="#{td.tramite.codigo}">
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
-						<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites"/>
+						<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectVersionTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('T')"/>
              			<p:ajax event="rowDblselect" oncomplete="triggerDoubleClick();" update="@form:toolbarTramites"/>
 
 				       <p:column style="width:16px">
@@ -161,13 +161,14 @@
 
 						<p:rowExpansion styleClass="">
 							<!-- Data table -->
-							<p:dataTable  id="dataTable" var="tdVersiones" value="#{td.listaVersiones}"
+							<p:dataTable  id="dataTableVersiones" var="tdVersiones" value="#{td.listaVersiones}"
 										  rows="10" emptyMessage="#{msg['error.emptyRows']}"
 										  styleClass="w95 margin-left-25 margin-top-10 margin-bottom-10"
-							        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}">
+							        	  selectionMode="single" selection="#{viewTramites.versionSeleccionada}" rowKey="#{tdVersiones.codigo}"
+										  >
 
 								<!-- Necesario para actualizar en controlador la fila seleccionada -->
-								<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites"/>
+								<p:ajax event="rowSelect" global="false" listener="#{viewTramites.unSelectTramite}" update="@form:toolbarTramites" oncomplete="deseleccionar('V')"/>
 								<p:ajax event="rowDblselect" listener="#{viewTramites.editarVersion}"/>
 
 								<!-- Columnas -->
@@ -218,6 +219,21 @@
 	      	  	function triggerDoubleClick() {
 	      	  		document.getElementById("form:btnEditarTramite").click();
 	      	  	}
+
+				function deseleccionar(modo) {
+					$("#form\\:dataTableTramites").find( ".ui-state-highlight").each(function() {
+
+						obj = $( this ).parents("[id^=form\\:dataTableTramites\\:]");
+						if (modo == "T" &amp;&amp; obj.length &gt; 0) {
+							 $( this ).removeClass("ui-state-highlight");
+						}
+						if (modo == "V" &amp;&amp;obj.length == 0) {
+							 $( this ).removeClass("ui-state-highlight");
+						}
+
+					});
+				}
+
 		    </h:outputScript>
 
 		    <p:confirmDialog global="true" >
