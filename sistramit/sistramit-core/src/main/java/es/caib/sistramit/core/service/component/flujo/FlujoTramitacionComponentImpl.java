@@ -37,6 +37,7 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.service.component.formulario.interno.SimulacionFormularioMock;
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
@@ -173,10 +174,13 @@ public class FlujoTramitacionComponentImpl
     @Override
     public ResultadoAccionPaso accionPaso(String idPaso,
             TypeAccionPaso accionPaso, ParametrosAccionPaso parametros) {
-
-        // TODO PENDIENTE
-
-        return null;
+        // Control de si el flujo es válido
+        controlFlujoInvalido();
+        // Ejecuta accion paso
+        final ResultadoAccionPaso respuestaAccionPaso = controladorFlujo
+                .accionPaso(datosSesion, idPaso, accionPaso, parametros);
+        // Devolvemos respuesta
+        return respuestaAccionPaso;
     }
 
     @Override
@@ -244,6 +248,13 @@ public class FlujoTramitacionComponentImpl
             throw new ErrorFormularioSoporteException("Error enviando mail");
         }
 
+    }
+
+    // TODO BORRAR
+    @Override
+    public String simularRellenarFormulario(String xml) {
+        SimulacionFormularioMock.setDatosSimulados(xml);
+        return "123";
     }
 
     // -------------------------------------------------------

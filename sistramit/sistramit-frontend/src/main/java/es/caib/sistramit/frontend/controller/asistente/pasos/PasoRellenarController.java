@@ -1,5 +1,7 @@
 package es.caib.sistramit.frontend.controller.asistente.pasos;
 
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -7,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.flujo.RedireccionFormulario;
+import es.caib.sistramit.core.api.model.flujo.AbrirFormulario;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
@@ -15,6 +17,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
+import es.caib.sistramit.frontend.model.MockRellenarFormData;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 
@@ -49,7 +52,10 @@ public final class PasoRellenarController extends TramitacionController {
      *            Identificador del formulario.
      * @return Devuelve JSON con la información para abrir un formulario
      */
-    @RequestMapping(value = "/abrirFormulario.json", method = RequestMethod.POST)
+    // TODO Quitar tras simulacion
+    // @RequestMapping(value = "/abrirFormulario.json", method =
+    // RequestMethod.POST)
+    @RequestMapping(value = "/abrirFormulario.json")
     public ModelAndView abrirFormulario(
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_FORMULARIO) final String idForm) {
@@ -66,7 +72,7 @@ public final class PasoRellenarController extends TramitacionController {
                 .accionPaso(idSesionTramitacion, idPaso,
                         TypeAccionPasoRellenar.ABRIR_FORMULARIO, pParametros);
 
-        final RedireccionFormulario af = (RedireccionFormulario) respuestaAbrirFormulario
+        final AbrirFormulario af = (AbrirFormulario) respuestaAbrirFormulario
                 .getParametroRetorno(PARAM_REFERENCIA);
 
         final RespuestaJSON res = new RespuestaJSON();
@@ -88,7 +94,10 @@ public final class PasoRellenarController extends TramitacionController {
      *            finalizar el formulario.
      * @return Devuelve JSON con estado actual del trámite
      */
-    @RequestMapping(value = "/guardarFormulario.json", method = RequestMethod.POST)
+    // TODO Quitar tras simulacion
+    // @RequestMapping(value = "/guardarFormulario.json", method =
+    // RequestMethod.POST)
+    @RequestMapping(value = "/guardarFormulario.json")
     public ModelAndView guardarFormulario(
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_FORMULARIO) final String idForm,
@@ -125,9 +134,9 @@ public final class PasoRellenarController extends TramitacionController {
         final RespuestaJSON res = new RespuestaJSON();
         res.setDatos(dt);
         if (cancelado == TypeSiNo.NO && correcto == TypeSiNo.NO) {
-            final MensajeUsuario mu = new MensajeUsuario(getLiteralesFront()
-                    .getLiteralFront(LiteralesFront.MENSAJES, "noGuardado",
-                            getIdioma()),
+            final MensajeUsuario mu = new MensajeUsuario(
+                    getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES,
+                            "noGuardado", getIdioma()),
                     mensajeIncorrecto);
             res.setMensaje(mu);
             res.setEstado(TypeRespuestaJSON.WARNING);
@@ -235,6 +244,55 @@ public final class PasoRellenarController extends TramitacionController {
         final byte[] datosFichero = (byte[]) resp.getParametroRetorno("xml");
 
         return generarDownloadView(nombre, datosFichero);
+    }
+
+    // TODO BORRAR
+    @RequestMapping("/simularRellenarFormulario.html")
+    public ModelAndView simularRellenarFormulario(
+            @RequestParam(PARAM_ID_PASO) final String idPaso,
+            @RequestParam(PARAM_ID_FORMULARIO) final String idForm) {
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        ParametrosAccionPaso pParametros;
+        pParametros = new ParametrosAccionPaso();
+        pParametros.addParametroEntrada(PARAM_ID_FORMULARIO, idForm);
+        final ResultadoAccionPaso resp = getFlujoTramitacionService()
+                .accionPaso(idSesionTramitacion, idPaso,
+                        TypeAccionPasoRellenar.DESCARGAR_XML, pParametros);
+        final byte[] datosFichero = (byte[]) resp.getParametroRetorno("xml");
+
+        final MockRellenarFormData m = new MockRellenarFormData();
+        m.setIdPaso(idPaso);
+        m.setIdFormulario(idForm);
+        try {
+            m.setXml(new String(datosFichero, "UTF-8"));
+        } catch (final UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Redirigimos a carga asistente
+        return new ModelAndView("asistente/simularRellenarFormulario", "datos",
+                m);
+
+    }
+
+    // TODO BORRAR
+    @RequestMapping("/simularGuardarFormulario.html")
+    public ModelAndView simularGuardarFormulario(
+            @RequestParam(PARAM_ID_PASO) final String idPaso,
+            @RequestParam(PARAM_ID_FORMULARIO) final String idForm,
+            @RequestParam("xml") final String xml) {
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+        final String ticket = getFlujoTramitacionService()
+                .simularRellenarFormulario(idSesionTramitacion, xml.trim());
+
+        guardarFormulario(idPaso, idForm, ticket);
+
+        // Redirigimos a carga asistente
+        return new ModelAndView("asistente/redirigirAsistente");
+
     }
 
 }

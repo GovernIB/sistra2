@@ -16,6 +16,7 @@ import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.FormatoInvalidoFechaFrontException;
+import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -25,6 +26,7 @@ import es.caib.sistramit.core.api.model.flujo.DetalleTramiteInfo;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
@@ -448,6 +450,29 @@ public final class UtilsFlujo {
         }
 
         return obligatorio;
+    }
+
+    /**
+     * Método para recuperar un parámetro de una acción de un paso.
+     *
+     * @param pParametros
+     *            Parametros acción
+     * @param pParametro
+     *            Nombre parámetro
+     * @param pObligatorio
+     *            Obligatorio
+     * @return Valor parámetro
+     */
+    public static Object recuperaParametroAccionPaso(
+            final ParametrosAccionPaso pParametros, final String pParametro,
+            final boolean pObligatorio) {
+        final Object valor = pParametros.getParametroEntrada(pParametro);
+        if (pObligatorio && ((valor == null) || ((valor instanceof String)
+                && StringUtils.isEmpty((String) valor)))) {
+            throw new ParametrosEntradaIncorrectosException(
+                    "Falta especificar parametro " + pParametro);
+        }
+        return valor;
     }
 
     /**

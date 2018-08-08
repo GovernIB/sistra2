@@ -142,9 +142,8 @@ public final class ControladorPasoDebeSaber
         dpds.setId(dipa.getIdPaso());
         dpds.setCompletado(TypeSiNo.SI);
         dpds.setInstrucciones(defPaso.getInstruccionesInicio());
-        dpds.setInstrucciones(
-                UtilsSTG.obtenerLiteral(entidadInfo.getInfoLopdHTML(),
-                        definicionTramite.getDefinicionVersion().getIdioma()));
+        dpds.setInfoLOPD(UtilsSTG.obtenerLiteral(entidadInfo.getInfoLopdHTML(),
+                definicionTramite.getDefinicionVersion().getIdioma()));
         dpds.setPasos(descripcionesPaso);
         return dpds;
     }

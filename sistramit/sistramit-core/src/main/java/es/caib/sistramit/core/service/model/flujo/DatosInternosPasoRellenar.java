@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
-import es.caib.sistramit.core.service.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 
 /**
  *

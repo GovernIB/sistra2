@@ -1,0 +1,175 @@
+<!-- contacte -->
+		
+<aside id="imc-contacte" class="imc-contacte">
+
+	<div data-conf="entitat">{{jsonContacte}}</div>
+	<div data-conf="suport">
+		<strong>{{txtNecessitauAjuda}}</strong> {{txtContactauAmb}}<button type="button" id="imc-bt-equip-suport"><span>{{txtEquipSuport}}</span></button>.
+	</div>
+
+	<div id="imc-suport" class="imc-suport" aria-hidden="true" role="dialog">
+		<div class="imc--c">
+
+			<!-- ajuda -->
+
+			<div class="imc-s--contingut imc-s--ajuda">
+
+				<h2><span>{{txtAjuda}}</span></h2>
+
+				<p>{{txtAjudaIntro}}</p>
+
+				<ul class="imc--dades">
+					<li>
+						{{txtEmplenarSeguent}} <a href="javascript:;" id="imc-bt-suport--form">{{txtFormIncidencias}}</a>
+					</li>
+					{{if jsonSuportTecnic}}
+					<li data-suport="url">
+						{{txtVisitePag}} <a href="{{jsonSuportTecnic}}" target="_blank">{{txtSuportTecnic}}</a>
+					</li>
+					{{/if}}
+					{{if jsonSuportCorreu}}
+					<li data-suport="url">
+						{{txtEnvieuCorreu}} <a href="mailto:{{jsonSuportCorreu}}" target="_blank">{{jsonSuportCorreu}}</a>
+					</li>
+					{{/if}}
+					{{if jsonTelefon}}
+					<li data-suport="telefon">
+						{{txtTrucarTelf}} <a href="tel:{{jsonTelefon}}">{{jsonTelefon}}</a>.
+					</li>
+					{{/if}}
+				</ul>
+
+				<ul class="imc--botonera">
+					<li>
+						<button type="button" class="imc-bt imc--tanca" data-tipus="tanca"><span>{{txtTanca}}</span></button>
+					</li>
+				</ul>
+
+			</div>
+
+			<!-- formulari -->
+
+			<div class="imc-s--contingut imc-s--form">
+
+				<h2><span>{{txtFormContacte}}</span></h2>	
+
+				<form action="" method="post">
+
+					<input name="lang" value="" type="hidden">
+					<input name="tramiteDesc" value="" type="hidden">
+					<input name="tramiteId" value="" type="hidden">
+					<input name="procedimientoId" value="" type="hidden">
+					<input name="fechaCreacion" value="" type="hidden">
+					<input name="idPersistencia" value="" type="hidden">
+					<input name="nivelAutenticacion" value="" type="hidden">
+
+					<div class="imc-el imc-el--nif">
+						<label for="nif">{{txtNIF}}</label>
+						<input id="nif" name="nif" value="" type="text" />
+					</div>
+
+					<div class="imc-el imc-el--nom">
+						<label for="nombre">{{txtNom}}</label>
+						<input id="nombre" name="nombre" value="" type="text" />
+					</div>
+
+					<div class="imc-el imc-el--telefon">
+						<label for="telefono">* {{txtTelefon}}</label>
+						<input id="telefono" name="telefono" value="" type="text" required />
+					</div>
+
+					<div class="imc-el imc-el--correu">
+						<label for="email">* {{txtCorreu}}</label>
+						<input id="email" name="email" value="" type="email" required />
+					</div>
+
+					<div class="imc-el imc-el--horari">
+						<label for="horarioContacto">* {{txtHorariContacte}}</label>
+						<input id="horarioContacto" name="horarioContacto" value="" type="text" required />
+					</div>
+
+					{{if jsonTipusProblema}}
+					<div class="imc-el imc-el--problema">
+						<label for="problemaTipo">{{txtTipusProblema}}</label>
+						<select id="problemaTipo" name="problemaTipo">
+							{{jsonTipusProblema}}
+							{{if #|first}}
+							<option value="{{codigo}}" selected>{{titulo}}</option>
+							{{else}}
+							<option value="{{codigo}}">{{titulo}}</option>
+							{{/if}}
+							{{/jsonTipusProblema}}
+						</select>
+						<ul class="imc--problema-explicacio">
+							{{jsonTipusProblema}}
+							{{if #|first}}
+							<li class="imc--visible" aria-hidden="false" data-valor="{{codigo}}">{{descripcion}}</li>
+							{{else}}
+							<li aria-hidden="true" data-valor="{{codigo}}">{{descripcion}}</li>
+							{{/if}}
+							{{/jsonTipusProblema}}
+						</ul>
+					</div>
+					{{/if}}
+
+					<div class="imc-el imc-el--descripcio">
+						<label for="problemaDesc">* {{txtDescripcioProblema}}</label>
+						<textarea id="problemaDesc" name="problemaDesc" rows="4" cols="30" required></textarea>
+					</div>
+
+					<div class="imc-el imc-el--annexe">
+						<label for="anexo">{{txtDocumentAnnex}}</label>
+						<!--<input id="anexo" name="anexo" type="file" />-->
+
+						<div class="imc-input-type">
+							<input id="anexo" name="anexo" type="file" />
+							<a class="imc-bt imc-bt-text" href="javascript:;"><span>{{txtSeleccionaFitxer}}</span></a>
+							<p></p>
+							<button type="button" class="imc-bt-elimina" title="{{txtEliminau}}"><span>{{txtEliminau}}</span></button>
+						</div>
+
+					</div>
+
+					<div class="imc-el imc-el--botonera">
+						<button type="submit" class="imc-bt imc--ico imc--principal" id="imc-bt-suport-form-envia"><span>{{txtEnviaConsulta}}</span></button>
+					</div>
+
+				</form>
+
+				<ul class="imc--botonera">
+					<li>
+						<button type="button" class="imc-bt imc--ico imc--torna" data-tipus="torna"><span>{{txtTorna}}</span></button>
+					</li>
+					<li>
+						<button type="button" class="imc-bt imc--tanca" data-tipus="tanca"><span>{{txtTanca}}</span></button>
+					</li>
+				</ul>
+			
+	  		</div>
+
+	  		<!-- missatge -->
+
+			<div class="imc-s--contingut imc-s--missatge">
+
+				<h2><span>{{txtEnviantDades}}</span></h2>
+
+				<div></div>
+
+				<ul class="imc--botonera">
+					<li>
+						<button type="button" class="imc-bt imc--ico imc--torna imc--error-torna" data-tipus="torna"><span>{{txtTornaIntentar}}</span></button>
+					</li>
+					<li>
+						<button type="button" class="imc-bt imc--tanca" data-tipus="tanca"><span>{{txtTanca}}</span></button>
+					</li>
+					<li>
+						<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancelaEnviament}}</span></button>
+					</li>
+				</ul>
+
+			</div>
+
+		</div>
+	</div>
+	
+</aside>

@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -195,9 +194,7 @@ public class AsistenteTramitacionController extends TramitacionController {
      * @return Devuelve JSON indicando que se ha cancelado.
      *
      */
-    // @RequestMapping(value = "/cancelarTramite.json", method =
-    // RequestMethod.POST)
-    @RequestMapping(value = "/cancelarTramite.json")
+    @RequestMapping(value = "/cancelarTramite.json", method = RequestMethod.POST)
     public ModelAndView cancelarTramite() {
 
         debug("Cancelar tramite");
@@ -224,15 +221,39 @@ public class AsistenteTramitacionController extends TramitacionController {
     }
 
     /**
+     * Realiza logout.
+     *
+     * @return Realiza logout.
+     *
+     */
+    @RequestMapping(value = "/logout.html")
+    public ModelAndView logout() {
+        // TODO PENDIENTE
+        return null;
+    }
+
+    /**
+     * Descarga clave tramitación.
+     *
+     * @return Descarga clave tramitación.
+     *
+     */
+    @RequestMapping(value = "/descargarClave.html")
+    public ModelAndView descargarClave() {
+        // TODO PENDIENTE
+        final String nombre = "clave.txt";
+        final byte[] datosFichero = ("PENDIENTE GENERAR FICHERO PDF. CLAVE: "
+                + getIdSesionTramitacionActiva()).getBytes();
+        return generarDownloadView(nombre, datosFichero);
+    }
+
+    /**
      * Devuelve un JSON con la información inicial trámite.
      *
      * @return JSON con la información inicial trámite.
      *
      */
-    // TODO RESTRINGIR POST
-    // @RequestMapping(value = "/informacionTramite.json", method =
-    // RequestMethod.POST)
-    @RequestMapping(value = "/informacionTramite.json")
+    @RequestMapping(value = "/informacionTramite.json", method = RequestMethod.POST)
     public ModelAndView informacionTramite() {
         debug("Obteniendo info tramite");
 
@@ -265,11 +286,8 @@ public class AsistenteTramitacionController extends TramitacionController {
      *            Identificador del formulario.
      * @return Devuelve JSON con estado actual del trámite.
      */
-    // TODO RESTRINGIR POST
-    // @RequestMapping(value = "/asistente/irAPaso.json", method =
-    // RequestMethod.POST)
-    @RequestMapping(value = "/irAPaso.json")
-    public ModelAndView irAPaso(@RequestParam("id") final String idPaso) {
+    @RequestMapping(value = "/irAPaso.json", method = RequestMethod.POST)
+    public ModelAndView irAPaso(@RequestParam("paso") final String idPaso) {
         debug("Ir a paso " + idPaso);
 
         final String idSesionTramitacion = getIdSesionTramitacionActiva();
@@ -298,10 +316,7 @@ public class AsistenteTramitacionController extends TramitacionController {
      *
      * @return Devuelve JSON con estado actual del trámite.
      */
-    // TODO RESTRINGIR POST
-    // @RequestMapping(value = "/asistente/irAPasoActual.json", method =
-    // RequestMethod.POST)
-    @RequestMapping(value = "/irAPasoActual.json")
+    @RequestMapping(value = "/irAPasoActual.json", method = RequestMethod.POST)
     public ModelAndView irAPasoActual() {
         debug("Ir a paso actual");
 
@@ -331,7 +346,7 @@ public class AsistenteTramitacionController extends TramitacionController {
      *
      * @return literales de la aplicación
      */
-    @RequestMapping("/literales.js")
+    @RequestMapping("/js/literales.js")
     public ModelAndView obtenerLiteralesAplicacion() {
 
         final Properties props = getLiteralesFront()
@@ -339,8 +354,11 @@ public class AsistenteTramitacionController extends TramitacionController {
         final Set<Map.Entry<Object, Object>> literales = props.entrySet();
         for (final Map.Entry<Object, Object> entry : literales) {
             final String key = (String) entry.getKey();
-            final String value = StringEscapeUtils
-                    .escapeEcmaScript((String) entry.getValue());
+            /*
+             * final String value = StringEscapeUtils .escapeEcmaScript((String)
+             * entry.getValue());
+             */
+            final String value = (String) entry.getValue();
             props.setProperty(key, value);
         }
 
@@ -353,7 +371,7 @@ public class AsistenteTramitacionController extends TramitacionController {
      *
      * @return configuración aplicación
      */
-    @RequestMapping("/configuracion.js")
+    @RequestMapping("/js/configuracion.js")
     public ModelAndView obtenerConfiguracionAplicacion() {
         final AsistenteConfig conf = new AsistenteConfig();
         conf.setUrl(getSystemService().obtenerPropiedadConfiguracion(
@@ -387,7 +405,9 @@ public class AsistenteTramitacionController extends TramitacionController {
     @RequestMapping(value = "/retornoFormularioExterno.html")
     public ModelAndView retornoFormularioExterno(
             @RequestParam("ticket") final String ticket) {
+
         // TODO PENDIENTE
+
         return null;
     }
 
@@ -428,10 +448,10 @@ public class AsistenteTramitacionController extends TramitacionController {
     public ModelAndView formularioSoporte(
             @RequestParam(value = "nif", required = false) final String nif,
             @RequestParam(value = "nom", required = false) final String nombre,
-            @RequestParam("telefono") final String telefono,
-            @RequestParam("email") final String email,
-            @RequestParam("problemaTipo") final String problemaTipo,
-            @RequestParam("problemaDesc") final String problemaDesc,
+            @RequestParam(value = "telefono", required = true) final String telefono,
+            @RequestParam(value = "email", required = true) final String email,
+            @RequestParam(value = "problemaTipo", required = true) final String problemaTipo,
+            @RequestParam(value = "problemaDesc", required = true) final String problemaDesc,
             final HttpServletRequest request) {
 
         // TODO VER SI PONEMOS LIMITE FICHERO

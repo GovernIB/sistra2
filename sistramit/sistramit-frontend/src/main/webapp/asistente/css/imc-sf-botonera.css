@@ -1,0 +1,114 @@
+/* Botonera CSS */
+
+
+/* button */
+
+.imc-bt { display: inline-block; vertical-align: middle; padding: .5em .7em; background-color: #4dba79; will-change: color, background-color; }
+.imc-bt:hover,
+.imc-bt:focus,
+.imc-bt:active { color: #fff; background-color: #000; }
+.imc-bt {
+	-webkit-transition: color .2s ease-out, background-color .2s ease-out;
+	-moz-transition: color .2s ease-out, background-color .2s ease-out;
+	-ms-transition: color .2s ease-out, background-color .2s ease-out;
+	-o-transition: color .2s ease-out, background-color .2s ease-out;
+	transition: color .2s ease-out, background-color .2s ease-out;
+}
+.imc-bt span { font-size: 1em; color: #fff; }
+
+
+/* ico */
+
+.imc-bt.imc--ico { text-align: left; white-space: nowrap; padding: .49em .7em; }
+
+.imc-bt.imc--ico::before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	top: -0.1em;
+	width: 1em;
+	height: 1em;
+	margin-right: .4em;
+	background: transparent url() no-repeat left center / auto 100%;
+	opacity: .7;
+}
+
+
+/* desactivat */
+
+.imc-bt.imc-bt--desactivat { display: none; }
+
+
+/* botons */
+
+.imc-bt.imc--principal { background-color: #265d3c; }
+.imc-bt.imc--principal span { color: #fff; }
+.imc-bt.imc--principal:hover,
+.imc-bt.imc--principal:focus,
+.imc-bt.imc--principal:active { color: #fff; background-color: #000; }
+
+.imc-bt.imc--principal::before { background: transparent url(imgs/icones/ico_correcte.svg) no-repeat center center / auto 1em; }
+
+
+.imc-bt.imc--cancela {
+	background-color: #fff;
+}
+
+.imc-bt.imc--cancela span {
+    color: #666;
+}
+
+.imc-bt.imc--cancela:hover,
+.imc-bt.imc--cancela:focus,
+.imc-bt.imc--cancela:active {
+	background-color: #666;
+}
+
+.imc-bt.imc--cancela:hover span,
+.imc-bt.imc--cancela:focus span,
+.imc-bt.imc--cancela:active span {
+    color: #fff;
+}
+
+.imc-bt.imc--tanca {
+	background-color: #fff;
+}
+
+.imc-bt.imc--tanca span {
+    color: #666;
+}
+
+.imc-bt.imc--tanca:hover,
+.imc-bt.imc--tanca:focus,
+.imc-bt.imc--tanca:active {
+	background-color: #666;
+}
+
+.imc-bt.imc--tanca:hover span,
+.imc-bt.imc--tanca:focus span,
+.imc-bt.imc--tanca:active span {
+    color: #fff;
+}
+
+.imc-bt.imc--torna {
+	background-color: #fff;
+}
+
+.imc-bt.imc--torna span {
+    color: #666;
+}
+
+.imc-bt.imc--torna:hover,
+.imc-bt.imc--torna:focus,
+.imc-bt.imc--torna:active {
+	background-color: #666;
+}
+
+.imc-bt.imc--torna:hover span,
+.imc-bt.imc--torna:focus span,
+.imc-bt.imc--torna:active span {
+    color: #fff;
+}
+
+.imc-bt.imc--torna::before { background: transparent url(imgs/icones/ico_enrere_000.svg) no-repeat center center / auto 1em; opacity: .4; }

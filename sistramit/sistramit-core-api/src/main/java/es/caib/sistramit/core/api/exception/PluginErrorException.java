@@ -33,6 +33,8 @@ public final class PluginErrorException extends ServiceRollbackException {
      *
      * @param message
      *            message
+     * @param ex
+     *            excepción
      */
     public PluginErrorException(final String message, Exception ex) {
         super(message, ex);

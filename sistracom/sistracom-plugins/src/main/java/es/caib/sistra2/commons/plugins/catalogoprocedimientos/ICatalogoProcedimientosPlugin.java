@@ -1,5 +1,7 @@
 package es.caib.sistra2.commons.plugins.catalogoprocedimientos;
 
+import java.util.List;
+
 import org.fundaciobit.plugins.IPlugin;
 
 /**
@@ -18,8 +20,18 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
      * @param idioma
      *            idioma
      */
-
     DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP,
             String idioma);
+
+    /**
+     * Recupera procedimientos en los que se usa un trámite de Sistra.
+     *
+     * @param idTramite
+     *            id trámite sistra
+     * @param idioma
+     *            idioma
+     */
+    List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(
+            String idTramite, String idioma);
 
 }

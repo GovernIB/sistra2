@@ -26,6 +26,7 @@ import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RPlugin;
+import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
@@ -275,7 +276,19 @@ public class SistragesMock {
         f.setIdentificador("F1");
         f.setDescripcion("Formulario");
         f.setObligatoriedad("S");
+        f.setInterno(true);
         f.setFormularioInterno(crearFormularioDisenyo());
+
+        final RScript scriptDatosIniciales = new RScript();
+        scriptDatosIniciales.setScript(
+                "DATOS_INICIALES_FORMULARIO.setValor('CAMPO1', 'VALOR_INICIAL');");
+        f.setScriptDatosIniciales(scriptDatosIniciales);
+
+        final RScript scriptPostguardar = new RScript();
+        scriptPostguardar.setScript(
+                "PLUGIN_LOG.debug(PLUGIN_FORMULARIOS.getValor('F1','CAMPO1'));");
+        f.setScriptPostguardar(scriptPostguardar);
+
         return f;
     }
 

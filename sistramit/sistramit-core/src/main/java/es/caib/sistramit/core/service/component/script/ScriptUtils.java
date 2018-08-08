@@ -9,7 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.XssFilter;
-import es.caib.sistramit.core.service.model.formulario.ValorCampoListaIndexados;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
+import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
+import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoCompuesto;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoCompuestoInt;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 
@@ -122,6 +124,25 @@ public final class ScriptUtils {
             }
         }
         return vci;
+    }
+
+    /**
+     * Genera valor compuesto a partir de un valor indexado.
+     *
+     * @param vi
+     *            Valor indexado
+     * @return valor compuesto
+     */
+    public static ClzValorCampoCompuestoInt crearValorCompuesto(
+            final ValorIndexado vi) {
+        ClzValorCampoCompuestoInt res;
+        if (vi != null) {
+            res = new ClzValorCampoCompuesto(vi.getValor(),
+                    vi.getDescripcion());
+        } else {
+            res = new ClzValorCampoCompuesto("", "");
+        }
+        return res;
     }
 
 }

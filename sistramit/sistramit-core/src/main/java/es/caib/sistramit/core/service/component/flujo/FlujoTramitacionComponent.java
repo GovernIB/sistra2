@@ -67,4 +67,7 @@ public interface FlujoTramitacionComponent {
             String email, String problemaTipo, String problemaDesc,
             AnexoFichero anexo);
 
+    // TODO BORRAR
+    String simularRellenarFormulario(String xml);
+
 }

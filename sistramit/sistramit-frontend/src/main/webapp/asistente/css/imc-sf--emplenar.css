@@ -1,0 +1,184 @@
+/* Document CSS */
+
+/* formularis */
+
+.imc--formularis { width: 100%; }
+
+.imc--formularis li { margin-bottom: 1em; }
+
+.imc--formularis a { display: grid; grid-auto-flow: column; grid-template-columns: 3em 1.5em auto; grid-column-gap: 0; grid-row-gap: 0; color: #000; padding: 0; background-color: #fff; }
+
+.imc--formularis a .imc--formulari { grid-area: 1 / 1 / span 2 / 1; background: #8c8c8c url(imgs/icones/ico_form.svg) no-repeat center center / auto 1.7em; border-right: 1px solid #fff; }
+.imc--formularis a .imc--ogligatori { grid-area: 1 / 2 / 1 / 2; width: 1.5em; min-height: 1.5em; background: #d66000 url(imgs/icones/ico_obligatori.svg) no-repeat center center / auto .9em; border-bottom:  1px solid #fff; }
+.imc--formularis a .imc--opcional { grid-area: 1 / 2 / 1 / 2; width: 1.5em; min-height: 1.5em; background: #106fc8 url(imgs/icones/ico_opcional.svg) no-repeat center center / auto .9em; border-bottom:  1px solid #fff; }
+.imc--formularis a .imc--completat { grid-area: 2 / 2 / 2 / 2; width: 1.5em; min-height: 1.5em; background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .7em; }
+.imc--formularis a .imc--no-completat { grid-area: 2 / 2 / 2 / 2; width: 1.5em; min-height: 1.5em; background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
+
+.imc--formularis a strong { grid-area: 1 / 3 / span 2 / 3; align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
+
+.imc--formularis a span { display: block; position: absolute; top: -999em; left: -999em; }
+
+.imc--formularis a:hover,
+.imc--formularis a:focus { color: #3b8e5d; }
+
+.imc--icones { width: 100%; margin-top: 2em; }
+
+.imc--icones h4 { position: absolute; top: -999em; left: -999em; text-transform: uppercase; margin-bottom: 1em; }
+.imc--icones h4 span { font-size: 1.1em; }
+
+.imc--icones li { display: inline-block; vertical-align: middle; margin-right: 1em; }
+.imc--icones li div { display: inline-block; }
+.imc--icones li div::before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	top: -0.1em;
+	width: 1.5em;
+	height: 1.5em;
+	margin-right: .6em;
+}
+
+.imc--icones li div.imc--opcional { margin-right: 2em; }
+
+.imc--icones li div.imc--ogligatori::before { background: #d66000 url(imgs/icones/ico_obligatori.svg) no-repeat center center / auto .9em; }
+.imc--icones li div.imc--opcional::before { background: #106fc8 url(imgs/icones/ico_opcional.svg) no-repeat center center / auto .9em; }
+.imc--icones li div.imc--completat::before { background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
+.imc--icones li div.imc--no-completat::before { background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
+
+.imc--icones li div span { width: calc(100% - 4em); font-size: .8em; line-height: 1.1em; }
+
+/* iframe */
+
+.imc-formulari { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
+.imc-formulari .imc--c { position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
+
+.imc-formulari.imc--on {
+	z-index: 10;
+	visibility: visible;
+	opacity: 1;
+	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
+	transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+.imc-formulari.imc--off {
+	z-index: 10;
+	opacity: 0;
+	-webkit-transition: opacity .3s ease-out;
+	-moz-transition: opacity .3s ease-out;
+	-ms-transition: opacity .3s ease-out;
+	-o-transition: opacity .3s ease-out;
+	transition: opacity .3s ease-out;
+}
+
+.imc-formulari button { display: none; }
+
+.imc-formulari iframe { position: fixed; z-index: 12; top: 50%; left: 50%; width: 100%; max-width: 70em; height: 100%; max-height: 50em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
+
+.imc-formulari iframe.imc--on {
+	visibility: visible;
+	opacity: 1;
+	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
+	transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+.imc-ico-anim { position: fixed; z-index: 13; background: #8c8c8c url(imgs/icones/ico_form.svg) no-repeat center center / auto 1.7em; }
+
+.imc-ico-anim.imc--off {
+	opacity: 0;
+	-webkit-transition: opacity .3s ease-out;
+	-moz-transition: opacity .3s ease-out;
+	-ms-transition: opacity .3s ease-out;
+	-o-transition: opacity .3s ease-out;
+	transition: opacity .3s ease-out;
+}
+
+.imc--centra { transform: translate(-50%, -50%); }
+
+.imc-ico-carrega { position: fixed; z-index: 12; top: 50%; left: 50%; width: 8em; height: 8em; border:1em solid transparent; border-top-color:#fff; border-bottom-color:#fff; border-radius: 50%; opacity: 0; transform: translate(-50%, -50%) rotate(0deg); transform-origin: center; }
+
+.imc-ico-carrega-on {
+	opacity: 1;
+	-webkit-transition: opacity 1s ease-out;
+	-moz-transition: opacity 1s ease-out;
+	-ms-transition: opacity 1s ease-out;
+	-o-transition: opacity 1s ease-out;
+	transition: opacity 1s ease-out;
+}
+
+.imc-ico-carrega {
+	-moz-animation-name: carregantFormulari;
+	-moz-animation-duration: 1s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-webkit-animation-name: carregantFormulari;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-o-animation-name: carregantFormulari;
+	-o-animation-duration: 1s;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
+	animation-name: carregantFormulari;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@-moz-keyframes carregantFormulari {
+	0% { -moz-transform: translate(-50%, -50%) rotate(0deg);  }
+	100% { -moz-transform: translate(-50%, -50%) rotate(360deg);  }
+}
+@-webkit-keyframes carregantFormulari {
+	0% { -webkit-transform: translate(-50%, -50%) rotate(0deg);  }
+	100% { -webkit-transform: translate(-50%, -50%) rotate(360deg);  }
+}
+@-o-keyframes carregantFormulari {
+	0% { -o-transform: translate(-50%, -50%) rotate(0deg);  }
+	100% { -o-transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes carregantFormulari {
+	0% { transform: translate(-50%, -50%) rotate(0deg); }
+	100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.imc-ico-carrega-text { position: fixed; z-index: 12; top: 50%; left: 50%; width: 12em; height: 14em; color: #fff; text-align: center; transform: translate(-50%, -50%); }
+
+html.imc--iframe-mostrat,
+body.imc--iframe-mostrat { overflow: hidden; }
+
+
+/* media 
+
+@media only screen and (max-width : 850px) {
+
+	.imc--formularis a strong { font-size: 1em; }
+
+	.imc--icones { padding-left: 1.5em; }
+	.imc--icones ul { font-size: .8em; }
+
+	.imc-formulari iframe { max-height: 100%; }
+
+
+
+}
+
+
+@media only screen and (max-width : 420px) {
+
+	
+
+	.imc--formularis { float: none; width: 100%; margin-bottom: 1.5em; }
+	.imc--formularis a strong { line-height: 1.1em; }
+
+	.imc--icones { float: none; width: 100%; padding-left: 7em; }
+
+}
+
+*/

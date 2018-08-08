@@ -46,7 +46,7 @@ public interface FlujoTramitacionService {
      *            url inicio
      * @param parametrosInicio
      *            parametros inicio
-     * @return id sesion tramitacion
+     *
      */
     void iniciarTramite(String idSesionTramitacion, final String idTramite,
             final int version, final String idioma,
@@ -160,16 +160,15 @@ public interface FlujoTramitacionService {
      *            problema tipo
      * @param problemaDesc
      *            problema descripción
-     * @param fileName
-     *            nombre fichero
-     * @param fileContent
-     *            contenido fichero
-     * @param fileContentType
-     *            contenType
+     * @param anexo
+     *            anexo
      */
     void envioFormularioSoporte(String idSesionTramitacion, String nif,
             String nombre, String telefono, String email, String problemaTipo,
             String problemaDesc, AnexoFichero anexo);
+
+    // TODO PARA BORRAR
+    String simularRellenarFormulario(String idSesionTramitacion, String xml);
 
     // -------------------------------------------------------------------------------------------
     // - Métodos especiales invocados desde el interceptor. No pasan por

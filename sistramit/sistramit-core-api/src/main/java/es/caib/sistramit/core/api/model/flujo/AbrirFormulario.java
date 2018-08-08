@@ -14,7 +14,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
  *
  */
 @SuppressWarnings("serial")
-public abstract class AbrirFormulario implements Serializable {
+public final class AbrirFormulario implements Serializable {
 
     /**
      * Indica si es externo o interno.
@@ -22,11 +22,16 @@ public abstract class AbrirFormulario implements Serializable {
     private TypeFormulario tipo;
 
     /**
+     * Url redireccion formulario.
+     */
+    private String url;
+
+    /**
      * Método de acceso a tipo.
      *
      * @return tipo
      */
-    public final TypeFormulario getTipo() {
+    public TypeFormulario getTipo() {
         return tipo;
     }
 
@@ -36,8 +41,27 @@ public abstract class AbrirFormulario implements Serializable {
      * @param pTipo
      *            tipo a establecer
      */
-    protected final void setTipo(final TypeFormulario pTipo) {
+    public void setTipo(final TypeFormulario pTipo) {
         tipo = pTipo;
+    }
+
+    /**
+     * Método de acceso a url.
+     *
+     * @return url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Método para establecer url.
+     *
+     * @param url
+     *            url a establecer
+     */
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }

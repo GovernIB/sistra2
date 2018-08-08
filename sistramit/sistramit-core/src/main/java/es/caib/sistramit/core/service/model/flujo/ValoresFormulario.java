@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
 import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
-import es.caib.sistramit.core.service.model.formulario.ValorCampo;
-import es.caib.sistramit.core.service.model.formulario.ValorResetCampos;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 
 /**

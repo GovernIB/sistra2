@@ -30,7 +30,15 @@ public final class ReglasFlujoNormalizadoImpl extends ReglasFlujoImpl {
         // CARGAR TRAMITE
         this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_CARGA);
 
-        // TODO PENDIENTE ANALIZAR
+        // IR A PASO
+        this.addRegla(new RTNavegacionAccesibilidadNormalizado(),
+                TypeFaseEjecucion.POST_NAVEGACION);
+
+        // ACCION PASO
+        this.addRegla(new RTNavegacionAccesibilidadNormalizado(),
+                TypeFaseEjecucion.POST_NAVEGACION);
+
+        // CANCELAR
 
     }
 }

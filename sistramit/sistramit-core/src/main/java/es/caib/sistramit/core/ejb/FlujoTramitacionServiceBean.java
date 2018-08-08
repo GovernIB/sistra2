@@ -119,4 +119,11 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
                 nombre, telefono, email, problemaTipo, problemaDesc, anexo);
     }
 
+    @Override
+    public String simularRellenarFormulario(String idSesionTramitacion,
+            String xml) {
+        return flujoTramitacionService
+                .simularRellenarFormulario(idSesionTramitacion, xml);
+    }
+
 }

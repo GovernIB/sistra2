@@ -1,0 +1,22 @@
+/* Document CSS */
+
+/* cal saber */
+
+.imc--info p { margin-bottom: 1em; }
+
+.imc--info .imc--important p:last-child { margin-bottom: 0; }
+
+.imc--explicacio-detallada { padding: 1em 2em; background-color: #fff; }
+.imc--explicacio-detallada > p { margin-bottom: 0; }
+.imc--explicacio-detallada ul { display: none; margin-top: 1em; }
+
+.imc--e-d ul li { overflow: hidden; padding-bottom: .5em; }
+.imc--e-d ul .imc--num { float: left; font-size: 3em; width: 1em; text-align: right; line-height: 1em; }
+.imc--e-d ul .imc--nom { display: block; font-weight: bold; padding-top: .3em; padding-bottom: .1em; padding-left: 4em; }
+.imc--e-d ul p { display: block; padding-left: 3.7em; }
+
+.imc--lopd h4 { padding-top: 1.5em; margin-bottom: 1em; }
+.imc--lopd h4 span { font-size: 1.2em; }
+
+.imc--lopd h5 { margin-top: 1em; margin-bottom: .3em; }
+.imc--lopd h5 span { font-size: 1.1em; }

@@ -144,6 +144,16 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
                 problemaDesc, anexo);
     }
 
+    // TODO BORRAR
+    @Override
+    @NegocioInterceptor
+    public String simularRellenarFormulario(String idSesionTramitacion,
+            String xml) {
+        final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(
+                idSesionTramitacion);
+        return ft.simularRellenarFormulario(xml);
+    }
+
     // -------------------------------------------------------------------------------------------
     // - Métodos especiales invocados desde el interceptor. No pasan por
     // interceptor

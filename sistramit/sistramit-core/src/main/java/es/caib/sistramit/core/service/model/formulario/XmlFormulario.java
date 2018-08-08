@@ -3,6 +3,8 @@ package es.caib.sistramit.core.service.model.formulario;
 import java.io.Serializable;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+
 /**
  * Xml de un formulario.
  *

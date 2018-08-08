@@ -72,8 +72,7 @@ public final class PlgLog implements PlgLogInt {
         this.tipoScript = pTipoScript;
         this.idElemento = pIdElemento;
         this.auditoriaComponent = (AuditoriaComponent) ApplicationContextProvider
-                .getApplicationContext()
-                .getBean("generacionAuditoriaComponent");
+                .getApplicationContext().getBean("auditoriaComponent");
         this.debug = pDebug;
     }
 
