@@ -1,6 +1,9 @@
 package es.caib.sistrages.core.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,11 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -30,12 +38,12 @@ import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
+import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
-
 
 /**
  * La clase TramiteServiceImpl.
@@ -66,6 +74,12 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Autowired
 	FicheroExternoDao ficheroExternoDao;
+
+	/**
+	 * DAO Formateador formulario
+	 */
+	@Autowired
+	FormateadorFormularioDao formateadorFormularioDao;
 
 	/**
 	 * DAO Formulario interno.
@@ -262,7 +276,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#addTramiteVersion(es.caib.
 	 * sistrages.core.api.model.TramiteVersion, java.lang.String, java.lang.String)
@@ -276,7 +290,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#updateTramiteVersion(es.
 	 * caib.sistrages.core.api.model.TramiteVersion)
@@ -302,10 +316,10 @@ public class TramiteServiceImpl implements TramiteService {
 
 		tramiteDao.updateTramiteVersion(tramiteVersion);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#removeTramiteVersion(java.
 	 * lang.Long)
@@ -318,7 +332,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramiteVersion(java.lang
 	 * .Long)
@@ -331,7 +345,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.TramiteService#listTipoTramitePaso()
 	 */
 	@Override
@@ -342,7 +356,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getAreaTramite(java.lang.
 	 * Long)
@@ -355,7 +369,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramitePasos(java.lang.
 	 * Long)
@@ -368,7 +382,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#changeAreaTramite(java.lang
 	 * .Long, java.lang.Long)
@@ -381,7 +395,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramiteDominiosId(java.
 	 * lang.Long)
@@ -394,7 +408,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#removeFormulario(java.lang.
 	 * Long, java.lang.Long)
@@ -407,7 +421,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#updateTramitePaso(es.caib.
 	 * sistrages.core.api.model.TramitePaso)
@@ -420,7 +434,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramitePaso(java.lang.
 	 * Long)
@@ -433,7 +447,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getFormulario(java.lang.
 	 * Long)
@@ -446,7 +460,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#addFormularioTramite(es.
 	 * caib.sistrages.core.api.model.FormularioTramite, java.lang.Long)
@@ -461,7 +475,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#updateFormularioTramite(es.
 	 * caib.sistrages.core.api.model.FormularioTramite)
@@ -474,7 +488,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#addDocumentoTramite(es.caib
 	 * .sistrages.core.api.model.Documento, java.lang.Long)
@@ -487,7 +501,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#updateDocumentoTramite(es.
 	 * caib.sistrages.core.api.model.Documento)
@@ -500,7 +514,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getDocumento(java.lang.
 	 * Long)
@@ -513,7 +527,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#removeDocumento(java.lang.
 	 * Long, java.lang.Long)
@@ -526,7 +540,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTasa(java.lang.Long)
 	 */
@@ -538,7 +552,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#addTasaTramite(es.caib.
 	 * sistrages.core.api.model.Tasa, java.lang.Long)
@@ -551,7 +565,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#updateTasaTramite(es.caib.
 	 * sistrages.core.api.model.Tasa)
@@ -564,7 +578,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#removeTasa(java.lang.Long,
 	 * java.lang.Long)
@@ -577,7 +591,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#uploadDocAnexo(java.lang.
 	 * Long, es.caib.sistrages.core.api.model.Fichero, byte[], java.lang.Long)
@@ -592,7 +606,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#removeDocAnexo(java.lang.
 	 * Long)
@@ -605,7 +619,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#bloquearTramiteVersion(java
 	 * .lang.Long, java.lang.String)
@@ -619,7 +633,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#desbloquearTramiteVersion(
 	 * java.lang.Long, java.lang.String, java.lang.String)
@@ -633,7 +647,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#listHistorialVersion(java.
 	 * lang.Long, java.lang.String)
@@ -646,7 +660,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getHistorialVersion(java.
 	 * lang.Long)
@@ -659,7 +673,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#tieneTramiteVersion(java.
 	 * lang.Long)
@@ -672,7 +686,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.TramiteService#
 	 * tieneTramiteNumVersionRepetida(java.lang.Long, int)
 	 */
@@ -684,7 +698,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramiteNumVersionMaximo(
 	 * java.lang.Long)
@@ -697,7 +711,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#clonadoTramiteVersion(java.
 	 * lang.Long, java.lang.String)
@@ -712,7 +726,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#listTramiteVersionActiva(
 	 * java.lang.Long)
@@ -725,7 +739,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.TramiteService#
 	 * getFormateadoresTramiteVersion(java.lang.Long)
 	 */
@@ -737,7 +751,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.TramiteService#
 	 * getFormulariosTramiteVersion(java.lang.Long)
 	 */
@@ -749,7 +763,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getFicherosTramiteVersion(
 	 * java.lang.Long)
@@ -762,7 +776,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getAreaByIdentificador(java
 	 * .lang.String, java.lang.Long)
@@ -775,7 +789,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramiteByIdentificador(
 	 * java.lang.String)
@@ -788,7 +802,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.TramiteService#
 	 * getTramiteVersionByNumVersion(int, java.lang.Long)
 	 */
@@ -800,7 +814,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.TramiteService#
 	 * getTramiteVersionMaxNumVersion(java.lang.Long)
 	 */
@@ -812,7 +826,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#intercambiarFormularios(
 	 * java.lang.Long, java.lang.Long)
@@ -825,7 +839,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getTramiteVersionByDominio(
 	 * java.lang.Long)
@@ -838,7 +852,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#checkTasaRepetida(java.lang
 	 * .Long, java.lang.String, java.lang.Long)
@@ -851,7 +865,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#checkAnexoRepetido(java.
 	 * lang.Long, java.lang.String, java.lang.Long)
@@ -864,7 +878,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#checkIdentificadorRepetido(
 	 * java.lang.String, java.lang.Long)
@@ -877,7 +891,7 @@ public class TramiteServiceImpl implements TramiteService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.api.service.TramiteService#
 	 * checkIdentificadorAreaRepetido(java.lang.String, java.lang.Long)
 	 */
@@ -885,6 +899,37 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public boolean checkIdentificadorAreaRepetido(final String identificador, final Long codigo) {
 		return areaDao.checkIdentificadorRepetido(identificador, codigo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void importar(final FilaImportarArea filaArea, final FilaImportarTramite filaTramite,
+			final FilaImportarTramiteVersion filaTramiteVersion, final List<FilaImportarDominio> filasDominios,
+			final List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
+			final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
+			final Map<Long, byte[]> ficherosContent) throws Exception {
+		final Long idArea = areaDao.importar(filaArea);
+		final Long idTramite = tramiteDao.importar(filaTramite, idArea);
+
+		final List<Long> idDominios = new ArrayList<>();
+		for (final FilaImportarDominio filaDominio : filasDominios) {
+			final Long idDominio = dominiosDao.importar(filaDominio);
+			idDominios.add(idDominio);
+		}
+
+		final Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
+		for (final FilaImportarFormateador filaFormateador : filasFormateador) {
+
+			final Long idFormateador = formateadorFormularioDao.importar(filaFormateador, idEntidad);
+			final FormateadorFormulario ff = formateadorFormularioDao.getById(idFormateador);
+			formateadores.put(idFormateador, ff);
+		}
+
+		final Long idTramiteVersion = tramiteDao.importar(filaTramiteVersion, idTramite, idDominios);
+		for (final TramitePaso tramitePaso : filaTramiteVersion.getTramiteVersion().getListaPasos()) {
+			tramitePasoDao.importar(filaTramiteVersion, tramitePaso, idTramiteVersion, idEntidad, formularios, ficheros,
+					ficherosContent, formateadores);
+		}
 	}
 
 }

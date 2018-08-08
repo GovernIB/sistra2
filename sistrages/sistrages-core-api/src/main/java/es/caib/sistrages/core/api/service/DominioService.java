@@ -7,6 +7,7 @@ import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
 /**
@@ -229,4 +230,11 @@ public interface DominioService {
 	 * @param idTramiteVersion
 	 */
 	public void addTramiteVersion(Long idDominio, Long idTramiteVersion);
+
+	/**
+	 *
+	 * @param filaDominio
+	 * @throws Exception
+	 */
+	public void importarDominio(FilaImportarDominio filaDominio) throws Exception;
 }

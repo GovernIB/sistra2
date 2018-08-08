@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -8,10 +9,11 @@ import javax.faces.bean.ViewScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportarTramiteVersion;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -60,6 +62,18 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarTV.estado.existemenor"));
 		}
 
+	}
+
+	/** Consultar. **/
+	public void consultarTramiteVersion() {
+
+		if (this.data.getTramiteVersionActual() != null) {
+			// Muestra dialogo
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.ID.toString(),
+					String.valueOf(this.data.getTramiteVersionActual().getCodigo()));
+			UtilJSF.openDialog(ViewDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 520, 160);
+		}
 	}
 
 	/**

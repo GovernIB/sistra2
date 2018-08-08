@@ -46,10 +46,10 @@
 
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerArea']}" style="text-align:right; padding-right:3px;" />
 						<p:outputLabel value="#{dialogTramiteImportar.area.identificador} - #{dialogTramiteImportar.area.descripcion}" />
-						<p:outputLabel value="#{dialogTramiteImportar.filaArea.estado.literal}" />
+						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaArea.estado]}" />
 						<p:column>
 								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonArea}" process="@form" actionListener="#{dialogTramiteImportar.checkArea()}" style="margin-left:5px" >
-									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoArea}" update="areaAccion areaIcon"/>
+									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoArea}" update="areaIcon"/>
 								</p:commandButton>
 						</p:column>
 						<p:outputLabel id="areaIcon" value="" >
@@ -58,7 +58,7 @@
 
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerTramite']}" style="text-align:right; padding-right:3px;" />
 						<p:outputLabel value="#{dialogTramiteImportar.tramite.identificador} - #{dialogTramiteImportar.tramite.descripcion}" />
-						<p:outputLabel value="#{dialogTramiteImportar.filaTramite.estado.literal}" />
+						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramite.estado]}" />
 
 						<p:column>
 								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramite}" actionListener="#{dialogTramiteImportar.checkTramite()}" style="margin-left:5px" >
@@ -72,7 +72,7 @@
 
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersion']}" style="text-align:right; padding-right:3px;" />
 						<p:outputLabel value="#{dialogTramiteImportar.tramiteVersion.numeroVersion} (release #{dialogTramiteImportar.tramiteVersion.release})" />
-						<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.estado.literal}" />
+						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramiteVersion.estado]}" />
 						<p:column>
 								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramiteVersion}" actionListener="#{dialogTramiteImportar.checkTramiteVersion()}" style="margin-left:5px" >
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramiteVersion}" update="tramiteVersionIcon"/>
@@ -104,19 +104,19 @@
 						 <f:facet name = "header">
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.dominio.ambito']}" style="font-weight: bold" />
 						 </f:facet>
-      					#{fila.dominio.ambito}
+      					#{msg['typeAmbito.' += fila.dominio.ambito]}
 					</h:column>
 
 					<h:column>
 						<f:facet name = "header">
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.dominio.estado']}" style="font-weight: bold" />
 						 </f:facet>
-						 <p:outputLabel id="labelDominio${fila.dominioActual.codigo}" value="#{fila.estado.literal}" />
+						 <p:outputLabel id="labelDominio${fila.dominioActual.codigo}" value="#{msg['typeImportar.estado.' += fila.estado]}" />
 					</h:column>
 
 					<h:column>
 						 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
-						 <p:outputLabel  value="#{fila.mensaje}"  rendered="#{fila.visibleBoton == false}"/>
+						 <p:outputLabel  value="#{msg[fila.mensaje]}"  rendered="#{fila.visibleBoton == false}"/>
       					 <p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogTramiteImportar.checkDominio(fila.dominioActual.codigo)}" style="margin-left:5px" >
       							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoDominio}" />
 						</p:commandButton>
@@ -149,7 +149,8 @@
 						 <f:facet name = "header" style="text-align: left;">
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.formateador.estado']}" />
 						 </f:facet>
-      					#{fila.estado.literal}
+      					#{msg['typeImportar.estado.' += fila.estado]}
+      					<p:outputLabel value=" #{fila.mensaje}" rendered="#{fila.mensaje != null}" />
 					</h:column>
 
 					<h:column>

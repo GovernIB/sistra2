@@ -43,8 +43,8 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
-	public FormateadorFormulario getFormateadorFormulario(final Long idEntidad, final String codigo) {
-		return fmtService.getFormateadorFormulario(idEntidad, codigo);
+	public FormateadorFormulario getFormateadorFormulario(final String codigo) {
+		return fmtService.getFormateadorFormulario(codigo);
 	}
 
 	/*

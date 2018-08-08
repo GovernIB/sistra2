@@ -312,4 +312,33 @@ public class JCampoFormularioTexto implements IModelApi {
 		return jModel;
 	}
 
+	public static JCampoFormularioTexto clonar(final JCampoFormularioTexto campoFormularioTexto,
+			final JCampoFormulario jcampo) {
+		JCampoFormularioTexto jcampoTexto = null;
+		if (campoFormularioTexto != null) {
+			jcampoTexto = new JCampoFormularioTexto();
+			jcampoTexto.setCampoFormulario(jcampo);
+			jcampoTexto.setIdentCif(campoFormularioTexto.isIdentCif());
+			jcampoTexto.setIdentNie(campoFormularioTexto.isIdentNie());
+			jcampoTexto.setIdentNif(campoFormularioTexto.isIdentNif());
+			jcampoTexto.setIdentNss(campoFormularioTexto.isIdentNss());
+			jcampoTexto.setNormalExpresionRegular(campoFormularioTexto.getNormalExpresionRegular());
+			jcampoTexto.setNormalMultilinea(campoFormularioTexto.isNormalMultilinea());
+			jcampoTexto.setNormalNumeroLineas(campoFormularioTexto.getNormalNumeroLineas());
+			jcampoTexto.setNormalTamanyo(campoFormularioTexto.getNormalTamanyo());
+			jcampoTexto.setNumeroConSigno(campoFormularioTexto.isNumeroConSigno());
+			jcampoTexto.setNumeroDigitosDecimales(campoFormularioTexto.getNumeroDigitosDecimales());
+			jcampoTexto.setNumeroDigitosEnteros(campoFormularioTexto.getNumeroDigitosEnteros());
+			jcampoTexto.setNumeroRangoMaximo(campoFormularioTexto.getNumeroRangoMaximo());
+			jcampoTexto.setNumeroRangoMinimo(campoFormularioTexto.getNumeroRangoMinimo());
+			jcampoTexto.setNumeroSeparador(campoFormularioTexto.getNumeroSeparador());
+			jcampoTexto.setOculto(campoFormularioTexto.isOculto());
+			jcampoTexto.setPermiteRango(campoFormularioTexto.isPermiteRango());
+			jcampoTexto.setTelefonoFijo(campoFormularioTexto.isTelefonoFijo());
+			jcampoTexto.setTelefonoMovil(campoFormularioTexto.isTelefonoMovil());
+			jcampoTexto.setTipo(campoFormularioTexto.getTipo());
+		}
+		return jcampoTexto;
+	}
+
 }

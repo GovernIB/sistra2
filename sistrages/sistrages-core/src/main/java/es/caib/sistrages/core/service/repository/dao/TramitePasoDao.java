@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
@@ -9,6 +10,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 
 /**
  * La interface TramitePasoDao.
@@ -201,5 +203,20 @@ public interface TramitePasoDao {
 	 * @return
 	 */
 	boolean checkAnexoRepetido(Long idTramiteVersion, String identificador, Long idAnexo);
+
+	/**
+	 * Importar un paso.
+	 *
+	 * @param filaTramiteVersion
+	 * @param tramitePaso
+	 * @param idTramite
+	 * @param formularios
+	 * @param ficheros
+	 * @param ficherosContent
+	 * @return
+	 */
+	Long importar(final FilaImportarTramiteVersion filaTramiteVersion, TramitePaso tramitePaso, Long idTramite,
+			final Long idEntidad, final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
+			final Map<Long, byte[]> ficherosContent, final Map<Long, FormateadorFormulario> idFormateadores);
 
 }

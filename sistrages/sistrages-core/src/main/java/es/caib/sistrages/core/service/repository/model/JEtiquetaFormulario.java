@@ -82,4 +82,16 @@ public class JEtiquetaFormulario implements IModelApi {
 		return jModel;
 	}
 
+	public static JEtiquetaFormulario clonar(final JEtiquetaFormulario etiquetaFormulario,
+			final JElementoFormulario jelemento) {
+		JEtiquetaFormulario jetiqueta = null;
+		if (etiquetaFormulario != null) {
+			jetiqueta = new JEtiquetaFormulario();
+			jetiqueta.setElementoFormulario(jelemento);
+			jetiqueta.setTipo(etiquetaFormulario.getTipo());
+		}
+		return jetiqueta;
+
+	}
+
 }

@@ -67,6 +67,9 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	/** Fuente. **/
 	private FuenteDatos fuente;
 
+	/** Type modo acceso. **/
+	private TypeModoAcceso typeModoAcceso;
+
 	/**
 	 * Inicialización.
 	 */
@@ -79,7 +82,11 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		} else {
 			refreshTabla();
 		}
-
+		if (modoAcceso == null) {
+			typeModoAcceso = TypeModoAcceso.CONSULTA;
+		} else {
+			typeModoAcceso = TypeModoAcceso.valueOf(this.modoAcceso);
+		}
 	}
 
 	/**
@@ -314,31 +321,34 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	 * @return el valor de permiteAlta
 	 */
 	public boolean getPermiteEdicion() {
+
 		boolean res = false;
-		switch (ambito) {
-		case GLOBAL:
-			// Entra como SuperAdmin
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
-			break;
-		case ENTIDAD:
-			// Entra como adm. entidad
-			res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-			break;
-		case AREA:
+		if (typeModoAcceso == TypeModoAcceso.ALTA || typeModoAcceso == TypeModoAcceso.EDICION) {
+			switch (ambito) {
+			case GLOBAL:
+				// Entra como SuperAdmin
+				res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+				break;
+			case ENTIDAD:
+				// Entra como adm. entidad
+				res = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+				break;
+			case AREA:
 
-			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
-				res = true;
-			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+				if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+						|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN) {
+					res = true;
+				} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
 
-				final List<TypeRolePermisos> permisos = securityService
-						.getPermisosDesarrolladorEntidadByArea(fuente.getIdArea());
+					final List<TypeRolePermisos> permisos = securityService
+							.getPermisosDesarrolladorEntidadByArea(fuente.getIdArea());
 
-				res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
+					res = permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA);
 
+				}
+
+				break;
 			}
-
-			break;
 		}
 		return res;
 	}

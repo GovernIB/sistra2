@@ -27,9 +27,11 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
+import es.caib.sistrages.core.service.repository.model.JAccionPersonalizada;
 import es.caib.sistrages.core.service.repository.model.JCampoFormulario;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioCasillaVerificacion;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioIndexado;
@@ -134,13 +136,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		for (final JPaginaFormulario jPagina : jForm.getPaginas()) {
 			formInt.getPaginas().add(getContenidoPaginaById(jPagina.getCodigo()));
 		}
-		
-		
+
 		for (final JPlantillaFormulario jPlantilla : jForm.getPlantillas()) {
 			formInt.getPlantillas().add(jPlantilla.toModel());
 		}
-		
-		
 
 		// ordenamos lista de paginas por campo orden
 		if (!formInt.getPaginas().isEmpty() && formInt.getPaginas().size() > 1) {
@@ -152,22 +151,29 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	}
 
 	@Override
-	public Long addFormulario(final FormularioTramite pFormTra) {
+	public Long addFormulario(final FormularioTramite pFormTra, final boolean crearPaginaInicial) {
 		if (pFormTra == null) {
 			throw new FaltanDatosException(FALTA_FORMDIS);
 		}
 
 		final JFormulario jForm = JFormulario.createDefault(JLiteral.fromModel(pFormTra.getDescripcion()));
 
-		final JPaginaFormulario jPagina = JPaginaFormulario.createDefault(jForm);
+		if (crearPaginaInicial) {
+			final JPaginaFormulario jPagina = JPaginaFormulario.createDefault(jForm);
 
-		final Set<JPaginaFormulario> paginas = new HashSet<>();
-		paginas.add(jPagina);
-		jForm.setPaginas(paginas);
+			final Set<JPaginaFormulario> paginas = new HashSet<>();
+			paginas.add(jPagina);
+			jForm.setPaginas(paginas);
+		}
 
 		entityManager.persist(jForm);
 
 		return jForm.getCodigo();
+	}
+
+	@Override
+	public Long addFormulario(final FormularioTramite pFormTra) {
+		return addFormulario(pFormTra, true);
 	}
 
 	@Override
@@ -308,6 +314,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
 				final JCampoFormularioIndexado jObjFormSelector = JCampoFormularioIndexado.createDefault(pOrden,
 						jLineaSeleccionada);
+				/*
+				 * jObjFormSelector.getCampoFormulario().getElementoFormulario()
+				 * .setCampoFormulario(jObjFormSelector.getCampoFormulario());
+				 */
 				entityManager.persist(jObjFormSelector);
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormSelector.toModel();
@@ -819,6 +829,63 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	private boolean quitaHuecoEnComponentes(final JLineaFormulario pJLineaSeleccionada, final Integer pInicio) {
 		return actualizaEntreComponentes(pJLineaSeleccionada, pInicio, -1);
+	}
+
+	@Override
+	public Long addPagina(final Long idFormulario, final PaginaFormulario paginaFormulario) {
+
+		if (idFormulario == null) {
+			throw new FaltanDatosException(FALTA_ID);
+		}
+
+		final JFormulario jFormulario = entityManager.find(JFormulario.class, idFormulario);
+		final JPaginaFormulario jpagina = JPaginaFormulario.fromModel(paginaFormulario);
+		jpagina.setFormulario(jFormulario);
+		entityManager.persist(jpagina);
+		return jpagina.getCodigo();
+	}
+
+	@Override
+	public Long addPlantilla(final Long idFormulario, final PlantillaFormulario mplantilla) {
+		if (idFormulario == null) {
+			throw new FaltanDatosException(FALTA_ID);
+		}
+
+		final JFormulario jFormulario = entityManager.find(JFormulario.class, idFormulario);
+		final JPlantillaFormulario jplantilla = JPlantillaFormulario.fromModel(mplantilla);
+		jplantilla.setFormulario(jFormulario);
+		entityManager.persist(jplantilla);
+		return jplantilla.getCodigo();
+	}
+
+	@Override
+	public void removeFormulario(final Long codigo) {
+		final JFormulario jFormulario = entityManager.find(JFormulario.class, codigo);
+		if (jFormulario.getPaginas() != null) {
+			for (final JPaginaFormulario pagina : jFormulario.getPaginas()) {
+				entityManager.remove(pagina);
+			}
+		}
+
+		if (jFormulario.getPlantillas() != null) {
+			for (final JPlantillaFormulario plantilla : jFormulario.getPlantillas()) {
+				if (plantilla.getPlantillaIdiomaFormulario() != null) {
+					for (final JPlantillaIdiomaFormulario plantillaIdioma : plantilla.getPlantillaIdiomaFormulario()) {
+						entityManager.remove(plantillaIdioma);
+					}
+				}
+				entityManager.remove(plantilla);
+			}
+		}
+
+		if (jFormulario.getPlantillas() != null) {
+
+			for (final JAccionPersonalizada accion : jFormulario.getAccionesPersonalizadas()) {
+				entityManager.remove(accion);
+			}
+		}
+
+		entityManager.remove(jFormulario);
 	}
 
 }

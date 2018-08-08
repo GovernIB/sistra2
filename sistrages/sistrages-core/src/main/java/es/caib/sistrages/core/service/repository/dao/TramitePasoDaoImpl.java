@@ -1,32 +1,48 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
+import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
+import es.caib.sistrages.core.api.model.ObjetoFormulario;
+import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Tasa;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
+import es.caib.sistrages.core.service.repository.model.JLiteral;
 import es.caib.sistrages.core.service.repository.model.JPagoTramite;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JScript;
+import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
 /**
  * La clase TramitePasoDaoImpl.
@@ -48,6 +64,15 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	 */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private FicheroExternoDao ficheroExternoDao;
+
+	@Autowired
+	private FormularioInternoDao formularioInternoDao;
+
+	@Autowired
+	private FormateadorFormularioDao formateadorFormularioDao;
 
 	/**
 	 * Crea una nueva instancia de TramiteDaoImpl.
@@ -114,6 +139,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JFormularioTramite jFormulario = entityManager.find(JFormularioTramite.class, idFormulario);
 		if (jFormulario == null) {
 			throw new NoExisteDato(STRING_NO_EXISTE_FORMULARIO + idFormulario);
+		}
+
+		if (jFormulario.getFormulario() != null) {
+			formularioInternoDao.removeFormulario(jFormulario.getFormulario().getCodigo());
 		}
 
 		jTramitePaso.getPasoRellenar().getFormulariosTramite().remove(jFormulario);
@@ -299,7 +328,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		if (results != null && !results.isEmpty()) {
 			for (final Iterator<JFormulario> iterator = results.iterator(); iterator.hasNext();) {
 				final JFormulario jformulario = iterator.next();
-				resultado.add(jformulario.toModel());
+				resultado.add(jformulario.toModelCompleto());
 			}
 		}
 
@@ -426,6 +455,249 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			repetido = true;
 		}
 		return repetido;
+	}
+
+	@Override
+	public Long importar(final FilaImportarTramiteVersion filaTramiteVersion, final TramitePaso tramitePaso,
+			final Long idTramiteVersion, final Long idEntidad, final Map<Long, DisenyoFormulario> formularios,
+			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
+			final Map<Long, FormateadorFormulario> formateadores) {
+
+		final JVersionTramite jVersionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
+
+		// Checkeamos si es de tipo rellenar, y hacemos un prepaso y relacionamos el
+		// idformulario con el identificador del formulario.
+		/// y seteamos el idformulariointerno a nulo (ya seteareamos luego
+		final Map<String, Long> formulariosId = new HashMap<>();
+		if (tramitePaso instanceof TramitePasoRellenar) {
+			for (final FormularioTramite formulario : ((TramitePasoRellenar) tramitePaso).getFormulariosTramite()) {
+				if (formulario.getIdFormularioInterno() != null) {
+					formulariosId.put(formulario.getIdentificador(), formulario.getIdFormularioInterno());
+					formulario.setIdFormularioInterno(null);
+				}
+			}
+		}
+		JPasoTramitacion jpaso = JPasoTramitacion.clonar(JPasoTramitacion.fromModel(tramitePaso), jVersionTramite);
+
+		// Checkeamos si es de tipo anexar, tenía anexado un fichero.
+		if (tramitePaso instanceof TramitePasoAnexar) {
+			for (final Documento documento : ((TramitePasoAnexar) tramitePaso).getDocumentos()) {
+				if (documento.getAyudaFichero() != null && documento.getAyudaFichero().getCodigo() != null
+						&& ficheros.containsKey(documento.getAyudaFichero().getCodigo())) {
+
+					// Obtenemos el fichero del zip y su contenido.
+					final Fichero fichero = ficheros.get(documento.getAyudaFichero().getCodigo());
+					final byte[] ficheroContent = ficherosContent.get(documento.getAyudaFichero().getCodigo());
+
+					// Generamos un nuevo fichero y guardamos su contenido.
+					fichero.setCodigo(null);
+					final JFichero jfichero = JFichero.fromModel(fichero);
+					entityManager.persist(jfichero);
+					fichero.setCodigo(jfichero.getCodigo());
+					ficheroExternoDao.guardarFichero(idEntidad, fichero, ficheroContent);
+
+					// Seteamos el jfichero que toque.
+					for (final JAnexoTramite janexotramite : jpaso.getPasoAnexar().getAnexosTramite()) {
+						if (janexotramite.getIdentificadorDocumento().equals(documento.getIdentificador())) {
+							janexotramite.setFicheroPlantilla(jfichero);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		if (jpaso.getPasoRegistrar() != null) {
+			jpaso.getPasoRegistrar().setCodigoLibroRegistro(filaTramiteVersion.getTramiteVersionResultadoLibro());
+			jpaso.getPasoRegistrar().setCodigoOficinaRegistro(filaTramiteVersion.getTramiteVersionResultadoOficina());
+			jpaso.getPasoRegistrar().setCodigoTipoAsunto(filaTramiteVersion.getTramiteVersionResultadoTipo());
+		}
+		entityManager.persist(jpaso);
+		entityManager.flush();
+
+		jpaso = entityManager.find(JPasoTramitacion.class, jpaso.getCodigo());
+
+		// Checkeamos si es de tipo rellenar, entonces buscamos el formulario, lo
+		// creamos y lo asociamos
+		if (jpaso.getPasoRellenar() != null && jpaso.getPasoRellenar().getFormulariosTramite() != null
+				&& !jpaso.getPasoRellenar().getFormulariosTramite().isEmpty()) {
+			for (final JFormularioTramite formulario : jpaso.getPasoRellenar().getFormulariosTramite()) {
+				// Si contiene el identificador, es que tiene un diseño ya hecho
+				if (formulariosId.containsKey(formulario.getIdentificador())) {
+
+					// Creamos la id.
+					formulario.setDescripcion(JLiteral.clonar(formulario.getDescripcion()));
+					final Long idJFormulario = formularioInternoDao.addFormulario(formulario.toModel(), false);
+
+					// Actualizamos el jformulario
+					final Long idFormularioInterno = formulariosId.get(formulario.getIdentificador());
+					final DisenyoFormulario formularioInterno = formularios.get(idFormularioInterno);
+
+					final DisenyoFormulario disenyoFormularioAlmacenado = formularioInternoDao
+							.getFormularioById(idJFormulario);
+					disenyoFormularioAlmacenado.setMostrarCabecera(formularioInterno.isMostrarCabecera());
+					disenyoFormularioAlmacenado
+							.setPermitirAccionesPersonalizadas(formularioInterno.isPermitirAccionesPersonalizadas());
+					if (formularioInterno.getScriptPlantilla() != null) {
+						formularioInterno.getScriptPlantilla().setCodigo(null);
+					}
+
+					if (formularioInterno.getTextoCabecera() != null) {
+						formularioInterno.getTextoCabecera().setCodigo(null);
+						if (formularioInterno.getTextoCabecera().getTraducciones() != null) {
+							for (final Traduccion trad : formularioInterno.getTextoCabecera().getTraducciones()) {
+								trad.setCodigo(null);
+							}
+						}
+					}
+
+					formularioInternoDao.updateFormulario(disenyoFormularioAlmacenado);
+
+					this.anyadirPaginas(formularioInterno.getPaginas(), idJFormulario);
+					this.anyadirPlantillas(formularioInterno.getPlantillas(), idJFormulario, formateadores,
+							ficherosContent, idEntidad);
+
+					// Refrescamos la relacion entre el formulario del paso y el formulario de
+					// diseño.
+					final JFormulario jform = entityManager.find(JFormulario.class, idJFormulario);
+					final JFormularioTramite jformNew = entityManager.find(JFormularioTramite.class,
+							formulario.getCodigo());
+					jformNew.setFormulario(jform);
+					entityManager.merge(jformNew);
+
+				}
+			}
+		}
+
+		return jpaso.getCodigo();
+	}
+
+	/**
+	 * Añaden plantilla y su lista de plantillas idiomas.
+	 *
+	 * @param mplantillas
+	 * @param jformulario
+	 * @param formateadores
+	 */
+	private void anyadirPlantillas(final List<PlantillaFormulario> mplantillas, final Long idFormularioInterno,
+			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, byte[]> ficherosContent,
+			final Long idEntidad) {
+		for (final PlantillaFormulario mplantilla : mplantillas) {
+
+			final List<PlantillaIdiomaFormulario> plantillasIdioma = mplantilla.getPlantillasIdiomaFormulario();
+
+			// Preparamos la plantilla
+			if (mplantilla.getIdFormateadorFormulario() != null) {
+				final String identificadorFormateador = formateadores.get(mplantilla.getIdFormateadorFormulario())
+						.getIdentificador();
+				final FormateadorFormulario formateador = formateadorFormularioDao
+						.getByCodigo(identificadorFormateador);
+				mplantilla.setIdFormateadorFormulario(formateador.getCodigo());
+			}
+			mplantilla.setCodigo(null);
+
+			final Long idPlantilla = formularioInternoDao.addPlantilla(idFormularioInterno, mplantilla);
+
+			for (final PlantillaIdiomaFormulario plantilla : plantillasIdioma) {
+				plantilla.setCodigo(null);
+				final byte[] contenido = ficherosContent.get(plantilla.getFichero().getCodigo());
+				plantilla.getFichero().setCodigo(null);
+				final PlantillaIdiomaFormulario mplantillaIdioma = formularioInternoDao
+						.uploadPlantillaIdiomaFormulario(idPlantilla, plantilla);
+				entityManager.flush();
+				ficheroExternoDao.guardarFichero(idEntidad, mplantillaIdioma.getFichero(), contenido);
+
+			}
+
+		}
+	}
+
+	/**
+	 * Añaden paginas y sus componentes.
+	 *
+	 * @param paginas
+	 * @param jformulario
+	 */
+	private void anyadirPaginas(final List<PaginaFormulario> paginas, final Long idFormulario) {
+
+		for (final PaginaFormulario paginaFormulario : paginas) {
+
+			final List<LineaComponentesFormulario> lineas = paginaFormulario.getLineas();
+			paginaFormulario.setLineas(null);
+			final DisenyoFormulario formulario = formularioInternoDao.getFormularioPaginasById(idFormulario);
+			if (paginaFormulario.getScriptValidacion() != null) {
+				paginaFormulario.getScriptValidacion().setCodigo(null);
+			}
+			paginaFormulario.setCodigo(null);
+
+			final Long idPagina = formularioInternoDao.addPagina(formulario.getCodigo(), paginaFormulario);
+
+			// Recorremos las lineas anteriormente
+			if (lineas != null) {
+				for (final LineaComponentesFormulario mlinea : lineas) {
+					final ObjetoFormulario objetoFormularioLine = formularioInternoDao
+							.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null);
+					final Long idLinea = objetoFormularioLine.getCodigo();
+					mlinea.setCodigo(idLinea);
+					final List<ComponenteFormulario> componentes = mlinea.getComponentes();
+					mlinea.setComponentes(null);
+					formularioInternoDao.updateFormulario(formulario);
+
+					// Añadir los componentes de la linea
+					for (final ComponenteFormulario componente : componentes) {
+						final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(),
+								idPagina, idLinea, componente.getOrden(), null);
+						entityManager.flush();
+						componente.setCodigo(retorno.getCodigo());
+						if (componente.getAyuda() != null) {
+							componente.getAyuda().setCodigo(null);
+							if (componente.getAyuda().getTraducciones() != null) {
+								for (final Traduccion traduccion : componente.getAyuda().getTraducciones()) {
+									traduccion.setCodigo(null);
+								}
+							}
+							componente.setAyuda(componente.getAyuda());
+						}
+						if (componente.getTexto() != null) {
+							componente.getTexto().setCodigo(null);
+							if (componente.getTexto().getTraducciones() != null) {
+								for (final Traduccion traduccion : componente.getTexto().getTraducciones()) {
+									traduccion.setCodigo(null);
+								}
+							}
+							componente.setTexto(componente.getTexto());
+						}
+						// formularioInternoDao.updateComponente(componente);
+
+					}
+
+				}
+			}
+
+			// Recorremos las lineas anteriormente
+			// for (final JListaElementosFormulario lista :
+			// paginaFormulario.getListaElementos()) {
+			// final ObjetoFormulario objetoFormularioListaElemento = formularioInternoDao
+			// .addComponente(TypeObjetoFormulario.LISTA_ELEMENTOS, idPagina, null, null,
+			// null);
+			// lista.setCodigo(objetoFormularioListaElemento.getCodigo());
+			// lista.setPaginaFormulario(jpag);
+			// jpag.getListasElementosFormulario().add(lista);
+
+			// final DisenyoFormulario form = jformulario.toModel();
+			// form.setPagina(jpag.toModel(), i);
+
+			// Habria que actualizar el formulario para que se actualice la linea
+			// formularioInternoDao.updateFormulario(form);
+
+			// lista.getElementoFormulario().setListaElementosFormulario(lista);
+			// formularioInternoDao.updateComponente(lista.getElementoFormulario().toModel(JElementoFormulario.class));
+
+			// Reactualizamos el formulario por si acaso
+			// jformulario = entityManager.find(JFormulario.class, jformulario.getCodigo());
+			// }
+
+		}
 	}
 
 }

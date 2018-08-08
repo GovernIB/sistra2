@@ -1,6 +1,4 @@
-package es.caib.sistrages.frontend.model.types;
-
-import es.caib.sistrages.frontend.util.UtilJSF;
+package es.caib.sistrages.core.api.model.types;
 
 /**
  * Tipo para indicar la acción a realizar.
@@ -24,13 +22,6 @@ public enum TypeImportarEstado {
 	 */
 	private TypeImportarEstado(final String iValor) {
 		this.valor = iValor;
-	}
-
-	/**
-	 * Literal.
-	 */
-	public String getLiteral() {
-		return UtilJSF.getLiteral("typeImportar.estado." + this.valor);
 	}
 
 	@Override

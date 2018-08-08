@@ -7,6 +7,8 @@ import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 
 /**
  * La interface TramiteDao.
@@ -50,8 +52,9 @@ public interface TramiteDao {
 	 *            idArea
 	 * @param pTramite
 	 *            Tramite
+	 * @return
 	 */
-	void add(Long idArea, final Tramite pTramite);
+	Long add(Long idArea, final Tramite pTramite);
 
 	/**
 	 * Elimina tramite.
@@ -250,5 +253,24 @@ public interface TramiteDao {
 	 * @return
 	 */
 	TramiteVersion getTramiteVersionByNumVersion(String idTramite, int numeroVersion);
+
+	/**
+	 * Importa un trámite.
+	 *
+	 * @param filaTramite
+	 * @param idArea
+	 * @return
+	 */
+	Long importar(final FilaImportarTramite filaTramite, final Long idArea);
+
+	/**
+	 * Importa una versión de trámite.
+	 *
+	 * @param filaTramiteVersion
+	 * @param idTramite
+	 * @param idDominios
+	 * @return
+	 */
+	Long importar(FilaImportarTramiteVersion filaTramiteVersion, Long idTramite, List<Long> idDominios);
 
 }

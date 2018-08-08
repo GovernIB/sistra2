@@ -21,6 +21,8 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioImportar.modoAcceso}"/>
+		<f:viewParam name="AMBITO" value="#{dialogDominioImportar.ambito}"/>
+		<f:viewParam name="ID" value="#{dialogDominioImportar.id}"/>
 		<f:viewAction action="#{dialogDominioImportar.init}" />
 	</f:metadata>
 
@@ -30,14 +32,12 @@
 
 			<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogDominioImportar.mostrarPanelInfo}">
 				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogDominioImportar.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
-					update="formTramite growlDialogImportar panelUpload panelInfo botonImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
+					update="formTramite growlDialogImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
 			</p:outputPanel>
 
-			<p:outputPanel id="panelInfo"  rendered="#{dialogDominioImportar.mostrarPanelInfo}">
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "5" cellpadding = "5" cellspacing = "0"  width="100%" rendered="#{dialogDominioImportar.mostrarPanelInfo}">
 
-				<h:dataTable columnClasses=",,,w50," id="dataTablaDominios" headerClass="grid-left" width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status">
-
-					<p:outputLabel value="#{msg['dialogDominioImportar.identificador']}" style="font-weight: bold" />
+				<p:outputLabel value="#{msg['dialogDominioImportar.identificador']}" style="font-weight: bold" />
 					<p:outputLabel value="#{msg['dialogDominioImportar.ambito']}" style="font-weight: bold" />
 					<p:outputLabel value="#{msg['dialogDominioImportar.estado']}" style="font-weight: bold" />
 					<p:outputLabel value="#{msg['dialogDominioImportar.dominio.accion']}" style="font-weight: bold" />
@@ -45,23 +45,22 @@
 
 					<p:outputLabel value="#{dialogDominioImportar.data.identificador}"  />
 					<p:outputLabel value="#{dialogDominioImportar.data.ambito}"  />
-					<p:outputLabel value="#{dialogDominioImportar.filaDominio.estado.literal}"  />
+					<p:outputLabel value="#{msg['typeImportar.estado.' += dialogDominioImportar.filaDominio.estado]}"  />
 					<h:column>
 							 <f:facet name = "header"><p:outputLabel value="#{msg['dialogDominioImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
-							 <p:outputLabel  value="#{fila.mensaje}"  rendered="#{fila.visibleBoton == false}"/>
-	      					 <p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogDominioImportar.checkDominio(fila.dominioActual.codigo)}" style="margin-left:5px" >
+							 <p:outputLabel  value="#{msg[dialogDominioImportar.filaDominio.mensaje]}"  rendered="#{dialogDominioImportar.filaDominio.visibleBoton == false}"/>
+	      					 <p:commandButton value="..." rendered="#{dialogDominioImportar.filaDominio.visibleBoton}"  actionListener="#{dialogDominioImportar.checkDominio()}" style="margin-left:5px" >
 	      							<p:ajax event="dialogReturn" listener="#{dialogDominioImportar.returnDialogoDominio}" />
 							</p:commandButton>
 					</h:column>
 					<i id="iconoDominio${fila.dominio.codigo}" class="#{dialogDominioImportar.filaDominio.resultado.icon}" style="#{dialogDominioImportar.filaDominio.resultado.css}" />
 
-				</h:dataTable>
+
+			</h:panelGrid>
 
 
-				<br />
-				<br />
-
-			</p:outputPanel>
+			<br />
+			<br />
 
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>

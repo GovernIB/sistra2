@@ -146,4 +146,22 @@ public class JLineaFormulario implements IModelApi {
 		return res;
 	}
 
+	public static JLineaFormulario clonar(final JLineaFormulario linea, final JPaginaFormulario jpagina) {
+		JLineaFormulario jlineaFormulario = null;
+		if (linea != null) {
+			jlineaFormulario = new JLineaFormulario();
+			jlineaFormulario.setOrden(linea.getOrden());
+			jlineaFormulario.setPaginaFormulario(jpagina);
+			if (linea.getElementoFormulario() != null) {
+				final Set<JElementoFormulario> elementoFormulario = new HashSet<>(0);
+				for (final JElementoFormulario elemento : linea.getElementoFormulario()) {
+					elementoFormulario.add(JElementoFormulario.clonar(elemento, jlineaFormulario, jpagina));
+				}
+				jlineaFormulario.setElementoFormulario(elementoFormulario);
+			}
+
+		}
+		return jlineaFormulario;
+	}
+
 }

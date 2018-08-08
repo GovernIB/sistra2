@@ -91,4 +91,15 @@ public class JSeccionFormulario implements IModelApi {
 		return jModel;
 	}
 
+	public static JSeccionFormulario clonar(final JSeccionFormulario seccionFormulario,
+			final JElementoFormulario jelemento) {
+		JSeccionFormulario jseccion = null;
+		if (seccionFormulario != null) {
+			jseccion = new JSeccionFormulario();
+			jseccion.setElementoFormulario(jelemento);
+			jseccion.setLetra(seccionFormulario.getLetra());
+		}
+		return jseccion;
+	}
+
 }

@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -141,6 +142,34 @@ public class JFormulario implements IModelApi {
 			formulario.setTextoCabecera(textoCabecera.toModel());
 		}
 
+		return formulario;
+	}
+
+	public DisenyoFormulario toModelCompleto() {
+		final DisenyoFormulario formulario = new DisenyoFormulario();
+		formulario.setCodigo(codigo);
+		formulario.setPermitirAccionesPersonalizadas(permitirAccionesPersonalizadas);
+		if (scriptPlantilla != null) {
+			formulario.setScriptPlantilla(scriptPlantilla.toModel());
+		}
+		formulario.setMostrarCabecera(mostrarCabecera);
+		if (textoCabecera != null) {
+			formulario.setTextoCabecera(textoCabecera.toModel());
+		}
+		if (this.getPaginas() != null) {
+			final List<PaginaFormulario> pags = new ArrayList<>();
+			for (final JPaginaFormulario pagina : this.getPaginas()) {
+				pags.add(pagina.toModelCompleto());
+			}
+			formulario.setPaginas(pags);
+		}
+		if (this.getPlantillas() != null) {
+			final List<PlantillaFormulario> plants = new ArrayList<>();
+			for (final JPlantillaFormulario plantilla : this.getPlantillas()) {
+				plants.add(plantilla.toModelCompleto());
+			}
+			formulario.setPlantillas(plants);
+		}
 		return formulario;
 	}
 
@@ -292,9 +321,43 @@ public class JFormulario implements IModelApi {
 	 * @param formulario
 	 * @return
 	 */
-	public static JFormulario clonar(final JFormulario formulario) {
-		// TODO Auto-generated method stub
-		return null;
+	public static JFormulario clonar(final JFormulario formulario,
+			final Map<String, FormateadorFormulario> formateadores) {
+		JFormulario jformulario = null;
+
+		if (formulario != null) {
+			jformulario = new JFormulario();
+
+			jformulario.setScriptPlantilla(JScript.clonar(formulario.getScriptPlantilla()));
+			jformulario.setMostrarCabecera(formulario.isMostrarCabecera());
+			jformulario.setTextoCabecera(JLiteral.clonar(formulario.getTextoCabecera()));
+			jformulario.setPermitirAccionesPersonalizadas(formulario.isPermitirAccionesPersonalizadas());
+
+			if (formulario.getPaginas() != null) {
+				final Set<JPaginaFormulario> paginas = new HashSet<>(0);
+				for (final JPaginaFormulario jpagina : formulario.getPaginas()) {
+					paginas.add(JPaginaFormulario.clonar(jpagina, jformulario));
+				}
+				jformulario.setPaginas(paginas);
+			}
+
+			if (formulario.getPlantillas() != null) {
+				final Set<JPlantillaFormulario> plantillas = new HashSet<>(0);
+				for (final JPlantillaFormulario jplantilla : formulario.getPlantillas()) {
+					plantillas.add(JPlantillaFormulario.clonar(jplantilla, jformulario, formateadores));
+				}
+				jformulario.setPlantillas(plantillas);
+			}
+
+			if (formulario.getAccionesPersonalizadas() != null) {
+				final Set<JAccionPersonalizada> acciones = new HashSet<>(0);
+				for (final JAccionPersonalizada jaccion : formulario.getAccionesPersonalizadas()) {
+					acciones.add(JAccionPersonalizada.clonar(jaccion, jformulario));
+				}
+				jformulario.setAccionesPersonalizadas(acciones);
+			}
+		}
+		return jformulario;
 	}
 
 }

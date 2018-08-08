@@ -29,15 +29,10 @@
 			 	<p>
 					<p:outputLabel value="#{dialogTramiteImportarTR.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
 				</p>
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18, padding-right-18 padding-left-18, padding-right-18" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 , padding-left-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerDescripcionNuevo']}" />
-					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerDescripcionActual']}" />
-					<p:outputLabel value="" />
-
-					<p:inputTextarea value="#{dialogTramiteImportarTR.data.tramite.descripcion}"   size="40" rows="5"  readonly="true" />
-					<p:inputTextarea value="#{dialogTramiteImportarTR.data.tramiteActual.descripcion}"   size="40" rows="5"  readonly="true" />
-					<p:inputTextarea value="#{dialogTramiteImportarTR.data.tramiteResultado}" required="true" rows="5"  size="40" style="background:white" requiredMessage="#{msg['error.obligatorio']}"  />
+					<p:outputLabel value="#{msg['dialogTramiteImportarTR.headerDescripcion']}:" />
+					<p:inputTextarea value="#{dialogTramiteImportarTR.data.tramiteResultado}" required="true" rows="5" cols="70" style="background:white" requiredMessage="#{msg['error.obligatorio']}"  />
 
 				</h:panelGrid>
 			</p:outputPanel>

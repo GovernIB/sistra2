@@ -3,17 +3,23 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
@@ -31,6 +37,9 @@ public class DominioDaoImpl implements DominioDao {
 	 */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private FuenteDatoDao fuenteDatoDao;
 
 	/**
 	 * Crea una nueva instancia de DominioDaoImpl.
@@ -371,6 +380,82 @@ public class DominioDaoImpl implements DominioDao {
 		}
 
 		return query.getResultList();
+	}
+
+	/***
+	 * Funcionamiento del método: <br />
+	 * - Si la acción tomada es mantener, no realizamos nada. - Si la acción tomada
+	 * es reemplazar: <br />
+	 * - Si existe, aprovechamos el mismo dominio y actualizamos los parámetros.
+	 * <br />
+	 * - Si no existe, lo creamos y actualizamos los params.<br />
+	 *
+	 * @throws Exception
+	 */
+	@Override
+	public Long importar(final FilaImportarDominio filaDominio) throws Exception {
+		// Si es reemplazar, hacemos la acción.
+		if (filaDominio.getAccion() == TypeImportarAccion.REEMPLAZAR) {
+			JDominio dominioAlmacenar;
+			if (filaDominio.getDominioActual() == null) { // No existe Dominio
+
+				dominioAlmacenar = JDominio.fromModelStatic(filaDominio.getDominio());
+				dominioAlmacenar.setCodigo(null);
+
+				if (filaDominio.getDominio().getAmbito() == TypeAmbito.AREA) {
+
+					final JArea jArea = entityManager.find(JArea.class, filaDominio.getIdArea());
+					final Set<JArea> areas = new HashSet<>(0);
+					areas.add(jArea);
+					dominioAlmacenar.setAreas(areas);
+				}
+
+				if (filaDominio.getDominio().getAmbito() == TypeAmbito.ENTIDAD) {
+					final JEntidad jEntidad = entityManager.find(JEntidad.class, filaDominio.getIdEntidad());
+					final Set<JEntidad> entidades = new HashSet<>(0);
+					entidades.add(jEntidad);
+					dominioAlmacenar.setEntidades(entidades);
+				}
+
+			} else { // Existe el dominio.
+
+				dominioAlmacenar = entityManager.find(JDominio.class, filaDominio.getDominioActual().getCodigo());
+
+			}
+
+			// Tratamos la fuente de datos
+			if (filaDominio.getDominio().getTipo() == TypeDominio.FUENTE_DATOS) {
+				final Long idFuenteDatos = fuenteDatoDao.importarFD(filaDominio);
+				final JFuenteDatos jfuenteDatos = entityManager.find(JFuenteDatos.class, idFuenteDatos);
+				dominioAlmacenar.setFuenteDatos(jfuenteDatos);
+			} else {
+				dominioAlmacenar.setFuenteDatos(null);
+			}
+
+			// Actualizamos los tipos
+			switch (filaDominio.getDominio().getTipo()) {
+			case CONSULTA_BD:
+				dominioAlmacenar.setDatasourceJndi(filaDominio.getResultadoJndi());
+				dominioAlmacenar.setSql(JDominio.decodeSql(filaDominio.getResultadoSQL()));
+				break;
+			case CONSULTA_REMOTA:
+				dominioAlmacenar.setServicioRemotoUrl(filaDominio.getResultadoURL());
+				break;
+			case FUENTE_DATOS:
+				dominioAlmacenar.setSql(JDominio.decodeSql(filaDominio.getResultadoSQL()));
+				break;
+			case LISTA_FIJA:
+				dominioAlmacenar.setListaFijaValores(filaDominio.getResultadoLista());
+				break;
+			}
+			// Actualizamos los params
+			dominioAlmacenar.setParametros(UtilJSON.toJSON(filaDominio.getDominio().getParametros()));
+
+			entityManager.merge(dominioAlmacenar);
+			return dominioAlmacenar.getCodigo();
+		} else {
+			return filaDominio.getDominioActual().getCodigo();
+		}
 	}
 
 }

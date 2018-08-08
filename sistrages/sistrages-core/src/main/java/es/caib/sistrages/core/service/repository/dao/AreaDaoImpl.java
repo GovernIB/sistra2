@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 
@@ -234,7 +235,7 @@ public class AreaDaoImpl implements AreaDao {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.sistrages.core.service.repository.dao.AreaDao#
 	 * checkIdentificadorRepetido(java.lang.String, java.lang.Long)
 	 */
@@ -263,5 +264,13 @@ public class AreaDaoImpl implements AreaDao {
 			repetido = true;
 		}
 		return repetido;
+	}
+
+	@Override
+	public Long importar(final FilaImportarArea filaArea) {
+		final JArea jarea = entityManager.find(JArea.class, filaArea.getAreaActual().getCodigo());
+		jarea.setDescripcion(filaArea.getAreaResultado());
+		entityManager.merge(jarea);
+		return jarea.getCodigo();
 	}
 }

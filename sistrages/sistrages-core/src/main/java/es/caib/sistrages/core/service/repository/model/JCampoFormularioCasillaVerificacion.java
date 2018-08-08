@@ -95,4 +95,17 @@ public class JCampoFormularioCasillaVerificacion implements IModelApi {
 		return jModel;
 	}
 
+	public static JCampoFormularioCasillaVerificacion clonar(
+			final JCampoFormularioCasillaVerificacion campoFormularioCasillaVerificacion,
+			final JCampoFormulario jcampo) {
+		JCampoFormularioCasillaVerificacion jcampoVerificacion = null;
+		if (campoFormularioCasillaVerificacion != null) {
+			jcampoVerificacion = new JCampoFormularioCasillaVerificacion();
+			jcampoVerificacion.setCampoFormulario(jcampo);
+			jcampoVerificacion.setValorChecked(campoFormularioCasillaVerificacion.getValorChecked());
+			jcampoVerificacion.setValorNoChecked(campoFormularioCasillaVerificacion.getValorNoChecked());
+		}
+		return jcampoVerificacion;
+	}
+
 }

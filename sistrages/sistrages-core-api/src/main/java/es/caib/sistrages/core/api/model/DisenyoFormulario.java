@@ -37,12 +37,12 @@ public final class DisenyoFormulario extends ModelApi {
 	/**
 	 * paginas.
 	 */
-	private final List<PaginaFormulario> paginas = new ArrayList<>();
+	private List<PaginaFormulario> paginas = new ArrayList<>();
 
 	/**
 	 * plantillas.
 	 */
-	private final List<PlantillaFormulario> plantillas = new ArrayList<>();
+	private List<PlantillaFormulario> plantillas = new ArrayList<>();
 
 	/**
 	 * Crea una nueva instancia de DisenyoFormulario.
@@ -162,6 +162,33 @@ public final class DisenyoFormulario extends ModelApi {
 	 */
 	public List<PlantillaFormulario> getPlantillas() {
 		return plantillas;
+	}
+
+	/**
+	 * @param paginas
+	 *            the paginas to set
+	 */
+	public void setPaginas(final List<PaginaFormulario> paginas) {
+		this.paginas = paginas;
+	}
+
+	/**
+	 * @param plantillas
+	 *            the plantillas to set
+	 */
+	public void setPlantillas(final List<PlantillaFormulario> plantillas) {
+		this.plantillas = plantillas;
+	}
+
+	/**
+	 * Reemplaza una pagina.
+	 *
+	 * @param pagina
+	 * @param posicion
+	 */
+	public void setPagina(final PaginaFormulario pagina, final int posicion) {
+		this.paginas.remove(posicion);
+		this.paginas.add(posicion, pagina);
 	}
 
 }

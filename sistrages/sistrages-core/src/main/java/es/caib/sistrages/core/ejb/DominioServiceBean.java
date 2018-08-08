@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 
@@ -263,6 +264,12 @@ public class DominioServiceBean implements DominioService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Dominio> listDominio(final Long idTramite, final String filtro) {
 		return dominioService.listDominio(idTramite, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void importarDominio(final FilaImportarDominio filaDominio) throws Exception {
+		dominioService.importarDominio(filaDominio);
 	}
 
 }

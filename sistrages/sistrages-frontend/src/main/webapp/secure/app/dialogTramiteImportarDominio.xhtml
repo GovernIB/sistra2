@@ -30,14 +30,14 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
 				<p>
-					<p:outputLabel  value="#{dialogTramiteImportarDominio.data.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
+					<p:outputLabel  value="#{msg[dialogTramiteImportarDominio.data.mensaje]}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
 				</p>
 
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel value="Dominio actual:" />
+					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual']}" />
 					<p:column>
-						<p:outputLabel value="No existe" rendered="#{dialogTramiteImportarDominio.data.dominioActual == null}" />
+						<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual.noexiste']}" rendered="#{dialogTramiteImportarDominio.data.dominioActual == null}" />
 						<p:commandButton value="#{msg['botones.consultar']}" actionListener="#{dialogTramiteImportarDominio.consultarDominio()}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportarDominio.data.dominioActual != null}" />
 					</p:column>
 
@@ -52,7 +52,7 @@
 					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoJndi}"   size="40" rows="5" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerSQL']}:" rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}" />
-					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoSQL}"   size="40" rows="5" converter="#{base64Converter}"    rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}" />
+					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoSQL}"   size="40" rows="5" converter="#{base64Converter}" rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}" />
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerURL']}:"  rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
 					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoURL}"   size="40" rows="5"  rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
@@ -60,7 +60,7 @@
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerParametros']}:"  rendered="#{dialogTramiteImportarDominio.mostrarLista and dialogTramiteImportarDominio.mostrarReemplazar}" />
 					<p:dataTable id="datalistValores2"
 								 var="td" emptyMessage="#{msg['error.emptyRows']}"
-								 value="#{dialogTramiteImportarDominio.data.dominioActual.listaFija}"
+								 value="#{dialogTramiteImportarDominio.parametros}"
 								 rendered="#{dialogTramiteImportarDominio.mostrarLista and dialogTramiteImportarDominio.mostrarReemplazar}"
 								 scrollable="true"
 								 scrollHeight="140"
@@ -86,7 +86,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteImportarDominio.guardar()}" process="@this" styleClass="boton-azul" />
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteImportarDominio.guardar()}" process="@form" styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteImportarDominio.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>

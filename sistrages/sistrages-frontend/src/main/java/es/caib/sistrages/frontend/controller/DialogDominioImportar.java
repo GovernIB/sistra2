@@ -26,14 +26,17 @@ import org.slf4j.LoggerFactory;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
+import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportarDominio;
 import es.caib.sistrages.frontend.model.comun.Constantes;
-import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -77,13 +80,15 @@ public class DialogDominioImportar extends DialogControllerBase {
 	/** Ambito. **/
 	private String ambito;
 
+	/** Id. **/
+	private String id;
+
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
 		setMostrarPanelInfo(false);
 		mostrarBotonImportar = false;
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "En fase BETA!");
 	}
 
 	/**
@@ -159,28 +164,43 @@ public class DialogDominioImportar extends DialogControllerBase {
 		}
 
 		final Dominio dominioActual = dominioService.loadDominio(data.getIdentificador());
-		final FuenteDatos fd = null;
-		final byte[] fdContent = null;
 		FuenteDatos fdActual = null;
 
-		if (data.getAmbito() != TypeAmbito.fromString(this.ambito)) {
-			filaDominio = new FilaImportarDominio();
-			filaDominio.setResultado(TypeImportarResultado.ERROR);
-			filaDominio.setDominio(data);
-			filaDominio.setDominioActual(dominioActual);
-			filaDominio.setMensaje("importar.error.distintosAmbitos");
-			this.setMostrarPanelInfo(true);
-			this.setMostrarBotonImportar(false);
-
-			// Si hay un error paramos de seguir mirando
-			return;
+		// En importar dominio, si no existe el dominio, pasa a tener el del propio
+		// ambito
+		if (dominioActual == null) {
+			data.setAmbito(TypeAmbito.fromString(ambito));
+		} else {
+			// Si el ambito no es igual al de ahora, no tiene que permitirte.
+			if (TypeAmbito.fromString(ambito) != dominioActual.getAmbito()) {
+				filaDominio = new FilaImportarDominio();
+				filaDominio.setAccion(TypeImportarAccion.ERROR);
+				filaDominio.setEstado(TypeImportarEstado.EXISTE);
+				filaDominio.setResultado(TypeImportarResultado.ERROR);
+				filaDominio.setVisibleBoton(false);
+				filaDominio.setMismoTipo(false);
+				filaDominio.setMensaje("importar.error.ambitoErroneo");
+				setMostrarPanelInfo(true);
+				setMostrarBotonImportar(false);
+				return;
+			}
 		}
 
+		// Cargamos FD si tiene
 		if (dominioActual != null && dominioActual.getIdFuenteDatos() != null) {
 			fdActual = dominioService.loadFuenteDato(dominioActual.getIdFuenteDatos());
 		}
 
-		filaDominio = new FilaImportarDominio(data, dominioActual, fd, fdContent, fdActual);
+		filaDominio = new FilaImportarDominio(data, dominioActual, fuentesDatos, fuentesDatosContent, fdActual,
+				checkPermisos());
+
+		// Generamos el id dependiendo del ambito (el global no tiene id).
+		if (data.getAmbito().equals(TypeAmbito.ENTIDAD)) {
+			filaDominio.setIdEntidad(UtilJSF.getIdEntidad());
+		}
+		if (data.getAmbito().equals(TypeAmbito.AREA)) {
+			filaDominio.setIdArea(Long.valueOf(id));
+		}
 
 		if (filaDominio.getResultado() == TypeImportarResultado.ERROR) {
 			this.setMostrarPanelInfo(true);
@@ -194,6 +214,33 @@ public class DialogDominioImportar extends DialogControllerBase {
 		setMostrarPanelInfo(true);
 		setMostrarBotonImportar(true);
 
+	}
+
+	/**
+	 * Metodo que comprueba si tiene permisos el usuario sobre los dominios.
+	 *
+	 * @return
+	 */
+	private boolean checkPermisos() {
+		boolean tienePermisosEdicion;
+
+		switch (data.getAmbito()) {
+		case AREA:
+			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR);
+			break;
+		case ENTIDAD:
+			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case GLOBAL:
+			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			break;
+		default:
+			tienePermisosEdicion = false;
+			break;
+		}
+
+		return tienePermisosEdicion;
 	}
 
 	/**
@@ -267,7 +314,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
 		if (!prop.getProperty("version").equals(UtilJSF.getVersion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteVersionImportar.error.version");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.version");
 			return false;
 		}
 
@@ -298,15 +345,26 @@ public class DialogDominioImportar extends DialogControllerBase {
 
 	/**
 	 * Importar.
+	 *
+	 * @throws Exception
 	 */
-	public void importar() {
+	public void importar() throws Exception {
 
 		// Comprobamos que el dominio está checkeado
 		if (filaDominio.getResultado() == TypeImportarResultado.WARNING
 				|| filaDominio.getResultado() == TypeImportarResultado.ERROR) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteVersionImportar.warning.check");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.warning.check");
 			return;
 		}
+
+		this.dominioService.importarDominio(filaDominio);
+
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "info.importar.ok");
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setCanceled(false);
+		UtilJSF.closeDialog(result);
+		return;
 	}
 
 	/**
@@ -453,6 +511,21 @@ public class DialogDominioImportar extends DialogControllerBase {
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(final String id) {
+		this.id = id;
 	}
 
 }

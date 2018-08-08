@@ -47,14 +47,14 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		final Long idEntidad = UtilJSF.getIdEntidad();
 		switch (acceso) {
 		case ALTA:
-			if (fmtService.getFormateadorFormulario(idEntidad, data.getIdentificador()) != null) {
+			if (fmtService.getFormateadorFormulario(data.getIdentificador()) != null) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 			fmtService.addFormateadorFormulario(idEntidad, data);
 			break;
 		case EDICION:
-			final FormateadorFormulario f = fmtService.getFormateadorFormulario(idEntidad, data.getIdentificador());
+			final FormateadorFormulario f = fmtService.getFormateadorFormulario(data.getIdentificador());
 			if (f != null && f.getCodigo().longValue() != data.getCodigo().longValue()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;

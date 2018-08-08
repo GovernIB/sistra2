@@ -107,4 +107,16 @@ public class JPlantillaIdiomaFormulario implements IModelApi {
 		return jModel;
 	}
 
+	public static JPlantillaIdiomaFormulario clonar(final JPlantillaIdiomaFormulario jplan,
+			final JPlantillaFormulario jplantilla) {
+		JPlantillaIdiomaFormulario jplantillaIdioma = null;
+		if (jplan != null) {
+			jplantillaIdioma = new JPlantillaIdiomaFormulario();
+			jplantillaIdioma.setFichero(JFichero.clonar(jplan.getFichero()));
+			jplantillaIdioma.setIdioma(jplan.getIdioma());
+			jplantillaIdioma.setPlantillaFormulario(jplantilla);
+		}
+		return jplantillaIdioma;
+	}
+
 }

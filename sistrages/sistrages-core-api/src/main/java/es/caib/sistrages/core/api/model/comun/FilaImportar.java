@@ -1,10 +1,10 @@
-package es.caib.sistrages.frontend.model;
+package es.caib.sistrages.core.api.model.comun;
 
 import java.util.List;
 
-import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
-import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
-import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 
 /**
  * Fila importar básico.

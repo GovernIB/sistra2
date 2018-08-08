@@ -61,4 +61,26 @@ public class JListaElementosFormulario implements IModelApi {
 		this.paginaFormulario = paginaFormulario;
 	}
 
+	public static JListaElementosFormulario clonar(final JListaElementosFormulario listaElementosFormulario,
+			final JElementoFormulario jelemento, final JPaginaFormulario jpagina) {
+		JListaElementosFormulario jlista = null;
+		if (listaElementosFormulario != null) {
+			jlista = new JListaElementosFormulario();
+			jlista.setElementoFormulario(jelemento);
+			jlista.setPaginaFormulario(jpagina);
+		}
+		return jlista;
+	}
+
+	public static JListaElementosFormulario clonar(final JListaElementosFormulario listaElementos,
+			final JPaginaFormulario jpagina) {
+		JListaElementosFormulario jlista = null;
+		if (listaElementos != null) {
+			jlista = new JListaElementosFormulario();
+			jlista.setElementoFormulario(listaElementos.getElementoFormulario());
+			jlista.setPaginaFormulario(jpagina);
+		}
+		return jlista;
+	}
+
 }

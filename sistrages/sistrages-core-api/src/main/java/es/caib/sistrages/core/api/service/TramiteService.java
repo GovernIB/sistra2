@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.api.service;
 
 import java.util.List;
+import java.util.Map;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
@@ -16,6 +17,11 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 
 /**
  * La interface TramiteService.
@@ -524,5 +530,24 @@ public interface TramiteService {
 	 * @return true, si existe
 	 */
 	public boolean checkIdentificadorAreaRepetido(String identificador, Long codigo);
+
+	/**
+	 * Métod que se encarga de importar un trámite.
+	 *
+	 * @param filaArea
+	 * @param filaTramite
+	 * @param filaTramiteVersion
+	 * @param filasDominios
+	 * @param filasFormateador
+	 * @param formularios
+	 * @param ficheros
+	 * @param ficherosContent
+	 * @throws Exception
+	 */
+	public void importar(FilaImportarArea filaArea, FilaImportarTramite filaTramite,
+			FilaImportarTramiteVersion filaTramiteVersion, List<FilaImportarDominio> filasDominios,
+			List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
+			Map<Long, DisenyoFormulario> formularios, Map<Long, Fichero> ficheros, Map<Long, byte[]> ficherosContent)
+			throws Exception;
 
 }
