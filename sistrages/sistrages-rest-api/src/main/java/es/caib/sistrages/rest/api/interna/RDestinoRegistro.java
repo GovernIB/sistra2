@@ -1,20 +1,27 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Destino registro.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RDestinoRegistro", description = "Descripcion de RDestinoRegistro")
 public class RDestinoRegistro {
 
     /** Oficina registro. */
+	@ApiModelProperty(value = "Oficina registro")
     private String oficinaRegistro;
 
     /** Libro registro. */
+	@ApiModelProperty(value = "Libro registro")
     private String libroRegistro;
 
     /** Tipo asunto. */
+	@ApiModelProperty(value = "Tipo asunto")
     private String tipoAsunto;
 
     /**

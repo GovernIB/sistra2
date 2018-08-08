@@ -1,17 +1,23 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Propiedades campo texto normal.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPropiedadesTextoNormal", description = "Descripcion de RPropiedadesTextoNormal")
 public class RPropiedadesTextoNormal {
 
     /** Texto normal: tamaño máximo. */
+	@ApiModelProperty(value = "Texto normal: tamaño máximo")
     private int tamanyoMax;
 
     /** Texto normal: multilinea. */
+	@ApiModelProperty(value = "Texto normal: multilinea")
     private boolean multilinea;
 
     /**

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
@@ -37,6 +39,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
@@ -73,17 +76,33 @@ import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
 import es.caib.sistrages.rest.utils.AdapterUtils;
-
-public class RVersionTramiteAdapter {
-    private RVersionTramite rVersionTramite;
-    private final RestApiInternaService restApiService;
-
-    public RVersionTramiteAdapter(TramiteVersion tv, String idioma,
-            String idiomaDefecto, RestApiInternaService restApiService) {
-        this.restApiService = restApiService;
+/**
+ * Adapter para convertir a modelo rest.
+ *
+ * @author Indra
+ *
+ */
+@Component
+public class VersionTramiteAdapter {
+   
+    /** Servicio rest. */
+    @Autowired
+    private RestApiInternaService restApiService;
+    
+	/**
+	 * Convierte a entidad rest RVersionTramite
+	 * @param idtramite
+	 * @param tv
+	 * @param idioma
+	 * @param idiomaDefecto
+	 * @return RVersionTramite
+	 */
+    public RVersionTramite convertir(String idtramite, TramiteVersion tv,
+            String idioma, String idiomaDefecto) {
+    	 
         List<String> idiSoportados;
         String idiRes;
-
+        
         idiSoportados = Arrays.asList(tv.getIdiomasSoportados()
                 .split(AdapterUtils.SEPARADOR_IDIOMAS));
 
@@ -113,10 +132,12 @@ public class RVersionTramiteAdapter {
             }
         }
 
-        rVersionTramite = new RVersionTramite();
+        RVersionTramite rVersionTramite = new RVersionTramite();
         rVersionTramite.setTimestamp(System.currentTimeMillis() + "");
-        rVersionTramite.setIdentificador(tv.getIdTramite() + "");
+        rVersionTramite.setIdentificador(idtramite);
         rVersionTramite.setVersion(tv.getNumeroVersion());
+        rVersionTramite.setRelease(tv.getRelease());
+
         rVersionTramite.setPasos(pasos);
         rVersionTramite
                 .setDominios(generarListaDominios(tv.getListaDominios()));
@@ -130,21 +151,34 @@ public class RVersionTramiteAdapter {
                                                                               // hacia
                                                                               // arriba
         rVersionTramite.setPropiedades(generaPropiedades(tv)); // ver pantalla
+        
+		return rVersionTramite;
 
     }
 
+    /**
+     * Genera el id de entidad para un tramite
+     * @param idTramite
+     * @return id de entidad
+     */
     private String generaidEntidadfromTramite(Long idTramite) {
-        if (idTramite != null) {
+    	String res = null;
+    	if (idTramite != null) {
             final Tramite t = restApiService.loadTramite(idTramite);
             if (t != null && t.getIdEntidad() != null) {
-                return t.getIdEntidad() + "";
+            	res = t.getIdEntidad() + "";
             }
         }
-
-        return null;
+        return res;
     }
 
+    /**
+     * Genera Propiedades de un tramite version
+     * @param tv
+     * @return
+     */
     private RVersionTramitePropiedades generaPropiedades(TramiteVersion tv) {
+    	
         final RVersionTramitePropiedades res = new RVersionTramitePropiedades();
         res.setAutenticado(tv.isAutenticado());
         if (tv.getPersistenciaDias() != null) {
@@ -166,8 +200,12 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
-    private RVersionTramiteControlAcceso generaControlAcceso(
-            TramiteVersion tv) {
+    /**
+     * Genera el control de acceso para un tramite version
+     * @param tv
+     * @return RVersionTramiteControlAcceso
+     */
+    private RVersionTramiteControlAcceso generaControlAcceso(TramiteVersion tv) {
         final RVersionTramiteControlAcceso res = new RVersionTramiteControlAcceso();
         res.setActivo(tv.isActiva());
         res.setDebug(tv.isDebug());
@@ -182,6 +220,13 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    /**
+     * Genera un paso para un idioma
+     * @param paso
+     * @param idioma
+     * @return RPasoTramitacion
+     */
+    
     private RPasoTramitacion creaPaso(TramitePaso paso, String idioma) {
 
         if (paso instanceof TramitePasoRellenar) {
@@ -199,6 +244,12 @@ public class RVersionTramiteAdapter {
         return null;
     }
 
+    /**
+     * Crea un paso registrar
+     * @param paso
+     * @param idioma
+     * @return RPasoTramitacion
+     */
     private RPasoTramitacion crearPasoRegistrar(TramitePasoRegistrar paso,
             String idioma) {
         final RPasoTramitacionRegistrar resPaso = new RPasoTramitacionRegistrar();
@@ -226,6 +277,12 @@ public class RVersionTramiteAdapter {
         return resPaso;
     }
 
+    /**
+     * Crea un paso anexar para un idioma
+     * @param paso
+     * @param idioma
+     * @return RPasoTramitacion
+     */
     private RPasoTramitacion crearPasoAnexar(TramitePasoAnexar paso,
             String idioma) {
         final RPasoTramitacionAnexar resPaso = new RPasoTramitacionAnexar();
@@ -239,6 +296,12 @@ public class RVersionTramiteAdapter {
         return resPaso;
     }
 
+    /**
+     * Crear Paso debe saber para un idioma
+     * @param paso
+     * @param idioma
+     * @return RPasoTramitacion
+     */
     private RPasoTramitacion crearPasoDebeSaber(TramitePasoDebeSaber paso,
             String idioma) {
         final RPasoTramitacionDebeSaber resPaso = new RPasoTramitacionDebeSaber();
@@ -251,6 +314,13 @@ public class RVersionTramiteAdapter {
         return resPaso;
     }
 
+    
+    /**
+     * Crea un paso tasa para un idioma
+     * @param paso
+     * @param idioma
+     * @return RPasoTramitacion
+     */
     private RPasoTramitacion crearPasoTasa(TramitePasoTasa paso,
             String idioma) {
         final RPasoTramitacionPagar resPaso = new RPasoTramitacionPagar();
@@ -262,6 +332,12 @@ public class RVersionTramiteAdapter {
         return resPaso;
     }
 
+    /**
+     *  crea un paso rellenar para un idioma
+     * @param paso
+     * @param idioma
+     * @return RPasoTramitacion
+     */
     private RPasoTramitacion crearPasoRellenar(TramitePasoRellenar paso,
             String idioma) {
         final RPasoTramitacionRellenar resPaso = new RPasoTramitacionRellenar();
@@ -275,9 +351,16 @@ public class RVersionTramiteAdapter {
 
     }
 
+    
+    /**
+     * genera una lista de dominios
+     * @param listaDominios
+     * @return List<RDominio>
+     */
     private List<RDominio> generarListaDominios(List<Long> listaDominios) {
-        final List<RDominio> res = new ArrayList<RDominio>();
+        List<RDominio> res = null;
         if (listaDominios != null) {
+        	res = new ArrayList<RDominio>();
             for (final Long idDom : listaDominios) {
                 final Dominio dom = restApiService.loadDominio(idDom);
                 if (dom != null) {
@@ -294,15 +377,27 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    /**
+     * Genera un tipo
+     * @param tipo
+     * @return
+     */
     private String generaTipo(TypeDominio tipo) {
         return tipo.toString();
     }
 
+    /**
+     * Genera una lista de formularios para un idioma
+     * @param formulariosTramite
+     * @param idioma
+     * @return List<RFormularioTramite>
+     */
     private List<RFormularioTramite> generaFormularios(
             List<FormularioTramite> formulariosTramite, String idioma) {
-        final List<RFormularioTramite> res = new ArrayList<RFormularioTramite>();
+        List<RFormularioTramite> res = null;
 
         if (formulariosTramite != null) {
+        	res = new ArrayList<RFormularioTramite>();
             for (final FormularioTramite f : formulariosTramite) {
                 final RFormularioTramite formularioTramite = new RFormularioTramite();
                 formularioTramite.setDescripcion(AdapterUtils
@@ -333,15 +428,20 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    /**
+     * Genera el formulario interno
+     * @param idFormularioInterno
+     * @param idioma
+     * @return RFormularioInterno
+     */
     private RFormularioInterno generaFormularioInterno(Long idFormularioInterno,
             String idioma) {
+    	RFormularioInterno formInterno =null;
         if (idFormularioInterno != null) {
-            // DisenyoFormulario d =
-            // restApiService.getFormularioInterno(idFormularioInterno);
             final DisenyoFormulario d = restApiService
                     .getDisenyoFormularioById(idFormularioInterno);
             if (d != null) {
-                final RFormularioInterno formInterno = new RFormularioInterno();
+                formInterno = new RFormularioInterno();
                 formInterno.setMostrarTitulo(d.isMostrarCabecera());
                 // TODO: verificar que se obtienen las plantillas y páginas,
                 // parece que no llegan en el objeto
@@ -354,16 +454,24 @@ public class RVersionTramiteAdapter {
                         AdapterUtils.generaScript(d.getScriptPlantilla()));
                 formInterno.setTitulo(AdapterUtils
                         .generarLiteralIdioma(d.getTextoCabecera(), idioma));
-                return formInterno;
+                
             }
         }
-        return null;
+        return formInterno;
     }
 
+    
+    /**
+     * Genera la lista de plantillas
+     * @param plantillas
+     * @param idioma
+     * @return Lista de RPlantillaFormulario
+     */
     private List<RPlantillaFormulario> generarPlantillas(
             List<PlantillaFormulario> plantillas, String idioma) {
-        final List<RPlantillaFormulario> lpf = new ArrayList<RPlantillaFormulario>();
+        List<RPlantillaFormulario> lpf = null;
         if (plantillas != null) {
+        	lpf = new ArrayList<RPlantillaFormulario>();
             for (final PlantillaFormulario p : plantillas) {
                 final RPlantillaFormulario plantillaFormulario = new RPlantillaFormulario();
                 plantillaFormulario.setClaseFormateador(
@@ -378,6 +486,12 @@ public class RVersionTramiteAdapter {
         return lpf;
     }
 
+    /**
+     * genera fichero plantilla
+     * @param idPlantillaFormulario
+     * @param idioma
+     * @return String
+     */
     private String generaFicheroPlantilla(Long idPlantillaFormulario,
             String idioma) {
         final List<PlantillaIdiomaFormulario> lp = restApiService
@@ -393,6 +507,12 @@ public class RVersionTramiteAdapter {
         return null;
     }
 
+    
+    /**
+     * Recupera el string del formateador del formulario
+     * @param idFormateadorFormulario
+     * @return
+     */
     private String getStringFormateador(Long idFormateadorFormulario) {
         final FormateadorFormulario f = restApiService
                 .getFormateadorFormulario(idFormateadorFormulario);
@@ -402,10 +522,20 @@ public class RVersionTramiteAdapter {
         return null;
     }
 
+    
+    /**
+     * Genera las páginas
+     * @param paginas
+     * @param idForm
+     * @param idioma
+     * @return lista de RPaginaFormulario
+     */
     private List<RPaginaFormulario> generarPaginas(
             List<PaginaFormulario> paginas, Long idForm, String idioma) {
-        final List<RPaginaFormulario> lpf = new ArrayList<RPaginaFormulario>();
+        List<RPaginaFormulario> lpf = null;
+        
         if (paginas != null) {
+        	lpf = new ArrayList<RPaginaFormulario>();
             for (final PaginaFormulario p : paginas) {
                 final RPaginaFormulario res = new RPaginaFormulario();
                 res.setHtmlB64(restApiService.getPaginaFormularioHTMLAsistente(
@@ -420,10 +550,17 @@ public class RVersionTramiteAdapter {
         return lpf;
     }
 
+    /**
+     * Genera las lineas
+     * @param lineas
+     * @param idioma
+     * @return  lista de RLineaComponentes
+     */
     private List<RLineaComponentes> generarLineas(
             List<LineaComponentesFormulario> lineas, String idioma) {
-        final List<RLineaComponentes> llc = new ArrayList<RLineaComponentes>();
+        List<RLineaComponentes> llc = null;
         if (lineas != null) {
+        	llc = new ArrayList<RLineaComponentes>();
             for (final LineaComponentesFormulario l : lineas) {
                 final RLineaComponentes res = new RLineaComponentes();
                 res.setComponentes(
@@ -434,9 +571,16 @@ public class RVersionTramiteAdapter {
         return llc;
     }
 
+    /**
+     * genera la lista de componentes
+     * @param componentes
+     * @param idioma
+     * @return lista de Rcomponente
+     */
     private List<RComponente> generaComponentes(
             List<ComponenteFormulario> componentes, String idioma) {
-        if (componentes != null) {
+        
+    	if (componentes != null) {
             final List<RComponente> lc = new ArrayList<RComponente>();
             for (final ComponenteFormulario c : componentes) {
                 switch (c.getTipo()) {
@@ -478,9 +622,14 @@ public class RVersionTramiteAdapter {
         } else {
             return null;
         }
-
     }
 
+    /**
+     * Genera componentes aviso
+     * @param ca
+     * @param idioma
+     * @return RComponenteAviso
+     */
     private RComponenteAviso generaComponenteAviso(
             ComponenteFormularioEtiqueta ca, String idioma) {
         final RComponenteAviso resET = new RComponenteAviso();
@@ -499,6 +648,12 @@ public class RVersionTramiteAdapter {
         return resET;
     }
 
+    /**
+     * Genera Componente Seccion
+     * @param csc
+     * @param idioma
+     * @return RComponenteSeccion
+     */
     private RComponenteSeccion generaComponenteSeccion(
             ComponenteFormularioSeccion csc, String idioma) {
         final RComponenteSeccion resSC = new RComponenteSeccion();
@@ -516,6 +671,12 @@ public class RVersionTramiteAdapter {
         return resSC;
     }
 
+    /**
+     * Genera Componente Selector
+     * @param cs
+     * @param idioma
+     * @return RComponenteSelector
+     */
     private RComponenteSelector generaComponenteSelector(
             ComponenteFormularioCampoSelector cs, String idioma) {
         final RComponenteSelector resSL = new RComponenteSelector();
@@ -540,6 +701,12 @@ public class RVersionTramiteAdapter {
         return resSL;
     }
 
+    /**
+     * genera Componente CheckBox
+     * @param cch
+     * @param idioma
+     * @return RComponenteCheckbox
+     */
     private RComponenteCheckbox generaComponenteCheckBox(
             ComponenteFormularioCampoCheckbox cch, String idioma) {
         final RComponenteCheckbox resCH = new RComponenteCheckbox();
@@ -559,6 +726,12 @@ public class RVersionTramiteAdapter {
         return resCH;
     }
 
+    /**
+     * Genera Componente Textbox
+     * @param ct
+     * @param idioma
+     * @return RComponenteTextbox
+     */
     private RComponenteTextbox generaComponenteTextbox(
             ComponenteFormularioCampoTexto ct, String idioma) {
         final RComponenteTextbox resTB = new RComponenteTextbox();
@@ -583,10 +756,17 @@ public class RVersionTramiteAdapter {
         return resTB;
     }
 
+    /**
+     * Genera Lista Fija
+     * @param ori
+     * @param idioma
+     * @return lista de RValorListaFija
+     */
     private List<RValorListaFija> generaListaFija(List<ValorListaFija> ori,
             String idioma) {
+    	List<RValorListaFija> rlv = new ArrayList<RValorListaFija>();
         if (ori != null) {
-            final List<RValorListaFija> rlv = new ArrayList<RValorListaFija>();
+            rlv = new ArrayList<RValorListaFija>();
             for (final ValorListaFija v : ori) {
                 final RValorListaFija res = new RValorListaFija();
                 res.setCodigo(v.getValor());
@@ -594,12 +774,16 @@ public class RVersionTramiteAdapter {
                         .generarLiteralIdioma(v.getDescripcion(), idioma));
                 res.setPorDefecto(v.isPorDefecto());
                 rlv.add(res);
-            }
-            return rlv;
+            }            
         }
-        return null;
+        return rlv;
     }
 
+    /**
+     * Genera la lista de dominos
+     * @param cs
+     * @return RListaDominio
+     */
     private RListaDominio generaListaDominio(
             ComponenteFormularioCampoSelector cs) {
         final RListaDominio l = new RListaDominio();
@@ -611,10 +795,16 @@ public class RVersionTramiteAdapter {
         return l;
     }
 
+    /**
+     * generaParametrosDominio
+     * @param ori
+     * @return lista RParametroDominio
+     */
     private List<RParametroDominio> generaParametrosDominio(
             List<ParametroDominio> ori) {
+    	List<RParametroDominio> lpd = null;
         if (ori != null) {
-            final List<RParametroDominio> lpd = new ArrayList<RParametroDominio>();
+            lpd = new ArrayList<RParametroDominio>();
             for (final ParametroDominio p : ori) {
                 final RParametroDominio res = new RParametroDominio();
                 res.setIdentificador(p.getParametro());
@@ -622,12 +812,16 @@ public class RVersionTramiteAdapter {
                         p.getTipo() == null ? null : p.getTipo().toString());
                 res.setValor(p.getValor());
                 lpd.add(res);
-            }
-            return lpd;
+            }           
         }
-        return null;
+        return lpd;
     }
 
+    /**
+     * Genera id Dominio
+     * @param codDominio
+     * @return id del dominio
+     */
     private String generaDominio(Long codDominio) {
         if (codDominio != null) {
             final Dominio d = restApiService.loadDominio(codDominio);
@@ -637,7 +831,13 @@ public class RVersionTramiteAdapter {
         }
         return null;
     }
-
+    
+    
+ /**
+  * Genera Propiedades del Campo checkbox
+  * @param ori
+  * @return RPropiedadesCampo
+  */
     private RPropiedadesCampo generarPropiedadesCampo(
             ComponenteFormularioCampoCheckbox ori) {
         final RPropiedadesCampo res = new RPropiedadesCampo();
@@ -653,6 +853,12 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    
+    /**
+     * genera Propiedades Campo texto
+     * @param ori
+     * @return RPropiedadesCampo
+     */
     private RPropiedadesCampo generaPropiedadesCampo(
             ComponenteFormularioCampoTexto ori) {
         final RPropiedadesCampo res = new RPropiedadesCampo();
@@ -668,6 +874,11 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    /**
+     * genera Propiedades Campo selector
+     * @param ori
+     * @return RPropiedadesCampo
+     */
     private RPropiedadesCampo generarPropiedadesCampo(
             ComponenteFormularioCampoSelector ori) {
         final RPropiedadesCampo res = new RPropiedadesCampo();
@@ -683,6 +894,11 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    /**
+     * Genera propiedades Texto Numero
+     * @param ori
+     * @return RPropiedadesTextoNumero
+     */
     private RPropiedadesTextoNumero generaTextoNumero(
             ComponenteFormularioCampoTexto ct) {
         final RPropiedadesTextoNumero res = new RPropiedadesTextoNumero();
@@ -701,6 +917,11 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    /**
+     * Genera propiedades Texto Normal
+     * @param ct
+     * @return RPropiedadesTextoNormal
+     */
     private RPropiedadesTextoNormal generaTextoNormal(
             ComponenteFormularioCampoTexto ct) {
         if (ct != null) {
@@ -714,20 +935,30 @@ public class RVersionTramiteAdapter {
 
     }
 
+    /**
+     * Genera Texto Identificacion
+     * @param componenteOrigen
+     * @return RPropiedadesTextoIdentificacion
+     */
     private RPropiedadesTextoIdentificacion generaTextoIdentificacion(
             ComponenteFormularioCampoTexto componenteOrigen) {
+    	RPropiedadesTextoIdentificacion res =null;
         if (componenteOrigen != null) {
-            final RPropiedadesTextoIdentificacion res = new RPropiedadesTextoIdentificacion();
+            res = new RPropiedadesTextoIdentificacion();
             res.setCif(componenteOrigen.isIdentCif());
             res.setNie(componenteOrigen.isIdentNie());
             res.setNif(componenteOrigen.isIdentNif());
-            res.setNss(componenteOrigen.isIdentNss());
-            return res;
+            res.setNss(componenteOrigen.isIdentNss());           
         }
-        return null;
+        return res;
 
     }
 
+    /**
+     * Genera propiedades Expresión Regular
+     * @param exp
+     * @return RPropiedadesTextoExpRegular
+     */
     private RPropiedadesTextoExpRegular generaExpresionRegular(String exp) {
         if (StringUtils.isEmpty(exp)) {
             return null;
@@ -737,30 +968,48 @@ public class RVersionTramiteAdapter {
         return res;
     }
 
+    
+    /**
+     * Genera Formulario Externo
+     * @param ori
+     * @return RFormularioExterno
+     */
     private RFormularioExterno generaFormularioExterno(
             GestorExternoFormularios ori) {
+    	RFormularioExterno res = null;
         if (ori != null) {
-            final RFormularioExterno res = new RFormularioExterno();
+            res = new RFormularioExterno();
             res.setIdentificadorFormulario(ori.getIdentificador());
             res.setIdentificadorGestorFormularios(ori.getIdentificador());// TODO:
                                                                           // revisar
                                                                           // esta
                                                                           // setIdentificadorGestorFormularios,
                                                                           // pendiente
-                                                                          // validar
-            return res;
+                                                                          // validar           
         }
-        return null;
+        return res;
     }
-
+	/**
+	 * Genera Obligatoriedad
+	 * @param obligatoriedad
+	 * @return obligatoriedad
+	 */
     private String generaObligatoriedad(
             TypeFormularioObligatoriedad obligatoriedad) {
         return obligatoriedad == null ? null : obligatoriedad.toString();
     }
 
+    
+    /**
+     * Generar lista Pagos 
+     * @param tasas
+     * @param idioma
+     * @return lista RPagoTramite
+     */
     private List<RPagoTramite> generarPagos(List<Tasa> tasas, String idioma) {
-        final List<RPagoTramite> lres = new ArrayList<RPagoTramite>();
+        List<RPagoTramite> lres = null;
         if (tasas != null) {
+        	lres = new ArrayList<RPagoTramite>();
             for (final Tasa t : tasas) {
                 final RPagoTramite res = new RPagoTramite();
                 res.setDescripcion(AdapterUtils
@@ -778,10 +1027,17 @@ public class RVersionTramiteAdapter {
         return lres;
     }
 
+    /**
+     * Generar lista anexos
+     * @param documentos
+     * @param idioma
+     * @return lista RAnexoTramite
+     */
     private List<RAnexoTramite> generaAnexos(List<Documento> documentos,
             String idioma) {
-        final List<RAnexoTramite> lres = new ArrayList<RAnexoTramite>();
+        List<RAnexoTramite> lres = null;
         if (documentos != null) {
+        	lres = new ArrayList<RAnexoTramite>();
             for (final Documento d : documentos) {
                 final RAnexoTramite res = new RAnexoTramite();
                 res.setAyuda(generaAyudaFichero(d.getAyudaTexto(),
@@ -818,6 +1074,14 @@ public class RVersionTramiteAdapter {
         return lres;
     }
 
+    /**
+     * Genera Ayuda Fichero
+     * @param texto
+     * @param fichero
+     * @param url
+     * @param idioma
+     * @return RAnexoTramiteAyuda
+     */
     private RAnexoTramiteAyuda generaAyudaFichero(Literal texto,
             Fichero fichero, String url, String idioma) {
         final RAnexoTramiteAyuda res = new RAnexoTramiteAyuda();
@@ -826,14 +1090,6 @@ public class RVersionTramiteAdapter {
         res.setMensajeHtml(AdapterUtils.generarLiteralIdioma(texto, idioma));
         res.setUrl(url);
         return res;
-    }
-
-    public RVersionTramite getrVersionTramite() {
-        return rVersionTramite;
-    }
-
-    public void setrVersionTramite(RVersionTramite rVersionTramite) {
-        this.rVersionTramite = rVersionTramite;
     }
 
 }

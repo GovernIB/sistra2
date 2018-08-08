@@ -1,8 +1,13 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "RPasoTramitacionDebeSaber", description = "Descripcion de RPasoTramitacionDebeSaber")
 public class RPasoTramitacionDebeSaber extends RPasoTramitacion {
 
     /** Instrucciones inicio. */
+	@ApiModelProperty(value = "Instrucciones inicio")
     private String instruccionesInicio;
 
     /**

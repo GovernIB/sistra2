@@ -1,32 +1,43 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Anexo trámite.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RAnexoTramite", description = "Descripcion de RAnexoTramite")
 public class RAnexoTramite {
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Descripción. */
+	@ApiModelProperty(value = "Descripción")
     private String descripcion;
 
     /** Obligatoriedad: Si (S) / No (N) / Depende (D). */
+	@ApiModelProperty(value = "Obligatoriedad: Si (S) / No (N) / Depende (D)")
     private String obligatoriedad;
 
     /** Script dependencia. */
+	@ApiModelProperty(value = "Script dependencia")
     private RScript scriptDependencia;
 
     /** Ayuda anexo. */
+	@ApiModelProperty(value = "Ayuda anexo")
     private RAnexoTramiteAyuda ayuda;
 
     /** Tipo presentacion: Electrónica (E) / Presencial (P). */
+	@ApiModelProperty(value = "Tipo presentacion: Electrónica (E) / Presencial (P)")
     private String presentacion;
 
     /** Propiedades para presentación electrónica. */
+	@ApiModelProperty(value = "Propiedades para presentación electrónica")
     private RAnexoTramitePresentacionElectronica presentacionElectronica;
 
     /**

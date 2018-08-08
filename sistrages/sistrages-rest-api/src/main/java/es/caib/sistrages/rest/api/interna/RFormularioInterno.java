@@ -2,27 +2,36 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Diseño formulario interno.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RFormularioInterno", description = "Descripcion de RFormularioInterno")
 public class RFormularioInterno {
 
     /** Indica si muestra título formulario. */
+	@ApiModelProperty(value = "Indica si muestra título formulario")
     private boolean mostrarTitulo;
 
     /** Título formulario. */
+	@ApiModelProperty(value = "Título formulario")
     private String titulo;
 
     /** Plantillas. */
+	@ApiModelProperty(value = "Plantillas")
     private List<RPlantillaFormulario> plantillas;
 
     /** Script plantillas. */
+	@ApiModelProperty(value = "Script plantillas")
     private RScript scriptPlantillas;
 
     /** Páginas. */
+	@ApiModelProperty(value = "Páginas")
     private List<RPaginaFormulario> paginas;
 
     /**

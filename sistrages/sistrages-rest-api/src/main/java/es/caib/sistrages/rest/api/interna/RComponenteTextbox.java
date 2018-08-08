@@ -1,32 +1,42 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Componente textbox.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RComponenteTextbox", description = "Descripcion de RComponenteTextbox")
 public class RComponenteTextbox extends RComponente {
 
     /** Propiedades campo. */
+	@ApiModelProperty(value = "Propiedades campo")
     private RPropiedadesCampo propiedadesCampo;
 
     /**
      * Tipo texto: NORMAL, NUMERO, EMAIL, ID, CP, TELEFONO, FECHA, HORA,
      * EXPRESION, IMPORTE.
      */
+	@ApiModelProperty(value = "Tipo texto: NORMAL, NUMERO, EMAIL, ID, CP, TELEFONO, FECHA, HORA, EXPRESION, IMPORTE")
     private String tipoTexto;
 
     /** Propiedades texto normal. */
+	@ApiModelProperty(value = "Propiedades texto normal")
     private RPropiedadesTextoNormal textoNormal;
 
     /** Propiedades texto numero. */
+	@ApiModelProperty(value = "Propiedades texto numero")
     private RPropiedadesTextoNumero textoNumero;
 
     /** Propiedades texto identificacion. */
+	@ApiModelProperty(value = "Propiedades texto identificacion")
     private RPropiedadesTextoIdentificacion textoIdentificacion;
 
     /** Propiedades texto expresión regular. */
+	@ApiModelProperty(value = "Propiedades texto expresión regular")
     private RPropiedadesTextoExpRegular textoExpRegular;
 
     /**

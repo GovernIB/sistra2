@@ -1,5 +1,8 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * Mensaje aviso.
@@ -7,30 +10,37 @@ package es.caib.sistrages.rest.api.interna;
  * @author Indra
  *
  */
+@ApiModel(value = "RAviso", description = "Descripcion de RAviso")
 public class RAviso {
 
     /** Mensaje aviso. */
+	@ApiModelProperty(value = "Mensaje aviso")
     private RLiteral mensaje;
 
     /**
      * Tipo aviso: Todos (TOD), No autenticados (NAU), Autenticados (AUT), Con
      * pago (PAG), Con registro (REG), Con firma (FIR), Lista trámites (LIS)
      */
+	@ApiModelProperty(value = "Tipo aviso: Todos (TOD), No autenticados (NAU), Autenticados (AUT), Con pago (PAG), Con registro (REG), Con firma (FIR), Lista trámites (LIS)")
     private String tipo;
 
     /** Bloquear. */
+	@ApiModelProperty(value = "Bloquear")
     private boolean bloquear;
 
     /** Fecha inicio (formato YYYYMMDDHHMISS). */
+	@ApiModelProperty(value = "Fecha inicio (formato YYYYMMDDHHMISS)")
     private String fechaInicio;
 
     /** Fecha fin (formato YYYYMMDDHHMISS). */
+	@ApiModelProperty(value = "Fecha fin (formato YYYYMMDDHHMISS)")
     private String fechaFin;
 
     /**
      * Lista versiones trámite. Formato: Trámite-Versión separados por “;” (p.e.
      * : TRAM1-1;TRAM2-1).
      */
+	@ApiModelProperty(value = "Lista versiones trámite. Formato: Trámite-Versión separados por ; (p.e. : TRAM1-1;TRAM2-1))")
     private String listaVersiones;
 
     /**

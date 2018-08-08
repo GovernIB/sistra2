@@ -1,26 +1,35 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Control acceso trámite.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RVersionTramiteControlAcceso", description = "RVersionTramiteControlAcceso")
 public class RVersionTramiteControlAcceso {
 
     /** Indica si está activo. */
+	@ApiModelProperty(value = "Indica si está activo")
     private boolean activo;
 
     /** Indica si se habilita debug. */
+	@ApiModelProperty(value = "Indica si se habilita debug")
     private boolean debug;
 
     /** Indica si se limita tramitación. */
+	@ApiModelProperty(value = "Indica si se limita tramitación")
     private boolean limitarTramitacion;
 
     /** Límite tramitación: número de inicio de tramites. */
+	@ApiModelProperty(value = "Límite tramitación: número de inicio de tramites")
     private int limiteTramitacionInicios;
 
     /** Límite tramitación: intervalo minutos. */
+	@ApiModelProperty(value = "Límite tramitación: intervalo minutos")
     private int limiteTramitacionIntervalo;
 
     /**

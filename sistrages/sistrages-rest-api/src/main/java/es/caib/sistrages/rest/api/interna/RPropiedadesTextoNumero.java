@@ -1,35 +1,46 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Propiedades campo texto número.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPropiedadesTextoNumero", description = "Descripcion de RPropiedadesTextoNumero")
 public class RPropiedadesTextoNumero {
 
     /** Texto número: precision parte entera. */
+	@ApiModelProperty(value = "Texto número: precision parte entera")
     private int precisionEntera;
 
     /** Texto número: precision parte decimal. */
+	@ApiModelProperty(value = "Texto número: precision parte decimal")
     private int precisionDecimal;
 
     /**
      * Texto número: formato punto/coma ("PC"), coma/punto ("CP") y sin formato
      * ("SF").
      */
+	@ApiModelProperty(value = "Texto número: formato punto/coma (PC), coma/punto (CP) y sin formato (SF)")
     private String formatoNumero;
 
     /** Texto número: rango. */
+	@ApiModelProperty(value = "Texto número: rango")
     private boolean rango;
 
     /** Texto número: rango desde. */
+	@ApiModelProperty(value = "Texto número: rango desde")
     private long rangoDesde;
 
     /** Texto número: rango hasta. */
+	@ApiModelProperty(value = "Texto número: rango hasta")
     private long rangoHasta;
 
     /** Texto número: permite negativos. */
+	@ApiModelProperty(value = "Texto número: permite negativos")
     private boolean negativos;
 
     /**

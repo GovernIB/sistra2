@@ -1,29 +1,39 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Propiedades campo formulario.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPropiedadesCampo", description = "Descripcion de RPropiedadesCampo")
 public class RPropiedadesCampo {
 
     /** Obligatorio. */
+	@ApiModelProperty(value = "Obligatorio")
     private boolean obligatorio;
 
     /** Solo lectura. */
+	@ApiModelProperty(value = "Solo lectura")
     private boolean soloLectura;
 
     /** No modificable (no permite modificar su valor inicial). */
+	@ApiModelProperty(value = "No modificable (no permite modificar su valor inicial)")
     private boolean noModificable;
 
     /** Script autorrellable. */
+	@ApiModelProperty(value = "Script autorrellable")
     private RScript scriptAutorrellenable;
 
     /** Script estado. */
+	@ApiModelProperty(value = "Script estado")
     private RScript scriptEstado;
 
     /** Script validacion. */
+	@ApiModelProperty(value = "Script validacion")
     private RScript scriptValidacion;
 
     /**

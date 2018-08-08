@@ -1,21 +1,27 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Valor parámetro.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RValorParametro", description = "Descripcion de RValorParametro")
 public class RValorParametro {
 
     /**
      * Código.
      */
+	@ApiModelProperty(value = "Código")
     private String codigo;
 
     /**
      * Valor.
      */
+	@ApiModelProperty(value = "Valor")
     private String valor;
 
     /**

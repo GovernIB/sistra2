@@ -1,20 +1,27 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Plugin.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPlugin", description = "Descripcion de RPlugin")
 public class RPlugin {
 
     /** Tipo. */
+	@ApiModelProperty(value = "Tipo")
     private String tipo;
 
     /** Classname. */
+	@ApiModelProperty(value = "Classname")
     private String classname;
 
     /** Propiedades. */
+	@ApiModelProperty(value = "Propiedades")
     private RListaParametros parametros;
 
     /**

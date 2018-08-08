@@ -15,15 +15,15 @@ import io.swagger.annotations.ApiModelProperty;
 public class RConfiguracionGlobal {
 
     /** Timestamp recuperacion. */
-	@ApiModelProperty(value = "timestamp", required = false)
+	@ApiModelProperty(value = "Timestamp recuperacion")
     private String timestamp;
 
     /** Propiedades. */
-	@ApiModelProperty(value = "lista de parametros", required = false)
+	@ApiModelProperty(value = "Propiedades")
     private RListaParametros propiedades;
 
     /** Plugins. */
-	@ApiModelProperty(value = "lista de plugins", required = false)
+	@ApiModelProperty(value = "Plugins")
     private List<RPlugin> plugins;
 
     /**

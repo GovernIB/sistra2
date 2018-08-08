@@ -1,23 +1,31 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Propiedades campo texto identificacion.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPropiedadesTextoIdentificacion", description = "Descripcion de RPropiedadesTextoIdentificacion")
 public class RPropiedadesTextoIdentificacion {
 
     /** Texto identificación: nif. */
+	@ApiModelProperty(value = "Texto identificación: nif")
     private boolean nif;
 
     /** Texto identificación: cif. */
+	@ApiModelProperty(value = "Texto identificación: cif")
     private boolean cif;
 
     /** Texto identificación: nie. */
+	@ApiModelProperty(value = "Texto identificación: nie")
     private boolean nie;
 
     /** Texto identificación: nss. */
+	@ApiModelProperty(value = "Texto identificación: nss")
     private boolean nss;
 
     /**

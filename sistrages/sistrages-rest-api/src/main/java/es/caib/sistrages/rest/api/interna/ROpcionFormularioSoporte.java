@@ -1,25 +1,34 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Opción formulario soporte.
  */
+@ApiModel(value = "ROpcionFormularioSoporte", description = "Descripcion de ROpcionFormularioSoporte")
 public class ROpcionFormularioSoporte {
 
     /** Codigo. */
+	@ApiModelProperty(value = "Codigo")
     private Long codigo;
 
     /** Tipo incidencia. */
+	@ApiModelProperty(value = "Tipo incidencia")
     private RLiteral tipo;
 
     /** Descripcion incidencia. */
+	@ApiModelProperty(value = "Descripcion incidencia")
     private RLiteral descripcion;
 
     /**
      * Destinatario: responsable incidencias ("R"), Lista fija de emails ("E").
      */
+	@ApiModelProperty(value = "Destinatario: responsable incidencias (R), Lista fija de emails (E)")
     private String destinatario;
 
     /** Lista emails (separadas por ;). */
+	@ApiModelProperty(value = "Lista emails (separadas por ;)")
     private String listaEmails;
 
     /**

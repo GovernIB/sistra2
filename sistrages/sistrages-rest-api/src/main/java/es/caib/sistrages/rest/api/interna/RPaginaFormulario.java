@@ -2,18 +2,26 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "RPaginaFormulario", description = "Descripcion de RPaginaFormulario")
 public class RPaginaFormulario {
 
     /** HTML página (B64). */
+	@ApiModelProperty(value = "HTML página (B64)")
     private String htmlB64;
 
     /** Indica si es página final. */
+	@ApiModelProperty(value = "Indica si es página final")
     private boolean paginaFinal;
 
     /** Script validación página. */
+	@ApiModelProperty(value = "Script validación página")
     private RScript scriptValidacion;
 
     /** Líneas de componentes. */
+	@ApiModelProperty(value = "Líneas de componentes")
     private List<RLineaComponentes> lineas;
 
     /**

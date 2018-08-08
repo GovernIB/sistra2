@@ -2,36 +2,48 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Propiedades versión trámite.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RVersionTramitePropiedades", description = "Descripcion de RVersionTramitePropiedades")
 public class RVersionTramitePropiedades {
 
     /** Autenticado. */
+	@ApiModelProperty(value = "Autenticado")
     private boolean autenticado;
 
     /** Nivel QAA de autenticación. */
+	@ApiModelProperty(value = "Nivel QAA de autenticación")
     private int nivelQAA;
 
     /** Autenticado. */
+	@ApiModelProperty(value = "Autenticado")
     private boolean noAutenticado;
 
     /** Idiomas. */
+	@ApiModelProperty(value = "Idiomas")
     private List<String> idiomas;
 
     /** Persistente. */
+	@ApiModelProperty(value = "Persistente")
     private boolean persistente;
 
     /** En caso de ser persistente indica días persistencia (si 0 infinita). */
+	@ApiModelProperty(value = "En caso de ser persistente indica días persistencia (si 0 infinita)")
     private int diasPersistencia;
 
     /** Script personalizacion. */
+	@ApiModelProperty(value = "Script personalizacion")
     private RScript scriptPersonalizacion;
 
     /** Script parametros iniciales. */
+	@ApiModelProperty(value = "Script parametros iniciales")
     private RScript scriptParametrosIniciales;
 
     /**

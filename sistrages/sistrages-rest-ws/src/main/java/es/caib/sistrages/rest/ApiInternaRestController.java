@@ -19,11 +19,11 @@ import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
-import es.caib.sistrages.rest.adapter.RAvisosEntidadAdapter;
-import es.caib.sistrages.rest.adapter.RConfiguracionEntidadAdapter;
-import es.caib.sistrages.rest.adapter.RConfiguracionGlobalAdapter;
-import es.caib.sistrages.rest.adapter.RValoresDominioAdapter;
-import es.caib.sistrages.rest.adapter.RVersionTramiteAdapter;
+import es.caib.sistrages.rest.adapter.AvisosEntidadAdapter;
+import es.caib.sistrages.rest.adapter.ConfiguracionEntidadAdapter;
+import es.caib.sistrages.rest.adapter.ConfiguracionGlobalAdapter;
+import es.caib.sistrages.rest.adapter.ValoresDominioAdapter;
+import es.caib.sistrages.rest.adapter.VersionTramiteAdapter;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
@@ -51,6 +51,40 @@ public class ApiInternaRestController {
     /** Servicio negocio. */
     @Autowired
     private RestApiInternaService restApiService;
+    
+    /**
+     * ConfiguracionGlobalAdapter
+     */
+    @Autowired
+    private ConfiguracionGlobalAdapter confGlobalAdapter;
+    
+    /**
+     * ConfiguracionEntidadAdapter
+     */
+    @Autowired
+    private ConfiguracionEntidadAdapter confEntidadAdapter;
+    
+    /**
+     * VersionTramiteAdapter
+     */
+    @Autowired
+    private VersionTramiteAdapter versionTramiteAdapter;
+    
+    /**
+     * AvisosEntidadAdapter
+     */
+    @Autowired
+    private AvisosEntidadAdapter avisosEntidadAdapter;
+    
+    /**
+     * ValoresDominioAdapter
+     */
+    @Autowired
+    private ValoresDominioAdapter valoresDominioAdapter;
+    
+    
+    
+
 
     // TODO Hacer que todas las clases del modelo api rest empiecen con "R" para
     // evitar conflictos con modelo core? RENOMBRAMOS QUE EMPIECEN CON "R"
@@ -72,9 +106,7 @@ public class ApiInternaRestController {
                 .listConfiguracionGlobal(null);
         final List<Plugin> pg = restApiService.listPlugin(TypeAmbito.GLOBAL,
                 (long) 0, null);
-        final RConfiguracionGlobalAdapter adapter = new RConfiguracionGlobalAdapter(
-                cg, pg);
-        return adapter.getrConfiguracionGlobal();
+        return confGlobalAdapter.convertir(cg, pg);        
     }
 
     /**
@@ -89,9 +121,7 @@ public class ApiInternaRestController {
     public RConfiguracionEntidad obtenerConfiguracionEntidad(
             @PathVariable("id") String id) {
         final Entidad entidad = restApiService.loadEntidad(Long.parseLong(id));
-        final RConfiguracionEntidadAdapter adapter = new RConfiguracionEntidadAdapter(
-                entidad, restApiService);
-        return adapter.getrConfiguracionEntidad();
+        return confEntidadAdapter.convertir(entidad);
     }
 
     /**
@@ -106,7 +136,7 @@ public class ApiInternaRestController {
      * @return versión de trámite
      * @throws Exception
      */
-    @ApiOperation(value = "Obtiene la definición de la versión del tramite", notes = "Obtiene la definición de la versión del tramite", response = RVersionTramite.class)    
+    @ApiOperation(value = "Obtiene la definición de la versión del tramite", notes = "Obtiene la definición de la versión del tramite", response = RVersionTramite.class)
     @RequestMapping(value = "/tramite/{idTramite}/{version}/{idioma}", method = RequestMethod.GET)
     public RVersionTramite obtenerDefinicionVersionTramite(
             @PathVariable("idTramite") String idtramite,
@@ -120,9 +150,7 @@ public class ApiInternaRestController {
         if (tv == null) {
             throw new Exception("El tramite especificado no existe");
         }
-        final RVersionTramiteAdapter adapter = new RVersionTramiteAdapter(tv,
-                idioma, idiomaDefecto, restApiService);
-        return adapter.getrVersionTramite();
+        return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
     }
 
     /**
@@ -132,13 +160,11 @@ public class ApiInternaRestController {
      *            Id entidad
      * @return avisos
      */
-    @ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)        
+    @ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)
     @RequestMapping(value = "/entidad/{id}/avisos", method = RequestMethod.GET)
     public RAvisosEntidad obtenerAvisosEntidad(
             @PathVariable("id") String idEntidad) {
-        final RAvisosEntidadAdapter aE = new RAvisosEntidadAdapter(
-                restApiService, idEntidad);
-        return aE.getrAvisosEntidad();
+    	return avisosEntidadAdapter.convertir(idEntidad);        
     }
 
     /**
@@ -181,8 +207,6 @@ public class ApiInternaRestController {
 
         final ValoresDominio res = restApiService
                 .realizarConsultaFuenteDatos(idDominio, listaParams);
-        final RValoresDominioAdapter adapter = new RValoresDominioAdapter(res);
-        return adapter.getrValoresDominio();
+        return valoresDominioAdapter.convertir(res);
     }
-
 }

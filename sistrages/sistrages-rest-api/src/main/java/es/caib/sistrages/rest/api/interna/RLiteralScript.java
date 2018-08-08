@@ -1,17 +1,23 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Mensajes de literales usados en script.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RLiteralScript", description = "Descripcion de RLiteralScript")
 public class RLiteralScript {
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Literal. */
+	@ApiModelProperty(value = "Literal")
     private String literal;
 
     /**

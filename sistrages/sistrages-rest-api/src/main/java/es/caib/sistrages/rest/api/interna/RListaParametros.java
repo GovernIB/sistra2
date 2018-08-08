@@ -2,15 +2,20 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Lista parámetros.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RListaParametros", description = "Descripcion de RListaParametros")
 public class RListaParametros {
 
     /** Lista parametros. */
+	@ApiModelProperty(value = "Lista parametros")
     private List<RValorParametro> parametros;
 
     /**

@@ -1,21 +1,28 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Ayuda anexo trámite.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RAnexoTramiteAyuda", description = "Descripcion de RAnexoTramiteAyuda")
 public class RAnexoTramiteAyuda {
 
     /** Ayuda fichero (path). */
+	@ApiModelProperty(value = "Ayuda fichero (path)")
     private String fichero;
 
     /** Ayuda url . */
+	@ApiModelProperty(value = "Ayuda url")
     private String url;
 
 
     /** Ayuda mensaje (html) . */
+	@ApiModelProperty(value = "Ayuda mensaje (html)")
     private String mensajeHtml;
 
     /**

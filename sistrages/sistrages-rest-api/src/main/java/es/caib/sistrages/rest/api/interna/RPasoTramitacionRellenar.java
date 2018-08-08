@@ -2,9 +2,13 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+@ApiModel(value = "RPasoTramitacionRellenar", description = "Descripcion de RPasoTramitacionRellenar", parent = RPasoTramitacion.class)
 public class RPasoTramitacionRellenar extends RPasoTramitacion {
 
     /** Formularios. */
+	@ApiModelProperty(value = "Formularios")
     private List<RFormularioTramite> formularios;
 
     /**

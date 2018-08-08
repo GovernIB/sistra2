@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Componente formulario.
  *
@@ -17,27 +20,35 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(value = RComponenteTextbox.class, name = "RComponenteTextbox"),
         @Type(value = RComponenteSelector.class, name = "RComponenteSelector"),
         @Type(value = RComponenteCheckbox.class, name = "RComponenteCheckbox")})
+@ApiModel(value = "RComponente", description = "Descripcion de RComponente")
 public abstract class RComponente {
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Tipo. */
+	@ApiModelProperty(value = "Tipo")
     private String tipo;
 
     /** Etiqueta. */
+	@ApiModelProperty(value = "Etiqueta")
     private String etiqueta;
 
     /** Mostrar etiqueta. */
+	@ApiModelProperty(value = "Mostrar etiqueta")
     private boolean mostrarEtiqueta;
 
     /** Alineacion etiqueta: Izquierda (I), Centrada (C), Derecha (D). */
+	@ApiModelProperty(value = "Alineacion etiqueta: Izquierda (I), Centrada (C), Derecha (D)")
     private String alineacion;
 
     /** Número columnas. */
+	@ApiModelProperty(value = "Número columnas")
     private int columnas;
 
     /** Ayuda. */
+	@ApiModelProperty(value = "Ayuda")
     private String ayuda;
 
     /**

@@ -1,20 +1,27 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Parámetro dominio.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RParametroDominio", description = "Descripcion de RParametroDominio")
 public class RParametroDominio {
 
     /** Identificador parámetro. */
+	@ApiModelProperty(value = "Identificador parámetro")
     private String identificador;
 
     /** Tipo parámetro: CONSTANTE("C"), CAMPO("M"), PARAMETRO("P"). */
+	@ApiModelProperty(value = "Tipo parámetro: CONSTANTE(C), CAMPO(M), PARAMETRO(P)")
     private String tipo;
 
     /** Valor parámetro. */
+	@ApiModelProperty(value = "Valor parámetro")
     private String valor;
 
     /**

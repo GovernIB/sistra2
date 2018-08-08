@@ -1,20 +1,27 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Valor lista fija.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RValorListaFija", description = "Descripcion de RValorListaFija")
 public class RValorListaFija {
 
     /** Código. */
+	@ApiModelProperty(value = "Código")
     private String codigo;
 
     /** Descripción. */
+	@ApiModelProperty(value = "Descripción")
     private String descripcion;
 
     /** Defecto. */
+	@ApiModelProperty(value = "Defecto")
     private boolean porDefecto;
 
     /**

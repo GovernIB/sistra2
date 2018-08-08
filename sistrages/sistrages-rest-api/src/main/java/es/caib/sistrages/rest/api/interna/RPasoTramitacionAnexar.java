@@ -2,18 +2,24 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Paso anexar.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPasoTramitacionAnexar", description = "Descripcion de RPasoTramitacionAnexar", parent = RPasoTramitacion.class)
 public class RPasoTramitacionAnexar extends RPasoTramitacion {
 
     /** Anexos. */
+	@ApiModelProperty(value = "Anexos")
     private List<RAnexoTramite> anexos;
 
     /** Script anexos dinámicos. */
+	@ApiModelProperty(value = "Script anexos dinámicos")
     private RScript scriptAnexosDinamicos;
 
     /**

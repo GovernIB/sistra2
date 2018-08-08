@@ -15,94 +15,93 @@ import io.swagger.annotations.ApiModelProperty;
 public class RConfiguracionEntidad {
 
     /** Timestamp recuperacion. */
-	@ApiModelProperty(value = "timestamp", required = false)
+	@ApiModelProperty(value = "Timestamp recuperacion")
     private String timestamp;
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Descripción. */
+	@ApiModelProperty(value = "Descripción")
     private RLiteral descripcion;
 
     /** Referencia logo. */
+	@ApiModelProperty(value = "Referencia logo")
     private String logo;
 
     /** Referencia logo. */
+	@ApiModelProperty(value = "Referencia logo")
     private String css;
 
     /** Contacto (HTML). */
+	@ApiModelProperty(value = "Contacto (HTML)")
     private RLiteral contactoHTML;
 
     /** Url carpeta ciudadana. */
+	@ApiModelProperty(value = "Url carpeta ciudadana")
     private RLiteral urlCarpeta;
 
     /** Info LOPD (HTML). */
+	@ApiModelProperty(value = "Info LOPD (HTML)")
     private RLiteral infoLopdHTML;
 
     /** Dias preregistro. */
+	@ApiModelProperty(value = "Dias preregistro")
     private int diasPreregistro;
 
     /** Email. */
+	@ApiModelProperty(value = "Email")
     private String email;
 
     /** Ayuda email. */
+	@ApiModelProperty(value = "Ayuda email")
     private boolean ayudaEmail;
 
     /** Ayuda telefono. */
+	@ApiModelProperty(value = "Ayuda telefono")
     private String ayudaTelefono;
 
     /** Ayuda url. */
+	@ApiModelProperty(value = "Ayuda url")
     private String ayudaUrl;
 
     /** Ayuda formulario soporte. */
+	@ApiModelProperty(value = "Ayuda formulario soporte")
     private List<ROpcionFormularioSoporte> ayudaFormulario;
 
     /** Plugins entidad. */
+	@ApiModelProperty(value = "Plugins entidad")
     private List<RPlugin> plugins;
     
     /** Mapa web */
+	@ApiModelProperty(value = "Mapa web")
     private RLiteral mapaWeb;
+	
     /** Aviso legal */
+	@ApiModelProperty(value = "Aviso legal")
     private RLiteral avisoLegal;
+	
     /** RSS */
+	@ApiModelProperty(value = "RSS")
     private RLiteral rss;
+	
     /** url de Facebook */
+	@ApiModelProperty(value = "url de Facebook")
     private String urlFacebook;
+	
     /** url de Instagram */
+	@ApiModelProperty(value = "url de Instagram")
     private String urlInstagram;
+	
     /** url de  Twiter */
+	@ApiModelProperty(value = "url de  Twiter")
     private String urlTwitter;
+	
     /** url de Youtube */
+	@ApiModelProperty(value = "url de Youtube")
     private String urlYoutube;
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     /**
      * Método de acceso a logo.
      *

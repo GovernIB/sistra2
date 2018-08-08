@@ -1,29 +1,39 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Pago trámite.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPagoTramite", description = "Descripcion de RPagoTramite")
 public class RPagoTramite {
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Descripción. */
+	@ApiModelProperty(value = "Descripción")
     private String descripcion;
 
     /** Obligatoriedad: Si (S) / No (N) / Depende (D). */
+	@ApiModelProperty(value = "Obligatoriedad: Si (S) / No (N) / Depende (D)")
     private String obligatoriedad;
 
     /** Script dependencia. */
+	@ApiModelProperty(value = "Script dependencia")
     private RScript scriptDependencia;
 
     /** Script pago. */
+	@ApiModelProperty(value = "Script pago")
     private RScript scriptPago;
 
     /** Simular pago. */
+	@ApiModelProperty(value = "Simular pago")
     private boolean simularPago;
 
     /**

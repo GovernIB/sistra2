@@ -1,20 +1,27 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Componente checkbox.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RComponenteCheckbox", description = "Descripcion de RComponenteCheckbox")
 public class RComponenteCheckbox extends RComponente {
 
     /** Propiedades campo. */
+	@ApiModelProperty(value = "Propiedades campo")
     private RPropiedadesCampo propiedadesCampo;
 
     /** Valor checked. */
+	@ApiModelProperty(value = "Valor checked")
     private String valorChecked;
 
     /** Valor no checked. */
+	@ApiModelProperty(value = "Valor no checked")
     private String valorNoChecked;
 
     /**

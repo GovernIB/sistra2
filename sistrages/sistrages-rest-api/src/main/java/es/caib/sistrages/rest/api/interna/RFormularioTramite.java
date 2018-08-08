@@ -1,56 +1,73 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Formulario trámite.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RFormularioTramite", description = "Descripcion de RFormularioTramite")
 public class RFormularioTramite {
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Descripción. */
+	@ApiModelProperty(value = "Descripción")
     private String descripcion;
 
     /** Obligatoriedad: Si (S) / No (N) / Depende (D). */
+	@ApiModelProperty(value = "Obligatoriedad: Si (S) / No (N) / Depende (D)")
     private String obligatoriedad;
 
     /** Script obligatoriedad. */
+	@ApiModelProperty(value = "Script obligatoriedad")
     private RScript scriptObligatoriedad;
 
     /**
      * Indica si hay que firmar electrónicamente (para presentación
      * electrónica).
      */
+	@ApiModelProperty(value = "Indica si hay que firmar electrónicamente (para presentación electrónica)")
     private boolean firmar;
 
     /** Script firmantes. */
+	@ApiModelProperty(value = "Script firmantes")
     private RScript scriptFirmantes;
 
     /**
      * Indica si hay que presentar en preregistro (para presentación
      * presencial).
      */
+	@ApiModelProperty(value = "Indica si hay que presentar en preregistro (para presentación presencial)")
     private boolean presentarPreregistro;
 
     /** Script parámetros apertura. */
+	@ApiModelProperty(value = "Script parámetros apertura")
     private RScript scriptParametrosApertura;
 
     /** Script datos iniciales. */
+	@ApiModelProperty(value = "Script datos iniciales")
     private RScript scriptDatosIniciales;
 
     /** Script post guardar. */
+	@ApiModelProperty(value = "Script post guardar")
     private RScript scriptPostguardar;
 
     /** Indica si es interno (si no externo). */
+	@ApiModelProperty(value = "Indica si es interno (si no externo)")
     private boolean interno;
 
     /** Si es interno, se indica el diseño del formulario. */
+	@ApiModelProperty(value = "Si es interno, se indica el diseño del formulario")
     private RFormularioInterno formularioInterno;
 
     /** Si es externo, se indica el formulario externo. */
+	@ApiModelProperty(value = "Si es externo, se indica el formulario externo")
     private RFormularioExterno formularioExterno;
 
     /**

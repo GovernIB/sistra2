@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Modela datos de un dominio.
@@ -19,33 +20,38 @@ import io.swagger.annotations.ApiModel;
 public final class RValoresDominio implements Serializable {
 
     /** Constante numérica. */
+	@ApiModelProperty(value = "Constante numérica")
     private static final int N1 = 1;
 
     /**
      * Filas de valores.
      */
+	@ApiModelProperty(value = "Filas de valores")
     private final List<Map<String, String>> datos = new ArrayList<>();
 
     /**
      * Indica si ha habido error.
      */
+	@ApiModelProperty(value = "Indica si ha habido error")
     private boolean error;
 
     /**
      * Codigo error.
      */
+	@ApiModelProperty(value = "Codigo error")
     private String codigoError;
 
     /**
      * Texto error.
      */
+	@ApiModelProperty(value = "Texto error")
     private String descripcionError;
 
     /**
      * Añade una fila de valores.
      *
      * @return Numero de fila añadida
-     */
+     */	
     public int addFila() {
         final Map<String, String> fila = new HashMap<String, String>();
         datos.add(fila);

@@ -1,29 +1,38 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Dominio.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RDominio", description = "Descripcion de RDominio")
 public class RDominio {
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Cachear. */
+	@ApiModelProperty(value = "Cachear")
     private boolean cachear;
 
     /**
      * Tipo dominio: Lista fija (L),Consulta BD (B), Consulta remota (R) y
      * Fuente datos (F).
      */
+	@ApiModelProperty(value = "Tipo dominio: Lista fija (L),Consulta BD (B), Consulta remota (R) y Fuente datos (F)")
     private String tipo;
 
     /** JNDI BD / URL para BD / Consulta remota. */
+	@ApiModelProperty(value = "JNDI BD / URL para BD / Consulta remota")
     private String uri;
 
     /** Query para BD. */
+	@ApiModelProperty(value = "Query para BD")
     private String sql;
 
     /**

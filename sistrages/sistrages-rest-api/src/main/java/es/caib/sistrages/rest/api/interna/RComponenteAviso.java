@@ -1,14 +1,19 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Componente aviso.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RComponenteAviso", description = "Descripcion de RComponenteAviso")
 public class RComponenteAviso extends RComponente {
 
     /** Tipo aviso. */
+	@ApiModelProperty(value = "Tipo aviso")
     private String tipoAviso;
 
     /**

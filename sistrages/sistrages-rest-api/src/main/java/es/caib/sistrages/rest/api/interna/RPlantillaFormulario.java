@@ -1,23 +1,31 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Plantilla formulario.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPlantillaFormulario", description = "Descripcion de RPlantillaFormulario")
 public class RPlantillaFormulario {
 
     /** Identificador plantilla. */
+	@ApiModelProperty(value = "Identificador plantilla")
     private String identificador;
 
     /** Clase formateador (classname). */
+	@ApiModelProperty(value = "Clase formateador (classname)")
     private String claseFormateador;
 
     /** Plantilla (path fichero). */
+	@ApiModelProperty(value = "Plantilla (path fichero)")
     private String ficheroPlantilla;
 
     /** Plantilla defecto. */
+	@ApiModelProperty(value = "Plantilla defecto")
     private boolean defecto;
 
     /**

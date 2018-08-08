@@ -9,34 +9,47 @@ import io.swagger.annotations.ApiModelProperty;
 public class RVersionTramite {
 
     /** Timestamp recuperacion. */
-	@ApiModelProperty(value = "timestamp", required = false)
+    @ApiModelProperty(value = "Timestamp recuperacion")
     private String timestamp;
 
     /** Identificador tramite. */
+    @ApiModelProperty(value = "Identificador tramite")
     private String identificador;
 
     /** Versión trámite. */
+    @ApiModelProperty(value = "Versión trámite")
     private int version;
 
+    /** Release trámite. */
+    @ApiModelProperty(value = "Release trámite")
+    private int release;
+
     /** Id entidad. */
+    @ApiModelProperty(value = "Id entidad")
     private String idEntidad;
 
     /** Idioma. */
+    @ApiModelProperty(value = "Idioma")
     private String idioma;
 
     /** Tipo flujo: Normalizado (N) / Personalizado (P). */
+    @ApiModelProperty(value = "Tipo flujo: Normalizado (N) / Personalizado (P)")
     private String tipoFlujo;
 
     /** Lista dominios utilizados. */
+    @ApiModelProperty(value = "Lista dominios utilizados")
     private List<RDominio> dominios;
 
     /** Propiedades. */
+    @ApiModelProperty(value = "Propiedades")
     private RVersionTramitePropiedades propiedades;
 
     /** Control acceso. */
+    @ApiModelProperty(value = "Lista dominios utilizados")
     private RVersionTramiteControlAcceso controlAcceso;
 
     /** Pasos tramitación. */
+    @ApiModelProperty(value = "Pasos tramitación")
     private List<RPasoTramitacion> pasos;
 
     /**
@@ -212,7 +225,7 @@ public class RVersionTramite {
 
     /**
      * Método de acceso a timestamp.
-     * 
+     *
      * @return timestamp
      */
     public String getTimestamp() {
@@ -221,12 +234,31 @@ public class RVersionTramite {
 
     /**
      * Método para establecer timestamp.
-     * 
+     *
      * @param timestamp
      *            timestamp a establecer
      */
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * Método de acceso a release.
+     * 
+     * @return release
+     */
+    public int getRelease() {
+        return release;
+    }
+
+    /**
+     * Método para establecer release.
+     * 
+     * @param release
+     *            release a establecer
+     */
+    public void setRelease(int release) {
+        this.release = release;
     }
 
 }

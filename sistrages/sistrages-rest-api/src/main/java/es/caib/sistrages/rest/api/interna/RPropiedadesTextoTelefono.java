@@ -1,17 +1,23 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Propiedades campo texto telefono.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPropiedadesTextoTelefono", description = "Descripcion de RPropiedadesTextoTelefono")
 public class RPropiedadesTextoTelefono {
 
     /** Texto teléfono: móvil. */
+	@ApiModelProperty(value = "Texto teléfono: móvil")
     private boolean movil;
 
     /** Texto teléfono: fijo. */
+	@ApiModelProperty(value = "Texto teléfono: fijo")
     private boolean fijo;
 
     /**

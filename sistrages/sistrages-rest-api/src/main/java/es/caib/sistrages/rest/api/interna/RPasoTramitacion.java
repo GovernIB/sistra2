@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Paso tramitación.
  *
@@ -17,18 +20,28 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(value = RPasoTramitacionAnexar.class, name = "RPasoTramitacionAnexar"),
         @Type(value = RPasoTramitacionPagar.class, name = "RPasoTramitacionPagar"),
         @Type(value = RPasoTramitacionRegistrar.class, name = "RPasoTramitacionRegistrar")})
+@ApiModel(value = "RPasoTramitacion", description = "Descripcion de RPasoTramitacion",
+	subTypes= { RPasoTramitacionDebeSaber.class,
+			RPasoTramitacionRellenar.class,
+			RPasoTramitacionAnexar.class,
+			RPasoTramitacionPagar.class,
+			RPasoTramitacionRegistrar.class },discriminator = "type")
 public abstract class RPasoTramitacion {
 
     /** Identificador. */
+	@ApiModelProperty(value = "Identificador")
     private String identificador;
 
     /** Tipo de paso. */
+	@ApiModelProperty(value = "Tipo de paso")
     private String tipo;
 
     /** Indica si es paso final. */
+	@ApiModelProperty(value = "Indica si es paso final")
     private boolean pasoFinal;
 
     /** Script navegacion. */
+	@ApiModelProperty(value = "Script navegacion")
     private RScript scriptNavegacion;
 
     /**

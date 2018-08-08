@@ -2,30 +2,40 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Componente selector.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RComponenteSelector", description = "Descripcion de RComponenteSelector")
 public class RComponenteSelector extends RComponente {
 
     /** Propiedades campo. */
+	@ApiModelProperty(value = "Propiedades campo")
     private RPropiedadesCampo propiedadesCampo;
 
     /** Tipo selector: SELECTOR, DESPLEGABLE, MULTIPLE, UNICA. */
+	@ApiModelProperty(value = "Tipo selector: SELECTOR, DESPLEGABLE, MULTIPLE, UNICA")
     private String tipoSelector;
 
     /** Tipo lista valores: FIJA("F"), DOMINIO("D"), SCRIPT("S"). */
+	@ApiModelProperty(value = "Tipo lista valores: FIJA(F), DOMINIO(D), SCRIPT(S)")
     private String tipoListaValores;
 
     /** Lista valores fija. */
+	@ApiModelProperty(value = "Lista valores fija")
     private List<RValorListaFija> listaFija;
 
     /** Lista valores por dominio. */
+	@ApiModelProperty(value = "Lista valores por dominio")
     private RListaDominio listaDominio;
 
     /** Lista valores por script. */
+	@ApiModelProperty(value = "Lista valores por script")
     private RScript scriptListaValores;
 
     /**

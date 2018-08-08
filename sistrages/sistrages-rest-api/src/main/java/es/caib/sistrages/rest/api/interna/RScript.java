@@ -2,18 +2,24 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Script.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RScript", description = "Descripcion de RScript")
 public class RScript {
 
     /** Script. */
+	@ApiModelProperty(value = "Script")
     private String script;
 
     /** Literales. */
+	@ApiModelProperty(value = "Literales")
     private List<RLiteralScript> literales;
 
     /**

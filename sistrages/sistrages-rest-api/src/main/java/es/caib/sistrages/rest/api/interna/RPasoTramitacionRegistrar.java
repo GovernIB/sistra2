@@ -1,38 +1,51 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Paso registrar.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RPasoTramitacionRegistrar", description = "Descripcion de RPasoTramitacionRegistrar", parent = RPasoTramitacion.class)
 public class RPasoTramitacionRegistrar extends RPasoTramitacion {
 
     /** Destino registro. */
+	@ApiModelProperty(value = "Destino registro")
     private RDestinoRegistro destino;
 
     /** Script destino registro. */
+	@ApiModelProperty(value = "Script destino registro")
     private RScript scriptDestino;
 
     /** Instrucciones presentación. */
+	@ApiModelProperty(value = "Instrucciones presentación")
     private String instruccionesPresentacionHtml;
 
     /** Instrucciones tramitación. */
+	@ApiModelProperty(value = "Instrucciones tramitación")
     private String instruccionesTramitacionHtml;
 
     /** Script presentador. */
+	@ApiModelProperty(value = "Script presentador")
     private RScript scriptPresentador;
 
     /** Indica si admite representación. */
+	@ApiModelProperty(value = "Indica si admite representación")
     private boolean admiteRepresentacion;
 
     /** Indica si valida representación. */
+	@ApiModelProperty(value = "Indica si valida representación")
     private boolean validaRepresentacion;
 
     /** Script representante. */
+	@ApiModelProperty(value = "Script representante")
     private RScript scriptRepresentante;
 
     /** Script validar registro. */
+	@ApiModelProperty(value = "Script validar registro")
     private RScript scriptValidar;
 
     /**

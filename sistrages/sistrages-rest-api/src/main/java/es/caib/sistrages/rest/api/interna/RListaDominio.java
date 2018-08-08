@@ -2,24 +2,32 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Configuración para valores de un dominio.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RListaDominio", description = "Descripcion de RListaDominio")
 public class RListaDominio {
 
     /** Identificador dominio. */
+	@ApiModelProperty(value = "Identificador dominio")
     private String dominio;
 
     /** Campo dominio para mapear código. */
+	@ApiModelProperty(value = "Campo dominio para mapear código")
     private String campoCodigo;
 
     /** Campo dominio para mapear descripción. */
+	@ApiModelProperty(value = "Campo dominio para mapear descripción")
     private String campoDescripción;
 
     /** Lista parámetros. */
+	@ApiModelProperty(value = "Lista parámetros")
     private List<RParametroDominio> parametros;
 
     /**

@@ -2,15 +2,20 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Línea de componentes.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RLineaComponentes", description = "Descripcion de RLineaComponentes")
 public class RLineaComponentes {
 
     /** Componentes. */
+	@ApiModelProperty(value = "Componentes")
     private List<RComponente> componentes;
 
     /**

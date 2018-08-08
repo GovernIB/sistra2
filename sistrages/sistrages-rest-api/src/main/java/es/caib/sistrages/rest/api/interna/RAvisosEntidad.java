@@ -15,10 +15,11 @@ import io.swagger.annotations.ApiModelProperty;
 public class RAvisosEntidad {
 
     /** Timestamp recuperacion. */
-	@ApiModelProperty(value = "timestamp", required = false)
+	@ApiModelProperty(value = "Timestamp recuperacion")
     private String timestamp;
 
     /** Avisos. */
+	@ApiModelProperty(value = "Avisos")
     private List<RAviso> avisos;
 
     /**

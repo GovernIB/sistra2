@@ -1,17 +1,23 @@
 package es.caib.sistrages.rest.api.interna;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Formulario externo.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RFormularioExterno", description = "Descripcion de RFormularioExterno")
 public class RFormularioExterno {
 
     /** Identificador gestor formularios externo. */
+	@ApiModelProperty(value = "Identificador gestor formularios externo")
     private String identificadorGestorFormularios;
 
     /** Identificador formulario externo. */
+	@ApiModelProperty(value = "Identificador formulario externo")
     private String identificadorFormulario;
 
     /**

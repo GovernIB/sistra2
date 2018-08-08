@@ -2,15 +2,20 @@ package es.caib.sistrages.rest.api.interna;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Literal.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "RLiteral", description = "Descripcion de RLiteral")
 public class RLiteral {
 
     /** Idiomas. */
+	@ApiModelProperty(value = "Idiomas")
     private List<RLiteralIdioma> literales;
 
     /**
