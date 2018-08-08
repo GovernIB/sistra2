@@ -85,4 +85,16 @@ public class JAccionPersonalizada implements IModelApi {
 		this.validar = validar;
 	}
 
+	public static JAccionPersonalizada clonar(final JAccionPersonalizada accion, final JFormulario jformulario) {
+		JAccionPersonalizada jaccion = null;
+		if (accion != null) {
+			jaccion = new JAccionPersonalizada();
+			jaccion.setFormulario(jformulario);
+			jaccion.setAccion(accion.getAccion());
+			jaccion.setTitulo(JLiteral.clonar(accion.getTitulo()));
+			jaccion.setValidar(accion.isValidar());
+		}
+		return jaccion;
+	}
+
 }

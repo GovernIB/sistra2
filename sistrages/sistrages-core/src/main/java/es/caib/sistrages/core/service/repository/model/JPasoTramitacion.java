@@ -319,6 +319,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setCodigo(this.getCodigo());
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
+		paso.setTipo(this.getTipoPasoTramitacion().toModel());
 
 		if (this.getPasoAnexar().getAnexosTramite() != null) {
 			final List<Documento> docs = new ArrayList<>();
@@ -333,56 +334,59 @@ public class JPasoTramitacion implements IModelApi {
 
 	private TramitePasoTasa toModelPagos() {
 
-		final TramitePasoTasa pago = new TramitePasoTasa();
-		pago.setIdPasoTramitacion(this.getIdPasoTramitacion());
-		pago.setDescripcion(this.getDescripcion().toModel());
-		pago.setCodigo(this.getCodigo());
-		pago.setOrden(this.getOrden());
-		pago.setPasoFinal(this.isPasoFinal());
+		final TramitePasoTasa paso = new TramitePasoTasa();
+		paso.setIdPasoTramitacion(this.getIdPasoTramitacion());
+		paso.setDescripcion(this.getDescripcion().toModel());
+		paso.setCodigo(this.getCodigo());
+		paso.setOrden(this.getOrden());
+		paso.setPasoFinal(this.isPasoFinal());
+		paso.setTipo(this.getTipoPasoTramitacion().toModel());
 
 		if (this.getPasoPagos().getPagosTramite() != null) {
 			final List<Tasa> tasas = new ArrayList<>();
 			for (final JPagoTramite jpago : this.getPasoPagos().getPagosTramite()) {
 				tasas.add(jpago.toModel());
 			}
-			pago.setTasas(tasas);
+			paso.setTasas(tasas);
 		}
-		return pago;
+		return paso;
 	}
 
 	private TramitePasoRellenar toModelRellenar() {
-		final TramitePasoRellenar mpasoRellenar = new TramitePasoRellenar();
-		mpasoRellenar.setIdPasoTramitacion(this.getIdPasoTramitacion());
-		mpasoRellenar.setDescripcion(this.getDescripcion().toModel());
-		mpasoRellenar.setCodigo(this.getCodigo());
-		mpasoRellenar.setIdPasoRelacion(this.getPasoRellenar().getCodigo());
-		mpasoRellenar.setOrden(this.getOrden());
-		mpasoRellenar.setPasoFinal(this.isPasoFinal());
+		final TramitePasoRellenar paso = new TramitePasoRellenar();
+		paso.setIdPasoTramitacion(this.getIdPasoTramitacion());
+		paso.setDescripcion(this.getDescripcion().toModel());
+		paso.setCodigo(this.getCodigo());
+		paso.setIdPasoRelacion(this.getPasoRellenar().getCodigo());
+		paso.setOrden(this.getOrden());
+		paso.setPasoFinal(this.isPasoFinal());
+		paso.setTipo(this.getTipoPasoTramitacion().toModel());
 		if (this.getPasoRellenar().getFormulariosTramite() != null) {
 			final List<FormularioTramite> formularios = new ArrayList<>();
 			for (final JFormularioTramite jformulario : this.getPasoRellenar().getFormulariosTramite()) {
 				final FormularioTramite formulario = jformulario.toModel();
 				formularios.add(formulario);
 			}
-			mpasoRellenar.setFormulariosTramite(formularios);
+			paso.setFormulariosTramite(formularios);
 		}
 
-		return mpasoRellenar;
+		return paso;
 	}
 
 	private TramitePasoDebeSaber toModelDebeSaber() {
-		final TramitePasoDebeSaber mpasoDebeSaber = new TramitePasoDebeSaber();
-		mpasoDebeSaber.setIdPasoRelacion(this.getPasoDebeSaber().getCodigo());
-		mpasoDebeSaber.setIdPasoTramitacion(this.getIdPasoTramitacion());
-		mpasoDebeSaber.setDescripcion(this.getDescripcion().toModel());
-		mpasoDebeSaber.setCodigo(this.getCodigo());
-		mpasoDebeSaber.setOrden(this.getOrden());
-		mpasoDebeSaber.setPasoFinal(this.isPasoFinal());
+		final TramitePasoDebeSaber paso = new TramitePasoDebeSaber();
+		paso.setIdPasoRelacion(this.getPasoDebeSaber().getCodigo());
+		paso.setIdPasoTramitacion(this.getIdPasoTramitacion());
+		paso.setDescripcion(this.getDescripcion().toModel());
+		paso.setCodigo(this.getCodigo());
+		paso.setOrden(this.getOrden());
+		paso.setPasoFinal(this.isPasoFinal());
+		paso.setTipo(this.getTipoPasoTramitacion().toModel());
 		if (this.getPasoDebeSaber().getInstruccionesInicio() != null) {
 			final Literal instruccionesIniciales = this.getPasoDebeSaber().getInstruccionesInicio().toModel();
-			mpasoDebeSaber.setInstruccionesIniciales(instruccionesIniciales);
+			paso.setInstruccionesIniciales(instruccionesIniciales);
 		}
-		return mpasoDebeSaber;
+		return paso;
 	}
 
 	public static JPasoTramitacion fromModel(final TramitePaso paso) {

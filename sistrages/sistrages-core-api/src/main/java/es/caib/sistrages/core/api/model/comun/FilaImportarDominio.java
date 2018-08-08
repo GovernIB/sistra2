@@ -1,21 +1,16 @@
-package es.caib.sistrages.frontend.model;
+package es.caib.sistrages.core.api.model.comun;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
-import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
-import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
-import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
-import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
-import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
-import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
+import es.caib.sistrages.core.api.util.UtilJSON;
 
 /**
  * Fila dominio importar.
@@ -24,9 +19,6 @@ import es.caib.sistrages.frontend.util.UtilJSF;
  *
  */
 public class FilaImportarDominio extends FilaImportar {
-
-	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(FilaImportarDominio.class);
 
 	/** Dominio. **/
 	private Dominio dominio;
@@ -39,15 +31,6 @@ public class FilaImportarDominio extends FilaImportar {
 
 	/** Indica si el dominio y el dominio actual son del mismo tipo. */
 	private boolean mismoTipo;
-
-	/** URL. **/
-	private String url;
-
-	/** JDNI. **/
-	private String jndi;
-
-	/** SQL. **/
-	private String sql;
 
 	/** Altura. **/
 	private Integer altura = 330;
@@ -85,6 +68,15 @@ public class FilaImportarDominio extends FilaImportar {
 	/** Fuente Datos content. */
 	private byte[] fuenteDatosContent;
 
+	/** Permite editar. **/
+	private boolean permisosEdicion;
+
+	/** En caso de dominio de tipo area, el idArea. **/
+	private Long idArea;
+
+	/** En caso de dominio de tipo entidad, el idEntidad. **/
+	private Long idEntidad;
+
 	/**
 	 * Constructor basico.
 	 */
@@ -99,12 +91,13 @@ public class FilaImportarDominio extends FilaImportar {
 	 * @param iDominioActual
 	 */
 	public FilaImportarDominio(final Dominio iDominio, final Dominio iDominioActual, final FuenteDatos fd,
-			final byte[] fdContent, final FuenteDatos fdActual) {
+			final byte[] fdContent, final FuenteDatos fdActual, final boolean permiteEditar) {
 		this.dominio = iDominio;
 		this.dominioActual = iDominioActual;
 		this.setFuenteDatos(fd);
 		this.setFuenteDatosContent(fdContent);
 		this.setFuenteDatosActual(fdActual);
+		this.permisosEdicion = permiteEditar;
 		this.checkDominios();
 		this.rellenarDatosPorDefecto();
 	}
@@ -116,19 +109,20 @@ public class FilaImportarDominio extends FilaImportar {
 		if (dominio != null) {
 			switch (dominio.getTipo()) {
 			case CONSULTA_BD:
-				this.jndi = dominio.getJndi();
-				this.sql = dominio.getSql();
+				this.resultadoJndi = dominio.getJndi();
+				this.resultadoSQL = dominio.getSql();
 				altura = 400;
 				break;
 			case CONSULTA_REMOTA:
-				this.url = dominio.getUrl();
+				this.resultadoURL = dominio.getUrl();
 				altura = 300;
 				break;
 			case FUENTE_DATOS:
-				this.sql = dominio.getSql();
+				this.resultadoSQL = dominio.getSql();
 				altura = 350;
 				break;
 			case LISTA_FIJA:
+				this.resultadoLista = UtilJSON.toJSON(dominio.getListaFija());
 				altura = 400;
 				break;
 			}
@@ -160,8 +154,6 @@ public class FilaImportarDominio extends FilaImportar {
 			this.setMensaje("importar.error.distintosAmbitos");
 			return;
 		}
-
-		final boolean permisosEdicion = checkPermisos();
 
 		if (permisosEdicion) {
 			checkDominioModoEdicion();
@@ -204,7 +196,11 @@ public class FilaImportarDominio extends FilaImportar {
 		} else {
 
 			this.accion = TypeImportarAccion.REEMPLAZAR;
-			this.estado = TypeImportarEstado.NO_EXISTE;
+			if (dominioActual == null) {
+				this.estado = TypeImportarEstado.NO_EXISTE;
+			} else {
+				this.estado = TypeImportarEstado.EXISTE;
+			}
 			this.resultado = TypeImportarResultado.WARNING;
 			this.visibleBoton = true;
 			this.mismoTipo = (dominio != null && dominioActual.getTipo() == dominio.getTipo());
@@ -301,33 +297,6 @@ public class FilaImportarDominio extends FilaImportar {
 	}
 
 	/**
-	 * Metodo que comprueba si tiene permisos el usuario sobre los dominios.
-	 *
-	 * @return
-	 */
-	private boolean checkPermisos() {
-		boolean tienePermisosEdicion;
-
-		switch (dominio.getAmbito()) {
-		case AREA:
-			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
-					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR);
-			break;
-		case ENTIDAD:
-			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-			break;
-		case GLOBAL:
-			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
-			break;
-		default:
-			tienePermisosEdicion = false;
-			break;
-		}
-
-		return tienePermisosEdicion;
-	}
-
-	/**
 	 * Comprueba si son el mismo valor.
 	 *
 	 * @param texto1
@@ -393,51 +362,6 @@ public class FilaImportarDominio extends FilaImportar {
 			}
 		}
 		return iguales;
-	}
-
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * @param url
-	 *            the url to set
-	 */
-	public void setUrl(final String url) {
-		this.url = url;
-	}
-
-	/**
-	 * @return the jndi
-	 */
-	public String getJndi() {
-		return jndi;
-	}
-
-	/**
-	 * @param jndi
-	 *            the jndi to set
-	 */
-	public void setJndi(final String jdni) {
-		this.jndi = jdni;
-	}
-
-	/**
-	 * @return the sql
-	 */
-	public String getSql() {
-		return sql;
-	}
-
-	/**
-	 * @param sql
-	 *            the sql to set
-	 */
-	public void setSql(final String sql) {
-		this.sql = sql;
 	}
 
 	/**
@@ -571,10 +495,8 @@ public class FilaImportarDominio extends FilaImportar {
 	 * @param mensaje
 	 *            the mensaje to set
 	 */
-	public void setMensaje(final String literal) {
-		if (literal != null) {
-			this.mensaje = UtilJSF.getLiteral(literal);
-		}
+	public void setMensaje(final String mensaje) {
+		this.mensaje = mensaje;
 	}
 
 	/**
@@ -694,6 +616,36 @@ public class FilaImportarDominio extends FilaImportar {
 	 */
 	public void setFuenteDatosActual(final FuenteDatos fuenteDatosActual) {
 		this.fuenteDatosActual = fuenteDatosActual;
+	}
+
+	/**
+	 * @return the idArea
+	 */
+	public Long getIdArea() {
+		return idArea;
+	}
+
+	/**
+	 * @param idArea
+	 *            the idArea to set
+	 */
+	public void setIdArea(final Long idArea) {
+		this.idArea = idArea;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	public Long getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad
+	 *            the idEntidad to set
+	 */
+	public void setIdEntidad(final Long idEntidad) {
+		this.idEntidad = idEntidad;
 	}
 
 }

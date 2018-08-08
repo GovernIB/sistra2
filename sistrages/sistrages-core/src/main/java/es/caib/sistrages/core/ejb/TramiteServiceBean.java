@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.ejb;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -26,6 +27,11 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.service.TramiteService;
 
 @Stateless
@@ -429,5 +435,16 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean checkIdentificadorAreaRepetido(final String identificador, final Long codigo) {
 		return tramiteService.checkIdentificadorAreaRepetido(identificador, codigo);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void importar(final FilaImportarArea filaArea, final FilaImportarTramite filaTramite,
+			final FilaImportarTramiteVersion filaTramiteVersion, final List<FilaImportarDominio> filasDominios,
+			final List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
+			final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
+			final Map<Long, byte[]> ficherosContent) throws Exception {
+		tramiteService.importar(filaArea, filaTramite, filaTramiteVersion, filasDominios, filasFormateador, idEntidad,
+				formularios, ficheros, ficherosContent);
 	}
 }

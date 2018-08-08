@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 
 /**
  * La interface FormateadorFormularioDao.
@@ -20,14 +21,12 @@ public interface FormateadorFormularioDao {
 
 	/**
 	 * Obtiene formateador por código.
-	 * 
-	 * @param idEntidad
-	 *            id entidad
+	 *
 	 * @param codigo
 	 *            código
 	 * @return formateador
 	 */
-	FormateadorFormulario getByCodigo(Long idEntidad, String codigo);
+	FormateadorFormulario getByCodigo(String codigo);
 
 	/**
 	 * Añade el Formateador de Formulario.
@@ -82,5 +81,14 @@ public interface FormateadorFormularioDao {
 	 * @return la lista de Formateadores de Formulario
 	 */
 	List<FormateadorFormulario> getAllByFiltro(Long idEntidad, String filtro);
+
+	/**
+	 * Importa un formateador formulario.
+	 *
+	 * @param filaFormateador
+	 * @param idEntidad
+	 * @return
+	 */
+	Long importar(FilaImportarFormateador filaFormateador, Long idEntidad);
 
 }

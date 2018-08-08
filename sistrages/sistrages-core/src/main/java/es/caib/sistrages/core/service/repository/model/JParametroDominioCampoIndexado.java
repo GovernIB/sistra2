@@ -106,4 +106,17 @@ public class JParametroDominioCampoIndexado implements IModelApi {
 		}
 		return jModel;
 	}
+
+	public static JParametroDominioCampoIndexado clonar(final JParametroDominioCampoIndexado parametro,
+			final JCampoFormularioIndexado jcampo) {
+		JParametroDominioCampoIndexado jparametro = null;
+		if (parametro != null) {
+			jparametro = new JParametroDominioCampoIndexado();
+			jparametro.setCampoFormularioIndexado(jcampo);
+			jparametro.setParametro(parametro.getParametro());
+			jparametro.setTipo(parametro.getTipo());
+			jparametro.setValor(parametro.getValor());
+		}
+		return jparametro;
+	}
 }

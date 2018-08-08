@@ -1,5 +1,8 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * La clase PlantillaFormulario.
  */
@@ -30,6 +33,9 @@ public class PlantillaFormulario extends ModelApi {
 	 * indica si es el valor por defecto.
 	 */
 	private boolean porDefecto;
+
+	/** Lista de plantillas idiomas formulario. **/
+	private List<PlantillaIdiomaFormulario> plantillasIdiomaFormulario = new ArrayList<>(0);
 
 	/**
 	 * Crea una nueva instancia de PlantillaFormulario.
@@ -131,6 +137,21 @@ public class PlantillaFormulario extends ModelApi {
 
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
+	}
+
+	/**
+	 * @return the plantillasIdiomaFormulario
+	 */
+	public List<PlantillaIdiomaFormulario> getPlantillasIdiomaFormulario() {
+		return plantillasIdiomaFormulario;
+	}
+
+	/**
+	 * @param plantillasIdiomaFormulario
+	 *            the plantillasIdiomaFormulario to set
+	 */
+	public void setPlantillasIdiomaFormulario(final List<PlantillaIdiomaFormulario> plantillasIdiomaFormulario) {
+		this.plantillasIdiomaFormulario = plantillasIdiomaFormulario;
 	}
 
 	/**

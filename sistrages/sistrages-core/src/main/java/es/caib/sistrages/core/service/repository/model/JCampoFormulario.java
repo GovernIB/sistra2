@@ -193,4 +193,26 @@ public class JCampoFormulario implements IModelApi {
 		return jModel;
 	}
 
+	public static JCampoFormulario clonar(final JCampoFormulario campoFormulario, final JElementoFormulario jelemento) {
+		JCampoFormulario jcampo = null;
+		if (campoFormulario != null) {
+			jcampo = new JCampoFormulario();
+			jcampo.setElementoFormulario(jelemento);
+			jcampo.setScriptAutocalculado(JScript.clonar(campoFormulario.getScriptAutocalculado()));
+			jcampo.setScriptSoloLectura(JScript.clonar(campoFormulario.getScriptSoloLectura()));
+			jcampo.setScriptValidaciones(JScript.clonar(campoFormulario.getScriptValidaciones()));
+			jcampo.setObligatorio(campoFormulario.isObligatorio());
+			jcampo.setSoloLectura(campoFormulario.isSoloLectura());
+			jcampo.setNoModificable(campoFormulario.isNoModificable());
+			jcampo.setCampoFormularioCasillaVerificacion(JCampoFormularioCasillaVerificacion
+					.clonar(campoFormulario.getCampoFormularioCasillaVerificacion(), jcampo));
+			jcampo.setCampoFormularioIndexado(
+					JCampoFormularioIndexado.clonar(campoFormulario.getCampoFormularioIndexado(), jcampo));
+			jcampo.setCampoFormularioTexto(
+					JCampoFormularioTexto.clonar(campoFormulario.getCampoFormularioTexto(), jcampo));
+
+		}
+		return jcampo;
+	}
+
 }

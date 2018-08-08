@@ -7,6 +7,7 @@ import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
@@ -79,6 +80,15 @@ public interface FormularioInternoDao {
 	Long addFormulario(FormularioTramite pFormTra);
 
 	/**
+	 * Crea una página pudiendo elegir si se pone página por defecto o no.
+	 *
+	 * @param pFormTra
+	 * @param crearPaginaInicial
+	 * @return
+	 */
+	Long addFormulario(FormularioTramite pFormTra, boolean crearPaginaInicial);
+
+	/**
 	 * Actualiza un formulario.
 	 *
 	 * @param pFormInt
@@ -125,4 +135,32 @@ public interface FormularioInternoDao {
 			PlantillaIdiomaFormulario plantilla);
 
 	void removePlantillaIdiomaFormulario(Long idPlantilla);
+
+	/**
+	 * Añade una página a un formulario. TODO Debería incluirse en addComponent un
+	 * Tipo de Pagina.
+	 *
+	 * @param idFormulario
+	 * @param paginaFormulario
+	 * @return
+	 */
+	Long addPagina(Long idFormulario, PaginaFormulario paginaFormulario);
+
+	/**
+	 * Añade una plantilla a un formulario. TODO Debería incluirse en addComponent
+	 * en un tipo de plantilla formulario.
+	 *
+	 * @param idFormulario
+	 * @param mplantilla
+	 * @return
+	 */
+	Long addPlantilla(Long idFormulario, PlantillaFormulario mplantilla);
+
+	/**
+	 * Borra un formulario
+	 * 
+	 * @param codigo
+	 */
+	void removeFormulario(Long codigo);
+
 }

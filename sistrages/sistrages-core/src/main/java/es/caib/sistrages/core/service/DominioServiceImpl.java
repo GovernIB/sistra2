@@ -13,6 +13,7 @@ import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -259,6 +260,11 @@ public class DominioServiceImpl implements DominioService {
 	@Override
 	public List<Dominio> listDominio(final Long idTramite, final String filtro) {
 		return dominioDao.getAllByFiltro(idTramite, filtro);
+	}
+
+	@Override
+	public void importarDominio(final FilaImportarDominio filaDominio) throws Exception {
+		dominioDao.importar(filaDominio);
 	}
 
 }

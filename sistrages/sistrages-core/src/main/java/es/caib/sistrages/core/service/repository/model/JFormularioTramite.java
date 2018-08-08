@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,11 +20,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.GestorExternoFormularios;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 
 /**
  * JFormularioTramite
@@ -388,7 +390,8 @@ public class JFormularioTramite implements IModelApi {
 			jformularioTramite.setScriptObligatoriedad(JScript.clonar(formularioTramite.getScriptObligatoriedad()));
 			jformularioTramite.setScriptParametros(JScript.clonar(formularioTramite.getScriptParametros()));
 			jformularioTramite.setScriptRetorno(JScript.clonar(formularioTramite.getScriptRetorno()));
-			jformularioTramite.setFormulario(JFormulario.clonar(formularioTramite.getFormulario()));
+			jformularioTramite.setFormulario(JFormulario.clonar(formularioTramite.getFormulario(),
+					new HashMap<String, FormateadorFormulario>()));
 
 			jformularioTramite.setTipo(formularioTramite.getTipo());
 			jformularioTramite.setTipoFormulario(formularioTramite.getTipoFormulario());

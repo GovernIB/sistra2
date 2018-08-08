@@ -115,6 +115,9 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** Idiomas del tramite version. **/
 	private List<String> idiomasTramiteVersion;
 
+	/** Nombre de los ficheros. **/
+	private final Map<String, Boolean> nombreFicheros = new HashMap<>();
+
 	/**
 	 * Inicialización.
 	 */
@@ -193,6 +196,12 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			}
 		}
 
+		if (this.tramiteVersion != null && this.tramiteVersion.getBloqueada() && todoCorrecto) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteExportar.error.tramiteBloqueado"));
+			todoCorrecto = false;
+		}
+
 		return todoCorrecto;
 
 	}
@@ -226,7 +235,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
 				if (literalIncompleto(formulario.getDescripcion())) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-							UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.formulario.desc"));
+							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.formulario.desc"));
 					return true;
 				}
 			}
@@ -244,7 +253,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		if (literalIncompleto(paso.getInstruccionesFinTramitacion())
 				|| literalIncompleto(paso.getInstruccionesPresentacion())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.registrar.inst"));
+					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.registrar.inst"));
 			return true;
 		}
 
@@ -260,7 +269,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	private boolean checkLiteralIncompleto(final TramitePasoDebeSaber paso) {
 		if (literalIncompleto(paso.getInstruccionesIniciales())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.debesaber.instr"));
+					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.debesaber.instr"));
 			return true;
 		}
 		return false;
@@ -275,7 +284,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	private boolean checkLiteralIncompleto(final TramitePasoAnexar paso) {
 		if (literalIncompleto(paso.getDescripcion())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.anexar.desc"));
+					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.anexar.desc"));
 			return true;
 		}
 
@@ -283,7 +292,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			for (final Documento documento : paso.getDocumentos()) {
 				if (literalIncompleto(documento.getAyudaTexto()) || literalIncompleto(documento.getDescripcion())) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-							UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.anexo.lit"));
+							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.anexo.lit"));
 					return true;
 				}
 			}
@@ -300,7 +309,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	private boolean checkLiteralIncompleto(final TramitePasoTasa paso) {
 		if (literalIncompleto(paso.getDescripcion())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.tasar.desc"));
+					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.tasar.desc"));
 			return true;
 		}
 
@@ -308,7 +317,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 			for (final Tasa tasa : paso.getTasas()) {
 				if (literalIncompleto(tasa.getDescripcion())) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-							UtilJSF.getLiteral("dialogTramiteVersionExportar.error.incompleto.tasa.lit"));
+							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.tasa.lit"));
 					return true;
 				}
 			}
@@ -450,9 +459,12 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 */
 	private void incluirModelApi(final ZipOutputStream zos, final ModelApi model, final String nombreFichero)
 			throws IOException {
-		final ZipEntry zeTramiteVersion = new ZipEntry(nombreFichero);
-		zos.putNextEntry(zeTramiteVersion);
-		zos.write(UtilCoreApi.serialize(model));
+		final ZipEntry zipEntry = new ZipEntry(nombreFichero);
+		if (!nombreFicheros.containsKey(nombreFichero)) {
+			nombreFicheros.put(nombreFichero, true);
+			zos.putNextEntry(zipEntry);
+			zos.write(UtilCoreApi.serialize(model));
+		}
 	}
 
 	/**
@@ -464,6 +476,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 	/**
 	 * @param id
+	 *
 	 *            the id to set
 	 */
 	public void setId(final String id) {

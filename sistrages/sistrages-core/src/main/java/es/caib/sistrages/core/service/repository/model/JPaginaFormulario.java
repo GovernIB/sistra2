@@ -1,6 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,7 +18,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
+import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
+import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
+import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
+import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * JPaginaFormulario
@@ -143,6 +154,88 @@ public class JPaginaFormulario implements IModelApi {
 		pagina.setOrden(orden);
 		pagina.setPaginaFinal(paginaFinal);
 
+		if (this.getLineasFormulario() != null) {
+			final List<LineaComponentesFormulario> lineas = new ArrayList<>(0);
+			for (final JLineaFormulario linea : this.getLineasFormulario()) {
+				lineas.add(linea.toModel());
+			}
+			pagina.setLineas(lineas);
+		}
+
+		// TODO this.getListasElementosFormulario() se ignora
+
+		return pagina;
+	}
+
+	public PaginaFormulario toModelCompleto() {
+		final PaginaFormulario pagina = new PaginaFormulario();
+		pagina.setCodigo(codigo);
+		if (scriptValidacion != null) {
+			pagina.setScriptValidacion(scriptValidacion.toModel());
+		}
+		pagina.setOrden(orden);
+		pagina.setPaginaFinal(paginaFinal);
+		if (scriptValidacion != null) {
+			pagina.setScriptValidacion(scriptValidacion.toModel());
+		}
+		pagina.setPaginaAsociadaListaElementos(paginaAsociadaListaElementos);
+		final List<LineaComponentesFormulario> lineas = new ArrayList<>(0);
+		if (this.lineasFormulario != null) {
+			for (final JLineaFormulario linea : this.lineasFormulario) {
+				final LineaComponentesFormulario comp = new LineaComponentesFormulario();
+				comp.setOrden(linea.getOrden());
+				comp.setCodigo(linea.getCodigo());
+				final List<ComponenteFormulario> componentes = new ArrayList<>(0);
+				if (linea.getElementoFormulario() != null) {
+					for (final JElementoFormulario elemento : linea.getElementoFormulario()) {
+						switch (TypeObjetoFormulario.fromString(elemento.getTipo())) {
+						case CAMPO_TEXTO:
+							componentes.add(elemento.toModel(ComponenteFormularioCampoTexto.class));
+							break;
+						case CHECKBOX:
+							componentes.add(elemento.toModel(ComponenteFormularioCampoCheckbox.class));
+							break;
+						case ETIQUETA:
+							componentes.add(elemento.toModel(ComponenteFormularioEtiqueta.class));
+							break;
+						case IMAGEN:
+							componentes.add(elemento.toModel(ComponenteFormularioImagen.class));
+							break;
+						case LISTA_ELEMENTOS:
+							componentes.add(elemento.toModel(ComponenteFormulario.class));
+							break;
+						case SECCION:
+							componentes.add(elemento.toModel(ComponenteFormularioSeccion.class));
+							break;
+						case SELECTOR:
+							componentes.add(elemento.toModel(ComponenteFormularioCampoSelector.class));
+							break;
+						case CAPTCHA:
+						case LINEA:
+						case PAGINA:
+							break;
+						}
+					}
+				}
+				comp.setComponentes(componentes);
+				lineas.add(comp);
+			}
+		}
+
+		if (this.listasElementosFormulario != null) {
+			for (final JListaElementosFormulario elementoForm : listasElementosFormulario) {
+				final LineaComponentesFormulario comp = new LineaComponentesFormulario();
+				comp.setCodigo(elementoForm.getCodigo());
+				final List<ComponenteFormulario> componentes = new ArrayList<>(0);
+				if (elementoForm.getElementoFormulario() != null) {
+					componentes.add(elementoForm.getElementoFormulario().toModel(JElementoFormulario.class));
+				}
+				comp.setComponentes(componentes);
+				lineas.add(comp);
+			}
+		}
+		pagina.setLineas(lineas);
+
 		return pagina;
 	}
 
@@ -167,5 +260,35 @@ public class JPaginaFormulario implements IModelApi {
 		jPagina.setPaginaAsociadaListaElementos(false);
 		jPagina.setFormulario(pJFormulario);
 		return jPagina;
+	}
+
+	public static JPaginaFormulario clonar(final JPaginaFormulario pagina, final JFormulario jformulario) {
+		JPaginaFormulario jpagina = null;
+		if (pagina != null) {
+			jpagina = new JPaginaFormulario();
+
+			jpagina.setFormulario(jformulario);
+			jpagina.setOrden(pagina.getOrden());
+			jpagina.setScriptValidacion(JScript.clonar(pagina.getScriptValidacion()));
+
+			jpagina.setPaginaFinal(pagina.isPaginaFinal());
+			jpagina.setPaginaAsociadaListaElementos(pagina.isPaginaAsociadaListaElementos());
+			if (pagina.getLineasFormulario() != null) {
+				final Set<JLineaFormulario> lineasFormulario = new HashSet<>(0);
+				for (final JLineaFormulario linea : pagina.getLineasFormulario()) {
+					lineasFormulario.add(JLineaFormulario.clonar(linea, jpagina));
+				}
+				jpagina.setLineasFormulario(lineasFormulario);
+			}
+
+			if (pagina.getListasElementosFormulario() != null) {
+				final Set<JListaElementosFormulario> listasElementosFormulario = new HashSet<>(0);
+				for (final JListaElementosFormulario listaElementos : pagina.getListasElementosFormulario()) {
+					listasElementosFormulario.add(JListaElementosFormulario.clonar(listaElementos, jpagina));
+				}
+				jpagina.setListasElementosFormulario(listasElementosFormulario);
+			}
+		}
+		return jpagina;
 	}
 }

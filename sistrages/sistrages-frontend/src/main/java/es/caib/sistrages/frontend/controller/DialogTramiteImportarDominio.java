@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -10,11 +11,12 @@ import javax.faces.event.ValueChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportarDominio;
 import es.caib.sistrages.frontend.model.comun.Constantes;
-import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -46,6 +48,9 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 
 	/** Mostrar los textos de reemplazar. **/
 	private boolean mostrarReemplazar = true;
+
+	/** La lista de parametros **/
+	private List<Propiedad> parametros;
 
 	/** Accion. **/
 	private String accion;
@@ -82,6 +87,9 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			break;
 		case LISTA_FIJA:
 			mostrarLista = true;
+			if (this.data.getResultadoLista() != null && !this.data.getResultadoLista().isEmpty()) {
+				parametros = (List<Propiedad>) UtilJSON.fromListJSON(this.data.getResultadoLista(), Propiedad.class);
+			}
 			break;
 		default:
 			mostrarSql = false;
@@ -336,6 +344,21 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 */
 	public void setAccion(final String accion) {
 		this.accion = accion;
+	}
+
+	/**
+	 * @return the parametros
+	 */
+	public List<Propiedad> getParametros() {
+		return parametros;
+	}
+
+	/**
+	 * @param parametros
+	 *            the parametros to set
+	 */
+	public void setParametros(final List<Propiedad> parametros) {
+		this.parametros = parametros;
 	}
 
 }

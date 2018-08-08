@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
 
@@ -62,11 +63,10 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	}
 
 	@Override
-	public FormateadorFormulario getByCodigo(final Long idEntidad, final String codigo) {
+	public FormateadorFormulario getByCodigo(final String codigo) {
 		FormateadorFormulario result = null;
-		final String sql = "select f from JFormateadorFormulario f where f.entidad.codigo = :idEntidad and f.identificador = :codigo";
+		final String sql = "select f from JFormateadorFormulario f where f.identificador = :codigo";
 		final Query query = entityManager.createQuery(sql);
-		query.setParameter("idEntidad", idEntidad);
 		query.setParameter("codigo", codigo);
 		final List<JFormateadorFormulario> list = query.getResultList();
 		if (!list.isEmpty()) {
@@ -210,6 +210,27 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idEntidad", idEntidad);
 		query.executeUpdate();
+	}
+
+	@Override
+	public Long importar(final FilaImportarFormateador filaFormateador, final Long idEntidad) {
+		if (filaFormateador.getFormateadorFormularioActual() == null) { // Si no existe, se crea.
+			final JEntidad jentidad = entityManager.find(JEntidad.class, idEntidad);
+			final JFormateadorFormulario jFmt = JFormateadorFormulario
+					.fromModel(filaFormateador.getFormateadorFormulario());
+			jFmt.setCodigo(null);
+			jFmt.setEntidad(jentidad);
+			entityManager.persist(jFmt);
+			return jFmt.getCodigo();
+		} else {
+			final JFormateadorFormulario jFmt = entityManager.find(JFormateadorFormulario.class,
+					filaFormateador.getFormateadorFormularioActual().getCodigo());
+			jFmt.setClassname(filaFormateador.getFormateadorFormulario().getClassname());
+			jFmt.setDescripcion(filaFormateador.getFormateadorFormulario().getDescripcion());
+			entityManager.merge(jFmt);
+			return jFmt.getCodigo();
+
+		}
 	}
 
 }

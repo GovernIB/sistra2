@@ -45,8 +45,8 @@ public class FormateadorFormularioServiceImpl implements FormateadorFormularioSe
 
 	@Override
 	@NegocioInterceptor
-	public FormateadorFormulario getFormateadorFormulario(final Long idEntidad, final String codigo) {
-		return fmtDao.getByCodigo(idEntidad, codigo);
+	public FormateadorFormulario getFormateadorFormulario(final String codigo) {
+		return fmtDao.getByCodigo(codigo);
 	}
 
 	/*

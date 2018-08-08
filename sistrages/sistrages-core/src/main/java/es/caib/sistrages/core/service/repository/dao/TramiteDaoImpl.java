@@ -21,6 +21,8 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
@@ -48,6 +50,12 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Autowired
 	private FicheroExternoDao ficheroExternoDao;
+
+	@Autowired
+	private DominioDao dominioDao;
+
+	@Autowired
+	private FormularioInternoDao formularioInternoDao;
 
 	/**
 	 * entity manager.
@@ -120,7 +128,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	 * es.caib.sistrages.core.api.model.Tramite)
 	 */
 	@Override
-	public void add(final Long idArea, final Tramite pTramite) {
+	public Long add(final Long idArea, final Tramite pTramite) {
 		if (idArea == null) {
 			throw new FaltanDatosException("Falta el area");
 		}
@@ -133,6 +141,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final JTramite jTramite = JTramite.fromModel(pTramite);
 		jTramite.setArea(jArea);
 		entityManager.persist(jTramite);
+		return jTramite.getCodigo();
 	}
 
 	/*
@@ -425,6 +434,14 @@ public class TramiteDaoImpl implements TramiteDao {
 		@SuppressWarnings("unchecked")
 		final List<JPasoTramitacion> pasos = query.getResultList();
 		for (final JPasoTramitacion paso : pasos) {
+			// Borramos el diseño.
+			if (paso.getPasoRellenar() != null && paso.getPasoRellenar().getFormulariosTramite() != null) {
+				for (final JFormularioTramite formulario : paso.getPasoRellenar().getFormulariosTramite()) {
+					if (formulario.getFormulario() != null) {
+						formularioInternoDao.removeFormulario(formulario.getFormulario().getCodigo());
+					}
+				}
+			}
 			entityManager.remove(paso);
 		}
 
@@ -617,13 +634,16 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		query.setParameter("identificador", identificador);
 
-		final JTramite jtramite = (JTramite) query.getSingleResult();
+		Tramite tramite = null;
 
-		if (jtramite == null) {
-			return null;
-		} else {
-			return jtramite.toModel();
+		@SuppressWarnings("unchecked")
+		final List<JTramite> tramites = query.getResultList();
+
+		if (tramites != null && tramites.size() > 0) {
+			tramite = tramites.get(0).toModel();
 		}
+
+		return tramite;
 	}
 
 	@Override
@@ -643,9 +663,9 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		return tramiteVersion;
 	}
-	
+
 	@Override
-	public TramiteVersion getTramiteVersionByNumVersion( final String idTramite, final int numeroVersion) {
+	public TramiteVersion getTramiteVersionByNumVersion(final String idTramite, final int numeroVersion) {
 		final String sql = "Select t From JVersionTramite t where t.tramite.identificador = :idTramite and t.numeroVersion = :numeroVersion";
 		final Query query = entityManager.createQuery(sql);
 
@@ -724,6 +744,97 @@ public class TramiteDaoImpl implements TramiteDao {
 			repetido = true;
 		}
 		return repetido;
+	}
+
+	@Override
+	public Long importar(final FilaImportarTramite filaTramite, final Long idArea) {
+		if (filaTramite.getTramiteActual() == null) {
+			final Tramite tramite = filaTramite.getTramite();
+			tramite.setCodigo(null);
+			return add(idArea, filaTramite.getTramite());
+		} else {
+			final JTramite jTramite = entityManager.find(JTramite.class, filaTramite.getTramiteActual().getCodigo());
+			jTramite.setDescripcion(filaTramite.getTramiteResultado());
+			entityManager.merge(jTramite);
+			return jTramite.getCodigo();
+		}
+	}
+
+	@Override
+	public Long importar(final FilaImportarTramiteVersion filaTramiteVersion, final Long idTramite,
+			final List<Long> idDominios) {
+
+		JVersionTramite jTramiteVersion = null;
+		if (filaTramiteVersion.getTramiteVersionActual() == null) {
+
+			jTramiteVersion = limpiar(JVersionTramite.fromModel(filaTramiteVersion.getTramiteVersion()));
+			final JTramite jTramite = entityManager.find(JTramite.class, idTramite);
+			jTramiteVersion.setTramite(jTramite);
+			entityManager.persist(jTramiteVersion);
+
+		} else {
+
+			// Obtenemos los pasos y los borramos
+			final String sql = "Select t From JPasoTramitacion t where t.versionTramite.id = :idTramiteVersion";
+
+			final Query query = entityManager.createQuery(sql);
+			query.setParameter(STRING_ID_TRAMITE_VERSION, filaTramiteVersion.getTramiteVersionActual().getCodigo());
+
+			@SuppressWarnings("unchecked")
+			final List<JPasoTramitacion> pasos = query.getResultList();
+			for (final JPasoTramitacion paso : pasos) {
+
+				// Borramos el diseño.
+				if (paso.getPasoRellenar() != null && paso.getPasoRellenar().getFormulariosTramite() != null) {
+					for (final JFormularioTramite formulario : paso.getPasoRellenar().getFormulariosTramite()) {
+						if (formulario.getFormulario() != null) {
+							formularioInternoDao.removeFormulario(formulario.getFormulario().getCodigo());
+						}
+					}
+				}
+				entityManager.remove(paso);
+			}
+
+			jTramiteVersion = entityManager.find(JVersionTramite.class,
+					filaTramiteVersion.getTramiteVersionActual().getCodigo());
+
+		}
+		entityManager.flush();
+
+		/** Primero borramos las asociaciones y luego las volvemos a asociar. **/
+		final List<Long> mdominios = this.getTramiteDominiosId(jTramiteVersion.getCodigo());
+		for (final Long mdominio : mdominios) {
+			dominioDao.removeTramiteVersion(mdominio, jTramiteVersion.getCodigo());
+		}
+		entityManager.flush();
+
+		/** Id dominio. **/
+		for (final Long idDominio : idDominios) {
+			dominioDao.addTramiteVersion(idDominio, jTramiteVersion.getCodigo());
+		}
+
+		return jTramiteVersion.getCodigo();
+	}
+
+	/**
+	 * Método que coge una version de tramite y quita los codigo.
+	 *
+	 * @param fromModel
+	 * @return
+	 */
+	private JVersionTramite limpiar(final JVersionTramite version) {
+
+		version.setCodigo(null);
+		if (version.getScriptInicializacionTramite() != null) {
+			version.getScriptInicializacionTramite().setCodigo(null);
+		}
+		if (version.getScriptPersonalizacion() != null) {
+			version.getScriptPersonalizacion().setCodigo(null);
+		}
+		if (version.getMensajeDesactivacion() != null) {
+			version.getMensajeDesactivacion().setCodigo(null);
+		}
+		return version;
 	}
 
 }

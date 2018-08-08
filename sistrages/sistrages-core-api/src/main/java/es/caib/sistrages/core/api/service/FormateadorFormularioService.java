@@ -19,15 +19,13 @@ public interface FormateadorFormularioService {
 	FormateadorFormulario getFormateadorFormulario(Long idFmt);
 
 	/**
-	 * Obtiene el formateador de formulario.
+	 * Obtiene el formateador de formulario segun el identificador.
 	 *
-	 * @param idEntidad
-	 *            idEntidad
 	 * @param codigo
 	 *            codigo
 	 * @return el formateador de formulario.
 	 */
-	FormateadorFormulario getFormateadorFormulario(Long idEntidad, String codigo);
+	FormateadorFormulario getFormateadorFormulario(String codigo);
 
 	/**
 	 * Añade el formateador de formulario.

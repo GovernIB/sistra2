@@ -346,4 +346,38 @@ public class JCampoFormularioIndexado implements IModelApi {
 		return jModel;
 	}
 
+	public static JCampoFormularioIndexado clonar(final JCampoFormularioIndexado campoFormularioIndexado,
+			final JCampoFormulario jcampo) {
+		JCampoFormularioIndexado jcampoIndexado = null;
+		if (campoFormularioIndexado != null) {
+			jcampoIndexado = new JCampoFormularioIndexado();
+			jcampoIndexado.setCampoFormulario(jcampo);
+			jcampoIndexado.setDominio(campoFormularioIndexado.getDominio());
+			jcampoIndexado.setScriptValoresPosibles(JScript.clonar(campoFormularioIndexado.getScriptValoresPosibles()));
+			jcampoIndexado.setTipoCampoIndexado(campoFormularioIndexado.getTipoCampoIndexado());
+			jcampoIndexado.setTipoListaValores(campoFormularioIndexado.getTipoListaValores());
+			jcampoIndexado.setCampoDominioCodigo(campoFormularioIndexado.getCampoDominioCodigo());
+			jcampoIndexado.setCampoDominioDescripcion(campoFormularioIndexado.getCampoDominioDescripcion());
+			jcampoIndexado.setIndiceAlfabetico(campoFormularioIndexado.isIndiceAlfabetico());
+			jcampoIndexado.setAltura(campoFormularioIndexado.getAltura());
+			if (campoFormularioIndexado.getParametrosDominio() != null) {
+				final Set<JParametroDominioCampoIndexado> parametrosDominio = new HashSet<>(0);
+				for (final JParametroDominioCampoIndexado parametro : campoFormularioIndexado.getParametrosDominio()) {
+					parametrosDominio.add(JParametroDominioCampoIndexado.clonar(parametro, jcampoIndexado));
+				}
+				jcampoIndexado.setParametrosDominio(parametrosDominio);
+			}
+
+			if (campoFormularioIndexado.getListaFijaValores() != null) {
+				final Set<JListaFijaValoresCampoIndexado> listaFijaValores = new HashSet<>(0);
+				for (final JListaFijaValoresCampoIndexado lista : campoFormularioIndexado.getListaFijaValores()) {
+					listaFijaValores.add(JListaFijaValoresCampoIndexado.clonar(lista, jcampoIndexado));
+				}
+				jcampoIndexado.setListaFijaValores(listaFijaValores);
+			}
+
+		}
+		return jcampoIndexado;
+	}
+
 }

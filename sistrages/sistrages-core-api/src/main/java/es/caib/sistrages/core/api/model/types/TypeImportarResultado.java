@@ -1,4 +1,4 @@
-package es.caib.sistrages.frontend.model.types;
+package es.caib.sistrages.core.api.model.types;
 
 /**
  * Tipo para indicar la acción a realizar.

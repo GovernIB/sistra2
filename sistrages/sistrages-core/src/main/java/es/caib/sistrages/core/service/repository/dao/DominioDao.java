@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
 // TODO: Auto-generated Javadoc
@@ -147,4 +148,14 @@ public interface DominioDao {
 	 * @return lista de dominios
 	 */
 	List<Dominio> getAllByFiltro(Long idTramite, String filtro);
+
+	/**
+	 * Importa un DAO según las condiciones.
+	 *
+	 * @param filaDominio
+	 * @return El codigo del dominio, tanto cuando se mantiene como cuando se
+	 *         reemplaza o crea.
+	 * @throws Exception
+	 */
+	Long importar(FilaImportarDominio filaDominio) throws Exception;
 }

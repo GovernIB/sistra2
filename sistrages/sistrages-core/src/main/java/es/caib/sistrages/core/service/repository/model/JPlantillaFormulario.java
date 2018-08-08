@@ -1,6 +1,9 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,6 +20,7 @@ import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 
 /**
  * JPlantillaFormulario
@@ -126,6 +130,26 @@ public class JPlantillaFormulario implements IModelApi {
 		return plantilla;
 	}
 
+	public PlantillaFormulario toModelCompleto() {
+		final PlantillaFormulario plantilla = new PlantillaFormulario();
+		plantilla.setCodigo(codigo);
+		plantilla.setIdentificador(identificador);
+		plantilla.setDescripcion(descripcion);
+		plantilla.setPorDefecto(porDefecto);
+
+		if (formateadorFormulario != null) {
+			plantilla.setIdFormateadorFormulario(formateadorFormulario.getCodigo());
+		}
+		if (this.getPlantillaIdiomaFormulario() != null) {
+			final List<PlantillaIdiomaFormulario> idiomas = new ArrayList<>();
+			for (final JPlantillaIdiomaFormulario plantillaIdioma : this.getPlantillaIdiomaFormulario()) {
+				idiomas.add(plantillaIdioma.toModel());
+			}
+			plantilla.setPlantillasIdiomaFormulario(idiomas);
+		}
+		return plantilla;
+	}
+
 	public static JPlantillaFormulario fromModel(final PlantillaFormulario model) {
 		JPlantillaFormulario jModel = null;
 		if (model != null) {
@@ -144,6 +168,31 @@ public class JPlantillaFormulario implements IModelApi {
 
 		}
 		return jModel;
+	}
+
+	public static JPlantillaFormulario clonar(final JPlantillaFormulario plantilla, final JFormulario jformulario,
+			final Map<String, FormateadorFormulario> formateadores) {
+		JPlantillaFormulario jplantilla = null;
+		if (plantilla != null) {
+			jplantilla = new JPlantillaFormulario();
+			jplantilla.setIdentificador(plantilla.getIdentificador());
+
+			if (plantilla.getFormateadorFormulario() != null
+					&& formateadores.containsKey(plantilla.getFormateadorFormulario().getIdentificador())) {
+				jplantilla.setFormateadorFormulario(JFormateadorFormulario
+						.fromModel(formateadores.get(plantilla.getFormateadorFormulario().getIdentificador())));
+			}
+			jplantilla.setFormulario(jformulario);
+			jplantilla.setPorDefecto(plantilla.isPorDefecto());
+			if (plantilla.getPlantillaIdiomaFormulario() != null) {
+				final Set<JPlantillaIdiomaFormulario> plantillaIdiomaFormulario = new HashSet<>(0);
+				for (final JPlantillaIdiomaFormulario jplan : plantilla.getPlantillaIdiomaFormulario()) {
+					plantillaIdiomaFormulario.add(JPlantillaIdiomaFormulario.clonar(jplan, jplantilla));
+				}
+				jplantilla.setPlantillaIdiomaFormulario(plantillaIdiomaFormulario);
+			}
+		}
+		return jplantilla;
 	}
 
 }

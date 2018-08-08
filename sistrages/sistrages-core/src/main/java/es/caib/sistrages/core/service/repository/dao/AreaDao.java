@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 
 /**
  * La interface AreaDao.
@@ -83,4 +84,12 @@ public interface AreaDao {
 	 * @return true, si existe
 	 */
 	boolean checkIdentificadorRepetido(String pIdentificador, Long pCodigo);
+
+	/**
+	 * Importa un area.
+	 *
+	 * @param filaArea
+	 * @return
+	 */
+	Long importar(FilaImportarArea filaArea);
 }

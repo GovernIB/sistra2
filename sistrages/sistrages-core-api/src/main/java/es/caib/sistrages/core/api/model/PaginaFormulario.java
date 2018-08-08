@@ -34,6 +34,9 @@ public final class PaginaFormulario extends ModelApi {
 	 */
 	private List<LineaComponentesFormulario> lineas = new ArrayList<>();
 
+	/** Pagina asociada lista elementos. **/
+	private boolean paginaAsociadaListaElementos;
+
 	/**
 	 * Crea una nueva instancia de PaginaFormulario.
 	 */
@@ -226,5 +229,20 @@ public final class PaginaFormulario extends ModelApi {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * @return the paginaAsociadaListaElementos
+	 */
+	public boolean isPaginaAsociadaListaElementos() {
+		return paginaAsociadaListaElementos;
+	}
+
+	/**
+	 * @param paginaAsociadaListaElementos
+	 *            the paginaAsociadaListaElementos to set
+	 */
+	public void setPaginaAsociadaListaElementos(final boolean paginaAsociadaListaElementos) {
+		this.paginaAsociadaListaElementos = paginaAsociadaListaElementos;
 	}
 }

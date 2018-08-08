@@ -81,4 +81,15 @@ public class JImagenFormulario implements IModelApi {
 		jModel.setElementoFormulario(JElementoFormulario.createDefault(TypeObjetoFormulario.IMAGEN, pOrden, pJLinea));
 		return jModel;
 	}
+
+	public static JImagenFormulario clonar(final JImagenFormulario imagenFormulario,
+			final JElementoFormulario jelemento) {
+		JImagenFormulario jimagen = null;
+		if (imagenFormulario != null) {
+			jimagen = new JImagenFormulario();
+			jimagen.setElementoFormulario(jelemento);
+			jimagen.setFichero(imagenFormulario.getFichero());
+		}
+		return jimagen;
+	}
 }

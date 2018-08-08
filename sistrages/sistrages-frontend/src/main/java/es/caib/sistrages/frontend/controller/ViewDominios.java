@@ -219,6 +219,9 @@ public class ViewDominios extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
+		if (id != null) {
+			params.put(TypeParametroVentana.ID.toString(), this.id);
+		}
 		UtilJSF.openDialog(DialogDominioImportar.class, TypeModoAcceso.ALTA, params, true, 770, 280);
 	}
 

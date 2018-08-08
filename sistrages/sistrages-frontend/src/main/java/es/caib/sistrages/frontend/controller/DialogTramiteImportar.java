@@ -33,7 +33,16 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.FilaImportar;
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
+import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
+import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
+import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -42,16 +51,7 @@ import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportar;
-import es.caib.sistrages.frontend.model.FilaImportarArea;
-import es.caib.sistrages.frontend.model.FilaImportarDominio;
-import es.caib.sistrages.frontend.model.FilaImportarFormateador;
-import es.caib.sistrages.frontend.model.FilaImportarTramite;
-import es.caib.sistrages.frontend.model.FilaImportarTramiteVersion;
 import es.caib.sistrages.frontend.model.comun.Constantes;
-import es.caib.sistrages.frontend.model.types.TypeImportarAccion;
-import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
-import es.caib.sistrages.frontend.model.types.TypeImportarResultado;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -160,7 +160,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	public void init() {
 		setMostrarPanelInfo(false);
 		mostrarBotonImportar = false;
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "En fase BETA!");
 	}
 
 	/**
@@ -221,7 +220,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error extrayendo la info del zip.", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Error cargando el fichero zip y sus datos.");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
 			setMostrarPanelInfo(false);
 			return;
 		} finally {
@@ -234,7 +234,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		if (tramite == null || tramiteVersion == null || area == null || tramiteVersion.getListaPasos() == null
 				|| tramiteVersion.getListaPasos().isEmpty()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					"El dato debería tener tramite, tramiteVersion, area y al menos 1 paso.");
+					UtilJSF.getLiteral("dialogTramiteImportar.error.ficheroContenido"));
 			setMostrarPanelInfo(false);
 			return;
 		}
@@ -252,7 +252,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		if (tramiteActual != null && tramiteActual.getIdArea().compareTo(areaActual.getCodigo()) != 0) {
-			// TODO Hay que soltar error!! Porque si son area distintas, algo está mal.
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.areaDistinta");
+			setMostrarPanelInfo(false);
+			return;
 		}
 
 		if (tramiteActual != null) {
@@ -361,7 +363,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				fdActual = dominioService.loadFuenteDato(dominioActual.getIdFuenteDatos());
 			}
 
-			final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual);
+			final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
+					checkPermisos(dominio));
 
 			this.filasDominios.add(fila);
 
@@ -374,16 +377,18 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		// Paso 3.5. Formateadores.
 		for (final Map.Entry<Long, FormateadorFormulario> entry : formateadores.entrySet()) {
 			final FormateadorFormulario formateador = entry.getValue();
+
 			final FormateadorFormulario formateadorActual = formateadorFormularioService
-					.getFormateadorFormulario(UtilJSF.getIdEntidad(), formateador.getIdentificador());
+					.getFormateadorFormulario(formateador.getIdentificador());
 			if (formateadorActual == null) {
 
-				filasFormateador.add(new FilaImportarFormateador(formateador, TypeImportarAccion.CREAR,
-						TypeImportarEstado.NO_EXISTE, TypeImportarResultado.INFO));
+				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
+						TypeImportarAccion.NADA, TypeImportarEstado.NO_EXISTE, TypeImportarResultado.ERROR,
+						UtilJSF.getLiteral("dialogTramiteImportar.error.noexisteformateador")));
 			} else {
 
-				filasFormateador.add(new FilaImportarFormateador(formateador, TypeImportarAccion.REEMPLAZAR,
-						TypeImportarEstado.EXISTE, TypeImportarResultado.INFO));
+				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
+						TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE, TypeImportarResultado.INFO, ""));
 			}
 
 		}
@@ -395,6 +400,33 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		setMostrarPanelInfo(true);
 		setMostrarBotonImportar(true);
 
+	}
+
+	/**
+	 * Metodo que comprueba si tiene permisos el usuario sobre los dominios.
+	 *
+	 * @return
+	 */
+	private boolean checkPermisos(final Dominio dominio) {
+		boolean tienePermisosEdicion;
+
+		switch (dominio.getAmbito()) {
+		case AREA:
+			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT
+					|| UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR);
+			break;
+		case ENTIDAD:
+			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
+			break;
+		case GLOBAL:
+			tienePermisosEdicion = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
+			break;
+		default:
+			tienePermisosEdicion = false;
+			break;
+		}
+
+		return tienePermisosEdicion;
 	}
 
 	/**
@@ -610,7 +642,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
 		if (!prop.getProperty("version").equals(UtilJSF.getVersion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteVersionImportar.error.version");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.version");
 			return false;
 		}
 
@@ -641,8 +673,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 	/**
 	 * Importar.
+	 *
+	 * @throws Exception
 	 */
-	public void importar() {
+	public void importar() throws Exception {
 
 		// Comprobamos que todas las filas están checkeadas.
 		if (isNotCheckeado(this.filaArea.getResultado()) || isNotCheckeado(this.filaTramite.getResultado())
@@ -661,6 +695,15 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				return;
 			}
 		}
+
+		tramiteService.importar(filaArea, filaTramite, filaTramiteVersion, filasDominios, filasFormateador,
+				UtilJSF.getIdEntidad(), formularios, ficheros, ficherosContent);
+
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setCanceled(false);
+		UtilJSF.closeDialog(result);
 	}
 
 	/**
@@ -673,7 +716,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final boolean noCheckeado = resultado == TypeImportarResultado.WARNING
 				|| resultado == TypeImportarResultado.ERROR;
 		if (noCheckeado) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteVersionImportar.warning.check");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportar.warning.check"));
 		}
 		return noCheckeado;
 	}

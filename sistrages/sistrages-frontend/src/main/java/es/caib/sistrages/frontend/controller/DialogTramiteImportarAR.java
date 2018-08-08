@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -8,12 +9,13 @@ import javax.faces.bean.ViewScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.DialogResult;
-import es.caib.sistrages.frontend.model.FilaImportarArea;
 import es.caib.sistrages.frontend.model.comun.Constantes;
-import es.caib.sistrages.frontend.model.types.TypeImportarEstado;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -38,6 +40,17 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarAR.estado.existedistinto"));
 		} else {
 			setMensaje(UtilJSF.getLiteral("dialogTramiteImportarAR.estado.noexiste"));
+		}
+	}
+
+	/** Consultar. **/
+	public void consultarArea() {
+
+		if (this.data.getAreaActual() != null) {
+			// Muestra dialogo
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.data.getAreaActual().getCodigo()));
+			UtilJSF.openDialog(DialogArea.class, TypeModoAcceso.CONSULTA, params, true, 520, 160);
 		}
 	}
 

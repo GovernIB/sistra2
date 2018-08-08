@@ -308,4 +308,30 @@ public class JElementoFormulario implements IModelApi {
 		return jModel;
 	}
 
+	public static JElementoFormulario clonar(final JElementoFormulario elemento,
+			final JLineaFormulario jlineaFormulario, final JPaginaFormulario jpagina) {
+		JElementoFormulario jelemento = null;
+		if (elemento != null) {
+			jelemento = new JElementoFormulario();
+			jelemento.setLineaFormulario(jlineaFormulario);
+			jelemento.setAyuda(JLiteral.clonar(elemento.getAyuda()));
+			jelemento.setTexto(JLiteral.clonar(elemento.getTexto()));
+			jelemento.setIdentificador(elemento.getIdentificador());
+			jelemento.setTipo(elemento.getTipo());
+			jelemento.setOrden(elemento.getOrden());
+			jelemento.setNumeroColumnas(elemento.getNumeroColumnas());
+			jelemento.setNoMostrarTexto(elemento.isNoMostrarTexto());
+			jelemento.setAlineacionTexto(elemento.getAlineacionTexto());
+			jelemento.setMostrarEnListaElementos(elemento.isMostrarEnListaElementos());
+			jelemento.setListaElementosAnchoColumna(elemento.getListaElementosAnchoColumna());
+			jelemento.setListaElementosFormulario(
+					JListaElementosFormulario.clonar(elemento.getListaElementosFormulario(), jelemento, jpagina));
+			jelemento.setEtiquetaFormulario(JEtiquetaFormulario.clonar(elemento.getEtiquetaFormulario(), jelemento));
+			jelemento.setSeccionFormulario(JSeccionFormulario.clonar(elemento.getSeccionFormulario(), jelemento));
+			jelemento.setCampoFormulario(JCampoFormulario.clonar(elemento.getCampoFormulario(), jelemento));
+			jelemento.setImagenFormulario(JImagenFormulario.clonar(elemento.getImagenFormulario(), jelemento));
+		}
+		return jelemento;
+	}
+
 }

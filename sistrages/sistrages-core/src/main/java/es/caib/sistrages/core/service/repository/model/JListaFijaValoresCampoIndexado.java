@@ -125,4 +125,19 @@ public class JListaFijaValoresCampoIndexado implements IModelApi {
 		return jModel;
 	}
 
+	public static JListaFijaValoresCampoIndexado clonar(final JListaFijaValoresCampoIndexado lista,
+			final JCampoFormularioIndexado jcampoIndexado) {
+		JListaFijaValoresCampoIndexado jlista = null;
+		if (lista != null) {
+			jlista = new JListaFijaValoresCampoIndexado();
+			jlista.setCampoFormularioIndexado(jcampoIndexado);
+			jlista.setDescripcion(JLiteral.clonar(lista.getDescripcion()));
+			jlista.setOrden(lista.getOrden());
+			jlista.setPorDefecto(lista.isPorDefecto());
+			jlista.setValor(lista.getValor());
+		}
+
+		return jlista;
+	}
+
 }
