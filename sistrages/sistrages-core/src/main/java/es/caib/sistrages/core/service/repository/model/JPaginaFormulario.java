@@ -19,12 +19,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
-import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
-import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
-import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
-import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
@@ -154,16 +148,6 @@ public class JPaginaFormulario implements IModelApi {
 		pagina.setOrden(orden);
 		pagina.setPaginaFinal(paginaFinal);
 
-		if (this.getLineasFormulario() != null) {
-			final List<LineaComponentesFormulario> lineas = new ArrayList<>(0);
-			for (final JLineaFormulario linea : this.getLineasFormulario()) {
-				lineas.add(linea.toModel());
-			}
-			pagina.setLineas(lineas);
-		}
-
-		// TODO this.getListasElementosFormulario() se ignora
-
 		return pagina;
 	}
 
@@ -190,25 +174,26 @@ public class JPaginaFormulario implements IModelApi {
 					for (final JElementoFormulario elemento : linea.getElementoFormulario()) {
 						switch (TypeObjetoFormulario.fromString(elemento.getTipo())) {
 						case CAMPO_TEXTO:
-							componentes.add(elemento.toModel(ComponenteFormularioCampoTexto.class));
+							componentes.add(elemento.getCampoFormulario().getCampoFormularioTexto().toModel());
 							break;
 						case CHECKBOX:
-							componentes.add(elemento.toModel(ComponenteFormularioCampoCheckbox.class));
+							componentes.add(
+									elemento.getCampoFormulario().getCampoFormularioCasillaVerificacion().toModel());
 							break;
 						case ETIQUETA:
-							componentes.add(elemento.toModel(ComponenteFormularioEtiqueta.class));
+							componentes.add(elemento.getEtiquetaFormulario().toModel());
 							break;
 						case IMAGEN:
-							componentes.add(elemento.toModel(ComponenteFormularioImagen.class));
+							componentes.add(elemento.getImagenFormulario().toModel());
 							break;
 						case LISTA_ELEMENTOS:
-							componentes.add(elemento.toModel(ComponenteFormulario.class));
+							componentes.add(elemento.getCampoFormulario().toModel(ComponenteFormulario.class));
 							break;
 						case SECCION:
-							componentes.add(elemento.toModel(ComponenteFormularioSeccion.class));
+							componentes.add(elemento.getSeccionFormulario().toModel());
 							break;
 						case SELECTOR:
-							componentes.add(elemento.toModel(ComponenteFormularioCampoSelector.class));
+							componentes.add(elemento.getCampoFormulario().getCampoFormularioIndexado().toModel());
 							break;
 						case CAPTCHA:
 						case LINEA:

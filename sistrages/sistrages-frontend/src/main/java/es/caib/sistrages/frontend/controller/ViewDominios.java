@@ -266,8 +266,15 @@ public class ViewDominios extends ViewControllerBase {
 			permiteEditar = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.SUPER_ADMIN);
 			break;
 		case ENTIDAD:
-			permiteEditar = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT);
-			permiteConsultar = (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR);
+			if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+				permiteEditar = true;
+			} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					permiteEditar = true;
+				} else {
+					permiteConsultar = true;
+				}
+			}
 			break;
 		case AREA:
 			checkPermisosArea();

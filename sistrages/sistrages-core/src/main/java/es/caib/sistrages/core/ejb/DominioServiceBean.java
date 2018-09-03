@@ -243,19 +243,19 @@ public class DominioServiceBean implements DominioService {
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean tieneTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
 		return dominioService.tieneTramiteVersion(idDominio, idTramiteVersion);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void removeTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
 		dominioService.removeTramiteVersion(idDominio, idTramiteVersion);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void addTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
 		dominioService.addTramiteVersion(idDominio, idTramiteVersion);
 	}

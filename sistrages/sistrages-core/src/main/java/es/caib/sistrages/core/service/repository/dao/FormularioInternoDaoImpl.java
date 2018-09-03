@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
@@ -20,7 +21,6 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
 import es.caib.sistrages.core.api.model.ComponenteFormularioEtiqueta;
-import es.caib.sistrages.core.api.model.ComponenteFormularioImagen;
 import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
@@ -71,6 +71,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	 */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	FicheroExternoDao ficheroExternoDao;
 
 	/**
 	 * Crea una nueva instancia de FormularioInternoDaoImpl.
@@ -206,9 +209,22 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 		jForm = JFormulario.mergePaginasModel(jForm, pFormInt);
 
+		final List<JPlantillaFormulario> borrar = JFormulario.listRemovePlantillasModel(jForm, pFormInt);
+
 		jForm = JFormulario.mergePlantillasModel(jForm, pFormInt);
 
 		entityManager.merge(jForm);
+
+		for (final JPlantillaFormulario jPlantillaFormulario : borrar) {
+
+			entityManager.remove(jPlantillaFormulario);
+
+			for (final JPlantillaIdiomaFormulario jPlantillaidiomaFormulario : jPlantillaFormulario
+					.getPlantillaIdiomaFormulario()) {
+				ficheroExternoDao.marcarBorrar(jPlantillaidiomaFormulario.getFichero().getCodigo());
+			}
+
+		}
 	}
 
 	/*
@@ -298,6 +314,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
 				final JCampoFormularioTexto jObjFormCampoTexto = JCampoFormularioTexto.createDefault(pOrden,
 						jLineaSeleccionada);
+				jObjFormCampoTexto.getCampoFormulario().setCampoFormularioTexto(jObjFormCampoTexto);
+				jObjFormCampoTexto.getCampoFormulario().getElementoFormulario()
+						.setCampoFormulario(jObjFormCampoTexto.getCampoFormulario());
 				entityManager.persist(jObjFormCampoTexto);
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormCampoTexto.toModel();
@@ -306,6 +325,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
 				final JCampoFormularioCasillaVerificacion jObjFormCasillaVerificacion = JCampoFormularioCasillaVerificacion
 						.createDefault(pOrden, jLineaSeleccionada);
+				jObjFormCasillaVerificacion.getCampoFormulario()
+						.setCampoFormularioCasillaVerificacion(jObjFormCasillaVerificacion);
+				jObjFormCasillaVerificacion.getCampoFormulario().getElementoFormulario()
+						.setCampoFormulario(jObjFormCasillaVerificacion.getCampoFormulario());
 				entityManager.persist(jObjFormCasillaVerificacion);
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormCasillaVerificacion.toModel();
@@ -314,10 +337,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
 				final JCampoFormularioIndexado jObjFormSelector = JCampoFormularioIndexado.createDefault(pOrden,
 						jLineaSeleccionada);
-				/*
-				 * jObjFormSelector.getCampoFormulario().getElementoFormulario()
-				 * .setCampoFormulario(jObjFormSelector.getCampoFormulario());
-				 */
+				jObjFormSelector.getCampoFormulario().setCampoFormularioIndexado(jObjFormSelector);
+				jObjFormSelector.getCampoFormulario().getElementoFormulario()
+						.setCampoFormulario(jObjFormSelector.getCampoFormulario());
 				entityManager.persist(jObjFormSelector);
 				entityManager.merge(jLineaSeleccionada);
 				objetoResultado = jObjFormSelector.toModel();
@@ -330,6 +352,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 							jLineaBloqueCreadaSeccion);
 
 					entityManager.persist(jLineaBloqueCreadaSeccion);
+					jObjFormSeccion.getElementoFormulario().setSeccionFormulario(jObjFormSeccion);
 					entityManager.persist(jObjFormSeccion);
 					entityManager.merge(jPagina);
 
@@ -344,6 +367,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					final JEtiquetaFormulario jObjFormEtiqueta = JEtiquetaFormulario.createDefault(1,
 							jLineaBloqueCreadaEtiqueta);
 
+					jObjFormEtiqueta.getElementoFormulario().setEtiquetaFormulario(jObjFormEtiqueta);
 					entityManager.persist(jLineaBloqueCreadaEtiqueta);
 					entityManager.persist(jObjFormEtiqueta);
 					entityManager.merge(jPagina);
@@ -462,7 +486,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				break;
 			case IMAGEN:
 				final JImagenFormulario jImagen = jElemento.getImagenFormulario();
-				final ComponenteFormularioImagen imagen = (ComponenteFormularioImagen) pComponente;
+				// final ComponenteFormularioImagen imagen = (ComponenteFormularioImagen)
+				// pComponente;
 				entityManager.merge(jImagen);
 				objetoResultado = jImagen.toModel();
 				break;
@@ -610,13 +635,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	public PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(final Long idPlantilla,
 			final PlantillaIdiomaFormulario plantilla) {
 		JPlantillaIdiomaFormulario jPlantillaIdioma;
-		final JFichero jFichero;
 
 		if (plantilla.getCodigo() != null) {
 			jPlantillaIdioma = entityManager.find(JPlantillaIdiomaFormulario.class, plantilla.getCodigo());
-			if (plantilla.getFichero() != null) {
-				plantilla.getFichero().setNombre(plantilla.getFichero().getNombre());
-				plantilla.getFichero().setPublico(plantilla.getFichero().isPublico());
+			if (jPlantillaIdioma.getFichero() != null) {
+				jPlantillaIdioma.getFichero().setNombre(plantilla.getFichero().getNombre());
+				jPlantillaIdioma.getFichero().setPublico(plantilla.getFichero().isPublico());
 			} else {
 				jPlantillaIdioma.setFichero(JFichero.fromModel(plantilla.getFichero()));
 			}

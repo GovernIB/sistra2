@@ -528,8 +528,9 @@ public class TramiteDaoImpl implements TramiteDao {
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
-		return query.getResultList();
+		final List<Long> resultado = query.getResultList();
 
+		return resultado;
 	}
 
 	@Override

@@ -647,12 +647,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		// Checkeamos si se sube de los entornos que toca
-		TypeEntorno entornoActual = TypeEntorno.fromString(UtilJSF.getEntorno());
+		final TypeEntorno entornoActual = TypeEntorno.fromString(UtilJSF.getEntorno());
 		final TypeEntorno entornoFicheroZip = TypeEntorno.fromString(prop.getProperty("entorno"));
 
-		entornoActual = TypeEntorno.PREPRODUCCION;
 		boolean correcto = true;
-		if ((entornoActual == TypeEntorno.PREPRODUCCION && entornoFicheroZip == TypeEntorno.DESARROLLO)
+		if (entornoActual == TypeEntorno.DESARROLLO
+				|| (entornoActual == TypeEntorno.PREPRODUCCION && entornoFicheroZip == TypeEntorno.DESARROLLO)
 				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION)) {
 
 			final TypeImportarTipo tipo = TypeImportarTipo.fromString(prop.getProperty("tipo"));

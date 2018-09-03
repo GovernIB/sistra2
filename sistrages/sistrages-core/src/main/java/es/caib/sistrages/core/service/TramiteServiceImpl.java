@@ -911,10 +911,17 @@ public class TramiteServiceImpl implements TramiteService {
 		final Long idArea = areaDao.importar(filaArea);
 		final Long idTramite = tramiteDao.importar(filaTramite, idArea);
 
+		/**
+		 * IdDominios son los dominios que se relacionan con el tramite mientras que
+		 * idDominiosEquivalencia es de donde viene, la id que equivale con el
+		 * importado.
+		 **/
+		final Map<Long, Long> idDominiosEquivalencia = new HashMap<Long, Long>();
 		final List<Long> idDominios = new ArrayList<>();
 		for (final FilaImportarDominio filaDominio : filasDominios) {
 			final Long idDominio = dominiosDao.importar(filaDominio);
 			idDominios.add(idDominio);
+			idDominiosEquivalencia.put(idDominio, filaDominio.getDominio().getCodigo());
 		}
 
 		final Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
@@ -928,7 +935,7 @@ public class TramiteServiceImpl implements TramiteService {
 		final Long idTramiteVersion = tramiteDao.importar(filaTramiteVersion, idTramite, idDominios);
 		for (final TramitePaso tramitePaso : filaTramiteVersion.getTramiteVersion().getListaPasos()) {
 			tramitePasoDao.importar(filaTramiteVersion, tramitePaso, idTramiteVersion, idEntidad, formularios, ficheros,
-					ficherosContent, formateadores);
+					ficherosContent, formateadores, idDominiosEquivalencia);
 		}
 	}
 

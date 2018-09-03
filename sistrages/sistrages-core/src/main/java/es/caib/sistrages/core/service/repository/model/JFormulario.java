@@ -262,29 +262,16 @@ public class JFormulario implements IModelApi {
 
 	public static JFormulario mergePlantillasModel(final JFormulario jFormulario, final DisenyoFormulario pFormInt) {
 
-		if (jFormulario != null && pFormInt != null && !pFormInt.getPlantillas().isEmpty()) {
-			// Borrar paginas no pasados en modelo
-			final List<JPlantillaFormulario> borrar = new ArrayList<>();
-			final List<Long> listPlantillas = new ArrayList<>();
-
-			for (final PlantillaFormulario pag : pFormInt.getPlantillas()) {
-				if (pag.getCodigo() != null) {
-					listPlantillas.add(pag.getCodigo());
-				}
-			}
-
-			for (final JPlantillaFormulario jPlantilla : jFormulario.getPlantillas()) {
-				if (!listPlantillas.contains(jPlantilla.getCodigo())) {
-					borrar.add(jPlantilla);
-				}
-			}
+		if (jFormulario != null && pFormInt != null) {
+			// Borrar plantillas no pasados en modelo
+			final List<JPlantillaFormulario> borrar = listRemovePlantillasModel(jFormulario, pFormInt);
 
 			for (final JPlantillaFormulario jPlantilla : borrar) {
 				jFormulario.getPlantillas().remove(jPlantilla);
 				jPlantilla.setFormulario(null);
 			}
 
-			// Actualizamos pagina pasados en modelo
+			// Actualizamos plantillas pasados en modelo
 			for (final PlantillaFormulario plantilla : pFormInt.getPlantillas()) {
 				if (plantilla.getCodigo() == null || plantilla.getCodigo() < 0) {
 					final JPlantillaFormulario jPlantilla = JPlantillaFormulario.fromModel(plantilla);
@@ -358,6 +345,32 @@ public class JFormulario implements IModelApi {
 			}
 		}
 		return jformulario;
+	}
+
+	public static List<JPlantillaFormulario> listRemovePlantillasModel(final JFormulario jFormulario,
+			final DisenyoFormulario pFormInt) {
+		final List<JPlantillaFormulario> borrar = new ArrayList<>();
+
+		if (jFormulario != null && pFormInt != null) {
+			// Borrar plantillas no pasados en modelo
+
+			final List<Long> listPlantillas = new ArrayList<>();
+
+			for (final PlantillaFormulario pag : pFormInt.getPlantillas()) {
+				if (pag.getCodigo() != null) {
+					listPlantillas.add(pag.getCodigo());
+				}
+			}
+
+			for (final JPlantillaFormulario jPlantilla : jFormulario.getPlantillas()) {
+				if (!listPlantillas.contains(jPlantilla.getCodigo())) {
+					borrar.add(jPlantilla);
+				}
+			}
+
+		}
+
+		return borrar;
 	}
 
 }

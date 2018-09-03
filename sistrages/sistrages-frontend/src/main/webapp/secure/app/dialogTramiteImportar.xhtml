@@ -44,7 +44,7 @@
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerAccion']}" style="font-weight: bold" />
 						<p:outputLabel value="" />
 
-						<p:outputLabel value="#{msg['dialogTramiteImportar.headerArea']}" style="text-align:right; padding-right:3px;" />
+						<p:outputLabel value="#{msg['dialogTramiteImportar.headerArea']}:" style="text-align:left; padding-right:3px;padding-left:13px;font-weight:bold" />
 						<p:outputLabel value="#{dialogTramiteImportar.area.identificador} - #{dialogTramiteImportar.area.descripcion}" />
 						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaArea.estado]}" />
 						<p:column>
@@ -56,7 +56,7 @@
 								<i class="#{dialogTramiteImportar.filaArea.resultado.icon}" style="#{dialogTramiteImportar.filaArea.resultado.css}" />
 						</p:outputLabel>
 
-						<p:outputLabel value="#{msg['dialogTramiteImportar.headerTramite']}" style="text-align:right; padding-right:3px;" />
+						<p:outputLabel value="#{msg['dialogTramiteImportar.headerTramite']}:" style="text-align:left; padding-right:3px;padding-left:13px;font-weight:bold" />
 						<p:outputLabel value="#{dialogTramiteImportar.tramite.identificador} - #{dialogTramiteImportar.tramite.descripcion}" />
 						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramite.estado]}" />
 
@@ -70,7 +70,7 @@
 								<i class="#{dialogTramiteImportar.filaTramite.resultado.icon}" style="#{dialogTramiteImportar.filaTramite.resultado.css}" />
 						</p:outputLabel>
 
-						<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersion']}" style="text-align:right; padding-right:3px;" />
+						<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersion']}:" style="text-align:left; padding-right:3px;padding-left:13px;font-weight:bold" />
 						<p:outputLabel value="#{dialogTramiteImportar.tramiteVersion.numeroVersion} (release #{dialogTramiteImportar.tramiteVersion.release})" />
 						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramiteVersion.estado]}" />
 						<p:column>

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -54,7 +55,7 @@ public class JPlantillaFormulario implements IModelApi {
 	@Column(name = "PLT_DEFECT", nullable = false, precision = 1, scale = 0)
 	private boolean porDefecto;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "plantillaFormulario")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "plantillaFormulario", orphanRemoval = true, cascade = CascadeType.ALL)
 	private Set<JPlantillaIdiomaFormulario> plantillaIdiomaFormulario = new HashSet<>(0);
 
 	public JPlantillaFormulario() {

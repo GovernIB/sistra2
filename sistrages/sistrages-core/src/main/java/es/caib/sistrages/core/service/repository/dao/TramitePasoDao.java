@@ -210,13 +210,17 @@ public interface TramitePasoDao {
 	 * @param filaTramiteVersion
 	 * @param tramitePaso
 	 * @param idTramite
+	 * @param idEntidad
 	 * @param formularios
 	 * @param ficheros
 	 * @param ficherosContent
+	 * @param idFormateadores
+	 * @param idDominiosEquivalencia
 	 * @return
 	 */
 	Long importar(final FilaImportarTramiteVersion filaTramiteVersion, TramitePaso tramitePaso, Long idTramite,
 			final Long idEntidad, final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
-			final Map<Long, byte[]> ficherosContent, final Map<Long, FormateadorFormulario> idFormateadores);
+			final Map<Long, byte[]> ficherosContent, final Map<Long, FormateadorFormulario> idFormateadores,
+			final Map<Long, Long> idDominiosEquivalencia);
 
 }
