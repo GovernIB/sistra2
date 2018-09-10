@@ -164,7 +164,7 @@ public class PluginsDaoImpl implements PluginsDao {
 		String sql = "select t from JPlugin as t where t.ambito = :ambito ";
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sql += " AND ( lower(t.claseImplementadora) like :pFiltro or lower(t.descripcion) like :pFiltro  or lower(t.idInstancia) like :pFiltro)";
+			sql += " AND ( lower(t.claseImplementadora) like :pFiltro or lower(t.descripcion) like :pFiltro) ";
 		}
 		if (ambito == TypeAmbito.ENTIDAD) {
 			sql += " AND t.entidad.codigo = :idEntidad";

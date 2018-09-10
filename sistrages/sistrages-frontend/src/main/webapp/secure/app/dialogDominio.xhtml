@@ -65,13 +65,13 @@
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
-							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="30" maxlength="500" />
+							<p:inputText id="jndi" value="#{dialogDominio.data.jndi}" disabled="#{dialogDominio.isConsulta()}" size="43" maxlength="500" />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
 						<p:column id="columnaBBDD2" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" style="margin-right:20px"  />
-							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" maxlength="2000" converter="#{base64Converter}" />
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" disabled="#{dialogDominio.isConsulta()}" rows="10" cols="50" maxlength="2000" converter="#{base64Converter}" />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -130,7 +130,7 @@
 								<p:outputLabel for="urlRemoto" value="#{msg['dialogDominio.headerTipo.consultaRemota.url']}"  />
 							</p>
 							<p>
-								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="40"  maxlength="500"/>
+								<p:inputText id="urlRemoto" value="#{dialogDominio.data.url}" disabled="#{dialogDominio.isConsulta()}" size="64"  maxlength="500"/>
 							</p>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleRemoto}" value=""  />
@@ -205,7 +205,7 @@
 	  	<p:outputPanel styleClass="botonera">
 	     	<p:toolbar>
 	     		<f:facet name="left">
-	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogDominio.tramites()}" process="@this" />
+	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogDominio.tramites()}" process="@this" rendered="#{dialogDominio.data.codigo ne null}" />
 	     		</f:facet>
 				<f:facet name="right">
 	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar()}">

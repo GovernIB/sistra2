@@ -10,7 +10,7 @@
 		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 		<p:outputPanel styleClass="titulo_pasos">
-			<h:outputText value="Flujo normalizado"/>
+			<h:outputText value="#{msg['viewDefinicionVersionPasos.flujo']}"/>
 		</p:outputPanel>
 
 		<p:dataTable id="dataTable" var="pasos" styleClass="hide-table-header"
@@ -19,18 +19,15 @@
 			scrollable="true" paginator="false" rowKey="#{pasos.codigo}"
 			dblClickSelect="true">
 
-			<!-- Columnas -->
 			<p:column styleClass="grid-center">
-				<h:outputText value="Paso #{pasos.idPasoTramitacion}" />
+				<h:outputText value="#{pasos.idPasoTramitacion}" />
 			</p:column>
-
 
 			<p:column styleClass="grid-center">
 				<h:outputText value="#{pasos.descripcion.getTraduccion(sessionBean.lang)}" />
 			</p:column>
 
 		</p:dataTable>
-
 
 	</h:form>
 
