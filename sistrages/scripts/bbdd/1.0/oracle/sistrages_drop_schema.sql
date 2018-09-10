@@ -102,8 +102,6 @@ drop table STG_ROLARE cascade constraints;
 
 drop table STG_SCRIPT cascade constraints;
 
-drop table STG_TIPPTR cascade constraints;
-
 drop table STG_TRADUC cascade constraints;
 
 drop table STG_TRAIDI cascade constraints;
