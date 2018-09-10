@@ -27,6 +27,7 @@ import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
+import es.caib.sistrages.core.api.model.types.TypePaso;
 
 /**
  * JPasoTramitacion
@@ -56,12 +57,11 @@ public class JPasoTramitacion implements IModelApi {
 	private JScript scriptNavegacion;
 
 	/** Tipo paso tramitacion. **/
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PTR_TIPPTR", nullable = false)
-	private JTipoPasoTramitacion tipoPasoTramitacion;
+	@Column(name = "PTR_TIPPAS", nullable = false)
+	private String tipoPaso;
 
 	/** Descripcion. **/
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "PTR_DESCRI")
 	private JLiteral descripcion;
 
@@ -137,14 +137,6 @@ public class JPasoTramitacion implements IModelApi {
 
 	public void setScriptNavegacion(final JScript scriptNavegacion) {
 		this.scriptNavegacion = scriptNavegacion;
-	}
-
-	public JTipoPasoTramitacion getTipoPasoTramitacion() {
-		return this.tipoPasoTramitacion;
-	}
-
-	public void setTipoPasoTramitacion(final JTipoPasoTramitacion tipoPasoTramitacion) {
-		this.tipoPasoTramitacion = tipoPasoTramitacion;
 	}
 
 	public JLiteral getDescripcion() {
@@ -243,6 +235,21 @@ public class JPasoTramitacion implements IModelApi {
 		this.pasoAnexar = pasoAnexar;
 	}
 
+	/**
+	 * @return the tipoPaso
+	 */
+	public String getTipoPaso() {
+		return tipoPaso;
+	}
+
+	/**
+	 * @param tipoPaso
+	 *            the tipoPaso to set
+	 */
+	public void setTipoPaso(final String tipoPaso) {
+		this.tipoPaso = tipoPaso;
+	}
+
 	public TramitePaso toModel() {
 		if (this.getPasoRellenar() != null) {
 			return this.toModelRellenar();
@@ -294,7 +301,7 @@ public class JPasoTramitacion implements IModelApi {
 		if (this.getPasoRegistrar().getInstruccionesPresentacion() != null) {
 			paso.setInstruccionesPresentacion(this.getPasoRegistrar().getInstruccionesPresentacion().toModel());
 		}
-		paso.setTipo(this.getTipoPasoTramitacion().toModel());
+		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
 		paso.setValidaRepresentacion(this.getPasoRegistrar().isValidaRepresentacion());
 		if (this.getPasoRegistrar().getScriptDestinoRegistro() != null) {
 			paso.setScriptDestinoRegistro(this.getPasoRegistrar().getScriptDestinoRegistro().toModel());
@@ -319,7 +326,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setCodigo(this.getCodigo());
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
-		paso.setTipo(this.getTipoPasoTramitacion().toModel());
+		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
 
 		if (this.getPasoAnexar().getAnexosTramite() != null) {
 			final List<Documento> docs = new ArrayList<>();
@@ -340,7 +347,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setCodigo(this.getCodigo());
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
-		paso.setTipo(this.getTipoPasoTramitacion().toModel());
+		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
 
 		if (this.getPasoPagos().getPagosTramite() != null) {
 			final List<Tasa> tasas = new ArrayList<>();
@@ -360,7 +367,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setIdPasoRelacion(this.getPasoRellenar().getCodigo());
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
-		paso.setTipo(this.getTipoPasoTramitacion().toModel());
+		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
 		if (this.getPasoRellenar().getFormulariosTramite() != null) {
 			final List<FormularioTramite> formularios = new ArrayList<>();
 			for (final JFormularioTramite jformulario : this.getPasoRellenar().getFormulariosTramite()) {
@@ -381,7 +388,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setCodigo(this.getCodigo());
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
-		paso.setTipo(this.getTipoPasoTramitacion().toModel());
+		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
 		if (this.getPasoDebeSaber().getInstruccionesInicio() != null) {
 			final Literal instruccionesIniciales = this.getPasoDebeSaber().getInstruccionesInicio().toModel();
 			paso.setInstruccionesIniciales(instruccionesIniciales);
@@ -403,9 +410,7 @@ public class JPasoTramitacion implements IModelApi {
 			jpaso.setOrden(paso.getOrden());
 			jpaso.setPasoFinal(paso.isPasoFinal());
 			if (paso.getTipo() != null) {
-				final JTipoPasoTramitacion tipo = new JTipoPasoTramitacion();
-				tipo.fromModel(paso.getTipo());
-				jpaso.setTipoPasoTramitacion(tipo);
+				jpaso.setTipoPaso(paso.getTipo().toString());
 			}
 
 			// Generamos los tipos
@@ -459,7 +464,7 @@ public class JPasoTramitacion implements IModelApi {
 			jpaso.setIdPasoTramitacion(origPaso.getIdPasoTramitacion());
 			jpaso.setOrden(origPaso.getOrden());
 			jpaso.setPasoFinal(origPaso.isPasoFinal());
-			jpaso.setTipoPasoTramitacion(origPaso.getTipoPasoTramitacion());
+			jpaso.setTipoPaso(origPaso.getTipoPaso());
 
 			// Los pasos
 			jpaso.setPasoAnexar(JPasoAnexar.clonar(origPaso.getPasoAnexar(), jpaso));

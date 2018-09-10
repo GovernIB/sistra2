@@ -19,7 +19,6 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
@@ -31,7 +30,6 @@ import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
-import es.caib.sistrages.core.service.repository.model.JTipoPasoTramitacion;
 import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
@@ -255,7 +253,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				tramiteVersion.setActiva(jTramiteVersion.isActiva());
 				tramiteVersion.setTipoFlujo(TypeFlujo.fromString(jTramiteVersion.getTipoflujo()));
 				tramiteVersion.setRelease(jTramiteVersion.getRelease());
-
+				tramiteVersion.setIdTramite(jTramiteVersion.getTramite().getCodigo());
 				resultado.add(tramiteVersion);
 			}
 		}
@@ -480,26 +478,6 @@ public class TramiteDaoImpl implements TramiteDao {
 	public TramiteVersion getTramiteVersion(final Long idTramiteVersion) {
 		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
 		return jTramiteVersion.toModel();
-	}
-
-	@Override
-	public List<TramiteTipo> listTipoTramitePaso() {
-		final String sql = "Select t From JTipoPasoTramitacion t order by t.orden asc";
-
-		final Query query = entityManager.createQuery(sql);
-
-		@SuppressWarnings("unchecked")
-		final List<JTipoPasoTramitacion> results = query.getResultList();
-
-		final List<TramiteTipo> resultado = new ArrayList<>();
-		if (results != null && !results.isEmpty()) {
-			for (final Iterator<JTipoPasoTramitacion> iterator = results.iterator(); iterator.hasNext();) {
-				final JTipoPasoTramitacion jTramiteVersion = iterator.next();
-				resultado.add(jTramiteVersion.toModel());
-			}
-		}
-
-		return resultado;
 	}
 
 	@Override

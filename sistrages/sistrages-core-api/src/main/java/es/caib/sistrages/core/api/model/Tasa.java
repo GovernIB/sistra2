@@ -10,8 +10,11 @@ import es.caib.sistrages.core.api.model.types.TypePago;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class Tasa extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Codigo. */
 	private Long codigo;

@@ -15,7 +15,6 @@ import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
@@ -198,13 +197,6 @@ public interface TramiteService {
 	 * @return
 	 */
 	public TramiteVersion getTramiteVersionByNumVersion(final int identificador, final Long idTramite);
-
-	/**
-	 * Devuelve los tipo de paso de trámite.
-	 *
-	 * @return
-	 */
-	public List<TramiteTipo> listTipoTramitePaso();
 
 	/**
 	 * Devuelve los pasos de una versión de trámite

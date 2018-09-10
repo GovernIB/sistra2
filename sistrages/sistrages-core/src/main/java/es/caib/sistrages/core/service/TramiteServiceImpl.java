@@ -23,7 +23,6 @@ import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
@@ -341,17 +340,6 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public TramiteVersion getTramiteVersion(final Long idTramiteVersion) {
 		return tramiteDao.getTramiteVersion(idTramiteVersion);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see es.caib.sistrages.core.api.service.TramiteService#listTipoTramitePaso()
-	 */
-	@Override
-	@NegocioInterceptor
-	public List<TramiteTipo> listTipoTramitePaso() {
-		return tramiteDao.listTipoTramitePaso();
 	}
 
 	/*

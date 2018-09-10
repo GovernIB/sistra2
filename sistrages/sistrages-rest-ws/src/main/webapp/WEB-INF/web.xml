@@ -60,7 +60,7 @@
       <url-pattern>/rest/externa/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>STG_API_INT</role-name>
+      <role-name>STG_API_EXT</role-name>
     </auth-constraint>
   </security-constraint>
   

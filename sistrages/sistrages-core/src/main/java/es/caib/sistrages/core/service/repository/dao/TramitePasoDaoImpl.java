@@ -125,7 +125,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JPasoTramitacion jTramitePasoNew = JPasoTramitacion.fromModel(tramitePaso);
 		jTramitePasoNew.setCodigo(jTramitePaso.getCodigo());
 		jTramitePasoNew.setVersionTramite(jTramitePaso.getVersionTramite());
-		jTramitePasoNew.setTipoPasoTramitacion(jTramitePaso.getTipoPasoTramitacion());
+		jTramitePasoNew.setTipoPaso(jTramitePaso.getTipoPaso());
+
 		entityManager.merge(jTramitePasoNew);
 
 	}

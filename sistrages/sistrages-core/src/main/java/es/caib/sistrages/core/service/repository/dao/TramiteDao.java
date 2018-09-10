@@ -5,7 +5,6 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
-import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
@@ -111,13 +110,6 @@ public interface TramiteDao {
 	 * @return
 	 */
 	TramiteVersion getTramiteVersion(Long idTramiteVersion);
-
-	/**
-	 * Devuelve la lista de tiops de trámite.
-	 *
-	 * @return
-	 */
-	List<TramiteTipo> listTipoTramitePaso();
 
 	/**
 	 * Obtiene area tramite.

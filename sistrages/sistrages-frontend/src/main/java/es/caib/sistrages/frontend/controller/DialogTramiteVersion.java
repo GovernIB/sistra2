@@ -7,16 +7,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
-import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
-import es.caib.sistrages.core.api.model.TramitePasoRellenar;
-import es.caib.sistrages.core.api.model.TramitePasoTasa;
-import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
+import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -86,31 +85,71 @@ public class DialogTramiteVersion extends DialogControllerBase {
 			}
 
 			final List<TramitePaso> listaPasos = new ArrayList<>();
-			/* iniciliza pasos tramite */
-			for (final TramiteTipo tipo : this.tramiteService.listTipoTramitePaso()) {
 
-				TramitePaso paso = null;
-				if (tipo.getIdentificador().equals("DebeSaber")) {
-					paso = new TramitePasoDebeSaber();
-				} else if (tipo.getIdentificador().equals("Rellenar")) {
-					paso = new TramitePasoRellenar();
-				} else if (tipo.getIdentificador().equals("Anexar")) {
-					paso = new TramitePasoAnexar();
-				} else if (tipo.getIdentificador().equals("Tasa")) {
-					paso = new TramitePasoTasa();
-				} else if (tipo.getIdentificador().equals("Registrar")) {
-					paso = new TramitePasoRegistrar();
-				} else {
-					paso = new TramitePaso();
-				}
+			/* Creamos Paso Debe Saber */
+			final TramitePaso pasoDS = new TramitePasoDebeSaber();
+			pasoDS.setIdPasoTramitacion(TypePaso.DEBESABER.toString());
+			final Literal descripcionDS = new Literal();
+			descripcionDS.add(new Traduccion(TypeIdioma.CATALAN.toString(),
+					UtilJSF.getLiteral("typePaso.ds", TypeIdioma.CATALAN.toString())));
+			descripcionDS.add(new Traduccion(TypeIdioma.CASTELLANO.toString(),
+					UtilJSF.getLiteral("typePaso.ds", TypeIdioma.CASTELLANO.toString())));
+			pasoDS.setDescripcion(descripcionDS);
+			pasoDS.setOrden(1);
+			pasoDS.setTipo(TypePaso.DEBESABER);
+			listaPasos.add(pasoDS);
 
-				paso.setIdPasoTramitacion(tipo.getIdentificador());
-				paso.setDescripcion(tipo.getDescripcion());
-				paso.setOrden(tipo.getOrden());
-				paso.setTipo(tipo);
+			/* Creamos Rellenar fomulario */
+			final TramitePaso pasoRF = new TramitePasoDebeSaber();
+			pasoRF.setIdPasoTramitacion(TypePaso.RELLENAR.toString());
+			final Literal descripcionRF = new Literal();
+			descripcionRF.add(new Traduccion(TypeIdioma.CATALAN.toString(),
+					UtilJSF.getLiteral("typePaso.rf", TypeIdioma.CATALAN.toString())));
+			descripcionRF.add(new Traduccion(TypeIdioma.CASTELLANO.toString(),
+					UtilJSF.getLiteral("typePaso.rf", TypeIdioma.CASTELLANO.toString())));
+			pasoRF.setDescripcion(descripcionRF);
+			pasoRF.setOrden(1);
+			pasoRF.setTipo(TypePaso.RELLENAR);
+			listaPasos.add(pasoRF);
 
-				listaPasos.add(paso);
-			}
+			/* Creamos Anexar Documentacion */
+			final TramitePaso pasoAD = new TramitePasoDebeSaber();
+			pasoAD.setIdPasoTramitacion(TypePaso.ANEXAR.toString());
+			final Literal descripcionAD = new Literal();
+			descripcionAD.add(new Traduccion(TypeIdioma.CATALAN.toString(),
+					UtilJSF.getLiteral("typePaso.ad", TypeIdioma.CATALAN.toString())));
+			descripcionAD.add(new Traduccion(TypeIdioma.CASTELLANO.toString(),
+					UtilJSF.getLiteral("typePaso.ad", TypeIdioma.CASTELLANO.toString())));
+			pasoAD.setDescripcion(descripcionAD);
+			pasoAD.setOrden(1);
+			pasoAD.setTipo(TypePaso.ANEXAR);
+			listaPasos.add(pasoAD);
+
+			/* Creamos Pagar Tasas */
+			final TramitePaso pasoPT = new TramitePasoDebeSaber();
+			pasoPT.setIdPasoTramitacion(TypePaso.PAGAR.toString());
+			final Literal descripcionPT = new Literal();
+			descripcionPT.add(new Traduccion(TypeIdioma.CATALAN.toString(),
+					UtilJSF.getLiteral("typePaso.pt", TypeIdioma.CATALAN.toString())));
+			descripcionPT.add(new Traduccion(TypeIdioma.CASTELLANO.toString(),
+					UtilJSF.getLiteral("typePaso.pt", TypeIdioma.CASTELLANO.toString())));
+			pasoPT.setDescripcion(descripcionPT);
+			pasoPT.setOrden(1);
+			pasoPT.setTipo(TypePaso.PAGAR);
+			listaPasos.add(pasoPT);
+
+			/* Creamos Pagar Tasas */
+			final TramitePaso pasoRT = new TramitePasoDebeSaber();
+			pasoRT.setIdPasoTramitacion(TypePaso.REGISTRAR.toString());
+			final Literal descripcionRT = new Literal();
+			descripcionRT.add(new Traduccion(TypeIdioma.CATALAN.toString(),
+					UtilJSF.getLiteral("typePaso.rt", TypeIdioma.CATALAN.toString())));
+			descripcionRT.add(new Traduccion(TypeIdioma.CASTELLANO.toString(),
+					UtilJSF.getLiteral("typePaso.rt", TypeIdioma.CASTELLANO.toString())));
+			pasoRT.setDescripcion(descripcionRT);
+			pasoRT.setOrden(1);
+			pasoRT.setTipo(TypePaso.REGISTRAR);
+			listaPasos.add(pasoRT);
 
 			this.dataVersion.setListaPasos(listaPasos);
 

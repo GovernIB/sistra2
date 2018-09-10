@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Rol;
+import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.RolService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -37,6 +38,9 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	/** Areas. **/
 	private List<Area> areas;
 
+	private TypeRolePermisos gestor;
+	private TypeRolePermisos helpdesk;
+
 	/**
 	 * Inicialización.
 	 */
@@ -52,6 +56,18 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		} else {
 			if (id != null) {
 				data = rolService.getRol(Long.valueOf(id));
+
+				if (data.isAlta()) {
+					gestor = TypeRolePermisos.ADMINISTRADOR_AREA;
+				} else if (data.isModificacion()) {
+					gestor = TypeRolePermisos.DESARROLLADOR_AREA;
+				} else if (data.isConsulta()) {
+					gestor = TypeRolePermisos.CONSULTA;
+				}
+
+				if (data.isHelpdesk()) {
+					helpdesk = TypeRolePermisos.HELPDESK;
+				}
 			}
 
 		}
@@ -63,6 +79,48 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+
+		if (gestor == null && helpdesk == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
+			return;
+		} else {
+
+			if (gestor != null) {
+				switch (gestor) {
+				case ADMINISTRADOR_AREA:
+					data.setAlta(true);
+					data.setModificacion(false);
+					data.setConsulta(false);
+					break;
+				case DESARROLLADOR_AREA:
+					data.setAlta(false);
+					data.setModificacion(true);
+					data.setConsulta(false);
+					break;
+				case CONSULTA:
+					data.setAlta(false);
+					data.setModificacion(false);
+					data.setConsulta(true);
+					break;
+				default:
+					data.setAlta(false);
+					data.setModificacion(false);
+					data.setConsulta(false);
+					break;
+				}
+			} else {
+				data.setAlta(false);
+				data.setModificacion(false);
+				data.setConsulta(false);
+			}
+
+			if (TypeRolePermisos.HELPDESK.equals(helpdesk)) {
+				data.setHelpdesk(true);
+			} else {
+				data.setHelpdesk(false);
+			}
+		}
+
 		switch (acceso) {
 		case ALTA:
 			if (!validaRoles()) {
@@ -159,6 +217,22 @@ public class DialogRolesPermisos extends DialogControllerBase {
 	 */
 	public void setAreas(final List<Area> areas) {
 		this.areas = areas;
+	}
+
+	public TypeRolePermisos getGestor() {
+		return gestor;
+	}
+
+	public void setGestor(final TypeRolePermisos gestor) {
+		this.gestor = gestor;
+	}
+
+	public TypeRolePermisos getHelpdesk() {
+		return helpdesk;
+	}
+
+	public void setHelpdesk(final TypeRolePermisos helpdesk) {
+		this.helpdesk = helpdesk;
 	}
 
 }

@@ -24,7 +24,6 @@ import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramiteTipo;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
@@ -176,12 +175,6 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public TramiteVersion getTramiteVersion(final Long idTramiteVersion) {
 		return tramiteService.getTramiteVersion(idTramiteVersion);
-	}
-
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<TramiteTipo> listTipoTramitePaso() {
-		return tramiteService.listTipoTramitePaso();
 	}
 
 	@Override
