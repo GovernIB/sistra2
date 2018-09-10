@@ -28,6 +28,9 @@ import es.caib.sistramit.core.service.model.script.flujo.PlgFormulariosInt;
 @SuppressWarnings("serial")
 public final class PlgFormularios implements PlgFormulariosInt {
 
+    /** Lista de datos de los formularios rellenados. */
+    private final Map<String, DatosDocumentoFormulario> datosFormularios = new HashMap<>();
+
     /**
      * Constructor.
      *
@@ -43,43 +46,14 @@ public final class PlgFormularios implements PlgFormulariosInt {
         }
     }
 
-    /**
-     * Lista de datos de los formularios rellenados.
-     */
-    private final Map<String, DatosDocumentoFormulario> datosFormularios = new HashMap<>();
-
     @Override
     public String getPluginId() {
         return ID;
     }
 
-
     @Override
     public boolean isFormularioRellenado(final String idFormulario) {
         return datosFormularios.containsKey(idFormulario);
-    }
-
-    @Override
-    public String getAccionPersonalizada(final String idFormulario)
-            throws ScriptException {
-        final DatosDocumentoFormulario df = getDatosFormulario(idFormulario);
-        String res = df.getCampos().getAccionPersonalizada();
-        if (res == null) {
-            res = "";
-        }
-        return res;
-    }
-
-    @Override
-    public String getXml(final String idFormulario) throws ScriptException {
-        final DatosDocumentoFormulario df = getDatosFormulario(idFormulario);
-        String res;
-        try {
-            res = new String(df.getCampos().getXml(), Constantes.UTF8);
-        } catch (final UnsupportedEncodingException e) {
-            throw new ScriptException(e);
-        }
-        return res;
     }
 
     @Override
@@ -110,26 +84,6 @@ public final class PlgFormularios implements PlgFormulariosInt {
     }
 
     @Override
-    public int getNumeroValoresValorMultiple(final String idFormulario,
-            final String campo) throws ScriptException {
-        int res = 0;
-        final ValorCampoListaIndexados vl = (ValorCampoListaIndexados) getValorCampo(
-                idFormulario, campo, TypeValor.LISTA_INDEXADOS);
-        if (vl != null && vl.getValor() != null) {
-            res = vl.getValor().size();
-        }
-        return res;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * es.gva.dgm.tra.ctt.att.negocio.services.component.script.plugins.flujo
-     * .PlgFormulariosInt#getValorMultiple(java.lang.String, java.lang.String,
-     * int)
-     */
-    @Override
     public ClzValorCampoCompuestoInt getValorMultiple(final String idFormulario,
             final String campo, final int indice) throws ScriptException {
         ClzValorCampoCompuestoInt res = null;
@@ -143,6 +97,45 @@ public final class PlgFormularios implements PlgFormulariosInt {
         }
         return res;
     }
+
+    @Override
+    public int getNumeroValoresValorMultiple(final String idFormulario,
+            final String campo) throws ScriptException {
+        int res = 0;
+        final ValorCampoListaIndexados vl = (ValorCampoListaIndexados) getValorCampo(
+                idFormulario, campo, TypeValor.LISTA_INDEXADOS);
+        if (vl != null && vl.getValor() != null) {
+            res = vl.getValor().size();
+        }
+        return res;
+    }
+
+    @Override
+    public String getAccionPersonalizada(final String idFormulario)
+            throws ScriptException {
+        final DatosDocumentoFormulario df = getDatosFormulario(idFormulario);
+        String res = df.getCampos().getAccionPersonalizada();
+        if (res == null) {
+            res = "";
+        }
+        return res;
+    }
+
+    @Override
+    public String getXml(final String idFormulario) throws ScriptException {
+        final DatosDocumentoFormulario df = getDatosFormulario(idFormulario);
+        String res;
+        try {
+            res = new String(df.getCampos().getXml(), Constantes.UTF8);
+        } catch (final UnsupportedEncodingException e) {
+            throw new ScriptException(e);
+        }
+        return res;
+    }
+
+    // ---------------------------------------------------------------------------------------
+    // FUNCIONES UTILIDAD.
+    // ---------------------------------------------------------------------------------------
 
     /**
      * Obtiene valor del campo.

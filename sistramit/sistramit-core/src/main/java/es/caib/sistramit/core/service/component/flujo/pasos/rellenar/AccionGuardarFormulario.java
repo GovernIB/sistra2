@@ -540,9 +540,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
                 .getDocumentoPasoPersistencia(idFormulario,
                         ConstantesNumero.N1);
 
-        // - Marcamos para borrar fichero y pdf
+        // - Marcamos para borrar fichero, pdf y firmas
         ficherosBorrar.addAll(
-                docPaso.obtenerReferenciasFicherosFormulario(true, true));
+                docPaso.obtenerReferenciasFicherosFormulario(true, true, true));
         // - Insertamos nuevos ficheros de datos y pdf
         ReferenciaFichero referenciaXML = null;
         ReferenciaFichero referenciaPDF = null;
@@ -610,9 +610,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
                     .getDocumentoPasoPersistencia(idFormModif,
                             ConstantesNumero.N1);
 
-            // Marcamos para borrar ficheros anteriores (xml, pdf )
+            // Marcamos para borrar ficheros anteriores (xml, pdf, firmas )
             ficherosBorrar.addAll(docPasoModif
-                    .obtenerReferenciasFicherosFormulario(true, true));
+                    .obtenerReferenciasFicherosFormulario(true, true, true));
 
             // Modificamos fichero xml actual y lo guardamos
             final ValoresFormulario vf = pDipa
@@ -640,7 +640,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 
         // Para formularios en los que se ha modificado el estado:
         // modificamos estado formulario modificado,
-        // borramos pdf (mantenemos xml)
+        // borramos pdf y firmas (mantenemos xml)
         for (final String idFormModif : rsp.getFormulariosIncorrectos()) {
 
             final DocumentoPasoPersistencia docPasoModif = pDpp
@@ -653,10 +653,10 @@ public final class AccionGuardarFormulario implements AccionPaso {
                 continue;
             }
 
-            // Marcamos para borrar ficheros anteriores (solo pdf, mantenemos
-            // xml)
+            // Marcamos para borrar ficheros anteriores (solo pdf y firmas,
+            // mantenemos xml)
             ficherosBorrar.addAll(docPasoModif
-                    .obtenerReferenciasFicherosFormulario(false, true));
+                    .obtenerReferenciasFicherosFormulario(false, true, true));
 
             // Establecemos nuevos datos
             if (docPasoModif
@@ -734,10 +734,10 @@ public final class AccionGuardarFormulario implements AccionPaso {
                 .getDocumentoPasoPersistencia(pIdFormulario,
                         ConstantesNumero.N1);
 
-        // Marcamos para borrar pdf. Mantenemos datos
+        // Marcamos para borrar pdf y firmas asociadas. Mantenemos datos
         // formulario.
-        ficherosBorrar.addAll(
-                docPaso.obtenerReferenciasFicherosFormulario(false, true));
+        ficherosBorrar.addAll(docPaso
+                .obtenerReferenciasFicherosFormulario(false, true, true));
 
         // - Eliminamos pdf
         docPaso.setFormularioPdf(null);

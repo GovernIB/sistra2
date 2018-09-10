@@ -3,7 +3,9 @@ package es.caib.sistramit.core.service.model.flujo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
@@ -92,6 +94,11 @@ public final class DocumentoPasoPersistencia implements Serializable {
      * Para registro, indica fecha registro.
      */
     private Date registroFechaRegistro;
+
+    /**
+     * Lista de firmas del documento.
+     */
+    private final Map<Long, List<FirmaDocumentoPersistencia>> firmas = new HashMap<>();
 
     /**
      * Crea clase vacía (uso en bucles).
@@ -434,10 +441,13 @@ public final class DocumentoPasoPersistencia implements Serializable {
      *            Indica si se obtiene el fichero correspondiente al xml
      * @param pPdf
      *            Indica si se obtiene el fichero correspondiente al pdf
+     * @param pFirmas
+     *            Indica si se obtienen los ficheros de las firmas (de todos los
+     *            ficheros)
      * @return Lista de referencias de fichero
      */
     public List<ReferenciaFichero> obtenerReferenciasFicherosFormulario(
-            final boolean pXml, final boolean pPdf) {
+            final boolean pXml, final boolean pPdf, final boolean pFirmas) {
         final List<ReferenciaFichero> res = new ArrayList<>();
         if (pXml && this.getFichero() != null) {
             res.add(this.getFichero());
@@ -445,7 +455,122 @@ public final class DocumentoPasoPersistencia implements Serializable {
         if (pPdf && this.getFormularioPdf() != null) {
             res.add(this.getFormularioPdf());
         }
+        // Recuperamos todas las firmas asociadas a los ficheros
+        if (pFirmas) {
+            if (this.getFichero() != null) {
+                for (final FirmaDocumentoPersistencia firma : this
+                        .obtenerFirmasFichero(this.getFichero().getId())) {
+                    if (firma.getFirma() != null) {
+                        res.add(firma.getFirma());
+                    }
+                }
+            }
+            if (this.getFormularioPdf() != null) {
+                for (final FirmaDocumentoPersistencia firma : this
+                        .obtenerFirmasFichero(
+                                this.getFormularioPdf().getId())) {
+                    if (firma.getFirma() != null) {
+                        res.add(firma.getFirma());
+                    }
+                }
+            }
+
+        }
         return res;
     }
 
+    /**
+     * Obtiene ficheros de persistencia para el anexo: fichero y firmas.
+     *
+     * @param pFichero
+     *            Indica si se obtiene el fichero correspondiente al anexo
+     * @param pFirmas
+     *            Indica si se obtienen los ficheros de las firmas (de todos los
+     *            ficheros)
+     * @return Lista de referencias de fichero
+     */
+    public List<ReferenciaFichero> obtenerReferenciasFicherosAnexo(
+            final boolean pFichero, final boolean pFirmas) {
+
+        final List<ReferenciaFichero> res = new ArrayList<ReferenciaFichero>();
+
+        if (pFichero && this.getFichero() != null) {
+            res.add(this.getFichero());
+        }
+
+        if (pFirmas && this.getFichero() != null) {
+            for (final FirmaDocumentoPersistencia firma : this
+                    .obtenerFirmasFichero(this.getFichero().getId())) {
+                if (firma.getFirma() != null) {
+                    res.add(firma.getFirma());
+                }
+            }
+        }
+
+        return res;
+    }
+
+    /**
+     * Añade firma de fichero.
+     *
+     * @param fdp
+     *            Firma
+     */
+    public void addFirma(final FirmaDocumentoPersistencia fdp) {
+        if (this.firmas.get(fdp.getFichero().getId()) == null) {
+            this.firmas.put(fdp.getFichero().getId(),
+                    new ArrayList<FirmaDocumentoPersistencia>());
+        }
+        this.firmas.get(fdp.getFichero().getId()).add(fdp);
+    }
+
+    /**
+     * Elimina firma de fichero.
+     *
+     * @param fdp
+     *            Firma
+     */
+    public void removeFirma(final FirmaDocumentoPersistencia fdp) {
+        if (this.firmas.get(fdp.getFichero().getId()) != null) {
+            // Borramos firma
+            this.firmas.get(fdp.getFichero().getId()).remove(fdp);
+            // Si el fichero no contiene firmas eliminamos elemento de la map
+            if (this.firmas.get(fdp.getFichero().getId()).size() == 0) {
+                this.firmas.remove(fdp.getFichero().getId());
+            }
+        }
+    }
+
+    /**
+     * Obtiene la lista de las firmas para todos los ficheros del documento.
+     *
+     * @return lista de las firmas para todos los ficheros del documento.
+     */
+    public List<FirmaDocumentoPersistencia> obtenerFirmasFicheros() {
+        final List<FirmaDocumentoPersistencia> res = new ArrayList<>();
+        for (final Long idFichero : this.firmas.keySet()) {
+            res.addAll(obtenerFirmasFichero(idFichero));
+        }
+        return res;
+    }
+
+    /**
+     * Método de acceso a firmas de un fichero.
+     *
+     * @param codigoFichero
+     *            Parámetro codigo fichero
+     * @return firmas
+     */
+    public List<FirmaDocumentoPersistencia> obtenerFirmasFichero(
+            final Long codigoFichero) {
+        final List<FirmaDocumentoPersistencia> res = new ArrayList<>();
+        final List<FirmaDocumentoPersistencia> lista = this.firmas
+                .get(codigoFichero);
+        if (lista != null) {
+            for (final FirmaDocumentoPersistencia firma : lista) {
+                res.add(firma);
+            }
+        }
+        return res;
+    }
 }

@@ -20,12 +20,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.exception.RepositoryException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.types.TypeDocumentoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 
 /**
  * Mapea tabla STT_DOCPTR.
@@ -628,6 +631,8 @@ public class HDocumento implements IModelApi {
 
         documento.setAnexoNombreFichero(hDocumento.getAnexoNombreFichero());
 
+        establecerFirmasDocumentoPasoPersistencia(hDocumento, documento);
+
         if (hDocumento.getFichero() != null) {
             documento.setFichero(new ReferenciaFichero(hDocumento.getFichero(),
                     hDocumento.getFicheroClave()));
@@ -715,6 +720,78 @@ public class HDocumento implements IModelApi {
         }
         d.setRegistroNumeroRegistro(documento.getRegistroNumeroRegistro());
         d.setRegistroFechaRegistro(documento.getRegistroFechaRegistro());
+    }
+
+    /**
+     * Método para Establecer firmas documento paso persistencia de la clase
+     * HModelFactory.
+     *
+     * @param hDocumento
+     *            Parámetro h documento
+     * @param documento
+     *            Parámetro documento
+     */
+    public static void establecerFirmasDocumentoPasoPersistencia(
+            final HDocumento hDocumento,
+            final DocumentoPasoPersistencia documento) {
+        for (final HFirma firma : hDocumento.getFirmas()) {
+            final FirmaDocumentoPersistencia f = FirmaDocumentoPersistencia
+                    .createFirmaDocumentoPersistencia();
+            f.setNif(firma.getNif());
+            f.setNombre(firma.getNombre());
+
+            if (firma.getFirma() != null) {
+                final ReferenciaFichero ref = ReferenciaFichero
+                        .createNewReferenciaFichero();
+                ref.setId(firma.getFirma());
+                ref.setClave(firma.getFirmaClave());
+                f.setFirma(ref);
+                if (firma.getTipoFirma() != null) {
+                    f.setTipoFirma(
+                            TypeFirmaDigital.fromString(firma.getTipoFirma()));
+                }
+            }
+            f.setFecha(firma.getFecha());
+
+            final ReferenciaFichero refFichero = ReferenciaFichero
+                    .createNewReferenciaFichero();
+            refFichero.setId(firma.getFichero());
+            final String clave = obtenerClaveFicheroFirma(hDocumento, firma);
+            refFichero.setClave(clave);
+            f.setFichero(refFichero);
+
+            documento.addFirma(f);
+        }
+    }
+
+    /**
+     * Método para Obtener clave fichero firma de la clase HModelFactory.
+     *
+     * @param hDocumento
+     *            Parámetro h documento
+     * @param firma
+     *            Parámetro firma
+     * @return el string
+     */
+    private static String obtenerClaveFicheroFirma(final HDocumento hDocumento,
+            final HFirma firma) {
+        String clave = null;
+        if ((hDocumento.getFichero() != null)
+                && hDocumento.getFichero().equals(firma.getFichero())) {
+            clave = hDocumento.getFicheroClave();
+        } else if ((hDocumento.getFormularioPdf() != null)
+                && hDocumento.getFormularioPdf().equals(firma.getFichero())) {
+            clave = hDocumento.getFormularioPdfClave();
+        } else if ((hDocumento.getPagoJustificantePdf() != null) && hDocumento
+                .getPagoJustificantePdf().equals(firma.getFichero())) {
+            clave = hDocumento.getPagoJustificantePdfClave();
+        }
+        if (clave == null) {
+            throw new RepositoryException(
+                    "No se ha encontrado clave acceso para fichero "
+                            + hDocumento.getFichero());
+        }
+        return clave;
     }
 
 }

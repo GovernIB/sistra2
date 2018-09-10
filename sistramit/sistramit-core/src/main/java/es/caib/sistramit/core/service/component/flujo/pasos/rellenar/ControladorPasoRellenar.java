@@ -590,7 +590,7 @@ public final class ControladorPasoRellenar
                 .getEstado() != TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
             // Buscamos pdf y firmas
             final List<ReferenciaFichero> ficsBorrar = pDocDpp
-                    .obtenerReferenciasFicherosFormulario(false, true);
+                    .obtenerReferenciasFicherosFormulario(false, true, true);
             if (!ficsBorrar.isEmpty()) {
                 updateBD = true;
                 ficsPersistenciaBorrar.addAll(ficsBorrar);

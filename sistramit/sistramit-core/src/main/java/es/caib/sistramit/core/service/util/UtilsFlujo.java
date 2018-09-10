@@ -476,6 +476,26 @@ public final class UtilsFlujo {
     }
 
     /**
+     * Convierte instancia pasada como string a int.
+     *
+     * @param instanciaStr
+     *            Instancia como string
+     * @return Devuelve entero
+     */
+    public static int instanciaStrToInt(final String instanciaStr) {
+        int instancia = ConstantesNumero.N1;
+        if (instanciaStr != null) {
+            try {
+                instancia = Integer.parseInt(instanciaStr);
+            } catch (final NumberFormatException nfe) {
+                throw new ParametrosEntradaIncorrectosException(
+                        "El parametro instancia no es un numero", nfe);
+            }
+        }
+        return instancia;
+    }
+
+    /**
      * Indicamos si el tramite esta recien abierto (en el primer paso).
      *
      * @param pDatosSesion

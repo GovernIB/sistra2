@@ -362,4 +362,25 @@ public final class UtilsSTG {
         return res;
     }
 
+    /**
+     * Método para recuperar la definición de un anexo de un paso anexar.
+     *
+     * @param definicionPaso
+     *            Parámetro definicion paso
+     * @param idAnexo
+     *            Parámetro id anexo
+     * @return Definición del paso
+     */
+    public static RAnexoTramite devuelveDefinicionAnexo(
+            final RPasoTramitacionAnexar definicionPaso, final String idAnexo) {
+        RAnexoTramite res = null;
+        for (final RAnexoTramite anexo : definicionPaso.getAnexos()) {
+            if (anexo.getIdentificador().equals(idAnexo)) {
+                res = anexo;
+                break;
+            }
+        }
+        return res;
+    }
+
 }
