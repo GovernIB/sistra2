@@ -1811,7 +1811,7 @@ create table STG_PASOTR
 (
    PTR_CODIGO           NUMBER(18)           not null,
    PTR_CODVTR           NUMBER(18)           not null,
-   PTR_TIPPTR           NUMBER(18)           not null,
+   PTR_TIPPAS           VARCHAR2(2 CHAR)     not null,
    PTR_IDEPTR           VARCHAR2(20 CHAR)    not null,
    PTR_DESCRI           NUMBER(18),
    PTR_ORDEN            NUMBER(2)            not null,
@@ -1829,7 +1829,7 @@ comment on column STG_PASOTR.PTR_CODIGO is
 comment on column STG_PASOTR.PTR_CODVTR is
 'Código versión trámite';
 
-comment on column STG_PASOTR.PTR_TIPPTR is
+comment on column STG_PASOTR.PTR_TIPPAS is
 'Tipo del paso de tramitación';
 
 comment on column STG_PASOTR.PTR_IDEPTR is
@@ -2156,64 +2156,6 @@ comment on column STG_SCRIPT.SCR_SCRIPT is
 
 alter table STG_SCRIPT
    add constraint STG_SCRIPT_PK primary key (SCR_CODIGO);
-
-/*==============================================================*/
-/* Table: STG_TIPPTR                                            */
-/*==============================================================*/
-create table STG_TIPPTR 
-(
-   TIP_CODIGO           NUMBER(18)           not null,
-   TIP_PASO             VARCHAR2(20 CHAR)    not null,
-   TIP_DESCOR           NUMBER(18)           not null,
-   TIP_ORDEN            NUMBER(2)
-);
-
-comment on table STG_TIPPTR is
-'Tipos de paso de tramitación:
-
-Debe saber
-Información en paso de debe saber
-
-Rellenar formularios    
-Paso que permite rellenar de 1 a n formularios. Muestra pantalla con la lista de formularios a completar.
-
-Capturar datos
-Paso que permite capturar datos a través de un formulario.
-
-Anexar documentos
-Paso que permite anexar 1 a n documentos binarios
-
-Pagar tasas
-Paso que permite realizar el pago de tasas
-
-Información
-Paso que permite mostrar una pantalla informativa calculando dinámicamente los datos a mostrar.
-
-Registrar trámite
-Paso que permite realizar el registro del trámite una vez se completen los pasos requeridos.
-Después de este paso no podrá haber más pasos.';
-
-comment on column STG_TIPPTR.TIP_CODIGO is
-'Código';
-
-comment on column STG_TIPPTR.TIP_PASO is
-'Identificador tipo de paso';
-
-comment on column STG_TIPPTR.TIP_DESCOR is
-'Descripción corta';
-
-comment on column STG_TIPPTR.TIP_ORDEN is
-'Orden, si forman parte del flujo normal';
-
-alter table STG_TIPPTR
-   add constraint STG_TIPPTR_PK primary key (TIP_CODIGO);
-
-/*==============================================================*/
-/* Index: STG_TIPPTR_PASO_UK                                    */
-/*==============================================================*/
-create unique index STG_TIPPTR_PASO_UK on STG_TIPPTR (
-   TIP_PASO ASC
-);
 
 /*==============================================================*/
 /* Table: STG_TRADUC                                            */
@@ -2832,10 +2774,6 @@ alter table STG_PASOTR
       references STG_SCRIPT (SCR_CODIGO);
 
 alter table STG_PASOTR
-   add constraint STG_PASOTR_TIPPTR_FK foreign key (PTR_TIPPTR)
-      references STG_TIPPTR (TIP_CODIGO);
-
-alter table STG_PASOTR
    add constraint STG_PASOTR_TRADUC_FK foreign key (PTR_DESCRI)
       references STG_TRADUC (TRA_CODIGO);
 
@@ -2898,10 +2836,6 @@ alter table STG_PRLFTR
 alter table STG_ROLARE
    add constraint STG_ROLARE_AREA_FK foreign key (RLA_CODARE)
       references STG_AREA (ARE_CODIGO);
-
-alter table STG_TIPPTR
-   add constraint STG_TIPPTR_TRADUC_FK foreign key (TIP_DESCOR)
-      references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_TRAIDI
    add constraint STG_TRAIDI_IDIOMA_FK foreign key (TRI_IDIOMA)
