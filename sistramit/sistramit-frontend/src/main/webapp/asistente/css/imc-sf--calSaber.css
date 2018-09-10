@@ -10,10 +10,9 @@
 .imc--explicacio-detallada > p { margin-bottom: 0; }
 .imc--explicacio-detallada ul { display: none; margin-top: 1em; }
 
-.imc--e-d ul li { overflow: hidden; padding-bottom: .5em; }
-.imc--e-d ul .imc--num { float: left; font-size: 3em; width: 1em; text-align: right; line-height: 1em; }
-.imc--e-d ul .imc--nom { display: block; font-weight: bold; padding-top: .3em; padding-bottom: .1em; padding-left: 4em; }
-.imc--e-d ul p { display: block; padding-left: 3.7em; }
+.imc--e-d ul .imc--num { float: left; font-size: 2em; width: 1em; color: #575353; text-align: right; line-height: 1em; }
+.imc--e-d ul .imc--nom { display: block; font-weight: bold; padding-top: .7em; padding-bottom: .1em; padding-left: 2.5em; }
+.imc--e-d ul p { display: block; padding-left: 2.3em; }
 
 .imc--lopd h4 { padding-top: 1.5em; margin-bottom: 1em; }
 .imc--lopd h4 span { font-size: 1.2em; }

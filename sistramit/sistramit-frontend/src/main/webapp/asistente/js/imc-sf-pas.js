@@ -10,13 +10,15 @@ var HTML_CAL_SABER
 	,HTML_ANNEXAR
 	,HTML_PAGAR
 	,HTML_REGISTRAR
-	,HTML_GUARDAR = false;
+	,HTML_GUARDAR
+	,HTML_SEGUENT_PAS = false;
 
 var HTML_PAS_CARREGAT = [];
 
 var HTML_PAS_LITERALS = {
 		"ds": {
 			txtCalSaber: txtCalSaber
+			,txtCalSaberInfo: txtCalSaberInfo
 			,txtVoleuInformacio: txtVoleuInformacio
 			,txtExplicacioDetalladaOcultar: txtExplicacioDetalladaOcultar
 			,txtExplicacioDetalladaMirau: txtExplicacioDetalladaMirau
@@ -29,6 +31,7 @@ var HTML_PAS_LITERALS = {
 			,txtPagarExplicacio: txtPagarExplicacio
 			,txtRegistrarTitol: txtRegistrarTitol
 			,txtRegistrarExplicacio: txtRegistrarExplicacio
+			,txtTitolLOPD: txtTitolLOPD
 			,txtSeguent: txtSeguent
 		},
 		"rf": {
@@ -40,8 +43,7 @@ var HTML_PAS_LITERALS = {
 			,txtNoCompletat: txtNoCompletat
 			,txtAnterior: txtAnterior
 			,txtSeguent: txtSeguent
-		}
-		,
+		},
 		"ad": {
 			txtAnnexarTitol: txtAnnexarTitol
 			,txtFormulari: txtFormulari
@@ -66,10 +68,40 @@ var HTML_PAS_LITERALS = {
 			,txtDesa: txtDesa
 			,txtSiAportare: txtSiAportare
 			,txtEsborra: txtEsborra
-
+		},
+		"pt": {
+			txtPagarTitol: txtPagarTitol
+			,txtObligatori: txtObligatori
+			,txtOpcional: txtOpcional
+			,txtCompletat: txtCompletat
+			,txtNoCompletat: txtNoCompletat
+			,txtAnterior: txtAnterior
+			,txtSeguent: txtSeguent
+		},
+		"rt": {
+			txtRegistrarTitol: txtRegistrarTitol
+			,txtInfoResum: txtInfoResum
+			,txtFormularis: txtFormularis
+			,txtAnnexes: txtAnnexes
+			,txtPagaments: txtPagaments
+			,txtAnterior: txtAnterior
+			,txtRegistrar: txtRegistrar
+		},
+		"gj": {
+			txtDesauJustificant: txtDesauJustificant
+			,txtDesauInfo: txtDesauInfo
+			,txtDesauJustificant: txtDesauJustificant
+			,txtDesauDocumentacio: txtDesauDocumentacio
+			,txtDesauDocumentacioInfo: txtDesauDocumentacioInfo
+			,txtFormularis: txtFormularis
+			,txtAnnexes: txtAnnexes
+			,txtPagaments: txtPagaments
+			,txtAnterior: txtAnterior
+			,txtRegistrar: txtRegistrar
+			,txtSotiuTramit: txtSotiuTramit
 		}
 
-
+		
 
 
 
@@ -87,7 +119,10 @@ $.fn.appPas = function(options) {
 			pas = settings.pas,
 			pas_json = false,
 			pas_tipus = false,
+			envia_ajax = false,
 			inicia = function() {
+
+				// hi ha pas?
 
 				if (!pas) {
 
@@ -96,12 +131,27 @@ $.fn.appPas = function(options) {
 
 				}
 
+				// llevem accessibilitat
+
+				imc_contenidor
+					.removeClass("imc--mostra-acc");
+
+				// es el mateix pas ja carregat?
+
+				if (imc_contingut.attr("data-id") === pas) {
+
+					imc_cap_c
+						.appCap();
+
+					return;
+
+				}
 
 				// missatge carregant
-
+				
 				imc_missatge
-					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol:"Carregant dades del pas" });
-
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtPasCarregant });
+				
 				// carrega
 
 				carregaJSON();
@@ -109,21 +159,30 @@ $.fn.appPas = function(options) {
 			},
 			carregaJSON = function() {
 
-				var pag_url = APP_SERVIDOR_JSON + APP_URL_PAS + APP_SERVIDOR_EXT,
+				var pag_url = APP_TRAMIT_PAS,
 					pag_data = { paso: pas };
 
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
 						data: pag_data,
 						method: "post",
+						dataType: "json",
 						beforeSend: function(xhr) {
-				            xhr.setRequestHeader(headerCSRF, tokenCSRF);
-				        },
-						dataType: "json"
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
 					})
 					.done(function( data ) {
-
+						
 						pas_json = data;
 						JSON_PAS_ACTUAL = data;
 
@@ -134,15 +193,23 @@ $.fn.appPas = function(options) {
 
 						} else {
 
-							error("carregaJSON desde JSON");
+							consola("Pas: error des de JSON");
+							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
 
 						}
-
+						
 					})
-					.fail(function(fail_dades, fail_tipus, errorThrown) {
+					.fail(function(dades, tipus, errorThrown) {
 
-						error("carregaJSON desde FAIL");
+						consola(dades+" , "+ tipus +" , "+ errorThrown);
 
+						if (tipus === "abort") {
+							return false;
+						}
+						
+						consola("Pas: error des de FAIL");
+						error();
+						
 					});
 
 			},
@@ -169,10 +236,10 @@ $.fn.appPas = function(options) {
 				// carrega
 
 				$.when(
-
-					$.get(APP_SERVIDOR + "css/imc-sf--"+pas_arxius_nom+".css")
-					,$.get(APP_SERVIDOR + "html/imc-sf--"+pas_arxius_nom+".html")
-					,$.getScript(APP_SERVIDOR + "js/imc-sf--"+pas_arxius_nom+".js")
+		
+					$.get(APP_ + "css/imc-sf--"+pas_arxius_nom+".css")
+					,$.get(APP_ + "html/imc-sf--"+pas_arxius_nom+".html")
+					,$.getScript(APP_ + "js/imc-sf--"+pas_arxius_nom+".js")
 
 				).then(
 
@@ -198,7 +265,7 @@ $.fn.appPas = function(options) {
 
 					function() {
 
-						error("carregaHTML desde FAIL");
+						error("Pas: error caregant HTML, CSS i JS");
 
 					}
 
@@ -207,7 +274,22 @@ $.fn.appPas = function(options) {
 			},
 			mollaPa = function() {
 
-				// repentem html
+				// es pas de guardar?
+
+				if (JSON_PAS_ACTUAL.datos.actual.tipo === "gj") {
+
+					imc_molla_pa
+						.remove();
+
+					imc_tramitacio
+						.find(".imc--elimina:first")
+							.remove();
+
+					return;
+
+				}
+
+				// repintem html
 
 				var imc_nav = imc_molla_pa.find("nav:first");
 
@@ -302,10 +384,25 @@ $.fn.appPas = function(options) {
 
 				var txtGlobals = {};
 
-				if (pas_tipus === "rf") {
+				if (pas_tipus === "ds") {
 
+					HTML_PAS_LITERALS[pas_tipus]["txtCalSaberImportant"] = pas_json.datos.actual.instrucciones;
+					HTML_PAS_LITERALS[pas_tipus]["txtInfoLOPD"] = pas_json.datos.actual.infoLOPD;
+
+				} else if (pas_tipus === "rf") {
+
+					HTML_PAS_LITERALS[pas_tipus]["jsonEntorn"] = APP_JSON_TRAMIT_D.entorno;
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
 					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instrucciones;
+
+					var txtGlobals = {
+							globals: {
+								txtFormulariEnPDF: txtFormulariEnPDF
+								,txtFormulariEnXML: txtFormulariEnXML
+								,txtPDF: txtPDF
+								,txtXML: txtXML
+							}
+						};
 
 				} else if (pas_tipus === "ad") {
 
@@ -321,6 +418,40 @@ $.fn.appPas = function(options) {
 								,txtDocAnnexat: txtDocAnnexat
 								,txtDocsAnnexats: txtDocsAnnexats
 								,txtTitol: txtTitol
+								,txtObriFinestra: txtObriFinestra
+								,txtPlantilla: txtPlantilla
+								,txtDescarrega: txtDescarrega
+							}
+						};
+
+				} else if (pas_tipus === "pt") {
+
+					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
+					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instrucciones;
+
+				} else if (pas_tipus === "rt") {
+
+					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instrucciones;
+					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
+					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
+					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
+
+					var txtGlobals = {
+							globals: {
+								txtSignar: txtSignar
+								,txtDescarrega: txtDescarrega
+							}
+						};
+
+				} else if (pas_tipus === "gj") {
+
+					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
+					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
+					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
+
+					var txtGlobals = {
+							globals: {
+								txtDescarrega: txtDescarrega
 							}
 						};
 
@@ -347,6 +478,14 @@ $.fn.appPas = function(options) {
 
 					pinta_ad();
 
+				} else if (pas_tipus === "rt") {
+
+					pinta_rt();
+
+				} else if (pas_tipus === "gj") {
+
+					pinta_gj();
+
 				}
 
 				// passes anterior i seguent
@@ -355,10 +494,14 @@ $.fn.appPas = function(options) {
 
 				if (pas_completat === "n") {
 
-					imc_contingut_c
-						.find(".imc--navegacio:first .imc--seguent")
-							.parent()
-								.remove();
+					var bt_seguent_pas = imc_contingut_c.find(".imc--navegacio:first .imc--seguent")
+						,bt_seguent_pas_html = bt_seguent_pas.parent().html();
+
+					HTML_SEGUENT_PAS = bt_seguent_pas_html;
+
+					bt_seguent_pas
+						.parent()
+							.remove();
 
 				}
 
@@ -384,19 +527,9 @@ $.fn.appPas = function(options) {
 				// mostra
 
 				mostra();
-
+				
 			},
 			pinta_ds = function() {
-
-				var info_txt = pas_json.datos.actual.instrucciones,
-					lopd_txt = pas_json.datos.actual.infoLOPD;
-
-				imc_contingut_c
-					.find(".imc--info:first")
-						.html( info_txt )
-						.end()
-					.find(".imc--lopd:first")
-						.html( lopd_txt );
 
 				// inicia js pas
 
@@ -408,7 +541,7 @@ $.fn.appPas = function(options) {
 
 				$(cs_passes)
 					.each(function() {
-
+						
 						var el = this
 							,el_tipus = el.tipo;
 
@@ -417,7 +550,7 @@ $.fn.appPas = function(options) {
 								.addClass("imc--mostra");
 
 					});
-
+				
 				imc_cs_explicacio
 					.find("li:not(.imc--mostra)")
 						.remove();
@@ -458,9 +591,9 @@ $.fn.appPas = function(options) {
 									.text( txtCompletat )
 									.end()
 								.find(".imc--no-completat:first span")
-									.text( txtNoCompletat )
-									.end()
-								.attr("data-url", APP_URL_FORMS + "?id=" + el_id);
+									.text( txtNoCompletat );
+									//.end()
+								//.attr("data-url", APP_URL_FORMS + "?id=" + el_id);
 
 						});
 
@@ -519,9 +652,19 @@ $.fn.appPas = function(options) {
 
 				imc_contingut_c
 					.find(".imc-document:first form")
-						.attr("action", APP_URL_ANNEXAR);
+						.attr("action", APP_ANNEXE_ANNEXA);
 
 				appPasAnnexarInicia();
+
+			},
+			pinta_rt = function() {
+
+				appPasRegistrarInicia();
+
+			},
+			pinta_gj = function() {
+
+				appPasGuardarInicia();
 
 			},
 			mostra = function(text) {
@@ -529,19 +672,71 @@ $.fn.appPas = function(options) {
 				imc_missatge
 					.appMissatge({ araAmaga: true });
 
+				envia_ajax = false;
+
+				imc_contingut
+					.attr("data-id", JSON_PAS_ACTUAL.datos.actual.id);
+
+				imc_cap_c
+					.appCap();
 
 			},
-			error = function(text) {
+			error = function(opcions) {
 
-				alert("ERROR: "+text);
+				var settings_opcions = $.extend({
+						titol: txtTramitPasErrorTitol,
+						text: txtTramitPasErrorText
+					}, opcions);
 
+				var titol = settings_opcions.titol,
+					text = settings_opcions.text;
 
+				imc_missatge
+					.appMissatge({ accio: "error", titol: titol, text: text, alTancar: function() { reintenta({ titol: titol, text: text }); } });
+
+				envia_ajax = false;
+
+			},
+			reintenta = function(opcions) {
+
+				var esPrimeraCarrega = ($.trim(imc_contingut_c.html()) === "") ? true : false;
+
+				if (esPrimeraCarrega) {
+
+					var text_html = imc_missatge.find(".imc--text:first").html();
+
+					var reintentant = function() {
+
+							imc_contingut_c
+								.html("")
+								.appPas({ pas: APP_JSON_TRAMIT_D.idPasoActual });
+
+						};
+
+					var bt_text = $("<span>").text( txtReintenta ),
+						bt = $("<button>").addClass("imc-bt imc--ico imc--reintenta").attr("type", "button").append( bt_text ).on("click", reintentant);
+
+					$("<div>")
+						.addClass("imc-pas--missatge-error")
+						.html( text_html )
+						.append( bt )
+						.appendTo( imc_contingut_c );
+
+					imc_contingut_c
+						.find(".imc-pas--missatge-error:first .imc--botonera")
+							.remove();
+
+				} else {
+
+					document.location = "#pas/" + APP_JSON_TRAMIT_D.idPasoActual;
+
+				}
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -553,27 +748,32 @@ var URL_HASH,
 	URL_PARAMETRES;
 
 function urlHash() {
-
+	
 	URL_HASH = location.hash.replace(/^.*#/, '');
 	URL_PARAMETRES = URL_HASH.split("/");
-
+		
 	return URL_HASH, URL_PARAMETRES;
-
+	
 }
 
 jQuery(window)
-	.on("hashchange", function(){
-
+	.on("hashchange", function(){ 
+		
 		urlHash();
-
+	
 	if (URL_PARAMETRES[0] === "pas" && URL_PARAMETRES.length === 2) {
-
+		
 		var pas = URL_PARAMETRES[1];
 
 		imc_contingut_c
 			.appPas({ pas: pas });
+		
+	} else if (URL_PARAMETRES[0] === "accessibilitat") {
+
+		imc_contingut_c
+			.appAccessibilitat();
 
 	}
-
+	
 });
 

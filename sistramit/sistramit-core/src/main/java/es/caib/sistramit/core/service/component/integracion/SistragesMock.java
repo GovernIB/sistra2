@@ -56,7 +56,7 @@ public class SistragesMock {
         final List<RValorParametro> parametros = new ArrayList<>();
         RValorParametro vp;
         vp = new RValorParametro();
-        vp.setCodigo(TypePropiedadConfiguracion.URL_SISTRAMIT.toString());
+        vp.setCodigo(TypePropiedadConfiguracion.SISTRAMIT_URL.toString());
         vp.setValor("http://localhost:8080/sistramitfront");
         parametros.add(vp);
         vp = new RValorParametro();
@@ -99,6 +99,28 @@ public class SistragesMock {
         return li;
     }
 
+    public static RLiteral generarLiteralUrl() {
+
+        final RLiteral li = new RLiteral();
+
+        final List<RLiteralIdioma> literales = new ArrayList<>();
+        RLiteralIdioma l = null;
+
+        l = new RLiteralIdioma();
+        l.setIdioma("es");
+        l.setDescripcion("http://www.google.es/es");
+        literales.add(l);
+
+        l = new RLiteralIdioma();
+        l.setIdioma("ca");
+        l.setDescripcion("http://www.google.es/ca");
+        literales.add(l);
+
+        li.setLiterales(literales);
+
+        return li;
+    }
+
     public static RConfiguracionEntidad crearEntidad() {
 
         ROpcionFormularioSoporte opc;
@@ -123,16 +145,16 @@ public class SistragesMock {
         final RConfiguracionEntidad e = new RConfiguracionEntidad();
         e.setTimestamp(generateTimestamp());
         e.setIdentificador("E1");
-        e.setLogo("pathlogo");
-        e.setCss("pathCss");
+        e.setLogo("/sistramitfront/asistente/imgs/logo-goib.svg");
+        // e.setCss("pathCss");
         e.setEmail("entidad@mail.es");
         e.setContactoHTML(generarLiteral());
-        e.setUrlCarpeta(generarLiteral());
+        e.setUrlCarpeta(generarLiteralUrl());
         e.setAyudaFormulario(opciones);
         e.setAyudaTelefono("012");
         e.setAyudaUrl("url ayuda");
         e.setAvisoLegal(generarLiteral());
-        e.setMapaWeb(generarLiteral());
+        e.setMapaWeb(generarLiteralUrl());
         e.setRss(generarLiteral());
         e.setUrlFacebook("http://facebook");
         e.setUrlInstagram("http://instagram");

@@ -21,6 +21,8 @@ var imc_doc_missatge
 	,imc_bt_tanca
 	,imc_bt_cancela;
 
+var imc_navegacio;
+
 
 // onReady
 
@@ -47,6 +49,8 @@ function appPasAnnexarInicia() {
 	imc_bt_torna_intentar = imc_doc_missatge.find(".imc--error-torna:first");
 	imc_bt_tanca = imc_doc_missatge.find(".imc--tanca:first");
 	imc_bt_cancela = imc_doc_missatge.find(".imc--cancela:first");
+
+	imc_navegacio = imc_contingut.find(".imc--navegacio:first");
 
 	imc_docs
 		.appAnnexa();
@@ -77,7 +81,9 @@ $.fn.appAnnexa = function(options) {
 
 				element
 					.off('.appAnnexa')
-					.on('click.appAnnexa', "li a", obri);
+					.on('click.appAnnexa', "li a", obri)
+					.on('click.appAnnexa', ".imc--descarrega", descarrega)
+					.on('click.appAnnexa', ".imc--descarrega-plantilla", descarregaPlantilla);
 
 				// botons electrònic enviament
 
@@ -114,23 +120,39 @@ $.fn.appAnnexa = function(options) {
 					.on('click.appSuport', aborta);
 
 			},
+			descarrega = function(e) {
+
+				var bt = $(this)
+					,elm_id = bt.attr("data-id");
+
+				document.location = APP_ANNEXE_DESCARREGA + "?id=" + elm_id;
+
+			},
+			descarregaPlantilla = function(e) {
+
+				var bt = $(this)
+					,elm_id = bt.attr("data-id");
+
+				document.location = APP_PLANTILLA_DESCARREGA + "?id=" + elm_id;
+
+			},
 			obri = function(e) {
 
 				// dades annexe
 
 				var bt = $(this),
 					bt_titol_text = bt.find("strong:first").text(),
-					bt_id = bt.attr("data-id"),
-					bt_omplit = bt.attr("data-omplit"),
-					bt_num = parseInt( bt.attr("data-num"), 10)
-					bt_extensions = bt.attr("data-extensions"),
-					bt_mida = bt.attr("data-mida"),
-					bt_ajuda = bt.attr("data-ajuda");
+					item_bt = bt.closest("li"),
+					bt_id = item_bt.attr("data-id"),
+					bt_omplit = item_bt.attr("data-omplit"),
+					bt_num = parseInt( item_bt.attr("data-num"), 10),
+					bt_extensions = item_bt.attr("data-extensions"),
+					bt_mida = item_bt.attr("data-mida"),
+					bt_ajuda = item_bt.attr("data-ajuda");
 
-				doc_tipus = bt.attr("data-tipus"); // e, p
+				doc_tipus = item_bt.attr("data-tipus"); // e, p
 
-				var item_bt = bt.parent(),
-					el_annexats = item_bt.find(".imc--annexats:first");
+				var el_annexats = item_bt.find(".imc--annexats:first");
 					items_annexats = el_annexats.find("strong");
 
 				// afegits
@@ -423,57 +445,90 @@ $.fn.appAnnexa = function(options) {
 
 				// revisa
 
-				var revisa_error = false;
+				imc_doc_electronic_form
+					.find(".imc--annexe-error")
+						.remove();
+
+				var revisa_error = false
+					,text_error = false;
 
 				if (doc_tipus === "e") {
 
-					imc_doc_electronic_form
-						.find(".imc--per-afegir:first input[type=file]")
-							.each(function() {
+					var docs_annexats = imc_doc_electronic_form.find(".imc--per-afegir:first input[type=file]");
 
-								var el_inputs_file = $(this),
-									valor = el_inputs_file.val();
+					var num_maxim = parseInt(imc_document.attr("data-num"), 10)
+						titol_val = imc_doc_electronic_form.find(".imc--titol:first input").val();
 
-								if (!valor || valor === "") {
+					if (!docs_annexats.length) {
 
-									alert("Cap arxiu annexat");
-									revisa_error = true;
+						text_error = "Cap arxiu annexat";
+						revisa_error = true;
 
-								}
+					} else if (num_maxim > 1 && titol_val === "") {
 
-								var arxiu = el_inputs_file[0].files[0]
-									,arxiu_nom = arxiu.name
-									,arxiu_extensio = arxiu_nom.split('.')[arxiu_nom.split('.').length - 1].toLowerCase()
-									,arxiu_mida = arxiu.size
-									,arxiu_mida_MB = (arxiu.size / 1048576).toFixed(2);
+						text_error = "Falta incloure un títol al annex";
+						revisa_error = true;
 
-								var tipus_posibles = imc_document.attr("data-extensions")
-									,esTipusPosible = (tipus_posibles.indexOf(arxiu_extensio) !== -1) ? true : false;
+					} else {
 
-								if (!esTipusPosible && tipus_posibles !== "null") {
+						imc_doc_electronic_form
+							.find(".imc--per-afegir:first input[type=file]")
+								.each(function() {
 
-									alert("Tipus d'arxiu no permés");
-									revisa_error = true;
+									var el_inputs_file = $(this),
+										valor = el_inputs_file.val();
 
-								}
+									if (!valor || valor === "") {
 
-								var mida_max = parseFloat(imc_document.attr("data-mida"))
-									,esMidaPosible = (mida_max > arxiu_mida_MB) ? true : false;
+										text_error = "Cap arxiu annexat";
+										revisa_error = true;
 
-								if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
+									}
 
-									alert("Mida d'arxiu massa gran");
-									revisa_error = true;
+									var arxiu = el_inputs_file[0].files[0]
+										,arxiu_nom = arxiu.name
+										,arxiu_extensio = arxiu_nom.split('.')[arxiu_nom.split('.').length - 1].toLowerCase()
+										,arxiu_mida = arxiu.size
+										,arxiu_mida_MB = (arxiu.size / 1048576).toFixed(2);
 
-								}
+									var tipus_posibles = imc_document.attr("data-extensions")
+										,esTipusPosible = (tipus_posibles.indexOf(arxiu_extensio) !== -1) ? true : false;
 
-							});
+									if (!esTipusPosible && tipus_posibles !== "null") {
+
+										text_error = "Tipus d'arxiu no permés";
+										revisa_error = true;
+
+									}
+
+									var mida_max = parseFloat(imc_document.attr("data-mida"))
+										,esMidaPosible = (mida_max > arxiu_mida_MB) ? true : false;
+
+									if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
+
+										text_error = "Mida d'arxiu massa gran";
+										revisa_error = true;
+
+									}
+
+								});
+
+					}
 
 				}
 
-				if (revisa_error) {
+				if (revisa_error && text_error) {
+
+					var error_lloc = imc_doc_electronic_form.find(".imc-input-annexe:first");
+
+					$("<div>")
+						.addClass("imc--annexe-error")
+						.text( text_error )
+						.appendTo( error_lloc );
+
 				 	return;
 				}
+
 				// envia
 
 				// missatge
@@ -497,7 +552,7 @@ $.fn.appAnnexa = function(options) {
 
 				// envia config
 
-				var	pag_url = APP_URL_ANNEXAR,
+				var	pag_url = APP_ANNEXE_ANNEXA,
 					pag_form = (doc_tipus === "e") ? imc_doc_electronic_form[0] : imc_doc_presencial_form[0],
 					formData = new FormData();
 
@@ -509,7 +564,18 @@ $.fn.appAnnexa = function(options) {
 				formData
 					.append("tipo", doc_tipus);
 
-				// arxius
+				var num_maxim = parseInt(imc_document.attr("data-num"), 10)
+					titol_val = imc_doc_electronic_form.find(".imc--titol:first input").val();
+
+				if (num_maxim > 1) {
+
+					formData
+						.append("titulo", titol_val);
+
+				}
+
+				// electronic - arxius
+				// presencial - checkbox
 
 				if (doc_tipus === "e") {
 
@@ -534,6 +600,11 @@ $.fn.appAnnexa = function(options) {
 
 					}
 
+				} else {
+
+					formData
+						.append("anexo_presencial", $("#anexo_presencial").prop("checked"));
+
 				}
 
 				// ajax
@@ -550,12 +621,12 @@ $.fn.appAnnexa = function(options) {
 						type: "post",
 						url: pag_url,
 						data: formData,
-						beforeSend: function(xhr) {
-				            xhr.setRequestHeader(headerCSRF, tokenCSRF);
-				        },
 						processData: false,
 						cache: false,
-						contentType: false
+						contentType: false,
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
 					})
 					.done(function( data ) {
 
@@ -632,74 +703,239 @@ $.fn.appAnnexa = function(options) {
 			},
 			finalitzatElectronic = function(json) {
 
-				var ann_id = json.datos.id,
-					ann_tipus = json.datos.tipo,
-					ann_arxiu = json.datos.archivo,
-					ann_nom = json.datos.nombre;
+				var json_annexes = json.datos.anexos
+					,json_completat = json.datos.completado || "n"
+					,json_seguent_id = json.datos.siguiente || false;
 
-				var doc_item = imc_docs.find("a[data-id="+ann_id+"]:first"),
-					doc_item_li = doc_item.parent();
+				if (json_annexes.length) {
 
-				doc_item_li
-					.find(".imc--opcions")
-						.remove();
+					$(json_annexes)
+						.each(function(i) {
 
-				var html_strong = $("<strong>").attr({ "data-id": ann_id, "data-fitxer": ann_arxiu }).text( ann_arxiu )
-					,html_li = $("<li>").append( html_strong )
-					,html_ul = $("<ul>").append( html_li )
-					,html_p = $("<p>").text( txtDocAnnexat )
-					,html_div = $("<div>").addClass("imc--annexats").append( html_p ).append( html_ul ).appendTo( doc_item_li );
+							var el_annex = this;
 
-				var doc_valor = doc_item.find(".imc--no-completat:first");
+							var id = el_annex.id,
+								esObligatori = el_annex.obligatorio || false,
+								fitxers = el_annex.ficheros || false;
 
-				doc_valor
-					.find("span")
-						.text( txtCompletat )
-						.end()
-					.removeClass("imc--no-completat")
-					.addClass("imc--completat");
+							var doc_item = imc_docs.find("li[data-id="+id+"]:first");
 
-				doc_item
-					.attr("data-omplit", "c");
+							if (esObligatori) {
+
+								if ( esObligatori === "s" ) {
+
+									var doc_valor = doc_item.find(".imc--opcional:first");
+
+									doc_valor
+										.find("span")
+											.text( txtObligatori )
+											.end()
+										.removeClass("imc--opcional")
+										.addClass("imc--ogligatori");
+
+									doc_item
+										.attr("data-obligatori", "s");
+
+								} else {
+
+									var doc_valor = doc_item.find(".imc--ogligatori:first");
+
+									doc_valor
+										.find("span")
+											.text( txtOpcional )
+											.end()
+										.removeClass("imc--ogligatori")
+										.addClass("imc--opcional");
+
+									doc_item
+										.attr("data-obligatori", "n");
+
+								}
+
+							}
+
+							if (fitxers) {
+
+								$(fitxers)
+									.each(function(j) {
+
+										var fi = this,
+											fi_id = fi.id,
+											fi_fitxer = fi.fichero,
+											fi_titol = fi.titulo;
+
+										var doc_item_annexats = doc_item.find(".imc--annexats:first");
+
+										var annexats_num = doc_item_annexats.find("li").length;
+
+										if (annexats_num) {
+
+											doc_item_annexats
+												.find("p:first")
+													.text( txtDocsAnnexats );
+
+										} else {
+
+											var html_ul = $("<ul>")
+												,html_p = $("<p>").text( txtDocAnnexat );
+
+											doc_item_annexats
+												.append( html_p )
+												.append( html_ul );
+
+										}
+
+										var annexats_llista = doc_item_annexats.find("ul:first");
+
+
+										var html_strong = $("<strong>").attr({ "data-id": fi_id, "data-fitxer": fi_fitxer }).text( fi_fitxer )
+											,html_button = $("<button>").addClass("imc-bt imc--ico imc--descarrega").attr({ "data-id": fi_id, "type": "button" }).html( $("<span>").text( txtDescarrega ) )
+											,html_li = $("<li>").append( html_strong ).append( html_button );
+
+										annexats_llista
+											.append( html_li );
+
+										var doc_valor = doc_item.find(".imc--no-completat:first");
+
+										doc_valor
+											.find("span")
+												.text( txtCompletat )
+												.end()
+											.removeClass("imc--no-completat")
+											.addClass("imc--completat");
+
+										doc_item
+											.attr("data-omplit", "c");
+
+									});
+
+							}
+
+						});
+
+				}
+
+				// completat?
+
+				estaCompletat(json_completat, json_seguent_id);
 
 			},
 			finalitzatPresencial = function(json) {
 
-				var id = json.datos.id,
-					estaAnnexat = json.datos.anexado;
+				var json_annexes = json.datos.anexos
+					,json_completat = json.datos.completado || "n"
+					,json_seguent_id = json.datos.siguiente || false;
 
-				var doc_item = imc_docs.find("a[data-id="+id+"]:first");
+				if (json_annexes.length) {
 
-				if ( estaAnnexat === "s" ) {
+					$(json_annexes)
+						.each(function(i) {
 
-					var doc_valor = doc_item.find(".imc--no-completat:first");
+							var el_annex = this;
 
-					doc_valor
-						.find("span")
-							.text( txtCompletat )
-							.end()
-						.removeClass("imc--no-completat")
-						.addClass("imc--completat");
+							var id = el_annex.id,
+								esObligatori = el_annex.obligatorio || false,
+								estaAnnexat = el_annex.anexado || false;
 
-					doc_item
-						.attr("data-omplit", "c");
+							var doc_item = imc_docs.find("li[data-id="+id+"]:first");
 
-				} else {
+							if (esObligatori) {
 
-					var doc_valor = doc_item.find(".imc--completat:first");
+								if ( esObligatori === "s" ) {
 
-					doc_valor
-						.find("span")
-							.text( txtNoCompletat )
-							.end()
-						.removeClass("imc--completat")
-						.addClass("imc--no-completat");
+									var doc_valor = doc_item.find(".imc--opcional:first");
 
-					doc_item
-						.attr("data-omplit", "v");
+									doc_valor
+										.find("span")
+											.text( txtObligatori )
+											.end()
+										.removeClass("imc--opcional")
+										.addClass("imc--ogligatori");
+
+									doc_item
+										.attr("data-obligatori", "s");
+
+								} else {
+
+									var doc_valor = doc_item.find(".imc--ogligatori:first");
+
+									doc_valor
+										.find("span")
+											.text( txtOpcional )
+											.end()
+										.removeClass("imc--ogligatori")
+										.addClass("imc--opcional");
+
+									doc_item
+										.attr("data-obligatori", "n");
+
+								}
+
+							}
+
+							if (estaAnnexat) {
+
+								if ( estaAnnexat === "s" ) {
+
+									var doc_valor = doc_item.find(".imc--no-completat:first");
+
+									doc_valor
+										.find("span")
+											.text( txtCompletat )
+											.end()
+										.removeClass("imc--no-completat")
+										.addClass("imc--completat");
+
+									doc_item
+										.attr("data-omplit", "c");
+
+								} else {
+
+									var doc_valor = doc_item.find(".imc--completat:first");
+
+									doc_valor
+										.find("span")
+											.text( txtNoCompletat )
+											.end()
+										.removeClass("imc--completat")
+										.addClass("imc--no-completat");
+
+									doc_item
+										.attr("data-omplit", "v");
+
+								}
+
+							}
+
+						});
 
 				}
 
+				// completat?
+
+				estaCompletat(json_completat, json_seguent_id);
+
+			},
+			estaCompletat = function(json_completat, json_seguent_id) {
+
+				imc_navegacio
+					.find(".imc--seguent")
+						.parent()
+							.remove();
+
+				if (json_completat === "s") {
+
+					var li = $("<li>").html( HTML_SEGUENT_PAS );
+
+					imc_navegacio
+						.find("ul:first")
+							.append( li );
+
+					imc_navegacio
+						.find(".imc--seguent:first")
+							.attr("href", "#pas/"+json_seguent_id);
+
+				}
 
 			},
 			errorTorna = function() {
@@ -778,9 +1014,13 @@ $.fn.appFitxerAnnexa = function(opcions){
 				var arxiu_val = input_elm.val(),
 					hiHaValor = (arxiu_val !== "") ? true : false;
 
+
+
 				if (hiHaValor) {
 
 					// hi ha llista?
+
+
 
 					if ( !elm_perAfegir.find("ul").length ) {
 
@@ -822,7 +1062,8 @@ $.fn.appFitxerAnnexa = function(opcions){
 
 					// revisem número màxim
 
-					revisa();
+					imc_document_contingut
+						.addClass("imc--num-maxim");
 
 				}
 
@@ -832,12 +1073,18 @@ $.fn.appFitxerAnnexa = function(opcions){
 				var bt_elimina = $(this);
 
 				bt_elimina
+					.closest(".imc-input-annexe")
+						.find(".imc--annexe-error")
+							.remove();
+
+				bt_elimina
 					.closest("li")
 						.remove();
 
 				// revisem número màxim
 
-				revisa();
+				imc_document_contingut
+					.removeClass("imc--num-maxim");
 
 			},
 			revisa = function(e) {
@@ -857,8 +1104,8 @@ $.fn.appFitxerAnnexa = function(opcions){
 					imc_document_contingut
 						.removeClass("imc--num-maxim");
 
-					elm_perAfegir
-						.html("");
+					//elm_perAfegir
+					//	.html("");
 
 				}
 
@@ -911,7 +1158,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 
 				// envia config
 
-				var	pag_url = APP_URL_ANNEXAT_ESBORRA,
+				var	pag_url = APP_ANNEXE_ESBORRA,
 					formData = new FormData();
 
 				// dades
@@ -934,12 +1181,12 @@ $.fn.appAnnexatEsborra = function(opcions){
 					type: "post",
 					url: pag_url,
 					data: formData,
-					beforeSend: function(xhr) {
-			            xhr.setRequestHeader(headerCSRF, tokenCSRF);
-			        },
 					processData: false,
 					cache: false,
-					contentType: false
+					contentType: false,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader(headerCSRF, tokenCSRF);
+					}
 				})
 				.done(function( data ) {
 
@@ -998,12 +1245,13 @@ $.fn.appAnnexatEsborra = function(opcions){
 								$(this)
 									.remove();
 
-								annexe_elm = imc_docs.find("a[data-id="+annexe_id+"]:first");
-								annexe_elm_annexats = annexe_elm.parent().find(".imc--annexats:first");
+								annexe_elm = imc_docs.find("li[data-id="+annexe_id+"]:first");
+								annexe_elm_annexats = annexe_elm.find(".imc--annexats:first");
 
 								annexe_elm_annexats
 									.find("strong[data-id="+bt_esborra_id+"]:first")
-										.remove();
+										.closest("li")
+											.remove();
 
 								repasa();
 

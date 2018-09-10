@@ -1,71 +1,79 @@
 <!-- emplenar -->
 
-<h3><span>{{txtEmplenarTitol}}</span></h3>
+<div class="imc-pas">
 
-<div class="imc--info">{{txtInstruccions}}</div>
+	<h3><span>{{txtEmplenarTitol}}</span></h3>
 
-<div class="imc--formularis">
+	<div class="imc--info">{{txtInstruccions}}</div>
 
-	{{if formularis}}
-	<ul>
-		{{formularis}}
-		<li>
-			<a href="javascript:;" data-id="{{id}}" data-url="">
-				<div class="imc--formulari"><span></span></div>
-				{{if obligatorio|equals>s}}
-				<div class="imc--tipus imc--ogligatori"><span></span></div>
-				{{/if}}
-				{{if obligatorio|equals>d}}
-				<div class="imc--tipus imc--opcional"><span></span></div>
-				{{/if}}
+	<div class="imc--formularis" data-entorn="{{jsonEntorn}}">
+
+		{{if formularis}}
+		<ul>
+			{{formularis}}
+			<li data-completat="{{rellenado}}">
+				<a href="javascript:;" data-id="{{id}}" data-url="">
+					<div class="imc--formulari"><span></span></div>
+					{{if obligatorio|equals>s}}
+					<div class="imc--tipus imc--ogligatori"><span></span></div>
+					{{/if}}
+					{{if obligatorio|equals>d}}
+					<div class="imc--tipus imc--opcional"><span></span></div>
+					{{/if}}
+					{{if rellenado|equals>c}}
+					<div class="imc--estat imc--completat"><span></span></div>
+					{{/if}}
+					{{if rellenado|equals>v}}
+					<div class="imc--estat imc--no-completat"><span></span></div>
+					{{/if}}
+					<strong>{{titulo}}</strong>
+				</a>
 				{{if rellenado|equals>c}}
-				<div class="imc--estat imc--completat"><span></span></div>
+				<button type="button" class="imc--fo-pdf" title="{{txtFormulariEnPDF}}"><span>{{txtPDF}}</span></button>
+				<button type="button" class="imc--fo-xml" title="{{txtFormulariEnXML}}"><span>{{txtXML}}</span></button>
 				{{/if}}
-				{{if rellenado|equals>v}}
-				<div class="imc--estat imc--no-completat"><span></span></div>
-				{{/if}}
-				<strong>{{titulo}}</strong>
-			</a>
-		</li>
-		{{/formularis}}
-	</ul>
-	{{/if}}
+			</li>
+			{{/formularis}}
+		</ul>
+		{{/if}}
+
+	</div>
+
+	<div class="imc--icones">
+
+		<h4><span>{{txtIcones}}</span></h4>
+
+		<ul>
+			<li>
+				<div class="imc--tipus imc--ogligatori"><span>{{txtObligatori}}</span></div>
+			</li>
+			<li>
+				<div class="imc--tipus imc--opcional"><span>{{txtOpcional}}</span></div>
+			</li>
+			<li>
+				<div class="imc--estat imc--completat"><span>{{txtCompletat}}</span></div>
+			</li>
+			<li>
+				<div class="imc--estat imc--no-completat"><span>{{txtNoCompletat}}</span></div>
+			</li>
+		</ul>
+
+	</div>
+
+	<nav class="imc--navegacio">
+
+		<ul>
+			<li>
+				<a class="imc-bt imc--anterior" href=""><span>{{txtAnterior}}</span></a>
+			</li>
+			<li>
+				<a class="imc-bt imc--seguent" href=""><span>{{txtSeguent}}</span></a>
+			</li>
+		</ul>
+
+	</nav>
 
 </div>
-
-<div class="imc--icones">
-
-	<h4><span>{{txtIcones}}</span></h4>
-
-	<ul>
-		<li>
-			<div class="imc--tipus imc--ogligatori"><span>{{txtObligatori}}</span></div>
-		</li>
-		<li>
-			<div class="imc--tipus imc--opcional"><span>{{txtOpcional}}</span></div>
-		</li>
-		<li>
-			<div class="imc--estat imc--completat"><span>{{txtCompletat}}</span></div>
-		</li>
-		<li>
-			<div class="imc--estat imc--no-completat"><span>{{txtNoCompletat}}</span></div>
-		</li>
-	</ul>
-
-</div>
-
-<nav class="imc--navegacio">
-
-	<ul>
-		<li>
-			<a class="imc-bt imc--anterior" href=""><span>{{txtAnterior}}</span></a>
-		</li>
-		<li>
-			<a class="imc-bt imc--seguent" href=""><span>{{txtSeguent}}</span></a>
-		</li>
-	</ul>
-
-</nav>
 
 <!-- formulari -->
 <div class="imc-formulari" id="imc-formulari">

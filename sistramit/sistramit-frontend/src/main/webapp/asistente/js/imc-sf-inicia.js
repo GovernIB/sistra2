@@ -5,6 +5,7 @@
 
 function iniciaHTML() {
 	
+	imc_cap_fixe = $("#imc-cap--fixe");
 	imc_cap = $("#imc-cap");
 	imc_cap_c = imc_cap.find(".imc--c:first");
 	imc_tramitacio = $("#imc-tramitacio");
@@ -23,7 +24,7 @@ function iniciaHTML() {
 	HTML_MOLLA_PA = imc_molla_pa.find("nav:first").html();
 
 
-	// botó cap
+	// cap padding
 
 	imc_cap_c
 		.appCap();
@@ -37,8 +38,13 @@ function iniciaHTML() {
 				imc_cap_c
 					.appCap();
 
-			}, 300);
+			}, 100);
 		});
+
+	// desa clau
+
+	imc_bt_desa
+		.appClauDesa();
 
 	// desconecta
 

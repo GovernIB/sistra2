@@ -87,7 +87,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         JndiBean.doSetup();
     }
 
-    /** Verificación cacheo definiciones. */
+    /**
+     * Verificación cacheo definiciones: se verifica el funcionamiento de las
+     * caches para configuración global, configuración entidad, avisos entidad y
+     * definiciones de trámite.
+     */
     @Test
     public void test1_cache() {
 
@@ -154,7 +158,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
     }
 
-    /** Verificación login autenticado. */
+    /**
+     * Verificación login autenticado: Se verifica proceso de login autenticado.
+     */
     @Test
     public void test2_loginAutenticado() {
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
@@ -181,7 +187,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         this.logger.info("Autenticado anonimo");
     }
 
-    /** Verificación carga/recarga tramite autenticado. */
+    /**
+     * Carga trámite autenticado: verificación de recarga de un trámite
+     * autenticado desde la sesión activa (p.e. tras un error) o carga de un
+     * trámite autenticado (p.e. desde carpeta ciudadana).
+     */
     @Test
     public void test4_cargaTramiteAutenticado() {
 
@@ -221,7 +231,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
     }
 
-    /** Verificación carga/recarga tramite anonimo. */
+    /**
+     * Carga trámite anónimo: verificación de recarga de un trámite anónimo
+     * desde la sesión activa (p.e. tras un error) o carga de un trámite a
+     * partir de la clave de tramitación .
+     */
     @Test
     public void test5_cargaTramiteAnonimo() {
 
@@ -264,7 +278,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
     }
 
-    /** Verificación flujo tramitacion: recorre pasos de tramitación. */
+    /**
+     * Verificación flujo tramitación: verifica la funcionalidad básica de los
+     * diferentes pasos de tramitación a partir de la definición simulada de una
+     * versión de trámite.
+     */
     @Test
     public void test6_flujoTramitacion() throws Exception {
 
@@ -286,7 +304,14 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
     }
 
-    public void flujoTramitacion_rellenar(final String idSesionTramitacion)
+    /**
+     * Test paso rellenar.
+     *
+     * @param idSesionTramitacion
+     *            id sesión
+     * @throws UnsupportedEncodingException
+     */
+    private void flujoTramitacion_rellenar(final String idSesionTramitacion)
             throws UnsupportedEncodingException {
         ParametrosAccionPaso parametros;
         ResultadoAccionPaso resPaso;
@@ -406,6 +431,12 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
     }
 
+    /**
+     * Test paso Debe saber.
+     *
+     * @param idSesionTramitacion
+     *            id sesión tramitación
+     */
     private void flujoTramitacion_debeSaber(final String idSesionTramitacion) {
         final DetallePasos dp = flujoTramitacionService
                 .obtenerDetallePasos(idSesionTramitacion);
@@ -414,6 +445,12 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         this.logger.info("Detalle paso: " + dp.print());
     }
 
+    /**
+     * Inicio de un trámite.
+     *
+     *   @param idSesionTramitacion
+     *            id sesión tramitación
+     */
     private void flujoTramitacion_iniciarTramite(
             final String idSesionTramitacion) {
         final Map<String, String> parametrosInicio = new HashMap<>();
@@ -432,7 +469,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         this.logger.info("Detalle Tramite: " + dt.print());
     }
 
-    /** Verificación soporte incidencias. */
+    /** Formulario soporte incidencias: verificación funcionamiento formulario soporte de incidencias. */
     @Test
     public void test7_soporteIncidencias() {
 

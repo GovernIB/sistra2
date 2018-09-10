@@ -12,6 +12,7 @@ var imc_formularis,
 function appPasEmplenarInicia() {
 	
 	imc_formularis = imc_contingut.find(".imc--formularis:first");
+
 	imc_formulari = $("#imc-formulari");
 	imc_formulari_c = imc_formulari.find(".imc--c:first");
 	imc_formulari_bt = imc_formulari.find("button:first");
@@ -21,6 +22,43 @@ function appPasEmplenarInicia() {
 		.find("li a")
 			.appFormulari();
 
+	imc_formularis
+		.appFormulariDescarrega();
+
+}
+
+
+// appFormulariDescarrega
+
+$.fn.appFormulariDescarrega = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			inicia = function() {
+
+				element
+					.off('.appFormulariDescarrega')
+					.on('click.appFormulariDescarrega', "button", activa);
+
+			},
+			activa = function(e) {
+
+				var bt = $(this)
+					,form_id = bt.parent().find("a:first").attr("data-id")
+					,esPDF = (bt.hasClass("imc--fo-pdf")) ? true : false
+					,url = (esPDF) ? APP_FORM_PDF : APP_FORM_XML;
+
+				document.location = url + "?id=" + form_id;
+
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+	return this;
 }
 
 
@@ -35,6 +73,8 @@ $.fn.appFormulari = function(options) {
 			ico_anim = false,
 			ico_anim_carrega = false,
 			iframe_url = false,
+			form_id = false,
+			envia_ajax = false,
 			inicia = function() {
 
 				element
@@ -54,6 +94,8 @@ $.fn.appFormulari = function(options) {
 					bt_ico_L = bt_ico.offset().left,
 					bt_ico_W = bt_ico.outerWidth(),
 					bt_ico_H = bt_ico.outerHeight();
+
+				form_id = bt.attr("data-id");
 
 				ico_anim = $("<div>").addClass("imc-ico-anim").css({ top: bt_ico_T+"px", left: bt_ico_L+"px", width: bt_ico_W+"px", height: bt_ico_W+"px" }).appendTo( imc_formulari_c );
 
@@ -92,13 +134,79 @@ $.fn.appFormulari = function(options) {
 			carregant = function() {
 
 				//var ico_anim_text = $("<div>").addClass("imc-ico-carrega-text").text( "Carregant formulari..." ).appendTo( imc_formulari_c );
-
+				/*
 				imc_formulari_iframe
 					.off("")
 					.on("load", carregat);
 
 				imc_formulari_iframe
 					.attr("src", iframe_url);
+				*/
+
+				var pag_url = APP_FORM_URL,
+					pag_data = { id: form_id };
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+				
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_data,
+						method: "post",
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
+					})
+					.done(function( data ) {
+
+						if (data.estado === "SUCCESS" || data.estado === "WARNING") {
+
+							var form_tipus = data.datos.tipo
+								,form_url = data.datos.url;
+
+							if (form_tipus === "i") {
+
+								imc_formulari_iframe
+									.off("")
+									.on("load", carregat);
+
+								imc_formulari_iframe
+									.attr("src", form_url);
+
+							} else {
+
+								document.location = form_url;
+
+							}
+
+						} else {
+
+							consola("Formulari: error des de JSON");
+							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
+
+						}
+						
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						if (tipus === "abort") {
+							return false;
+						}
+						
+						consola("Formulari: error des de FAIL");
+						error();
+						
+					});
+
+
 
 			},
 			carregat = function() {
@@ -152,6 +260,8 @@ $.fn.appFormulari = function(options) {
 					.off('.appFormulari')
 					.on('click.appFormulari', tanca);
 
+				envia_ajax = false;
+
 			},
 			tanca = function() {
 
@@ -175,6 +285,34 @@ $.fn.appFormulari = function(options) {
 
 
 					}, 300);
+
+			},
+			error = function(opcions) {
+
+				// missatge error
+
+				var settings_opcions = $.extend({
+						titol: txtTramitEliminaErrorTitol,
+						text: txtTramitEliminaErrorText
+					}, opcions);
+
+				var titol = settings_opcions.titol,
+					text = settings_opcions.text;
+
+				imc_missatge
+					.appMissatge({ accio: "error", titol: titol, text: text });
+
+				// iframe
+
+				ico_anim_carrega
+					.remove();
+
+				ico_anim
+					.remove();
+
+				tanca();
+
+				envia_ajax = false;
 
 			};
 		

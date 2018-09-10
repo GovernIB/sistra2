@@ -76,4 +76,11 @@
 	<mvc:resources mapping="/resources/**" location="file:${ficherosExternos.path}/publico" />
 	<mvc:default-servlet-handler/>
 
+	<!-- Upload ficheros-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--
+			En caso de querer habilitar hay que capturar excepcion generada en el ExceptionHandler
+		<property name="maxUploadSize" value="100000"/> -->
+	</bean>
+
 </beans>

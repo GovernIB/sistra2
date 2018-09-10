@@ -21,6 +21,26 @@
 .imc--formularis a:hover,
 .imc--formularis a:focus { color: #3b8e5d; }
 
+.imc--formularis .imc--fo-xml { display: none; }
+
+.imc--formularis:not([data-entorn="PRO"]) .imc--fo-xml { display: inline-block; }
+
+.imc--formularis li[data-completat="c"] { display: flex; }
+.imc--formularis li[data-completat="c"] a { width: 100%; }
+
+.imc--formularis li[data-completat="c"] > button { position: relative; width: 4em; padding: 0; background: #4dba79 url(imgs/icones/ico_descarrega.svg) no-repeat center top .5em / auto 1em; }
+
+.imc--formularis li[data-completat="c"] > button.imc--fo-pdf {
+    background-color: #265d3c;
+}
+
+.imc--formularis li[data-completat="c"] > button:hover,
+.imc--formularis li[data-completat="c"] > button:focus { background-color: #000; }
+
+.imc--formularis li[data-completat="c"] > button span { display: block; position: absolute; left: 0; bottom: .5em; width: 100%; font-size: .8em; }
+
+/* icones */
+
 .imc--icones { width: 100%; margin-top: 2em; }
 
 .imc--icones h4 { position: absolute; top: -999em; left: -999em; text-transform: uppercase; margin-bottom: 1em; }

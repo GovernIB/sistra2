@@ -78,7 +78,7 @@ public final class PasoRegistrarController extends TramitacionController {
      *            Identificador paso.
      * @return Devuelve JSON con estado actual del trámite.
      */
-    @RequestMapping(value = "/registrarTramite.html", method = RequestMethod.POST)
+    @RequestMapping(value = "/registrarTramite.json", method = RequestMethod.POST)
     public ModelAndView registrarTramite(
             @RequestParam(PARAM_ID_PASO) final String idPaso) {
 

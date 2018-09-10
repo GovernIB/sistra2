@@ -1,5 +1,7 @@
 // JS
 
+var APP_ACCESSIBILITAT_HTML = false;
+
 
 // appCap
 
@@ -9,81 +11,59 @@ $.fn.appCap = function(options) {
 	}, options);
 	this.each(function(){
 		var element = $(this),
-			dades_el = element.find(".imc--dades:first"),
-			dades_W = false,
-			dades_usuari_W = false,
-			dades_usuari_H = false,
-			dades_clau_H = false,
-			dades_desa_H = false,
-			altura_total = false,
-			verifica = function() {
-
-				dades_el
-					.removeAttr("style")
-					.removeClass("imc--obert");
-
-				if (dades_el.css("opacity") === "0") {
-
-					inicia();
-
-				}
-
-			},
 			inicia = function() {
 
-				dades_W = dades_el.css("width");
-				dades_usuari_W = dades_el.find(".imc--usuari:first").css("width");
-				dades_usuari_H = dades_el.find(".imc--usuari:first").outerHeight();
-				dades_clau_H = dades_el.find(".imc--clau:first").outerHeight();
-				dades_desa_H = dades_el.find(".imc--desa:first").outerHeight();
+				var cap_fixe_ALTURA = imc_cap_fixe.height();
 
-				altura_total = (dades_W === dades_usuari_W) ? dades_usuari_H + dades_clau_H + dades_desa_H : dades_desa_H;
+				imc_contingut
+					.css("paddingTop", cap_fixe_ALTURA+"px");
 
-				if (dades_el.css("opacity") === "0") {
+			};
+
+		// inicia
+		inicia();
+
+	});
+	return this;
+}
+
+
+// appClauDesa
+
+$.fn.appClauDesa = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			inicia = function() {
+
+				var autenticacio_val = imc_cap.attr("data-autenticacio");
+
+				element
+					.data("data-autenticacio", autenticacio_val);
+
+				if (autenticacio_val === "a") {
 
 					element
-						.off('.appCap')
-						.on('click.appCap', activa);
+						.off('.appClauDesa')
+						.on('click.appClauDesa', desa);
 
 				}
 
 			},
-			activa = function(e) {
+			desa = function() {
 
-				var bt = $(e.target);
+				if (element.data("data-autenticacio") === "a") {
 
-				if (dades_el.hasClass("imc--obert") && !bt.hasClass("imc--desa")) {
-
-					dades_el
-						.animate(
-							{ height: "0px", opacity: 0 }
-							,200
-							,function() {
-
-								dades_el
-									.removeClass("imc--obert");
-
-							});
-
-				} else {
-
-					dades_el
-						.animate(
-							{ height: altura_total+"px", opacity: 1 }
-							,200
-							,function() {
-
-								dades_el
-									.addClass("imc--obert");
-
-							});
+					document.location = APP_TRAMIT_CLAU_DESCARREGA + "?id=" + APP_JSON_TRAMIT_T.idSesion;
 
 				}
 
 			};
 
-		// verifica
-		verifica();
+		// inicia
+		inicia();
 
 	});
 	return this;
@@ -108,7 +88,7 @@ $.fn.appDesconecta = function(options) {
 			avis = function() {
 
 				imc_missatge
-					.appMissatge({ boto: element, accio: "desconecta", titol: txtSortirTitol, text: txtSortirText });
+					.appMissatge({ boto: element, accio: "desconecta", titol: txtSortirTitol, text: txtSortirText, alAcceptar: function() { document.location = APP_TRAMIT_DESCONECTA; } });
 
 			};
 
@@ -128,6 +108,7 @@ $.fn.appTramitacioElimina = function(options) {
 	}, options);
 	this.each(function(){
 		var element = $(this),
+			envia_ajax = false,
 			inicia = function() {
 
 				element
@@ -138,7 +119,88 @@ $.fn.appTramitacioElimina = function(options) {
 			obri = function() {
 
 				imc_missatge
-					.appMissatge({ boto: element, accio: "esborra", titol: txtTramitEliminaTitol, text: txtTramitEliminaText });
+					.appMissatge({ boto: element, accio: "esborra", titol: txtTramitEliminaTitol, text: txtTramitEliminaText, alAcceptar: function() { eliminant(); } });
+
+			},
+			eliminant = function() {
+
+				// missatge carregant
+
+				imc_missatge
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtTramitEliminant });
+
+				// envia
+
+				envia();
+
+			},
+			envia = function() {
+
+				var pag_url = APP_TRAMIT_CANCELA,
+					pag_data = { id: APP_JSON_TRAMIT_T.idSesion };
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_data,
+						method: "post",
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
+					})
+					.done(function( data ) {
+
+						if (data.estado === "SUCCESS" || data.estado === "WARNING") {
+
+							document.location = data.url;
+
+						} else {
+
+							consola("carregaJSON desde JSON");
+
+							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
+
+						}
+
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						consola(dades+" , "+ tipus +" , "+ errorThrown);
+
+						if (tipus === "abort") {
+							return false;
+						}
+
+						consola("carregaJSON desde FAIL");
+						error();
+
+					});
+
+			},
+			error = function(opcions) {
+
+				var settings_opcions = $.extend({
+						titol: txtTramitEliminaErrorTitol,
+						text: txtTramitEliminaErrorText
+					}, opcions);
+
+				var titol = settings_opcions.titol,
+					text = settings_opcions.text;
+
+				imc_missatge
+					.appMissatge({ accio: "error", titol: titol, text: text });
+
+				envia_ajax = false;
 
 			};
 
@@ -163,7 +225,8 @@ $.fn.appMissatge = function(options) {
 		alMostrar: function() {},
 		alAmagar: function() {},
 		alAcceptar: function() {},
-		alCancelar: function() {}
+		alCancelar: function() {},
+		alTancar: function() {}
 	}, options);
 	this.each(function(){
 		var element = $(this),
@@ -179,9 +242,11 @@ $.fn.appMissatge = function(options) {
 			alAmagar = settings.alAmagar,
 			alAcceptar = settings.alAcceptar,
 			alCancelar = settings.alCancelar,
+			alTancar = settings.alTancar,
 			botonera_elm = element.find(".imc--botonera:first"),
 			accepta_bt = element.find("button[data-tipus='accepta']:first"),
 			cancela_bt = element.find("button[data-tipus='cancela']:first"),
+			tanca_bt = element.find("button[data-tipus='tanca']:first"),
 			ico_anim = false,
 			inicia = function() {
 
@@ -200,6 +265,10 @@ $.fn.appMissatge = function(options) {
 					.off('.appMissatge')
 					.on('click.appMissatge', cancela);
 
+				tanca_bt
+					.off('.appMissatge')
+					.on('click.appMissatge', tanca);
+
 				element
 					.find("h2 span")
 						.text( titol_txt )
@@ -209,6 +278,9 @@ $.fn.appMissatge = function(options) {
 						.end()
 					.attr("data-accio", accio);
 
+				element_c
+					.off('.appMissatge');
+				/*
 				botonera_elm
 					.attr("aria-hidden", "false")
 					.show();
@@ -216,6 +288,10 @@ $.fn.appMissatge = function(options) {
 				cancela_bt
 					.attr("aria-hidden", "false")
 					.show();
+
+				tanca_bt
+					.attr("aria-hidden", "true")
+					.hide();
 
 				if (accio === "informa" || accio === "alerta") {
 
@@ -229,7 +305,7 @@ $.fn.appMissatge = function(options) {
 						.attr("aria-hidden", "true")
 						.hide();
 
-				}
+				}*/
 
 				anima();
 
@@ -299,7 +375,6 @@ $.fn.appMissatge = function(options) {
 				if (amagaDesdeFons) {
 
 					element_c
-						.off('.appMissatge')
 						.on('click.appMissatge', amagaFons);
 
 				}
@@ -319,6 +394,13 @@ $.fn.appMissatge = function(options) {
 			cancela = function() {
 
 				alCancelar();
+
+				amaga();
+
+			},
+			tanca = function() {
+
+				alTancar();
 
 				amaga();
 
@@ -478,7 +560,7 @@ $.fn.appSuport = function(options) {
 			inicia = function() {
 
 				el_suport_form_f
-					.attr("action", APP_URL_SUPORT_FORM);
+					.attr("action", APP_TRAMIT_SUPORT);
 
 				bt_equip_suport
 					.off('.appSuport')
@@ -658,7 +740,7 @@ $.fn.appSuport = function(options) {
 
 				// envia config
 
-				var	pag_url = APP_URL_SUPORT_FORM,
+				var	pag_url = APP_TRAMIT_SUPORT,
 					formData = new FormData( el_suport_form.find("form:first")[0] );
 
 				// arxius
@@ -699,11 +781,11 @@ $.fn.appSuport = function(options) {
 						url: pag_url,
 						data: formData,
 						processData: false,
-						beforeSend: function(xhr) {
-				            xhr.setRequestHeader(headerCSRF, tokenCSRF);
-				        },
 						cache: false,
-						contentType: false
+						contentType: false,
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
 					})
 					.done(function( data ) {
 
@@ -807,6 +889,114 @@ $.fn.appSuport = function(options) {
 
 		// inicia
 		inicia();
+
+	});
+	return this;
+}
+
+
+// accessibilitat
+
+$.fn.appAccessibilitat = function(options) {
+	var settings = $.extend({
+		contenidor: false
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			verifica = function() {
+
+
+				if (APP_ACCESSIBILITAT_HTML) {
+
+					mostra();
+
+				} else {
+
+					carrega();
+
+				}
+
+			},
+			carrega = function() {
+
+				// carrega
+
+				$.when(
+
+					$.get(APP_ + "css/imc-accessibilitat.css")
+					,$.get(APP_ + "html/imc-accessibilitat.html")
+					,$.getScript(APP_ + "js/imc-accessibilitat.js")
+
+				).then(
+
+					function( cssAcc, htmlAcc) {
+
+						// estils
+
+						$("<style>")
+							.html( cssAcc[0] )
+								.appendTo( imc_head );
+
+						// html
+
+						var literals_acc = {
+							txtAccessibilitat: txtAccessibilitat
+							,txtAccCompromisTitol: txtAccCompromisTitol
+							,txtAccCompromisText_1: txtAccCompromisText_1
+							,txtAccCompromisText_2: txtAccCompromisText_2
+							,txtEquipSuport: txtEquipSuport
+							,txtAccCompromisContacte: txtAccCompromisContacte
+							,txtAccIconaTitle: txtAccIconaTitle
+							,txtAccIconaAlt: txtAccIconaAlt
+							,txtAccCanviaTitol: txtAccCanviaTitol
+							,txtAccCanviaText_1: txtAccCanviaText_1
+							,txtEstilsDefecte: txtEstilsDefecte
+							,txtEstilsAltContrast: txtEstilsAltContrast
+							,txtCanvia: txtCanvia
+							,txtAccTecnologiaTitol: txtAccTecnologiaTitol
+							,txtAccTecnologiaText_1: txtAccTecnologiaText_1
+							,txtAccTecnologiaText_2: txtAccTecnologiaText_2
+							,txtAccEinesTitol: txtAccEinesTitol
+							,txtAccEinesText_1: txtAccEinesText_1
+							,pasActualId: JSON_PAS_ACTUAL.datos.actual.id
+						};
+
+						APP_ACCESSIBILITAT_HTML = Mark.up(htmlAcc[0], literals_acc);
+
+						imc_contingut_c
+							.append( APP_ACCESSIBILITAT_HTML );
+
+						// mostra
+
+						mostra();
+
+					}
+
+				).fail(
+
+					function() {
+
+						alert("Accessibilitat: error caregant HTML, CSS i JS");
+
+					}
+
+				);
+
+			},
+			mostra = function() {
+
+				imc_contenidor
+					.addClass("imc--mostra-acc");
+
+				imc_cap_c
+					.appCap();
+
+				appAccessibilitatInicia();
+
+			};
+
+		// verifica
+		verifica();
 
 	});
 	return this;

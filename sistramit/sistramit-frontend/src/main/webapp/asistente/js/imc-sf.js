@@ -10,16 +10,18 @@ var APP_JSON_TRAMIT
 	,APP_JSON_TRAMIT_T
 	,APP_JSON_TRAMIT_U
 	,APP_JSON_TRAMIT_E
-	,APP_URL_TRAMIT
-	,APP_URL_PAS;
+	,APP_TRAMIT_INFO
+	,APP_TRAMIT_PAS;
 
 var HTML_MOLLA_PA;
 
 var imc_finestra
+	,imc_html
 	,imc_head
 	,imc_body
 	,imc_carrega_inicial
 	,imc_contenidor
+	,imc_cap_fixe
 	,imc_cap
 	,imc_cap_c
 	,imc_tramitacio
@@ -42,6 +44,7 @@ $(function(){
 	APP_IDIOMA = $("html").attr("lang");
 
 	imc_finestra = $(window);
+	imc_html = $("html");
 	imc_head = $("head");
 	imc_body = $("body");
 	imc_carrega_inicial = $("#imc-carrega-inicial");
@@ -59,6 +62,13 @@ $(function(){
 		document.location = "";
 
 	}
+
+	// estils?
+
+	var estils = (localStorage.getItem("goib_sistra2tramit_estils")) ? localStorage.getItem("goib_sistra2tramit_estils") : "pd";
+
+	imc_html
+		.attr("data-estil", estils);
 
 	// carrega info tràmit
 
@@ -89,21 +99,21 @@ $.fn.carregaInfoTramit = function(options) {
 			},
 			envia = function() {
 
-				var pag_url = APP_SERVIDOR_JSON + APP_URL_TRAMIT + APP_SERVIDOR_EXT,
+				var pag_url = APP_TRAMIT_INFO,
 					pag_data = { id: "" };
-
+				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
 						data: pag_data,
-						beforeSend: function(xhr) {
-				            xhr.setRequestHeader(headerCSRF, tokenCSRF);
-				        },
 						method: "post",
-						dataType: "json"
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
 					})
 					.done(function( data ) {
-
+						
 						APP_JSON_TRAMIT = data;
 						APP_JSON_TRAMIT_D = APP_JSON_TRAMIT.datos;
 						APP_JSON_TRAMIT_T = APP_JSON_TRAMIT_D.tramite;
@@ -112,6 +122,8 @@ $.fn.carregaInfoTramit = function(options) {
 
 						if (APP_JSON_TRAMIT.estado === "SUCCESS" || APP_JSON_TRAMIT.estado === "WARNING") {
 
+							// literals
+
 							carregaLiterals();
 
 						} else {
@@ -119,12 +131,12 @@ $.fn.carregaInfoTramit = function(options) {
 							error();
 
 						}
-
+						
 					})
 					.fail(function(fail_dades, fail_tipus, errorThrown) {
-
+						
 						error();
-
+						
 					});
 
 			},
@@ -144,10 +156,10 @@ $.fn.carregaInfoTramit = function(options) {
 					.addClass("imc--error");
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -158,14 +170,13 @@ $.fn.carregaInfoTramit = function(options) {
 function carregaLiterals() {
 
 	$.when(
-
-
+		
 		$.getScript(APP_LITERALS + "?idioma="+APP_IDIOMA)
 
 	).then(
 
 		function() {
-
+			
 			carregaHTML();
 
 		}
@@ -193,18 +204,17 @@ function carregaHTML() {
 	// html
 
 	$.when(
-
-		$.get(APP_SERVIDOR + "css/imc-sf-botonera.css")
-		,$.get(APP_SERVIDOR + "css/imc-sf-base.css")
-		,$.get(APP_SERVIDOR + "html/imc-cap.html")
-		,$.get(APP_SERVIDOR + "html/imc-contacte.html")
-		,$.get(APP_SERVIDOR + "html/imc-missatge.html")
-		//,$.getScript(APP_LITERALS + "?idioma="+APP_IDIOMA)
-		,$.getScript(APP_SERVIDOR + "js/utils/modernizr-imc-0.3.js")
-		,$.getScript(APP_SERVIDOR + "js/utils/markup.min.js")
-		,$.getScript(APP_SERVIDOR + "js/imc-sf-pas.js")
-		,$.getScript(APP_SERVIDOR + "js/imc-sf-funcions.js")
-		,$.getScript(APP_SERVIDOR + "js/imc-sf-inicia.js")
+		
+		$.get(APP_ + "css/imc-sf-botonera.css")
+		,$.get(APP_ + "css/imc-sf-base.css")
+		,$.get(APP_ + "html/imc-cap.html")
+		,$.get(APP_ + "html/imc-contacte.html")
+		,$.get(APP_ + "html/imc-missatge.html")
+		,$.getScript(APP_ + "js/utils/modernizr-imc-0.3.js")
+		,$.getScript(APP_ + "js/utils/markup.min.js")
+		,$.getScript(APP_ + "js/imc-sf-pas.js")
+		,$.getScript(APP_ + "js/imc-sf-funcions.js")
+		,$.getScript(APP_ + "js/imc-sf-inicia.js")
 
 	).then(
 
@@ -224,15 +234,20 @@ function carregaHTML() {
 
 			// cap
 
+			var jsonAutenticacio = APP_JSON_TRAMIT_T.autenticacion,
+				jsonUsuari = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 + ", " + APP_JSON_TRAMIT_U.nombre : txtSenseAutenticacio;
+
 			var txtHTML_Cap = {
 				txtGovern: txtGovern
 				,txtAplicacioTitol: txtAplicacioTitol
 				,txtUsuari: txtUsuari
 				,txtDesconecta: txtDesconecta
-				,txtClauTramitacio : txtClauTramitacio
-				,txtDesauClau : txtDesauClau
+				,txtClauTramitacio: txtClauTramitacio
+				,txtDesauClau: txtDesauClau
+				,txtAccessibilitat: txtAccessibilitat
 				,txtEliminau: txtEliminau
-				,jsonUsuari: APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 + ", " + APP_JSON_TRAMIT_U.nombre
+				,jsonAutenticacio: jsonAutenticacio
+				,jsonUsuari: jsonUsuari
 				,jsonClauTramitacio: APP_JSON_TRAMIT_T.idSesion
 				,jsonTramitTitol: APP_JSON_TRAMIT_T.titulo
 				,txtCalSaber: txtCalSaber
@@ -284,6 +299,9 @@ function carregaHTML() {
 				,txtCancelaEnviament: txtCancelaEnviament
 				,txtTornaIntentar: txtTornaIntentar
 				,jsonContacte: APP_JSON_TRAMIT_E.contacto
+				,txtMapaWeb: txtMapaWeb
+				,txtAvisLegal: txtAvisLegal
+				,txtSegueixnos: txtSegueixnos
 			};
 
 			var html_contacte = Mark.up(htmlContacte[0], txtHTML_Contacte);
@@ -296,12 +314,37 @@ function carregaHTML() {
 			var txtHTML_Missatge = {
 				txtAccepta: txtAccepta
 				,txtCancela: txtCancela
+				,txtTanca: txtTanca
 			};
 
 			var html_missatge = Mark.up(htmlMissatge[0], txtHTML_Missatge);
 
 			imc_body
 				.append( html_missatge );
+
+			// entitat - logo
+
+			var app_logo = APP_JSON_TRAMIT_E.logo;
+
+			if (app_logo !== "") {
+
+				imc_contenidor
+					.find(".imc--logo:first")
+						.css({ "backgroundImage": "url("+app_logo+")" });
+
+			}
+
+			// entitat - css
+
+			var app_css = APP_JSON_TRAMIT_E.css;
+
+			if (app_css !== "") {
+
+				$("<link>")
+					.attr({ rel: "stylesheet", type: "text/css", href: APP_JSON_TRAMIT_E.css })
+						.appendTo( imc_head );
+
+			}
 
 			// inicia html
 

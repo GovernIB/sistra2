@@ -41,7 +41,7 @@ $.fn.appExplicacioDetallada = function(options) {
 			inicia = function() {
 
 				imc_bt_cs_explicacio
-					.off('.appFormulari')
+					.off('.appExplicacioDetallada')
 					.on('click.appExplicacioDetallada', activa);
 
 			},
