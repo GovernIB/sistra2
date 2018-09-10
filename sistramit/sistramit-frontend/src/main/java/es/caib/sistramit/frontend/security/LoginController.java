@@ -196,7 +196,7 @@ public final class LoginController {
         }
 
         final String urlCallback = systemService.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.URL_SISTRAMIT)
+                TypePropiedadConfiguracion.SISTRAMIT_URL)
                 + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN;
         return new ModelAndView(
                 "redirect:" + securityService.iniciarSesionAutenticacion(
@@ -236,7 +236,7 @@ public final class LoginController {
             lang = "es";
         }
         final String urlCallback = systemService.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.URL_SISTRAMIT)
+                TypePropiedadConfiguracion.SISTRAMIT_URL)
                 + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT;
         return new ModelAndView("redirect:" + securityService
                 .iniciarLogoutSesion(idEntidad, lang, urlCallback, debug));

@@ -12,8 +12,15 @@ public enum TypePropiedadConfiguracion {
 
     /** Entorno. */
     ENTORNO("entorno"),
+    /** STG Url. */
+    SISTRAGES_URL("sistrages.url"),
+    /** STG Url. */
+    SISTRAGES_USR("sistrages.usr"),
+    /** STG Url. */
+    SISTRAGES_PWD("sistrages.pwd"),
+
     /** Url asistente. */
-    URL_SISTRAMIT("sistramit.url"),
+    SISTRAMIT_URL("sistramit.url"),
     /** Idiomas soportados. */
     IDIOMAS_SOPORTADOS("sistramit.idiomas"),
     /**

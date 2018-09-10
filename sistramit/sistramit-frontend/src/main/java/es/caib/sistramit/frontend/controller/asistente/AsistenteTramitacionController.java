@@ -375,7 +375,7 @@ public class AsistenteTramitacionController extends TramitacionController {
     public ModelAndView obtenerConfiguracionAplicacion() {
         final AsistenteConfig conf = new AsistenteConfig();
         conf.setUrl(getSystemService().obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.URL_SISTRAMIT));
+                TypePropiedadConfiguracion.SISTRAMIT_URL));
         conf.setIdioma(this.getIdioma());
         return new ModelAndView("asistente/configuracion", "configuracion",
                 conf);
