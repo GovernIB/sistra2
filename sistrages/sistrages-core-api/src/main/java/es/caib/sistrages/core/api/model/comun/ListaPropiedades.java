@@ -13,7 +13,7 @@ import es.caib.sistra2.commons.utils.SerializadorMap;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public final class ListaPropiedades implements Serializable {
 
 	/**

@@ -5,8 +5,11 @@ import es.caib.sistrages.core.api.model.types.TypeRoleUser;
 /**
  * La clase Rol.
  */
-@SuppressWarnings("serial")
+
 public class Rol extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** codigo. */
 	private Long codigo;

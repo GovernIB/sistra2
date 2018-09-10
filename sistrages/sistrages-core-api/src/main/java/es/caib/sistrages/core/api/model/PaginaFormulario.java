@@ -6,8 +6,11 @@ import java.util.List;
 /**
  * La clase PaginaFormulario.
  */
-@SuppressWarnings("serial")
+
 public final class PaginaFormulario extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * codigo.

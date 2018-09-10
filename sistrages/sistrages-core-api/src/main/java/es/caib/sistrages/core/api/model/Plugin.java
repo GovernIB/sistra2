@@ -14,8 +14,11 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class Plugin extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Id. */
 	private Long codigo;

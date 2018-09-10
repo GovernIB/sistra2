@@ -5,8 +5,11 @@ import es.caib.sistrages.core.api.model.types.TypeParametroDominio;
 /**
  * La clase ParametroDominio.
  */
-@SuppressWarnings("serial")
+
 public class ParametroDominio extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * codigo.

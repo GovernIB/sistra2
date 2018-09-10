@@ -3,8 +3,11 @@ package es.caib.sistrages.core.api.model;
 /**
  * La clase Script.
  */
-@SuppressWarnings("serial")
+
 public class Script extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Codigo. */
 	private Long codigo;

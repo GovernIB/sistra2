@@ -9,7 +9,7 @@ import es.caib.sistrages.core.api.model.ModelApi;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public final class Propiedad extends ModelApi {
 
 	/**

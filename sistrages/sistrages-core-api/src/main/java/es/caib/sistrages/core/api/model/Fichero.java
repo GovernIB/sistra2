@@ -6,8 +6,11 @@ package es.caib.sistrages.core.api.model;
  * @author indra
  *
  */
-@SuppressWarnings("serial")
+
 public class Fichero extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Código interno. **/
 	private Long codigo;

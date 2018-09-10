@@ -8,8 +8,11 @@ import es.caib.sistrages.core.api.model.types.TypeListaValores;
 /**
  * La clase ComponenteFormularioCampoSelector.
  */
-@SuppressWarnings("serial")
+
 public final class ComponenteFormularioCampoSelector extends ComponenteFormularioCampo {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * tipo campo indexado.

@@ -6,8 +6,11 @@ import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 /**
  * La clase ComponenteFormulario.
  */
-@SuppressWarnings("serial")
+
 public abstract class ComponenteFormulario extends ObjetoFormulario {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * id componente.

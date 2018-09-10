@@ -5,8 +5,11 @@ import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 /**
  * La clase ComponenteFormularioImagen.
  */
-@SuppressWarnings("serial")
+
 public final class ComponenteFormularioImagen extends ComponenteFormulario {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * fichero.

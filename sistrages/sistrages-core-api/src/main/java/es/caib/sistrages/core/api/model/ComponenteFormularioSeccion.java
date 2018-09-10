@@ -6,8 +6,11 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public final class ComponenteFormularioSeccion extends ComponenteFormulario {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	private String letra;
 

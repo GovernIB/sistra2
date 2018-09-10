@@ -3,8 +3,11 @@ package es.caib.sistrages.core.api.model;
 /**
  * La clase ObjetoFormulario.
  */
-@SuppressWarnings("serial")
+
 public abstract class ObjetoFormulario extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * codigo.

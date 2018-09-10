@@ -12,9 +12,11 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class FuenteDatos extends ModelApi {
 
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 	/** Id. */
 	private Long codigo;
 
@@ -35,7 +37,7 @@ public class FuenteDatos extends ModelApi {
 
 	/**
 	 * Get idString.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getIdString() {
@@ -48,7 +50,7 @@ public class FuenteDatos extends ModelApi {
 
 	/**
 	 * Set idstring.
-	 * 
+	 *
 	 * @param idString
 	 */
 	public void setIdString(final String idString) {

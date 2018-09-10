@@ -1,8 +1,8 @@
 package es.caib.sistrages.core.api.model;
 
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 
 /**
  *
@@ -11,8 +11,11 @@ import es.caib.sistrages.core.api.model.types.TypeFormularioGestor;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class FormularioTramite extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Codigo. */
 	private Long codigo;

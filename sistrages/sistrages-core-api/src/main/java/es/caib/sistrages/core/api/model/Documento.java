@@ -12,8 +12,11 @@ import es.caib.sistrages.core.api.model.types.TypeTamanyo;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class Documento extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Id. */
 	private Long codigo;

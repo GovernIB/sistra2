@@ -3,8 +3,11 @@ package es.caib.sistrages.core.api.model;
 /**
  * La clase PlantillaIdiomaFormulario.
  */
-@SuppressWarnings("serial")
+
 public class PlantillaIdiomaFormulario extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * codigo.

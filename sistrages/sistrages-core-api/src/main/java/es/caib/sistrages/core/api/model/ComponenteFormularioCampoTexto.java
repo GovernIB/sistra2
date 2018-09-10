@@ -6,8 +6,11 @@ import es.caib.sistrages.core.api.model.types.TypeSeparadorNumero;
 /**
  * La clase ComponenteFormularioCampoTexto.
  */
-@SuppressWarnings("serial")
+
 public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCampo {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * oculto.

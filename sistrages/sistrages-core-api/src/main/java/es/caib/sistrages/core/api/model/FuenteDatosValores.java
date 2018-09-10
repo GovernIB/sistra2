@@ -10,9 +10,11 @@ import java.util.List;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class FuenteDatosValores extends ModelApi {
 
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 	/** Campos. **/
 	private List<FuenteFila> filas = new ArrayList<>();
 

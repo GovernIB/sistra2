@@ -5,8 +5,11 @@ import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 /**
  * La clase FormularioSoporte.
  */
-@SuppressWarnings("serial")
+
 public class FormularioSoporte extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * codigo.

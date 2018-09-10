@@ -7,8 +7,11 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class TramitePasoDebeSaber extends TramitePaso {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Instrucciones iniciales. **/
 	private Literal instruccionesIniciales;

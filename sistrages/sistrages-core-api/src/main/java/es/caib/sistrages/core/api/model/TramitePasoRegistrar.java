@@ -7,8 +7,11 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class TramitePasoRegistrar extends TramitePaso {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Script destino registro. **/
 	private Script scriptDestinoRegistro;

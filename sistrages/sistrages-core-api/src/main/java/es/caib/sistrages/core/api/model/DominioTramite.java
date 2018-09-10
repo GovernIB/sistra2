@@ -5,7 +5,10 @@ package es.caib.sistrages.core.api.model;
  *
  * @author Indra
  */
-public class DominioTramite {
+public class DominioTramite extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Id tramite version. **/
 	private Long idTramiteVersion;

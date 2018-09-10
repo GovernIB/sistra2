@@ -9,8 +9,11 @@ import java.util.List;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class TramitePasoTasa extends TramitePaso {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Tasas. **/
 	private List<Tasa> tasas;

@@ -14,8 +14,11 @@ import es.caib.sistrages.core.api.model.types.TypeDominio;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class Dominio extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Id. */
 	private Long codigo;

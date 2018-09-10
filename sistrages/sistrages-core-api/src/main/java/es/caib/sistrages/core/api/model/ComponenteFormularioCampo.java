@@ -3,8 +3,11 @@ package es.caib.sistrages.core.api.model;
 /**
  * La clase ComponenteFormularioCampo.
  */
-@SuppressWarnings("serial")
+
 public abstract class ComponenteFormularioCampo extends ComponenteFormulario {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * obligatorio.

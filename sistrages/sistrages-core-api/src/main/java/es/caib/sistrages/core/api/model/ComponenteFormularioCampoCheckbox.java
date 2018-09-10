@@ -5,8 +5,11 @@ import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 /**
  * La clase ComponenteFormularioCampoCheckbox.
  */
-@SuppressWarnings("serial")
+
 public final class ComponenteFormularioCampoCheckbox extends ComponenteFormularioCampo {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * valor checked.

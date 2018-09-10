@@ -3,8 +3,11 @@ package es.caib.sistrages.core.api.model;
 /**
  * La clase ValorListaFija.
  */
-@SuppressWarnings("serial")
+
 public class ValorListaFija extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** codigo. */
 	private Long codigo;

@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.types.TypePaso;
+
 /**
  *
  * Tramite paso.
@@ -7,8 +9,11 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class TramitePaso extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Id. */
 	private Long codigo;
@@ -20,7 +25,7 @@ public class TramitePaso extends ModelApi {
 	private TramiteVersion tramiteVersion;
 
 	/** Tipo del paso de tramitación. **/
-	private TramiteTipo tipo;
+	private TypePaso tipo;
 
 	/**
 	 * Identificador paso tramitación. Para flujo normalizado será establecido
@@ -89,7 +94,7 @@ public class TramitePaso extends ModelApi {
 	/**
 	 * @return the tipo
 	 */
-	public TramiteTipo getTipo() {
+	public TypePaso getTipo() {
 		return tipo;
 	}
 
@@ -97,7 +102,7 @@ public class TramitePaso extends ModelApi {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(final TramiteTipo tipo) {
+	public void setTipo(final TypePaso tipo) {
 		this.tipo = tipo;
 	}
 
@@ -199,9 +204,10 @@ public class TramitePaso extends ModelApi {
 	}
 
 	/**
-	 * @param idPasoRelacion the idPasoRelacion to set
+	 * @param idPasoRelacion
+	 *            the idPasoRelacion to set
 	 */
-	public void setIdPasoRelacion(Long idPasoRelacion) {
+	public void setIdPasoRelacion(final Long idPasoRelacion) {
 		this.idPasoRelacion = idPasoRelacion;
 	}
 

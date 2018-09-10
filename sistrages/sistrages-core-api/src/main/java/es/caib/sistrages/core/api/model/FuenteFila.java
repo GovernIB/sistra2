@@ -11,8 +11,11 @@ import java.util.List;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class FuenteFila extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Codigo interno. **/
 	private Long codigo;

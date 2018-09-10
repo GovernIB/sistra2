@@ -8,8 +8,11 @@ import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
 /**
  * La clase LineaComponentesFormulario.
  */
-@SuppressWarnings("serial")
+
 public final class LineaComponentesFormulario extends ObjetoFormulario {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * orden.

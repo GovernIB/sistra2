@@ -2,12 +2,14 @@ package es.caib.sistrages.core.api.model;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * La clase Entidad.
  */
-@SuppressWarnings("serial")
+
 public class Entidad extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * codigo.
@@ -529,7 +531,7 @@ public class Entidad extends ModelApi {
 		return mapaWeb;
 	}
 
-	public void setMapaWeb(Literal mapaWeb) {
+	public void setMapaWeb(final Literal mapaWeb) {
 		this.mapaWeb = mapaWeb;
 	}
 
@@ -537,7 +539,7 @@ public class Entidad extends ModelApi {
 		return avisoLegal;
 	}
 
-	public void setAvisoLegal(Literal avisoLegal) {
+	public void setAvisoLegal(final Literal avisoLegal) {
 		this.avisoLegal = avisoLegal;
 	}
 
@@ -545,7 +547,7 @@ public class Entidad extends ModelApi {
 		return rss;
 	}
 
-	public void setRss(Literal rss) {
+	public void setRss(final Literal rss) {
 		this.rss = rss;
 	}
 
@@ -553,7 +555,7 @@ public class Entidad extends ModelApi {
 		return urlYoutube;
 	}
 
-	public void setUrlYoutube(String urlYoutube) {
+	public void setUrlYoutube(final String urlYoutube) {
 		this.urlYoutube = urlYoutube;
 	}
 
@@ -561,7 +563,7 @@ public class Entidad extends ModelApi {
 		return urlInstagram;
 	}
 
-	public void setUrlInstagram(String urlInstagram) {
+	public void setUrlInstagram(final String urlInstagram) {
 		this.urlInstagram = urlInstagram;
 	}
 
@@ -569,7 +571,7 @@ public class Entidad extends ModelApi {
 		return urlTwitter;
 	}
 
-	public void setUrlTwitter(String urlTwitter) {
+	public void setUrlTwitter(final String urlTwitter) {
 		this.urlTwitter = urlTwitter;
 	}
 
@@ -577,7 +579,7 @@ public class Entidad extends ModelApi {
 		return urlFacebook;
 	}
 
-	public void setUrlFacebook(String urlFacebook) {
+	public void setUrlFacebook(final String urlFacebook) {
 		this.urlFacebook = urlFacebook;
 	}
 

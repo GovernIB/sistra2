@@ -8,8 +8,11 @@ import es.caib.sistrages.core.api.model.types.TypeFlujo;
 /**
  * The Class TramiteVersion.
  */
-@SuppressWarnings("serial")
+
 public class TramiteVersion extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** codigo. */
 	private Long codigo;
@@ -638,7 +641,7 @@ public class TramiteVersion extends ModelApi {
 
 	/**
 	 * OBtiene el paso de registrar, si lo tiene.
-	 * 
+	 *
 	 * @return
 	 */
 	public TramitePasoRegistrar getPasoRegistrar() {

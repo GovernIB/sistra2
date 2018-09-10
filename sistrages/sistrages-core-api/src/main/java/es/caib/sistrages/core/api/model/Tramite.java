@@ -7,8 +7,11 @@ package es.caib.sistrages.core.api.model;
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
+
 public class Tramite extends ModelApi {
+
+	/** Serial version UID. **/
+	private static final long serialVersionUID = 1L;
 
 	/** Codigo. */
 	private Long codigo;
@@ -118,9 +121,10 @@ public class Tramite extends ModelApi {
 	}
 
 	/**
-	 * @param idEntidad the idEntidad to set
+	 * @param idEntidad
+	 *            the idEntidad to set
 	 */
-	public void setIdEntidad(Long idEntidad) {
+	public void setIdEntidad(final Long idEntidad) {
 		this.idEntidad = idEntidad;
 	}
 
