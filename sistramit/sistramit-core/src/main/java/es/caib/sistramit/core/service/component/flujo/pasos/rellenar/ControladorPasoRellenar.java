@@ -74,10 +74,11 @@ public final class ControladorPasoRellenar
     private AccionDescargarXmlFormulario accionDescargarXmlFormulario;
 
     @Override
-    protected void actualizarDatosInternos(DatosPaso pDatosPaso,
-            DatosPersistenciaPaso pDpp, DefinicionTramiteSTG pDefinicionTramite,
-            VariablesFlujo pVariablesFlujo,
-            TypeFaseActualizacionDatosInternos pFaseEjecucion) {
+    protected void actualizarDatosInternos(final DatosPaso pDatosPaso,
+            final DatosPersistenciaPaso pDpp,
+            final DefinicionTramiteSTG pDefinicionTramite,
+            final VariablesFlujo pVariablesFlujo,
+            final TypeFaseActualizacionDatosInternos pFaseEjecucion) {
 
         // Obtenemos datos internos paso rellenar
         final DatosInternosPasoRellenar dipa = (DatosInternosPasoRellenar) pDatosPaso
@@ -88,7 +89,8 @@ public final class ControladorPasoRellenar
     }
 
     @Override
-    protected EstadoSubestadoPaso evaluarEstadoPaso(DatosPaso pDatosPaso) {
+    protected EstadoSubestadoPaso evaluarEstadoPaso(
+            final DatosPaso pDatosPaso) {
         // El estado del paso sera COMPLETADO cuando todos los documentos esten
         // rellenados y firmados (si lo requieren).
 
@@ -139,8 +141,8 @@ public final class ControladorPasoRellenar
 
     @Override
     protected List<DatosDocumento> obtenerDocumentosCompletadosPaso(
-            DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-            DefinicionTramiteSTG pDefinicionTramite) {
+            final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
+            final DefinicionTramiteSTG pDefinicionTramite) {
         // Obtiene datos internos paso
         final DatosInternosPasoRellenar dipa = ((DatosInternosPasoRellenar) pDatosPaso
                 .internalData());
@@ -150,10 +152,11 @@ public final class ControladorPasoRellenar
 
     @Override
     protected RespuestaEjecutarAccionPaso ejecutarAccionPaso(
-            DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-            TypeAccionPaso pAccionPaso, ParametrosAccionPaso pParametros,
-            DefinicionTramiteSTG pDefinicionTramite,
-            VariablesFlujo pVariablesFlujo) {
+            final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
+            final TypeAccionPaso pAccionPaso,
+            final ParametrosAccionPaso pParametros,
+            final DefinicionTramiteSTG pDefinicionTramite,
+            final VariablesFlujo pVariablesFlujo) {
 
         RespuestaEjecutarAccionPaso rp = null;
 
@@ -196,9 +199,10 @@ public final class ControladorPasoRellenar
      *            Variables flujo
      *
      */
-    private void regenerarDatos(DatosInternosPasoRellenar pDipa,
-            DatosPersistenciaPaso pDpp, DefinicionTramiteSTG pDefinicionTramite,
-            VariablesFlujo pVariablesFlujo) {
+    private void regenerarDatos(final DatosInternosPasoRellenar pDipa,
+            final DatosPersistenciaPaso pDpp,
+            final DefinicionTramiteSTG pDefinicionTramite,
+            final VariablesFlujo pVariablesFlujo) {
 
         // Inicializamosdetalle del paso a partir de la definicion
         final DetallePasoRellenar dpaNew = calcularDetalle(pDipa.getIdPaso(),
@@ -276,7 +280,7 @@ public final class ControladorPasoRellenar
 
         // Lista de formularios que se han ido completando para irlos pasando a
         // los scripts
-        final List<DatosDocumento> formulariosCompletados = new ArrayList<DatosDocumento>();
+        final List<DatosDocumento> formulariosCompletados = new ArrayList<>();
 
         // Recorremos definicion del paso para calcular la lista de formularios
         for (final RFormularioTramite formularioDef : pPasoDef
@@ -460,7 +464,7 @@ public final class ControladorPasoRellenar
 
         // Evaluamos resultado con la lista de firmantes
         final ResFirmantes resf = (ResFirmantes) rs.getResultado();
-        if (resf.getFirmantes().size() <= 0) {
+        if (resf.getFirmantes().isEmpty()) {
             throw new ErrorScriptException(
                     TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
                     pVariablesFlujo.getIdSesionTramitacion(),

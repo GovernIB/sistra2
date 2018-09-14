@@ -21,7 +21,7 @@ public enum TypeInvalidacion {
      */
     ENTIDAD("E"),
     /**
-     * Configuración.
+     * Configuración global.
      */
     CONFIGURACION("C");
 

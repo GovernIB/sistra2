@@ -17,36 +17,33 @@ import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
  *
  */
 @Component("catalogoProcedimientosComponent")
-public final class CatalogoProcedimientosImpl
-        implements CatalogoProcedimientosComponent {
+public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosComponent {
 
-    /** Log. */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Configuracion. */
-    @Autowired
-    private ConfiguracionComponent configuracionComponent;
+	/** Configuracion. */
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
 
-    @Override
-    public DefinicionTramiteCP obtenerDefinicionTramite(String idEntidad,
-            String idTramiteCP, String idioma) {
-        final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
-        return plgCP.obtenerDefinicionTramite(idTramiteCP, idioma);
-    }
+	@Override
+	public DefinicionTramiteCP obtenerDefinicionTramite(final String idEntidad, final String idTramiteCP,
+			final String idioma) {
+		final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
+		return plgCP.obtenerDefinicionTramite(idTramiteCP, idioma);
+	}
 
-    /**
-     * Obtiene plugin
-     *
-     * @param idEntidad
-     *            idEntidad
-     *
-     * @return plugin
-     */
-    private ICatalogoProcedimientosPlugin getPlugin(String idEntidad) {
-        final ICatalogoProcedimientosPlugin plgCP = (ICatalogoProcedimientosPlugin) configuracionComponent
-                .obtenerPluginEntidad(TypePluginEntidad.CATALOGO_PROCEDIMIENTOS,
-                        idEntidad);
-        return plgCP;
-    }
+	/**
+	 * Obtiene plugin
+	 *
+	 * @param idEntidad
+	 *            idEntidad
+	 *
+	 * @return plugin
+	 */
+	private ICatalogoProcedimientosPlugin getPlugin(final String idEntidad) {
+		return (ICatalogoProcedimientosPlugin) configuracionComponent
+				.obtenerPluginEntidad(TypePluginEntidad.CATALOGO_PROCEDIMIENTOS, idEntidad);
+	}
 
 }

@@ -65,6 +65,14 @@
 		    <scope>provided</scope>
 		</dependency>
 
+		<!-- EJB -->
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<version>${ejb-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- Jackson (incluida en lib)-->
 		<dependency>
 			 <groupId>com.fasterxml.jackson.core</groupId>

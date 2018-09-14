@@ -12,20 +12,19 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 @SuppressWarnings("serial")
 public final class DatosInternosPasoAnexar extends DatosInternosPasoReferencia {
 
-	/**
-	 * Constructor.
-	 *
-	 * @param idSesionTramitacion
-	 *            Parámetro id sesion tramitacion
-	 * @param idPaso
-	 *            Parámetro id paso
-	 */
-	public DatosInternosPasoAnexar(final String idSesionTramitacion, final String idPaso) {
-		this.setTipo(TypePaso.ANEXAR);
-		this.setIdSesionTramitacion(idSesionTramitacion);
-		this.setIdPaso(idPaso);
-	}
-
-	// TODO PENDIENTE
+    /**
+     * Constructor.
+     *
+     * @param idSesionTramitacion
+     *            Parámetro id sesion tramitacion
+     * @param idPaso
+     *            Parámetro id paso
+     */
+    public DatosInternosPasoAnexar(final String idSesionTramitacion,
+            final String idPaso) {
+        this.setTipo(TypePaso.ANEXAR);
+        this.setIdSesionTramitacion(idSesionTramitacion);
+        this.setIdPaso(idPaso);
+    }
 
 }

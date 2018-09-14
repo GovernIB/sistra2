@@ -1,12 +1,13 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.anexar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
@@ -34,10 +35,13 @@ import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoAnexar;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
+import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.TransformacionAnexo;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
+import es.caib.sistramit.core.service.model.flujo.types.TypeDocumentoPersistencia;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
@@ -56,12 +60,12 @@ public final class AccionAnexarDocumento implements AccionPaso {
     /**
      * Atributo dao.
      */
-    @Resource(name = "flujoPasoDao")
+    @Autowired
     private FlujoPasoDao dao;
     /**
      * Motor de ejecución de scritps.
      */
-    @Resource(name = "scriptExec")
+    @Autowired
     private ScriptExec scriptFlujo;
 
     @Override
@@ -258,6 +262,11 @@ public final class AccionAnexarDocumento implements AccionPaso {
                             + anexoDetalle.getId());
         }
         verificarTamanyoMaximo(anexoDetalle.getTamMax(), datosFichero.length);
+        // - Verificar si debe anexarse firmado
+        if (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
+            // TODO Pendiente implementar
+            throw new RuntimeException("Pendiente implementar");
+        }
 
         // - Ejecutamos script de validacion de anexo
         final RPasoTramitacionAnexar defPaso = (RPasoTramitacionAnexar) UtilsSTG
@@ -354,8 +363,65 @@ public final class AccionAnexarDocumento implements AccionPaso {
             final String ptituloInstancia,
             final VariablesFlujo pVariablesFlujo) {
 
-        // TODO PENDIENTE
-        throw new RuntimeException("Pendiente implementar");
+        DocumentoPasoPersistencia doc;
+
+        // Si es genérico y hay más de una instancia añadimos nuevo documento
+        if (pAnexoDetalle.getMaxInstancias() > ConstantesNumero.N1
+                && pAnexoDetalle.getFicheros().size() > ConstantesNumero.N1) {
+            doc = new DocumentoPasoPersistencia();
+            doc.setId(pAnexoDetalle.getId());
+            doc.setTipo(TypeDocumentoPersistencia.ANEXO);
+            doc.setInstancia(pAnexoDetalle.getFicheros().size());
+            // Añadimos a datos persistencia (insertamos detras de la ultima
+            // instancia)
+            int index = 0;
+            boolean enc = false;
+            boolean medio = false;
+            for (final DocumentoPasoPersistencia d : pDpp.getDocumentos()) {
+                if (d.getId().equals(pAnexoDetalle.getId())) {
+                    enc = true;
+                }
+                if (enc && !d.getId().equals(pAnexoDetalle.getId())) {
+                    medio = true;
+                    break;
+                }
+                index++;
+            }
+            if (!medio) {
+                pDpp.getDocumentos().add(doc);
+            } else {
+                pDpp.getDocumentos().add(index, doc);
+            }
+
+        } else {
+            // Si no, actualizamos la existente
+            doc = pDpp.getDocumentoPasoPersistencia(pAnexoDetalle.getId(),
+                    ConstantesNumero.N1);
+        }
+
+        // Marcamos para borrar el fichero y firmas
+        final List<ReferenciaFichero> ficherosBorrar = new ArrayList<>();
+        ficherosBorrar.addAll(doc.obtenerReferenciasFicherosAnexo(true, true));
+
+        // Insertamos nuevo fichero
+        final ReferenciaFichero rfp = dao.insertarFicheroPersistencia(
+                pNombreFichero, pDatosFichero,
+                pVariablesFlujo.getIdSesionTramitacion());
+        doc.setFichero(rfp);
+        // Actualizamos el estado
+        doc.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+        // Actualizamos el nombre del fichero
+        doc.setAnexoNombreFichero(pNombreFichero);
+        // Actualizamos titulo instancia
+        doc.setAnexoDescripcionInstancia(ptituloInstancia);
+        // Guardamos datos documento persistencia
+        dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(),
+                pDipa.getIdPaso(), doc);
+        // Eliminamos ficheros marcados para borrar (despues de actualizar
+        // datos documento)
+        for (final ReferenciaFichero ref : ficherosBorrar) {
+            dao.eliminarFicheroPersistencia(ref);
+        }
 
     }
 

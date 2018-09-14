@@ -1,7 +1,6 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.anexar;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
@@ -28,7 +27,7 @@ import es.caib.sistramit.core.service.util.UtilsFlujo;
 public final class AccionDescargarAnexo implements AccionPaso {
 
     /** Atributo dao de AccionObtenerDatosAnexo. */
-    @Resource(name = "flujoPasoDao")
+    @Autowired
     private FlujoPasoDao dao;
 
     @Override
@@ -55,7 +54,7 @@ public final class AccionDescargarAnexo implements AccionPaso {
 
         // Devolvemos respuesta con el documento
         final RespuestaAccionPaso rp = new RespuestaAccionPaso();
-        rp.addParametroRetorno("datos", dfp.getContenido());
+        rp.addParametroRetorno("datosFichero", dfp.getContenido());
         rp.addParametroRetorno("nombreFichero", dfp.getNombre());
 
         final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();

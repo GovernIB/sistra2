@@ -12,6 +12,9 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
  */
 @SuppressWarnings("serial")
 public abstract class DatosDocumento implements Serializable {
+
+    // TODO Habrá que ver como se pasan firmantes para paso registro
+
     /**
      * Id documento.
      */
