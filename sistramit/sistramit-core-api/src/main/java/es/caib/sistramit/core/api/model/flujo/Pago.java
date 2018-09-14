@@ -2,7 +2,6 @@ package es.caib.sistramit.core.api.model.flujo;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
-
 /**
  *
  * Información sobre un pago.
@@ -13,10 +12,10 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 @SuppressWarnings("serial")
 public final class Pago extends Documento {
 
-	/**
-	 * Tipo pago.
-	 */
-	private TypePresentacion presentacion;
+    /**
+     * Tipo pago.
+     */
+    private TypePresentacion presentacion;
 
     /**
      * Detalle del estado cuando el pago es incorrecto.
@@ -33,30 +32,42 @@ public final class Pago extends Documento {
     }
 
     /**
-     * Indica detalle del estado cuando el pago es incorrecto.
+     * Método de acceso a presentacion.
      *
-     * @return detalle del estado cuando el pago es incorrecto
+     * @return presentacion
+     */
+    public TypePresentacion getPresentacion() {
+        return presentacion;
+    }
+
+    /**
+     * Método para establecer presentacion.
+     *
+     * @param presentacion
+     *            presentacion a establecer
+     */
+    public void setPresentacion(TypePresentacion presentacion) {
+        this.presentacion = presentacion;
+    }
+
+    /**
+     * Método de acceso a estadoIncorrecto.
+     * 
+     * @return estadoIncorrecto
      */
     public DetalleEstadoPagoIncorrecto getEstadoIncorrecto() {
         return estadoIncorrecto;
     }
 
     /**
-     * Indica detalle del estado cuando el pago es incorrecto.
-     *
-     * @param pEstadoIncorrecto
-     *            detalle del estado cuando el pago es incorrecto
+     * Método para establecer estadoIncorrecto.
+     * 
+     * @param estadoIncorrecto
+     *            estadoIncorrecto a establecer
      */
     public void setEstadoIncorrecto(
-            final DetalleEstadoPagoIncorrecto pEstadoIncorrecto) {
-        estadoIncorrecto = pEstadoIncorrecto;
+            DetalleEstadoPagoIncorrecto estadoIncorrecto) {
+        this.estadoIncorrecto = estadoIncorrecto;
     }
 
-	public TypePresentacion getPresentacion() {
-		return presentacion;
-	}
-
-	public void setPresentacion(TypePresentacion presentacion) {
-		this.presentacion = presentacion;
-	}
 }

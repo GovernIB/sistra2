@@ -492,7 +492,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
     public List<ReferenciaFichero> obtenerReferenciasFicherosAnexo(
             final boolean pFichero, final boolean pFirmas) {
 
-        final List<ReferenciaFichero> res = new ArrayList<ReferenciaFichero>();
+        final List<ReferenciaFichero> res = new ArrayList<>();
 
         if (pFichero && this.getFichero() != null) {
             res.add(this.getFichero());

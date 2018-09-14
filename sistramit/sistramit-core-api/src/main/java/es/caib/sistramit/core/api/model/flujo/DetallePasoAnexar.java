@@ -88,18 +88,12 @@ public final class DetallePasoAnexar extends DetallePaso {
                     .append(" Ayuda:" + anexo.getAyuda() + "\n");
             strb.append(identForms).append(ident)
                     .append(" Extensiones:" + anexo.getExtensiones() + "\n");
-            if (anexo.getFirmar() != null) {
-                strb.append(identForms).append(ident).append(
-                        " Firmar:" + anexo.getFirmar().toString() + "\n");
-            }
-            if (anexo.getObligatorio() != null) {
-                strb.append(identForms).append(ident).append(" Obligatorio:"
-                        + anexo.getObligatorio().toString() + "\n");
-            }
-            if (anexo.getPlantilla() != null) {
-                strb.append(identForms).append(ident).append(
-                        " Plantilla:" + anexo.getPlantilla().print() + "\n");
-            }
+            strb.append(identForms).append(ident)
+                    .append(" Firmar:" + anexo.getFirmar().toString() + "\n");
+            strb.append(identForms).append(ident).append(" Anexar firmado:"
+                    + anexo.getAnexarfirmado().toString() + "\n");
+            strb.append(identForms).append(ident).append(
+                    " Obligatorio:" + anexo.getObligatorio().toString() + "\n");
             strb.append(identForms).append(ident)
                     .append(" Rellenado:" + anexo.getRellenado() + "\n");
             strb.append(identForms).append(ident).append("  Firmantes:\n");
@@ -109,12 +103,12 @@ public final class DetallePasoAnexar extends DetallePaso {
                 strb.append(identForms).append(ident).append(ident)
                         .append("   nombre:" + firmante.getNombre() + "\n");
             }
-            strb.append(identForms).append(ident).append("  FICHEROS\n");
+            strb.append(identForms).append(ident).append("  Ficheros:\n");
             for (final Fichero fichero : anexo.getFicheros()) {
                 strb.append(identForms).append(ident).append(ident)
                         .append("   Fichero:" + fichero.getFichero() + "\n");
-                strb.append(identForms).append(ident).append(ident)
-                        .append("   Titulo" + fichero.getTitulo() + "\n");
+                strb.append(identForms).append(ident).append(ident).append(
+                        "   Titulo (genéricos):" + fichero.getTitulo() + "\n");
             }
         }
         return strb.toString();

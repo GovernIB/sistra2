@@ -42,15 +42,6 @@ public final class PlantillaAnexo implements ModelApi {
     }
 
     /**
-     * Método para Imprime de la clase PlantillaAnexo.
-     *
-     * @return el string
-     */
-    public final String print() {
-        return "[tipo:]" + getTipo();
-    }
-
-    /**
      * Método de acceso a url.
      *
      * @return url
@@ -67,6 +58,15 @@ public final class PlantillaAnexo implements ModelApi {
      */
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    /** Crea instancia (para bucles). */
+    public static PlantillaAnexo createNewPlantillaAnexo(
+            TypePlantillaAnexo pTipo, String pUrl) {
+        final PlantillaAnexo p = new PlantillaAnexo();
+        p.setTipo(pTipo);
+        p.setUrl(pUrl);
+        return p;
     }
 
 }

@@ -76,6 +76,9 @@ public final class UtilsPasoRellenar {
                                     + " en la definicion del paso "
                                     + pasoDef.getIdentificador());
                 }
+
+                // TODO Ver datos firmantes
+
                 final DatosDocumentoFormulario ddf = crearDatosDocumentoFormulario(
                         pDpp, f, pDipa.getValoresFormulario(f.getId()));
                 res.add(ddf);

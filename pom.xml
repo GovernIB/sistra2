@@ -72,6 +72,7 @@
 
   		<!-- Apis entre modulos -->
   		<module>sistrages/sistrages-rest-api</module>
+  		<module>sistramit/sistramit-rest-api</module>
 
   		<!-- Modulos aplicacion -->
 		<module>sistramit</module>
