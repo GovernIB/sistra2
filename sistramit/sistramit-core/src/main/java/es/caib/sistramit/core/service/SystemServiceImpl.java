@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
+import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -128,6 +129,19 @@ public class SystemServiceImpl implements SystemService {
             }
         }
 
+    }
+
+    @Override
+    @NegocioInterceptor
+    public void invalidar(Invalidacion invalidacion) {
+
+        // TODO Validar valores
+        if (invalidacion.getTipo() == null) {
+            throw new TipoNoControladoException(
+                    "Tipo de invalidación no soportada");
+        }
+
+        invalidacionDAO.addInvalidacion(invalidacion);
     }
 
     /**

@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 
 /**
@@ -63,6 +64,14 @@ public interface SystemService {
      *            instancia
      */
     void purgar(String instancia);
+
+    /**
+     * Invalida caché.
+     * 
+     * @param invalidacion
+     *            datos invalidación caché
+     */
+    void invalidar(Invalidacion invalidacion);
 
     /**
      * Revisa invalidaciones a procesar.
