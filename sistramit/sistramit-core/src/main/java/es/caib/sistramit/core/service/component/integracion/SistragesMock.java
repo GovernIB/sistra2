@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import es.caib.sistrages.rest.api.interna.RAnexoTramite;
+import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
+import es.caib.sistrages.rest.api.interna.RAnexoTramitePresentacionElectronica;
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RComponente;
@@ -22,6 +25,7 @@ import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
@@ -176,7 +180,8 @@ public class SistragesMock {
         plugin.setTipo(TypePluginEntidad.CATALOGO_PROCEDIMIENTOS.toString());
         plugin.setClassname(
                 "es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.CatalogoProcedimientosPluginMock");
-        plugin.setParametros(crearListaParametros());
+        plugin.setPrefijoPropiedades("prefijo");
+        plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
 
         return plugins;
@@ -189,16 +194,18 @@ public class SistragesMock {
 
         plugin = new RPlugin();
         plugin.setTipo(TypePluginGlobal.LOGIN.toString());
+        plugin.setPrefijoPropiedades("prefijo");
         plugin.setClassname(
                 "es.caib.sistra2.commons.plugins.mock.autenticacion.ComponenteAutenticacionPluginMock");
-        plugin.setParametros(crearListaParametros());
+        plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
 
         plugin = new RPlugin();
         plugin.setTipo(TypePluginGlobal.EMAIL.toString());
+        plugin.setPrefijoPropiedades("prefijo");
         plugin.setClassname(
                 "es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock");
-        plugin.setParametros(crearListaParametros());
+        plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
 
         return plugins;
@@ -231,6 +238,7 @@ public class SistragesMock {
         final List<RPasoTramitacion> pasos = new ArrayList<>();
         pasos.add(crearPasoDebeSaber());
         pasos.add(crearPasoRellenar());
+        pasos.add(crearPasoAnexar());
         pasos.add(crearPasoRegistrar());
 
         final RVersionTramite vt = new RVersionTramite();
@@ -273,11 +281,55 @@ public class SistragesMock {
         final RPasoTramitacionRellenar pr = new RPasoTramitacionRellenar();
         final List<RFormularioTramite> fl = new ArrayList<>();
         fl.add(crearFormularioTramite());
-        // fl.add(crearFormularioTramite());
         pr.setIdentificador("RF1");
         pr.setTipo("RF");
         pr.setFormularios(fl);
         return pr;
+    }
+
+    private static RPasoTramitacionAnexar crearPasoAnexar() {
+        final RPasoTramitacionAnexar pr = new RPasoTramitacionAnexar();
+        final List<RAnexoTramite> fl = new ArrayList<>();
+        fl.add(crearAnexoTramite("ANE1", 1));
+        fl.add(crearAnexoTramite("ANE2", 2));
+        pr.setIdentificador("AD1");
+        pr.setTipo("AD");
+        pr.setAnexos(fl);
+        return pr;
+    }
+
+    private static RAnexoTramite crearAnexoTramite(String identificador,
+            int instancias) {
+
+        final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
+        ayuda.setUrl("http://www.google.es");
+        ayuda.setMensajeHtml("Mensaje <strong>HTML</strong>");
+
+        final List<String> extensiones = new ArrayList<>();
+        extensiones.add("pdf");
+        extensiones.add("odt");
+
+        final RAnexoTramitePresentacionElectronica presentacionElectronica = new RAnexoTramitePresentacionElectronica();
+        presentacionElectronica.setTamanyoMax(1);
+        presentacionElectronica.setTamanyoUnidad("MB");
+        presentacionElectronica.setExtensiones(extensiones);
+        presentacionElectronica.setInstancias(instancias);
+        presentacionElectronica.setConvertirPDF(false);
+        presentacionElectronica.setAnexarFirmado(false);
+
+        final RScript scriptDependencia = new RScript();
+        scriptDependencia.setScript("return 'S';");
+
+        final RAnexoTramite anexo = new RAnexoTramite();
+        anexo.setIdentificador(identificador);
+        anexo.setDescripcion(identificador);
+        anexo.setAyuda(ayuda);
+        anexo.setObligatoriedad("D");
+        anexo.setScriptDependencia(scriptDependencia);
+        anexo.setPresentacion("E");
+        anexo.setPresentacionElectronica(presentacionElectronica);
+
+        return anexo;
     }
 
     private static RPasoTramitacionRegistrar crearPasoRegistrar() {

@@ -28,6 +28,19 @@ public interface ConfiguracionComponent {
     String obtenerPropiedadConfiguracion(TypePropiedadConfiguracion propiedad);
 
     /**
+     * Obtiene configuración.
+     *
+     * @param propiedad
+     *            Propiedad configuración
+     * @param forceLocal
+     *            si fuerza solo a buscar en el properties local y no buscar en
+     *            la configuración global del STG
+     * @return configuración
+     */
+    String obtenerPropiedadConfiguracion(TypePropiedadConfiguracion propiedad,
+            boolean forceLocal);
+
+    /**
      * Recupera definición versión de trámite.
      *
      * @param idTramite

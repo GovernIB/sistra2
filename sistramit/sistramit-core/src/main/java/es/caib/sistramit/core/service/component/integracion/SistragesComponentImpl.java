@@ -19,55 +19,50 @@ import es.caib.sistrages.rest.api.interna.RVersionTramite;
 @Component("sistragesComponent")
 public final class SistragesComponentImpl implements SistragesComponent {
 
-    /** Log. */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private SistragesApiComponent sistragesApiComponent;
+	@Autowired
+	private SistragesApiComponent sistragesApiComponent;
 
-    @Override
-    public RConfiguracionGlobal obtenerConfiguracionGlobal() {
-        return sistragesApiComponent.obtenerConfiguracionGlobal();
-    }
+	@Override
+	public RConfiguracionGlobal obtenerConfiguracionGlobal() {
+		return sistragesApiComponent.obtenerConfiguracionGlobal();
+	}
 
-    @Override
-    public void evictConfiguracionGlobal() {
-        log.debug("evictConfiguracionGlobal");
-    }
+	@Override
+	public void evictConfiguracionGlobal() {
+		log.debug("evictConfiguracionGlobal");
+	}
 
-    @Override
-    public RConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad) {
-        return sistragesApiComponent.obtenerConfiguracionEntidad(idEntidad);
-    }
+	@Override
+	public RConfiguracionEntidad obtenerConfiguracionEntidad(final String idEntidad) {
+		return sistragesApiComponent.obtenerConfiguracionEntidad(idEntidad);
+	}
 
-    @Override
-    public void evictConfiguracionEntidad(String idEntidad) {
-        log.debug("evictConfiguracionEntidad: " + idEntidad);
-    }
+	@Override
+	public void evictConfiguracionEntidad(final String idEntidad) {
+		log.debug("evictConfiguracionEntidad: " + idEntidad);
+	}
 
-    @Override
-    public RVersionTramite recuperarDefinicionTramite(String idTramite,
-            int version, String idioma) {
-        final RVersionTramite definicionVersion = sistragesApiComponent
-                .recuperarDefinicionTramite(idTramite, version, idioma);
-        return definicionVersion;
-    }
+	@Override
+	public RVersionTramite recuperarDefinicionTramite(final String idTramite, final int version, final String idioma) {
+		return sistragesApiComponent.recuperarDefinicionTramite(idTramite, version, idioma);
+	}
 
-    @Override
-    public void evictDefinicionTramite(String idTramite, int version,
-            String idioma) {
-        log.debug("evictDefinicionTramite: " + idTramite + "-" + version + "-"
-                + idioma);
-    }
+	@Override
+	public void evictDefinicionTramite(final String idTramite, final int version, final String idioma) {
+		log.debug("evictDefinicionTramite: " + idTramite + "-" + version + "-" + idioma);
+	}
 
-    @Override
-    public RAvisosEntidad obtenerAvisosEntidad(String idEntidad) {
-        return sistragesApiComponent.obtenerAvisosEntidad(idEntidad);
-    }
+	@Override
+	public RAvisosEntidad obtenerAvisosEntidad(final String idEntidad) {
+		return sistragesApiComponent.obtenerAvisosEntidad(idEntidad);
+	}
 
-    @Override
-    public void evictAvisosEntidad(String idEntidad) {
-        log.debug("evictAvisosEntidad: " + idEntidad);
-    }
+	@Override
+	public void evictAvisosEntidad(final String idEntidad) {
+		log.debug("evictAvisosEntidad: " + idEntidad);
+	}
 
 }
