@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.plugins.IPlugin;
+import org.fundaciobit.plugins.utils.PluginsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,19 +46,19 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
     @Override
     public String obtenerPropiedadConfiguracion(
-            TypePropiedadConfiguracion propiedad) {
-        // Busca primero en propiedades locales
-        String prop = propiedadesLocales.getProperty(propiedad.toString());
-        if (StringUtils.isBlank(prop)) {
-            // Si no, busca en propiedades globales
-            prop = getPropiedadGlobal(propiedad);
-        }
-        return prop;
+            final TypePropiedadConfiguracion propiedad, boolean forceLocal) {
+        return readPropiedad(propiedad, forceLocal);
     }
 
     @Override
-    public DefinicionTramiteSTG recuperarDefinicionTramite(String idTramite,
-            int version, String idioma) {
+    public String obtenerPropiedadConfiguracion(
+            final TypePropiedadConfiguracion propiedad) {
+        return readPropiedad(propiedad, false);
+    }
+
+    @Override
+    public DefinicionTramiteSTG recuperarDefinicionTramite(
+            final String idTramite, final int version, final String idioma) {
         final RVersionTramite definicionVersion = sistragesComponent
                 .recuperarDefinicionTramite(idTramite, version, idioma);
         final DefinicionTramiteSTG dt = new DefinicionTramiteSTG(new Date(),
@@ -66,25 +67,26 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
     }
 
     @Override
-    public RConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad) {
+    public RConfiguracionEntidad obtenerConfiguracionEntidad(
+            final String idEntidad) {
         return sistragesComponent.obtenerConfiguracionEntidad(idEntidad);
     }
 
     @Override
-    public RAvisosEntidad obtenerAvisosEntidad(String idEntidad) {
+    public RAvisosEntidad obtenerAvisosEntidad(final String idEntidad) {
         return sistragesComponent.obtenerAvisosEntidad(idEntidad);
     }
 
     @Override
-    public IPlugin obtenerPluginGlobal(TypePluginGlobal tipoPlugin) {
+    public IPlugin obtenerPluginGlobal(final TypePluginGlobal tipoPlugin) {
         final RConfiguracionGlobal confGlobal = sistragesComponent
                 .obtenerConfiguracionGlobal();
         return createPlugin(confGlobal.getPlugins(), tipoPlugin.toString());
     }
 
     @Override
-    public IPlugin obtenerPluginEntidad(TypePluginEntidad tipoPlugin,
-            String idEntidad) {
+    public IPlugin obtenerPluginEntidad(final TypePluginEntidad tipoPlugin,
+            final String idEntidad) {
         final RConfiguracionEntidad confEntidad = sistragesComponent
                 .obtenerConfiguracionEntidad(idEntidad);
         return createPlugin(confEntidad.getPlugins(), tipoPlugin.toString());
@@ -120,7 +122,8 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
      *            propiedad
      * @return valor
      */
-    private String getPropiedadGlobal(TypePropiedadConfiguracion propiedad) {
+    private String getPropiedadGlobal(
+            final TypePropiedadConfiguracion propiedad) {
         String res = null;
         final RConfiguracionGlobal configuracionGlobal = sistragesComponent
                 .obtenerConfiguracionGlobal();
@@ -142,28 +145,76 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
     private IPlugin createPlugin(final List<RPlugin> plugins,
             final String plgTipo) {
         IPlugin plg = null;
-        String className = null;
+        RPlugin rplg = null;
+        String classname = null;
         try {
             for (final RPlugin p : plugins) {
                 if (p.getTipo().equals(plgTipo)) {
-                    className = p.getClassname();
+                    rplg = p;
                     break;
                 }
             }
 
-            if (className == null) {
+            if (rplg == null) {
                 throw new PluginErrorException(
                         "No existe plugin de tipo " + plgTipo);
             }
 
-            // TODO Revisar creación y establecer props
-            plg = (IPlugin) Class.forName(className).newInstance();
+            classname = rplg.getClassname();
 
-        } catch (InstantiationException | IllegalAccessException
-                | ClassNotFoundException e) {
+            /**
+             * final Class plgClass = Class.forName(classname);
+             *
+             * final Constructor constructor =
+             * plgClass.getConstructor(String.class, Properties.class); plg =
+             * (IPlugin) constructor.newInstance(rplg.getPrefijo(), null);
+             */
+
+            Properties prop = null;
+            if (rplg.getPrefijoPropiedades() != null
+                    && rplg.getPropiedades() != null
+                    && rplg.getPropiedades().getParametros() != null
+                    && !rplg.getPropiedades().getParametros().isEmpty()) {
+                prop = new Properties();
+                for (final RValorParametro parametro : rplg.getPropiedades()
+                        .getParametros()) {
+                    prop.put(
+                            rplg.getPrefijoPropiedades() + "."
+                                    + parametro.getCodigo(),
+                            parametro.getValor());
+                }
+            }
+
+            plg = (IPlugin) PluginsManager.instancePluginByClassName(classname,
+                    rplg.getPrefijoPropiedades(), prop);
+
+            return plg;
+
+        } catch (final Exception e) {
             throw new PluginErrorException("Error al instanciar plugin "
-                    + plgTipo + " con classname " + className, e);
+                    + plgTipo + " con classname " + classname, e);
         }
-        return plg;
     }
+
+    /**
+     * Lee propiedad.
+     * 
+     * @param propiedad
+     *            propiedad
+     * @param forceLocal
+     *            si fuerza solo a buscar en el properties local y no buscar en
+     *            la configuración global del STG
+     * @return valor propiedad (nulo si no existe)
+     */
+    private String readPropiedad(final TypePropiedadConfiguracion propiedad,
+            boolean forceLocal) {
+        // Busca primero en propiedades locales
+        String prop = propiedadesLocales.getProperty(propiedad.toString());
+        // Si no, busca en propiedades globales
+        if (StringUtils.isBlank(prop) && !forceLocal) {
+            prop = getPropiedadGlobal(propiedad);
+        }
+        return prop;
+    }
+
 }
