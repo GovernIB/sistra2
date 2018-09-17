@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Documento;
@@ -14,6 +15,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -287,10 +289,8 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
-
-		if (tramiteService.checkAnexoRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
-				this.data.getCodigo())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+		// verificamos precondiciones
+		if (!verificarGuardar()) {
 			return;
 		}
 
@@ -309,6 +309,28 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Verificar precondiciones al guardar.
+	 *
+	 * @return true, si se cumplen las todas la condiciones
+	 */
+	private boolean verificarGuardar() {
+		if (tramiteService.checkAnexoRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
+				this.data.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			return false;
+		}
+
+		if (TypeFormularioObligatoriedad.DEPENDIENTE.equals(data.getObligatoriedad())
+				&& (data.getScriptObligatoriedad() == null
+						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

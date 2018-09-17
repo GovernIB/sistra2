@@ -446,10 +446,9 @@ public interface TramiteService {
 	 * Obtiene area por identificador.
 	 *
 	 * @param identificador
-	 * @param idEntidad
 	 * @return
 	 */
-	public Area getAreaByIdentificador(String identificador, Long idEntidad);
+	public Area getAreaByIdentificador(String identificador);
 
 	/**
 	 * Obtiene tramite por identificador.
@@ -534,12 +533,13 @@ public interface TramiteService {
 	 * @param formularios
 	 * @param ficheros
 	 * @param ficherosContent
+	 * @param usuario
 	 * @throws Exception
 	 */
 	public void importar(FilaImportarArea filaArea, FilaImportarTramite filaTramite,
 			FilaImportarTramiteVersion filaTramiteVersion, List<FilaImportarDominio> filasDominios,
 			List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
-			Map<Long, DisenyoFormulario> formularios, Map<Long, Fichero> ficheros, Map<Long, byte[]> ficherosContent)
-			throws Exception;
+			Map<Long, DisenyoFormulario> formularios, Map<Long, Fichero> ficheros, Map<Long, byte[]> ficherosContent,
+			final String usuario) throws Exception;
 
 }

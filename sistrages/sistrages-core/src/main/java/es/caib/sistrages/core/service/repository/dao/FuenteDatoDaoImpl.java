@@ -661,21 +661,31 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 				fd.setCodigo(null);
 				final JFuenteDatos jfuente = new JFuenteDatos();
 				jfuente.fromModel(fd);
+				final List<FuenteDatosCampo> campos = fd.getCampos();
+				final Set<JCampoFuenteDatos> jcampos = new HashSet<>();
+				jfuente.setCampos(jcampos);
 				entityManager.persist(jfuente);
 
-				for (final FuenteDatosCampo campo : fd.getCampos()) {
+				for (final FuenteDatosCampo campo : campos) {
 					final JCampoFuenteDatos jcampo = new JCampoFuenteDatos();
 					jcampo.fromModel(campo);
 					jcampo.setCodigo(null);
 					jcampo.setFuenteDatos(jfuente);
-					entityManager.persist(jfuente);
+
+					jcampos.add(jcampo);
 				}
+
+				jfuente.setCampos(jcampos);
+				entityManager.merge(jfuente);
+
+				// Flusheamos los datos creados por si acaso
+				entityManager.flush();
 
 				final CsvDocumento csvDocumento = CsvUtil
 						.importar(new ByteArrayInputStream(filaDominio.getFuenteDatosContent()));
-				this.importarCSV(fd.getCodigo(), csvDocumento);
+				this.importarCSV(jfuente.getCodigo(), csvDocumento);
 
-				return fd.getCodigo();
+				return jfuente.getCodigo();
 			} else {
 
 				// Borramos filas de datos de la fuente de datos

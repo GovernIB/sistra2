@@ -308,7 +308,6 @@ public class JFormularioTramite implements IModelApi {
 			jformularioTramite.setScriptObligatoriedad(JScript.fromModel(formulario.getScriptObligatoriedad()));
 			jformularioTramite.setScriptParametros(JScript.fromModel(formulario.getScriptParametros()));
 			jformularioTramite.setScriptRetorno(JScript.fromModel(formulario.getScriptRetorno()));
-			// jformularioTramite.setFormulario(JFormulario.fromModel(formulario.getFormulario()));
 
 			jformularioTramite.setTipo(formulario.getTipo().toString());
 			jformularioTramite.setTipoFormulario(formulario.getTipoFormulario().toString());

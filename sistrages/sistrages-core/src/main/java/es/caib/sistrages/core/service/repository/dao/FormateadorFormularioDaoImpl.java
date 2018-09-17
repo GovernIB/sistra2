@@ -62,6 +62,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		return fmt;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public FormateadorFormulario getByCodigo(final String codigo) {
 		FormateadorFormulario result = null;

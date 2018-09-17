@@ -49,6 +49,10 @@
 					<p:inputText id="descripcion" value="#{dialogPlugin.data.descripcion}" disabled="#{dialogPlugin.isConsulta()}" required="true" size="40" maxlength="255"/>
 					<p:outputLabel value="" />
 
+					<p:outputLabel for="prefijoPropiedades" value="#{msg['dialogPlugin.headerPrefijo']}" />
+					<p:inputText id="prefijoPropiedades" value="#{dialogPlugin.data.prefijoPropiedades}" disabled="#{dialogPlugin.isConsulta()}" size="40" maxlength="100"/>
+					<p:outputLabel value="" />
+
 					<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogPlugin.headerPropiedad']}" />
 					<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogPlugin.data.propiedades}"
 								  rows="10" emptyMessage="#{msg['error.emptyRows']}"

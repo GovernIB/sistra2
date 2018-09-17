@@ -767,12 +767,12 @@ public class TramiteServiceImpl implements TramiteService {
 	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#getAreaByIdentificador(java
-	 * .lang.String, java.lang.Long)
+	 * .lang.String)
 	 */
 	@Override
 	@NegocioInterceptor
-	public Area getAreaByIdentificador(final String identificador, final Long idEntidad) {
-		return areaDao.getAreaByIdentificador(identificador, idEntidad);
+	public Area getAreaByIdentificador(final String identificador) {
+		return areaDao.getAreaByIdentificador(identificador);
 	}
 
 	/*
@@ -895,7 +895,7 @@ public class TramiteServiceImpl implements TramiteService {
 			final FilaImportarTramiteVersion filaTramiteVersion, final List<FilaImportarDominio> filasDominios,
 			final List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
 			final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
-			final Map<Long, byte[]> ficherosContent) throws Exception {
+			final Map<Long, byte[]> ficherosContent, final String usuario) throws Exception {
 		final Long idArea = areaDao.importar(filaArea);
 		final Long idTramite = tramiteDao.importar(filaTramite, idArea);
 
@@ -904,10 +904,10 @@ public class TramiteServiceImpl implements TramiteService {
 		 * idDominiosEquivalencia es de donde viene, la id que equivale con el
 		 * importado.
 		 **/
-		final Map<Long, Long> idDominiosEquivalencia = new HashMap<Long, Long>();
+		final Map<Long, Long> idDominiosEquivalencia = new HashMap<>();
 		final List<Long> idDominios = new ArrayList<>();
 		for (final FilaImportarDominio filaDominio : filasDominios) {
-			final Long idDominio = dominiosDao.importar(filaDominio);
+			final Long idDominio = dominiosDao.importar(filaDominio, idEntidad);
 			idDominios.add(idDominio);
 			idDominiosEquivalencia.put(idDominio, filaDominio.getDominio().getCodigo());
 		}
@@ -920,7 +920,7 @@ public class TramiteServiceImpl implements TramiteService {
 			formateadores.put(idFormateador, ff);
 		}
 
-		final Long idTramiteVersion = tramiteDao.importar(filaTramiteVersion, idTramite, idDominios);
+		final Long idTramiteVersion = tramiteDao.importar(filaTramiteVersion, idTramite, idDominios, usuario);
 		for (final TramitePaso tramitePaso : filaTramiteVersion.getTramiteVersion().getListaPasos()) {
 			tramitePasoDao.importar(filaTramiteVersion, tramitePaso, idTramiteVersion, idEntidad, formularios, ficheros,
 					ficherosContent, formateadores, idDominiosEquivalencia);

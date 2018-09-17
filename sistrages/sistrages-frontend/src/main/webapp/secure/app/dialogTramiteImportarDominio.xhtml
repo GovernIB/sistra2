@@ -43,8 +43,7 @@
 
 					<p:outputLabel value="Acción:" />
 					<p:selectOneMenu value="#{dialogTramiteImportarDominio.accion}" valueChangeListener="#{dialogTramiteImportarDominio.eventoChangeResultado}">
-					     <f:selectItem itemLabel="#{msg['dialogTramiteImportarDominio.reemplazar']}" itemValue="R" renderer="#{dialogTramiteImportarDominio.checkAccion('R')}" />
-					     <f:selectItem itemLabel="#{msg['dialogTramiteImportarDominio.mantener']}" itemValue="M" renderer="#{dialogTramiteImportarDominio.checkAccion('M')}" />
+					     <f:selectItems value="#{dialogTramiteImportarDominio.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
 					     <p:ajax update=":dialogEntidad"  />
 					</p:selectOneMenu>
 

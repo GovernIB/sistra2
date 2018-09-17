@@ -11,41 +11,42 @@
 		<title>
 			<h:outputText value="#{msg['dialogDefinicionVersionControlAcceso.titulo']}" />
 		</title>
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+	</h:head>
 
+	<h:body >
+
+		<f:facet name="last">
+			<h:outputStylesheet library="css" name="style.css" />
+		</f:facet>
 		<!-- Parametros dialogo -->
 		<f:metadata>
 			<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionControlAcceso.modoAcceso}" />
 			<f:viewParam name="ID" value="#{dialogDefinicionVersionControlAcceso.id}" />
 			<f:viewAction action="#{dialogDefinicionVersionControlAcceso.init}" />
 		</f:metadata>
-	</h:head>
 
-	<h:body>
-
-		<f:facet name="last">
-			<h:outputStylesheet library="css" name="style.css" />
-		</f:facet>
-
-		<h:form id="formDialogDefinicionVersionControlAcceso">
+		<h:form id="formDialogDefinicionVersionControlAcceso" styleClass="h100">
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
 			<!-- Contenido dialogo -->
-			<h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="15" cellspacing="0">
+			<h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="25" cellspacing="0">
 
-	         	<p:outputLabel for="activo" value="#{msg['viewDefinicionVersionControlAcceso.activo']}" />
+	         	<p:outputLabel for="activo" value="#{msg['viewDefinicionVersionControlAcceso.activo']}"/>
 	            <p:selectBooleanCheckbox id="activo" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.activa}"/>
 
 	         	<p:outputLabel for="plazodesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.desactivacion']}" />
-				<h:panelGrid styleClass="noBorders w100" columns="2" columnClasses="w85 grid-left, w15 grid-left">
+				<h:panelGrid styleClass="noBorders w100 rows-spacing" columns="2" columnClasses="w85 grid-left, w15 grid-left">
 
 					<p:column styleClass="ui-inputgroup noPadding-left">
-			           		<p:outputLabel for="mensajedesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.mensajedesactivacion']}" />
-			           		<p:spacer width="3" height="1" />
-			           		<p:inputTextarea  id="mensajedesactivacion" disabled="true" styleClass="w75" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang)}"/>
+			           		<p:outputLabel for="mensajedesactivacion" value="#{msg['viewDefinicionVersionControlAcceso.mensajedesactivacion']}" styleClass="center-vertical" />
+			           		<p:spacer width="8" height="1" />
+			           		<p:inputTextarea  id="mensajedesactivacion" disabled="true" styleClass="w75 va-middle" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang)}"/>
 
-			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top"
-									process="@this" update="growlDialog" style="margin-left:5px">
+			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top margin-left-3"
+									process="@this" update="growlDialog">
 								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionControlAcceso.returnDialogo}" update="growlDialog mensajedesactivacion" />
 	        				</p:commandButton>
 					</p:column>
@@ -55,21 +56,23 @@
 		        		</p:commandButton>
 					</p:column>
 					<p:column styleClass="noPadding-left">
-							<p:selectBooleanCheckbox id="plazodesactivacion" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.bloqueado}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.bloqueado']}"/>
 							<p:outputLabel for="plazodesactivacioninicio" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacioninicio']}" />
 							<p:spacer width="8" height="1" />
-							<p:calendar id="plazodesactivacioninicio" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaInicio}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
+							<p:calendar id="plazodesactivacioninicio" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaInicio}" pattern="dd/MM/yyyy HH:mm:ss"  size="19" locale="#{sessionBean.locale}" showOn="button" showButtonPanel="true" />
 
 							<p:spacer width="40" height="1" />
 
 							<p:outputLabel for="plazodesactivacionfin" value="#{msg['viewDefinicionVersionControlAcceso.plazodesactivacionfin']}" />
 							<p:spacer width="8"/>
-							<p:calendar id="plazodesactivacionfin" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss" size="17"/>
+							<p:calendar id="plazodesactivacionfin" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.fechaFin}" pattern="dd/MM/yyyy HH:mm:ss"  size="19" locale="#{sessionBean.locale}" showOn="button" showButtonPanel="true" />
 					</p:column>
 					<p:column></p:column>
 
-
+					<p:column styleClass="noPadding-left">
+							<p:selectBooleanCheckbox id="plazodesactivacion" value="#{dialogDefinicionVersionControlAcceso.avisoEntidad.bloqueado}" itemLabel="#{msg['viewDefinicionVersionControlAcceso.bloqueado']}"/>
+					</p:column>
 					<p:column></p:column>
+
 				</h:panelGrid>
 
 	            <p:outputLabel for="habilitardebug" value="#{msg['viewDefinicionVersionControlAcceso.habilitardebug']}" />
@@ -89,7 +92,7 @@
 						<p:column>
 							<p:outputLabel for="numtramitraciones" value="#{msg['viewDefinicionVersionControlAcceso.numtramitraciones']}" />
 							<p:spacer width="8" height="1" />
-							<p:inputNumber decimalPlaces="0" id="numtramitraciones" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.numLimiteTramitacion}"/>
+							<p:inputNumber minValue="0" maxValue="9999" decimalPlaces="0" id="numtramitraciones" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.numLimiteTramitacion}" />
 						</p:column>
 						<p:column>
 							<p:spacer width="10" height="1" />
@@ -97,7 +100,7 @@
 						<p:column>
 							<p:outputLabel for="intervalo" value="#{msg['viewDefinicionVersionControlAcceso.intervalo']}" />
 							<p:spacer width="8" height="1" />
-							<p:inputNumber decimalPlaces="0" id="intervalo" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.intLimiteTramitacion}"/>
+							<p:inputNumber minValue="0" maxValue="99" decimalPlaces="0" id="intervalo" disabled="#{!dialogDefinicionVersionControlAcceso.tramiteVersion.limiteTramitacion}" size="4" value="#{dialogDefinicionVersionControlAcceso.tramiteVersion.intLimiteTramitacion}"/>
 						</p:column>
 					</p:row>
 				</p:panelGrid>

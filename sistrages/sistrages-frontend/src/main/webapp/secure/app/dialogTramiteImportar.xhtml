@@ -117,7 +117,7 @@
 					<h:column>
 						 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
 						 <p:outputLabel  value="#{msg[fila.mensaje]}"  rendered="#{fila.visibleBoton == false}"/>
-      					 <p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogTramiteImportar.checkDominio(fila.dominioActual.codigo)}" style="margin-left:5px" >
+      					 <p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogTramiteImportar.checkDominio(fila.dominio.identificador)}" style="margin-left:5px" >
       							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoDominio}" />
 						</p:commandButton>
 					</h:column>

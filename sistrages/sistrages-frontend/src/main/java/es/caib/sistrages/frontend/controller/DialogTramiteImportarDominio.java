@@ -100,24 +100,6 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	}
 
 	/**
-	 * Comprueba si se puede visualizar la acción.
-	 *
-	 * @return
-	 */
-	public boolean checkAccion(final String valor) {
-		boolean visible = false;
-		if (this.data.getAcciones() != null && valor != null) {
-			for (final TypeImportarAccion tAccion : this.data.getAcciones()) {
-				if (tAccion.toString().equals(accion)) {
-					visible = true;
-					break;
-				}
-			}
-		}
-		return visible;
-	}
-
-	/**
 	 * El evento del combo. Cuando se actualiza a reemplazar, se ven los valores o
 	 * sino, se ocultan.
 	 */

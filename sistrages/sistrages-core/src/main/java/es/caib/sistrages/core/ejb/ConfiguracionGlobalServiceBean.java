@@ -49,7 +49,7 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	 * getConfiguracionGlobal(java.lang.String)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
 	public ConfiguracionGlobal getConfiguracionGlobal(final String propiedad) {
 		return configuracionGlobalService.getConfiguracionGlobal(propiedad);
 	}

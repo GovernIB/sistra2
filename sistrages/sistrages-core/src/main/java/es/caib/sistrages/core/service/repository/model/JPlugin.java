@@ -65,6 +65,10 @@ public class JPlugin implements IModelApi {
 	@JoinColumn(name = "PLG_CODENT", nullable = true)
 	private JEntidad entidad;
 
+	/** prefijo propiedades **/
+	@Column(name = "PLG_PREPRO", length = 100)
+	private String prefijoPropiedades;
+
 	/** Constructor. **/
 	public JPlugin() {
 		super();
@@ -176,10 +180,30 @@ public class JPlugin implements IModelApi {
 	}
 
 	/**
+	 * Obtiene el valor de prefijoPropiedades.
+	 *
+	 * @return el valor de prefijo propiedades
+	 */
+	public String getPrefijoPropiedades() {
+		return prefijoPropiedades;
+	}
+
+	/**
+	 * Establece el valor de prefijo propiedades.
+	 *
+	 * @param prefijo
+	 *            propiedades el nuevo valor de prefijo propiedades
+	 */
+	public void setPrefijoPropiedades(final String prefijoPropiedades) {
+		this.prefijoPropiedades = prefijoPropiedades;
+	}
+
+	/**
 	 * toModel.
 	 *
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public Plugin toModel() {
 		final Plugin plugin = new Plugin();
 		plugin.setCodigo(this.getCodigo());
@@ -188,6 +212,7 @@ public class JPlugin implements IModelApi {
 		plugin.setDescripcion(this.descripcion);
 		plugin.setTipo(TypePlugin.fromString(this.tipo));
 		plugin.setPropiedades((List<Propiedad>) UtilJSON.fromListJSON(propiedades, Propiedad.class));
+		plugin.setPrefijoPropiedades(prefijoPropiedades);
 		return plugin;
 	}
 
@@ -207,6 +232,7 @@ public class JPlugin implements IModelApi {
 			jPlugin.setDescripcion(plugin.getDescripcion());
 			jPlugin.setPropiedades(UtilJSON.toJSON(plugin.getPropiedades()));
 			jPlugin.setTipo(plugin.getTipo().toString());
+			jPlugin.setPrefijoPropiedades(plugin.getPrefijoPropiedades());
 		}
 		return jPlugin;
 	}

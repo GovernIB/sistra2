@@ -51,10 +51,10 @@
 					<p:outputLabel for="descripcion" value="#{msg['dialogRolesPermisos.headerDescripcion']}" />
 					<p:inputText id="descripcion" value="#{dialogRolesPermisos.data.descripcion}" required="true" size="40" maxlength="255" disabled="#{dialogRolesPermisos.consulta}"/>
 
-					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}" />
+					<p:outputLabel value="#{msg['dialogRolesPermisos.headerPermisos']}:"/>
 					<p:outputLabel value=" " />
 
-					<p:outputLabel value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;#{msg['dialogRolesPermisos.headerGestorTramites']}" escape="false"/>
+					<p:outputLabel value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;#{msg['dialogRolesPermisos.headerGestorTramites']}" escape="false"/>
 					<p:panelGrid>
 						<p:selectOneButton id="gestor" value="#{dialogRolesPermisos.gestor}">
 							<f:selectItem itemValue="#{TypeRolePermisos.ADMINISTRADOR_AREA}" itemLabel="#{msg['typeRolePermisos.A']}" disabled="#{dialogRolesPermisos.consulta}"/>
@@ -63,7 +63,7 @@
 						</p:selectOneButton>
 					</p:panelGrid>
 
-					<p:outputLabel value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;#{msg['dialogRolesPermisos.headerHelpdesk']}" escape="false"/>
+					<p:outputLabel value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;#{msg['dialogRolesPermisos.headerHelpdesk']}" escape="false"/>
 					<p:panelGrid>
 						<p:selectOneButton id="help" value="#{dialogRolesPermisos.helpdesk}">
 							<f:selectItem itemValue="#{TypeRolePermisos.HELPDESK}" itemLabel="#{msg['typeRolePermisos.H']}" disabled="#{dialogRolesPermisos.consulta}"/>

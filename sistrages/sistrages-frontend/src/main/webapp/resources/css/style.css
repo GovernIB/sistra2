@@ -504,7 +504,7 @@ label.ui-state-disabled {
 
 .outputlabel-nota {font-size:9pt !important;font-style: italic;}
 
-.formulario-frame {width:100%; height:600px; overflow:auto;border: none;}
+.formulario-frame {width:100%; height:590px; overflow:auto;border: none;}
 
 .formulario-panel {border: solid 2px lightgrey }
 
@@ -523,12 +523,12 @@ label.ui-state-disabled {
 }
 
 /** Para cambiar el fondo a los inputs y se vea blanco. **/
-/* .ui-inputfield { */
+/* .ui-inputfield ,.ui-chkbox-box > .ui-icon-blank{ */
 /* 	background: white; */
 /* } */
 
 .CodeMirror {
-	height: 500px !important;
+	height: 450px !important;
 }
 
 .scriptRelleno span.fa-bolt{
@@ -543,4 +543,9 @@ label.ui-state-disabled {
 	padding-right:5px;
 	text-align: left;
     width: 100px;
+}
+
+.rows-spacing{
+	border-collapse: separate;
+	border-spacing: 0px 10px;
 }

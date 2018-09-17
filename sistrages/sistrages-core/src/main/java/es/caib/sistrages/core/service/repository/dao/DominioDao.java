@@ -157,5 +157,5 @@ public interface DominioDao {
 	 *         reemplaza o crea.
 	 * @throws Exception
 	 */
-	Long importar(FilaImportarDominio filaDominio) throws Exception;
+	Long importar(FilaImportarDominio filaDominio, Long idDominio) throws Exception;
 }

@@ -261,8 +261,9 @@ public interface TramiteDao {
 	 * @param filaTramiteVersion
 	 * @param idTramite
 	 * @param idDominios
+	 * @param usuario
 	 * @return
 	 */
-	Long importar(FilaImportarTramiteVersion filaTramiteVersion, Long idTramite, List<Long> idDominios);
+	Long importar(FilaImportarTramiteVersion filaTramiteVersion, Long idTramite, List<Long> idDominios, String usuario);
 
 }

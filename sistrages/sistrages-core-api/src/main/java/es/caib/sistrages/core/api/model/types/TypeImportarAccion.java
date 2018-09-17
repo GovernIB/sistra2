@@ -21,7 +21,7 @@ public enum TypeImportarAccion {
 	/** ERROR **/
 	ERROR("E"),
 	/** Pendiente. **/
-	PENDIENTE("P"),;
+	PENDIENTE("P");
 
 	/** valor. **/
 	private String valor;

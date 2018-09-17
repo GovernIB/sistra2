@@ -10,7 +10,7 @@ public enum TypeFormularioObligatoriedad {
 	/** OBLIGATORIO. **/
 	OBLIGATORIO("S"),
 	/** OPCIONAL. **/
-	OPCIONAL("O"),
+	OPCIONAL("N"),
 	/** DEPENDIENTE. **/
 	DEPENDIENTE("D");
 

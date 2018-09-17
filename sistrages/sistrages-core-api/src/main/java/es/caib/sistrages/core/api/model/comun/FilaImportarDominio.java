@@ -198,13 +198,15 @@ public class FilaImportarDominio extends FilaImportar {
 			this.accion = TypeImportarAccion.REEMPLAZAR;
 			if (dominioActual == null) {
 				this.estado = TypeImportarEstado.NO_EXISTE;
+				this.acciones = Arrays.asList(TypeImportarAccion.REEMPLAZAR);
 			} else {
 				this.estado = TypeImportarEstado.EXISTE;
+				this.acciones = Arrays.asList(TypeImportarAccion.REEMPLAZAR, TypeImportarAccion.MANTENER);
 			}
 			this.resultado = TypeImportarResultado.WARNING;
 			this.visibleBoton = true;
-			this.mismoTipo = (dominio != null && dominioActual.getTipo() == dominio.getTipo());
-			this.acciones = Arrays.asList(TypeImportarAccion.REEMPLAZAR, TypeImportarAccion.MANTENER);
+			this.mismoTipo = (dominio != null && dominioActual != null && dominioActual.getTipo() == dominio.getTipo());
+
 			setMensaje("importar.ok.actualizacioncompleta");
 		}
 

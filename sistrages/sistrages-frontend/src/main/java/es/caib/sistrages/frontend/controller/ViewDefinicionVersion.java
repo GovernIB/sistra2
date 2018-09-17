@@ -359,7 +359,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 
-		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 720);
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 680);
 	}
 
 	/**
@@ -517,7 +517,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void editarControlAcceso() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionControlAcceso.class, TypeModoAcceso.EDICION, params, true, 1000, 380);
+		UtilJSF.openDialog(DialogDefinicionVersionControlAcceso.class, TypeModoAcceso.EDICION, params, true, 1000, 500);
 	}
 
 	// ------- VIEW DE DOMINIOS
@@ -1287,9 +1287,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		// Nos guardamos el nodo seleccionado si hiciese falta y se marca a nulo
 		final Long idNodoSeleccionado = this.getIdSelectNode();
+		String tipoNodoSeleccionado = null;
 		OpcionArbol nodoSeleccionado = null;
 		if (this.selectedNode != null && this.selectedNode.getData() != null) {
 			nodoSeleccionado = (OpcionArbol) this.selectedNode.getData();
+			tipoNodoSeleccionado = getTipo((OpcionArbol) this.selectedNode.getData());
 		}
 		this.selectedNode = null;
 
@@ -1301,7 +1303,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.propiedades"),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionPropiedades")));
 		marcarNodoComoSeleccionado(nodoPropiedades, null, "viewDefinicionVersionPropiedades", nodoSeleccionado,
-				idNodoSeleccionado);
+				idNodoSeleccionado, tipoNodoSeleccionado, "VPR");
 		root.getChildren().add(nodoPropiedades);
 
 		/** Nodo Control acceso. **/
@@ -1309,7 +1311,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.controlAcceso"),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionControlAcceso")));
 		marcarNodoComoSeleccionado(nodoControlAcceso, null, "viewDefinicionVersionControlAcceso", nodoSeleccionado,
-				idNodoSeleccionado);
+				idNodoSeleccionado, tipoNodoSeleccionado, "VCA");
 		root.getChildren().add(nodoControlAcceso);
 
 		/** Nodo Dominios. **/
@@ -1317,7 +1319,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.dominiosEmpleados"),
 						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionDominios")));
 		marcarNodoComoSeleccionado(nodoDominios, null, "viewDefinicionVersionDominios", nodoSeleccionado,
-				idNodoSeleccionado);
+				idNodoSeleccionado, tipoNodoSeleccionado, "VDM");
 		root.getChildren().add(nodoDominios);
 
 		final TreeNode nodePasosTramitacion = new DefaultTreeNode(
@@ -1335,7 +1337,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			final String url = UtilJSF.getUrlTramitePaso(tramitePaso);
 			final DefaultTreeNode nodo = new DefaultTreeNode(
 					new OpcionArbol(textoTramite, UtilJSF.getUrlArbolDefinicionVersion(url), tramitePaso));
-			marcarNodoComoSeleccionado(nodo, idTramite, url, nodoSeleccionado, idNodoSeleccionado);
+			marcarNodoComoSeleccionado(nodo, idTramite, url, nodoSeleccionado, idNodoSeleccionado, tipoNodoSeleccionado,
+					getTipo(tramitePaso));
 
 			if (tramitePaso instanceof TramitePasoRellenar
 					&& ((TramitePasoRellenar) tramitePaso).getFormulariosTramite() != null
@@ -1349,7 +1352,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 									UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionFormulario"), formulario,
 									tramitePaso));
 					marcarNodoComoSeleccionado(nodoFormulario, formulario.getCodigo(),
-							"viewDefinicionVersionFormulario", nodoSeleccionado, idNodoSeleccionado);
+							"viewDefinicionVersionFormulario", nodoSeleccionado, idNodoSeleccionado,
+							tipoNodoSeleccionado, "FRM");
 					nodo.getChildren().add(nodoFormulario);
 
 				}
@@ -1366,7 +1370,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 									UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionAnexo"), documento,
 									tramitePaso));
 					marcarNodoComoSeleccionado(nodoDocumento, documento.getCodigo(), "viewDefinicionVersionAnexo",
-							nodoSeleccionado, idNodoSeleccionado);
+							nodoSeleccionado, idNodoSeleccionado, tipoNodoSeleccionado, "DOC");
 					nodo.getChildren().add(nodoDocumento);
 
 				}
@@ -1380,7 +1384,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 					final DefaultTreeNode nodoTasa = new DefaultTreeNode(new OpcionArbol(tasa.getIdentificador(),
 							UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionTasa"), tasa, tramitePaso));
 					marcarNodoComoSeleccionado(nodoTasa, tasa.getCodigo(), "viewDefinicionVersionTasa",
-							nodoSeleccionado, idNodoSeleccionado);
+							nodoSeleccionado, idNodoSeleccionado, tipoNodoSeleccionado, "TAX");
 					nodo.getChildren().add(nodoTasa);
 
 				}
@@ -1395,6 +1399,60 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
+	 * Devuelve el tipo de opcion arbol.
+	 *
+	 * @param opcionArbol
+	 * @return
+	 */
+	private String getTipo(final OpcionArbol opcionArbol) {
+		String tipo;
+		if (opcionArbol.getDocumento() != null) {
+			tipo = "DOC";
+		} else if (opcionArbol.getFormulario() != null) {
+			tipo = "FRM";
+		} else if (opcionArbol.getTasa() != null) {
+			tipo = "TAX";
+		} else if (opcionArbol.getTramitePaso() != null) {
+			tipo = getTipo(opcionArbol.getTramitePaso());
+		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionPropiedades")) {
+			tipo = "VPR";
+		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionControlAcceso")) {
+			tipo = "VCA";
+		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionDominios")) {
+			tipo = "VDM";
+		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionPasos")) {
+			tipo = "VPS";
+		} else {
+			tipo = "";
+		}
+		return tipo;
+	}
+
+	/**
+	 * Devuelve el tipo de paso que es un paso.
+	 *
+	 * @param data
+	 * @return
+	 */
+	private String getTipo(final TramitePaso data) {
+		String tipo;
+		if (data instanceof TramitePasoRellenar) {
+			tipo = "PRL";
+		} else if (data instanceof TramitePasoRegistrar) {
+			tipo = "PRG";
+		} else if (data instanceof TramitePasoDebeSaber) {
+			tipo = "PDS";
+		} else if (data instanceof TramitePasoAnexar) {
+			tipo = "PAX";
+		} else if (data instanceof TramitePasoTasa) {
+			tipo = "PTS";
+		} else {
+			tipo = "";
+		}
+		return tipo;
+	}
+
+	/**
 	 * Se encarga de marcar un nodo como seleccionado si era el antiguo nodo
 	 * seleccionado.
 	 *
@@ -1403,22 +1461,31 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @param urlNodoArbol
 	 * @param nodoSeleccionado
 	 * @param idNodoSeleccionado
+	 * @param tipoNodoSeleccionado
+	 * @param tipo
 	 * @return
 	 */
 	private void marcarNodoComoSeleccionado(final DefaultTreeNode nodoArbol, final Long idNodoArbol,
-			final String urlNodoArbol, final OpcionArbol nodoSeleccionado, final Long idNodoSeleccionado) {
+			final String urlNodoArbol, final OpcionArbol nodoSeleccionado, final Long idNodoSeleccionado,
+			final String tipoNodoSeleccionado, final String tipo) {
+
+		if (tipo == null || tipoNodoSeleccionado == null) {
+			return;
+		}
+
 		// Si el nodo no tiene arbol, hay que ver si por url.
 		if (idNodoArbol == null) {
 
 			if (nodoSeleccionado != null && urlNodoArbol != null && nodoSeleccionado.getUrl() != null
-					&& nodoSeleccionado.getUrl().contains(urlNodoArbol)) {
+					&& nodoSeleccionado.getUrl().contains(urlNodoArbol) && tipoNodoSeleccionado.equals(tipo)) {
 				this.selectedNode = nodoArbol;
 				nodoArbol.setSelected(true);
 			}
 
 		} else { // Si tiene id, se tienen que comparar por id
 
-			if (idNodoSeleccionado != null && idNodoSeleccionado.compareTo(idNodoArbol) == 0) {
+			if (idNodoSeleccionado != null && idNodoSeleccionado.compareTo(idNodoArbol) == 0
+					&& tipoNodoSeleccionado.equals(tipo)) {
 				this.selectedNode = nodoArbol;
 				nodoArbol.setSelected(true);
 			}

@@ -18,12 +18,14 @@ import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.CsvUtil;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
@@ -42,6 +44,10 @@ public class DialogDominioExportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private DominioService dominioService;
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -134,6 +140,16 @@ public class DialogDominioExportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Para obtener la versión de la configuracion global.
+	 *
+	 * @return
+	 */
+	private String getVersion() {
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		return confGlobal.getValor();
+	}
+
+	/**
 	 * Perpara el fichero de properties.
 	 *
 	 * @return
@@ -143,7 +159,7 @@ public class DialogDominioExportar extends DialogControllerBase {
 
 		final Properties prop = new Properties();
 		prop.setProperty("entorno", UtilJSF.getEntorno());
-		prop.setProperty("version", UtilJSF.getVersion());
+		prop.setProperty("version", getVersion());
 		prop.setProperty("fecha", Calendar.getInstance().getTime().toString());
 		prop.setProperty("usuario", UtilJSF.getSessionBean().getUserName());
 		prop.setProperty("tipo", TypeImportarTipo.DOMINIO.toString());

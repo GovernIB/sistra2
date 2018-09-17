@@ -460,7 +460,7 @@ public class JPasoTramitacion implements IModelApi {
 			jpaso = new JPasoTramitacion();
 			jpaso.setVersionTramite(jTramiteVersion);
 			jpaso.setCodigo(null);
-			jpaso.setDescripcion(origPaso.getDescripcion());
+			jpaso.setDescripcion(JLiteral.clonar(origPaso.getDescripcion()));
 			jpaso.setIdPasoTramitacion(origPaso.getIdPasoTramitacion());
 			jpaso.setOrden(origPaso.getOrden());
 			jpaso.setPasoFinal(origPaso.isPasoFinal());

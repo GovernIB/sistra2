@@ -55,6 +55,29 @@ public class EntidadDaoImpl implements EntidadDao {
 	 * (non-Javadoc)
 	 *
 	 * @see
+	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#getById(java.lang.
+	 * Long)
+	 */
+
+	@Override
+	public Entidad getByCodigo(final String codigoDir3) {
+		Entidad entidad = null;
+
+		final String sql = "select entidad from JEntidad entidad where entidad.codigoDir3 like '" + codigoDir3 + "'";
+		final Query query = entityManager.createQuery(sql);
+
+		final List<JEntidad> results = query.getResultList();
+
+		if (!results.isEmpty()) {
+			entidad = results.get(0).toModel();
+		}
+		return entidad;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
 	 * es.caib.sistrages.core.service.repository.dao.EntidadDao#getByArea(java.lang.
 	 * Long)
 	 */
@@ -139,6 +162,7 @@ public class EntidadDaoImpl implements EntidadDao {
 
 		jEntidad.setPiePaginaAsistenteTramitacion(
 				JLiteral.mergeModel(jEntidad.getPiePaginaAsistenteTramitacion(), entidad.getPie()));
+		jEntidad.setLopd(JLiteral.mergeModel(jEntidad.getLopd(), entidad.getLopd()));
 
 		jEntidad.setEmail(entidad.getEmail());
 		jEntidad.setContactoEmail(entidad.isEmailHabilitado());

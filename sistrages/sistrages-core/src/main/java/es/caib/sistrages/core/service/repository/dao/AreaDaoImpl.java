@@ -213,24 +213,25 @@ public class AreaDaoImpl implements AreaDao {
 	 *
 	 * @see
 	 * es.caib.sistrages.core.service.repository.dao.AreaDao#getAreaByIdentificador(
-	 * java.lang.String, java.lang.Long)
+	 * java.lang.String)
 	 */
 	@Override
-	public Area getAreaByIdentificador(final String identificador, final Long idEntidad) {
+	public Area getAreaByIdentificador(final String identificador) {
 
-		final String sql = "Select t From JArea t where t.entidad.codigo = :idEntidad and t.identificador = :identificador";
+		final String sql = "Select t From JArea t where t.identificador = :identificador";
 		final Query query = entityManager.createQuery(sql);
 
-		query.setParameter("idEntidad", idEntidad);
 		query.setParameter("identificador", identificador);
 
-		final JArea jarea = (JArea) query.getSingleResult();
-		if (jarea == null) {
-			return null;
+		final List<JArea> jareas = query.getResultList();
+		Area area;
+		if (jareas.isEmpty()) {
+			area = null;
 		} else {
-			return jarea.toModel();
+			area = jareas.get(0).toModel();
 		}
 
+		return area;
 	}
 
 	/*

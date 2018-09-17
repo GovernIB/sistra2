@@ -7,12 +7,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -148,10 +150,8 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	 * Guarda los datos y cierra el dialog.
 	 */
 	public void aceptar() {
-
-		if (tramiteService.checkTasaRepetida(tramiteVersion.getCodigo(), this.data.getIdentificador(),
-				this.data.getCodigo())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+		// verificamos precondiciones
+		if (!verificarGuardar()) {
 			return;
 		}
 
@@ -168,6 +168,28 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Verificar precondiciones al guardar.
+	 *
+	 * @return true, si se cumplen las todas la condiciones
+	 */
+	private boolean verificarGuardar() {
+		if (tramiteService.checkTasaRepetida(tramiteVersion.getCodigo(), this.data.getIdentificador(),
+				this.data.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			return false;
+		}
+
+		if (TypeFormularioObligatoriedad.DEPENDIENTE.equals(data.getObligatoriedad())
+				&& (data.getScriptObligatoriedad() == null
+						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

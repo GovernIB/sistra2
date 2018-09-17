@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
@@ -29,7 +30,9 @@ import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
+import es.caib.sistrages.core.service.repository.model.JLiteral;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
+import es.caib.sistrages.core.service.repository.model.JScript;
 import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
 
@@ -54,6 +57,9 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Autowired
 	private FormularioInternoDao formularioInternoDao;
+
+	@Autowired
+	private HistorialVersionDao historialVersionDao;
 
 	/**
 	 * entity manager.
@@ -741,7 +747,7 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@Override
 	public Long importar(final FilaImportarTramiteVersion filaTramiteVersion, final Long idTramite,
-			final List<Long> idDominios) {
+			final List<Long> idDominios, final String usuario) {
 
 		JVersionTramite jTramiteVersion = null;
 		if (filaTramiteVersion.getTramiteVersionActual() == null) {
@@ -777,8 +783,62 @@ public class TramiteDaoImpl implements TramiteDao {
 			jTramiteVersion = entityManager.find(JVersionTramite.class,
 					filaTramiteVersion.getTramiteVersionActual().getCodigo());
 
+			// Actualizamos la version y release respecto a lo que nos pasan
+			jTramiteVersion.setActiva(filaTramiteVersion.getTramiteVersion().isActiva());
+			jTramiteVersion.setAdmitePersistencia(filaTramiteVersion.getTramiteVersion().isPersistencia());
+			jTramiteVersion.setAutenticado(filaTramiteVersion.getTramiteVersion().isAutenticado());
+			jTramiteVersion.setBloqueada(false);
+			jTramiteVersion.setDebug(false);
+			jTramiteVersion.setDesactivacionTemporal(filaTramiteVersion.getTramiteVersion().isDesactivacion());
+			jTramiteVersion.setIdiomasSoportados(filaTramiteVersion.getTramiteVersion().getIdiomasSoportados());
+			if (filaTramiteVersion.getTramiteVersion().isLimiteTramitacion()) {
+				jTramiteVersion.setLimiteTramitacion("S");
+			} else {
+				jTramiteVersion.setLimiteTramitacion("N");
+			}
+			jTramiteVersion
+					.setLimiteTramitacionIntervalo(filaTramiteVersion.getTramiteVersion().getIntLimiteTramitacion());
+			jTramiteVersion
+					.setLimiteTramitacionNumero(filaTramiteVersion.getTramiteVersion().getNumLimiteTramitacion());
+			jTramiteVersion.setMensajeDesactivacion(
+					JLiteral.fromModel(filaTramiteVersion.getTramiteVersion().getMensajeDesactivacion()));
+			jTramiteVersion.setNivelQAA(filaTramiteVersion.getTramiteVersion().getNivelQAA());
+			jTramiteVersion.setNoAutenticado(filaTramiteVersion.getTramiteVersion().isNoAutenticado());
+			jTramiteVersion.setNumeroVersion(filaTramiteVersion.getTramiteVersion().getNumeroVersion());
+			jTramiteVersion.setPersistenciaDias(filaTramiteVersion.getTramiteVersion().getPersistenciaDias());
+			jTramiteVersion.setPersistenciaInfinita(filaTramiteVersion.getTramiteVersion().isPersistenciaInfinita());
+			jTramiteVersion.setPlazoFinDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoFinDesactivacion());
+			jTramiteVersion
+					.setPlazoInicioDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoInicioDesactivacion());
+			jTramiteVersion.setRelease(filaTramiteVersion.getTramiteVersion().getRelease());
+			jTramiteVersion.setScriptInicializacionTramite(
+					JScript.fromModel(filaTramiteVersion.getTramiteVersion().getScriptInicializacionTramite()));
+			jTramiteVersion.setScriptPersonalizacion(
+					JScript.fromModel(filaTramiteVersion.getTramiteVersion().getScriptPersonalizacion()));
+			jTramiteVersion.setUsuarioDatosBloqueo("");
+			jTramiteVersion.setUsuarioIdBloqueo("");
+			jTramiteVersion.setTipoflujo(filaTramiteVersion.getTramiteVersion().getTipoFlujo().toString());
+			entityManager.merge(jTramiteVersion);
+
+			// Actualizamos el historial
+			final String sqlHistorial = "Select t From JHistorialVersion t where t.versionTramite.id = :idTramiteVersion and t.release >= :release";
+
+			final Query queryHistorial = entityManager.createQuery(sqlHistorial);
+			queryHistorial.setParameter(STRING_ID_TRAMITE_VERSION,
+					filaTramiteVersion.getTramiteVersionActual().getCodigo());
+			queryHistorial.setParameter("release", filaTramiteVersion.getTramiteVersionActual().getRelease());
+
+			@SuppressWarnings("unchecked")
+			final List<JHistorialVersion> historiales = queryHistorial.getResultList();
+			for (final JHistorialVersion historialFuturo : historiales) {
+				entityManager.remove(historialFuturo);
+			}
+
 		}
 		entityManager.flush();
+
+		// Creamos una nueva entrada en el historial
+		historialVersionDao.add(jTramiteVersion.getCodigo(), usuario, TypeAccionHistorial.IMPORTACION, "");
 
 		/** Primero borramos las asociaciones y luego las volvemos a asociar. **/
 		final List<Long> mdominios = this.getTramiteDominiosId(jTramiteVersion.getCodigo());

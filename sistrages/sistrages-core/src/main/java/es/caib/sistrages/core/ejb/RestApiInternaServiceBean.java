@@ -28,7 +28,6 @@ import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
-import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 
 /**
  * Servicios de API Rest.
@@ -41,21 +40,21 @@ import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class RestApiInternaServiceBean implements RestApiInternaService {
 
-    /** System service. */
-    @Autowired
-    private RestApiInternaService restApiService;
+	/** System service. */
+	@Autowired
+	private RestApiInternaService restApiService;
 
-    @Override
-    @RolesAllowed(ConstantesRolesAcceso.REST)
-    public String test(String echo) {
-        return restApiService.test(echo);
-    }
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public String test(final String echo) {
+		return restApiService.test(echo);
+	}
 
-    @Override
-    @RolesAllowed(ConstantesRolesAcceso.REST)
-    public List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro){
-    	return restApiService.listConfiguracionGlobal(filtro);
-    }
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro) {
+		return restApiService.listConfiguracionGlobal(filtro);
+	}
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
@@ -77,30 +76,33 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public String getReferenciaFichero(Long id) {
+	public Entidad loadEntidad(final String codigoDIR3) {
+		return restApiService.loadEntidad(codigoDIR3);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public String getReferenciaFichero(final Long id) {
 		return restApiService.getReferenciaFichero(id);
 	}
 
-
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public Tramite loadTramite(Long idTramite) {
+	public Tramite loadTramite(final Long idTramite) {
 		return restApiService.loadTramite(idTramite);
 	}
-	
+
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public TramiteVersion loadTramiteVersion(String idTramite, int version) {
+	public TramiteVersion loadTramiteVersion(final String idTramite, final int version) {
 		return restApiService.loadTramiteVersion(idTramite, version);
 	}
-	
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public Dominio loadDominio(Long idDominio) {
+	public Dominio loadDominio(final Long idDominio) {
 		return restApiService.loadDominio(idDominio);
 	}
-
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
@@ -109,13 +111,11 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	}
 
-
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public DisenyoFormulario getFormularioInterno(final Long pId) {
 		return restApiService.getFormularioInterno(pId);
 	}
-
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
@@ -123,45 +123,42 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiService.getListaPlantillaIdiomaFormularioById(idPlantillaFormulario);
 	}
 
-
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public FormateadorFormulario getFormateadorFormulario(final Long idFmt) {
 		return restApiService.getFormateadorFormulario(idFmt);
 	}
 
-
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public String getPaginaFormularioHTMLAsistente(Long pIdPage, String pLang) {
+	public String getPaginaFormularioHTMLAsistente(final Long pIdPage, final String pLang) {
 		return restApiService.getPaginaFormularioHTMLAsistente(pIdPage, pLang);
 	}
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public List<TramitePaso> getTramitePasos(Long idTramiteVersion) {
-	   return restApiService.getTramitePasos(idTramiteVersion);
+	public List<TramitePaso> getTramitePasos(final Long idTramiteVersion) {
+		return restApiService.getTramitePasos(idTramiteVersion);
 	}
-	
-   @Override
-   @RolesAllowed(ConstantesRolesAcceso.REST)
-   public DisenyoFormulario getDisenyoFormularioById(Long idForm) {
-	   return restApiService.getDisenyoFormularioById(idForm);
-   }
 
-   
-   @Override
-   @RolesAllowed(ConstantesRolesAcceso.REST)
-   public List<AvisoEntidad> getAvisosEntidad(final String pIdEntidad) {
-	   return restApiService.getAvisosEntidad(pIdEntidad);
-   }
-   
-   @Override
-   @RolesAllowed(ConstantesRolesAcceso.REST)
-   
-   public ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros) {
-	   return restApiService.realizarConsultaFuenteDatos(idDominio, parametros);
-   }
-    
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public DisenyoFormulario getDisenyoFormularioById(final Long idForm) {
+		return restApiService.getDisenyoFormularioById(idForm);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<AvisoEntidad> getAvisosEntidad(final String pIdEntidad) {
+		return restApiService.getAvisosEntidad(pIdEntidad);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+
+	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
+			final List<ValorParametroDominio> parametros) {
+		return restApiService.realizarConsultaFuenteDatos(idDominio, parametros);
+	}
 
 }

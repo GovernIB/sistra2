@@ -48,165 +48,150 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "interna", produces = "application/json")
 public class ApiInternaRestController {
 
-    /** Servicio negocio. */
-    @Autowired
-    private RestApiInternaService restApiService;
-    
-    /**
-     * ConfiguracionGlobalAdapter
-     */
-    @Autowired
-    private ConfiguracionGlobalAdapter confGlobalAdapter;
-    
-    /**
-     * ConfiguracionEntidadAdapter
-     */
-    @Autowired
-    private ConfiguracionEntidadAdapter confEntidadAdapter;
-    
-    /**
-     * VersionTramiteAdapter
-     */
-    @Autowired
-    private VersionTramiteAdapter versionTramiteAdapter;
-    
-    /**
-     * AvisosEntidadAdapter
-     */
-    @Autowired
-    private AvisosEntidadAdapter avisosEntidadAdapter;
-    
-    /**
-     * ValoresDominioAdapter
-     */
-    @Autowired
-    private ValoresDominioAdapter valoresDominioAdapter;
-    
-    
-    
+	/** Servicio negocio. */
+	@Autowired
+	private RestApiInternaService restApiService;
 
+	/**
+	 * ConfiguracionGlobalAdapter
+	 */
+	@Autowired
+	private ConfiguracionGlobalAdapter confGlobalAdapter;
 
-    // TODO Hacer que todas las clases del modelo api rest empiecen con "R" para
-    // evitar conflictos con modelo core? RENOMBRAMOS QUE EMPIECEN CON "R"
+	/**
+	 * ConfiguracionEntidadAdapter
+	 */
+	@Autowired
+	private ConfiguracionEntidadAdapter confEntidadAdapter;
 
-    // TODO Ver gestion errores, tanto generados en capa Rest como los que
-    // vengan de negocio. Ver de gestionar con interceptor. DE MOMENTO QUE
-    // DEVUELVA 500 Y LUEGO YA VEMOS.
+	/**
+	 * VersionTramiteAdapter
+	 */
+	@Autowired
+	private VersionTramiteAdapter versionTramiteAdapter;
 
-    /**
-     * Recupera configuración global.
-     *
-     * @return Configuracion global
-     */
+	/**
+	 * AvisosEntidadAdapter
+	 */
+	@Autowired
+	private AvisosEntidadAdapter avisosEntidadAdapter;
 
-    @ApiOperation(value = "Lista de Propiedades de configuracion global", notes = "Lista de Propiedades de configuracion global", response = RConfiguracionGlobal.class)
-    @RequestMapping(value = "/configuracionGlobal", method = RequestMethod.GET)
-    public RConfiguracionGlobal obtenerConfiguracionGlobal() {
-        final List<ConfiguracionGlobal> cg = restApiService
-                .listConfiguracionGlobal(null);
-        final List<Plugin> pg = restApiService.listPlugin(TypeAmbito.GLOBAL,
-                (long) 0, null);
-        return confGlobalAdapter.convertir(cg, pg);        
-    }
+	/**
+	 * ValoresDominioAdapter
+	 */
+	@Autowired
+	private ValoresDominioAdapter valoresDominioAdapter;
 
-    /**
-     * Recupera configuración entidad.
-     *
-     * @param id
-     *            id entidad
-     * @return Entidad
-     */
-    @ApiOperation(value = "Lista de Propiedades de configuracion de entidad", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
-    @RequestMapping(value = "/entidad/{id}", method = RequestMethod.GET)
-    public RConfiguracionEntidad obtenerConfiguracionEntidad(
-            @PathVariable("id") String id) {
-        final Entidad entidad = restApiService.loadEntidad(Long.parseLong(id));
-        return confEntidadAdapter.convertir(entidad);
-    }
+	// TODO Hacer que todas las clases del modelo api rest empiecen con "R" para
+	// evitar conflictos con modelo core? RENOMBRAMOS QUE EMPIECEN CON "R"
 
-    /**
-     * Recupera definición versión de trámite.
-     *
-     * @param idioma
-     *            Idioma
-     * @param idtramite
-     *            Id Trámite
-     * @param version
-     *            Versión trámite
-     * @return versión de trámite
-     * @throws Exception
-     */
-    @ApiOperation(value = "Obtiene la definición de la versión del tramite", notes = "Obtiene la definición de la versión del tramite", response = RVersionTramite.class)
-    @RequestMapping(value = "/tramite/{idTramite}/{version}/{idioma}", method = RequestMethod.GET)
-    public RVersionTramite obtenerDefinicionVersionTramite(
-            @PathVariable("idTramite") String idtramite,
-            @PathVariable("version") int version,
-            @PathVariable("idioma") String idioma) throws Exception {
+	// TODO Ver gestion errores, tanto generados en capa Rest como los que
+	// vengan de negocio. Ver de gestionar con interceptor. DE MOMENTO QUE
+	// DEVUELVA 500 Y LUEGO YA VEMOS.
 
-        final String idiomaDefecto = restApiService.getValorConfiguracionGlobal(
-                "definicionTramite.lenguajeDefecto");
-        final TramiteVersion tv = restApiService.loadTramiteVersion(idtramite,
-                version);
-        if (tv == null) {
-            throw new Exception("El tramite especificado no existe");
-        }
-        return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
-    }
+	/**
+	 * Recupera configuración global.
+	 *
+	 * @return Configuracion global
+	 */
 
-    /**
-     * Obtiene avisos activos entidad.
-     *
-     * @param idEntidad
-     *            Id entidad
-     * @return avisos
-     */
-    @ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)
-    @RequestMapping(value = "/entidad/{id}/avisos", method = RequestMethod.GET)
-    public RAvisosEntidad obtenerAvisosEntidad(
-            @PathVariable("id") String idEntidad) {
-    	return avisosEntidadAdapter.convertir(idEntidad);        
-    }
+	@ApiOperation(value = "Lista de Propiedades de configuracion global", notes = "Lista de Propiedades de configuracion global", response = RConfiguracionGlobal.class)
+	@RequestMapping(value = "/configuracionGlobal", method = RequestMethod.GET)
+	public RConfiguracionGlobal obtenerConfiguracionGlobal() {
+		final List<ConfiguracionGlobal> cg = restApiService.listConfiguracionGlobal(null);
+		final List<Plugin> pg = restApiService.listPlugin(TypeAmbito.GLOBAL, (long) 0, null);
+		return confGlobalAdapter.convertir(cg, pg);
+	}
 
-    /**
-     * Recupera valores de un dominio de fuente de datos.
-     *
-     * @param idDominio
-     *            id dominio
-     * @param parametrosJSON
-     *            parametros (en formato JSON)
-     * @return Valores dominio
-     */
-    @ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores de un dominio", response = RValoresDominio.class)
-    @RequestMapping(value = "/dominioFuenteDatos/{idDominio}", method = RequestMethod.POST)
-    public RValoresDominio obtenerValoresDominioFD(
-            @PathVariable("idDominio") String idDominio,
-            @RequestParam(name = "parametros", required = false) String parametrosJSON) {
+	/**
+	 * Recupera configuración entidad.
+	 *
+	 * @param codigoDIR3
+	 *            id entidad
+	 * @return Entidad
+	 */
+	@ApiOperation(value = "Lista de Propiedades de configuracion de entidad", notes = "Lista de Propiedades de configuracion de entidad", response = RConfiguracionEntidad.class)
+	@RequestMapping(value = "/entidad/{id}", method = RequestMethod.GET)
+	public RConfiguracionEntidad obtenerConfiguracionEntidad(@PathVariable("id") final String codigoDIR3) {
+		final Entidad entidad = restApiService.loadEntidad(codigoDIR3);
+		return confEntidadAdapter.convertir(entidad);
+	}
 
-        // TODO Ver si gestionamos así los parametros compuestos JSON
-        RListaParametros pars = null;
-        if (StringUtils.isNotBlank(parametrosJSON)) {
-            try {
-                pars = (RListaParametros) JsonUtil.fromJson(parametrosJSON,
-                        RListaParametros.class);
-            } catch (final JsonException e) {
-                // TODO Gestion excepciones
-                throw new RuntimeException(e);
-            }
-        }
+	/**
+	 * Recupera definición versión de trámite.
+	 *
+	 * @param idioma
+	 *            Idioma
+	 * @param idtramite
+	 *            Id Trámite
+	 * @param version
+	 *            Versión trámite
+	 * @return versión de trámite
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "Obtiene la definición de la versión del tramite", notes = "Obtiene la definición de la versión del tramite", response = RVersionTramite.class)
+	@RequestMapping(value = "/tramite/{idTramite}/{version}/{idioma}", method = RequestMethod.GET)
+	public RVersionTramite obtenerDefinicionVersionTramite(@PathVariable("idTramite") final String idtramite,
+			@PathVariable("version") final int version, @PathVariable("idioma") final String idioma) throws Exception {
 
-        // Convertimos los parametros a la clase necesaria
-        final List<ValorParametroDominio> listaParams = new ArrayList<ValorParametroDominio>();
-        if (pars != null && pars.getParametros() != null) {
-            for (final RValorParametro p : pars.getParametros()) {
-                final ValorParametroDominio param = new ValorParametroDominio();
-                param.setCodigo(p.getCodigo());
-                param.setValor(p.getValor());
-                listaParams.add(param);
-            }
-        }
+		final String idiomaDefecto = restApiService.getValorConfiguracionGlobal("definicionTramite.lenguajeDefecto");
+		final TramiteVersion tv = restApiService.loadTramiteVersion(idtramite, version);
+		if (tv == null) {
+			throw new Exception("El tramite especificado no existe");
+		}
+		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
+	}
 
-        final ValoresDominio res = restApiService
-                .realizarConsultaFuenteDatos(idDominio, listaParams);
-        return valoresDominioAdapter.convertir(res);
-    }
+	/**
+	 * Obtiene avisos activos entidad.
+	 *
+	 * @param idEntidad
+	 *            Id entidad
+	 * @return avisos
+	 */
+	@ApiOperation(value = "Obtiene los avisos de una entidad", notes = "Obtiene los avisos de una entidad", response = RAvisosEntidad.class)
+	@RequestMapping(value = "/entidad/{id}/avisos", method = RequestMethod.GET)
+	public RAvisosEntidad obtenerAvisosEntidad(@PathVariable("id") final String idEntidad) {
+		return avisosEntidadAdapter.convertir(idEntidad);
+	}
+
+	/**
+	 * Recupera valores de un dominio de fuente de datos.
+	 *
+	 * @param idDominio
+	 *            id dominio
+	 * @param parametrosJSON
+	 *            parametros (en formato JSON)
+	 * @return Valores dominio
+	 */
+	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores de un dominio", response = RValoresDominio.class)
+	@RequestMapping(value = "/dominioFuenteDatos/{idDominio}", method = RequestMethod.POST)
+	public RValoresDominio obtenerValoresDominioFD(@PathVariable("idDominio") final String idDominio,
+			@RequestParam(name = "parametros", required = false) final String parametrosJSON) {
+
+		// TODO Ver si gestionamos así los parametros compuestos JSON
+		RListaParametros pars = null;
+		if (StringUtils.isNotBlank(parametrosJSON)) {
+			try {
+				pars = (RListaParametros) JsonUtil.fromJson(parametrosJSON, RListaParametros.class);
+			} catch (final JsonException e) {
+				// TODO Gestion excepciones
+				throw new RuntimeException(e);
+			}
+		}
+
+		// Convertimos los parametros a la clase necesaria
+		final List<ValorParametroDominio> listaParams = new ArrayList<ValorParametroDominio>();
+		if (pars != null && pars.getParametros() != null) {
+			for (final RValorParametro p : pars.getParametros()) {
+				final ValorParametroDominio param = new ValorParametroDominio();
+				param.setCodigo(p.getCodigo());
+				param.setValor(p.getValor());
+				listaParams.add(param);
+			}
+		}
+
+		final ValoresDominio res = restApiService.realizarConsultaFuenteDatos(idDominio, listaParams);
+		return valoresDominioAdapter.convertir(res);
+	}
 }

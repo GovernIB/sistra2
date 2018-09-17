@@ -23,6 +23,7 @@ import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
@@ -33,6 +34,7 @@ import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -52,6 +54,10 @@ public class DialogDominioImportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private DominioService dominioService;
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/** Dominio. */
 	private Dominio data;
@@ -89,6 +95,16 @@ public class DialogDominioImportar extends DialogControllerBase {
 	public void init() {
 		setMostrarPanelInfo(false);
 		mostrarBotonImportar = false;
+	}
+
+	/**
+	 * Para obtener la versión de la configuracion global.
+	 *
+	 * @return
+	 */
+	private String getVersion() {
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		return confGlobal.getValor();
 	}
 
 	/**
@@ -147,7 +163,8 @@ public class DialogDominioImportar extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error extrayendo la info del zip.", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Error cargando el fichero zip y sus datos.");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogDominioImportar.error.cargandoFichero"));
 			setMostrarPanelInfo(false);
 			return;
 		} finally {
@@ -158,7 +175,8 @@ public class DialogDominioImportar extends DialogControllerBase {
 
 		// 2. Comprobamos que tiene lo básico:
 		if (data == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "El dato debería tener un dominio.");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogDominioImportar.error.dominioobligatorio"));
 			setMostrarPanelInfo(false);
 			return;
 		}
@@ -313,29 +331,30 @@ public class DialogDominioImportar extends DialogControllerBase {
 		final Properties prop = new Properties();
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
-		if (!prop.getProperty("version").equals(UtilJSF.getVersion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.version");
+		if (!prop.getProperty("version").equals(getVersion())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportar.error.version"));
 			return false;
 		}
 
 		// Checkeamos si se sube de los entornos que toca
-		TypeEntorno entornoActual = TypeEntorno.fromString(UtilJSF.getEntorno());
+		final TypeEntorno entornoActual = TypeEntorno.fromString(UtilJSF.getEntorno());
 		final TypeEntorno entornoFicheroZip = TypeEntorno.fromString(prop.getProperty("entorno"));
 
-		entornoActual = TypeEntorno.PREPRODUCCION;
 		boolean correcto = true;
 		if ((entornoActual == TypeEntorno.PREPRODUCCION && entornoFicheroZip == TypeEntorno.DESARROLLO)
 				|| (entornoActual == TypeEntorno.PRODUCCION && entornoFicheroZip == TypeEntorno.PREPRODUCCION)) {
 
 			final TypeImportarTipo tipo = TypeImportarTipo.fromString(prop.getProperty("tipo"));
 			if (tipo != TypeImportarTipo.DOMINIO) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Este fichero no es de tipo dominio.");
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("dialogDominioImportar.error.tipodominio"));
 				correcto = false;
 			}
 
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					"Sólo se puede subir de desarrollo a preproducción y de preproducción a producción.");
+					UtilJSF.getLiteral("dialogTramiteImportar.error.entorno"));
 
 			correcto = false;
 		}
@@ -357,7 +376,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 			return;
 		}
 
-		this.dominioService.importarDominio(filaDominio);
+		this.dominioService.importarDominio(filaDominio, UtilJSF.getIdEntidad());
 
 		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "info.importar.ok");
 		final DialogResult result = new DialogResult();

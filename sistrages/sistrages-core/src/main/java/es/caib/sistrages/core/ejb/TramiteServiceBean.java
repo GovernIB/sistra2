@@ -372,8 +372,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public Area getAreaByIdentificador(final String identificador, final Long idEntidad) {
-		return tramiteService.getAreaByIdentificador(identificador, idEntidad);
+	public Area getAreaByIdentificador(final String identificador) {
+		return tramiteService.getAreaByIdentificador(identificador);
 	}
 
 	@Override
@@ -436,8 +436,8 @@ public class TramiteServiceBean implements TramiteService {
 			final FilaImportarTramiteVersion filaTramiteVersion, final List<FilaImportarDominio> filasDominios,
 			final List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
 			final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
-			final Map<Long, byte[]> ficherosContent) throws Exception {
+			final Map<Long, byte[]> ficherosContent, final String usuario) throws Exception {
 		tramiteService.importar(filaArea, filaTramite, filaTramiteVersion, filasDominios, filasFormateador, idEntidad,
-				formularios, ficheros, ficherosContent);
+				formularios, ficheros, ficherosContent, usuario);
 	}
 }

@@ -26,8 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
@@ -45,7 +47,9 @@ import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -81,6 +85,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** Servicio. */
+	@Inject
+	private EntidadService entidadService;
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -160,6 +172,16 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	public void init() {
 		setMostrarPanelInfo(false);
 		mostrarBotonImportar = false;
+	}
+
+	/**
+	 * Para obtener la versión de la configuracion global.
+	 *
+	 * @return
+	 */
+	private String getVersion() {
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		return confGlobal.getValor();
 	}
 
 	/**
@@ -244,16 +266,24 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		this.setMostrarBotonImportar(false);
 
 		// 3. Preparamos la info a mostrar de area/tramite/tramiteVersion
-		areaActual = tramiteService.getAreaByIdentificador(area.getIdentificador(), UtilJSF.getIdEntidad());
+		areaActual = tramiteService.getAreaByIdentificador(area.getIdentificador());
 		if (areaActual != null) {
 
+			final Entidad entidad = entidadService.loadEntidadByArea(areaActual.getCodigo());
+			if (entidad.getCodigo().compareTo(UtilJSF.getIdEntidad()) != 0) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("dialogTramiteImportar.error.distintaEntidad"));
+				ocultarPaneles();
+				return;
+			}
 			tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador());
 
 		}
 
 		if (tramiteActual != null && tramiteActual.getIdArea().compareTo(areaActual.getCodigo()) != 0) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.areaDistinta");
-			setMostrarPanelInfo(false);
+			this.setMostrarPanelInfo(false);
+			this.setMostrarBotonImportar(false);
 			return;
 		}
 
@@ -277,26 +307,28 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-						"No existe el area y tendría que crearla un administrador de entidad.");
+						UtilJSF.getLiteral("dialogTramiteImportar.error.noexistearea"));
 
-				setMostrarBotonImportar(false);
+				this.ocultarPaneles();
 				return;
 			}
 
 		} else {
-
 			final List<TypeRolePermisos> permisos = UtilJSF.getSessionBean().getSecurityService()
 					.getPermisosDesarrolladorEntidadByArea(areaActual.getCodigo());
-			if (!permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-					&& !permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)) {
+			// Si no estamos en desarrollo, es desarrollador de entidad, es obligatorio ser
+			// de tipo adm. area (sino pete)
+			if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT
+					&& !permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+					&& !UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
 
 				filaArea = new FilaImportarArea(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
 						TypeImportarResultado.ERROR, area, areaActual);
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-						"No tienes permisos de promocionar sobre este area.");
+						UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
 
-				setMostrarBotonImportar(false);
+				ocultarPaneles();
 				return;
 
 			} else if (area.getDescripcion().equals(areaActual.getDescripcion())) {
@@ -314,7 +346,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		// Paso 3.2. Tramite.
-		if (tramiteActual == null) {
+		if (tramiteActual == null)
+
+		{
 
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
 					TypeImportarResultado.INFO, tramite, tramiteActual);
@@ -402,6 +436,18 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 	}
 
+	private void ocultarPaneles() {
+		this.setMostrarPanelInfo(false);
+		this.setMostrarBotonImportar(false);
+		this.area = null;
+		this.areaActual = null;
+		this.tramite = null;
+		this.tramiteActual = null;
+		this.tramiteVersion = null;
+		this.tramiteVersionActual = null;
+
+	}
+
 	/**
 	 * Metodo que comprueba si tiene permisos el usuario sobre los dominios.
 	 *
@@ -467,12 +513,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 *
 	 * @param idDominio
 	 */
-	public void checkDominio(final Long codigo) {
+	public void checkDominio(final String identificador) {
 
 		posicionDominio = null;
 		for (int posicion = 0; posicion < filasDominios.size(); posicion++) {
-			if (filasDominios.get(posicion).getDominioActual() != null
-					&& filasDominios.get(posicion).getDominioActual().getCodigo().compareTo(codigo) == 0) {
+			if (filasDominios.get(posicion).getDominio() != null
+					&& filasDominios.get(posicion).getDominio().getIdentificador().equals(identificador)) {
 				posicionDominio = posicion;
 				break;
 			}
@@ -641,8 +687,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final Properties prop = new Properties();
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
-		if (!prop.getProperty("version").equals(UtilJSF.getVersion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.version");
+		if (!prop.getProperty("version").equals(getVersion())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportar.error.version"));
 			return false;
 		}
 
@@ -657,13 +704,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 			final TypeImportarTipo tipo = TypeImportarTipo.fromString(prop.getProperty("tipo"));
 			if (tipo != TypeImportarTipo.TRAMITE) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Este fichero no es de tipo tramite.");
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("dialogTramiteImportar.error.tipoTramite"));
 				correcto = false;
 			}
 
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					"Sólo se puede subir de desarrollo a preproducción y de preproducción a producción.");
+					UtilJSF.getLiteral("dialogTramiteImportar.error.entorno"));
 
 			correcto = false;
 		}
@@ -697,7 +745,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		tramiteService.importar(filaArea, filaTramite, filaTramiteVersion, filasDominios, filasFormateador,
-				UtilJSF.getIdEntidad(), formularios, ficheros, ficherosContent);
+				UtilJSF.getIdEntidad(), formularios, ficheros, ficherosContent, UtilJSF.getSessionBean().getUserName());
 
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();

@@ -72,7 +72,7 @@ public interface AreaDao {
 	 * @param identificador
 	 * @return
 	 */
-	Area getAreaByIdentificador(String identificador, Long idEntidad);
+	Area getAreaByIdentificador(String identificador);
 
 	/**
 	 * Comprueba si el identificador está repetido.

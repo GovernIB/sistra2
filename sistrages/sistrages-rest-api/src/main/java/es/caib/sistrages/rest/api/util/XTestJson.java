@@ -124,13 +124,13 @@ public class XTestJson {
         plugin = new RPlugin();
         plugin.setTipo("Tipo1");
         plugin.setClassname("Clase1");
-        plugin.setParametros(crearListaParametros());
+        plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
 
         plugin = new RPlugin();
         plugin.setTipo("Tipo2");
         plugin.setClassname("Clase2");
-        plugin.setParametros(crearListaParametros());
+        plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
 
         return plugins;

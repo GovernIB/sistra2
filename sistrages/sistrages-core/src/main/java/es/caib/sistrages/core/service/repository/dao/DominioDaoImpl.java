@@ -393,7 +393,7 @@ public class DominioDaoImpl implements DominioDao {
 	 * @throws Exception
 	 */
 	@Override
-	public Long importar(final FilaImportarDominio filaDominio) throws Exception {
+	public Long importar(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
 		// Si es reemplazar, hacemos la acción.
 		if (filaDominio.getAccion() == TypeImportarAccion.REEMPLAZAR) {
 			JDominio dominioAlmacenar;
@@ -411,7 +411,7 @@ public class DominioDaoImpl implements DominioDao {
 				}
 
 				if (filaDominio.getDominio().getAmbito() == TypeAmbito.ENTIDAD) {
-					final JEntidad jEntidad = entityManager.find(JEntidad.class, filaDominio.getIdEntidad());
+					final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
 					final Set<JEntidad> entidades = new HashSet<>(0);
 					entidades.add(jEntidad);
 					dominioAlmacenar.setEntidades(entidades);
@@ -451,7 +451,12 @@ public class DominioDaoImpl implements DominioDao {
 			// Actualizamos los params
 			dominioAlmacenar.setParametros(UtilJSON.toJSON(filaDominio.getDominio().getParametros()));
 
-			entityManager.merge(dominioAlmacenar);
+			if (dominioAlmacenar.getCodigo() == null) {
+				entityManager.persist(dominioAlmacenar);
+			} else {
+				entityManager.merge(dominioAlmacenar);
+			}
+
 			return dominioAlmacenar.getCodigo();
 		} else {
 			return filaDominio.getDominioActual().getCodigo();

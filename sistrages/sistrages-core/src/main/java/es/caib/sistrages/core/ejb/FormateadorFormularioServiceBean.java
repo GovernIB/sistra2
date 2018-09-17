@@ -42,7 +42,7 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	}
 
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public FormateadorFormulario getFormateadorFormulario(final String codigo) {
 		return fmtService.getFormateadorFormulario(codigo);
 	}
@@ -55,7 +55,7 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	 * FormateadorFormulario)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void addFormateadorFormulario(final Long idEntidad, final FormateadorFormulario fmt) {
 		fmtService.addFormateadorFormulario(idEntidad, fmt);
 

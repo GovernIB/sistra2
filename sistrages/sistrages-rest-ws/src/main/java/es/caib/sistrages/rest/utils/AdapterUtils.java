@@ -3,8 +3,6 @@ package es.caib.sistrages.rest.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Script;
@@ -23,27 +21,25 @@ public class AdapterUtils {
 		throw new IllegalStateException("No se puede instanciar la clase");
 	}
 
-	private final static String literalDefecto= "??";
-	private final static String literalDefectoError= "?err?";
-	public final static String SEPARADOR_IDIOMAS= ";";
+	private static final String literalDefecto = "??";
+	private static final String literalDefectoError = "?err?";
+	public static final String SEPARADOR_IDIOMAS = ";";
 	public static final String SEPARADOR_EXTENSIONES = SEPARADOR_IDIOMAS;
 	public static final String FORMATO_FECHA = "yyyyMMddHHmmss";
 
-
-
-	public static RLiteral generarLiteral(Literal ori) {
+	public static RLiteral generarLiteral(final Literal ori) {
 		final RLiteral li = new RLiteral();
 		try {
 			final List<RLiteralIdioma> literales = new ArrayList<>();
 			RLiteralIdioma l = null;
-			for (Traduccion t : ori.getTraducciones()) {
+			for (final Traduccion t : ori.getTraducciones()) {
 				l = new RLiteralIdioma();
 				l.setIdioma(t.getIdioma());
 				l.setDescripcion(t.getLiteral());
 				literales.add(l);
 			}
 			li.setLiterales(literales);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return null;
 		}
 		return li;
@@ -59,63 +55,64 @@ public class AdapterUtils {
 	 * @param idiDefecto
 	 * @return
 	 */
-	public static String generarLiteralIdioma(Literal ori, String idioma) {
+	public static String generarLiteralIdioma(final Literal ori, final String idioma) {
 		try {
-			for (Traduccion t : ori.getTraducciones()) {
+			for (final Traduccion t : ori.getTraducciones()) {
 				if (idioma.equals(t.getIdioma())) {
 					return t.getLiteral();
 				}
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return literalDefectoError; // si el literal es null por ejemplo.
 		}
 		return literalDefecto;
 	}
 
-	public static RListaParametros toListaParametrosFromPropiedad(List<Propiedad> lp) {
+	public static RListaParametros toListaParametrosFromPropiedad(final List<Propiedad> lp) {
 		final RListaParametros params = new RListaParametros();
 		try {
 			params.setParametros(new ArrayList<>());
-			for (Propiedad p : lp) {
+			for (final Propiedad p : lp) {
 				final RValorParametro vp = new RValorParametro();
 				vp.setCodigo(p.getCodigo() + "");
 				vp.setValor(p.getValor());
 				params.getParametros().add(vp);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return null;
 		}
 		return params;
 	}
 
-	public static List<RPlugin> crearPlugins(List<Plugin> lpg) {
+	public static List<RPlugin> crearPlugins(final List<Plugin> lpg) {
 		final List<RPlugin> plugins = new ArrayList<>();
 		try {
-			for (Plugin p : lpg) {
+			for (final Plugin p : lpg) {
 				RPlugin plugin;
 				plugin = new RPlugin();
-				plugin.setTipo(p.getTipo()==null?null:p.getTipo().toString());
+				plugin.setTipo(p.getTipo() == null ? null : p.getTipo().toString());
 				plugin.setClassname(p.getClassname());
-				plugin.setParametros(toListaParametrosFromPropiedad(p.getPropiedades()));
+				plugin.setPropiedades(toListaParametrosFromPropiedad(p.getPropiedades()));
+				plugin.setPrefijoPropiedades(p.getPrefijoPropiedades());
 				plugins.add(plugin);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return null;
 		}
 		return plugins;
 	}
 
-	public static RScript generaScript(Script origen) {
-		
-		if(origen!=null) {
-			RScript s = new RScript();
+	public static RScript generaScript(final Script origen) {
+
+		if (origen != null) {
+			final RScript s = new RScript();
 			s.setScript(origen.getContenido());
-			//TODO: añadir los literales	
+			// TODO: añadir los literales
 			return s;
-		}else {
+		} else {
 			return null;
-		}		
-		
+		}
+
 	}
 
 }

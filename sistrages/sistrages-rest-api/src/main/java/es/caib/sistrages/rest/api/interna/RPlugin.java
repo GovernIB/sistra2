@@ -12,73 +12,92 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RPlugin", description = "Descripcion de RPlugin")
 public class RPlugin {
 
-    /** Tipo. */
+	/** Tipo. */
 	@ApiModelProperty(value = "Tipo")
-    private String tipo;
+	private String tipo;
 
-    /** Classname. */
+	/** Classname. */
 	@ApiModelProperty(value = "Classname")
-    private String classname;
+	private String classname;
 
-    /** Propiedades. */
+	/** Prefijo. */
+	@ApiModelProperty(value = "PrefijoPropiedades")
+	private String prefijoPropiedades;
+
+	/** Propiedades. */
 	@ApiModelProperty(value = "Propiedades")
-    private RListaParametros parametros;
+	private RListaParametros propiedades;
 
-    /**
-     * Método de acceso a tipo.
-     *
-     * @return tipo
-     */
-    public String getTipo() {
-        return tipo;
-    }
+	/**
+	 * Método de acceso a tipo.
+	 *
+	 * @return tipo
+	 */
+	public String getTipo() {
+		return tipo;
+	}
 
-    /**
-     * Método para establecer tipo.
-     *
-     * @param tipo
-     *            tipo a establecer
-     */
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+	/**
+	 * Método para establecer tipo.
+	 *
+	 * @param tipo
+	 *            tipo a establecer
+	 */
+	public void setTipo(final String tipo) {
+		this.tipo = tipo;
+	}
 
-    /**
-     * Método de acceso a classname.
-     *
-     * @return classname
-     */
-    public String getClassname() {
-        return classname;
-    }
+	/**
+	 * Método de acceso a classname.
+	 *
+	 * @return classname
+	 */
+	public String getClassname() {
+		return classname;
+	}
 
-    /**
-     * Método para establecer classname.
-     *
-     * @param classname
-     *            classname a establecer
-     */
-    public void setClassname(String classname) {
-        this.classname = classname;
-    }
+	/**
+	 * Método para establecer classname.
+	 *
+	 * @param classname
+	 *            classname a establecer
+	 */
+	public void setClassname(final String classname) {
+		this.classname = classname;
+	}
 
-    /**
-     * Método de acceso a parametros.
-     *
-     * @return parametros
-     */
-    public RListaParametros getParametros() {
-        return parametros;
-    }
+	/**
+	 * Método de acceso a propiedades.
+	 *
+	 * @return propiedades
+	 */
+	public RListaParametros getPropiedades() {
+		return propiedades;
+	}
 
-    /**
-     * Método para establecer parametros.
-     *
-     * @param parametros
-     *            parametros a establecer
-     */
-    public void setParametros(RListaParametros parametros) {
-        this.parametros = parametros;
-    }
+	/**
+	 * Método para establecer propiedades.
+	 *
+	 * @param propiedades
+	 *            propiedades a establecer
+	 */
+	public void setPropiedades(final RListaParametros parametros) {
+		this.propiedades = parametros;
+	}
+
+	/**
+	 * @return the prefijoPropiedades
+	 */
+	public String getPrefijoPropiedades() {
+		return prefijoPropiedades;
+	}
+
+	/**
+	 * @param prefijoPropiedades
+	 *            the prefijoPropiedades to set
+	 */
+	public void setPrefijoPropiedades(final String prefijo) {
+		this.prefijoPropiedades = prefijo;
+	}
 
 }

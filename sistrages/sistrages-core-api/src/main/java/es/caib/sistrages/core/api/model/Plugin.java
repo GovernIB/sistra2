@@ -38,6 +38,9 @@ public class Plugin extends ModelApi {
 	/** Propiedades */
 	private List<Propiedad> propiedades = new ArrayList<>();
 
+	/** Prefijo propiedades **/
+	private String prefijoPropiedades;
+
 	/**
 	 * @return the codigo
 	 */
@@ -126,6 +129,25 @@ public class Plugin extends ModelApi {
 	 */
 	public void setPropiedades(final List<Propiedad> propiedades) {
 		this.propiedades = propiedades;
+	}
+
+	/**
+	 * Obtiene el valor de prefijoPropiedades.
+	 *
+	 * @return el valor de prefijo propiedades
+	 */
+	public String getPrefijoPropiedades() {
+		return prefijoPropiedades;
+	}
+
+	/**
+	 * Establece el valor de prefijo propiedades.
+	 *
+	 * @param prefijo
+	 *            propiedades el nuevo valor de prefijo propiedades
+	 */
+	public void setPrefijoPropiedades(final String prefijoPropiedades) {
+		this.prefijoPropiedades = prefijoPropiedades;
 	}
 
 }

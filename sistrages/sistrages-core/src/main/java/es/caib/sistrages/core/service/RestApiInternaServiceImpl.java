@@ -1,4 +1,5 @@
 package es.caib.sistrages.core.service;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
@@ -38,12 +38,9 @@ import es.caib.sistrages.core.service.repository.dao.PluginsDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
-
 @Service
 @Transactional
 public class RestApiInternaServiceImpl implements RestApiInternaService {
-
-
 
 	/**
 	 * Constante LOG.
@@ -77,7 +74,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	/** DAO Tramite. */
 	@Autowired
 	TramiteDao tramiteDao;
-	
+
 	/** DAO Tramite Paso. **/
 	@Autowired
 	TramitePasoDao tramitePasoDao;
@@ -95,35 +92,31 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	 * FormateadorFormulario
 	 */
 	@Autowired
-	FormateadorFormularioDao fmtDao;	
-	
+	FormateadorFormularioDao fmtDao;
+
 	/**
 	 * aviso entidad dao.
 	 */
 	@Autowired
 	AvisoEntidadDao avisoEntidadDao;
-	
-	
+
 	/**
 	 * Componente fuente de datos
 	 */
 	@Autowired
 	FuenteDatosComponent fuenteDatosComponent;
 
-
-    @Override
-    @NegocioInterceptor
-    public String test(String echo) {
-        return "Echo: " + echo;
-    }
-
+	@Override
+	@NegocioInterceptor
+	public String test(final String echo) {
+		return "Echo: " + echo;
+	}
 
 	@Override
 	@NegocioInterceptor
 	public List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro) {
 		return configuracionGlobalDao.getAllByFiltro(filtro);
 	}
-
 
 	@Override
 	@NegocioInterceptor
@@ -145,48 +138,50 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		return result;
 	}
 
+	@Override
+	@NegocioInterceptor
+	public Entidad loadEntidad(final String codigoDir3) {
+		Entidad result = null;
+		result = entidadDao.getByCodigo(codigoDir3);
+		return result;
+	}
 
 	@Override
 	@NegocioInterceptor
-	public String getReferenciaFichero(Long id) {
-		if(id==null) {
+	public String getReferenciaFichero(final Long id) {
+		if (id == null) {
 			return null;
-		}else {
+		} else {
 			return ficheroExternoDao.getReferenciaById(id);
 		}
 	}
 
 	@Override
 	@NegocioInterceptor
-	public Tramite loadTramite(Long idTramite) {
+	public Tramite loadTramite(final Long idTramite) {
 		return tramiteDao.getById(idTramite);
 	}
-	
+
 	@Override
 	@NegocioInterceptor
-	public TramiteVersion loadTramiteVersion(String idTramite, int version) {
+	public TramiteVersion loadTramiteVersion(final String idTramite, final int version) {
 		return tramiteDao.getTramiteVersionByNumVersion(idTramite, version);
 	}
-	
-	
-
 
 	@Override
 	@NegocioInterceptor
-	public Dominio loadDominio(Long idDominio) {
+	public Dominio loadDominio(final Long idDominio) {
 		return dominioDao.getByCodigo(idDominio);
 	}
-
 
 	@Override
 	@NegocioInterceptor
 	public String getValorConfiguracionGlobal(final String propiedad) {
-		if(configuracionGlobalDao.getByPropiedad(propiedad)!=null) {
+		if (configuracionGlobalDao.getByPropiedad(propiedad) != null) {
 			return configuracionGlobalDao.getByPropiedad(propiedad).getValor();
 		}
 		return "";
 	}
-
 
 	@Override
 	@NegocioInterceptor
@@ -194,52 +189,48 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		return formIntDao.getFormularioById(pId);
 	}
 
-
 	@Override
 	@NegocioInterceptor
 	public FormateadorFormulario getFormateadorFormulario(final Long idFmt) {
 		return fmtDao.getById(idFmt);
 	}
 
-
 	@Override
 	@NegocioInterceptor
 	public List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormularioById(final Long idPlantillaFormulario) {
 		return formIntDao.getListaPlantillaIdiomaFormularioById(idPlantillaFormulario);
 	}
-	
-	
-    @Override
-    @NegocioInterceptor
-    public DisenyoFormulario getDisenyoFormularioById(Long idForm) {
-	   return formIntDao.getFormularioCompletoById(idForm);
-    }
 
-    
-    @Override
-    @NegocioInterceptor
-    public String getPaginaFormularioHTMLAsistente(Long pIdPage, String pLang) {
-        // TODO PENDIENTE
-        return "<html/>";
-    }
-    
-    @Override
+	@Override
+	@NegocioInterceptor
+	public DisenyoFormulario getDisenyoFormularioById(final Long idForm) {
+		return formIntDao.getFormularioCompletoById(idForm);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public String getPaginaFormularioHTMLAsistente(final Long pIdPage, final String pLang) {
+		// TODO PENDIENTE
+		return "<html/>";
+	}
+
+	@Override
 	@NegocioInterceptor
 	public List<TramitePaso> getTramitePasos(final Long idTramiteVersion) {
 		return tramitePasoDao.getTramitePasos(idTramiteVersion);
 	}
-    
-    @Override
+
+	@Override
 	@NegocioInterceptor
 	public List<AvisoEntidad> getAvisosEntidad(final String pIdEntidad) {
 		return avisoEntidadDao.getAll(pIdEntidad);
 	}
 
-
-    @Override
+	@Override
 	@NegocioInterceptor
-	public ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros) {
+	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
+			final List<ValorParametroDominio> parametros) {
 		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
 	}
-    
+
 }

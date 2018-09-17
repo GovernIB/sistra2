@@ -9,13 +9,22 @@ import es.caib.sistrages.core.api.model.types.TypeIdioma;
 public interface EntidadDao {
 
 	/**
-	 * Obtiene la entidad.
+	 * Obtiene la entidad por codigo.
 	 *
 	 * @param idEntidad
 	 *            Identificador de entidad
 	 * @return la entidad
 	 */
 	Entidad getById(final Long idEntidad);
+
+	/**
+	 * Obtiene la entidad por el codigo dir3.
+	 *
+	 * @param codigoDir3
+	 *            Identificador de entidad
+	 * @return la entidad
+	 */
+	Entidad getByCodigo(String codigoDir3);
 
 	/**
 	 * Obtiene la entidad.

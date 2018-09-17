@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.exception.FrontException;
@@ -14,11 +15,13 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
@@ -103,6 +106,11 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		// verificamos precondiciones
+		if (!verificarGuardar()) {
+			return;
+		}
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
@@ -265,7 +273,23 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
 
-		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 720);
+		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 680);
+	}
+
+	/**
+	 * Verificar precondiciones al guardar.
+	 *
+	 * @return true, si se cumplen las todas la condiciones
+	 */
+	private boolean verificarGuardar() {
+		if (TypeFormularioObligatoriedad.DEPENDIENTE.equals(data.getObligatoriedad())
+				&& (data.getScriptObligatoriedad() == null
+						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

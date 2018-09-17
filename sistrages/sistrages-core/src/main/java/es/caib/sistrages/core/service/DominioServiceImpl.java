@@ -263,8 +263,8 @@ public class DominioServiceImpl implements DominioService {
 	}
 
 	@Override
-	public void importarDominio(final FilaImportarDominio filaDominio) throws Exception {
-		dominioDao.importar(filaDominio);
+	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
+		dominioDao.importar(filaDominio, idEntidad);
 	}
 
 }

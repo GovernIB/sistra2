@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
@@ -45,6 +46,7 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.GestorFicherosService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -67,6 +69,10 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** Servicio. **/
 	@Inject
 	private GestorFicherosService gestorFicherosService;
+
+	/** Servicio. **/
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/** Servicio. */
 	@Inject
@@ -429,6 +435,16 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Para obtener la versión de la configuracion global.
+	 *
+	 * @return
+	 */
+	private String getVersion() {
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		return confGlobal.getValor();
+	}
+
+	/**
 	 * Perpara el fichero de properties.
 	 *
 	 * @return
@@ -438,7 +454,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		final Properties prop = new Properties();
 		prop.setProperty("entorno", UtilJSF.getEntorno());
-		prop.setProperty("version", UtilJSF.getVersion());
+		prop.setProperty("version", getVersion());
 		prop.setProperty("fecha", Calendar.getInstance().getTime().toString());
 		prop.setProperty("usuario", UtilJSF.getSessionBean().getUserName());
 		prop.setProperty("tipo", TypeImportarTipo.TRAMITE.toString());
