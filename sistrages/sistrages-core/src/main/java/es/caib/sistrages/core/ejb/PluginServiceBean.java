@@ -101,7 +101,7 @@ public class PluginServiceBean implements PluginService {
 	 * .core.api.model.types.TypeAmbito, java.lang.Long, TypePlugin)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final TypePlugin tipo) {
 		return pluginService.listPlugin(ambito, idEntidad, tipo);
 	}
