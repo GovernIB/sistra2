@@ -1967,8 +1967,8 @@ create table STG_PLUGIN
    PLG_TIPO             VARCHAR2(3 CHAR)     not null,
    PLG_DESCR            VARCHAR2(255 CHAR)   not null,
    PLG_CLASS            VARCHAR2(500 CHAR)   not null,
-   PLG_PROPS            VARCHAR2(4000 CHAR),
-   PLG_IDINST           VARCHAR2(20 CHAR)
+   PLG_PREPRO           VARCHAR2(100 CHAR),
+   PLG_PROPS            VARCHAR2(4000 CHAR)
 );
 
 comment on table STG_PLUGIN is
@@ -1994,11 +1994,11 @@ comment on column STG_PLUGIN.PLG_DESCR is
 comment on column STG_PLUGIN.PLG_CLASS is
 'Clase implementadora';
 
+comment on column STG_PLUGIN.PLG_PREPRO is
+'Prefijo propiedades';
+
 comment on column STG_PLUGIN.PLG_PROPS is
 'Lista serializada propiedades (codigo  - valor)';
-
-comment on column STG_PLUGIN.PLG_IDINST is
-'Id Instancia (para plugins multiinstancia como pagos)';
 
 alter table STG_PLUGIN
    add constraint STG_PLUGIN_PK primary key (PLG_CODIGO);
