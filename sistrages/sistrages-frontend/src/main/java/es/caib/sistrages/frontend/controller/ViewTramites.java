@@ -26,13 +26,16 @@ import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.TramiteVersiones;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de tramites.
@@ -61,6 +64,9 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	@Inject
 	private SecurityService securityService;
+
+	@Inject
+	private SystemService systemService;
 
 	/**
 	 * Filtro (puede venir por parametro).
@@ -215,8 +221,7 @@ public class ViewTramites extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 
 			// Refrescamos datos
-			this.buscarAreas();
-			this.filtrar();
+			this.buscarTramites();
 		}
 	}
 
@@ -722,7 +727,7 @@ public class ViewTramites extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(),
 				String.valueOf(this.tramiteSeleccionada.getTramite().getCodigo()));
-		UtilJSF.openDialog(DialogMoverTramite.class, TypeModoAcceso.EDICION, params, true, 540, 120);
+		UtilJSF.openDialog(DialogMoverTramite.class, TypeModoAcceso.EDICION, params, true, 540, 180);
 	}
 
 	/**
@@ -1012,7 +1017,27 @@ public class ViewTramites extends ViewControllerBase {
 	 * Regrescar.
 	 */
 	public void refrescar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+		String identificador = null;
+
+		for (final TramiteVersiones tramite : listaTramiteVersiones) {
+			if (tramite.getTramite().getCodigo().equals(versionSeleccionada.getIdTramite())) {
+				identificador = tramite.getTramite().getIdentificador();
+				break;
+			}
+		}
+
+		if (identificador != null) {
+			final int resultado = UtilRest.refrescar(urlBase, usuario, pwd, "T",
+					identificador + "-" + versionSeleccionada.getNumeroVersion());
+			if (resultado == 1) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+			} else {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.refrescar"));
+			}
+		}
 	}
 
 	/**

@@ -19,6 +19,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeCampoFichero;
@@ -26,6 +27,7 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
@@ -43,6 +45,9 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	@Inject
 	private EntidadService entidadService;
+
+	@Inject
+	private SystemService systemService;
 
 	/** Datos elemento. */
 	private Entidad data;
@@ -111,7 +116,16 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 * Cancelar.
 	 */
 	public void refrescar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Sin implementar");
+		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+
+		final int resultado = UtilRest.refrescar(urlBase, usuario, pwd, "E", data.getCodigoDIR3());
+		if (resultado == 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.refrescar"));
+		}
 	}
 
 	private void explorarLiteral(final Literal pLiteral) {

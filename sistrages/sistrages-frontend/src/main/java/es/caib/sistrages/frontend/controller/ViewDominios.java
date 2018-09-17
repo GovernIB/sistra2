@@ -17,11 +17,14 @@ import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de dominiosId (ambito global, entidad y area).
@@ -40,6 +43,9 @@ public class ViewDominios extends ViewControllerBase {
 	/** security service. */
 	@Inject
 	private SecurityService securityService;
+
+	@Inject
+	private SystemService systemService;
 
 	/** Filtro (puede venir por parametro). */
 	private String filtro;
@@ -177,7 +183,18 @@ public class ViewDominios extends ViewControllerBase {
 	 * Refrescar cache.
 	 */
 	public void refrescarCache() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		if (datoSeleccionado != null) {
+			final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+			final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+			final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+
+			final int resultado = UtilRest.refrescar(urlBase, usuario, pwd, "D", datoSeleccionado.getIdentificador());
+			if (resultado == 1) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+			} else {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.refrescar"));
+			}
+		}
 	}
 
 	/**
@@ -385,7 +402,7 @@ public class ViewDominios extends ViewControllerBase {
 		if (typeAmbito == TypeAmbito.ENTIDAD) {
 			params.put("ENTIDAD", id);
 		}
-		UtilJSF.openDialog(DialogDominio.class, modoAccesoDlg, params, true, 770, 680);
+		UtilJSF.openDialog(DialogDominio.class, modoAccesoDlg, params, true, 770, 670);
 	}
 
 	/**

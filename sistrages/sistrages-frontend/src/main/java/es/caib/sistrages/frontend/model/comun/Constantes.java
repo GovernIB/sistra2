@@ -67,4 +67,10 @@ public final class Constantes {
 	/** Constante fuente datos valores. **/
 	public static final String CLAVE_MOCHILA_FUENTEVALORES = "FUENTEVALORES";
 
+	public static final String SISTRAMIT_REST_PWD = "sistramit.rest.pwd";
+
+	public static final String SISTRAMIT_REST_USER = "sistramit.rest.user";
+
+	public static final String SISTRAMIT_REST_URL = "sistramit.rest.url";
+
 }

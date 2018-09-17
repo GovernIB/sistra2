@@ -19,6 +19,17 @@
 			<type>pom</type>
 		</dependency>
 
+		<dependency>
+		 	<groupId>org.springframework</groupId>
+		  	<artifactId>spring-context</artifactId>
+		  	<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.springframework</groupId>
+		  	<artifactId>spring-webmvc</artifactId>
+		   	<version>${spring.version}</version>
+		</dependency>
+
 		<!-- EJB -->
 		<dependency>
 			<groupId>javax.ejb</groupId>

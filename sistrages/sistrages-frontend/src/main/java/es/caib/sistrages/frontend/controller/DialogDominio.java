@@ -22,14 +22,17 @@ import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.DialogResultMessage;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 @ManagedBean
 @ViewScoped
@@ -46,6 +49,9 @@ public class DialogDominio extends DialogControllerBase {
 	/** Enlace servicio. */
 	@Inject
 	private TramiteService tramiteService;
+
+	@Inject
+	private SystemService systemService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -303,7 +309,7 @@ public class DialogDominio extends DialogControllerBase {
 						}
 					}
 
-					if (duplicado) {
+					if (duplicado && !propiedadSeleccionada.getCodigo().equals(propiedadEdicion.getCodigo())) {
 						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 					} else {
 						this.data.getParametros().remove(posicion);
@@ -326,7 +332,7 @@ public class DialogDominio extends DialogControllerBase {
 						}
 					}
 
-					if (duplicado) {
+					if (duplicado && !valorSeleccionado.getCodigo().equals(propiedadEdicion.getCodigo())) {
 						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 					} else {
 						this.data.getListaFija().remove(posicion);
@@ -349,7 +355,18 @@ public class DialogDominio extends DialogControllerBase {
 	 * Refresca la cache
 	 */
 	public void refrescarCache() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+
+		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+
+		final int resultado = UtilRest.refrescar(urlBase, usuario, pwd, "D", data.getIdentificador());
+		if (resultado == 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.refrescar"));
+		}
+
 	}
 
 	/**

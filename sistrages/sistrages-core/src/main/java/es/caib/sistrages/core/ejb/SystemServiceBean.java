@@ -32,4 +32,10 @@ public class SystemServiceBean implements SystemService {
         systemService.purgarFicheros(appId);
     }
 
+    @Override
+    @PermitAll
+    public String obtenerPropiedadConfiguracion(String propiedad) {
+        return systemService.obtenerPropiedadConfiguracion(propiedad);
+    }
+
 }
