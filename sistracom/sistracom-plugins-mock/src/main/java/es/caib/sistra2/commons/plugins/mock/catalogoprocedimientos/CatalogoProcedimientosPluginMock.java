@@ -2,6 +2,9 @@ package es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionProcedimientoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
@@ -13,12 +16,19 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.ICatalogoProcedimi
  * @author Indra
  *
  */
-public class CatalogoProcedimientosPluginMock
+public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
         implements ICatalogoProcedimientosPlugin {
 
+    public CatalogoProcedimientosPluginMock() {
+    }
+
+    public CatalogoProcedimientosPluginMock(final String prefijoPropiedades,
+            final Properties properties) {
+    }
+
     @Override
-    public DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP,
-            String idioma) {
+    public DefinicionTramiteCP obtenerDefinicionTramite(
+            final String idTramiteCP, final String idioma) {
         final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
         dp.setIdentificador("PROC1");
         dp.setDescripcion("Procedimiento 1");
@@ -36,7 +46,7 @@ public class CatalogoProcedimientosPluginMock
 
     @Override
     public List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(
-            String idTramite, String idioma) {
+            final String idTramite, final String idioma) {
         final List<DefinicionProcedimientoCP> res = new ArrayList<>();
 
         final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();

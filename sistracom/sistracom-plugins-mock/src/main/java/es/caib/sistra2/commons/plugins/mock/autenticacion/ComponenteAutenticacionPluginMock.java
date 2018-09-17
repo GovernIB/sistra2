@@ -1,6 +1,9 @@
 package es.caib.sistra2.commons.plugins.mock.autenticacion;
 
 import java.util.List;
+import java.util.Properties;
+
+import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
 import es.caib.sistra2.commons.plugins.autenticacion.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.IComponenteAutenticacionPlugin;
@@ -13,7 +16,7 @@ import es.caib.sistra2.commons.plugins.autenticacion.TipoMetodoAutenticacion;
  * @author Indra
  *
  */
-public class ComponenteAutenticacionPluginMock
+public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
         implements IComponenteAutenticacionPlugin {
 
     /**
@@ -21,10 +24,17 @@ public class ComponenteAutenticacionPluginMock
      */
     private static final String PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN = "/asistente/retornoAutenticacion.html";
 
+    public ComponenteAutenticacionPluginMock() {
+    }
+
+    public ComponenteAutenticacionPluginMock(final String prefijoPropiedades,
+            final Properties properties) {
+    }
+
     @Override
-    public String iniciarSesionAutenticacion(String codigoEntidad,
-            String idioma, List<TipoAutenticacion> metodos, String qaa,
-            String callback) {
+    public String iniciarSesionAutenticacion(final String codigoEntidad,
+            final String idioma, final List<TipoAutenticacion> metodos,
+            final String qaa, final String callback) {
         // Simulamos directamente retorno componente autenticacion. Ponemos la
         // primera letra del ticket el primer tipo de autenticacion para simular
         // ese metodo.
@@ -35,7 +45,7 @@ public class ComponenteAutenticacionPluginMock
     }
 
     @Override
-    public DatosUsuario validarTicketAutenticacion(String pTicket) {
+    public DatosUsuario validarTicketAutenticacion(final String pTicket) {
         // Simulamos segun primera letra del ticket
         DatosUsuario u;
         if (pTicket.startsWith(TipoAutenticacion.AUTENTICADO.toString())) {
@@ -47,8 +57,8 @@ public class ComponenteAutenticacionPluginMock
     }
 
     @Override
-    public String iniciarSesionLogout(String codigoEntidad, String pIdioma,
-            String pCallback) {
+    public String iniciarSesionLogout(final String codigoEntidad,
+            final String pIdioma, final String pCallback) {
         // TODO PENDIENTE IMPLEMENTAR
         return null;
     }

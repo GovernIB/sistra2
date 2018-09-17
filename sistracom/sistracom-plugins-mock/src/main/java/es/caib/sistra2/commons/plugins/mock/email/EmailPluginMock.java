@@ -1,7 +1,9 @@
 package es.caib.sistra2.commons.plugins.mock.email;
 
 import java.util.List;
+import java.util.Properties;
 
+import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +16,18 @@ import es.caib.sistra2.commons.plugins.email.IEmailPlugin;
  * @author Indra
  *
  */
-public class EmailPluginMock implements IEmailPlugin {
+public class EmailPluginMock extends AbstractPluginProperties
+        implements IEmailPlugin {
 
     /** Log. */
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    public EmailPluginMock() {
+    }
+
+    public EmailPluginMock(final String prefijoPropiedades,
+            final Properties properties) {
+    }
 
     @Override
     public boolean envioEmail(List<String> destinatarios, String asunto,
