@@ -27,6 +27,7 @@ import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.DialogResultMessage;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -360,11 +361,12 @@ public class DialogDominio extends DialogControllerBase {
 		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
 		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
 
-		final int resultado = UtilRest.refrescar(urlBase, usuario, pwd, "D", data.getIdentificador());
-		if (resultado == 1) {
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "D", data.getIdentificador());
+		if (resultado.getCodigo() == 1) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.refrescar"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
 		}
 
 	}

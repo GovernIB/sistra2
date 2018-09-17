@@ -29,6 +29,7 @@ import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.TramiteVersiones;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -1030,12 +1031,13 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		if (identificador != null) {
-			final int resultado = UtilRest.refrescar(urlBase, usuario, pwd, "T",
+			final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "T",
 					identificador + "-" + versionSeleccionada.getNumeroVersion());
-			if (resultado == 1) {
+			if (resultado.getCodigo() == 1) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
 			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.refrescar"));
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
 			}
 		}
 	}

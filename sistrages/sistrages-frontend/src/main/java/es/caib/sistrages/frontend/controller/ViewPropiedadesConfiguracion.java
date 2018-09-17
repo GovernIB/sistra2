@@ -14,6 +14,7 @@ import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -100,11 +101,12 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
 		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
 
-		final int resultado = UtilRest.refrescar(urlBase, usuario, pwd, "C", null);
-		if (resultado == 1) {
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "C", null);
+		if (resultado.getCodigo() == 1) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.refrescar"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
 		}
 
 	}

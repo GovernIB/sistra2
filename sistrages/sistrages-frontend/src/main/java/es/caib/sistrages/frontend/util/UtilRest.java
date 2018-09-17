@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import es.caib.sistrages.frontend.model.ResultadoError;
 import es.caib.sistramit.rest.api.interna.RInvalidacion;
 import es.caib.sistramit.rest.api.util.JsonException;
 import es.caib.sistramit.rest.api.util.JsonUtil;
@@ -30,10 +32,10 @@ public class UtilRest {
 	 *            identificador
 	 * @return 1 si se ha ejecutado correctamente, 0 si ha habido algun error.
 	 */
-	public static int refrescar(final String urlBase, final String usuario, final String pwd, final String tipo,
-			final String identificador) {
+	public static ResultadoError refrescar(final String urlBase, final String usuario, final String pwd,
+			final String tipo, final String identificador) {
 		final RestTemplate restTemplate = new RestTemplate();
-		int resultado = 0;
+		final ResultadoError resultado = new ResultadoError(0, null);
 
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usuario, pwd));
 
@@ -47,7 +49,8 @@ public class UtilRest {
 		try {
 			invJSON = JsonUtil.toJson(inv);
 		} catch (final JsonException e) {
-			return 0;
+			resultado.setMensaje(e.getMessage());
+			return resultado;
 		}
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
@@ -56,13 +59,17 @@ public class UtilRest {
 		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map,
 				headers);
 
-		final ResponseEntity<Boolean> response = restTemplate.postForEntity(urlBase + "/invalidacion", request,
-				Boolean.class);
+		ResponseEntity<Boolean> response = null;
+		try {
+			response = restTemplate.postForEntity(urlBase + "/invalidacion", request, Boolean.class);
 
-		switch (response.getStatusCodeValue()) {
-		case 200:
-			resultado = 1;
-			break;
+			switch (response.getStatusCodeValue()) {
+			case 200:
+				resultado.setCodigo(1);
+				break;
+			}
+		} catch (final RestClientException e) {
+			resultado.setMensaje(e.getMessage());
 		}
 
 		return resultado;
