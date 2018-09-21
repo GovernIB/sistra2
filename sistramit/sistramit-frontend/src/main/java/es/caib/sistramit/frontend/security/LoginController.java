@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -209,6 +210,7 @@ public final class LoginController {
      * @return retorno de componente de autenticación redirigiendo a url de
      *         inicio.
      */
+    @CrossOrigin
     @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN)
     public ModelAndView retornoAutenticacionLogin(
             final HttpServletRequest request,
@@ -227,6 +229,7 @@ public final class LoginController {
      *
      * @return Redirección a componente autenticación para realizar logout.
      */
+    @CrossOrigin
     @RequestMapping("/redirigirAutenticacionLogout.html")
     public ModelAndView redirigirAutenticacionLogout(
             @RequestParam("entidad") String idEntidad,
@@ -253,6 +256,7 @@ public final class LoginController {
      *            response
      * @return redirección cierre sesión
      */
+    @CrossOrigin
     @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT)
     public ModelAndView retornoAutenticacionLogout(
             final @RequestParam(required = true) boolean logout,

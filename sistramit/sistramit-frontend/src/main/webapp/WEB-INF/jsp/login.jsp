@@ -13,7 +13,7 @@
 	<script type="text/javascript">
 
 			function loginComponenteAutenticacion() {
-				document.location="redirigirAutenticacionLogin.html?entidad=${entidad.id}&metodosAutenticacion=${login.nivelesAutenticacionToString()}&qaa=${login.qaa}&debug=${login.debug}";
+				document.location="redirigirAutenticacionLogin.html?entidad=${login.entidad.id}&metodosAutenticacion=${login.nivelesAutenticacionToString()}&qaa=${login.qaa}&debug=${login.debug}";
 			}
 
 			function loginAnonimoAuto() {

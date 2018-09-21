@@ -18,13 +18,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
-			 <scope>provided</scope>
-		</dependency>
-    	<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-			 <scope>provided</scope>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- JSON -->
@@ -33,12 +27,6 @@
 		    <artifactId>jackson-databind</artifactId>
 		    <version>${jackson.version}</version>
 		    <scope>provided</scope>
-		</dependency>
-		<!-- SWAGGER -->
-		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger2</artifactId>
-		    <version>${swagger.version}</version>
 		</dependency>
 
 		<!-- Plugins Sistra2 -->
@@ -56,6 +44,11 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>es.caib.loginib</groupId>
+   			<artifactId>loginib-rest-api</artifactId>
+   			<version>${loginib.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

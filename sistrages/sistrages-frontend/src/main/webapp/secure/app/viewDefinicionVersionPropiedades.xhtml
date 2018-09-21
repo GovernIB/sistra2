@@ -22,7 +22,7 @@
 					<p:column>
 						<p:outputLabel for="nivelQAA" value="#{msg['viewDefinicionVersionPropiedades.nivelQAA']}" />
 						<p:spacer width="8" height="1"/>
-						<p:inputText id="nivelQAA" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.nivelQAA}" />
+						<p:inputText id="nivelQAA" disabled="true" value="#{msg['typeQAA.' += viewDefinicionVersion.tramiteVersion.nivelQAA]}"/>
 					</p:column>
 				</p:row>
 				<p:row>

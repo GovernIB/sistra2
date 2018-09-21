@@ -188,8 +188,8 @@ public class SecurityServiceImpl implements SecurityService {
             niveles.add(TypeAutenticacion.ANONIMO);
         }
         res.setNiveles(niveles);
-
-        res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma));
+        res.setQaa(String.valueOf(defTramite.getDefinicionVersion().getPropiedades().getNivelQAA()));
+		res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma));
 
         final List<AvisoPlataforma> avisos = new ArrayList<>();
         for (final RAviso a : avisosEntidad.getAvisos()) {

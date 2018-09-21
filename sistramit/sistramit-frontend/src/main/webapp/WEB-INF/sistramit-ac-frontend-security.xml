@@ -13,6 +13,12 @@
 
       <security:intercept-url pattern="/asistente/**" access="isAuthenticated()"/>
 
+	 	<security:csrf disabled="true" />
+
+		<security:headers>
+	        <security:frame-options policy="SAMEORIGIN"/>
+	    </security:headers>
+
       <security:form-login
          login-page='/login.html'
          authentication-failure-url="/login.html?error=true" />
