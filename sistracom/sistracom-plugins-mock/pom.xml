@@ -48,6 +48,12 @@
 			<groupId>es.caib.loginib</groupId>
    			<artifactId>loginib-rest-api</artifactId>
    			<version>${loginib.version}</version>
+   			<exclusions>
+   				<exclusion>
+   					 <groupId>io.springfox</groupId>
+				    <artifactId>springfox-swagger2</artifactId>
+   				</exclusion>
+   			</exclusions>
 		</dependency>
 	</dependencies>
 

@@ -73,7 +73,7 @@
 					</modules>
 					<defaultLibBundleDir>lib/</defaultLibBundleDir>
 
-					<skinnyWars>false</skinnyWars>
+					<skinnyWars>true</skinnyWars>
 
 					<!-- Anyadir dependencia Hibernate de JBoss en MANIFEST -->
 					<archive>

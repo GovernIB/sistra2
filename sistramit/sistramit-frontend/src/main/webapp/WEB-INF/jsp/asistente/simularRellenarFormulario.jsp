@@ -21,7 +21,7 @@
 
 	<p>Simular rellenar:</p>
 
-	<form action="simularGuardarFormulario.html" method="post">
+	<form action="simularGuardarFormulario.html" method="post" target="_top">
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<input type="hidden" name="idPaso" value="${datos.idPaso}"/>
 		<input type="hidden" name="idFormulario" value="${datos.idFormulario}"/>
