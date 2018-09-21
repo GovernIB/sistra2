@@ -1103,8 +1103,11 @@ public class VersionTramiteAdapter {
                 final RAnexoTramitePresentacionElectronica resPE = new RAnexoTramitePresentacionElectronica();
                 resPE.setAnexarFirmado(d.isDebeAnexarFirmado());
                 resPE.setConvertirPDF(d.isDebeConvertirPDF());
-                resPE.setExtensiones(Arrays.asList(d.getExtensiones()
-                        .split(AdapterUtils.SEPARADOR_EXTENSIONES)));
+                if (StringUtils.isNotBlank(d.getExtensiones())
+                        && !"*".equals(d.getExtensiones())) {
+                    resPE.setExtensiones(Arrays.asList(d.getExtensiones()
+                            .split(AdapterUtils.SEPARADOR_EXTENSIONES)));
+                }
                 resPE.setFirmar(d.isDebeFirmarDigitalmente());
                 resPE.setInstancias(d.getNumeroInstancia());
                 resPE.setScriptFirmantes(AdapterUtils
