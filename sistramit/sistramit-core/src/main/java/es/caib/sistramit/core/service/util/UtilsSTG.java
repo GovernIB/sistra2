@@ -159,7 +159,7 @@ public final class UtilsSTG {
                     incluirAviso = ArrayUtils.contains(ids,
                             definicionTramiteSTG.getDefinicionVersion()
                                     .getIdentificador()
-                                    + "-"
+                                    + "#"
                                     + definicionTramiteSTG
                                             .getDefinicionVersion()
                                             .getVersion());

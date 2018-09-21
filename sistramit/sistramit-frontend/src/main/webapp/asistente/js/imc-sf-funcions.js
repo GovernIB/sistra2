@@ -19,10 +19,10 @@ $.fn.appCap = function(options) {
 					.css("paddingTop", cap_fixe_ALTURA+"px");
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -61,10 +61,10 @@ $.fn.appClauDesa = function(options) {
 				}
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -87,14 +87,25 @@ $.fn.appDesconecta = function(options) {
 			},
 			avis = function() {
 
+				var esPersistent = (APP_JSON_TRAMIT_T.persistente === "s") ? true : false
+					,esAnonim = (APP_JSON_TRAMIT_T.autenticacion === "a") ? true : false;
+
+				var txt_text = (!esAnonim) ? txtSortirTextPotTornar : txtSortirText;
+
+				if (!esPersistent) {
+
+					txt_text = txtSortirTextNoPersistent;
+
+				}
+
 				imc_missatge
-					.appMissatge({ boto: element, accio: "desconecta", titol: txtSortirTitol, text: txtSortirText, alAcceptar: function() { document.location = APP_TRAMIT_DESCONECTA; } });
+					.appMissatge({ boto: element, accio: "desconecta", titol: txtSortirTitol, text: txt_text, alAcceptar: function() { document.location = APP_TRAMIT_DESCONECTA; } });
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -125,10 +136,10 @@ $.fn.appTramitacioElimina = function(options) {
 			eliminant = function() {
 
 				// missatge carregant
-
+				
 				imc_missatge
 					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtTramitEliminant });
-
+				
 				// envia
 
 				envia();
@@ -147,7 +158,7 @@ $.fn.appTramitacioElimina = function(options) {
 						.abort();
 
 				}
-
+				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -171,7 +182,7 @@ $.fn.appTramitacioElimina = function(options) {
 							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
 
 						}
-
+						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
@@ -180,10 +191,10 @@ $.fn.appTramitacioElimina = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						consola("carregaJSON desde FAIL");
 						error();
-
+						
 					});
 
 			},
@@ -203,10 +214,10 @@ $.fn.appTramitacioElimina = function(options) {
 				envia_ajax = false;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -385,7 +396,7 @@ $.fn.appMissatge = function(options) {
 				alAcceptar();
 
 				if (accio === "informa" || accio === "alerta") {
-
+					
 					amaga();
 
 				}
@@ -436,10 +447,10 @@ $.fn.appMissatge = function(options) {
 					}, 200);
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -480,13 +491,13 @@ $.fn.appFitxerAdjunta = function(opcions){
 
 				input_elm
 					.trigger("click");
-
+				
 			},
 			pinta = function() {
-
+				
 				var arxiu_val = input_elm.val(),
 					hiHaValor = (arxiu_val !== "") ? true : false;
-
+				
 				elm
 					.removeClass("imc-emplenat");
 
@@ -505,13 +516,13 @@ $.fn.appFitxerAdjunta = function(opcions){
 						.find("p")
 							.text( arxiu_val );
 
-
+					
 
 				}
-
+				
 			},
 			elimina = function(e) {
-
+				
 				elm
 					.removeClass("imc-emplenat");
 
@@ -525,7 +536,7 @@ $.fn.appFitxerAdjunta = function(opcions){
 				}
 
 			};
-
+		
 		// prepara
 		prepara()
 
@@ -711,7 +722,7 @@ $.fn.appSuport = function(options) {
 							.removeClass("imc--on");
 
 						el_suport_missatge
-							.removeClass("imc--on imc--enviat-correcte");
+							.removeClass("imc--on imc--enviant imc--enviat-correcte");
 
 						el_suport
 							.removeClass("imc--on imc--off");
@@ -736,7 +747,7 @@ $.fn.appSuport = function(options) {
 						.text( "" )
 						.end()
 					.removeClass("imc--enviat-correcte imc--enviat-error")
-					.addClass("imc--on");
+					.addClass("imc--on imc--enviant");
 
 				// envia config
 
@@ -788,10 +799,10 @@ $.fn.appSuport = function(options) {
 						}
 					})
 					.done(function( data ) {
-
+						
 						var json = data,
 							estat = json.estado;
-
+						
 						if (estat === "ERROR") {
 							finalitzat({ estat: "error", json: json });
 						} else if (estat === "FATAL") {
@@ -808,9 +819,9 @@ $.fn.appSuport = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						finalitzat({ estat: "fail" });
-
+						
 					});
 
 			},
@@ -843,6 +854,7 @@ $.fn.appSuport = function(options) {
 					.find("div")
 						.text( text )
 						.end()
+					.removeClass("imc--enviant")
 					.addClass( clase );
 
 				envia_ajax = false;
@@ -886,10 +898,10 @@ $.fn.appSuport = function(options) {
 					.on('change.appSuport', alSeleccionar);
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -922,7 +934,7 @@ $.fn.appAccessibilitat = function(options) {
 				// carrega
 
 				$.when(
-
+		
 					$.get(APP_ + "css/imc-accessibilitat.css")
 					,$.get(APP_ + "html/imc-accessibilitat.html")
 					,$.getScript(APP_ + "js/imc-accessibilitat.js")
@@ -994,10 +1006,40 @@ $.fn.appAccessibilitat = function(options) {
 				appAccessibilitatInicia();
 
 			};
-
+		
 		// verifica
 		verifica();
+		
+	});
+	return this;
+}
 
+
+// errors
+
+$.fn.errors = function(options) {
+	var settings = $.extend({
+			estat: false,
+			titol: txtErrorGeneralTitol,
+			text: txtErrorGeneralText,
+			url: false
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			estat = settings_opcions.estat,
+			titol = settings_opcions.titol,
+			text = settings_opcions.text,
+			url = settings_opcions.url,
+			mostra = function() {
+
+				imc_missatge
+					.appMissatge({ accio: "error", titol: titol, text: text, alTancar: function() { document.location = url; } });
+
+			};
+		
+		// mostra
+		mostra();
+		
 	});
 	return this;
 }

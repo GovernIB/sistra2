@@ -43,6 +43,7 @@ import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.EstadoMarcadores;
 import es.caib.sistramit.core.service.model.flujo.EstadoSubestadoPaso;
+import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
@@ -653,6 +654,130 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
     }
 
     /**
+     * Regenera anexos que existen en persistencia.
+     *
+     * @param pDipa
+     *            Datos internos paso
+     * @param pDpp
+     *            Datos persistencia
+     * @param pVariablesFlujo
+     *            Variables flujo
+     */
+    private void regenerarAnexosExistentes(final DatosInternosPasoAnexar pDipa,
+            final DatosPersistenciaPaso pDpp,
+            final VariablesFlujo pVariablesFlujo) {
+        // Recorremos documentos existentes en persistencia para actualizar
+        // la informacion del documento en el detalle del paso
+        for (final DocumentoPasoPersistencia docDpp : pDpp.getDocumentos()) {
+            // Obtenemos anexo en detalle
+            final Anexo docDpa = ((DetallePasoAnexar) pDipa.getDetallePaso())
+                    .getAnexo(docDpp.getId());
+            // Si no existe en la lista de anexos o es dependiente no hay que
+            // anexarlo
+            if (docDpa == null || docDpa
+                    .getObligatorio() == TypeObligatoriedad.DEPENDIENTE) {
+                // Borramos documento del paso
+                eliminarDocumentoPersistencia(pDipa, docDpp, pVariablesFlujo);
+            } else {
+                // Comprobamos si se ha anexado anteriormente y actualizamos su
+                // informacion
+                if (docDpp.getEstado() != TypeEstadoDocumento.SIN_RELLENAR) {
+                    actualizarDocumentoExistente(pDipa, docDpp,
+                            pVariablesFlujo);
+                }
+            }
+        }
+    }
+
+    /**
+     * Elimina documento existente en persistencia.
+     *
+     * @param pDipa
+     *            Datos internos paso
+     * @param docDpp
+     *            Datos documento persistente
+     * @param pVariablesFlujo
+     *            Variables flujo
+     *
+     */
+    private void eliminarDocumentoPersistencia(
+            final DatosInternosPasoAnexar pDipa,
+            final DocumentoPasoPersistencia docDpp,
+            final VariablesFlujo pVariablesFlujo) {
+        // Eliminamos documento en persistencia
+        getDao().eliminarDocumento(pVariablesFlujo.getIdSesionTramitacion(),
+                pDipa.getIdPaso(), docDpp.getId(), docDpp.getInstancia());
+        // Borramos ficheros asociados
+        final List<ReferenciaFichero> refs = docDpp
+                .obtenerReferenciasFicherosAnexo(true, true);
+        for (final ReferenciaFichero ref : refs) {
+            getDao().eliminarFicheroPersistencia(ref);
+        }
+    }
+
+    /**
+     * Actualiza documento existente.
+     *
+     * @param pDipa
+     *            Datos internos paso
+     * @param docDpp
+     *            Datos documento persistente
+     * @param pVariablesFlujo
+     *            Variables flujo
+     */
+    private void actualizarDocumentoExistente(
+            final DatosInternosPasoAnexar pDipa,
+            final DocumentoPasoPersistencia docDpp,
+            final VariablesFlujo pVariablesFlujo) {
+
+        final Anexo docDpa = ((DetallePasoAnexar) pDipa.getDetallePaso())
+                .getAnexo(docDpp.getId());
+
+        // - Estado rellenado
+        docDpa.setRellenado(docDpp.getEstado());
+
+        // - Fichero anexado y sus firmas
+        final Fichero fichero = new Fichero();
+        docDpa.getFicheros().add(fichero);
+        fichero.setFichero(docDpp.getAnexoNombreFichero());
+        fichero.setTitulo(docDpp.getAnexoDescripcionInstancia());
+
+        // Eliminamos firmas sobrantes
+        boolean updateBD = false;
+        final List<ReferenciaFichero> ficsPersistenciaBorrar = new ArrayList<>();
+        // - Recorremos firmas almacenadas y vemos si deben de estar
+        // o no
+        for (final FirmaDocumentoPersistencia fp : docDpp
+                .obtenerFirmasFichero(docDpp.getFichero().getId())) {
+            // Si no hay que firmar el documento o el firmante no
+            // debe firmarlo eliminamos de persistencia firma y fichero asociado
+            if (docDpa.getFirmar() == TypeSiNo.NO
+                    || docDpa.esFirmante(fp.getNif()) == ConstantesNumero.N_1) {
+                // Indicamos que se ha de actualizar el doc en BBDD
+                updateBD = true;
+                // Eliminamos firma
+                docDpp.removeFirma(fp);
+                // Marcamos el fichero para borrar
+                if (fp.getFirma() != null) {
+                    ficsPersistenciaBorrar.add(fp.getFirma());
+                }
+            }
+        }
+        // - En caso de haber eliminado alguna firma, actualizamos
+        // el documento en BBDD
+        if (updateBD) {
+            // Actualizamos documento
+            getDao().establecerDatosDocumento(
+                    pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(),
+                    docDpp);
+            // Borramos ficheros de firma marcados para borrar
+            for (final ReferenciaFichero rf : ficsPersistenciaBorrar) {
+                getDao().eliminarFicheroPersistencia(rf);
+            }
+        }
+    }
+
+    /**
      * Calcula marcadores estado.
      *
      * @param pDipa
@@ -730,21 +855,5 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
             pListaCompletados.add(ddf);
             numInstancia++;
         }
-    }
-
-    /**
-     * Regenera anexos que existen en persistencia.
-     *
-     * @param pDipa
-     *            Datos internos paso
-     * @param pDpp
-     *            Datos persistencia
-     * @param pVariablesFlujo
-     *            Variables flujo
-     */
-    private void regenerarAnexosExistentes(final DatosInternosPasoAnexar pDipa,
-            final DatosPersistenciaPaso pDpp,
-            final VariablesFlujo pVariablesFlujo) {
-        // TODO PENDIENTE
     }
 }

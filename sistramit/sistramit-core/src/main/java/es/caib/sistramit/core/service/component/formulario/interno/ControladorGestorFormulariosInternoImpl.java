@@ -24,8 +24,8 @@ public final class ControladorGestorFormulariosInternoImpl
     @Override
     public String iniciarSesion(DatosInicioSesionFormulario difi) {
         // TODO Simulacion rellenar
-        return "simularRellenarFormulario.html?idPaso=" + difi.getIdPaso()
-                + "&idFormulario=" + difi.getIdFormulario();
+        return "/sistramitfront/asistente/rf/simularRellenarFormulario.html?idPaso="
+                + difi.getIdPaso() + "&idFormulario=" + difi.getIdFormulario();
     }
 
     @Override

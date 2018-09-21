@@ -85,6 +85,9 @@ $.fn.appAnnexa = function(options) {
 					.on('click.appAnnexa', ".imc--descarrega", descarrega)
 					.on('click.appAnnexa', ".imc--descarrega-plantilla", descarregaPlantilla);
 
+				element
+					.appAnnexatEsborra();
+
 				// botons electrònic enviament
 
 				imc_doc_electronic_form
@@ -123,22 +126,23 @@ $.fn.appAnnexa = function(options) {
 			descarrega = function(e) {
 
 				var bt = $(this)
+					,elm_annexe_id = bt.closest(".imc--doc-li").attr("data-id")
 					,elm_id = bt.attr("data-id");
 
-				document.location = APP_ANNEXE_DESCARREGA + "?id=" + elm_id;
+				document.location = APP_ANNEXE_DESCARREGA + "?idAnexo=" + elm_annexe_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_id;
 
 			},
 			descarregaPlantilla = function(e) {
 
 				var bt = $(this)
-					,elm_id = bt.attr("data-id");
+					,elm_annexe_id = bt.closest(".imc--doc-li").attr("data-id");
 
-				document.location = APP_PLANTILLA_DESCARREGA + "?id=" + elm_id;
+				document.location = APP_PLANTILLA_DESCARREGA + "?idAnexo=" + elm_annexe_id + "&idPaso=" + APP_TRAMIT_PAS_ID;
 
 			},
 			obri = function(e) {
 
-				// dades annexe
+				// dades annex
 
 				var bt = $(this),
 					bt_titol_text = bt.find("strong:first").text(),
@@ -152,8 +156,16 @@ $.fn.appAnnexa = function(options) {
 
 				doc_tipus = item_bt.attr("data-tipus"); // e, p
 
-				var el_annexats = item_bt.find(".imc--annexats:first");
+				var el_annexats = item_bt.find(".imc--annexats:first"),
 					items_annexats = el_annexats.find("strong");
+
+				// esta completat?
+
+				if (item_bt.hasClass("imc--completat")) {
+
+					return;
+
+				}
 
 				// afegits
 
@@ -179,6 +191,8 @@ $.fn.appAnnexa = function(options) {
 					imc_doc_electronic
 						.attr("aria-hidden", "false")
 						.addClass("imc--on");
+
+						/*
 
 					if (items_annexats.length) {
 
@@ -230,6 +244,7 @@ $.fn.appAnnexa = function(options) {
 							.appAnnexatEsborra();
 
 					}
+					*/
 
 				} else {
 
@@ -282,49 +297,36 @@ $.fn.appAnnexa = function(options) {
 				el_doc_info
 					.html("");
 
+				var opcions_codi = item_bt.find(".imc--opcions").html();
+
+				if (typeof opcions_codi !== "undefined") {
+
+					el_doc_info
+						.html( opcions_codi );
+
+				}
+
 				el_input_file
 					.removeAttr("accept");
-
-				var txt_info = "";
 
 				if (bt_extensions !== "" && bt_extensions !== "null") {
 
 					var el_ext = bt_extensions.split(","),
 						el_ext_size = el_ext.length;
 
-					var ext_txt = "",
-						ext_accept = "";
+					var ext_accept = "";
 
 					$(el_ext)
 						.each(function(i) {
 
 							var ext = this;
 
-							ext_txt += (i === el_ext_size-1) ? ext : ext+", ";
 							ext_accept += (i === el_ext_size-1) ? "application/"+ext : "application/"+ext+",";
 
 						});
 
 					el_input_file
 						.attr("accept", ext_accept);
-
-					txt_info += txtDocumentsAccept + " <strong>" + ext_txt + "</strong>. ";
-
-				}
-
-				// mida màxima document
-
-				if (bt_mida !== "" && bt_mida !== "null") {
-
-					txt_info += txtMidaMaxima + " <strong>" + bt_mida + " MB</strong>. ";
-
-				}
-
-				if (txt_info !== "") {
-
-					$("<p>")
-						.html( txt_info )
-							.appendTo( el_doc_info );
 
 				}
 
@@ -338,7 +340,6 @@ $.fn.appAnnexa = function(options) {
 							.appendTo( el_doc_info );
 
 				}
-
 
 			},
 			carrega = function() {
@@ -461,7 +462,7 @@ $.fn.appAnnexa = function(options) {
 
 					if (!docs_annexats.length) {
 
-						text_error = "Cap arxiu annexat";
+						text_error = txtErrorCapArxiu;
 						revisa_error = true;
 
 					} else if (num_maxim > 1 && titol_val === "") {
@@ -480,7 +481,7 @@ $.fn.appAnnexa = function(options) {
 
 									if (!valor || valor === "") {
 
-										text_error = "Cap arxiu annexat";
+										text_error = txtErrorCapArxiu;
 										revisa_error = true;
 
 									}
@@ -489,24 +490,50 @@ $.fn.appAnnexa = function(options) {
 										,arxiu_nom = arxiu.name
 										,arxiu_extensio = arxiu_nom.split('.')[arxiu_nom.split('.').length - 1].toLowerCase()
 										,arxiu_mida = arxiu.size
-										,arxiu_mida_MB = (arxiu.size / 1048576).toFixed(2);
+										,arxiu_mida_MB = (arxiu.size / 1048576).toFixed(2)
+										,arxiu_mida_KB = (arxiu.size / 1024).toFixed(2);
 
 									var tipus_posibles = imc_document.attr("data-extensions")
-										,esTipusPosible = (tipus_posibles.indexOf(arxiu_extensio) !== -1) ? true : false;
+										,tipus_posibles_arr = tipus_posibles.split(",")
+										,esTipusPosible = false;
+
+									$(tipus_posibles_arr)
+										.each(function() {
+
+											var ext_tipus = this;
+
+											esTipusPosible = (arxiu_extensio == ext_tipus) ? true : false;
+
+											if (esTipusPosible) {
+												return false;
+											}
+
+										});
 
 									if (!esTipusPosible && tipus_posibles !== "null") {
 
-										text_error = "Tipus d'arxiu no permés";
+										text_error = txtErrorTipusNoPermes;
 										revisa_error = true;
 
 									}
 
-									var mida_max = parseFloat(imc_document.attr("data-mida"))
-										,esMidaPosible = (mida_max > arxiu_mida_MB) ? true : false;
+									var mida_max = imc_document.attr("data-mida")
+										,esMB = (mida_max.indexOf("MB") !== -1) ? true : false
+										,mida_max_num = (esMB) ? parseInt( mida_max.replace("MB", ""), 10 ) : parseInt( mida_max.replace("KB", ""), 10 )
+
+									if (esMB) {
+
+										esMidaPosible = (mida_max_num > arxiu_mida_MB) ? true : false;
+
+									} else {
+
+										esMidaPosible = (mida_max_num > arxiu_mida_KB) ? true : false;
+
+									}
 
 									if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
 
-										text_error = "Mida d'arxiu massa gran";
+										text_error = txtErrorMidaGran;
 										revisa_error = true;
 
 									}
@@ -547,6 +574,7 @@ $.fn.appAnnexa = function(options) {
 						.text( "" )
 						.end()
 					.removeClass("imc--enviat-correcte imc--enviat-error")
+					.addClass("imc--enviant")
 					.attr("aria-hidden", "false")
 					.addClass("imc--on");
 
@@ -558,8 +586,11 @@ $.fn.appAnnexa = function(options) {
 
 				// dades
 
+				formData.append("idPaso", APP_TRAMIT_PAS_ID);
+
+
 				formData
-					.append("id", doc_id);
+					.append("idAnexo", doc_id);
 
 				formData
 					.append("tipo", doc_tipus);
@@ -592,7 +623,7 @@ $.fn.appAnnexa = function(options) {
 								if (el_annex.val() !== "") {
 
 									formData
-										.append('archivo-'+i, el_annex[0].files[0]);
+										.append('fichero', el_annex[0].files[0]);
 
 								}
 
@@ -684,12 +715,17 @@ $.fn.appAnnexa = function(options) {
 					.find("div")
 						.text( text )
 						.end()
+					.find(".imc--tanca")
+						.off(".recarrega")
+						.end()
+					.removeClass("imc--enviant")
 					.addClass( clase );
 
 				envia_ajax = false;
 
 				consola("finalitzat");
 
+				/*
 				if (estat === "SUCCESS" && doc_tipus === "e") {
 
 					finalitzatElectronic(json);
@@ -698,7 +734,30 @@ $.fn.appAnnexa = function(options) {
 
 					finalitzatPresencial(json);
 
+				}*/
+
+				// al tancar, recarregar
+
+				if (estat === "SUCCESS") {
+
+					imc_doc_missatge
+						.find(".imc--tanca")
+							.on("click.recarrega", recarrega)
+
 				}
+
+			},
+			recarrega = function() {
+
+				$("html, body")
+					.removeClass("imc--iframe-mostrat");
+
+				imc_doc_missatge
+					.find(".imc--tanca")
+						.off(".recarrega");
+
+				imc_contingut_c
+					.appPas({ pas: APP_TRAMIT_PAS_ID, recarrega: true });
 
 			},
 			finalitzatElectronic = function(json) {
@@ -1130,6 +1189,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 			bt_esborra = false,
 			bt_esborra_id = false,
 			bt_esborra_fitxer = false,
+			bt_esborra_anexe_id = false,
 			annexe_id = false,
 			annexe_num = false,
 			annexe_elm = false,
@@ -1138,23 +1198,35 @@ $.fn.appAnnexatEsborra = function(opcions){
 
 				elm
 					.off(".appAnnexatEsborra")
-					.on("click.appAnnexatEsborra", ".imc-bt-esborra", esborra);
+					.on("click.appAnnexatEsborra", ".imc--esborra", verifica);
+
+			},
+			verifica = function(e) {
+
+				bt = $(this);
+
+				annex = bt.closest(".imc--doc-li");
+				annex_id = annex.attr("data-id");
+				annex_num_max = parseInt( annex.attr("data-num"), 10);
+
+				arxiu = bt.parent().find("strong");
+				arxiu_id = arxiu.attr("data-id");
+				arxiu_text = arxiu.text();
+
+				imc_missatge
+					.appMissatge({
+						boto: bt
+						, accio: "esborra"
+						, titol: txtVolEsborrarTitol
+						, text: arxiu_text
+						, alAcceptar: function() { esborra(); }
+					});
 
 			},
 			esborra = function(e) {
 
-				bt_esborra = $(this);
-				bt_esborra_id = bt_esborra.attr("data-id");
-				bt_esborra_fitxer = bt_esborra.attr("data-fitxer");
-
-				// missatge en el botó
-
-				bt_esborra
-					.find("span")
-						.text( txtEsborrant )
-						.end()
-					.addClass("imc-bt-esborrant")
-					.removeClass("imc-bt-esborra");
+				imc_missatge
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtEsborrantAnnex });
 
 				// envia config
 
@@ -1163,17 +1235,17 @@ $.fn.appAnnexatEsborra = function(opcions){
 
 				// dades
 
-				annexe_id = imc_document.attr("data-id");
-				annexe_num = parseInt( imc_document.attr("data-num"), 10);
+				formData
+					.append("idPaso", APP_TRAMIT_PAS_ID);
 
 				formData
-					.append("anexoID", annexe_id);
+					.append("idAnexo", annex_id);
 
 				formData
-					.append("documentoAnexadoID", bt_esborra_id);
+					.append("instancia", arxiu_id);
 
 				formData
-					.append("fichero", bt_esborra_fitxer);
+					.append("archivo", arxiu_text);
 
 				// envia ajax
 
@@ -1190,27 +1262,30 @@ $.fn.appAnnexatEsborra = function(opcions){
 				})
 				.done(function( data ) {
 
-					var json = data,
-						estat = json.estado;
+					var json = data;
 
-					if (estat === "ERROR") {
-						finalitzat({ estat: "error", json: json });
-					} else if (estat === "FATAL") {
-						finalitzat({ estat: "fatal", json: json });
+					if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+						finalitzat();
+
 					} else {
-						finalitzat({ estat: "SUCCESS", json: json });
+
+						envia_ajax = false;
+
+						consola("Annexar esborra: error des de JSON");
+						errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: json.url });
+
 					}
 
 				})
 				.fail(function(dades, tipus, errorThrown) {
 
-					consola(dades+" , "+ tipus +" , "+ errorThrown);
-
 					if (tipus === "abort") {
 						return false;
 					}
 
-					finalitzat({ estat: "fail" });
+					consola("Annexar esborra: error des de FAIL");
+					errors({ estat: "fail" });
 
 				});
 
@@ -1225,6 +1300,10 @@ $.fn.appAnnexatEsborra = function(opcions){
 				var estat = settings_opcions.estat,
 					json = settings_opcions.json;
 
+				imc_contingut_c
+					.appPas({ pas: APP_TRAMIT_PAS_ID, recarrega: true });
+
+				/*
 				if (estat === "error" || (estat === "fail")) {
 
 					// missatge en el botó
@@ -1258,6 +1337,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 							});
 
 				}
+				*/
 
 			},
 			repasa = function() {
@@ -1284,7 +1364,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 					annexe_elm
 						.attr("data-omplit", "v");
 
-				} else if (num_afegits_actual < annexe_num) {
+				} else if (num_afegits_actual < annex_num_max) {
 
 					imc_document_contingut
 						.removeClass("imc--no-annexar");

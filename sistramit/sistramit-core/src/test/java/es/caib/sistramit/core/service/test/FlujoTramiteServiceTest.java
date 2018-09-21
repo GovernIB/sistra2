@@ -1,11 +1,14 @@
 package es.caib.sistramit.core.service.test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -21,12 +24,14 @@ import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AbrirFormulario;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
+import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
@@ -43,6 +48,9 @@ import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.integracion.SistragesMock;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+
+// TODO Meter en test la funcionalidad que se pueda: convertir pdf,
+// anexar firmado, script validacion, anexos dinamicos, opcionales,...
 
 /**
  * Testing capa de negocio de tramitación.
@@ -284,7 +292,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * versión de trámite.
      */
     @Test
-    public void test6_flujoTramitacion() throws Exception {
+    public void test7_flujoTramitacion() throws Exception {
 
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.AUTENTICADO);
@@ -301,6 +309,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
         // Pasamos a paso siguiente: rellenar
         flujoTramitacion_rellenar(idSesionTramitacion);
+
+        // Pasamos a paso siguiente: anexar
+        flujoTramitacion_anexar(idSesionTramitacion);
 
     }
 
@@ -429,6 +440,136 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         Assert.isTrue(nombreFichero.endsWith(".pdf"), "El fichero no es pdf");
         Assert.isTrue(datosFichero.length > 0, "El fichero no tiene contenido");
 
+        // -- Paso terminado
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.RELLENAR,
+                "No esta en paso rellenar");
+        Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI,
+                "Paso rellenar no esta completado");
+        this.logger.info("Detalle paso: " + dp.print());
+
+    }
+
+    /**
+     * Test paso anexar.
+     *
+     * @param idSesionTramitacion
+     *            id sesión
+     * @throws IOException
+     */
+    private void flujoTramitacion_anexar(final String idSesionTramitacion)
+            throws IOException {
+        final ParametrosAccionPaso parametros;
+        final ResultadoAccionPaso resPaso;
+        final String nombreFichero;
+        final byte[] datosFichero;
+        DetallePasos dp;
+        ResultadoIrAPaso rp;
+        ResultadoAccionPaso ra;
+        ParametrosAccionPaso params;
+
+        String idPasoAnexar;
+
+        // - Pasamos a paso anexar
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        rp = flujoTramitacionService.irAPaso(idSesionTramitacion,
+                dp.getSiguiente());
+        Assert.isTrue(
+                StringUtils.equals(rp.getIdPasoActual(), dp.getSiguiente()),
+                "No se ha podido pasar a siguiente paso");
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.ANEXAR,
+                "Paso actual no es anexar");
+        idPasoAnexar = dp.getActual().getId();
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Anexamos primer anexo
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(0)
+                        .getId());
+        params.addParametroEntrada("nombreFichero", "18KB.pdf");
+        params.addParametroEntrada("datosFichero",
+                readResourceFromClasspath("test-files/18KB.pdf"));
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Descargar anexo
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(0)
+                        .getId());
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.DESCARGAR_ANEXO, params);
+        Assert.isTrue(
+                StringUtils.isNotBlank(
+                        (String) ra.getParametroRetorno("nombreFichero")),
+                "No se devuelve nombre fichero");
+        Assert.isTrue(ra.getParametroRetorno("datosFichero") != null,
+                "No se devuelve datos fichero");
+
+        // - Anexamos segundo anexo: genérico primera instancia
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
+                        .getId());
+        params.addParametroEntrada("instancia", "1");
+        params.addParametroEntrada("titulo", "instancia A");
+        params.addParametroEntrada("nombreFichero", "18KB.pdf");
+        params.addParametroEntrada("datosFichero",
+                readResourceFromClasspath("test-files/18KB.pdf"));
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+        // - Anexamos segundo anexo: genérico segunda instancia
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
+                        .getId());
+        params.addParametroEntrada("instancia", "2");
+        params.addParametroEntrada("titulo", "instancia B");
+        params.addParametroEntrada("nombreFichero", "18KB.pdf");
+        params.addParametroEntrada("datosFichero",
+                readResourceFromClasspath("test-files/18KB.pdf"));
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+        // Borramos instancia segundo anexo
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
+                        .getId());
+        params.addParametroEntrada("instancia", "1");
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.BORRAR_ANEXO, params);
+
+        // - Anexamos segundo anexo: genérico tercera instancia
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
+                        .getId());
+        params.addParametroEntrada("instancia", "2");
+        params.addParametroEntrada("titulo", "instancia C");
+        params.addParametroEntrada("nombreFichero", "18KB.pdf");
+        params.addParametroEntrada("datosFichero",
+                readResourceFromClasspath("test-files/18KB.pdf"));
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // -- Paso terminado
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.ANEXAR,
+                "No esta en paso anexar");
+        Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI,
+                "Paso rellenar no esta completado");
+        this.logger.info("Detalle paso: " + dp.print());
+
     }
 
     /**
@@ -448,7 +589,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
     /**
      * Inicio de un trámite.
      *
-     *   @param idSesionTramitacion
+     * @param idSesionTramitacion
      *            id sesión tramitación
      */
     private void flujoTramitacion_iniciarTramite(
@@ -469,9 +610,12 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         this.logger.info("Detalle Tramite: " + dt.print());
     }
 
-    /** Formulario soporte incidencias: verificación funcionamiento formulario soporte de incidencias. */
+    /**
+     * Formulario soporte incidencias: verificación funcionamiento formulario
+     * soporte de incidencias.
+     */
     @Test
-    public void test7_soporteIncidencias() {
+    public void test6_soporteIncidencias() {
 
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.AUTENTICADO);
@@ -544,4 +688,20 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         return usuarioAutenticadoInfo;
     }
 
+    /**
+     * Lee recurso de classpath.
+     *
+     * @param filePath
+     *            path file
+     * @return contenido fichero
+     * @throws IOException
+     */
+    private byte[] readResourceFromClasspath(String filePath)
+            throws IOException {
+        try (final InputStream isFile = FlujoTramitacionService.class
+                .getClassLoader().getResourceAsStream(filePath);) {
+            final byte[] content = IOUtils.toByteArray(isFile);
+            return content;
+        }
+    }
 }

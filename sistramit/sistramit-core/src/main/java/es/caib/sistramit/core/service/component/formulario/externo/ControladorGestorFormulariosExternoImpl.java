@@ -21,14 +21,14 @@ public final class ControladorGestorFormulariosExternoImpl
     @Override
     public String iniciarSesion(DatosInicioSesionFormulario difi) {
         // TODO Auto-generated method stub
-        return null;
+        throw new RuntimeException("PENDIENTE IMPLEMENTAR");
     }
 
     @Override
     public DatosFinalizacionFormulario obtenerDatosFinalizacionFormulario(
             String pTicket) {
         // TODO Auto-generated method stub
-        return null;
+        throw new RuntimeException("PENDIENTE IMPLEMENTAR");
     }
 
 }

@@ -10,7 +10,7 @@ var imc_formularis,
 // onReady
 
 function appPasEmplenarInicia() {
-	
+
 	imc_formularis = imc_contingut.find(".imc--formularis:first");
 
 	imc_formulari = $("#imc-formulari");
@@ -50,13 +50,13 @@ $.fn.appFormulariDescarrega = function(options) {
 					,esPDF = (bt.hasClass("imc--fo-pdf")) ? true : false
 					,url = (esPDF) ? APP_FORM_PDF : APP_FORM_XML;
 
-				document.location = url + "?id=" + form_id;
+				document.location = url + "?idFormulario=" + form_id + "&idPaso=" + URL_PARAMETRES[1];
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -144,7 +144,7 @@ $.fn.appFormulari = function(options) {
 				*/
 
 				var pag_url = APP_FORM_URL,
-					pag_data = { id: form_id };
+					pag_data = { idPaso: "rf", idFormulario: form_id };
 
 				// ajax
 
@@ -154,7 +154,7 @@ $.fn.appFormulari = function(options) {
 						.abort();
 
 				}
-				
+
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -193,17 +193,17 @@ $.fn.appFormulari = function(options) {
 							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
 
 						}
-						
+
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
 						if (tipus === "abort") {
 							return false;
 						}
-						
+
 						consola("Formulari: error des de FAIL");
 						error();
-						
+
 					});
 
 
@@ -315,10 +315,10 @@ $.fn.appFormulari = function(options) {
 				envia_ajax = false;
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }

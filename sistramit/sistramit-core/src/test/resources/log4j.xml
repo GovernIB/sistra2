@@ -15,5 +15,9 @@
 		<level value="INFO" />
 		<appender-ref ref="console" />
 	</root>
-	
+
+	<category name="es.caib.sistramit">
+     <priority value="DEBUG"/>
+   </category>
+
 </log4j:configuration>

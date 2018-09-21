@@ -11,7 +11,7 @@ var APP_JSON_TRAMIT
 	,APP_JSON_TRAMIT_U
 	,APP_JSON_TRAMIT_E
 	,APP_TRAMIT_INFO
-	,APP_TRAMIT_PAS;
+	,APP_TRAMIT_PAS_ID;
 
 var HTML_MOLLA_PA;
 
@@ -264,6 +264,18 @@ function carregaHTML() {
 
 			// contacte
 
+			//APP_JSON_TRAMIT_E
+
+			var jsonMapaWeb = APP_JSON_TRAMIT_E.urlMapaWeb
+				,jsonAvisLegal = APP_JSON_TRAMIT_E.urlAvisoLegal
+				,jsonRSS = APP_JSON_TRAMIT_E.urlRss;
+
+			var jsonXarxes = APP_JSON_TRAMIT_E.redes
+				,jsonYouTube = APP_JSON_TRAMIT_E.redes.youtube
+				,jsonInstagram = APP_JSON_TRAMIT_E.redes.instagram
+				,jsonTwitter = APP_JSON_TRAMIT_E.redes.twiter
+				,jsonFacebook = APP_JSON_TRAMIT_E.redes.facebook;
+
 			var txtHTML_Contacte = {
 				txtNecessitauAjuda: txtNecessitauAjuda
 				,txtTelefon: txtTelefon
@@ -302,6 +314,14 @@ function carregaHTML() {
 				,txtMapaWeb: txtMapaWeb
 				,txtAvisLegal: txtAvisLegal
 				,txtSegueixnos: txtSegueixnos
+				,jsonMapaWeb: jsonMapaWeb
+				,jsonAvisLegal: jsonAvisLegal
+				,jsonRSS: jsonRSS
+				,jsonXarxes: jsonXarxes
+				,jsonYouTube: jsonYouTube
+				,jsonInstagram: jsonInstagram
+				,jsonTwitter: jsonTwitter
+				,jsonFacebook: jsonFacebook
 			};
 
 			var html_contacte = Mark.up(htmlContacte[0], txtHTML_Contacte);

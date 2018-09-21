@@ -2,6 +2,8 @@ package es.caib.sistramit.frontend.controller.asistente.pasos;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,7 +60,8 @@ public final class PasoRellenarController extends TramitacionController {
     @RequestMapping(value = "/abrirFormulario.json")
     public ModelAndView abrirFormulario(
             @RequestParam(PARAM_ID_PASO) final String idPaso,
-            @RequestParam(PARAM_ID_FORMULARIO) final String idForm) {
+            @RequestParam(PARAM_ID_FORMULARIO) final String idForm,
+            final HttpServletResponse response) {
 
         debug("Abriendo formulario: " + idForm);
 

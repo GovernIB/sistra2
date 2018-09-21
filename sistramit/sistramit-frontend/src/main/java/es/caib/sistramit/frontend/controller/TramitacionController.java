@@ -1,6 +1,7 @@
 package es.caib.sistramit.frontend.controller;
 
 import javax.annotation.Resource;
+import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -276,8 +277,13 @@ public abstract class TramitacionController {
         // Si no es una excepcion de negocio ni una excepcion generada
         // explicitamente desde front lo tomamos como una excepcion no
         // controlada de front
+        // Si viene de la capa EJB viene envuelta en una EJBException
         Exception ex = pex;
-        if (!(pex instanceof ServiceException)
+
+        if (pex instanceof EJBException
+                && pex.getCause() instanceof ServiceException) {
+            ex = (Exception) pex.getCause();
+        } else if (!(pex instanceof ServiceException)
                 && !(pex instanceof ErrorFrontException)) {
             ex = new ErrorFrontException(
                     "Excepcion no controlada en front: " + pex.getMessage(),
@@ -439,7 +445,7 @@ public abstract class TramitacionController {
 
     /**
      * Obtiene tramitacion service.
-     * 
+     *
      * @return tramitacion service.
      */
     protected FlujoTramitacionService getFlujoTramitacionService() {
@@ -448,7 +454,7 @@ public abstract class TramitacionController {
 
     /**
      * Obtiene system service.
-     * 
+     *
      * @return system service.
      */
     protected SystemService getSystemService() {

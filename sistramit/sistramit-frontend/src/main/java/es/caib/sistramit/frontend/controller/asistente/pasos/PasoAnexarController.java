@@ -1,14 +1,25 @@
 package es.caib.sistramit.frontend.controller.asistente.pasos;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
+import es.caib.sistramit.frontend.literales.LiteralesFront;
+import es.caib.sistramit.frontend.model.MensajeUsuario;
+import es.caib.sistramit.frontend.model.RespuestaJSON;
+import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 
 /**
  * Interacción con paso Anexar.
@@ -28,25 +39,6 @@ public final class PasoAnexarController extends TramitacionController {
     private static final String PARAM_INSTANCIA = "instancia";
 
     /**
-     * Realiza download de la plantilla de un anexo.
-     *
-     * @param idPaso
-     *            Identificador paso.
-     * @param idAnexo
-     *            Identificador anexo.
-     * @return Documento para descargar.
-     */
-    @RequestMapping("/descargarPlantilla.html")
-    public ModelAndView descargarPlantilla(
-            @RequestParam(PARAM_ID_PASO) final String idPaso,
-            @RequestParam(PARAM_ID_ANEXO) final String idAnexo) {
-
-        // TODO Pendiente
-        return null;
-
-    }
-
-    /**
      * Anexa un documento. El upload del documento se realizará desde un iframe
      * de forma que como respuesta se generará un HTML que se cargará en el
      * iframe e invocará a la función fileUploaded del parent pasando el estado
@@ -63,17 +55,71 @@ public final class PasoAnexarController extends TramitacionController {
      *            de la request "fichero").
      * @return Genera un HTML que invoca a la función fileUploaded del parent
      */
-    @RequestMapping(value = "/anexarDocumento.html", method = RequestMethod.POST)
+    @RequestMapping(value = "/anexarDocumento.json", method = RequestMethod.POST)
     public ModelAndView anexarDocumento(
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_ANEXO) final String idAnexo,
             @RequestParam(value = "titulo", required = false) final String titulo,
             final HttpServletRequest request) {
 
-        // TODO PENDIENTE
-        // return generarUploadView(resAnexar);
+        debug("Anexando documento: " + idAnexo);
 
-        return null;
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        boolean errorLectura = false;
+
+        // Recuperamos datos fichero de la request
+        String fileName = null;
+        byte[] fileContent = null;
+        if (request instanceof MultipartHttpServletRequest) {
+            final MultipartHttpServletRequest mp = (MultipartHttpServletRequest) request;
+            final MultipartFile fic = mp.getFile("fichero");
+            try {
+                fileName = fic.getOriginalFilename();
+                fileContent = fic.getBytes();
+            } catch (final IOException e) {
+                errorLectura = true;
+            }
+        } else {
+            errorLectura = true;
+        }
+
+        RespuestaJSON resAnexar;
+        resAnexar = new RespuestaJSON();
+
+        if (!errorLectura) {
+
+            // Invocamos al flujo para anexar
+            final ParametrosAccionPaso params = new ParametrosAccionPaso();
+            params.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+            params.addParametroEntrada("titulo", titulo);
+            params.addParametroEntrada("nombreFichero", fileName);
+            params.addParametroEntrada("datosFichero", fileContent);
+
+            final ResultadoAccionPaso rp = getFlujoTramitacionService()
+                    .accionPaso(idSesionTramitacion, idPaso,
+                            TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+            // En caso de que se haya convertido a PDF mostramos mensaje
+            // para que el ciudadano revise el documento
+            if ("true".equalsIgnoreCase(
+                    (String) rp.getParametroRetorno("conversionPDF"))) {
+                resAnexar.setMensaje(new MensajeUsuario(
+                        getLiteralesFront().getLiteralFront(
+                                LiteralesFront.MENSAJES, "atencion",
+                                getIdioma()),
+                        getLiteralesFront().getLiteralFront(
+                                LiteralesFront.MENSAJES, "anexoConvertidoPDF",
+                                getIdioma())));
+            }
+
+        } else {
+            resAnexar.setEstado(TypeRespuestaJSON.ERROR);
+            resAnexar.setMensaje(new MensajeUsuario("Error",
+                    "Error al leer fichero de la request"));
+        }
+
+        return generarJsonView(resAnexar);
     }
 
     /**
@@ -87,14 +133,27 @@ public final class PasoAnexarController extends TramitacionController {
      *            Instancia (en caso de ser multiinstancia, es decir, genérico)
      * @return Devuelve JSON con estado actual del paso
      */
-    @RequestMapping(value = "/asistente/ad/borrarDocumento.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/borrarDocumento.json", method = RequestMethod.POST)
     public ModelAndView borrarDocumento(
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_ANEXO) final String idAnexo,
             @RequestParam(value = PARAM_INSTANCIA, required = false) final String instancia) {
 
-        // TODO PENDIENTE
-        return null;
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        // Invocamos al flujo para borrar documento
+        final ParametrosAccionPaso parametros = new ParametrosAccionPaso();
+        parametros.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+        // TODO QUITAR CUANDO SE ARREGLE JS
+        if (!"???".equals(instancia)) {
+            parametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
+        }
+        getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+                TypeAccionPasoAnexar.BORRAR_ANEXO, parametros);
+
+        // Retornamos respuesta
+        final RespuestaJSON resBorrarAnexo = new RespuestaJSON();
+        return generarJsonView(resBorrarAnexo);
 
     }
 
@@ -115,9 +174,60 @@ public final class PasoAnexarController extends TramitacionController {
             @RequestParam(PARAM_ID_ANEXO) final String idAnexo,
             @RequestParam(value = PARAM_INSTANCIA, required = false) final String instancia) {
 
-        // TODO PENDIENTE
-        return null;
+        debug("Obteniendo datos anexo: " + idAnexo);
 
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        ParametrosAccionPaso pParametros;
+        pParametros = new ParametrosAccionPaso();
+        pParametros.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+
+        // TODO QUITAR CUANDO SE ARREGLE JS
+        if (!"???".equals(instancia)) {
+            pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
+        }
+
+        final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoAnexar.DESCARGAR_ANEXO, pParametros);
+        final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
+        final String nombreFichero = (String) rap
+                .getParametroRetorno("nombreFichero");
+
+        return generarDownloadView(nombreFichero, datos);
+
+    }
+
+    /**
+     * Realiza download de la plantilla de un anexo.
+     *
+     * @param idPaso
+     *            Identificador paso.
+     * @param idAnexo
+     *            Identificador anexo.
+     * @return Documento para descargar.
+     */
+    @RequestMapping("/descargarPlantilla.html")
+    public ModelAndView descargarPlantilla(
+            @RequestParam(PARAM_ID_PASO) final String idPaso,
+            @RequestParam(PARAM_ID_ANEXO) final String idAnexo) {
+        debug("Descargar plantilla para anexo " + idAnexo);
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        // Invocamos al flujo para descargar la plantilla
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+        final ResultadoAccionPaso rp = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoAnexar.DESCARGAR_PLANTILLA, params);
+        final String nomFichero = (String) rp
+                .getParametroRetorno("nombreFichero");
+        final byte[] plantilla = (byte[]) rp
+                .getParametroRetorno("datosFichero");
+
+        // Descargamos plantilla a traves DownloadFileView
+        return generarDownloadView(nomFichero, plantilla);
     }
 
 }

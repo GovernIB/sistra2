@@ -33,7 +33,7 @@
 
 	<div id="imc-carrega-inicial" class="imc-carrega-inicial">
 
-		<div class="imc--logo" title="Govern de les Illes Balears"></div>
+		<!--<div class="imc--logo" title="Govern de les Illes Balears"></div>-->
 
 		<h1><span>Assistent de tramitació</span></h1>
 

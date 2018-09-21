@@ -469,7 +469,7 @@ form textarea { font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif;
 	border-radius: 50%;
 }
 
-.imc-suport .imc-s--missatge:before {
+.imc-suport .imc-s--missatge.imc--enviant:before {
 	-moz-animation-name: carregant;
 	-moz-animation-duration: 1s;
 	-moz-animation-iteration-count: infinite;

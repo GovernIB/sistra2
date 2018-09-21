@@ -417,7 +417,7 @@ public final class ControladorPasoRellenar
                             + " no definido para TypeObligatoriedad");
         }
 
-        if (rs == TypeObligatoriedad.OPCIONAL) {
+        if (rs == TypeObligatoriedad.DEPENDIENTE) {
             rs = UtilsFlujo.ejecutarScriptDependenciaDocumento(
                     pFormularioDef.getScriptObligatoriedad(),
                     pFormularioDef.getIdentificador(), pVariablesFlujo,

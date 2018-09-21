@@ -4,7 +4,9 @@
 
 	<h3><span>{{txtAnnexarTitol}}</span></h3>
 
-	<div class="imc--info">{{txtInstruccions}}</div>
+	<div class="imc--info">
+		{{txtAnnexarInfo}}
+	</div>
 
 	<div class="imc--annexes">
 
@@ -53,6 +55,17 @@
 
 					</div>
 
+					<div class="imc--opcions" data-extensions="{{extensiones}}" data-mida="{{tamMax}}" data-num="{{maxInstancias}}">
+						{{if maxInstancias|more>1}}
+							<span class="imc--instancies">{{txtDocumentsInstancies}} <strong>{{maxInstancias}}</strong> {{txtDocumentsInstancies2}}.</span>
+						{{/if}}
+						{{if extensiones|notempty}}
+							<span class="imc--extensions">{{txtDocumentsAccept}} <strong>{{extensiones}}</strong>.</span>
+						{{/if}}
+						{{if tamMax|notempty}}
+							<span class="imc--mida-max">{{txtMidaMaxima}} <strong>{{tamMax}}</strong>.</span>
+						{{/if}}
+					</div>
 					
 					<div class="imc--annexats">
 					{{if ficheros}}
@@ -67,23 +80,14 @@
 							{{ficheros}}
 							<li>
 								<strong data-id="{{id}}" data-fitxer="{{fichero}}">{{if titulo}}{{titulo}}{{else}}{{fichero}}{{/if}}</strong>
-								<button data-id="{{id}}" type="button" class="imc-bt imc--ico imc--descarrega"><span>{{txtDescarrega}}</span></button>
+								<button data-id="{{id}}" type="button" class="imc-bt imc--ico imc--descarrega" title="{{txtDescarrega}}"><span>{{txtDescarrega}}</span></button>
+								<button data-id="{{id}}" type="button" class="imc-bt imc--ico imc--esborra" title="{{txtEsborra}}"><span>{{txtEsborra}}</span></button>
 							</li>
 							{{/ficheros}}
 						</ul>
 					
 					{{/if}}
 					</div>
-					
-					<div class="imc--opcions" data-extensions="{{extensiones}}" data-mida="{{tamMax}}">
-						{{if extensiones|notempty}}
-							{{txtDocumentsAccept}} <strong> {{extensiones}}</strong>.
-						{{/if}}
-						{{if tamMax|notempty}}
-							{{txtMidaMaxima}} <strong> {{tamMax}} MB</strong>.
-						{{/if}}
-					</div>
-					
 
 				</li>
 				{{/if}}

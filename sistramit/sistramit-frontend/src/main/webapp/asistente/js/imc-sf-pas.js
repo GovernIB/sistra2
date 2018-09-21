@@ -36,6 +36,7 @@ var HTML_PAS_LITERALS = {
 		},
 		"rf": {
 			txtEmplenarTitol: txtEmplenarTitol
+			,txtEmplenarInfo: txtEmplenarInfo
 			,txtFormulari: txtFormulari
 			,txtObligatori: txtObligatori
 			,txtOpcional: txtOpcional
@@ -46,6 +47,7 @@ var HTML_PAS_LITERALS = {
 		},
 		"ad": {
 			txtAnnexarTitol: txtAnnexarTitol
+			,txtAnnexarInfo: txtAnnexarInfo
 			,txtFormulari: txtFormulari
 			,txtObligatori: txtObligatori
 			,txtOpcional: txtOpcional
@@ -71,6 +73,7 @@ var HTML_PAS_LITERALS = {
 		},
 		"pt": {
 			txtPagarTitol: txtPagarTitol
+			,txtPagarInfo: txtPagarInfo
 			,txtObligatori: txtObligatori
 			,txtOpcional: txtOpcional
 			,txtCompletat: txtCompletat
@@ -80,6 +83,7 @@ var HTML_PAS_LITERALS = {
 		},
 		"rt": {
 			txtRegistrarTitol: txtRegistrarTitol
+			,txtRegistrarInfo: txtRegistrarInfo
 			,txtInfoResum: txtInfoResum
 			,txtFormularis: txtFormularis
 			,txtAnnexes: txtAnnexes
@@ -112,11 +116,13 @@ var HTML_PAS_LITERALS = {
 
 $.fn.appPas = function(options) {
 	var settings = $.extend({
-		pas: false
+			pas: false
+			,recarrega: false
 	}, options);
 	this.each(function(){
 		var element = $(this),
 			pas = settings.pas,
+			recarrega = settings.recarrega,
 			pas_json = false,
 			pas_tipus = false,
 			envia_ajax = false,
@@ -138,7 +144,7 @@ $.fn.appPas = function(options) {
 
 				// es el mateix pas ja carregat?
 
-				if (imc_contingut.attr("data-id") === pas) {
+				if (imc_contingut.attr("data-id") === pas && !recarrega) {
 
 					imc_cap_c
 						.appCap();
@@ -193,8 +199,10 @@ $.fn.appPas = function(options) {
 
 						} else {
 
+							envia_ajax = false;
+
 							consola("Pas: error des de JSON");
-							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
+							errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: pas_json.url });
 
 						}
 						
@@ -208,7 +216,7 @@ $.fn.appPas = function(options) {
 						}
 						
 						consola("Pas: error des de FAIL");
-						error();
+						errors({ estat: "fail" });
 						
 					});
 
@@ -265,7 +273,10 @@ $.fn.appPas = function(options) {
 
 					function() {
 
-						error("Pas: error caregant HTML, CSS i JS");
+						envia_ajax = false;
+
+						consola("Pas: error caregant HTML, CSS i JS");
+						errors({ estat: "fail", titol: "Pas: error caregant HTML, CSS i JS" });
 
 					}
 
@@ -393,7 +404,6 @@ $.fn.appPas = function(options) {
 
 					HTML_PAS_LITERALS[pas_tipus]["jsonEntorn"] = APP_JSON_TRAMIT_D.entorno;
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
-					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instrucciones;
 
 					var txtGlobals = {
 							globals: {
@@ -408,11 +418,12 @@ $.fn.appPas = function(options) {
 
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
 					HTML_PAS_LITERALS[pas_tipus]["annexesPresencials"] = pas_json.datos.actual.anexos;
-					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instrucciones;
 
 					var txtGlobals = {
 							globals: {
-								txtDocumentsAccept: txtDocumentsAccept
+								txtDocumentsInstancies: txtDocumentsInstancies
+								,txtDocumentsInstancies2: txtDocumentsInstancies2
+								,txtDocumentsAccept: txtDocumentsAccept
 								,txtMidaMaxima: txtMidaMaxima
 								,txtDescarregaPlantilla: txtDescarregaPlantilla
 								,txtDocAnnexat: txtDocAnnexat
@@ -421,17 +432,16 @@ $.fn.appPas = function(options) {
 								,txtObriFinestra: txtObriFinestra
 								,txtPlantilla: txtPlantilla
 								,txtDescarrega: txtDescarrega
+								,txtEsborra: txtEsborra
 							}
 						};
 
 				} else if (pas_tipus === "pt") {
 
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
-					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instrucciones;
 
 				} else if (pas_tipus === "rt") {
 
-					HTML_PAS_LITERALS[pas_tipus]["txtInstruccions"] = pas_json.datos.actual.instrucciones;
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
@@ -654,6 +664,64 @@ $.fn.appPas = function(options) {
 					.find(".imc-document:first form")
 						.attr("action", APP_ANNEXE_ANNEXA);
 
+
+				imc_contingut_c
+					.find(".imc--opcions")
+						.each(function(i) {
+
+							var el = $(this),
+								el_data_extension = el.attr("data-extensions");
+
+							if (el_data_extension !== "null") {
+
+								var el_data_extension_arr = el_data_extension.split(","),
+									el_data_extension_arr_size = el_data_extension_arr.length,
+									el_codi = "";
+
+								$(el_data_extension_arr)
+									.each(function(j) {
+
+										var d_e = this;
+
+										el_codi += d_e.toUpperCase();
+										el_codi += (j < el_data_extension_arr_size-1) ? ", " : "";
+
+									});
+
+								el
+									.find(".imc--extensions strong")
+										.text( el_codi );
+
+							}
+
+							// hi ha algo que mostrar a opcions?
+
+							if ($.trim( el.html() ) === "") {
+
+								el
+									.remove();
+
+							}
+
+						});
+
+				imc_contingut_c
+					.find(".imc--doc-li")
+						.each(function(i) {
+
+							var el = $(this),
+								num_max = parseInt( el.attr("data-num") ),
+								num_annexats = el.find(".imc--annexats li").length;
+
+							if (num_max === num_annexats) {
+
+								el
+									.addClass("imc--completat");
+
+							}
+
+						});
+
 				appPasAnnexarInicia();
 
 			},
@@ -684,11 +752,13 @@ $.fn.appPas = function(options) {
 			error = function(opcions) {
 
 				var settings_opcions = $.extend({
+						estat: "ERROR",
 						titol: txtTramitPasErrorTitol,
 						text: txtTramitPasErrorText
 					}, opcions);
 
-				var titol = settings_opcions.titol,
+				var estat = settings_opcions.estat,
+					titol = settings_opcions.titol,
 					text = settings_opcions.text;
 
 				imc_missatge
@@ -764,6 +834,8 @@ jQuery(window)
 	if (URL_PARAMETRES[0] === "pas" && URL_PARAMETRES.length === 2) {
 		
 		var pas = URL_PARAMETRES[1];
+
+		APP_TRAMIT_PAS_ID = URL_PARAMETRES[1];
 
 		imc_contingut_c
 			.appPas({ pas: pas });

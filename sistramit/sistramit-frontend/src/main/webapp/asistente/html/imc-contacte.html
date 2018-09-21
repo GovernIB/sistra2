@@ -4,7 +4,7 @@
 
 	<!--<div data-conf="entitat">{{jsonContacte}}</div>-->
 	<div data-conf="suport">
-		<strong>{{txtNecessitauAjuda}}</strong> {{txtContactauAmb}}<button type="button" id="imc-bt-equip-suport"><span>{{txtEquipSuport}}</span></button>.
+		<strong>{{txtNecessitauAjuda}}</strong> {{txtContactauAmb}}<button type="button" id="imc-bt-equip-suport"><span>{{txtEquipSuport}}</span></button>
 	</div>
 
 	<div id="imc-suport" class="imc-suport" aria-hidden="true" role="dialog">
@@ -185,10 +185,15 @@
 
 		<div class="imc-peu-opcions">
 			<ul>
-				<li><a href="https://www.caib.es/seucaib/ca/mapaWeb">{{txtMapaWeb}}</a></li>
-				<li><a href="http://www.caib.es/govern/external/infoLegal.do?lang=ca">{{txtAvisLegal}}</a></li>
+				{{if jsonMapaWeb}}
+				<li><a href="{{jsonMapaWeb}}">{{txtMapaWeb}}</a></li>
+				{{/if}}
+				{{if jsonAvisLegal}}
+				<li><a href="{{jsonAvisLegal}}">{{txtAvisLegal}}</a></li>
+				{{/if}}
+				{{if jsonRSS}}
 				<li>
-					<a href="http://www.caib.es/govern/rss.do?lang=ca" class="imc-en-rss">
+					<a href="{{jsonRSS}}" class="imc-en-rss">
 						<span>RSS</span>
 						<svg viewBox="0 0 430.117 430.118" xml:space="preserve">
 							<g>
@@ -204,14 +209,17 @@
 						</svg>
 					</a>
 				</li>
+				{{/if}}
 			</ul>
 		</div>
 
 		<div class="imc-peu-xarxes">
+			{{if jsonXarxes}}
 			<p>{{txtSegueixnos}}:</p>
 			<ul>
+				{{if jsonYouTube}}
 				<li>
-					<a href="http://www.youtube.com/CanalIllesBalears" class="imc-bt-xarxa imc-logo-youtube" title="YouTube">
+					<a href="{{jsonYouTube}}" class="imc-bt-xarxa imc-logo-youtube" title="YouTube">
 						<svg viewBox="0 0 90 90" xml:space="preserve">
 							<g>
 								<path d="M70.939,65.832H66l0.023-2.869c0-1.275,1.047-2.318,2.326-2.318h0.315c1.282,0,2.332,1.043,2.332,2.318
@@ -243,8 +251,10 @@
 						<span>YouTube</span>
 					</a>
 				</li>
+				{{/if}}
+				{{if jsonInstagram}}
 				<li>
-					<a href="http://www.instagram.com/goib_" class="imc-bt-xarxa imc-logo-instagram" title="Instagram">
+					<a href="{{jsonInstagram}}" class="imc-bt-xarxa imc-logo-instagram" title="Instagram">
 						<svg viewBox="0 0 169.063 169.063" xml:space="preserve">
 							<g>
 								<path d="M122.406,0H46.654C20.929,0,0,20.93,0,46.655v75.752c0,25.726,20.929,46.655,46.654,46.655h75.752
@@ -262,8 +272,10 @@
 						<span>Instagram</span>
 					</a>
 				</li>
+				{{/if}}
+				{{if jsonTwitter}}
 				<li>
-					<a href="http://www.twitter.com/goib" class="imc-bt-xarxa imc-logo-twitter" title="Twitter">
+					<a href="{{jsonTwitter}}" class="imc-bt-xarxa imc-logo-twitter" title="Twitter">
 						<svg viewBox="0 0 430.117 430.117" xml:space="preserve">
 							<g>
 								<path d="M381.384,198.639c24.157-1.993,40.543-12.975,46.849-27.876
@@ -281,8 +293,10 @@
 						<span>Twitter</span>
 					</a>
 				</li>
+				{{/if}}
+				{{if jsonFacebook}}
 				<li>
-					<a href="https://www.facebook.com/GovernIllesBalear" class="imc-bt-xarxa imc-logo-facebook" title="Facebook">
+					<a href="{{jsonFacebook}}" class="imc-bt-xarxa imc-logo-facebook" title="Facebook">
 						<svg viewBox="0 0 430.113 430.114" xml:space="preserve">
 							<g>
 								<path d="M158.081,83.3c0,10.839,0,59.218,0,59.218h-43.385v72.412h43.385v215.183h89.122V214.936h59.805
@@ -293,7 +307,9 @@
 						<span>Facebook</span>
 					</a>
 				</li>
+				{{/if}}
 			</ul>
+			{{/if}}
 		</div>
 
 	</div>

@@ -4,21 +4,17 @@
 
 	<h3><span>{{txtCalSaber}}</span></h3>
 
-	<div class="imc--info">
+	{{txtCalSaberInfo}}
 
-		<p>{{txtCalSaberInfo}}</p>
-
-		{{if txtCalSaberImportant}}
-		<div class="imc--important">
-			{{txtCalSaberImportant}}
-		</div>
-		{{/if}}
-
+	{{if txtCalSaberImportant}}
+	<div class="imc--important">
+		{{txtCalSaberImportant}}
 	</div>
+	{{/if}}
 
 	<div class="imc--explicacio-detallada imc--e-d" id="imc--explicacio-detallada">
 
-		<p>{{txtVoleuInformacio}} <button type="buttton" id="imc-bt-explicacio-detallada"><span>{{txtExplicacioDetalladaMirau}}</span></button>.</p>
+		<p>{{txtVoleuInformacio}} <button type="buttton" id="imc-bt-explicacio-detallada"><span>{{txtExplicacioDetalladaMirau}}</span></button></p>
 
 		<ul>
 			<li data-tipus="ds">

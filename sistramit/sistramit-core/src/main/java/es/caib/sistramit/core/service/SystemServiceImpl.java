@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
@@ -135,10 +138,34 @@ public class SystemServiceImpl implements SystemService {
     @NegocioInterceptor
     public void invalidar(Invalidacion invalidacion) {
 
-        // TODO Validar valores
+        // Validamos tipo
         if (invalidacion.getTipo() == null) {
             throw new TipoNoControladoException(
                     "Tipo de invalidación no soportada");
+        }
+
+        // Validamos identificador obligatorio
+        if (invalidacion.getTipo() != TypeInvalidacion.CONFIGURACION
+                && StringUtils.isBlank(invalidacion.getIdentificador())) {
+            throw new ErrorConfiguracionException(
+                    "Invalidación incorrecta: no existe identificador");
+        }
+
+        // Validamos identificador para tipo trámite
+        if (invalidacion.getTipo() == TypeInvalidacion.TRAMITE) {
+            final String[] codigos = invalidacion.getIdentificador().split("#");
+            if (codigos.length != 2) {
+                throw new ErrorConfiguracionException(
+                        "Invalidación incorrecta: no es válido identificador "
+                                + invalidacion.getIdentificador());
+            }
+            try {
+                Integer.parseInt(codigos[1]);
+            } catch (final NumberFormatException nfe) {
+                throw new ErrorConfiguracionException(
+                        "Invalidación incorrecta: no es válido identificador "
+                                + invalidacion.getIdentificador());
+            }
         }
 
         invalidacionDAO.addInvalidacion(invalidacion);
