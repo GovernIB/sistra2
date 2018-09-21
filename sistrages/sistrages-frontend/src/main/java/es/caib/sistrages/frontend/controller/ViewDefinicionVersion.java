@@ -381,7 +381,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 		tramiteVersion.setListaDominios(dominiosId);
 		avisoEntidad = avisoEntidadService
-				.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion());
+				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 	}
 
 	/**
@@ -506,7 +506,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK));
 		}
 		avisoEntidad = avisoEntidadService
-				.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion());
+				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 	}
 
 	// ------- VIEW DE EDITAR CONTROL DE ACCESO DE TRAMITE VERSION
@@ -1634,7 +1634,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			// El aviso entidad se pregunta cada vez por si se actualiza fuera
 			avisoEntidad = avisoEntidadService
-					.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion());
+					.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 		}
 	}
 

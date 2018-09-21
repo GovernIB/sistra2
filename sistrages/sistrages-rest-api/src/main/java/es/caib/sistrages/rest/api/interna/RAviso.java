@@ -40,7 +40,7 @@ public class RAviso {
      * Lista versiones trámite. Formato: Trámite-Versión separados por “;” (p.e.
      * : TRAM1-1;TRAM2-1).
      */
-	@ApiModelProperty(value = "Lista versiones trámite. Formato: Trámite-Versión separados por ; (p.e. : TRAM1-1;TRAM2-1))")
+	@ApiModelProperty(value = "Lista versiones trámite. Formato: Trámite#Versión separados por ; (p.e. : TRAM1#1;TRAM2#1))")
     private String listaVersiones;
 
     /**

@@ -104,7 +104,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			// Si es tipo tramite version, ya tiene unos valores por defecto.
 			if (tipoTramite) {
 				data.setTipo(TypeAvisoEntidad.TRAMITE_VERSION);
-				data.setListaSerializadaTramites(tramite + "-" + tramiteVersion);
+				data.setListaSerializadaTramites(tramite + "#" + tramiteVersion);
 			}
 		} else {
 			if (id != null) {
@@ -119,7 +119,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 				}
 			}
 			if (tramite != null) {
-				data = avisoEntidadService.getAvisoEntidadByTramite(tramite + "-" + tramiteVersion);
+				data = avisoEntidadService.getAvisoEntidadByTramite(tramite + "#" + tramiteVersion);
 			}
 		}
 

@@ -59,7 +59,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 		tramiteVersion = tramiteService.getTramiteVersion(id);
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
 		setAvisoEntidad(avisoEntidadService
-				.getAvisoEntidadByTramite(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion()));
+				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion()));
 		if (avisoEntidad == null) {
 			crearAvisoEntidad();
 		}
@@ -72,7 +72,7 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 		avisoEntidad = new AvisoEntidad();
 		avisoEntidad.setTipo(TypeAvisoEntidad.TRAMITE_VERSION);
 		avisoEntidad.setBloqueado(false);
-		avisoEntidad.setListaSerializadaTramites(tramite.getIdentificador() + "-" + tramiteVersion.getNumeroVersion());
+		avisoEntidad.setListaSerializadaTramites(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 	}
 
 	/**
