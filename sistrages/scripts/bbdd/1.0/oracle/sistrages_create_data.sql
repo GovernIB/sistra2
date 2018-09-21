@@ -13,3 +13,8 @@ INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.url', 'http://localhost:8080/sistramit/api/rest/interna', 'Url Rest sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.user', 'api-stt', 'Usuario Rest sistramit');
 INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'sistramit.rest.pwd', '1234', 'Contraseña Rest sistramit');
+
+
+Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'E','1','C','Plugin catálogo mock ','es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.CatalogoProcedimientosPluginMock','[]','xxx');
+Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'L','Plugin login mock ','es.caib.sistra2.commons.plugins.mock.autenticacion.ComponenteAutenticacionPluginMock','[]','xxx');
+Insert into STG_PLUGIN (PLG_CODIGO,PLG_AMBITO,PLG_CODENT,PLG_TIPO,PLG_DESCR,PLG_CLASS,PLG_PROPS,PLG_PREPRO) values (STG_PLUGIN_SEQ.nextval,'G',null,'M','Plugin email mock ','es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock','[]','xxx');
