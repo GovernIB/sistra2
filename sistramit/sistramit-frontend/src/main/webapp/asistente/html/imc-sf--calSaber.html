@@ -4,7 +4,9 @@
 
 	<h3><span>{{txtCalSaber}}</span></h3>
 
-	{{txtCalSaberInfo}}
+	<div class="imc--info">
+		{{txtCalSaberInfo}}
+	</div>
 
 	{{if txtCalSaberImportant}}
 	<div class="imc--important">
@@ -61,6 +63,7 @@
 
 	</div>
 
+	{{if txtInfoLOPD}}
 	<div class="imc--lopd">
 
 		<h4><span>{{txtTitolLOPD}}</span></h4>
@@ -68,6 +71,7 @@
 		{{txtInfoLOPD}}
 
 	</div>
+	{{/if}}
 
 	<nav class="imc--navegacio">
 

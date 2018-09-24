@@ -403,7 +403,7 @@ $.fn.appMissatge = function(options) {
 
 			},
 			cancela = function() {
-
+				
 				alCancelar();
 
 				amaga();
@@ -1022,15 +1022,22 @@ $.fn.errors = function(options) {
 			estat: false,
 			titol: txtErrorGeneralTitol,
 			text: txtErrorGeneralText,
-			url: false
+			url: APP_
 	}, options);
 	this.each(function(){
 		var element = $(this),
-			estat = settings_opcions.estat,
-			titol = settings_opcions.titol,
-			text = settings_opcions.text,
-			url = settings_opcions.url,
+			estat = settings.estat,
+			titol = settings.titol,
+			text = settings.text,
+			url = settings.url,
 			mostra = function() {
+
+				if (estat === "fail" || estat === "FATAL") {
+
+					imc_contenidor
+						.remove();
+
+				}
 
 				imc_missatge
 					.appMissatge({ accio: "error", titol: titol, text: text, alTancar: function() { document.location = url; } });

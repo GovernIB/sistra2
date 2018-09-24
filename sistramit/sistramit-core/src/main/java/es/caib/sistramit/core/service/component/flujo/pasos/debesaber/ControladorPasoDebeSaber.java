@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.flujo.pasos.debesaber;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
@@ -141,7 +142,8 @@ public final class ControladorPasoDebeSaber
         final DetallePasoDebeSaber dpds = new DetallePasoDebeSaber();
         dpds.setId(dipa.getIdPaso());
         dpds.setCompletado(TypeSiNo.SI);
-        dpds.setInstrucciones(defPaso.getInstruccionesInicio());
+        dpds.setInstrucciones(
+                StringUtils.defaultString(defPaso.getInstruccionesInicio()));
         dpds.setInfoLOPD(UtilsSTG.obtenerLiteral(entidadInfo.getInfoLopdHTML(),
                 definicionTramite.getDefinicionVersion().getIdioma()));
         dpds.setPasos(descripcionesPaso);

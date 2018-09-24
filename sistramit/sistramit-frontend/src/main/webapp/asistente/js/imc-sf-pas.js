@@ -194,6 +194,15 @@ $.fn.appPas = function(options) {
 
 						if (pas_json.estado === "SUCCESS" || pas_json.estado === "WARNING") {
 
+							if (pas_json.estado === "WARNING") {
+
+								imc_missatge
+									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.text, alAcceptar: function() { mollaPa(); carregaHTML(); } });
+
+								return;
+
+							}
+
 							mollaPa();
 							carregaHTML();
 
@@ -202,21 +211,23 @@ $.fn.appPas = function(options) {
 							envia_ajax = false;
 
 							consola("Pas: error des de JSON");
-							errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: pas_json.url });
+
+							imc_contenidor
+								.errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: pas_json.url });
 
 						}
 						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
-						consola(dades+" , "+ tipus +" , "+ errorThrown);
-
 						if (tipus === "abort") {
 							return false;
 						}
 						
 						consola("Pas: error des de FAIL");
-						errors({ estat: "fail" });
+
+						imc_contenidor
+							.errors({ estat: "fail" });
 						
 					});
 
@@ -276,7 +287,9 @@ $.fn.appPas = function(options) {
 						envia_ajax = false;
 
 						consola("Pas: error caregant HTML, CSS i JS");
-						errors({ estat: "fail", titol: "Pas: error caregant HTML, CSS i JS" });
+
+						imc_contenidor
+							.errors({ estat: "fail" });
 
 					}
 
@@ -798,7 +811,7 @@ $.fn.appPas = function(options) {
 
 				} else {
 
-					document.location = "#pas/" + APP_JSON_TRAMIT_D.idPasoActual;
+					document.location = "#pas/" + APP_TRAMIT_PAS_ID;
 
 				}
 

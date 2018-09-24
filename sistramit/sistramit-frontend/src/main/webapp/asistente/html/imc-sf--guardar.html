@@ -1,0 +1,83 @@
+<!-- -->
+
+<div class="imc-pas">
+
+	<div class="imc--guarda">
+
+		<h4><span>{{txtDesauJustificant}}</span></h4>
+
+		<p>{{txtDesauInfo}}</p>
+
+		<p class="imc--fi-bt"><button type="button" id="imc-bt-justificant-desa" class="imc-bt imc--ico imc--justificant"><span>{{txtDesauJustificant}}</span></button></p>
+
+		<h4><span>{{txtDesauDocumentacio}}</span></h4>
+
+		<p>{{txtDesauDocumentacioInfo}}</p>
+
+		{{if formularis}}
+		<h5><span>{{txtFormularis}}</span></h5>
+		
+		<ul>
+			{{formularis}}
+			<li>
+				<div class="imc--reg imc--form" data-id="{{id}}" data-descarrega="{{descargable}}">
+					<span class="imc--icona"></span>
+					<strong>{{titulo}}</strong>
+					{{if descargable|equals>s}}
+					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="formulari"><span>{{txtDescarrega}}</span></button>
+					{{/if}}
+				</div>
+			</li>
+			{{/formularis}}
+		</ul>
+		{{/if}}
+
+		{{if annexes}}
+		<h5><span>{{txtAnnexes}}</span></h5>
+		
+		<ul>
+			{{annexes}}
+			<li>
+				<div class="imc--reg imc--doc" data-id="{{id}}" data-descarrega="{{descargable}}">
+					<span class="imc--icona"></span>
+					<strong>{{titulo}}</strong>
+					{{if descargable|equals>s}}
+					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="annexe"><span>{{txtDescarrega}}</span></button>
+					{{/if}}
+				</div>
+			</li>
+			{{/annexes}}
+		</ul>
+		{{/if}}
+
+		{{if pagaments}}
+		<h5><span>{{txtPagaments}}</span></h5>
+		
+		<ul>
+			{{pagaments}}
+			<li>
+				<div class="imc--reg imc--pagament" data-id="{{id}}" data-descarrega="{{descargable}}">
+					<span class="imc--icona"></span>
+					<strong>{{titulo}}</strong>
+					{{if descargable|equals>s}}
+					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="taxa"><span>{{txtDescarrega}}</span></button>
+					{{/if}}
+				</div>
+			</li>
+			{{/pagaments}}
+		</ul>
+		{{/if}}
+
+	</div>
+
+	<nav class="imc--navegacio">
+
+		<ul>
+			<li>
+				<a class="imc-bt imc--sortir" href="javascript:;" id="imc-bt-tramit-surt"><span>{{txtSotiuTramit}}</span></a>
+			</li>
+		</ul>
+
+	</nav>
+
+</div>

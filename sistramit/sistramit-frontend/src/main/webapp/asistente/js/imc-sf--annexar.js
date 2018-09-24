@@ -27,7 +27,7 @@ var imc_navegacio;
 // onReady
 
 function appPasAnnexarInicia() {
-
+	
 	imc_docs = imc_contingut.find(".imc--annexes:first");
 	imc_document = $("#imc-document");
 	imc_doc_c = imc_document.find(".imc--c:first");
@@ -406,17 +406,11 @@ $.fn.appAnnexa = function(options) {
 				imc_doc_c
 					.off('.appAnnexa')
 					.on('click.appAnnexa', tanca);
-
+				
 				*/
 
 			},
-			tanca = function(e) {
-
-				var obj = $(e.target);
-
-				if (obj.closest(".imc-document-contingut").length && !obj.hasClass("imc--cancela") && !obj.hasClass("imc--tanca")) {
-					return;
-				}
+			tanca = function() {
 
 				imc_document
 					.addClass("imc--off");
@@ -509,7 +503,7 @@ $.fn.appAnnexa = function(options) {
 											}
 
 										});
-
+										
 									if (!esTipusPosible && tipus_posibles !== "null") {
 
 										text_error = txtErrorTipusNoPermes;
@@ -530,7 +524,7 @@ $.fn.appAnnexa = function(options) {
 										esMidaPosible = (mida_max_num > arxiu_mida_KB) ? true : false;
 
 									}
-
+									
 									if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
 
 										text_error = txtErrorMidaGran;
@@ -586,8 +580,8 @@ $.fn.appAnnexa = function(options) {
 
 				// dades
 
-				formData.append("idPaso", APP_TRAMIT_PAS_ID);
-
+				formData
+					.append("idPaso", APP_TRAMIT_PAS_ID);
 
 				formData
 					.append("idAnexo", doc_id);
@@ -660,14 +654,16 @@ $.fn.appAnnexa = function(options) {
 						}
 					})
 					.done(function( data ) {
-
+						
 						var json = data,
 							estat = json.estado;
-
+						
 						if (estat === "ERROR") {
 							finalitzat({ estat: "error", json: json });
 						} else if (estat === "FATAL") {
 							finalitzat({ estat: "fatal", json: json });
+						} else if (estat === "WARNING") {
+							finalitzat({ estat: "WARNING", json: json });
 						} else {
 							finalitzat({ estat: "SUCCESS", json: json });
 						}
@@ -675,14 +671,12 @@ $.fn.appAnnexa = function(options) {
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
-						consola(dades+" , "+ tipus +" , "+ errorThrown);
-
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						finalitzat({ estat: "fail" });
-
+						
 					});
 
 			},
@@ -702,11 +696,18 @@ $.fn.appAnnexa = function(options) {
 				}, opcions);
 
 				var estat = settings_opcions.estat,
-					json = settings_opcions.json;
+					json = settings_opcions.json
+					url = json.url;
 
-				var titol = (estat === "SUCCESS") ? txtDadesEnviadesCorrecteTitol : (estat === "FAIL") ? txtDadesEnviadesErrorTitol : json.mensaje.titulo,
-					text = (estat === "SUCCESS") ? txtDadesEnviadesCorrecteText : (estat === "FAIL") ? txtDadesEnviadesErrorText : json.mensaje.texto,
+				var titol = (estat === "fail") ? txtDadesEnviadesErrorTitol : json.mensaje.titulo,
+					text = (estat === "fail") ? txtDadesEnviadesErrorText : json.mensaje.texto,
 					clase = (estat === "SUCCESS") ? "imc--enviat-correcte" : "imc--enviat-error";
+
+				if (titol === "") {
+
+					titol = txtDadesEnviadesCorrecteTitol;
+
+				}
 
 				imc_doc_missatge
 					.find("h2 span")
@@ -738,11 +739,25 @@ $.fn.appAnnexa = function(options) {
 
 				// al tancar, recarregar
 
-				if (estat === "SUCCESS") {
+				if (estat === "SUCCESS" || estat === "WARNING") {
 
 					imc_doc_missatge
 						.find(".imc--tanca")
 							.on("click.recarrega", recarrega)
+
+				}
+
+				if (estat === "fail" || estat === "error" || estat === "fatal") {
+
+					if (estat === "fail") {
+						url = APP_;
+					}
+
+					imc_contenidor
+						.remove();
+
+					imc_missatge
+						.appMissatge({ accio: "error", titol: titol, text: text, alTancar: function() { document.location = url; } });
 
 				}
 
@@ -780,7 +795,7 @@ $.fn.appAnnexa = function(options) {
 							var doc_item = imc_docs.find("li[data-id="+id+"]:first");
 
 							if (esObligatori) {
-
+								
 								if ( esObligatori === "s" ) {
 
 									var doc_valor = doc_item.find(".imc--opcional:first");
@@ -796,7 +811,7 @@ $.fn.appAnnexa = function(options) {
 										.attr("data-obligatori", "s");
 
 								} else {
-
+									
 									var doc_valor = doc_item.find(".imc--ogligatori:first");
 
 									doc_valor
@@ -899,7 +914,7 @@ $.fn.appAnnexa = function(options) {
 							var doc_item = imc_docs.find("li[data-id="+id+"]:first");
 
 							if (esObligatori) {
-
+								
 								if ( esObligatori === "s" ) {
 
 									var doc_valor = doc_item.find(".imc--opcional:first");
@@ -915,7 +930,7 @@ $.fn.appAnnexa = function(options) {
 										.attr("data-obligatori", "s");
 
 								} else {
-
+									
 									var doc_valor = doc_item.find(".imc--ogligatori:first");
 
 									doc_valor
@@ -949,7 +964,7 @@ $.fn.appAnnexa = function(options) {
 										.attr("data-omplit", "c");
 
 								} else {
-
+									
 									var doc_valor = doc_item.find(".imc--completat:first");
 
 									doc_valor
@@ -1010,10 +1025,10 @@ $.fn.appAnnexa = function(options) {
 					.removeClass("imc--on");
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -1064,10 +1079,10 @@ $.fn.appFitxerAnnexa = function(opcions){
 
 				input_elm
 					.trigger("click");
-
+				
 			},
 			pinta = function(e) {
-
+				
 				var input_elm = $(this);
 
 				var arxiu_val = input_elm.val(),
@@ -1125,10 +1140,10 @@ $.fn.appFitxerAnnexa = function(opcions){
 						.addClass("imc--num-maxim");
 
 				}
-
+				
 			},
 			elimina = function(e) {
-
+				
 				var bt_elimina = $(this);
 
 				bt_elimina
@@ -1169,7 +1184,7 @@ $.fn.appFitxerAnnexa = function(opcions){
 				}
 
 			};
-
+		
 		// prepara
 		prepara()
 
@@ -1195,7 +1210,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 			annexe_elm = false,
 			annexe_elm_annexats = false,
 			prepara = function() {
-
+				
 				elm
 					.off(".appAnnexatEsborra")
 					.on("click.appAnnexatEsborra", ".imc--esborra", verifica);
@@ -1261,12 +1276,12 @@ $.fn.appAnnexatEsborra = function(opcions){
 					}
 				})
 				.done(function( data ) {
-
+					
 					var json = data;
 
 					if (json.estado === "SUCCESS" || json.estado === "WARNING") {
 
-						finalitzat();
+						esborrat();
 
 					} else {
 
@@ -1283,15 +1298,21 @@ $.fn.appAnnexatEsborra = function(opcions){
 					if (tipus === "abort") {
 						return false;
 					}
-
+					
 					consola("Annexar esborra: error des de FAIL");
 					errors({ estat: "fail" });
-
+					
 				});
+				
+			},
+			esborrat = function(opcions) {
+
+				imc_missatge
+					.appMissatge({ titol: txtEsborrantCorrecte, alTancar: function() { recarrega(); } });
 
 			},
-			finalitzat = function(opcions) {
-
+			recarrega = function(opcions) {
+				/*
 				var settings_opcions = $.extend({
 					estat: false,
 					json: false
@@ -1299,9 +1320,19 @@ $.fn.appAnnexatEsborra = function(opcions){
 
 				var estat = settings_opcions.estat,
 					json = settings_opcions.json;
+				*/
 
-				imc_contingut_c
-					.appPas({ pas: APP_TRAMIT_PAS_ID, recarrega: true });
+				setTimeout(
+					function() {
+
+						imc_contingut_c
+							.appPas({ pas: APP_TRAMIT_PAS_ID, recarrega: true });
+
+					}
+					,300
+				);
+
+				
 
 				/*
 				if (estat === "error" || (estat === "fail")) {
@@ -1320,7 +1351,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 					bt_esborra
 						.parent()
 							.slideUp( 200, function() {
-
+								
 								$(this)
 									.remove();
 
@@ -1372,7 +1403,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 				}
 
 			};
-
+		
 		// prepara
 		prepara()
 
@@ -1395,12 +1426,12 @@ envia = function(e) {
 
 				var form_action = form_el.attr('action'),
 					img_el = form_el.find("#foto");
-
+				
 				var form_dades = new FormData();
 
 				form_dades
 					.append('foto', form_el.find('#foto')[0].files[0]);
-
+				
 				form_dades
 					.append('titulo', form_el.find('#tit').val());
 
@@ -1432,7 +1463,7 @@ envia = function(e) {
 					.addEventListener('load',function(evt){
 
 						if (evt.target.responseText.toLowerCase().indexOf('error')>=0) {
-
+							
 							error( txtImatgeEnviamentError );
 
 						} else {
@@ -1440,7 +1471,7 @@ envia = function(e) {
 							window.location = "mmepartefotos.do?id="+ $('#imc-img-cod_actuacion').val() +"/"+ $('#imc-img-relevo').val();
 
 						}
-
+						
 					},false);
 
 				ajax
@@ -1464,7 +1495,7 @@ envia = function(e) {
 				ajax.send(form_dades);
 
 				return false;
-
+				
 
 			},
 			enviaProgres = function(percentatge) {

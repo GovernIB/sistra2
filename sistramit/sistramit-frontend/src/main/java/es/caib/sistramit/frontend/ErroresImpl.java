@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
@@ -24,6 +26,10 @@ public final class ErroresImpl implements Errores {
     /** Atributo literales. */
     @Autowired
     private LiteralesFront literales;
+
+    /** Configuracion. */
+    @Autowired
+    private SystemService systemService;
 
     @Override
     public RespuestaJSON generarRespuestaJsonExcepcion(final Exception pEx,
@@ -85,11 +91,10 @@ public final class ErroresImpl implements Errores {
             final String pIdioma, final TypeRespuestaJSON pTipoError) {
         String url = null;
 
-        // Url estandar para excepciones FATAL: salir trámite
+        // Url estandar para excepciones recargar tramite
         if (pTipoError == TypeRespuestaJSON.FATAL) {
-            // TODO Ver como particularizar para entidad, para redirigir a
-            // entidad
-            url = "http://www.google.es";
+            // TODO Revisar excepciones y urls.
+            url = getUrlAsistente() + "/asistente/recargarTramite.html";
         }
 
         if (pEx instanceof ServiceException) {
@@ -178,6 +183,17 @@ public final class ErroresImpl implements Errores {
         keyLiteralExcepcion = name.substring(idx + ConstantesNumero.N1,
                 name.length());
         return keyLiteralExcepcion;
+    }
+
+    /**
+     * Obtiene url asistente.
+     *
+     * @return url asistente
+     */
+    private String getUrlAsistente() {
+        // TODO Ver si cachear
+        return systemService.obtenerPropiedadConfiguracion(
+                TypePropiedadConfiguracion.SISTRAMIT_URL);
     }
 
 }

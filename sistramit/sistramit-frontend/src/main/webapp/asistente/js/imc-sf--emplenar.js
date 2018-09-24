@@ -10,7 +10,7 @@ var imc_formularis,
 // onReady
 
 function appPasEmplenarInicia() {
-
+	
 	imc_formularis = imc_contingut.find(".imc--formularis:first");
 
 	imc_formulari = $("#imc-formulari");
@@ -53,10 +53,10 @@ $.fn.appFormulariDescarrega = function(options) {
 				document.location = url + "?idFormulario=" + form_id + "&idPaso=" + URL_PARAMETRES[1];
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -154,7 +154,7 @@ $.fn.appFormulari = function(options) {
 						.abort();
 
 				}
-
+				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -169,44 +169,63 @@ $.fn.appFormulari = function(options) {
 
 						if (data.estado === "SUCCESS" || data.estado === "WARNING") {
 
-							var form_tipus = data.datos.tipo
-								,form_url = data.datos.url;
+							var continua = function() {
 
-							if (form_tipus === "i") {
+									var form_tipus = data.datos.tipo
+										,form_url = data.datos.url;
 
-								imc_formulari_iframe
-									.off("")
-									.on("load", carregat);
+									if (form_tipus === "i") {
 
-								imc_formulari_iframe
-									.attr("src", form_url);
+										imc_formulari_iframe
+											.off("")
+											.on("load", carregat);
 
-							} else {
+										imc_formulari_iframe
+											.attr("src", form_url);
 
-								document.location = form_url;
+									} else {
+
+										document.location = form_url;
+
+									}
+
+								};
+
+							if (data.estado === "WARNING") {
+
+								imc_missatge
+									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.text, alAcceptar: function() { continua(); } });
+
+								return;
 
 							}
 
+							continua();
+
 						} else {
 
+							envia_ajax = false;
+
 							consola("Formulari: error des de JSON");
-							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
+							
+							imc_contenidor
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: data.url });
 
 						}
-
+						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
 						if (tipus === "abort") {
 							return false;
 						}
-
+						
 						consola("Formulari: error des de FAIL");
-						error();
-
+						
+						imc_contenidor
+							.errors({ estat: "fail" });
+						
 					});
-
-
 
 			},
 			carregat = function() {
@@ -315,10 +334,10 @@ $.fn.appFormulari = function(options) {
 				envia_ajax = false;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }

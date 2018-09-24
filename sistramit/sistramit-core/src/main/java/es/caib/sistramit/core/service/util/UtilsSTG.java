@@ -96,7 +96,7 @@ public final class UtilsSTG {
                 }
             }
         }
-        return res;
+        return StringUtils.defaultString(res);
     }
 
     /**

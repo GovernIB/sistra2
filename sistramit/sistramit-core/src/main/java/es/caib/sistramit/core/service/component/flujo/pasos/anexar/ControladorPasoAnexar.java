@@ -384,6 +384,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
                 final Anexo anexo = Anexo.createNewAnexo();
                 anexo.setId(anexd.getIdentificador());
                 anexo.setTitulo(anexd.getDescripcion());
+                anexo.setAyuda("");
                 anexo.setPresentacion(TypePresentacion.ELECTRONICA);
                 if (StringUtils.isNotBlank(anexd.getExtensiones())) {
                     anexo.setExtensiones(anexd.getExtensiones());
@@ -446,7 +447,8 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
             anexoDetalle.setTitulo(anexoDef.getDescripcion());
             anexoDetalle.setPresentacion(
                     TypePresentacion.fromString(anexoDef.getPresentacion()));
-            anexoDetalle.setAyuda(anexoDef.getAyuda().getMensajeHtml());
+            anexoDetalle.setAyuda(StringUtils
+                    .defaultString(anexoDef.getAyuda().getMensajeHtml()));
             if (anexoDef.getAyuda().getFichero() != null) {
                 anexoDetalle
                         .setPlantilla(PlantillaAnexo.createNewPlantillaAnexo(

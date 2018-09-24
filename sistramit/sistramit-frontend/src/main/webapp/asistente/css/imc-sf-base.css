@@ -360,6 +360,13 @@ aside address { display: inline; }
 .imc-missatge[data-accio='signa'] .imc--text { background: #fff url(imgs/icones/ico_signa_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
 
 
+.imc-missatge[data-accio='warning'] .imc--text { background: #fff url(imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-missatge[data-accio='warning'] button[data-tipus="tanca"],
+.imc-missatge[data-accio='warning'] button[data-tipus="cancela"] { display: none; }
+
+.imc-missatge[data-accio='warning'] button[data-tipus="accepta"] { display: inline-block; }
+
 /* missatge inline */
 
 .imc-pas--missatge-error { padding: 1.5em 1em 1.5em 6em; background: transparent url(imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em; }
