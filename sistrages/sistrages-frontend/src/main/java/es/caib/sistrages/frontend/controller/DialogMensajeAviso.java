@@ -145,13 +145,40 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/**
+	 * Verificar precondiciones al guardar.
+	 *
+	 * @return true, si se cumplen las todas la condiciones
+	 */
+	private boolean verificarGuardar() {
+
+		if (!validasFechas()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogMensajeAviso.error.fechaInicialPosterior"));
+			return false;
+		}
+
+		// if (TypeExtension.PERSONALIZADAS.equals(data.getExtensionSeleccion())) {
+		// final String[] listaExtensiones =
+		// data.getExtensiones().split(Constantes.LISTAS_SEPARADOR);
+		// for (final String cadena : listaExtensiones) {
+		// if (!cadena.matches("^\\.\\w{3}$")) {
+		// UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+		// UtilJSF.getLiteral("error.extensiones.formato"));
+		// return false;
+		// }
+		// }
+		// }
+
+		return true;
+	}
+
+	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
 
-		if (!validasFechas()) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
-					UtilJSF.getLiteral("dialogMensajeAviso.error.fechaInicialPosterior"));
+		// verificamos precondiciones
+		if (!verificarGuardar()) {
 			return;
 		}
 

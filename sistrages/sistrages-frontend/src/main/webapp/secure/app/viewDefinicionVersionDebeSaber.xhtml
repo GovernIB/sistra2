@@ -28,7 +28,7 @@
 						actionListener="#{viewDefinicionVersion.editarPaso()}" style="margin-right:20px"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoPT}" update="growl formArbol:arbol descripcion"  />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol descripcion"  />
 					</p:commandButton>
 				</p:outputPanel>
 

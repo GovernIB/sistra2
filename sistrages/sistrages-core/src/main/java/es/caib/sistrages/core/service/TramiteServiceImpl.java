@@ -927,4 +927,11 @@ public class TramiteServiceImpl implements TramiteService {
 		}
 	}
 
+	@Override
+	@NegocioInterceptor
+	public boolean checkFormularioRepetido(final Long idTramiteVersion, final String identificador,
+			final Long idFormulario) {
+		return tramitePasoDao.checkFormularioRepetido(idTramiteVersion, identificador, idFormulario);
+	}
+
 }

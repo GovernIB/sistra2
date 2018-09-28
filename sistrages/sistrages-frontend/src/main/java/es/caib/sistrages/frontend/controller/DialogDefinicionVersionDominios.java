@@ -87,6 +87,8 @@ public class DialogDefinicionVersionDominios extends DialogControllerBase {
 			return;
 		}
 
+		dominioService.addTramiteVersion(datoSeleccionado.getCodigo(), Long.valueOf(id));
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));

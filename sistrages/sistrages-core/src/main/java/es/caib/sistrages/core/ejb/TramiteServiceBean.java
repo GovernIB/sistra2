@@ -440,4 +440,12 @@ public class TramiteServiceBean implements TramiteService {
 		tramiteService.importar(filaArea, filaTramite, filaTramiteVersion, filasDominios, filasFormateador, idEntidad,
 				formularios, ficheros, ficherosContent, usuario);
 	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean checkFormularioRepetido(final Long idTramiteVersion, final String identificador,
+			final Long idFormulario) {
+		return tramiteService.checkFormularioRepetido(idTramiteVersion, identificador, idFormulario);
+	}
+
 }

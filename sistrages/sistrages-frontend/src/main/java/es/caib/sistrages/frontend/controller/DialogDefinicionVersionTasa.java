@@ -155,6 +155,8 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 			return;
 		}
 
+		tramiteService.updateTasaTramite(data);
+
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);

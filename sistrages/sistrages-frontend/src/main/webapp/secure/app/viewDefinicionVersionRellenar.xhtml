@@ -22,14 +22,14 @@
 						actionListener="#{viewDefinicionVersion.nuevoFormulario()}" process="@this"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
-							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" process="@this" oncomplete="$('#formViewDefinicionVersionRellenar\\:btnEditarHidden').click();" />
+							<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormularioAlta}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" process="@this" oncomplete="$('#formViewDefinicionVersionRellenar\\:btnEditarHidden').click();" />
 		        	</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarFormulario()}" process="@this"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
 					</p:commandButton>
 
 					<p:commandButton id="btnEliminar"
@@ -71,9 +71,7 @@
 
 			<!-- Necesario para actualizar en controlador la fila seleccionada -->
 			<p:ajax event="rowSelect" global="false"/>
-			<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDblClick();"
-		                        />
+			<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
 
 			<!-- Columnas -->
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerIdentificador']}" >
@@ -85,25 +83,25 @@
 				<h:outputText value="#{formularios.descripcion.getTraduccion(sessionBean.lang)}" />
 			</p:column>
 
-						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerTipo']}">
-				<h:outputText value="#{formularios.tipoFormulario}" />
+			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionRellenar.headerTipo']}">
+				<h:outputText value="#{msg['typeFormularioGestor.'+=formularios.tipoFormulario]}" />
 			</p:column>
 
 
 
 		</p:dataTable>
 
-				<p:confirmDialog global="true" >
-					<p:outputPanel styleClass="confirmar_botonera">
-			        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
-					</p:outputPanel>
-			    </p:confirmDialog>
+			<p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
 
 			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
 				actionListener="#{viewDefinicionVersion.editarFormularioAlta()}" process="@this"
 				update="growl" style="display: none">
-				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
 			</p:commandButton>
 
 			<h:outputScript >
@@ -116,7 +114,7 @@
 				actionListener="#{viewDefinicionVersion.editarFormularioDblClick()}" process="@this"
 				style="display:none"
 				update="growl">
-				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
+				<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRellenar formViewDefinicionVersionRellenar:dataTable dataTable" />
 			</p:commandButton>
 
 	</h:form>

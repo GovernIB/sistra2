@@ -110,7 +110,7 @@
 					<f:facet name="right">
 						<p:commandButton value="#{msg['botones.guardar']}" styleClass="boton-azul"
 							actionListener="#{dialogDefinicionVersionPropiedades.aceptar()}" process="@form"
-							update="@form growlDialog" />
+							update="growlDialog @form" />
 						<p:commandButton value="#{msg['botones.cancelar']}"
 							actionListener="#{dialogDefinicionVersionPropiedades.cancelar()}" process="@this" />
 					</f:facet>

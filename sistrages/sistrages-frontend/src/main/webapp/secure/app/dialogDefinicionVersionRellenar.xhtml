@@ -26,6 +26,8 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionRellenar.modoAcceso}"/>
 		<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionRellenar.idTramiteVersion}" />
+		<f:viewParam name="TRAMITEPASO" value="#{dialogDefinicionVersionRellenar.idTramitePaso}" />
+
 		<f:viewAction action="#{dialogDefinicionVersionRellenar.init}" />
 	</f:metadata>
 	<h:form id="dialogDefinicionRellenar" styleClass="margin-top-10">
@@ -50,9 +52,8 @@
 
 					<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionRellenar.headerTipo']}" />
 					<p:selectOneMenu id="tipo" value="#{dialogDefinicionVersionRellenar.data.tipoFormulario}" style="width:200px" required="true">
-					     <f:selectItems value="#{TypeFormularioGestor.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeInterno.' += tipo]}" />
+					     <f:selectItems value="#{TypeFormularioGestor.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioGestor.' += tipo]}" />
 					</p:selectOneMenu >
-
 
 			 </h:panelGrid>
 				  	 <p:outputPanel styleClass="botonera">

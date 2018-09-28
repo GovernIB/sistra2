@@ -112,6 +112,8 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			return;
 		}
 
+		tramiteService.updateFormularioTramite(data);
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -282,10 +284,17 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 * @return true, si se cumplen las todas la condiciones
 	 */
 	private boolean verificarGuardar() {
+
 		if (TypeFormularioObligatoriedad.DEPENDIENTE.equals(data.getObligatoriedad())
 				&& (data.getScriptObligatoriedad() == null
 						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			return false;
+		}
+
+		if (tramiteService.checkFormularioRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
+				this.data.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
 			return false;
 		}
 

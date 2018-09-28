@@ -17,21 +17,21 @@
 						actionListener="#{viewDefinicionVersion.nuevaTasa()}" process="@this"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" oncomplete="$('#formViewDefinicionVersionPagarTasas\\:btnEditarHidden').click();" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasaAlta}" update="growl formArbol:arbol @form" oncomplete="$('#formViewDefinicionVersionPagarTasas\\:btnEditarHidden').click();" />
 					</p:commandButton>
 
 					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarTasa()}" process="@this"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
 					</p:commandButton>
 
 					<p:commandButton id="btnEliminar"
 						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
 						actionListener="#{viewDefinicionVersion.eliminarTasa()}"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						process="@this" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" >
+						process="@this" update="growl formArbol:arbol @form" >
 						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        	</p:commandButton>
 
@@ -39,18 +39,18 @@
 						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
 						actionListener="#{viewDefinicionVersion.subirTasa()}"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						process="@this" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+						process="@this" update="growl formArbol:arbol @form" />
 
 					<p:commandButton id="btnBajar"
 						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
 						actionListener="#{viewDefinicionVersion.bajarTasa()}"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						process="@this" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+						process="@this" update="growl formArbol:arbol @form" />
 
 					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 						icon="fa fa-question-circle-o"
 						actionListener="#{viewDefinicionVersion.ayudar()}" process="@this"
-						update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+						update="growl formArbol:arbol @form" />
 				</h:panelGrid>
 			</f:facet>
 		</p:toolbar>
@@ -77,11 +77,11 @@
 			</p:column>
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerObligatoriedad']}">
-				<h:outputText value="#{tasas.obligatoriedad}" />
+				<h:outputText value="#{msg['typeFormularioObligatoriedad.'+=tasas.obligatoriedad]}" />
 			</p:column>
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerTipo']}">
-				<h:outputText value="#{tasas.tipo}" />
+				<h:outputText value="#{msg['typePago.'+=tasas.tipo]}" />
 			</p:column>
 
 		</p:dataTable>
@@ -97,7 +97,7 @@
 			    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarTasaAlta()}" process="@this"
 						update="growl" style="display:none">
-					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
 				</p:commandButton>
 
 				 <h:outputScript >
@@ -110,7 +110,7 @@
 					 	value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarTasaDblClick()}" process="@this"
 						update="growl" style="display:none">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionPagarTasas formViewDefinicionVersionPagarTasas:dataTable dataTable" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
 					</p:commandButton>
 	</h:form>
 

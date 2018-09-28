@@ -73,4 +73,11 @@ public final class Constantes {
 
 	public static final String SISTRAMIT_REST_URL = "sistramit.rest.url";
 
+	public static final String EXTENSIONES_TODAS = "*";
+	public static final String LISTAS_SEPARADOR = ";";
+
+	/** Literal info modificado ok. **/
+	public static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
+	/** Literal info alta ok. */
+	public static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
 }

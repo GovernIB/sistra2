@@ -62,6 +62,9 @@ public class DialogDefinicionVersionRegistrarTramite extends ViewControllerBase 
 	 * Guarda los datos y cierra el dialog.
 	 */
 	public void aceptar() {
+
+		tramiteService.updateTramitePaso(data);
+
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);

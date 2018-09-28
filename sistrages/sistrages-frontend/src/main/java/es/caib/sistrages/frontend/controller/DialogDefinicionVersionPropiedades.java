@@ -80,14 +80,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		if (modoAcceso != null && TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {
 			if (!tramiteVersionIdiomaEsSoportado && !tramiteVersionIdiomaCaSoportado
 					&& !tramiteVersionIdiomaEnSoportado) {
-
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Seleccione un idioma");
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.idioma"));
 				return;
 			}
 
 			if (!this.getTramiteVersion().isAutenticado() && !this.getTramiteVersion().isNoAutenticado()) {
-
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Seleccione un tipo de autenticación");
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.tipoAutenticacion"));
 				return;
 			}
 
@@ -101,6 +99,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			if (tramiteVersionIdiomaEnSoportado) {
 				idiomas += "en;";
 			}
+
 			idiomas = idiomas.substring(0, idiomas.length() - 1); // Quitamos el ; del final
 			tramiteVersion.setIdiomasSoportados(idiomas);
 			tramiteService.updateTramiteVersion(tramiteVersion);

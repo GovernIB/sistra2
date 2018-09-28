@@ -66,5 +66,10 @@ public enum TypeParametroVentana {
 	/**
 	 * Activa mochila.
 	 */
-	MOCHILA_ACTIVA;
+	MOCHILA_ACTIVA,
+
+	/**
+	 * tramitepaso.
+	 */
+	TRAMITEPASO;
 }

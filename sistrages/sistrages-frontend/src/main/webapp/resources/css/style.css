@@ -335,6 +335,10 @@ body{
     padding-left: 0px !important;
 }
 
+.noPadding-right, .noPadding-right tr, .noPadding-right td {
+    padding-right: 0px !important;
+}
+
 .noPadding-bottom {
   padding-bottom: 0px !important;
 }

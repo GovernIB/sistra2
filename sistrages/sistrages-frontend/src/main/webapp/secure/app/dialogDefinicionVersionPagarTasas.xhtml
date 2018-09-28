@@ -22,6 +22,7 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionPagarTasas.modoAcceso}"/>
 		<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionPagarTasas.idTramiteVersion}"/>
+		<f:viewParam name="TRAMITEPASO" value="#{dialogDefinicionVersionPagarTasas.idTramitePaso}" />
 		<f:viewAction action="#{dialogDefinicionVersionPagarTasas.init}" />
 	</f:metadata>
 	<h:form id="dialogDefinicionRellenar" styleClass="margin-top-10">
@@ -32,7 +33,7 @@
 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			<p:outputLabel for="inputIdentificador" value="#{msg['dialogDefinicionVersionPagarTasas.headerIdentificador']}" />
-			<p:inputText   id="inputIdentificador" required="true" value="#{dialogDefinicionVersionPagarTasas.data.identificador}" size="40"  onblur="this.value = this.value.toUpperCase();">
+			<p:inputText   id="inputIdentificador" required="true" value="#{dialogDefinicionVersionPagarTasas.data.identificador}" size="40"  onblur="this.value = this.value.toUpperCase();" maxlength="20">
           		<p:keyFilter regEx="/[a-z0-9_-]/i"/>
           	</p:inputText>
 

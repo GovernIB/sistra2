@@ -542,4 +542,14 @@ public interface TramiteService {
 			Map<Long, DisenyoFormulario> formularios, Map<Long, Fichero> ficheros, Map<Long, byte[]> ficherosContent,
 			final String usuario) throws Exception;
 
+	/**
+	 * Comprueba si el identificador de formulario está repetido.
+	 *
+	 * @param idTramiteVersion
+	 * @param identificador
+	 * @param idFormulario
+	 * @return
+	 */
+	boolean checkFormularioRepetido(Long idTramiteVersion, String identificador, Long idFormulario);
+
 }

@@ -42,6 +42,8 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	/** ID tramite version. **/
 	private String idTramiteVersion;
 
+	private String idTramitePaso;
+
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
@@ -79,10 +81,8 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 			case ALTA:
 			case EDICION:
-
 				final Literal traducciones = (Literal) respuesta.getResult();
 				data.setDescripcion(traducciones);
-
 				break;
 
 			case CONSULTA:
@@ -117,10 +117,18 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 			return;
 		}
 
+		if (tramiteService.checkFormularioRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
+				this.data.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			return;
+		}
+
+		final FormularioTramite formularioAlta = tramiteService.addFormularioTramite(data, Long.valueOf(idTramitePaso));
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
+		result.setResult(formularioAlta);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -177,6 +185,14 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	public String getIdTramitePaso() {
+		return idTramitePaso;
+	}
+
+	public void setIdTramitePaso(final String idTramitePaso) {
+		this.idTramitePaso = idTramitePaso;
 	}
 
 }

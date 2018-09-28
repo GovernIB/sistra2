@@ -45,6 +45,8 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
+	private String idTramitePaso;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
 	 */
@@ -111,10 +113,12 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 			return;
 		}
 
+		final Documento documentoAlta = tramiteService.addDocumentoTramite(data, Long.valueOf(idTramitePaso));
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
+		result.setResult(documentoAlta);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -174,4 +178,11 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		this.tramiteVersion = tramiteVersion;
 	}
 
+	public String getIdTramitePaso() {
+		return idTramitePaso;
+	}
+
+	public void setIdTramitePaso(final String idTramitePaso) {
+		this.idTramitePaso = idTramitePaso;
+	}
 }

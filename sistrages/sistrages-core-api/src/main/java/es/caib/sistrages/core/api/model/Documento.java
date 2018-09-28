@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
+import es.caib.sistrages.core.api.model.types.TypeExtension;
 import es.caib.sistrages.core.api.model.types.TypeFormulario;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypePresentacion;
@@ -56,6 +57,8 @@ public class Documento extends ModelApi {
 
 	/** Lista extensiones permitidas separadas por coma */
 	private String extensiones;
+
+	private TypeExtension extensionSeleccion;
 
 	/** Tamaño máximo (segun unidad tamaño) */
 	private int tamanyoMaximo;
@@ -473,6 +476,14 @@ public class Documento extends ModelApi {
 	 */
 	public void setDebeFotocopiar(final boolean debeFotocopiar) {
 		this.debeFotocopiar = debeFotocopiar;
+	}
+
+	public TypeExtension getExtensionSeleccion() {
+		return extensionSeleccion;
+	}
+
+	public void setExtensionSeleccion(TypeExtension extensionSeleccion) {
+		this.extensionSeleccion = extensionSeleccion;
 	}
 
 }

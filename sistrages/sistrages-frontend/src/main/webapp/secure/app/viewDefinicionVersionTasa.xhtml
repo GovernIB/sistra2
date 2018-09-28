@@ -67,7 +67,7 @@
 						actionListener="#{viewDefinicionVersion.editarTasaTramite()}"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasa}" update="growl formArbol:arbol formViewDefinicionVersionTasa" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionTasa" />
 			       	</p:commandButton>
 				</p:outputPanel>
 			</f:facet>

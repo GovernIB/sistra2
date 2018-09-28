@@ -37,6 +37,7 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
+import es.caib.sistrages.core.api.model.types.TypeExtension;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
@@ -148,10 +149,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private static final String LITERAL_ERROR_MOVERARRIBA = "error.moverarriba";
 	/** Literal error mover abajo. **/
 	private static final String LITERAL_ERROR_MOVERABAJO = "error.moverabajo";
-	/** Literal info modificado ok. **/
-	private static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
-	/** Literal info alta ok. */
-	private static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
+
 	/** Literal error fila no seleccionada. **/
 	private static final String LITERAL_ERROR_NOSELECCIONADOFILA = "error.noseleccionadofila";
 
@@ -428,10 +426,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 				UtilJSF.openDialog(DialogDefinicionVersionDebeSaber.class, TypeModoAcceso.EDICION, map, true, 950, 500);
 
-			} else if (paso instanceof TramitePasoTasa) {
-
-				UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, map, true, 950, 700);
-
 			} else if (paso instanceof TramitePasoRegistrar) {
 
 				UtilJSF.openDialog(DialogDefinicionVersionRegistrarTramite.class, TypeModoAcceso.EDICION, map, true,
@@ -440,47 +434,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			}
 
 		}
-	}
-
-	/**
-	 * Retorno dialogo de un Paso Tramite.
-	 *
-	 * @param event
-	 *            respuesta dialogo
-	 ***/
-	public void returnDialogoPT(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		if (!respuesta.isCanceled()) {
-
-			switch (respuesta.getModoAcceso()) {
-			case EDICION:
-
-				// Recuperamos el tramite paso y lo actualizamos y damos el
-				// mensaje
-				final TramitePaso tramitePasoMod = (TramitePaso) respuesta.getResult();
-				tramiteService.updateTramitePaso(tramitePasoMod);
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK));
-
-				// Podriamos llamar la BBDD o actualizarlo a mano.
-				recuperarDatos();
-
-				// Refrescamos el arbol
-				inicializarArbol();
-
-				break;
-			case ALTA:
-				// Se da por hecho que de alta de momento no existe (ya que los
-				// pasos no pueden
-				// ser personalizados)
-				break;
-			case CONSULTA:
-			default:
-				// No hay que hacer nada
-				break;
-			}
-		}
-
 	}
 
 	// ------- VIEW DE EDITAR PROPIEDADES DE TRAMITE VERSION
@@ -502,11 +455,23 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void returnDialogoRefrescarTramite(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled()) {
+
 			recuperarDatos();
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK));
+
+			// Refrescamos el arbol
+			inicializarArbol();
+
+			if (TypeModoAcceso.ALTA.equals(respuesta.getModoAcceso())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(Constantes.LITERAL_INFO_ALTA_OK));
+			} else if (TypeModoAcceso.EDICION.equals(respuesta.getModoAcceso())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+						UtilJSF.getLiteral(Constantes.LITERAL_INFO_MODIFICADO_OK));
+			}
 		}
-		avisoEntidad = avisoEntidadService
-				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
+
+		// avisoEntidad = avisoEntidadService
+		// .getAvisoEntidadByTramite(tramite.getIdentificador() + "#" +
+		// tramiteVersion.getNumeroVersion());
 	}
 
 	// ------- VIEW DE EDITAR CONTROL DE ACCESO DE TRAMITE VERSION
@@ -537,8 +502,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void quitarDominio() {
 
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada()) {
 			return;
+		}
 
 		if (dominioService.tieneTramiteVersion(this.dominioSeleccionado.getCodigo(), this.id)) {
 
@@ -551,6 +517,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			}
 			tramiteVersion.setListaDominios(dominiosId);
 
+			dominioSeleccionado = null;
 		} else {
 
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.relacionInexistente"));
@@ -563,47 +530,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void consultarDominio() {
 
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada()) {
 			return;
+		}
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), dominioSeleccionado.getCodigo().toString());
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
 
-	}
-
-	/**
-	 * Retorno dialogo.
-	 *
-	 * @param event
-	 *            respuesta dialogo
-	 */
-	public void returnDialogoDominio(final SelectEvent event) {
-
-		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.ALTA) {
-			final Dominio dominio = (Dominio) respuesta.getResult();
-			dominioService.addTramiteVersion(dominio.getCodigo(), tramiteVersion.getCodigo());
-
-			dominios = new ArrayList<>();
-			final List<Long> dominiosId = tramiteService.getTramiteDominiosId(id);
-			for (final Long dominioId : dominiosId) {
-				dominios.add(dominioService.loadDominio(dominioId));
-			}
-			tramiteVersion.setListaDominios(dominiosId);
-
-			message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
-
-		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-		}
 	}
 
 	/**
@@ -628,6 +563,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void nuevoFormulario() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
+				getTramitePasoRELLSeleccionado().getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionRellenar.class, TypeModoAcceso.ALTA, params, true, 600, 200);
 	}
 
@@ -636,8 +573,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void editarFormulario() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFormularioSeleccionado())
+		if (!verificarFormularioSeleccionado()) {
 			return;
+		}
 
 		abrirDialogFormulario(this.formularioSeleccionado);
 	}
@@ -677,12 +615,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void eliminarFormulario() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFormularioSeleccionado())
+		if (!verificarFormularioSeleccionado()) {
 			return;
+		}
 
 		tramiteService.removeFormulario(this.getTramitePasoRELLSeleccionado().getCodigo(),
 				this.formularioSeleccionado.getCodigo());
 
+		formularioSeleccionado = null;
 		// Actualizamos la info
 		recuperarDatos();
 		inicializarArbol();
@@ -706,8 +646,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Sube el formulario.
 	 */
 	public void subirFormulario() {
-		if (!verificarFormularioSeleccionado())
+		if (!verificarFormularioSeleccionado()) {
 			return;
+		}
 
 		final int posicion = posicionFormulario(this.formularioSeleccionado);
 
@@ -728,8 +669,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Baja el formulario.
 	 */
 	public void bajarFormulario() {
-		if (!verificarFormularioSeleccionado())
+		if (!verificarFormularioSeleccionado()) {
 			return;
+		}
 
 		final int posicion = posicionFormulario(this.formularioSeleccionado);
 
@@ -769,57 +711,22 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @param event
 	 *            respuesta dialogo
 	 ***/
-	public void returnDialogoFormulario(final SelectEvent event) {
+	public void returnDialogoFormularioAlta(final SelectEvent event) {
+		returnDialogoRefrescarTramite(event);
 		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-
-		FormularioTramite formulario = null;
 		if (!respuesta.isCanceled()) {
-
-			formulario = (FormularioTramite) respuesta.getResult();
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-				formularioAlta = null;
-				formularioAlta = tramiteService.addFormularioTramite(formulario,
-						this.getTramitePasoRELLSeleccionado().getCodigo());
-
-				// Mensaje
-				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
-
-				break;
-
-			case EDICION:
-
-				tramiteService.updateFormularioTramite(formulario);
-
-				// Mensaje
-				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
-				break;
-			case CONSULTA:
-				// No hay que hacer nada
-				break;
-			}
+			this.formularioAlta = (FormularioTramite) respuesta.getResult();
 		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-
-			// Si el mensaje está relleno es que ha habido algún cambio
-			recuperarDatos();
-			inicializarArbol();
-		}
-
 	}
 
 	/** Evento para editar formulario después de crear un alta. */
 	public void editarFormularioAlta() {
 
-		this.formularioSeleccionado = formularioAlta;
-		this.editarFormulario();
-		formularioAlta = null;
+		if (formularioAlta != null) {
+			this.formularioSeleccionado = formularioAlta;
+			this.editarFormulario();
+			formularioAlta = null;
+		}
 	}
 
 	// ------- VIEW DE PASO DE DOCUMENTO ------------------------------
@@ -869,7 +776,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			this.getTramitePasoANEXSeleccionado().setScriptAnexosDinamicos(script);
 			tramiteService.updateTramitePaso(this.getTramitePasoANEXSeleccionado());
 
-			message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
+			message = UtilJSF.getLiteral(Constantes.LITERAL_INFO_MODIFICADO_OK);
 
 		}
 
@@ -886,6 +793,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
+				getTramitePasoANEXSeleccionado().getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionAnexarDocumentos.class, TypeModoAcceso.ALTA, params, true, 600, 200);
 	}
 
@@ -894,8 +803,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void editarDocumento() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarDocumentoSeleccionada())
+		if (!verificarDocumentoSeleccionada()) {
 			return;
+		}
 
 		this.editarDocumentoDialog(this.getDocumentoSeleccionado().getCodigo());
 	}
@@ -934,12 +844,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void eliminarDocumento() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarDocumentoSeleccionada())
+		if (!verificarDocumentoSeleccionada()) {
 			return;
+		}
 
 		tramiteService.removeDocumento(this.getTramitePasoANEXSeleccionado().getCodigo(),
 				this.documentoSeleccionado.getCodigo());
 
+		documentoSeleccionado = null;
 		// Actualizamos la info
 		recuperarDatos();
 		inicializarArbol();
@@ -963,11 +875,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Sube la propiedad de posición.
 	 */
 	public void subirDocumento() {
-		if (!verificarDocumentoSeleccionada())
+		if (!verificarDocumentoSeleccionada()) {
 			return;
+		}
 
 		final TramitePasoAnexar tramitePasoAnexar = this.getTramitePasoANEXSeleccionado();
 		final int posicion = tramitePasoAnexar.getDocumentos().indexOf(this.documentoSeleccionado);
+
 		if (posicion <= 0) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERARRIBA));
 			return;
@@ -984,17 +898,21 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Actualizamos la info
 		recuperarDatos();
 		inicializarArbol();
+
+		documentoSeleccionado = null;
 	}
 
 	/**
 	 * Baja la propiedad de posición.
 	 */
 	public void bajarDocumento() {
-		if (!verificarDocumentoSeleccionada())
+		if (!verificarDocumentoSeleccionada()) {
 			return;
+		}
 
 		final TramitePasoAnexar tramitePasoAnexar = this.getTramitePasoANEXSeleccionado();
 		final int posicion = tramitePasoAnexar.getDocumentos().indexOf(this.documentoSeleccionado);
+
 		if (posicion >= tramitePasoAnexar.getDocumentos().size() - 1) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_MOVERABAJO));
 			return;
@@ -1012,6 +930,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Actualizamos la info
 		recuperarDatos();
 		inicializarArbol();
+
+		documentoSeleccionado = null;
 	}
 
 	/**
@@ -1020,57 +940,22 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @param event
 	 *            respuesta dialogo
 	 ***/
-	public void returnDialogoDocumento(final SelectEvent event) {
+	public void returnDialogoDocumentoAlta(final SelectEvent event) {
+		returnDialogoRefrescarTramite(event);
 		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-		Documento documento = null;
 		if (!respuesta.isCanceled()) {
-
-			documento = (Documento) respuesta.getResult();
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-				documentoAlta = null;
-				documentoAlta = tramiteService.addDocumentoTramite(documento,
-						this.getTramitePasoANEXSeleccionado().getCodigo());
-
-				// Mensaje
-				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
-
-				break;
-
-			case EDICION:
-
-				tramiteService.updateDocumentoTramite(documento);
-
-				// Mensaje
-				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
-				break;
-			case CONSULTA:
-			default:
-				// No hay que hacer nada
-				break;
-			}
+			this.documentoAlta = (Documento) respuesta.getResult();
 		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-
-			// Si el mensaje está relleno es que ha habido algún cambio
-			recuperarDatos();
-			inicializarArbol();
-		}
-
 	}
 
 	/** Evento para editar documento después de crear un alta. */
 	public void editarDocumentoAlta() {
 
-		this.documentoSeleccionado = documentoAlta;
-		this.editarDocumento();
-		documentoAlta = null;
+		if (documentoAlta != null) {
+			this.documentoSeleccionado = documentoAlta;
+			this.editarDocumento();
+			documentoAlta = null;
+		}
 	}
 
 	// ------- VIEW DE PASO DE TASA ------------------------------
@@ -1081,6 +966,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	public void nuevaTasa() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.TRAMITEPASO.toString(), getTramitePasoTSSeleccionado().getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionPagarTasas.class, TypeModoAcceso.ALTA, params, true, 600, 150);
 	}
 
@@ -1089,8 +975,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void editarTasa() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarTasaSeleccionada())
+		if (!verificarTasaSeleccionada()) {
 			return;
+		}
 
 		this.editarTasaDialog(this.tasaSeleccionado.getCodigo());
 
@@ -1123,11 +1010,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void eliminarTasa() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarTasaSeleccionada())
+		if (!verificarTasaSeleccionada()) {
 			return;
+		}
 
 		tramiteService.removeTasa(this.getTramitePasoTSSeleccionado().getCodigo(), this.tasaSeleccionado.getCodigo());
-
+		tasaSeleccionado = null;
 		// Actualizamos la info
 		recuperarDatos();
 		inicializarArbol();
@@ -1151,8 +1039,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Sube la propiedad de posición.
 	 */
 	public void subirTasa() {
-		if (!verificarTasaSeleccionada())
+		if (!verificarTasaSeleccionada()) {
 			return;
+		}
 
 		final TramitePasoTasa tramitePasoAnexar = this.getTramitePasoTSSeleccionado();
 		final int posicion = tramitePasoAnexar.getTasas().indexOf(this.tasaSeleccionado);
@@ -1169,6 +1058,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 
 		tramiteService.updateTramitePaso(tramitePasoAnexar);
+		tasaSeleccionado = null;
 
 		// Actualizamos la info
 		recuperarDatos();
@@ -1179,8 +1069,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * Baja la propiedad de posición.
 	 */
 	public void bajarTasa() {
-		if (!verificarTasaSeleccionada())
+		if (!verificarTasaSeleccionada()) {
 			return;
+		}
 
 		final TramitePasoTasa tramitePasoAnexar = this.getTramitePasoTSSeleccionado();
 		final int posicion = tramitePasoAnexar.getTasas().indexOf(this.tasaSeleccionado);
@@ -1198,6 +1089,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		tramiteService.updateTramitePaso(tramitePasoAnexar);
 
+		tasaSeleccionado = null;
 		// Actualizamos la info
 		recuperarDatos();
 		inicializarArbol();
@@ -1209,55 +1101,22 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 * @param event
 	 *            respuesta dialogo
 	 */
-	public void returnDialogoTasa(final SelectEvent event) {
+	public void returnDialogoTasaAlta(final SelectEvent event) {
+		returnDialogoRefrescarTramite(event);
 		final DialogResult respuesta = (DialogResult) event.getObject();
-
-		String message = null;
-		Tasa tasa = null;
 		if (!respuesta.isCanceled()) {
-
-			tasa = (Tasa) respuesta.getResult();
-			switch (respuesta.getModoAcceso()) {
-
-			case ALTA:
-				tasaAlta = null;
-				tasaAlta = tramiteService.addTasaTramite(tasa, this.getTramitePasoTSSeleccionado().getCodigo());
-
-				// Mensaje
-				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
-
-				break;
-			case EDICION:
-
-				tramiteService.updateTasaTramite(tasa);
-
-				// Mensaje
-				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
-				break;
-			case CONSULTA:
-			default:
-				// No hay que hacer nada
-				break;
-			}
+			this.tasaAlta = (Tasa) respuesta.getResult();
 		}
-
-		// Mostramos mensaje
-		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-
-			// Si el mensaje está relleno es que ha habido algún cambio
-			recuperarDatos();
-			inicializarArbol();
-		}
-
 	}
 
 	/** Evento para editar alta después de crear un alta. */
 	public void editarTasaAlta() {
 
-		this.tasaSeleccionado = tasaAlta;
-		this.editarTasa();
-		tasaAlta = null;
+		if (tasaAlta != null) {
+			this.tasaSeleccionado = tasaAlta;
+			this.editarTasa();
+			tasaAlta = null;
+		}
 	}
 
 	// ------- FUNCIONES PRIVADAS ------------------------------
@@ -1414,13 +1273,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			tipo = "TAX";
 		} else if (opcionArbol.getTramitePaso() != null) {
 			tipo = getTipo(opcionArbol.getTramitePaso());
-		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionPropiedades")) {
+		} else if ("viewDefinicionVersionPropiedades".equals(opcionArbol.getUrl())) {
 			tipo = "VPR";
-		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionControlAcceso")) {
+		} else if ("viewDefinicionVersionControlAcceso".equals(opcionArbol.getUrl())) {
 			tipo = "VCA";
-		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionDominios")) {
+		} else if ("viewDefinicionVersionDominios".equals(opcionArbol.getUrl())) {
 			tipo = "VDM";
-		} else if (opcionArbol.getUrl().equals("viewDefinicionVersionPasos")) {
+		} else if ("viewDefinicionVersionPasos".equals(opcionArbol.getUrl())) {
 			tipo = "VPS";
 		} else {
 			tipo = "";
@@ -1519,6 +1378,18 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setSelectedNode(final TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
+
+		// anexar documento tiene un check de extensiones que es calculado en base al
+		// campo extensiones
+		if (selectedNode != null && selectedNode.getData() instanceof OpcionArbol
+				&& ((OpcionArbol) this.selectedNode.getData()).getDocumento() != null) {
+			final Documento data = ((OpcionArbol) this.selectedNode.getData()).getDocumento();
+			if (data.getExtensiones().equals(Constantes.EXTENSIONES_TODAS)) {
+				data.setExtensionSeleccion(TypeExtension.TODAS);
+			} else {
+				data.setExtensionSeleccion(TypeExtension.PERSONALIZADAS);
+			}
+		}
 	}
 
 	/**

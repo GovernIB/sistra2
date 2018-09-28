@@ -86,7 +86,7 @@
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
 						process="@this" update="growl" value="#{msg['viewDefinicionVersionRegistrarTramite.representacion.establecer']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
 				<p:spacer width="30" height="1"/>
-				<p:selectBooleanCheckbox id="valida" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
+				<p:selectBooleanCheckbox id="valida" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.validaRepresentacion}" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>
 
        		<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.registrar']}" />
@@ -101,7 +101,7 @@
 						actionListener="#{viewDefinicionVersion.editarPaso()}"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoPT}" update="growl formArbol:arbol formViewDefinicionVersionRegistrarTramite"/>
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRegistrarTramite"/>
 		        </p:commandButton>
 				</p:outputPanel>
 			</f:facet>

@@ -45,14 +45,14 @@
 					</p:column>
 					<p:column>
 						<p:inputText id="oficina" size="30"
-							required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}"  />
+							required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" maxlength="20" />
 					</p:column>
 					<p:column>
 						<p:outputLabel for="libro"
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="libro" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" />
+						<p:inputText id="libro" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" maxlength="20"/>
 					</p:column>
 				</p:row>
 				<p:row>
@@ -61,7 +61,7 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.tipo']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="tipo" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoTipoAsunto}"  />
+						<p:inputText id="tipo" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoTipoAsunto}"  maxlength="20"/>
 					</p:column>
 				</p:row>
 				<p:row>
@@ -114,7 +114,7 @@
 						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRepresentante}" update="growl buttonScript3"/>
 				</p:commandButton>
 				<p:spacer width="30" height="1"/>
-				<p:selectBooleanCheckbox id="valida" value="true" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}"/>
+				<p:selectBooleanCheckbox id="valida" value="#{dialogDefinicionVersionRegistrarTramite.data.validaRepresentacion}" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>
 
        		<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.registrar']}" />

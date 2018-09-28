@@ -23,21 +23,21 @@
 									actionListener="#{viewDefinicionVersion.nuevoDocumento()}" process="@this"
 									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									update="growl">
-									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" oncomplete="$('#formViewDefinicionVersionAnexarDocumentos\\:btnEditarHidden').click();" />
+									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumentoAlta}" update="growl formArbol:arbol @form" oncomplete="$('#formViewDefinicionVersionAnexarDocumentos\\:btnEditarHidden').click();" />
 		        				</p:commandButton>
 
 								<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
 									actionListener="#{viewDefinicionVersion.editarDocumento()}" process="@this"
 									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									update="growl dataTable">
-									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+									<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
 		        				</p:commandButton>
 
 								<p:commandButton id="btnEliminar"
 									value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
 									actionListener="#{viewDefinicionVersion.eliminarDocumento()}"
 									rendered="#{viewDefinicionVersion.permiteEditar()}"
-									process="@this" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos:dataTable formViewDefinicionVersionAnexarDocumentos dataTable">
+									process="@this" update="growl formArbol:arbol @form">
 										<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        				</p:commandButton>
 
@@ -45,18 +45,18 @@
 									value="#{msg['botones.subir']}" icon="fa fa-caret-up"
 									actionListener="#{viewDefinicionVersion.subirDocumento()}"
 									rendered="#{viewDefinicionVersion.permiteEditar()}"
-									process="@this" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos:dataTable formViewDefinicionVersionAnexarDocumentos dataTable"  />
+									process="@this" update="growl formArbol:arbol @form"  />
 
 								<p:commandButton id="btnBajar"
 									value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
 									rendered="#{viewDefinicionVersion.permiteEditar()}"
 									actionListener="#{viewDefinicionVersion.bajarDocumento()}"
-									process="@this" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos:dataTable formViewDefinicionVersionAnexarDocumentos dataTable"  />
+									process="@this" update="growl formArbol:arbol @form"  />
 
 								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 									icon="fa fa-question-circle-o"
 									actionListener="#{viewDefinicionVersion.ayudar()}" process="@this"
-									update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos:dataTable formViewDefinicionVersionAnexarDocumentos dataTable"  />
+									update="growl formArbol:arbol @form"  />
 							</h:panelGrid>
 						</f:facet>
 					</p:toolbar>
@@ -70,9 +70,7 @@
 
 						<!-- Necesario para actualizar en controlador la fila seleccionada -->
 						<p:ajax event="rowSelect" global="false"/>
-						<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDblClick();"
-		                        />
+						<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
 
 						<!-- Columnas -->
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerIdentificador']}" >
@@ -85,7 +83,7 @@
 						</p:column>
 
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerObligatoriedad']}">
-							<h:outputText value="#{documentos.obligatoriedad}" />
+							<h:outputText value="#{msg['typeFormularioObligatoriedad.'+=documentos.obligatoriedad]}" />
 						</p:column>
 
 
@@ -109,7 +107,7 @@
 			   	<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
 								actionListener="#{viewDefinicionVersion.editarDocumentoAlta()}" process="@this"
 								update="growl" style="display: none">
-					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
 		        </p:commandButton>
 
 		        <h:outputScript >
@@ -122,7 +120,7 @@
 					 	value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarDocumentoDblClick()}" process="@this"
 						update="growl dataTable" style="display:none">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionAnexarDocumentos formViewDefinicionVersionAnexarDocumentos:dataTable dataTable" />
        			</p:commandButton>
 		</h:panelGrid>
 

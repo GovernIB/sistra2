@@ -1073,4 +1073,35 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		formularioInternoDao.updateComponente(comp);
 	}
 
+	@Override
+	public boolean checkFormularioRepetido(final Long idTramiteVersion, final String identificador,
+			final Long idFormulario) {
+
+		if (idTramiteVersion == null || identificador == null) {
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
+		}
+
+		// final StringBuilder sqlCount = new StringBuilder(
+		// "Select count(*) From JFormularioTramite p where
+		// p.pasosCaptura.pasoTramitacion.versionTramite.codigo = ");
+		// sqlCount.append(idTramiteVersion);
+		// sqlCount.append(" and p.identificador = '");
+		// sqlCount.append(identificador);
+		// sqlCount.append("' ");
+		// if (idFormulario != null) {
+		// sqlCount.append(" and p.codigo != " + idFormulario);
+		// }
+		//
+		// final Query query = entityManager.createQuery(sqlCount.toString());
+		// final Long cuantos = (Long) query.getSingleResult();
+		// boolean repetido;
+		// if (cuantos == 0) {
+		// repetido = false;
+		// } else {
+		// repetido = true;
+		// }
+		// return repetido;
+		return false;
+	}
+
 }

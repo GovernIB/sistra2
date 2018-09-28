@@ -35,7 +35,9 @@
 								<p:ajax event="select" listener="#{viewDefinicionVersion.onNodeSelect}" update=":workDefinicionVersion :breadDefinicionVersion" delay="500"/>
 							</p:tree>
 
-							<p:remoteCommand name="rcDobleClickTree" actionListener="#{viewDefinicionVersion.rcDobleClickTree()}" />
+							<p:commandButton id="hiddenCommandEditar" styleClass="button no-display"  action="#{viewDefinicionVersion.rcDobleClickTree()}">
+				      			   <p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="@parent :workDefinicionVersion"  />
+					        </p:commandButton>
 
 						</h:form>
 					</p:layoutUnit>
@@ -69,7 +71,8 @@
 				if (newSelected == lastSelected) {
 		       		if ( (ahora - timestampDblClick &lt; 500)) {
 		       			// console.log('dblClick');
-		       			rcDobleClickTree();
+		       			//rcDobleClickTree();
+		       			document.getElementById("formArbol:hiddenCommandEditar").click();
 		       		}
 		       	}
 

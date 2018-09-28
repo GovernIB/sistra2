@@ -6,6 +6,7 @@
 
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad" var="TypeFormularioObligatoriedad" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypePresentacion" var="TypePresentacion" />
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeExtension" var="TypeExtension" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeTamanyo" var="TypeTamanyo" />
 <p:importEnum type="es.caib.sistrages.core.api.model.types.TypeScriptFlujo" var="TypeScriptFlujo" />
 
@@ -42,27 +43,17 @@
 
         	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda']}" />
         	<p:outputPanel>
-	        	<h:panelGrid columns="2" columnClasses="noPadding-left wpx100," styleClass="w100">
-
-					<p:outputPanel>
-						<p:spacer width="8" height="1"/>
-						<p:outputLabel  value="#{msg['viewDefinicionVersionAnexo.ayuda.fichero']}" />
-					</p:outputPanel>
+	        	<h:panelGrid columns="2" columnClasses="noPadding-left wpx120," styleClass="w100">
+					<p:outputLabel  value="#{msg['viewDefinicionVersionAnexo.ayuda.fichero']}" />
 					<p:column>
 						<h:outputText  id="ficheroVacio" value="#{msg['error.noexistefitxer']}" rendered="#{empty viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero}"/>
 		           		<p:commandLink id="ficheroLink" action="#{dialogDefinicionVersionAnexo.descargaFichero(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero)}" target="_blank" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero.nombre}" rendered="#{!empty viewDefinicionVersion.documentoTramiteSeleccionado.ayudaFichero}"/>
 		           	</p:column>
 
-					<p:outputPanel>
-						<p:spacer width="8" height="1"/>
-						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.url']}" />
-					</p:outputPanel>
+					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.url']}" />
 					<p:inputText id="url_input"  disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaURL}" />
 
-					<p:outputPanel>
-						<p:spacer width="8" height="1"/>
-						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
-					</p:outputPanel>
+					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
 					<p:outputPanel styleClass="ui-inputgroup">
 	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang)}" />
 	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto)}"
@@ -75,8 +66,8 @@
          	<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion']}" />
         	<p:outputPanel>
 	        	<p:selectOneRadio id="tipopresentacion" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.tipoPresentacion}" layout="custom">
-		        	     <f:selectItems value="#{TypePresentacion.ALL_VALUES}" var="tipo" itemLabel="#{msg['typePresentacion.' += tipo]}" />
-		        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial']}" itemValue="presencial" />
+		        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica']}" itemValue="#{TypePresentacion.ELECTRONICA}" />
+		        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.presencial']}" itemValue="#{TypePresentacion.PRESENCIAL}" />
 	        	</p:selectOneRadio>
 	         	<h:panelGrid columns="2" columnClasses="noPadding-left wpx100 padding8," styleClass="w100">
 					<p:outputPanel>
@@ -93,11 +84,11 @@
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.extensiones']}" />
 						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,noPadding-left">
-								<p:selectOneRadio id="extensiones" disabled="true" value="anexarfirmado">
-						        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="todas" />
-						        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="personalizadas" />
+								<p:selectOneRadio id="extensiones" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.extensionSeleccion}">
+						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.todas']}" itemValue="#{TypeExtension.TODAS}"/>
+						        	<f:selectItem itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.extensiones.personalizadas']}" itemValue="#{TypeExtension.PERSONALIZADAS}"/>
 					        	</p:selectOneRadio>
-					        	<p:inputText id="personalizadas_input" disabled="true" size="15"/>
+					        	<p:inputText id="personalizadas_input" disabled="true" size="15" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.extensiones}"/>
 						 </p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.tammaximo']}" for="tammaximo" />
@@ -109,15 +100,15 @@
 
 
 							<p:spacer width="8" height="1"/>
-							<p:selectBooleanCheckbox id="convertirpdf" disabled="true" value="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"/>
+							<p:selectBooleanCheckbox id="convertirpdf" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeConvertirPDF}" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.convertirpdf']}"/>
 						</p:panelGrid>
 
 						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firma']}"  />
-						<p:panelGrid styleClass="noBorders" columns="2" columnClasses="noPadding-left,noPadding-left">
-							<p:selectOneRadio id="firma" disabled="true" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeAnexarFirmado}">
-					        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" itemValue="anexarfirmado" />
-					        	<f:selectItem itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" itemValue="firmar" />
-						     </p:selectOneRadio>
+						<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,noPadding-left">
+
+						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeAnexarFirmado}" />
+						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeFirmarDigitalmente}" />
+
 							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
 									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"
 									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null}"
@@ -152,7 +143,7 @@
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						actionListener="#{viewDefinicionVersion.editarDocumentoTramite()}"
 						process="@this" update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento}" update="growl formArbol:arbol formViewDefinicionVersionAnexo" />
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoDocumento2}" update="growl formArbol:arbol formViewDefinicionVersionAnexo" />
 					</p:commandButton>
 				</p:outputPanel>
 			</f:facet>

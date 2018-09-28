@@ -102,6 +102,10 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
+		if (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {
+			tramiteService.updateTramitePaso(data);
+		}
+
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		if (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {

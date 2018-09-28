@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.types.TypeExtension;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -75,6 +76,13 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		if (idTramiteVersion != null) {
 			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		}
+
+		if (data.getExtensiones().equals(Constantes.EXTENSIONES_TODAS)) {
+			data.setExtensionSeleccion(TypeExtension.TODAS);
+		} else {
+			data.setExtensionSeleccion(TypeExtension.PERSONALIZADAS);
+		}
+
 	}
 
 	/**
@@ -294,6 +302,22 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			return;
 		}
 
+		//
+		if (TypeExtension.TODAS.equals(data.getExtensionSeleccion())) {
+			data.setExtensiones(Constantes.EXTENSIONES_TODAS);
+		}
+
+		switch (TypeModoAcceso.valueOf(modoAcceso)) {
+		case ALTA:
+		case EDICION:
+			tramiteService.updateDocumentoTramite(data);
+			break;
+		case CONSULTA:
+		default:
+			// No hay que hacer nada
+			break;
+		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -317,6 +341,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 * @return true, si se cumplen las todas la condiciones
 	 */
 	private boolean verificarGuardar() {
+
 		if (tramiteService.checkAnexoRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
 				this.data.getCodigo())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
@@ -327,6 +352,22 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 				&& (data.getScriptObligatoriedad() == null
 						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			return false;
+		}
+
+		if (TypeExtension.PERSONALIZADAS.equals(data.getExtensionSeleccion())) {
+			final String[] listaExtensiones = data.getExtensiones().split(Constantes.LISTAS_SEPARADOR);
+			for (final String cadena : listaExtensiones) {
+				if (!cadena.matches("^\\w{3}$")) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("error.extensiones.formato"));
+					return false;
+				}
+			}
+		}
+
+		if (data.isDebeAnexarFirmado() && data.isDebeFirmarDigitalmente()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.firma.unicidad"));
 			return false;
 		}
 

@@ -223,4 +223,14 @@ public interface TramitePasoDao {
 			final Map<Long, byte[]> ficherosContent, final Map<Long, FormateadorFormulario> idFormateadores,
 			final Map<Long, Long> idDominiosEquivalencia);
 
+	/**
+	 * Comprueba si un formulario se repite.
+	 *
+	 * @param idTramiteVersion
+	 * @param identificador
+	 * @param idFormulario
+	 * @return
+	 */
+	boolean checkFormularioRepetido(Long idTramiteVersion, String identificador, Long idFormulario);
+
 }

@@ -45,6 +45,8 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	/** ID tramite version. **/
 	private String idTramiteVersion;
 
+	private String idTramitePaso;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
 	 */
@@ -114,10 +116,12 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 			return;
 		}
 
+		final Tasa tasaAlta = tramiteService.addTasaTramite(data, Long.valueOf(idTramitePaso));
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data);
+		result.setResult(tasaAlta);
 		UtilJSF.closeDialog(result);
 	}
 
@@ -167,6 +171,14 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	public String getIdTramitePaso() {
+		return idTramitePaso;
+	}
+
+	public void setIdTramitePaso(final String idTramitePaso) {
+		this.idTramitePaso = idTramitePaso;
 	}
 
 }

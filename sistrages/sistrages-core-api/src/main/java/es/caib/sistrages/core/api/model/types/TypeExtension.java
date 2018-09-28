@@ -1,24 +1,24 @@
 package es.caib.sistrages.core.api.model.types;
 
 /**
- * Tipo para indicar el tamaño: KB (KILOBYTES) / MB (MEGABYTES)
+ * Tipo para indicar la extension: T (Todas) / P (Personalizadas)
  *
  * @author Indra
  *
  */
-public enum TypeTamanyo {
+public enum TypeExtension {
 	/**
-	 * KILOBYTES.
+	 * TODAS.
 	 */
-	KILOBYTES("KB"),
+	TODAS("T"),
 	/**
-	 * MEGABYTES
+	 * PERSONALIZADAS
 	 */
-	MEGABYTES("MB");
+	PERSONALIZADAS("P");
 
 	private String valor;
 
-	TypeTamanyo(final String iValor) {
+	private TypeExtension(final String iValor) {
 		this.valor = iValor;
 	}
 
@@ -28,10 +28,10 @@ public enum TypeTamanyo {
 	 * @param tipo
 	 * @return
 	 */
-	public static TypeTamanyo fromString(final String text) {
-		TypeTamanyo respuesta = null;
+	public static TypeExtension fromString(final String text) {
+		TypeExtension respuesta = null;
 		if (text != null) {
-			for (final TypeTamanyo b : TypeTamanyo.values()) {
+			for (final TypeExtension b : TypeExtension.values()) {
 				if (text.equalsIgnoreCase(b.toString())) {
 					respuesta = b;
 					break;
