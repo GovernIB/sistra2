@@ -8,11 +8,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import es.caib.loginib.rest.api.v1.RDatosAutenticacion;
+import es.caib.loginib.rest.api.v1.RLoginParams;
+import es.caib.loginib.rest.api.v1.RLogoutParams;
+import es.caib.sistra2.commons.plugins.autenticacion.AutenticacionPluginException;
 import es.caib.sistra2.commons.plugins.autenticacion.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.IComponenteAutenticacionPlugin;
 import es.caib.sistra2.commons.plugins.autenticacion.TipoAutenticacion;
@@ -27,34 +28,15 @@ import es.caib.sistra2.commons.plugins.autenticacion.TipoMetodoAutenticacion;
 public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperties
 		implements IComponenteAutenticacionPlugin {
 
-	public ComponenteAutenticacionPluginLoginib() {
-		prefijo = null;
-		properties = null;
-		url = "http://localhost:8080/loginib/api/rest/v1";
-	}
-
-	private final String prefijo;
-	private final Properties properties;
-	private String url;
-
 	public ComponenteAutenticacionPluginLoginib(final String prefijoPropiedades, final Properties properties) {
-		this.prefijo = prefijoPropiedades;
-		this.properties = properties;
-		this.url = "http://localhost:8080/loginib/api/rest/v1";
-		if (this.properties != null) {
-			if (this.properties.get("plugins.login.url") != null) {
-				url = this.properties.get("plugins.login.url").toString();
-			}
-		}
-
+		super(prefijoPropiedades, properties);
 	}
 
 	@Override
 	public String iniciarSesionAutenticacion(final String codigoEntidad, final String idioma,
-			final List<TipoAutenticacion> metodos, final String qaa, final String callback) {
+			final List<TipoAutenticacion> metodos, final String qaa, final String callback)
+			throws AutenticacionPluginException {
 
-		// Configuracion global
-		final StringBuilder parametros = new StringBuilder();
 		String metodo = "";
 		if (metodos.contains(TipoAutenticacion.ANONIMO)) {
 			metodo += "ANONIMO;";
@@ -66,31 +48,33 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 			metodo = metodo.substring(0, metodo.length() - 1);
 		}
 
-		parametros.append("{  \"entidad\": \"" + codigoEntidad + "\"," + "  \"forzarAutenticacion\": false,"
-				+ "  \"idioma\": \"" + idioma + "\"," + "  \"metodosAutenticacion\": \"" + metodo + "\","
-				+ "  \"qaa\": " + qaa + "," + "  \"urlCallback\": \"" + callback + "\"" + "}");
-
+		final RLoginParams param = new RLoginParams();
+		param.setAplicacion(getIdAplicacion());
+		param.setEntidad(codigoEntidad);
+		param.setUrlCallback(callback);
+		param.setIdioma(idioma);
+		param.setForzarAutenticacion(false);
+		param.setQaa(Integer.parseInt(qaa));
+		param.setMetodosAutenticacion(metodo);
+		param.setAplicacion("SISTRA2");
 		final RestTemplate restTemplate = new RestTemplate();
 
 		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		// Obtener tramite.
-		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("parametros", parametros.toString());
-		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-		final ResponseEntity<String> responseTramite = restTemplate.postForEntity(this.url + "/login", request,
+		final HttpEntity<RLoginParams> request = new HttpEntity<>(param, headers);
+		final ResponseEntity<String> responseTramite = restTemplate.postForEntity(getUrl() + "/login", request,
 				String.class);
+
 		return responseTramite.getBody();
 	}
 
 	@Override
-	public DatosUsuario validarTicketAutenticacion(final String pTicket) {
+	public DatosUsuario validarTicketAutenticacion(final String pTicket) throws AutenticacionPluginException {
 
 		final RestTemplate restTemplate = new RestTemplate();
 
-		// Configuracion global
-		final RDatosAutenticacion datosUtenticacion = restTemplate.getForObject(this.url + "/ticket/" + pTicket,
+		final RDatosAutenticacion datosUtenticacion = restTemplate.getForObject(getUrl() + "/ticket/" + pTicket,
 				RDatosAutenticacion.class);
 
 		final DatosUsuario datos = new DatosUsuario();
@@ -109,25 +93,54 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 	}
 
 	@Override
-	public String iniciarSesionLogout(final String codigoEntidad, final String pIdioma, final String pCallback) {
+	public String iniciarSesionLogout(final String codigoEntidad, final String pIdioma, final String pCallback)
+			throws AutenticacionPluginException {
+
 		final RestTemplate restTemplate = new RestTemplate();
 
+		final RLogoutParams param = new RLogoutParams();
+		param.setAplicacion(getIdAplicacion());
+		param.setEntidad(codigoEntidad);
+		param.setUrlCallback(pCallback);
+		param.setIdioma(pIdioma);
+		param.setAplicacion("SISTRA2");
 		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		// Configuracion global
-		final StringBuilder parametros = new StringBuilder();
-
-		parametros.append("{  \"entidad\": \"" + codigoEntidad + "\", \"idioma\": \"" + pIdioma
-				+ "\", \"urlCallback\": \"" + pCallback + "\"" + "}");
-
-		// Obtener tramite.
-		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("parametros", parametros.toString());
-		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-		final ResponseEntity<String> responseTramite = restTemplate.postForEntity(this.url + "/logout", request,
+		final HttpEntity<RLogoutParams> request = new HttpEntity<>(param, headers);
+		final ResponseEntity<String> responseTramite = restTemplate.postForEntity(getUrl() + "/logout", request,
 				String.class);
+
 		return responseTramite.getBody();
+
+	}
+
+	/**
+	 * Obtiene url de propiedades.
+	 *
+	 * @return url propiedades
+	 * @throws AutenticacionPluginException
+	 */
+	private String getUrl() throws AutenticacionPluginException {
+		final String url = this.getProperty("url");
+		if (url == null) {
+			throw new AutenticacionPluginException("No se ha especificado parametro url en propiedades");
+		}
+		return url;
+	}
+
+	/**
+	 * Obtiene id aplicacion de propiedades.
+	 *
+	 * @return
+	 * @throws AutenticacionPluginException
+	 */
+	protected String getIdAplicacion() throws AutenticacionPluginException {
+		final String idApp = this.getProperty("idAplicacion");
+		if (idApp == null) {
+			throw new AutenticacionPluginException("No se ha especificado parametro idAplicacion en propiedades");
+		}
+		return idApp;
 	}
 
 }
