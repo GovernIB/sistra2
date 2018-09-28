@@ -233,6 +233,8 @@ body.imc--iframe-mostrat { overflow: hidden; }
 .imc-document h2 { margin-bottom: 1em; }
 .imc-document h2 span { font-size: 1.5em; }
 
+.imc-document .imc--doc-info { margin-bottom: 2em; }
+
 .imc-document .imc--botonera { text-align: right; }
 .imc-document .imc--botonera li { display: inline-block; margin: 0 .5em; }
 

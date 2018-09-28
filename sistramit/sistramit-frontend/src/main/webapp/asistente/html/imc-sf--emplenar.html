@@ -14,13 +14,16 @@
 		<ul>
 			{{formularis}}
 			<li data-completat="{{rellenado}}">
-				<a href="javascript:;" data-id="{{id}}" data-url="">
+				<a href="javascript:;" data-id="{{id}}" data-url="" data-obligatori="{{obligatorio}}">
 					<div class="imc--formulari"><span></span></div>
 					{{if obligatorio|equals>s}}
 					<div class="imc--tipus imc--ogligatori"><span></span></div>
 					{{/if}}
-					{{if obligatorio|equals>d}}
+					{{if obligatorio|equals>n}}
 					<div class="imc--tipus imc--opcional"><span></span></div>
+					{{/if}}
+					{{if obligatorio|equals>d}}
+					<div class="imc--tipus imc--depenent"><span></span></div>
 					{{/if}}
 					{{if rellenado|equals>c}}
 					<div class="imc--estat imc--completat"><span></span></div>
@@ -51,6 +54,9 @@
 			</li>
 			<li>
 				<div class="imc--tipus imc--opcional"><span>{{txtOpcional}}</span></div>
+			</li>
+			<li>
+				<div class="imc--tipus imc--depenent"><span>{{txtDepenent}}</span></div>
 			</li>
 			<li>
 				<div class="imc--estat imc--completat"><span>{{txtCompletat}}</span></div>

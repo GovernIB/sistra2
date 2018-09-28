@@ -11,6 +11,7 @@
 .imc--formularis a .imc--formulari { grid-area: 1 / 1 / span 2 / 1; background: #8c8c8c url(imgs/icones/ico_form.svg) no-repeat center center / auto 1.7em; border-right: 1px solid #fff; }
 .imc--formularis a .imc--ogligatori { grid-area: 1 / 2 / 1 / 2; width: 1.5em; min-height: 1.5em; background: #d66000 url(imgs/icones/ico_obligatori.svg) no-repeat center center / auto .9em; border-bottom:  1px solid #fff; }
 .imc--formularis a .imc--opcional { grid-area: 1 / 2 / 1 / 2; width: 1.5em; min-height: 1.5em; background: #106fc8 url(imgs/icones/ico_opcional.svg) no-repeat center center / auto .9em; border-bottom:  1px solid #fff; }
+.imc--formularis a .imc--depenent { grid-area: 1 / 2 / 1 / 2; width: 1.5em; min-height: 1.5em; background: #555 url(imgs/icones/ico_descendent.svg) no-repeat center center / auto .9em; border-bottom:  1px solid #fff; }
 .imc--formularis a .imc--completat { grid-area: 2 / 2 / 2 / 2; width: 1.5em; min-height: 1.5em; background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .7em; }
 .imc--formularis a .imc--no-completat { grid-area: 2 / 2 / 2 / 2; width: 1.5em; min-height: 1.5em; background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
 
@@ -20,6 +21,11 @@
 
 .imc--formularis a:hover,
 .imc--formularis a:focus { color: #3b8e5d; }
+
+.imc--formularis a[data-obligatori="d"] { color: #000; cursor: default; }
+
+.imc--formularis a[data-obligatori="d"]:hover,
+.imc--formularis a[data-obligatori="d"]:focus { color: #000; }
 
 .imc--formularis .imc--fo-xml { display: none; }
 
