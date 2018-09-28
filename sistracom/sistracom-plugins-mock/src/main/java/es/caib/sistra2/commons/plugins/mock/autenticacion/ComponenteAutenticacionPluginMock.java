@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
+import es.caib.sistra2.commons.plugins.autenticacion.AutenticacionPluginException;
 import es.caib.sistra2.commons.plugins.autenticacion.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.IComponenteAutenticacionPlugin;
 import es.caib.sistra2.commons.plugins.autenticacion.TipoAutenticacion;
@@ -34,7 +35,8 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
     @Override
     public String iniciarSesionAutenticacion(final String codigoEntidad,
             final String idioma, final List<TipoAutenticacion> metodos,
-            final String qaa, final String callback) {
+            final String qaa, final String callback)
+            throws AutenticacionPluginException {
         // Simulamos directamente retorno componente autenticacion. Ponemos la
         // primera letra del ticket el primer tipo de autenticacion para simular
         // ese metodo.
@@ -45,7 +47,8 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
     }
 
     @Override
-    public DatosUsuario validarTicketAutenticacion(final String pTicket) {
+    public DatosUsuario validarTicketAutenticacion(final String pTicket)
+            throws AutenticacionPluginException {
         // Simulamos segun primera letra del ticket
         DatosUsuario u;
         if (pTicket.startsWith(TipoAutenticacion.AUTENTICADO.toString())) {
@@ -58,7 +61,8 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 
     @Override
     public String iniciarSesionLogout(final String codigoEntidad,
-            final String pIdioma, final String pCallback) {
+            final String pIdioma, final String pCallback)
+            throws AutenticacionPluginException {
         // TODO PENDIENTE IMPLEMENTAR
         return null;
     }

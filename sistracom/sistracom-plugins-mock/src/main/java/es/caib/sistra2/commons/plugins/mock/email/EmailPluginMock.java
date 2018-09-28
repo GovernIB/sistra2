@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.caib.sistra2.commons.plugins.email.AnexoEmail;
+import es.caib.sistra2.commons.plugins.email.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.IEmailPlugin;
 
 /**
@@ -31,7 +32,8 @@ public class EmailPluginMock extends AbstractPluginProperties
 
     @Override
     public boolean envioEmail(List<String> destinatarios, String asunto,
-            String mensaje, List<AnexoEmail> anexos) {
+            String mensaje, List<AnexoEmail> anexos)
+            throws EmailPluginException {
         String dest = "";
         for (final String d : destinatarios) {
             dest += d + " ";

@@ -12,6 +12,10 @@ import org.fundaciobit.plugins.IPlugin;
  */
 public interface IComponenteAutenticacionPlugin extends IPlugin {
 
+    /** Prefix. */
+    public static final String AUTENTICACION_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES
+            + "login.";
+
     /**
      * Inicia sesion autenticacion.
      *
@@ -28,7 +32,8 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
      * @return url inicio sesion
      */
     String iniciarSesionAutenticacion(String codigoEntidad, String idioma,
-            List<TipoAutenticacion> metodos, String qaa, String urlCallback);
+            List<TipoAutenticacion> metodos, String qaa, String urlCallback)
+            throws AutenticacionPluginException;
 
     /**
      * Validar ticket.
@@ -37,7 +42,8 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
      *            ticket
      * @return datos usuario
      */
-    DatosUsuario validarTicketAutenticacion(String ticket);
+    DatosUsuario validarTicketAutenticacion(String ticket)
+            throws AutenticacionPluginException;
 
     /**
      * Iniciar sesión de logout.
@@ -53,6 +59,6 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
      * @return
      */
     String iniciarSesionLogout(String codigoEntidad, String idioma,
-            String urlCallback);
+            String urlCallback) throws AutenticacionPluginException;
 
 }

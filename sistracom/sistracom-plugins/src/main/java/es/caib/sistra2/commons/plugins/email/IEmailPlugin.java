@@ -12,20 +12,23 @@ import org.fundaciobit.plugins.IPlugin;
  */
 public interface IEmailPlugin extends IPlugin {
 
-    /**
-     * Realiza envio email.
-     *
-     * @param destinatarios
-     *            Destinatarios
-     * @param asunto
-     *            Asunto
-     * @param mensaje
-     *            Mensaje
-     * @param anexos
-     *            anexos
-     * @return boolean
-     */
-    boolean envioEmail(List<String> destinatarios, String asunto,
-            String mensaje, List<AnexoEmail> anexos);
+	/** Prefix. */
+	public static final String AUTENTICACION_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES + "email.";
+
+	/**
+	 * Realiza envio email.
+	 *
+	 * @param destinatarios
+	 *            Destinatarios
+	 * @param asunto
+	 *            Asunto
+	 * @param mensaje
+	 *            Mensaje
+	 * @param anexos
+	 *            anexos
+	 * @return boolean
+	 */
+	boolean envioEmail(List<String> destinatarios, String asunto, String mensaje, List<AnexoEmail> anexos)
+			throws EmailPluginException;
 
 }
