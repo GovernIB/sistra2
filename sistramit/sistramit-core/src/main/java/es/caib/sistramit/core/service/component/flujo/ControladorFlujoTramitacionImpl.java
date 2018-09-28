@@ -386,8 +386,9 @@ public final class ControladorFlujoTramitacionImpl
                         .getDefinicionVersion().getIdEntidad());
 
         // Establece detalle tramite
-        final DetalleTramite detalleTramite = UtilsFlujo
-                .detalleTramite(pDatosSesion, entidadInfo);
+        final DetalleTramite detalleTramite = UtilsFlujo.detalleTramite(
+                pDatosSesion, entidadInfo,
+                configuracionComponent.obtenerUrlResources());
 
         return detalleTramite;
     }

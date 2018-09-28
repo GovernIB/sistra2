@@ -263,16 +263,18 @@ public final class UtilsFlujo {
      *            entidad
      * @param idioma
      *            idioma
+     * @param urlResources
+     *            Url recursos
      * @return entidad
      */
     public static Entidad detalleTramiteEntidad(RConfiguracionEntidad entidad,
-            String idioma) {
+            String idioma, String urlResources) {
 
         final Entidad e = new Entidad();
         e.setId(entidad.getIdentificador());
         e.setNombre(UtilsSTG.obtenerLiteral(entidad.getDescripcion(), idioma));
-        e.setLogo(entidad.getLogo());
-        e.setCss(entidad.getCss());
+        e.setLogo(urlResources + entidad.getLogo());
+        e.setCss(urlResources + entidad.getCss());
         e.setContacto(
                 UtilsSTG.obtenerLiteral(entidad.getContactoHTML(), idioma));
         e.setUrlCarpeta(
@@ -362,11 +364,13 @@ public final class UtilsFlujo {
      *            Datos sesion
      * @param entidadInfo
      *            entidad info
+     * @param urlResources
+     *            Url recursos
      * @return detalle tramite
      */
     public static DetalleTramite detalleTramite(
             final DatosSesionTramitacion pDatosSesion,
-            final RConfiguracionEntidad entidadInfo) {
+            final RConfiguracionEntidad entidadInfo, String urlResources) {
         final DetalleTramite detalleTramite = new DetalleTramite();
         detalleTramite.setFechaDefinicion(UtilsFlujo.formateaFechaFront(
                 pDatosSesion.getDefinicionTramite().getFechaRecuperacion()));
@@ -379,7 +383,7 @@ public final class UtilsFlujo {
         detalleTramite
                 .setUsuario(pDatosSesion.getDatosTramite().getIniciador());
         detalleTramite.setEntidad(detalleTramiteEntidad(entidadInfo,
-                pDatosSesion.getDatosTramite().getIdioma()));
+                pDatosSesion.getDatosTramite().getIdioma(), urlResources));
         return detalleTramite;
     }
 

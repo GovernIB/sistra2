@@ -1,19 +1,31 @@
 package es.caib.sistramit.core.service.component.system;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.plugins.IPlugin;
+import org.fundaciobit.plugins.utils.FileUtils;
 import org.fundaciobit.plugins.utils.PluginsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.plugins.firmacliente.FicheroAFirmar;
+import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
+import es.caib.sistra2.commons.plugins.firmacliente.InfoSesionFirma;
+import es.caib.sistra2.commons.plugins.firmacliente.TypeEstadoFirmado;
+import es.caib.sistra2.commons.plugins.mock.firmacliente.ComponenteFirmaSimpleWebPlugin;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
@@ -85,6 +97,12 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		return createPlugin(confEntidad.getPlugins(), tipoPlugin.toString());
 	}
 
+	@Override
+	public String obtenerUrlResources() {
+		final String urlResources = readPropiedad(TypePropiedadConfiguracion.SISTRAMIT_URL, false) + "/resources";
+		return urlResources;
+	}
+
 	// ----------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// ----------------------------------------------------------------------
@@ -145,23 +163,98 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
 			classname = rplg.getClassname();
 
-			/**
-			 * final Class plgClass = Class.forName(classname);
-			 *
-			 * final Constructor constructor = plgClass.getConstructor(String.class,
-			 * Properties.class); plg = (IPlugin) constructor.newInstance(rplg.getPrefijo(),
-			 * null);
-			 */
-
 			Properties prop = null;
 			if (rplg.getPrefijoPropiedades() != null && rplg.getPropiedades() != null
 					&& rplg.getPropiedades().getParametros() != null
 					&& !rplg.getPropiedades().getParametros().isEmpty()) {
 				prop = new Properties();
 				for (final RValorParametro parametro : rplg.getPropiedades().getParametros()) {
-					prop.put(rplg.getPrefijoPropiedades() + "." + parametro.getCodigo(), parametro.getValor());
+					prop.put(rplg.getPrefijoPropiedades() + parametro.getCodigo(), parametro.getValor());
 				}
 			}
+
+			/**
+			try {
+				prop = new Properties();
+				prop.put("plugins.firma.url",
+						"http://portafib2.fundaciobit.org/portafib/common/rest/apifirmawebsimple/v1/");
+				prop.put("plugins.firma.usr", "ibsalut_sistra2");
+				prop.put("plugins.firma.pwd", "ibsalut_sistra2");
+				plg = (IPlugin) PluginsManager.instancePluginByClassName(
+						"es.caib.sistra2.commons.plugins.mock.firmacliente.ComponenteFirmaSimpleWebPlugin",
+						"plugins.firma.", prop);
+				final ComponenteFirmaSimpleWebPlugin plugin = (ComponenteFirmaSimpleWebPlugin) plg;
+
+				// Paso 1. Crear sesion
+				final InfoSesionFirma infoSesionFirma = new InfoSesionFirma();
+				infoSesionFirma.setEntidad("12345678C");
+				infoSesionFirma.setIdioma("ca");
+				infoSesionFirma.setNombreUsuario("jmico");
+				final String idSession = plugin.generarSesionFirma(infoSesionFirma);
+
+				// Paso 2. Leer y subir los 2 ficheros.
+				//Anyadimos docs
+				final InputStream is = new DataInputStream(new FileInputStream("P://hola.pdf"));
+				final ByteArrayOutputStream fos = new ByteArrayOutputStream();
+				FileUtils.copy(is, fos);
+				final FicheroAFirmar fichero = new FicheroAFirmar();
+				fichero.setFichero(fos.toByteArray());
+				fichero.setMimetypeFichero("application/pdf");
+				fichero.setIdioma("ca");
+				fichero.setSignNumber(1);
+				fichero.setNombreFichero("hola.pdf");
+				fichero.setRazon("Fichero prueba1");
+				fichero.setSignID("666");
+				fichero.setSesion(idSession);
+				plugin.ficheroAFirmar(fichero);
+
+				final InputStream is2 = new DataInputStream(new FileInputStream("P://hola2.pdf"));
+				final ByteArrayOutputStream fos2 = new ByteArrayOutputStream();
+				FileUtils.copy(is2, fos2);
+				final FicheroAFirmar fichero2 = new FicheroAFirmar();
+				fichero2.setFichero(fos2.toByteArray());
+				fichero2.setMimetypeFichero("application/pdf");
+				fichero2.setIdioma("ca");
+				fichero2.setSignNumber(1);
+				fichero2.setNombreFichero("hola2.pdf");
+				fichero2.setRazon("Fichero prueba1");
+				fichero2.setSignID("777");
+				fichero2.setSesion(idSession);
+				plugin.ficheroAFirmar(fichero2);
+
+				// Paso 3. Crear transaction y obtener url
+				final String url = plugin.iniciarSesionFirma(idSession, null, null);
+				System.out.println("URL:" + url);
+
+				// Paso 3.5 Esperando a que se finalice el firmado (4 seg durmiendo)
+				TypeEstadoFirmado estado = TypeEstadoFirmado.INICIALIZADO;
+				while (estado != TypeEstadoFirmado.FINALIZADO_OK) {
+					estado = plugin.obtenerEstadoSesionFirma(idSession);
+					System.out.println("estado: " + estado);
+					Thread.sleep(4000l);
+				}
+
+				// Paso 4. Obtenemos ficheros cuando finalizado
+				if (estado == TypeEstadoFirmado.FINALIZADO_OK) {
+					final FicheroFirmado ficheroFirmado1 = plugin.obtenerFirmaFichero(idSession, "666");
+					final FileOutputStream output = new FileOutputStream(
+							new File("P://" + ficheroFirmado1.getNombreFichero()));
+					IOUtils.write(ficheroFirmado1.getFirmaFichero(), output);
+					output.close();
+
+					final FicheroFirmado ficheroFirmado2 = plugin.obtenerFirmaFichero(idSession, "777");
+					final FileOutputStream output2 = new FileOutputStream(
+							new File("P://" + ficheroFirmado2.getNombreFichero()));
+					IOUtils.write(ficheroFirmado2.getFirmaFichero(), output2);
+					output2.close();
+				}
+
+				// Paso 5. Cerramos session.
+				plugin.cerrarSesionFirma(idSession);
+
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}*/
 
 			plg = (IPlugin) PluginsManager.instancePluginByClassName(classname, rplg.getPrefijoPropiedades(), prop);
 

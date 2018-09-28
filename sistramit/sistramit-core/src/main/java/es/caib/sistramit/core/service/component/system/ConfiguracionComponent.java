@@ -89,4 +89,11 @@ public interface ConfiguracionComponent {
     IPlugin obtenerPluginEntidad(TypePluginEntidad tipoPlugin,
             String idEntidad);
 
+    /**
+     * Obtiene url recursos.
+     *
+     * @return configuración
+     */
+    String obtenerUrlResources();
+
 }
