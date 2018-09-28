@@ -81,19 +81,19 @@ public class AsistenteTramitacionController extends TramitacionController {
 		response.getWriter().println();
 		response.getWriter().println();
 		response.getWriter().println(
-				"URL del estado: caibter.indra.es/sistramitfront/debug/testFirmaEstado.html?idSession=" + idSesion);
+				"URL del estado: /sistramitfront/debug/testFirmaEstado.html?idSession=" + idSesion);
 		response.getWriter().println(" <br />          ");
 		response.getWriter().println(
 				" <br />                                                                                            ");
 		response.getWriter().println(
-				"Descargar doc1 firmado (solo funciona si ya está firmado, sino da error): caibter.indra.es/sistramitfront/debug/testFirmaDoc.html?idSession="
+				"Descargar doc1 firmado (solo funciona si ya está firmado, sino da error): /sistramitfront/debug/testFirmaDoc.html?idSession="
 						+ idSesion + "&docId=666");
 		response.getWriter().println(
-				"Descargar doc2 firmado (solo funciona si ya está firmado, sino da error): caibter.indra.es/sistramitfront/debug/testFirmaDoc.html?idSession="
+				"Descargar doc2 firmado (solo funciona si ya está firmado, sino da error): /sistramitfront/debug/testFirmaDoc.html?idSession="
 						+ idSesion + "&docId=777");
 		response.getWriter().println();
 		response.getWriter().println(
-				"Cerrar transaction: caibter.indra.es/sistramitfront/debug/testFirmaCerrar.html?idSession=" + idSesion);
+				"Cerrar transaction: /sistramitfront/debug/testFirmaCerrar.html?idSession=" + idSesion);
 
 		return null;
 	}
