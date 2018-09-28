@@ -13,6 +13,10 @@ import org.fundaciobit.plugins.IPlugin;
  */
 public interface ICatalogoProcedimientosPlugin extends IPlugin {
 
+	/** Prefix. */
+	public static final String CATALOGO_PROCEDIMIENTOS_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES
+			+ "catalogoprocedimientos.";
+
 	/**
 	 * Recupera configuración trámite.
 	 *
@@ -22,7 +26,7 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
 	 *            idioma
 	 * @throws ParseException
 	 */
-	DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP, String idioma);
+	DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP, String idioma) throws RolsacPluginException;
 
 	/**
 	 * Recupera procedimientos en los que se usa un trámite de Sistra.
@@ -31,7 +35,9 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
 	 *            id trámite sistra
 	 * @param idioma
 	 *            idioma
+	 * @throws RolsacPluginException
 	 */
-	List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(String idTramite, String idioma);
+	List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(String idTramite, String idioma)
+			throws RolsacPluginException;
 
 }

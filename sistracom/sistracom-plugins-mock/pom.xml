@@ -55,6 +55,12 @@
    				</exclusion>
    			</exclusions>
 		</dependency>
+
+		<dependency>
+			<artifactId>firmasimple-api</artifactId>
+ 			<groupId>org.fundaciobit.pluginsib.signature.firmasimple</groupId>
+			<version>${firmasimple.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

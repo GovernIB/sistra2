@@ -26,104 +26,119 @@ import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 
-    @Autowired
-    private FlujoTramitacionService flujoTramitacionService;
+	@Autowired
+	private FlujoTramitacionService flujoTramitacionService;
 
-    @Override
-    public String crearSesionTramitacion(
-            UsuarioAutenticadoInfo usuarioAutenticado) {
-        return flujoTramitacionService
-                .crearSesionTramitacion(usuarioAutenticado);
-    }
+	@Override
+	public String crearSesionTramitacion(final UsuarioAutenticadoInfo usuarioAutenticado) {
+		return flujoTramitacionService.crearSesionTramitacion(usuarioAutenticado);
+	}
 
-    @Override
-    public void iniciarTramite(String idSesionTramitacion,
-            final String idTramite, final int version, final String idioma,
-            final String idTramiteCatalogo, final String urlInicio,
-            final Map<String, String> parametrosInicio) {
-        flujoTramitacionService.iniciarTramite(idSesionTramitacion, idTramite,
-                version, idioma, idTramiteCatalogo, urlInicio,
-                parametrosInicio);
-    }
+	@Override
+	public void iniciarTramite(final String idSesionTramitacion, final String idTramite, final int version,
+			final String idioma, final String idTramiteCatalogo, final String urlInicio,
+			final Map<String, String> parametrosInicio) {
+		flujoTramitacionService.iniciarTramite(idSesionTramitacion, idTramite, version, idioma, idTramiteCatalogo,
+				urlInicio, parametrosInicio);
+	}
 
-    @Override
-    public DetalleTramite obtenerDetalleTramite(
-            final String idSesionTramitacion) {
-        return flujoTramitacionService
-                .obtenerDetalleTramite(idSesionTramitacion);
-    }
+	@Override
+	public DetalleTramite obtenerDetalleTramite(final String idSesionTramitacion) {
+		return flujoTramitacionService.obtenerDetalleTramite(idSesionTramitacion);
+	}
 
-    @Override
-    public DetallePasos obtenerDetallePasos(String idSesionTramitacion) {
-        return flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
-    }
+	@Override
+	public DetallePasos obtenerDetallePasos(final String idSesionTramitacion) {
+		return flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+	}
 
-    @Override
-    public FlujoTramitacionInfo obtenerFlujoTramitacionInfo(
-            final String idSesionTramitacion) {
-        return flujoTramitacionService
-                .obtenerFlujoTramitacionInfo(idSesionTramitacion);
-    }
+	@Override
+	public FlujoTramitacionInfo obtenerFlujoTramitacionInfo(final String idSesionTramitacion) {
+		return flujoTramitacionService.obtenerFlujoTramitacionInfo(idSesionTramitacion);
+	}
 
-    @Override
-    public void invalidarFlujoTramitacion(final String idSesionTramitacion) {
-        flujoTramitacionService.invalidarFlujoTramitacion(idSesionTramitacion);
-    }
+	@Override
+	public void invalidarFlujoTramitacion(final String idSesionTramitacion) {
+		flujoTramitacionService.invalidarFlujoTramitacion(idSesionTramitacion);
+	}
 
-    @Override
-    public void cargarTramite(String idSesionTramitacion,
-            UsuarioAutenticadoInfo usuarioAutenticado) {
-        flujoTramitacionService.cargarTramite(idSesionTramitacion,
-                usuarioAutenticado);
-    }
+	@Override
+	public void cargarTramite(final String idSesionTramitacion, final UsuarioAutenticadoInfo usuarioAutenticado) {
+		flujoTramitacionService.cargarTramite(idSesionTramitacion, usuarioAutenticado);
+	}
 
-    @Override
-    public void recargarTramite(String idSesionTramitacion,
-            UsuarioAutenticadoInfo userInfo) {
-        flujoTramitacionService.recargarTramite(idSesionTramitacion, userInfo);
-    }
+	@Override
+	public void recargarTramite(final String idSesionTramitacion, final UsuarioAutenticadoInfo userInfo) {
+		flujoTramitacionService.recargarTramite(idSesionTramitacion, userInfo);
+	}
 
-    @Override
-    public ResultadoIrAPaso irAPaso(String idSesionTramitacion, String idPaso) {
-        return flujoTramitacionService.irAPaso(idSesionTramitacion, idPaso);
-    }
+	@Override
+	public ResultadoIrAPaso irAPaso(final String idSesionTramitacion, final String idPaso) {
+		return flujoTramitacionService.irAPaso(idSesionTramitacion, idPaso);
+	}
 
-    @Override
-    public ResultadoIrAPaso irAPasoActual(String idSesionTramitacion) {
-        return flujoTramitacionService.irAPasoActual(idSesionTramitacion);
-    }
+	@Override
+	public ResultadoIrAPaso irAPasoActual(final String idSesionTramitacion) {
+		return flujoTramitacionService.irAPasoActual(idSesionTramitacion);
+	}
 
-    @Override
-    public ResultadoAccionPaso accionPaso(String idSesionTramitacion,
-            String idPaso, TypeAccionPaso accionPaso,
-            ParametrosAccionPaso parametros) {
-        return flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
-                accionPaso, parametros);
-    }
+	@Override
+	public ResultadoAccionPaso accionPaso(final String idSesionTramitacion, final String idPaso,
+			final TypeAccionPaso accionPaso, final ParametrosAccionPaso parametros) {
+		return flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso, accionPaso, parametros);
+	}
 
-    @Override
-    public void cancelarTramite(String idSesionTramitacion) {
-        flujoTramitacionService.cancelarTramite(idSesionTramitacion);
-    }
+	@Override
+	public void cancelarTramite(final String idSesionTramitacion) {
+		flujoTramitacionService.cancelarTramite(idSesionTramitacion);
+	}
 
-    @Override
-    public void purgar() {
-        flujoTramitacionService.purgar();
-    }
+	@Override
+	public void purgar() {
+		flujoTramitacionService.purgar();
+	}
 
-    @Override
-    public void envioFormularioSoporte(String idSesionTramitacion, String nif,
-            String nombre, String telefono, String email, String problemaTipo,
-            String problemaDesc, AnexoFichero anexo) {
-        flujoTramitacionService.envioFormularioSoporte(idSesionTramitacion, nif,
-                nombre, telefono, email, problemaTipo, problemaDesc, anexo);
-    }
+	@Override
+	public void envioFormularioSoporte(final String idSesionTramitacion, final String nif, final String nombre,
+			final String telefono, final String email, final String problemaTipo, final String problemaDesc,
+			final AnexoFichero anexo) {
+		flujoTramitacionService.envioFormularioSoporte(idSesionTramitacion, nif, nombre, telefono, email, problemaTipo,
+				problemaDesc, anexo);
+	}
 
-    @Override
-    public String simularRellenarFormulario(String idSesionTramitacion,
-            String xml) {
-        return flujoTramitacionService
-                .simularRellenarFormulario(idSesionTramitacion, xml);
-    }
+	@Override
+	public String simularRellenarFormulario(final String idSesionTramitacion, final String xml) {
+		return flujoTramitacionService.simularRellenarFormulario(idSesionTramitacion, xml);
+	}
+
+	@Override
+	public String testFirmaCreateSesion(final String idSesionTramitacion) {
+		return flujoTramitacionService.testFirmaCreateSesion(idSesionTramitacion);
+	}
+
+	@Override
+	public String testFirmaAddFichero(final String idSesionTramitacion, final String idSession) {
+		return flujoTramitacionService.testFirmaAddFichero(idSesionTramitacion, idSession);
+	}
+
+	@Override
+	public String testFirmaActivar(final String idSesionTramitacion, final String idSession) {
+		return flujoTramitacionService.testFirmaActivar(idSesionTramitacion, idSession);
+	}
+
+	@Override
+	public String testFirmaEstado(final String idSesionTramitacion, final String idSession) {
+		return flujoTramitacionService.testFirmaEstado(idSesionTramitacion, idSession);
+	}
+
+	@Override
+	public byte[] testFirmaDoc(final String idSesionTramitacion, final String idSession, final String idDoc) {
+		return flujoTramitacionService.testFirmaDoc(idSesionTramitacion, idSession, idDoc);
+	}
+
+	@Override
+	public void testFirmaCerrar(final String idSesionTramitacion, final String idSession) {
+		flujoTramitacionService.testFirmaCerrar(idSesionTramitacion, idSession);
+	}
 
 }

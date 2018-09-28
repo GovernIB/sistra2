@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.ICatalogoProcedimientosPlugin;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.RolsacPluginException;
+import es.caib.sistramit.core.api.exception.CatalogoProcedimientosException;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 
@@ -30,7 +32,12 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 	public DefinicionTramiteCP obtenerDefinicionTramite(final String idEntidad, final String idTramiteCP,
 			final String idioma) {
 		final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
-		return plgCP.obtenerDefinicionTramite(idTramiteCP, idioma);
+		try {
+			return plgCP.obtenerDefinicionTramite(idTramiteCP, idioma);
+		} catch (final RolsacPluginException e) {
+			log.error("Error obteniendo la info del tramite", e);
+			throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);
+		}
 	}
 
 	/**

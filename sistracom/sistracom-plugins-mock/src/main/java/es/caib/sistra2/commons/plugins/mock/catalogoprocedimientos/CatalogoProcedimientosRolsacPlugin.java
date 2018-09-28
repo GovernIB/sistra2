@@ -1,15 +1,12 @@
 package es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.fundaciobit.plugins.IPlugin;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
-import org.fundaciobit.plugins.utils.PluginsManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,9 +16,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import es.caib.sistra2.commons.plugins.autenticacion.AutenticacionPluginException;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionProcedimientoCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.ICatalogoProcedimientosPlugin;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.RolsacPluginException;
 import es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.modelo.RProcedimientoRolsac;
 import es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.modelo.RRespuestaProcedimiento;
 import es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.modelo.RRespuestaProcedimientos;
@@ -37,51 +36,17 @@ import es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.modelo.RTrami
 public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		implements ICatalogoProcedimientosPlugin {
 
-	public static void main(final String args[]) throws ParseException {
-		final Properties prop = new Properties();
-		final String prefijo = "plugins.catalogoprocedimientos";
-		prop.put(prefijo + ".usr", "rolsac_rest_api");
-		prop.put(prefijo + ".pwd", "rolsac_rest_api");
-		prop.put(prefijo + ".url", "http://caibter.indra.es/rolsac/api/rest/");
-		final String className = "es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.CatalogoProcedimientosRolsacPlugin";
-		final IPlugin plg = (IPlugin) PluginsManager.instancePluginByClassName(className, prefijo, prop);
-		if (plg instanceof CatalogoProcedimientosRolsacPlugin) {
-			final CatalogoProcedimientosRolsacPlugin plugin = (CatalogoProcedimientosRolsacPlugin) plg;
-			final String idTramite = "1319201";
-			final String idioma = "ca";
-			plugin.obtenerDefinicionTramite(idTramite, idioma);
-			plugin.obtenerProcedimientosTramiteSistra(idTramite, idioma);
-		}
-	}
-
-	private final String prefijo;
-	private final Properties properties;
-	private String usr;
-	private String pwd;
-	private String url;
-
 	public CatalogoProcedimientosRolsacPlugin(final String prefijoPropiedades, final Properties properties) {
-		this.prefijo = prefijoPropiedades;
-		this.properties = properties;
-		if (this.properties != null) {
-			if (this.properties.get("plugins.catalogoprocedimientos.usr") != null) {
-				usr = this.properties.get("plugins.catalogoprocedimientos.usr").toString();
-			}
-			if (this.properties.get("plugins.catalogoprocedimientos.pwd") != null) {
-				pwd = this.properties.get("plugins.catalogoprocedimientos.pwd").toString();
-			}
-			if (this.properties.get("plugins.catalogoprocedimientos.url") != null) {
-				url = this.properties.get("plugins.catalogoprocedimientos.url").toString();
-			}
-		}
+		super(prefijoPropiedades, properties);
 	}
 
 	@Override
-	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, final String idioma) {
+	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, final String idioma)
+			throws RolsacPluginException {
 
 		final RestTemplate restTemplate = new RestTemplate();
 
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usr, pwd));
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUsr(), getPwd()));
 
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -91,14 +56,21 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		map.add("idioma", idioma);
 		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		final ResponseEntity<RRespuestaTramite> responseTramite = restTemplate
-				.postForEntity(this.url + "/tramites/" + idTramiteCP, request, RRespuestaTramite.class);
+				.postForEntity(getUrl() + "/tramites/" + idTramiteCP, request, RRespuestaTramite.class);
+		if (responseTramite == null || responseTramite.getBody() == null
+				|| responseTramite.getBody().getResultado() == null) {
+			throw new RolsacPluginException("El tramite no existe.");
+		}
 		final RTramiteRolsac tramiteRolsac = responseTramite.getBody().getResultado();
 
 		// Obtener procedimiento.
 		final String codigoProc = tramiteRolsac.getLink_procedimiento().getCodigo();
 		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
 		final ResponseEntity<RRespuestaProcedimiento> responseProc = restTemplate
-				.postForEntity(this.url + "/procedimientos/" + codigoProc, requestProc, RRespuestaProcedimiento.class);
+				.postForEntity(getUrl() + "/procedimientos/" + codigoProc, requestProc, RRespuestaProcedimiento.class);
+		if (responseProc == null || responseProc.getBody() == null || responseProc.getBody().getResultado() == null) {
+			throw new RolsacPluginException("El procedimiento no existe.");
+		}
 		final RProcedimientoRolsac procRolsac = responseProc.getBody().getResultado();
 
 		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
@@ -119,13 +91,13 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 	@Override
 	public List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(final String idTramite,
-			final String idioma) {
+			final String idioma) throws RolsacPluginException {
 
 		final List<DefinicionProcedimientoCP> res = new ArrayList<>();
 
 		final RestTemplate restTemplate = new RestTemplate();
 
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usr, pwd));
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUsr(), getPwd()));
 
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -137,7 +109,11 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		// Obtener procedimiento.
 		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
 		final ResponseEntity<RRespuestaProcedimientos> responseProc = restTemplate
-				.postForEntity(this.url + "/procedimientos/", requestProc, RRespuestaProcedimientos.class);
+				.postForEntity(getUrl() + "/procedimientos/", requestProc, RRespuestaProcedimientos.class);
+
+		if (responseProc == null || responseProc.getBody() == null || responseProc.getBody().getResultado() == null) {
+			throw new RolsacPluginException("Los procedimientos no existen");
+		}
 		final RProcedimientoRolsac[] procedimientosRolsac = responseProc.getBody().getResultado();
 
 		if (procedimientosRolsac != null) {
@@ -156,7 +132,8 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 	}
 
-	public boolean esPublico(final RProcedimientoRolsac procedimiento, final RTramiteRolsac tramite) {
+	public boolean esPublico(final RProcedimientoRolsac procedimiento, final RTramiteRolsac tramite)
+			throws RolsacPluginException {
 		final Date now = new Date();
 		Date fechaCaducidad;
 		Date fechaPublicacion;
@@ -167,8 +144,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			try {
 				fechaCaducidad = sdf.parse(tramite.getDataCaducitat());
 			} catch (final Exception e) {
-				e.printStackTrace();
-				fechaCaducidad = null;
+				throw new RolsacPluginException("La fecha de caducidad tiene un formato erroneo", e);
 			}
 		}
 		if (tramite.getDataPublicacio() == null || tramite.getDataPublicacio().isEmpty()) {
@@ -177,8 +153,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			try {
 				fechaPublicacion = sdf.parse(tramite.getDataPublicacio());
 			} catch (final Exception e) {
-				e.printStackTrace();
-				fechaPublicacion = null;
+				throw new RolsacPluginException("La fecha de caducidad tiene un formato erroneo", e);
 			}
 		}
 		final boolean noCaducado = (fechaCaducidad == null || fechaCaducidad.after(now));
@@ -186,6 +161,62 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final boolean visible = procedimiento != null
 				&& (procedimiento.getValidacion() == null || "1".equals(procedimiento.getValidacion().toString()));
 		return visible && noCaducado && publicado;
+	}
+
+	/**
+	 * Obtiene url de propiedades.
+	 *
+	 * @return url propiedades
+	 * @throws AutenticacionPluginException
+	 */
+	private String getUrl() throws RolsacPluginException {
+		final String url = this.getProperty("url");
+		if (url == null) {
+			throw new RolsacPluginException("No se ha especificado parametro url en propiedades");
+		}
+		return url;
+	}
+
+	/**
+	 * Obtiene usuario de propiedades.
+	 *
+	 * @return url propiedades
+	 * @throws AutenticacionPluginException
+	 */
+	private String getUsr() throws RolsacPluginException {
+		final String usr = this.getProperty("usr");
+		if (usr == null) {
+			throw new RolsacPluginException("No se ha especificado parametro usuario en propiedades");
+		}
+		return usr;
+	}
+
+	/**
+	 * Obtiene password de propiedades.
+	 *
+	 * @return url propiedades
+	 * @throws AutenticacionPluginException
+	 */
+	private String getPwd() throws RolsacPluginException {
+		final String pwd = this.getProperty("pwd");
+		if (pwd == null) {
+			throw new RolsacPluginException("No se ha especificado parametro password en propiedades");
+		}
+		return pwd;
+	}
+
+	/**
+	 * Obtiene id aplicacion de propiedades.
+	 *
+	 * @return
+	 * @throws AutenticacionPluginException
+	 */
+	protected String getIdAplicacion() throws RolsacPluginException {
+		final String idApp = this.getProperty("idAplicacion");
+		if (idApp == null) {
+			throw new RolsacPluginException("No se ha especificado parametro idAplicacion en propiedades");
+		}
+		return idApp;
 	}
 
 }

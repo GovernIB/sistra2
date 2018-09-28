@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.flujo;
 
 import java.util.Map;
 
+import es.caib.sistra2.commons.plugins.firmacliente.FirmaPluginException;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
@@ -14,60 +15,67 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 
 public interface FlujoTramitacionComponent {
 
-    String crearSesionTramitacion(UsuarioAutenticadoInfo pUsuarioAutenticado);
+	String crearSesionTramitacion(UsuarioAutenticadoInfo pUsuarioAutenticado);
 
-    void iniciarTramite(String idTramite, int version, String idioma,
-            String idTramiteCatalogo, String urlInicio,
-            Map<String, String> parametrosInicio);
+	void iniciarTramite(String idTramite, int version, String idioma, String idTramiteCatalogo, String urlInicio,
+			Map<String, String> parametrosInicio);
 
-    void cargarTramite(String idSesionTramitacion,
-            UsuarioAutenticadoInfo usuarioAutenticado);
+	void cargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo usuarioAutenticado);
 
-    void recargarTramite(String idSesionTramitacion,
-            UsuarioAutenticadoInfo userInfo);
+	void recargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo userInfo);
 
-    DetalleTramite obtenerDetalleTramite();
+	DetalleTramite obtenerDetalleTramite();
 
-    DetallePasos obtenerDetallePasos();
+	DetallePasos obtenerDetallePasos();
 
-    void invalidarFlujoTramicacion();
+	void invalidarFlujoTramicacion();
 
-    ResultadoIrAPaso irAPaso(String idPaso);
+	ResultadoIrAPaso irAPaso(String idPaso);
 
-    ResultadoIrAPaso irAPasoActual();
+	ResultadoIrAPaso irAPasoActual();
 
-    ResultadoAccionPaso accionPaso(String idPaso, TypeAccionPaso accionPaso,
-            ParametrosAccionPaso parametros);
+	ResultadoAccionPaso accionPaso(String idPaso, TypeAccionPaso accionPaso, ParametrosAccionPaso parametros);
 
-    void cancelarTramite();
+	void cancelarTramite();
 
-    FlujoTramitacionInfo obtenerFlujoTramitacionInfo();
+	FlujoTramitacionInfo obtenerFlujoTramitacionInfo();
 
-    /**
-     * Envío formulario de soporte.
-     *
-     * @param idSesionTramitacion
-     *            id sesión tramitación
-     * @param nif
-     *            nif
-     * @param nombre
-     *            nombre
-     * @param telefono
-     *            telefono
-     * @param email
-     *            email
-     * @param problemaTipo
-     *            problema tipo
-     * @param problemaDesc
-     *            problema descripción
-     * @param anexo
-     *            anexo
-     */
-    void envioFormularioSoporte(String nif, String nombre, String telefono,
-            String email, String problemaTipo, String problemaDesc,
-            AnexoFichero anexo);
+	/**
+	 * Envío formulario de soporte.
+	 *
+	 * @param idSesionTramitacion
+	 *            id sesión tramitación
+	 * @param nif
+	 *            nif
+	 * @param nombre
+	 *            nombre
+	 * @param telefono
+	 *            telefono
+	 * @param email
+	 *            email
+	 * @param problemaTipo
+	 *            problema tipo
+	 * @param problemaDesc
+	 *            problema descripción
+	 * @param anexo
+	 *            anexo
+	 */
+	void envioFormularioSoporte(String nif, String nombre, String telefono, String email, String problemaTipo,
+			String problemaDesc, AnexoFichero anexo);
 
-    // TODO BORRAR
-    String simularRellenarFormulario(String xml);
+	// TODO BORRAR
+	String simularRellenarFormulario(String xml);
+
+	String testFirmaCreateSesion() throws FirmaPluginException;
+
+	String testFirmaAddFichero(String idSession) throws Exception;
+
+	String testFirmaActivar(String idSession) throws FirmaPluginException;
+
+	String testFirmaEstado(String idSession) throws FirmaPluginException;
+
+	byte[] testFirmaDoc(String idSession, String idDoc) throws FirmaPluginException;
+
+	void testFirmaCerrar(String idSession) throws FirmaPluginException;
 
 }

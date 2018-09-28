@@ -58,6 +58,7 @@
 		<plugins-ib.version>1.0.0</plugins-ib.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
 		<loginib.version>0.0.1-SNAPSHOT</loginib.version>
+		<firmasimple.version>1.0</firmasimple.version>
 	</properties>
 
 	<repositories>
