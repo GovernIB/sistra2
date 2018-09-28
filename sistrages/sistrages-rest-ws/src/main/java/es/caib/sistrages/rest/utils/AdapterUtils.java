@@ -3,6 +3,8 @@ package es.caib.sistrages.rest.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Script;
@@ -94,7 +96,14 @@ public class AdapterUtils {
                 plugin.setClassname(p.getClassname());
                 plugin.setPropiedades(
                         toListaParametrosFromPropiedad(p.getPropiedades()));
-                plugin.setPrefijoPropiedades(p.getPrefijoPropiedades());
+                if (StringUtils.isNotBlank(p.getPrefijoPropiedades())) {
+                    plugin.setPrefijoPropiedades(
+                            p.getPrefijoPropiedades().trim());
+                    if (!plugin.getPrefijoPropiedades().endsWith(".")) {
+                        plugin.setPrefijoPropiedades(
+                                plugin.getPrefijoPropiedades() + ".");
+                    }
+                }
                 plugins.add(plugin);
             }
         }

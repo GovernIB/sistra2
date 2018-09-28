@@ -3,12 +3,11 @@ package es.caib.sistrages.rest;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
@@ -32,8 +31,6 @@ import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
-import es.caib.sistrages.rest.api.util.JsonException;
-import es.caib.sistrages.rest.api.util.JsonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -180,24 +177,12 @@ public class ApiInternaRestController {
     @RequestMapping(value = "/dominioFuenteDatos/{idDominio}", method = RequestMethod.POST)
     public RValoresDominio obtenerValoresDominioFD(
             @PathVariable("idDominio") final String idDominio,
-            @RequestParam(name = "parametros", required = false) final String parametrosJSON) {
-
-        // TODO Ver si gestionamos así los parametros compuestos JSON
-        RListaParametros pars = null;
-        if (StringUtils.isNotBlank(parametrosJSON)) {
-            try {
-                pars = (RListaParametros) JsonUtil.fromJson(parametrosJSON,
-                        RListaParametros.class);
-            } catch (final JsonException e) {
-                // TODO Gestion excepciones
-                throw new RuntimeException(e);
-            }
-        }
+            @RequestBody(required = false) final RListaParametros parametros) {
 
         // Convertimos los parametros a la clase necesaria
-        final List<ValorParametroDominio> listaParams = new ArrayList<ValorParametroDominio>();
-        if (pars != null && pars.getParametros() != null) {
-            for (final RValorParametro p : pars.getParametros()) {
+        final List<ValorParametroDominio> listaParams = new ArrayList<>();
+        if (parametros != null && parametros.getParametros() != null) {
+            for (final RValorParametro p : parametros.getParametros()) {
                 final ValorParametroDominio param = new ValorParametroDominio();
                 param.setCodigo(p.getCodigo());
                 param.setValor(p.getValor());
