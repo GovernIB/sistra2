@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -228,6 +229,71 @@ public final class PasoAnexarController extends TramitacionController {
 
         // Descargamos plantilla a traves DownloadFileView
         return generarDownloadView(nomFichero, plantilla);
+    }
+
+    // TODO BORRAR
+    @RequestMapping("/testFirma.html")
+    public ModelAndView testFirma(
+            @RequestParam(PARAM_ID_PASO) final String idPaso,
+            @RequestParam(PARAM_ID_ANEXO) final String idAnexo,
+            @RequestParam(value = PARAM_INSTANCIA, required = false) final String instancia) {
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+        params.addParametroEntrada(PARAM_INSTANCIA, instancia);
+        final ResultadoAccionPaso rp = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso, TypeAccionPasoAnexar.TEST_FIRMAR,
+                params);
+        final String url = (String) rp.getParametroRetorno("url");
+
+        return new ModelAndView("redirect:" + url);
+    }
+
+    @CrossOrigin
+    @RequestMapping("/testRetornoFirma.html")
+    public ModelAndView retornoFirma(
+            @RequestParam(PARAM_ID_PASO) final String idPaso,
+            @RequestParam(PARAM_ID_ANEXO) final String idAnexo,
+            @RequestParam(value = PARAM_INSTANCIA, required = false) final String instancia) {
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+        params.addParametroEntrada(PARAM_INSTANCIA, instancia);
+        final ResultadoAccionPaso rp = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoAnexar.TEST_RETORNO_FIRMA, params);
+
+        return new ModelAndView("redirect:/asistente/recargarTramite.html");
+    }
+
+    @RequestMapping(value = "/testDescargarFirma.html")
+    public ModelAndView descargarFirma(
+            @RequestParam(PARAM_ID_PASO) final String idPaso,
+            @RequestParam(PARAM_ID_ANEXO) final String idAnexo,
+            @RequestParam(value = PARAM_INSTANCIA, required = false) final String instancia) {
+
+        debug("Obteniendo datos anexo: " + idAnexo);
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        ParametrosAccionPaso pParametros;
+        pParametros = new ParametrosAccionPaso();
+        pParametros.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+        pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
+
+        final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoAnexar.TEST_DESCARGAR_FIRMA, pParametros);
+        final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
+        final String nombreFichero = (String) rap
+                .getParametroRetorno("nombreFichero");
+
+        return generarDownloadView(nombreFichero, datos);
+
     }
 
 }

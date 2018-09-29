@@ -28,7 +28,21 @@ public enum TypeAccionPasoAnexar implements TypeAccionPaso {
      * Descargar anexo. Parámetros entrada: idAnexo, instancia. Parámetros
      * salida: nombreFichero, datosFichero (byte[])
      */
-    DESCARGAR_ANEXO(false);
+    DESCARGAR_ANEXO(false),
+    // TODO BORRAR
+    /**
+     * Parámetros entrada: idAnexo, instancia. Parámetros salida: url
+     */
+    TEST_FIRMAR(false),
+    /**
+     * Parámetros entrada: idAnexo, instancia. Parámetros salida:
+     */
+    TEST_RETORNO_FIRMA(false),
+    /**
+     * Parámetros entrada: idAnexo, instancia. Parámetros salida: nombreFichero,
+     * datosFichero (byte[])
+     */
+    TEST_DESCARGAR_FIRMA(false);
 
     /**
      * Indica si la acción modifica datos del paso.
