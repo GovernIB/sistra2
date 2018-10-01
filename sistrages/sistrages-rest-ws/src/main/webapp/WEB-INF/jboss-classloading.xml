@@ -1,6 +1,0 @@
-<classloading xmlns="urn:jboss:classloading:1.0"
-		domain="sistrages-rest.war"
-		parent-domain="sistrages-rest.war"
-		export-all="NON_EMPTY"
-		import-all="true">
-</classloading>

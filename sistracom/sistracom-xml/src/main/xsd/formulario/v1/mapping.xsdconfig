@@ -1,7 +1,0 @@
-<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config">
-
-  <xb:namespace uri="urn:es:caib:sistra2:xml:formulario:v1:model">
-    <xb:package>es.caib.sistra2.commons.xml.formulario.v1.model</xb:package>
-  </xb:namespace>
-
-</xb:config>
