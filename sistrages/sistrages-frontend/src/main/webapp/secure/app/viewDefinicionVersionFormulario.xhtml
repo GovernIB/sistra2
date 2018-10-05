@@ -99,7 +99,7 @@
             			actionListener="#{viewDefinicionVersion.editarFormularioSeleccionado()}"
             			rendered="#{viewDefinicionVersion.permiteEditar()}"
             			process="@this" update="growl">
-                		<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoFormulario2}" update="growl formArbol:arbol formviewDefinicionVersionFormulario" />
+                		<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formviewDefinicionVersionFormulario" />
            			</p:commandButton>
         		</p:outputPanel>
       		</f:facet>

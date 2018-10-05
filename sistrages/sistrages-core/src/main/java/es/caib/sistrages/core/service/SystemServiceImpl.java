@@ -51,15 +51,14 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     @NegocioInterceptor
-    public void purgarFicheros(final String appId) {
+    public void purgarFicheros() {
+        ficheroExternoDAO.purgarFicheros();
+    }
 
-        // Control maestro/esclavo procesos
-        if (procesosDAO.verificarMaestro(appId)) {
-            log.debug("Es maestro. Lanza purga ficheros");
-            ficheroExternoDAO.purgarFicheros();
-        } else {
-            log.debug("No es maestro. No lanza purga ficheros");
-        }
+    @Override
+    @NegocioInterceptor
+    public boolean verificarMaestro(final String appId) {
+        return procesosDAO.verificarMaestro(appId);
 
     }
 

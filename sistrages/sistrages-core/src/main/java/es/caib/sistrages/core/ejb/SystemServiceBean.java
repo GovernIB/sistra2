@@ -28,14 +28,19 @@ public class SystemServiceBean implements SystemService {
 
     @Override
     @PermitAll
-    public void purgarFicheros(final String appId) {
-        systemService.purgarFicheros(appId);
+    public void purgarFicheros() {
+        systemService.purgarFicheros();
     }
 
     @Override
     @PermitAll
     public String obtenerPropiedadConfiguracion(String propiedad) {
         return systemService.obtenerPropiedadConfiguracion(propiedad);
+    }
+
+    @Override
+    public boolean verificarMaestro(String appId) {
+        return systemService.verificarMaestro(appId);
     }
 
 }

@@ -42,7 +42,11 @@ public enum TypePlugin {
 	/**
 	 * Plugin de formularios externo (Entidad).
 	 */
-	REGISTRO("E");
+	REGISTRO("E"),
+	/**
+	 * Plugin de Conversión PDF
+	 */
+	CONVERSION_PDF("V");
 
 	/** Valor. **/
 	private String valor;

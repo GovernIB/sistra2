@@ -12,7 +12,7 @@ public interface SystemService {
      * Purgado de ficheros.
      *
      */
-    public void purgarFicheros(String appId);
+    public void purgarFicheros();
 
     /**
      * Obtiene propiedad configuración.
@@ -22,5 +22,13 @@ public interface SystemService {
      * @return valor
      */
     public String obtenerPropiedadConfiguracion(String propiedad);
+
+    /**
+     * Verifica si es maestro
+     *
+     * @param appId
+     *            aplicacion id
+     */
+    boolean verificarMaestro(String appId);
 
 }

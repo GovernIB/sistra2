@@ -82,6 +82,7 @@ public class DialogPlugin extends DialogControllerBase {
 			tipos.add(TypePlugin.EMAIL);
 			tipos.add(TypePlugin.REPRESENTACION);
 			tipos.add(TypePlugin.DOMINIO_REMOTO);
+			tipos.add(TypePlugin.CONVERSION_PDF);
 			// No permite plugins multiinstancia
 			break;
 		case ENTIDAD:

@@ -36,8 +36,13 @@ public final class PurgaProcess {
         log.debug("Proceso purgarFicheros");
         final String instancia = getIdServletContext();
         if (StringUtils.isNotBlank(instancia)) {
-            log.debug("Lanza purgarFicheros con id instancia: " + instancia);
-            systemService.purgarFicheros(instancia);
+            // Control maestro/esclavo procesos
+            if (systemService.verificarMaestro(instancia)) {
+                log.debug("Es maestro. Lanza purga ficheros");
+                systemService.purgarFicheros();
+            } else {
+                log.debug("No es maestro. No lanza purga ficheros");
+            }
         } else {
             log.warn("No se ha podido obtener id instancia.");
         }
