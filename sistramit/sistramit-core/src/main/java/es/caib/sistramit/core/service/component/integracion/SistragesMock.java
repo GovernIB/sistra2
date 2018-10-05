@@ -179,7 +179,7 @@ public class SistragesMock {
         plugin = new RPlugin();
         plugin.setTipo(TypePluginEntidad.CATALOGO_PROCEDIMIENTOS.toString());
         plugin.setClassname(
-                "es.caib.sistra2.commons.plugins.mock.catalogoprocedimientos.CatalogoProcedimientosPluginMock");
+                "es.caib.sistra2.commons.plugins.catalogoprocedimientos.mock.CatalogoProcedimientosPluginMock");
         plugin.setPrefijoPropiedades("prefijo");
         plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
@@ -196,7 +196,7 @@ public class SistragesMock {
         plugin.setTipo(TypePluginGlobal.LOGIN.toString());
         plugin.setPrefijoPropiedades("prefijo");
         plugin.setClassname(
-                "es.caib.sistra2.commons.plugins.mock.autenticacion.ComponenteAutenticacionPluginMock");
+                "es.caib.sistra2.commons.plugins.autenticacion.mock.ComponenteAutenticacionPluginMock");
         plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
 
@@ -204,7 +204,7 @@ public class SistragesMock {
         plugin.setTipo(TypePluginGlobal.EMAIL.toString());
         plugin.setPrefijoPropiedades("prefijo");
         plugin.setClassname(
-                "es.caib.sistra2.commons.plugins.mock.email.EmailPluginMock");
+                "es.caib.sistra2.commons.plugins.email.mock.EmailPluginMock");
         plugin.setPropiedades(crearListaParametros());
         plugins.add(plugin);
 

@@ -11,8 +11,13 @@
 	<modules>
 		<module>sistracom-utils</module>
 		<module>sistracom-xml</module>
-		<module>sistracom-plugins</module>
-		<module>sistracom-plugins-mock</module>
-	</modules>
+        <module>sistracom-plugin-autenticacion</module>
+        <module>sistracom-plugin-catalogoprocedimientos</module>
+        <module>sistracom-plugin-email</module>
+        <module>sistracom-plugin-firmacliente</module>
+        <module>sistracom-plugin-pago</module>
+        <module>sistracom-plugin-registro</module>
+        <module>sistracom-plugin-dominio</module>
+    </modules>
 
 </project>

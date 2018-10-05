@@ -1,8 +1,8 @@
-package es.caib.sistra2.commons.plugins.email;
+package es.caib.sistra2.commons.plugins.email.api;
+
+import org.fundaciobit.pluginsib.core.IPlugin;
 
 import java.util.List;
-
-import org.fundaciobit.plugins.IPlugin;
 
 /**
  * Interface email plugin.

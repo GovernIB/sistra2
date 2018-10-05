@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.email;
+package es.caib.sistra2.commons.plugins.email.api;
 
 /**
  * Anexo email.
