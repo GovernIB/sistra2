@@ -81,7 +81,7 @@
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoNuevaVersion}" update="growl @form" />
 			        		</p:commandButton>
 
-			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{viewTramites.versionSeleccionada ne null}" />
+			        		<p:commandButton id="btnConsultarVersion" value="#{msg['botones.consultarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.consultarVersion}" process="@this" update="growl" rendered="#{not viewTramites.permiteEditarTramite and viewTramites.versionSeleccionada ne null}" />
 							<p:commandButton id="btnEditarVersion" value="#{msg['botones.editarVersion']}" icon="fa fa-edit" actionListener="#{viewTramites.editarVersion}" process="@this" update="growl" rendered="#{viewTramites.permiteEditarTramite and viewTramites.versionSeleccionada ne null}" />
 
 			        		<p:commandButton id="btnBloquear" value="#{msg['botones.bloquear']}" icon="fa fa-lock" actionListener="#{viewTramites.bloquear}" process="@this" update="growl @form"  rendered="#{(viewTramites.permiteEditarTramite or viewTramites.permiteAltaTramite) and viewTramites.versionSeleccionada ne null and viewTramites.permiteBloquear}">
