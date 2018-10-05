@@ -3,7 +3,7 @@ package es.caib.sistramit.core.service.component.flujo.pasos.anexar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
+import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;

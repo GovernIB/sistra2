@@ -1,6 +1,6 @@
-package es.caib.sistra2.commons.plugins.firmacliente;
+package es.caib.sistra2.commons.plugins.firmacliente.api;
 
-import org.fundaciobit.plugins.IPlugin;
+import org.fundaciobit.pluginsib.core.IPlugin;
 
 /**
  * Interface firma plugin.

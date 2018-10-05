@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.firmacliente;
+package es.caib.sistra2.commons.plugins.firmacliente.api;
 
 /**
  * Excepción en plugin firma.

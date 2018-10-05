@@ -1,17 +1,12 @@
-package es.caib.sistra2.commons.plugins.mock.firmacliente;
+package es.caib.sistra2.commons.plugins.firmacliente.mock;
+
+import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
+import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import java.util.Properties;
-
-import org.fundaciobit.plugins.utils.AbstractPluginProperties;
-
-import es.caib.sistra2.commons.plugins.autenticacion.DatosUsuario;
-import es.caib.sistra2.commons.plugins.autenticacion.TipoAutenticacion;
-import es.caib.sistra2.commons.plugins.autenticacion.TipoMetodoAutenticacion;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.TypeEstadoFirmado;
 
 /**
  * Plugin mock componente firma.
@@ -46,9 +41,6 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 
 	/**
 	 * Genera usuario anonimo.
-	 *
-	 * @param sesionInfo
-	 *            sesion info
 	 * @return usuario anonimo
 	 */
 	public DatosUsuario generarUsuarioAnonimo() {

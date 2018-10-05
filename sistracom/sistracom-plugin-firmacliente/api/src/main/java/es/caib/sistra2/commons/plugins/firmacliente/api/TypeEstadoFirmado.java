@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.firmacliente;
+package es.caib.sistra2.commons.plugins.firmacliente.api;
 
 /**
  * Estado de la sesión de firma. Segun la doc. oficial:

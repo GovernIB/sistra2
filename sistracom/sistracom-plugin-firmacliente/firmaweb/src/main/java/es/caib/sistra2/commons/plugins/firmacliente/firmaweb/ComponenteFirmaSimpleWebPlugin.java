@@ -1,26 +1,12 @@
-package es.caib.sistra2.commons.plugins.mock.firmacliente;
+package es.caib.sistra2.commons.plugins.firmacliente.firmaweb;
+
+import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
+import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.ApiFirmaWebSimple;
+import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.*;
 
 import java.util.Properties;
-
-import org.fundaciobit.plugins.utils.AbstractPluginProperties;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.ApiFirmaWebSimple;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleAddFileToSignRequest;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleCommonInfo;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleFile;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleFileInfoSignature;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleGetSignatureResultRequest;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleGetTransactionStatusResponse;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleSignatureResult;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleStartTransactionRequest;
-import org.fundaciobit.pluginsib.signature.firmasimple.apifirmasimple.v1.beans.FirmaSimpleStatus;
-
-import es.caib.sistra2.commons.plugins.autenticacion.AutenticacionPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.FirmaPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.TypeEstadoFirmado;
 
 /**
  * Plugin mock componente firma.

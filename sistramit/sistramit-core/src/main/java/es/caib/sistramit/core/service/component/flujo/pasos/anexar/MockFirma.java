@@ -1,9 +1,10 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.anexar;
 
+import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
 
 public class MockFirma {
 
