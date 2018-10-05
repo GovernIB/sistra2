@@ -172,16 +172,16 @@ public class JPlantillaFormulario implements IModelApi {
 	}
 
 	public static JPlantillaFormulario clonar(final JPlantillaFormulario plantilla, final JFormulario jformulario,
-			final Map<String, FormateadorFormulario> formateadores) {
+			final Map<String, JFormateadorFormulario> formateadores) {
 		JPlantillaFormulario jplantilla = null;
 		if (plantilla != null) {
 			jplantilla = new JPlantillaFormulario();
 			jplantilla.setIdentificador(plantilla.getIdentificador());
-
+			jplantilla.setDescripcion(plantilla.getDescripcion());
 			if (plantilla.getFormateadorFormulario() != null
 					&& formateadores.containsKey(plantilla.getFormateadorFormulario().getIdentificador())) {
-				jplantilla.setFormateadorFormulario(JFormateadorFormulario
-						.fromModel(formateadores.get(plantilla.getFormateadorFormulario().getIdentificador())));
+				jplantilla.setFormateadorFormulario(
+						formateadores.get(plantilla.getFormateadorFormulario().getIdentificador()));
 			}
 			jplantilla.setFormulario(jformulario);
 			jplantilla.setPorDefecto(plantilla.isPorDefecto());

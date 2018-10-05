@@ -309,7 +309,7 @@ public class JFormulario implements IModelApi {
 	 * @return
 	 */
 	public static JFormulario clonar(final JFormulario formulario,
-			final Map<String, FormateadorFormulario> formateadores) {
+			final Map<String, JFormateadorFormulario> formateadores) {
 		JFormulario jformulario = null;
 
 		if (formulario != null) {

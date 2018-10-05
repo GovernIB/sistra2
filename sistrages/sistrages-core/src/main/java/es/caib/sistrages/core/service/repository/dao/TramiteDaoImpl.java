@@ -1,8 +1,10 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,6 +30,8 @@ import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
 import es.caib.sistrages.core.service.repository.model.JFichero;
+import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
+import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
@@ -338,6 +342,9 @@ public class TramiteDaoImpl implements TramiteDao {
 			entityManager.merge(jdominio);
 		}
 
+		// Paso 3.0 Obtenemos formateadores
+		final Map<String, JFormateadorFormulario> formateadores = getFormateadoresTramiteVersion(idTramiteVersion);
+
 		// Paso 3. Buscamos los pasos y los clonamos y añadimos.
 		final String sqlPasos = "Select p From JPasoTramitacion p where p.versionTramite.id = :idTramiteVersion order by p.orden asc";
 		final Long idEntidad = jVersionTramite.getTramite().getArea().getEntidad().getCodigo();
@@ -346,12 +353,62 @@ public class TramiteDaoImpl implements TramiteDao {
 		@SuppressWarnings("unchecked")
 		final List<JPasoTramitacion> jpasos = queryPasos.getResultList();
 		for (final JPasoTramitacion origPaso : jpasos) {
+
+			final Map<String, JFormulario> forms = new HashMap<>();
 			final JPasoTramitacion jpaso = JPasoTramitacion.clonar(origPaso, jVersionTramite);
+			if (origPaso.getPasoRellenar() != null && origPaso.getPasoRellenar().getFormulariosTramite() != null
+					&& !origPaso.getPasoRellenar().getFormulariosTramite().isEmpty()) {
+				// Habria que guardarse los diseños.
+				for (final JFormularioTramite formulario : origPaso.getPasoRellenar().getFormulariosTramite()) {
+					forms.put(formulario.getIdentificador(), formulario.getFormulario());
+				}
+			}
 			entityManager.persist(jpaso);
+			entityManager.flush();
+			if (!forms.isEmpty()) {
+				for (final Map.Entry<String, JFormulario> entry : forms.entrySet()) {
+					final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores);
+					entityManager.persist(jform);
+					entityManager.flush();
+					for (final JFormularioTramite formTramite : jpaso.getPasoRellenar().getFormulariosTramite()) {
+						if (formTramite.getIdentificador().equals(entry.getKey())) {
+							formTramite.setFormulario(jform);
+							entityManager.merge(jform);
+						}
+					}
+				}
+			}
 			checkFicherosPaso(jpaso, origPaso, idEntidad);
 		}
 
 		return jVersionTramite.getCodigo();
+	}
+
+	/**
+	 * Método privado para obtener los formateadores de una version.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	private Map<String, JFormateadorFormulario> getFormateadoresTramiteVersion(final Long idTramiteVersion) {
+
+		final String sql = "Select plan.formateadorFormulario from  JPlantillaFormulario plan inner join plan.formulario fr where fr in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion) ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+
+		@SuppressWarnings("unchecked")
+		final List<JFormateadorFormulario> results = query.getResultList();
+		final Map<String, JFormateadorFormulario> resultado = new HashMap<>();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JFormateadorFormulario> iterator = results.iterator(); iterator.hasNext();) {
+				final JFormateadorFormulario jformateadorFormulario = iterator.next();
+				resultado.put(jformateadorFormulario.getIdentificador(), jformateadorFormulario);
+			}
+		}
+
+		return resultado;
 	}
 
 	/**
