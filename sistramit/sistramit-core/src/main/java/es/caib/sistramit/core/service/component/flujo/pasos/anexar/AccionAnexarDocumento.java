@@ -144,8 +144,14 @@ public final class AccionAnexarDocumento implements AccionPaso {
 
         final TransformacionAnexo res = new TransformacionAnexo();
         if (pAnexoDetalle.getConvertirPDF() == TypeSiNo.SI) {
+
+            // Enviamos mail
+            // final IEmailPlugin plgEmail = (IEmailPlugin)
+            // configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
+
             // TODO Pendiente transformación PDF. Controlar si la extension se
             // puede transformar??
+
             final String extensionOrigen = FilenameUtils
                     .getExtension(pNombreFichero);
             throw new RuntimeException("Pendiente transformacion PDF");

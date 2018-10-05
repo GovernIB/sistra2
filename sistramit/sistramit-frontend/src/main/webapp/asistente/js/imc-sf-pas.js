@@ -40,6 +40,7 @@ var HTML_PAS_LITERALS = {
 			,txtFormulari: txtFormulari
 			,txtObligatori: txtObligatori
 			,txtOpcional: txtOpcional
+			,txtDepenent: txtDepenent
 			,txtCompletat: txtCompletat
 			,txtNoCompletat: txtNoCompletat
 			,txtAnterior: txtAnterior
@@ -609,6 +610,9 @@ $.fn.appPas = function(options) {
 									.end()
 								.find(".imc--opcional:first span")
 									.text( txtOpcional )
+									.end()
+								.find(".imc--depenent:first span")
+									.text( txtDepenent )
 									.end()
 								.find(".imc--completat:first span")
 									.text( txtCompletat )

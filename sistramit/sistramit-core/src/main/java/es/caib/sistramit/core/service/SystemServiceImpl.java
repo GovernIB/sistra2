@@ -27,6 +27,7 @@ import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.repository.dao.InvalidacionDao;
+import es.caib.sistramit.core.service.repository.dao.ProcesoDao;
 
 @Service
 @Transactional
@@ -43,6 +44,10 @@ public class SystemServiceImpl implements SystemService {
     /** Invalidaciones DAO. */
     @Autowired
     private InvalidacionDao invalidacionDAO;
+
+    /** Procesos DAO. */
+    @Autowired
+    private ProcesoDao procesosDao;
 
     /** Componente STG. */
     @Autowired
@@ -86,13 +91,16 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     @NegocioInterceptor
-    public void purgar(String instancia) {
+    public void purgar() {
         // TODO PENDIENTE. VER SI SE DEBE SEPARAR EN VARIOS PROCESOS POR TEMA DE
         // DURACION DE TX.
-
-        // Purga invalidaciones
         purgarInvalidaciones();
+    }
 
+    @Override
+    @NegocioInterceptor
+    public boolean verificarMaestro(String instancia) {
+        return procesosDao.verificarMaestro(instancia);
     }
 
     @Override

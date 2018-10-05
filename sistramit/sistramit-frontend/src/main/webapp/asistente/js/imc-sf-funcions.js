@@ -680,6 +680,19 @@ $.fn.appSuport = function(options) {
 			},
 			formulari = function() {
 
+				$("#nif, #nombre")
+					.val("");
+
+				if (APP_JSON_TRAMIT_T.autenticacion === "c") {
+
+					$("#nif")
+						.val( APP_JSON_TRAMIT_U.nif );
+
+					$("#nombre")
+						.val( APP_JSON_TRAMIT_U.nombre + " " + APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 );
+
+				}
+
 				el_suport_ajuda
 					.removeClass("imc--on");
 

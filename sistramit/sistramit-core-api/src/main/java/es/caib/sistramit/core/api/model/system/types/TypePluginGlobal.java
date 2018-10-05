@@ -23,7 +23,11 @@ public enum TypePluginGlobal {
     /**
      * Plugin de dominio remoto (Global).
      */
-    DOMINIO_REMOTO("D");
+    DOMINIO_REMOTO("D"),
+    /**
+     * Plugin de conversión PDF (Global).
+     */
+    CONVERSION_PDF("PDF");
 
     /**
      * Valor como string.

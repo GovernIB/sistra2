@@ -46,8 +46,8 @@ public class SystemServiceBean implements SystemService {
     }
 
     @Override
-    public void purgar(String instancia) {
-        systemService.purgar(instancia);
+    public void purgar() {
+        systemService.purgar();
     }
 
     @Override
@@ -58,6 +58,11 @@ public class SystemServiceBean implements SystemService {
     @Override
     public void invalidar(Invalidacion invalidacion) {
         systemService.invalidar(invalidacion);
+    }
+
+    @Override
+    public boolean verificarMaestro(String instancia) {
+        return systemService.verificarMaestro(instancia);
     }
 
 }

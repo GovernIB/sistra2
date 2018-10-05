@@ -95,6 +95,10 @@ $.fn.appFormulari = function(options) {
 					bt_ico_W = bt_ico.outerWidth(),
 					bt_ico_H = bt_ico.outerHeight();
 
+				if (bt.attr("data-obligatori") === "d") {
+					return;
+				}
+
 				form_id = bt.attr("data-id");
 
 				ico_anim = $("<div>").addClass("imc-ico-anim").css({ top: bt_ico_T+"px", left: bt_ico_L+"px", width: bt_ico_W+"px", height: bt_ico_W+"px" }).appendTo( imc_formulari_c );
@@ -144,7 +148,7 @@ $.fn.appFormulari = function(options) {
 				*/
 
 				var pag_url = APP_FORM_URL,
-					pag_data = { idPaso: "rf", idFormulario: form_id };
+					pag_data = { idFormulario: form_id, idPaso: APP_TRAMIT_PAS_ID };
 
 				// ajax
 

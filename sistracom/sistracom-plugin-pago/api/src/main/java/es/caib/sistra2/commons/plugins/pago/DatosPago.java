@@ -32,6 +32,9 @@ public class DatosPago {
     /** Sujeto pasivo nombre. */
     private String sujetoPasivoNombre;
 
+    /** Modelo pago. */
+    private String modelo;
+
     /** Concepto pago. */
     private String concepto;
 
@@ -248,6 +251,25 @@ public class DatosPago {
      */
     public void setDetallePago(String detallePago) {
         this.detallePago = detallePago;
+    }
+
+    /**
+     * Método de acceso a modelo.
+     * 
+     * @return modelo
+     */
+    public String getModelo() {
+        return modelo;
+    }
+
+    /**
+     * Método para establecer modelo.
+     * 
+     * @param modelo
+     *            modelo a establecer
+     */
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
 
 }

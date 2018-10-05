@@ -1,6 +1,6 @@
 package es.caib.sistra2.commons.plugins.pago;
 
-import org.fundaciobit.plugins.IPlugin;
+import org.fundaciobit.pluginsib.core.IPlugin;
 
 /**
  * Interface componente pago.

@@ -63,11 +63,11 @@ public interface SystemService {
      * @param instancia
      *            instancia
      */
-    void purgar(String instancia);
+    void purgar();
 
     /**
      * Invalida caché.
-     * 
+     *
      * @param invalidacion
      *            datos invalidación caché
      */
@@ -77,5 +77,14 @@ public interface SystemService {
      * Revisa invalidaciones a procesar.
      */
     void revisarInvalidaciones();
+
+    /**
+     * Verifica si es maestro
+     * 
+     * @param instancia
+     *            instancia
+     * @return si es maestro
+     */
+    boolean verificarMaestro(String instancia);
 
 }
