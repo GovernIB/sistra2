@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.ICatalogoProcedimientosPlugin;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.RolsacPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.RolsacPluginException;
 import es.caib.sistramit.core.api.exception.CatalogoProcedimientosException;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;

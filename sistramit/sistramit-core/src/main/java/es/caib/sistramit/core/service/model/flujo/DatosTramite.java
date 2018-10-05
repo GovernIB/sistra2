@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;

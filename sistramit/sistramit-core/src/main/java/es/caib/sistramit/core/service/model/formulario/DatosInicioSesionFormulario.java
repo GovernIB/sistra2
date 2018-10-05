@@ -2,7 +2,7 @@ package es.caib.sistramit.core.service.model.formulario;
 
 import java.io.Serializable;
 
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;

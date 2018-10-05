@@ -1,7 +1,7 @@
 package es.caib.sistramit.core.service.component.integracion;
 
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.RolsacPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.RolsacPluginException;
 
 /**
  * Acceso a componente Catálogo de procedimientos.
