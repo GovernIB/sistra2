@@ -1,6 +1,6 @@
 package es.caib.sistramit.core.service.component.flujo;
 
-import es.caib.sistra2.commons.plugins.firmacliente.FirmaPluginException;
+import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
 
 public interface FlujoTramitacionCacheComponent {
 

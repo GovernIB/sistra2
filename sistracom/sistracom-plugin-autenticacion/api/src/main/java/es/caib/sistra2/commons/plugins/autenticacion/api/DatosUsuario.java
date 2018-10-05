@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.autenticacion;
+package es.caib.sistra2.commons.plugins.autenticacion.api;
 
 /**
  * Datos usario retornados por Clave.
@@ -24,11 +24,11 @@ public class DatosUsuario {
     private String email;
 
     /**
-     * Tipo autenticacion.
+     * Tipo es.caib.sistra2.commons.plugins.autenticacion.
      */
     private TipoAutenticacion autenticacion;
 
-    /** Metodo autenticacion. */
+    /** Metodo es.caib.sistra2.commons.plugins.autenticacion. */
     private TipoMetodoAutenticacion metodoAutenticacion;
 
     /**
@@ -147,19 +147,19 @@ public class DatosUsuario {
     }
 
     /**
-     * Método de acceso a autenticacion.
+     * Método de acceso a es.caib.sistra2.commons.plugins.autenticacion.
      *
-     * @return autenticacion
+     * @return es.caib.sistra2.commons.plugins.autenticacion
      */
     public TipoAutenticacion getAutenticacion() {
         return autenticacion;
     }
 
     /**
-     * Método para establecer autenticacion.
+     * Método para establecer es.caib.sistra2.commons.plugins.autenticacion.
      *
      * @param autenticacion
-     *            autenticacion a establecer
+     *            es.caib.sistra2.commons.plugins.autenticacion a establecer
      */
     public void setAutenticacion(TipoAutenticacion autenticacion) {
         this.autenticacion = autenticacion;

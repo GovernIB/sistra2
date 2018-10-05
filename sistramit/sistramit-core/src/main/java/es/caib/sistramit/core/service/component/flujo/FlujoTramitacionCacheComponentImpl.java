@@ -1,5 +1,17 @@
 package es.caib.sistramit.core.service.component.flujo;
 
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
+import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.model.flujo.FlujoTramitacionCache;
+import org.fundaciobit.pluginsib.core.utils.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -7,24 +19,6 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.fundaciobit.plugins.utils.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.FirmaPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.TypeEstadoFirmado;
-import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
-import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
-import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
-import es.caib.sistramit.core.service.model.flujo.FlujoTramitacionCache;
 
 @Component("flujoTramitacionCacheComponent")
 public class FlujoTramitacionCacheComponentImpl implements FlujoTramitacionCacheComponent {

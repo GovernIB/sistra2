@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>sistracom-plugin-autenticacion</artifactId>
+        <groupId>es.caib.sistra2</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>sistracom-plugin-autenticacion-loginib</artifactId>
+    <packaging>jar</packaging>
+    <dependencies>
+
+        <!-- Plugins IB -->
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <artifactId>pluginsib-core</artifactId>
+            <version>${plugins-ib.version}</version>
+        </dependency>
+
+
+        <!-- Spring web -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- LOG -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.loginib</groupId>
+            <artifactId>loginib-rest-api</artifactId>
+            <version>${loginib.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-swagger2</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <artifactId>firmasimple-api</artifactId>
+            <groupId>org.fundaciobit.pluginsib.signature.firmasimple</groupId>
+            <version>${firmasimple.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.caib.sistra2</groupId>
+            <artifactId>sistracom-plugin-autenticacion-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerVersion>${java.version}</compilerVersion>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

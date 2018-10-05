@@ -2,7 +2,7 @@ package es.caib.sistramit.core.service.component.flujo;
 
 import java.util.Map;
 
-import es.caib.sistra2.commons.plugins.firmacliente.FirmaPluginException;
+import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;

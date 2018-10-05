@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.autenticacion;
+package es.caib.sistra2.commons.plugins.autenticacion.api;
 
 /**
  * Tipos de autenticación.
@@ -46,7 +46,7 @@ public enum TipoAutenticacion {
      *
      * @param text
      *            Parámetro text
-     * @return el type autenticacion
+     * @return el type es.caib.sistra2.commons.plugins.autenticacion
      */
     public static TipoAutenticacion fromString(final String text) {
         TipoAutenticacion respuesta = null;

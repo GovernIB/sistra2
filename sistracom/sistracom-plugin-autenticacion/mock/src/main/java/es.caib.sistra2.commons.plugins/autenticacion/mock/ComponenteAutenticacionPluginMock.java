@@ -1,15 +1,10 @@
-package es.caib.sistra2.commons.plugins.mock.autenticacion;
+package es.caib.sistra2.commons.plugins.autenticacion.mock;
+
+import es.caib.sistra2.commons.plugins.autenticacion.api.*;
+import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import java.util.List;
 import java.util.Properties;
-
-import org.fundaciobit.plugins.utils.AbstractPluginProperties;
-
-import es.caib.sistra2.commons.plugins.autenticacion.AutenticacionPluginException;
-import es.caib.sistra2.commons.plugins.autenticacion.DatosUsuario;
-import es.caib.sistra2.commons.plugins.autenticacion.IComponenteAutenticacionPlugin;
-import es.caib.sistra2.commons.plugins.autenticacion.TipoAutenticacion;
-import es.caib.sistra2.commons.plugins.autenticacion.TipoMetodoAutenticacion;
 
 /**
  * Plugin mock componente autenticación.
@@ -21,7 +16,7 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
         implements IComponenteAutenticacionPlugin {
 
     /**
-     * Punto de entrada retorno componente autenticacion.
+     * Punto de entrada retorno componente es.caib.sistra2.commons.plugins.autenticacion.
      */
     private static final String PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN = "/asistente/retornoAutenticacion.html";
 
@@ -29,7 +24,7 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
     }
 
     public ComponenteAutenticacionPluginMock(final String prefijoPropiedades,
-            final Properties properties) {
+                                             final Properties properties) {
     }
 
     @Override
@@ -37,8 +32,8 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
             final String idioma, final List<TipoAutenticacion> metodos,
             final String qaa, final String callback)
             throws AutenticacionPluginException {
-        // Simulamos directamente retorno componente autenticacion. Ponemos la
-        // primera letra del ticket el primer tipo de autenticacion para simular
+        // Simulamos directamente retorno componente es.caib.sistra2.commons.plugins.autenticacion. Ponemos la
+        // primera letra del ticket el primer tipo de es.caib.sistra2.commons.plugins.autenticacion para simular
         // ese metodo.
         String prefix;
         prefix = metodos.get(0).toString();
@@ -87,8 +82,6 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
     /**
      * Genera usuario anonimo.
      *
-     * @param sesionInfo
-     *            sesion info
      * @return usuario anonimo
      */
     private DatosUsuario generarUsuarioAnonimo() {

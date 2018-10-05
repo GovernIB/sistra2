@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.autenticacion.AutenticacionPluginException;
-import es.caib.sistra2.commons.plugins.autenticacion.DatosUsuario;
-import es.caib.sistra2.commons.plugins.autenticacion.IComponenteAutenticacionPlugin;
-import es.caib.sistra2.commons.plugins.autenticacion.TipoAutenticacion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
+import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
+import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
+import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
 import es.caib.sistramit.core.api.exception.AutenticacionException;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;

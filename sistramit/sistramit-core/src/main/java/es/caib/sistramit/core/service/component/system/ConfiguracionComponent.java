@@ -1,13 +1,12 @@
 package es.caib.sistramit.core.service.component.system;
 
-import org.fundaciobit.plugins.IPlugin;
-
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import org.fundaciobit.pluginsib.core.IPlugin;
 
 /**
  * Componente para acceder a configuracion.

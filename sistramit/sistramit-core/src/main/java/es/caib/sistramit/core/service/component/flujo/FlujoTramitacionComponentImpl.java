@@ -1,49 +1,16 @@
 package es.caib.sistramit.core.service.component.flujo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.fundaciobit.plugins.utils.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.DefinicionTramiteCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.RolsacPluginException;
-import es.caib.sistra2.commons.plugins.email.AnexoEmail;
-import es.caib.sistra2.commons.plugins.email.EmailPluginException;
-import es.caib.sistra2.commons.plugins.email.IEmailPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.FirmaPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.TypeEstadoFirmado;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.RolsacPluginException;
+import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
+import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
+import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
+import es.caib.sistra2.commons.plugins.firmacliente.api.*;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
-import es.caib.sistramit.core.api.exception.EmailException;
-import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
-import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
-import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
-import es.caib.sistramit.core.api.exception.TipoNoControladoException;
-import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
+import es.caib.sistramit.core.api.exception.*;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
-import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
-import es.caib.sistramit.core.api.model.flujo.DetallePasos;
-import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
-import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
-import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
-import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.*;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
@@ -63,6 +30,21 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormularioSoporte;
+import org.fundaciobit.pluginsib.core.utils.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component("flujoTramitacionComponent")
 @Scope(value = "prototype")

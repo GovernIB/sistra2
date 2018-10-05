@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.autenticacion;
+package es.caib.sistra2.commons.plugins.autenticacion.api;
 
 /**
  * Excepción en proceso de autenticación.

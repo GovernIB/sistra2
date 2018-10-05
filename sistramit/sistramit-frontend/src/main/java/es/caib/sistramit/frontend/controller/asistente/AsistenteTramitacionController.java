@@ -590,7 +590,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 		// Comprobamos que sea el iniciador (en caso de autenticado)
 		if (dt.getTramite().getAutenticacion() != userInfo.getAutenticacion()) {
-			throw new WarningFrontException("No coincide nivel autenticacion");
+			throw new WarningFrontException("No coincide nivel es.caib.sistra2.commons.plugins.autenticacion");
 		}
 		if (dt.getTramite().getAutenticacion() != TypeAutenticacion.ANONIMO) {
 			if (!StringUtils.equals(dt.getUsuario().getNif(), userInfo.getNif())) {

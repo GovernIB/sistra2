@@ -1,37 +1,6 @@
 package es.caib.sistramit.core.service.component.system;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.fundaciobit.plugins.IPlugin;
-import org.fundaciobit.plugins.utils.FileUtils;
-import org.fundaciobit.plugins.utils.PluginsManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroAFirmar;
-import es.caib.sistra2.commons.plugins.firmacliente.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.InfoSesionFirma;
-import es.caib.sistra2.commons.plugins.firmacliente.TypeEstadoFirmado;
-import es.caib.sistra2.commons.plugins.mock.firmacliente.ComponenteFirmaSimpleWebPlugin;
-import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
-import es.caib.sistrages.rest.api.interna.RPlugin;
-import es.caib.sistrages.rest.api.interna.RValorParametro;
-import es.caib.sistrages.rest.api.interna.RVersionTramite;
+import es.caib.sistrages.rest.api.interna.*;
 import es.caib.sistramit.core.api.exception.CargaConfiguracionException;
 import es.caib.sistramit.core.api.exception.PluginErrorException;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
@@ -39,6 +8,18 @@ import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import org.apache.commons.lang3.StringUtils;
+import org.fundaciobit.pluginsib.core.IPlugin;
+import org.fundaciobit.pluginsib.core.utils.PluginsManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 @Component("configuracionComponent")
 public class ConfiguracionComponentImpl implements ConfiguracionComponent {
