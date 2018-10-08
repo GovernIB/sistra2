@@ -526,7 +526,7 @@ public class TramiteVersion extends ModelApi {
     /**
      * Establece el valor de desactivacion.
      *
-     * @param desactivación
+     * @param desactivacion
      *            el nuevo valor de desactivacion
      */
     public void setDesactivacion(final boolean desactivacion) {
