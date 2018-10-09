@@ -34,20 +34,7 @@
 
 
 
-		<!-- PLUGINS -->
-
-		<dependency>
-			<groupId>es.caib.sistra2</groupId>
-			<artifactId>sistracom-plugin-autenticacion-loginib</artifactId>
-			<version>${sistra2.version}</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>es.caib.sistra2</groupId>
-			<artifactId>sistracom-plugin-catalogoprocedimientos-rolsac</artifactId>
-			<version>${sistra2.version}</version>
-		</dependency>
+		<!-- PLUGINS APIs-->
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
@@ -92,6 +79,27 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-firmacliente-mock</artifactId>
+			<version>${sistra2.version}</version>
+		</dependency>
+
+
+		<!-- PLUGINS IMPLEMENTACIONES-->
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistracom-plugin-autenticacion-loginib</artifactId>
+			<version>${sistra2.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistracom-plugin-catalogoprocedimientos-rolsac</artifactId>
+			<version>${sistra2.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistracom-plugin-firmacliente-firmaweb</artifactId>
 			<version>${sistra2.version}</version>
 		</dependency>
 
