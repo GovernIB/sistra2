@@ -39,6 +39,7 @@ public class SystemServiceBean implements SystemService {
     }
 
     @Override
+    @PermitAll
     public boolean verificarMaestro(String appId) {
         return systemService.verificarMaestro(appId);
     }
