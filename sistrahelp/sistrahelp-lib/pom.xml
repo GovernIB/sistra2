@@ -17,6 +17,7 @@
 			<version>${sistra2.version}</version>
 		</dependency>
 
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -63,6 +64,33 @@
 			<artifactId>spring-oxm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
+       <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-jdbc</artifactId>
+		  <version>${spring.version}</version>
+		</dependency>
+
+ 		<!-- AOPAlliance -->
+        <dependency>
+		    <groupId>aopalliance</groupId>
+		    <artifactId>aopalliance</artifactId>
+		    <version>1.0</version>
+		</dependency>
+
+		<!-- Commons -->
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>${commons-io.version}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

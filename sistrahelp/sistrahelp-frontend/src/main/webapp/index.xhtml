@@ -5,12 +5,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:head></h:head>
-<body>
-	<h1>JSF with Primefaces</h1>
-	<h:outputFormat  value = "Accedemos al componente desde {0}">
-		<f:param value = "#{ejemploBean.recuperaDato().nombre}" />
-	</h:outputFormat>
+<h:head>
 
-</body>
+</h:head>
+
+<!-- TODO REDIRECCION HACIA INDICE APLICACION -->
+
+<h:body>
+	<h1>JSF with Primefaces</h1>
+	#{facesContext.externalContext.response.sendRedirect('secure/app/index.xhtml')}
+</h:body>
 </html>

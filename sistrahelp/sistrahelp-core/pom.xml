@@ -10,11 +10,25 @@
 	<name>sistrahelp-core</name>
 	<packaging>ejb</packaging>
 	<dependencies>
+
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistrahelp-lib</artifactId>
 			<version>${sistra2.version}</version>
 			<type>pom</type>
+		</dependency>
+
+		<!-- MODEL API REST STG -->
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistrages-rest-api</artifactId>
+			<version>${sistra2.version}</version>
+			<exclusions>
+				<exclusion>
+		          <groupId>io.springfox</groupId>
+  				  <artifactId>springfox-swagger2</artifactId>
+		        </exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- EJB -->
@@ -28,6 +42,14 @@
 			<groupId>javax.annotation</groupId>
 			<artifactId>jsr250-api</artifactId>
 			<version>${jsr250-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- LOG -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
