@@ -1,12 +1,20 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.anexar;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
+import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.fundaciobit.pluginsib.documentconverter.ConversionDocumentException;
+import org.fundaciobit.pluginsib.documentconverter.IDocumentConverterPlugin;
+import org.fundaciobit.plugins.documentconverter.openoffice.OpenOfficeDocumentConverterPlugin;
+import org.fundaciobit.pluginsib.documentconverter.InputDocumentNotSupportedException;
+import org.fundaciobit.pluginsib.documentconverter.OutputDocumentNotSupportedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -145,6 +153,9 @@ public final class AccionAnexarDocumento implements AccionPaso {
         final TransformacionAnexo res = new TransformacionAnexo();
         if (pAnexoDetalle.getConvertirPDF() == TypeSiNo.SI) {
 
+            final IDocumentConverterPlugin plgDC = new OpenOfficeDocumentConverterPlugin();
+
+
             // Enviamos mail
             // final IEmailPlugin plgEmail = (IEmailPlugin)
             // configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
@@ -154,6 +165,26 @@ public final class AccionAnexarDocumento implements AccionPaso {
 
             final String extensionOrigen = FilenameUtils
                     .getExtension(pNombreFichero);
+            final String extensionDestino= "pdf";
+
+            OutputStream datosDestino = new ByteArrayOutputStream();
+            InputStream datosOrigen =  new ByteArrayInputStream(pDatosFichero);
+
+            try {
+                plgDC.convertDocumentByExtension(datosOrigen, extensionOrigen, datosDestino,
+                        extensionDestino);
+
+               res.setConvertido(true);
+               res.setNombreFichero(FilenameUtils.removeExtension(pNombreFichero)+".pdf");
+               res.setDatosFichero(((ByteArrayOutputStream) datosDestino).toByteArray());
+            } catch (InputDocumentNotSupportedException e) {
+                e.printStackTrace();
+            } catch (OutputDocumentNotSupportedException e) {
+                e.printStackTrace();
+            } catch (ConversionDocumentException e) {
+                e.printStackTrace();
+            }
+
             throw new RuntimeException("Pendiente transformacion PDF");
         } else {
             res.setNombreFichero(pNombreFichero);
