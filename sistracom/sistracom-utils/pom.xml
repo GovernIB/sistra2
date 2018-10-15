@@ -46,6 +46,12 @@
 		    <version>${jackson.version}</version>
 		</dependency>
 
+		<!--  ITEXT   -->
+		<dependency>
+		    <groupId>com.lowagie</groupId>
+		    <artifactId>itext</artifactId>
+		    <version>${itext.version}</version>
+		</dependency>
 
 	</dependencies>
 
