@@ -554,8 +554,14 @@ public class DialogDominio extends DialogControllerBase {
 		boolean identificadorCambiado = false;
 
 		if (this.data.getTipo() == TypeDominio.FUENTE_DATOS) {
-			final FuenteDatos fuenteDato = dominioService.loadFuenteDato(idFuenteDato);
-			this.data.setIdFuenteDatos(fuenteDato.getCodigo());
+
+			if (idFuenteDato == null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.fuenteDatos"));
+				return;
+			} else {
+				final FuenteDatos fuenteDato = dominioService.loadFuenteDato(idFuenteDato);
+				this.data.setIdFuenteDatos(fuenteDato.getCodigo());
+			}
 		} else {
 			this.data.setIdFuenteDatos(null);
 		}

@@ -71,7 +71,7 @@
 
 						<p:column id="columnaBBDD2" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" style="margin-right:20px"  />
-							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" disabled="#{dialogDominio.isConsulta()}" rows="10" cols="50" maxlength="2000" converter="#{base64Converter}" />
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" disabled="#{dialogDominio.isConsulta()}" rows="8" cols="50" maxlength="2000" converter="#{base64Converter}" />
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 

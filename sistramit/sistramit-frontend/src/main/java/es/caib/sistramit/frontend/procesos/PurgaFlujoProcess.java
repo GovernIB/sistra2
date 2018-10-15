@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.utils.GeneradorId;
-import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 
 /**
- * Proceso que arranca proceso purga flujos tramitación.
+ * Proceso que arranca proceso purga flujos tramitación. Debe ejecutarse en
+ * todos los nodos.
  */
 @Component
 public final class PurgaFlujoProcess {
@@ -35,24 +34,6 @@ public final class PurgaFlujoProcess {
     public void process() {
         log.debug("Proceso purgar flujos tramitación");
         flujoTramitacionService.purgar();
-    }
-
-    /**
-     * Obtiene id instancia.
-     *
-     * @return id instancia
-     */
-    private String getIdServletContext() {
-        String id = null;
-        if (servletContext != null) {
-            id = (String) servletContext
-                    .getAttribute(Constantes.SERVLET_CONTEXT_ID);
-            if (id == null) {
-                id = GeneradorId.generarId();
-                servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
-            }
-        }
-        return id;
     }
 
 }

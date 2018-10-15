@@ -14,7 +14,8 @@ import es.caib.sistramit.core.api.model.comun.Constantes;
 import es.caib.sistramit.core.api.service.SystemService;
 
 /**
- * Proceso que arranca proceso purga ficheros.
+ * Proceso que arranca proceso purga ficheros. Debe ejecutarse en el nodo
+ * maestro.
  */
 @Component
 public final class PurgaProcess {

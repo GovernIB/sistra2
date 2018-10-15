@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import es.caib.sistramit.core.api.service.SystemService;
 
 /**
- * Proceso que revisa invalidaciones.
+ * Proceso que revisa invalidaciones. Debe ejecutarse en todos los nodos.
  */
 @Component
 public final class InvalidacionesProcess {
