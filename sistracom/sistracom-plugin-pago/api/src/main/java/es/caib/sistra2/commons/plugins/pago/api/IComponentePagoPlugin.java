@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.pago;
+package es.caib.sistra2.commons.plugins.pago.api;
 
 import org.fundaciobit.pluginsib.core.IPlugin;
 
@@ -45,12 +45,14 @@ public interface IComponentePagoPlugin extends IPlugin {
 	/**
 	 * Obtiene importe tasa.
 	 *
+	 * @param idPasarela
+	 *            id pasarela
 	 * @param idTasa
 	 *            id tasa
 	 * @return importe (en cents)
 	 * @throws PagoPluginException
 	 */
-	int consultaTasa(String idTasa) throws PagoPluginException;
+	int consultaTasa(final String idPasarela, String idTasa) throws PagoPluginException;
 
 	/**
 	 * Obtiene carta de pago presencial (PDF).

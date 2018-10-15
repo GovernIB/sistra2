@@ -1,4 +1,4 @@
-package es.caib.sistra2.commons.plugins.pago;
+package es.caib.sistra2.commons.plugins.pago.api;
 
 /**
  * Tipo estado pago.
