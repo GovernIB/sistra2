@@ -7,10 +7,7 @@ package es.caib.sistramit.core.api.model.system.types;
  *
  */
 public enum TypePluginEntidad {
-    /**
-     * Catálogo procedimientos (Entidad).
-     */
-    DOCUMENT_CONVERTER("D"),
+
     /**
      * Catálogo procedimientos (Entidad).
      */

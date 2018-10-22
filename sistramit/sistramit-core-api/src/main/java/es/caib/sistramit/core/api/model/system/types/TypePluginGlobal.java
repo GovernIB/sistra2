@@ -27,7 +27,7 @@ public enum TypePluginGlobal {
     /**
      * Plugin de conversión PDF (Global).
      */
-    CONVERSION_PDF("PDF");
+    CONVERSION_PDF("V");
 
     /**
      * Valor como string.

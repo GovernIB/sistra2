@@ -1,13 +1,15 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.anexar;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
+import es.caib.sistramit.core.api.exception.*;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
+import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.api.service.SystemService;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.documentconverter.ConversionDocumentException;
@@ -23,13 +25,6 @@ import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
 import es.caib.sistrages.rest.api.interna.RScript;
-import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
-import es.caib.sistramit.core.api.exception.AnexoVacioException;
-import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.exception.ExtensionAnexoNoValidaException;
-import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
-import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexoException;
-import es.caib.sistramit.core.api.exception.ValidacionAnexoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
@@ -60,7 +55,6 @@ import es.caib.sistramit.core.service.util.UtilsSTG;
  * Acción que permite descargar una plantilla en el paso Anexar.
  *
  * @author Indra
- *
  */
 @Component("accionAdAnexarDocumento")
 public final class AccionAnexarDocumento implements AccionPaso {
@@ -75,6 +69,15 @@ public final class AccionAnexarDocumento implements AccionPaso {
      */
     @Autowired
     private ScriptExec scriptFlujo;
+
+    /**
+     * Configuracion.
+     */
+    //   @Autowired
+    //   private SystemService systemService;
+
+    @Autowired
+    private ConfiguracionComponent configuracionComponent;
 
     @Override
     public RespuestaEjecutarAccionPaso ejecutarAccionPaso(
@@ -93,7 +96,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
                 .recuperaParametroAccionPaso(pParametros, "datosFichero", true);
         final String tituloInstancia = (String) UtilsFlujo
                 .recuperaParametroAccionPaso(pParametros, "titulo", false); // titulo
-                                                                            // genericos
+        // genericos
 
         // Obtenemos datos internos paso anexar
         final DatosInternosPasoAnexar dipa = (DatosInternosPasoAnexar) pDatosPaso
@@ -135,57 +138,42 @@ public final class AccionAnexarDocumento implements AccionPaso {
     /**
      * Transforma anexo (en caso de que este configurado).
      *
-     * @param pAnexoDetalle
-     *            Detalle anexo
-     * @param pNombreFichero
-     *            Nombre fichero
-     * @param pDatosFichero
-     *            Datos fichero
-     * @param pDebugEnabled
-     *            Debug enabled
+     * @param pAnexoDetalle  Detalle anexo
+     * @param pNombreFichero Nombre fichero
+     * @param pDatosFichero  Datos fichero
+     * @param pDebugEnabled  Debug enabled
      * @return Transformacion realizada (si no se realiza transformación se
-     *         devuelven los datos originales).
+     * devuelven los datos originales).
      */
     private TransformacionAnexo transformarAnexo(final Anexo pAnexoDetalle,
-            final String pNombreFichero, final byte[] pDatosFichero,
-            final boolean pDebugEnabled) {
+                                                 final String pNombreFichero, final byte[] pDatosFichero,
+                                                 final boolean pDebugEnabled) {
 
         final TransformacionAnexo res = new TransformacionAnexo();
         if (pAnexoDetalle.getConvertirPDF() == TypeSiNo.SI) {
-
-            final IDocumentConverterPlugin plgDC = new OpenOfficeDocumentConverterPlugin();
-
-
-            // Enviamos mail
-            // final IEmailPlugin plgEmail = (IEmailPlugin)
-            // configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-
-            // TODO Pendiente transformación PDF. Controlar si la extension se
-            // puede transformar??
-
-            final String extensionOrigen = FilenameUtils
-                    .getExtension(pNombreFichero);
-            final String extensionDestino= "pdf";
-
-            OutputStream datosDestino = new ByteArrayOutputStream();
-            InputStream datosOrigen =  new ByteArrayInputStream(pDatosFichero);
-
             try {
+                final IDocumentConverterPlugin plgDC = (IDocumentConverterPlugin) configuracionComponent
+                        .obtenerPluginGlobal(TypePluginGlobal.CONVERSION_PDF);
+
+                final String extensionOrigen = FilenameUtils
+                        .getExtension(pNombreFichero);
+                final String extensionDestino = "pdf";
+
+                OutputStream datosDestino = new ByteArrayOutputStream();
+                InputStream datosOrigen = new ByteArrayInputStream(pDatosFichero);
+
+
                 plgDC.convertDocumentByExtension(datosOrigen, extensionOrigen, datosDestino,
                         extensionDestino);
 
-               res.setConvertido(true);
-               res.setNombreFichero(FilenameUtils.removeExtension(pNombreFichero)+".pdf");
-               res.setDatosFichero(((ByteArrayOutputStream) datosDestino).toByteArray());
-            } catch (InputDocumentNotSupportedException e) {
-                e.printStackTrace();
-            } catch (OutputDocumentNotSupportedException e) {
-                e.printStackTrace();
-            } catch (ConversionDocumentException e) {
-                e.printStackTrace();
+                res.setConvertido(true);
+                res.setNombreFichero(FilenameUtils.removeExtension(pNombreFichero) + ".pdf");
+                res.setDatosFichero(((ByteArrayOutputStream) datosDestino).toByteArray());
+            } catch (Exception e) {
+                throw new TransformacionPdfException("Pendiente transformacion PDF" + e.getMessage());
             }
 
-            throw new RuntimeException("Pendiente transformacion PDF");
+
         } else {
             res.setNombreFichero(pNombreFichero);
             res.setDatosFichero(pDatosFichero);
@@ -197,15 +185,12 @@ public final class AccionAnexarDocumento implements AccionPaso {
     /**
      * Actualiza el detalle del anexo.
      *
-     * @param anexoDetalle
-     *            Detalle anexo
-     * @param nombreFichero
-     *            Nombre fichero
-     * @param titulo
-     *            Título (para genericos)
+     * @param anexoDetalle  Detalle anexo
+     * @param nombreFichero Nombre fichero
+     * @param titulo        Título (para genericos)
      */
     private void actualizarDetalleAnexo(final Anexo anexoDetalle,
-            final String nombreFichero, final String titulo) {
+                                        final String nombreFichero, final String titulo) {
         anexoDetalle.setRellenado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
         // - Creamos fichero
         final Fichero fic = new Fichero();
@@ -227,27 +212,20 @@ public final class AccionAnexarDocumento implements AccionPaso {
     /**
      * Realiza las validaciones al subir el anexo.
      *
-     * @param dipa
-     *            Datos internos paso
-     * @param anexoDetalle
-     *            Detalle anexo
-     * @param nombreFichero
-     *            Nombre fichero
-     * @param datosFichero
-     *            Datos fichero
-     * @param titulo
-     *            Título (para genericos)
-     * @param pDefinicionTramite
-     *            Definicion tramite
-     * @param pVariablesFlujo
-     *            Variables de flujo
+     * @param dipa               Datos internos paso
+     * @param anexoDetalle       Detalle anexo
+     * @param nombreFichero      Nombre fichero
+     * @param datosFichero       Datos fichero
+     * @param titulo             Título (para genericos)
+     * @param pDefinicionTramite Definicion tramite
+     * @param pVariablesFlujo    Variables de flujo
      * @return
      */
     private void validarAnexo(final DatosInternosPasoAnexar dipa,
-            final Anexo anexoDetalle, final String nombreFichero,
-            final byte[] datosFichero, final String titulo,
-            final DefinicionTramiteSTG pDefinicionTramite,
-            final VariablesFlujo pVariablesFlujo) {
+                              final Anexo anexoDetalle, final String nombreFichero,
+                              final byte[] datosFichero, final String titulo,
+                              final DefinicionTramiteSTG pDefinicionTramite,
+                              final VariablesFlujo pVariablesFlujo) {
 
         // Comprobamos si el fichero anexado está vacío
         if (datosFichero.length == 0) {
@@ -269,7 +247,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
         // - Verificamos si es generico y ha llegado al maximo de instancias
         if (anexoDetalle.getMaxInstancias() > ConstantesNumero.N1
                 && anexoDetalle.getFicheros()
-                        .size() == (anexoDetalle.getMaxInstancias())) {
+                .size() == (anexoDetalle.getMaxInstancias())) {
             throw new AccionPasoNoPermitidaException(
                     "El limite de instancias para el anexo "
                             + anexoDetalle.getId() + " es "
@@ -280,8 +258,8 @@ public final class AccionAnexarDocumento implements AccionPaso {
                 .getExtension(nombreFichero);
         if (anexoDetalle.getExtensiones() != null
                 && (anexoDetalle.getExtensiones().toLowerCase() + ",")
-                        .indexOf(extensionFichero.toLowerCase()
-                                + ",") == ConstantesNumero.N_1) {
+                .indexOf(extensionFichero.toLowerCase()
+                        + ",") == ConstantesNumero.N_1) {
             throw new ExtensionAnexoNoValidaException("Extension '"
                     + extensionFichero + "' no permitida para anexo "
                     + anexoDetalle.getId());
@@ -337,13 +315,11 @@ public final class AccionAnexarDocumento implements AccionPaso {
      * Verifica el tamaño máximo. Genera una excepción en caso de que se
      * sobrepase.
      *
-     * @param tamMax
-     *            Tamaño máximo (con sufijo MB o KB)
-     * @param numBytes
-     *            Número de bytes del fichero
+     * @param tamMax   Tamaño máximo (con sufijo MB o KB)
+     * @param numBytes Número de bytes del fichero
      */
     private void verificarTamanyoMaximo(final String tamMax,
-            final int numBytes) {
+                                        final int numBytes) {
 
         final String tam = tamMax.trim();
 
@@ -379,26 +355,19 @@ public final class AccionAnexarDocumento implements AccionPaso {
     /**
      * Actualiza persistencia.
      *
-     * @param pDipa
-     *            Datos internos paso
-     * @param pDpp
-     *            Datos persistencia
-     * @param pAnexoDetalle
-     *            Detalle anexo
-     * @param pNombreFichero
-     *            Nombre fichero
-     * @param pDatosFichero
-     *            Datos fichero
-     * @param ptituloInstancia
-     *            titulo (para genericos)
-     * @param pVariablesFlujo
-     *            Variables flujo
+     * @param pDipa            Datos internos paso
+     * @param pDpp             Datos persistencia
+     * @param pAnexoDetalle    Detalle anexo
+     * @param pNombreFichero   Nombre fichero
+     * @param pDatosFichero    Datos fichero
+     * @param ptituloInstancia titulo (para genericos)
+     * @param pVariablesFlujo  Variables flujo
      */
     private void actualizarPersistencia(final DatosInternosPasoAnexar pDipa,
-            final DatosPersistenciaPaso pDpp, final Anexo pAnexoDetalle,
-            final String pNombreFichero, final byte[] pDatosFichero,
-            final String ptituloInstancia,
-            final VariablesFlujo pVariablesFlujo) {
+                                        final DatosPersistenciaPaso pDpp, final Anexo pAnexoDetalle,
+                                        final String pNombreFichero, final byte[] pDatosFichero,
+                                        final String ptituloInstancia,
+                                        final VariablesFlujo pVariablesFlujo) {
 
         DocumentoPasoPersistencia doc;
 
