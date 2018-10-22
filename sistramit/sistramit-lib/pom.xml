@@ -137,7 +137,6 @@
 		</dependency>
 
 
-
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -236,7 +235,12 @@
 		    <version>${ehcache.version}</version>
 		</dependency>
 
-
+		<!--  ITEXT   -->
+		<dependency>
+		    <groupId>com.lowagie</groupId>
+		    <artifactId>itext</artifactId>
+		    <version>${itext.version}</version>
+		</dependency>
 
 	</dependencies>
 
