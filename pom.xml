@@ -58,8 +58,11 @@
 		<plugins-ib.version>2.0.0</plugins-ib.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
 		<loginib.version>0.0.1-SNAPSHOT</loginib.version>
+		<paymentib.version>0.0.1-SNAPSHOT</paymentib.version>
 		<firmasimple.version>1.0</firmasimple.version>
 		<itext.version>2.1.7</itext.version>
+		<paymentib.version>0.0.1-SNAPSHOT</paymentib.version>
+		<regweb3-ws.version>3.0.9</regweb3-ws.version>
 	</properties>
 
 	<repositories>
