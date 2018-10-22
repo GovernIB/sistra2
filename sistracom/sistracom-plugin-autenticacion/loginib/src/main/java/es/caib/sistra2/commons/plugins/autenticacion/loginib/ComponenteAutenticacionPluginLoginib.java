@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 import es.caib.loginib.rest.api.v1.RDatosAutenticacion;
@@ -27,6 +28,9 @@ import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion
  */
 public class ComponenteAutenticacionPluginLoginib extends
         AbstractPluginProperties implements IComponenteAutenticacionPlugin {
+
+    /** Prefix. */
+    public static final String IMPLEMENTATION_BASE_PROPERTY = "loginib.";
 
     public ComponenteAutenticacionPluginLoginib(final String prefijoPropiedades,
             final Properties properties) {
@@ -51,7 +55,7 @@ public class ComponenteAutenticacionPluginLoginib extends
         }
 
         final RLoginParams param = new RLoginParams();
-        param.setAplicacion(getIdAplicacion());
+        param.setAplicacion(getPropiedad("idAplicacion"));
         param.setEntidad(codigoEntidad);
         param.setUrlCallback(callback);
         param.setIdioma(idioma);
@@ -61,13 +65,17 @@ public class ComponenteAutenticacionPluginLoginib extends
         param.setAplicacion("SISTRA2");
         final RestTemplate restTemplate = new RestTemplate();
 
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
+
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         final HttpEntity<RLoginParams> request = new HttpEntity<>(param,
                 headers);
         final ResponseEntity<String> responseTramite = restTemplate
-                .postForEntity(getUrl() + "/login", request, String.class);
+                .postForEntity(getPropiedad("url") + "/login", request,
+                        String.class);
 
         return responseTramite.getBody();
     }
@@ -78,8 +86,12 @@ public class ComponenteAutenticacionPluginLoginib extends
 
         final RestTemplate restTemplate = new RestTemplate();
 
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
+
         final RDatosAutenticacion datosUtenticacion = restTemplate.getForObject(
-                getUrl() + "/ticket/" + pTicket, RDatosAutenticacion.class);
+                getPropiedad("url") + "/ticket/" + pTicket,
+                RDatosAutenticacion.class);
 
         final DatosUsuario datos = new DatosUsuario();
         datos.setMetodoAutenticacion(TipoMetodoAutenticacion
@@ -105,8 +117,11 @@ public class ComponenteAutenticacionPluginLoginib extends
 
         final RestTemplate restTemplate = new RestTemplate();
 
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
+
         final RLogoutParams param = new RLogoutParams();
-        param.setAplicacion(getIdAplicacion());
+        param.setAplicacion(getPropiedad("idAplicacion"));
         param.setEntidad(codigoEntidad);
         param.setUrlCallback(pCallback);
         param.setIdioma(pIdioma);
@@ -117,40 +132,31 @@ public class ComponenteAutenticacionPluginLoginib extends
         final HttpEntity<RLogoutParams> request = new HttpEntity<>(param,
                 headers);
         final ResponseEntity<String> responseTramite = restTemplate
-                .postForEntity(getUrl() + "/logout", request, String.class);
+                .postForEntity(getPropiedad("url") + "/logout", request,
+                        String.class);
 
         return responseTramite.getBody();
 
     }
 
     /**
-     * Obtiene url de propiedades.
+     * Obtiene propiedad.
      *
-     * @return url propiedades
+     * @param propiedad
+     *            propiedad
+     * @return valor
      * @throws AutenticacionPluginException
      */
-    private String getUrl() throws AutenticacionPluginException {
-        final String url = this.getProperty("url");
-        if (url == null) {
+    private String getPropiedad(String propiedad)
+            throws AutenticacionPluginException {
+        final String res = getProperty(
+                AUTENTICACION_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+        if (res == null) {
             throw new AutenticacionPluginException(
-                    "No se ha especificado parametro url en propiedades");
+                    "No se ha especificado parametro " + propiedad
+                            + " en propiedades");
         }
-        return url;
-    }
-
-    /**
-     * Obtiene id aplicacion de propiedades.
-     *
-     * @return
-     * @throws AutenticacionPluginException
-     */
-    protected String getIdAplicacion() throws AutenticacionPluginException {
-        final String idApp = this.getProperty("idAplicacion");
-        if (idApp == null) {
-            throw new AutenticacionPluginException(
-                    "No se ha especificado parametro idAplicacion en propiedades");
-        }
-        return idApp;
+        return res;
     }
 
 }

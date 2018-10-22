@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
 /**
  * Documento mostrado en el paso de registro.
@@ -39,6 +40,11 @@ public final class DocumentoRegistro implements ModelApi {
      * Indica si se debe firmar.
      */
     private TypeSiNo firmar = TypeSiNo.NO;
+
+    /**
+     * Presentación.
+     */
+    private TypePresentacion presentacion;
 
     /**
      * Si se debe firmar indica datos firmantes.
@@ -213,7 +219,7 @@ public final class DocumentoRegistro implements ModelApi {
 
     /**
      * Método de acceso a instancia.
-     * 
+     *
      * @return instancia
      */
     public int getInstancia() {
@@ -222,12 +228,31 @@ public final class DocumentoRegistro implements ModelApi {
 
     /**
      * Método para establecer instancia.
-     * 
+     *
      * @param instancia
      *            instancia a establecer
      */
     public void setInstancia(int instancia) {
         this.instancia = instancia;
+    }
+
+    /**
+     * Método de acceso a presentacion.
+     * 
+     * @return presentacion
+     */
+    public TypePresentacion getPresentacion() {
+        return presentacion;
+    }
+
+    /**
+     * Método para establecer presentacion.
+     * 
+     * @param presentacion
+     *            presentacion a establecer
+     */
+    public void setPresentacion(TypePresentacion presentacion) {
+        this.presentacion = presentacion;
     }
 
 }

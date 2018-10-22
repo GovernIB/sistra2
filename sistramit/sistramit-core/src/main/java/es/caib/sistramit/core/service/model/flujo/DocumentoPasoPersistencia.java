@@ -65,7 +65,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
      */
     private String pagoNifSujetoPasivo;
     /**
-     * Para pagos indica el nif del sujeto pasivo.
+     * Para pagos indica el identificador del pago en la pasarela.
      */
     private String pagoNumeroAutoliquidacion;
     /**
@@ -573,4 +573,17 @@ public final class DocumentoPasoPersistencia implements Serializable {
         }
         return res;
     }
+
+    /**
+     * Obtiene referencias ficheros pago.
+     *
+     * @return ficheros pago
+     */
+    public List<ReferenciaFichero> obtenerReferenciasFicherosPago() {
+        // TODO Ver si es necesario justificante,...
+        final List<ReferenciaFichero> res = new ArrayList<>();
+        res.add(this.getFichero());
+        return res;
+    }
+
 }

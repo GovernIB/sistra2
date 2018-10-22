@@ -67,10 +67,6 @@ public class SistragesMock {
         vp.setCodigo(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS.toString());
         vp.setValor("es,ca,en");
         parametros.add(vp);
-        vp = new RValorParametro();
-        vp.setCodigo(TypePropiedadConfiguracion.TIMEOUT_CACHE_FLUJO.toString());
-        vp.setValor("3600");
-        parametros.add(vp);
 
         final RListaParametros propiedades = new RListaParametros();
         propiedades.setParametros(parametros);

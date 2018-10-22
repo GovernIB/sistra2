@@ -16,11 +16,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 public final class DetallePasoPagar extends DetallePaso {
 
     /**
-     * Año actual.
-     */
-    private String anyo;
-
-    /**
      * Lista de pagos.
      */
     private List<Pago> pagos = new ArrayList<>();
@@ -93,25 +88,6 @@ public final class DetallePasoPagar extends DetallePaso {
         }
 
         return strb.toString();
-    }
-
-    /**
-     * Método de acceso a anyo.
-     *
-     * @return anyo
-     */
-    public String getAnyo() {
-        return anyo;
-    }
-
-    /**
-     * Método para establecer anyo.
-     *
-     * @param pAnyo
-     *            anyo a establecer
-     */
-    public void setAnyo(final String pAnyo) {
-        anyo = pAnyo;
     }
 
 }

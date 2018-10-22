@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.api.model.flujo;
 
+import java.util.List;
+
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
 /**
@@ -11,6 +13,11 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
  */
 @SuppressWarnings("serial")
 public final class Pago extends Documento {
+
+    /**
+     * Presentaciones permitidas.
+     */
+    private List<TypePresentacion> presentacionesPermitidas;
 
     /**
      * Tipo pago.
@@ -52,7 +59,7 @@ public final class Pago extends Documento {
 
     /**
      * Método de acceso a estadoIncorrecto.
-     * 
+     *
      * @return estadoIncorrecto
      */
     public DetalleEstadoPagoIncorrecto getEstadoIncorrecto() {
@@ -61,13 +68,33 @@ public final class Pago extends Documento {
 
     /**
      * Método para establecer estadoIncorrecto.
-     * 
+     *
      * @param estadoIncorrecto
      *            estadoIncorrecto a establecer
      */
     public void setEstadoIncorrecto(
             DetalleEstadoPagoIncorrecto estadoIncorrecto) {
         this.estadoIncorrecto = estadoIncorrecto;
+    }
+
+    /**
+     * Método de acceso a presentacionesPermitidas.
+     * 
+     * @return presentacionesPermitidas
+     */
+    public List<TypePresentacion> getPresentacionesPermitidas() {
+        return presentacionesPermitidas;
+    }
+
+    /**
+     * Método para establecer presentacionesPermitidas.
+     * 
+     * @param presentacionesPermitidas
+     *            presentacionesPermitidas a establecer
+     */
+    public void setPresentacionesPermitidas(
+            List<TypePresentacion> presentacionesPermitidas) {
+        this.presentacionesPermitidas = presentacionesPermitidas;
     }
 
 }

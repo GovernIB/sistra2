@@ -164,17 +164,7 @@ public interface FlujoTramitacionService {
 	// TODO PARA BORRAR
 	String simularRellenarFormulario(String idSesionTramitacion, String xml);
 
-	String testFirmaCreateSesion(String idSesionTramitacion);
 
-	String testFirmaAddFichero(String idSesionTramitacion, String idSession);
-
-	String testFirmaActivar(String idSesionTramitacion, String idSession);
-
-	String testFirmaEstado(String idSesionTramitacion, String idSession);
-
-	byte[] testFirmaDoc(String idSesionTramitacion, String idSession, String idDoc);
-
-	void testFirmaCerrar(String idSesionTramitacion, String idSession);
 
 	// -------------------------------------------------------------------------------------------
 	// - Métodos especiales invocados desde el interceptor. No pasan por

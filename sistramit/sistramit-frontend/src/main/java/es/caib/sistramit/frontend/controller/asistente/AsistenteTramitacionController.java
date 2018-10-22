@@ -50,95 +50,12 @@ import es.caib.sistramit.frontend.security.UsuarioAutenticado;
 @RequestMapping(value = "/asistente")
 public class AsistenteTramitacionController extends TramitacionController {
 
+        /** Sesion. */
 	@Autowired
 	SesionHttp sesionHttp;
 
 	/** Url redireccion asistente. */
 	private static final String URL_REDIRIGIR_ASISTENTE = "asistente/redirigirAsistente";
-
-	// TODO Borrar, es test firma.
-	@RequestMapping(value = "/testFirma.html")
-	public ModelAndView testFirma(final HttpServletResponse response) throws IOException {
-
-		final String idSesionTramitacion = getIdSesionTramitacion();
-
-		// Intenta ir a paso indicado
-		final String idSesion = getFlujoTramitacionService().testFirmaCreateSesion(idSesionTramitacion);
-		if (idSesion == null) {
-			response.getWriter().print("La idSesion es nula");
-			return null;
-		}
-		response.getWriter().println("La idSesion:" + idSesion);
-		getFlujoTramitacionService().testFirmaAddFichero(idSesionTramitacion, idSesion);
-		final String url = getFlujoTramitacionService().testFirmaActivar(idSesionTramitacion, idSesion);
-		if (url == null) {
-			response.getWriter().print("La url es nula");
-			return null;
-		}
-		response.getWriter().println();
-		response.getWriter().println();
-		response.getWriter().println("La url: " + url);
-		response.getWriter().println();
-		response.getWriter().println();
-		response.getWriter().println(
-				"URL del estado: /sistramitfront/debug/testFirmaEstado.html?idSession=" + idSesion);
-		response.getWriter().println(" <br />          ");
-		response.getWriter().println(
-				" <br />                                                                                            ");
-		response.getWriter().println(
-				"Descargar doc1 firmado (solo funciona si ya está firmado, sino da error): /sistramitfront/debug/testFirmaDoc.html?idSession="
-						+ idSesion + "&docId=666");
-		response.getWriter().println(
-				"Descargar doc2 firmado (solo funciona si ya está firmado, sino da error): /sistramitfront/debug/testFirmaDoc.html?idSession="
-						+ idSesion + "&docId=777");
-		response.getWriter().println();
-		response.getWriter().println(
-				"Cerrar transaction: /sistramitfront/debug/testFirmaCerrar.html?idSession=" + idSesion);
-
-		return null;
-	}
-
-	// TODO Borrar, es test firma.
-	@RequestMapping(value = "/testFirmaEstado.html")
-	public ModelAndView testFirmaEstado(@RequestParam("idSession") final String idSession,
-			final HttpServletResponse response) throws IOException {
-
-		final String idSesionTramitacion = getIdSesionTramitacion();
-		final String estado = getFlujoTramitacionService().testFirmaEstado(idSesionTramitacion, idSession);
-		response.getWriter().println();
-		response.getWriter().println("Estado: " + estado);
-		response.getWriter().println();
-		return null;
-	}
-
-	// TODO Borrar, es test firma.
-	@RequestMapping(value = "/testFirmaDoc.html")
-	public ModelAndView testFirmaDoc(@RequestParam("idSession") final String idSession,
-			@RequestParam("docId") final String docId, final HttpServletResponse response) throws IOException {
-
-		final String idSesionTramitacion = getIdSesionTramitacion();
-		final byte[] contenido = getFlujoTramitacionService().testFirmaDoc(idSesionTramitacion, idSession, docId);
-		response.setHeader("Content-Disposition", "attachment;filename=fichero" + docId + ".pdf");
-		response.setContentType("text/plain");
-
-		final InputStream is = new ByteArrayInputStream(contenido);
-		IOUtils.copy(is, response.getOutputStream());
-		response.flushBuffer();
-		return null;
-	}
-
-	// TODO Borrar, es test firma.
-	@RequestMapping(value = "/testFirmaCerrar.html")
-	public ModelAndView testFirmaCerrar(@RequestParam("idSession") final String idSession,
-			final HttpServletResponse response) throws IOException {
-
-		final String idSesionTramitacion = getIdSesionTramitacion();
-		getFlujoTramitacionService().testFirmaCerrar(idSesionTramitacion, idSession);
-		response.getWriter().println();
-		response.getWriter().println("Cerrado");
-		response.getWriter().println();
-		return null;
-	}
 
 	/**
 	 * Inicia trámite.
@@ -590,7 +507,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 		// Comprobamos que sea el iniciador (en caso de autenticado)
 		if (dt.getTramite().getAutenticacion() != userInfo.getAutenticacion()) {
-			throw new WarningFrontException("No coincide nivel es.caib.sistra2.commons.plugins.autenticacion");
+			throw new WarningFrontException("No coincide nivel autenticacion");
 		}
 		if (dt.getTramite().getAutenticacion() != TypeAutenticacion.ANONIMO) {
 			if (!StringUtils.equals(dt.getUsuario().getNif(), userInfo.getNif())) {

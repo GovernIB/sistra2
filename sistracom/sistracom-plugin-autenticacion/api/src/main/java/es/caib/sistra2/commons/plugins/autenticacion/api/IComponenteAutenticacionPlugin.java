@@ -1,8 +1,8 @@
 package es.caib.sistra2.commons.plugins.autenticacion.api;
 
-import org.fundaciobit.pluginsib.core.IPlugin;
-
 import java.util.List;
+
+import org.fundaciobit.pluginsib.core.IPlugin;
 
 /**
  * Interface componente autenticación.
@@ -13,7 +13,7 @@ import java.util.List;
 public interface IComponenteAutenticacionPlugin extends IPlugin {
 
     /** Prefix. */
-    public static final String AUTENTICACION_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES
+    public static final String AUTENTICACION_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES
             + "login.";
 
     /**
@@ -32,7 +32,7 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
      * @return url inicio sesion
      */
     String iniciarSesionAutenticacion(String codigoEntidad, String idioma,
-                                      List<TipoAutenticacion> metodos, String qaa, String urlCallback)
+            List<TipoAutenticacion> metodos, String qaa, String urlCallback)
             throws AutenticacionPluginException;
 
     /**
@@ -57,6 +57,6 @@ public interface IComponenteAutenticacionPlugin extends IPlugin {
      * @return
      */
     String iniciarSesionLogout(String codigoEntidad, String idioma,
-                               String urlCallback) throws AutenticacionPluginException;
+            String urlCallback) throws AutenticacionPluginException;
 
 }

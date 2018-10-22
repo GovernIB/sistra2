@@ -41,6 +41,8 @@ public final class ReglasFlujoNormalizadoImpl extends ReglasFlujoImpl {
         this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_ACCION);
 
         // CANCELAR
+        this.addRegla(new RTCancelacionPagoIniciado(),
+                TypeFaseEjecucion.PRE_CANCELAR);
 
     }
 }

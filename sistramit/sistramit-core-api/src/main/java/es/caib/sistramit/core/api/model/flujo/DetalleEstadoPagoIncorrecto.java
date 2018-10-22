@@ -11,28 +11,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
 public final class DetalleEstadoPagoIncorrecto implements ModelApi {
 
     /**
-     * Constructor.
-     *
-     * @param pEstado
-     *            Estado incorrecto
-     * @param pMensaje
-     *            Mensaje
-     */
-    public DetalleEstadoPagoIncorrecto(final TypeEstadoPagoIncorrecto pEstado,
-            final String pMensaje) {
-        super();
-        estado = pEstado;
-        mensaje = pMensaje;
-    }
-
-    /**
-     * Constructor.
-     */
-    public DetalleEstadoPagoIncorrecto() {
-        super();
-    }
-
-    /**
      * Detalle del estado cuando el pago es incorrecto.
      */
     private TypeEstadoPagoIncorrecto estado;
@@ -51,6 +29,31 @@ public final class DetalleEstadoPagoIncorrecto implements ModelApi {
      * Mensaje error pasarela pagos.
      */
     private String mensajeErrorPasarela;
+
+    /**
+     * Constructor.
+     *
+     * @param pEstado
+     *            Estado incorrecto
+     * @param pMensaje
+     *            Mensaje
+     */
+    public DetalleEstadoPagoIncorrecto(final TypeEstadoPagoIncorrecto pEstado,
+            final String pMensaje, final String pCodigoErrorPasarela,
+            final String pMensajeErrorPasarela) {
+        super();
+        estado = pEstado;
+        mensaje = pMensaje;
+        codigoErrorPasarela = pCodigoErrorPasarela;
+        mensajeErrorPasarela = pMensajeErrorPasarela;
+    }
+
+    /**
+     * Constructor.
+     */
+    public DetalleEstadoPagoIncorrecto() {
+        super();
+    }
 
     /**
      * Método de acceso a estado.

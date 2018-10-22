@@ -111,34 +111,4 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 		return flujoTramitacionService.simularRellenarFormulario(idSesionTramitacion, xml);
 	}
 
-	@Override
-	public String testFirmaCreateSesion(final String idSesionTramitacion) {
-		return flujoTramitacionService.testFirmaCreateSesion(idSesionTramitacion);
-	}
-
-	@Override
-	public String testFirmaAddFichero(final String idSesionTramitacion, final String idSession) {
-		return flujoTramitacionService.testFirmaAddFichero(idSesionTramitacion, idSession);
-	}
-
-	@Override
-	public String testFirmaActivar(final String idSesionTramitacion, final String idSession) {
-		return flujoTramitacionService.testFirmaActivar(idSesionTramitacion, idSession);
-	}
-
-	@Override
-	public String testFirmaEstado(final String idSesionTramitacion, final String idSession) {
-		return flujoTramitacionService.testFirmaEstado(idSesionTramitacion, idSession);
-	}
-
-	@Override
-	public byte[] testFirmaDoc(final String idSesionTramitacion, final String idSession, final String idDoc) {
-		return flujoTramitacionService.testFirmaDoc(idSesionTramitacion, idSession, idDoc);
-	}
-
-	@Override
-	public void testFirmaCerrar(final String idSesionTramitacion, final String idSession) {
-		flujoTramitacionService.testFirmaCerrar(idSesionTramitacion, idSession);
-	}
-
 }

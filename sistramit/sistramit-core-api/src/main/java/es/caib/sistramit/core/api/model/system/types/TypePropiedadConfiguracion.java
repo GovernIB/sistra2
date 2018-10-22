@@ -29,8 +29,10 @@ public enum TypePropiedadConfiguracion {
      * se puede deshabilitar
      */
     CHECK_PERSISTENCIA_POSTACCION("sistramit.checkPersistenciaPostAccion"),
-    /** Timeout cache flujo tramitación (segundos). */
-    TIMEOUT_CACHE_FLUJO("sistramit.cacheFlujo.timeout");
+    /** Timeout sesión web (minutos). */
+    TIMEOUT_SESION_WEB("sesionweb.timeout"),
+    /** Prefijo plugin. */
+    PLUGINS_PREFIJO("plugins.prefix");
 
     /**
      * Valor como string.

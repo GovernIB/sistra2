@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
@@ -147,13 +148,11 @@ public class VersionTramiteAdapter {
         rVersionTramite.setIdioma(idiRes);
         rVersionTramite.setTipoFlujo(tv.getTipoFlujo() == null ? null
                 : tv.getTipoFlujo().toString());
-        rVersionTramite.setControlAcceso(generaControlAcceso(tv)); // ver
-                                                                   // pantalla
+        rVersionTramite.setControlAcceso(generaControlAcceso(tv));
         rVersionTramite
-                .setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite())); // buscar
-                                                                              // hacia
-                                                                              // arriba
-        rVersionTramite.setPropiedades(generaPropiedades(tv)); // ver pantalla
+                .setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite()));
+        rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
+        rVersionTramite.setPropiedades(generaPropiedades(tv));
 
         return rVersionTramite;
 
@@ -173,6 +172,26 @@ public class VersionTramiteAdapter {
                 final Entidad e = restApiService.loadEntidad(t.getIdEntidad());
                 if (e != null) {
                     res = e.getCodigoDIR3();
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Genera el id de area para un tramite
+     *
+     * @param idTramite
+     * @return id de entidad
+     */
+    private String generaidAreafromTramite(final Long idTramite) {
+        String res = null;
+        if (idTramite != null) {
+            final Tramite t = restApiService.loadTramite(idTramite);
+            if (t != null && t.getIdArea() != null) {
+                final Area e = restApiService.loadArea(t.getIdArea());
+                if (e != null) {
+                    res = e.getIdentificador();
                 }
             }
         }
@@ -1067,6 +1086,7 @@ public class VersionTramiteAdapter {
                 res.setScriptDependencia(
                         AdapterUtils.generaScript(t.getScriptObligatoriedad()));
                 res.setScriptPago(AdapterUtils.generaScript(t.getScriptPago()));
+                res.setTipo(t.getTipo().toString());
                 res.setSimularPago(t.isSimulado());
                 lres.add(res);
             }

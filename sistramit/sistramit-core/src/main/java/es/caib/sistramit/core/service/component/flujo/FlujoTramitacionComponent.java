@@ -66,16 +66,4 @@ public interface FlujoTramitacionComponent {
 	// TODO BORRAR
 	String simularRellenarFormulario(String xml);
 
-	String testFirmaCreateSesion() throws FirmaPluginException;
-
-	String testFirmaAddFichero(String idSession) throws Exception;
-
-	String testFirmaActivar(String idSession) throws FirmaPluginException;
-
-	String testFirmaEstado(String idSession) throws FirmaPluginException;
-
-	byte[] testFirmaDoc(String idSession, String idDoc) throws FirmaPluginException;
-
-	void testFirmaCerrar(String idSession) throws FirmaPluginException;
-
 }
