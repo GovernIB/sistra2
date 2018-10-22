@@ -13,10 +13,10 @@
 			jndi-name="sistrahelp/EjemploServiceBean/local"
 			business-interface="es.caib.sistrahelp.core.api.service.EjemploService"/>
  	-->
-	<!-- JBoss 7  -->
+	<!-- JBoss 7
 	<jee:local-slsb
 			id="ejemploService"
 			jndi-name="java:app//sistrahelp-core/EjemploServiceBean"
 			business-interface="es.caib.sistrahelp.core.api.service.EjemploService"/>
-
+ -->
 </beans>

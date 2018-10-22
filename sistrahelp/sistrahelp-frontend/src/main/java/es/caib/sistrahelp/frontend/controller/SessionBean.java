@@ -1,9 +1,12 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -11,15 +14,18 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 import es.caib.sistrahelp.core.api.service.SecurityService;
 import es.caib.sistrahelp.frontend.model.types.TypeOpcionMenu;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
@@ -66,11 +72,16 @@ public class SessionBean {
 
 	private List<Entidad> listaEntidades;
 
+	private List<Area> listaAreas;
+
 	/**
 	 * Servicio seguridad.
 	 */
 	@Inject
 	private SecurityService securityService;
+
+	@Inject
+	private ConfiguracionService configuracionService;
 
 	/**
 	 * Titulo pantalla.
@@ -97,6 +108,17 @@ public class SessionBean {
 
 		if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
 			activeRole = TypeRoleAcceso.HELPDESK;
+		} else {
+			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
+			return;
+		}
+
+		listaAreas = securityService.obtenerAreas();
+
+		listaEntidades = obtenerEntidades(listaAreas);
+
+		if (!listaEntidades.isEmpty()) {
+			entidad = listaEntidades.get(0);
 		} else {
 			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
 			return;
@@ -138,7 +160,7 @@ public class SessionBean {
 			for (final Entidad newEntidad : listaEntidades) {
 				if (!entidad.equals(newEntidad)) {
 					final DefaultMenuItem item3 = new DefaultMenuItem(newEntidad.getNombre().getTraduccion(this.lang));
-					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getCodigo() + ")}");
+					item3.setCommand("#{sessionBean.cambiarEntidadActivo(\"" + newEntidad.getCodigoDIR3() + "\")}");
 					item3.setIcon("fa-li fa fa-institution");
 					entidadSubmenu.addElement(item3);
 				}
@@ -171,6 +193,20 @@ public class SessionBean {
 		model.addElement(secondSubmenu);
 		model.generateUniqueIds();
 		return model;
+	}
+
+	/** Cambio entidad activa. */
+	public void cambiarEntidadActivo(final String idEntidad) {
+		// Cambia entidad
+		for (final Entidad e : listaEntidades) {
+			if (e.getCodigoDIR3().equals(idEntidad)) {
+				entidad = e;
+			}
+		}
+		// Cambio logo
+		cambiarLogo();
+		// Recarga pagina principal
+		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
 
 	/** Opciones del menú. */
@@ -239,6 +275,18 @@ public class SessionBean {
 		mochilaDatos.remove(pClave);
 	}
 
+	public Entidad getEntidad(final String id) {
+		Entidad res = null;
+
+		for (final Entidad ent : listaEntidades) {
+			if (ent.getCodigoDIR3().equals(id)) {
+				res = ent;
+			}
+		}
+
+		return res;
+	}
+
 	// --------- PRIVATE METHODS --------------------
 
 	/** Cambiar logo. */
@@ -246,7 +294,12 @@ public class SessionBean {
 		final String url = "/resources/images/";
 
 		if (entidad != null && entidad.getLogoGestor() != null) {
-			logo = Constantes.DESCARGA_FICHEROS_URL + "?id=" + entidad.getLogoGestor().getCodigo();
+			logo = Constantes.DESCARGA_FICHEROS_URL;
+
+			final HttpSession sessionHttp = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+					.getSession(false);
+
+			sessionHttp.setAttribute("LOGO_ENTIDAD_ACTIVA", entidad.getLogoGestor());
 		} else {
 			logo = url + Constantes.ENTIDAD_NO_LOGO;
 		}
@@ -260,6 +313,20 @@ public class SessionBean {
 			idEntidad = entidad.getCodigo();
 		}
 		return idEntidad;
+	}
+
+	private List<Entidad> obtenerEntidades(final List<Area> listaAreas) {
+		final Set<String> cEntidades = new HashSet<>();
+		final List<Entidad> lista = new ArrayList<>();
+		for (final Area area : listaAreas) {
+			if (!cEntidades.contains(area.getCodigoDIR3Entidad())) {
+				lista.add(configuracionService.obtenerDatosEntidad(area.getCodigoDIR3Entidad()));
+				cEntidades.add(area.getCodigoDIR3Entidad());
+			}
+		}
+
+		return lista;
+
 	}
 
 	// --------- GETTERS / SETTERS ------------------

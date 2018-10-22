@@ -1,4 +1,4 @@
-package es.caib.sistrages.core.api.model;
+package es.caib.sistrahelp.core.api.model;
 
 /**
  *

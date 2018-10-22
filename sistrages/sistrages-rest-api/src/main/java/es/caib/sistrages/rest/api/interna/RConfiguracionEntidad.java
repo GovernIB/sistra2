@@ -14,385 +14,390 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RConfiguracionEntidad", description = "Descripcion de RConfiguracionEntidad")
 public class RConfiguracionEntidad {
 
-    /** Timestamp recuperacion. */
+	/** Timestamp recuperacion. */
 	@ApiModelProperty(value = "Timestamp recuperacion")
-    private String timestamp;
+	private String timestamp;
 
-    /** Identificador. */
+	/** Identificador. */
 	@ApiModelProperty(value = "Identificador")
-    private String identificador;
+	private String identificador;
 
-    /** Descripción. */
+	/** Descripción. */
 	@ApiModelProperty(value = "Descripción")
-    private RLiteral descripcion;
+	private RLiteral descripcion;
 
-    /** Referencia logo. */
+	/** Referencia logo. */
 	@ApiModelProperty(value = "Referencia logo")
-    private String logo;
+	private String logo;
 
-    /** Referencia logo. */
+	/** Referencia logo. */
 	@ApiModelProperty(value = "Referencia logo")
-    private String css;
+	private String css;
 
-    /** Contacto (HTML). */
+	/** Contacto (HTML). */
 	@ApiModelProperty(value = "Contacto (HTML)")
-    private RLiteral contactoHTML;
+	private RLiteral contactoHTML;
 
-    /** Url carpeta ciudadana. */
+	/** Url carpeta ciudadana. */
 	@ApiModelProperty(value = "Url carpeta ciudadana")
-    private RLiteral urlCarpeta;
+	private RLiteral urlCarpeta;
 
-    /** Info LOPD (HTML). */
+	/** Info LOPD (HTML). */
 	@ApiModelProperty(value = "Info LOPD (HTML)")
-    private RLiteral infoLopdHTML;
+	private RLiteral infoLopdHTML;
 
-    /** Dias preregistro. */
+	/** Dias preregistro. */
 	@ApiModelProperty(value = "Dias preregistro")
-    private int diasPreregistro;
+	private int diasPreregistro;
 
-    /** Email. */
+	/** Email. */
 	@ApiModelProperty(value = "Email")
-    private String email;
+	private String email;
 
-    /** Ayuda email. */
+	/** Ayuda email. */
 	@ApiModelProperty(value = "Ayuda email")
-    private boolean ayudaEmail;
+	private boolean ayudaEmail;
 
-    /** Ayuda telefono. */
+	/** Ayuda telefono. */
 	@ApiModelProperty(value = "Ayuda telefono")
-    private String ayudaTelefono;
+	private String ayudaTelefono;
 
-    /** Ayuda url. */
+	/** Ayuda url. */
 	@ApiModelProperty(value = "Ayuda url")
-    private String ayudaUrl;
+	private String ayudaUrl;
 
-    /** Ayuda formulario soporte. */
+	/** Ayuda formulario soporte. */
 	@ApiModelProperty(value = "Ayuda formulario soporte")
-    private List<ROpcionFormularioSoporte> ayudaFormulario;
+	private List<ROpcionFormularioSoporte> ayudaFormulario;
 
-    /** Plugins entidad. */
+	/** Plugins entidad. */
 	@ApiModelProperty(value = "Plugins entidad")
-    private List<RPlugin> plugins;
-    
-    /** Mapa web */
+	private List<RPlugin> plugins;
+
+	/** Mapa web */
 	@ApiModelProperty(value = "Mapa web")
-    private RLiteral mapaWeb;
-	
-    /** Aviso legal */
+	private RLiteral mapaWeb;
+
+	/** Aviso legal */
 	@ApiModelProperty(value = "Aviso legal")
-    private RLiteral avisoLegal;
-	
-    /** RSS */
+	private RLiteral avisoLegal;
+
+	/** RSS */
 	@ApiModelProperty(value = "RSS")
-    private RLiteral rss;
-	
-    /** url de Facebook */
+	private RLiteral rss;
+
+	/** url de Facebook */
 	@ApiModelProperty(value = "url de Facebook")
-    private String urlFacebook;
-	
-    /** url de Instagram */
+	private String urlFacebook;
+
+	/** url de Instagram */
 	@ApiModelProperty(value = "url de Instagram")
-    private String urlInstagram;
-	
-    /** url de  Twiter */
+	private String urlInstagram;
+
+	/** url de Twiter */
 	@ApiModelProperty(value = "url de  Twiter")
-    private String urlTwitter;
-	
-    /** url de Youtube */
+	private String urlTwitter;
+
+	/** url de Youtube */
 	@ApiModelProperty(value = "url de Youtube")
-    private String urlYoutube;
-    
-    /**
-     * Método de acceso a logo.
-     *
-     * @return logo
-     */
-    public String getLogo() {
-        return logo;
-    }
+	private String urlYoutube;
 
-    /**
-     * Método para establecer logo.
-     *
-     * @param logo
-     *            logo a establecer
-     */
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
+	/**
+	 * logo gestor.
+	 */
+	@ApiModelProperty(value = "logo Gestor")
+	private String logoGestor;
 
-    /**
-     * Método de acceso a css.
-     *
-     * @return css
-     */
-    public String getCss() {
-        return css;
-    }
+	/**
+	 * Método de acceso a logo.
+	 *
+	 * @return logo
+	 */
+	public String getLogo() {
+		return logo;
+	}
 
-    /**
-     * Método para establecer css.
-     *
-     * @param css
-     *            css a establecer
-     */
-    public void setCss(String css) {
-        this.css = css;
-    }
+	/**
+	 * Método para establecer logo.
+	 *
+	 * @param logo
+	 *            logo a establecer
+	 */
+	public void setLogo(final String logo) {
+		this.logo = logo;
+	}
 
-    /**
-     * Método de acceso a contactoHTML.
-     *
-     * @return contactoHTML
-     */
-    public RLiteral getContactoHTML() {
-        return contactoHTML;
-    }
+	/**
+	 * Método de acceso a css.
+	 *
+	 * @return css
+	 */
+	public String getCss() {
+		return css;
+	}
 
-    /**
-     * Método para establecer contactoHTML.
-     *
-     * @param contactoHTML
-     *            contactoHTML a establecer
-     */
-    public void setContactoHTML(RLiteral contactoHTML) {
-        this.contactoHTML = contactoHTML;
-    }
+	/**
+	 * Método para establecer css.
+	 *
+	 * @param css
+	 *            css a establecer
+	 */
+	public void setCss(final String css) {
+		this.css = css;
+	}
 
-    /**
-     * Método de acceso a urlCarpeta.
-     *
-     * @return urlCarpeta
-     */
-    public RLiteral getUrlCarpeta() {
-        return urlCarpeta;
-    }
+	/**
+	 * Método de acceso a contactoHTML.
+	 *
+	 * @return contactoHTML
+	 */
+	public RLiteral getContactoHTML() {
+		return contactoHTML;
+	}
 
-    /**
-     * Método para establecer urlCarpeta.
-     *
-     * @param urlCarpeta
-     *            urlCarpeta a establecer
-     */
-    public void setUrlCarpeta(RLiteral urlCarpeta) {
-        this.urlCarpeta = urlCarpeta;
-    }
+	/**
+	 * Método para establecer contactoHTML.
+	 *
+	 * @param contactoHTML
+	 *            contactoHTML a establecer
+	 */
+	public void setContactoHTML(final RLiteral contactoHTML) {
+		this.contactoHTML = contactoHTML;
+	}
 
-    /**
-     * Método de acceso a email.
-     *
-     * @return email
-     */
-    public String getEmail() {
-        return email;
-    }
+	/**
+	 * Método de acceso a urlCarpeta.
+	 *
+	 * @return urlCarpeta
+	 */
+	public RLiteral getUrlCarpeta() {
+		return urlCarpeta;
+	}
 
-    /**
-     * Método para establecer email.
-     *
-     * @param email
-     *            email a establecer
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	/**
+	 * Método para establecer urlCarpeta.
+	 *
+	 * @param urlCarpeta
+	 *            urlCarpeta a establecer
+	 */
+	public void setUrlCarpeta(final RLiteral urlCarpeta) {
+		this.urlCarpeta = urlCarpeta;
+	}
 
-    /**
-     * Método de acceso a ayudaEmail.
-     *
-     * @return ayudaEmail
-     */
-    public boolean isAyudaEmail() {
-        return ayudaEmail;
-    }
+	/**
+	 * Método de acceso a email.
+	 *
+	 * @return email
+	 */
+	public String getEmail() {
+		return email;
+	}
 
-    /**
-     * Método para establecer ayudaEmail.
-     *
-     * @param ayudaEmail
-     *            ayudaEmail a establecer
-     */
-    public void setAyudaEmail(boolean ayudaEmail) {
-        this.ayudaEmail = ayudaEmail;
-    }
+	/**
+	 * Método para establecer email.
+	 *
+	 * @param email
+	 *            email a establecer
+	 */
+	public void setEmail(final String email) {
+		this.email = email;
+	}
 
-    /**
-     * Método de acceso a ayudaTelefono.
-     *
-     * @return ayudaTelefono
-     */
-    public String getAyudaTelefono() {
-        return ayudaTelefono;
-    }
+	/**
+	 * Método de acceso a ayudaEmail.
+	 *
+	 * @return ayudaEmail
+	 */
+	public boolean isAyudaEmail() {
+		return ayudaEmail;
+	}
 
-    /**
-     * Método para establecer ayudaTelefono.
-     *
-     * @param ayudaTelefono
-     *            ayudaTelefono a establecer
-     */
-    public void setAyudaTelefono(String ayudaTelefono) {
-        this.ayudaTelefono = ayudaTelefono;
-    }
+	/**
+	 * Método para establecer ayudaEmail.
+	 *
+	 * @param ayudaEmail
+	 *            ayudaEmail a establecer
+	 */
+	public void setAyudaEmail(final boolean ayudaEmail) {
+		this.ayudaEmail = ayudaEmail;
+	}
 
-    /**
-     * Método de acceso a ayudaUrl.
-     *
-     * @return ayudaUrl
-     */
-    public String getAyudaUrl() {
-        return ayudaUrl;
-    }
+	/**
+	 * Método de acceso a ayudaTelefono.
+	 *
+	 * @return ayudaTelefono
+	 */
+	public String getAyudaTelefono() {
+		return ayudaTelefono;
+	}
 
-    /**
-     * Método para establecer ayudaUrl.
-     *
-     * @param ayudaUrl
-     *            ayudaUrl a establecer
-     */
-    public void setAyudaUrl(String ayudaUrl) {
-        this.ayudaUrl = ayudaUrl;
-    }
+	/**
+	 * Método para establecer ayudaTelefono.
+	 *
+	 * @param ayudaTelefono
+	 *            ayudaTelefono a establecer
+	 */
+	public void setAyudaTelefono(final String ayudaTelefono) {
+		this.ayudaTelefono = ayudaTelefono;
+	}
 
-    /**
-     * Método de acceso a ayudaFormulario.
-     *
-     * @return ayudaFormulario
-     */
-    public List<ROpcionFormularioSoporte> getAyudaFormulario() {
-        return ayudaFormulario;
-    }
+	/**
+	 * Método de acceso a ayudaUrl.
+	 *
+	 * @return ayudaUrl
+	 */
+	public String getAyudaUrl() {
+		return ayudaUrl;
+	}
 
-    /**
-     * Método para establecer ayudaFormulario.
-     *
-     * @param ayudaFormulario
-     *            ayudaFormulario a establecer
-     */
-    public void setAyudaFormulario(
-            List<ROpcionFormularioSoporte> ayudaFormulario) {
-        this.ayudaFormulario = ayudaFormulario;
-    }
+	/**
+	 * Método para establecer ayudaUrl.
+	 *
+	 * @param ayudaUrl
+	 *            ayudaUrl a establecer
+	 */
+	public void setAyudaUrl(final String ayudaUrl) {
+		this.ayudaUrl = ayudaUrl;
+	}
 
-    /**
-     * Método de acceso a plugins.
-     *
-     * @return plugins
-     */
-    public List<RPlugin> getPlugins() {
-        return plugins;
-    }
+	/**
+	 * Método de acceso a ayudaFormulario.
+	 *
+	 * @return ayudaFormulario
+	 */
+	public List<ROpcionFormularioSoporte> getAyudaFormulario() {
+		return ayudaFormulario;
+	}
 
-    /**
-     * Método para establecer plugins.
-     *
-     * @param plugins
-     *            plugins a establecer
-     */
-    public void setPlugins(List<RPlugin> plugins) {
-        this.plugins = plugins;
-    }
+	/**
+	 * Método para establecer ayudaFormulario.
+	 *
+	 * @param ayudaFormulario
+	 *            ayudaFormulario a establecer
+	 */
+	public void setAyudaFormulario(final List<ROpcionFormularioSoporte> ayudaFormulario) {
+		this.ayudaFormulario = ayudaFormulario;
+	}
 
-    /**
-     * Método de acceso a identificador.
-     *
-     * @return identificador
-     */
-    public String getIdentificador() {
-        return identificador;
-    }
+	/**
+	 * Método de acceso a plugins.
+	 *
+	 * @return plugins
+	 */
+	public List<RPlugin> getPlugins() {
+		return plugins;
+	}
 
-    /**
-     * Método para establecer identificador.
-     *
-     * @param identificador
-     *            identificador a establecer
-     */
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
-    }
+	/**
+	 * Método para establecer plugins.
+	 *
+	 * @param plugins
+	 *            plugins a establecer
+	 */
+	public void setPlugins(final List<RPlugin> plugins) {
+		this.plugins = plugins;
+	}
 
-    /**
-     * Método de acceso a infoLopdHTML.
-     *
-     * @return infoLopdHTML
-     */
-    public RLiteral getInfoLopdHTML() {
-        return infoLopdHTML;
-    }
+	/**
+	 * Método de acceso a identificador.
+	 *
+	 * @return identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
 
-    /**
-     * Método para establecer infoLopdHTML.
-     *
-     * @param infoLopdHTML
-     *            infoLopdHTML a establecer
-     */
-    public void setInfoLopdHTML(RLiteral infoLopdHTML) {
-        this.infoLopdHTML = infoLopdHTML;
-    }
+	/**
+	 * Método para establecer identificador.
+	 *
+	 * @param identificador
+	 *            identificador a establecer
+	 */
+	public void setIdentificador(final String identificador) {
+		this.identificador = identificador;
+	}
 
-    /**
-     * Método de acceso a diasPreregistro.
-     *
-     * @return diasPreregistro
-     */
-    public int getDiasPreregistro() {
-        return diasPreregistro;
-    }
+	/**
+	 * Método de acceso a infoLopdHTML.
+	 *
+	 * @return infoLopdHTML
+	 */
+	public RLiteral getInfoLopdHTML() {
+		return infoLopdHTML;
+	}
 
-    /**
-     * Método para establecer diasPreregistro.
-     *
-     * @param diasPreregistro
-     *            diasPreregistro a establecer
-     */
-    public void setDiasPreregistro(int diasPreregistro) {
-        this.diasPreregistro = diasPreregistro;
-    }
+	/**
+	 * Método para establecer infoLopdHTML.
+	 *
+	 * @param infoLopdHTML
+	 *            infoLopdHTML a establecer
+	 */
+	public void setInfoLopdHTML(final RLiteral infoLopdHTML) {
+		this.infoLopdHTML = infoLopdHTML;
+	}
 
-    /**
-     * Método de acceso a descripcion.
-     *
-     * @return descripcion
-     */
-    public RLiteral getDescripcion() {
-        return descripcion;
-    }
+	/**
+	 * Método de acceso a diasPreregistro.
+	 *
+	 * @return diasPreregistro
+	 */
+	public int getDiasPreregistro() {
+		return diasPreregistro;
+	}
 
-    /**
-     * Método para establecer descripcion.
-     *
-     * @param descripcion
-     *            descripcion a establecer
-     */
-    public void setDescripcion(RLiteral descripcion) {
-        this.descripcion = descripcion;
-    }
+	/**
+	 * Método para establecer diasPreregistro.
+	 *
+	 * @param diasPreregistro
+	 *            diasPreregistro a establecer
+	 */
+	public void setDiasPreregistro(final int diasPreregistro) {
+		this.diasPreregistro = diasPreregistro;
+	}
 
-    /**
-     * Método de acceso a timestamp.
-     * 
-     * @return timestamp
-     */
-    public String getTimestamp() {
-        return timestamp;
-    }
+	/**
+	 * Método de acceso a descripcion.
+	 *
+	 * @return descripcion
+	 */
+	public RLiteral getDescripcion() {
+		return descripcion;
+	}
 
-    /**
-     * Método para establecer timestamp.
-     * 
-     * @param timestamp
-     *            timestamp a establecer
-     */
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+	/**
+	 * Método para establecer descripcion.
+	 *
+	 * @param descripcion
+	 *            descripcion a establecer
+	 */
+	public void setDescripcion(final RLiteral descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * Método de acceso a timestamp.
+	 *
+	 * @return timestamp
+	 */
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	/**
+	 * Método para establecer timestamp.
+	 *
+	 * @param timestamp
+	 *            timestamp a establecer
+	 */
+	public void setTimestamp(final String timestamp) {
+		this.timestamp = timestamp;
+	}
 
 	public RLiteral getMapaWeb() {
 		return mapaWeb;
 	}
 
-	public void setMapaWeb(RLiteral mapaWeb) {
+	public void setMapaWeb(final RLiteral mapaWeb) {
 		this.mapaWeb = mapaWeb;
 	}
 
@@ -400,7 +405,7 @@ public class RConfiguracionEntidad {
 		return avisoLegal;
 	}
 
-	public void setAvisoLegal(RLiteral avisoLegal) {
+	public void setAvisoLegal(final RLiteral avisoLegal) {
 		this.avisoLegal = avisoLegal;
 	}
 
@@ -408,7 +413,7 @@ public class RConfiguracionEntidad {
 		return rss;
 	}
 
-	public void setRss(RLiteral rss) {
+	public void setRss(final RLiteral rss) {
 		this.rss = rss;
 	}
 
@@ -416,7 +421,7 @@ public class RConfiguracionEntidad {
 		return urlFacebook;
 	}
 
-	public void setUrlFacebook(String urlFacebook) {
+	public void setUrlFacebook(final String urlFacebook) {
 		this.urlFacebook = urlFacebook;
 	}
 
@@ -424,7 +429,7 @@ public class RConfiguracionEntidad {
 		return urlInstagram;
 	}
 
-	public void setUrlInstagram(String urlInstagram) {
+	public void setUrlInstagram(final String urlInstagram) {
 		this.urlInstagram = urlInstagram;
 	}
 
@@ -432,7 +437,7 @@ public class RConfiguracionEntidad {
 		return urlTwitter;
 	}
 
-	public void setUrlTwitter(String urlTwitter) {
+	public void setUrlTwitter(final String urlTwitter) {
 		this.urlTwitter = urlTwitter;
 	}
 
@@ -440,10 +445,16 @@ public class RConfiguracionEntidad {
 		return urlYoutube;
 	}
 
-	public void setUrlYoutube(String urlYoutube) {
+	public void setUrlYoutube(final String urlYoutube) {
 		this.urlYoutube = urlYoutube;
 	}
 
+	public String getLogoGestor() {
+		return logoGestor;
+	}
 
+	public void setLogoGestor(String logoGestor) {
+		this.logoGestor = logoGestor;
+	}
 
 }

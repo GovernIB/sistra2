@@ -79,4 +79,11 @@ public interface RolDao {
 	 */
 	List<Rol> getAllByArea(Long idArea);
 
+	/**
+	 * Obtiene lista de roles que tienen permiso de helpdesk.
+	 *
+	 * @return la lista de roles
+	 */
+	List<Rol> getAllByHelpDesk();
+
 }

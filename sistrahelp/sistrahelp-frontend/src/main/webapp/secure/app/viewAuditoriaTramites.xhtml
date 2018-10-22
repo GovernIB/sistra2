@@ -10,46 +10,72 @@
 	</f:metadata>
 
 
-	<ui:define name="content">
 
-		<h:form id="form" style="height: 100%">
+	<ui:define name="content">
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+		<p:importEnum type="es.caib.sistrahelp.frontend.model.types.TypeEvento" var="TypeEvento"/>
+
+		<h:form id="form" styleClass="h100">
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 			<!-- Toolbar -->
-			<p:toolbar id="toolbar">
-		        <f:facet name="left">
-		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-		        	<h:panelGrid id="panelFiltro" columns="2" cellspacing="5">
-			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewAuditoriaTramites.filtro}"/>
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" />
-	           		</h:panelGrid>
-		        </f:facet>
-
-		        <f:facet name="right">
-		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
-		        		<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewAuditoriaTramites.nuevo()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewAuditoriaTramites.returnDialogo}" update="growl dataTable"/>
-		        		</p:commandButton>
-		        		<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewAuditoriaTramites.editar()}" process="@this" update="growl">
-		        			<p:ajax event="dialogReturn" listener="#{viewAuditoriaTramites.returnDialogo}" update="growl dataTable"/>
-		        		</p:commandButton>
-		        		<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewAuditoriaTramites.eliminar()}" process="@this" update="growl dataTable">
-		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-		        		</p:commandButton>
-
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewTramites.ayudar()}" process="@this" update="growl"/>
-		        	</h:panelGrid>
-		        </f:facet>
-
-		    </p:toolbar>
 
 
+        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+        	<p:panelGrid id="panelFiltro" columns="4" columnClasses="w27,w22,w26,w25" styleClass="noBackground w100 noBorders h10">
+        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
+		        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtroIdSesion}" size="30" maxlength="30"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+		        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
+		        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtroNif}" size="12" maxlength="12"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w35 grid-right,w65">
+	        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
+	        		<h:panelGroup>
+		        		<p:inputText id="filtroTramite" value="#{viewAuditoriaTramites.filtroTramite}" size="16" maxlength="20">
+		        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+		        		</p:inputText>
+		        		<p:outputLabel value=" / "/>
+		        		<p:inputText id="filtroVersion" value="#{viewAuditoriaTramites.filtroVersion}" size="1" maxlength="2">
+		        			<p:keyFilter regEx="/[0-9]/i"/>
+		        		</p:inputText>
+	        		</h:panelGroup>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
+	        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
+	        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtroProcedimiento}" size="20" maxlength="20"/>
+	        	</h:panelGrid>
+
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
+	        		<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtroFechaInicio}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
+	        		<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtroFechaFin}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w35 grid-right,w65">
+	        		<p:outputLabel for="filtroEvento" value="#{msg['viewAuditoriaTramites.filtroEvento']}:"/>
+
+					<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtroEvento}" >
+					 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
+    					 <f:selectItems value="#{TypeEvento.ALL_VALUES}" var="evento" itemLabel="#{msg['typeEvento.' += evento]}"/>
+					</p:selectOneMenu >
+
+	        	</h:panelGrid>
+          		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+
+          		</p:panelGrid>
 
 
 			<!-- Data table -->
-			<p:dataTable  id="dataTable" var="td" value="#{viewAuditoriaTramites.listaDatos}"
+			<p:outputPanel  styleClass="h80">
+			<p:dataTable  id="dataTable" var="dt" value="#{viewAuditoriaTramites.listaDatos}"
 						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
@@ -66,24 +92,35 @@
 		                        />
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headerCodigoDIR3']}">
-			        <h:outputText value="#{td.codigoDIR3}" />
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headerDescripcion']}">
-			        <h:outputText value="#{td.nombre.getTraduccion(sessionBean.lang)}" />
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
 			    </p:column>
-
- 				<p:column headerText="#{msg['viewAuditoriaTramites.headerActivo']}">
-			        <p:selectBooleanCheckbox value="#{td.activo}" disabled="true" />
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
 			    </p:column>
-
-
- 				<p:column headerText="#{msg['viewAuditoriaTramites.headerRol']}">
-			        <h:outputText value="#{td.rol}" />
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
 			    </p:column>
-
-			</p:dataTable>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
+			    </p:column>
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
+			    </p:column>
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
+			    </p:column>
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}">
+			        <h:outputText value="#{dt.codigoDIR3}" />
+			    </p:column>
+			</p:dataTable></p:outputPanel>
 
 			<h:outputScript >
 		      function triggerDblClick() {

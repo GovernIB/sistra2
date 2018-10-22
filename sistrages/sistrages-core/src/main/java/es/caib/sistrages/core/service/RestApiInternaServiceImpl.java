@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
@@ -17,6 +18,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
+import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -26,6 +28,7 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.FuenteDatosComponent;
+import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
 import es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
@@ -35,6 +38,7 @@ import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioSoporteDao;
 import es.caib.sistrages.core.service.repository.dao.PluginsDao;
+import es.caib.sistrages.core.service.repository.dao.RolDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
@@ -79,15 +83,18 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Autowired
 	TramitePasoDao tramitePasoDao;
 
-	/**
-	 * dominio service.
-	 */
+   /** DAO Dominio. */
 	@Autowired
 	DominioDao dominioDao;
 
+    /** DAO formulario. */
 	@Autowired
 	FormularioInternoDao formIntDao;
 
+    /** DAO Area. */
+    @Autowired
+    AreaDao areaDao;
+    
 	/**
 	 * FormateadorFormulario
 	 */
@@ -99,6 +106,12 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	 */
 	@Autowired
 	AvisoEntidadDao avisoEntidadDao;
+
+	/**
+	 * aviso entidad dao.
+	 */
+	@Autowired
+	RolDao rolDao;
 
 	/**
 	 * Componente fuente de datos
@@ -137,6 +150,14 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		result = entidadDao.getById(idEntidad);
 		return result;
 	}
+	
+	@Override
+    @NegocioInterceptor
+    public Area loadArea(final Long idArea) {
+        Area result = null;
+        result = areaDao.getById(idArea);
+        return result;
+    }
 
 	@Override
 	@NegocioInterceptor
@@ -231,6 +252,12 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
 			final List<ValorParametroDominio> parametros) {
 		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<Rol> obtenerPermisosHelpdesk() {
+		return rolDao.getAllByHelpDesk();
 	}
 
 }

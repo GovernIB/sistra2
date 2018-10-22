@@ -31,6 +31,13 @@
 			</exclusions>
 		</dependency>
 
+		<!-- Spring web: rest client -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
 		<!-- EJB -->
 		<dependency>
 			<groupId>javax.ejb</groupId>

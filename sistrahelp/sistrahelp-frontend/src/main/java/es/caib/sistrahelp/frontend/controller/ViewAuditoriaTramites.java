@@ -1,5 +1,6 @@
 package es.caib.sistrahelp.frontend.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.frontend.model.DialogResult;
+import es.caib.sistrahelp.frontend.model.types.TypeEvento;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.model.types.TypeParametroVentana;
@@ -39,9 +41,16 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Filtro (puede venir por parametro).
+	 * Filtros (puede venir por parametro).
 	 */
-	private String filtro;
+	private String filtroIdSesion;
+	private String filtroNif;
+	private String filtroTramite;
+	private String filtroVersion;
+	private String filtroProcedimiento;
+	private Date filtroFechaInicio;
+	private Date filtroFechaFin;
+	private TypeEvento filtroEvento;
 
 	/**
 	 * Lista de datos.
@@ -58,7 +67,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public void filtrar() {
 		// Normaliza filtro
-		filtro = normalizarFiltro(filtro);
+		// filtro = normalizarFiltro(filtro);
 		// Buscar
 		this.buscar();
 	}
@@ -145,21 +154,6 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * @return the filtro
-	 */
-	public String getFiltro() {
-		return filtro;
-	}
-
-	/**
-	 * @param filtro
-	 *            the filtro to set
-	 */
-	public void setFiltro(final String filtro) {
-		this.filtro = filtro;
-	}
-
-	/**
 	 * @return the listaDatos
 	 */
 	public List<Entidad> getListaDatos() {
@@ -187,6 +181,70 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public void setDatoSeleccionado(final Entidad datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
+	}
+
+	public String getFiltroIdSesion() {
+		return filtroIdSesion;
+	}
+
+	public void setFiltroIdSesion(final String filtroIdSesion) {
+		this.filtroIdSesion = filtroIdSesion;
+	}
+
+	public String getFiltroNif() {
+		return filtroNif;
+	}
+
+	public void setFiltroNif(final String filtroNif) {
+		this.filtroNif = filtroNif;
+	}
+
+	public String getFiltroTramite() {
+		return filtroTramite;
+	}
+
+	public void setFiltroTramite(final String filtroTramite) {
+		this.filtroTramite = filtroTramite;
+	}
+
+	public String getFiltroProcedimiento() {
+		return filtroProcedimiento;
+	}
+
+	public void setFiltroProcedimiento(final String filtroProcedimiento) {
+		this.filtroProcedimiento = filtroProcedimiento;
+	}
+
+	public Date getFiltroFechaInicio() {
+		return filtroFechaInicio;
+	}
+
+	public void setFiltroFechaInicio(final Date filtroFechaInicio) {
+		this.filtroFechaInicio = filtroFechaInicio;
+	}
+
+	public Date getFiltroFechaFin() {
+		return filtroFechaFin;
+	}
+
+	public void setFiltroFechaFin(final Date filtroFechaFin) {
+		this.filtroFechaFin = filtroFechaFin;
+	}
+
+	public TypeEvento getFiltroEvento() {
+		return filtroEvento;
+	}
+
+	public void setFiltroEvento(final TypeEvento filtroEvento) {
+		this.filtroEvento = filtroEvento;
+	}
+
+	public String getFiltroVersion() {
+		return filtroVersion;
+	}
+
+	public void setFiltroVersion(final String filtroVersion) {
+		this.filtroVersion = filtroVersion;
 	}
 
 }

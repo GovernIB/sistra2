@@ -176,8 +176,24 @@ body{
   width: 20% !important;
 }
 
+.w22 {
+  width: 22% !important;
+}
+
+.w23 {
+  width: 23% !important;
+}
+
 .w25 {
   width: 25% !important;
+}
+
+.w26 {
+  width: 26% !important;
+}
+
+.w27 {
+  width: 27% !important;
 }
 
 .w30 {
@@ -228,8 +244,16 @@ body{
   width: 70% !important;
 }
 
+.w73 {
+  width: 73% !important;
+}
+
 .w75 {
   width: 75% !important;
+}
+
+.w77 {
+  width: 77% !important;
 }
 
 .w80 {
@@ -299,6 +323,16 @@ body{
 .wpx350{
 	 width: 350px !important;
 }
+
+.h10{
+  height: 10% !important;
+}
+
+.h20{
+  height: 20% !important;
+}
+
+
 .h80{
   height: 80% !important;
 }
@@ -376,7 +410,12 @@ body{
 .padding-left-18 {
      padding-left: 1.8em !important;
 }
-
+.padding-right-2 {
+     padding-right: 0.2em !important;
+}
+.padding-right-4 {
+     padding-right: 0.4em !important;
+}
 .padding-right-8 {
      padding-right: 0.8em !important;
 }
@@ -425,7 +464,7 @@ body{
 	margin-left: 25px !important;
 }
 
-.noBackground,.noBackground div {
+.noBackground,.noBackground div,.noBackground tr {
    background: none !important;
 }
 
@@ -514,3 +553,5 @@ label.ui-state-disabled {
 	border-collapse: separate;
 	border-spacing: 0px 10px;
 }
+
+.boton_derecha {float:right !important;}

@@ -33,6 +33,10 @@ public final class DatosPersistenciaTramite implements Serializable {
      */
     private String descripcionTramite;
     /**
+     * Codigo de áreas.
+     */
+    private String idArea;
+    /**
      * Codigo de trámite Catalogo Procedimientos.
      */
     private String idTramiteCP;
@@ -143,7 +147,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a idSesionTramitacion.
-     * 
+     *
      * @return idSesionTramitacion
      */
     public String getIdSesionTramitacion() {
@@ -152,7 +156,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer idSesionTramitacion.
-     * 
+     *
      * @param idSesionTramitacion
      *            idSesionTramitacion a establecer
      */
@@ -162,7 +166,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a idTramite.
-     * 
+     *
      * @return idTramite
      */
     public String getIdTramite() {
@@ -171,7 +175,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer idTramite.
-     * 
+     *
      * @param idTramite
      *            idTramite a establecer
      */
@@ -181,7 +185,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a versionTramite.
-     * 
+     *
      * @return versionTramite
      */
     public int getVersionTramite() {
@@ -190,7 +194,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer versionTramite.
-     * 
+     *
      * @param versionTramite
      *            versionTramite a establecer
      */
@@ -200,7 +204,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a descripcionTramite.
-     * 
+     *
      * @return descripcionTramite
      */
     public String getDescripcionTramite() {
@@ -209,7 +213,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer descripcionTramite.
-     * 
+     *
      * @param descripcionTramite
      *            descripcionTramite a establecer
      */
@@ -219,7 +223,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a idTramiteCP.
-     * 
+     *
      * @return idTramiteCP
      */
     public String getIdTramiteCP() {
@@ -228,7 +232,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer idTramiteCP.
-     * 
+     *
      * @param idTramiteCP
      *            idTramiteCP a establecer
      */
@@ -238,7 +242,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a idProcedimientoCP.
-     * 
+     *
      * @return idProcedimientoCP
      */
     public String getIdProcedimientoCP() {
@@ -247,7 +251,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer idProcedimientoCP.
-     * 
+     *
      * @param idProcedimientoCP
      *            idProcedimientoCP a establecer
      */
@@ -257,7 +261,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a idProcedimientoSIA.
-     * 
+     *
      * @return idProcedimientoSIA
      */
     public String getIdProcedimientoSIA() {
@@ -266,7 +270,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer idProcedimientoSIA.
-     * 
+     *
      * @param idProcedimientoSIA
      *            idProcedimientoSIA a establecer
      */
@@ -276,7 +280,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a estado.
-     * 
+     *
      * @return estado
      */
     public TypeEstadoTramite getEstado() {
@@ -285,7 +289,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer estado.
-     * 
+     *
      * @param estado
      *            estado a establecer
      */
@@ -295,7 +299,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a autenticacion.
-     * 
+     *
      * @return autenticacion
      */
     public TypeAutenticacion getAutenticacion() {
@@ -304,7 +308,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer autenticacion.
-     * 
+     *
      * @param autenticacion
      *            autenticacion a establecer
      */
@@ -314,7 +318,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a metodoAutenticacionInicio.
-     * 
+     *
      * @return metodoAutenticacionInicio
      */
     public TypeMetodoAutenticacion getMetodoAutenticacionInicio() {
@@ -323,7 +327,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer metodoAutenticacionInicio.
-     * 
+     *
      * @param metodoAutenticacionInicio
      *            metodoAutenticacionInicio a establecer
      */
@@ -334,7 +338,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a nifIniciador.
-     * 
+     *
      * @return nifIniciador
      */
     public String getNifIniciador() {
@@ -343,7 +347,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer nifIniciador.
-     * 
+     *
      * @param nifIniciador
      *            nifIniciador a establecer
      */
@@ -353,7 +357,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a nombreIniciador.
-     * 
+     *
      * @return nombreIniciador
      */
     public String getNombreIniciador() {
@@ -362,7 +366,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer nombreIniciador.
-     * 
+     *
      * @param nombreIniciador
      *            nombreIniciador a establecer
      */
@@ -372,7 +376,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a apellido1Iniciador.
-     * 
+     *
      * @return apellido1Iniciador
      */
     public String getApellido1Iniciador() {
@@ -381,7 +385,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer apellido1Iniciador.
-     * 
+     *
      * @param apellido1Iniciador
      *            apellido1Iniciador a establecer
      */
@@ -391,7 +395,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a apellido2Iniciador.
-     * 
+     *
      * @return apellido2Iniciador
      */
     public String getApellido2Iniciador() {
@@ -400,7 +404,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer apellido2Iniciador.
-     * 
+     *
      * @param apellido2Iniciador
      *            apellido2Iniciador a establecer
      */
@@ -410,7 +414,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a timestamp.
-     * 
+     *
      * @return timestamp
      */
     public Long getTimestamp() {
@@ -419,7 +423,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer timestamp.
-     * 
+     *
      * @param timestamp
      *            timestamp a establecer
      */
@@ -429,7 +433,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a idioma.
-     * 
+     *
      * @return idioma
      */
     public String getIdioma() {
@@ -438,7 +442,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer idioma.
-     * 
+     *
      * @param idioma
      *            idioma a establecer
      */
@@ -448,7 +452,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a urlInicio.
-     * 
+     *
      * @return urlInicio
      */
     public String getUrlInicio() {
@@ -457,7 +461,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer urlInicio.
-     * 
+     *
      * @param urlInicio
      *            urlInicio a establecer
      */
@@ -467,7 +471,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a parametrosInicio.
-     * 
+     *
      * @return parametrosInicio
      */
     public Map<String, String> getParametrosInicio() {
@@ -476,7 +480,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer parametrosInicio.
-     * 
+     *
      * @param parametrosInicio
      *            parametrosInicio a establecer
      */
@@ -486,7 +490,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a persistente.
-     * 
+     *
      * @return persistente
      */
     public boolean isPersistente() {
@@ -495,7 +499,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer persistente.
-     * 
+     *
      * @param persistente
      *            persistente a establecer
      */
@@ -505,7 +509,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a plazoDinamico.
-     * 
+     *
      * @return plazoDinamico
      */
     public boolean isPlazoDinamico() {
@@ -514,7 +518,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer plazoDinamico.
-     * 
+     *
      * @param plazoDinamico
      *            plazoDinamico a establecer
      */
@@ -524,7 +528,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a fechaInicio.
-     * 
+     *
      * @return fechaInicio
      */
     public Date getFechaInicio() {
@@ -533,7 +537,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer fechaInicio.
-     * 
+     *
      * @param fechaInicio
      *            fechaInicio a establecer
      */
@@ -543,7 +547,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a fechaUltimoAcceso.
-     * 
+     *
      * @return fechaUltimoAcceso
      */
     public Date getFechaUltimoAcceso() {
@@ -552,7 +556,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer fechaUltimoAcceso.
-     * 
+     *
      * @param fechaUltimoAcceso
      *            fechaUltimoAcceso a establecer
      */
@@ -562,7 +566,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a fechaCaducidad.
-     * 
+     *
      * @return fechaCaducidad
      */
     public Date getFechaCaducidad() {
@@ -571,7 +575,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer fechaCaducidad.
-     * 
+     *
      * @param fechaCaducidad
      *            fechaCaducidad a establecer
      */
@@ -581,7 +585,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a fechaFin.
-     * 
+     *
      * @return fechaFin
      */
     public Date getFechaFin() {
@@ -590,7 +594,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer fechaFin.
-     * 
+     *
      * @param fechaFin
      *            fechaFin a establecer
      */
@@ -600,7 +604,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a cancelado.
-     * 
+     *
      * @return cancelado
      */
     public boolean isCancelado() {
@@ -609,7 +613,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer cancelado.
-     * 
+     *
      * @param cancelado
      *            cancelado a establecer
      */
@@ -619,7 +623,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a nifPresentador.
-     * 
+     *
      * @return nifPresentador
      */
     public String getNifPresentador() {
@@ -628,7 +632,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer nifPresentador.
-     * 
+     *
      * @param nifPresentador
      *            nifPresentador a establecer
      */
@@ -638,7 +642,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a nombreCompletoPresentador.
-     * 
+     *
      * @return nombreCompletoPresentador
      */
     public String getNombreCompletoPresentador() {
@@ -647,7 +651,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer nombreCompletoPresentador.
-     * 
+     *
      * @param nombreCompletoPresentador
      *            nombreCompletoPresentador a establecer
      */
@@ -657,7 +661,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a marcadoPurgar.
-     * 
+     *
      * @return marcadoPurgar
      */
     public boolean isMarcadoPurgar() {
@@ -666,7 +670,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer marcadoPurgar.
-     * 
+     *
      * @param marcadoPurgar
      *            marcadoPurgar a establecer
      */
@@ -676,7 +680,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a purgado.
-     * 
+     *
      * @return purgado
      */
     public boolean isPurgado() {
@@ -685,7 +689,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer purgado.
-     * 
+     *
      * @param purgado
      *            purgado a establecer
      */
@@ -695,7 +699,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a fechaPurgado.
-     * 
+     *
      * @return fechaPurgado
      */
     public Date getFechaPurgado() {
@@ -704,7 +708,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer fechaPurgado.
-     * 
+     *
      * @param fechaPurgado
      *            fechaPurgado a establecer
      */
@@ -714,7 +718,7 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método de acceso a purgaPendientePorPagoRealizado.
-     * 
+     *
      * @return purgaPendientePorPagoRealizado
      */
     public boolean isPurgaPendientePorPagoRealizado() {
@@ -723,13 +727,32 @@ public final class DatosPersistenciaTramite implements Serializable {
 
     /**
      * Método para establecer purgaPendientePorPagoRealizado.
-     * 
+     *
      * @param purgaPendientePorPagoRealizado
      *            purgaPendientePorPagoRealizado a establecer
      */
     public void setPurgaPendientePorPagoRealizado(
             boolean purgaPendientePorPagoRealizado) {
         this.purgaPendientePorPagoRealizado = purgaPendientePorPagoRealizado;
+    }
+
+    /**
+     * Método de acceso a idArea.
+     * 
+     * @return idArea
+     */
+    public String getIdArea() {
+        return idArea;
+    }
+
+    /**
+     * Método para establecer idArea.
+     * 
+     * @param idArea
+     *            idArea a establecer
+     */
+    public void setIdArea(String idArea) {
+        this.idArea = idArea;
     }
 
 }

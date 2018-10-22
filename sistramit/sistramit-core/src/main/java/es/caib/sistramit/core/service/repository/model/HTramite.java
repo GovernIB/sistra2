@@ -55,6 +55,10 @@ public final class HTramite implements IModelApi {
     @Column(name = "TRP_VERTRA")
     private int versionTramite;
 
+    /** Atributo trámite Id Area. */
+    @Column(name = "TRP_IDEARE")
+    private String idArea;
+
     /** Atributo trámite Catálogo Procedimientos. */
     @Column(name = "TRP_IDETCP")
     private String idTramiteCP;
@@ -800,6 +804,7 @@ public final class HTramite implements IModelApi {
         hTramite.setIdTramite(m.getIdTramite());
         hTramite.setVersionTramite(m.getVersionTramite());
         hTramite.setDescripcionTramite(m.getDescripcionTramite());
+        hTramite.setIdArea(m.getIdArea());
         hTramite.setIdTramiteCP(m.getIdTramiteCP());
         hTramite.setIdProcedimientoCP(m.getIdProcedimientoCP());
         hTramite.setIdProcedimientoSIA(m.getIdProcedimientoSIA());
@@ -866,6 +871,7 @@ public final class HTramite implements IModelApi {
             m.setIdTramite(h.getIdTramite());
             m.setVersionTramite(h.getVersionTramite());
             m.setDescripcionTramite(h.getDescripcionTramite());
+            m.setIdArea(h.getIdArea());
             m.setIdTramiteCP(h.getIdTramiteCP());
             m.setIdProcedimientoCP(h.getIdProcedimientoCP());
             m.setIdProcedimientoSIA(h.getIdProcedimientoSIA());
@@ -892,6 +898,25 @@ public final class HTramite implements IModelApi {
 
         }
         return m;
+    }
+
+    /**
+     * Método de acceso a idArea.
+     *
+     * @return idArea
+     */
+    public String getIdArea() {
+        return idArea;
+    }
+
+    /**
+     * Método para establecer idArea.
+     *
+     * @param idArea
+     *            idArea a establecer
+     */
+    public void setIdArea(String idArea) {
+        this.idArea = idArea;
     }
 
 }

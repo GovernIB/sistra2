@@ -2,6 +2,7 @@ package es.caib.sistrahelp.core.api.service;
 
 import java.util.List;
 
+import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 
 /**
@@ -26,4 +27,10 @@ public interface SecurityService {
 	 */
 	public List<TypeRoleAcceso> getRoles();
 
+	/**
+	 * Obtener areas que se tiene permiso.
+	 *
+	 * @return lista de areas
+	 */
+	List<Area> obtenerAreas();
 }

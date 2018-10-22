@@ -28,6 +28,10 @@ public class RVersionTramite {
     @ApiModelProperty(value = "Id entidad")
     private String idEntidad;
 
+    /** Id área. */
+    @ApiModelProperty(value = "Id área")
+    private String idArea;
+
     /** Idioma. */
     @ApiModelProperty(value = "Idioma")
     private String idioma;
@@ -244,7 +248,7 @@ public class RVersionTramite {
 
     /**
      * Método de acceso a release.
-     * 
+     *
      * @return release
      */
     public int getRelease() {
@@ -253,12 +257,31 @@ public class RVersionTramite {
 
     /**
      * Método para establecer release.
-     * 
+     *
      * @param release
      *            release a establecer
      */
     public void setRelease(int release) {
         this.release = release;
+    }
+
+    /**
+     * Método de acceso a idArea.
+     * 
+     * @return idArea
+     */
+    public String getIdArea() {
+        return idArea;
+    }
+
+    /**
+     * Método para establecer idArea.
+     * 
+     * @param idArea
+     *            idArea a establecer
+     */
+    public void setIdArea(String idArea) {
+        this.idArea = idArea;
     }
 
 }

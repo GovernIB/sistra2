@@ -227,4 +227,28 @@ public class RolDaoImpl implements RolDao {
 		query.executeUpdate();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Rol> getAllByHelpDesk() {
+		final List<Rol> listaRoles = new ArrayList<>();
+		final String sql = "select r from JRolArea r left join fetch r.area a left join fetch a.entidad e where r.permisoAccesoHelpdesk = 1 and e.activa = 1";
+
+		final Query query = entityManager.createQuery(sql);
+		final List<JRolArea> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			for (final JRolArea jRol : results) {
+				final Rol rol = jRol.toModel();
+				if (jRol.getArea() != null) {
+					rol.setArea(jRol.getArea().toModel());
+
+					if (jRol.getArea().getEntidad() != null) {
+						rol.getArea().setCodigoDIR3Entidad(jRol.getArea().getEntidad().getCodigoDir3());
+					}
+				}
+				listaRoles.add(rol);
+			}
+		}
+		return listaRoles;
+	}
+
 }

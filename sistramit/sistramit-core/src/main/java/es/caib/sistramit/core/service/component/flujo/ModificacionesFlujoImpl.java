@@ -305,6 +305,8 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
         dpdt.setVersionTramite(
                 pDatosSesion.getDatosTramite().getVersionTramite());
         dpdt.setIdTramite(pDatosSesion.getDatosTramite().getIdTramite());
+        dpdt.setIdArea(pDatosSesion.getDefinicionTramite()
+                .getDefinicionVersion().getIdArea());
         dpdt.setIdTramiteCP(pDatosSesion.getDatosTramite()
                 .getDefinicionTramiteCP().getIdentificador());
         dpdt.setIdProcedimientoCP(pDatosSesion.getDatosTramite()
