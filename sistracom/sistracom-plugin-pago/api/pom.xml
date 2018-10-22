@@ -12,10 +12,25 @@
 
     <artifactId>sistracom-plugin-pago-api</artifactId>
     <dependencies>
+
+        <!-- PluginsIB -->
         <dependency>
             <groupId>org.fundaciobit.pluginsib.core</groupId>
             <artifactId>pluginsib-core</artifactId>
             <version>${plugins-ib.version}</version>
+        </dependency>
+
+		<!-- Model api PaymentIB -->
+        <dependency>
+            <groupId>es.caib.paymentib</groupId>
+            <artifactId>paymentib-rest-api</artifactId>
+            <version>${paymentib.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-swagger2</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

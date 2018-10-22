@@ -23,6 +23,13 @@
             <version>${sistra2.version}</version>
             <scope>compile</scope>
         </dependency>
+         <!--  Payment models -->
+        <dependency>
+         	<groupId>es.caib.paymentib</groupId>
+    		<artifactId>paymentib-rest-api</artifactId>
+    		<version>${paymentib.version}</version>
+        </dependency>
+
      </dependencies>
      <build>
         <plugins>
