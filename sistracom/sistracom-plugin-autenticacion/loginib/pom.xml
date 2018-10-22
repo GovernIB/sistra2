@@ -45,6 +45,7 @@
             <scope>provided</scope>
         </dependency>
 
+		<!-- Model api LoginIB -->
         <dependency>
             <groupId>es.caib.loginib</groupId>
             <artifactId>loginib-rest-api</artifactId>

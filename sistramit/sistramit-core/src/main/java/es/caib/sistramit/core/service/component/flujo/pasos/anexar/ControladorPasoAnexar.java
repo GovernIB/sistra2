@@ -599,7 +599,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
                         TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
                         pVariablesFlujo.getIdSesionTramitacion(),
                         anexoDef.getIdentificador(),
-                        "No se ha establecido script de firmantes");
+                        "El trámite es anónimo y no se ha establecido script de firmantes");
             }
             final Persona f = new Persona();
             f.setNif(pVariablesFlujo.getUsuario().getNif());
