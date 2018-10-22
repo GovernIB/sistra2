@@ -46,7 +46,11 @@ public enum TypePlugin {
 	/**
 	 * Plugin de Conversión PDF
 	 */
-	CONVERSION_PDF("V");
+	CONVERSION_PDF("V"),
+	/**
+	 * plugin de validación de firma en servidor
+	 */
+	VALIDACION_FIRMA_SERVIDOR("S");
 
 	/** Valor. **/
 	private String valor;

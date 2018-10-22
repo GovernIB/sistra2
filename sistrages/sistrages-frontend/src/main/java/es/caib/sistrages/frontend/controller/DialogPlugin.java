@@ -92,6 +92,7 @@ public class DialogPlugin extends DialogControllerBase {
 			tipos.add(TypePlugin.PAGOS);
 			tipos.add(TypePlugin.FORMULARIOS_EXTERNOS);
 			tipos.add(TypePlugin.REGISTRO);
+			tipos.add(TypePlugin.VALIDACION_FIRMA_SERVIDOR);
 			// Permite plugins multiinstancia (pagos)
 			break;
 		default:
