@@ -67,6 +67,10 @@ public class SistragesMock {
         vp.setCodigo(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS.toString());
         vp.setValor("es,ca,en");
         parametros.add(vp);
+        vp = new RValorParametro();
+        vp.setCodigo(TypePropiedadConfiguracion.PLUGINS_PREFIJO.toString());
+        vp.setValor("es.caib.sistra2");
+        parametros.add(vp);
 
         final RListaParametros propiedades = new RListaParametros();
         propiedades.setParametros(parametros);
