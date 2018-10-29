@@ -34,6 +34,12 @@
    			<artifactId>javacsv</artifactId>
 		    <version>${opencsv.version}</version>
 		</dependency>
+		<!-- Plugins IB -->
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <artifactId>pluginsib-core</artifactId>
+            <version>${plugins-ib.version}</version>
+        </dependency>
 	</dependencies>
 
 	<build>

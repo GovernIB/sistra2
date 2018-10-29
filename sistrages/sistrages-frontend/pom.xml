@@ -11,6 +11,7 @@
 	<name>sistrages-frontend</name>
 	<dependencies>
 
+
 		<!-- Spring web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
