@@ -36,6 +36,9 @@
 			jndi-name="java:app/sistramit-core/GestorFormulariosInternoServiceBean"
 			business-interface="es.caib.sistramit.core.api.service.GestorFormulariosInternoService"/>
 
-
+	<jee:local-slsb
+			id="restApiInternaService"
+			jndi-name="java:app/sistramit-core/RestApiInternaServiceBean"
+			business-interface="es.caib.sistramit.core.api.service.RestApiInternaService"/>
 
 </beans>

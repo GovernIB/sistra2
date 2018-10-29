@@ -15,180 +15,213 @@ import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 @SuppressWarnings("serial")
 public final class EventoAuditoria implements Serializable {
 
-    /**
-     * Inidica si esta asociado a una sesion de tramitacion.
-     */
-    private String idSesionTramitacion;
+	public EventoAuditoria(final Long id, final String idSesionTramitacion, final String tipoEvento, final Date fecha,
+			final String nif) {
+		super();
+		this.id = id;
+		this.idSesionTramitacion = idSesionTramitacion;
+		this.tipoEvento = TypeEvento.fromString(tipoEvento);
+		this.fecha = fecha;
+		this.nif = nif;
+	}
 
-    /**
-     * Tipo evento aplicacion.
-     */
-    private TypeEvento tipoEvento;
+	public EventoAuditoria() {
+		super();
+	}
 
-    /**
-     * Fecha evento aplicacion.
-     */
-    private Date fecha;
+	private Long id;
 
-    /**
-     * Descripción evento aplicacion.
-     */
-    private String descripcion;
+	/**
+	 * Inidica si esta asociado a una sesion de tramitacion.
+	 */
+	private String idSesionTramitacion;
 
-    /**
-     * Resultado evento aplicacion (depende del evento).
-     */
-    private String resultado;
+	/**
+	 * Tipo evento aplicacion.
+	 */
+	private TypeEvento tipoEvento;
 
-    /**
-     * Propiedades evento aplicacion.
-     */
-    private ListaPropiedades propiedadesEvento;
+	/**
+	 * Fecha evento aplicacion.
+	 */
+	private Date fecha;
 
-    /**
-     * En caso de error, establece codigo error.
-     */
-    private String codigoError;
+	/**
+	 * Descripción evento aplicacion.
+	 */
+	private String descripcion;
 
-    /**
-     * En caso de error, establece traza error.
-     */
-    private String trazaError;
+	/**
+	 * Resultado evento aplicacion (depende del evento).
+	 */
+	private String resultado;
 
-    /**
-     * Método de acceso a tipoEvento de EventoAplicacion.
-     *
-     * @return tipoEvento
-     */
-    public TypeEvento getTipoEvento() {
-        return tipoEvento;
-    }
+	/**
+	 * Propiedades evento aplicacion.
+	 */
+	private ListaPropiedades propiedadesEvento;
 
-    /**
-     * Método para establecer tipoEvento de EventoAplicacion.
-     *
-     * @param pTipoEvento
-     *            tipoEvento a establecer
-     */
-    public void setTipoEvento(final TypeEvento pTipoEvento) {
-        tipoEvento = pTipoEvento;
-    }
+	/**
+	 * En caso de error, establece codigo error.
+	 */
+	private String codigoError;
 
-    /**
-     * Método de acceso a fecha de EventoAplicacion.
-     *
-     * @return fecha
-     */
-    public Date getFecha() {
-        return fecha;
-    }
+	/**
+	 * En caso de error, establece traza error.
+	 */
+	private String trazaError;
 
-    /**
-     * Método para establecer fecha de EventoAplicacion.
-     *
-     * @param pFechaEventoAplicacion
-     *            fecha a establecer
-     */
-    public void setFecha(final Date pFechaEventoAplicacion) {
-        // fecha de EventoAplicacion
-        fecha = pFechaEventoAplicacion;
-    }
+	private String nif;
 
-    /**
-     * Método de acceso a descripcion de EventoAplicacion.
-     *
-     * @return descripcion
-     */
-    public String getDescripcion() {
-        // descripcion de EventoAplicacion
-        return descripcion;
-    }
+	/**
+	 * Método de acceso a tipoEvento de EventoAplicacion.
+	 *
+	 * @return tipoEvento
+	 */
+	public TypeEvento getTipoEvento() {
+		return tipoEvento;
+	}
 
-    /**
-     * Método de acceso a resultado de EventoAplicacion.
-     *
-     * @return resultado
-     */
-    public String getResultado() {
-        return resultado;
-    }
+	/**
+	 * Método para establecer tipoEvento de EventoAplicacion.
+	 *
+	 * @param pTipoEvento
+	 *            tipoEvento a establecer
+	 */
+	public void setTipoEvento(final TypeEvento pTipoEvento) {
+		tipoEvento = pTipoEvento;
+	}
 
-    /**
-     * Método para establecer descripcion de EventoAplicacion.
-     *
-     * @param pDescripcion
-     *            descripcion a establecer
-     */
-    public void setDescripcion(final String pDescripcion) {
-        // descripcion de EventoAplicacion
-        descripcion = pDescripcion;
-    }
+	/**
+	 * Método de acceso a fecha de EventoAplicacion.
+	 *
+	 * @return fecha
+	 */
+	public Date getFecha() {
+		return fecha;
+	}
 
-    /**
-     * Método de acceso a idSesionTramitacion.
-     *
-     * @return idSesionTramitacion
-     */
-    public String getIdSesionTramitacion() {
-        // Devuelve idSesionTramitacion de evento
-        return idSesionTramitacion;
-    }
+	/**
+	 * Método para establecer fecha de EventoAplicacion.
+	 *
+	 * @param pFechaEventoAplicacion
+	 *            fecha a establecer
+	 */
+	public void setFecha(final Date pFechaEventoAplicacion) {
+		// fecha de EventoAplicacion
+		fecha = pFechaEventoAplicacion;
+	}
 
-    /**
-     * Método de acceso a propiedadesEvento de EventoAplicacion.
-     *
-     * @return propiedadesEvento
-     */
-    public ListaPropiedades getPropiedadesEvento() {
-        // Devuelve propiedadesEvento de EventoAplicacion
-        return propiedadesEvento;
-    }
+	/**
+	 * Método de acceso a descripcion de EventoAplicacion.
+	 *
+	 * @return descripcion
+	 */
+	public String getDescripcion() {
+		// descripcion de EventoAplicacion
+		return descripcion;
+	}
 
-    /**
-     * Método para establecer resultado de EventoAplicacion.
-     *
-     * @param pResultado
-     *            resultado a establecer
-     */
-    public void setResultado(final String pResultado) {
-        resultado = pResultado;
-    }
+	/**
+	 * Método de acceso a resultado de EventoAplicacion.
+	 *
+	 * @return resultado
+	 */
+	public String getResultado() {
+		return resultado;
+	}
 
-    /**
-     * Método para establecer propiedadesEvento de EventoAplicacion.
-     *
-     * @param pPropiedadesEvento
-     *            propiedadesEvento a establecer
-     */
-    public void setPropiedadesEvento(
-            final ListaPropiedades pPropiedadesEvento) {
-        propiedadesEvento = pPropiedadesEvento;
-    }
+	/**
+	 * Método para establecer descripcion de EventoAplicacion.
+	 *
+	 * @param pDescripcion
+	 *            descripcion a establecer
+	 */
+	public void setDescripcion(final String pDescripcion) {
+		// descripcion de EventoAplicacion
+		descripcion = pDescripcion;
+	}
 
-    /**
-     * Método para establecer idSesionTramitacion.
-     *
-     * @param pIdSesionTramitacion
-     *            idSesionTramitacion a establecer
-     */
-    public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
-        idSesionTramitacion = pIdSesionTramitacion;
-    }
+	/**
+	 * Método de acceso a idSesionTramitacion.
+	 *
+	 * @return idSesionTramitacion
+	 */
+	public String getIdSesionTramitacion() {
+		// Devuelve idSesionTramitacion de evento
+		return idSesionTramitacion;
+	}
 
-    public String getTrazaError() {
-        return trazaError;
-    }
+	/**
+	 * Método de acceso a propiedadesEvento de EventoAplicacion.
+	 *
+	 * @return propiedadesEvento
+	 */
+	public ListaPropiedades getPropiedadesEvento() {
+		// Devuelve propiedadesEvento de EventoAplicacion
+		return propiedadesEvento;
+	}
 
-    public void setTrazaError(String trazaError) {
-        this.trazaError = trazaError;
-    }
+	/**
+	 * Método para establecer resultado de EventoAplicacion.
+	 *
+	 * @param pResultado
+	 *            resultado a establecer
+	 */
+	public void setResultado(final String pResultado) {
+		resultado = pResultado;
+	}
 
-    public String getCodigoError() {
-        return codigoError;
-    }
+	/**
+	 * Método para establecer propiedadesEvento de EventoAplicacion.
+	 *
+	 * @param pPropiedadesEvento
+	 *            propiedadesEvento a establecer
+	 */
+	public void setPropiedadesEvento(final ListaPropiedades pPropiedadesEvento) {
+		propiedadesEvento = pPropiedadesEvento;
+	}
 
-    public void setCodigoError(String codigoError) {
-        this.codigoError = codigoError;
-    }
+	/**
+	 * Método para establecer idSesionTramitacion.
+	 *
+	 * @param pIdSesionTramitacion
+	 *            idSesionTramitacion a establecer
+	 */
+	public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
+		idSesionTramitacion = pIdSesionTramitacion;
+	}
+
+	public String getTrazaError() {
+		return trazaError;
+	}
+
+	public void setTrazaError(final String trazaError) {
+		this.trazaError = trazaError;
+	}
+
+	public String getCodigoError() {
+		return codigoError;
+	}
+
+	public void setCodigoError(final String codigoError) {
+		this.codigoError = codigoError;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
+
+	public String getNif() {
+		return nif;
+	}
+
+	public void setNif(final String nif) {
+		this.nif = nif;
+	}
 
 }
