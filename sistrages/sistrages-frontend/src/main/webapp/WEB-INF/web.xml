@@ -47,6 +47,10 @@
   	<servlet-name>GestorFicherosServlet</servlet-name>
    <servlet-class>es.caib.sistrages.frontend.servlet.GestorFicherosServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>AyudaServlet</servlet-name>
+   <servlet-class>es.caib.sistrages.frontend.servlet.AyudaServlet</servlet-class>
+  </servlet>  
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
@@ -59,6 +63,10 @@
 	   <servlet-name>GestorFicherosServlet</servlet-name>
 	   <url-pattern>/secure/app/GestorFicherosServlet</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+	   <servlet-name>AyudaServlet</servlet-name>
+	   <url-pattern>/secure/app/AyudaServlet</url-pattern>
+  </servlet-mapping>  
   <context-param>
     <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
     <param-value>.xhtml</param-value>

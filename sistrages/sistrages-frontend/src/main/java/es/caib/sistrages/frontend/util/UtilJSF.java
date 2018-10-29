@@ -33,6 +33,7 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.frontend.controller.DialogAyuda;
 import es.caib.sistrages.frontend.controller.SessionBean;
 import es.caib.sistrages.frontend.controller.ViewConfiguracionEntidad;
 import es.caib.sistrages.frontend.controller.ViewDominios;
@@ -729,5 +730,16 @@ public final class UtilJSF {
 				.getCurrentInstance().getApplication().evaluateExpressionGet(FacesContext.getCurrentInstance(),
 						"#{negocioModuleConfig}", es.caib.sistrages.frontend.model.comun.ModuleConfig.class)
 				.getVersion();
+	}
+
+	public static void openHelp(final String id) {
+		final Map<String, String> params = new HashMap<>();
+		if (StringUtils.isBlank(id)) {
+			throw new FrontException("No existe identificador");
+		}
+
+		params.put(TypeParametroVentana.ID.toString(), id);
+
+		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
 	}
 }

@@ -176,6 +176,10 @@ public class ViewEntidades extends ViewControllerBase {
 
 	}
 
+	public void ayuda() {
+		UtilJSF.openHelp("entidades");
+	}
+
 	/**
 	 * @return the filtro
 	 */
