@@ -47,7 +47,6 @@ public class TestPago {
 
 		final ComponentePagoPaymentIBPlugin comp = (ComponentePagoPaymentIBPlugin) plg;
 		final DatosPago datosPago = new DatosPago();
-		datosPago.setAplicacionId("S2");
 		datosPago.setConcepto("co");
 		datosPago.setDetallePago("dp");
 		datosPago.setEntidadId("E1");

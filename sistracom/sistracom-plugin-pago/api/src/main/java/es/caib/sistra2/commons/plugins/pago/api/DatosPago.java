@@ -11,9 +11,6 @@ public class DatosPago {
     /** Identificador pasarela de pago a utilizar. */
     private String pasarelaId;
 
-    /** Identicador aplicación desde la que se lanza el pago. */
-    private String aplicacionId;
-
     /** Identicador entidad. */
     private String entidadId;
 
@@ -216,25 +213,6 @@ public class DatosPago {
     }
 
     /**
-     * Método de acceso a aplicacionId.
-     *
-     * @return aplicacionId
-     */
-    public String getAplicacionId() {
-        return aplicacionId;
-    }
-
-    /**
-     * Método para establecer aplicacionId.
-     *
-     * @param aplicacionId
-     *            aplicacionId a establecer
-     */
-    public void setAplicacionId(String aplicacionId) {
-        this.aplicacionId = aplicacionId;
-    }
-
-    /**
      * Método de acceso a detallePago.
      *
      * @return detallePago
@@ -255,7 +233,7 @@ public class DatosPago {
 
     /**
      * Método de acceso a modelo.
-     * 
+     *
      * @return modelo
      */
     public String getModelo() {
@@ -264,7 +242,7 @@ public class DatosPago {
 
     /**
      * Método para establecer modelo.
-     * 
+     *
      * @param modelo
      *            modelo a establecer
      */

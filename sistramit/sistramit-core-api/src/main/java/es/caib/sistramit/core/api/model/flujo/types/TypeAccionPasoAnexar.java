@@ -10,8 +10,8 @@ public enum TypeAccionPasoAnexar implements TypeAccionPaso {
 
     /**
      * Anexar documento. Parámetros entrada: idAnexo, nombreFichero,
-     * datosFichero (byte[]), titulo. Parámetros salida: conversionPDF
-     * (true/false)
+     * presentacion (TypePresentacion), datosFichero (byte[]), titulo.
+     * Parámetros salida: conversionPDF (true/false)
      */
     ANEXAR_DOCUMENTO,
     /**

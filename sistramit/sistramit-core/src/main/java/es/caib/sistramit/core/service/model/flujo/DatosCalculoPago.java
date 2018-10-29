@@ -14,14 +14,14 @@ import es.caib.sistramit.core.api.model.flujo.Persona;
 public final class DatosCalculoPago implements Serializable {
 
     /**
+     * Pasarela a usar.
+     */
+    private String pasarelaId;
+
+    /**
      * Contribuyente. Por defecto el usuario que realiza el trámite.
      */
     private Persona contribuyente;
-
-    /**
-     * Código tasa.
-     */
-    private String codigo;
 
     /**
      * Fecha devengo (dd/mm/yyyy hh:mi:ss).
@@ -41,11 +41,21 @@ public final class DatosCalculoPago implements Serializable {
     /**
      * Importe (en cents).
      */
-    private String importe;
+    private int importe;
+
+    /**
+     * Organismo (depende pasarela).
+     */
+    private String organismo;
+
+    /**
+     * Tasa.
+     */
+    private String tasa;
 
     /**
      * Método de acceso a contribuyente.
-     * 
+     *
      * @return contribuyente
      */
     public Persona getContribuyente() {
@@ -54,7 +64,7 @@ public final class DatosCalculoPago implements Serializable {
 
     /**
      * Método para establecer contribuyente.
-     * 
+     *
      * @param contribuyente
      *            contribuyente a establecer
      */
@@ -63,27 +73,8 @@ public final class DatosCalculoPago implements Serializable {
     }
 
     /**
-     * Método de acceso a codigo.
-     * 
-     * @return codigo
-     */
-    public String getCodigo() {
-        return codigo;
-    }
-
-    /**
-     * Método para establecer codigo.
-     * 
-     * @param codigo
-     *            codigo a establecer
-     */
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    /**
      * Método de acceso a fecha.
-     * 
+     *
      * @return fecha
      */
     public String getFecha() {
@@ -92,7 +83,7 @@ public final class DatosCalculoPago implements Serializable {
 
     /**
      * Método para establecer fecha.
-     * 
+     *
      * @param fecha
      *            fecha a establecer
      */
@@ -102,7 +93,7 @@ public final class DatosCalculoPago implements Serializable {
 
     /**
      * Método de acceso a modelo.
-     * 
+     *
      * @return modelo
      */
     public String getModelo() {
@@ -111,7 +102,7 @@ public final class DatosCalculoPago implements Serializable {
 
     /**
      * Método para establecer modelo.
-     * 
+     *
      * @param modelo
      *            modelo a establecer
      */
@@ -121,7 +112,7 @@ public final class DatosCalculoPago implements Serializable {
 
     /**
      * Método de acceso a concepto.
-     * 
+     *
      * @return concepto
      */
     public String getConcepto() {
@@ -130,7 +121,7 @@ public final class DatosCalculoPago implements Serializable {
 
     /**
      * Método para establecer concepto.
-     * 
+     *
      * @param concepto
      *            concepto a establecer
      */
@@ -140,20 +131,77 @@ public final class DatosCalculoPago implements Serializable {
 
     /**
      * Método de acceso a importe.
-     * 
+     *
      * @return importe
      */
-    public String getImporte() {
+    public int getImporte() {
         return importe;
     }
 
     /**
      * Método para establecer importe.
-     * 
+     *
      * @param importe
      *            importe a establecer
      */
-    public void setImporte(String importe) {
+    public void setImporte(int importe) {
         this.importe = importe;
+    }
+
+    /**
+     * Método de acceso a organismo.
+     *
+     * @return organismo
+     */
+    public String getOrganismo() {
+        return organismo;
+    }
+
+    /**
+     * Método para establecer organismo.
+     *
+     * @param organismo
+     *            organismo a establecer
+     */
+    public void setOrganismo(String organismo) {
+        this.organismo = organismo;
+    }
+
+    /**
+     * Método de acceso a pasarelaId.
+     *
+     * @return pasarelaId
+     */
+    public String getPasarelaId() {
+        return pasarelaId;
+    }
+
+    /**
+     * Método para establecer pasarelaId.
+     *
+     * @param pasarelaId
+     *            pasarelaId a establecer
+     */
+    public void setPasarelaId(String pasarelaId) {
+        this.pasarelaId = pasarelaId;
+    }
+
+    /**
+     * Método de acceso a tasa.
+     *
+     * @return tasa
+     */
+    public String getTasa() {
+        return tasa;
+    }
+
+    /**
+     * Método para establecer tasa.
+     *
+     * @param tasa
+     *            tasa a establecer
+     */
+    public void setTasa(String tasa) {
+        this.tasa = tasa;
     }
 }

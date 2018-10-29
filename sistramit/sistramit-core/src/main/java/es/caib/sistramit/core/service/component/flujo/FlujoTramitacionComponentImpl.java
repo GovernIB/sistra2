@@ -1,16 +1,39 @@
 package es.caib.sistramit.core.service.component.flujo;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.RolsacPluginException;
 import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.api.*;
+import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
-import es.caib.sistramit.core.api.exception.*;
+import es.caib.sistramit.core.api.exception.EmailException;
+import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
+import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
+import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
+import es.caib.sistramit.core.api.exception.TipoNoControladoException;
+import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
-import es.caib.sistramit.core.api.model.flujo.*;
+import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
+import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.DetallePasos;
+import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
@@ -30,21 +53,6 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormularioSoporte;
-import org.fundaciobit.pluginsib.core.utils.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 @Component("flujoTramitacionComponent")
 @Scope(value = "prototype")
@@ -354,7 +362,9 @@ public class FlujoTramitacionComponentImpl
         st.getDatosTramite().setIdTramite(pIdTramite);
         st.getDatosTramite().setVersionTramite(pVersion);
         st.getDatosTramite().setTipoFlujo(tipoFlujo);
-        st.getDatosTramite().setTituloTramite(tramiteCP.getDescripcion());
+        st.getDatosTramite()
+                .setTituloTramite(tramiteCP.getProcedimiento().getDescripcion()
+                        + " - " + tramiteCP.getDescripcion());
         st.getDatosTramite().setUrlInicio(pUrlInicio);
         st.getDatosTramite().setParametrosInicio(pParametrosInicio);
         st.getDatosTramite().setDefinicionTramiteCP(tramiteCP);

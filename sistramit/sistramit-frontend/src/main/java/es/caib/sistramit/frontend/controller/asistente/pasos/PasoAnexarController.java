@@ -13,9 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
@@ -60,13 +62,96 @@ public final class PasoAnexarController extends TramitacionController {
     public ModelAndView anexarDocumento(
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_ANEXO) final String idAnexo,
+            @RequestParam("tipo") final String tipo,
             @RequestParam(value = "titulo", required = false) final String titulo,
+            @RequestParam(value = "anexo_presencial", required = false) final String anexarPresencial,
             final HttpServletRequest request) {
 
         debug("Anexando documento: " + idAnexo);
 
         final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
+        // TODO FALTA PRESENCIAL
+
+        final TypePresentacion presentacion = TypePresentacion.fromString(tipo);
+
+        RespuestaJSON resAnexar = null;
+
+        if (presentacion == TypePresentacion.ELECTRONICA) {
+            resAnexar = anexarElectronico(idPaso, idAnexo, titulo, request,
+                    idSesionTramitacion);
+        } else {
+            TypeSiNo anexoPresencial = TypeSiNo.NO;
+            if ("true".equalsIgnoreCase(anexarPresencial)) {
+                anexoPresencial = TypeSiNo.SI;
+            }
+            resAnexar = anexarPresencial(idPaso, idAnexo, titulo,
+                    anexoPresencial, idSesionTramitacion);
+        }
+
+        return generarJsonView(resAnexar);
+    }
+
+    /**
+     * Anexa documento presencial.
+     *
+     * @param idPaso
+     *            idPaso
+     * @param idAnexo
+     *            idAnexo
+     * @param titulo
+     *            titulo
+     * @param anexarPresencial
+     *            indica si se anexa o se quita
+     * @param idSesionTramitacion
+     *            idSesionTramitacion
+     * @return respuesta paso
+     */
+    private RespuestaJSON anexarPresencial(String idPaso, String idAnexo,
+            String titulo, TypeSiNo anexarPresencial,
+            String idSesionTramitacion) {
+
+        RespuestaJSON res = null;
+
+        if (anexarPresencial == TypeSiNo.SI) {
+            res = new RespuestaJSON();
+            final ParametrosAccionPaso params = new ParametrosAccionPaso();
+            params.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+            params.addParametroEntrada("presentacion",
+                    TypePresentacion.PRESENCIAL);
+            params.addParametroEntrada("titulo", titulo);
+
+            final ResultadoAccionPaso rp = getFlujoTramitacionService()
+                    .accionPaso(idSesionTramitacion, idPaso,
+                            TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+        } else {
+            res = accionBorrarDocumento(idPaso, idAnexo, "1",
+                    idSesionTramitacion);
+        }
+
+        return res;
+    }
+
+    /**
+     * Anexa documento electronico.
+     *
+     * @param idPaso
+     *            idPaso
+     * @param idAnexo
+     *            idAnexo
+     * @param titulo
+     *            titulo
+     * @param request
+     *            request
+     * @param idSesionTramitacion
+     *            idSesionTramitacion
+     * @return respuesta paso
+     */
+    private RespuestaJSON anexarElectronico(final String idPaso,
+            final String idAnexo, final String titulo,
+            final HttpServletRequest request,
+            final String idSesionTramitacion) {
+        RespuestaJSON resAnexar;
         boolean errorLectura = false;
 
         // Recuperamos datos fichero de la request
@@ -85,7 +170,6 @@ public final class PasoAnexarController extends TramitacionController {
             errorLectura = true;
         }
 
-        RespuestaJSON resAnexar;
         resAnexar = new RespuestaJSON();
 
         if (!errorLectura) {
@@ -93,6 +177,8 @@ public final class PasoAnexarController extends TramitacionController {
             // Invocamos al flujo para anexar
             final ParametrosAccionPaso params = new ParametrosAccionPaso();
             params.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
+            params.addParametroEntrada("presentacion",
+                    TypePresentacion.ELECTRONICA);
             params.addParametroEntrada("titulo", titulo);
             params.addParametroEntrada("nombreFichero", fileName);
             params.addParametroEntrada("datosFichero", fileContent);
@@ -119,8 +205,7 @@ public final class PasoAnexarController extends TramitacionController {
             resAnexar.setMensaje(new MensajeUsuario("Error",
                     "Error al leer fichero de la request"));
         }
-
-        return generarJsonView(resAnexar);
+        return resAnexar;
     }
 
     /**
@@ -142,6 +227,28 @@ public final class PasoAnexarController extends TramitacionController {
 
         final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
+        final RespuestaJSON resBorrarAnexo = accionBorrarDocumento(idPaso,
+                idAnexo, instancia, idSesionTramitacion);
+        return generarJsonView(resBorrarAnexo);
+
+    }
+
+    /**
+     * Acción borrar documento.
+     *
+     * @param idPaso
+     *            Id paso
+     * @param idAnexo
+     *            Id anexo
+     * @param instancia
+     *            Instancia (en caso de ser multiinstancia, es decir, genérico)
+     * @param idSesionTramitacion
+     *            idSesionTramitacion
+     * @return respuesta
+     */
+    private RespuestaJSON accionBorrarDocumento(final String idPaso,
+            final String idAnexo, final String instancia,
+            final String idSesionTramitacion) {
         // Invocamos al flujo para borrar documento
         final ParametrosAccionPaso parametros = new ParametrosAccionPaso();
         parametros.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
@@ -154,8 +261,7 @@ public final class PasoAnexarController extends TramitacionController {
 
         // Retornamos respuesta
         final RespuestaJSON resBorrarAnexo = new RespuestaJSON();
-        return generarJsonView(resBorrarAnexo);
-
+        return resBorrarAnexo;
     }
 
     /**

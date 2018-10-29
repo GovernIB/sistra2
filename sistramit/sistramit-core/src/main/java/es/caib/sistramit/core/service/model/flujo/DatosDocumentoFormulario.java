@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.model.flujo;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
 /**
  * Datos de un formulario accesibles desde los demás pasos.
@@ -32,6 +33,7 @@ public final class DatosDocumentoFormulario extends DatosDocumento {
     public DatosDocumentoFormulario() {
         super();
         this.setTipo(TypeDocumento.FORMULARIO);
+        this.setPresentacion(TypePresentacion.ELECTRONICA);
     }
 
     /**
@@ -46,7 +48,7 @@ public final class DatosDocumentoFormulario extends DatosDocumento {
 
     /**
      * Método de acceso a formularioCaptura.
-     * 
+     *
      * @return formularioCaptura
      */
     public boolean isFormularioCaptura() {
@@ -55,7 +57,7 @@ public final class DatosDocumentoFormulario extends DatosDocumento {
 
     /**
      * Método para establecer formularioCaptura.
-     * 
+     *
      * @param formularioCaptura
      *            formularioCaptura a establecer
      */
@@ -65,7 +67,7 @@ public final class DatosDocumentoFormulario extends DatosDocumento {
 
     /**
      * Método de acceso a pdf.
-     * 
+     *
      * @return pdf
      */
     public ReferenciaFichero getPdf() {
@@ -74,7 +76,7 @@ public final class DatosDocumentoFormulario extends DatosDocumento {
 
     /**
      * Método para establecer pdf.
-     * 
+     *
      * @param pdf
      *            pdf a establecer
      */
@@ -84,7 +86,7 @@ public final class DatosDocumentoFormulario extends DatosDocumento {
 
     /**
      * Método de acceso a campos.
-     * 
+     *
      * @return campos
      */
     public ValoresFormulario getCampos() {
@@ -93,7 +95,7 @@ public final class DatosDocumentoFormulario extends DatosDocumento {
 
     /**
      * Método para establecer campos.
-     * 
+     *
      * @param campos
      *            campos a establecer
      */

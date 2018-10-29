@@ -173,6 +173,8 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
         }
 
         vf.setUsuario(du);
+        vf.setUsuarioAutenticado(
+                pDatosSesion.getDatosTramite().getUsuarioAutenticado());
         vf.setParametrosInicio(
                 pDatosSesion.getDatosTramite().getParametrosInicio());
 

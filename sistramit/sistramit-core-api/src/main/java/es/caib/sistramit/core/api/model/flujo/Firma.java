@@ -12,6 +12,11 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 public final class Firma implements ModelApi {
 
     /**
+     * Indica firmante.
+     */
+    private Persona firmante;
+
+    /**
      * Indica si ha firmado.
      */
     private TypeEstadoFirma estadoFirma = TypeEstadoFirma.NO_FIRMADO;
@@ -31,13 +36,17 @@ public final class Firma implements ModelApi {
     /**
      * Constructor.
      *
+     * @param pFirmante
+     *            firmante
      * @param pEstadoFirma
      *            Parámetro estado firma
      * @param pFechaFirma
      *            Parámetro fecha firma
      */
-    public Firma(final TypeEstadoFirma pEstadoFirma, final String pFechaFirma) {
+    public Firma(final Persona pFirmante, final TypeEstadoFirma pEstadoFirma,
+            final String pFechaFirma) {
         super();
+        firmante = pFirmante;
         estadoFirma = pEstadoFirma;
         fechaFirma = pFechaFirma;
     }
@@ -87,6 +96,25 @@ public final class Firma implements ModelApi {
      */
     public void setFechaFirma(final String pFechaFirma) {
         fechaFirma = pFechaFirma;
+    }
+
+    /**
+     * Método de acceso a firmante.
+     *
+     * @return firmante
+     */
+    public Persona getFirmante() {
+        return firmante;
+    }
+
+    /**
+     * Método para establecer firmante.
+     *
+     * @param firmante
+     *            firmante a establecer
+     */
+    public void setFirmante(Persona firmante) {
+        this.firmante = firmante;
     }
 
 }

@@ -7,8 +7,11 @@ public class EstadoPago {
     /** Estado pago. */
     private TypeEstadoPago estado;
 
-    /** Fecha pago. */
+    /** Fecha pago, opcional, en caso de estar pagado. */
     private Date fechaPago;
+
+    /** Localizador pago, en caso de estar pagado. */
+    private String localizador;
 
     /** Código error pasarela, opcional en caso de estado desconocido. */
     private String codigoErrorPasarela;
@@ -18,7 +21,7 @@ public class EstadoPago {
 
     /**
      * Método de acceso a estado.
-     * 
+     *
      * @return estado
      */
     public TypeEstadoPago getEstado() {
@@ -27,7 +30,7 @@ public class EstadoPago {
 
     /**
      * Método para establecer estado.
-     * 
+     *
      * @param estado
      *            estado a establecer
      */
@@ -37,7 +40,7 @@ public class EstadoPago {
 
     /**
      * Método de acceso a fechaPago.
-     * 
+     *
      * @return fechaPago
      */
     public Date getFechaPago() {
@@ -46,7 +49,7 @@ public class EstadoPago {
 
     /**
      * Método para establecer fechaPago.
-     * 
+     *
      * @param fechaPago
      *            fechaPago a establecer
      */
@@ -56,7 +59,7 @@ public class EstadoPago {
 
     /**
      * Método de acceso a codigoErrorPasarela.
-     * 
+     *
      * @return codigoErrorPasarela
      */
     public String getCodigoErrorPasarela() {
@@ -65,7 +68,7 @@ public class EstadoPago {
 
     /**
      * Método para establecer codigoErrorPasarela.
-     * 
+     *
      * @param codigoErrorPasarela
      *            codigoErrorPasarela a establecer
      */
@@ -75,7 +78,7 @@ public class EstadoPago {
 
     /**
      * Método de acceso a mensajeErrorPasarela.
-     * 
+     *
      * @return mensajeErrorPasarela
      */
     public String getMensajeErrorPasarela() {
@@ -84,12 +87,31 @@ public class EstadoPago {
 
     /**
      * Método para establecer mensajeErrorPasarela.
-     * 
+     *
      * @param mensajeErrorPasarela
      *            mensajeErrorPasarela a establecer
      */
     public void setMensajeErrorPasarela(String mensajeErrorPasarela) {
         this.mensajeErrorPasarela = mensajeErrorPasarela;
+    }
+
+    /**
+     * Método de acceso a localizador.
+     * 
+     * @return localizador
+     */
+    public String getLocalizador() {
+        return localizador;
+    }
+
+    /**
+     * Método para establecer localizador.
+     * 
+     * @param localizador
+     *            localizador a establecer
+     */
+    public void setLocalizador(String localizador) {
+        this.localizador = localizador;
     }
 
 }

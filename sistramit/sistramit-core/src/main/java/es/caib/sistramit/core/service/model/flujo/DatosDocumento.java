@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.model.flujo;
 import java.io.Serializable;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
 /**
  * Datos de un documento de un paso accesibles desde los demás pasos.
@@ -23,6 +24,10 @@ public abstract class DatosDocumento implements Serializable {
      * Tipo documento.
      */
     private TypeDocumento tipo;
+    /**
+     * Presentacion.
+     */
+    private TypePresentacion presentacion;
     /**
      * Título.
      */
@@ -130,6 +135,25 @@ public abstract class DatosDocumento implements Serializable {
      */
     public void setContenidoFichero(final ContenidoFichero pContenidoFichero) {
         contenidoFichero = pContenidoFichero;
+    }
+
+    /**
+     * Método de acceso a presentacion.
+     * 
+     * @return presentacion
+     */
+    public TypePresentacion getPresentacion() {
+        return presentacion;
+    }
+
+    /**
+     * Método para establecer presentacion.
+     * 
+     * @param presentacion
+     *            presentacion a establecer
+     */
+    public void setPresentacion(TypePresentacion presentacion) {
+        this.presentacion = presentacion;
     }
 
 }

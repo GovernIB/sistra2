@@ -81,6 +81,7 @@ var HTML_PAS_LITERALS = {
 			,txtNoCompletat: txtNoCompletat
 			,txtAnterior: txtAnterior
 			,txtSeguent: txtSeguent
+			,txtPagamentTanca: txtPagamentTanca
 		},
 		"rt": {
 			txtRegistrarTitol: txtRegistrarTitol
@@ -452,7 +453,18 @@ $.fn.appPas = function(options) {
 
 				} else if (pas_tipus === "pt") {
 
-					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
+					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.pagos;
+
+					var txtGlobals = {
+							globals: {
+								txtPresencial: txtPresencial
+								,txtElectronic: txtElectronic
+								,txtDescargarPagament: txtDescargarPagament
+								,txtPlantillaPagament: txtPlantillaPagament
+								,txtJustificantPagament: txtJustificantPagament
+								,txtRevisarPagament: txtRevisarPagament
+							}
+						};
 
 				} else if (pas_tipus === "rt") {
 
@@ -501,6 +513,10 @@ $.fn.appPas = function(options) {
 				} else if (pas_tipus === "ad") {
 
 					pinta_ad();
+
+				} else if (pas_tipus === "pt") {
+
+					pinta_pt();
 
 				} else if (pas_tipus === "rt") {
 
@@ -740,6 +756,11 @@ $.fn.appPas = function(options) {
 						});
 
 				appPasAnnexarInicia();
+
+			},
+			pinta_pt = function() {
+
+				appPasPagarInicia()
 
 			},
 			pinta_rt = function() {

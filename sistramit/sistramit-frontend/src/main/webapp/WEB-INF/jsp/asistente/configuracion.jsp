@@ -50,7 +50,11 @@ var APP_ANNEXE_ANNEXA = APP_SERVIDOR + "ad/anexarDocumento.json"
 
 /* pas taxa */
 
-var APP_TAXA_DESCARREGA = APP_SERVIDOR + "bbdd/taxaDescarrega.php";
+var APP_TAXA_URL = APP_SERVIDOR + "bbdd/taxaURL.php"
+	,APP_TAXA_REVISAR = APP_SERVIDOR + "bbdd/taxaRevisar.php"
+	,APP_TAXA_DESCARTAR = APP_SERVIDOR + "bbdd/taxaDescartar.php"
+	,APP_TAXA_JUSTIFICANT = APP_SERVIDOR + "bbdd/taxaJustificant.php"
+	,APP_TAXA_CARTA = APP_SERVIDOR + "bbdd/taxaCarta.php";
 
 
 /* pas registrar */

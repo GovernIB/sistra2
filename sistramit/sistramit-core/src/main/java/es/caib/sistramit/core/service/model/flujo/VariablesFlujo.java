@@ -9,6 +9,8 @@ import java.util.Map;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 
@@ -104,8 +106,13 @@ public final class VariablesFlujo implements Serializable {
     private boolean debugEnabled;
 
     /**
+     * Usuario autenticado.
+     */
+    private UsuarioAutenticadoInfo usuarioAutenticado;
+
+    /**
      * Método de acceso a entorno.
-     * 
+     *
      * @return entorno
      */
     public TypeEntorno getEntorno() {
@@ -114,7 +121,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer entorno.
-     * 
+     *
      * @param entorno
      *            entorno a establecer
      */
@@ -124,7 +131,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a idSesionTramitacion.
-     * 
+     *
      * @return idSesionTramitacion
      */
     public String getIdSesionTramitacion() {
@@ -133,7 +140,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer idSesionTramitacion.
-     * 
+     *
      * @param idSesionTramitacion
      *            idSesionTramitacion a establecer
      */
@@ -143,7 +150,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a nivelAutenticacion.
-     * 
+     *
      * @return nivelAutenticacion
      */
     public TypeAutenticacion getNivelAutenticacion() {
@@ -152,7 +159,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer nivelAutenticacion.
-     * 
+     *
      * @param nivelAutenticacion
      *            nivelAutenticacion a establecer
      */
@@ -162,7 +169,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a metodoAutenticacion.
-     * 
+     *
      * @return metodoAutenticacion
      */
     public TypeMetodoAutenticacion getMetodoAutenticacion() {
@@ -171,7 +178,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer metodoAutenticacion.
-     * 
+     *
      * @param metodoAutenticacion
      *            metodoAutenticacion a establecer
      */
@@ -182,7 +189,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a usuario.
-     * 
+     *
      * @return usuario
      */
     public DatosUsuario getUsuario() {
@@ -191,7 +198,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer usuario.
-     * 
+     *
      * @param usuario
      *            usuario a establecer
      */
@@ -201,7 +208,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a idioma.
-     * 
+     *
      * @return idioma
      */
     public String getIdioma() {
@@ -210,7 +217,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer idioma.
-     * 
+     *
      * @param idioma
      *            idioma a establecer
      */
@@ -220,7 +227,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a urlInicioTramite.
-     * 
+     *
      * @return urlInicioTramite
      */
     public String getUrlInicioTramite() {
@@ -229,7 +236,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer urlInicioTramite.
-     * 
+     *
      * @param urlInicioTramite
      *            urlInicioTramite a establecer
      */
@@ -239,7 +246,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a idTramite.
-     * 
+     *
      * @return idTramite
      */
     public String getIdTramite() {
@@ -248,7 +255,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer idTramite.
-     * 
+     *
      * @param idTramite
      *            idTramite a establecer
      */
@@ -258,7 +265,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a versionTramite.
-     * 
+     *
      * @return versionTramite
      */
     public int getVersionTramite() {
@@ -267,7 +274,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer versionTramite.
-     * 
+     *
      * @param versionTramite
      *            versionTramite a establecer
      */
@@ -277,7 +284,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a tituloTramite.
-     * 
+     *
      * @return tituloTramite
      */
     public String getTituloTramite() {
@@ -286,7 +293,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer tituloTramite.
-     * 
+     *
      * @param tituloTramite
      *            tituloTramite a establecer
      */
@@ -296,7 +303,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a parametrosInicio.
-     * 
+     *
      * @return parametrosInicio
      */
     public Map<String, String> getParametrosInicio() {
@@ -305,7 +312,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer parametrosInicio.
-     * 
+     *
      * @param parametrosInicio
      *            parametrosInicio a establecer
      */
@@ -315,7 +322,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a datosTramiteCP.
-     * 
+     *
      * @return datosTramiteCP
      */
     public DefinicionTramiteCP getDatosTramiteCP() {
@@ -324,7 +331,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer datosTramiteCP.
-     * 
+     *
      * @param datosTramiteCP
      *            datosTramiteCP a establecer
      */
@@ -334,7 +341,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a documentos.
-     * 
+     *
      * @return documentos
      */
     public List<DatosDocumento> getDocumentos() {
@@ -343,7 +350,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer documentos.
-     * 
+     *
      * @param documentos
      *            documentos a establecer
      */
@@ -353,7 +360,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a fechaInicioPlazo.
-     * 
+     *
      * @return fechaInicioPlazo
      */
     public Date getFechaInicioPlazo() {
@@ -362,7 +369,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer fechaInicioPlazo.
-     * 
+     *
      * @param fechaInicioPlazo
      *            fechaInicioPlazo a establecer
      */
@@ -372,7 +379,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a fechaFinPlazo.
-     * 
+     *
      * @return fechaFinPlazo
      */
     public Date getFechaFinPlazo() {
@@ -381,7 +388,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer fechaFinPlazo.
-     * 
+     *
      * @param fechaFinPlazo
      *            fechaFinPlazo a establecer
      */
@@ -391,7 +398,7 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método de acceso a debugEnabled.
-     * 
+     *
      * @return debugEnabled
      */
     public boolean isDebugEnabled() {
@@ -400,12 +407,48 @@ public final class VariablesFlujo implements Serializable {
 
     /**
      * Método para establecer debugEnabled.
-     * 
+     *
      * @param debugEnabled
      *            debugEnabled a establecer
      */
     public void setDebugEnabled(boolean debugEnabled) {
         this.debugEnabled = debugEnabled;
+    }
+
+    /**
+     * Devuelve si existe documentación presencial (preregistro).
+     *
+     * @return boolean
+     */
+    public boolean existeDocumentacionPresencial() {
+        boolean res = false;
+        for (final DatosDocumento dd : this.documentos) {
+            if (dd.getPresentacion() == TypePresentacion.PRESENCIAL) {
+                res = true;
+                break;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Método de acceso a usuarioAutenticado.
+     * 
+     * @return usuarioAutenticado
+     */
+    public UsuarioAutenticadoInfo getUsuarioAutenticado() {
+        return usuarioAutenticado;
+    }
+
+    /**
+     * Método para establecer usuarioAutenticado.
+     * 
+     * @param usuarioAutenticado
+     *            usuarioAutenticado a establecer
+     */
+    public void setUsuarioAutenticado(
+            UsuarioAutenticadoInfo usuarioAutenticado) {
+        this.usuarioAutenticado = usuarioAutenticado;
     }
 
 }

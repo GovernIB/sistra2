@@ -112,3 +112,19 @@
 }
 
 .imc-bt.imc--torna::before { background: transparent url(imgs/icones/ico_enrere_000.svg) no-repeat center center / auto 1em; opacity: .4; }
+
+/* botó com text */
+
+.imc-bt--com-text { position: relative;
+top: -0.1em; color: #4dba79; padding: 0; background-color: transparent; }
+
+.imc-bt--com-text:hover,
+.imc-bt--com-text:focus { color: #000; background-color: transparent; }
+
+.imc-bt--com-text {
+	-webkit-transition: color .2s ease-out;
+	-moz-transition: color .2s ease-out;
+	-ms-transition: color .2s ease-out;
+	-o-transition: color .2s ease-out;
+	transition: color .2s ease-out;
+}

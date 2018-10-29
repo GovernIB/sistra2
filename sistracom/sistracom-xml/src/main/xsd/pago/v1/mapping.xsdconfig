@@ -1,0 +1,7 @@
+<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config">
+
+  <xb:namespace uri="urn:es:caib:sistra2:xml:pago:v1:model">
+    <xb:package>es.caib.sistra2.commons.xml.pago.v1.model</xb:package>
+  </xb:namespace>
+
+</xb:config>

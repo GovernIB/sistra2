@@ -8,6 +8,8 @@ package es.caib.sistra2.commons.plugins.pago.api;
  */
 public enum TypeEstadoPago {
 
+    // TODO TIMEOUT PAGO??
+
     /** No iniciado. **/
     NO_INICIADO("v"),
     /** No pagado. **/

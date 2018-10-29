@@ -13,23 +13,106 @@
 		{{if pagaments}}
 		<ul>
 			{{pagaments}}
-			<li>
-				<a href="{{url}}" data-id="{{id}}" data-url="{{url}}">
-					<div class="imc--pagament"><span></span></div>
-					{{if obligatorio|equals>s}}
-					<div class="imc--tipus imc--ogligatori"><span></span></div>
+			<li data-id="{{id}}" data-presentacions="{{presentacionesPermitidas|size}}">
+
+				<div class="imc--pagament-fila">
+
+					<a href="javascript:;">
+						<div class="imc--pagament"><span></span></div>
+						{{if obligatorio|equals>s}}
+						<div class="imc--tipus imc--ogligatori"><span></span></div>
+						{{/if}}
+						{{if obligatorio|equals>d}}
+						<div class="imc--tipus imc--opcional"><span></span></div>
+						{{/if}}
+						{{if rellenado|equals>c}}
+						<div class="imc--estat imc--completat"><span></span></div>
+						{{/if}}
+						{{if rellenado|equals>v}}
+						<div class="imc--estat imc--no-completat"><span></span></div>
+						{{/if}}
+						{{if rellenado|equals>i}}
+						<div class="imc--estat imc--no-completat"><span></span></div>
+						{{/if}}
+						<strong>{{titulo}}</strong>
+					</a>
+
+					{{if presentacion|empty}}
+
+						{{if presentacionesPermitidas|size|equals>2}}
+						<button type="button" class="imc-bt imc--ico imc--pagament-presencial"><span>{{txtPresencial}}</span></button>
+						<button type="button" class="imc-bt imc--ico imc--pagament-electronic"><span>{{txtElectronic}}</span></button>
+						{{/if}}
+
+						{{if presentacionesPermitidas|size|equals>1}}
+
+							{{if presentacionesPermitidas.0|equals>p}}
+							<button type="button" class="imc-bt imc--ico imc--pagament-presencial"><span>{{txtPresencial}}</span></button>
+							{{/if}}
+							{{if presentacionesPermitidas.0|equals>e}}
+							<button type="button" class="imc-bt imc--ico imc--pagament-electronic"><span>{{txtElectronic}}</span></button>
+							{{/if}}
+
+						{{/if}}
+
 					{{/if}}
-					{{if obligatorio|equals>d}}
-					<div class="imc--tipus imc--opcional"><span></span></div>
+
+				</div>
+
+				{{if presentacion|notempty}}
+
+				<div class="imc--opcions">
+
+					{{if presentacion|equals>p}}
+
+						<p class="imc--presentacio imc--presencial">
+							{{txtPresencial}}
+							{{if estadoIncorrecto.estado|notempty}}
+							<span class="imc--error-{{estadoIncorrecto.estado}}">{{estadoIncorrecto.mensaje}}</span>
+							{{/if}}
+						</p>
+
+						{{if estadoIncorrecto.estado|empty}}
+						<button type="button" class="imc-bt imc--ico imc--plantilla-pagament"><span>{{txtPlantillaPagament}}</span></button>
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescargarPagament}}</span></button>
+						{{/if}}
+
+						{{if estadoIncorrecto.estado|equals>i}}
+						<button type="button" class="imc-bt imc--ico imc--revisar-pagament"><span>{{txtRevisarPagament}}</span></button>
+						{{/if}}
+
+						{{if estadoIncorrecto.estado|equals>x}}
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescargarPagament}}</span></button>
+						{{/if}}
+
 					{{/if}}
-					{{if rellenado|equals>c}}
-					<div class="imc--estat imc--completat"><span></span></div>
+
+					{{if presentacion|equals>e}}
+
+						<p class="imc--presentacio imc--electronic">
+							{{txtElectronic}}
+							{{if estadoIncorrecto.estado|notempty}}
+							<span class="imc--error-{{estadoIncorrecto.estado}}">{{estadoIncorrecto.mensaje}}</span>
+							{{/if}}
+						</p>
+
+						{{if estadoIncorrecto.estado|empty}}
+						<button type="button" class="imc-bt imc--ico imc--justificant-pagament"><span>{{txtJustificantPagament}}</span></button>
+						{{/if}}
+
+						{{if estadoIncorrecto.estado|equals>i}}
+						<button type="button" class="imc-bt imc--ico imc--revisar-pagament"><span>{{txtRevisarPagament}}</span></button>
+						{{/if}}
+
+						{{if estadoIncorrecto.estado|equals>x}}
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescargarPagament}}</span></button>
+						{{/if}}
+
 					{{/if}}
-					{{if rellenado|equals>v}}
-					<div class="imc--estat imc--no-completat"><span></span></div>
-					{{/if}}
-					<strong>{{titulo}}</strong>
-				</a>
+				</div>
+
+				{{/if}}
+
 			</li>
 			{{/pagaments}}
 		</ul>
@@ -72,3 +155,15 @@
 	</nav>
 
 </div>
+
+<!-- pagament -->
+<div class="imc-pagament" id="imc-pagament">
+	<div class="imc--c">
+
+		<button type="button" id="imc-bt-iframe-tanca"><span>{{txtPagamentTanca}}</span></button>
+
+		<iframe id="imc-pagament-iframe" src="" scrolling="yes" frameborder="0"></iframe>
+
+	</div>
+</div>
+<!-- /pagament -->

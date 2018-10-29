@@ -65,9 +65,9 @@ public final class DocumentoPasoPersistencia implements Serializable {
      */
     private String pagoNifSujetoPasivo;
     /**
-     * Para pagos indica el identificador del pago en la pasarela.
+     * Para pagos indica el identificador del pago.
      */
-    private String pagoNumeroAutoliquidacion;
+    private String pagoIdentificador;
     /**
      * Para pagos incorrectos indica el estado incorrecto.
      */
@@ -305,8 +305,8 @@ public final class DocumentoPasoPersistencia implements Serializable {
      *
      * @return pagoNumeroAutoliquidacion
      */
-    public String getPagoNumeroAutoliquidacion() {
-        return pagoNumeroAutoliquidacion;
+    public String getPagoIdentificador() {
+        return pagoIdentificador;
     }
 
     /**
@@ -315,8 +315,8 @@ public final class DocumentoPasoPersistencia implements Serializable {
      * @param pagoNumeroAutoliquidacion
      *            pagoNumeroAutoliquidacion a establecer
      */
-    public void setPagoNumeroAutoliquidacion(String pagoNumeroAutoliquidacion) {
-        this.pagoNumeroAutoliquidacion = pagoNumeroAutoliquidacion;
+    public void setPagoIdentificador(String pagoNumeroAutoliquidacion) {
+        this.pagoIdentificador = pagoNumeroAutoliquidacion;
     }
 
     /**
@@ -580,9 +580,13 @@ public final class DocumentoPasoPersistencia implements Serializable {
      * @return ficheros pago
      */
     public List<ReferenciaFichero> obtenerReferenciasFicherosPago() {
-        // TODO Ver si es necesario justificante,...
         final List<ReferenciaFichero> res = new ArrayList<>();
-        res.add(this.getFichero());
+        if (this.getFichero() != null) {
+            res.add(this.getFichero());
+        }
+        if (this.getFichero() != null) {
+            res.add(this.getPagoJustificantePdf());
+        }
         return res;
     }
 

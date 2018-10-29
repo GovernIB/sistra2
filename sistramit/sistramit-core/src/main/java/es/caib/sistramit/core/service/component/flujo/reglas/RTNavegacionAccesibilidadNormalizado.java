@@ -4,6 +4,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.flujo.types.TypeSubEstadoPasoPagar;
+import es.caib.sistramit.core.service.model.flujo.types.TypeSubEstadoPasoRegistrar;
 
 /**
  * Regla que establece la accesibilidad de los pasos para el flujo normalizado:
@@ -25,15 +26,18 @@ public final class RTNavegacionAccesibilidadNormalizado
 
         // No podemos movernos del paso actual si estamos:
         // - en el paso final
-        // - el paso actual esta enviado a la bandeja
-        // - el paso de pagar no tiene un pago iniciado
-        // - el paso de registro no esta pendiente de reintentar
+        // - en el paso de pagar y se tiene un pago iniciado
+        // - en el paso de registro y se esta pendiente de reintentar
         boolean evaluar = true;
         if (datosPasoActual.isPasoFinal()) {
             evaluar = false;
         }
         if (datosPasoActual.getTipo() == TypePaso.PAGAR && datosPasoActual
                 .getSubestado() == TypeSubEstadoPasoPagar.PAGO_INICIADO) {
+            evaluar = false;
+        }
+        if (datosPasoActual.getTipo() == TypePaso.REGISTRAR && datosPasoActual
+                .getSubestado() == TypeSubEstadoPasoRegistrar.REINTENTAR_REGISTRO) {
             evaluar = false;
         }
 

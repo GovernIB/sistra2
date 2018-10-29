@@ -3,7 +3,6 @@ package es.caib.sistra2.commons.plugins.pago.paymentib;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.springframework.http.HttpEntity;
@@ -31,219 +30,231 @@ import es.caib.sistra2.commons.plugins.pago.api.TypeEstadoPago;
  * @author Indra
  *
  */
-public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties implements IComponentePagoPlugin {
+public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties
+        implements IComponentePagoPlugin {
 
-	/** Prefix. */
-	public static final String IMPLEMENTATION_BASE_PROPERTY = "paymentib.";
+    /** Prefix. */
+    public static final String IMPLEMENTATION_BASE_PROPERTY = "paymentib.";
 
-	/**
-	 * Constructor.
-	 *
-	 * @param prefijoPropiedades
-	 * @param properties
-	 */
-	public ComponentePagoPaymentIBPlugin(final String prefijoPropiedades, final Properties properties) {
-		super(prefijoPropiedades, properties);
-	}
+    /**
+     * Inicia pago electrónico.
+     *
+     * @param datosPago
+     *            Datos pago.
+     * @param urlCallback
+     *            Url callback.
+     * @return Redirección al pago (identificador pago + url)
+     */
+    @Override
+    public RedireccionPago iniciarPagoElectronico(final DatosPago datosPago,
+            final String urlCallback) throws PagoPluginException {
 
-	/**
-	 * Inicia pago electrónico.
-	 *
-	 * @param datosPago
-	 *            Datos pago.
-	 * @param urlCallback
-	 *            Url callback.
-	 * @return Redirección al pago (identificador pago + url)
-	 */
-	@Override
-	public RedireccionPago iniciarPagoElectronico(final DatosPago datosPago, final String urlCallback)
-			throws PagoPluginException {
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
 
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        final RDatosInicioPago datos = new RDatosInicioPago();
+        final RDatosPago rdatosPago = new RDatosPago();
+        rdatosPago.setAplicacionId(getPropiedad("idAplicacion"));
+        rdatosPago.setConcepto(datosPago.getConcepto());
+        rdatosPago.setDetallePago(datosPago.getDetallePago());
+        rdatosPago.setEntidadId(datosPago.getEntidadId());
+        rdatosPago.setIdioma(datosPago.getIdioma());
+        rdatosPago.setImporte(datosPago.getImporte());
+        rdatosPago.setModelo(datosPago.getModelo());
+        rdatosPago.setOrganismoId(datosPago.getOrganismoId());
+        rdatosPago.setPasarelaId(datosPago.getPasarelaId());
+        rdatosPago.setSujetoPasivoNif(datosPago.getSujetoPasivoNif());
+        rdatosPago.setSujetoPasivoNombre(datosPago.getSujetoPasivoNombre());
+        rdatosPago.setTasaId(datosPago.getTasaId());
+        datos.setDatosPago(rdatosPago);
+        datos.setUrlCallback(urlCallback);
 
-		final RDatosInicioPago datos = new RDatosInicioPago();
-		final RDatosPago rdatosPago = new RDatosPago();
-		rdatosPago.setAplicacionId(datosPago.getAplicacionId());
-		rdatosPago.setConcepto(datosPago.getConcepto());
-		rdatosPago.setDetallePago(datosPago.getDetallePago());
-		rdatosPago.setEntidadId(datosPago.getEntidadId());
-		rdatosPago.setIdioma(datosPago.getIdioma());
-		rdatosPago.setImporte(datosPago.getImporte());
-		rdatosPago.setModelo(datosPago.getModelo());
-		rdatosPago.setOrganismoId(datosPago.getOrganismoId());
-		rdatosPago.setPasarelaId(datosPago.getPasarelaId());
-		rdatosPago.setSujetoPasivoNif(datosPago.getSujetoPasivoNif());
-		rdatosPago.setSujetoPasivoNombre(datosPago.getSujetoPasivoNombre());
-		rdatosPago.setTasaId(datosPago.getTasaId());
-		datos.setDatosPago(rdatosPago);
-		datos.setUrlCallback(urlCallback);
+        final HttpEntity<RDatosInicioPago> request = new HttpEntity<>(datos,
+                headers);
+        final ResponseEntity<RedireccionPago> response = restTemplate
+                .postForEntity(getPropiedad("url") + "/iniciarPagoElectronico/",
+                        request, RedireccionPago.class);
 
-		final HttpEntity<RDatosInicioPago> request = new HttpEntity<>(datos, headers);
-		final ResponseEntity<RedireccionPago> response = restTemplate
-				.postForEntity(getPropiedad("url") + "/iniciarPagoElectronico/", request, RedireccionPago.class);
+        return response.getBody();
+    }
 
-		return response.getBody();
+    /**
+     * Verifica estado pago contra pasarela de pago.
+     *
+     * @param identificador
+     *            identificador pago
+     * @return estado pago
+     */
+    @Override
+    public EstadoPago verificarPagoElectronico(final String identificador)
+            throws PagoPluginException {
 
-	}
+        final RestTemplate restTemplate = new RestTemplate();
 
-	/**
-	 * Verifica estado pago contra pasarela de pago.
-	 *
-	 * @param identificador
-	 *            identificador pago
-	 * @return estado pago
-	 */
-	@Override
-	public EstadoPago verificarPagoElectronico(final String identificador) throws PagoPluginException {
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
 
-		final RestTemplate restTemplate = new RestTemplate();
+        final REstadoPago resRest = restTemplate
+                .getForObject(getPropiedad("url") + "/verificarPagoElectronico/"
+                        + identificador, REstadoPago.class);
 
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+        final EstadoPago res = new EstadoPago();
+        res.setEstado(TypeEstadoPago.fromString(resRest.getEstado()));
+        res.setFechaPago(deformateaFecha(resRest.getFechaPago()));
+        res.setLocalizador(resRest.getLocalizador());
+        res.setCodigoErrorPasarela(resRest.getCodigoErrorPasarela());
+        res.setMensajeErrorPasarela(resRest.getMensajeErrorPasarela());
+        return res;
 
-		final REstadoPago resRest = restTemplate
-				.getForObject(getPropiedad("url") + "/verificarPagoElectronico/" + identificador, REstadoPago.class);
+    }
 
-		final EstadoPago res = new EstadoPago();
-		res.setEstado(TypeEstadoPago.fromString(resRest.getEstado()));
-		res.setFechaPago(deformateaFecha(resRest.getFechaPago()));
-		res.setCodigoErrorPasarela(resRest.getCodigoErrorPasarela());
-		res.setMensajeErrorPasarela(resRest.getMensajeErrorPasarela());
-		return res;
+    /**
+     * Obtiene justificante de pago
+     *
+     * @param identificador
+     *            identificador pago
+     * @return Justificante de pago (nulo si la pasarela no genera
+     *         justificante).
+     */
+    @Override
+    public byte[] obtenerJustificantePagoElectronico(final String identificador)
+            throws PagoPluginException {
 
-	}
+        final RestTemplate restTemplate = new RestTemplate();
 
-	/**
-	 * Obtiene justificante de pago
-	 *
-	 * @param identificador
-	 *            identificador pago
-	 * @return Justificante de pago (nulo si la pasarela no genera justificante).
-	 */
-	@Override
-	public byte[] obtenerJustificantePagoElectronico(final String identificador) throws PagoPluginException {
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
 
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
-		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        // Obtener procedimiento.
+        final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(
+                map, headers);
+        final ResponseEntity<byte[]> response = restTemplate.postForEntity(
+                getPropiedad("url") + "/obtenerJustificantePagoElectronico/"
+                        + identificador,
+                requestProc, byte[].class);
 
-		// Obtener procedimiento.
-		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
-		final ResponseEntity<byte[]> response = restTemplate.postForEntity(
-				getPropiedad("url") + "/obtenerJustificantePagoElectronico/" + identificador, requestProc,
-				byte[].class);
+        return response.getBody();
 
-		return response.getBody();
+    }
 
-	}
+    /**
+     * Obtiene importe tasa.
+     *
+     * @param idTasa
+     *            id tasa
+     * @return importe (en cents)
+     * @throws PagoPluginException
+     */
+    @Override
+    public int consultaTasa(final String idPasarela, final String idTasa)
+            throws PagoPluginException {
 
-	/**
-	 * Obtiene importe tasa.
-	 *
-	 * @param idTasa
-	 *            id tasa
-	 * @return importe (en cents)
-	 * @throws PagoPluginException
-	 */
-	@Override
-	public int consultaTasa(final String idPasarela, final String idTasa) throws PagoPluginException {
+        final RestTemplate restTemplate = new RestTemplate();
 
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
 
-		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
-		// Obtener procedimiento.
-		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
-		final ResponseEntity<Integer> response = restTemplate.postForEntity(
-				getPropiedad("url") + "/consultaTasa/" + idPasarela + "/" + idTasa + "/", requestProc, Integer.class);
+        // Obtener procedimiento.
+        final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(
+                map, headers);
+        final ResponseEntity<Integer> response = restTemplate
+                .postForEntity(
+                        getPropiedad("url") + "/consultaTasa/" + idPasarela
+                                + "/" + idTasa + "/",
+                        requestProc, Integer.class);
 
-		return response.getBody();
-	}
+        return response.getBody();
+    }
 
-	/**
-	 * Obtiene carta de pago presencial (PDF).
-	 *
-	 * @param datosPago
-	 *            Datos pago
-	 * @return carta de pago presencial
-	 */
-	@Override
-	public byte[] obtenerCartaPagoPresencial(final DatosPago datosPago) throws PagoPluginException {
+    /**
+     * Obtiene carta de pago presencial (PDF).
+     *
+     * @param datosPago
+     *            Datos pago
+     * @return carta de pago presencial
+     */
+    @Override
+    public byte[] obtenerCartaPagoPresencial(final DatosPago datosPago)
+            throws PagoPluginException {
+        final RestTemplate restTemplate = new RestTemplate();
 
-		final RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
+                getPropiedad("usr"), getPropiedad("pwd")));
 
-		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-		final RDatosPago rdatosPago = new RDatosPago();
-		rdatosPago.setAplicacionId(datosPago.getAplicacionId());
-		rdatosPago.setConcepto(datosPago.getConcepto());
-		rdatosPago.setDetallePago(datosPago.getDetallePago());
-		rdatosPago.setEntidadId(datosPago.getEntidadId());
-		rdatosPago.setIdioma(datosPago.getIdioma());
-		rdatosPago.setImporte(datosPago.getImporte());
-		rdatosPago.setModelo(datosPago.getModelo());
-		rdatosPago.setOrganismoId(datosPago.getOrganismoId());
-		rdatosPago.setPasarelaId(datosPago.getPasarelaId());
-		rdatosPago.setSujetoPasivoNif(datosPago.getSujetoPasivoNif());
-		rdatosPago.setSujetoPasivoNombre(datosPago.getSujetoPasivoNombre());
-		rdatosPago.setTasaId(datosPago.getTasaId());
+        final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("aplicacionId", getPropiedad("idAplicacion"));
+        map.add("concepto", datosPago.getConcepto());
+        map.add("detallePago", datosPago.getDetallePago());
+        map.add("entidadId", datosPago.getEntidadId());
+        map.add("idioma", datosPago.getIdioma());
+        map.add("importe", String.valueOf(datosPago.getImporte()));
+        map.add("modelo", datosPago.getModelo());
+        map.add("organismoId", datosPago.getOrganismoId());
+        map.add("pasarelaId", datosPago.getPasarelaId());
+        map.add("sujetoPasivoNif", datosPago.getSujetoPasivoNif());
+        map.add("sujetoPasivoNombre", datosPago.getSujetoPasivoNombre());
+        map.add("tasaId", datosPago.getTasaId());
 
-		// Obtener procedimiento.
-		final HttpEntity<RDatosPago> requestProc = new HttpEntity<>(rdatosPago, headers);
-		final ResponseEntity<byte[]> response = restTemplate
-				.postForEntity(getPropiedad("url") + "/obtenerCartaPagoPresencial/", requestProc, byte[].class);
+        // Obtener procedimiento.
+        final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(
+                map, headers);
+        final ResponseEntity<byte[]> response = restTemplate.postForEntity(
+                getPropiedad("url") + "/obtenerCartaPagoPresencial/",
+                requestProc, byte[].class);
 
-		return response.getBody();
-	}
+        return response.getBody();
+    }
 
-	/**
-	 * Obtiene propiedad.
-	 *
-	 * @param propiedad
-	 *            propiedad
-	 * @return valor
-	 * @throws FirmaPluginException
-	 */
-	private String getPropiedad(final String propiedad) throws PagoPluginException {
-		final String res = getProperty(PAGO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
-		if (res == null) {
-			throw new PagoPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
-		}
-		return res;
-	}
+    /**
+     * Obtiene propiedad.
+     *
+     * @param propiedad
+     *            propiedad
+     * @return valor
+     * @throws FirmaPluginException
+     */
+    private String getPropiedad(String propiedad) throws PagoPluginException {
+        final String res = getProperty(
+                PAGO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+        if (res == null) {
+            throw new PagoPluginException("No se ha especificado parametro "
+                    + propiedad + " en propiedades");
+        }
+        return res;
+    }
 
-	/**
-	 * Formatea una fecha
-	 *
-	 * @param pFecha
-	 * @return
-	 * @throws PagoPluginException
-	 */
-	private Date deformateaFecha(final String pFecha) throws PagoPluginException {
-		Date res = null;
-		if (pFecha != null) {
-			final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			df.setLenient(false);
-			try {
-				res = df.parse(pFecha);
-				return res;
-			} catch (final ParseException e) {
-				throw new PagoPluginException("Error al interpretar fecha: " + pFecha, e);
-			}
-		}
-		return res;
-	}
+    private Date deformateaFecha(final String pFecha)
+            throws PagoPluginException {
+        Date res = null;
+        if (pFecha != null) {
+            final SimpleDateFormat df = new SimpleDateFormat(
+                    "dd/MM/yyyy HH:mm:ss");
+            df.setLenient(false);
+            try {
+                res = df.parse(pFecha);
+                return res;
+            } catch (final ParseException e) {
+                throw new PagoPluginException(
+                        "Error al interpretar fecha: " + pFecha, e);
+            }
+        }
+        return res;
+    }
 }

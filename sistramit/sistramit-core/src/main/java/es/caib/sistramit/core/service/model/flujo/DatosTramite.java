@@ -14,6 +14,7 @@ import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 
@@ -169,6 +170,11 @@ public final class DatosTramite implements Serializable {
      * Timestamp flujo.
      */
     private Date timestampFlujo;
+
+    /**
+     * Usuario autenticado.
+     */
+    private UsuarioAutenticadoInfo usuarioAutenticado;
 
     /**
      * Método para obtener el campo ultimoAcceso.
@@ -799,7 +805,7 @@ public final class DatosTramite implements Serializable {
 
     /**
      * Método de acceso a fechaInicio.
-     * 
+     *
      * @return fechaInicio
      */
     public Date getFechaInicio() {
@@ -808,12 +814,32 @@ public final class DatosTramite implements Serializable {
 
     /**
      * Método para establecer fechaInicio.
-     * 
+     *
      * @param fechaInicio
      *            fechaInicio a establecer
      */
     public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
+    }
+
+    /**
+     * Método de acceso a usuarioAutenticado.
+     * 
+     * @return usuarioAutenticado
+     */
+    public UsuarioAutenticadoInfo getUsuarioAutenticado() {
+        return usuarioAutenticado;
+    }
+
+    /**
+     * Método para establecer usuarioAutenticado.
+     * 
+     * @param usuarioAutenticado
+     *            usuarioAutenticado a establecer
+     */
+    public void setUsuarioAutenticado(
+            UsuarioAutenticadoInfo usuarioAutenticado) {
+        this.usuarioAutenticado = usuarioAutenticado;
     }
 
 }

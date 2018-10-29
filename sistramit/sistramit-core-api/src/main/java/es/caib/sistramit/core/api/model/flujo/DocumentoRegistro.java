@@ -46,12 +46,7 @@ public final class DocumentoRegistro implements ModelApi {
      */
     private TypePresentacion presentacion;
 
-    /**
-     * Si se debe firmar indica datos firmantes.
-     */
-    private List<Persona> firmantes = new ArrayList<>();
-
-    /** Firmas: generadas en el mismo orden que los firmantes. */
+    /** Información de firmas. */
     private List<Firma> firmas = new ArrayList<>();
 
     /**
@@ -140,25 +135,6 @@ public final class DocumentoRegistro implements ModelApi {
     }
 
     /**
-     * Método de acceso a firmantes.
-     *
-     * @return firmantes
-     */
-    public List<Persona> getFirmantes() {
-        return firmantes;
-    }
-
-    /**
-     * Método para establecer firmantes.
-     *
-     * @param firmantes
-     *            firmantes a establecer
-     */
-    public void setFirmantes(List<Persona> firmantes) {
-        this.firmantes = firmantes;
-    }
-
-    /**
      * Método de acceso a firmas.
      *
      * @return firmas
@@ -238,7 +214,7 @@ public final class DocumentoRegistro implements ModelApi {
 
     /**
      * Método de acceso a presentacion.
-     * 
+     *
      * @return presentacion
      */
     public TypePresentacion getPresentacion() {
@@ -247,7 +223,7 @@ public final class DocumentoRegistro implements ModelApi {
 
     /**
      * Método para establecer presentacion.
-     * 
+     *
      * @param presentacion
      *            presentacion a establecer
      */

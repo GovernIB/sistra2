@@ -18,6 +18,22 @@ public interface ResPagoInt extends PluginScriptRes {
     String ID = "DATOS_PAGO";
 
     /**
+     * Establece id pasarela.
+     *
+     * @param pasarelaId
+     *            pasarelaId
+     */
+    void setPasarela(String pasarelaId);
+
+    /**
+     * Establece id organismo (opcional, depende del plugin).
+     *
+     * @param organismoId
+     *            organismoId
+     */
+    void setOrganismo(String organismoId);
+
+    /**
      * Establece contribuyente.
      *
      * @param nif
@@ -31,22 +47,22 @@ public interface ResPagoInt extends PluginScriptRes {
     /**
      * Establece detalle pago.
      *
-     * @param codigo
+     * @param tasa
      *            codigo
      * @param modelo
      *            modelo
      * @param concepto
      *            concepto
      * @param importe
-     *            importe
+     *            importe en cents
      * @throws ScriptException
      */
-    void setDetallePago(String codigo, String modelo, String concepto,
-            String importe) throws ScriptException;
+    void setDetallePago(String modelo, String concepto, String tasa,
+            int importe) throws ScriptException;
 
     /**
      * Método de acceso a datosPago.
-     * 
+     *
      * @return datosPago
      */
     DatosCalculoPago getDatosPago();

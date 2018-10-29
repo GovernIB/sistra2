@@ -252,6 +252,8 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
                 defPaso, pDefinicionTramite, pVariablesFlujo);
 
         // Si hay algun doc presencial, todos deberan ser presenciales
+        // TODO Que pasa con opcionales?? Obliga a preregistro : dejarlo asi y
+        // forzar a que sean dependientes segun datos formulario
         revisarDocumentosPresenciales(anexosFij, anexosDin);
 
         // Creamos detalle paso
@@ -755,35 +757,43 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
         // - Estado rellenado
         docDpa.setRellenado(docDpp.getEstado());
 
-        // - Fichero anexado y sus firmas
-        final Fichero fichero = new Fichero();
-        docDpa.getFicheros().add(fichero);
-        fichero.setFichero(docDpp.getAnexoNombreFichero());
-        fichero.setTitulo(docDpp.getAnexoDescripcionInstancia());
-
-        // Eliminamos firmas sobrantes
         boolean updateBD = false;
         final List<ReferenciaFichero> ficsPersistenciaBorrar = new ArrayList<>();
-        // - Recorremos firmas almacenadas y vemos si deben de estar
-        // o no
-        for (final FirmaDocumentoPersistencia fp : docDpp
-                .obtenerFirmasFichero(docDpp.getFichero().getId())) {
-            // Si no hay que firmar el documento o el firmante no
-            // debe firmarlo eliminamos de persistencia firma y fichero asociado
-            if (docDpa.getFirmar() == TypeSiNo.NO
-                    || docDpa.esFirmante(fp.getNif()) == ConstantesNumero.N_1) {
-                // Indicamos que se ha de actualizar el doc en BBDD
-                updateBD = true;
-                // Eliminamos firma
-                docDpp.removeFirma(fp);
-                // Marcamos el fichero para borrar
-                if (fp.getFirma() != null) {
-                    ficsPersistenciaBorrar.add(fp.getFirma());
+
+        if (docDpa.getPresentacion() == TypePresentacion.ELECTRONICA) {
+            // - Fichero anexado y sus firmas
+            final Fichero fichero = new Fichero();
+            docDpa.getFicheros().add(fichero);
+            fichero.setFichero(docDpp.getAnexoNombreFichero());
+            fichero.setTitulo(docDpp.getAnexoDescripcionInstancia());
+
+            // Eliminamos firmas sobrantes
+            // - Recorremos firmas almacenadas y vemos si deben de estar
+            // o no
+            for (final FirmaDocumentoPersistencia fp : docDpp
+                    .obtenerFirmasFichero(docDpp.getFichero().getId())) {
+                // Si no hay que firmar el documento o el firmante no
+                // debe firmarlo eliminamos de persistencia firma y fichero
+                // asociado
+                if (docDpa.getFirmar() == TypeSiNo.NO || docDpa
+                        .esFirmante(fp.getNif()) == ConstantesNumero.N_1) {
+                    // Indicamos que se ha de actualizar el doc en BBDD
+                    updateBD = true;
+                    // Eliminamos firma
+                    docDpp.removeFirma(fp);
+                    // Marcamos el fichero para borrar
+                    if (fp.getFirma() != null) {
+                        ficsPersistenciaBorrar.add(fp.getFirma());
+                    }
                 }
             }
+        } else {
+            // Presentacion presencial: hay que borrar todos los documentos
+            // TODO PENDIENTE
+
         }
-        // - En caso de haber eliminado alguna firma, actualizamos
-        // el documento en BBDD
+
+        // Miramos si hay que actualizar BD
         if (updateBD) {
             // Actualizamos documento
             getDao().establecerDatosDocumento(
@@ -857,6 +867,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
                     .createNewDatosDocumentoAnexo();
             ddf.setId(pDetalleAnexo.getId());
             ddf.setInstancia(numInstancia);
+            ddf.setPresentacion(pDetalleAnexo.getPresentacion());
 
             if (pDetalleAnexo.getMaxInstancias() > ConstantesNumero.N1) {
                 ddf.setTitulo(fichero.getTitulo());

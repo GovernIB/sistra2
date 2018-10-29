@@ -13,6 +13,7 @@ import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoAnexar;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
@@ -156,8 +157,12 @@ public final class AccionBorrarAnexo implements AccionPaso {
             final String pIdAnexo, final int pInstancia) {
         final Anexo anexoDetalle = ((DetallePasoAnexar) pDipa.getDetallePaso())
                 .getAnexo(pIdAnexo);
-        anexoDetalle.borrarFichero(pInstancia);
-        if (anexoDetalle.getFicheros().isEmpty()) {
+        if (anexoDetalle.getPresentacion() == TypePresentacion.ELECTRONICA) {
+            anexoDetalle.borrarFichero(pInstancia);
+            if (anexoDetalle.getFicheros().isEmpty()) {
+                anexoDetalle.setRellenado(TypeEstadoDocumento.SIN_RELLENAR);
+            }
+        } else {
             anexoDetalle.setRellenado(TypeEstadoDocumento.SIN_RELLENAR);
         }
     }

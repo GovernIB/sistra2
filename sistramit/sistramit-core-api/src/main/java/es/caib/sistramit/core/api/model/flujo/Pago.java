@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.api.model.flujo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
@@ -17,7 +18,7 @@ public final class Pago extends Documento {
     /**
      * Presentaciones permitidas.
      */
-    private List<TypePresentacion> presentacionesPermitidas;
+    private List<TypePresentacion> presentacionesPermitidas = new ArrayList<>();
 
     /**
      * Tipo pago.
@@ -79,7 +80,7 @@ public final class Pago extends Documento {
 
     /**
      * Método de acceso a presentacionesPermitidas.
-     * 
+     *
      * @return presentacionesPermitidas
      */
     public List<TypePresentacion> getPresentacionesPermitidas() {
@@ -88,7 +89,7 @@ public final class Pago extends Documento {
 
     /**
      * Método para establecer presentacionesPermitidas.
-     * 
+     *
      * @param presentacionesPermitidas
      *            presentacionesPermitidas a establecer
      */

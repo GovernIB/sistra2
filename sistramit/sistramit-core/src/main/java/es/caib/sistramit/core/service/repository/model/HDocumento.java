@@ -33,7 +33,6 @@ import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 /**
  * Mapea tabla STT_DOCPTR.
  */
-
 @Entity
 @Table(name = "STT_DOCPTR")
 @SuppressWarnings("serial")
@@ -105,7 +104,7 @@ public class HDocumento implements IModelApi {
 
     /** Atributo pago que indica identificador del pago. */
     @Column(name = "DTP_PAGIDE")
-    private String pagoNumAutoliquidacion;
+    private String pagoIdentificador;
 
     /** Atributo pago estado incorrecto. */
     @Column(name = "DTP_PAGEST")
@@ -593,8 +592,8 @@ public class HDocumento implements IModelApi {
      *
      * @return pagoNumAutoliquidacion
      */
-    public String getPagoNumAutoliquidacion() {
-        return pagoNumAutoliquidacion;
+    public String getPagoIdentificador() {
+        return pagoIdentificador;
     }
 
     /**
@@ -603,9 +602,8 @@ public class HDocumento implements IModelApi {
      * @param pPagoNumAutoliquidacion
      *            pagoNumAutoliquidacion a establecer
      */
-    public void setPagoNumAutoliquidacion(
-            final String pPagoNumAutoliquidacion) {
-        pagoNumAutoliquidacion = pPagoNumAutoliquidacion;
+    public void setPagoIdentificador(final String pPagoNumAutoliquidacion) {
+        pagoIdentificador = pPagoNumAutoliquidacion;
     }
 
     public static DocumentoPasoPersistencia toModel(final HDocumento hDocumento,
@@ -624,8 +622,7 @@ public class HDocumento implements IModelApi {
         documento.setPagoMensajeErrorPasarela(
                 hDocumento.getPagoMensajeErrorPasarela());
         documento.setPagoNifSujetoPasivo(hDocumento.getPagoNifSujetoPasivo());
-        documento.setPagoNumeroAutoliquidacion(
-                hDocumento.getPagoNumAutoliquidacion());
+        documento.setPagoIdentificador(hDocumento.getPagoIdentificador());
         documento.setTipo(
                 TypeDocumentoPersistencia.fromString(hDocumento.getTipo()));
 
@@ -711,7 +708,7 @@ public class HDocumento implements IModelApi {
             d.setPagoJustificantePdfClave(null);
         }
         d.setPagoNifSujetoPasivo(documento.getPagoNifSujetoPasivo());
-        d.setPagoNumAutoliquidacion(documento.getPagoNumeroAutoliquidacion());
+        d.setPagoIdentificador(documento.getPagoIdentificador());
         if (documento.getRegistroPreregistro() != null) {
             d.setRegistroPreregistro(
                     documento.getRegistroPreregistro().toString());

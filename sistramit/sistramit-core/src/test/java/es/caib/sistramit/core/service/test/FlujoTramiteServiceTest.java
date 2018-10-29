@@ -35,6 +35,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
@@ -459,10 +460,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      */
     private void flujoTramitacion_anexar(final String idSesionTramitacion)
             throws IOException {
-        final ParametrosAccionPaso parametros;
-        final ResultadoAccionPaso resPaso;
-        final String nombreFichero;
-        final byte[] datosFichero;
+
         DetallePasos dp;
         ResultadoIrAPaso rp;
         ResultadoAccionPaso ra;
@@ -488,6 +486,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         params.addParametroEntrada("idAnexo",
                 ((DetallePasoAnexar) dp.getActual()).getAnexos().get(0)
                         .getId());
+        params.addParametroEntrada("presentacion",
+                TypePresentacion.ELECTRONICA);
         params.addParametroEntrada("nombreFichero", "18KB.pdf");
         params.addParametroEntrada("datosFichero",
                 readResourceFromClasspath("test-files/18KB.pdf"));
@@ -516,6 +516,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         params.addParametroEntrada("idAnexo",
                 ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
                         .getId());
+        params.addParametroEntrada("presentacion",
+                TypePresentacion.ELECTRONICA);
         params.addParametroEntrada("instancia", "1");
         params.addParametroEntrada("titulo", "instancia A");
         params.addParametroEntrada("nombreFichero", "18KB.pdf");
@@ -529,6 +531,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         params.addParametroEntrada("idAnexo",
                 ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
                         .getId());
+        params.addParametroEntrada("presentacion",
+                TypePresentacion.ELECTRONICA);
         params.addParametroEntrada("instancia", "2");
         params.addParametroEntrada("titulo", "instancia B");
         params.addParametroEntrada("nombreFichero", "18KB.pdf");
@@ -551,6 +555,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         params.addParametroEntrada("idAnexo",
                 ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
                         .getId());
+        params.addParametroEntrada("presentacion",
+                TypePresentacion.ELECTRONICA);
         params.addParametroEntrada("instancia", "2");
         params.addParametroEntrada("titulo", "instancia C");
         params.addParametroEntrada("nombreFichero", "18KB.pdf");

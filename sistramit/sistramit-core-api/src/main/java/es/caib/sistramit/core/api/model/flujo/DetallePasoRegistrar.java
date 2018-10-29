@@ -17,9 +17,19 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 public final class DetallePasoRegistrar extends DetallePaso {
 
     /**
-     * Lista de documentos a registrar (formularios, anexos y pagos).
+     * Lista de formularios a registrar.
      */
-    private List<DocumentosRegistroPorTipo> documentos = new ArrayList<>();
+    private List<DocumentoRegistro> formularios = new ArrayList<>();
+
+    /**
+     * Lista de anexos a registrar.
+     */
+    private List<DocumentoRegistro> anexos = new ArrayList<>();
+
+    /**
+     * Lista de pagos a registrar.
+     */
+    private List<DocumentoRegistro> pagos = new ArrayList<>();
 
     /**
      * Indica presentador. Por defecto el usuario que realiza el trámite. Se
@@ -46,26 +56,6 @@ public final class DetallePasoRegistrar extends DetallePaso {
     public DetallePasoRegistrar() {
         super();
         this.setTipo(TypePaso.REGISTRAR);
-    }
-
-    /**
-     * Método de acceso a documentos.
-     *
-     * @return documentos
-     */
-    public List<DocumentosRegistroPorTipo> getDocumentos() {
-        return documentos;
-    }
-
-    /**
-     * Método para establecer documentos.
-     *
-     * @param pDocumentos
-     *            documentos a establecer
-     */
-    public void setDocumentos(
-            final List<DocumentosRegistroPorTipo> pDocumentos) {
-        documentos = pDocumentos;
     }
 
     /**
@@ -156,6 +146,63 @@ public final class DetallePasoRegistrar extends DetallePaso {
         strb.append(ident).append("Sólo lectura:" + getSoloLectura());
         strb.append(ident).append("Reintentar registro:" + getReintentar());
         return strb.toString();
+    }
+
+    /**
+     * Método de acceso a formularios.
+     * 
+     * @return formularios
+     */
+    public List<DocumentoRegistro> getFormularios() {
+        return formularios;
+    }
+
+    /**
+     * Método para establecer formularios.
+     * 
+     * @param formularios
+     *            formularios a establecer
+     */
+    public void setFormularios(List<DocumentoRegistro> formularios) {
+        this.formularios = formularios;
+    }
+
+    /**
+     * Método de acceso a anexos.
+     * 
+     * @return anexos
+     */
+    public List<DocumentoRegistro> getAnexos() {
+        return anexos;
+    }
+
+    /**
+     * Método para establecer anexos.
+     * 
+     * @param anexos
+     *            anexos a establecer
+     */
+    public void setAnexos(List<DocumentoRegistro> anexos) {
+        this.anexos = anexos;
+    }
+
+    /**
+     * Método de acceso a pagos.
+     * 
+     * @return pagos
+     */
+    public List<DocumentoRegistro> getPagos() {
+        return pagos;
+    }
+
+    /**
+     * Método para establecer pagos.
+     * 
+     * @param pagos
+     *            pagos a establecer
+     */
+    public void setPagos(List<DocumentoRegistro> pagos) {
+        this.pagos = pagos;
     }
 
 }

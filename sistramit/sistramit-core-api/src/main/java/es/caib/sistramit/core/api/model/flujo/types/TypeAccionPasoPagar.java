@@ -9,10 +9,16 @@ package es.caib.sistramit.core.api.model.flujo.types;
 public enum TypeAccionPasoPagar implements TypeAccionPaso {
 
     /**
-     * Iniciar pago. Parámetros entrada: idPago, reiniciar (opcional).
-     * Parámetros salida: url inicio pago.
+     * Iniciar pago electrónico. Parámetros entrada: idPago, presentacion
+     * (TypePresentacion), reiniciar (opcional). Parámetros salida: url (url
+     * inicio pago).
      */
     INICIAR_PAGO,
+    /**
+     * Genera carta de pago presencial (pago presencial). Parámetros entrada:
+     * idPago. Parámetros salida: no tiene.
+     */
+    CARTA_PAGO_PRESENCIAL,
     /**
      * Cancelar pago iniciado. Parámetros entrada: idPago. Parámetros salida: no
      * tiene.
@@ -24,8 +30,8 @@ public enum TypeAccionPasoPagar implements TypeAccionPaso {
      */
     VERIFICAR_PAGO_PASARELA,
     /**
-     * Descarga justificante de pago. Parámetros entrada: idPago. Parámetros
-     * salida: datos (byte[])
+     * Descarga justificante de pago o carta de pago presencial. Parámetros
+     * entrada: idPago. Parámetros salida: datos (byte[])
      */
     DESCARGAR_JUSTIFICANTE(false);
 

@@ -13,6 +13,7 @@ import es.caib.sistrages.rest.api.interna.RPagoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionPagar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
 import es.caib.sistramit.core.api.exception.ConfiguracionModificadaException;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -25,7 +26,6 @@ import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
-import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -84,6 +84,9 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
     /** Accion cancelar pago iniciado. */
     @Autowired
     private AccionCancelarPagoIniciado accionCancelarPagoIniciado;
+    /** Accion carta de pago presencial. */
+    @Autowired
+    private AccionCartaPagoPresencial accionCartaPagoPresencial;
 
     @Override
     protected void actualizarDatosInternos(final DatosPaso pDatosPaso,
@@ -146,11 +149,32 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
         return res;
     }
 
+    /**
+     * Crea los datos del documento de pago accesibles desde otros pasos.
+     *
+     * @param pDipa
+     *            Datos internos paso
+     * @param pDpp
+     *            Datos persistencia
+     * @param pDetallePago
+     *            Detalle pago
+     * @param pDefinicionTramite
+     *            Definición trámite
+     * @return Datos documento pago
+     */
     private DatosDocumentoPago crearDatosDocumentoPago(
-            DatosInternosPasoPagar pDipa, DatosPersistenciaPaso pDpp, Pago p,
-            DefinicionTramiteSTG pDefinicionTramite) {
-        // TODO PENDIENTE
-        throw new RuntimeException("PENDIENTE");
+            DatosInternosPasoPagar pDipa, DatosPersistenciaPaso pDpp,
+            Pago pDetallePago, DefinicionTramiteSTG pDefinicionTramite) {
+        // Obtenemos documento de persistencia
+        final DocumentoPasoPersistencia dpp = pDpp.getDocumentoPasoPersistencia(
+                pDetallePago.getId(), ConstantesNumero.N1);
+        // Establecemos datos documento pago
+        final DatosDocumentoPago ddp = new DatosDocumentoPago();
+        ddp.setId(pDetallePago.getId());
+        ddp.setTitulo(pDetallePago.getTitulo());
+        ddp.setFichero(dpp.getFichero());
+        ddp.setJustificantePago(dpp.getPagoJustificantePdf());
+        return ddp;
     }
 
     @Override
@@ -170,6 +194,9 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
             break;
         case VERIFICAR_PAGO_PASARELA:
             accionPaso = accionVerificarPagoPasarela;
+            break;
+        case CARTA_PAGO_PRESENCIAL:
+            accionPaso = accionCartaPagoPresencial;
             break;
         case DESCARGAR_JUSTIFICANTE:
             accionPaso = accionDescargarJustificantePago;
@@ -264,20 +291,30 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
             }
             pago.setObligatorio(rs);
 
-            // Tipos presentacion
+            // Tipos presentacion según definición
             if ("T".equals(detalle.getTipo())) {
                 pago.getPresentacionesPermitidas()
                         .add(TypePresentacion.ELECTRONICA);
             }
-            if ("P".equals(detalle.getTipo())) {
+            if ("P".equals(detalle.getTipo())
+                    && pVariablesFlujo.existeDocumentacionPresencial()) {
                 pago.getPresentacionesPermitidas()
                         .add(TypePresentacion.PRESENCIAL);
+
             }
             if ("A".equals(detalle.getTipo())) {
                 pago.getPresentacionesPermitidas()
                         .add(TypePresentacion.ELECTRONICA);
-                pago.getPresentacionesPermitidas()
-                        .add(TypePresentacion.PRESENCIAL);
+                if (pVariablesFlujo.existeDocumentacionPresencial()) {
+                    pago.getPresentacionesPermitidas()
+                            .add(TypePresentacion.PRESENCIAL);
+                }
+            }
+
+            // Verificamos que existe un tipo de presentacion permitida
+            if (pago.getPresentacionesPermitidas().isEmpty()) {
+                throw new ErrorConfiguracionException(
+                        "No existe ninguna presentación permitida para el pago (debe existir un pago configurado únicamente como presencial y el trámite no es preregistro)");
             }
 
             // Calculamos los datos del pago y los almacenamos en datos internos
@@ -292,6 +329,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
         }
 
         return pagos;
+
     }
 
     /**
@@ -467,26 +505,36 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
             final Pago detallePagoPasarela,
             final VariablesFlujo pVariablesFlujo) {
 
-        // - Estado rellenado: correcto o incorrecto
-        detallePagoPasarela.setRellenado(pDocumentoPersistencia.getEstado());
-
         // Recuperamos datos sesion de pago y los cacheamos en
         // datos internos
         final DatosFicheroPersistencia xmlDatosSesionPago = getDao()
                 .recuperarFicheroPersistencia(
                         pDocumentoPersistencia.getFichero());
-        final DatosSesionPago datosSesionPago = DatosSesionPago
-                .deserializa(xmlDatosSesionPago.getContenido());
+        final DatosSesionPago datosSesionPago = ControladorPasoPagarHelper
+                .getInstance().fromXML(xmlDatosSesionPago.getContenido());
         pDipa.addSesionPago(detallePagoPasarela.getId(), datosSesionPago);
 
-        // Documento incorrecto, establecemos datos de error
+        // Detalle pago
+        // - Presentacion pago
+        detallePagoPasarela.setPresentacion(datosSesionPago.getPresentacion());
+        if (datosSesionPago.getPresentacion() != null
+                && !detallePagoPasarela.getPresentacionesPermitidas()
+                        .contains(datosSesionPago.getPresentacion())) {
+            throw new ErrorConfiguracionException(
+                    "El pago se realizado mediante una forma de presentación que no está permitida");
+        }
+        // - Rellenado
+        detallePagoPasarela.setRellenado(pDocumentoPersistencia.getEstado());
+        // - Estado incorrecto
         if (pDocumentoPersistencia
                 .getEstado() != TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
-            final String mensajeError = generarMensajeEstadoIncorrecto(
-                    pVariablesFlujo.getIdioma(),
-                    pDocumentoPersistencia.getPagoEstadoIncorrecto(),
-                    pDocumentoPersistencia.getPagoErrorPasarela(),
-                    pDocumentoPersistencia.getPagoMensajeErrorPasarela());
+            final String mensajeError = ControladorPasoPagarHelper.getInstance()
+                    .generarMensajeEstadoIncorrecto(getLiterales(),
+                            pVariablesFlujo.getIdioma(),
+                            pDocumentoPersistencia.getPagoEstadoIncorrecto(),
+                            pDocumentoPersistencia.getPagoErrorPasarela(),
+                            pDocumentoPersistencia
+                                    .getPagoMensajeErrorPasarela());
             detallePagoPasarela
                     .setEstadoIncorrecto(new DetalleEstadoPagoIncorrecto(
                             pDocumentoPersistencia.getPagoEstadoIncorrecto(),
@@ -495,14 +543,6 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
                             pDocumentoPersistencia
                                     .getPagoMensajeErrorPasarela()));
         }
-
-    }
-
-    private String generarMensajeEstadoIncorrecto(String idioma,
-            TypeEstadoPagoIncorrecto pagoEstadoIncorrecto,
-            String pagoErrorPasarela, String pagoMensajeErrorPasarela) {
-        // TODO PENDIENTE
-        throw new RuntimeException("PENDIENTE");
     }
 
     /**

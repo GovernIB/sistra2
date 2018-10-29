@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.api.model.flujo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -39,9 +40,19 @@ public final class DatosGuardarJustificante implements ModelApi {
     private Persona solicitante;
 
     /**
-     * Documentos registrados.
+     * Lista de formularios a registrar.
      */
-    private List<DocumentosRegistroPorTipo> documentos;
+    private List<DocumentoRegistro> formularios = new ArrayList<>();
+
+    /**
+     * Lista de anexos a registrar.
+     */
+    private List<DocumentoRegistro> anexos = new ArrayList<>();
+
+    /**
+     * Lista de pagos a registrar.
+     */
+    private List<DocumentoRegistro> pagos = new ArrayList<>();
 
     /**
      * Método de acceso a numero.
@@ -120,26 +131,6 @@ public final class DatosGuardarJustificante implements ModelApi {
     }
 
     /**
-     * Método de acceso a documentos.
-     *
-     * @return documentos
-     */
-    public List<DocumentosRegistroPorTipo> getDocumentos() {
-        return documentos;
-    }
-
-    /**
-     * Método para establecer documentos.
-     *
-     * @param pDocumentos
-     *            documentos a establecer
-     */
-    public void setDocumentos(
-            final List<DocumentosRegistroPorTipo> pDocumentos) {
-        documentos = pDocumentos;
-    }
-
-    /**
      * Método de acceso a preregistro.
      *
      * @return preregistro
@@ -156,6 +147,63 @@ public final class DatosGuardarJustificante implements ModelApi {
      */
     public void setPreregistro(final TypeSiNo pPreregistro) {
         preregistro = pPreregistro;
+    }
+
+    /**
+     * Método de acceso a formularios.
+     *
+     * @return formularios
+     */
+    public List<DocumentoRegistro> getFormularios() {
+        return formularios;
+    }
+
+    /**
+     * Método de acceso a anexos.
+     *
+     * @return anexos
+     */
+    public List<DocumentoRegistro> getAnexos() {
+        return anexos;
+    }
+
+    /**
+     * Método de acceso a pagos.
+     *
+     * @return pagos
+     */
+    public List<DocumentoRegistro> getPagos() {
+        return pagos;
+    }
+
+    /**
+     * Método para establecer formularios.
+     * 
+     * @param formularios
+     *            formularios a establecer
+     */
+    public void setFormularios(List<DocumentoRegistro> formularios) {
+        this.formularios = formularios;
+    }
+
+    /**
+     * Método para establecer anexos.
+     * 
+     * @param anexos
+     *            anexos a establecer
+     */
+    public void setAnexos(List<DocumentoRegistro> anexos) {
+        this.anexos = anexos;
+    }
+
+    /**
+     * Método para establecer pagos.
+     * 
+     * @param pagos
+     *            pagos a establecer
+     */
+    public void setPagos(List<DocumentoRegistro> pagos) {
+        this.pagos = pagos;
     }
 
 }
