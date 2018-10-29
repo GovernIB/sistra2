@@ -11,15 +11,21 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.exception.FrontException;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.PluginService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de plugins (global y de entidad).
@@ -37,6 +43,8 @@ public class ViewPlugins extends ViewControllerBase {
 	/** Id entidad activa. */
 	private Long idEntidad;
 
+	private Entidad entidad;
+
 	/** Filtro. */
 	private String filtro;
 
@@ -49,6 +57,12 @@ public class ViewPlugins extends ViewControllerBase {
 	/** Plugin service. */
 	@Inject
 	private PluginService pluginService;
+
+	@Inject
+	private SystemService systemService;
+
+	@Inject
+	private EntidadService entidadService;
 
 	/**
 	 * Inicializacion.
@@ -65,6 +79,9 @@ public class ViewPlugins extends ViewControllerBase {
 
 		// Obtenemos entidad activa
 		idEntidad = UtilJSF.getIdEntidad();
+		if (idEntidad != null) {
+			setEntidad(entidadService.loadEntidad(idEntidad));
+		}
 
 		switch (ambitoType) {
 		case GLOBAL:
@@ -132,6 +149,39 @@ public class ViewPlugins extends ViewControllerBase {
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
+	}
+
+	/**
+	 * Refrescar.
+	 */
+	public void refrescar() {
+		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+
+		String tipo = null;
+		String identificador = null;
+		switch (TypeAmbito.fromString(ambito)) {
+		case GLOBAL:
+			tipo = "C";
+			break;
+		case ENTIDAD:
+			tipo = "E";
+			if (entidad != null) {
+				identificador = entidad.getCodigoDIR3();
+			}
+			break;
+		default:
+			break;
+		}
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, tipo, identificador);
+		if (resultado.getCodigo() == 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
+		}
+
 	}
 
 	/**
@@ -306,6 +356,14 @@ public class ViewPlugins extends ViewControllerBase {
 	 */
 	public void setAmbito(final String ambito) {
 		this.ambito = ambito;
+	}
+
+	public Entidad getEntidad() {
+		return entidad;
+	}
+
+	public void setEntidad(final Entidad entidad) {
+		this.entidad = entidad;
 	}
 
 }
