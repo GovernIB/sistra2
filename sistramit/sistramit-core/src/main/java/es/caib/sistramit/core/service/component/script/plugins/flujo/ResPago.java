@@ -52,16 +52,25 @@ public final class ResPago implements ResPagoInt {
     }
 
     @Override
-    public void setDetallePago(final String codigo, final String modelo,
-            final String concepto, final String importe)
-            throws ScriptException {
+    public void setDetallePago(final String modelo, final String concepto,
+            final String tasa, final int importe) throws ScriptException {
 
-        validarDatosPago(codigo, modelo, concepto, importe);
+        validarDatosPago(tasa, modelo, concepto);
 
-        datosPago.setCodigo(codigo);
         datosPago.setModelo(modelo);
         datosPago.setConcepto(concepto);
+        datosPago.setTasa(tasa);
         datosPago.setImporte(importe);
+    }
+
+    @Override
+    public void setPasarela(String pasarelaId) {
+        datosPago.setPasarelaId(pasarelaId);
+    }
+
+    @Override
+    public void setOrganismo(String organismoId) {
+        datosPago.setOrganismo(organismoId);
     }
 
     /**
@@ -104,8 +113,7 @@ public final class ResPago implements ResPagoInt {
      *             Exception
      */
     private void validarDatosPago(final String codigo, final String modelo,
-            final String concepto, final String importe)
-            throws ScriptException {
+            final String concepto) throws ScriptException {
         if (!XssFilter.filtroXss(codigo)) {
             throw new ScriptException(
                     "El codigo contiene caracteres no permitidos");
@@ -117,9 +125,6 @@ public final class ResPago implements ResPagoInt {
         if (!XssFilter.filtroXss(concepto)) {
             throw new ScriptException(
                     "El concepto contiene caracteres no permitidos");
-        }
-        if (!ValidacionesTipo.getInstance().esNatural(importe)) {
-            throw new ScriptException("Importe no valido");
         }
     }
 

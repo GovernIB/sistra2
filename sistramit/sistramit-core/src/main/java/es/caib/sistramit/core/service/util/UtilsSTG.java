@@ -17,10 +17,13 @@ import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.RLiteralScript;
+import es.caib.sistrages.rest.api.interna.RPagoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionPagar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RScript;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
@@ -73,6 +76,10 @@ public final class UtilsSTG {
                 res = p;
                 break;
             }
+        }
+        if (res == null) {
+            throw new ErrorConfiguracionException(
+                    "No existe paso con id " + pIdPaso);
         }
         return res;
     }
@@ -359,6 +366,11 @@ public final class UtilsSTG {
                 break;
             }
         }
+        if (res == null) {
+            throw new ErrorConfiguracionException(
+                    "No existe formulario con id " + idFormulario + " en paso "
+                            + definicionPaso.getIdentificador());
+        }
         return res;
     }
 
@@ -380,7 +392,56 @@ public final class UtilsSTG {
                 break;
             }
         }
+        if (res == null) {
+            throw new ErrorConfiguracionException(
+                    "No existe anexo con id " + idAnexo + " en paso "
+                            + definicionPaso.getIdentificador());
+        }
         return res;
+    }
+
+    /**
+     * Método para recuperar la definición de un pago de un paso pagar.
+     *
+     * @param definicionPaso
+     *            Parámetro definicion paso
+     * @param idPago
+     *            Id Pago
+     * @return Definición del pago
+     */
+    public static RPagoTramite devuelveDefinicionPago(
+            RPasoTramitacionPagar definicionPaso, String id) {
+        RPagoTramite res = null;
+        for (final RPagoTramite anexo : definicionPaso.getPagos()) {
+            if (anexo.getIdentificador().equals(id)) {
+                res = anexo;
+                break;
+            }
+        }
+        if (res == null) {
+            throw new ErrorConfiguracionException("No existe pago con id " + id
+                    + " en paso " + definicionPaso.getIdentificador());
+        }
+        return res;
+    }
+
+    /**
+     * Indica si el pago es simulado.
+     *
+     * @param idPaso
+     *            id paso
+     * @param idPago
+     *            id pago
+     * @param definicionTramite
+     *            Definición trámite
+     * @return indica si el pago es simulado.
+     */
+    public static boolean isPagoSimulado(String idPaso, String idPago,
+            DefinicionTramiteSTG definicionTramite) {
+        final RPasoTramitacionPagar pasoPagar = (RPasoTramitacionPagar) devuelveDefinicionPaso(
+                idPaso, definicionTramite);
+        final RPagoTramite pago = devuelveDefinicionPago(pasoPagar, idPago);
+        return pago.isSimularPago();
     }
 
 }

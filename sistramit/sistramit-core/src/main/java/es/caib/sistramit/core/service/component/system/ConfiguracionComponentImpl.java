@@ -155,6 +155,11 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
         String prefijoGlobal = this
                 .getPropiedadGlobal(TypePropiedadConfiguracion.PLUGINS_PREFIJO);
+        if (prefijoGlobal == null) {
+            throw new PluginErrorException(
+                    "No se ha definido propiedad global para prefijo global para plugins: "
+                            + TypePropiedadConfiguracion.PLUGINS_PREFIJO);
+        }
         if (!prefijoGlobal.endsWith(".")) {
             prefijoGlobal = prefijoGlobal + ".";
         }
@@ -227,7 +232,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
         if (StringUtils.isBlank(prop) && !forceLocal) {
             prop = getPropiedadGlobal(propiedad);
         }
-        return prop;
+        return StringUtils.trim(prop);
     }
 
 }
