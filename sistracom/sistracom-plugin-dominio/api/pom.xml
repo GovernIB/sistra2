@@ -12,6 +12,15 @@
     <artifactId>sistracom-plugin-dominio-api</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.core</groupId>
+            <artifactId>pluginsib-core</artifactId>
+            <version>${plugins-ib.version}</version>
+        </dependency>
+    </dependencies>
+
+
     <build>
         <plugins>
             <plugin>

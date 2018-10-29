@@ -543,7 +543,7 @@ public class JVersionTramite implements IModelApi {
 
 	/**
 	 * ToModel.
-	 * 
+	 *
 	 * @return
 	 */
 	public TramiteVersion toModel() {
@@ -596,7 +596,7 @@ public class JVersionTramite implements IModelApi {
 
 	/**
 	 * fromModel.
-	 * 
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -649,15 +649,13 @@ public class JVersionTramite implements IModelApi {
 		if (origVersionTramite != null) {
 			jversionTramite = new JVersionTramite();
 			jversionTramite.setCodigo(null);
-			jversionTramite.setRelease(0);
+			jversionTramite.setRelease(1);
 			jversionTramite.setNumeroVersion(numVersionNuevo);
 			jversionTramite.setTramite(origVersionTramite.getTramite());
 			jversionTramite.setActiva(origVersionTramite.isActiva());
 			jversionTramite.setAutenticado(origVersionTramite.isAutenticado());
 			jversionTramite.setNoAutenticado(origVersionTramite.isNoAutenticado());
-			jversionTramite.setBloqueada(origVersionTramite.getBloqueada());
-			jversionTramite.setUsuarioIdBloqueo(origVersionTramite.getUsuarioIdBloqueo());
-			jversionTramite.setUsuarioDatosBloqueo(origVersionTramite.getUsuarioDatosBloqueo());
+			jversionTramite.setBloqueada(false);
 			jversionTramite.setDebug(origVersionTramite.isDebug());
 			jversionTramite.setDesactivacionTemporal(origVersionTramite.isDesactivacionTemporal());
 			jversionTramite.setIdiomasSoportados(origVersionTramite.getIdiomasSoportados());

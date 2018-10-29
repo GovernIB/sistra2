@@ -2,7 +2,10 @@ package es.caib.sistrages.core.api.service;
 
 import java.util.List;
 
+import org.fundaciobit.pluginsib.core.IPlugin;
+
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 
 /**
  * La interface ConfiguracionGlobalService.
@@ -60,4 +63,21 @@ public interface ConfiguracionGlobalService {
 	 */
 	public List<ConfiguracionGlobal> listConfiguracionGlobal(String filtro);
 
+	/**
+	 * Obtiene tipo plugin global.
+	 *
+	 * @param tipoPlugin
+	 *            tipo plugin
+	 * @return Plugin
+	 */
+	public IPlugin obtenerPluginGlobal(TypePlugin tipoPlugin);
+
+	/**
+	 * Obtiene tipo plugin entidad.
+	 *
+	 * @param tipoPlugin
+	 *            tipo plugin
+	 * @return Plugin
+	 */
+	public IPlugin obtenerPluginEntidad(TypePlugin tipoPlugin, Long idEntidad);
 }

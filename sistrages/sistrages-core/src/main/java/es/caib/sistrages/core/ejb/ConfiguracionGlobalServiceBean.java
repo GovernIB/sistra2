@@ -8,11 +8,13 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import org.fundaciobit.pluginsib.core.IPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 
 // TODO: Auto-generated Javadoc
@@ -101,6 +103,18 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
 	public List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro) {
 		return configuracionGlobalService.listConfiguracionGlobal(filtro);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	public IPlugin obtenerPluginGlobal(final TypePlugin tipoPlugin) {
+		return configuracionGlobalService.obtenerPluginGlobal(tipoPlugin);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	public IPlugin obtenerPluginEntidad(final TypePlugin tipoPlugin, final Long idEntidad) {
+		return configuracionGlobalService.obtenerPluginEntidad(tipoPlugin, idEntidad);
 	}
 
 }

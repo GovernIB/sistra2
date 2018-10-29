@@ -12,11 +12,14 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
+import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.component.FuenteDatosComponent;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 
@@ -43,6 +46,12 @@ public class DominioServiceImpl implements DominioService {
 	 */
 	@Autowired
 	FuenteDatoDao fuenteDatoDao;
+
+	/**
+	 * dominio dao.
+	 */
+	@Autowired
+	FuenteDatosComponent fuenteDatosComponent;
 
 	/*
 	 * (non-Javadoc)
@@ -243,28 +252,47 @@ public class DominioServiceImpl implements DominioService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public boolean tieneTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
 		return dominioDao.tieneTramiteVersion(idDominio, idTramiteVersion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void removeTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
 		dominioDao.removeTramiteVersion(idDominio, idTramiteVersion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void addTramiteVersion(final Long idDominio, final Long idTramiteVersion) {
 		dominioDao.addTramiteVersion(idDominio, idTramiteVersion);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public List<Dominio> listDominio(final Long idTramite, final String filtro) {
 		return dominioDao.getAllByFiltro(idTramite, filtro);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
 		dominioDao.importar(filaDominio, idEntidad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
+			final List<ValorParametroDominio> parametros) {
+		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ValoresDominio realizarConsultaBD(final String datasource, final String sql,
+			final List<ValorParametroDominio> parametros) {
+		return fuenteDatosComponent.realizarConsultaBD(datasource, sql, parametros);
 	}
 
 }

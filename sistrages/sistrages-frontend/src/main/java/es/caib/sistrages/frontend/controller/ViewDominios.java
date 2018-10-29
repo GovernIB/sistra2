@@ -177,7 +177,18 @@ public class ViewDominios extends ViewControllerBase {
 	 * Ping.
 	 */
 	public void ping() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada())
+			return;
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
+
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+
+		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 	}
 
 	/**

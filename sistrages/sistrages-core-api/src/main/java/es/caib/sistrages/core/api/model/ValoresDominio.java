@@ -23,7 +23,7 @@ public final class ValoresDominio extends ModelApi {
 	/**
 	 * Filas de valores.
 	 */
-	private final List<Map<String, String>> datos = new ArrayList<>();
+	private List<Map<String, String>> datos = new ArrayList<>();
 
 	/**
 	 * Indica si ha habido error.
@@ -156,6 +156,15 @@ public final class ValoresDominio extends ModelApi {
 	 */
 	public List<Map<String, String>> getDatos() {
 		return datos;
+	}
+
+	/**
+	 * Método de acceso a datos.
+	 *
+	 * @return el datos
+	 */
+	public void setDatos(final List<Map<String, String>> datos) {
+		this.datos = datos;
 	}
 
 	/**

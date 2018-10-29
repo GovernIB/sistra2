@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+<h:head>
+	<title><h:outputText value="#{msg['dialogDominioPing.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+
+<h:body>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="ID" value="#{dialogDominioPing.id}"/>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioPing.modoAcceso}"/>
+		<f:viewAction action="#{dialogDominioPing.init}" />
+	</f:metadata>
+	<h:form id="dialogDominioPing"  styleClass="margin-top-10; margin-left-10; margin-right-10">
+
+  			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			<h:outputText value="#{msg['dialogDominioPing.info']}" style="margin:20px" styleClass="margin-right-10;margin-top-10;margin-left-10" rendered="#{dialogDominioPing.mostrarTablaParametro}" />
+
+    		<h:dataTable value="#{dialogDominioPing.dominio.parametros}" var="td"
+    			styleClass="order-table"
+    			headerClass="order-table-header"
+    			rowClasses="order-table-odd-row,order-table-even-row"
+    			columnClasses="grid-right , w50"
+    			rendered="#{dialogDominioPing.mostrarTablaParametro}"
+    		>
+    			<h:column>
+    				<h:outputText value="#{td.codigo}" styleClass="margin-right-10" />
+				</h:column>
+    			<h:column>
+    				<p:inputText placeholder=" " value="#{td.valor}" style="width:80%" />
+    			</h:column>
+       		</h:dataTable>
+
+			<p:commandButton value="#{msg['botones.ping']}" actionListener="#{dialogDominioPing.ping()}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogDominioPing.mostrarBotonPing}" style="margin:10px" />
+
+
+				<!-- Data table -->
+				<p:dataTable  id="dataTableDatos"
+							 var="td"
+							 value="#{dialogDominioPing.data}"
+							 rows="10"
+							 emptyMessage="#{msg['error.emptyRows']}"
+							 scrollable="true"
+							 scrollHeight="100%"
+							 styleClass="h100"
+	                         paginator="true"
+	                         paginatorPosition="bottom"
+	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	                         rowsPerPageTemplate="5,10,15,30"
+	                         rendered="#{dialogDominioPing.mostrarTablaDatos}"
+				        	 rowIndexVar="rowIndex">
+
+
+					<!-- Necesario para actualizar en controlador la fila seleccionada -->
+					<p:ajax event="rowSelect" global="false" />
+					<p:ajax event="rowUnselect" />
+
+					<c:if test="${not empty dialogDominioPing.data}">
+						<!-- Columnas, sin el rowIndex no va muy bien que se diga -->
+						<c:forEach items="#{dialogDominioPing.data.get(rowIndex)}" var="dato">
+							<p:column headerText="#{dato.key}">
+						        <h:outputText value="#{dato.value}" />
+						    </p:column>
+						</c:forEach>
+					</c:if>
+
+				</p:dataTable>
+
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominioPing.cerrar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

@@ -1,17 +1,25 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.io.ByteArrayInputStream;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistrages.core.api.exception.FuenteDatosCSVNoExisteCampoException;
@@ -730,4 +738,109 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 		}
 	}
 
+	@Override
+	public ValoresDominio realizarConsultaBD(final String jndi, final String sql,
+			final List<ValorParametroDominio> parametros) {
+		final ValoresDominio valoresDominio = new ValoresDominio();
+
+		DataSource datasource = null;
+		Context initCtx;
+		try {
+			initCtx = new InitialContext();
+			datasource = (javax.sql.DataSource) initCtx.lookup("java:/" + jndi);
+		} catch (final NamingException e1) {
+			valoresDominio.setError(true);
+			valoresDominio.setCodigoError("BBDD");
+			valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e1));
+			return valoresDominio;
+		}
+
+		if (datasource == null) {
+			valoresDominio.setError(true);
+			valoresDominio.setCodigoError("BBDD");
+			valoresDominio.setDescripcionError("El datasource es nulo.");
+			return valoresDominio;
+		}
+
+		final StringBuilder where = new StringBuilder(" 1 = 1");
+		if (parametros != null && !parametros.isEmpty()) {
+
+			for (final ValorParametroDominio parametro : parametros) {
+
+				if (parametro.getCodigo() != null && !parametro.getCodigo().isEmpty() && parametro.getValor() != null
+						&& !parametro.getValor().isEmpty()) {
+					where.append(" and " + parametro.getCodigo() + "=" + parametro.getValor());
+				}
+
+			}
+		}
+
+		final String sqlFinal = getSql(JDominio.decodeSql(sql), where);
+
+		try (ResultSet rs = datasource.getConnection().createStatement().executeQuery(sqlFinal)) {
+
+			valoresDominio.setError(false);
+			while (rs.next()) {
+				final int totalColumnas = rs.getMetaData().getColumnCount();
+				int numfila = valoresDominio.addFila();
+
+				for (int i = 1; i <= totalColumnas; i++) {
+					valoresDominio.setValor(numfila, rs.getMetaData().getColumnName(i), getValor(rs.getObject(i)));
+				}
+				numfila++;
+			}
+
+		} catch (final Exception e) {
+
+			valoresDominio.setError(true);
+			valoresDominio.setCodigoError("BBDD");
+			valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e));
+		}
+		return valoresDominio;
+	}
+
+	/**
+	 * Obtiene el valor limpio.
+	 *
+	 * @param elemento
+	 * @return
+	 */
+	private String getValor(final Object elemento) {
+		String valor;
+		if (elemento == null) {
+			valor = "";
+		} else if (elemento instanceof Date) {
+			final SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+			valor = format.format((Date) elemento);
+		} else {
+			valor = elemento.toString();
+		}
+		return valor;
+	}
+
+	/**
+	 * Revisa como ejecutar la sql.
+	 *
+	 * @param sql
+	 * @param where
+	 * @return
+	 */
+	private String getSql(final String sql, final StringBuilder where) {
+		final String LIT_WHERE = " where ";
+		if (sql.toLowerCase().contains("order by")) {
+			final int posicionOrderBy = sql.toLowerCase().indexOf("order by");
+			String literalWhere;
+			if (sql.toLowerCase().contains("where")) {
+				literalWhere = "";
+			} else {
+				literalWhere = LIT_WHERE;
+			}
+			return sql.substring(0, posicionOrderBy) + literalWhere + " AND " + " " + where.toString() + " "
+					+ sql.substring(posicionOrderBy);
+		} else if (sql.toLowerCase().contains(LIT_WHERE)) {
+			return sql + " AND " + where.toString();
+		} else {
+			return sql + LIT_WHERE + where.toString();
+		}
+	}
 }

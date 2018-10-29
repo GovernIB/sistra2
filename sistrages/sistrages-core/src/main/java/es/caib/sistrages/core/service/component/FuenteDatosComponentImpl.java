@@ -12,14 +12,21 @@ import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 
 @Component
 @Transactional
-public class FuenteDatosComponentImpl implements FuenteDatosComponent{
-		
+public class FuenteDatosComponentImpl implements FuenteDatosComponent {
+
 	@Autowired
 	FuenteDatoDao fuenteDatosDao;
 
 	@Override
-	public ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros) {
+	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
+			final List<ValorParametroDominio> parametros) {
 		return fuenteDatosDao.realizarConsultaFuenteDatos(idDominio, parametros);
+	}
+
+	@Override
+	public ValoresDominio realizarConsultaBD(final String datasource, final String sql,
+			final List<ValorParametroDominio> parametros) {
+		return fuenteDatosDao.realizarConsultaBD(datasource, sql, parametros);
 	}
 
 }
