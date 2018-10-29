@@ -11,7 +11,7 @@ import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 
 /**
  * Interface email plugin.
- *
+ * 
  * @author Indra
  *
  */

@@ -6,7 +6,7 @@ import org.fundaciobit.pluginsib.core.IPlugin;
 
 /**
  * Interface email plugin.
- *
+ * 
  * @author Indra
  *
  */

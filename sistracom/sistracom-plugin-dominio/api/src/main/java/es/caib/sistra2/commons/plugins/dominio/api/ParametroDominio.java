@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Parámetro dominio.
- *
+ * 
  * @author Indra
  *
  */

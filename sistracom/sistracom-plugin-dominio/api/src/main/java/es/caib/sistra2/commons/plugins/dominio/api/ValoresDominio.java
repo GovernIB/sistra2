@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * Modela datos de un dominio.
- *
+ * 
  * @author Indra
  *
  */
