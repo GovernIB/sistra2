@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.component.formulario.interno.formateadores.utiles.pdf;
+package es.caib.sistra2.commons.pdf;
 
 /**
  * 

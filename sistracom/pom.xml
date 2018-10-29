@@ -18,6 +18,7 @@
         <module>sistracom-plugin-pago</module>
         <module>sistracom-plugin-registro</module>
         <module>sistracom-plugin-dominio</module>
+        <module>sistracom-pdf</module>
     </modules>
 
 </project>

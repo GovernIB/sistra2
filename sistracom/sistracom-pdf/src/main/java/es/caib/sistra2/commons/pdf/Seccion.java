@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.component.formulario.interno.formateadores.utiles.pdf;
+package es.caib.sistra2.commons.pdf;
 
 import java.awt.Color;
 import java.util.List;
@@ -14,6 +14,8 @@ import com.lowagie.text.pdf.PdfPTable;
 public class Seccion {
 
 	private String apartado;
+
+	private boolean visibleCabecera = true;
 
 	private String titulo;
 
@@ -36,22 +38,40 @@ public class Seccion {
 	public static final String F_ARIAL8 = "Arial8";
 	public static final String F_ARIAL8BOLD = "Arial8Bold";
 
+	/**
+	 * Constructor apartado y titulo sin fuente.
+	 *
+	 * @param apartado
+	 * @param titulo
+	 */
 	public Seccion(final String apartado, final String titulo) {
 		super();
-		// TODO Apendice de constructor generado automaticamente
 		this.apartado = apartado;
 		this.titulo = titulo;
 		_fuentetitulo = "Titulo2";
 	}
 
 	/**
+	 * Constructor para cuando no se quiere mostrar la cabecera.
+	 *
+	 * @param visibleCabecera
+	 */
+	public Seccion(final boolean visible) {
+		super();
+		this.visibleCabecera = visible;
+		this.apartado = "";
+		this.titulo = "";
+		_fuentetitulo = "Titulo2";
+	}
+
+	/**
+	 * Constructor apartado y titulo con fuente.
 	 *
 	 * @param apartado
 	 * @param titulo
 	 */
 	public Seccion(final String apartado, final String titulo, final String fuentetitol) {
 		super();
-		// TODO Apendice de constructor generado automaticamente
 		this.apartado = apartado;
 		this.titulo = titulo;
 		_fuentetitulo = fuentetitol;
@@ -105,14 +125,17 @@ public class Seccion {
 		final float[] widths = { 0.5f, 9.5f };
 		final PdfPTable table = new PdfPTable(widths);
 		table.setWidthPercentage(100);
-		PdfPCell cell = new PdfPCell(new Phrase(12, apartado, document.getContext().getFont(_fuentetitulo)));
-		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cell.setBackgroundColor(new Color(0xCC, 0xCC, 0xCC));
-		table.addCell(cell);
-		cell = new PdfPCell(new Phrase(12, titulo, document.getContext().getFont(_fuentetitulo)));
-		cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-		cell.setPaddingLeft(20f);
-		table.addCell(cell);
+		PdfPCell cell;
+		if (visibleCabecera) {
+			cell = new PdfPCell(new Phrase(12, apartado, document.getContext().getFont(_fuentetitulo)));
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor(new Color(0xCC, 0xCC, 0xCC));
+			table.addCell(cell);
+			cell = new PdfPCell(new Phrase(12, titulo, document.getContext().getFont(_fuentetitulo)));
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingLeft(20f);
+			table.addCell(cell);
+		}
 		cell = new PdfPCell(new Phrase(1, ""));
 		cell.setBorder(Rectangle.LEFT | Rectangle.TOP);
 		table.addCell(cell);

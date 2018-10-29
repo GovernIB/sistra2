@@ -1,10 +1,9 @@
-package es.caib.sistra2.commons.utils;
+package es.caib.sistra2.commons.pdf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.Blob;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -23,8 +22,8 @@ import com.lowagie.text.pdf.PdfWriter;
  */
 public class PdfUtil {
 
-	private String NombrePlantillaPDF = null;
-	private String NombreSalida = null;
+	private String nombrePlantillaPDF = null;
+	private String nombreSalida = null;
 	private final PdfReader pdfr;
 	private PdfStamper pdfs;
 	private OutputStream ostream;
@@ -38,7 +37,7 @@ public class PdfUtil {
 		long lon = -1;
 		byte[] b;
 
-		NombrePlantillaPDF = "";
+		nombrePlantillaPDF = "";
 		lon = plantillaPdf.length();
 		b = plantillaPdf.getBytes(1, (int) lon + 1);
 		pdfr = new PdfReader(b);
@@ -49,7 +48,7 @@ public class PdfUtil {
 	 * Constructor, recibe como parámetro un byte [].
 	 */
 	public PdfUtil(final byte[] plantillaPdf) throws Exception {
-		NombrePlantillaPDF = "";
+		nombrePlantillaPDF = "";
 		pdfr = new PdfReader(plantillaPdf);
 		iniciarPdf();
 	}
@@ -61,9 +60,9 @@ public class PdfUtil {
 	 */
 	public PdfUtil(final String Nombre) throws Exception {
 
-		NombrePlantillaPDF = Nombre;
+		nombrePlantillaPDF = Nombre;
 
-		pdfr = new PdfReader(NombrePlantillaPDF);
+		pdfr = new PdfReader(nombrePlantillaPDF);
 
 		iniciarPdf();
 	}
@@ -85,7 +84,7 @@ public class PdfUtil {
 	 *
 	 * @return
 	 */
-	public HashMap getCampos() {
+	public Map getCampos() {
 		return afields.getFields();
 	}
 
@@ -106,13 +105,13 @@ public class PdfUtil {
 	 * contenga pares (campo, valor). Mejora el acceso cuando se parsea el contenido
 	 * de un XML.
 	 */
-	public void ponerValor(final Map datos) throws Exception {
+	public void ponerValor(final Map<String, String> datos) throws Exception {
 		String clave = null;
-		final Set seto = datos.keySet();
-		final Iterator iterator = seto.iterator();
+		final Set<String> seto = datos.keySet();
+		final Iterator<String> iterator = seto.iterator();
 
 		while (iterator.hasNext()) {
-			clave = (String) iterator.next();
+			clave = iterator.next();
 			final String valor = (datos.get(clave) != null ? datos.get(clave).toString() : "");
 			ponerValor(clave, valor);
 		}
@@ -136,8 +135,8 @@ public class PdfUtil {
 	 * parámetro recibo el nombre del fichero de salida.
 	 */
 	public void guardar(final String Salida, final boolean formFlattening) throws Exception {
-		NombreSalida = Salida;
-		final FileOutputStream fout = new FileOutputStream(NombreSalida);
+		nombreSalida = Salida;
+		final FileOutputStream fout = new FileOutputStream(nombreSalida);
 		fout.write(guardarEnMemoria(formFlattening));
 		fout.close();
 	}
