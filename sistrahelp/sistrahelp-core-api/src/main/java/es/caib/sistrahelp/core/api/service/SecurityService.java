@@ -32,5 +32,6 @@ public interface SecurityService {
 	 *
 	 * @return lista de areas
 	 */
-	List<Area> obtenerAreas();
+	public List<Area> obtenerAreas();
+
 }

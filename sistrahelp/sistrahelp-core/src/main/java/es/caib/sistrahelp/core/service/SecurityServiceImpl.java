@@ -14,6 +14,7 @@ import es.caib.sistrahelp.core.api.service.ContextService;
 import es.caib.sistrahelp.core.api.service.SecurityService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
 import es.caib.sistrahelp.core.service.component.SistragesApiComponent;
+import es.caib.sistrahelp.core.service.component.SistramitApiComponent;
 
 @Service
 @Transactional
@@ -24,6 +25,9 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Autowired
 	private SistragesApiComponent sistragesApiComponent;
+
+	@Autowired
+	private SistramitApiComponent sistramitApiComponent;
 
 	@Override
 	@NegocioInterceptor

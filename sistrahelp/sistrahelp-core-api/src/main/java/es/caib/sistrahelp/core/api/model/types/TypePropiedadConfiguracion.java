@@ -17,7 +17,15 @@ public enum TypePropiedadConfiguracion {
 	/** STG Url. */
 	SISTRAGES_USR("sistrages.rest.user"),
 	/** STG Url. */
-	SISTRAGES_PWD("sistrages.rest.pwd"), PATH_FICHEROS_EXTERNOS("ficherosExternos.path");
+	SISTRAGES_PWD("sistrages.rest.pwd"),
+
+	PATH_FICHEROS_EXTERNOS("ficherosExternos.path"),
+
+	SISTRAMIT_URL("sistramit.rest.url"),
+	/** STG Url. */
+	SISTRAMIT_USR("sistramit.rest.user"),
+	/** STG Url. */
+	SISTRAMIT_PWD("sistramit.rest.pwd");
 
 	/**
 	 * Valor como string.

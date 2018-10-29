@@ -1,22 +1,23 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrahelp.core.api.model.Entidad;
+import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.DialogResult;
-import es.caib.sistrahelp.frontend.model.types.TypeEvento;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
+import es.caib.sistramit.rest.api.interna.REventoAuditoria;
+import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 
 /**
  * Mantenimiento de entidades.
@@ -28,6 +29,29 @@ import es.caib.sistrahelp.frontend.util.UtilJSF;
 @ViewScoped
 public class ViewAuditoriaTramites extends ViewControllerBase {
 
+	@Inject
+	private HelpDeskService helpDeskService;
+
+	/**
+	 * Filtros (puede venir por parametro).
+	 */
+
+	private String filtroTramite;
+	private String filtroVersion;
+	private String filtroProcedimiento;
+
+	/**
+	 * Lista de datos.
+	 */
+	private List<REventoAuditoria> listaDatos;
+
+	/**
+	 * Dato seleccionado en la lista.
+	 */
+	private REventoAuditoria datoSeleccionado;
+
+	private RFiltrosAuditoria filtros;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -36,31 +60,9 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// UtilJSF.verificarAccesoSuperAdministrador();
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-		// Recuperar datos
-		buscar();
+
+		filtros = new RFiltrosAuditoria();
 	}
-
-	/**
-	 * Filtros (puede venir por parametro).
-	 */
-	private String filtroIdSesion;
-	private String filtroNif;
-	private String filtroTramite;
-	private String filtroVersion;
-	private String filtroProcedimiento;
-	private Date filtroFechaInicio;
-	private Date filtroFechaFin;
-	private TypeEvento filtroEvento;
-
-	/**
-	 * Lista de datos.
-	 */
-	private List<Entidad> listaDatos;
-
-	/**
-	 * Dato seleccionado en la lista.
-	 */
-	private Entidad datoSeleccionado;
 
 	/**
 	 * Recuperacion de datos.
@@ -80,6 +82,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// listaDatos = entidadService.listEntidad(UtilJSF.getIdioma(), filtro);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
+
+		listaDatos = helpDeskService.obtenerAuditoriaEvento(filtros);
 	}
 
 	/**
@@ -92,7 +96,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
 		// UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true,
 		// 570, 190);
 	}
@@ -156,7 +160,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * @return the listaDatos
 	 */
-	public List<Entidad> getListaDatos() {
+	public List<REventoAuditoria> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -164,14 +168,14 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * @param listaDatos
 	 *            the listaDatos to set
 	 */
-	public void setListaDatos(final List<Entidad> listaDatos) {
+	public void setListaDatos(final List<REventoAuditoria> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
 	 * @return the datoSeleccionado
 	 */
-	public Entidad getDatoSeleccionado() {
+	public REventoAuditoria getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -179,24 +183,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            the datoSeleccionado to set
 	 */
-	public void setDatoSeleccionado(final Entidad datoSeleccionado) {
+	public void setDatoSeleccionado(final REventoAuditoria datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
-	}
-
-	public String getFiltroIdSesion() {
-		return filtroIdSesion;
-	}
-
-	public void setFiltroIdSesion(final String filtroIdSesion) {
-		this.filtroIdSesion = filtroIdSesion;
-	}
-
-	public String getFiltroNif() {
-		return filtroNif;
-	}
-
-	public void setFiltroNif(final String filtroNif) {
-		this.filtroNif = filtroNif;
 	}
 
 	public String getFiltroTramite() {
@@ -215,36 +203,20 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		this.filtroProcedimiento = filtroProcedimiento;
 	}
 
-	public Date getFiltroFechaInicio() {
-		return filtroFechaInicio;
-	}
-
-	public void setFiltroFechaInicio(final Date filtroFechaInicio) {
-		this.filtroFechaInicio = filtroFechaInicio;
-	}
-
-	public Date getFiltroFechaFin() {
-		return filtroFechaFin;
-	}
-
-	public void setFiltroFechaFin(final Date filtroFechaFin) {
-		this.filtroFechaFin = filtroFechaFin;
-	}
-
-	public TypeEvento getFiltroEvento() {
-		return filtroEvento;
-	}
-
-	public void setFiltroEvento(final TypeEvento filtroEvento) {
-		this.filtroEvento = filtroEvento;
-	}
-
 	public String getFiltroVersion() {
 		return filtroVersion;
 	}
 
 	public void setFiltroVersion(final String filtroVersion) {
 		this.filtroVersion = filtroVersion;
+	}
+
+	public RFiltrosAuditoria getFiltros() {
+		return filtros;
+	}
+
+	public void setFiltros(final RFiltrosAuditoria filtros) {
+		this.filtros = filtros;
 	}
 
 }

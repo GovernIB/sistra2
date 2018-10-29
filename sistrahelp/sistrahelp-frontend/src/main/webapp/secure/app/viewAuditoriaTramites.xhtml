@@ -28,11 +28,11 @@
         	<p:panelGrid id="panelFiltro" columns="4" columnClasses="w27,w22,w26,w25" styleClass="noBackground w100 noBorders h10">
         		<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
 	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
-		        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtroIdSesion}" size="30" maxlength="30"/>
+		        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
 	        	</h:panelGrid>
 	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
 		        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
-		        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtroNif}" size="12" maxlength="12"/>
+		        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="12" maxlength="12"/>
 	        	</h:panelGrid>
 	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w35 grid-right,w65">
 	        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
@@ -53,16 +53,16 @@
 
 	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
 	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
-	        		<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtroFechaInicio}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+	        		<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 	        	</h:panelGrid>
 	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
 	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
-	        		<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtroFechaFin}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+	        		<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 	        	</h:panelGrid>
 	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w35 grid-right,w65">
 	        		<p:outputLabel for="filtroEvento" value="#{msg['viewAuditoriaTramites.filtroEvento']}:"/>
 
-					<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtroEvento}" >
+					<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtros.evento}" >
 					 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
     					 <f:selectItems value="#{TypeEvento.ALL_VALUES}" var="evento" itemLabel="#{msg['typeEvento.' += evento]}"/>
 					</p:selectOneMenu >
@@ -81,7 +81,7 @@
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
-			        	 selectionMode="single" selection="#{viewAuditoriaTramites.datoSeleccionado}" rowKey="#{td.codigo}">
+			        	 selectionMode="single" selection="#{viewAuditoriaTramites.datoSeleccionado}" rowKey="#{dt.id}">
 
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -93,32 +93,34 @@
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.tipo}" />
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.fecha}">
+			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.idSesion}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.tipo}" />
 			    </p:column>
 			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.tipo}" />
 			    </p:column>
 			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.tipo}" />
 			    </p:column>
 			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.tipo}" />
 			    </p:column>
 			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}">
-			        <h:outputText value="#{dt.codigoDIR3}" />
+			        <h:outputText value="#{dt.tipo}" />
 			    </p:column>
 			</p:dataTable></p:outputPanel>
 

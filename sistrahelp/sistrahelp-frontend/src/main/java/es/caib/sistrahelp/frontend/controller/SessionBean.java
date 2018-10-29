@@ -74,6 +74,8 @@ public class SessionBean {
 
 	private List<Area> listaAreas;
 
+	private List<Area> listaAreasEntidad;
+
 	/**
 	 * Servicio seguridad.
 	 */
@@ -119,6 +121,7 @@ public class SessionBean {
 
 		if (!listaEntidades.isEmpty()) {
 			entidad = listaEntidades.get(0);
+			listaAreasEntidad = obtenerAreasEntidad(listaAreas, entidad);
 		} else {
 			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
 			return;
@@ -201,6 +204,7 @@ public class SessionBean {
 		for (final Entidad e : listaEntidades) {
 			if (e.getCodigoDIR3().equals(idEntidad)) {
 				entidad = e;
+				listaAreasEntidad = obtenerAreasEntidad(listaAreas, entidad);
 			}
 		}
 		// Cambio logo
@@ -329,6 +333,21 @@ public class SessionBean {
 
 	}
 
+	private List<Area> obtenerAreasEntidad(final List<Area> pListaAreas, final Entidad pEntidad) {
+		List<Area> listaResultado = null;
+
+		if (pListaAreas != null && !pListaAreas.isEmpty()) {
+			listaResultado = new ArrayList<>();
+			for (final Area area : pListaAreas) {
+				if (pEntidad.getCodigoDIR3().equals(area.getCodigoDIR3Entidad())) {
+					listaResultado.add(area);
+				}
+			}
+		}
+
+		return listaResultado;
+	}
+
 	// --------- GETTERS / SETTERS ------------------
 
 	public SecurityService getSecurityService() {
@@ -409,6 +428,14 @@ public class SessionBean {
 
 	public void setMochilaDatos(final Map<String, Object> mapaDatos) {
 		this.mochilaDatos = mapaDatos;
+	}
+
+	public List<Area> getListaAreasEntidad() {
+		return listaAreasEntidad;
+	}
+
+	public void setListaAreasEntidad(final List<Area> listaAreasEntidad) {
+		this.listaAreasEntidad = listaAreasEntidad;
 	}
 
 }
