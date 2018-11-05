@@ -350,6 +350,8 @@ aside address { display: inline; }
 
 .imc-missatge[data-accio='registra'] .imc--text { background: #fff url(imgs/icones/ico_correcte_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
 
+.imc-missatge[data-accio='reintenta'] .imc--text { background: #fff url(imgs/icones/ico_reintenta_f00.svg) no-repeat 1.5em 1em / auto 3em; }
+
 .imc-missatge[data-accio='error'] .imc--text { background: #fff url(imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em; }
 
 .imc-missatge[data-accio='error'] button[data-tipus="accepta"],

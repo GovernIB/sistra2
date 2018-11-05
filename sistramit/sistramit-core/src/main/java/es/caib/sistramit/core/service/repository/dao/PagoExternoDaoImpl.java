@@ -53,6 +53,25 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
 
     @Override
     public RetornoPago consumirTicketPago(String ticket) {
+        return obtenerDatosTicketPago(ticket, true);
+    }
+
+    @Override
+    public RetornoPago obtenerTicketPago(String ticket) {
+        return obtenerDatosTicketPago(ticket, false);
+    }
+
+    /**
+     * Obtiene dato ticket.
+     *
+     * @param ticket
+     *            ticket
+     * @param consumirTicket
+     *            si se consume ticket de 1 solo uso
+     * @return datos ticket
+     */
+    private RetornoPago obtenerDatosTicketPago(String ticket,
+            boolean consumirTicket) {
         HPagoExterno h = null;
         final String sql = "SELECT t FROM HPagoExterno t WHERE t.ticket = :ticket";
         final Query query = entityManager.createQuery(sql);
@@ -65,9 +84,17 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
             throw new TicketPagoException(
                     "No existe pago externo con el ticket " + ticket);
         }
-        if (h.isUsadoRetorno()) {
+
+        // Si se consume ticket, no debe estar usado
+        if (consumirTicket && h.isUsadoRetorno()) {
             throw new TicketPagoException(
                     "El ticket " + ticket + " ya ha sido usado");
+        }
+
+        // Si no se consume ticket, debe estar usado
+        if (!consumirTicket && !h.isUsadoRetorno()) {
+            throw new TicketPagoException(
+                    "El ticket " + ticket + " no ha sido usado");
         }
 
         final RetornoPago res = new RetornoPago();
@@ -83,10 +110,12 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
                             + ticket);
         }
 
-        // Marcamos ticket como usado
-        h.setUsadoRetorno(true);
-        h.setFechaFin(new Date());
-        entityManager.merge(h);
+        // Si se consume ticket, marcamos ticket como usado
+        if (consumirTicket) {
+            h.setUsadoRetorno(true);
+            h.setFechaFin(new Date());
+            entityManager.merge(h);
+        }
 
         return res;
     }

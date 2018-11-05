@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.component.integracion;
+package es.caib.sistramit.core.service.test.mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,11 @@ import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
+import es.caib.sistrages.rest.api.interna.RPagoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionPagar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RPlugin;
@@ -36,6 +38,8 @@ import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
+import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
+import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -239,9 +243,11 @@ public class SistragesMock {
         pasos.add(crearPasoDebeSaber());
         pasos.add(crearPasoRellenar());
         pasos.add(crearPasoAnexar());
+        pasos.add(crearPasoPagar());
         pasos.add(crearPasoRegistrar());
 
         final RVersionTramite vt = new RVersionTramite();
+        vt.setIdEntidad("ENTIDAD1");
         vt.setTimestamp(generateTimestamp());
         vt.setIdentificador("T1");
         vt.setVersion(1);
@@ -251,6 +257,45 @@ public class SistragesMock {
         vt.setControlAcceso(crearControlAcceso());
         vt.setPasos(pasos);
         return vt;
+    }
+
+    private static RPasoTramitacion crearPasoPagar() {
+        final RPasoTramitacionPagar p = new RPasoTramitacionPagar();
+        p.setIdentificador("PT1");
+        p.setTipo(TypePaso.PAGAR.toString());
+        final List<RPagoTramite> pagos = new ArrayList<>();
+
+        // Pago electronico
+        final RPagoTramite pagoElectronico = new RPagoTramite();
+        pagoElectronico.setDescripcion("Pago electronico");
+        pagoElectronico.setIdentificador("P1");
+        pagoElectronico
+                .setObligatoriedad(TypeObligatoriedad.OBLIGATORIO.toString());
+        pagoElectronico.setSimularPago(true);
+        pagoElectronico.setTipo("A");
+        final RScript scriptPagoElectronico = new RScript();
+        scriptPagoElectronico.setScript(
+                "DATOS_PAGO.setPasarela('ATIB'); DATOS_PAGO.setOrganismo('ORG1'); DATOS_PAGO.setDetallePago('046','C1','T1', 100);");
+        pagoElectronico.setScriptPago(scriptPagoElectronico);
+        pagos.add(pagoElectronico);
+
+        // Pago presencial
+        final RPagoTramite pagoPresencial = new RPagoTramite();
+        pagoPresencial.setDescripcion("Pago presencial");
+        pagoPresencial.setIdentificador("P2");
+        pagoPresencial
+                .setObligatoriedad(TypeObligatoriedad.OBLIGATORIO.toString());
+        pagoPresencial.setSimularPago(true);
+        pagoPresencial.setTipo("P");
+        final RScript scriptPagoPresencial = new RScript();
+        scriptPagoPresencial.setScript(
+                "DATOS_PAGO.setPasarela('ATIB'); DATOS_PAGO.setOrganismo('ORG1'); DATOS_PAGO.setDetallePago('046','C1','T1', 100);");
+        pagoPresencial.setScriptPago(scriptPagoPresencial);
+        // pagos.add(pagoPresencial);
+
+        p.setPagos(pagos);
+
+        return p;
     }
 
     private static RVersionTramitePropiedades crearPropiedadesVT() {
@@ -292,6 +337,7 @@ public class SistragesMock {
         final List<RAnexoTramite> fl = new ArrayList<>();
         fl.add(crearAnexoTramite("ANE1", 1));
         fl.add(crearAnexoTramite("ANE2", 2));
+        fl.add(crearAnexoPresencialTramite("ANEP"));
         pr.setIdentificador("AD1");
         pr.setTipo("AD");
         pr.setAnexos(fl);
@@ -328,6 +374,28 @@ public class SistragesMock {
         anexo.setScriptDependencia(scriptDependencia);
         anexo.setPresentacion("E");
         anexo.setPresentacionElectronica(presentacionElectronica);
+
+        return anexo;
+    }
+
+    private static RAnexoTramite crearAnexoPresencialTramite(
+            String identificador) {
+
+        final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
+        ayuda.setUrl("http://www.google.es");
+        ayuda.setMensajeHtml("Mensaje <strong>HTML</strong>");
+
+        final RScript scriptDependencia = new RScript();
+        scriptDependencia.setScript(
+                "return (PLUGIN_FORMULARIOS.getValor('F1', 'PRESENTACION') == 'p'?'s':'d');");
+
+        final RAnexoTramite anexo = new RAnexoTramite();
+        anexo.setIdentificador(identificador);
+        anexo.setDescripcion(identificador);
+        anexo.setAyuda(ayuda);
+        anexo.setObligatoriedad("D");
+        anexo.setScriptDependencia(scriptDependencia);
+        anexo.setPresentacion("P");
 
         return anexo;
     }

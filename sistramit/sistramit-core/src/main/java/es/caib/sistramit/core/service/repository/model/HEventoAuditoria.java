@@ -33,265 +33,268 @@ import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 @SuppressWarnings("serial")
 public class HEventoAuditoria implements IModelApi {
 
-	/**
-	 * id.
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STT_LOGINT_SEQ")
-	@SequenceGenerator(name = "STT_LOGINT_SEQ", sequenceName = "STT_LOGINT_SEQ", allocationSize = ConstantesNumero.N1)
-	@Column(name = "LOG_CODIGO")
-	private Long id;
+    /**
+     * id.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STT_LOGINT_SEQ")
+    @SequenceGenerator(name = "STT_LOGINT_SEQ", sequenceName = "STT_LOGINT_SEQ", allocationSize = ConstantesNumero.N1)
+    @Column(name = "LOG_CODIGO")
+    private Long id;
 
-	/**
-	 * tipo.
-	 */
-	@Column(name = "LOG_EVETIP", nullable = false)
-	private String tipo;
+    /**
+     * tipo.
+     */
+    @Column(name = "LOG_EVETIP", nullable = false)
+    private String tipo;
 
-	/**
-	 * fecha.
-	 */
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "LOG_EVEFEC", nullable = false)
-	private Date fecha;
+    /**
+     * fecha.
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LOG_EVEFEC", nullable = false)
+    private Date fecha;
 
-	/**
-	 * sesion tramitacion.
-	 */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "LOG_CODSES")
-	private HSesionTramitacion sesionTramitacion;
+    /**
+     * sesion tramitacion.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LOG_CODSES")
+    private HSesionTramitacion sesionTramitacion;
 
-	/**
-	 * descripcion.
-	 */
-	@Column(name = "LOG_EVEDES")
-	private String descripcion;
+    /**
+     * descripcion.
+     */
+    @Column(name = "LOG_EVEDES", length = 1000)
+    private String descripcion;
 
-	/**
-	 * resultado.
-	 */
-	@Column(name = "LOG_EVERES")
-	private String resultado;
+    /**
+     * resultado.
+     */
+    @Column(name = "LOG_EVERES", length = 50)
+    private String resultado;
 
-	/**
-	 * detalle.
-	 */
-	@Column(name = "LOG_EVEDET")
-	private String detalle;
+    /**
+     * detalle.
+     */
+    @Column(name = "LOG_EVEDET", length = 4000)
+    private String detalle;
 
-	/**
-	 * codigoError.
-	 */
-	@Column(name = "LOG_ERRCOD")
-	private String codigoError;
+    /**
+     * codigoError.
+     */
+    @Column(name = "LOG_ERRCOD", length = 500)
+    private String codigoError;
 
-	/**
-	 * traza.
-	 */
-	@Lob
-	@Column(name = "LOG_ERRDET")
-	private String trazaError;
+    /**
+     * traza.
+     */
+    @Lob
+    @Column(name = "LOG_ERRDET")
+    private String trazaError;
 
-	/**
-	 * Instancia un nuevo h log interno de HLogInterno.
-	 */
-	public HEventoAuditoria() {
-	}
+    /**
+     * Instancia un nuevo h log interno de HLogInterno.
+     */
+    public HEventoAuditoria() {
+    }
 
-	/**
-	 * Para obtener el atributo id.
-	 *
-	 * @return id
-	 */
-	public Long getId() {
-		return id;
-	}
+    /**
+     * Para obtener el atributo id.
+     *
+     * @return id
+     */
+    public Long getId() {
+        return id;
+    }
 
-	/**
-	 * Para establecer el atributo id.
-	 *
-	 * @param pId
-	 *            el nuevo valor para id
-	 */
-	public void setId(final Long pId) {
-		this.id = pId;
-	}
+    /**
+     * Para establecer el atributo id.
+     *
+     * @param pId
+     *            el nuevo valor para id
+     */
+    public void setId(final Long pId) {
+        this.id = pId;
+    }
 
-	/**
-	 * Para obtener el atributo fecha.
-	 *
-	 * @return fecha
-	 */
-	public Date getFecha() {
-		return fecha;
-	}
+    /**
+     * Para obtener el atributo fecha.
+     *
+     * @return fecha
+     */
+    public Date getFecha() {
+        return fecha;
+    }
 
-	/**
-	 * Para establecer el atributo fecha.
-	 *
-	 * @param pFecha
-	 *            el nuevo valor para fecha
-	 */
-	public void setFecha(final Date pFecha) {
-		this.fecha = pFecha;
-	}
+    /**
+     * Para establecer el atributo fecha.
+     *
+     * @param pFecha
+     *            el nuevo valor para fecha
+     */
+    public void setFecha(final Date pFecha) {
+        this.fecha = pFecha;
+    }
 
-	/**
-	 * Para obtener el atributo descripcion.
-	 *
-	 * @return descripcion
-	 */
-	public String getDescripcion() {
-		return descripcion;
-	}
+    /**
+     * Para obtener el atributo descripcion.
+     *
+     * @return descripcion
+     */
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	/**
-	 * Para establecer el atributo descripcion.
-	 *
-	 * @param pDescripcion
-	 *            el nuevo valor para descripcion
-	 */
-	public void setDescripcion(final String pDescripcion) {
-		this.descripcion = pDescripcion;
-	}
+    /**
+     * Para establecer el atributo descripcion.
+     *
+     * @param pDescripcion
+     *            el nuevo valor para descripcion
+     */
+    public void setDescripcion(final String pDescripcion) {
+        this.descripcion = pDescripcion;
+    }
 
-	/**
-	 * Para obtener el atributo resultado.
-	 *
-	 * @return resultado
-	 */
-	public String getResultado() {
-		return resultado;
-	}
+    /**
+     * Para obtener el atributo resultado.
+     *
+     * @return resultado
+     */
+    public String getResultado() {
+        return resultado;
+    }
 
-	/**
-	 * Para establecer el atributo resultado.
-	 *
-	 * @param pResultado
-	 *            el nuevo valor para resultado
-	 */
-	public void setResultado(final String pResultado) {
-		this.resultado = pResultado;
-	}
+    /**
+     * Para establecer el atributo resultado.
+     *
+     * @param pResultado
+     *            el nuevo valor para resultado
+     */
+    public void setResultado(final String pResultado) {
+        this.resultado = pResultado;
+    }
 
-	/**
-	 * Para obtener el atributo detalle.
-	 *
-	 * @return detalle
-	 */
-	public String getDetalle() {
-		return detalle;
-	}
+    /**
+     * Para obtener el atributo detalle.
+     *
+     * @return detalle
+     */
+    public String getDetalle() {
+        return detalle;
+    }
 
-	/**
-	 * Para establecer el atributo detalle.
-	 *
-	 * @param pDetalle
-	 *            el nuevo valor para detalle
-	 */
-	public void setDetalle(final String pDetalle) {
-		this.detalle = pDetalle;
-	}
+    /**
+     * Para establecer el atributo detalle.
+     *
+     * @param pDetalle
+     *            el nuevo valor para detalle
+     */
+    public void setDetalle(final String pDetalle) {
+        this.detalle = pDetalle;
+    }
 
-	/**
-	 * Para obtener el atributo codigoError.
-	 *
-	 * @return codigoError
-	 */
-	public String getCodigoError() {
-		return codigoError;
-	}
+    /**
+     * Para obtener el atributo codigoError.
+     *
+     * @return codigoError
+     */
+    public String getCodigoError() {
+        return codigoError;
+    }
 
-	/**
-	 * Para establecer el atributo codigoError.
-	 *
-	 * @param pCodigoError
-	 *            el nuevo valor para codigo error
-	 */
-	public void setCodigoError(final String pCodigoError) {
-		this.codigoError = pCodigoError;
-	}
+    /**
+     * Para establecer el atributo codigoError.
+     *
+     * @param pCodigoError
+     *            el nuevo valor para codigo error
+     */
+    public void setCodigoError(final String pCodigoError) {
+        this.codigoError = pCodigoError;
+    }
 
-	/**
-	 * Para obtener el atributo traza.
-	 *
-	 * @return traza
-	 */
-	public String getTrazaError() {
-		return trazaError;
-	}
+    /**
+     * Para obtener el atributo traza.
+     *
+     * @return traza
+     */
+    public String getTrazaError() {
+        return trazaError;
+    }
 
-	/**
-	 * Para establecer el atributo traza.
-	 *
-	 * @param pTraza
-	 *            el nuevo valor para traza
-	 */
-	public void setTrazaError(final String pTraza) {
-		this.trazaError = pTraza;
-	}
+    /**
+     * Para establecer el atributo traza.
+     *
+     * @param pTraza
+     *            el nuevo valor para traza
+     */
+    public void setTrazaError(final String pTraza) {
+        this.trazaError = pTraza;
+    }
 
-	public HSesionTramitacion getSesionTramitacion() {
-		return sesionTramitacion;
-	}
+    public HSesionTramitacion getSesionTramitacion() {
+        return sesionTramitacion;
+    }
 
-	public void setSesionTramitacion(final HSesionTramitacion sesionTramitacion) {
-		this.sesionTramitacion = sesionTramitacion;
-	}
+    public void setSesionTramitacion(
+            final HSesionTramitacion sesionTramitacion) {
+        this.sesionTramitacion = sesionTramitacion;
+    }
 
-	public static HEventoAuditoria fromModel(final EventoAuditoria m) {
+    public static HEventoAuditoria fromModel(final EventoAuditoria m) {
 
-		// Pasamos propiedades a json
-		String detalle = null;
-		try {
-			detalle = JSONUtil.toJSON(m.getPropiedadesEvento());
-		} catch (final JSONUtilException e) {
-			// No auditamos detalles
-		}
+        // Pasamos propiedades a json
+        String detalle = null;
+        try {
+            detalle = JSONUtil.toJSON(m.getPropiedadesEvento());
+        } catch (final JSONUtilException e) {
+            // No auditamos detalles
+        }
 
-		final HEventoAuditoria h = new HEventoAuditoria();
-		h.setFecha(new Date()); // Establecemos fecha actual
-		h.setTipo(m.getTipoEvento().toString());
-		h.setDescripcion(StringUtils.truncate(m.getDescripcion(), ConstantesNumero.N1000));
-		h.setResultado(m.getResultado());
-		h.setDetalle(detalle); // Serializamos propiedades
-		h.setCodigoError(m.getCodigoError());
-		h.setTrazaError(m.getTrazaError());
+        final HEventoAuditoria h = new HEventoAuditoria();
+        h.setFecha(new Date()); // Establecemos fecha actual
+        h.setTipo(m.getTipoEvento().toString());
+        h.setDescripcion(StringUtils.truncate(m.getDescripcion(),
+                ConstantesNumero.N1000));
+        h.setResultado(m.getResultado());
+        h.setDetalle(detalle); // Serializamos propiedades
+        h.setCodigoError(m.getCodigoError());
+        h.setTrazaError(m.getTrazaError());
 
-		return h;
-	}
+        return h;
+    }
 
-	public static EventoAuditoria toModel(final HEventoAuditoria hEvento) {
-		final EventoAuditoria evento = new EventoAuditoria();
-		evento.setId(hEvento.getId());
-		evento.setFecha(hEvento.getFecha());
-		evento.setTipoEvento(TypeEvento.fromString(hEvento.getTipo()));
-		evento.setDescripcion(hEvento.getDescripcion());
-		evento.setResultado(hEvento.getResultado());
+    public static EventoAuditoria toModel(final HEventoAuditoria hEvento) {
+        final EventoAuditoria evento = new EventoAuditoria();
+        evento.setId(hEvento.getId());
+        evento.setFecha(hEvento.getFecha());
+        evento.setTipoEvento(TypeEvento.fromString(hEvento.getTipo()));
+        evento.setDescripcion(hEvento.getDescripcion());
+        evento.setResultado(hEvento.getResultado());
 
-		if (hEvento.getSesionTramitacion() != null) {
-			evento.setIdSesionTramitacion(hEvento.getSesionTramitacion().getIdSesionTramitacion());
-		}
+        if (hEvento.getSesionTramitacion() != null) {
+            evento.setIdSesionTramitacion(
+                    hEvento.getSesionTramitacion().getIdSesionTramitacion());
+        }
 
-		try {
-			evento.setPropiedadesEvento(
-					(ListaPropiedades) JSONUtil.fromJSON(hEvento.getDetalle(), ListaPropiedades.class));
-		} catch (final JSONUtilException e) {
-			// No auditamos detalles
-		}
+        try {
+            evento.setPropiedadesEvento((ListaPropiedades) JSONUtil
+                    .fromJSON(hEvento.getDetalle(), ListaPropiedades.class));
+        } catch (final JSONUtilException e) {
+            // No auditamos detalles
+        }
 
-		evento.setCodigoError(hEvento.getCodigoError());
-		evento.setTrazaError(hEvento.getTrazaError());
-		return evento;
-	}
+        evento.setCodigoError(hEvento.getCodigoError());
+        evento.setTrazaError(hEvento.getTrazaError());
+        return evento;
+    }
 
-	public String getTipo() {
-		return tipo;
-	}
+    public String getTipo() {
+        return tipo;
+    }
 
-	public void setTipo(final String tipo) {
-		this.tipo = tipo;
-	}
+    public void setTipo(final String tipo) {
+        this.tipo = tipo;
+    }
 
 }

@@ -9,9 +9,8 @@ package es.caib.sistramit.core.api.model.flujo.types;
 public enum TypeAccionPasoPagar implements TypeAccionPaso {
 
     /**
-     * Iniciar pago electrónico. Parámetros entrada: idPago, presentacion
-     * (TypePresentacion), reiniciar (opcional). Parámetros salida: url (url
-     * inicio pago).
+     * Iniciar pago electrónico. Parámetros entrada: idPago, reiniciar
+     * (opcional). Parámetros salida: url (url inicio pago).
      */
     INICIAR_PAGO,
     /**

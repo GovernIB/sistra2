@@ -140,7 +140,12 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
                 .getAnexos()) {
             if (anexo
                     .getRellenado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
-                addFicherosAnexo(pDpp, anexo, resultado);
+
+                if (anexo.getPresentacion() == TypePresentacion.ELECTRONICA) {
+                    addFicherosAnexo(pDpp, anexo, resultado);
+                } else {
+                    addAnexoPresencial(pDpp, anexo, resultado);
+                }
             }
         }
         return resultado;
@@ -480,14 +485,14 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 
             if (anexoDetalle
                     .getPresentacion() == TypePresentacion.ELECTRONICA) {
+                // Max instancias
                 anexoDetalle.setMaxInstancias(
                         anexoDef.getPresentacionElectronica().getInstancias());
+                // Conversion PDF
                 if (anexoDef.getPresentacionElectronica().isConvertirPDF()) {
                     anexoDetalle.setConvertirPDF(TypeSiNo.SI);
                 }
-                if (anexoDef.getPresentacionElectronica().isAnexarFirmado()) {
-                    anexoDetalle.setAnexarfirmado(TypeSiNo.SI);
-                }
+                // Extensiones y tamanyo
                 if (anexoDef.getPresentacionElectronica().getTamanyoMax() > 0) {
                     anexoDetalle.setTamMax(anexoDef.getPresentacionElectronica()
                             .getTamanyoMax()
@@ -510,22 +515,26 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
                                 anexoDetalle.getExtensiones() + ext);
                     }
                 }
+                // Comprobamos si debe firmarse digitalmente
+                if (anexoDef.getPresentacionElectronica().isAnexarFirmado()) {
+                    anexoDetalle.setAnexarfirmado(TypeSiNo.SI);
+                }
+                if (anexoDef.getPresentacionElectronica().isFirmar()
+                        && anexoDetalle
+                                .getObligatorio() != TypeObligatoriedad.DEPENDIENTE) {
+                    anexoDetalle.setFirmar(TypeSiNo.SI);
+                    calcularFirmantes(anexoDef, anexoDetalle,
+                            pDefinicionTramite, pVariablesFlujo);
+                } else {
+                    anexoDetalle.setFirmar(TypeSiNo.NO);
+                }
+
             }
 
             // Comprobamos obligatoriedad
             final TypeObligatoriedad obligatoriedad = evaluarObligatoriedad(
                     pDefinicionTramite, anexoDef, pVariablesFlujo);
             anexoDetalle.setObligatorio(obligatoriedad);
-
-            // Comprobamos si debe firmarse digitalmente
-            if (anexoDef.getPresentacionElectronica().isFirmar() && anexoDetalle
-                    .getObligatorio() != TypeObligatoriedad.DEPENDIENTE) {
-                anexoDetalle.setFirmar(TypeSiNo.SI);
-                calcularFirmantes(anexoDef, anexoDetalle, pDefinicionTramite,
-                        pVariablesFlujo);
-            } else {
-                anexoDetalle.setFirmar(TypeSiNo.NO);
-            }
 
             // Si es un dependiente no lo añadimos a la lista de anexos
             if (anexoDetalle
@@ -860,6 +869,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
     private void addFicherosAnexo(final DatosPersistenciaPaso pDpp,
             final Anexo pDetalleAnexo,
             final List<DatosDocumento> pListaCompletados) {
+
         int numInstancia = ConstantesNumero.N1;
 
         for (final Fichero fichero : pDetalleAnexo.getFicheros()) {
@@ -886,4 +896,27 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
             numInstancia++;
         }
     }
+
+    /**
+     * Añade anexo presencial a la lista de documentos completados.
+     *
+     * @param pDpp
+     *            Datos persistencia paso
+     * @param pDetalleAnexo
+     *            Detalle anexo
+     * @param pListaCompletados
+     *            Lista de documentos completados
+     */
+    private void addAnexoPresencial(final DatosPersistenciaPaso pDpp,
+            final Anexo pDetalleAnexo,
+            final List<DatosDocumento> pListaCompletados) {
+        final DatosDocumentoAnexo ddf = DatosDocumentoAnexo
+                .createNewDatosDocumentoAnexo();
+        ddf.setId(pDetalleAnexo.getId());
+        ddf.setInstancia(ConstantesNumero.N1);
+        ddf.setPresentacion(pDetalleAnexo.getPresentacion());
+        ddf.setTitulo(pDetalleAnexo.getTitulo());
+        pListaCompletados.add(ddf);
+    }
+
 }

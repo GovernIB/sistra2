@@ -19,19 +19,6 @@
 			<type>pom</type>
 		</dependency>
 
-		<!-- MODEL API REST STG -->
-		<dependency>
-			<groupId>es.caib.sistra2</groupId>
-			<artifactId>sistrages-rest-api</artifactId>
-			<version>${sistra2.version}</version>
-			<exclusions>
-				<exclusion>
-		          <groupId>io.springfox</groupId>
-  				  <artifactId>springfox-swagger2</artifactId>
-		        </exclusion>
-			</exclusions>
-		</dependency>
-
 		<!-- Spring web: rest client -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -67,14 +54,6 @@
 		    <artifactId>hibernate-jpa-2.1-api</artifactId>
 		    <version>${hibernate-jpa-2.1-api.version}</version>
 		    <scope>provided</scope>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.fundaciobit.pluginsib.documentconverter</groupId>
-			<artifactId>pluginsib-documentconverter-openoffice</artifactId>
-			<version>2.0.0</version>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- Testing -->

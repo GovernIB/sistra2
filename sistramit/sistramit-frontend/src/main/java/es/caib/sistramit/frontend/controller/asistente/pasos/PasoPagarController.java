@@ -6,7 +6,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.RedireccionPago;
+import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
+import es.caib.sistramit.frontend.model.RespuestaJSON;
 
 /**
  * Interacción con paso Pagar.
@@ -42,8 +47,23 @@ public final class PasoPagarController extends TramitacionController {
             @RequestParam(PARAM_ID_PAGO) final String idPago,
             @RequestParam(value = "reiniciar", required = false) final String reiniciar) {
 
-        // TODO Pendiente
-        return null;
+        debug("Iniciar pago electronico: " + idPago);
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_PAGO, idPago);
+        final ResultadoAccionPaso rp = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso, TypeAccionPasoPagar.INICIAR_PAGO,
+                params);
+        final String url = (String) rp.getParametroRetorno("url");
+
+        debug("Iniciar pago electronico - redireccion url: " + url);
+        final RedireccionPago redireccion = new RedireccionPago();
+        redireccion.setUrl(url);
+        final RespuestaJSON resPagar = new RespuestaJSON();
+        resPagar.setDatos(redireccion);
+        return generarJsonView(resPagar);
 
     }
 
@@ -77,6 +97,25 @@ public final class PasoPagarController extends TramitacionController {
      */
     @RequestMapping(value = "/verificarPagoIniciado.json", method = RequestMethod.POST)
     public ModelAndView verificarPagoIniciado(
+            @RequestParam(PARAM_ID_PASO) final String idPaso,
+            @RequestParam(PARAM_ID_PAGO) final String idPago) {
+
+        // TODO PENDIENTE
+        return null;
+
+    }
+
+    /**
+     * Genera carta de pago para pago presencial.
+     *
+     * @param idPaso
+     *            Identificador paso.
+     * @param idPago
+     *            Identificador del pago.
+     * @return Devuelve JSON con la información de verificación de un pago.
+     */
+    @RequestMapping(value = "/cartaPago.json", method = RequestMethod.POST)
+    public ModelAndView cartaPago(
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_PAGO) final String idPago) {
 

@@ -85,6 +85,8 @@ public final class DetallePasoPagar extends DetallePaso {
             strb.append(" Titulo:" + pago.getTitulo() + "\n");
             strb.append(" Obligatorio:" + pago.getObligatorio() + "\n");
             strb.append(" Rellenado:" + pago.getRellenado() + "\n");
+            strb.append(" Presentacion:" + pago.getPresentacion() + "\n");
+
         }
 
         return strb.toString();

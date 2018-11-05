@@ -71,8 +71,6 @@ public final class PasoAnexarController extends TramitacionController {
 
         final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
-        // TODO FALTA PRESENCIAL
-
         final TypePresentacion presentacion = TypePresentacion.fromString(tipo);
 
         RespuestaJSON resAnexar = null;

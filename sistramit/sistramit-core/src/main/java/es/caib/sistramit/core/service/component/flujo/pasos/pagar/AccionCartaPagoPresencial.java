@@ -23,6 +23,7 @@ import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
+import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
@@ -89,8 +90,12 @@ public final class AccionCartaPagoPresencial implements AccionPaso {
         // Cacheamos datos de sesion de pago en datos internos paso
         pDipa.addSesionPago(idPago, sesionPago);
 
-        // TODO PENDIENTE
-        return null;
+        // Devolvemos respuesta (no se devuelve nada, el pdf se descarga con la
+        // accion de descargar justificante)
+        final RespuestaAccionPaso rp = new RespuestaAccionPaso();
+        final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
+        rep.setRespuestaAccionPaso(rp);
+        return rep;
     }
 
     /**
@@ -136,6 +141,7 @@ public final class AccionCartaPagoPresencial implements AccionPaso {
                 .getDetallePaso();
         final Pago detallePago = detallePasoPagar.getPago(idPago);
         detallePago.setRellenado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+        detallePago.setPresentacion(TypePresentacion.PRESENCIAL);
         detallePago.setEstadoIncorrecto(null);
     }
 

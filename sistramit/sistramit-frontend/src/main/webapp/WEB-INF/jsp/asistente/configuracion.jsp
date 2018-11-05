@@ -50,17 +50,19 @@ var APP_ANNEXE_ANNEXA = APP_SERVIDOR + "ad/anexarDocumento.json"
 
 /* pas taxa */
 
-var APP_TAXA_URL = APP_SERVIDOR + "bbdd/taxaURL.php"
-	,APP_TAXA_REVISAR = APP_SERVIDOR + "bbdd/taxaRevisar.php"
-	,APP_TAXA_DESCARTAR = APP_SERVIDOR + "bbdd/taxaDescartar.php"
-	,APP_TAXA_JUSTIFICANT = APP_SERVIDOR + "bbdd/taxaJustificant.php"
-	,APP_TAXA_CARTA = APP_SERVIDOR + "bbdd/taxaCarta.php";
+var APP_TAXA_URL = APP_SERVIDOR + "pt/iniciarPago.json"
+	,APP_TAXA_REVISAR = APP_SERVIDOR + "pt/verificarPagoIniciado.json"
+	,APP_TAXA_DESCARTAR = APP_SERVIDOR + "pt/cancelarPagoIniciado.json"
+	,APP_TAXA_JUSTIFICANT = APP_SERVIDOR + "pt/descargarJustificante.html"
+	,APP_TAXA_CARTA = APP_SERVIDOR + "pt/cartaPago.json";
 
 
 /* pas registrar */
 
-var APP_SIGNA = APP_SERVIDOR + "rt/firmarDocumento.json",
-	APP_TRAMIT_REGISTRA = APP_SERVIDOR + "rt/registrarTramite.json";
+var APP_SIGNA = APP_SERVIDOR + "bbdd/signa.php"
+	,APP_SIGNATURA_URL = APP_SERVIDOR + "bbdd/signaturaURL.php"
+	,APP_TRAMIT_REGISTRA = APP_SERVIDOR + "bbdd/tramiteRegistrar.php"
+	,APP_TRAMIT_REINTENTA = APP_SERVIDOR + "bbdd/tramiteReintentar.php";
 
 /* pas guardar */
 

@@ -4,13 +4,13 @@
 
 	<h3><span>{{txtPagarTitol}}</span></h3>
 
+	{{if pagaments}}
 	<div class="imc--info">
 		{{txtPagarInfo}}
 	</div>
 
 	<div class="imc--pagaments">
-
-		{{if pagaments}}
+		
 		<ul>
 			{{pagaments}}
 			<li data-id="{{id}}" data-presentacions="{{presentacionesPermitidas|size}}">
@@ -116,7 +116,6 @@
 			</li>
 			{{/pagaments}}
 		</ul>
-		{{/if}}
 
 	</div>
 
@@ -140,6 +139,14 @@
 		</ul>
 
 	</div>
+
+	{{else}}
+
+	<div class="imc--important">
+		{{txtCapPagament}}
+	</div>
+
+	{{/if}}
 
 	<nav class="imc--navegacio">
 

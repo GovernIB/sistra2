@@ -13,6 +13,7 @@ import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
+import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
@@ -28,6 +29,7 @@ import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionUsuario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
+import es.caib.sistramit.core.service.repository.dao.PagoExternoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
@@ -50,6 +52,10 @@ public class SecurityServiceImpl implements SecurityService {
     /** DAO Flujo tramite. */
     @Autowired
     private FlujoTramiteDao flujoTramiteDao;
+
+    /** DAO Pago externo. */
+    @Autowired
+    private PagoExternoDao pagoExternoDao;
 
     @Override
     @NegocioInterceptor
@@ -143,8 +149,14 @@ public class SecurityServiceImpl implements SecurityService {
     @NegocioInterceptor
     public UsuarioAutenticadoInfo validarTicketPasarelaPagos(
             final SesionInfo sesionInfo, final String ticket) {
-        // TODO PENDIENTE
-        throw new ErrorNoControladoException("Pendiente implementar");
+        final RetornoPago datosTicket = pagoExternoDao
+                .consumirTicketPago(ticket);
+        return datosTicket.getUsuario();
+    }
+
+    @Override
+    public RetornoPago obtenerTicketPago(String ticket) {
+        return pagoExternoDao.obtenerTicketPago(ticket);
     }
 
     @Override
@@ -205,4 +217,5 @@ public class SecurityServiceImpl implements SecurityService {
         res.setDebug(UtilsSTG.isDebugEnabled(defTramite));
         return res;
     }
+
 }

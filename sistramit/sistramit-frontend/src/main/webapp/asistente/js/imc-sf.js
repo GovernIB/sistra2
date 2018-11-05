@@ -11,7 +11,8 @@ var APP_JSON_TRAMIT
 	,APP_JSON_TRAMIT_U
 	,APP_JSON_TRAMIT_E
 	,APP_TRAMIT_INFO
-	,APP_TRAMIT_PAS_ID;
+	,APP_TRAMIT_PAS_ID
+	,APP_USUARI_ID;
 
 var HTML_MOLLA_PA;
 
@@ -236,6 +237,8 @@ function carregaHTML() {
 
 			var jsonAutenticacio = APP_JSON_TRAMIT_T.autenticacion,
 				jsonUsuari = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 + ", " + APP_JSON_TRAMIT_U.nombre : txtSenseAutenticacio;
+
+			APP_USUARI_ID = APP_JSON_TRAMIT_U.nif;
 
 			var txtHTML_Cap = {
 				txtGovern: txtGovern

@@ -2,6 +2,7 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -129,6 +130,13 @@ public interface SecurityService {
      */
     UsuarioAutenticadoInfo validarTicketPasarelaPagos(SesionInfo sesionInfo,
             String ticket);
+
+    /**
+     * Obtiene datos retorno pago.
+     * 
+     * @return
+     */
+    RetornoPago obtenerTicketPago(String ticket);
 
     /**
      * Crea datos usuario info para login anonimo automatico.

@@ -292,17 +292,17 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
             pago.setObligatorio(rs);
 
             // Tipos presentacion según definición
-            if ("T".equals(detalle.getTipo())) {
+            if ("T".equalsIgnoreCase(detalle.getTipo())) {
                 pago.getPresentacionesPermitidas()
                         .add(TypePresentacion.ELECTRONICA);
             }
-            if ("P".equals(detalle.getTipo())
+            if ("P".equalsIgnoreCase(detalle.getTipo())
                     && pVariablesFlujo.existeDocumentacionPresencial()) {
                 pago.getPresentacionesPermitidas()
                         .add(TypePresentacion.PRESENCIAL);
 
             }
-            if ("A".equals(detalle.getTipo())) {
+            if ("A".equalsIgnoreCase(detalle.getTipo())) {
                 pago.getPresentacionesPermitidas()
                         .add(TypePresentacion.ELECTRONICA);
                 if (pVariablesFlujo.existeDocumentacionPresencial()) {

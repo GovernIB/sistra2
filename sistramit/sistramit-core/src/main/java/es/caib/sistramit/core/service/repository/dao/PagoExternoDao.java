@@ -20,12 +20,21 @@ public interface PagoExternoDao {
     String generarTicketPago(RetornoPago retornoPago);
 
     /**
-     * Devuelve datos retorno pago.
+     * Consume ticket retorno pago (un solo uso).
      *
      * @param ticket
      *            Ticket
      * @return Datos retorno pago
      */
     RetornoPago consumirTicketPago(String ticket);
+
+    /**
+     * Obtiene datos retorno pago (debe haber sido consumido antes).
+     *
+     * @param ticket
+     *            Ticket
+     * @return Datos retorno pago
+     */
+    RetornoPago obtenerTicketPago(String ticket);
 
 }

@@ -10,7 +10,6 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.service.component.integracion.SistragesApiComponent;
-import es.caib.sistramit.core.service.component.integracion.SistragesMock;
 
 /**
  * Simula acceso SISTRAGES.

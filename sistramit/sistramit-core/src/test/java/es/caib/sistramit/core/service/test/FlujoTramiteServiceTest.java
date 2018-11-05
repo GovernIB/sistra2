@@ -25,13 +25,16 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AbrirFormulario;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
+import es.caib.sistramit.core.api.model.flujo.DetallePasoPagar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
@@ -47,8 +50,8 @@ import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
-import es.caib.sistramit.core.service.component.integracion.SistragesMock;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+import es.caib.sistramit.core.service.test.mock.SistragesMock;
 
 // TODO Meter en test la funcionalidad que se pueda: convertir pdf,
 // anexar firmado, script validacion, anexos dinamicos, opcionales,...
@@ -231,7 +234,6 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
                 "No se devuelve id sesion tramitacion");
 
         // Cargar trámite (fuera sesion)
-
         flujoTramitacionService.cargarTramite(idSesionTramitacion,
                 usuarioAutenticadoInfo);
         dt = flujoTramitacionService.obtenerDetalleTramite(idSesionTramitacion);
@@ -293,7 +295,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * versión de trámite.
      */
     @Test
-    public void test7_flujoTramitacion() throws Exception {
+    public void test7_flujoTramitacionElectronico() throws Exception {
 
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.AUTENTICADO);
@@ -309,10 +311,49 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         flujoTramitacion_debeSaber(idSesionTramitacion);
 
         // Pasamos a paso siguiente: rellenar
-        flujoTramitacion_rellenar(idSesionTramitacion);
+        flujoTramitacion_rellenar(idSesionTramitacion,
+                TypePresentacion.ELECTRONICA);
 
         // Pasamos a paso siguiente: anexar
-        flujoTramitacion_anexar(idSesionTramitacion);
+        flujoTramitacion_anexar_electronico(idSesionTramitacion);
+
+        // Pasamos a paso siguiente: pagar
+        flujoTramitacion_pagar_electronico(idSesionTramitacion,
+                usuarioAutenticadoInfo);
+
+    }
+
+    /**
+     * Verificación flujo tramitación preregistro: verifica la funcionalidad
+     * básica de los diferentes pasos de tramitación a partir de la definición
+     * simulada de una versión de trámite.
+     */
+    @Test
+    public void test8_flujoTramitacionPreregistro() throws Exception {
+
+        final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
+                TypeAutenticacion.AUTENTICADO);
+
+        // Generar sesion tramitacion
+        final String idSesionTramitacion = flujoTramitacionService
+                .crearSesionTramitacion(usuarioAutenticadoInfo);
+
+        // Iniciar trámite
+        flujoTramitacion_iniciarTramite(idSesionTramitacion);
+
+        // Detalle paso actual: Debe saber
+        flujoTramitacion_debeSaber(idSesionTramitacion);
+
+        // Pasamos a paso siguiente: rellenar
+        flujoTramitacion_rellenar(idSesionTramitacion,
+                TypePresentacion.PRESENCIAL);
+
+        // Pasamos a paso siguiente: anexar
+        flujoTramitacion_anexar_presencial(idSesionTramitacion);
+
+        // Pasamos a paso siguiente: pagar
+        flujoTramitacion_pagar_presencial(idSesionTramitacion,
+                usuarioAutenticadoInfo);
 
     }
 
@@ -321,10 +362,12 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      *
      * @param idSesionTramitacion
      *            id sesión
+     * @param presentacion
+     *            presentacion
      * @throws UnsupportedEncodingException
      */
-    private void flujoTramitacion_rellenar(final String idSesionTramitacion)
-            throws UnsupportedEncodingException {
+    private void flujoTramitacion_rellenar(final String idSesionTramitacion,
+            TypePresentacion presentacion) throws UnsupportedEncodingException {
         ParametrosAccionPaso parametros;
         ResultadoAccionPaso resPaso;
         String nombreFichero;
@@ -365,8 +408,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         Assert.isTrue(af.getUrl() != null, "No se ha devuelto url formulario");
 
         // -- Simulamos rellenar
-        final String campoNuevoId = "CAMPO_NUEVO";
-        final String campoNuevoValor = "Valor nuevo";
+        final String campoNuevoId = "PRESENTACION";
+        final String campoNuevoValor = presentacion.toString();
         final XmlFormulario xmlForm = UtilsFormulario
                 .xmlToValores(datosFichero);
         xmlForm.getValores()
@@ -458,9 +501,79 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      *            id sesión
      * @throws IOException
      */
-    private void flujoTramitacion_anexar(final String idSesionTramitacion)
-            throws IOException {
+    private void flujoTramitacion_anexar_presencial(
+            final String idSesionTramitacion) throws IOException {
+        DetallePasos dp;
+        ResultadoIrAPaso rp;
+        ResultadoAccionPaso ra;
+        ParametrosAccionPaso params;
 
+        String idPasoAnexar;
+
+        // - Pasamos a paso anexar
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        rp = flujoTramitacionService.irAPaso(idSesionTramitacion,
+                dp.getSiguiente());
+        Assert.isTrue(
+                StringUtils.equals(rp.getIdPasoActual(), dp.getSiguiente()),
+                "No se ha podido pasar a siguiente paso");
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.ANEXAR,
+                "Paso actual no es anexar");
+        idPasoAnexar = dp.getActual().getId();
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Anexamos primer anexo
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(0)
+                        .getId());
+        params.addParametroEntrada("presentacion", TypePresentacion.PRESENCIAL);
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Anexamos segundo anexo
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(1)
+                        .getId());
+        params.addParametroEntrada("presentacion", TypePresentacion.PRESENCIAL);
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+        // - Anexamos tercer anexo
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idAnexo",
+                ((DetallePasoAnexar) dp.getActual()).getAnexos().get(2)
+                        .getId());
+        params.addParametroEntrada("presentacion", TypePresentacion.PRESENCIAL);
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoAnexar, TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // -- Paso terminado
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.ANEXAR,
+                "No esta en paso anexar");
+        Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI,
+                "Paso rellenar no esta completado");
+        this.logger.info("Detalle paso: " + dp.print());
+
+    }
+
+    /**
+     * Test paso anexar.
+     *
+     * @param idSesionTramitacion
+     *            id sesión
+     * @throws IOException
+     */
+    private void flujoTramitacion_anexar_electronico(
+            final String idSesionTramitacion) throws IOException {
         DetallePasos dp;
         ResultadoIrAPaso rp;
         ResultadoAccionPaso ra;
@@ -576,6 +689,135 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
                 "Paso rellenar no esta completado");
         this.logger.info("Detalle paso: " + dp.print());
 
+    }
+
+    /**
+     * Test paso pagar.
+     *
+     * @param idSesionTramitacion
+     *            id sesión
+     * @throws IOException
+     */
+    private void flujoTramitacion_pagar_electronico(
+            final String idSesionTramitacion,
+            UsuarioAutenticadoInfo usuarioAutenticadoInfo) throws IOException {
+
+        DetallePasos dp;
+        ResultadoIrAPaso rp;
+        ResultadoAccionPaso ra;
+        ParametrosAccionPaso params;
+
+        String idPasoPagar;
+
+        // - Pasamos a paso pagar
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        rp = flujoTramitacionService.irAPaso(idSesionTramitacion,
+                dp.getSiguiente());
+        Assert.isTrue(
+                StringUtils.equals(rp.getIdPasoActual(), dp.getSiguiente()),
+                "No se ha podido pasar a siguiente paso");
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.PAGAR,
+                "Paso actual no es pagar");
+        idPasoPagar = dp.getActual().getId();
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Iniciamos pago electronico
+        this.logger.info("Iniciamos pago electronico...");
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idPago",
+                ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoPagar, TypeAccionPasoPagar.INICIAR_PAGO, params);
+        final String url = (String) ra.getParametroRetorno("url");
+        Assert.isTrue(StringUtils.isNotBlank(url),
+                "No se ha devuelto URL de redireccion a pago");
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Simulamos retorno (carga de trámite desde fuera sesión activa)
+        this.logger.info("Simulamos retorno...");
+        flujoTramitacionService.cargarTramite(idSesionTramitacion,
+                usuarioAutenticadoInfo);
+
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.PAGAR,
+                "Paso actual no es pagar");
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idPago",
+                ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoPagar, TypeAccionPasoPagar.VERIFICAR_PAGO_PASARELA,
+                params);
+        final PagoVerificacion verificacionPago = (PagoVerificacion) ra
+                .getParametroRetorno("verificacion");
+        Assert.isTrue(verificacionPago.getRealizado() == TypeSiNo.SI,
+                "Pago no se indica como pagado");
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        this.logger.info("Detalle paso: " + dp.print());
+
+        this.logger.info("Descargamos justificante...");
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idPago",
+                ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoPagar, TypeAccionPasoPagar.DESCARGAR_JUSTIFICANTE,
+                params);
+        final byte[] justif = (byte[]) ra.getParametroRetorno("datos");
+        Assert.isTrue(justif.length > 0, "No se puede obtener justificante");
+    }
+
+    /**
+     * Pago presencial.
+     *
+     * @param idSesionTramitacion
+     *            id sesión
+     * @throws IOException
+     */
+    private void flujoTramitacion_pagar_presencial(
+            final String idSesionTramitacion,
+            UsuarioAutenticadoInfo usuarioAutenticadoInfo) throws IOException {
+
+        DetallePasos dp;
+        ResultadoIrAPaso rp;
+        ResultadoAccionPaso ra;
+        ParametrosAccionPaso params;
+
+        String idPasoPagar;
+
+        // - Pasamos a paso pagar
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        rp = flujoTramitacionService.irAPaso(idSesionTramitacion,
+                dp.getSiguiente());
+        Assert.isTrue(
+                StringUtils.equals(rp.getIdPasoActual(), dp.getSiguiente()),
+                "No se ha podido pasar a siguiente paso");
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        Assert.isTrue(dp.getActual().getTipo() == TypePaso.PAGAR,
+                "Paso actual no es pagar");
+        idPasoPagar = dp.getActual().getId();
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Iniciamos pago electronico
+        this.logger.info("Iniciamos pago presencial...");
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idPago",
+                ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoPagar, TypeAccionPasoPagar.CARTA_PAGO_PRESENCIAL, params);
+
+        dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+        this.logger.info("Detalle paso: " + dp.print());
+
+        // - Descargamos carta pago
+        this.logger.info("Descargamos carta pago...");
+        params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idPago",
+                ((DetallePasoPagar) dp.getActual()).getPagos().get(0).getId());
+        ra = flujoTramitacionService.accionPaso(idSesionTramitacion,
+                idPasoPagar, TypeAccionPasoPagar.DESCARGAR_JUSTIFICANTE,
+                params);
+        final byte[] justif = (byte[]) ra.getParametroRetorno("datos");
+        Assert.isTrue(justif.length > 0, "No se puede obtener carta pago");
     }
 
     /**

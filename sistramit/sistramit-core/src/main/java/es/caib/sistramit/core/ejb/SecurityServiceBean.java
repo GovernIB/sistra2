@@ -10,6 +10,7 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -83,6 +84,11 @@ public class SecurityServiceBean implements SecurityService {
     @Override
     public UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo) {
         return securityService.validarUsuarioAnonimo(sesionInfo);
+    }
+
+    @Override
+    public RetornoPago obtenerTicketPago(String ticket) {
+        return securityService.obtenerTicketPago(ticket);
     }
 
 }

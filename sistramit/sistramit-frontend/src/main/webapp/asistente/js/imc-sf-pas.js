@@ -82,6 +82,7 @@ var HTML_PAS_LITERALS = {
 			,txtAnterior: txtAnterior
 			,txtSeguent: txtSeguent
 			,txtPagamentTanca: txtPagamentTanca
+			,txtCapPagament: txtCapPagament
 		},
 		"rt": {
 			txtRegistrarTitol: txtRegistrarTitol
@@ -92,6 +93,7 @@ var HTML_PAS_LITERALS = {
 			,txtPagaments: txtPagaments
 			,txtAnterior: txtAnterior
 			,txtRegistrar: txtRegistrar
+			,txtReintentar: txtReintentar
 		},
 		"gj": {
 			txtDesauJustificant: txtDesauJustificant
@@ -470,12 +472,20 @@ $.fn.appPas = function(options) {
 
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
-					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
+					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.pagos;
+					HTML_PAS_LITERALS[pas_tipus]["representado"] = pas_json.datos.actual.representado;
+					HTML_PAS_LITERALS[pas_tipus]["preregistro"] = pas_json.datos.actual.preregistro;
+					HTML_PAS_LITERALS[pas_tipus]["reintentar"] = pas_json.datos.actual.reintentar;
+					HTML_PAS_LITERALS[pas_tipus]["seguent"] = pas_json.datos.siguiente;
 
 					var txtGlobals = {
 							globals: {
 								txtSignar: txtSignar
 								,txtDescarrega: txtDescarrega
+								,jsonUsuariId: APP_USUARI_ID
+								,txtSignant: txtSignant
+								,txtSignants: txtSignants
+								,txtSignatEl: txtSignatEl
 							}
 						};
 

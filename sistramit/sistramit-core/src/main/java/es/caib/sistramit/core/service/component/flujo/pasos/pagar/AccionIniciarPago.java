@@ -223,6 +223,7 @@ public final class AccionIniciarPago implements AccionPaso {
                 .getDetallePaso();
         final Pago detallePago = detallePasoPagar.getPago(idPago);
         detallePago.setRellenado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
+        detallePago.setPresentacion(TypePresentacion.ELECTRONICA);
         detallePago.setEstadoIncorrecto(new DetalleEstadoPagoIncorrecto(
                 TypeEstadoPagoIncorrecto.PAGO_INICIADO, msgError, null, null));
     }
