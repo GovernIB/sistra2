@@ -11,17 +11,17 @@
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominioPing.titulo']}"/></title>
 
-  <f:facet name="last">
-    <h:outputStylesheet library="css" name="style.css" />
-  </f:facet>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
 </h:head>
 
 <h:body>
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
-		<f:viewParam name="ID" value="#{dialogDominioPing.id}"/>
-		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioPing.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDominioPing.id}" />
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioPing.modoAcceso}" />
 		<f:viewAction action="#{dialogDominioPing.init}" />
 	</f:metadata>
 	<h:form id="dialogDominioPing"  styleClass="margin-top-10; margin-left-10; margin-right-10">
@@ -29,50 +29,55 @@
   			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
-			<h:outputText value="#{msg['dialogDominioPing.info']}" style="margin:20px" styleClass="margin-right-10;margin-top-10;margin-left-10" rendered="#{dialogDominioPing.mostrarTablaParametro}" />
 
-    		<h:dataTable value="#{dialogDominioPing.dominio.parametros}" var="td"
-    			styleClass="order-table"
-    			headerClass="order-table-header"
-    			rowClasses="order-table-odd-row,order-table-even-row"
-    			columnClasses="grid-right , w50"
-    			rendered="#{dialogDominioPing.mostrarTablaParametro}"
-    		>
-    			<h:column>
-    				<h:outputText value="#{td.codigo}" styleClass="margin-right-10" />
-				</h:column>
-    			<h:column>
-    				<p:inputText placeholder=" " value="#{td.valor}" style="width:80%" />
-    			</h:column>
-       		</h:dataTable>
+			<p:fieldset legend="#{msg['dialogDominioPing.informacionGeneral']}" styleClass="margin-left-10 margin-right-10 margin-botton-10 margin-top-10" rendered="#{dialogDominioPing.mostrarTablaParametro}">
 
-			<p:commandButton value="#{msg['botones.ping']}" actionListener="#{dialogDominioPing.ping()}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogDominioPing.mostrarBotonPing}" style="margin:10px" />
+					<h:outputText value="#{msg['dialogDominioPing.info']}" style="margin:20px;padding-bottom:5px" styleClass="margin-right-10;margin-top-10;margin-left-10" rendered="#{!empty dialogDominioPing.dominio.parametros}" />
+					<h:outputText value="#{msg['dialogDominioPing.infoSinParams']}" style="margin:20px;padding-bottom:5px" styleClass="margin-right-10;margin-top-10;margin-left-10" rendered="#{empty dialogDominioPing.dominio.parametros}" />
 
+		    		<h:dataTable value="#{dialogDominioPing.dominio.parametros}" var="td"
+		    			styleClass="order-table"
+		    			headerClass="order-table-header"
+		    			rowClasses="order-table-odd-row,order-table-even-row"
+		    			columnClasses="grid-right , w50"
+		    			rendered="#{dialogDominioPing.mostrarTablaParametro}"
+		    		>
+
+		    			<h:column>
+		    				<h:outputText value="#{td.codigo}:" style="margin-right:10px; padding-right:10px" />
+						</h:column>
+
+		    			<h:column>
+		    				<p:inputText placeholder=" " value="#{td.valor}" style="width:80%" />
+		    			</h:column>
+
+		       		</h:dataTable>
+
+					<p:commandButton value="#{msg['botones.ping']}" actionListener="#{dialogDominioPing.ping()}" process="@form" update="@form growlDialog" styleClass="boton-azul" style="margin:10px" />
+
+			</p:fieldset>
+
+
+			<p:fieldset legend="#{msg['dialogDominioPing.resultado']}" styleClass="margin-left-10 margin-right-10 margin-botton-10 margin-top-10" rendered="#{dialogDominioPing.mostrarTablaDatos or dialogDominioPing.mostrarTablaFicheros}">
 
 				<!-- Data table -->
 				<p:dataTable  id="dataTableDatos"
 							 var="td"
-							 value="#{dialogDominioPing.data}"
+							 value="#{dialogDominioPing.valoresDominio.datos}"
 							 rows="10"
 							 emptyMessage="#{msg['error.emptyRows']}"
-							 scrollable="true"
-							 scrollHeight="100%"
-							 styleClass="h100"
-	                         paginator="true"
-	                         paginatorPosition="bottom"
-	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-	                         rowsPerPageTemplate="5,10,15,30"
-	                         rendered="#{dialogDominioPing.mostrarTablaDatos}"
+							 paginator="true"
+                         	 paginatorPosition="bottom"
+                         	 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         	 rowsPerPageTemplate="5,10,15,30"
+			        	 	 rendered="#{dialogDominioPing.mostrarTablaDatos}"
 				        	 rowIndexVar="rowIndex">
 
 
-					<!-- Necesario para actualizar en controlador la fila seleccionada -->
-					<p:ajax event="rowSelect" global="false" />
-					<p:ajax event="rowUnselect" />
 
-					<c:if test="${not empty dialogDominioPing.data}">
+					<c:if test="${not empty dialogDominioPing.valoresDominio.datos}">
 						<!-- Columnas, sin el rowIndex no va muy bien que se diga -->
-						<c:forEach items="#{dialogDominioPing.data.get(rowIndex)}" var="dato">
+						<c:forEach items="#{dialogDominioPing.valoresDominio.datos.get(rowIndex)}" var="dato">
 							<p:column headerText="#{dato.key}">
 						        <h:outputText value="#{dato.value}" />
 						    </p:column>
@@ -82,15 +87,40 @@
 				</p:dataTable>
 
 
-		  	 <p:outputPanel styleClass="botonera">
-		     	<p:toolbar>
-					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominioPing.cerrar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
-					</f:facet>
-				</p:toolbar>
-		    </p:outputPanel>
+				<!-- Data table -->
+				<p:dataTable  id="dataTableFicheros"
+							  var="td"
+							  value="#{dialogDominioPing.valoresDominio.getFicheros().values()}"
+							  rows="10"
+							  emptyMessage="#{msg['error.emptyRows']}"
+							  paginator="true"
+                         	  paginatorPosition="bottom"
+                         	  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         	  rowsPerPageTemplate="5,10,15,30"
+			        	 	  rendered="#{dialogDominioPing.mostrarTablaFicheros}"
+				        	  rowIndexVar="rowIndex">
 
+						<p:column headerText="#{msg['dialogDominioPing.headerNombre']}">
+						        <h:outputText value="#{td.nombre}" />
+						    </p:column>
+						    <p:column headerText="#{msg['dialogDominioPing.headerDescripcion']}">
+						        <h:outputText value="#{td.descripcion}" />
+						    </p:column>
+						    <p:column headerText="#{msg['dialogDominioPing.headerContenido']}">
+						        <h:outputText value="#{td.contenidoB64}" />
+						    </p:column>
 
+				</p:dataTable>
+
+		</p:fieldset>
+
+		<p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+				<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominioPing.cerrar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
+				</f:facet>
+			</p:toolbar>
+		</p:outputPanel>
 	</h:form>
 </h:body>
 

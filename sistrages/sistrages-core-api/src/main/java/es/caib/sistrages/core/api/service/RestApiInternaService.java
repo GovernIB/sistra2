@@ -2,6 +2,7 @@ package es.caib.sistrages.core.api.service;
 
 import java.util.List;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
@@ -17,7 +18,6 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
 /**
@@ -28,47 +28,45 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
  */
 public interface RestApiInternaService {
 
-    String test(String echo);
+	String test(String echo);
 
-    List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro);
+	List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro);
 
-    List<Plugin> listPlugin(TypeAmbito ambito, Long idEntidad, String filtro);
+	List<Plugin> listPlugin(TypeAmbito ambito, Long idEntidad, String filtro);
 
-    List<FormularioSoporte> listOpcionesFormularioSoporte(final Long idEntidad);
+	List<FormularioSoporte> listOpcionesFormularioSoporte(final Long idEntidad);
 
-    Entidad loadEntidad(final Long idEntidad);
+	Entidad loadEntidad(final Long idEntidad);
 
-    Entidad loadEntidad(String idEntidad);
+	Entidad loadEntidad(String idEntidad);
 
-    String getReferenciaFichero(Long id);
+	String getReferenciaFichero(Long id);
 
-    Tramite loadTramite(Long idTramite);
+	Tramite loadTramite(Long idTramite);
 
-    Dominio loadDominio(Long id);
+	Dominio loadDominio(Long id);
 
-    String getValorConfiguracionGlobal(String propiedad);
+	String getValorConfiguracionGlobal(String propiedad);
 
-    DisenyoFormulario getFormularioInterno(Long pId);
+	DisenyoFormulario getFormularioInterno(Long pId);
 
-    FormateadorFormulario getFormateadorFormulario(Long idFmt);
+	FormateadorFormulario getFormateadorFormulario(Long idFmt);
 
-    String getPaginaFormularioHTMLAsistente(Long pIdPage, String pLang);
+	String getPaginaFormularioHTMLAsistente(Long pIdPage, String pLang);
 
-    List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormularioById(
-            Long idPlantillaFormulario);
+	List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormularioById(Long idPlantillaFormulario);
 
-    TramiteVersion loadTramiteVersion(String idTramite, int version);
+	TramiteVersion loadTramiteVersion(String idTramite, int version);
 
-    List<TramitePaso> getTramitePasos(Long idTramiteVersion);
+	List<TramitePaso> getTramitePasos(Long idTramiteVersion);
 
-    DisenyoFormulario getDisenyoFormularioById(Long idForm);
+	DisenyoFormulario getDisenyoFormularioById(Long idForm);
 
-    List<AvisoEntidad> getAvisosEntidad(String pIdEntidad);
+	List<AvisoEntidad> getAvisosEntidad(String pIdEntidad);
 
-    ValoresDominio realizarConsultaFuenteDatos(String idDominio,
-            List<ValorParametroDominio> listaParams);
+	ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> listaParams);
 
-    Area loadArea(Long idArea);
+	Area loadArea(Long idArea);
 
 	public List<Rol> obtenerPermisosHelpdesk();
 

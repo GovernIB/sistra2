@@ -15,8 +15,6 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
-import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
@@ -272,20 +270,6 @@ public class DominioServiceBean implements DominioService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
 		dominioService.importarDominio(filaDominio, idEntidad);
-	}
-
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
-			final List<ValorParametroDominio> parametros) {
-		return dominioService.realizarConsultaFuenteDatos(idDominio, parametros);
-	}
-
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public ValoresDominio realizarConsultaBD(final String datasource, final String sql,
-			final List<ValorParametroDominio> parametros) {
-		return dominioService.realizarConsultaBD(datasource, sql, parametros);
 	}
 
 }

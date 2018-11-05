@@ -2,11 +2,11 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;

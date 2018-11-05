@@ -6,8 +6,6 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
-import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -241,24 +239,5 @@ public interface DominioService {
 	 * @throws Exception
 	 */
 	public void importarDominio(FilaImportarDominio filaDominio, final Long idEntidad) throws Exception;
-
-	/**
-	 * realizarConsultaFuenteDatos
-	 *
-	 * @param idFuenteDatos
-	 * @param parametros
-	 * @return valoresDominio
-	 */
-	public ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros);
-
-	/**
-	 * Realiza consulta a la bbdd
-	 * 
-	 * @param datasource
-	 * @param sql
-	 * @param parametros
-	 * @return
-	 */
-	public ValoresDominio realizarConsultaBD(String datasource, String sql, List<ValorParametroDominio> parametros);
 
 }

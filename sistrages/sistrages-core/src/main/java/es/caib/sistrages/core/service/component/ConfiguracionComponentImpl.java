@@ -32,13 +32,13 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	@Override
 	public IPlugin obtenerPluginGlobal(final TypePlugin tipoPlugin) {
 		final List<Plugin> plugins = pluginsDao.getAll(TypeAmbito.GLOBAL, null);
-		return createPlugin(plugins, tipoPlugin.toString());
+		return createPlugin(plugins, tipoPlugin);
 	}
 
 	@Override
 	public IPlugin obtenerPluginEntidad(final TypePlugin tipoPlugin, final Long idEntidad) {
 		final List<Plugin> plugins = pluginsDao.getAll(TypeAmbito.ENTIDAD, idEntidad);
-		return createPlugin(plugins, tipoPlugin.toString());
+		return createPlugin(plugins, tipoPlugin);
 	}
 
 	// ----------------------------------------------------------------------
@@ -77,9 +77,9 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		return res;
 	}
 
-	private IPlugin createPlugin(final List<Plugin> plugins, final String plgTipo) {
+	private IPlugin createPlugin(final List<Plugin> plugins, final TypePlugin plgTipo) {
 		String prefijoGlobal = this.getPropiedadGlobal(TypePropiedadConfiguracion.PLUGINS_PREFIJO);
-		if (!prefijoGlobal.endsWith(".")) {
+		if (prefijoGlobal != null && !prefijoGlobal.endsWith(".")) {
 			prefijoGlobal = prefijoGlobal + ".";
 		}
 

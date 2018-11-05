@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
@@ -23,7 +24,6 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -83,18 +83,18 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Autowired
 	TramitePasoDao tramitePasoDao;
 
-   /** DAO Dominio. */
+	/** DAO Dominio. */
 	@Autowired
 	DominioDao dominioDao;
 
-    /** DAO formulario. */
+	/** DAO formulario. */
 	@Autowired
 	FormularioInternoDao formIntDao;
 
-    /** DAO Area. */
-    @Autowired
-    AreaDao areaDao;
-    
+	/** DAO Area. */
+	@Autowired
+	AreaDao areaDao;
+
 	/**
 	 * FormateadorFormulario
 	 */
@@ -150,14 +150,14 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		result = entidadDao.getById(idEntidad);
 		return result;
 	}
-	
+
 	@Override
-    @NegocioInterceptor
-    public Area loadArea(final Long idArea) {
-        Area result = null;
-        result = areaDao.getById(idArea);
-        return result;
-    }
+	@NegocioInterceptor
+	public Area loadArea(final Long idArea) {
+		Area result = null;
+		result = areaDao.getById(idArea);
+		return result;
+	}
 
 	@Override
 	@NegocioInterceptor

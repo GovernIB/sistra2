@@ -9,18 +9,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
-import es.caib.sistra2.commons.plugins.dominio.api.IDominioPlugin;
 import es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio;
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
-import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
-import es.caib.sistrages.core.api.model.types.TypePlugin;
-import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
+import es.caib.sistrages.core.api.service.DominioResolucionService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -37,7 +32,7 @@ public class DialogDominioPing extends DialogControllerBase {
 
 	/** Enlace servicio. */
 	@Inject
-	private ConfiguracionGlobalService configuracionGlobalService;
+	private DominioResolucionService dominioResolucionService;
 
 	/** Id del dominio a tratar. */
 	private String id;
@@ -51,13 +46,11 @@ public class DialogDominioPing extends DialogControllerBase {
 	/** Muestra o no la tabla de datos. **/
 	private boolean mostrarTablaDatos;
 
-	/** Muestra o no el botón ping. **/
-	private boolean mostrarBotonPing;
+	/** Muestra o no la tabla de ficheros. **/
+	private boolean mostrarTablaFicheros;
 
-	/**
-	 * Datos.
-	 **/
-	private List<Map<String, String>> data = new ArrayList<>();
+	/** Valores dominio. **/
+	private ValoresDominio valoresDominio;
 
 	/**
 	 * Inicialización.
@@ -76,7 +69,6 @@ public class DialogDominioPing extends DialogControllerBase {
 		final boolean isTipoListaFija = dominio.getTipo() == TypeDominio.LISTA_FIJA;
 		mostrarTablaParametro = !isTipoListaFija;
 		mostrarTablaDatos = isTipoListaFija;
-		mostrarBotonPing = !isTipoListaFija;
 
 		// Si es tipo lista fija, rellenar los datos.
 		if (isTipoListaFija && dominio.getListaFija() != null && !dominio.getListaFija().isEmpty()) {
@@ -84,13 +76,12 @@ public class DialogDominioPing extends DialogControllerBase {
 			for (final Propiedad prop : dominio.getListaFija()) {
 				datos.put(prop.getCodigo(), prop.getValor());
 			}
-			this.data.add(datos);
+			valoresDominio = new ValoresDominio();
+			final List<Map<String, String>> lista = new ArrayList<>();
+			lista.add(datos);
+			valoresDominio.setDatos(lista);
 		}
 
-		// Si no hay parametros, ocultarlos igualmente
-		if (this.dominio.getParametros() == null || this.dominio.getParametros().isEmpty()) {
-			mostrarTablaParametro = false;
-		}
 	}
 
 	/**
@@ -98,20 +89,16 @@ public class DialogDominioPing extends DialogControllerBase {
 	 */
 	public void ping() {
 
-		ValoresDominio valoresDominio = null;
 		if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
-			final List<ValorParametroDominio> params = getValorParametrosDominio();
-			valoresDominio = pingFuenteDatos(params);
+			valoresDominio = pingFuenteDatos(getValorParametrosDominio());
 		}
 
 		if (dominio.getTipo() == TypeDominio.CONSULTA_BD) {
-			final List<ValorParametroDominio> params = getValorParametrosDominio();
-			valoresDominio = pingConsultaBD(params);
+			valoresDominio = pingConsultaBD(getValorParametrosDominio());
 		}
 
 		if (dominio.getTipo() == TypeDominio.CONSULTA_REMOTA) {
-			final List<ParametroDominio> params = getParametrosDominio();
-			valoresDominio = pingConsultaRemota(params);
+			valoresDominio = pingConsultaRemota(getParametrosDominio());
 		}
 
 		if (valoresDominio != null) {
@@ -119,8 +106,13 @@ public class DialogDominioPing extends DialogControllerBase {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 						valoresDominio.getCodigoError() + " : " + valoresDominio.getDescripcionError());
 			} else {
-				data = valoresDominio.getDatos();
-				mostrarTablaDatos = true;
+				if (valoresDominio.getFicheros().isEmpty()) {
+					mostrarTablaDatos = true;
+					mostrarTablaFicheros = false;
+				} else {
+					mostrarTablaDatos = false;
+					mostrarTablaFicheros = true;
+				}
 			}
 		}
 	}
@@ -131,50 +123,27 @@ public class DialogDominioPing extends DialogControllerBase {
 	 * @param parametros
 	 */
 	private ValoresDominio pingConsultaRemota(final List<ParametroDominio> parametros) {
-		ValoresDominio valores = new ValoresDominio();
-		valores.setError(false);
-		try {
-			if (this.dominio.getAmbito() == TypeAmbito.ENTIDAD) {
-				final IDominioPlugin plugin = (IDominioPlugin) configuracionGlobalService
-						.obtenerPluginEntidad(TypePlugin.DOMINIO_REMOTO, UtilJSF.getIdEntidad());
-				final es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio valoresCommons = plugin
-						.invocarDominio(this.dominio.getIdentificador(), this.dominio.getUrl(), parametros);
-				valores.setDatos(valoresCommons.getDatos());
-			} else if (this.dominio.getAmbito() == TypeAmbito.GLOBAL) {
-				final IDominioPlugin plugin = (IDominioPlugin) configuracionGlobalService
-						.obtenerPluginGlobal(TypePlugin.DOMINIO_REMOTO);
-				final es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio valoresCommons = plugin
-						.invocarDominio(this.dominio.getIdentificador(), this.dominio.getUrl(), parametros);
-				valores.setDatos(valoresCommons.getDatos());
-			} else {
-				valores = new ValoresDominio();
-			}
-		} catch (final Exception e) {
-			valores = new ValoresDominio();
-			valores.setError(true);
-			valores.setCodigoError("REM");
-			valores.setDescripcionError(ExceptionUtils.getMessage(e));
-		}
-		return valores;
+		return dominioResolucionService.realizarConsultaRemota(this.dominio.getAmbito(), UtilJSF.getIdEntidad(),
+				this.dominio.getIdentificador(), this.dominio.getUrl(), parametros);
 	}
 
 	/**
 	 * Resuelve el ping para consulta BD.
 	 */
 	private ValoresDominio pingConsultaBD(final List<ValorParametroDominio> parametros) {
-		return dominioService.realizarConsultaBD(dominio.getJndi(), dominio.getSql(), parametros);
+		return dominioResolucionService.realizarConsultaBD(dominio.getJndi(), dominio.getSql(), parametros);
 	}
 
 	/**
 	 * Resuelve el ping para fuente de datos.
 	 */
 	private ValoresDominio pingFuenteDatos(final List<ValorParametroDominio> parametros) {
-		return dominioService.realizarConsultaFuenteDatos(dominio.getIdentificador(), parametros);
+		return dominioResolucionService.realizarConsultaFuenteDatos(dominio.getIdentificador(), parametros);
 	}
 
 	/**
 	 * Obtiene los params para la remota
-	 * 
+	 *
 	 * @return
 	 */
 	private List<ParametroDominio> getParametrosDominio() {
@@ -250,21 +219,6 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
-	 */
-	public void setData(final List<Map<String, String>> data) {
-		this.data = data;
-	}
-
-	/**
-	 * @return the data
-	 */
-	public List<Map<String, String>> getData() {
-		return data;
-	}
-
-	/**
 	 * @return the mostrarTablaParametro
 	 */
 	public boolean isMostrarTablaParametro() {
@@ -295,18 +249,33 @@ public class DialogDominioPing extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the mostrarBotonPing
+	 * @return the valoresDominio
 	 */
-	public boolean isMostrarBotonPing() {
-		return mostrarBotonPing;
+	public ValoresDominio getValoresDominio() {
+		return valoresDominio;
 	}
 
 	/**
-	 * @param mostrarBotonPing
-	 *            the mostrarBotonPing to set
+	 * @param valoresDominio
+	 *            the valoresDominio to set
 	 */
-	public void setMostrarBotonPing(final boolean mostrarBotonPing) {
-		this.mostrarBotonPing = mostrarBotonPing;
+	public void setValoresDominio(final ValoresDominio valoresDominio) {
+		this.valoresDominio = valoresDominio;
+	}
+
+	/**
+	 * @return the mostrarTablaFicheros
+	 */
+	public boolean isMostrarTablaFicheros() {
+		return mostrarTablaFicheros;
+	}
+
+	/**
+	 * @param mostrarTablaFicheros
+	 *            the mostrarTablaFicheros to set
+	 */
+	public void setMostrarTablaFicheros(final boolean mostrarTablaFicheros) {
+		this.mostrarTablaFicheros = mostrarTablaFicheros;
 	}
 
 }

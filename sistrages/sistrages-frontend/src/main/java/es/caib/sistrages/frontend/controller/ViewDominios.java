@@ -188,7 +188,7 @@ public class ViewDominios extends ViewControllerBase {
 
 		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
 
-		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
 	}
 
 	/**

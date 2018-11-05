@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Clase de acceso a un fichero devuelto por un dominio.
  *
  * @author Indra
- * 
+ *
  */
 @SuppressWarnings("serial")
 public final class FicheroDominio implements Serializable {

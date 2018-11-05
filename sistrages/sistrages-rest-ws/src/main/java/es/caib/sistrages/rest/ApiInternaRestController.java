@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
@@ -17,7 +18,6 @@ import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.adapter.AvisosEntidadAdapter;

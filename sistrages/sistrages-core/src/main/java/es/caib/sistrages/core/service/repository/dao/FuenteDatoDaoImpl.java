@@ -1,13 +1,11 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.io.ByteArrayInputStream;
-import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.naming.Context;
@@ -20,8 +18,13 @@ import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.exception.FuenteDatosCSVNoExisteCampoException;
 import es.caib.sistrages.core.api.exception.FuenteDatosConsultaDominioPeticionIncorrecta;
 import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
@@ -32,7 +35,6 @@ import es.caib.sistrages.core.api.model.FuenteDatosCampo;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -51,6 +53,10 @@ import es.caib.sistrages.core.service.utils.FuenteDatosUtil;
 
 @Repository("fuenteDatoDao")
 public class FuenteDatoDaoImpl implements FuenteDatoDao {
+
+	/** Path almacenamiento. */
+	@Value("${jndi.path}")
+	private String jndiPath;
 
 	/** EntityManager. */
 	@PersistenceContext
@@ -741,106 +747,92 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 	@Override
 	public ValoresDominio realizarConsultaBD(final String jndi, final String sql,
 			final List<ValorParametroDominio> parametros) {
+
 		final ValoresDominio valoresDominio = new ValoresDominio();
 
-		DataSource datasource = null;
-		Context initCtx;
 		try {
-			initCtx = new InitialContext();
-			datasource = (javax.sql.DataSource) initCtx.lookup("java:/" + jndi);
-		} catch (final NamingException e1) {
-			valoresDominio.setError(true);
-			valoresDominio.setCodigoError("BBDD");
-			valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e1));
-			return valoresDominio;
-		}
+			final ValoresDominio res = new ValoresDominio();
 
-		if (datasource == null) {
-			valoresDominio.setError(true);
-			valoresDominio.setCodigoError("BBDD");
-			valoresDominio.setDescripcionError("El datasource es nulo.");
-			return valoresDominio;
-		}
+			// Traducimos sql por si esta en formato antiguo
+			final String query = transformSql(JDominio.decodeSql(sql), parametros);
 
-		final StringBuilder where = new StringBuilder(" 1 = 1");
-		if (parametros != null && !parametros.isEmpty()) {
+			// Obtenemos datasource
+			final Context ctext = new InitialContext();
+			final DataSource ds = (DataSource) ctext.lookup(jndiPath + jndi);
 
-			for (final ValorParametroDominio parametro : parametros) {
-
-				if (parametro.getCodigo() != null && !parametro.getCodigo().isEmpty() && parametro.getValor() != null
-						&& !parametro.getValor().isEmpty()) {
-					where.append(" and " + parametro.getCodigo() + "=" + parametro.getValor());
+			// Realizamos consulta
+			final NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(ds);
+			final MapSqlParameterSource params = new MapSqlParameterSource();
+			if (parametros != null) {
+				for (final ValorParametroDominio param : parametros) {
+					params.addValue(param.getCodigo(), param.getValor());
+				}
+			}
+			// Verificamos si es un select o un insert
+			if (query.trim().toUpperCase().startsWith("INSERT")) {
+				// INSERT
+				final int rowsUpdated = jdbcTemplate.update(query, params);
+				final int numFila = res.addFila();
+				res.setValor(numFila, "ROWS_INSERTED", "" + rowsUpdated);
+			} else {
+				// SELECT
+				final List<Map<String, Object>> queryRes = jdbcTemplate.queryForList(query, params);
+				// Creamos objeto valores dominio
+				for (final Map<String, Object> fila : queryRes) {
+					final int numFila = res.addFila();
+					for (final String column : fila.keySet()) {
+						final Object valor = fila.get(column);
+						if (valor != null) {
+							res.setValor(numFila, column, valor.toString());
+						} else {
+							res.setValor(numFila, column, null);
+						}
+					}
 				}
 
 			}
-		}
 
-		final String sqlFinal = getSql(JDominio.decodeSql(sql), where);
+			return res;
 
-		try (ResultSet rs = datasource.getConnection().createStatement().executeQuery(sqlFinal)) {
+		} catch (final NamingException e) {
+			valoresDominio.setError(true);
+			valoresDominio.setCodigoError("BBDD.NAMING");
+			valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e));
 
-			valoresDominio.setError(false);
-			while (rs.next()) {
-				final int totalColumnas = rs.getMetaData().getColumnCount();
-				int numfila = valoresDominio.addFila();
-
-				for (int i = 1; i <= totalColumnas; i++) {
-					valoresDominio.setValor(numfila, rs.getMetaData().getColumnName(i), getValor(rs.getObject(i)));
-				}
-				numfila++;
-			}
+		} catch (final DataAccessException e) {
+			valoresDominio.setError(true);
+			valoresDominio.setCodigoError("BBDD.DATA");
+			valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e));
 
 		} catch (final Exception e) {
-
 			valoresDominio.setError(true);
-			valoresDominio.setCodigoError("BBDD");
+			valoresDominio.setCodigoError("BBDD.ERROR");
 			valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e));
+
 		}
 		return valoresDominio;
 	}
 
 	/**
-	 * Obtiene el valor limpio.
+	 * Transforma [#PARAMETROSDOMINIO.CODIGO#] a :CODIGO.
 	 *
-	 * @param elemento
-	 * @return
+	 * @param pTramiteDef
+	 *            Def tramite
+	 * @param pSql
+	 *            Sql
+	 * @param pParametros
+	 *            Parametros
+	 * @return Sql transformada
 	 */
-	private String getValor(final Object elemento) {
-		String valor;
-		if (elemento == null) {
-			valor = "";
-		} else if (elemento instanceof Date) {
-			final SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
-			valor = format.format((Date) elemento);
-		} else {
-			valor = elemento.toString();
+	private String transformSql(final String pSql, final List<ValorParametroDominio> pParametros) {
+		String sql = pSql;
+		if (pParametros != null) {
+			for (final ValorParametroDominio parametro : pParametros) {
+				sql = sql.replace("'[#PARAMETROSDOMINIO." + parametro.getCodigo() + "#]'", ":" + parametro.getCodigo());
+				sql = sql.replace("[#PARAMETROSDOMINIO." + parametro.getCodigo() + "#]", ":" + parametro.getCodigo());
+			}
 		}
-		return valor;
+		return sql;
 	}
 
-	/**
-	 * Revisa como ejecutar la sql.
-	 *
-	 * @param sql
-	 * @param where
-	 * @return
-	 */
-	private String getSql(final String sql, final StringBuilder where) {
-		final String LIT_WHERE = " where ";
-		if (sql.toLowerCase().contains("order by")) {
-			final int posicionOrderBy = sql.toLowerCase().indexOf("order by");
-			String literalWhere;
-			if (sql.toLowerCase().contains("where")) {
-				literalWhere = "";
-			} else {
-				literalWhere = LIT_WHERE;
-			}
-			return sql.substring(0, posicionOrderBy) + literalWhere + " AND " + " " + where.toString() + " "
-					+ sql.substring(posicionOrderBy);
-		} else if (sql.toLowerCase().contains(LIT_WHERE)) {
-			return sql + " AND " + where.toString();
-		} else {
-			return sql + LIT_WHERE + where.toString();
-		}
-	}
 }

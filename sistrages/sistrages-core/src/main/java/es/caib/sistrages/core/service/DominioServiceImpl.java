@@ -12,8 +12,6 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.FuenteFila;
-import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -279,20 +277,6 @@ public class DominioServiceImpl implements DominioService {
 	@NegocioInterceptor
 	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
 		dominioDao.importar(filaDominio, idEntidad);
-	}
-
-	@Override
-	@NegocioInterceptor
-	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
-			final List<ValorParametroDominio> parametros) {
-		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
-	}
-
-	@Override
-	@NegocioInterceptor
-	public ValoresDominio realizarConsultaBD(final String datasource, final String sql,
-			final List<ValorParametroDominio> parametros) {
-		return fuenteDatosComponent.realizarConsultaBD(datasource, sql, parametros);
 	}
 
 }

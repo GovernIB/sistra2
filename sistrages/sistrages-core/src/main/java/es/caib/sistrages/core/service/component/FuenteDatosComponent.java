@@ -2,14 +2,14 @@ package es.caib.sistrages.core.service.component;
 
 import java.util.List;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.ValoresDominio;
 
 public interface FuenteDatosComponent {
 
 	/**
 	 * realizarConsultaFuenteDatos
-	 * 
+	 *
 	 * @param idFuenteDatos
 	 * @param parametros
 	 * @return valoresDominio
@@ -18,7 +18,7 @@ public interface FuenteDatosComponent {
 
 	/**
 	 * Realiza consulta BD
-	 * 
+	 *
 	 * @param datasource
 	 * @param sql
 	 * @param parametros

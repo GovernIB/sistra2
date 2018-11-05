@@ -4,7 +4,7 @@ package es.caib.sistra2.commons.plugins.dominio.api;
  * Excepción en plugin dominio.
  *
  * @author Indra
- * 
+ *
  */
 public class DominioPluginException extends Exception {
 
