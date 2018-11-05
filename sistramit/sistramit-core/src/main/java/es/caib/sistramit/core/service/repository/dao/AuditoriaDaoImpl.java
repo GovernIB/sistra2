@@ -19,10 +19,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
 import es.caib.sistramit.core.service.repository.model.HEventoAuditoria;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
 import es.caib.sistramit.core.service.repository.model.HTramite;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 
 /**
  * Implementación DAO Auditoria.
@@ -110,17 +111,21 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 	}
 
 	@Override
-	public List<EventoAuditoria> retrieveByAreas(final RFiltrosAuditoria pFiltros) {
+	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltrosAuditoriaTramitacion pFiltros) {
 
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<EventoAuditoria> query = builder.createQuery(EventoAuditoria.class);
-		final Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
+		final CriteriaQuery<EventoAuditoriaTramitacion> query = builder.createQuery(EventoAuditoriaTramitacion.class);
 
+		final Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
 		final Root<HTramite> tableT = query.from(HTramite.class);
 
 		final Join<HEventoAuditoria, HSesionTramitacion> p = tableE.join("sesionTramitacion");
 
 		Predicate predicate = builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion"));
+
+		if (pFiltros.getListaAreas() != null) {
+			predicate = builder.and(predicate, tableT.get("idArea").in(pFiltros.getListaAreas()));
+		}
 
 		if (pFiltros.getFechaDesde() != null) {
 			predicate = builder.and(predicate,
@@ -137,13 +142,37 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 					pFiltros.getIdSesionTramitacion()));
 		}
 
+		if (StringUtils.isNoneBlank(pFiltros.getNif())) {
+			predicate = builder.and(predicate, builder.like(tableT.get("nifIniciador"), "%" + pFiltros.getNif() + "%"));
+		}
+
+		if (pFiltros.getEvento() != null) {
+			predicate = builder.and(predicate, builder.equal(tableE.get("tipo"), pFiltros.getEvento().toString()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltros.getIdTramite())) {
+			predicate = builder.and(predicate, builder.equal(tableT.get("idTramite"), pFiltros.getIdTramite()));
+		}
+
+		if (pFiltros.getVersionTramite() != null) {
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("versionTramite"), pFiltros.getVersionTramite()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltros.getIdProcedimientoCP())) {
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("idProcedimientoCP"), pFiltros.getIdProcedimientoCP()));
+		}
+
 		query.where(predicate);
 
 		query.orderBy(builder.asc(tableE.get("fecha")));
 
-		final List<EventoAuditoria> result = entityManager.createQuery(query.multiselect(tableE.get("id"),
-				p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"), tableT.get("nifIniciador")))
-				.getResultList();
+		final List<EventoAuditoriaTramitacion> result = entityManager.createQuery(query.multiselect(tableE.get("id"),
+				p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"), tableT.get("nifIniciador"),
+				tableT.get("idTramite"), tableT.get("versionTramite"), tableT.get("idProcedimientoCP"),
+				tableT.get("idProcedimientoSIA"), tableE.get("codigoError"), tableE.get("descripcion"),
+				tableE.get("resultado"), tableE.get("trazaError"), tableE.get("detalle"))).getResultList();
 
 		return result;
 	}

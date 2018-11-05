@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 
 @Service
 @Transactional
@@ -27,7 +27,8 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
-	public List<EventoAuditoria> recuperarLogSesionTramitacionArea(final RFiltrosAuditoria pFiltros) {
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltrosAuditoriaTramitacion pFiltros) {
 		return auditoriaComponent.recuperarLogSesionTramitacionArea(pFiltros);
 	}
 

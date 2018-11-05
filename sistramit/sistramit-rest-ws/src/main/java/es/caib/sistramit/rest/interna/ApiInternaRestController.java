@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.caib.sistra2.commons.utils.JSONUtil;
+import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
-import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
 import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.api.service.SystemService;
@@ -75,28 +79,63 @@ public class ApiInternaRestController {
 
 	@ApiOperation(value = "Auditoría de eventos", notes = "Auditoría de eventos", response = REventoAuditoria.class, responseContainer = "List")
 	@RequestMapping(value = "/auditoria/evento", method = RequestMethod.GET)
-	public List<REventoAuditoria> obtenerAuditoriaEvento(@RequestParam(name = "filtros") final String filtros) {
+	public List<REventoAuditoria> obtenerAuditoriaEvento(@RequestParam(name = "filtros") final String pFiltros) {
 		List<REventoAuditoria> resListaEventos = null;
 
 		RFiltrosAuditoria rFiltros = null;
 		try {
-			rFiltros = (RFiltrosAuditoria) JsonUtil.fromJson(filtros, RFiltrosAuditoria.class);
+			rFiltros = (RFiltrosAuditoria) JsonUtil.fromJson(pFiltros, RFiltrosAuditoria.class);
 		} catch (final JsonException e) {
 			throw new ErrorJsonException(e);
 		}
 
-		final List<EventoAuditoria> listaEventos = restApiInternaService.recuperarLogSesionTramitacionArea(rFiltros);
+		FiltrosAuditoriaTramitacion filtros = null;
+		if (rFiltros != null) {
+			filtros = new FiltrosAuditoriaTramitacion();
+			if (rFiltros.getEvento() != null) {
+				filtros.setEvento(TypeEvento.valueOf(rFiltros.getEvento()));
+			}
+			filtros.setFechaDesde(rFiltros.getFechaDesde());
+			filtros.setFechaHasta(rFiltros.getFechaHasta());
+			filtros.setIdSesionTramitacion(rFiltros.getIdSesionTramitacion());
+			filtros.setListaAreas(rFiltros.getListaAreas());
+			filtros.setNif(rFiltros.getNif());
+			filtros.setIdTramite(rFiltros.getIdTramite());
+			filtros.setVersionTramite(rFiltros.getVersionTramite());
+			filtros.setIdProcedimientoCP(rFiltros.getIdProcedimientoCP());
+			filtros.setIdProcedimientoSIA(rFiltros.getIdProcedimientoSIA());
+
+		}
+
+		final List<EventoAuditoriaTramitacion> listaEventos = restApiInternaService
+				.recuperarLogSesionTramitacionArea(filtros);
 
 		if (listaEventos != null && !listaEventos.isEmpty()) {
 			resListaEventos = new ArrayList<>();
 
-			for (final EventoAuditoria eventoAuditoria : listaEventos) {
+			for (final EventoAuditoriaTramitacion eventoAuditoria : listaEventos) {
 				final REventoAuditoria nuevo = new REventoAuditoria();
 				nuevo.setId(eventoAuditoria.getId());
+				nuevo.setIdSesionTramitacion(eventoAuditoria.getIdSesionTramitacion());
+				nuevo.setTipoEvento(eventoAuditoria.getTipoEvento().toString());
 				nuevo.setFecha(eventoAuditoria.getFecha());
-				nuevo.setTipo(eventoAuditoria.getTipoEvento().toString());
-				nuevo.setIdSesion(eventoAuditoria.getIdSesionTramitacion());
 				nuevo.setNif(eventoAuditoria.getNif());
+				nuevo.setIdTramite(eventoAuditoria.getIdTramite());
+				nuevo.setVersionTramite(eventoAuditoria.getVersionTramite());
+				nuevo.setIdProcedimientoCP(eventoAuditoria.getIdProcedimientoCP());
+				nuevo.setIdProcedimientoSIA(eventoAuditoria.getIdProcedimientoSIA());
+				nuevo.setCodigoError(eventoAuditoria.getCodigoError());
+				nuevo.setDescripcion(eventoAuditoria.getDescripcion());
+				nuevo.setResultado(eventoAuditoria.getResultado());
+				nuevo.setTrazaError(eventoAuditoria.getTrazaError());
+
+				if (eventoAuditoria.getPropiedadesEvento() != null) {
+					try {
+						nuevo.setDetalle(JSONUtil.toJSON(eventoAuditoria.getPropiedadesEvento()));
+					} catch (final JSONUtilException e) {
+						throw new ErrorJsonException(e);
+					}
+				}
 				resListaEventos.add(nuevo);
 			}
 

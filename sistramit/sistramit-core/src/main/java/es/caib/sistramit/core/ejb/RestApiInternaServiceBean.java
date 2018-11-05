@@ -10,9 +10,9 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 
 @Stateless
 @Interceptors(SpringBeanAutowiringInterceptor.class)
@@ -23,7 +23,8 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	private RestApiInternaService restApiInternaService;
 
 	@Override
-	public List<EventoAuditoria> recuperarLogSesionTramitacionArea(final RFiltrosAuditoria pFiltros) {
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltrosAuditoriaTramitacion pFiltros) {
 		return restApiInternaService.recuperarLogSesionTramitacionArea(pFiltros);
 	}
 

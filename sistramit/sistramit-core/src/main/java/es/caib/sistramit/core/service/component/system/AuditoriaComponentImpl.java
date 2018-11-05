@@ -12,9 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.service.repository.dao.AuditoriaDao;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 
 @Component("auditoriaComponent")
 @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -56,7 +57,8 @@ public class AuditoriaComponentImpl implements AuditoriaComponent {
 	}
 
 	@Override
-	public List<EventoAuditoria> recuperarLogSesionTramitacionArea(final RFiltrosAuditoria pFiltros) {
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltrosAuditoriaTramitacion pFiltros) {
 		return auditoriaDao.retrieveByAreas(pFiltros);
 	}
 

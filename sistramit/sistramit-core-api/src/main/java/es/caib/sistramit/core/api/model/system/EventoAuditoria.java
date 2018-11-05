@@ -15,16 +15,6 @@ import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 @SuppressWarnings("serial")
 public final class EventoAuditoria implements Serializable {
 
-	public EventoAuditoria(final Long id, final String idSesionTramitacion, final String tipoEvento, final Date fecha,
-			final String nif) {
-		super();
-		this.id = id;
-		this.idSesionTramitacion = idSesionTramitacion;
-		this.tipoEvento = TypeEvento.fromString(tipoEvento);
-		this.fecha = fecha;
-		this.nif = nif;
-	}
-
 	public EventoAuditoria() {
 		super();
 	}
@@ -70,8 +60,6 @@ public final class EventoAuditoria implements Serializable {
 	 * En caso de error, establece traza error.
 	 */
 	private String trazaError;
-
-	private String nif;
 
 	/**
 	 * Método de acceso a tipoEvento de EventoAplicacion.
@@ -214,14 +202,6 @@ public final class EventoAuditoria implements Serializable {
 
 	public void setId(final Long id) {
 		this.id = id;
-	}
-
-	public String getNif() {
-		return nif;
-	}
-
-	public void setNif(final String nif) {
-		this.nif = nif;
 	}
 
 }

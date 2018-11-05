@@ -1,10 +1,9 @@
-package es.caib.sistramit.rest.api.interna;
+package es.caib.sistramit.core.api.model.system;
 
 import java.util.Date;
 import java.util.List;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 
 /**
  * Filtros para la auditoria de tramites
@@ -12,38 +11,28 @@ import io.swagger.annotations.ApiModelProperty;
  * @author Indra
  *
  */
-@ApiModel(value = "RFiltrosAuditoria", description = "Filtros para la auditoria de tramites")
-public class RFiltrosAuditoria {
+public class FiltrosAuditoriaTramitacion {
 
-	@ApiModelProperty(value = "")
 	private List<String> listaAreas;
-
-	@ApiModelProperty(value = "")
 	private String idSesionTramitacion;
-
-	@ApiModelProperty(value = "")
 	private String nif;
-
-	@ApiModelProperty(value = "")
 	private Date fechaDesde;
-
-	@ApiModelProperty(value = "")
 	private Date fechaHasta;
+	private TypeEvento evento;
 
-	@ApiModelProperty(value = "")
-	private String evento;
-
-	@ApiModelProperty(value = "")
 	private String idTramite;
-
-	@ApiModelProperty(value = "")
 	private Integer versionTramite;
-
-	@ApiModelProperty(value = "")
 	private String idProcedimientoCP;
-
-	@ApiModelProperty(value = "")
 	private String idProcedimientoSIA;
+
+	public FiltrosAuditoriaTramitacion() {
+		super();
+	}
+
+	public FiltrosAuditoriaTramitacion(final List<String> listaAreas) {
+		super();
+		this.listaAreas = listaAreas;
+	}
 
 	public List<String> getListaAreas() {
 		return listaAreas;
@@ -85,11 +74,11 @@ public class RFiltrosAuditoria {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public String getEvento() {
+	public TypeEvento getEvento() {
 		return evento;
 	}
 
-	public void setEvento(final String evento) {
+	public void setEvento(final TypeEvento evento) {
 		this.evento = evento;
 	}
 

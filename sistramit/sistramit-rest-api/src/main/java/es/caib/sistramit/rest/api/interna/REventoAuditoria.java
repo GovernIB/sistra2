@@ -15,10 +15,10 @@ public class REventoAuditoria {
 	private Long id;
 
 	/**
-	 * tipo.
+	 * tipoEvento.
 	 */
 	@ApiModelProperty(value = "Tipo de evento")
-	private String tipo;
+	private String tipoEvento;
 
 	/**
 	 * fecha.
@@ -42,7 +42,7 @@ public class REventoAuditoria {
 	 * id sesion.
 	 */
 	@ApiModelProperty(value = "Identificador de la sesión")
-	private String idSesion;
+	private String idSesionTramitacion;
 
 	/**
 	 * nif.
@@ -60,13 +60,34 @@ public class REventoAuditoria {
 	 * version tramite.
 	 */
 	@ApiModelProperty(value = "Versión del trámite")
-	private Long versionTramite;
+	private Integer versionTramite;
 
 	/**
 	 * cod procedimiento.
 	 */
 	@ApiModelProperty(value = "Código del procedimiento")
-	private Long codProcedimiento;
+	private String idProcedimientoCP;
+
+	/**
+	 * id procedimiento SIA.
+	 */
+	@ApiModelProperty(value = "Código del procedimiento SIA")
+	private String idProcedimientoSIA;
+
+	/**
+	 * codigoError.
+	 */
+	@ApiModelProperty(value = "Código Error")
+	private String codigoError;
+
+	/**
+	 * traza.
+	 */
+	@ApiModelProperty(value = "Traza Error")
+	private String trazaError;
+
+	@ApiModelProperty(value = "detalle")
+	private String detalle;
 
 	/**
 	 * Instancia un nuevo evento
@@ -150,20 +171,20 @@ public class REventoAuditoria {
 		this.resultado = pResultado;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public String getTipoEvento() {
+		return tipoEvento;
 	}
 
-	public void setTipo(final String tipo) {
-		this.tipo = tipo;
+	public void setTipoEvento(final String tipo) {
+		this.tipoEvento = tipo;
 	}
 
-	public String getIdSesion() {
-		return idSesion;
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
 	}
 
-	public void setIdSesion(final String idSesion) {
-		this.idSesion = idSesion;
+	public void setIdSesionTramitacion(final String idSesion) {
+		this.idSesionTramitacion = idSesion;
 	}
 
 	public String getNif() {
@@ -182,20 +203,52 @@ public class REventoAuditoria {
 		this.idTramite = idTramite;
 	}
 
-	public Long getVersionTramite() {
+	public Integer getVersionTramite() {
 		return versionTramite;
 	}
 
-	public void setVersionTramite(final Long versionTramite) {
+	public void setVersionTramite(final Integer versionTramite) {
 		this.versionTramite = versionTramite;
 	}
 
-	public Long getCodProcedimiento() {
-		return codProcedimiento;
+	public String getIdProcedimientoCP() {
+		return idProcedimientoCP;
 	}
 
-	public void setCodProcedimiento(final Long codProcedimiento) {
-		this.codProcedimiento = codProcedimiento;
+	public void setIdProcedimientoCP(final String codProcedimiento) {
+		this.idProcedimientoCP = codProcedimiento;
+	}
+
+	public String getIdProcedimientoSIA() {
+		return idProcedimientoSIA;
+	}
+
+	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
+		this.idProcedimientoSIA = idProcedimientoSIA;
+	}
+
+	public String getCodigoError() {
+		return codigoError;
+	}
+
+	public void setCodigoError(final String codigoError) {
+		this.codigoError = codigoError;
+	}
+
+	public String getTrazaError() {
+		return trazaError;
+	}
+
+	public void setTrazaError(final String trazaError) {
+		this.trazaError = trazaError;
+	}
+
+	public String getDetalle() {
+		return detalle;
+	}
+
+	public void setDetalle(final String detalle) {
+		this.detalle = detalle;
 	}
 
 }

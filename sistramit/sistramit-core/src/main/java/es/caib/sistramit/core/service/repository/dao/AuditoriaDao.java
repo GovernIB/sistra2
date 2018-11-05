@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
+import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
 
 /**
  * Interface de acceso a base de datos para servicios de auditoria.
@@ -67,6 +68,6 @@ public interface AuditoriaDao {
 	 *            filtros
 	 * @return Lista de eventos asociados a la sesión.
 	 */
-	List<EventoAuditoria> retrieveByAreas(final RFiltrosAuditoria pFiltros);
+	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltrosAuditoriaTramitacion pFiltros);
 
 }
