@@ -44,15 +44,19 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="oficina" size="30"
-							required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" maxlength="20" />
+						<p:selectOneMenu id="oficina" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" required="true">
+						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
+							<p:ajax listener="#{dialogDefinicionVersionRegistrarTramite.onChangeOficina}" update="@form" />
+						</p:selectOneMenu>
 					</p:column>
 					<p:column>
 						<p:outputLabel for="libro"
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="libro" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" maxlength="20"/>
+						<p:selectOneMenu id="libro" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" required="true">
+						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
+						</p:selectOneMenu>
 					</p:column>
 				</p:row>
 				<p:row>
@@ -61,7 +65,9 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.tipo']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="tipo" size="30" required="true" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoTipoAsunto}"  maxlength="20"/>
+						<p:selectOneMenu id="tipo" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoTipoAsunto}" required="true">
+						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.tipos}"  itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}" var="tipo" />
+						</p:selectOneMenu>
 					</p:column>
 				</p:row>
 				<p:row>

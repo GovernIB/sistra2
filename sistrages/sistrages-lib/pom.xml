@@ -16,8 +16,34 @@
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-dominio-api</artifactId>
-			<version>${sistra2.version}</version>
+    		<version>${sistra2.version}</version>
 		</dependency>
+		
+		<!-- Plugins API -->
+		<dependency>
+            <groupId>es.caib.sistra2</groupId>
+            <artifactId>sistracom-plugin-dominio-api</artifactId>
+            <version>${sistra2.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>es.caib.sistra2</groupId>
+            <artifactId>sistracom-plugin-registro-api</artifactId>
+            <version>${sistra2.version}</version>
+        </dependency>
+
+		<!-- Plugins MOCK -->
+		<dependency>
+            <groupId>es.caib.sistra2</groupId>
+            <artifactId>sistracom-plugin-dominio-mock</artifactId>
+            <version>${sistra2.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>es.caib.sistra2</groupId>
+            <artifactId>sistracom-plugin-registro-mock</artifactId>
+            <version>${sistra2.version}</version>
+        </dependency>
 
 		<!-- Plugins IB -->
         <dependency>
@@ -32,10 +58,18 @@
 			<artifactId>sistrages-core-api</artifactId>
 			<version>${sistra2.version}</version>
 		</dependency>
+		
+		<!-- API Rest Sistramit -->
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistramit-rest-api</artifactId>
 			<version>${sistra2.version}</version>
+			<exclusions>
+				<exclusion>
+		          <groupId>io.springfox</groupId>
+  				  <artifactId>springfox-swagger2</artifactId>
+		        </exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Spring -->

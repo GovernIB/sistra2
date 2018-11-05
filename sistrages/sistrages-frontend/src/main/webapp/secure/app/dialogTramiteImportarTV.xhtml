@@ -31,16 +31,23 @@
 				<p>
 					<p:outputLabel value="#{dialogTramiteImportarTV.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
 				</p>
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarTV.headerOficina']}:" />
-					<p:inputTextarea value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoOficina}" required="true" rows="5" cols="70" style="background:white" requiredMessage="#{msg['error.obligatorio']}"  />
+					<p:outputLabel   for="oficina" value="#{msg['dialogTramiteImportarTV.headerOficina']}:" />
+					<p:selectOneMenu id ="oficina" styleClass="w40" value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoOficina}" required="true" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >
+						    <f:selectItems value="#{dialogTramiteImportarTV.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
+							<p:ajax listener="#{dialogTramiteImportarTV.onChangeOficina}" update="@form" />
+					</p:selectOneMenu>
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarTV.headerLibro']}:" />
-					<p:inputTextarea value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoLibro}" required="true" rows="5"  cols="70"  style="background:white" requiredMessage="#{msg['error.obligatorio']}"  />
+					<p:outputLabel   for="libro" value="#{msg['dialogTramiteImportarTV.headerLibro']}:" />
+					<p:selectOneMenu id ="libro" styleClass="w40" value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoLibro}" required="true" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >
+						     <f:selectItems value="#{dialogTramiteImportarTV.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
+					</p:selectOneMenu>
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarTV.headerTipo']}:" />
-					<p:inputTextarea value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoTipo}" required="true" rows="5"  cols="70"  style="background:white" requiredMessage="#{msg['error.obligatorio']}"  />
+					<p:outputLabel   for="tipo" value="#{msg['dialogTramiteImportarTV.headerTipo']}:" />
+					<p:selectOneMenu id ="tipo" styleClass="w40" value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoTipo}" required="true">
+						    <f:selectItems value="#{dialogTramiteImportarTV.tipos}"  itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}" var="tipo" />
+					</p:selectOneMenu>
 
 				</h:panelGrid>
 			</p:outputPanel>
