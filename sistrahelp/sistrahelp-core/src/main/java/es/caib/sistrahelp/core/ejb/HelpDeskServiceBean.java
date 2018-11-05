@@ -11,10 +11,10 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
-import es.caib.sistramit.rest.api.interna.REventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 
 /**
  * Servicio para verificar accesos de seguridad.
@@ -33,7 +33,7 @@ public class HelpDeskServiceBean implements HelpDeskService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
-	public List<REventoAuditoria> obtenerAuditoriaEvento(final RFiltrosAuditoria pFiltros) {
+	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltrosAuditoriaTramitacion pFiltros) {
 		return auditoriaService.obtenerAuditoriaEvento(pFiltros);
 	}
 

@@ -2,8 +2,8 @@ package es.caib.sistrahelp.core.api.service;
 
 import java.util.List;
 
-import es.caib.sistramit.rest.api.interna.REventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
+import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
 
 /**
  * Servicio para auditoria de tramites.
@@ -18,5 +18,5 @@ public interface HelpDeskService {
 	 *
 	 * @return lista de eventos
 	 */
-	public List<REventoAuditoria> obtenerAuditoriaEvento(RFiltrosAuditoria pFiltros);
+	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltrosAuditoriaTramitacion pFiltros);
 }

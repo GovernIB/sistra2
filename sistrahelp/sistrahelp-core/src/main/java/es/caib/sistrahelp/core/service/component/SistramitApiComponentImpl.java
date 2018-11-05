@@ -1,6 +1,6 @@
 package es.caib.sistrahelp.core.service.component;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +14,15 @@ import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import es.caib.sistra2.commons.utils.JSONUtil;
+import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistrahelp.core.api.exception.ErrorJsonException;
+import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
+import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 import es.caib.sistramit.rest.api.util.JsonException;
 import es.caib.sistramit.rest.api.util.JsonUtil;
 
@@ -38,8 +43,8 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	private ConfiguracionComponent configuracionComponent;
 
 	@Override
-	public List<REventoAuditoria> obtenerAuditoriaEvento(final RFiltrosAuditoria pFiltros) {
-		List<REventoAuditoria> resultado = null;
+	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltrosAuditoriaTramitacion pFiltros) {
+		List<EventoAuditoriaTramitacion> resultado = null;
 		final RestTemplate restTemplate = new RestTemplate();
 
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
@@ -61,7 +66,35 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 				.getForObject(getUrl() + "/auditoria/evento?filtros={filtros}", REventoAuditoria[].class, map);
 
 		if (listaEventos != null) {
-			resultado = Arrays.asList(listaEventos);
+			resultado = new ArrayList<>();
+			for (final REventoAuditoria rEventoAuditoria : listaEventos) {
+				final EventoAuditoriaTramitacion evento = new EventoAuditoriaTramitacion();
+				evento.setId(rEventoAuditoria.getId());
+
+				evento.setIdSesionTramitacion(rEventoAuditoria.getIdSesionTramitacion());
+				evento.setTipoEvento(TypeEvento.fromString(rEventoAuditoria.getTipoEvento()));
+				evento.setFecha(rEventoAuditoria.getFecha());
+				evento.setNif(rEventoAuditoria.getNif());
+				evento.setIdTramite(rEventoAuditoria.getIdTramite());
+				evento.setVersionTramite(rEventoAuditoria.getVersionTramite());
+				evento.setIdProcedimientoCP(rEventoAuditoria.getIdProcedimientoCP());
+				evento.setIdProcedimientoSIA(rEventoAuditoria.getIdProcedimientoSIA());
+				evento.setCodigoError(rEventoAuditoria.getCodigoError());
+				evento.setDescripcion(rEventoAuditoria.getDescripcion());
+				evento.setResultado(rEventoAuditoria.getResultado());
+				evento.setTrazaError(rEventoAuditoria.getTrazaError());
+
+				if (rEventoAuditoria.getDetalle() != null) {
+					try {
+						evento.setPropiedadesEvento((ListaPropiedades) JSONUtil.fromJSON(rEventoAuditoria.getDetalle(),
+								ListaPropiedades.class));
+					} catch (final JSONUtilException e) {
+						throw new ErrorJsonException(e);
+					}
+				}
+				resultado.add(evento);
+			}
+
 		}
 
 		return resultado;

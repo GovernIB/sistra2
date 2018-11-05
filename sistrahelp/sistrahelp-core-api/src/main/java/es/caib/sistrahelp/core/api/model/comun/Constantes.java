@@ -19,4 +19,6 @@ public final class Constantes {
 	/** Url descarga ficheros. */
 	public static final String DESCARGA_FICHEROS_URL = "/secure/app/GestorFicherosServlet";
 
+	public static final String CLAVE_MOCHILA_EVENTO = "CLAVE_MOCHILA_EVENTO";
+
 }

@@ -2,8 +2,8 @@ package es.caib.sistrahelp.core.service.component;
 
 import java.util.List;
 
-import es.caib.sistramit.rest.api.interna.REventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
+import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
 
 /**
  * Acceso a componente SISTRAGES.
@@ -18,6 +18,6 @@ public interface SistramitApiComponent {
 	 *
 	 * @return the lista de
 	 */
-	public List<REventoAuditoria> obtenerAuditoriaEvento(RFiltrosAuditoria pFiltros);
+	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltrosAuditoriaTramitacion pFiltros);
 
 }

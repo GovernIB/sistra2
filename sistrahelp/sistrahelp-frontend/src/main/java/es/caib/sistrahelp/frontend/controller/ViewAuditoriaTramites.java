@@ -1,6 +1,6 @@
 package es.caib.sistrahelp.frontend.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,101 +8,102 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.event.SelectEvent;
+import org.apache.commons.lang3.StringUtils;
 
+import es.caib.sistrahelp.core.api.model.Area;
+import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
-import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
-import es.caib.sistrahelp.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
-import es.caib.sistramit.rest.api.interna.REventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
 
 /**
- * Mantenimiento de entidades.
- *
- * @author Indra
- *
+ * La clase ViewAuditoriaTramites.
  */
 @ManagedBean
 @ViewScoped
 public class ViewAuditoriaTramites extends ViewControllerBase {
 
+	/**
+	 * helpdesk service.
+	 */
 	@Inject
 	private HelpDeskService helpDeskService;
 
 	/**
-	 * Filtros (puede venir por parametro).
+	 * lista datos.
 	 */
-
-	private String filtroTramite;
-	private String filtroVersion;
-	private String filtroProcedimiento;
+	private List<EventoAuditoriaTramitacion> listaDatos;
 
 	/**
-	 * Lista de datos.
+	 * dato seleccionado.
 	 */
-	private List<REventoAuditoria> listaDatos;
+	private EventoAuditoriaTramitacion datoSeleccionado;
 
 	/**
-	 * Dato seleccionado en la lista.
+	 * filtros.
 	 */
-	private REventoAuditoria datoSeleccionado;
-
-	private RFiltrosAuditoria filtros;
+	private FiltrosAuditoriaTramitacion filtros;
 
 	/**
-	 * Inicializacion.
+	 * Inicializa.
 	 */
 	public void init() {
-		// Control acceso
-		// UtilJSF.verificarAccesoSuperAdministrador();
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		filtros = new RFiltrosAuditoria();
+		filtros = new FiltrosAuditoriaTramitacion(convierteListaAreas());
 	}
 
 	/**
-	 * Recuperacion de datos.
+	 * Filtrar.
 	 */
 	public void filtrar() {
 		// Normaliza filtro
-		// filtro = normalizarFiltro(filtro);
+		normalizarFiltro();
+
 		// Buscar
 		this.buscar();
 	}
 
-	/**
-	 * Método final que se encarga de realizar la búsqueda
-	 */
-	private void buscar() {
-		// Filtra
-		// listaDatos = entidadService.listEntidad(UtilJSF.getIdioma(), filtro);
-		// Quitamos seleccion de dato
-		datoSeleccionado = null;
-
-		listaDatos = helpDeskService.obtenerAuditoriaEvento(filtros);
+	private void normalizarFiltro() {
+		filtros.setIdSesionTramitacion(StringUtils.trim(filtros.getIdSesionTramitacion()));
+		filtros.setNif(StringUtils.trim(filtros.getNif()));
+		filtros.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
+		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 	}
 
 	/**
-	 * Abre dialogo para editar dato.
+	 * Buscar.
+	 */
+	private void buscar() {
+		// Filtra
+		listaDatos = helpDeskService.obtenerAuditoriaEvento(filtros);
+
+		// Quitamos seleccion de dato
+		datoSeleccionado = null;
+	}
+
+	/**
+	 * Consultar.
 	 */
 	public void consultar() {
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilaSeleccionada())
 			return;
 
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO, datoSeleccionado);
+
 		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getId()));
-		// UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true,
-		// 570, 190);
+		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 900, 600);
 	}
 
 	/**
-	 * Dbl click.
+	 * Rc doble click.
 	 */
 	public void rcDobleClick() {
 		consultar();
@@ -118,9 +119,9 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Verifica si hay fila seleccionada.
+	 * Verificar fila seleccionada.
 	 *
-	 * @return
+	 * @return true, if successful
 	 */
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
@@ -132,90 +133,80 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Retorno dialogo.
+	 * Convierte lista areas.
 	 *
-	 * @param event
-	 *            respuesta dialogo
+	 * @return the lista de
 	 */
-	public void returnDialogo(final SelectEvent event) {
+	private List<String> convierteListaAreas() {
+		List<String> resultado = null;
 
-		final DialogResult respuesta = (DialogResult) event.getObject();
+		final List<Area> lista = UtilJSF.getSessionBean().getListaAreasEntidad();
 
-		// Verificamos si se ha modificado
-		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
-			// Mensaje
-			String message = null;
-			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
-			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+		if (lista != null && !lista.isEmpty()) {
+			resultado = new ArrayList<>();
+			for (final Area area : lista) {
+				resultado.add(area.getIdentificador());
 			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
-			// Refrescamos datos
-			buscar();
 		}
+
+		return resultado;
 
 	}
 
 	/**
-	 * @return the listaDatos
+	 * Obtiene el valor de listaDatos.
+	 *
+	 * @return el valor de listaDatos
 	 */
-	public List<REventoAuditoria> getListaDatos() {
+	public List<EventoAuditoriaTramitacion> getListaDatos() {
 		return listaDatos;
 	}
 
 	/**
+	 * Establece el valor de listaDatos.
+	 *
 	 * @param listaDatos
-	 *            the listaDatos to set
+	 *            el nuevo valor de listaDatos
 	 */
-	public void setListaDatos(final List<REventoAuditoria> listaDatos) {
+	public void setListaDatos(final List<EventoAuditoriaTramitacion> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
 	/**
-	 * @return the datoSeleccionado
+	 * Obtiene el valor de datoSeleccionado.
+	 *
+	 * @return el valor de datoSeleccionado
 	 */
-	public REventoAuditoria getDatoSeleccionado() {
+	public EventoAuditoriaTramitacion getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
 	/**
+	 * Establece el valor de datoSeleccionado.
+	 *
 	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
+	 *            el nuevo valor de datoSeleccionado
 	 */
-	public void setDatoSeleccionado(final REventoAuditoria datoSeleccionado) {
+	public void setDatoSeleccionado(final EventoAuditoriaTramitacion datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 
-	public String getFiltroTramite() {
-		return filtroTramite;
-	}
-
-	public void setFiltroTramite(final String filtroTramite) {
-		this.filtroTramite = filtroTramite;
-	}
-
-	public String getFiltroProcedimiento() {
-		return filtroProcedimiento;
-	}
-
-	public void setFiltroProcedimiento(final String filtroProcedimiento) {
-		this.filtroProcedimiento = filtroProcedimiento;
-	}
-
-	public String getFiltroVersion() {
-		return filtroVersion;
-	}
-
-	public void setFiltroVersion(final String filtroVersion) {
-		this.filtroVersion = filtroVersion;
-	}
-
-	public RFiltrosAuditoria getFiltros() {
+	/**
+	 * Obtiene el valor de filtros.
+	 *
+	 * @return el valor de filtros
+	 */
+	public FiltrosAuditoriaTramitacion getFiltros() {
 		return filtros;
 	}
 
-	public void setFiltros(final RFiltrosAuditoria filtros) {
+	/**
+	 * Establece el valor de filtros.
+	 *
+	 * @param filtros
+	 *            el nuevo valor de filtros
+	 */
+	public void setFiltros(final FiltrosAuditoriaTramitacion filtros) {
 		this.filtros = filtros;
 	}
 

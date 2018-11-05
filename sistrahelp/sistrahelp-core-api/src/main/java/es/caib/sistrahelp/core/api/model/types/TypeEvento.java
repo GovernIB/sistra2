@@ -1,4 +1,4 @@
-package es.caib.sistrahelp.frontend.model.types;
+package es.caib.sistrahelp.core.api.model.types;
 
 /**
  * Tipos de evento de auditoria.

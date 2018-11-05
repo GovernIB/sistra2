@@ -1,8 +1,11 @@
 package es.caib.sistrahelp.core.api.model.comun;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import es.caib.sistra2.commons.utils.SerializadorMap;
 
@@ -129,5 +132,9 @@ public final class ListaPropiedades implements Serializable {
 	 */
 	public String getPropiedad(final String propiedad) {
 		return this.getPropiedades().get(propiedad);
+	}
+
+	public List<Entry<String, String>> getAsArrayList() {
+		return new ArrayList<Entry<String, String>>(propiedadesError.entrySet());
 	}
 }
