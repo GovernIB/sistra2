@@ -166,7 +166,8 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 		boolean valida = true;
 
 		for (final ValorListaFija valorListaFija : data) {
-			if (valorListaFija.getValor().equals(pNuevo.getValor())) {
+			if (valorListaFija.getValor().equals(pNuevo.getValor())
+					&& !valorListaFija.getCodigo().equals(pNuevo.getCodigo())) {
 				valida = false;
 				break;
 			}

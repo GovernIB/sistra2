@@ -59,7 +59,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	public void init() {
 
 		data = new FormularioTramite();
-		data.setObligatoriedad(TypeFormularioObligatoriedad.OPCIONAL);
+		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
 		data.setTipo(TypeFormulario.TRAMITE);
 		if (idTramiteVersion != null) {
 			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
