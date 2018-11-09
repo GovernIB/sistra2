@@ -9,37 +9,37 @@ import io.swagger.annotations.ApiModelProperty;
 public class REventoAuditoria {
 
 	/**
-	 * id.
+	 * Identificador.
 	 */
 	@ApiModelProperty(value = "Identificador")
 	private Long id;
 
 	/**
-	 * tipoEvento.
+	 * tipo de evento.
 	 */
 	@ApiModelProperty(value = "Tipo de evento")
 	private String tipoEvento;
 
 	/**
-	 * fecha.
+	 * Fecha del evento.
 	 */
-	@ApiModelProperty(value = "fecha del evento")
+	@ApiModelProperty(value = "Fecha del evento")
 	private Date fecha;
 
 	/**
-	 * descripcion.
+	 * Descripcion.
 	 */
 	@ApiModelProperty(value = "Descripcion")
 	private String descripcion;
 
 	/**
-	 * resultado.
+	 * Resultado.
 	 */
 	@ApiModelProperty(value = "Resultado")
 	private String resultado;
 
 	/**
-	 * id sesion.
+	 * Identificador de la sesión.
 	 */
 	@ApiModelProperty(value = "Identificador de la sesión")
 	private String idSesionTramitacion;
@@ -63,7 +63,7 @@ public class REventoAuditoria {
 	private Integer versionTramite;
 
 	/**
-	 * cod procedimiento.
+	 * Código del procedimiento.
 	 */
 	@ApiModelProperty(value = "Código del procedimiento")
 	private String idProcedimientoCP;
@@ -96,38 +96,38 @@ public class REventoAuditoria {
 	}
 
 	/**
-	 * Para obtener el atributo id.
+	 * Para obtener el Identificador.
 	 *
-	 * @return id
+	 * @return Identificador
 	 */
 	public Long getId() {
 		return id;
 	}
 
 	/**
-	 * Para establecer el atributo id.
+	 * Para establecer el Identificador.
 	 *
 	 * @param pId
-	 *            el nuevo valor para id
+	 *            el nuevo valor para Identificador
 	 */
 	public void setId(final Long pId) {
 		this.id = pId;
 	}
 
 	/**
-	 * Para obtener el atributo fecha.
+	 * Para obtener la fecha del evento.
 	 *
-	 * @return fecha
+	 * @return fecha del evento
 	 */
 	public Date getFecha() {
 		return fecha;
 	}
 
 	/**
-	 * Para establecer el atributo fecha.
+	 * Para establecer la fecha del evento.
 	 *
 	 * @param pFecha
-	 *            el nuevo valor para fecha
+	 *            el nuevo valor para fecha del evento
 	 */
 	public void setFecha(final Date pFecha) {
 		this.fecha = pFecha;
@@ -171,82 +171,192 @@ public class REventoAuditoria {
 		this.resultado = pResultado;
 	}
 
+	/**
+	 * Obtiene el valor de tipo evento.
+	 *
+	 * @return el valor de tipo evento
+	 */
 	public String getTipoEvento() {
 		return tipoEvento;
 	}
 
+	/**
+	 * Establece el valor de tipo evento.
+	 *
+	 * @param tipo
+	 *            el nuevo valor de tipo evento
+	 */
 	public void setTipoEvento(final String tipo) {
 		this.tipoEvento = tipo;
 	}
 
+	/**
+	 * Obtiene el valor de Identificador de la sesión.
+	 *
+	 * @return el valor de Identificador de la sesión
+	 */
 	public String getIdSesionTramitacion() {
 		return idSesionTramitacion;
 	}
 
+	/**
+	 * Establece el valor de Identificador de la sesión.
+	 *
+	 * @param idSesion
+	 *            el nuevo valor de Identificador de la sesión
+	 */
 	public void setIdSesionTramitacion(final String idSesion) {
 		this.idSesionTramitacion = idSesion;
 	}
 
+	/**
+	 * Obtiene el valor de nif.
+	 *
+	 * @return el valor de nif
+	 */
 	public String getNif() {
 		return nif;
 	}
 
+	/**
+	 * Establece el valor de nif.
+	 *
+	 * @param nif
+	 *            el nuevo valor de nif
+	 */
 	public void setNif(final String nif) {
 		this.nif = nif;
 	}
 
+	/**
+	 * Obtiene el valor de id. Tramite.
+	 *
+	 * @return el valor de id. Tramite
+	 */
 	public String getIdTramite() {
 		return idTramite;
 	}
 
+	/**
+	 * Establece el valor de id. tramite.
+	 *
+	 * @param idTramite
+	 *            el nuevo valor de id. tramite
+	 */
 	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
 	}
 
+	/**
+	 * Obtiene el valor de version tramite.
+	 *
+	 * @return el valor de version tramite
+	 */
 	public Integer getVersionTramite() {
 		return versionTramite;
 	}
 
+	/**
+	 * Establece el valor de version tramite.
+	 *
+	 * @param versionTramite
+	 *            el nuevo valor de version tramite
+	 */
 	public void setVersionTramite(final Integer versionTramite) {
 		this.versionTramite = versionTramite;
 	}
 
+	/**
+	 * Obtiene el valor de id. Procedimiento CP.
+	 *
+	 * @return el valor de id. Procedimiento CP
+	 */
 	public String getIdProcedimientoCP() {
 		return idProcedimientoCP;
 	}
 
+	/**
+	 * Establece el valor de id. Procedimiento CP.
+	 *
+	 * @param codProcedimiento
+	 *            el nuevo valor de id. Procedimiento CP
+	 */
 	public void setIdProcedimientoCP(final String codProcedimiento) {
 		this.idProcedimientoCP = codProcedimiento;
 	}
 
+	/**
+	 * Obtiene el valor de id. Procedimiento SIA.
+	 *
+	 * @return el valor de id. Procedimiento SIA
+	 */
 	public String getIdProcedimientoSIA() {
 		return idProcedimientoSIA;
 	}
 
+	/**
+	 * Establece el valor de id. Procedimiento SIA.
+	 *
+	 * @param idProcedimientoSIA
+	 *            el nuevo valor de id. Procedimiento SIA
+	 */
 	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
 	}
 
+	/**
+	 * Obtiene el valor de codigo error.
+	 *
+	 * @return el valor de codigo error
+	 */
 	public String getCodigoError() {
 		return codigoError;
 	}
 
+	/**
+	 * Establece el valor de codigo error.
+	 *
+	 * @param codigoError
+	 *            el nuevo valor de codigo error
+	 */
 	public void setCodigoError(final String codigoError) {
 		this.codigoError = codigoError;
 	}
 
+	/**
+	 * Obtiene el valor de traza error.
+	 *
+	 * @return el valor de traza error
+	 */
 	public String getTrazaError() {
 		return trazaError;
 	}
 
+	/**
+	 * Establece el valor de traza error.
+	 *
+	 * @param trazaError
+	 *            el nuevo valor de traza error
+	 */
 	public void setTrazaError(final String trazaError) {
 		this.trazaError = trazaError;
 	}
 
+	/**
+	 * Obtiene el valor de detalle.
+	 *
+	 * @return el valor de detalle
+	 */
 	public String getDetalle() {
 		return detalle;
 	}
 
+	/**
+	 * Establece el valor de detalle.
+	 *
+	 * @param detalle
+	 *            el nuevo valor de detalle
+	 */
 	public void setDetalle(final String detalle) {
 		this.detalle = detalle;
 	}
