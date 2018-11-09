@@ -6,7 +6,6 @@ import java.util.Date;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 
-// TODO: Auto-generated Javadoc
 /**
  * La clase EventoAuditoriaTramitacion.
  */
@@ -125,7 +124,6 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 *            el nuevo valor de fecha
 	 */
 	public void setFecha(final Date pFechaEventoAplicacion) {
-		// fecha de EventoAplicacion
 		fecha = pFechaEventoAplicacion;
 	}
 
@@ -135,7 +133,6 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 * @return el valor de descripcion
 	 */
 	public String getDescripcion() {
-		// descripcion de EventoAplicacion
 		return descripcion;
 	}
 
@@ -155,7 +152,6 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 *            el nuevo valor de descripcion
 	 */
 	public void setDescripcion(final String pDescripcion) {
-		// descripcion de EventoAplicacion
 		descripcion = pDescripcion;
 	}
 
@@ -165,7 +161,6 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 * @return el valor de idSesionTramitacion
 	 */
 	public String getIdSesionTramitacion() {
-		// Devuelve idSesionTramitacion de evento
 		return idSesionTramitacion;
 	}
 
@@ -175,7 +170,6 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 * @return el valor de propiedadesEvento
 	 */
 	public ListaPropiedades getPropiedadesEvento() {
-		// Devuelve propiedadesEvento de EventoAplicacion
 		return propiedadesEvento;
 	}
 

@@ -3,7 +3,8 @@ package es.caib.sistrahelp.core.api.service;
 import java.util.List;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 
 /**
  * Servicio para auditoria de tramites.
@@ -18,5 +19,8 @@ public interface HelpDeskService {
 	 *
 	 * @return lista de eventos
 	 */
-	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltrosAuditoriaTramitacion pFiltros);
+	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion);
+
+	public Long obtenerAuditoriaEventoCount(final FiltroAuditoriaTramitacion pFiltroBusqueda);
 }

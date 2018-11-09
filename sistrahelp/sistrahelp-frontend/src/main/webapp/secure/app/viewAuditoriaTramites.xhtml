@@ -77,7 +77,7 @@
 
 			<!-- Data table -->
 			<p:outputPanel  styleClass="h80">
-			<p:dataTable id="dataTable" var="dt" value="#{viewAuditoriaTramites.listaDatos}"
+			<p:dataTable id="dataTable" var="dt" value="#{viewAuditoriaTramites.listaDatos}" lazy="true"
 						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"

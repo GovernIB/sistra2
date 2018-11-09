@@ -12,7 +12,6 @@
 		<module>sistrahelp-core-api</module>
 		<module>sistrahelp-lib</module>
 		<module>sistrahelp-core</module>
-		<module>sistrahelp-rest-ws</module>
 		<module>sistrahelp-frontend</module>
 		<module>sistrahelp-ear</module>
 	</modules>

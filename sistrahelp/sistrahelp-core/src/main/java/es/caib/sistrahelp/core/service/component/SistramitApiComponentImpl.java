@@ -18,7 +18,8 @@ import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistrahelp.core.api.exception.ErrorJsonException;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
@@ -43,7 +44,8 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	private ConfiguracionComponent configuracionComponent;
 
 	@Override
-	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltrosAuditoriaTramitacion pFiltros) {
+	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
 		List<EventoAuditoriaTramitacion> resultado = null;
 		final RestTemplate restTemplate = new RestTemplate();
 
@@ -52,18 +54,31 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		final HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-		String filtros = null;
-		try {
-			filtros = JsonUtil.toJson(pFiltros);
-		} catch (final JsonException e) {
-			throw new ErrorJsonException(e);
+		String filtroBusqueda = null;
+		if (pFiltroBusqueda != null) {
+			try {
+				filtroBusqueda = JsonUtil.toJson(pFiltroBusqueda);
+			} catch (final JsonException e) {
+				throw new ErrorJsonException(e);
+			}
+		}
+
+		String filtroPaginacion = null;
+		if (pFiltroPaginacion != null) {
+			try {
+				filtroPaginacion = JsonUtil.toJson(pFiltroPaginacion);
+			} catch (final JsonException e) {
+				throw new ErrorJsonException(e);
+			}
 		}
 
 		final Map<String, String> map = new HashMap<>();
-		map.put("filtros", filtros);
+		map.put("filtroPaginacion", filtroPaginacion);
+		map.put("filtroBusqueda", filtroBusqueda);
 
-		final REventoAuditoria[] listaEventos = restTemplate
-				.getForObject(getUrl() + "/auditoria/evento?filtros={filtros}", REventoAuditoria[].class, map);
+		final REventoAuditoria[] listaEventos = restTemplate.getForObject(
+				getUrl() + "/auditoria/evento?filtroPaginacion={filtroPaginacion}&filtroBusqueda={filtroBusqueda}",
+				REventoAuditoria[].class, map);
 
 		if (listaEventos != null) {
 			resultado = new ArrayList<>();
@@ -98,6 +113,31 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	public Long obtenerAuditoriaEventoCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		String filtroBusqueda = null;
+		if (pFiltroBusqueda != null) {
+			try {
+				filtroBusqueda = JsonUtil.toJson(pFiltroBusqueda);
+			} catch (final JsonException e) {
+				throw new ErrorJsonException(e);
+			}
+		}
+
+		final Map<String, String> map = new HashMap<>();
+		map.put("filtroBusqueda", filtroBusqueda);
+
+		return restTemplate.getForObject(getUrl() + "/auditoria/eventoContar?filtroBusqueda={filtroBusqueda}",
+				Long.class, map);
 	}
 
 	private String getPassword() {

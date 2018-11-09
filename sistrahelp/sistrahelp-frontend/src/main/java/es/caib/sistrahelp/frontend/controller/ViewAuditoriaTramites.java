@@ -9,12 +9,14 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
+import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
@@ -35,7 +37,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * lista datos.
 	 */
-	private List<EventoAuditoriaTramitacion> listaDatos;
+	private LazyDataModel<EventoAuditoriaTramitacion> listaDatos;
 
 	/**
 	 * dato seleccionado.
@@ -45,7 +47,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * filtros.
 	 */
-	private FiltrosAuditoriaTramitacion filtros;
+	private FiltroAuditoriaTramitacion filtros;
 
 	/**
 	 * Inicializa.
@@ -54,7 +56,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		filtros = new FiltrosAuditoriaTramitacion(convierteListaAreas());
+		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas());
 	}
 
 	/**
@@ -80,8 +82,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = helpDeskService.obtenerAuditoriaEvento(filtros);
-
+		final Long rowCount = helpDeskService.obtenerAuditoriaEventoCount(filtros);
+		listaDatos = new EventoAuditoriaTramitacionLazyDataModel(helpDeskService, rowCount, filtros);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -158,7 +160,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de listaDatos
 	 */
-	public List<EventoAuditoriaTramitacion> getListaDatos() {
+	public LazyDataModel<EventoAuditoriaTramitacion> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -168,7 +170,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * @param listaDatos
 	 *            el nuevo valor de listaDatos
 	 */
-	public void setListaDatos(final List<EventoAuditoriaTramitacion> listaDatos) {
+	public void setListaDatos(final LazyDataModel<EventoAuditoriaTramitacion> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
@@ -196,7 +198,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de filtros
 	 */
-	public FiltrosAuditoriaTramitacion getFiltros() {
+	public FiltroAuditoriaTramitacion getFiltros() {
 		return filtros;
 	}
 
@@ -206,7 +208,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * @param filtros
 	 *            el nuevo valor de filtros
 	 */
-	public void setFiltros(final FiltrosAuditoriaTramitacion filtros) {
+	public void setFiltros(final FiltroAuditoriaTramitacion filtros) {
 		this.filtros = filtros;
 	}
 

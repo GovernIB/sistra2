@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltrosAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.core.interceptor.NegocioInterceptor;
 import es.caib.sistrahelp.core.service.component.SistramitApiComponent;
@@ -21,7 +22,13 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 
 	@Override
 	@NegocioInterceptor
-	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltrosAuditoriaTramitacion pFiltros) {
-		return sistramitApiComponent.obtenerAuditoriaEvento(pFiltros);
+	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		return sistramitApiComponent.obtenerAuditoriaEvento(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public Long obtenerAuditoriaEventoCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return sistramitApiComponent.obtenerAuditoriaEventoCount(pFiltroBusqueda);
 	}
 }

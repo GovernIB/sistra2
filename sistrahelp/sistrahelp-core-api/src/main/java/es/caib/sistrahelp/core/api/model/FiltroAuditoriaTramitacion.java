@@ -11,7 +11,7 @@ import es.caib.sistrahelp.core.api.model.types.TypeEvento;
  * @author Indra
  *
  */
-public class FiltrosAuditoriaTramitacion {
+public class FiltroAuditoriaTramitacion {
 
 	private List<String> listaAreas;
 	private String idSesionTramitacion;
@@ -25,11 +25,11 @@ public class FiltrosAuditoriaTramitacion {
 	private String idProcedimientoCP;
 	private String idProcedimientoSIA;
 
-	public FiltrosAuditoriaTramitacion() {
+	public FiltroAuditoriaTramitacion() {
 		super();
 	}
 
-	public FiltrosAuditoriaTramitacion(final List<String> listaAreas) {
+	public FiltroAuditoriaTramitacion(final List<String> listaAreas) {
 		super();
 		this.listaAreas = listaAreas;
 	}
