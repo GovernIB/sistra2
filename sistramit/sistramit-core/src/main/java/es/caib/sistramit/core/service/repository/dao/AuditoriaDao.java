@@ -5,7 +5,8 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 
 /**
  * Interface de acceso a base de datos para servicios de auditoria.
@@ -64,10 +65,33 @@ public interface AuditoriaDao {
 	 * Permite recuperar la lista de eventos internos por areas parametrizada por
 	 * unos filtros
 	 *
-	 * @param pFiltros
-	 *            filtros
-	 * @return Lista de eventos asociados a la sesión.
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltrosAuditoriaTramitacion pFiltros);
+	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda);
+
+	/**
+	 * Permite recuperar la lista de eventos internos por areas parametrizada por
+	 * unos filtros
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @param pFiltroPaginacion
+	 *            filtro paginacion
+	 * @return lista de eventos
+	 */
+	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion);
+
+	/**
+	 * Permite recuperar el numero de eventos internos por areas parametrizada por
+	 * unos filtros
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return numero de eventos
+	 */
+	Long retrieveByAreasCount(final FiltroAuditoriaTramitacion pFiltroBusqueda);
 
 }

@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 
 @Stateless
@@ -24,8 +25,19 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltrosAuditoriaTramitacion pFiltros) {
-		return restApiInternaService.recuperarLogSesionTramitacionArea(pFiltros);
+			final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return restApiInternaService.recuperarLogSesionTramitacionArea(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltroAuditoriaTramitacion pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
+		return restApiInternaService.recuperarLogSesionTramitacionArea(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return restApiInternaService.recuperarLogSesionTramitacionAreaCount(pFiltroBusqueda);
 	}
 
 }

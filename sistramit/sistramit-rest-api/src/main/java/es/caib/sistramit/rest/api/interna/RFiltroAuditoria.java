@@ -12,37 +12,37 @@ import io.swagger.annotations.ApiModelProperty;
  * @author Indra
  *
  */
-@ApiModel(value = "RFiltrosAuditoria", description = "Filtros para la auditoria de tramites")
-public class RFiltrosAuditoria {
+@ApiModel(value = "RFiltroAuditoria", description = "Filtros para la auditoria de tramites")
+public class RFiltroAuditoria {
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Lista de areas")
 	private List<String> listaAreas;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "id.Sesion Tramitacion")
 	private String idSesionTramitacion;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Nif")
 	private String nif;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Fecha desde")
 	private Date fechaDesde;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Fecha Hasta")
 	private Date fechaHasta;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Tipo Evento")
 	private String evento;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Id. Tramite")
 	private String idTramite;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Version tramite")
 	private Integer versionTramite;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Cod. Procedimiento")
 	private String idProcedimientoCP;
 
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "Cod. Procedimiento SIA")
 	private String idProcedimientoSIA;
 
 	public List<String> getListaAreas() {

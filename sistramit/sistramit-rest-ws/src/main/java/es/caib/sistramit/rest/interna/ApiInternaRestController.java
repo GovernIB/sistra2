@@ -14,14 +14,16 @@ import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltrosAuditoria;
+import es.caib.sistramit.rest.api.interna.RFiltroAuditoria;
+import es.caib.sistramit.rest.api.interna.RFiltroPaginacion;
 import es.caib.sistramit.rest.api.interna.RInvalidacion;
 import es.caib.sistramit.rest.api.util.JsonException;
 import es.caib.sistramit.rest.api.util.JsonUtil;
@@ -79,36 +81,16 @@ public class ApiInternaRestController {
 
 	@ApiOperation(value = "Auditoría de eventos", notes = "Auditoría de eventos", response = REventoAuditoria.class, responseContainer = "List")
 	@RequestMapping(value = "/auditoria/evento", method = RequestMethod.GET)
-	public List<REventoAuditoria> obtenerAuditoriaEvento(@RequestParam(name = "filtros") final String pFiltros) {
+	public List<REventoAuditoria> obtenerAuditoriaEvento(
+			@RequestParam(name = "filtroPaginacion") final String pFiltroPaginacion,
+			@RequestParam(name = "filtroBusqueda") final String pFiltroBusqueda) {
 		List<REventoAuditoria> resListaEventos = null;
 
-		RFiltrosAuditoria rFiltros = null;
-		try {
-			rFiltros = (RFiltrosAuditoria) JsonUtil.fromJson(pFiltros, RFiltrosAuditoria.class);
-		} catch (final JsonException e) {
-			throw new ErrorJsonException(e);
-		}
-
-		FiltrosAuditoriaTramitacion filtros = null;
-		if (rFiltros != null) {
-			filtros = new FiltrosAuditoriaTramitacion();
-			if (rFiltros.getEvento() != null) {
-				filtros.setEvento(TypeEvento.valueOf(rFiltros.getEvento()));
-			}
-			filtros.setFechaDesde(rFiltros.getFechaDesde());
-			filtros.setFechaHasta(rFiltros.getFechaHasta());
-			filtros.setIdSesionTramitacion(rFiltros.getIdSesionTramitacion());
-			filtros.setListaAreas(rFiltros.getListaAreas());
-			filtros.setNif(rFiltros.getNif());
-			filtros.setIdTramite(rFiltros.getIdTramite());
-			filtros.setVersionTramite(rFiltros.getVersionTramite());
-			filtros.setIdProcedimientoCP(rFiltros.getIdProcedimientoCP());
-			filtros.setIdProcedimientoSIA(rFiltros.getIdProcedimientoSIA());
-
-		}
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltroPaginacion);
+		final FiltroAuditoriaTramitacion filtroBusqueda = convierteFiltroAuditoriaBusqueda(pFiltroBusqueda);
 
 		final List<EventoAuditoriaTramitacion> listaEventos = restApiInternaService
-				.recuperarLogSesionTramitacionArea(filtros);
+				.recuperarLogSesionTramitacionArea(filtroBusqueda, filtroPaginacion);
 
 		if (listaEventos != null && !listaEventos.isEmpty()) {
 			resListaEventos = new ArrayList<>();
@@ -143,4 +125,79 @@ public class ApiInternaRestController {
 
 		return resListaEventos;
 	}
+
+	@ApiOperation(value = "Auditoría de eventos número total", notes = "Auditoría de eventos número total", response = Long.class)
+	@RequestMapping(value = "/auditoria/eventoContar", method = RequestMethod.GET)
+	public Long obtenerAuditoriaEventoCount(@RequestParam(name = "filtroBusqueda") final String pFiltroBusqueda) {
+
+		final FiltroAuditoriaTramitacion filtro = convierteFiltroAuditoriaBusqueda(pFiltroBusqueda);
+
+		return restApiInternaService.recuperarLogSesionTramitacionAreaCount(filtro);
+	}
+
+	/**
+	 * Convierte los filtros de busqueda de auditoria de String al tipo
+	 * correspondiente.
+	 *
+	 * @param pFiltro
+	 *            filtros de busqueda
+	 * @return filtro auditoria tramitacion
+	 */
+	private FiltroAuditoriaTramitacion convierteFiltroAuditoriaBusqueda(final String pFiltro) {
+		RFiltroAuditoria rFiltro = null;
+		try {
+			rFiltro = (RFiltroAuditoria) JsonUtil.fromJson(pFiltro, RFiltroAuditoria.class);
+		} catch (final JsonException e) {
+			throw new ErrorJsonException(e);
+		}
+
+		FiltroAuditoriaTramitacion filtro = null;
+		if (rFiltro != null) {
+			filtro = new FiltroAuditoriaTramitacion();
+			if (rFiltro.getEvento() != null) {
+				filtro.setEvento(TypeEvento.valueOf(rFiltro.getEvento()));
+			}
+			filtro.setFechaDesde(rFiltro.getFechaDesde());
+			filtro.setFechaHasta(rFiltro.getFechaHasta());
+			filtro.setIdSesionTramitacion(rFiltro.getIdSesionTramitacion());
+			filtro.setListaAreas(rFiltro.getListaAreas());
+			filtro.setNif(rFiltro.getNif());
+			filtro.setIdTramite(rFiltro.getIdTramite());
+			filtro.setVersionTramite(rFiltro.getVersionTramite());
+			filtro.setIdProcedimientoCP(rFiltro.getIdProcedimientoCP());
+			filtro.setIdProcedimientoSIA(rFiltro.getIdProcedimientoSIA());
+
+		}
+
+		return filtro;
+
+	}
+
+	/**
+	 * Convierte los filtros de paginacion de String al tipo correspondiente.
+	 *
+	 * @param pFiltro
+	 *            filtro
+	 * @return filtro de paginacion
+	 */
+	private FiltroPaginacion convierteFiltroPaginacion(final String pFiltro) {
+		RFiltroPaginacion rFiltro = null;
+		try {
+			rFiltro = (RFiltroPaginacion) JsonUtil.fromJson(pFiltro, RFiltroPaginacion.class);
+		} catch (final JsonException e) {
+			throw new ErrorJsonException(e);
+		}
+
+		FiltroPaginacion filtro = null;
+		if (rFiltro != null) {
+			filtro = new FiltroPaginacion();
+
+			filtro.setFirst(rFiltro.getFirst());
+			filtro.setPageSize(rFiltro.getPageSize());
+		}
+
+		return filtro;
+
+	}
+
 }

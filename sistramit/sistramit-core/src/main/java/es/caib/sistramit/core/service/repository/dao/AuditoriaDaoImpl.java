@@ -20,7 +20,8 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.service.repository.model.HEventoAuditoria;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
 import es.caib.sistramit.core.service.repository.model.HTramite;
@@ -111,10 +112,40 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 	}
 
 	@Override
-	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltrosAuditoriaTramitacion pFiltros) {
+	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return retrieveByAreas(pFiltroBusqueda, null);
+	}
+
+	@Override
+	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion filtroPaginacion) {
+		List<EventoAuditoriaTramitacion> result = null;
+		final CriteriaQuery<EventoAuditoriaTramitacion> query = retrieveByAreasCriteria(pFiltroBusqueda,
+				EventoAuditoriaTramitacion.class, false);
+
+		if (filtroPaginacion == null) {
+			result = entityManager.createQuery(query).getResultList();
+		} else {
+			result = entityManager.createQuery(query).setFirstResult(filtroPaginacion.getFirst())
+					.setMaxResults(filtroPaginacion.getPageSize()).getResultList();
+		}
+
+		return result;
+	}
+
+	@Override
+	public Long retrieveByAreasCount(final FiltroAuditoriaTramitacion pFiltros) {
+		final CriteriaQuery<Long> queryCount = retrieveByAreasCriteria(pFiltros, Long.class, true);
+		final Long countResult = entityManager.createQuery(queryCount).getSingleResult();
+
+		return countResult;
+	}
+
+	private <T> CriteriaQuery<T> retrieveByAreasCriteria(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final Class<T> pTipo, final boolean pCount) {
 
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<EventoAuditoriaTramitacion> query = builder.createQuery(EventoAuditoriaTramitacion.class);
+		final CriteriaQuery<T> query = builder.createQuery(pTipo);
 
 		final Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
 		final Root<HTramite> tableT = query.from(HTramite.class);
@@ -123,58 +154,64 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 
 		Predicate predicate = builder.equal(tableE.get("sesionTramitacion"), tableT.get("sesionTramitacion"));
 
-		if (pFiltros.getListaAreas() != null) {
-			predicate = builder.and(predicate, tableT.get("idArea").in(pFiltros.getListaAreas()));
+		if (pFiltroBusqueda.getListaAreas() != null) {
+			predicate = builder.and(predicate, tableT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
 		}
 
-		if (pFiltros.getFechaDesde() != null) {
+		if (pFiltroBusqueda.getFechaDesde() != null) {
 			predicate = builder.and(predicate,
-					builder.greaterThanOrEqualTo(tableE.get("fecha"), pFiltros.getFechaDesde()));
+					builder.greaterThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaDesde()));
 		}
 
-		if (pFiltros.getFechaHasta() != null) {
+		if (pFiltroBusqueda.getFechaHasta() != null) {
 			predicate = builder.and(predicate,
-					builder.lessThanOrEqualTo(tableE.get("fecha"), pFiltros.getFechaHasta()));
+					builder.lessThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaHasta()));
 		}
 
-		if (StringUtils.isNoneBlank(pFiltros.getIdSesionTramitacion())) {
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdSesionTramitacion())) {
 			predicate = builder.and(predicate, builder.equal(tableE.get("sesionTramitacion").get("idSesionTramitacion"),
-					pFiltros.getIdSesionTramitacion()));
+					pFiltroBusqueda.getIdSesionTramitacion()));
 		}
 
-		if (StringUtils.isNoneBlank(pFiltros.getNif())) {
-			predicate = builder.and(predicate, builder.like(tableT.get("nifIniciador"), "%" + pFiltros.getNif() + "%"));
-		}
-
-		if (pFiltros.getEvento() != null) {
-			predicate = builder.and(predicate, builder.equal(tableE.get("tipo"), pFiltros.getEvento().toString()));
-		}
-
-		if (StringUtils.isNoneBlank(pFiltros.getIdTramite())) {
-			predicate = builder.and(predicate, builder.equal(tableT.get("idTramite"), pFiltros.getIdTramite()));
-		}
-
-		if (pFiltros.getVersionTramite() != null) {
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNif())) {
 			predicate = builder.and(predicate,
-					builder.equal(tableT.get("versionTramite"), pFiltros.getVersionTramite()));
+					builder.like(tableT.get("nifIniciador"), "%" + pFiltroBusqueda.getNif() + "%"));
 		}
 
-		if (StringUtils.isNoneBlank(pFiltros.getIdProcedimientoCP())) {
+		if (pFiltroBusqueda.getEvento() != null) {
 			predicate = builder.and(predicate,
-					builder.equal(tableT.get("idProcedimientoCP"), pFiltros.getIdProcedimientoCP()));
+					builder.equal(tableE.get("tipo"), pFiltroBusqueda.getEvento().toString()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
+			predicate = builder.and(predicate, builder.equal(tableT.get("idTramite"), pFiltroBusqueda.getIdTramite()));
+		}
+
+		if (pFiltroBusqueda.getVersionTramite() != null) {
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("versionTramite"), pFiltroBusqueda.getVersionTramite()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdProcedimientoCP())) {
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("idProcedimientoCP"), pFiltroBusqueda.getIdProcedimientoCP()));
 		}
 
 		query.where(predicate);
 
-		query.orderBy(builder.asc(tableE.get("fecha")));
+		if (pCount) {
+			query.multiselect(builder.count(tableE));
+		} else {
+			query.orderBy(builder.asc(tableE.get("fecha")));
 
-		final List<EventoAuditoriaTramitacion> result = entityManager.createQuery(query.multiselect(tableE.get("id"),
-				p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"), tableT.get("nifIniciador"),
-				tableT.get("idTramite"), tableT.get("versionTramite"), tableT.get("idProcedimientoCP"),
-				tableT.get("idProcedimientoSIA"), tableE.get("codigoError"), tableE.get("descripcion"),
-				tableE.get("resultado"), tableE.get("trazaError"), tableE.get("detalle"))).getResultList();
+			query.multiselect(tableE.get("id"), p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"),
+					tableT.get("nifIniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
+					tableT.get("idProcedimientoCP"), tableT.get("idProcedimientoSIA"), tableE.get("codigoError"),
+					tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"),
+					tableE.get("detalle"));
 
-		return result;
+		}
+		return query;
 	}
 
 	private HSesionTramitacion findHSesionTramitacion(final String idSesionTramitacion) {

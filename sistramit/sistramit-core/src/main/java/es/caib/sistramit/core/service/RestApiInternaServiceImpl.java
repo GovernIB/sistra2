@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
@@ -28,8 +29,19 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltrosAuditoriaTramitacion pFiltros) {
+			final FiltroAuditoriaTramitacion pFiltros) {
 		return auditoriaComponent.recuperarLogSesionTramitacionArea(pFiltros);
+	}
+
+	@Override
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltroAuditoriaTramitacion pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
+		return auditoriaComponent.recuperarLogSesionTramitacionArea(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return auditoriaComponent.recuperarLogSesionTramitacionAreaCount(pFiltroBusqueda);
 	}
 
 }

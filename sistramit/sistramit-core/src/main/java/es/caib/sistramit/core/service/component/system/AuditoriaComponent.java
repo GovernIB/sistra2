@@ -7,7 +7,8 @@ import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltrosAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 
 /**
  * Componente para generar auditoria.
@@ -69,12 +70,36 @@ public interface AuditoriaComponent {
 
 	/**
 	 * Permite recuperar la lista de eventos internos por areas parametrizada por
-	 * unos filtos
+	 * unos filtros
 	 *
-	 * @param pFiltros
-	 *            filtros
-	 * @return Lista de eventos asociados a la sesión.
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltrosAuditoriaTramitacion pFiltros);
+	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
+			final FiltroAuditoriaTramitacion pFiltroBusqueda);
+
+	/**
+	 * Permite recuperar la lista de eventos internos por areas parametrizada por
+	 * unos filtros
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @param pFiltroPaginacion
+	 *            filtro paginacion
+	 * @return lista de eventos
+	 */
+	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion);
+
+	/**
+	 * Permite recuperar el numero de eventos internos por areas parametrizada por
+	 * unos filtros
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return numero de eventos
+	 */
+	Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda);
 
 }
