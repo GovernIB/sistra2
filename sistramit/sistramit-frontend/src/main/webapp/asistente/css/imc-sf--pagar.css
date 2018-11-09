@@ -1,5 +1,21 @@
 /* Document CSS */
 
+
+/* info pagamanet */
+
+.imc--info-pagament { margin-bottom: 2em; }
+.imc--info-pagament > div { display: none; }
+
+.imc--info-pagament.imc--es-presencial > div.imc--presencial { display: block; }
+.imc--info-pagament.imc--es-electronic > div.imc--electronic { display: block; }
+
+.imc--info-pagament .imc--presencial { margin-bottom: 1em; }
+
+.imc--info-pagament .imc--electronic { margin-bottom: 1em; }
+
+.imc--info-pagament h4 { margin-bottom: .3em; }
+.imc--info-pagament h4 span { font-size: 1.1em; }
+
 /* pagaments */
 
 .imc--pagaments { width: 100%; }
@@ -20,9 +36,6 @@
 .imc--pagaments > ul .imc--pagament-fila a strong { grid-area: 1 / 3 / span 2 / 3; align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
 
 .imc--pagaments > ul .imc--pagament-fila a span { display: block; position: absolute; top: -999em; left: -999em; }
-
-.imc--pagaments > ul .imc--pagament-fila a:hover,
-.imc--pagaments > ul .imc--pagament-fila a:focus { color: #3b8e5d; }
 
 .imc--pagaments > ul .imc--pagament-fila button {
     position: relative;
@@ -132,6 +145,13 @@
 
 .imc--pagaments .imc--opcions .imc--revisar-pagament::before {
     background-image: url(imgs/icones/ico_reintenta.svg);
+}
+
+.imc--pagaments .imc--opcions .imc--justificant-pagament:hover,
+.imc--pagaments .imc--opcions .imc--justificant-pagament:focus,
+.imc--pagaments .imc--opcions .imc--descartar-pagament:hover,
+.imc--pagaments .imc--opcions .imc--descartar-pagament:focus {
+	background-color: #000;
 }
 
 

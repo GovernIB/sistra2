@@ -87,20 +87,19 @@ public final class ControladorPasoPagarHelper {
                 literalError = "iniciado.noFinalizado";
                 break;
             case TIEMPO_EXCEDIDO:
-                literalError = "iniciado.tiempExcedido";
+                literalError = "iniciado.tiempoExcedido";
                 break;
             default:
                 res = "";
                 break;
             }
 
-            if (literalError != null) {
-                res = literales.getLiteral("pasoPagar", literalError, idioma);
-                if (codErrorPasarela != null || msgErrorPasarela != null) {
-                    res += " [" + codErrorPasarela + " - " + msgErrorPasarela
-                            + "]";
-                }
+            res = literales.getLiteral(Literales.PASO_PAGAR, literalError,
+                    idioma);
+            if (codErrorPasarela != null || msgErrorPasarela != null) {
+                res += " [" + codErrorPasarela + " - " + msgErrorPasarela + "]";
             }
+
         }
         return res;
     }

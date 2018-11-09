@@ -584,7 +584,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
         if (this.getFichero() != null) {
             res.add(this.getFichero());
         }
-        if (this.getFichero() != null) {
+        if (this.getPagoJustificantePdf() != null) {
             res.add(this.getPagoJustificantePdf());
         }
         return res;

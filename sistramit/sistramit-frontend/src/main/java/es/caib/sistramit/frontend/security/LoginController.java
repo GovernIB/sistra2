@@ -155,7 +155,7 @@ public final class LoginController {
         } else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO
                 .equals(puntoEntrada)) {
             login = autenticarTicket(savedRequest,
-                    ConstantesSeguridad.TICKET_USER_CARPETA,
+                    ConstantesSeguridad.TICKET_USER_PAGO,
                     ConstantesSeguridad.TICKET_PARAM);
         } else {
             throw new ErrorFrontException(

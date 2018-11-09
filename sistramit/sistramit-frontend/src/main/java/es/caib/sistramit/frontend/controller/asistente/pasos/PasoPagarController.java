@@ -6,11 +6,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.RedireccionPago;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
+import es.caib.sistramit.frontend.literales.LiteralesFront;
+import es.caib.sistramit.frontend.model.MensajeAsistente;
+import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 
 /**
@@ -57,12 +62,22 @@ public final class PasoPagarController extends TramitacionController {
                 idSesionTramitacion, idPaso, TypeAccionPasoPagar.INICIAR_PAGO,
                 params);
         final String url = (String) rp.getParametroRetorno("url");
+        final TypeSiNo simulado = (TypeSiNo) rp.getParametroRetorno("simulado");
 
         debug("Iniciar pago electronico - redireccion url: " + url);
         final RedireccionPago redireccion = new RedireccionPago();
         redireccion.setUrl(url);
+
         final RespuestaJSON resPagar = new RespuestaJSON();
         resPagar.setDatos(redireccion);
+        if (simulado == TypeSiNo.SI) {
+            final String tituloMensaje = getLiteralesFront().getLiteralFront(
+                    LiteralesFront.MENSAJES, "atencion", getIdioma());
+            final String textoMensaje = getLiteralesFront().getLiteralFront(
+                    LiteralesFront.MENSAJES, "pagoSimulado", getIdioma());
+            resPagar.setMensaje(
+                    new MensajeUsuario(tituloMensaje, textoMensaje));
+        }
         return generarJsonView(resPagar);
 
     }
@@ -81,8 +96,21 @@ public final class PasoPagarController extends TramitacionController {
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_PAGO) final String idPago) {
 
-        // TODO PENDIENTE
-        return null;
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_PAGO, idPago);
+        final ResultadoAccionPaso ra = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoPagar.CANCELAR_PAGO_INICIADO, params);
+
+        final RespuestaJSON resPagar = new RespuestaJSON();
+        final String tituloMensaje = getLiteralesFront().getLiteralFront(
+                LiteralesFront.MENSAJES, "atencion", getIdioma());
+        final String textoMensaje = getLiteralesFront().getLiteralFront(
+                LiteralesFront.MENSAJES, "pagoCancelado", getIdioma());
+        resPagar.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje));
+        return generarJsonView(resPagar);
 
     }
 
@@ -100,8 +128,29 @@ public final class PasoPagarController extends TramitacionController {
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_PAGO) final String idPago) {
 
-        // TODO PENDIENTE
-        return null;
+        debug("Validar pago iniciado");
+
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_PAGO, idPago);
+        final ResultadoAccionPaso ra = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoPagar.VERIFICAR_PAGO_PASARELA, params);
+        final PagoVerificacion verificacionPago = (PagoVerificacion) ra
+                .getParametroRetorno("verificacion");
+
+        debug("Estado pago: Verificado = " + verificacionPago.getVerificado()
+                + " - Realizado = " + verificacionPago.getRealizado());
+
+        final MensajeAsistente ma = generarMensajeValidacionPago(
+                verificacionPago);
+
+        final RespuestaJSON res = new RespuestaJSON();
+        res.setEstado(ma.getTipo());
+        res.setMensaje(ma.getMensaje());
+        res.setDatos(verificacionPago);
+        return generarJsonView(res);
 
     }
 
@@ -119,8 +168,21 @@ public final class PasoPagarController extends TramitacionController {
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_PAGO) final String idPago) {
 
-        // TODO PENDIENTE
-        return null;
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_PAGO, idPago);
+        final ResultadoAccionPaso ra = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoPagar.CARTA_PAGO_PRESENCIAL, params);
+
+        final RespuestaJSON resPagar = new RespuestaJSON();
+        final String tituloMensaje = getLiteralesFront().getLiteralFront(
+                LiteralesFront.MENSAJES, "atencion", getIdioma());
+        final String textoMensaje = getLiteralesFront().getLiteralFront(
+                LiteralesFront.MENSAJES, "pagoCartaPago", getIdioma());
+        resPagar.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje));
+        return generarJsonView(resPagar);
 
     }
 
@@ -138,9 +200,18 @@ public final class PasoPagarController extends TramitacionController {
             @RequestParam(PARAM_ID_PASO) final String idPaso,
             @RequestParam(PARAM_ID_PAGO) final String idPago) {
 
-        // TODO PENDIENTE
-        return null;
+        final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada(PARAM_ID_PAGO, idPago);
+        final ResultadoAccionPaso ra = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, idPaso,
+                TypeAccionPasoPagar.DESCARGAR_JUSTIFICANTE, params);
+        final byte[] just = (byte[]) ra.getParametroRetorno("datos");
+
+        final String nombre = "justificante.pdf";
+        final byte[] datosFichero = just;
+        return generarDownloadView(nombre, datosFichero);
     }
 
 }

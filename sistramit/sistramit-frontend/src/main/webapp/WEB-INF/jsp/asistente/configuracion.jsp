@@ -51,10 +51,10 @@ var APP_ANNEXE_ANNEXA = APP_SERVIDOR + "ad/anexarDocumento.json"
 /* pas taxa */
 
 var APP_TAXA_URL = APP_SERVIDOR + "pt/iniciarPago.json"
-	,APP_TAXA_REVISAR = APP_SERVIDOR + "pt/verificarPagoIniciado.json"
+	,APP_TAXA_VALIDAR = APP_SERVIDOR + "pt/verificarPagoIniciado.json"
 	,APP_TAXA_DESCARTAR = APP_SERVIDOR + "pt/cancelarPagoIniciado.json"
 	,APP_TAXA_JUSTIFICANT = APP_SERVIDOR + "pt/descargarJustificante.html"
-	,APP_TAXA_CARTA = APP_SERVIDOR + "pt/cartaPago.json";
+	,APP_TAXA_PRESENCIAL = APP_SERVIDOR + "pt/cartaPago.json";
 
 
 /* pas registrar */

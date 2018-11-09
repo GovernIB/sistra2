@@ -9,11 +9,13 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.EngineScriptException;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
+import es.caib.sistramit.core.service.component.integracion.PagoComponent;
 import es.caib.sistramit.core.service.component.script.plugins.PlgAviso;
 import es.caib.sistramit.core.service.component.script.plugins.PlgDominios;
 import es.caib.sistramit.core.service.component.script.plugins.PlgError;
@@ -21,6 +23,7 @@ import es.caib.sistramit.core.service.component.script.plugins.PlgLog;
 import es.caib.sistramit.core.service.component.script.plugins.PlgMensajesValidacion;
 import es.caib.sistramit.core.service.component.script.plugins.PlgValidaciones;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgFormularios;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgPago;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgValidacionAnexo;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAnexosDinamicos;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResDatosInicialesFormulario;
@@ -71,6 +74,10 @@ public final class ScriptExecImpl implements ScriptExec {
      * Script Engine manager.
      */
     private final ScriptEngineManager engineManager;
+
+    /** Pago component para plugin pago (calculo tasa). */
+    @Autowired
+    private PagoComponent pagoComponent;
 
     /**
      * Constructor.
@@ -383,6 +390,8 @@ public final class ScriptExecImpl implements ScriptExec {
             plugins.add(new ResAnexosDinamicos());
             break;
         case SCRIPT_DATOS_PAGO:
+            plugins.add(new PlgPago(pagoComponent,
+                    pDefinicionTramite.getDefinicionVersion().getIdEntidad()));
             plugins.add(new ResPago());
             break;
         case SCRIPT_FIRMANTES:

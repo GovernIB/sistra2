@@ -247,6 +247,8 @@ public final class PagoComponentImpl implements PagoComponent {
 
             // Devuelve verificacion y justificante
             final PagoComponentVerificacion res = new PagoComponentVerificacion();
+            // TODO Ver si algun caso podemos establecer como no verificado
+            // (capturar excepcion??)
             res.setVerificado(true);
             res.setPagado(resPlg.getEstado() == TypeEstadoPago.PAGADO);
             res.setLocalizador(resPlg.getLocalizador());
@@ -270,14 +272,24 @@ public final class PagoComponentImpl implements PagoComponent {
      */
     private PagoComponentVerificacion verificarPagoElectronicoSimulado(
             DatosSesionPago sesionPago) {
-        // Devuelve verificacion y justificante simulado
+
+        final boolean verificado = true;
+        final boolean realizado = true;
+
         final PagoComponentVerificacion res = new PagoComponentVerificacion();
-        res.setVerificado(true);
-        res.setPagado(true);
-        res.setLocalizador(System.currentTimeMillis() + "");
-        res.setJustificantePDF(generaPdfMock());
-        res.setCodigoError(null);
-        res.setMensajeError(null);
+        res.setVerificado(verificado);
+        res.setPagado(realizado);
+
+        if (verificado && realizado) {
+            res.setLocalizador(System.currentTimeMillis() + "");
+            res.setJustificantePDF(generaPdfMock());
+        }
+
+        if (verificado && !realizado) {
+            res.setCodigoError("ERR");
+            res.setMensajeError("Error simulado");
+        }
+
         return res;
     }
 
@@ -303,7 +315,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
     /**
      * Obtiene carta pago presencial simulado.
-     * 
+     *
      * @param sesionPago
      *            sesion pago
      * @return carta pago
@@ -315,7 +327,7 @@ public final class PagoComponentImpl implements PagoComponent {
 
     /**
      * Obtiene carta pago presencial.
-     * 
+     *
      * @param sesionPago
      *            sesion pago
      * @return carta pago

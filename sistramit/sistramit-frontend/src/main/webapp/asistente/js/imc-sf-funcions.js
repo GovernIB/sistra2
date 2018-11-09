@@ -179,7 +179,7 @@ $.fn.appTramitacioElimina = function(options) {
 
 							consola("carregaJSON desde JSON");
 
-							error({ titol: data.mensaje.titulo, text: data.mensaje.text });
+							error({ titol: data.mensaje.titulo, text: data.mensaje.texto });
 
 						}
 						
@@ -227,18 +227,18 @@ $.fn.appTramitacioElimina = function(options) {
 
 $.fn.appMissatge = function(options) {
 	var settings = $.extend({
-		boto: false,
-		accio: "informa",
-		titol: "",
-		text: "",
-		araAmaga: false,
-		amagaDesdeFons: true,
-		alMostrar: function() {},
-		alAmagar: function() {},
-		alAcceptar: function() {},
-		alCancelar: function() {},
-		alTancar: function() {}
-	}, options);
+			boto: false,
+			accio: "informa",
+			titol: "",
+			text: "",
+			araAmaga: false,
+			amagaDesdeFons: true,
+			alMostrar: function() {},
+			alAmagar: function() {},
+			alAcceptar: function() {},
+			alCancelar: function() {},
+			alTancar: function() {}
+		}, options);
 	this.each(function(){
 		var element = $(this),
 			boto = settings.boto,
@@ -284,10 +284,19 @@ $.fn.appMissatge = function(options) {
 					.find("h2 span")
 						.text( titol_txt )
 						.end()
-					.find(".imc--text:first div")
-						.text( text_txt )
-						.end()
 					.attr("data-accio", accio);
+
+				// text HTML
+
+				if (text_txt) {
+
+					text_txt = text_txt.replace("script", "");
+
+					element
+						.find(".imc--text:first div")
+							.html( text_txt );
+
+				}
 
 				element_c
 					.off('.appMissatge');

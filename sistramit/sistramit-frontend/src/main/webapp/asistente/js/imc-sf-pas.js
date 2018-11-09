@@ -83,6 +83,9 @@ var HTML_PAS_LITERALS = {
 			,txtSeguent: txtSeguent
 			,txtPagamentTanca: txtPagamentTanca
 			,txtCapPagament: txtCapPagament
+			,txtPagament: txtPagament
+			,txtPagarPresencialInfo: txtPagarPresencialInfo
+			,txtPagarElectronicInfo: txtPagarElectronicInfo
 		},
 		"rt": {
 			txtRegistrarTitol: txtRegistrarTitol
@@ -201,7 +204,7 @@ $.fn.appPas = function(options) {
 							if (pas_json.estado === "WARNING") {
 
 								imc_missatge
-									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.text, alAcceptar: function() { mollaPa(); carregaHTML(); } });
+									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { mollaPa(); carregaHTML(); } });
 
 								return;
 
@@ -217,7 +220,7 @@ $.fn.appPas = function(options) {
 							consola("Pas: error des de JSON");
 
 							imc_contenidor
-								.errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: pas_json.url });
+								.errors({ estat: pas_json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: pas_json.url });
 
 						}
 						
@@ -420,6 +423,7 @@ $.fn.appPas = function(options) {
 				} else if (pas_tipus === "rf") {
 
 					HTML_PAS_LITERALS[pas_tipus]["jsonEntorn"] = APP_JSON_TRAMIT_D.entorno;
+					HTML_PAS_LITERALS[pas_tipus]["jsonSolsLectura"] = pas_json.datos.actual.soloLectura;
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
 
 					var txtGlobals = {
@@ -456,15 +460,17 @@ $.fn.appPas = function(options) {
 				} else if (pas_tipus === "pt") {
 
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.pagos;
+					HTML_PAS_LITERALS[pas_tipus]["jsonSolsLectura"] = pas_json.datos.actual.soloLectura;
 
 					var txtGlobals = {
 							globals: {
 								txtPresencial: txtPresencial
 								,txtElectronic: txtElectronic
-								,txtDescargarPagament: txtDescargarPagament
+								,txtDescartarPagament: txtDescartarPagament
 								,txtPlantillaPagament: txtPlantillaPagament
 								,txtJustificantPagament: txtJustificantPagament
 								,txtRevisarPagament: txtRevisarPagament
+								,txtSolsLectura: pas_json.datos.actual.soloLectura
 							}
 						};
 
@@ -491,13 +497,16 @@ $.fn.appPas = function(options) {
 
 				} else if (pas_tipus === "gj") {
 
-					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.formularios;
-					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
-					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.tasas;
+					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.justificante.formularios;
+					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.justificante.anexos;
+					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.justificante.pagos;
 
 					var txtGlobals = {
 							globals: {
 								txtDescarrega: txtDescarrega
+								,txtSignant: txtSignant
+								,txtSignants: txtSignants
+								,txtSignatEl: txtSignatEl
 							}
 						};
 
@@ -769,6 +778,62 @@ $.fn.appPas = function(options) {
 
 			},
 			pinta_pt = function() {
+
+				// informació pagaments
+
+				var esPresencial = esElectronic = false;
+
+				var items = imc_contingut_c.find(".imc--pagaments li")
+					,items_size = items.length;
+
+				if (items_size) {
+
+					items
+						.each(function() {
+
+							var it = $(this)
+								,presentacio = it.attr("data-presentacio");
+
+							if (presentacio === "p") {
+								esPresencial = true;
+							}
+
+							if (presentacio === "e") {
+								esElectronic = true;
+							}
+
+							if (presentacio === "" || presentacio === "null") {
+								
+								if (it.find(".imc--pagament-presencial").length) {
+									esPresencial = true;
+								}
+								if (it.find(".imc--pagament-electronic").length) {
+									esElectronic = true;
+								}
+
+							}
+
+						})
+
+				}
+
+				if (esPresencial) {
+
+					imc_contingut_c
+						.find(".imc--info-pagament:first")
+							.addClass("imc--es-presencial");
+
+				}
+
+				if (esElectronic) {
+
+					imc_contingut_c
+						.find(".imc--info-pagament:first")
+							.addClass("imc--es-electronic");
+
+				}
+
+				// inicia
 
 				appPasPagarInicia()
 

@@ -45,6 +45,11 @@
 
 .imc--formularis li[data-completat="c"] > button span { display: block; position: absolute; left: 0; bottom: .5em; width: 100%; font-size: .8em; }
 
+.imc--formularis[data-lectura="s"] a { color: #000; cursor: default; }
+
+.imc--formularis[data-lectura="s"] a:hover,
+.imc--formularis[data-lectura="s"] a:focus { color: #000; }
+
 /* icones */
 
 .imc--icones { width: 100%; margin-top: 2em; }

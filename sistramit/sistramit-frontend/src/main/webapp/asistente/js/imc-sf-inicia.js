@@ -81,6 +81,17 @@ function iniciaHTML() {
 				.attr("aria-hidden", "false")
 				.addClass("imc-mostra");
 
+			// missatge inicial?
+
+			if (APP_JSON_TRAMIT_MISSATGE) {
+
+				imc_missatge
+					.appMissatge({ accio: "warning", titol: APP_JSON_TRAMIT_MISSATGE.titulo, text: APP_JSON_TRAMIT_MISSATGE.texto, alAcceptar: function() { document.location = "#pas/" + APP_JSON_TRAMIT_D.idPasoActual; } });
+
+				return;
+
+			}
+
 			// anar a pas
 
 			document.location = "#pas/" + APP_JSON_TRAMIT_D.idPasoActual;

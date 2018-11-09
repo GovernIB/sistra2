@@ -19,10 +19,7 @@ function appPasEmplenarInicia() {
 	imc_formulari_iframe = imc_formulari.find("iframe:first");
 
 	imc_formularis
-		.find("li a")
-			.appFormulari();
-
-	imc_formularis
+		.appFormulari()
 		.appFormulariDescarrega();
 
 }
@@ -50,7 +47,7 @@ $.fn.appFormulariDescarrega = function(options) {
 					,esPDF = (bt.hasClass("imc--fo-pdf")) ? true : false
 					,url = (esPDF) ? APP_FORM_PDF : APP_FORM_XML;
 
-				document.location = url + "?idFormulario=" + form_id + "&idPaso=" + URL_PARAMETRES[1];
+				document.location = url + "?idFormulario=" + form_id + "&idPaso=" + APP_TRAMIT_PAS_ID;
 
 			};
 		
@@ -79,7 +76,7 @@ $.fn.appFormulari = function(options) {
 
 				element
 					.off('.appFormulari')
-					.on('click.appFormulari', obri);
+					.on('click.appFormulari', "li a", obri);
 
 				imc_formulari_bt
 					.off('.appFormulari')
@@ -95,7 +92,7 @@ $.fn.appFormulari = function(options) {
 					bt_ico_W = bt_ico.outerWidth(),
 					bt_ico_H = bt_ico.outerHeight();
 
-				if (bt.attr("data-obligatori") === "d") {
+				if (bt.attr("data-obligatori") === "d" || element.attr("data-lectura") === "s") {
 					return;
 				}
 
@@ -198,7 +195,7 @@ $.fn.appFormulari = function(options) {
 							if (data.estado === "WARNING") {
 
 								imc_missatge
-									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.text, alAcceptar: function() { continua(); } });
+									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { continua(); } });
 
 								return;
 
@@ -213,7 +210,7 @@ $.fn.appFormulari = function(options) {
 							consola("Formulari: error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
 
 						}
 						

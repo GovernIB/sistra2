@@ -331,7 +331,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
                     a.setExtensiones(null);
                     a.setFirmantes(null);
                     a.setFirmar(TypeSiNo.NO);
-                    a.setMaxInstancias(0);
+                    a.setMaxInstancias(ConstantesNumero.N1);
                     a.setTamMax(null);
                 }
             }

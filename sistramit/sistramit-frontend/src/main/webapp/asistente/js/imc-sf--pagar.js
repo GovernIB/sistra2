@@ -18,11 +18,12 @@ function appPasPagarInicia() {
 	imc_pagament_bt = imc_pagament.find("button:first");
 	imc_pagament_iframe = imc_pagament.find("iframe:first");
 
-	imc_pagaments
-		.appPagaments();
+	// funcions
 
 	imc_pagaments
-		.appPagament();
+		.appPagament()
+		.appPagamentPresencial()
+		.appPagaments();
 
 }
 
@@ -76,8 +77,6 @@ $.fn.appPagament = function(options) {
 
 						})
 					.addClass("imc--centra");
-
-				//iframe_url = APP_TAXA_PAGA + "?idPago=" + elm_pagament_id + "&idPaso=" + APP_TRAMIT_PAS_ID;
 
 			},
 			carrega = function() {
@@ -145,10 +144,10 @@ $.fn.appPagament = function(options) {
 
 								};
 
-							if (data.estado === "WARNING") {
+							if (data.mensaje.titulo !== "") {
 
 								imc_missatge
-									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.text, alAcceptar: function() { continua(); } });
+									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { continua(); } });
 
 								return;
 
@@ -160,21 +159,23 @@ $.fn.appPagament = function(options) {
 
 							envia_ajax = false;
 
-							consola("Formulari: error des de JSON");
+							consola("Pagament electrònic: error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
 
 						}
 						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
+						envia_ajax = false;
+
 						if (tipus === "abort") {
 							return false;
 						}
 						
-						consola("Formulari: error des de FAIL");
+						consola("Pagament electrònic: error des de FAIL");
 						
 						imc_contenidor
 							.errors({ estat: "fail" });
@@ -269,6 +270,118 @@ $.fn.appPagament = function(options) {
 }
 
 
+
+// appPagamentPresencial
+
+$.fn.appPagamentPresencial = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			envia_ajax = false,
+			elm_pagament_id = false,
+			inicia = function() {
+
+				element
+					.off('.appPagamentPresencial')
+					.on('click.appPagamentPresencial', ".imc--pagament-presencial", carrega);
+
+			},
+			carrega = function(e) {
+
+				var bt = $(this);
+
+				elm_pagament_id = bt.closest("li").attr("data-id");
+
+				imc_missatge
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtPagamentPresencialSeleccionat, alMostrar: function() { carregant(); } });
+
+			},
+			carregant = function() {
+
+				var pag_url = APP_TAXA_PRESENCIAL,
+					pag_data = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID };
+
+				// ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+				
+				envia_ajax =
+					$.ajax({
+						url: pag_url,
+						data: pag_data,
+						method: "post",
+						dataType: "json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(headerCSRF, tokenCSRF);
+						}
+					})
+					.done(function( data ) {
+
+						if (data.estado === "SUCCESS" || data.estado === "WARNING") {
+
+							var continua = function() {
+
+									imc_contingut_c
+										.appPas({ pas: APP_TRAMIT_PAS_ID, recarrega: true });
+
+								};
+
+							if (data.mensaje.titulo !== "") {
+
+								imc_missatge
+									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { continua(); } });
+
+								return;
+
+							}
+
+							continua();
+
+						} else {
+
+							envia_ajax = false;
+
+							consola("Pagament presencial: error des de JSON");
+							
+							imc_contenidor
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
+
+						}
+						
+					})
+					.fail(function(dades, tipus, errorThrown) {
+
+						envia_ajax = false;
+
+						if (tipus === "abort") {
+							return false;
+						}
+						
+						consola("Pagament presencial: error des de FAIL");
+						
+						imc_contenidor
+							.errors({ estat: "fail" });
+						
+					});
+
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+	return this;
+}
+
+
+
 // appPagaments
 
 $.fn.appPagaments = function(options) {
@@ -282,27 +395,10 @@ $.fn.appPagaments = function(options) {
 
 				element
 					.off('.appPagaments')
-					.on('click.appPagaments', ".imc--pagament-presencial", descarregaCarta)
-					.on('click.appPagaments', ".imc--plantilla-pagament", descarregaCarta)
+					.on('click.appPagaments', ".imc--plantilla-pagament", descarregaJustificant)
 					.on('click.appPagaments', ".imc--justificant-pagament", descarregaJustificant)
-					.on('click.appPagaments', ".imc--descartar-pagament", descartar);
-
-			},
-			descarregaCarta = function(e) {
-
-				var bt = $(this)
-					,elm_pagament_id = bt.closest("li").attr("data-id");
-
-				document.location = APP_TAXA_CARTA + "?idPago=" + elm_pagament_id + "&idPaso=" + APP_TRAMIT_PAS_ID;
-
-				// recarrega si escull PRESENCIAL
-
-				if (bt.hasClass("imc--pagament-presencial")) {
-
-					imc_contingut_c
-						.appPas({ pas: APP_TRAMIT_PAS_ID, recarrega: true });
-
-				}
+					.on('click.appPagaments', ".imc--descartar-pagament", executa)
+					.on('click.appPagaments', ".imc--revisar-pagament", executa);
 
 			},
 			descarregaJustificant = function(e) {
@@ -313,27 +409,45 @@ $.fn.appPagaments = function(options) {
 				document.location = APP_TAXA_JUSTIFICANT + "?idPago=" + elm_pagament_id + "&idPaso=" + APP_TRAMIT_PAS_ID;
 
 			},
-			descartar = function(e) {
+			executa = function(e) {
 
 				var bt = $(this)
+					,esDescartar = (bt.hasClass("imc--descartar-pagament")) ? true : false
 					,elm_pagament_id = bt.closest("li").attr("data-id");
 
-				imc_missatge
-					.appMissatge({ boto: bt, accio: "esborra", titol: txtDescartarTaxaTitol, text: txtDescartarTaxaText, alAcceptar: function() { descarta(elm_pagament_id); } });
+				// es descartar
+
+				if (esDescartar) {
+
+					var taxa_tipus = bt.closest("li").attr("data-presentacio")
+						,text = (taxa_tipus === "p") ? txtDescartarTaxaText : txtDescartarTaxaElectronicaText;
+
+					imc_missatge
+						.appMissatge({ boto: bt, accio: "esborra", titol: txtDescartarTaxaTitol, text: text, alAcceptar: function() { enviant(esDescartar, elm_pagament_id); } });
+
+					return;
+				}
+
+				// es validar
+
+				enviant(esDescartar, elm_pagament_id);
 
 			},
-			descarta = function(elm_pagament_id) {
+			enviant = function(esDescartar, elm_pagament_id) {
+
+				var titol = (esDescartar) ? txtDescartantTaxaTitol : txtValidantTaxaTitol;
 
 				imc_missatge
-					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtDescartantTaxaTitol, alMostrar: function() { descartant(elm_pagament_id); } });
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: titol, alMostrar: function() { enviament(esDescartar, elm_pagament_id); } });
 
 			},
-			descartant = function(elm_pagament_id) {
+			enviament = function(esDescartar, elm_pagament_id) {
 
 				// ajax!!!
 
-				var pag_url = APP_TAXA_DESCARTAR,
-					pag_data = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID };
+				var pag_url = (esDescartar) ? APP_TAXA_DESCARTAR : APP_TAXA_VALIDAR
+					,pag_data = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID }
+					,errorConsola = (esDescartar) ? "descartar" : "validar";
 
 				// ajax
 
@@ -367,10 +481,10 @@ $.fn.appPagaments = function(options) {
 
 								};
 
-							if (data.estado === "WARNING") {
+							if (data.mensaje.titulo !== "") {
 
 								imc_missatge
-									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.text, alAcceptar: function() { continua(); } });
+									.appMissatge({ accio: "warning", titol: data.mensaje.titulo, text: data.mensaje.texto, alAcceptar: function() { continua(); } });
 
 								return;
 
@@ -382,21 +496,23 @@ $.fn.appPagaments = function(options) {
 
 							envia_ajax = false;
 
-							consola("Formulari: error des de JSON");
+							consola("Taxa "+errorConsola+": error des de JSON");
 							
 							imc_contenidor
-								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: data.url });
+								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
 
 						}
 						
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
+						envia_ajax = false;
+
 						if (tipus === "abort") {
 							return false;
 						}
 						
-						consola("Formulari: error des de FAIL");
+						consola("Taxa "+errorConsola+": error des de FAIL");
 						
 						imc_contenidor
 							.errors({ estat: "fail" });

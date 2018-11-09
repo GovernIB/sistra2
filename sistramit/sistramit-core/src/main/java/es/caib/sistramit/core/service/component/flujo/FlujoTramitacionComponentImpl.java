@@ -370,6 +370,7 @@ public class FlujoTramitacionComponentImpl
         st.getDatosTramite().setDefinicionTramiteCP(tramiteCP);
         st.getDatosTramite().setIdioma(idiomaSesion);
         st.getDatosTramite().setEntorno(entorno);
+        st.getDatosTramite().setUsuarioAutenticado(pUsuarioAutenticadoInfo);
         st.getDatosTramite().setNivelAutenticacion(
                 pUsuarioAutenticadoInfo.getAutenticacion());
         st.getDatosTramite().setMetodoAutenticacionInicio(

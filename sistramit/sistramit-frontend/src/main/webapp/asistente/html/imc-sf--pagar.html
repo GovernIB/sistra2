@@ -9,11 +9,29 @@
 		{{txtPagarInfo}}
 	</div>
 
-	<div class="imc--pagaments">
+	<div class="imc--info-pagament">
+
+		<div class="imc--presencial">
+
+			<h4><span>{{txtPagament}} {{txtPresencial|downcase}}</span></h4>
+			<div>{{txtPagarPresencialInfo}}</div>
+
+		</div>
+
+		<div class="imc--electronic">
+
+			<h4><span>{{txtPagament}} {{txtElectronic|downcase}}</span></h4>
+			<div>{{txtPagarElectronicInfo}}</div>
+
+		</div>
+
+	</div>
+
+	<div class="imc--pagaments" data-lectura="{{jsonSolsLectura}}">
 		
 		<ul>
 			{{pagaments}}
-			<li data-id="{{id}}" data-presentacions="{{presentacionesPermitidas|size}}">
+			<li data-id="{{id}}" data-presentacio="{{presentacion}}" data-presentacions="{{presentacionesPermitidas|size}}">
 
 				<div class="imc--pagament-fila">
 
@@ -38,6 +56,7 @@
 					</a>
 
 					{{if presentacion|empty}}
+					{{if txtSolsLectura|equals>n}}
 
 						{{if presentacionesPermitidas|size|equals>2}}
 						<button type="button" class="imc-bt imc--ico imc--pagament-presencial"><span>{{txtPresencial}}</span></button>
@@ -55,6 +74,7 @@
 
 						{{/if}}
 
+					{{/if}}
 					{{/if}}
 
 				</div>
@@ -74,15 +94,22 @@
 
 						{{if estadoIncorrecto.estado|empty}}
 						<button type="button" class="imc-bt imc--ico imc--plantilla-pagament"><span>{{txtPlantillaPagament}}</span></button>
-						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescargarPagament}}</span></button>
+						{{if txtSolsLectura|equals>n}}
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescartarPagament}}</span></button>
+						{{/if}}
 						{{/if}}
 
 						{{if estadoIncorrecto.estado|equals>i}}
 						<button type="button" class="imc-bt imc--ico imc--revisar-pagament"><span>{{txtRevisarPagament}}</span></button>
+						{{if txtSolsLectura|equals>n}}
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescartarPagament}}</span></button>
+						{{/if}}
 						{{/if}}
 
 						{{if estadoIncorrecto.estado|equals>x}}
-						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescargarPagament}}</span></button>
+						{{if txtSolsLectura|equals>n}}
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescartarPagament}}</span></button>
+						{{/if}}
 						{{/if}}
 
 					{{/if}}
@@ -102,10 +129,15 @@
 
 						{{if estadoIncorrecto.estado|equals>i}}
 						<button type="button" class="imc-bt imc--ico imc--revisar-pagament"><span>{{txtRevisarPagament}}</span></button>
+						{{if txtSolsLectura|equals>n}}
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescartarPagament}}</span></button>
+						{{/if}}
 						{{/if}}
 
 						{{if estadoIncorrecto.estado|equals>x}}
-						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescargarPagament}}</span></button>
+						{{if txtSolsLectura|equals>n}}
+						<button type="button" class="imc-bt imc--ico imc--descartar-pagament"><span>{{txtDescartarPagament}}</span></button>
+						{{/if}}
 						{{/if}}
 
 					{{/if}}

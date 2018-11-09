@@ -25,7 +25,7 @@ public final class ConstantesSeguridad {
     /**
      * Punto de entrada para retornar desde modulo de pagos.
      */
-    public static final String PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO = "/asistente/retornoGestorPagoExterno.html";
+    public static final String PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO = "/asistente/retornoPagoExterno.html";
     /**
      * Punto de entrada para retornar desde un gestor de formularios externo.
      */

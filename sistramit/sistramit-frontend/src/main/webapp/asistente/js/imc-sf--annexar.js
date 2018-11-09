@@ -1288,7 +1288,7 @@ $.fn.appAnnexatEsborra = function(opcions){
 						envia_ajax = false;
 
 						consola("Annexar esborra: error des de JSON");
-						errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.text, url: json.url });
+						errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
 
 					}
 

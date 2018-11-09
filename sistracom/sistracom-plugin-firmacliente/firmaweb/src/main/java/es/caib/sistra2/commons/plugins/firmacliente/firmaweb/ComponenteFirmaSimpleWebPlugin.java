@@ -36,6 +36,14 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties
     public ComponenteFirmaSimpleWebPlugin() {
     }
 
+    /**
+     * Constructor.
+     *
+     * @param prefijoPropiedades
+     *            prefijo props
+     * @param properties
+     *            propiedades
+     */
     public ComponenteFirmaSimpleWebPlugin(final String prefijoPropiedades,
             final Properties properties) {
         super(prefijoPropiedades, properties);

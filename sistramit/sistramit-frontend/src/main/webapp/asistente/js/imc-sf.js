@@ -14,6 +14,8 @@ var APP_JSON_TRAMIT
 	,APP_TRAMIT_PAS_ID
 	,APP_USUARI_ID;
 
+var APP_JSON_TRAMIT_MISSATGE = false;
+
 var HTML_MOLLA_PA;
 
 var imc_finestra
@@ -123,8 +125,20 @@ $.fn.carregaInfoTramit = function(options) {
 
 						if (APP_JSON_TRAMIT.estado === "SUCCESS" || APP_JSON_TRAMIT.estado === "WARNING") {
 
-							// literals
+							// missatge
 
+							var json_missatge = APP_JSON_TRAMIT.mensaje
+								,json_missatge_titol = json_missatge.titulo
+								,json_missatge_text = json_missatge.texto;
+
+							if (json_missatge_titol !== "") {
+
+								APP_JSON_TRAMIT_MISSATGE = json_missatge;
+
+							}
+
+							// literals
+							
 							carregaLiterals();
 
 						} else {

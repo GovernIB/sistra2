@@ -10,7 +10,8 @@ public enum TypeAccionPasoPagar implements TypeAccionPaso {
 
     /**
      * Iniciar pago electrónico. Parámetros entrada: idPago, reiniciar
-     * (opcional). Parámetros salida: url (url inicio pago).
+     * (opcional). Parámetros salida: url (url inicio pago) y simulado
+     * (TypeSiNo).
      */
     INICIAR_PAGO,
     /**

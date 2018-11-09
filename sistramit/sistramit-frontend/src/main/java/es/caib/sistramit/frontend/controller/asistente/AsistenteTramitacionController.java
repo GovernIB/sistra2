@@ -26,8 +26,12 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -405,9 +409,24 @@ public class AsistenteTramitacionController extends TramitacionController {
                 .obtenerTicketPago(ticket);
 
         // Cargamos tramite de persistencia
-        this.cargarTramiteImpl(retornoPago.getIdSesionTramitacion(), false);
+        final String idSesionTramitacion = retornoPago.getIdSesionTramitacion();
+        this.cargarTramiteImpl(idSesionTramitacion, false);
 
-        // TODO PENDIENTE VALIDAR PAGO Y REDIRIGIR PAGO
+        // Validamos pago
+        final ParametrosAccionPaso params = new ParametrosAccionPaso();
+        params.addParametroEntrada("idPago", retornoPago.getIdPago());
+        final ResultadoAccionPaso ra = getFlujoTramitacionService().accionPaso(
+                idSesionTramitacion, retornoPago.getIdPaso(),
+                TypeAccionPasoPagar.VERIFICAR_PAGO_PASARELA, params);
+        final PagoVerificacion verificacion = (PagoVerificacion) ra
+                .getParametroRetorno("verificacion");
+
+        debug("Estado pago: Verificado = " + verificacion.getVerificado()
+                + " - Realizado = " + verificacion.getRealizado());
+
+        // En funcion del resultado, mostramos mensaje al usuario
+        final MensajeAsistente ma = generarMensajeValidacionPago(verificacion);
+        this.setMensajeAsistente(ma);
 
         // Redirigimos a carga asistente
         return new ModelAndView(URL_REDIRIGIR_ASISTENTE);

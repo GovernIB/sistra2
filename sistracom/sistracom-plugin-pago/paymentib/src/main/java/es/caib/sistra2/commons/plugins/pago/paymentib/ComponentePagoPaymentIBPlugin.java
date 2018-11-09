@@ -3,6 +3,7 @@ package es.caib.sistra2.commons.plugins.pago.paymentib;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.springframework.http.HttpEntity;
@@ -10,8 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import es.caib.paymentib.rest.api.v1.RDatosInicioPago;
@@ -35,6 +34,19 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties
 
     /** Prefix. */
     public static final String IMPLEMENTATION_BASE_PROPERTY = "paymentib.";
+
+    /**
+     * Constructor.
+     *
+     * @param prefijoPropiedades
+     *            prefijo props
+     * @param properties
+     *            propiedades
+     */
+    public ComponentePagoPaymentIBPlugin(final String prefijoPropiedades,
+            final Properties properties) {
+        super(prefijoPropiedades, properties);
+    }
 
     /**
      * Inicia pago electrónico.
@@ -129,20 +141,11 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties
         restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
                 getPropiedad("usr"), getPropiedad("pwd")));
 
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        final byte[] resRest = restTemplate.getForObject(getPropiedad("url")
+                + "/obtenerJustificantePagoElectronico/" + identificador,
+                byte[].class);
 
-        final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-
-        // Obtener procedimiento.
-        final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(
-                map, headers);
-        final ResponseEntity<byte[]> response = restTemplate.postForEntity(
-                getPropiedad("url") + "/obtenerJustificantePagoElectronico/"
-                        + identificador,
-                requestProc, byte[].class);
-
-        return response.getBody();
+        return resRest;
 
     }
 
@@ -163,21 +166,10 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties
         restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(
                 getPropiedad("usr"), getPropiedad("pwd")));
 
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        final Integer resRest = restTemplate.getForObject(getPropiedad("url")
+                + "/consultaTasa/" + idPasarela + "/" + idTasa, Integer.class);
 
-        final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-
-        // Obtener procedimiento.
-        final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(
-                map, headers);
-        final ResponseEntity<Integer> response = restTemplate
-                .postForEntity(
-                        getPropiedad("url") + "/consultaTasa/" + idPasarela
-                                + "/" + idTasa + "/",
-                        requestProc, Integer.class);
-
-        return response.getBody();
+        return resRest;
     }
 
     /**
@@ -196,28 +188,27 @@ public class ComponentePagoPaymentIBPlugin extends AbstractPluginProperties
                 getPropiedad("usr"), getPropiedad("pwd")));
 
         final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("aplicacionId", getPropiedad("idAplicacion"));
-        map.add("concepto", datosPago.getConcepto());
-        map.add("detallePago", datosPago.getDetallePago());
-        map.add("entidadId", datosPago.getEntidadId());
-        map.add("idioma", datosPago.getIdioma());
-        map.add("importe", String.valueOf(datosPago.getImporte()));
-        map.add("modelo", datosPago.getModelo());
-        map.add("organismoId", datosPago.getOrganismoId());
-        map.add("pasarelaId", datosPago.getPasarelaId());
-        map.add("sujetoPasivoNif", datosPago.getSujetoPasivoNif());
-        map.add("sujetoPasivoNombre", datosPago.getSujetoPasivoNombre());
-        map.add("tasaId", datosPago.getTasaId());
+        final RDatosPago rdatosPago = new RDatosPago();
+        rdatosPago.setAplicacionId(getPropiedad("idAplicacion"));
+        rdatosPago.setConcepto(datosPago.getConcepto());
+        rdatosPago.setDetallePago(datosPago.getDetallePago());
+        rdatosPago.setEntidadId(datosPago.getEntidadId());
+        rdatosPago.setIdioma(datosPago.getIdioma());
+        rdatosPago.setImporte(datosPago.getImporte());
+        rdatosPago.setModelo(datosPago.getModelo());
+        rdatosPago.setOrganismoId(datosPago.getOrganismoId());
+        rdatosPago.setPasarelaId(datosPago.getPasarelaId());
+        rdatosPago.setSujetoPasivoNif(datosPago.getSujetoPasivoNif());
+        rdatosPago.setSujetoPasivoNombre(datosPago.getSujetoPasivoNombre());
+        rdatosPago.setTasaId(datosPago.getTasaId());
 
-        // Obtener procedimiento.
-        final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(
-                map, headers);
+        final HttpEntity<RDatosPago> request = new HttpEntity<>(rdatosPago,
+                headers);
         final ResponseEntity<byte[]> response = restTemplate.postForEntity(
-                getPropiedad("url") + "/obtenerCartaPagoPresencial/",
-                requestProc, byte[].class);
+                getPropiedad("url") + "/obtenerCartaPagoPresencial/", request,
+                byte[].class);
 
         return response.getBody();
     }

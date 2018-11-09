@@ -97,9 +97,17 @@ public final class AccionIniciarPago implements AccionPaso {
         final String urlInicioPago = abrirPagoPasarela(pDipa, pDpp, pago,
                 pDefinicionTramite, pVariablesFlujo);
 
+        // Verificamos si es simulado
+        final DatosSesionPago sesionPago = pDipa.recuperarSesionPago(idPago);
+        TypeSiNo simulado = TypeSiNo.NO;
+        if (sesionPago.isSimulado()) {
+            simulado = TypeSiNo.SI;
+        }
+
         // Devolvemos respuesta
         final RespuestaAccionPaso rp = new RespuestaAccionPaso();
         rp.addParametroRetorno("url", urlInicioPago);
+        rp.addParametroRetorno("simulado", simulado);
         final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
         rep.setRespuestaAccionPaso(rp);
         return rep;
@@ -179,7 +187,7 @@ public final class AccionIniciarPago implements AccionPaso {
                 .obtenerPropiedadConfiguracion(
                         TypePropiedadConfiguracion.SISTRAMIT_URL)
                 + ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO
-                + "?" + ConstantesSeguridad.TICKET_USER_PAGO + "=" + ticket;
+                + "?" + ConstantesSeguridad.TICKET_PARAM + "=" + ticket;
 
         // Inicia sesion de pago en pasarela externa
         final PagoComponentRedireccion urlInicioPago = pagoExternoComponent

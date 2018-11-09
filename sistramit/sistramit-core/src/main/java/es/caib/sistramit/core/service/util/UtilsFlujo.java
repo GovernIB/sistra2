@@ -274,7 +274,11 @@ public final class UtilsFlujo {
         e.setId(entidad.getIdentificador());
         e.setNombre(UtilsSTG.obtenerLiteral(entidad.getDescripcion(), idioma));
         e.setLogo(urlResources + entidad.getLogo());
-        e.setCss(urlResources + entidad.getCss());
+        if (StringUtils.isBlank(entidad.getCss())) {
+            e.setCss("");
+        } else {
+            e.setCss(urlResources + entidad.getCss());
+        }
         e.setContacto(
                 UtilsSTG.obtenerLiteral(entidad.getContactoHTML(), idioma));
         e.setUrlCarpeta(

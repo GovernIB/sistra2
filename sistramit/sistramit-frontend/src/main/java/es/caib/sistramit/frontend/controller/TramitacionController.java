@@ -22,6 +22,8 @@ import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
 import es.caib.sistramit.core.api.exception.WarningFrontException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SystemService;
@@ -459,6 +461,56 @@ public abstract class TramitacionController {
      */
     protected SystemService getSystemService() {
         return systemService;
+    }
+
+    /**
+     * Genera mensaje para pagos.
+     *
+     * @param verificacion
+     *            verificacion pago
+     * @return mensaje asistente
+     */
+    protected MensajeAsistente generarMensajeValidacionPago(
+            final PagoVerificacion verificacion) {
+
+        TypeRespuestaJSON tipoMensaje;
+        String literalTextoMensaje;
+
+        if (verificacion.getVerificado() == TypeSiNo.NO) {
+            // Mensaje no se ha podido verificar
+            tipoMensaje = TypeRespuestaJSON.WARNING;
+            literalTextoMensaje = "pagoNoVerificado";
+        } else {
+            if (verificacion.getRealizado() == TypeSiNo.NO) {
+                // Mensaje no se ha podido realizar pago
+                if (verificacion.getEstadoIncorrecto() != null
+                        && verificacion.getEstadoIncorrecto()
+                                .getCodigoErrorPasarela() != null) {
+                    // Error verificar pago
+                    tipoMensaje = TypeRespuestaJSON.WARNING;
+                    literalTextoMensaje = "pagoError";
+                } else {
+                    // Pago no realizado, sin indicar error -> no pagado
+                    tipoMensaje = TypeRespuestaJSON.WARNING;
+                    literalTextoMensaje = "pagoNoRealizado";
+                }
+            } else {
+                // Mensaje de que se ha podido realizar pago
+                tipoMensaje = TypeRespuestaJSON.SUCCESS;
+                literalTextoMensaje = "pagoRealizado";
+            }
+        }
+
+        final String tituloMensaje = getLiteralesFront().getLiteralFront(
+                LiteralesFront.MENSAJES, "atencion", getIdioma());
+        final String textoMensaje = getLiteralesFront().getLiteralFront(
+                LiteralesFront.MENSAJES, literalTextoMensaje, getIdioma());
+        final MensajeUsuario mensajeUsuario = new MensajeUsuario(tituloMensaje,
+                textoMensaje);
+        final MensajeAsistente ma = new MensajeAsistente();
+        ma.setTipo(tipoMensaje);
+        ma.setMensaje(mensajeUsuario);
+        return ma;
     }
 
 }

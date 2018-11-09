@@ -74,6 +74,9 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
         // Actualiza persistencia
         actualizarPersistencia(pDipa, pDpp, idPago);
 
+        // Eliminamos sesion pago
+        pDipa.eliminarSesionPago(idPago);
+
         // Devolvemos respuesta
         final RespuestaAccionPaso rp = new RespuestaAccionPaso();
         final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
@@ -96,20 +99,44 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
     private void validacionesPago(final DatosInternosPasoPagar pDipa,
             final Pago pPago, boolean debugEnabled) {
 
-        // - Verifica que el pago este en estado iniciado
-        if (pPago
-                .getRellenado() != TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE) {
-            throw new AccionPasoNoPermitidaException(
-                    "El pago no esta en estado iniciado");
-        }
-
-        // - Verificamos si el pago se ha realizado contra la pasarela
         final DatosSesionPago sesionPago = pDipa
                 .recuperarSesionPago(pPago.getId());
-        final PagoComponentVerificacion dvp = pagoExternoComponent
-                .verificarPagoElectronico(sesionPago, debugEnabled);
-        if (dvp.isVerificado() && dvp.isPagado()) {
-            throw new AccionPasoNoPermitidaException("El pago esta completado");
+
+        // Verificamos que se haya iniciado el pago
+        if (sesionPago.getPresentacion() == null
+                || pPago.getRellenado() == TypeEstadoDocumento.SIN_RELLENAR) {
+            throw new AccionPasoNoPermitidaException(
+                    "No se ha iniciado el pago");
+        }
+
+        switch (sesionPago.getPresentacion()) {
+        case PRESENCIAL:
+            // En caso de que sea un pago presencial verificamos que este
+            // correcto
+            if (pPago
+                    .getRellenado() != TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
+                throw new AccionPasoNoPermitidaException(
+                        "El pago es presencial pero no esta en estado correcto");
+            }
+            break;
+        case ELECTRONICA:
+            // En caso de que sea un pago electronico verificamos que este
+            // iniciado y que no se haya pagado
+            if (pPago
+                    .getRellenado() != TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE) {
+                throw new AccionPasoNoPermitidaException(
+                        "El pago no esta en estado iniciado");
+            }
+            final PagoComponentVerificacion dvp = pagoExternoComponent
+                    .verificarPagoElectronico(sesionPago, debugEnabled);
+            if (dvp.isVerificado() && dvp.isPagado()) {
+                throw new AccionPasoNoPermitidaException(
+                        "El pago esta completado");
+            }
+            break;
+        default:
+            throw new AccionPasoNoPermitidaException(
+                    "Tipo presentacion no reconocida");
         }
 
     }
@@ -128,6 +155,7 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
                 .getPago(idPago);
         detallePago.setRellenado(TypeEstadoDocumento.SIN_RELLENAR);
         detallePago.setEstadoIncorrecto(null);
+        detallePago.setPresentacion(null);
     }
 
     /**
@@ -160,6 +188,7 @@ public final class AccionCancelarPagoIniciado implements AccionPaso {
         documentoPersistencia.setPagoNifSujetoPasivo(null);
         documentoPersistencia.setPagoIdentificador(null);
         documentoPersistencia.setFichero(null);
+        documentoPersistencia.setPagoJustificantePdf(null);
 
         dao.establecerDatosDocumento(pDipa.getIdSesionTramitacion(),
                 pDipa.getIdPaso(), documentoPersistencia);

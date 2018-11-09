@@ -92,6 +92,8 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
         final PagoVerificacion pv = new PagoVerificacion();
         pv.setVerificado(TypeSiNo.fromBoolean(dvp.isVerificado()));
         pv.setRealizado(TypeSiNo.fromBoolean(dvp.isPagado()));
+        pv.setEstadoIncorrecto(pago.getEstadoIncorrecto());
+
         final RespuestaAccionPaso rp = new RespuestaAccionPaso();
         rp.addParametroRetorno("verificacion", pv);
         final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
@@ -118,30 +120,27 @@ public final class AccionVerificarPagoPasarela implements AccionPaso {
         final Pago detallePago = ((DetallePasoPagar) pDipa.getDetallePaso())
                 .getPago(idPago);
 
-        // Si no se ha podido verificar, lo seguimos dejando pendiente y
-        // ajustamos mensaje error
-        if (!pDvp.isVerificado()) {
-            final String mensajeError = ControladorPasoPagarHelper.getInstance()
+        // TODO PENDIENTE ERROR TIMEOUT PAGO
+
+        // Si se ha verificado como pagado, establecemos como pagado
+        if (pDvp.isVerificado() && pDvp.isPagado()) {
+            detallePago
+                    .setRellenado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+            detallePago.setEstadoIncorrecto(null);
+        } else {
+            // En caso contrario establecemos detalle error
+            final String msgError = ControladorPasoPagarHelper.getInstance()
                     .generarMensajeEstadoIncorrecto(literales,
                             pVariablesFlujo.getIdioma(),
                             TypeEstadoPagoIncorrecto.PAGO_INICIADO,
                             pDvp.getCodigoError(), pDvp.getMensajeError());
+            detallePago.setRellenado(
+                    TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
             detallePago.setEstadoIncorrecto(new DetalleEstadoPagoIncorrecto(
-                    TypeEstadoPagoIncorrecto.PAGO_INICIADO, mensajeError,
+                    TypeEstadoPagoIncorrecto.PAGO_INICIADO, msgError,
                     pDvp.getCodigoError(), pDvp.getMensajeError()));
-        } else {
-            // Si ha podido verificarse, comprobamos si esta pagado o no
-            if (pDvp.isPagado()) {
-                detallePago.setRellenado(
-                        TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
-                detallePago.setEstadoIncorrecto(null);
-            } else {
-                // Si no se ha pagado, volvemos a estado inicial para iniciar
-                // proceso de pago
-                detallePago.setRellenado(TypeEstadoDocumento.SIN_RELLENAR);
-                detallePago.setEstadoIncorrecto(null);
-            }
         }
+
     }
 
     /**
