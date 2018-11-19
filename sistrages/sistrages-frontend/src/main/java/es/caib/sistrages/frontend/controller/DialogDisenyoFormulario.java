@@ -156,7 +156,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 			idiomas = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
 			if (!idiomas.isEmpty()) {
-				idioma = idiomas.get(0);
+				if (idiomas.contains(UtilJSF.getIdioma().toString())) {
+					idioma = UtilJSF.getIdioma().toString();
+				} else {
+					idioma = idiomas.get(0);
+				}
 			}
 		}
 
