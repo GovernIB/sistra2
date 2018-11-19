@@ -202,8 +202,10 @@ function carregaLiterals() {
 
 			var error_txt = "Error carrega literals";
 
-			imc_contenidor_c
-				.html( error_txt );
+			consola( error_txt );
+
+			imc_carrega_inicial
+				.addClass("imc--error");
 
 		}
 
@@ -252,7 +254,7 @@ function carregaHTML() {
 			var jsonAutenticacio = APP_JSON_TRAMIT_T.autenticacion,
 				jsonUsuari = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 + ", " + APP_JSON_TRAMIT_U.nombre : txtSenseAutenticacio;
 
-			APP_USUARI_ID = APP_JSON_TRAMIT_U.nif;
+			APP_USUARI_ID = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.nif : false;
 
 			var txtHTML_Cap = {
 				txtGovern: txtGovern
@@ -395,8 +397,10 @@ function carregaHTML() {
 
 			var error_txt = "Error carrega arxius HTML i CSS";
 
-			imc_contenidor_c
-				.html( error_txt );
+			consola( error_txt );
+
+			imc_carrega_inicial
+				.addClass("imc--error");
 
 		}
 
