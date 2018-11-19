@@ -13,7 +13,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>api</module>
-        <module>regweb3</module>
 		<module>mock</module>
     </modules>
 
