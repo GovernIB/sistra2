@@ -58,10 +58,14 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties
             final ApiFirmaWebSimple api = new ApiFirmaWebSimple(
                     getPropiedad("url"), getPropiedad("usr"),
                     getPropiedad("pwd"));
-            final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(
-                    infoSesionFirma.getIdioma(),
-                    infoSesionFirma.getNombreUsuario(),
-                    infoSesionFirma.getEntidad());
+            // TODO ARREGLAR A NUEVA API
+            /*
+             * final FirmaSimpleCommonInfo commonInfo = new
+             * FirmaSimpleCommonInfo( infoSesionFirma.getIdioma(),
+             * infoSesionFirma.getNombreUsuario(),
+             * infoSesionFirma.getEntidad());
+             */
+            final FirmaSimpleCommonInfo commonInfo = null;
             return api.getTransactionID(commonInfo);
         } catch (final Exception e) {
             throw new FirmaPluginException(
