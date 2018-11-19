@@ -2,22 +2,18 @@ package es.caib.sistrahelp.frontend.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
-import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
-import es.caib.sistrahelp.core.api.model.comun.Constantes;
+import es.caib.sistrahelp.core.api.model.FiltroPerdidaClave;
+import es.caib.sistrahelp.core.api.model.PerdidaClave;
+import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
-import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
-import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
@@ -26,7 +22,7 @@ import es.caib.sistrahelp.frontend.util.UtilJSF;
  */
 @ManagedBean
 @ViewScoped
-public class ViewAuditoriaTramites extends ViewControllerBase {
+public class ViewPerdidaClave extends ViewControllerBase {
 
 	/**
 	 * helpdesk service.
@@ -37,17 +33,17 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	/**
 	 * lista datos.
 	 */
-	private LazyDataModel<EventoAuditoriaTramitacion> listaDatos;
+	private List<PerdidaClave> listaDatos;
 
 	/**
 	 * dato seleccionado.
 	 */
-	private EventoAuditoriaTramitacion datoSeleccionado;
+	private PerdidaClave datoSeleccionado;
 
 	/**
 	 * filtros.
 	 */
-	private FiltroAuditoriaTramitacion filtros;
+	private FiltroPerdidaClave filtros;
 
 	/**
 	 * Inicializa.
@@ -56,7 +52,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
+		filtros = new FiltroPerdidaClave(convierteListaAreas());
 	}
 
 	/**
@@ -71,10 +67,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	private void normalizarFiltro() {
-		filtros.setIdSesionTramitacion(StringUtils.trim(filtros.getIdSesionTramitacion()));
-		filtros.setNif(StringUtils.trim(filtros.getNif()));
+		// filtros.setDatoFormulario(StringUtils.trim(filtros.getDatoFormulario()));
 		filtros.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
-		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 	}
 
 	/**
@@ -82,33 +76,19 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		final Long rowCount = helpDeskService.countAuditoriaEvento(filtros);
-		listaDatos = new EventoAuditoriaTramitacionLazyDataModel(helpDeskService, rowCount, filtros);
+		final ResultadoPerdidaClave datosRes = helpDeskService.obtenerAuditoriaTramite(filtros);
+
+		if (datosRes.getResultado() == -1) {
+			listaDatos = null;
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("warning.perdidaClave.tamanyosuperado"));
+		} else if (datosRes.getResultado() == 0) {
+			listaDatos = null;
+		} else if (datosRes.getResultado() == 1) {
+			listaDatos = datosRes.getListaClaves();
+		}
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
-	}
-
-	/**
-	 * Consultar.
-	 */
-	public void consultar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
-
-		UtilJSF.getSessionBean().limpiaMochilaDatos();
-		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_EVENTO, datoSeleccionado);
-
-		// Muestra dialogo
-		UtilJSF.openDialog(DialogAuditoriaTramites.class, TypeModoAcceso.CONSULTA, null, true, 900, 600);
-	}
-
-	/**
-	 * Rc doble click.
-	 */
-	public void rcDobleClick() {
-		consultar();
 	}
 
 	/**
@@ -160,7 +140,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de listaDatos
 	 */
-	public LazyDataModel<EventoAuditoriaTramitacion> getListaDatos() {
+	public List<PerdidaClave> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -170,7 +150,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * @param listaDatos
 	 *            el nuevo valor de listaDatos
 	 */
-	public void setListaDatos(final LazyDataModel<EventoAuditoriaTramitacion> listaDatos) {
+	public void setListaDatos(final List<PerdidaClave> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
@@ -179,7 +159,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de datoSeleccionado
 	 */
-	public EventoAuditoriaTramitacion getDatoSeleccionado() {
+	public PerdidaClave getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -189,7 +169,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            el nuevo valor de datoSeleccionado
 	 */
-	public void setDatoSeleccionado(final EventoAuditoriaTramitacion datoSeleccionado) {
+	public void setDatoSeleccionado(final PerdidaClave datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 
@@ -198,7 +178,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 *
 	 * @return el valor de filtros
 	 */
-	public FiltroAuditoriaTramitacion getFiltros() {
+	public FiltroPerdidaClave getFiltros() {
 		return filtros;
 	}
 
@@ -208,7 +188,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 * @param filtros
 	 *            el nuevo valor de filtros
 	 */
-	public void setFiltros(final FiltroAuditoriaTramitacion filtros) {
+	public void setFiltros(final FiltroPerdidaClave filtros) {
 		this.filtros = filtros;
 	}
 

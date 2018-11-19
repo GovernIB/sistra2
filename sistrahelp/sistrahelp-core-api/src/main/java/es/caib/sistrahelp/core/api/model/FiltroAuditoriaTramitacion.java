@@ -25,6 +25,9 @@ public class FiltroAuditoriaTramitacion {
 	private String idProcedimientoCP;
 	private String idProcedimientoSIA;
 
+	private boolean errorPlataforma;
+	private boolean soloContar;
+
 	public FiltroAuditoriaTramitacion() {
 		super();
 	}
@@ -32,6 +35,12 @@ public class FiltroAuditoriaTramitacion {
 	public FiltroAuditoriaTramitacion(final List<String> listaAreas) {
 		super();
 		this.listaAreas = listaAreas;
+	}
+
+	public FiltroAuditoriaTramitacion(final List<String> listaAreas, final boolean errorPlataforma) {
+		super();
+		this.listaAreas = listaAreas;
+		this.errorPlataforma = errorPlataforma;
 	}
 
 	public List<String> getListaAreas() {
@@ -112,6 +121,22 @@ public class FiltroAuditoriaTramitacion {
 
 	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
+	}
+
+	public boolean isErrorPlataforma() {
+		return errorPlataforma;
+	}
+
+	public void setErrorPlataforma(final boolean errorPlataforma) {
+		this.errorPlataforma = errorPlataforma;
+	}
+
+	public boolean isSoloContar() {
+		return soloContar;
+	}
+
+	public void setSoloContar(boolean soloContar) {
+		this.soloContar = soloContar;
 	}
 
 }

@@ -29,6 +29,7 @@ import es.caib.sistrahelp.core.api.model.types.TypeIdioma;
 import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrahelp.frontend.controller.SessionBean;
 import es.caib.sistrahelp.frontend.controller.ViewAuditoriaTramites;
+import es.caib.sistrahelp.frontend.controller.ViewPerdidaClave;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
@@ -403,6 +404,9 @@ public final class UtilJSF {
 		switch (opcion) {
 		case AUDITORIA_TRAMITES:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewAuditoriaTramites.class) + EXTENSION_XHTML;
+			break;
+		case PERDIDA_CLAVE:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewPerdidaClave.class) + EXTENSION_XHTML;
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;

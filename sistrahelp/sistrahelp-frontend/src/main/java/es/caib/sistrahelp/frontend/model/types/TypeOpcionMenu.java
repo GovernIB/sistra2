@@ -14,6 +14,6 @@ public enum TypeOpcionMenu implements OpcionMenu {
 	/**
 	 * Auditoria de Tramites.
 	 */
-	AUDITORIA_TRAMITES;
+	AUDITORIA_TRAMITES, PERDIDA_CLAVE;
 
 }

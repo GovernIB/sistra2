@@ -43,7 +43,9 @@ public enum TypeEvento {
 	/**
 	 * DEBUG SCRIPT. EVENTO GENERADO CUANDO SE GENERA UN DEBUG EN UN SCRIPT.
 	 */
-	DEBUG_SCRIPT("TR_SCR");
+	DEBUG_SCRIPT("TR_SCR"),
+
+	PROCESO_PURGA("TR_PUR");
 
 	/**
 	 * Valor como string.

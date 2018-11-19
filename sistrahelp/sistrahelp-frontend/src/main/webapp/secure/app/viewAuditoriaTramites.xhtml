@@ -88,40 +88,37 @@
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false"/>
-				<p:ajax event="rowDblselect"
-		                  		oncomplete="triggerDblClick();"
-		                        update=":form:dataTable"
-		                        />
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}">
-			        <h:outputText value="#{dt.tipoEvento}" />
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}"        width="15%">
+			        <h:outputText value="#{msg['typeEvento.' += dt.tipoEvento]}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}"         width="11%">
 			        <h:outputText value="#{dt.fecha}">
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}"      width="19%">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}"           width="7%">
 			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}"       width="12%">
 			        <h:outputText value="#{dt.idTramite}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}"       width="5%">
 			        <h:outputText value="#{dt.versionTramite}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}" width="8%">
 			        <h:outputText value="#{dt.idProcedimientoCP}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}"           width="6%">
 			        <h:outputText value="#{dt.idProcedimientoSIA}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}"         width="17%">
 			        <h:outputText value="#{dt.codigoError}" />
 			    </p:column>
 			</p:dataTable></p:outputPanel>

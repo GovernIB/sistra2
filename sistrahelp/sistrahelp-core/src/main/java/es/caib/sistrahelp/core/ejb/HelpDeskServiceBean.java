@@ -14,6 +14,8 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
+import es.caib.sistrahelp.core.api.model.FiltroPerdidaClave;
+import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 
@@ -30,19 +32,25 @@ public class HelpDeskServiceBean implements HelpDeskService {
 
 	/** Security service. */
 	@Autowired
-	HelpDeskService auditoriaService;
+	HelpDeskService helpdeskService;
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
 	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
-		return auditoriaService.obtenerAuditoriaEvento(pFiltroBusqueda, pFiltroPaginacion);
+		return helpdeskService.obtenerAuditoriaEvento(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
-	public Long obtenerAuditoriaEventoCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
-		return auditoriaService.obtenerAuditoriaEventoCount(pFiltroBusqueda);
+	public Long countAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+		return helpdeskService.countAuditoriaEvento(pFiltroBusqueda);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	public ResultadoPerdidaClave obtenerAuditoriaTramite(final FiltroPerdidaClave pFiltroBusqueda) {
+		return helpdeskService.obtenerAuditoriaTramite(pFiltroBusqueda);
 	}
 
 }

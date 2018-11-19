@@ -27,7 +27,7 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
-				<p:fieldset legend="#{msg['dialogAuditoriaTramites.informacionGeneral']}" styleClass="margin-left-10 margin-right-10  noPadding">
+				<p:fieldset legend="#{msg['dialogAuditoriaTramites.informacionGeneral']}" styleClass="margin-left-10 margin-right-10  noPadding" rendered="#{dialogAuditoriaTramites.dato.idSesionTramitacion ne null}">
 			 		<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns="2" styleClass="w100">
 				 		<p:outputLabel for="evento" value="#{msg['dialogAuditoriaTramites.nombreEvento']}:" />
 						<p:inputText id="evento" value="#{dialogAuditoriaTramites.dato.tipoEvento}" disabled="true" size="40"/>
@@ -61,7 +61,7 @@
 				 		<h:panelGroup>
 							<p:inputText id="codigoError" value="#{dialogAuditoriaTramites.dato.codigoError}" disabled="true" size="70"/>
 							<p:spacer width="5px"/>
-							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();"/>
+							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();" rendered="#{dialogAuditoriaTramites.dato.trazaError ne null}"/>
 
 							<p:dialog header="#{msg['dialogAuditoriaTramites.tituloTraza']}" widgetVar="dlgTraza"  modal="true" resizable="false" height="405" width="780">
 								<p:outputPanel styleClass="w100">
@@ -80,8 +80,8 @@
 
 						<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogAuditoriaTramites.headerPropiedades']}" />
 						<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogAuditoriaTramites.dato.propiedadesEvento.asArrayList}"
-									  emptyMessage="#{msg['error.emptyRows']}"
-									  scrollable="true" scrollHeight="92%"
+									  emptyMessage="#{msg['error.emptyRows']}" scrollHeight="110"
+									  scrollable="true"
 			                          paginator="false"
 			                          selectionMode="single" rowKey="#{td.key}">
 
@@ -95,6 +95,9 @@
 						    </p:column>
 
 			 			</p:dataTable>
+
+						<p:spacer height="1px"/>
+						<p:spacer height="1px"/>
 					</h:panelGrid>
 
 				</p:fieldset>

@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewPerdidaClave.init}" />
+	</f:metadata>
+
+
+
+	<ui:define name="content">
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+
+		<h:form id="form" styleClass="h100">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+
+
+        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+        	<p:panelGrid id="panelFiltro" columns="3" columnClasses="w50,w30,w20" styleClass="noBackground w100 h10 noBorders">
+        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+	        		<p:outputLabel for="filtroDato" value="#{msg['viewPerdidaClave.filtroDatoFormulario']}:"/>
+		        	<p:inputText id="filtroDato" value="#{viewPerdidaClave.filtros.datoFormulario}" size="60" maxlength="60" required="true"/>
+	        	</h:panelGrid>
+
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+	        		<h:panelGroup>
+	        			<p:outputLabel for="filtroTramite" value="#{msg['viewPerdidaClave.filtroTramite']}" indicateRequired=""/>
+	        			<p:outputLabel value="/" />
+	        			<p:outputLabel for="filtroVersion" value="#{msg['viewPerdidaClave.filtroVersion']}:"/>
+	        		</h:panelGroup>
+	        		<h:panelGroup>
+		        		<p:inputText id="filtroTramite" value="#{viewPerdidaClave.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();" required="true">
+		        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+		        		</p:inputText>
+		        		<p:outputLabel value=" / "/>
+		        		<p:inputText id="filtroVersion" value="#{viewPerdidaClave.filtros.versionTramite}" size="1" maxlength="2" required="true">
+		        			<p:keyFilter regEx="/[0-9]/i"/>
+		        		</p:inputText>
+	        		</h:panelGroup>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
+	        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewPerdidaClave.filtroProcedimiento']}:"/>
+	        		<p:inputText id="filtroProcedimiento" value="#{viewPerdidaClave.filtros.idProcedimientoCP}" size="20" maxlength="20">
+	        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+	        		</p:inputText>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:"/>
+	        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:"/>
+	        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
+	        	</h:panelGrid>
+
+          		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+
+          		</p:panelGrid>
+
+
+			<!-- Data table -->
+			<p:outputPanel  styleClass="h80">
+				<p:dataTable id="dataTable" var="dt" value="#{viewPerdidaClave.listaDatos}" lazy="true" liveResize="true"
+							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+							 scrollable="true" scrollHeight="90%"
+	                         paginator="true" paginatorPosition="bottom"
+	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	                         rowsPerPageTemplate="5,10,15,30"
+				        	 selectionMode="single" selection="#{viewPerdidaClave.datoSeleccionado}" rowKey="#{dt.claveTramitacion}">
+
+
+					<!-- Necesario para actualizar en controlador la fila seleccionada -->
+					<p:ajax event="rowSelect" global="false"/>
+
+					<!-- Columnas -->
+			   		<p:column headerText="#{msg['viewPerdidaClave.headClaveTramitacion']}">
+				        <h:outputText value="#{dt.claveTramitacion}" />
+				    </p:column>
+				    <p:column headerText="#{msg['viewPerdidaClave.headFecha']}">
+				        <h:outputText value="#{dt.fecha}">
+				        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+				        </h:outputText>
+				    </p:column>
+				    <p:column headerText="#{msg['viewPerdidaClave.headTramite']}">
+				        <h:outputText value="#{dt.idTramite}" />
+				    </p:column>
+				    <p:column headerText="#{msg['viewPerdidaClave.headVersion']}">
+				        <h:outputText value="#{dt.versionTramite}" />
+				    </p:column>
+				   	<p:column headerText="#{msg['viewPerdidaClave.headProcedimiento']}">
+				        <h:outputText value="#{dt.idProcedimientoCP}" />
+				    </p:column>
+
+				</p:dataTable>
+			</p:outputPanel>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
