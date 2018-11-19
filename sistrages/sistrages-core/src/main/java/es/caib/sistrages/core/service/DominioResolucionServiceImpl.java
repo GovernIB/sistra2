@@ -29,78 +29,90 @@ import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 @Transactional
 public class DominioResolucionServiceImpl implements DominioResolucionService {
 
-	/**
-	 * log.
-	 */
-	private final Logger log = LoggerFactory.getLogger(DominioResolucionServiceImpl.class);
+    /**
+     * log.
+     */
+    private final Logger log = LoggerFactory
+            .getLogger(DominioResolucionServiceImpl.class);
 
-	/**
-	 * dominio dao.
-	 */
-	@Autowired
-	DominioDao dominioDao;
+    /**
+     * dominio dao.
+     */
+    @Autowired
+    DominioDao dominioDao;
 
-	/**
-	 * fuente dato dao.
-	 */
-	@Autowired
-	FuenteDatoDao fuenteDatoDao;
+    /**
+     * fuente dato dao.
+     */
+    @Autowired
+    FuenteDatoDao fuenteDatoDao;
 
-	/**
-	 * dominio dao.
-	 */
-	@Autowired
-	FuenteDatosComponent fuenteDatosComponent;
+    /**
+     * dominio dao.
+     */
+    @Autowired
+    FuenteDatosComponent fuenteDatosComponent;
 
-	/**
-	 * Configuracion Component.
-	 */
-	@Autowired
-	ConfiguracionComponent configuracionComponent;
+    /**
+     * Configuracion Component.
+     */
+    @Autowired
+    ConfiguracionComponent configuracionComponent;
 
-	@Override
-	@NegocioInterceptor
-	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
-			final List<ValorParametroDominio> parametros) {
-		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
-	}
+    @Override
+    @NegocioInterceptor
+    public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
+            final List<ValorParametroDominio> parametros) {
+        return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio,
+                parametros);
+    }
 
-	@Override
-	@NegocioInterceptor
-	public ValoresDominio realizarConsultaBD(final String datasource, final String sql,
-			final List<ValorParametroDominio> parametros) {
-		return fuenteDatosComponent.realizarConsultaBD(datasource, sql, parametros);
-	}
+    @Override
+    @NegocioInterceptor
+    public ValoresDominio realizarConsultaBD(final String datasource,
+            final String sql, final List<ValorParametroDominio> parametros) {
+        return fuenteDatosComponent.realizarConsultaBD(datasource, sql,
+                parametros);
+    }
 
-	@Override
-	public ValoresDominio realizarConsultaRemota(final TypeAmbito ambito, final Long idEntidad, final String idDominio,
-			final String url, final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros) {
-		IDominioPlugin iplugin;
-		if (ambito == TypeAmbito.GLOBAL) {
-			iplugin = (IDominioPlugin) configuracionComponent.obtenerPluginGlobal(TypePlugin.DOMINIO_REMOTO);
-		} else {
-			iplugin = (IDominioPlugin) configuracionComponent.obtenerPluginEntidad(TypePlugin.DOMINIO_REMOTO,
-					idEntidad);
-		}
+    @Override
+    public ValoresDominio realizarConsultaRemota(final TypeAmbito ambito,
+            final Long idEntidad, final String idDominio, final String url,
+            final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros) {
+        IDominioPlugin iplugin;
 
-		ValoresDominio valoresDominio;
-		if (iplugin == null) {
-			valoresDominio = new ValoresDominio();
-			valoresDominio.setError(true);
-			valoresDominio.setCodigoError("PLG");
-			valoresDominio.setDescripcionError("El plugin es nulo");
-		} else {
-			try {
-				valoresDominio = iplugin.invocarDominio(idDominio, url, parametros);
-				valoresDominio.setError(false);
-			} catch (final DominioPluginException e) {
-				valoresDominio = new ValoresDominio();
-				valoresDominio.setError(true);
-				valoresDominio.setDescripcionError(ExceptionUtils.getMessage(e));
-				valoresDominio.setCodigoError("BD");
-			}
-		}
-		return valoresDominio;
-	}
+        // TODO No hace falta trasladar ambito, siempre será global
+        iplugin = (IDominioPlugin) configuracionComponent
+                .obtenerPluginGlobal(TypePlugin.DOMINIO_REMOTO);
+        // if (ambito == TypeAmbito.GLOBAL) {
+        // iplugin = (IDominioPlugin)
+        // configuracionComponent.obtenerPluginGlobal(TypePlugin.DOMINIO_REMOTO);
+        // } else {
+        // iplugin = (IDominioPlugin)
+        // configuracionComponent.obtenerPluginEntidad(TypePlugin.DOMINIO_REMOTO,
+        // idEntidad);
+        // }
+
+        ValoresDominio valoresDominio;
+        if (iplugin == null) {
+            valoresDominio = new ValoresDominio();
+            valoresDominio.setError(true);
+            valoresDominio.setCodigoError("PLG");
+            valoresDominio.setDescripcionError("El plugin es nulo");
+        } else {
+            try {
+                valoresDominio = iplugin.invocarDominio(idDominio, url,
+                        parametros);
+                valoresDominio.setError(false);
+            } catch (final DominioPluginException e) {
+                valoresDominio = new ValoresDominio();
+                valoresDominio.setError(true);
+                valoresDominio
+                        .setDescripcionError(ExceptionUtils.getMessage(e));
+                valoresDominio.setCodigoError("BD");
+            }
+        }
+        return valoresDominio;
+    }
 
 }
