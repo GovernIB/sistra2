@@ -3,8 +3,11 @@ package es.caib.sistramit.rest.interna;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,18 +16,39 @@ import org.springframework.web.bind.annotation.RestController;
 import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
 import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
+import es.caib.sistramit.core.api.model.system.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.PerdidaClave;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.api.service.SystemService;
+import es.caib.sistramit.rest.api.interna.RDatosSesionPago;
+import es.caib.sistramit.rest.api.interna.RDetallePagoAuditoria;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
-import es.caib.sistramit.rest.api.interna.RFiltroAuditoria;
+import es.caib.sistramit.rest.api.interna.RFichero;
+import es.caib.sistramit.rest.api.interna.RFiltroEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroPaginacion;
+import es.caib.sistramit.rest.api.interna.RFiltroPagoAuditoria;
+import es.caib.sistramit.rest.api.interna.RFiltroPerdidaClave;
+import es.caib.sistramit.rest.api.interna.RINEventoAuditoria;
+import es.caib.sistramit.rest.api.interna.RINPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RInvalidacion;
+import es.caib.sistramit.rest.api.interna.ROUTEventoAuditoria;
+import es.caib.sistramit.rest.api.interna.ROUTPagoAuditoria;
+import es.caib.sistramit.rest.api.interna.ROUTPerdidaClave;
+import es.caib.sistramit.rest.api.interna.RPagoAuditoria;
+import es.caib.sistramit.rest.api.interna.RPerdidaClave;
+import es.caib.sistramit.rest.api.interna.RVerificacionPago;
 import es.caib.sistramit.rest.api.util.JsonException;
 import es.caib.sistramit.rest.api.util.JsonUtil;
 import io.swagger.annotations.Api;
@@ -65,108 +89,110 @@ public class ApiInternaRestController {
 			try {
 				pars = (RInvalidacion) JsonUtil.fromJson(invalidacionJSON, RInvalidacion.class);
 			} catch (final JsonException e) {
-				throw new RuntimeException(e);
+				throw new ErrorJsonException(e);
 			}
 		}
 
 		// Añade invalidación
 		final Invalidacion invalidacion = new Invalidacion();
-		invalidacion.setTipo(TypeInvalidacion.fromString(pars.getTipo()));
-		invalidacion.setIdentificador(pars.getIdentificador());
+		if (pars != null) {
+			invalidacion.setTipo(TypeInvalidacion.fromString(pars.getTipo()));
+			invalidacion.setIdentificador(pars.getIdentificador());
+		}
 		systemService.invalidar(invalidacion);
 
 		return true;
 
 	}
 
-	@ApiOperation(value = "Auditoría de eventos", notes = "Auditoría de eventos", response = REventoAuditoria.class, responseContainer = "List")
-	@RequestMapping(value = "/auditoria/evento", method = RequestMethod.GET)
-	public List<REventoAuditoria> obtenerAuditoriaEvento(
-			@RequestParam(name = "filtroPaginacion") final String pFiltroPaginacion,
-			@RequestParam(name = "filtroBusqueda") final String pFiltroBusqueda) {
-		List<REventoAuditoria> resListaEventos = null;
+	@ApiOperation(value = "Auditoría de eventos", notes = "Auditoría de eventos", response = ROUTEventoAuditoria.class)
+	@RequestMapping(value = "/auditoria/evento", method = RequestMethod.POST)
+	public ROUTEventoAuditoria obtenerAuditoriaEvento(@RequestBody final RINEventoAuditoria pFiltros) {
+		final ROUTEventoAuditoria resEvento = new ROUTEventoAuditoria();
 
-		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltroPaginacion);
-		final FiltroAuditoriaTramitacion filtroBusqueda = convierteFiltroAuditoriaBusqueda(pFiltroBusqueda);
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroEventoAuditoria filtroBusqueda = convierteFiltroEventoAuditoria(pFiltros.getFiltro());
 
-		final List<EventoAuditoriaTramitacion> listaEventos = restApiInternaService
-				.recuperarLogSesionTramitacionArea(filtroBusqueda, filtroPaginacion);
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resEvento.setNumElementos(restApiInternaService.contarLogSesionTramitacionArea(filtroBusqueda));
+		} else {
+			final List<EventoAuditoriaTramitacion> listaEventos = restApiInternaService
+					.recuperarLogSesionTramitacionArea(filtroBusqueda, filtroPaginacion);
 
-		if (listaEventos != null && !listaEventos.isEmpty()) {
-			resListaEventos = new ArrayList<>();
+			if (listaEventos != null && !listaEventos.isEmpty()) {
+				resEvento.setListaEventos(new ArrayList<>());
 
-			for (final EventoAuditoriaTramitacion eventoAuditoria : listaEventos) {
-				final REventoAuditoria nuevo = new REventoAuditoria();
-				nuevo.setId(eventoAuditoria.getId());
-				nuevo.setIdSesionTramitacion(eventoAuditoria.getIdSesionTramitacion());
-				nuevo.setTipoEvento(eventoAuditoria.getTipoEvento().toString());
-				nuevo.setFecha(eventoAuditoria.getFecha());
-				nuevo.setNif(eventoAuditoria.getNif());
-				nuevo.setIdTramite(eventoAuditoria.getIdTramite());
-				nuevo.setVersionTramite(eventoAuditoria.getVersionTramite());
-				nuevo.setIdProcedimientoCP(eventoAuditoria.getIdProcedimientoCP());
-				nuevo.setIdProcedimientoSIA(eventoAuditoria.getIdProcedimientoSIA());
-				nuevo.setCodigoError(eventoAuditoria.getCodigoError());
-				nuevo.setDescripcion(eventoAuditoria.getDescripcion());
-				nuevo.setResultado(eventoAuditoria.getResultado());
-				nuevo.setTrazaError(eventoAuditoria.getTrazaError());
-
-				if (eventoAuditoria.getPropiedadesEvento() != null) {
-					try {
-						nuevo.setDetalle(JSONUtil.toJSON(eventoAuditoria.getPropiedadesEvento()));
-					} catch (final JSONUtilException e) {
-						throw new ErrorJsonException(e);
-					}
+				for (final EventoAuditoriaTramitacion eventoAuditoria : listaEventos) {
+					resEvento.getListaEventos().add(convierteEventoAuditoria(eventoAuditoria));
 				}
-				resListaEventos.add(nuevo);
+
 			}
 
 		}
 
-		return resListaEventos;
+		return resEvento;
 	}
 
-	@ApiOperation(value = "Auditoría de eventos número total", notes = "Auditoría de eventos número total", response = Long.class)
-	@RequestMapping(value = "/auditoria/eventoContar", method = RequestMethod.GET)
-	public Long obtenerAuditoriaEventoCount(@RequestParam(name = "filtroBusqueda") final String pFiltroBusqueda) {
+	@ApiOperation(value = "Auditoría de trámite", notes = "Auditoría de trámite", response = ROUTPerdidaClave.class)
+	@RequestMapping(value = "/auditoria/tramite", method = RequestMethod.POST)
+	public ROUTPerdidaClave obtenerAuditoriaTramite(@RequestBody final RFiltroPerdidaClave pRFiltroBusqueda) {
+		ROUTPerdidaClave resClavePerdida = null;
 
-		final FiltroAuditoriaTramitacion filtro = convierteFiltroAuditoriaBusqueda(pFiltroBusqueda);
+		final FiltroPerdidaClave filtro = convierteFiltroPerdidaClave(pRFiltroBusqueda);
 
-		return restApiInternaService.recuperarLogSesionTramitacionAreaCount(filtro);
+		final OUTPerdidaClave resultadoClave = restApiInternaService.recuperarClaveTramitacionArea(filtro);
+
+		if (resultadoClave != null) {
+			resClavePerdida = new ROUTPerdidaClave();
+
+			resClavePerdida.setResultado(resultadoClave.getResultado());
+
+			if (resultadoClave.getResultado() == 1 && resultadoClave.getListaClaves() != null
+					&& !resultadoClave.getListaClaves().isEmpty()) {
+				resClavePerdida.setListaClaves(new ArrayList<>());
+				for (final PerdidaClave clave : resultadoClave.getListaClaves()) {
+					resClavePerdida.getListaClaves().add(conviertePerdidaClave(clave));
+				}
+			}
+
+		}
+
+		return resClavePerdida;
 	}
+
+
 
 	/**
-	 * Convierte los filtros de busqueda de auditoria de String al tipo
-	 * correspondiente.
+	 * Convierte filtro auditoria busqueda.
 	 *
-	 * @param pFiltro
-	 *            filtros de busqueda
-	 * @return filtro auditoria tramitacion
+	 * @param pRFiltro
+	 *            filtro
+	 * @return FiltroAuditoriaTramitacion
 	 */
-	private FiltroAuditoriaTramitacion convierteFiltroAuditoriaBusqueda(final String pFiltro) {
-		RFiltroAuditoria rFiltro = null;
-		try {
-			rFiltro = (RFiltroAuditoria) JsonUtil.fromJson(pFiltro, RFiltroAuditoria.class);
-		} catch (final JsonException e) {
-			throw new ErrorJsonException(e);
-		}
+	private FiltroEventoAuditoria convierteFiltroEventoAuditoria(final RFiltroEventoAuditoria pRFiltro) {
+		FiltroEventoAuditoria filtro = null;
 
-		FiltroAuditoriaTramitacion filtro = null;
-		if (rFiltro != null) {
-			filtro = new FiltroAuditoriaTramitacion();
-			if (rFiltro.getEvento() != null) {
-				filtro.setEvento(TypeEvento.valueOf(rFiltro.getEvento()));
+		if (pRFiltro != null) {
+
+			filtro = new FiltroEventoAuditoria();
+
+			filtro.setListaAreas(pRFiltro.getListaAreas());
+			filtro.setIdSesionTramitacion(pRFiltro.getIdSesionTramitacion());
+			filtro.setNif(pRFiltro.getNif());
+			filtro.setFechaDesde(pRFiltro.getFechaDesde());
+			filtro.setFechaHasta(pRFiltro.getFechaHasta());
+
+			if (pRFiltro.getEvento() != null) {
+				filtro.setEvento(TypeEvento.valueOf(pRFiltro.getEvento()));
 			}
-			filtro.setFechaDesde(rFiltro.getFechaDesde());
-			filtro.setFechaHasta(rFiltro.getFechaHasta());
-			filtro.setIdSesionTramitacion(rFiltro.getIdSesionTramitacion());
-			filtro.setListaAreas(rFiltro.getListaAreas());
-			filtro.setNif(rFiltro.getNif());
-			filtro.setIdTramite(rFiltro.getIdTramite());
-			filtro.setVersionTramite(rFiltro.getVersionTramite());
-			filtro.setIdProcedimientoCP(rFiltro.getIdProcedimientoCP());
-			filtro.setIdProcedimientoSIA(rFiltro.getIdProcedimientoSIA());
 
+			filtro.setIdTramite(pRFiltro.getIdTramite());
+			filtro.setVersionTramite(pRFiltro.getVersionTramite());
+			filtro.setIdProcedimientoCP(pRFiltro.getIdProcedimientoCP());
+			filtro.setIdProcedimientoSIA(pRFiltro.getIdProcedimientoSIA());
+
+			filtro.setErrorPlataforma(pRFiltro.isErrorPlataforma());
+			filtro.setSoloContar(pRFiltro.isSoloContar());
 		}
 
 		return filtro;
@@ -174,30 +200,116 @@ public class ApiInternaRestController {
 	}
 
 	/**
-	 * Convierte los filtros de paginacion de String al tipo correspondiente.
+	 * Convierte filtro paginacion.
 	 *
-	 * @param pFiltro
+	 * @param pRFiltro
 	 *            filtro
-	 * @return filtro de paginacion
+	 * @return FiltroPaginacion
 	 */
-	private FiltroPaginacion convierteFiltroPaginacion(final String pFiltro) {
-		RFiltroPaginacion rFiltro = null;
-		try {
-			rFiltro = (RFiltroPaginacion) JsonUtil.fromJson(pFiltro, RFiltroPaginacion.class);
-		} catch (final JsonException e) {
-			throw new ErrorJsonException(e);
-		}
-
+	private FiltroPaginacion convierteFiltroPaginacion(final RFiltroPaginacion pRFiltro) {
 		FiltroPaginacion filtro = null;
-		if (rFiltro != null) {
+
+		if (pRFiltro != null) {
+
 			filtro = new FiltroPaginacion();
 
-			filtro.setFirst(rFiltro.getFirst());
-			filtro.setPageSize(rFiltro.getPageSize());
+			filtro.setFirst(pRFiltro.getFirst());
+			filtro.setPageSize(pRFiltro.getPageSize());
 		}
 
 		return filtro;
 
 	}
+
+	/**
+	 * Convierte evento auditoria.
+	 *
+	 * @param pEventoAuditoria
+	 *            evento auditoria
+	 * @return REventoAuditoria
+	 */
+	private REventoAuditoria convierteEventoAuditoria(final EventoAuditoriaTramitacion pEventoAuditoria) {
+		REventoAuditoria rEvento = null;
+
+		if (pEventoAuditoria != null) {
+			rEvento = new REventoAuditoria();
+
+			rEvento.setId(pEventoAuditoria.getId());
+			rEvento.setIdSesionTramitacion(pEventoAuditoria.getIdSesionTramitacion());
+
+			if (pEventoAuditoria.getTipoEvento() != null) {
+				rEvento.setTipoEvento(pEventoAuditoria.getTipoEvento().toString());
+			}
+
+			rEvento.setFecha(pEventoAuditoria.getFecha());
+			rEvento.setNif(pEventoAuditoria.getNif());
+			rEvento.setIdTramite(pEventoAuditoria.getIdTramite());
+			rEvento.setVersionTramite(pEventoAuditoria.getVersionTramite());
+			rEvento.setIdProcedimientoCP(pEventoAuditoria.getIdProcedimientoCP());
+			rEvento.setIdProcedimientoSIA(pEventoAuditoria.getIdProcedimientoSIA());
+			rEvento.setCodigoError(pEventoAuditoria.getCodigoError());
+			rEvento.setDescripcion(pEventoAuditoria.getDescripcion());
+			rEvento.setResultado(pEventoAuditoria.getResultado());
+			rEvento.setTrazaError(pEventoAuditoria.getTrazaError());
+			if (pEventoAuditoria.getPropiedadesEvento() != null) {
+				try {
+					rEvento.setDetalle(JSONUtil.toJSON(pEventoAuditoria.getPropiedadesEvento()));
+				} catch (final JSONUtilException e) {
+					throw new ErrorJsonException(e);
+				}
+			}
+		}
+
+		return rEvento;
+	}
+
+	/**
+	 * Convierte filtro tramite busqueda.
+	 *
+	 * @param pRFiltro
+	 *            filtro
+	 * @return FiltroPerdidaClave
+	 */
+	private FiltroPerdidaClave convierteFiltroPerdidaClave(final RFiltroPerdidaClave pRFiltro) {
+
+		FiltroPerdidaClave filtro = null;
+		if (pRFiltro != null) {
+
+			filtro = new FiltroPerdidaClave();
+
+			filtro.setListaAreas(pRFiltro.getListaAreas());
+			filtro.setDatoFormulario(pRFiltro.getDatoFormulario());
+			filtro.setFechaDesde(pRFiltro.getFechaDesde());
+			filtro.setFechaHasta(pRFiltro.getFechaHasta());
+			filtro.setIdTramite(pRFiltro.getIdTramite());
+			filtro.setVersionTramite(pRFiltro.getVersionTramite());
+			filtro.setIdProcedimientoCP(pRFiltro.getIdProcedimientoCP());
+		}
+		return filtro;
+	}
+
+	/**
+	 * Convierte perdida clave.
+	 *
+	 * @param pPerdidaClave
+	 *            perdida clave
+	 * @return RPerdidaClave
+	 */
+	private RPerdidaClave conviertePerdidaClave(final PerdidaClave pPerdidaClave) {
+		RPerdidaClave rClave = null;
+
+		if (pPerdidaClave != null) {
+
+			rClave = new RPerdidaClave();
+
+			rClave.setClaveTramitacion(pPerdidaClave.getClaveTramitacion());
+			rClave.setFecha(pPerdidaClave.getFecha());
+			rClave.setIdTramite(pPerdidaClave.getIdTramite());
+			rClave.setVersionTramite(pPerdidaClave.getVersionTramite());
+			rClave.setIdProcedimientoCP(pPerdidaClave.getIdProcedimientoCP());
+		}
+		return rClave;
+	}
+
 
 }

@@ -5,6 +5,12 @@ import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+/**
+ * Evento Auditoria.
+ *
+ * @author Indra
+ *
+ */
 @ApiModel(value = "REventoAuditoria", description = "Evento Auditoria")
 public class REventoAuditoria {
 
@@ -86,6 +92,9 @@ public class REventoAuditoria {
 	@ApiModelProperty(value = "Traza Error")
 	private String trazaError;
 
+	/**
+	 * detalle.
+	 */
 	@ApiModelProperty(value = "detalle")
 	private String detalle;
 
@@ -93,6 +102,7 @@ public class REventoAuditoria {
 	 * Instancia un nuevo evento
 	 */
 	public REventoAuditoria() {
+		super();
 	}
 
 	/**

@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Filtros para la auditoria de tramites
+ * Filtros para la paginacion
  *
  * @author Indra
  *

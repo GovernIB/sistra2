@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.service.repository.model.HEventoAuditoria;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
@@ -112,16 +112,22 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 	}
 
 	@Override
-	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroEventoAuditoria pFiltroBusqueda) {
 		return retrieveByAreas(pFiltroBusqueda, null);
 	}
 
 	@Override
-	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+	public List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroEventoAuditoria pFiltroBusqueda,
 			final FiltroPaginacion filtroPaginacion) {
 		List<EventoAuditoriaTramitacion> result = null;
-		final CriteriaQuery<EventoAuditoriaTramitacion> query = retrieveByAreasCriteria(pFiltroBusqueda,
-				EventoAuditoriaTramitacion.class, false);
+
+		CriteriaQuery<EventoAuditoriaTramitacion> query = null;
+
+		if (pFiltroBusqueda.isErrorPlataforma()) {
+			query = retrieveByAreasAndNoIdSesionCriteria(pFiltroBusqueda, EventoAuditoriaTramitacion.class, false);
+		} else {
+			query = retrieveByAreasCriteria(pFiltroBusqueda, EventoAuditoriaTramitacion.class, false);
+		}
 
 		if (filtroPaginacion == null) {
 			result = entityManager.createQuery(query).getResultList();
@@ -134,14 +140,21 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 	}
 
 	@Override
-	public Long retrieveByAreasCount(final FiltroAuditoriaTramitacion pFiltros) {
-		final CriteriaQuery<Long> queryCount = retrieveByAreasCriteria(pFiltros, Long.class, true);
+	public Long countByAreas(final FiltroEventoAuditoria pFiltros) {
+
+		CriteriaQuery<Long> queryCount = null;
+
+		if (pFiltros.isErrorPlataforma()) {
+			queryCount = retrieveByAreasAndNoIdSesionCriteria(pFiltros, Long.class, true);
+		} else {
+			queryCount = retrieveByAreasCriteria(pFiltros, Long.class, true);
+		}
 		final Long countResult = entityManager.createQuery(queryCount).getSingleResult();
 
 		return countResult;
 	}
 
-	private <T> CriteriaQuery<T> retrieveByAreasCriteria(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+	private <T> CriteriaQuery<T> retrieveByAreasCriteria(final FiltroEventoAuditoria pFiltroBusqueda,
 			final Class<T> pTipo, final boolean pCount) {
 
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -211,6 +224,46 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 					tableE.get("detalle"));
 
 		}
+		return query;
+	}
+
+	private <T> CriteriaQuery<T> retrieveByAreasAndNoIdSesionCriteria(final FiltroEventoAuditoria pFiltroBusqueda,
+			final Class<T> pTipo, final boolean pCount) {
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<T> query = builder.createQuery(pTipo);
+
+		final Root<HEventoAuditoria> tableE = query.from(HEventoAuditoria.class);
+
+		Predicate predicate = builder.isNull(tableE.get("sesionTramitacion"));
+
+		if (pFiltroBusqueda.getFechaDesde() != null) {
+			predicate = builder.and(predicate,
+					builder.greaterThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaDesde()));
+		}
+
+		if (pFiltroBusqueda.getFechaHasta() != null) {
+			predicate = builder.and(predicate,
+					builder.lessThanOrEqualTo(tableE.get("fecha"), pFiltroBusqueda.getFechaHasta()));
+		}
+
+		if (pFiltroBusqueda.getEvento() != null) {
+			predicate = builder.and(predicate,
+					builder.equal(tableE.get("tipo"), pFiltroBusqueda.getEvento().toString()));
+		}
+
+		query.where(predicate);
+
+		if (pCount) {
+			query.multiselect(builder.count(tableE));
+		} else {
+			query.orderBy(builder.asc(tableE.get("fecha")));
+
+			query.multiselect(tableE.get("id"), tableE.get("tipo"), tableE.get("fecha"), tableE.get("codigoError"),
+					tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"),
+					tableE.get("detalle"));
+
+		}
+
 		return query;
 	}
 

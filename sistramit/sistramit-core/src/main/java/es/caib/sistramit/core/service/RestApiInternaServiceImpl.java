@@ -8,12 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
+import es.caib.sistramit.core.api.model.system.PagoAuditoria;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
+import es.caib.sistramit.core.service.component.system.RestApiInternaComponent;
 
 @Service
 @Transactional
@@ -23,25 +30,36 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Autowired
 	private AuditoriaComponent auditoriaComponent;
 
+	@Autowired
+	private RestApiInternaComponent restApiInternaComponent;
+
 	/** Log. */
 	private static Logger log = LoggerFactory.getLogger(RestApiInternaServiceImpl.class);
 
 	@Override
 	@NegocioInterceptor
-	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltros) {
+	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltros) {
 		return auditoriaComponent.recuperarLogSesionTramitacionArea(pFiltros);
 	}
 
 	@Override
+	@NegocioInterceptor
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
+			final FiltroEventoAuditoria pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
 		return auditoriaComponent.recuperarLogSesionTramitacionArea(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
-	public Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
-		return auditoriaComponent.recuperarLogSesionTramitacionAreaCount(pFiltroBusqueda);
+	@NegocioInterceptor
+	public Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda) {
+		return auditoriaComponent.contarLogSesionTramitacionArea(pFiltroBusqueda);
 	}
+
+	@Override
+	@NegocioInterceptor
+	public OUTPerdidaClave recuperarClaveTramitacionArea(final FiltroPerdidaClave pFiltroBusqueda) {
+		return restApiInternaComponent.recuperarClaveTramitacionArea(pFiltroBusqueda);
+	}
+
 
 }

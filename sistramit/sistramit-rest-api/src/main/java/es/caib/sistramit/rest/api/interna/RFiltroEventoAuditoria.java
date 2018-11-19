@@ -12,8 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
  * @author Indra
  *
  */
-@ApiModel(value = "RFiltroAuditoria", description = "Filtros para la auditoria de tramites")
-public class RFiltroAuditoria {
+@ApiModel(value = "RFiltroEventoAuditoria", description = "Filtros para la auditoria de tramites")
+public class RFiltroEventoAuditoria {
 
 	@ApiModelProperty(value = "Lista de areas")
 	private List<String> listaAreas;
@@ -44,6 +44,12 @@ public class RFiltroAuditoria {
 
 	@ApiModelProperty(value = "Cod. Procedimiento SIA")
 	private String idProcedimientoSIA;
+
+	@ApiModelProperty(value = "Error plataforma")
+	private boolean errorPlataforma;
+
+	@ApiModelProperty(value = "Solo contar numero de elementos")
+	private boolean soloContar;
 
 	public List<String> getListaAreas() {
 		return listaAreas;
@@ -123,6 +129,22 @@ public class RFiltroAuditoria {
 
 	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
+	}
+
+	public boolean isErrorPlataforma() {
+		return errorPlataforma;
+	}
+
+	public void setErrorPlataforma(final boolean errorPlataforma) {
+		this.errorPlataforma = errorPlataforma;
+	}
+
+	public boolean isSoloContar() {
+		return soloContar;
+	}
+
+	public void setSoloContar(final boolean soloContar) {
+		this.soloContar = soloContar;
 	}
 
 }

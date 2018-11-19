@@ -64,6 +64,44 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 
 	/**
 	 * Crea una nueva instancia de EventoAuditoriaTramitacion.
+	 *
+	 * @param id
+	 *            the id
+	 * @param tipoEvento
+	 *            the tipo evento
+	 * @param fecha
+	 *            the fecha
+	 * @param codigoError
+	 *            the codigo error
+	 * @param descripcion
+	 *            the descripcion
+	 * @param resultado
+	 *            the resultado
+	 * @param trazaError
+	 *            the traza error
+	 * @param detalle
+	 *            the detalle
+	 */
+	public EventoAuditoriaTramitacion(final Long id, final String tipoEvento, final Date fecha,
+			final String codigoError, final String descripcion, final String resultado, final String trazaError,
+			final String detalle) {
+		super();
+		this.id = id;
+		this.tipoEvento = TypeEvento.fromString(tipoEvento);
+		this.fecha = fecha;
+		this.codigoError = codigoError;
+		this.descripcion = descripcion;
+		this.resultado = resultado;
+		this.trazaError = trazaError;
+		try {
+			this.propiedadesEvento = (ListaPropiedades) JSONUtil.fromJSON(detalle, ListaPropiedades.class);
+		} catch (final JSONUtilException e) {
+			throw new ErrorJsonException(e);
+		}
+	}
+
+	/**
+	 * Crea una nueva instancia de EventoAuditoriaTramitacion.
 	 */
 	public EventoAuditoriaTramitacion() {
 		super();

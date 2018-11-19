@@ -7,7 +7,7 @@ import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 
 /**
@@ -77,7 +77,7 @@ public interface AuditoriaComponent {
 	 * @return lista de eventos
 	 */
 	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltroBusqueda);
+			final FiltroEventoAuditoria pFiltroBusqueda);
 
 	/**
 	 * Permite recuperar la lista de eventos internos por areas parametrizada por
@@ -89,7 +89,7 @@ public interface AuditoriaComponent {
 	 *            filtro paginacion
 	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion);
 
 	/**
@@ -100,6 +100,6 @@ public interface AuditoriaComponent {
 	 *            filtro busqueda
 	 * @return numero de eventos
 	 */
-	Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda);
+	Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda);
 
 }

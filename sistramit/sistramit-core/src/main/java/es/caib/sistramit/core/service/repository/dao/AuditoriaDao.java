@@ -5,7 +5,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 
 /**
@@ -69,7 +69,7 @@ public interface AuditoriaDao {
 	 *            filtro busqueda
 	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda);
+	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroEventoAuditoria pFiltroBusqueda);
 
 	/**
 	 * Permite recuperar la lista de eventos internos por areas parametrizada por
@@ -81,7 +81,7 @@ public interface AuditoriaDao {
 	 *            filtro paginacion
 	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+	List<EventoAuditoriaTramitacion> retrieveByAreas(final FiltroEventoAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion);
 
 	/**
@@ -92,6 +92,6 @@ public interface AuditoriaDao {
 	 *            filtro busqueda
 	 * @return numero de eventos
 	 */
-	Long retrieveByAreasCount(final FiltroAuditoriaTramitacion pFiltroBusqueda);
+	Long countByAreas(final FiltroEventoAuditoria pFiltroBusqueda);
 
 }

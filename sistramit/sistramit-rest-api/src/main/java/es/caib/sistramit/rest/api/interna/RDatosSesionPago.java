@@ -1,9 +1,9 @@
-package es.caib.sistramit.core.api.model.flujo;
+package es.caib.sistramit.rest.api.interna;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Datos almacenados en la sesión de pago.
@@ -11,51 +11,70 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
  * @author Indra
  *
  */
-public class DatosSesionPago implements Serializable {
+@ApiModel(value = "RDatosSesionPago", description = "Datos Sesion Pago")
+public class RDatosSesionPago {
 
 	/** Identificador pasarela de pago a utilizar. */
+	@ApiModelProperty(value = "Identificador pasarela")
 	private String pasarelaId;
 
 	/** Entidad. */
+	@ApiModelProperty(value = "Identificador entidad")
 	private String entidadId;
 
 	/** Código organismo dentro de la entidad (opcional según pasarela pago). */
+	@ApiModelProperty(value = "Codigo organismo dentro de la entidad")
 	private String organismoId;
 
 	/** Indica si pago simulado. */
+	@ApiModelProperty(value = "Simulado")
 	private boolean simulado;
 
 	/** Identificador pago. */
+	@ApiModelProperty(value = "Identificador Pago")
 	private String identificadorPago;
 
 	/** Presentacion pago. */
-	private TypePresentacion presentacion;
+	@ApiModelProperty(value = "Presentacion pago")
+	private String presentacion;
 
 	/** Fecha pago en caso de estar pagado. */
+	@ApiModelProperty(value = "Fecha pago")
 	private Date fechaPago;
 
 	/** Identificador pago pasarela en caso de estar pagado. */
+	@ApiModelProperty(value = "Identificador pago pasarela")
 	private String localizador;
 
 	/** Idioma. */
+	@ApiModelProperty(value = "Idioma")
 	private String idioma;
 
 	/** Sujeto pasivo. */
-	private Persona sujetoPasivo;
+	@ApiModelProperty(value = "Sujeto pasivo Nombre")
+	private String sujetoPasivoNombre;
+
+	@ApiModelProperty(value = "Sujeto pasivo Nif")
+	private String sujetoPasivoNif;
 
 	/** Modelo pago. */
+	@ApiModelProperty(value = "Modelo")
 	private String modelo;
 
 	/** Concepto pago. */
+	@ApiModelProperty(value = "Concepto")
 	private String concepto;
 
 	/** Código tasa (opcional según pasarela pago). */
+	@ApiModelProperty(value = "Codigo tasa")
 	private String tasaId;
 
 	/** Importe (en cents). */
+	@ApiModelProperty(value = "Importe")
 	private int importe;
 
 	/** Detalle pago (info debug a pasar a pasarela pago). */
+	@ApiModelProperty(value = "Detalle Pago")
 	private String detallePago;
 
 	/**
@@ -291,7 +310,7 @@ public class DatosSesionPago implements Serializable {
 	 *
 	 * @return presentacion
 	 */
-	public TypePresentacion getPresentacion() {
+	public String getPresentacion() {
 		return presentacion;
 	}
 
@@ -301,27 +320,8 @@ public class DatosSesionPago implements Serializable {
 	 * @param presentacion
 	 *            presentacion a establecer
 	 */
-	public void setPresentacion(final TypePresentacion presentacion) {
+	public void setPresentacion(final String presentacion) {
 		this.presentacion = presentacion;
-	}
-
-	/**
-	 * Método de acceso a sujetoPasivo.
-	 *
-	 * @return sujetoPasivo
-	 */
-	public Persona getSujetoPasivo() {
-		return sujetoPasivo;
-	}
-
-	/**
-	 * Método para establecer sujetoPasivo.
-	 *
-	 * @param sujetoPasivo
-	 *            sujetoPasivo a establecer
-	 */
-	public void setSujetoPasivo(final Persona sujetoPasivo) {
-		this.sujetoPasivo = sujetoPasivo;
 	}
 
 	/**
@@ -341,5 +341,43 @@ public class DatosSesionPago implements Serializable {
 	 */
 	public void setEntidadId(final String entidadId) {
 		this.entidadId = entidadId;
+	}
+
+	/**
+	 * Obtiene el valor de sujetoPasivoNombre.
+	 *
+	 * @return el valor de sujetoPasivoNombre
+	 */
+	public String getSujetoPasivoNombre() {
+		return sujetoPasivoNombre;
+	}
+
+	/**
+	 * Establece el valor de sujetoPasivoNombre.
+	 *
+	 * @param sujetoPasivoNombre
+	 *            el nuevo valor de sujetoPasivoNombre
+	 */
+	public void setSujetoPasivoNombre(final String sujetoPasivoNombre) {
+		this.sujetoPasivoNombre = sujetoPasivoNombre;
+	}
+
+	/**
+	 * Obtiene el valor de sujetoPasivoNif.
+	 *
+	 * @return el valor de sujetoPasivoNif
+	 */
+	public String getSujetoPasivoNif() {
+		return sujetoPasivoNif;
+	}
+
+	/**
+	 * Establece el valor de sujetoPasivoNif.
+	 *
+	 * @param sujetoPasivoNif
+	 *            el nuevo valor de sujetoPasivoNif
+	 */
+	public void setSujetoPasivoNif(final String sujetoPasivoNif) {
+		this.sujetoPasivoNif = sujetoPasivoNif;
 	}
 }

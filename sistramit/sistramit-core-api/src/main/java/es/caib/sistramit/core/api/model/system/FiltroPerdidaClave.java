@@ -3,33 +3,27 @@ package es.caib.sistramit.core.api.model.system;
 import java.util.Date;
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.system.types.TypeEvento;
-
 /**
- * Filtros para la auditoria de tramites
+ * Filtros para la perdida de clave
  *
  * @author Indra
  *
  */
-public class FiltroAuditoriaTramitacion {
+public class FiltroPerdidaClave {
 
 	private List<String> listaAreas;
-	private String idSesionTramitacion;
-	private String nif;
+	private String datoFormulario;
 	private Date fechaDesde;
 	private Date fechaHasta;
-	private TypeEvento evento;
-
 	private String idTramite;
 	private Integer versionTramite;
 	private String idProcedimientoCP;
-	private String idProcedimientoSIA;
 
-	public FiltroAuditoriaTramitacion() {
+	public FiltroPerdidaClave() {
 		super();
 	}
 
-	public FiltroAuditoriaTramitacion(final List<String> listaAreas) {
+	public FiltroPerdidaClave(final List<String> listaAreas) {
 		super();
 		this.listaAreas = listaAreas;
 	}
@@ -42,20 +36,12 @@ public class FiltroAuditoriaTramitacion {
 		this.listaAreas = listaAreas;
 	}
 
-	public String getIdSesionTramitacion() {
-		return idSesionTramitacion;
+	public String getDatoFormulario() {
+		return datoFormulario;
 	}
 
-	public void setIdSesionTramitacion(final String idSesionTramitacion) {
-		this.idSesionTramitacion = idSesionTramitacion;
-	}
-
-	public String getNif() {
-		return nif;
-	}
-
-	public void setNif(final String nif) {
-		this.nif = nif;
+	public void setDatoFormulario(final String datoFormulario) {
+		this.datoFormulario = datoFormulario;
 	}
 
 	public Date getFechaDesde() {
@@ -72,14 +58,6 @@ public class FiltroAuditoriaTramitacion {
 
 	public void setFechaHasta(final Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
-	}
-
-	public TypeEvento getEvento() {
-		return evento;
-	}
-
-	public void setEvento(final TypeEvento evento) {
-		this.evento = evento;
 	}
 
 	public String getIdTramite() {
@@ -104,14 +82,6 @@ public class FiltroAuditoriaTramitacion {
 
 	public void setIdProcedimientoCP(final String idProcedimientoCP) {
 		this.idProcedimientoCP = idProcedimientoCP;
-	}
-
-	public String getIdProcedimientoSIA() {
-		return idProcedimientoSIA;
-	}
-
-	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
-		this.idProcedimientoSIA = idProcedimientoSIA;
 	}
 
 }

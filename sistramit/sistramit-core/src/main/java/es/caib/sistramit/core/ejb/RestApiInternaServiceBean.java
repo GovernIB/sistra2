@@ -10,9 +10,15 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
+import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
+import es.caib.sistramit.core.api.model.system.PagoAuditoria;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 
 @Stateless
@@ -25,19 +31,24 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+			final FiltroEventoAuditoria pFiltroBusqueda) {
 		return restApiInternaService.recuperarLogSesionTramitacionArea(pFiltroBusqueda);
 	}
 
 	@Override
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
+			final FiltroEventoAuditoria pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
 		return restApiInternaService.recuperarLogSesionTramitacionArea(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
-	public Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
-		return restApiInternaService.recuperarLogSesionTramitacionAreaCount(pFiltroBusqueda);
+	public Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda) {
+		return restApiInternaService.contarLogSesionTramitacionArea(pFiltroBusqueda);
+	}
+
+	@Override
+	public OUTPerdidaClave recuperarClaveTramitacionArea(final FiltroPerdidaClave pFiltroBusqueda) {
+		return restApiInternaService.recuperarClaveTramitacionArea(pFiltroBusqueda);
 	}
 
 }

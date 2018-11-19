@@ -13,7 +13,7 @@ import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.service.repository.dao.AuditoriaDao;
@@ -59,19 +59,19 @@ public class AuditoriaComponentImpl implements AuditoriaComponent {
 
 	@Override
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltroBusqueda) {
+			final FiltroEventoAuditoria pFiltroBusqueda) {
 		return auditoriaDao.retrieveByAreas(pFiltroBusqueda);
 	}
 
 	@Override
 	public List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
+			final FiltroEventoAuditoria pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
 		return auditoriaDao.retrieveByAreas(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
-	public Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
-		return auditoriaDao.retrieveByAreasCount(pFiltroBusqueda);
+	public Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda) {
+		return auditoriaDao.countByAreas(pFiltroBusqueda);
 	}
 
 }

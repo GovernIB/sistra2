@@ -2,9 +2,15 @@ package es.caib.sistramit.core.api.service;
 
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
+import es.caib.sistramit.core.api.model.system.PagoAuditoria;
 
 /**
  * Servicio funcionalidades Rest Api Interna.
@@ -22,8 +28,7 @@ public interface RestApiInternaService {
 	 *            filtro busqueda
 	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroAuditoriaTramitacion pFiltroBusqueda);
+	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda);
 
 	/**
 	 * Permite recuperar el numero de eventos internos por areas parametrizada por
@@ -35,7 +40,7 @@ public interface RestApiInternaService {
 	 *            filtro paginacion
 	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroAuditoriaTramitacion pFiltroBusqueda,
+	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion);
 
 	/**
@@ -46,6 +51,17 @@ public interface RestApiInternaService {
 	 *            filtro busqueda
 	 * @return Numero de eventos
 	 */
-	Long recuperarLogSesionTramitacionAreaCount(final FiltroAuditoriaTramitacion pFiltroBusqueda);
+	Long contarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda);
+
+	/**
+	 * Recuperar las claves de tramitacion por area parametrizada por unos filtros
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return resultado: resultado: 1 -> correcto -1 -> se ha excedido el tamaño
+	 *         maximo de la consulta lista de las claves
+	 */
+	OUTPerdidaClave recuperarClaveTramitacionArea(final FiltroPerdidaClave pFiltroBusqueda);
+
 
 }
