@@ -1,26 +1,22 @@
-/* Ayudas STG */
-h1.stgH1 {
-	font-size:1.5em; 
-	margin-bottom:.8em; 
-	color: #4285f4;
-}
-	
-h2.stgH2 {
-	font-size:1.2em;
-	margin-bottom:.8em; 
-	color: #000000;
-}
-
-span.nombreCampo {
-	color: #4dba79;
-}
-
-span.boton {
-	font-style:italic;
-	text-decoration:underline;
-	color: #cc073c;
-}
-
-ul {
-	list-style-type: square;
+/* Ayudas STG */ 
+body { font:normal 80% Helvetica, Arial, sans-serif; color: #333; } 
+h1.stgH1 { 
+        font-size:1.5em; 
+        margin-bottom:.8em; 
+} 
+        
+h2.stgH2 { 
+        font-size:1.2em; 
+        margin-bottom:.8em; 
+        color: #000000; 
+} 
+span.nombreCampo { 
+} 
+span.boton { 
+        font-style:italic; 
+        text-decoration:underline; 
+        color: #cc073c; 
+} 
+ul { 
+        list-style-type: square; 
 }
