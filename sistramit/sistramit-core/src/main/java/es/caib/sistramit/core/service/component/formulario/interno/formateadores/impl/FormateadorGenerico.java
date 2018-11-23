@@ -4,12 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.pdf.PDFDocument;
 import es.caib.sistra2.commons.pdf.Parrafo;
 import es.caib.sistra2.commons.pdf.Propiedad;
 import es.caib.sistra2.commons.pdf.Seccion;
-import es.caib.sistra2.commons.pdf.TipoVisualizacionListado;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteAviso;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
@@ -25,6 +25,7 @@ import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+import es.caib.sistramit.core.service.model.formulario.types.TipoVisualizacionValorIndexado;
 
 /**
  * Formateador PDF para formularios.
@@ -34,40 +35,50 @@ import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
  */
 public class FormateadorGenerico implements FormateadorPdfFormulario {
 
-    /**
-     * Propiedad que se pasa por plantilla, indica la url para poner el pdf.
-     **/
-    public static final String IMAGEN_URL = "imagen.url";
-    /**
-     * Propiedad que se pasa por plantilla, indica como mostrar la visualización
-     * de listado de valores.
-     **/
-    public static final String LISTADO_VISUALIZACION = "listado.visualizacion";
-    /**
-     * Propiedad que se pasa por plantilla, indica si los mensajes de aviso se
-     * deben mostrar tambien el pdf.
-     **/
-    public static final String AVISO_MOSTRAR = "aviso.mostrar";
+    /** Propiedad plantilla que indica url logo. **/
+    public static final String PROP_LOGO_URL = "logo.url";
 
-    /** Como es la visualización de listados. **/
-    private TipoVisualizacionListado listadoVisualizacion;
+    /** Propiedad plantilla que indica visualización campos indexados. **/
+    public static final String PROP_VISUALIZACION_VALOR_INDEXADO = "campoIndexado.visualizacion";
+
+    /** Propiedad plantilla que indica si se muestran mensajes de aviso. **/
+    public static final String PROP_MOSTRAR_AVISOS = "aviso.mostrar";
+
+    /** Propiedad plantilla que indica si se muestra título procedimiento. */
+    public static final String PROP_MOSTRAR_TITULO_PROCEDIMIENTO = "titulo.procedimiento";
+
+    /** Visualización campos indexados. **/
+    private TipoVisualizacionValorIndexado visualizacionValorIndexado;
+
     /** Indica si hay que mostrar los mensajes de aviso. **/
     private Boolean mostrarAviso;
+
     /** Url de la imagen. **/
     private String urlImagen;
 
+    /**
+     * Si está activo, se mostrará procedimiento - titulo , sino solo el titulo.
+     **/
+    private Boolean mostrarTituloConProcedimiento;
+
     @Override
     public byte[] formatear(final byte[] ixml, final byte[] plantilla,
-            final String idioma, final RFormularioInterno defFormInterno) {
+            final String idioma, final RFormularioInterno defFormInterno,
+            final String tituloProcedimiento) {
 
         final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 
         inicializarValores(plantilla);
 
         // Creamos Map de valores
-        final PDFDocument documento = new PDFDocument(
-                defFormInterno.getTitulo());
-        if (urlImagen != null) {
+        final PDFDocument documento;
+        if (mostrarTituloConProcedimiento) {
+            documento = new PDFDocument(
+                    tituloProcedimiento + " - " + defFormInterno.getTitulo());
+        } else {
+            documento = new PDFDocument(defFormInterno.getTitulo());
+        }
+        if (StringUtils.isNotBlank(urlImagen)) {
             documento.setImagen(urlImagen);
         }
 
@@ -148,25 +159,30 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
     private void inicializarValores(final byte[] plantilla) {
 
         urlImagen = null;
-        listadoVisualizacion = TipoVisualizacionListado.SUFIJO_PARENTESIS;
+        visualizacionValorIndexado = TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS;
         mostrarAviso = false;
+        mostrarTituloConProcedimiento = false;
         if (plantilla != null) {
             try {
 
-                final Properties prop = SerializationUtils
+                final Properties propiedades = SerializationUtils
                         .deserialize(plantilla);
-                if (prop != null && prop.containsKey(IMAGEN_URL)) {
-                    urlImagen = prop.getProperty(IMAGEN_URL);
-                }
+                if (propiedades != null) {
 
-                if (prop != null && prop.containsKey(LISTADO_VISUALIZACION)) {
-                    listadoVisualizacion = (TipoVisualizacionListado) prop
-                            .get(LISTADO_VISUALIZACION);
-                }
+                    urlImagen = propiedades.getProperty(PROP_LOGO_URL);
 
-                if (prop != null && prop.containsKey(AVISO_MOSTRAR)) {
-                    mostrarAviso = Boolean
-                            .valueOf(prop.get(AVISO_MOSTRAR).toString());
+                    if (StringUtils.isNotBlank(propiedades
+                            .getProperty(PROP_VISUALIZACION_VALOR_INDEXADO))) {
+                        visualizacionValorIndexado = TipoVisualizacionValorIndexado
+                                .valueOf(propiedades.getProperty(
+                                        PROP_VISUALIZACION_VALOR_INDEXADO));
+                    }
+
+                    mostrarAviso = Boolean.valueOf(
+                            propiedades.getProperty(PROP_MOSTRAR_AVISOS));
+
+                    mostrarTituloConProcedimiento = Boolean.valueOf(propiedades
+                            .getProperty(PROP_MOSTRAR_TITULO_PROCEDIMIENTO));
                 }
 
             } catch (final Exception e) {
@@ -229,9 +245,7 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
      */
     private Propiedad getPropiedad(final String etiqueta,
             final ValorCampoIndexado valor) {
-        if (listadoVisualizacion == TipoVisualizacionListado.SOLO_CODIGO) {
-            return new Propiedad(etiqueta, valor.getValor().getValor());
-        } else if (listadoVisualizacion == TipoVisualizacionListado.SOLO_DESCRIPCION) {
+        if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.DESCRIPCION) {
             return new Propiedad(etiqueta, valor.getValor().getDescripcion());
         } else {
             return new Propiedad(etiqueta,
@@ -250,13 +264,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
             final ValorCampoListaIndexados valor) {
         final ValorCampoListaIndexados valorLista = valor;
         final StringBuilder valorListaSimple = new StringBuilder("");
-        String separador;
-        if (listadoVisualizacion == TipoVisualizacionListado.SOLO_DESCRIPCION_COMAS
-                || listadoVisualizacion == TipoVisualizacionListado.SOLO_CODIGO_COMAS) {
-            separador = ", ";
-        } else {
-            separador = "\n";
-        }
+        final String separador = "\n";
+
         for (final ValorIndexado valorElemento : valorLista.getValor()) {
             valorListaSimple.append(getValorCampoIndexado(valorElemento));
             valorListaSimple.append(separador);
@@ -277,27 +286,22 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
      */
     private String getValorCampoIndexado(final ValorIndexado valorElemento) {
         final StringBuilder valorListaSimple = new StringBuilder("");
-        switch (listadoVisualizacion) {
-        case PREFIJO_GUION:
-        case PREFIJO_PARENTESIS:
+        switch (visualizacionValorIndexado) {
+        case CODIGO_DESCRIPCION_CON_GUION:
+        case CODIGO_DESCRIPCION_CON_PARENTESIS:
             valorListaSimple
                     .append(getCodigoVisualizado(valorElemento.getValor()));
             valorListaSimple.append(valorElemento.getDescripcion());
             break;
 
-        case SUFIJO_GUION:
-        case SUFIJO_PARENTESIS:
+        case DESCRIPCION_CODIGO_CON_GUION:
+        case DESCRIPCION_CODIGO_CON_PARENTESIS:
             valorListaSimple.append(valorElemento.getDescripcion());
             valorListaSimple
                     .append(getCodigoVisualizado(valorElemento.getValor()));
             break;
 
-        case SOLO_CODIGO:
-        case SOLO_CODIGO_COMAS:
-            valorListaSimple.append(valorElemento.getValor());
-            break;
-        case SOLO_DESCRIPCION_COMAS:
-        case SOLO_DESCRIPCION:
+        case DESCRIPCION:
             valorListaSimple.append(valorElemento.getDescripcion());
             break;
         }
@@ -306,18 +310,18 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 
     private String getCodigoVisualizado(final String codigo) {
         final StringBuilder texto = new StringBuilder();
-        if (listadoVisualizacion == TipoVisualizacionListado.PREFIJO_PARENTESIS
-                || listadoVisualizacion == TipoVisualizacionListado.SUFIJO_PARENTESIS) {
+        if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.CODIGO_DESCRIPCION_CON_PARENTESIS
+                || visualizacionValorIndexado == TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS) {
             texto.append(" (");
-        } else if (listadoVisualizacion == TipoVisualizacionListado.SUFIJO_GUION) {
+        } else if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_GUION) {
             texto.append(" - ");
         }
 
         texto.append(codigo);
-        if (listadoVisualizacion == TipoVisualizacionListado.PREFIJO_PARENTESIS
-                || listadoVisualizacion == TipoVisualizacionListado.SUFIJO_PARENTESIS) {
+        if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.CODIGO_DESCRIPCION_CON_PARENTESIS
+                || visualizacionValorIndexado == TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS) {
             texto.append(") ");
-        } else if (listadoVisualizacion == TipoVisualizacionListado.PREFIJO_GUION) {
+        } else if (visualizacionValorIndexado == TipoVisualizacionValorIndexado.CODIGO_DESCRIPCION_CON_GUION) {
             texto.append(" - ");
         }
 

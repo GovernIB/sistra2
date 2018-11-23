@@ -34,8 +34,57 @@ public enum TypePropiedadConfiguracion {
 	/** Prefijo plugin. */
 	PLUGINS_PREFIJO("plugins.prefix"),
 
-	PERDIDA_CLAVE_NUMMAXTRAMITES("sistrahelp.perdidaClave.numMaxTramites");
-
+	PERDIDA_CLAVE_NUMMAXTRAMITES("sistrahelp.perdidaClave.numMaxTramites"),
+	/**
+	 * Propiedades en la purga.
+	 */
+	/** Tiempos de purgado. **/
+	PURGA_ERRORES_INTERNOS("sistramit.purga.erroresInternos"),
+	/** Tiempo (minutos) tras el cual seran borradas las sesiones de formularios */
+	PURGA_SESION_FORMULARIOS_FINALIZADOS("sistramit.purga.formulario.fin"),
+	/**
+	 * Tiempo (minutos) tras el cual seran borradas las sesiones de formularios, si
+	 * la sesion de formulario no esta finalizada
+	 */
+	PURGA_SESION_FORMULARIOS_NO_FINALIZADOS("sistramit.purga.formulario.nofin"),
+	/** Tiempo (minutos) tras el cual seran borradas los pagos */
+	PURGA_PAGOS_FINALIZADOS("sistramit.purga.pago.fin"),
+	/**
+	 * Tiempo (minutos) tras el cual seran borradas los pagos, si la sesion de
+	 * formulario no esta finalizada
+	 */
+	PURGA_PAGOS_NO_FINALIZADOS("sistramit.purga.pago.nofin"),
+	/**
+	 * Tiempo (horas) tras su fecha de finalizacion tras el cual un tramite
+	 * finalizado sera purgado.
+	 */
+	PURGA_FINALIZADOS("sistramit.purga.finalizado"),
+	/**
+	 * Tiempo (horas) tras su fecha de ultimo acceso tras el cual seran purgados los
+	 * tramites no persistentes no finalizados.
+	 */
+	PURGA_NO_PERSISTENTES("sistramit.purga.noPersistente"),
+	/**
+	 * Tiempo (horas) tras su fecha de caducidad tras el cual seran purgados los
+	 * tramites persistentes caducados.
+	 */
+	PURGA_CADUCADOS("sistramit.purga.caducados"),
+	/**
+	 * Tiempo (horas) tras que las invalidaciones de tramites y dominios se purgan,
+	 * debe ser mayor que el TimeToLive (o si existe el TimeToIdle) de las caches de
+	 * tramites y dominios.
+	 */
+	PURGA_INVALIDACIONES("sistramit.purga.invalidaciones"),
+	/**
+	 * Dias despues de la ultima modificacion del tramite tras los cuales se borrara
+	 * tramite pendiente de purgar por pago realizado.
+	 */
+	PURGA_PENDIENTE_PURGA_PAGO("sistramit.purga.pendientePurgaPago"),
+	/**
+	 * Tiempo (dias) tras su fecha de purgado tras el cual seran definitivamente
+	 * borrados los purgados.
+	 **/
+	PURGA_PURGADOS("sistramit.purga.purgados");
 	/**
 	 * Valor como string.
 	 */

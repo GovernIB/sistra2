@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.caib.sistra2.commons.pdf.PdfUtil;
-import es.caib.sistra2.commons.pdf.TipoVisualizacionListado;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistramit.core.api.exception.FormateadorException;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -15,6 +14,7 @@ import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+import es.caib.sistramit.core.service.model.formulario.types.TipoVisualizacionValorIndexado;
 
 /**
  * Formateador PDF para formularios.
@@ -25,11 +25,11 @@ import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 public class FormateadorPlantilla implements FormateadorPdfFormulario {
 
 	/** Como es la visualización de listados. **/
-	private TipoVisualizacionListado listadoVisualizacion;
+	private TipoVisualizacionValorIndexado listadoVisualizacion;
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
-			final RFormularioInterno defFormInterno) {
+			final RFormularioInterno defFormInterno, final String tituloProcedimiento) {
 
 		inicializarValores();
 		try {
@@ -68,7 +68,7 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	 */
 	private void inicializarValores() {
 
-		listadoVisualizacion = TipoVisualizacionListado.SUFIJO_PARENTESIS;
+		listadoVisualizacion = TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS;
 	}
 
 	/**
@@ -79,9 +79,7 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	 * @return
 	 */
 	private String getValor(final ValorCampoIndexado valor) {
-		if (listadoVisualizacion == TipoVisualizacionListado.SOLO_CODIGO) {
-			return valor.getValor().getValor();
-		} else if (listadoVisualizacion == TipoVisualizacionListado.SOLO_DESCRIPCION) {
+		if (listadoVisualizacion == TipoVisualizacionValorIndexado.DESCRIPCION) {
 			return valor.getValor().getDescripcion();
 		} else {
 			return getValorCampoIndexado(valor.getValor());
@@ -120,24 +118,19 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	private String getValorCampoIndexado(final ValorIndexado valorElemento) {
 		final StringBuilder valorListaSimple = new StringBuilder("");
 		switch (listadoVisualizacion) {
-		case PREFIJO_GUION:
-		case PREFIJO_PARENTESIS:
+		case DESCRIPCION_CODIGO_CON_GUION:
+		case CODIGO_DESCRIPCION_CON_PARENTESIS:
 			valorListaSimple.append(getCodigoVisualizado(valorElemento.getValor()));
 			valorListaSimple.append(valorElemento.getDescripcion());
 			break;
 
-		case SUFIJO_GUION:
-		case SUFIJO_PARENTESIS:
+		case CODIGO_DESCRIPCION_CON_GUION:
+		case DESCRIPCION_CODIGO_CON_PARENTESIS:
 			valorListaSimple.append(valorElemento.getDescripcion());
 			valorListaSimple.append(getCodigoVisualizado(valorElemento.getValor()));
 			break;
 
-		case SOLO_CODIGO:
-		case SOLO_CODIGO_COMAS:
-			valorListaSimple.append(valorElemento.getValor());
-			break;
-		case SOLO_DESCRIPCION_COMAS:
-		case SOLO_DESCRIPCION:
+		case DESCRIPCION:
 			valorListaSimple.append(valorElemento.getDescripcion());
 			break;
 		}
@@ -146,18 +139,18 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 
 	private String getCodigoVisualizado(final String codigo) {
 		final StringBuilder texto = new StringBuilder();
-		if (listadoVisualizacion == TipoVisualizacionListado.PREFIJO_PARENTESIS
-				|| listadoVisualizacion == TipoVisualizacionListado.SUFIJO_PARENTESIS) {
+		if (listadoVisualizacion == TipoVisualizacionValorIndexado.CODIGO_DESCRIPCION_CON_PARENTESIS
+				|| listadoVisualizacion == TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS) {
 			texto.append(" (");
-		} else if (listadoVisualizacion == TipoVisualizacionListado.SUFIJO_GUION) {
+		} else if (listadoVisualizacion == TipoVisualizacionValorIndexado.CODIGO_DESCRIPCION_CON_GUION) {
 			texto.append(" - ");
 		}
 
 		texto.append(codigo);
-		if (listadoVisualizacion == TipoVisualizacionListado.PREFIJO_PARENTESIS
-				|| listadoVisualizacion == TipoVisualizacionListado.SUFIJO_PARENTESIS) {
+		if (listadoVisualizacion == TipoVisualizacionValorIndexado.CODIGO_DESCRIPCION_CON_PARENTESIS
+				|| listadoVisualizacion == TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS) {
 			texto.append(") ");
-		} else if (listadoVisualizacion == TipoVisualizacionListado.PREFIJO_GUION) {
+		} else if (listadoVisualizacion == TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_GUION) {
 			texto.append(" - ");
 		}
 

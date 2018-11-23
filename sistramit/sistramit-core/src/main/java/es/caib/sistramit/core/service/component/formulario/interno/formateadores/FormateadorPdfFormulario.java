@@ -10,20 +10,22 @@ import es.caib.sistrages.rest.api.interna.RFormularioInterno;
  */
 public interface FormateadorPdfFormulario {
 
-    /**
-     * Formatea a PDF.
-     *
-     * @param xml
-     *            XML datos formulario
-     * @param defFormInterno
-     *            Definición formulario interno
-     * @param plantilla
-     *            plantilla a usar
-     * @param idioma
-     *            idioma
-     * @return PDF generado
-     */
-    byte[] formatear(byte[] xml, byte[] plantilla, String idioma,
-            RFormularioInterno defFormInterno);
+	/**
+	 * Formatea a PDF.
+	 *
+	 * @param xml
+	 *            XML datos formulario
+	 * @param defFormInterno
+	 *            Definición formulario interno
+	 * @param plantilla
+	 *            plantilla a usar
+	 * @param idioma
+	 *            idioma
+	 * @param tituloProcedimiento
+	 *            titulo del procedimiento
+	 * @return PDF generado
+	 */
+	byte[] formatear(byte[] xml, byte[] plantilla, String idioma, RFormularioInterno defFormInterno,
+			String tituloProcedimiento);
 
 }
