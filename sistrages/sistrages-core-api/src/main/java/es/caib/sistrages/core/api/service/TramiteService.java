@@ -406,8 +406,10 @@ public interface TramiteService {
 	 *
 	 * @param idTramiteVersion
 	 * @param usuario
+	 * @param idArea
+	 * @param idTramite
 	 */
-	public void clonadoTramiteVersion(Long idTramiteVersion, final String usuario);
+	public void clonadoTramiteVersion(Long idTramiteVersion, final String usuario, Long idArea, Long idTramite);
 
 	/**
 	 * Devuelve una lista con el id de los tramites que tengan una versión activa

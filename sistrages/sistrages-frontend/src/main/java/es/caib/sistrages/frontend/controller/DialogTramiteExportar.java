@@ -63,6 +63,9 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogTramiteExportar extends DialogControllerBase {
 
+	/** LITERAL GUION. **/
+	private static final String GUION = "-";
+
 	/** Log. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteExportar.class);
 
@@ -430,8 +433,18 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 10. Descargar.
 		final InputStream myInputStream = new ByteArrayInputStream(content);
-		return new DefaultStreamedContent(myInputStream, "application/zip", "fichero.zip");
+		return new DefaultStreamedContent(myInputStream, "application/zip", getNombreZip() + ".zip");
 
+	}
+
+	/**
+	 * Obtiene el nombre del fichero, que es tramit-versio-release-entorn.zip
+	 *
+	 * @return
+	 */
+	private String getNombreZip() {
+		return this.tramite.getIdentificador() + GUION + this.tramiteVersion.getNumeroVersion() + GUION
+				+ this.tramiteVersion.getRelease() + GUION + UtilJSF.getEntorno();
 	}
 
 	/**

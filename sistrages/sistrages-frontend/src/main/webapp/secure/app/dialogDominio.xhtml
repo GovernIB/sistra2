@@ -13,6 +13,7 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogDominio.titulo']}"/></title>
+	<h:outputScript library="js" name="encode.js"/>
 </h:head>
 
 <h:body>
@@ -69,9 +70,20 @@
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
-						<p:column id="columnaBBDD2" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
-							<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" style="margin-right:20px"  />
-							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" disabled="#{dialogDominio.isConsulta()}" rows="8" cols="50" maxlength="2000" converter="#{base64Converter}" />
+						<p:column id="columnaBBDD2" colspan="1" rendered="#{dialogDominio.visibleJNDI}">
+							<p:outputLabel for="sql" value="#{msg['dialogDominio.headerTipo.consultaBD.query']}" styleClass="margin-right-20 center-vertical" />
+
+							<c:choose>
+							<c:when test="#{dialogDominio.isConsulta()}">
+								<textarea disabled="disabled" id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+							</c:when>
+							<c:otherwise>
+								<textarea id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+							</c:otherwise>
+							</c:choose>
+
+							<p:inputTextarea id="sql" value="#{dialogDominio.data.sql}" autoResize="false" rows="8" cols="50" maxlength="2000" styleClass="no-display"/>
+
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleJNDI}"  value="" />
 
@@ -148,8 +160,16 @@
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 
 						<p:column id="columnaFuente2" colspan="1" rendered="#{dialogDominio.visibleFuente}" >
-							<p:outputLabel for="fuenteQuery" value="#{msg['dialogDominio.headerTipo.fuente.query']}" style="margin-right:20px"  />
-							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.sql}" disabled="#{dialogDominio.isConsulta()}" rows="4" cols="40" converter="#{base64Converter}"/>
+							<p:outputLabel for="fuenteQuery" value="#{msg['dialogDominio.headerTipo.fuente.query']}" styleClass="margin-right-20 center-vertical"   />
+							<c:choose>
+							<c:when test="#{dialogDominio.isConsulta()}">
+								<textarea disabled="disabled" id="fuenteQueryDecoded" cols="40" rows="4" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable ui-state-disabled" role="textbox" aria-disabled="true" aria-readonly="false" aria-multiline="true" data-autosize-on="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+							</c:when>
+							<c:otherwise>
+								<textarea id="fuenteQueryDecoded" cols="40" rows="4" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true" data-autosize-on="true" style="overflow: auto;"><h:outputText value="#{dialogDominio.data.sqlDecoded}" /></textarea>
+							</c:otherwise>
+							</c:choose>
+							<p:inputTextarea id="fuenteQuery" value="#{dialogDominio.data.sql}" rows="4" cols="40" styleClass="no-display"/>
 						</p:column>
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 				</h:panelGrid>
@@ -208,7 +228,7 @@
 	     			<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{dialogDominio.tramites()}" process="@this" rendered="#{dialogDominio.data.codigo ne null}" />
 	     		</f:facet>
 				<f:facet name="right">
-	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar()}">
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDominio.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogDominio.permiteGuardar()}" onclick="cambioValorB64();">
 	        			<c:if test="#{dialogDominio.mostrarAdvertencia}">
 	        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.dominioactualizar']}" icon="fa fa-question-circle fa-3x confirmar_icono"  />
 	        			</c:if>
@@ -227,6 +247,78 @@
 	    </p:confirmDialog>
 	</h:form>
 </h:body>
-
 </f:view>
+
+<script type="text/javascript" language="javascript">
+
+
+    function cambioValorB64() {
+    	var elSql = $('#sqlDecoded')[0];
+    	var elFuente = $('#fuenteQueryDecoded')[0];
+
+    	if (elSql) {
+    		var plain = $('#sqlDecoded').val().trim();
+    		$('#dialogDominio\\:sql').val(encodeBase64(plain));
+    	}
+
+    	if (elFuente) {
+    		var plain = $('#fuenteQueryDecoded').val().trim();
+    		$('#dialogDominio\\:fuenteQuery').val(encodeBase64(plain));
+    	}
+
+    }
+
+    function ponerEventosElemento(elemento) {
+	    $(elemento).on( "blur", function() {
+	   		  $(this).removeClass("ui-state-focus")
+	   	});
+
+
+	    $(elemento).on( "focus", function() {
+	    	 $(this).addClass("ui-state-focus")
+	 	});
+
+	    $(elemento).on( "keyup", function() {
+	        var c = a.normalizeNewlines(a.jq.val()),
+	        b = c.length;
+	     	if (b > a.cfg.maxlength) {
+	        	a.jq.val(c.substr(0, a.cfg.maxlength))
+	      	}
+
+		});
+
+	    $(elemento).on( "mouseout", function() {
+	    	 $(this).removeClass("ui-state-hover")
+		});
+
+
+	    $(elemento).on( "mouseover", function() {
+	    	  $(this).addClass("ui-state-hover")
+		});
+
+	    $(elemento).on( "remove", function() {
+	    	if (b.isDetached()) {
+	    		    PrimeFaces.detachedWidgets.push(b.widgetVar)
+	    	}
+		});
+
+    }
+
+    function ponerEventos() {
+
+		var elSql = $('#sqlDecoded')[0];
+		var elFuente = $('#fuenteQueryDecoded')[0];
+
+	    if (elSql) {
+	    	ponerEventosElemento("#sqlDecoded");
+	    }
+
+	    if (elFuente) {
+	    	ponerEventosElemento("#fuenteQueryDecoded");
+	    }
+	 }
+
+    //ponerEventos();
+</script>
+
 </html>

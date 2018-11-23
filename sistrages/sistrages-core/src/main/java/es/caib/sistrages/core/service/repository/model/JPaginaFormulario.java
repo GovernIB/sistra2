@@ -247,7 +247,8 @@ public class JPaginaFormulario implements IModelApi {
 		return jPagina;
 	}
 
-	public static JPaginaFormulario clonar(final JPaginaFormulario pagina, final JFormulario jformulario) {
+	public static JPaginaFormulario clonar(final JPaginaFormulario pagina, final JFormulario jformulario,
+			final boolean cambioArea) {
 		JPaginaFormulario jpagina = null;
 		if (pagina != null) {
 			jpagina = new JPaginaFormulario();
@@ -261,7 +262,7 @@ public class JPaginaFormulario implements IModelApi {
 			if (pagina.getLineasFormulario() != null) {
 				final Set<JLineaFormulario> lineasFormulario = new HashSet<>(0);
 				for (final JLineaFormulario linea : pagina.getLineasFormulario()) {
-					lineasFormulario.add(JLineaFormulario.clonar(linea, jpagina));
+					lineasFormulario.add(JLineaFormulario.clonar(linea, jpagina, cambioArea));
 				}
 				jpagina.setLineasFormulario(lineasFormulario);
 			}

@@ -97,6 +97,7 @@
 	        					<p:separator rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and (viewTramites.permiteAltaArea and viewTramites.seleccionadaArea)}"/>
 
 	        					<p:menuitem id="btnMoverTramite" value="#{msg['botones.moverTramite']}" icon="fa fa-exchange" onclick="triggerMoverTramite();return false;" rendered="#{viewTramites.permiteAltaArea and viewTramites.tramiteSeleccionada ne null}"></p:menuitem>
+			        			<p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{viewTramites.permiteEditarTramite and viewTramites.versionSeleccionada ne null}"></p:menuitem>
 			        			<p:menuitem id="btnEliminarTramite" value="#{msg['botones.eliminarTramite']}" icon="fa fa-trash-o" actionListener="#{viewTramites.eliminarTramite}" process="@this" update="growl @form" rendered="#{viewTramites.permiteAltaTramite and viewTramites.tramiteSeleccionada ne null}">
 			        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 			        			</p:menuitem>
@@ -106,9 +107,7 @@
 			        			</p:menuitem>
         						<p:menuitem id="btnExportar" value="#{msg['botones.exportarVersion']}" icon="fa fa-download" actionListener="#{viewTramites.exportarVersion}" process="@this" update="growl @form"  rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
 	        					<p:menuitem id="btnRefrescar" value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewTramites.refrescar}" process="@this" update="growl @form" rendered="#{viewTramites.versionSeleccionada ne null}" />
-					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" actionListener="#{viewTramites.duplicarVersion}" process="@this" update="growl @form"  rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}">
-					        		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['viewTramitesVersion.clonar.aviso']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-				       			</p:menuitem>
+					        	<p:menuitem id="btnDuplicar" value="#{msg['botones.duplicarVersion']}" icon="fa fa-copy" onclick="triggerClonarTramite(); return false;" rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
 	        					<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramites.historialVersion}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
 
 			        			<p:menuitem id="btnProcedimientosTramite" value="#{msg['viewTramites.botones.procedimientos']}" icon="fa fa-eye" actionListener="#{viewTramites.procedimientosTramite}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaArea and viewTramites.tramiteSeleccionada ne null}"/>
@@ -200,12 +199,20 @@
 				</div>
 			</div>
 
-			<p:commandButton id="hiddenCommandImportar" styleClass="button"  action="#{viewTramites.importar()}"  style="display:none">
+			<p:commandButton id="hiddenCommandImportar" styleClass="button"  process="@this" action="#{viewTramites.importar()}"  style="display:none">
       			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoImportar}" update="growl form:dataTableTramites"  />
 	        </p:commandButton>
 
-	        <p:commandButton id="hiddenCommandMover" styleClass="button"  action="#{viewTramites.moverTramite()}"  style="display:none">
+			<p:commandButton id="hiddenCommandClonar" styleClass="button"   process="@this" update="growl @form"  actionListener="#{viewTramites.duplicarVersion()}" style="display:none">
+		    		<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoClonar}" update="growl form:dataTableTramites"/>
+		    </p:commandButton>
+
+	        <p:commandButton id="hiddenCommandMover" styleClass="button"  process="@this"  action="#{viewTramites.moverTramite()}"  style="display:none">
       			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl form:dataTableTramites"  />
+	        </p:commandButton>
+
+	        <p:commandButton id="hiddenCommandControlAcceso" styleClass="button" process="@this"  action="#{viewTramites.controlAcceso()}"  style="display:none">
+      			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoControlAcceso}" update="growl form:dataTableTramites"  />
 	        </p:commandButton>
 
 			<h:outputScript >
@@ -213,8 +220,16 @@
 		        	document.getElementById("form:hiddenCommandImportar").click();
 		     	}
 
+		     	function triggerClonarTramite() {
+		        	document.getElementById("form:hiddenCommandClonar").click();
+		     	}
+
 	      	  	function triggerMoverTramite() {
 	        		document.getElementById("form:hiddenCommandMover").click();
+	      	  	}
+
+	      	  	function triggerControlAcceso() {
+	        		document.getElementById("form:hiddenCommandControlAcceso").click();
 	      	  	}
 
 	      	  	function triggerDoubleClick() {

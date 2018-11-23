@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
@@ -550,6 +551,10 @@ public class DialogDominio extends DialogControllerBase {
 	public void aceptar() {
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+
+		if (data.getSql() != null) {
+			data.setSqlDecoded(new String(Base64.decodeBase64(data.getSql())));
+		}
 
 		boolean identificadorCambiado = false;
 

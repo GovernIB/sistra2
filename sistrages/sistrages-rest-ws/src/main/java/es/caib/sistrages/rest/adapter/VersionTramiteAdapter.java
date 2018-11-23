@@ -404,7 +404,7 @@ public class VersionTramiteAdapter {
                     final RDominio rdom = new RDominio();
                     rdom.setCachear(dom.isCacheable());
                     rdom.setIdentificador(dom.getIdentificador());
-                    rdom.setSql(dom.getSql());
+                    rdom.setSql(dom.getSqlDecoded());
                     rdom.setTipo(generaTipo(dom.getTipo()));
                     rdom.setUri(dom.getUrl());
                     res.add(rdom);

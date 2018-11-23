@@ -463,4 +463,31 @@ public class DominioDaoImpl implements DominioDao {
 		}
 	}
 
+	/**
+	 * Limpiamos los campos id del dominio y, en caso de pasarse area y fd, se
+	 * asocian.
+	 */
+	@Override
+	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long fdID,
+			final Long idEntidad) {
+
+		Set<JArea> jareas = null;
+		JFuenteDatos jfuenteDatos = null;
+		if (areaID != null) {
+			jareas = new HashSet<>();
+			final JArea jarea = entityManager.find(JArea.class, areaID);
+			jareas.add(jarea);
+		}
+		if (fdID != null) {
+			jfuenteDatos = entityManager.find(JFuenteDatos.class, fdID);
+		}
+		JEntidad jentidad = null;
+		if (idEntidad != null) {
+			jentidad = entityManager.find(JEntidad.class, idEntidad);
+		}
+		final JDominio hdominio = JDominio.clonar(entityManager.find(JDominio.class, Long.valueOf(dominioID)),
+				nuevoIdentificador, jareas, jfuenteDatos, jentidad);
+		entityManager.persist(hdominio);
+	}
+
 }

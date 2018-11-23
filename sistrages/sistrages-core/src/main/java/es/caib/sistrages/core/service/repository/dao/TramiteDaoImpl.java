@@ -311,7 +311,9 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public Long clonarTramiteVersion(final Long idTramiteVersion) {
+	public Long clonarTramiteVersion(final Long idTramiteVersion, final Long idArea, final Long idTramite) {
+
+		boolean cambioArea = false;
 
 		// Paso 0. Preparamos los datos.
 		if (idTramiteVersion == null) {
@@ -320,11 +322,18 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		// Paso 1. Clonamos el tramiteVersion
 		final JVersionTramite jVersionTramiteOriginal = entityManager.find(JVersionTramite.class, idTramiteVersion);
+		final JTramite jtramite = entityManager.find(JTramite.class, idTramite);
 		if (jVersionTramiteOriginal == null) {
 			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
 		}
-		final int numVersion = this.getTramiteNumVersionMaximo(jVersionTramiteOriginal.getTramite().getCodigo()) + 1;
+
+		if (jVersionTramiteOriginal.getTramite().getArea().getCodigo().compareTo(idArea) != 0) {
+			cambioArea = true;
+		}
+
+		final int numVersion = this.getTramiteNumVersionMaximo(idTramite) + 1;
 		final JVersionTramite jVersionTramite = JVersionTramite.clonar(jVersionTramiteOriginal, numVersion);
+		jVersionTramite.setTramite(jtramite);
 
 		entityManager.persist(jVersionTramite);
 		entityManager.flush();
@@ -338,8 +347,13 @@ public class TramiteDaoImpl implements TramiteDao {
 		@SuppressWarnings("unchecked")
 		final List<JDominio> jdominios = queryDominios.getResultList();
 		for (final JDominio jdominio : jdominios) {
+			if (cambioArea && jdominio.getAmbito().equals("A")) {
+				// Si hay cambio de area y el ambito es de area (A), se ignora
+				continue;
+			}
 			jdominio.getVersionesTramite().add(jVersionTramite);
 			entityManager.merge(jdominio);
+
 		}
 
 		// Paso 3.0 Obtenemos formateadores
@@ -367,7 +381,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			entityManager.flush();
 			if (!forms.isEmpty()) {
 				for (final Map.Entry<String, JFormulario> entry : forms.entrySet()) {
-					final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores);
+					final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores, cambioArea);
 					entityManager.persist(jform);
 					entityManager.flush();
 					for (final JFormularioTramite formTramite : jpaso.getPasoRellenar().getFormulariosTramite()) {

@@ -78,8 +78,9 @@ public class DialogDominioTramites extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.valorSeleccionado.getIdTramiteVersion()));
+
 		params.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
-		UtilJSF.openDialog(ViewTramitesVersion.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+		UtilJSF.openDialog(ViewDefinicionVersion.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 
 	}
 

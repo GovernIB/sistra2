@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeDominio" var="TypeDominio"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDominioClonar.titulo']}"/></title>
+</h:head>
+
+<h:body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDominioClonar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDominioClonar.id}"/>
+		<f:viewParam name="AREA" value="#{dialogDominioClonar.idArea}"/>
+		<f:viewAction action="#{dialogDominioClonar.init}" />
+	</f:metadata>
+	<h:form id="dialogDominioClonar" styleClass="margin-top-10">
+  		<p:outputPanel>
+			<!-- Contenido dialogo -->
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+				<p:outputLabel for="codigo" value="#{msg['dialogDominioClonar.headerCodigo']}" />
+				<p:inputText id="codigo" value="#{dialogDominioClonar.nuevoIdentificador}" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" styleClass="w90" >
+			   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			   	</p:inputText>
+
+				<p:outputLabel for="areas" value="#{msg['dialogDominioClonar.headerArea']}" rendered="#{dialogDominioClonar.mostrarAreas}" />
+				<p:selectOneMenu id="areas" styleClass="w90" value="#{dialogDominioClonar.areaID}" rendered="#{dialogDominioClonar.mostrarAreas}" >
+						    <f:selectItems value="#{dialogDominioClonar.areas}" var="area"   itemLabel="#{area.identificador}" itemValue="#{area.codigo}" />
+							<p:ajax listener="#{dialogDominioClonar.onChangeArea}" update="@form" process="@this"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel for="fuentes" value="#{msg['dialogDominioClonar.headerFD']}" rendered="#{dialogDominioClonar.mostrarFDs}" />
+				<p:selectOneMenu id="fuentes" styleClass="w90"  value="#{dialogDominioClonar.fuenteID}" rendered="#{dialogDominioClonar.mostrarFDs}">
+					     <f:selectItems value="#{dialogDominioClonar.fuentes}" var="fuente" itemLabel="#{fuente.identificador}" itemValue="#{fuente.codigo}"  />
+				</p:selectOneMenu >
+
+			</h:panelGrid>
+		</p:outputPanel>
+	  	<p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+	     		<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.duplicar']}" actionListener="#{dialogDominioClonar.clonar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+	        		<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominioClonar.cerrar()}" process="@this" />
+				</f:facet>
+			</p:toolbar>
+	    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

@@ -347,7 +347,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 	}
 
 	public static JCampoFormularioIndexado clonar(final JCampoFormularioIndexado campoFormularioIndexado,
-			final JCampoFormulario jcampo) {
+			final JCampoFormulario jcampo, final boolean cambioArea) {
 		JCampoFormularioIndexado jcampoIndexado = null;
 		if (campoFormularioIndexado != null) {
 			jcampoIndexado = new JCampoFormularioIndexado();
@@ -355,18 +355,26 @@ public class JCampoFormularioIndexado implements IModelApi {
 			jcampoIndexado.setDominio(campoFormularioIndexado.getDominio());
 			jcampoIndexado.setScriptValoresPosibles(JScript.clonar(campoFormularioIndexado.getScriptValoresPosibles()));
 			jcampoIndexado.setTipoCampoIndexado(campoFormularioIndexado.getTipoCampoIndexado());
-			jcampoIndexado.setTipoListaValores(campoFormularioIndexado.getTipoListaValores());
-			jcampoIndexado.setCampoDominioCodigo(campoFormularioIndexado.getCampoDominioCodigo());
+			if (cambioArea && campoFormularioIndexado.getTipoListaValores().equals("D")) {
+				// Si se ha cambiado de area, pasa a ser tipo lista fija si era de tipo dominio.
+				jcampoIndexado.setTipoListaValores("F");
+				jcampoIndexado.setCampoDominioCodigo(null);
+				jcampoIndexado.setParametrosDominio(null);
+			} else {
+				jcampoIndexado.setTipoListaValores(campoFormularioIndexado.getTipoListaValores());
+				jcampoIndexado.setCampoDominioCodigo(campoFormularioIndexado.getCampoDominioCodigo());
+				if (campoFormularioIndexado.getParametrosDominio() != null) {
+					final Set<JParametroDominioCampoIndexado> parametrosDominio = new HashSet<>(0);
+					for (final JParametroDominioCampoIndexado parametro : campoFormularioIndexado
+							.getParametrosDominio()) {
+						parametrosDominio.add(JParametroDominioCampoIndexado.clonar(parametro, jcampoIndexado));
+					}
+					jcampoIndexado.setParametrosDominio(parametrosDominio);
+				}
+			}
 			jcampoIndexado.setCampoDominioDescripcion(campoFormularioIndexado.getCampoDominioDescripcion());
 			jcampoIndexado.setIndiceAlfabetico(campoFormularioIndexado.isIndiceAlfabetico());
 			jcampoIndexado.setAltura(campoFormularioIndexado.getAltura());
-			if (campoFormularioIndexado.getParametrosDominio() != null) {
-				final Set<JParametroDominioCampoIndexado> parametrosDominio = new HashSet<>(0);
-				for (final JParametroDominioCampoIndexado parametro : campoFormularioIndexado.getParametrosDominio()) {
-					parametrosDominio.add(JParametroDominioCampoIndexado.clonar(parametro, jcampoIndexado));
-				}
-				jcampoIndexado.setParametrosDominio(parametrosDominio);
-			}
 
 			if (campoFormularioIndexado.getListaFijaValores() != null) {
 				final Set<JListaFijaValoresCampoIndexado> listaFijaValores = new HashSet<>(0);

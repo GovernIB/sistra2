@@ -706,9 +706,10 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public void clonadoTramiteVersion(final Long idTramiteVersion, final String usuario) {
+	public void clonadoTramiteVersion(final Long idTramiteVersion, final String usuario, final Long idArea,
+			final Long idTramite) {
 		log.debug("Entrando al clonar idTramiteVersion: {} por el usuario {} ", idTramiteVersion, usuario);
-		final Long idTramiteVersionNuevo = tramiteDao.clonarTramiteVersion(idTramiteVersion);
+		final Long idTramiteVersionNuevo = tramiteDao.clonarTramiteVersion(idTramiteVersion, idArea, idTramite);
 		historialVersionDao.add(idTramiteVersionNuevo, usuario, TypeAccionHistorial.CREACION, "");
 	}
 

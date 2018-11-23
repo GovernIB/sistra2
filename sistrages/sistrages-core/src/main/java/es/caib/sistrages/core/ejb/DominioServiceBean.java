@@ -272,4 +272,11 @@ public class DominioServiceBean implements DominioService {
 		dominioService.importarDominio(filaDominio, idEntidad);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void clonar(final String dominioID, final String nuevoIdentificador, final Long areaID, final Long fdID,
+			final Long idEntidad) {
+		dominioService.clonar(dominioID, nuevoIdentificador, areaID, fdID, idEntidad);
+	}
+
 }

@@ -23,14 +23,14 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
- * DialogDefinicionVersionControlAcceso.
+ * DialogTramiteControlAcceso.
  *
  * @author Indra
  *
  */
 @ManagedBean
 @ViewScoped
-public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
+public class DialogTramiteControlAcceso extends DialogControllerBase {
 
 	/** Service. **/
 	@Inject
@@ -143,12 +143,12 @@ public class DialogDefinicionVersionControlAcceso extends DialogControllerBase {
 		if (avisoEntidad.getFechaFin() != null && avisoEntidad.getFechaInicio() != null
 				&& avisoEntidad.getFechaFin().before(avisoEntidad.getFechaInicio())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("dialogDefinicionVersionControlAcceso.error.fechas"));
+					UtilJSF.getLiteral("dialogTramiteControlAcceso.error.fechas"));
 			retorno = false;
 		} else if (isVacio(avisoEntidad.getMensaje()) && (avisoEntidad.isBloqueado()
 				|| avisoEntidad.getFechaFin() != null || avisoEntidad.getFechaInicio() != null)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("dialogDefinicionVersionControlAcceso.error.mensaje"));
+					UtilJSF.getLiteral("dialogTramiteControlAcceso.error.mensaje"));
 			retorno = false;
 		} else {
 

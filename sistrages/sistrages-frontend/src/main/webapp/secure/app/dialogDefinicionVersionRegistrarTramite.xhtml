@@ -44,7 +44,8 @@
 							value="#{msg['dialogDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
 					</p:column>
 					<p:column>
-						<p:selectOneMenu id="oficina" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" required="true">
+						<p:selectOneMenu id="oficina" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoOficinaRegistro}" required="true" >
+						    <f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
 						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
 							<p:ajax listener="#{dialogDefinicionVersionRegistrarTramite.onChangeOficina}" update="@form" />
 						</p:selectOneMenu>
@@ -55,6 +56,7 @@
 					</p:column>
 					<p:column>
 						<p:selectOneMenu id="libro" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoLibroRegistro}" required="true">
+						    <f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
 						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.libros}"  itemLabel="#{libro.nombre}" itemValue="#{libro.codigo}" var="libro" />
 						</p:selectOneMenu>
 					</p:column>
@@ -66,6 +68,7 @@
 					</p:column>
 					<p:column>
 						<p:selectOneMenu id="tipo" styleClass="w90" value="#{dialogDefinicionVersionRegistrarTramite.data.codigoTipoAsunto}" required="true">
+						    <f:selectItem  itemLabel=""  noSelectionOption="true"></f:selectItem>
 						    <f:selectItems value="#{dialogDefinicionVersionRegistrarTramite.tipos}"  itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}" var="tipo" />
 						</p:selectOneMenu>
 					</p:column>

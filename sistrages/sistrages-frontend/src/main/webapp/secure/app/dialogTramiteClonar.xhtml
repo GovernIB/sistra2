@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeDominio" var="TypeDominio"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogTramiteClonar.titulo']}"/></title>
+</h:head>
+
+<h:body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteClonar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogTramiteClonar.id}"/>
+		<f:viewParam name="AREA" value="#{dialogTramiteClonar.idArea}"/>
+		<f:viewAction action="#{dialogTramiteClonar.init}" />
+	</f:metadata>
+	<h:form id="dialogDominioClonar" styleClass="margin-top-10">
+  		<p:outputPanel>
+			<!-- Contenido dialogo -->
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+				<p:outputLabel for="areas" value="#{msg['dialogTramiteClonar.headerArea']}"  />
+				<p:selectOneMenu id="areas" styleClass="w90" value="#{dialogTramiteClonar.areaID}"  >
+						    <f:selectItems value="#{dialogTramiteClonar.areas}" var="area"   itemLabel="#{area.identificador}" itemValue="#{area.codigo}" />
+							<p:ajax listener="#{dialogTramiteClonar.onChangeArea}" update="@form" process="@this"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel for="tramites" value="#{msg['dialogTramiteClonar.headerTramites']}"  />
+				<p:selectOneMenu id="tramites" styleClass="w90"  value="#{dialogTramiteClonar.tramiteID}">
+					     <f:selectItems value="#{dialogTramiteClonar.tramites}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}"  />
+				</p:selectOneMenu >
+
+			</h:panelGrid>
+		</p:outputPanel>
+	  	<p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+	     		<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.duplicar']}" actionListener="#{dialogTramiteClonar.clonar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+	        		<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteClonar.cerrar()}" process="@this" />
+				</f:facet>
+			</p:toolbar>
+	    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

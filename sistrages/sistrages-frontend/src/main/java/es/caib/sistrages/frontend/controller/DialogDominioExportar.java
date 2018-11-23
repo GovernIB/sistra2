@@ -135,8 +135,17 @@ public class DialogDominioExportar extends DialogControllerBase {
 
 		// 5. Descargar.
 		final InputStream myInputStream = new ByteArrayInputStream(content);
-		return new DefaultStreamedContent(myInputStream, "application/zip", "fichero.zip");
+		return new DefaultStreamedContent(myInputStream, "application/zip", getNombreFichero() + ".zip");
 
+	}
+
+	/**
+	 * Obtiene el nombre del fichero.
+	 * 
+	 * @return
+	 */
+	private String getNombreFichero() {
+		return this.data.getIdentificador() + "-" + UtilJSF.getEntorno();
 	}
 
 	/**

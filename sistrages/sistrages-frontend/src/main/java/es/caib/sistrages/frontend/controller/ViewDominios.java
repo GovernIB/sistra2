@@ -244,6 +244,33 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
+	 * Retorno dialogo clonar.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoClonar(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+			// Mensaje
+			final String message = UtilJSF.getLiteral("info.clonado.ok");
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+
+			// Mensaje dialogo
+			if (respuesta.getMensaje() != null) {
+				UtilJSF.addMessageContext(respuesta.getMensaje().getNivel(), respuesta.getMensaje().getMensaje());
+			}
+
+			// Refrescamos datos
+			buscar(filtro);
+		}
+
+	}
+
+	/**
 	 * Importar un dominio.
 	 */
 	public void importar() {
@@ -268,6 +295,26 @@ public class ViewDominios extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
 		UtilJSF.openDialog(DialogDominioExportar.class, TypeModoAcceso.ALTA, params, true, 500, 200);
+	}
+
+	/**
+	 * Clona un dominio.
+	 */
+	public void clonar() {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionada()) {
+			return;
+		}
+
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
+
+		if (this.datoSeleccionado.getAmbito() == TypeAmbito.AREA) {
+			final Long idArea = (Long) this.datoSeleccionado.getAreas().toArray()[0];
+			params.put(TypeParametroVentana.AREA.toString(), String.valueOf(idArea));
+		}
+		UtilJSF.openDialog(DialogDominioClonar.class, TypeModoAcceso.ALTA, params, true, 500, 200);
 	}
 
 	/**

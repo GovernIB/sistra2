@@ -240,4 +240,15 @@ public interface DominioService {
 	 */
 	public void importarDominio(FilaImportarDominio filaDominio, final Long idEntidad) throws Exception;
 
+	/**
+	 * Clonar dominio.
+	 *
+	 * @param dominioID
+	 * @param nuevoIdentificador
+	 * @param areaID
+	 * @param fdID
+	 * @param idEntidad
+	 */
+	public void clonar(String dominioID, String nuevoIdentificador, Long areaID, Long fdID, final Long idEntidad);
+
 }

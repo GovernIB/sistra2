@@ -46,6 +46,9 @@
 		        		<p:commandButton id="btnTramites" value="#{msg['botones.tramites']}" icon="fa fa-level-down" actionListener="#{viewDominios.tramites()}" process="@this" update="growl dataTable" rendered="#{viewDominios.getPermiteConsultar()}"/>
 		        		<p:commandButton id="btnImportar"  value="#{msg['botones.importar']}" icon="fa fa-upload"  actionListener="#{viewDominios.importar()}"  process="@this" update="growl @form" />
 						<p:commandButton id="btnExportar" value="#{msg['botones.exportar']}" icon="fa fa-download" actionListener="#{viewDominios.exportar()}" process="@this" update="growl @form"  />
+	        			<p:commandButton id="btnClonar" value="#{msg['botones.duplicarDominio']}" icon="fa fa-edit" actionListener="#{viewDominios.clonar()}" process="@this" update="growl" rendered="#{viewDominios.getPermiteEditar()}">
+		        			<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogoClonar}" update="growl dataTable"/>
+		        		</p:commandButton>
 	        			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewDominios.ayudar()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>

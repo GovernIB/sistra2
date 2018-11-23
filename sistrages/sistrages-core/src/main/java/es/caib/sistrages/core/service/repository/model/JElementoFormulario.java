@@ -309,7 +309,7 @@ public class JElementoFormulario implements IModelApi {
 	}
 
 	public static JElementoFormulario clonar(final JElementoFormulario elemento,
-			final JLineaFormulario jlineaFormulario, final JPaginaFormulario jpagina) {
+			final JLineaFormulario jlineaFormulario, final JPaginaFormulario jpagina, final boolean cambioArea) {
 		JElementoFormulario jelemento = null;
 		if (elemento != null) {
 			jelemento = new JElementoFormulario();
@@ -328,7 +328,7 @@ public class JElementoFormulario implements IModelApi {
 					JListaElementosFormulario.clonar(elemento.getListaElementosFormulario(), jelemento, jpagina));
 			jelemento.setEtiquetaFormulario(JEtiquetaFormulario.clonar(elemento.getEtiquetaFormulario(), jelemento));
 			jelemento.setSeccionFormulario(JSeccionFormulario.clonar(elemento.getSeccionFormulario(), jelemento));
-			jelemento.setCampoFormulario(JCampoFormulario.clonar(elemento.getCampoFormulario(), jelemento));
+			jelemento.setCampoFormulario(JCampoFormulario.clonar(elemento.getCampoFormulario(), jelemento, cambioArea));
 			jelemento.setImagenFormulario(JImagenFormulario.clonar(elemento.getImagenFormulario(), jelemento));
 		}
 		return jelemento;

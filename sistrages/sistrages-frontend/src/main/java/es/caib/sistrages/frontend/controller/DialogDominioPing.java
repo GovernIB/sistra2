@@ -137,7 +137,7 @@ public class DialogDominioPing extends DialogControllerBase {
     private ValoresDominio pingConsultaBD(
             final List<ValorParametroDominio> parametros) {
         return dominioResolucionService.realizarConsultaBD(dominio.getJndi(),
-                dominio.getSql(), parametros);
+                dominio.getSqlDecoded(), parametros);
     }
 
     /**

@@ -36,7 +36,7 @@ public class JTraduccionLiteral implements IModelApi {
 	@JoinColumn(name = "TRI_CODTRA", nullable = false)
 	private JLiteral traduccion;
 
-	@Column(name = "TRI_LITERA", nullable = false, length = 1000)
+	@Column(name = "TRI_LITERA", nullable = false, length = 4000)
 	private String literal;
 
 	/**

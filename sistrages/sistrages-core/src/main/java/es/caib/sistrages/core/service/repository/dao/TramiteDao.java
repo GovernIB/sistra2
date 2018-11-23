@@ -183,9 +183,11 @@ public interface TramiteDao {
 	 * Clona tramite version.
 	 *
 	 * @param idTramiteVersion
+	 * @param idArea
+	 * @param idTramite
 	 * @return
 	 */
-	Long clonarTramiteVersion(Long idTramiteVersion);
+	Long clonarTramiteVersion(Long idTramiteVersion, Long idArea, Long idTramite);
 
 	/**
 	 * Obtiene el id de los tramites de un area que tienen una versión activa.

@@ -193,7 +193,8 @@ public class JCampoFormulario implements IModelApi {
 		return jModel;
 	}
 
-	public static JCampoFormulario clonar(final JCampoFormulario campoFormulario, final JElementoFormulario jelemento) {
+	public static JCampoFormulario clonar(final JCampoFormulario campoFormulario, final JElementoFormulario jelemento,
+			final boolean cambioArea) {
 		JCampoFormulario jcampo = null;
 		if (campoFormulario != null) {
 			jcampo = new JCampoFormulario();
@@ -207,7 +208,7 @@ public class JCampoFormulario implements IModelApi {
 			jcampo.setCampoFormularioCasillaVerificacion(JCampoFormularioCasillaVerificacion
 					.clonar(campoFormulario.getCampoFormularioCasillaVerificacion(), jcampo));
 			jcampo.setCampoFormularioIndexado(
-					JCampoFormularioIndexado.clonar(campoFormulario.getCampoFormularioIndexado(), jcampo));
+					JCampoFormularioIndexado.clonar(campoFormulario.getCampoFormularioIndexado(), jcampo, cambioArea));
 			jcampo.setCampoFormularioTexto(
 					JCampoFormularioTexto.clonar(campoFormulario.getCampoFormularioTexto(), jcampo));
 

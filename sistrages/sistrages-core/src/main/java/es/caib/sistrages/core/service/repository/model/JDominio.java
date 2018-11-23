@@ -1,6 +1,5 @@
 package es.caib.sistrages.core.service.repository.model;
 
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.apache.commons.codec.binary.Base64;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
@@ -240,6 +241,7 @@ public class JDominio implements IModelApi {
 		dominio.setParametros((List<Propiedad>) UtilJSON.fromListJSON(this.parametros, Propiedad.class));
 		if (this.sql != null) {
 			dominio.setSql(encodeSql(this.sql));
+			dominio.setSqlDecoded(sql);
 		}
 		dominio.setTipo(TypeDominio.fromString(this.tipo));
 		dominio.setAmbito(TypeAmbito.fromString(this.ambito));
@@ -288,15 +290,51 @@ public class JDominio implements IModelApi {
 	}
 
 	public static String encodeSql(final String sqlPlain) {
-		return Base64.getEncoder().encodeToString(sqlPlain.getBytes());
+		return Base64.encodeBase64String(sqlPlain.getBytes());
 	}
 
 	public static String decodeSql(final String sqlEncoded) {
 		if (sqlEncoded == null) {
 			return null;
 		} else {
-			return new String(Base64.getDecoder().decode(sqlEncoded));
+			return new String(Base64.decodeBase64(sqlEncoded));
 		}
 	}
 
+	/**
+	 * Clona un dominio.
+	 *
+	 * @param dominio
+	 * @param nuevoIdentificador
+	 * @param jareas
+	 * @param jfuenteDatos
+	 * @param jentidad
+	 * @return
+	 */
+	public static JDominio clonar(final JDominio dominio, final String nuevoIdentificador, final Set<JArea> jareas,
+			final JFuenteDatos jfuenteDatos, final JEntidad jentidad) {
+		JDominio jdominio = null;
+		if (dominio != null) {
+			jdominio = new JDominio();
+			jdominio.setAmbito(dominio.getAmbito());
+			jdominio.setAreas(jareas);
+			jdominio.setCacheo(dominio.isCacheo());
+			jdominio.setCamposFormularioIndexado(null);
+			jdominio.setDatasourceJndi(dominio.getDatasourceJndi());
+			jdominio.setDescripcion(dominio.getDescripcion());
+			jdominio.setEntidades(new HashSet<>(0));
+			if (jentidad != null) {
+				jdominio.getEntidades().add(jentidad);
+			}
+			jdominio.setFuenteDatos(jfuenteDatos);
+			jdominio.setIdentificador(nuevoIdentificador);
+			jdominio.setListaFijaValores(dominio.getListaFijaValores());
+			jdominio.setParametros(dominio.getParametros());
+			jdominio.setServicioRemotoUrl(dominio.getServicioRemotoUrl());
+			jdominio.setSql(dominio.getSql());
+			jdominio.setTipo(dominio.getTipo());
+			jdominio.setVersionesTramite(null);
+		}
+		return jdominio;
+	}
 }

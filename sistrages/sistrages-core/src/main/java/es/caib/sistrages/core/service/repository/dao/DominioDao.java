@@ -158,4 +158,20 @@ public interface DominioDao {
 	 * @throws Exception
 	 */
 	Long importar(FilaImportarDominio filaDominio, Long idDominio) throws Exception;
+
+	/**
+	 * Clona un dominio.
+	 *
+	 * @param dominioID
+	 *            Codigo del dominio
+	 * @param nuevoIdentificador
+	 *            Nuevo identificador del dominio
+	 * @param areaID
+	 *            Codigo del area si es necesaria.
+	 * @param fdID
+	 *            Codigo de la FD si es necesaria.
+	 * @param idEntidad
+	 *            Codigo de la entidad si de ambito entidad.
+	 */
+	void clonar(String dominioID, final String nuevoIdentificador, Long areaID, Long fdID, final Long idEntidad);
 }

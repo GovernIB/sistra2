@@ -47,6 +47,8 @@ public class Dominio extends ModelApi {
 	/** Para tipo Base datos indica SQL */
 	private String sql;
 
+	private String sqlDecoded;
+
 	/** Para tipo Fuente de datos indica el ID de la Fuente de datos */
 	private Long idFuenteDatos;
 
@@ -290,6 +292,14 @@ public class Dominio extends ModelApi {
 	 */
 	public void setAreas(final Set<Long> areas) {
 		this.areas = areas;
+	}
+
+	public String getSqlDecoded() {
+		return sqlDecoded;
+	}
+
+	public void setSqlDecoded(String sqlDecoded) {
+		this.sqlDecoded = sqlDecoded;
 	}
 
 }

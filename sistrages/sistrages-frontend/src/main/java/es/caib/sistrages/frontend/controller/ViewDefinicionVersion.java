@@ -306,12 +306,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			}
 
-			// Editar propiedades
-			if (this.selectedNode != null && permiteEditarControlAcceso() && opc.getUrl() != null && opc.getUrl()
-					.equals(UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionControlAcceso"))) {
-				editarControlAcceso();
-			}
-
 		}
 
 	}
@@ -469,20 +463,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			}
 		}
 
-		// avisoEntidad = avisoEntidadService
-		// .getAvisoEntidadByTramite(tramite.getIdentificador() + "#" +
-		// tramiteVersion.getNumeroVersion());
-	}
-
-	// ------- VIEW DE EDITAR CONTROL DE ACCESO DE TRAMITE VERSION
-
-	/**
-	 * Abre la ventana para editar propiedades.
-	 */
-	public void editarControlAcceso() {
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), id.toString());
-		UtilJSF.openDialog(DialogDefinicionVersionControlAcceso.class, TypeModoAcceso.EDICION, params, true, 1000, 500);
 	}
 
 	// ------- VIEW DE DOMINIOS
@@ -1165,14 +1145,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				idNodoSeleccionado, tipoNodoSeleccionado, "VPR");
 		root.getChildren().add(nodoPropiedades);
 
-		/** Nodo Control acceso. **/
-		final DefaultTreeNode nodoControlAcceso = new DefaultTreeNode(
-				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.controlAcceso"),
-						UtilJSF.getUrlArbolDefinicionVersion("viewDefinicionVersionControlAcceso")));
-		marcarNodoComoSeleccionado(nodoControlAcceso, null, "viewDefinicionVersionControlAcceso", nodoSeleccionado,
-				idNodoSeleccionado, tipoNodoSeleccionado, "VCA");
-		root.getChildren().add(nodoControlAcceso);
-
 		/** Nodo Dominios. **/
 		final DefaultTreeNode nodoDominios = new DefaultTreeNode(
 				new OpcionArbol(UtilJSF.getLiteral("viewDefinicionVersion.indice.dominiosEmpleados"),
@@ -1275,8 +1247,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			tipo = getTipo(opcionArbol.getTramitePaso());
 		} else if ("viewDefinicionVersionPropiedades".equals(opcionArbol.getUrl())) {
 			tipo = "VPR";
-		} else if ("viewDefinicionVersionControlAcceso".equals(opcionArbol.getUrl())) {
-			tipo = "VCA";
 		} else if ("viewDefinicionVersionDominios".equals(opcionArbol.getUrl())) {
 			tipo = "VDM";
 		} else if ("viewDefinicionVersionPasos".equals(opcionArbol.getUrl())) {
@@ -1738,5 +1708,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
 		this.avisoEntidad = avisoEntidad;
+	}
+
+	/**
+	 * @return the tramite
+	 */
+	public Tramite getTramite() {
+		return tramite;
+	}
+
+	/**
+	 * @param tramite
+	 *            the tramite to set
+	 */
+	public void setTramite(final Tramite tramite) {
+		this.tramite = tramite;
 	}
 }
