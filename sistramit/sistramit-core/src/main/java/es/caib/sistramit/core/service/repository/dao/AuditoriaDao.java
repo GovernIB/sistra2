@@ -94,4 +94,13 @@ public interface AuditoriaDao {
 	 */
 	Long countByAreas(final FiltroEventoAuditoria pFiltroBusqueda);
 
+	/**
+	 * Borra log interno hasta la fecha indicada (no incluida).
+	 *
+	 * @param date
+	 *            Fecha hasta la cual se debe borrar.
+	 * @return numero de errores borrados
+	 */
+	int deleteLogInterno(final Date date);
+
 }

@@ -22,47 +22,38 @@ import es.caib.sistramit.core.api.service.SystemService;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class SystemServiceBean implements SystemService {
 
-    @Autowired
-    private SystemService systemService;
+	@Autowired
+	private SystemService systemService;
 
-    @Override
-    public String obtenerPropiedadConfiguracion(
-            final TypePropiedadConfiguracion propiedad) {
-        return systemService.obtenerPropiedadConfiguracion(propiedad);
-    }
+	@Override
+	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad) {
+		return systemService.obtenerPropiedadConfiguracion(propiedad);
+	}
 
-    @Override
-    public void auditarErrorFront(final String idSesionTramitacion,
-            final ErrorFrontException error) {
-        systemService.auditarErrorFront(idSesionTramitacion, error);
-    }
+	@Override
+	public void auditarErrorFront(final String idSesionTramitacion, final ErrorFrontException error) {
+		systemService.auditarErrorFront(idSesionTramitacion, error);
+	}
 
-    @Override
-    public List<EventoAuditoria> recuperarLogSesionTramitacion(
-            final String idSesionTramitacion, final Date fechaDesde,
-            final Date fechaHasta, final boolean ordenAsc) {
-        return systemService.recuperarLogSesionTramitacion(idSesionTramitacion,
-                fechaDesde, fechaHasta, ordenAsc);
-    }
+	@Override
+	public List<EventoAuditoria> recuperarLogSesionTramitacion(final String idSesionTramitacion, final Date fechaDesde,
+			final Date fechaHasta, final boolean ordenAsc) {
+		return systemService.recuperarLogSesionTramitacion(idSesionTramitacion, fechaDesde, fechaHasta, ordenAsc);
+	}
 
-    @Override
-    public void purgar() {
-        systemService.purgar();
-    }
+	@Override
+	public void revisarInvalidaciones() {
+		systemService.revisarInvalidaciones();
+	}
 
-    @Override
-    public void revisarInvalidaciones() {
-        systemService.revisarInvalidaciones();
-    }
+	@Override
+	public void invalidar(final Invalidacion invalidacion) {
+		systemService.invalidar(invalidacion);
+	}
 
-    @Override
-    public void invalidar(Invalidacion invalidacion) {
-        systemService.invalidar(invalidacion);
-    }
-
-    @Override
-    public boolean verificarMaestro(String instancia) {
-        return systemService.verificarMaestro(instancia);
-    }
+	@Override
+	public boolean verificarMaestro(final String instancia) {
+		return systemService.verificarMaestro(instancia);
+	}
 
 }

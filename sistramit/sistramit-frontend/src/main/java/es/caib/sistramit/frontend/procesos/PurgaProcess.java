@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistramit.core.api.model.comun.Constantes;
+import es.caib.sistramit.core.api.service.PurgaService;
 import es.caib.sistramit.core.api.service.SystemService;
 
 /**
@@ -20,50 +21,52 @@ import es.caib.sistramit.core.api.service.SystemService;
 @Component
 public final class PurgaProcess {
 
-    /** Log. */
-    private static Logger log = LoggerFactory.getLogger(PurgaProcess.class);
+	/** Log. */
+	private static Logger log = LoggerFactory.getLogger(PurgaProcess.class);
 
-    @Autowired
-    private SystemService systemService;
+	@Autowired
+	private SystemService systemService;
 
-    @Autowired
-    private ServletContext servletContext;
+	@Autowired
+	private PurgaService purgaService;
 
-    /**
-     * Process.
-     */
-    @Scheduled(cron = "${procesos.purga.cron}")
-    public void process() {
-        log.debug("Proceso purgarFicheros");
-        final String instancia = getIdServletContext();
-        if (StringUtils.isNotBlank(instancia)) {
-            if (systemService.verificarMaestro(instancia)) {
-                log.debug("Es maestro, lanza proceso purga");
-                systemService.purgar();
-            } else {
-                log.debug("No es maestro, no lanza proceso purga");
-            }
-        } else {
-            log.warn("No se ha podido obtener id instancia.");
-        }
-    }
+	@Autowired
+	private ServletContext servletContext;
 
-    /**
-     * Obtiene id instancia.
-     *
-     * @return id instancia
-     */
-    private String getIdServletContext() {
-        String id = null;
-        if (servletContext != null) {
-            id = (String) servletContext
-                    .getAttribute(Constantes.SERVLET_CONTEXT_ID);
-            if (id == null) {
-                id = GeneradorId.generarId();
-                servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
-            }
-        }
-        return id;
-    }
+	/**
+	 * Process.
+	 */
+	@Scheduled(cron = "${procesos.purga.cron}")
+	public void process() {
+		log.debug("Proceso purgarFicheros");
+		final String instancia = getIdServletContext();
+		if (StringUtils.isNotBlank(instancia)) {
+			if (systemService.verificarMaestro(instancia)) {
+				log.debug("Es maestro, lanza proceso purga");
+				purgaService.purgar();
+			} else {
+				log.debug("No es maestro, no lanza proceso purga");
+			}
+		} else {
+			log.warn("No se ha podido obtener id instancia.");
+		}
+	}
+
+	/**
+	 * Obtiene id instancia.
+	 *
+	 * @return id instancia
+	 */
+	private String getIdServletContext() {
+		String id = null;
+		if (servletContext != null) {
+			id = (String) servletContext.getAttribute(Constantes.SERVLET_CONTEXT_ID);
+			if (id == null) {
+				id = GeneradorId.generarId();
+				servletContext.setAttribute(Constantes.SERVLET_CONTEXT_ID, id);
+			}
+		}
+		return id;
+	}
 
 }

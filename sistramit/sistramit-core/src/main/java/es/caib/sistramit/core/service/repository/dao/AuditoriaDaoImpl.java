@@ -149,9 +149,8 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		} else {
 			queryCount = retrieveByAreasCriteria(pFiltros, Long.class, true);
 		}
-		final Long countResult = entityManager.createQuery(queryCount).getSingleResult();
+		return entityManager.createQuery(queryCount).getSingleResult();
 
-		return countResult;
 	}
 
 	private <T> CriteriaQuery<T> retrieveByAreasCriteria(final FiltroEventoAuditoria pFiltroBusqueda,
@@ -272,11 +271,23 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		final String sql = "SELECT t FROM HSesionTramitacion t WHERE t.idSesionTramitacion = :idSesionTramitacion";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idSesionTramitacion", idSesionTramitacion);
-		final List results = query.getResultList();
+		final List<HSesionTramitacion> results = query.getResultList();
 		if (!results.isEmpty()) {
-			hSesion = (HSesionTramitacion) results.get(0);
+			hSesion = results.get(0);
 		}
 		return hSesion;
+	}
+
+	@Override
+	public int deleteLogInterno(final Date fecha) {
+		// Borramos logs no asociados a tramites (errores o eventos)
+		// Realizamos delete con sql nativo para optimizar y limitar num de regs
+		// a borrar
+
+		final String delete = "DELETE FROM STT_LOGINT WHERE LOG_EVEFEC < :fecha AND LOG_CODSES NOT IN ( SELECT SES_CODIGO FROM STT_SESION )";
+		final Query sqlQuery = entityManager.createNativeQuery(delete);
+		sqlQuery.setParameter("fecha", fecha);
+		return sqlQuery.executeUpdate();
 	}
 
 }
