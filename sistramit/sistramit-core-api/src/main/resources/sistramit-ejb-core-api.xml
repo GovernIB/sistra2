@@ -41,4 +41,9 @@
 			jndi-name="java:app/sistramit-core/RestApiInternaServiceBean"
 			business-interface="es.caib.sistramit.core.api.service.RestApiInternaService"/>
 
+	<jee:local-slsb
+			id="purgaService"
+			jndi-name="java:app/sistramit-core/PurgaServiceBean"
+			business-interface="es.caib.sistramit.core.api.service.PurgaService"/>
+
 </beans>
