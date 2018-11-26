@@ -112,7 +112,78 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 		return resPedidaClave;
 	}
 
+	@Override
+	public FicheroAuditoria recuperarFichero(final Long pIdFichero, final String pClave) {
+		FicheroAuditoria ficheroAuditoria = null;
+		final ReferenciaFichero rf = new ReferenciaFichero(pIdFichero, pClave);
+		final DatosFicheroPersistencia fichero = flujoPasoDao.recuperarFicheroPersistenciaNoBorrado(rf);
 
+		if (fichero != null) {
+			ficheroAuditoria = new FicheroAuditoria();
+			ficheroAuditoria.setNombre(fichero.getNombre());
+			ficheroAuditoria.setContenido(fichero.getContenido());
+		}
+
+		return ficheroAuditoria;
+	}
+
+	@Override
+	public List<PagoAuditoria> recuperarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		final List<PagoAuditoria> listaPagos = flujoTramiteDao.obtenerPagos(pFiltroBusqueda, pFiltroPaginacion);
+
+		for (final PagoAuditoria pagoAuditoria : listaPagos) {
+			final DatosFicheroPersistencia fichero = flujoPasoDao.recuperarFicheroPersistencia(
+					new ReferenciaFichero(pagoAuditoria.getFichero(), pagoAuditoria.getFicheroClave()));
+			if (fichero.getContenido() != null) {
+				final DatosSesionPago sesionPago = ControladorPasoPagarHelper.getInstance()
+						.fromXML(fichero.getContenido());
+
+				if (sesionPago != null) {
+					pagoAuditoria.setIdentificador(sesionPago.getIdentificadorPago());
+					pagoAuditoria.setPresentacion(sesionPago.getPresentacion().toString());
+					pagoAuditoria.setPasarelaId(sesionPago.getPasarelaId());
+					pagoAuditoria.setImporte(sesionPago.getImporte());
+					pagoAuditoria.setTasaId(sesionPago.getTasaId());
+					pagoAuditoria.setLocalizador(sesionPago.getLocalizador());
+					pagoAuditoria.setFechaPago(sesionPago.getFechaPago());
+				}
+
+			}
+		}
+
+		return listaPagos;
+	}
+
+	@Override
+	public Long contarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda) {
+		return flujoTramiteDao.countPagos(pFiltroBusqueda);
+	}
+
+	@Override
+	public DetallePagoAuditoria recuperarDetallePago(final Long pIdPago) {
+
+		final DetallePagoAuditoria detallePago = new DetallePagoAuditoria();
+
+		final DocumentoPasoPersistencia doc = flujoPasoDao.obtenerDocumento(pIdPago);
+
+		if (doc != null) {
+			final DatosFicheroPersistencia fichero = flujoPasoDao.recuperarFicheroPersistencia(doc.getFichero());
+
+			if (fichero != null && fichero.getContenido() != null) {
+				detallePago.setDatos(ControladorPasoPagarHelper.getInstance().fromXML(fichero.getContenido()));
+			}
+
+			if (!doc.getEstado().equals(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE)) {
+				final PagoComponentVerificacion verificacion = pagoComponent
+						.verificarPagoElectronico(detallePago.getDatos(), true);
+
+				detallePago.setVerificacion(convertVerificacionPago(verificacion));
+			}
+		}
+
+		return detallePago;
+	}
 
 	/**
 	 * Convert perdida clave.
@@ -135,5 +206,21 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 		return res;
 	}
 
+	private VerificacionPago convertVerificacionPago(final PagoComponentVerificacion pPCV) {
+		VerificacionPago res = null;
+		if (pPCV != null) {
+			res = new VerificacionPago();
+			res.setVerificado(pPCV.isVerificado());
+			res.setPagado(pPCV.isPagado());
+			res.setCodigoError(pPCV.getCodigoError());
+			res.setMensajeError(pPCV.getMensajeError());
+			res.setFechaPago(pPCV.getFechaPago());
+			res.setLocalizador(pPCV.getLocalizador());
+			res.setJustificantePDF(pPCV.getJustificantePDF());
+		}
+
+		return res;
+
+	}
 
 }

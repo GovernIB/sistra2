@@ -160,7 +160,106 @@ public class ApiInternaRestController {
 		return resClavePerdida;
 	}
 
+	@ApiOperation(value = "Recuperar fichero", notes = "Solicita recuperación de un fichero de una sesión de tramitación", response = RFichero.class)
+	@RequestMapping(value = "/auditoria/fichero/{idFichero}/{clave}", method = RequestMethod.GET)
+	public RFichero obtenerAuditoriaFichero(@PathVariable("idFichero") final Long pIdFichero,
+			@PathVariable("clave") final String pClave) {
+		RFichero rFichero = null;
+		final FicheroAuditoria fichero = restApiInternaService.recuperarFichero(pIdFichero, pClave);
 
+		if (fichero != null) {
+			rFichero = new RFichero();
+			rFichero.setNombre(fichero.getNombre());
+			rFichero.setContenido(Base64.encodeBase64String(fichero.getContenido()));
+		}
+
+		return rFichero;
+
+	}
+
+	@ApiOperation(value = "Auditoría de pago", notes = "Auditoría de pago", response = ROUTPagoAuditoria.class)
+	@RequestMapping(value = "/auditoria/pago", method = RequestMethod.POST)
+	public ROUTPagoAuditoria obtenerAuditoriaPago(@RequestBody final RINPagoAuditoria pFiltros) {
+		final ROUTPagoAuditoria resPago = new ROUTPagoAuditoria();
+
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroPagoAuditoria filtroBusqueda = convierteFiltroPagoAuditoriaBusqueda(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resPago.setNumElementos(restApiInternaService.contarPagosArea(filtroBusqueda));
+		} else {
+			final List<PagoAuditoria> listaPagos = restApiInternaService.recuperarPagosArea(filtroBusqueda,
+					filtroPaginacion);
+
+			if (listaPagos != null && !listaPagos.isEmpty()) {
+				resPago.setListaPagos(new ArrayList<>());
+
+				for (final PagoAuditoria pagoAuditoria : listaPagos) {
+					resPago.getListaPagos().add(conviertePagoAuditoria(pagoAuditoria));
+				}
+
+			}
+
+		}
+
+		return resPago;
+	}
+
+	@ApiOperation(value = "Recuperar detalle pago", notes = "Solicita detalle de un pago.", response = RDetallePagoAuditoria.class)
+	@RequestMapping(value = "/auditoria/pago/{id}", method = RequestMethod.GET)
+	public RDetallePagoAuditoria obtenerAuditoriaPago(@PathVariable("id") final Long pIdPago) {
+		final DetallePagoAuditoria detallePago = restApiInternaService.recuperarDetallePago(pIdPago);
+		return convierteDetallePago(detallePago);
+	}
+
+	private RDetallePagoAuditoria convierteDetallePago(final DetallePagoAuditoria pDetallePago) {
+		RDetallePagoAuditoria rDetalle = null;
+
+		if (pDetallePago != null) {
+
+			rDetalle = new RDetallePagoAuditoria();
+
+			if (pDetallePago.getDatos() != null) {
+				final RDatosSesionPago rDatos = new RDatosSesionPago();
+				rDatos.setPasarelaId(pDetallePago.getDatos().getPasarelaId());
+				rDatos.setEntidadId(pDetallePago.getDatos().getEntidadId());
+				rDatos.setOrganismoId(pDetallePago.getDatos().getOrganismoId());
+				rDatos.setSimulado(pDetallePago.getDatos().isSimulado());
+				rDatos.setIdentificadorPago(pDetallePago.getDatos().getIdentificadorPago());
+				rDatos.setPresentacion(pDetallePago.getDatos().getPresentacion().toString());
+				rDatos.setFechaPago(pDetallePago.getDatos().getFechaPago());
+				rDatos.setLocalizador(pDetallePago.getDatos().getLocalizador());
+				rDatos.setIdioma(pDetallePago.getDatos().getIdioma());
+				rDatos.setSujetoPasivoNif(pDetallePago.getDatos().getSujetoPasivo().getNif());
+				rDatos.setSujetoPasivoNombre(pDetallePago.getDatos().getSujetoPasivo().getNombre());
+				rDatos.setModelo(pDetallePago.getDatos().getModelo());
+				rDatos.setConcepto(pDetallePago.getDatos().getConcepto());
+				rDatos.setTasaId(pDetallePago.getDatos().getTasaId());
+				rDatos.setImporte(pDetallePago.getDatos().getImporte());
+				rDatos.setDetallePago(pDetallePago.getDatos().getDetallePago());
+
+				rDetalle.setDatos(rDatos);
+			}
+
+			if (pDetallePago.getVerificacion() != null) {
+				final RVerificacionPago rVerificacion = new RVerificacionPago();
+
+				rVerificacion.setVerificado(pDetallePago.getVerificacion().isVerificado());
+				rVerificacion.setPagado(pDetallePago.getVerificacion().isPagado());
+				rVerificacion.setCodigoError(pDetallePago.getVerificacion().getCodigoError());
+				rVerificacion.setMensajeError(pDetallePago.getVerificacion().getMensajeError());
+				rVerificacion.setFechaPago(pDetallePago.getVerificacion().getFechaPago());
+				rVerificacion.setLocalizador(pDetallePago.getVerificacion().getLocalizador());
+				rVerificacion.setJustificantePDF(
+						Base64.encodeBase64String(pDetallePago.getVerificacion().getJustificantePDF()));
+
+				rDetalle.setVerificacion(rVerificacion);
+			}
+
+		}
+
+		return rDetalle;
+	}
 
 	/**
 	 * Convierte filtro auditoria busqueda.
@@ -311,5 +410,61 @@ public class ApiInternaRestController {
 		return rClave;
 	}
 
+	/**
+	 * Convierte filtro auditoria busqueda.
+	 *
+	 * @param pRFiltro
+	 *            filtro
+	 * @return FiltroAuditoriaTramitacion
+	 */
+	private FiltroPagoAuditoria convierteFiltroPagoAuditoriaBusqueda(final RFiltroPagoAuditoria pRFiltro) {
+		FiltroPagoAuditoria filtro = null;
 
+		if (pRFiltro != null) {
+
+			filtro = new FiltroPagoAuditoria();
+
+			filtro.setListaAreas(pRFiltro.getListaAreas());
+			filtro.setIdSesionTramitacion(pRFiltro.getIdSesionTramitacion());
+			filtro.setNif(pRFiltro.getNif());
+			filtro.setFechaDesde(pRFiltro.getFechaDesde());
+			filtro.setFechaHasta(pRFiltro.getFechaHasta());
+
+			if (pRFiltro.getAcceso() != null) {
+				filtro.setAcceso(TypeAutenticacion.valueOf(pRFiltro.getAcceso()));
+			}
+
+			filtro.setSoloContar(pRFiltro.isSoloContar());
+		}
+
+		return filtro;
+
+	}
+
+	private RPagoAuditoria conviertePagoAuditoria(final PagoAuditoria pPagoAuditoria) {
+		RPagoAuditoria rPago = null;
+
+		if (pPagoAuditoria != null) {
+
+			rPago = new RPagoAuditoria();
+
+			rPago.setClaveTramitacion(pPagoAuditoria.getClaveTramitacion());
+			rPago.setFecha(pPagoAuditoria.getFecha());
+			rPago.setIdTramite(pPagoAuditoria.getIdTramite());
+			rPago.setVersionTramite(pPagoAuditoria.getVersionTramite());
+			rPago.setFichero(pPagoAuditoria.getFichero());
+			rPago.setFicheroClave(pPagoAuditoria.getFicheroClave());
+			rPago.setCodigoPago(pPagoAuditoria.getCodigoPago());
+			rPago.setEstado(pPagoAuditoria.getEstado());
+			rPago.setIdentificador(pPagoAuditoria.getIdentificador());
+			rPago.setPresentacion(pPagoAuditoria.getPresentacion());
+			rPago.setPasarelaId(pPagoAuditoria.getPasarelaId());
+			rPago.setImporte(pPagoAuditoria.getImporte());
+			rPago.setTasaId(pPagoAuditoria.getTasaId());
+			rPago.setLocalizador(pPagoAuditoria.getLocalizador());
+			rPago.setFechaPago(pPagoAuditoria.getFechaPago());
+		}
+
+		return rPago;
+	}
 }

@@ -51,4 +51,25 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiInternaService.recuperarClaveTramitacionArea(pFiltroBusqueda);
 	}
 
+	@Override
+	public FicheroAuditoria recuperarFichero(final Long pIdFichero, final String pClave) {
+		return restApiInternaService.recuperarFichero(pIdFichero, pClave);
+	}
+
+	@Override
+	public Long contarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda) {
+		return restApiInternaService.contarPagosArea(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<PagoAuditoria> recuperarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		return restApiInternaService.recuperarPagosArea(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public DetallePagoAuditoria recuperarDetallePago(final Long pIdPago) {
+		return restApiInternaService.recuperarDetallePago(pIdPago);
+	}
+
 }

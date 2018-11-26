@@ -61,5 +61,29 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		return restApiInternaComponent.recuperarClaveTramitacionArea(pFiltroBusqueda);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public FicheroAuditoria recuperarFichero(final Long pIdFichero, final String pClave) {
+		return restApiInternaComponent.recuperarFichero(pIdFichero, pClave);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Long contarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda) {
+		return restApiInternaComponent.contarPagosArea(pFiltroBusqueda);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<PagoAuditoria> recuperarPagosArea(final FiltroPagoAuditoria pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		return restApiInternaComponent.recuperarPagosArea(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public DetallePagoAuditoria recuperarDetallePago(final Long pIdPago) {
+		return restApiInternaComponent.recuperarDetallePago(pIdPago);
+	}
 
 }

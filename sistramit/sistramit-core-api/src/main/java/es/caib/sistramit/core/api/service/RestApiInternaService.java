@@ -63,5 +63,44 @@ public interface RestApiInternaService {
 	 */
 	OUTPerdidaClave recuperarClaveTramitacionArea(final FiltroPerdidaClave pFiltroBusqueda);
 
+	/**
+	 * Recuperar fichero.
+	 *
+	 * @param pIdFichero
+	 *            id fichero
+	 * @param pClave
+	 *            clave
+	 * @return fichero
+	 */
+	FicheroAuditoria recuperarFichero(final Long pIdFichero, final String pClave);
+
+	/**
+	 * Contar pagos area.
+	 *
+	 * @param filtroBusqueda
+	 *            filtro busqueda
+	 * @return Numero de pagos
+	 */
+	Long contarPagosArea(FiltroPagoAuditoria filtroBusqueda);
+
+	/**
+	 * Recuperar pagos area.
+	 *
+	 * @param filtroBusqueda
+	 *            filtro busqueda
+	 * @param filtroPaginacion
+	 *            filtro paginacion
+	 * @return lista de pagos
+	 */
+	List<PagoAuditoria> recuperarPagosArea(FiltroPagoAuditoria filtroBusqueda, FiltroPaginacion filtroPaginacion);
+
+	/**
+	 * Recuperar detalle pago.
+	 *
+	 * @param pIdPago
+	 *            id pago
+	 * @return detalle pago auditoria
+	 */
+	DetallePagoAuditoria recuperarDetallePago(Long pIdPago);
 
 }
