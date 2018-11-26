@@ -160,4 +160,9 @@ public class DialogEntidad extends DialogControllerBase {
 	public void setLiteral(final String literal) {
 		this.literal = literal;
 	}
+
+	/** Ayuda. */
+        public void ayuda() {
+            UtilJSF.openHelp("entidadDialog");
+        }
 }

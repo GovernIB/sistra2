@@ -58,6 +58,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogEntidad.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogEntidad.cancelar()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogEntidad.ayuda}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
