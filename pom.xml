@@ -63,6 +63,7 @@
 		<itext.version>2.1.7</itext.version>
 		<paymentib.version>0.0.1-SNAPSHOT</paymentib.version>
 		<regweb3-ws.version>3.0.9</regweb3-ws.version>
+		<cxf.version>3.1.4</cxf.version>
 	</properties>
 
 	<repositories>

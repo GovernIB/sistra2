@@ -16,16 +16,18 @@ import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
-import es.caib.sistra2.commons.plugins.registro.api.TypeRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ComponenteService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.core.api.model.Entidad;
 
 @ManagedBean
 @ViewScoped
@@ -37,6 +39,10 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
+	
+	/** Entidad service. */
+	@Inject
+	private EntidadService entidadService;
 
 	/** FilaImportar. */
 	private FilaImportarTramiteVersion data;
@@ -64,6 +70,8 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 
 	/** Tipos. **/
 	private List<TipoAsunto> tipos;
+	
+	private Entidad entidad;
 
 	/**
 	 * Inicialización.
@@ -97,17 +105,18 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 	 */
 	private void cargarDatosRegistro() {
 		iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
+		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		try {
-			oficinas = iplugin.obtenerOficinasRegistro(UtilJSF.getIdEntidad().toString(),
+			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
 					TypeRegistro.REGISTRO_ENTRADA);
-			tipos = iplugin.obtenerTiposAsunto(UtilJSF.getIdEntidad().toString());
+			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 
 			if (this.data.getTramiteVersionResultadoOficina() != null) {
 				// Es muy marciano, pero por si el cod oficina registro no existe en el listado
 				// de oficinas de la entidad, puede pasar
 				for (final OficinaRegistro ofi : oficinas) {
 					if (this.data.getTramiteVersionResultadoOficina().equals(ofi.getCodigo())) {
-						libros = iplugin.obtenerLibrosOficina(UtilJSF.getIdEntidad().toString(),
+						libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
 								this.data.getTramiteVersionResultadoOficina(), TypeRegistro.REGISTRO_ENTRADA);
 						break;
 					}

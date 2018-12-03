@@ -3,6 +3,8 @@ package es.caib.sistra2.commons.plugins.registro.api;
 import java.io.Serializable;
 import java.util.Date;
 
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
+
 /**
  * Datos de oficina provinientes del registro
  *
@@ -18,6 +20,9 @@ public class DatosOrigen implements Serializable {
     /** Codigo de oficina sobre la que se realiza el asiento */
 	private String codigoOficinaRegistro;
 
+	/** Libro de la oficina de registro sobre la que realiza el asiento */
+	private String libroOficinaRegistro;
+
 	/** Numero de registro del apunte */
 	private String numeroRegistro;
 
@@ -25,7 +30,7 @@ public class DatosOrigen implements Serializable {
 	private Date fechaEntradaRegistro;
 
 	/** Tipo de registro (E/S) */
-	private Character tipoRegistro;
+	private TypeRegistro tipoRegistro;
 
 	public String getCodigoEntidad() {
 		return codigoEntidad;
@@ -41,6 +46,15 @@ public class DatosOrigen implements Serializable {
 
 	public void setCodigoOficinaRegistro(String codigoOficinaRegistro) {
 		this.codigoOficinaRegistro = codigoOficinaRegistro;
+	}
+
+
+	public String getLibroOficinaRegistro() {
+		return libroOficinaRegistro;
+	}
+
+	public void setLibroOficinaRegistro(String libroOficinaRegistro) {
+		this.libroOficinaRegistro = libroOficinaRegistro;
 	}
 
 	public String getNumeroRegistro() {
@@ -59,11 +73,11 @@ public class DatosOrigen implements Serializable {
 		this.fechaEntradaRegistro = fechaEntradaRegistro;
 	}
 
-	public Character getTipoRegistro() {
+	public TypeRegistro getTipoRegistro() {
 		return tipoRegistro;
 	}
 
-	public void setTipoRegistro(Character tipoRegistro) {
+	public void setTipoRegistro(TypeRegistro tipoRegistro) {
 		this.tipoRegistro = tipoRegistro;
 	}
 

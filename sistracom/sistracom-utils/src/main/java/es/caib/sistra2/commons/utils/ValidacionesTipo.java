@@ -48,6 +48,13 @@ public final class ValidacionesTipo {
     /** Instancia. */
     private static ValidacionesTipo instance;
 
+    public static final int DOCUMENTO_NO_VALIDO = -1;
+	public static final int TIPO_DOCUMENTO_NIF = 1;
+	public static final int TIPO_DOCUMENTO_CIF = 2;
+	public static final int TIPO_DOCUMENTO_NIE = 3;
+	public static final int TIPO_DOCUMENTO_NSS = 4;
+	public static final int TIPO_DOCUMENTO_PASAPORTE = 5;
+
     /** Variable codigosB para code128. */
     final String[] codigosB = new String[] {" ", "!", "\"", "#", "$", "%", "&",
             "'", "(", ")", "*", "+", ",", "-", ".", "/", "0", "1", "2", "3",
@@ -308,6 +315,15 @@ public final class ValidacionesTipo {
         }
         return result;
     }
+
+    public int validaDocumento( String valor )
+	{
+		if ( esNif( valor ) ) return TIPO_DOCUMENTO_NIF;
+		if ( esCif( valor ) ) return TIPO_DOCUMENTO_CIF;
+		if ( esNie( valor ) ) return TIPO_DOCUMENTO_NIE;
+		if ( esNumeroSeguridadSocial( valor ) ) return TIPO_DOCUMENTO_NSS;
+		return DOCUMENTO_NO_VALIDO;
+	}
 
     public boolean esNumeroCuentaValido(final String numeroCuenta) {
         boolean res = false;

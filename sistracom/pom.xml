@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>sistracom-utils</module>
+		<module>sistracom-ws-utils</module>
 		<module>sistracom-xml</module>
         <module>sistracom-plugin-autenticacion</module>
         <module>sistracom-plugin-catalogoprocedimientos</module>

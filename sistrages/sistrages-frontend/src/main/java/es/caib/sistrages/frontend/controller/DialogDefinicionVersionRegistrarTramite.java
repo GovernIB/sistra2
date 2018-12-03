@@ -17,14 +17,16 @@ import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
-import es.caib.sistra2.commons.plugins.registro.api.TypeRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.TramiteService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -54,9 +56,15 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
+	
+	/** Entidad service. */
+	@Inject
+	private EntidadService entidadService;
 
 	/** Id. **/
 	private String id;
+	
+	private Entidad entidad;
 
 	/** Tramite Paso Registrar. **/
 	private TramitePasoRegistrar data;
@@ -95,17 +103,18 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	private void cargarDatosRegistro() {
 		iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
+		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		try {
-			oficinas = iplugin.obtenerOficinasRegistro(UtilJSF.getIdEntidad().toString(),
+			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
 					TypeRegistro.REGISTRO_ENTRADA);
-			tipos = iplugin.obtenerTiposAsunto(UtilJSF.getIdEntidad().toString());
+			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 
 			if (this.data.getCodigoOficinaRegistro() != null) {
 				// Es muy marciano, pero por si el cod oficina registro no existe en el listado
 				// de oficinas de la entidad, puede pasar
 				for (final OficinaRegistro ofi : oficinas) {
 					if (this.data.getCodigoOficinaRegistro().equals(ofi.getCodigo())) {
-						libros = iplugin.obtenerLibrosOficina(UtilJSF.getIdEntidad().toString(),
+						libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
 								this.data.getCodigoOficinaRegistro(), TypeRegistro.REGISTRO_ENTRADA);
 						break;
 					}

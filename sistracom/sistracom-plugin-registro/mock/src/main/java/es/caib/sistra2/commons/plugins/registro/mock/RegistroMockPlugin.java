@@ -13,7 +13,7 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
-import es.caib.sistra2.commons.plugins.registro.api.TypeRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 
 /**
  * Plugin mock registro.

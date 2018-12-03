@@ -2,6 +2,8 @@ package es.caib.sistra2.commons.plugins.registro.api;
 
 import org.fundaciobit.pluginsib.core.IPlugin;
 
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
+
 import java.text.ParseException;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
 public interface IRegistroPlugin extends IPlugin {
 
 	/** Prefix. */
-	public static final String REGISTRO_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES
+	public static final String REGISTRO_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES
 			+ "registro.";
 
 	/**
