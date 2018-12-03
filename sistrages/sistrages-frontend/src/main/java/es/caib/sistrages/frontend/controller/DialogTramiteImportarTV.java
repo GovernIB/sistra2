@@ -150,7 +150,7 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 	 */
 	public void onChangeOficina() {
 		try {
-			libros = iplugin.obtenerLibrosOficina(UtilJSF.getIdEntidad().toString(),
+			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
 					this.data.getTramiteVersionResultadoOficina(), TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
