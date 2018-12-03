@@ -144,6 +144,7 @@ public class ApiInternaRestController {
 		if (tv == null) {
 			throw new Exception("El tramite especificado no existe");
 		}
+
 		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
 	}
 
@@ -169,8 +170,8 @@ public class ApiInternaRestController {
 	 *            parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
-	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores de un dominio", response = RValoresDominio.class)
-	@RequestMapping(value = "/dominioFuenteDatos/{idDominio}", method = RequestMethod.POST)
+	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores FD de un dominio", response = RValoresDominio.class)
+	@RequestMapping(value = "/dominioFuenteDatos/{idDominio}", method = RequestMethod.GET)
 	public RValoresDominio obtenerValoresDominioFD(@PathVariable("idDominio") final String idDominio,
 			@RequestBody(required = false) final RListaParametros parametros) {
 
@@ -198,8 +199,8 @@ public class ApiInternaRestController {
 	 *            parametros (en formato JSON)
 	 * @return Valores dominio
 	 */
-	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores de un dominio", response = RValoresDominio.class)
-	@RequestMapping(value = "/dominioListaFija/{idDominio}", method = RequestMethod.POST)
+	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores LF de un dominio", response = RValoresDominio.class)
+	@RequestMapping(value = "/dominioListaFija/{idDominio}", method = RequestMethod.GET)
 	public RValoresDominio obtenerValoresDominioLF(@PathVariable("idDominio") final String idDominio,
 			@RequestBody(required = false) final RListaParametros parametros) {
 

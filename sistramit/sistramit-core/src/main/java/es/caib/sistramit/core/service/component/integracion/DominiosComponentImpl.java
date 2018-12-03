@@ -77,8 +77,12 @@ public final class DominiosComponentImpl implements DominiosComponent {
 
         // Comprobamos si el dominio es cacheable y tiene los datos cacheados
         if (dominio.isCachear()) {
-            cacheKey = idDominio + SEPARATOR + parametrosDominio.hashCode();
-            final ValoresDominio cached = (ValoresDominio) getFromCache(
+        	String hashCode = "";
+			if (parametrosDominio != null) {
+				hashCode = parametrosDominio.hashCode() + "";
+			}
+			cacheKey = idDominio + SEPARATOR + hashCode;
+			final ValoresDominio cached = (ValoresDominio) getFromCache(
                     cacheKey);
             if (cached != null) {
                 cached.setFromCache(true);

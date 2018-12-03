@@ -51,9 +51,9 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 	public RVersionTramite recuperarDefinicionTramite(final String idTramite, final int version, final String idioma) {
 		final RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
-		final RVersionTramite rversion = restTemplate
-				.getForObject(getUrl() + "/tramite/" + idTramite + "/" + version + "/" + idioma, RVersionTramite.class);
-		return rversion;
+		return restTemplate.getForObject(getUrl() + "/tramite/" + idTramite + "/" + version + "/" + idioma,
+				RVersionTramite.class);
+
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 	public RValoresDominio resuelveDominioFuenteDatos(final RDominio dominio) {
 		final RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
-		return restTemplate.getForObject(getUrl() + "/obtenerValoresDominioFD/" + dominio.getIdentificador(),
+		return restTemplate.getForObject(getUrl() + "/dominioFuenteDatos/" + dominio.getIdentificador(),
 				RValoresDominio.class);
 
 	}
@@ -76,7 +76,7 @@ public final class SistragesApiComponentImpl implements SistragesApiComponent {
 	public RValoresDominio resuelveDominioListaFija(final RDominio dominio) {
 		final RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
-		return restTemplate.getForObject(getUrl() + "/obtenerValoresDominioLF/" + dominio.getIdentificador(),
+		return restTemplate.getForObject(getUrl() + "/dominioListaFija/" + dominio.getIdentificador(),
 				RValoresDominio.class);
 
 	}
