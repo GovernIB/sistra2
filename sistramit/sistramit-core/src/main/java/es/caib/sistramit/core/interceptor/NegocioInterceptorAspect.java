@@ -20,6 +20,7 @@ import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.exception.ServiceRollbackException;
 import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
+import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.GestorFormulariosInternoService;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
@@ -209,12 +210,12 @@ public final class NegocioInterceptorAspect {
         final EventoFlujoInfo res = new EventoFlujoInfo();
 
         // - Flujo tramitacion
-        String idSesionTramitacion = null;
         if (jp.getTarget() instanceof FlujoTramitacionService) {
             // Operaciones previas a estar creada la sesión. El resto tendrá
             // como primer parámetro la sesión.
             final String[] operacionesPrevias = {"crearSesionTramitacion",
                     "purgar"};
+            String idSesionTramitacion = null;
             if (!ArrayUtils.contains(operacionesPrevias,
                     jp.getSignature().getName())) {
                 idSesionTramitacion = (String) jp.getArgs()[0];
@@ -227,14 +228,30 @@ public final class NegocioInterceptorAspect {
                 if (infoFlujo != null) {
                     res.setIdSesionTramitacion(idSesionTramitacion);
                     res.setDebugEnabled(infoFlujo.isDebug());
-                } else {
-                    idSesionTramitacion = null;
                 }
             }
         }
         // - Gestor formulario interno
         if (jp.getTarget() instanceof GestorFormulariosInternoService) {
-            // TODO PENDIENTE
+            // Operaciones previas a estar creada la sesión. El resto tendrá
+            // como primer parámetro la sesión.
+            final String[] operacionesPrevias = {"cargarSesion", "purgar"};
+            String idSesionFormulario = null;
+            if (!ArrayUtils.contains(operacionesPrevias,
+                    jp.getSignature().getName())) {
+                idSesionFormulario = (String) jp.getArgs()[0];
+            }
+            // Si existe id sesion, intentamos obtener detalle sesion formulario
+            if (idSesionFormulario != null) {
+                final SesionFormularioInfo infoFlujo = ((GestorFormulariosInternoService) jp
+                        .getTarget()).obtenerInformacionFormulario(
+                                idSesionFormulario);
+                if (infoFlujo != null) {
+                    res.setIdSesionTramitacion(
+                            infoFlujo.getIdSesionTramitacion());
+                    res.setDebugEnabled(infoFlujo.isDebugEnabled());
+                }
+            }
         }
         return res;
     }
