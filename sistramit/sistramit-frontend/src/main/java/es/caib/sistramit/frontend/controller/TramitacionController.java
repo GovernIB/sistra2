@@ -102,6 +102,18 @@ public abstract class TramitacionController {
     }
 
     /**
+     * Al iniciar un formulario interno guarda en la sesión http la referencia a
+     * la sesión en el gestor de formularios interno.
+     *
+     * @param pidSesionFormulario
+     *            Sesión en el gestor de formularios interno
+     */
+    protected final void registraSesionFormulario(
+            final String pidSesionFormulario) {
+        sesionHttp.setIdSesionFormulario(pidSesionFormulario);
+    }
+
+    /**
      * Obtiene el flujo de tramitación generando una excepcion si no existe.
      *
      * @return sesionTramitacion

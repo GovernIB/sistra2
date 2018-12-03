@@ -10,94 +10,109 @@ import es.caib.sistramit.frontend.model.MensajeAsistente;
  */
 public interface SesionHttp {
 
-	/**
-	 * Obtiene user agent sesion http.
-	 *
-	 * @return user agent sesion http.
-	 */
-	String getUserAgent();
+    /**
+     * Obtiene user agent sesion http.
+     *
+     * @return user agent sesion http.
+     */
+    String getUserAgent();
 
-	/**
-	 * Establece user agent sesion http.
-	 *
-	 * @param userAgent
-	 *            user agent sesion http.
-	 */
-	void setUserAgent(String userAgent);
+    /**
+     * Establece user agent sesion http.
+     *
+     * @param userAgent
+     *            user agent sesion http.
+     */
+    void setUserAgent(String userAgent);
 
-	/**
-	 * Método para guardar idioma a nivel de sesión web.
-	 *
-	 * @param idioma
-	 *            Idioma de tramitación
-	 */
-	void setIdioma(final String idioma);
+    /**
+     * Método para guardar idioma a nivel de sesión web.
+     *
+     * @param idioma
+     *            Idioma de tramitación
+     */
+    void setIdioma(final String idioma);
 
-	/**
-	 * Método para obtener idioma tramitación.
-	 *
-	 * @return Idioma de tramitación
-	 */
-	String getIdioma();
+    /**
+     * Método para obtener idioma tramitación.
+     *
+     * @return Idioma de tramitación
+     */
+    String getIdioma();
 
-	/**
-	 * Método para guardar identificador de sesión de tramitación.
-	 *
-	 * @param idSesionTramitacion
-	 *            Id sesión de tramitación
-	 */
-	void setIdSesionTramitacion(final String idSesionTramitacion);
+    /**
+     * Método para guardar identificador de sesión de tramitación.
+     *
+     * @param idSesionTramitacion
+     *            Id sesión de tramitación
+     */
+    void setIdSesionTramitacion(final String idSesionTramitacion);
 
-	/**
-	 * Método para obtener id sesión tramitación.
-	 *
-	 * @return idSesionTramitacion Id sesión de tramitación
-	 */
-	String getIdSesionTramitacion();
+    /**
+     * Método para obtener id sesión tramitación.
+     *
+     * @return idSesionTramitacion Id sesión de tramitación
+     */
+    String getIdSesionTramitacion();
 
-	/**
-	 * Indica si de hace debug de la sesión de tramitación
-	 * 
-	 * @param debug
-	 *            Debug
-	 */
-	void setDebugSesionTramitacion(boolean debug);
+    /**
+     * Indica si de hace debug de la sesión de tramitación
+     *
+     * @param debug
+     *            Debug
+     */
+    void setDebugSesionTramitacion(boolean debug);
 
-	/**
-	 * Indica si de hace debug de la sesión de tramitación
-	 * 
-	 * @return debug
-	 */
-	boolean isDebugSesionTramitacion();
+    /**
+     * Indica si de hace debug de la sesión de tramitación
+     *
+     * @return debug
+     */
+    boolean isDebugSesionTramitacion();
 
-	/**
-	 * Url inicio.
-	 *
-	 * @param url
-	 *            url
-	 */
-	void setUrlInicio(String url);
+    /**
+     * Url inicio.
+     *
+     * @param url
+     *            url
+     */
+    void setUrlInicio(String url);
 
-	/**
-	 * Url inicio.
-	 *
-	 * @return url
-	 */
-	String getUrlInicio();
+    /**
+     * Url inicio.
+     *
+     * @return url
+     */
+    String getUrlInicio();
 
-	/**
-	 * Método para establecer mensajeAsistente.
-	 *
-	 * @param pMensajeAsistente
-	 *            mensajeAsistente a establecer
-	 */
-	void setMensajeAsistente(final MensajeAsistente pMensajeAsistente);
+    /**
+     * Método para establecer mensajeAsistente.
+     *
+     * @param pMensajeAsistente
+     *            mensajeAsistente a establecer
+     */
+    void setMensajeAsistente(final MensajeAsistente pMensajeAsistente);
 
-	/**
-	 * Método de acceso a mensajeAsistente.
-	 *
-	 * @return mensajeAsistente
-	 */
-	MensajeAsistente getMensajeAsistente();
+    /**
+     * Método de acceso a mensajeAsistente.
+     *
+     * @return mensajeAsistente
+     */
+    MensajeAsistente getMensajeAsistente();
+
+    /**
+     * Obtiene id sesion formulario.
+     * 
+     * @return id sesion formulario
+     */
+    String getIdSesionFormulario();
+
+    /**
+     * Establece id sesion formulario.
+     * 
+     * @param idSesionFormulario
+     *            id sesion formulario
+     */
+    void setIdSesionFormulario(String idSesionFormulario);
 
 }

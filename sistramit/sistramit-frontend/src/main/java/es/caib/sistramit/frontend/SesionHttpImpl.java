@@ -18,101 +18,117 @@ import es.caib.sistramit.frontend.model.MensajeAsistente;
 @SuppressWarnings("serial")
 public final class SesionHttpImpl implements SesionHttp, Serializable {
 
-	/**
-	 * User agent sesion http.
-	 */
-	private String userAgent;
+    /**
+     * User agent sesion http.
+     */
+    private String userAgent;
 
-	/**
-	 * Id de sesión de tramitación.
-	 */
-	private String idSesionTramitacion;
+    /**
+     * Id de sesión de tramitación.
+     */
+    private String idSesionTramitacion;
 
-	/**
-	 * Debug sesión tramitación.
-	 */
-	private boolean debugSesionTramitacion;
+    /**
+     * Debug sesión tramitación.
+     */
+    private boolean debugSesionTramitacion;
 
-	/**
-	 * Idioma de tramitación.
-	 */
-	private String idioma;
+    /**
+     * Id de sesión de formulario.
+     */
+    private String idSesionFormulario;
 
-	/**
-	 * Mensaje a mostrar al cargar el asistente.
-	 */
-	private MensajeAsistente mensajeAsistente;
+    /**
+     * Idioma de tramitación.
+     */
+    private String idioma;
 
-	/**
-	 * Url inicio.
-	 */
-	private String urlInicio;
+    /**
+     * Mensaje a mostrar al cargar el asistente.
+     */
+    private MensajeAsistente mensajeAsistente;
 
-	/**
-	 * Constructor.
-	 */
-	public SesionHttpImpl() {
-		super();
-	}
+    /**
+     * Url inicio.
+     */
+    private String urlInicio;
 
-	@Override
-	public void setIdioma(final String pIdioma) {
-		this.idioma = pIdioma;
-	}
+    /**
+     * Constructor.
+     */
+    public SesionHttpImpl() {
+        super();
+    }
 
-	@Override
-	public String getIdioma() {
-		return this.idioma;
-	}
+    @Override
+    public void setIdioma(final String pIdioma) {
+        this.idioma = pIdioma;
+    }
 
-	@Override
-	public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
-		this.idSesionTramitacion = pIdSesionTramitacion;
-	}
+    @Override
+    public String getIdioma() {
+        return this.idioma;
+    }
 
-	@Override
-	public String getIdSesionTramitacion() {
-		return this.idSesionTramitacion;
-	}
+    @Override
+    public void setIdSesionTramitacion(final String pIdSesionTramitacion) {
+        this.idSesionTramitacion = pIdSesionTramitacion;
+    }
 
-	@Override
-	public MensajeAsistente getMensajeAsistente() {
-		return mensajeAsistente;
-	}
+    @Override
+    public String getIdSesionTramitacion() {
+        return this.idSesionTramitacion;
+    }
 
-	@Override
-	public void setMensajeAsistente(final MensajeAsistente pMensajeAsistente) {
-		mensajeAsistente = pMensajeAsistente;
-	}
+    @Override
+    public MensajeAsistente getMensajeAsistente() {
+        return mensajeAsistente;
+    }
 
-	@Override
-	public String getUserAgent() {
-		return userAgent;
-	}
+    @Override
+    public void setMensajeAsistente(final MensajeAsistente pMensajeAsistente) {
+        mensajeAsistente = pMensajeAsistente;
+    }
 
-	@Override
-	public void setUserAgent(final String pUserAgent) {
-		userAgent = pUserAgent;
-	}
+    @Override
+    public String getUserAgent() {
+        return userAgent;
+    }
 
-	@Override
-	public String getUrlInicio() {
-		return urlInicio;
-	}
+    @Override
+    public void setUserAgent(final String pUserAgent) {
+        userAgent = pUserAgent;
+    }
 
-	@Override
-	public void setUrlInicio(final String pUrlInicio) {
-		urlInicio = pUrlInicio;
-	}
+    @Override
+    public String getUrlInicio() {
+        return urlInicio;
+    }
 
-	@Override
-	public boolean isDebugSesionTramitacion() {
-		return debugSesionTramitacion;
-	}
+    @Override
+    public void setUrlInicio(final String pUrlInicio) {
+        urlInicio = pUrlInicio;
+    }
 
-	@Override
-	public void setDebugSesionTramitacion(final boolean debugSesionTramitacion) {
-		this.debugSesionTramitacion = debugSesionTramitacion;
-	}
+    @Override
+    public boolean isDebugSesionTramitacion() {
+        return debugSesionTramitacion;
+    }
+
+    @Override
+    public void setDebugSesionTramitacion(
+            final boolean debugSesionTramitacion) {
+        this.debugSesionTramitacion = debugSesionTramitacion;
+    }
+
+    @Override
+    public String getIdSesionFormulario() {
+        return idSesionFormulario;
+    }
+
+    @Override
+    public void setIdSesionFormulario(String idSesionFormulario) {
+        this.idSesionFormulario = idSesionFormulario;
+    }
 
 }
