@@ -23,12 +23,12 @@
 				<p:layout id="mainDefinicionVersion" styleClass="h100">
 
 					<p:layoutUnit id="breadDefinicionVersionLayout" position="north" styleClass="body-color">
-						<p:outputPanel id="breadDefinicionVersion" style="display:flex" >
-							<div style="width:100vw">
+						<p:outputPanel id="breadDefinicionVersion" style="display:flex;" >
+							<div style="width:100vw;">
 								<p:breadCrumb homeDisplay="text" model="#{viewDefinicionVersion.breadCrumModel}" />
 								<p:menuitem value="Employees" disabled="true"/>
 							</div>
-							<div style="width:170px;padding:3px">
+							<div style="width:190px;padding:3px;">
 								<p:commandButton id="btnRefrescarCache"
 									 	value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh"
 										actionListener="#{viewTramites.refrescarCache(viewDefinicionVersion.tramite.identificador, viewDefinicionVersion.tramiteVersion.numeroVersion)}" process="@this" style="margin-left:4px" update="growl" />

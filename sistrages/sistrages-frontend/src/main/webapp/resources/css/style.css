@@ -49,7 +49,7 @@ body{
 
 /*color gris para el cuerpo de la pantalla y el pie*/
 #footer, #footer > div,.grid-nobgcolor, .body-color, #work, #work > .ui-layout-unit-content,
-#breadDefinicionVersionLayout .ui-layout-unit-content,.logo-color  {background-color: #f0f0f0;border:0pt none;}
+#breadDefinicionVersionLayout .ui-layout-unit-content,.logo-color  {background-color: #f0f0f0;border:0pt none;overflow:hidden;}
 
 .logo-color {border-left:10px solid #CC073C !important;}
 

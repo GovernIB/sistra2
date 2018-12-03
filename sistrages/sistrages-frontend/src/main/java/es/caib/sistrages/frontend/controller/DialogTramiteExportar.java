@@ -443,7 +443,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 * @return
 	 */
 	private String getNombreZip() {
-		return this.tramite.getIdentificador() + GUION + this.tramiteVersion.getNumeroVersion() + GUION
+		return "TRA-" + this.tramite.getIdentificador() + GUION + this.tramiteVersion.getNumeroVersion() + GUION
 				+ this.tramiteVersion.getRelease() + GUION + UtilJSF.getEntorno();
 	}
 

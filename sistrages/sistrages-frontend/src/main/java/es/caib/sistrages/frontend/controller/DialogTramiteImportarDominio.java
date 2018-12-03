@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +128,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 * Consultar estructura FD.
 	 */
 	public void consultarEstructura() {
-		if (data.getDominio() != null & data.getDominio().getIdFuenteDatos() != null) {
+		if (data.getDominio() != null && data.getDominio().getIdFuenteDatos() != null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEDATOS, UtilJSON.toJSON(data.getFuenteDatos()));
@@ -139,7 +140,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 * Consultar datos FD.
 	 */
 	public void consultarDatos() {
-		if (data.getDominio() != null & data.getDominio().getIdFuenteDatos() != null) {
+		if (data.getDominio() != null && data.getDominio().getIdFuenteDatos() != null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEDATOS, UtilJSON.toJSON(data.getFuenteDatos()));
@@ -154,6 +155,13 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	public void guardar() {
 		if (data.getAccion() != null) {
 			final DialogResult result = new DialogResult();
+			if (data.getResultadoSQL() != null) {
+				data.getDominio().setSql(new String(Base64.decodeBase64(data.getResultadoSQL())));
+				data.getDominio().setSqlDecoded(data.getResultadoSQL());
+				data.setResultadoSQL(data.getResultadoSQL());
+				data.setResultadoSQLdecoded(new String(Base64.decodeBase64(data.getResultadoSQL())));
+
+			}
 			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 			result.setCanceled(false);
 			data.setAccion(TypeImportarAccion.fromString(accion));

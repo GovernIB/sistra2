@@ -39,7 +39,7 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	 * getConfiguracionGlobal(java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public ConfiguracionGlobal getConfiguracionGlobal(final Long idConfiguracionGlobal) {
 		return configuracionGlobalService.getConfiguracionGlobal(idConfiguracionGlobal);
 	}
@@ -51,7 +51,7 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	 * getConfiguracionGlobal(java.lang.String)
 	 */
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public ConfiguracionGlobal getConfiguracionGlobal(final String propiedad) {
 		return configuracionGlobalService.getConfiguracionGlobal(propiedad);
 	}
@@ -75,7 +75,7 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	 * removeConfiguracionGlobal(java.lang.Long)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void removeConfiguracionGlobal(final Long idConfiguracionGlobal) {
 		configuracionGlobalService.removeConfiguracionGlobal(idConfiguracionGlobal);
 	}
@@ -88,7 +88,7 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	 * ConfiguracionGlobal)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public void updateConfiguracionGlobal(final ConfiguracionGlobal configuracionGlobal) {
 		configuracionGlobalService.updateConfiguracionGlobal(configuracionGlobal);
 	}
@@ -100,19 +100,19 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	 * listConfiguracionGlobal(java.lang.String)
 	 */
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<ConfiguracionGlobal> listConfiguracionGlobal(final String filtro) {
 		return configuracionGlobalService.listConfiguracionGlobal(filtro);
 	}
 
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public IPlugin obtenerPluginGlobal(final TypePlugin tipoPlugin) {
 		return configuracionGlobalService.obtenerPluginGlobal(tipoPlugin);
 	}
 
 	@Override
-	@RolesAllowed(ConstantesRolesAcceso.SUPER_ADMIN)
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public IPlugin obtenerPluginEntidad(final TypePlugin tipoPlugin, final Long idEntidad) {
 		return configuracionGlobalService.obtenerPluginEntidad(tipoPlugin, idEntidad);
 	}

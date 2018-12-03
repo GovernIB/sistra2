@@ -141,11 +141,11 @@ public class DialogDominioExportar extends DialogControllerBase {
 
 	/**
 	 * Obtiene el nombre del fichero.
-	 * 
+	 *
 	 * @return
 	 */
 	private String getNombreFichero() {
-		return this.data.getIdentificador() + "-" + UtilJSF.getEntorno();
+		return "DOM-" + this.data.getIdentificador() + "-" + UtilJSF.getEntorno();
 	}
 
 	/**

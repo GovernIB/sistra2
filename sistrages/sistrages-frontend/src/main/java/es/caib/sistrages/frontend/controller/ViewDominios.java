@@ -244,6 +244,28 @@ public class ViewDominios extends ViewControllerBase {
 	}
 
 	/**
+	 * Retorno dialogo.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoImportar(final SelectEvent event) {
+
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		// Verificamos si se ha modificado
+		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
+
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+
+			// Refrescamos datos
+			buscar(filtro);
+
+		}
+
+	}
+
+	/**
 	 * Retorno dialogo clonar.
 	 *
 	 * @param event

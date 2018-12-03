@@ -12,6 +12,7 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogTramiteImportarDominio.titulo']}"/></title>
+	<h:outputScript library="js" name="encode.js"/>
 </h:head>
 <h:body>
   	<f:facet name="last">
@@ -23,7 +24,7 @@
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteImportarDominio.modoAcceso}"/>
 		<f:viewAction action="#{dialogTramiteImportarDominio.init}" />
 	</f:metadata>
-	<h:form id="dialogEntidad" styleClass="margin-top-10">
+	<h:form id="dialogTramiteImpDom" styleClass="margin-top-10">
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -44,14 +45,17 @@
 					<p:outputLabel value="Acción:" />
 					<p:selectOneMenu value="#{dialogTramiteImportarDominio.accion}" valueChangeListener="#{dialogTramiteImportarDominio.eventoChangeResultado}">
 					     <f:selectItems value="#{dialogTramiteImportarDominio.data.acciones}" var="accion" itemLabel="#{msg['typeImportar.accion.' +=accion.toString()]}" itemValue="#{accion.toString()}" />
-					     <p:ajax update=":dialogEntidad"  />
+					     <p:ajax update=":dialogTramiteImpDom"  />
 					</p:selectOneMenu>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerJNDI']}:" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />
 					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoJndi}"   size="40" rows="5" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerSQL']}:" rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}" />
-					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoSQL}"   size="40" rows="5" converter="#{base64Converter}" rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}" />
+					<p:column rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}">
+							<textarea id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogTramiteImportarDominio.data.resultadoSQLdecoded}" /></textarea>
+							<p:inputTextarea id="sql" value="#{dialogTramiteImportarDominio.data.resultadoSQL}" styleClass="no-display"/>
+					</p:column>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerURL']}:"  rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
 					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoURL}"   size="40" rows="5"  rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
@@ -85,7 +89,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteImportarDominio.guardar()}" process="@form" styleClass="boton-azul" />
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogTramiteImportarDominio.guardar()}" process="@form" styleClass="boton-azul" onclick="cambioValorB64();" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteImportarDominio.cancelar()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
@@ -94,4 +98,66 @@
 </h:body>
 
 </f:view>
+<script type="text/javascript" language="javascript">
+
+
+    function cambioValorB64() {
+
+    	var elSql = $('#sqlDecoded')[0];
+    	if (elSql) {
+    		var plain = $('#sqlDecoded').val().trim();
+    		$('#dialogTramiteImpDom\\:sql').val(encodeBase64(plain));
+    	}
+
+    }
+
+    function ponerEventosElemento(elemento) {
+	    $(elemento).on( "blur", function() {
+	   		  $(this).removeClass("ui-state-focus")
+	   	});
+
+
+	    $(elemento).on( "focus", function() {
+	    	 $(this).addClass("ui-state-focus")
+	 	});
+
+	    $(elemento).on( "keyup", function() {
+	        var c = a.normalizeNewlines(a.jq.val()),
+	        b = c.length;
+	     	if (b > a.cfg.maxlength) {
+	        	a.jq.val(c.substr(0, a.cfg.maxlength))
+	      	}
+
+		});
+
+	    $(elemento).on( "mouseout", function() {
+	    	 $(this).removeClass("ui-state-hover")
+		});
+
+
+	    $(elemento).on( "mouseover", function() {
+	    	  $(this).addClass("ui-state-hover")
+		});
+
+	    $(elemento).on( "remove", function() {
+	    	if (b.isDetached()) {
+	    		    PrimeFaces.detachedWidgets.push(b.widgetVar)
+	    	}
+		});
+
+    }
+
+    function ponerEventos() {
+
+		var elSql = $('#sqlDecoded')[0];
+
+	    if (elSql) {
+	    	ponerEventosElemento("#sqlDecoded");
+	    }
+
+	 }
+
+    //ponerEventos();
+</script>
+
 </html>
