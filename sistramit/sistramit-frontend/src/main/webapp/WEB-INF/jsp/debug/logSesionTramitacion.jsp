@@ -16,7 +16,6 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="css/debug.css" />
 
 	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
-	<script type="text/javascript" src="js/jquery.imc.comuns.js"></script>
 	<script type="text/javascript" src="js/jquery.imc.debug.js"></script>
 	<script type="text/javascript">
 	<!--
