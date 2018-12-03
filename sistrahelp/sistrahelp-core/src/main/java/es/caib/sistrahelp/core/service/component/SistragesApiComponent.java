@@ -14,17 +14,17 @@ import es.caib.sistrahelp.core.api.model.Entidad;
 public interface SistragesApiComponent {
 
 	/**
-	 * Obtener permisos helpdesk.
+	 * Obtener permisos de helpdesk.
 	 *
 	 * @return lista de permisos
 	 */
 	List<RPermisoHelpDesk> obtenerPermisosHelpdesk();
 
 	/**
-	 * Obtener datos entidad.
+	 * Obtener datos de la entidad.
 	 *
 	 * @param idEntidad
-	 *            id entidad
+	 *            identificador de la entidad
 	 * @return entidad
 	 */
 	Entidad obtenerDatosEntidad(String idEntidad);

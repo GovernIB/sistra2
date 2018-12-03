@@ -26,6 +26,13 @@ public interface SistramitApiComponent {
 	public ResultadoEventoAuditoria obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion);
 
+	/**
+	 * Obtener auditoria tramite.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return resultado perdida clave
+	 */
 	public ResultadoPerdidaClave obtenerAuditoriaTramite(final FiltroPerdidaClave pFiltroBusqueda);
 
 }

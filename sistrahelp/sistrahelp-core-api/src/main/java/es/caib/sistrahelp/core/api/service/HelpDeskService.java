@@ -24,7 +24,21 @@ public interface HelpDeskService {
 	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion);
 
+	/**
+	 * Obtener numero de elementos de auditoria evento.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return numero de elementos
+	 */
 	public Long countAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda);
 
+	/**
+	 * Obtener auditoria tramite.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return resultado perdida clave
+	 */
 	public ResultadoPerdidaClave obtenerAuditoriaTramite(FiltroPerdidaClave pFiltroBusqueda);
 }

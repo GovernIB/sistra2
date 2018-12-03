@@ -78,9 +78,9 @@
 							</p:dialog>
 						</h:panelGroup>
 
-						<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogAuditoriaTramites.headerPropiedades']}" />
+						<p:outputLabel for="dataTablePropiedades" value="#{msg['dialogAuditoriaTramites.headerPropiedades']}:" />
 						<p:dataTable  id="dataTablePropiedades" var="td" value="#{dialogAuditoriaTramites.dato.propiedadesEvento.asArrayList}"
-									  emptyMessage="#{msg['error.emptyRows']}" scrollHeight="110"
+									  emptyMessage="#{msg['error.emptyRows']}" scrollHeight="#{dialogAuditoriaTramites.dato.idSesionTramitacion ne null?110:300}"
 									  scrollable="true"
 			                          paginator="false"
 			                          selectionMode="single" rowKey="#{td.key}">
