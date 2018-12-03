@@ -16,6 +16,7 @@ import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
+import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
@@ -44,8 +45,6 @@ import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 
-// TODO PASAR A TEST UNA VEZ SE INTEGRE CON STG
-
 /**
  *
  * Clase con la definición estática de información simulada de Sistrages para
@@ -55,6 +54,17 @@ import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
  *
  */
 public class SistragesMock {
+
+    /** Id entidad test. */
+    public final static String ID_ENTIDAD = "E1";
+    /** Id tramite test. */
+    public final static String ID_TRAMITE = "T1";
+    /** Version tramite test. */
+    public final static int VERSION_TRAMITE = 1;
+    /** Id tramite CP test. */
+    public final static String ID_TRAMITE_CP = "Y";
+    /** Idioma test. */
+    public final static String IDIOMA = "es";
 
     public static RConfiguracionGlobal crearConfiguracionGlobal() {
         final RConfiguracionGlobal configuracionGlobal = new RConfiguracionGlobal();
@@ -256,7 +266,21 @@ public class SistragesMock {
         vt.setPropiedades(crearPropiedadesVT());
         vt.setControlAcceso(crearControlAcceso());
         vt.setPasos(pasos);
+        vt.setDominios(crearDominios());
+
         return vt;
+    }
+
+    private static List<RDominio> crearDominios() {
+        final List<RDominio> dominios = new ArrayList<>();
+        final RDominio dom1 = new RDominio();
+        dom1.setCachear(true);
+        final String identificadorDominio = "DOM";
+        dom1.setIdentificador(identificadorDominio);
+        dom1.setTipo(RDominio.TIPO_CONSULTA_BD);
+        dom1.setSql("Select 1 from dual");
+        dominios.add(dom1);
+        return dominios;
     }
 
     private static RPasoTramitacion crearPasoPagar() {
@@ -302,7 +326,7 @@ public class SistragesMock {
         final RVersionTramitePropiedades p = new RVersionTramitePropiedades();
         p.setAutenticado(true);
         p.setNoAutenticado(true);
-        p.setNivelQAA(2);
+        p.setNivelQAA(3);
         p.setPersistente(true);
         return p;
     }
@@ -344,8 +368,8 @@ public class SistragesMock {
         return pr;
     }
 
-    private static RAnexoTramite crearAnexoTramite(String identificador,
-            int instancias) {
+    private static RAnexoTramite crearAnexoTramite(final String identificador,
+            final int instancias) {
 
         final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
         ayuda.setUrl("http://www.google.es");
@@ -379,7 +403,7 @@ public class SistragesMock {
     }
 
     private static RAnexoTramite crearAnexoPresencialTramite(
-            String identificador) {
+            final String identificador) {
 
         final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
         ayuda.setUrl("http://www.google.es");
@@ -511,6 +535,33 @@ public class SistragesMock {
     private static String generateTimestamp() {
         final Random rand = new Random();
         return System.currentTimeMillis() + "-" + rand.nextInt();
+    }
+
+    public static RValoresDominio crearValoresDominioFD(
+            final RDominio dominio) {
+        final RValoresDominio rvalores = new RValoresDominio();
+        rvalores.setCodigoError(null);
+        rvalores.setError(false);
+        rvalores.setDescripcionError(null);
+        int fila = rvalores.addFila();
+        rvalores.setValor(fila, "COD1", "VAL11");
+        rvalores.setValor(fila, "COD2", "VAL12");
+        fila = rvalores.addFila();
+        rvalores.setValor(fila, "COD1", "VAL21");
+        rvalores.setValor(fila, "COD2", "VAL22");
+        return rvalores;
+    }
+
+    public static RValoresDominio crearValoresDominioLF(
+            final RDominio dominio) {
+        final RValoresDominio rvalores = new RValoresDominio();
+        rvalores.setCodigoError(null);
+        rvalores.setError(false);
+        rvalores.setDescripcionError(null);
+        final int fila = rvalores.addFila();
+        rvalores.setValor(fila, "COD1", "VAL11");
+        rvalores.setValor(fila, "COD2", "VAL12");
+        return rvalores;
     }
 
 }

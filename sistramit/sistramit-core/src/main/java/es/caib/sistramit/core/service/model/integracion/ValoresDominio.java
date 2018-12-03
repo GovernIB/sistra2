@@ -18,9 +18,14 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 public final class ValoresDominio implements Serializable {
 
 	/**
+	 * Detecta si se ha recuperado cacheado o no
+	 */
+	private boolean fromCache;
+
+	/**
 	 * Filas de valores.
 	 */
-	private final List<Map<String, String>> datos = new ArrayList<>();
+	private List<Map<String, String>> datos = new ArrayList<>();
 
 	/**
 	 * Ficheros.
@@ -48,7 +53,7 @@ public final class ValoresDominio implements Serializable {
 	 * @return Numero de fila añadida
 	 */
 	public int addFila() {
-		final Map<String, String> fila = new HashMap<String, String>();
+		final Map<String, String> fila = new HashMap<>();
 		datos.add(fila);
 		return datos.size();
 	}
@@ -164,8 +169,8 @@ public final class ValoresDominio implements Serializable {
 	 * @return el atributo nombre columnas
 	 */
 	public List<String> getNombreColumnas() {
-		final List<String> nombresColumnas = new ArrayList<String>();
-		if (datos.size() > 0) {
+		final List<String> nombresColumnas = new ArrayList<>();
+		if (!datos.isEmpty()) {
 			final Map<String, String> fila = datos.get(0);
 			for (final Map.Entry<String, String> entry : fila.entrySet()) {
 				nombresColumnas.add(entry.getKey());
@@ -200,5 +205,29 @@ public final class ValoresDominio implements Serializable {
 	 */
 	public void setCodigoError(final String pCodigoError) {
 		codigoError = pCodigoError;
+	}
+
+	/**
+	 * @return the fromCache
+	 */
+	public boolean isFromCache() {
+		return fromCache;
+	}
+
+	/**
+	 * @param fromCache
+	 *            the fromCache to set
+	 */
+	public void setFromCache(final boolean fromCache) {
+		this.fromCache = fromCache;
+	}
+
+	/**
+	 * Setea los datos.
+	 *
+	 * @param datos2
+	 */
+	public void setDatos(final List<Map<String, String>> datos2) {
+		this.datos = datos2;
 	}
 }

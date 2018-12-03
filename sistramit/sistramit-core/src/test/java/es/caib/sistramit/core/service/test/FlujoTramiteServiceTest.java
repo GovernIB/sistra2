@@ -17,10 +17,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
-import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
-import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AbrirFormulario;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
@@ -49,7 +45,6 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
-import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
 
@@ -72,26 +67,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
     @Autowired
     private SecurityService securityService;
 
-    /** Acceso STG (simulado). */
-    @Autowired
-    private SistragesComponent sistragesComponent;
-
-    /** Id entidad test. */
-    private final static String ID_ENTIDAD = "E1";
-    /** Id tramite test. */
-    private final static String ID_TRAMITE = "T1";
-    /** Version tramite test. */
-    private final static int VERSION_TRAMITE = 1;
-    /** Id tramite CP test. */
-    private final static String ID_TRAMITE_CP = "Y";
-    /** Idioma test. */
-    private final static String IDIOMA = "es";
-    /** QAA Test. */
-    private final static String QAA = "3";
     /** Url inicio. */
     private static final String URL_INICIO = "localhost:8080/sistramitfront/asistente/iniciarTramite.html?tramite="
-            + ID_TRAMITE + "&version=" + VERSION_TRAMITE + "&idioma=" + IDIOMA
-            + "&idTramiteCatalogo=" + ID_TRAMITE_CP;
+            + SistragesMock.ID_TRAMITE + "&version="
+            + SistragesMock.VERSION_TRAMITE + "&idioma=" + SistragesMock.IDIOMA
+            + "&idTramiteCatalogo=" + SistragesMock.ID_TRAMITE_CP;
 
     /** Publicación JNDI Datasource y creación de BBDD en memoria. */
     @BeforeClass
@@ -100,81 +80,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
     }
 
     /**
-     * Verificación cacheo definiciones: se verifica el funcionamiento de las
-     * caches para configuración global, configuración entidad, avisos entidad y
-     * definiciones de trámite.
-     */
-    @Test
-    public void test1_cache() {
-
-        String timestamp1, timestamp2, timestamp3;
-
-        // Configuracion global
-        RConfiguracionGlobal confGlobal = null;
-        confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
-        timestamp1 = confGlobal.getTimestamp();
-        confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
-        timestamp2 = confGlobal.getTimestamp();
-        Assert.isTrue(timestamp1.equals(timestamp2), "No coincide timestamp");
-        sistragesComponent.evictConfiguracionGlobal();
-        confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
-        timestamp3 = confGlobal.getTimestamp();
-        Assert.isTrue(!timestamp2.equals(timestamp3),
-                "No ha variado timestamp");
-
-        // Configuracion entidad
-        RConfiguracionEntidad confEntidad = null;
-        confEntidad = sistragesComponent
-                .obtenerConfiguracionEntidad(ID_ENTIDAD);
-        timestamp1 = confEntidad.getTimestamp();
-        confEntidad = sistragesComponent
-                .obtenerConfiguracionEntidad(ID_ENTIDAD);
-        timestamp2 = confEntidad.getTimestamp();
-        Assert.isTrue(timestamp1.equals(timestamp2), "No coincide timestamp");
-        sistragesComponent.evictConfiguracionEntidad(ID_ENTIDAD);
-        confEntidad = sistragesComponent
-                .obtenerConfiguracionEntidad(ID_ENTIDAD);
-        timestamp3 = confEntidad.getTimestamp();
-        Assert.isTrue(!timestamp2.equals(timestamp3),
-                "No ha variado timestamp");
-
-        // Avisos entidad
-        RAvisosEntidad avisosEntidad = null;
-        avisosEntidad = sistragesComponent.obtenerAvisosEntidad(ID_ENTIDAD);
-        timestamp1 = avisosEntidad.getTimestamp();
-        avisosEntidad = sistragesComponent.obtenerAvisosEntidad(ID_ENTIDAD);
-        timestamp2 = avisosEntidad.getTimestamp();
-        Assert.isTrue(timestamp1.equals(timestamp2), "No coincide timestamp");
-        sistragesComponent.evictAvisosEntidad(ID_ENTIDAD);
-        avisosEntidad = sistragesComponent.obtenerAvisosEntidad(ID_ENTIDAD);
-        timestamp3 = avisosEntidad.getTimestamp();
-        Assert.isTrue(!timestamp2.equals(timestamp3),
-                "No ha variado timestamp");
-
-        // Definicion tramite
-        RVersionTramite defTramite = sistragesComponent
-                .recuperarDefinicionTramite(ID_TRAMITE, VERSION_TRAMITE,
-                        IDIOMA);
-        timestamp1 = defTramite.getTimestamp();
-        defTramite = sistragesComponent.recuperarDefinicionTramite(ID_TRAMITE,
-                VERSION_TRAMITE, IDIOMA);
-        timestamp2 = defTramite.getTimestamp();
-        Assert.isTrue(timestamp1.equals(timestamp2), "No coincide timestamp");
-        sistragesComponent.evictDefinicionTramite(ID_TRAMITE, VERSION_TRAMITE,
-                IDIOMA);
-        defTramite = sistragesComponent.recuperarDefinicionTramite(ID_TRAMITE,
-                VERSION_TRAMITE, IDIOMA);
-        timestamp3 = defTramite.getTimestamp();
-        Assert.isTrue(!timestamp2.equals(timestamp3),
-                "No ha variado timestamp");
-
-    }
-
-    /**
      * Verificación login autenticado: Se verifica proceso de login autenticado.
      */
     @Test
-    public void test2_loginAutenticado() {
+    public void test1_loginAutenticado() {
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.AUTENTICADO);
         Assert.isTrue(
@@ -189,7 +98,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
     /** Verificación login anonimo. */
     @Test
-    public void test3_loginAnonimo() {
+    public void test2_loginAnonimo() {
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.ANONIMO);
         Assert.isTrue(
@@ -205,7 +114,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * trámite autenticado (p.e. desde carpeta ciudadana).
      */
     @Test
-    public void test4_cargaTramiteAutenticado() {
+    public void test3_cargaTramiteAutenticado() {
 
         DetalleTramite dt = null;
 
@@ -220,8 +129,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         // Iniciar trámite
         final Map<String, String> parametrosInicio = new HashMap<>();
 
-        flujoTramitacionService.iniciarTramite(idSesionTramitacion, ID_TRAMITE,
-                VERSION_TRAMITE, IDIOMA, ID_TRAMITE_CP, URL_INICIO,
+        flujoTramitacionService.iniciarTramite(idSesionTramitacion,
+                SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE,
+                SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
                 parametrosInicio);
         Assert.isTrue(idSesionTramitacion != null,
                 "No se devuelve id sesion tramitacion");
@@ -248,7 +158,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * partir de la clave de tramitación .
      */
     @Test
-    public void test5_cargaTramiteAnonimo() {
+    public void test4_cargaTramiteAnonimo() {
 
         DetalleTramite dt = null;
 
@@ -262,8 +172,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
         // Iniciar trámite
         final Map<String, String> parametrosInicio = new HashMap<>();
-        flujoTramitacionService.iniciarTramite(idSesionTramitacion, ID_TRAMITE,
-                VERSION_TRAMITE, IDIOMA, ID_TRAMITE_CP, URL_INICIO,
+        flujoTramitacionService.iniciarTramite(idSesionTramitacion,
+                SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE,
+                SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
                 parametrosInicio);
         Assert.isTrue(idSesionTramitacion != null,
                 "No se devuelve id sesion tramitacion");
@@ -295,7 +206,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * versión de trámite.
      */
     @Test
-    public void test7_flujoTramitacionElectronico() throws Exception {
+    public void test6_flujoTramitacionElectronico() throws Exception {
 
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.AUTENTICADO);
@@ -329,7 +240,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * simulada de una versión de trámite.
      */
     @Test
-    public void test8_flujoTramitacionPreregistro() throws Exception {
+    public void test7_flujoTramitacionPreregistro() throws Exception {
 
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.AUTENTICADO);
@@ -367,7 +278,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * @throws UnsupportedEncodingException
      */
     private void flujoTramitacion_rellenar(final String idSesionTramitacion,
-            TypePresentacion presentacion) throws UnsupportedEncodingException {
+            final TypePresentacion presentacion)
+            throws UnsupportedEncodingException {
         ParametrosAccionPaso parametros;
         ResultadoAccionPaso resPaso;
         String nombreFichero;
@@ -700,7 +612,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      */
     private void flujoTramitacion_pagar_electronico(
             final String idSesionTramitacion,
-            UsuarioAutenticadoInfo usuarioAutenticadoInfo) throws IOException {
+            final UsuarioAutenticadoInfo usuarioAutenticadoInfo)
+            throws IOException {
 
         DetallePasos dp;
         ResultadoIrAPaso rp;
@@ -775,7 +688,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      */
     private void flujoTramitacion_pagar_presencial(
             final String idSesionTramitacion,
-            UsuarioAutenticadoInfo usuarioAutenticadoInfo) throws IOException {
+            final UsuarioAutenticadoInfo usuarioAutenticadoInfo)
+            throws IOException {
 
         DetallePasos dp;
         ResultadoIrAPaso rp;
@@ -843,8 +757,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
     private void flujoTramitacion_iniciarTramite(
             final String idSesionTramitacion) {
         final Map<String, String> parametrosInicio = new HashMap<>();
-        flujoTramitacionService.iniciarTramite(idSesionTramitacion, ID_TRAMITE,
-                VERSION_TRAMITE, IDIOMA, ID_TRAMITE_CP, URL_INICIO,
+        flujoTramitacionService.iniciarTramite(idSesionTramitacion,
+                SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE,
+                SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
                 parametrosInicio);
         Assert.isTrue(idSesionTramitacion != null,
                 "No se devuelve id sesion tramitacion");
@@ -863,7 +778,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * soporte de incidencias.
      */
     @Test
-    public void test6_soporteIncidencias() {
+    public void test5_soporteIncidencias() {
 
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(
                 TypeAutenticacion.AUTENTICADO);
@@ -874,8 +789,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
         // Iniciar trámite
         final Map<String, String> parametrosInicio = new HashMap<>();
-        flujoTramitacionService.iniciarTramite(idSesionTramitacion, ID_TRAMITE,
-                VERSION_TRAMITE, IDIOMA, ID_TRAMITE_CP, URL_INICIO,
+        flujoTramitacionService.iniciarTramite(idSesionTramitacion,
+                SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE,
+                SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
                 parametrosInicio);
         Assert.isTrue(idSesionTramitacion != null,
                 "No se devuelve id sesion tramitacion");
@@ -907,11 +823,14 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
     // FUNCIONES PRIVADAS
     // -------------------------------------------------------------
 
-    private UsuarioAutenticadoInfo loginSimulado(TypeAutenticacion auth) {
+    private UsuarioAutenticadoInfo loginSimulado(final TypeAutenticacion auth) {
 
         // Recuperacion info login
-        securityService.obtenerInfoLoginTramite(ID_TRAMITE, VERSION_TRAMITE,
-                ID_TRAMITE_CP, IDIOMA, URL_INICIO);
+        final InfoLoginTramite infoLogin = securityService
+                .obtenerInfoLoginTramite(SistragesMock.ID_TRAMITE,
+                        SistragesMock.VERSION_TRAMITE,
+                        SistragesMock.ID_TRAMITE_CP, SistragesMock.IDIOMA,
+                        URL_INICIO);
 
         // Inicio sesion hacia redireccion
         final List<TypeAutenticacion> authList = new ArrayList<>();
@@ -919,8 +838,9 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         authList.add(TypeAutenticacion.ANONIMO);
 
         final String urlRedirect = securityService.iniciarSesionAutenticacion(
-                SistragesMock.crearEntidad().getIdentificador(), IDIOMA,
-                authList, QAA, "http://localhost:8080", true);
+                SistragesMock.crearEntidad().getIdentificador(),
+                SistragesMock.IDIOMA, authList, infoLogin.getQaa(),
+                "http://localhost:8080", true);
 
         Assert.isTrue(urlRedirect != null,
                 "No se ha devuelto url redireccion login");
@@ -928,7 +848,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
         // Autenticar usuario (en modo mock, autentica segun primera letra del
         // ticket)
         final SesionInfo sesionInfo = new SesionInfo();
-        sesionInfo.setIdioma(IDIOMA);
+        sesionInfo.setIdioma(SistragesMock.IDIOMA);
         sesionInfo.setUserAgent("");
         final UsuarioAutenticadoInfo usuarioAutenticadoInfo = securityService
                 .validarTicketAutenticacion(sesionInfo,
@@ -944,7 +864,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
      * @return contenido fichero
      * @throws IOException
      */
-    private byte[] readResourceFromClasspath(String filePath)
+    private byte[] readResourceFromClasspath(final String filePath)
             throws IOException {
         try (final InputStream isFile = FlujoTramitacionService.class
                 .getClassLoader().getResourceAsStream(filePath);) {
@@ -952,4 +872,5 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
             return content;
         }
     }
+
 }

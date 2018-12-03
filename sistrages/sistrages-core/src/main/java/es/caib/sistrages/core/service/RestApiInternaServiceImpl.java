@@ -186,7 +186,12 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public TramiteVersion loadTramiteVersion(final String idTramite, final int version) {
-		return tramiteDao.getTramiteVersionByNumVersion(idTramite, version);
+		final TramiteVersion tramiteVersion = tramiteDao.getTramiteVersionByNumVersion(idTramite, version);
+		if (tramiteVersion != null) {
+			final List<Long> dominiosId = tramiteDao.getTramiteDominiosId(tramiteVersion.getCodigo());
+			tramiteVersion.setListaDominios(dominiosId);
+		}
+		return tramiteVersion;
 	}
 
 	@Override
@@ -252,6 +257,13 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public ValoresDominio realizarConsultaFuenteDatos(final String idDominio,
 			final List<ValorParametroDominio> parametros) {
 		return fuenteDatosComponent.realizarConsultaFuenteDatos(idDominio, parametros);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ValoresDominio realizarConsultaListaFija(final String idDominio,
+			final List<ValorParametroDominio> parametros) {
+		return fuenteDatosComponent.realizarConsultaListaFija(idDominio);
 	}
 
 	@Override

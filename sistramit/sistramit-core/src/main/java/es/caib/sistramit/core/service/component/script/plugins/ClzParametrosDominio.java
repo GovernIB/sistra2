@@ -22,11 +22,7 @@ public final class ClzParametrosDominio implements ClzParametrosDominioInt {
 		parametros.addParametro(codigo, parametro);
 	}
 
-	/**
-	 * Obtiene lista parámetros.
-	 *
-	 * @return el atributo parametros
-	 */
+	@Override
 	public ParametrosDominio getParametros() {
 		return parametros;
 	}

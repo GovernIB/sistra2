@@ -15,6 +15,7 @@ import es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.DominioResolucionService;
 
@@ -51,6 +52,13 @@ public class DominioResolucionServiceBean implements DominioResolucionService {
 	public ValoresDominio realizarConsultaRemota(final TypeAmbito ambito, final Long idEntidad, final String idDominio,
 			final String url, final List<ParametroDominio> parametros) {
 		return dominioResolucionService.realizarConsultaRemota(ambito, idEntidad, idDominio, url, parametros);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public ValoresDominio realizarConsultaListaFija(final TypeAmbito ambito, final Long idEntidad,
+			final String identificador, final String url, final List<Propiedad> parametros) {
+		return dominioResolucionService.realizarConsultaListaFija(ambito, idEntidad, identificador, url, parametros);
 	}
 
 }

@@ -1,6 +1,9 @@
 package es.caib.sistramit.core.service.component.script.plugins;
 
+import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
+import es.caib.sistramit.core.service.model.integracion.ValoresDominio;
 import es.caib.sistramit.core.service.model.script.ClzParametrosDominioInt;
 import es.caib.sistramit.core.service.model.script.ClzValoresDominioInt;
 import es.caib.sistramit.core.service.model.script.PlgDominiosInt;
@@ -17,8 +20,12 @@ public final class PlgDominios implements PlgDominiosInt {
 	/** Definición trámite. */
 	private final DefinicionTramiteSTG definicionTramite;
 
-	public PlgDominios(final DefinicionTramiteSTG pDefinicionTramite) {
+	/** Definición trámite. */
+	private final DominiosComponent dominiosComponent;
+
+	public PlgDominios(final DefinicionTramiteSTG pDefinicionTramite, final DominiosComponent pDominiosComponent) {
 		definicionTramite = pDefinicionTramite;
+		dominiosComponent = pDominiosComponent;
 	}
 
 	@Override
@@ -28,20 +35,23 @@ public final class PlgDominios implements PlgDominiosInt {
 
 	@Override
 	public ClzParametrosDominioInt crearParametros() {
-		// TODO PENDIENTE
-		return null;
+		return new ClzParametrosDominio();
 	}
 
 	@Override
 	public ClzValoresDominioInt invocarDominio(final String idDominio) {
-		// TODO PENDIENTE
-		return null;
+		final ValoresDominio valoresDominio = dominiosComponent.recuperarDominio(idDominio, null, definicionTramite);
+		return new ClzValoresDominio(valoresDominio);
 	}
 
 	@Override
 	public ClzValoresDominioInt invocarDominio(final String idDominio, final ClzParametrosDominioInt parametros) {
-		// TODO PENDIENTE
-		return null;
+		ParametrosDominio params = null;
+		if (parametros != null) {
+			params = parametros.getParametros();
+		}
+		final ValoresDominio valoresDominio = dominiosComponent.recuperarDominio(idDominio, params, definicionTramite);
+		return new ClzValoresDominio(valoresDominio);
 	}
 
 }

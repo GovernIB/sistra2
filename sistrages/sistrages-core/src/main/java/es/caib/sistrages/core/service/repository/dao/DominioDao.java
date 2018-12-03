@@ -2,6 +2,7 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.List;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -174,4 +175,12 @@ public interface DominioDao {
 	 *            Codigo de la entidad si de ambito entidad.
 	 */
 	void clonar(String dominioID, final String nuevoIdentificador, Long areaID, Long fdID, final Long idEntidad);
+
+	/**
+	 * Obtiene el valores dominio.
+	 * 
+	 * @param identificador
+	 * @return
+	 */
+	ValoresDominio realizarConsultaListaFija(String identificador);
 }

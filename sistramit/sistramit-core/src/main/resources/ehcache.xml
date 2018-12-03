@@ -26,5 +26,13 @@
 	    memoryStoreEvictionPolicy="LRU"/>
 
 
-
+ 	<!-- Cache dominio: se cachea maximo 24h y entre peticiones 1h (se puede forzar mediante invalidacion)-->
+	<cache
+		name="cacheDominios"
+		maxElementsInMemory="100"
+	    overflowToDisk="false"
+	    diskPersistent="false"
+	    timeToIdleSeconds="3600"
+	    timeToLiveSeconds="86400"
+	    memoryStoreEvictionPolicy="LRU"/>
 </ehcache>

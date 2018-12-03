@@ -189,6 +189,35 @@ public class ApiInternaRestController {
 		return valoresDominioAdapter.convertir(res);
 	}
 
+	/**
+	 * Recupera valores de un dominio de fuente de datos.
+	 *
+	 * @param idDominio
+	 *            id dominio
+	 * @param parametrosJSON
+	 *            parametros (en formato JSON)
+	 * @return Valores dominio
+	 */
+	@ApiOperation(value = "Obtiene los valores de un dominio", notes = "Obtiene los valores de un dominio", response = RValoresDominio.class)
+	@RequestMapping(value = "/dominioListaFija/{idDominio}", method = RequestMethod.POST)
+	public RValoresDominio obtenerValoresDominioLF(@PathVariable("idDominio") final String idDominio,
+			@RequestBody(required = false) final RListaParametros parametros) {
+
+		// Convertimos los parametros a la clase necesaria
+		final List<ValorParametroDominio> listaParams = new ArrayList<>();
+		if (parametros != null && parametros.getParametros() != null) {
+			for (final RValorParametro p : parametros.getParametros()) {
+				final ValorParametroDominio param = new ValorParametroDominio();
+				param.setCodigo(p.getCodigo());
+				param.setValor(p.getValor());
+				listaParams.add(param);
+			}
+		}
+
+		final ValoresDominio res = restApiService.realizarConsultaListaFija(idDominio, listaParams);
+		return valoresDominioAdapter.convertir(res);
+	}
+
 	@ApiOperation(value = "Lista de roles con permiso helpdesk", notes = "Lista de roles con permiso helpdesk", response = RPermisoHelpDesk.class, responseContainer = "List")
 	@RequestMapping(value = "/permisosHelpdesk", method = RequestMethod.GET)
 	public List<RPermisoHelpDesk> obtenerPermisosHelpdesk() {

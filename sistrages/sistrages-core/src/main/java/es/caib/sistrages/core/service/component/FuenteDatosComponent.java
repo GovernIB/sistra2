@@ -26,4 +26,12 @@ public interface FuenteDatosComponent {
 	 */
 	ValoresDominio realizarConsultaBD(String datasource, String sql, List<ValorParametroDominio> parametros);
 
+	/**
+	 * Realiza consulta lista fija
+	 * 
+	 * @param identificador
+	 * @return
+	 */
+	ValoresDominio realizarConsultaListaFija(String identificador);
+
 }

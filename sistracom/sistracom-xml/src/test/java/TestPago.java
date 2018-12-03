@@ -19,6 +19,7 @@ public class TestPago {
 
         final DATOSPAGO datosPago = pago.addNewDATOSPAGO();
         datosPago.setENTIDADID("E1");
+        datosPago.setPASARELAID("ATIB");
         datosPago.setSIMULADO(true);
         datosPago.setIDIOMA("es");
         datosPago.setMODELO("modelo");

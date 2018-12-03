@@ -13,9 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
@@ -488,6 +490,21 @@ public class DominioDaoImpl implements DominioDao {
 		final JDominio hdominio = JDominio.clonar(entityManager.find(JDominio.class, Long.valueOf(dominioID)),
 				nuevoIdentificador, jareas, jfuenteDatos, jentidad);
 		entityManager.persist(hdominio);
+	}
+
+	/**
+	 * Obtiene el valores dominio.
+	 */
+	@Override
+	public ValoresDominio realizarConsultaListaFija(final String identificador) {
+		final ValoresDominio valoresDominio = new ValoresDominio();
+		final Dominio dominio = this.getByIdentificador(identificador);
+		for (final Propiedad prop : dominio.getListaFija()) {
+			final int fila = valoresDominio.addFila();
+			valoresDominio.setValor(fila, "CODIGO", prop.getCodigo());
+			valoresDominio.setValor(fila, "VALOR", prop.getValor());
+		}
+		return valoresDominio;
 	}
 
 }

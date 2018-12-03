@@ -70,4 +70,6 @@ public interface RestApiInternaService {
 
 	public List<Rol> obtenerPermisosHelpdesk();
 
+	ValoresDominio realizarConsultaListaFija(String idDominio, List<ValorParametroDominio> parametros);
+
 }
