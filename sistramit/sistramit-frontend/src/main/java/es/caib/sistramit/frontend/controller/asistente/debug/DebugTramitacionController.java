@@ -3,6 +3,7 @@ package es.caib.sistramit.frontend.controller.asistente.debug;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,10 +11,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.WarningFrontException;
+import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
+import es.caib.sistramit.core.api.service.PurgaService;
+import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.frontend.controller.TramitacionController;
+import es.caib.sistramit.frontend.model.DebugPurga;
 import es.caib.sistramit.frontend.model.DebugSesionTramitacion;
 import es.caib.sistramit.frontend.model.MensajeUsuario;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
@@ -28,6 +33,14 @@ import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 @RequestMapping("/debug")
 public final class DebugTramitacionController extends TramitacionController {
 
+    /** Security service. */
+    @Autowired
+    SecurityService securityService;
+
+    /** Purga service. */
+    @Autowired
+    PurgaService purgaService;
+
     /**
      * Carga pantalla debug.
      *
@@ -36,6 +49,33 @@ public final class DebugTramitacionController extends TramitacionController {
     @RequestMapping("/logSesionTramitacion.html")
     public ModelAndView logSesionTramitacion() {
         return new ModelAndView("debug/logSesionTramitacion");
+    }
+
+    /**
+     * Ejecuta la purga (y redirige a la pantalla debug para no meter mas
+     * codigo)
+     *
+     * @return Pantalla debug.
+     */
+    @RequestMapping("/purga.html")
+    public ModelAndView purga() {
+
+        // Debug no permitido en produción
+        final TypeEntorno entorno = this.getEntorno();
+        if (entorno == TypeEntorno.PRODUCCION) {
+            throw new WarningFrontException(
+                    "Acceso a DEBUG TRAMITACION no permitido para producción");
+        }
+
+        final ResultadoProcesoProgramado r = purgaService.purgar();
+        final DebugPurga resultado = new DebugPurga();
+        resultado.setResultado(r);
+        resultado.setEntorno("DES");
+        resultado.setIdSesionTramitacion("ID_SESION_TRAMITACION");
+        resultado.setIdTramite("ID_TRAMITE");
+        // Redirigimos a carga asistente
+        return new ModelAndView("debug/logPurga", "datos", resultado);
+
     }
 
     /**
