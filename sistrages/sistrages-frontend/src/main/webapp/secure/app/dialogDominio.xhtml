@@ -57,12 +57,12 @@
 					</p>
 					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true" disabled="#{dialogDominio.isConsulta()}">
 					     <f:selectItems value="#{dialogDominio.tipos}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}"  />
-						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this @form" update="@form columnaBBDD1 columnaBBDD2 columnaLista1 columnaLista2 columnaRemota columnaFuente1 columnaFuente2 labelParametros gridParametros" />
-					</p:selectOneMenu >
+						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form panel_tipo" />
+					</p:selectOneMenu>
 
 
 				</p:column>
-				<h:panelGrid columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid id="panel_tipo" columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 						<p:column id="columnaBBDD1" colspan="1" rendered="#{dialogDominio.visibleJNDI}" >
 							<p:outputLabel for="jndi" value="#{msg['dialogDominio.headerTipo.consultaBD.jndi']}" style="margin-right:20px" />
