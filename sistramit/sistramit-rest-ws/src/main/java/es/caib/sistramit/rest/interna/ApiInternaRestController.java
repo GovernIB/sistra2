@@ -24,12 +24,15 @@ import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.Invalidacion;
 import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.PerdidaClave;
+import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
+import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.rest.api.interna.RDatosSesionPago;
@@ -40,14 +43,18 @@ import es.caib.sistramit.rest.api.interna.RFiltroEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroPaginacion;
 import es.caib.sistramit.rest.api.interna.RFiltroPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroPerdidaClave;
+import es.caib.sistramit.rest.api.interna.RFiltroPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RINEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RINPagoAuditoria;
+import es.caib.sistramit.rest.api.interna.RINTramiteAuditoria;
 import es.caib.sistramit.rest.api.interna.RInvalidacion;
 import es.caib.sistramit.rest.api.interna.ROUTEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTPerdidaClave;
+import es.caib.sistramit.rest.api.interna.ROUTTramiteAuditoria;
 import es.caib.sistramit.rest.api.interna.RPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RPerdidaClave;
+import es.caib.sistramit.rest.api.interna.RPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RVerificacionPago;
 import es.caib.sistramit.rest.api.util.JsonException;
 import es.caib.sistramit.rest.api.util.JsonUtil;
@@ -133,9 +140,9 @@ public class ApiInternaRestController {
 		return resEvento;
 	}
 
-	@ApiOperation(value = "Auditoría de trámite", notes = "Auditoría de trámite", response = ROUTPerdidaClave.class)
-	@RequestMapping(value = "/auditoria/tramite", method = RequestMethod.POST)
-	public ROUTPerdidaClave obtenerAuditoriaTramite(@RequestBody final RFiltroPerdidaClave pRFiltroBusqueda) {
+	@ApiOperation(value = "Auditoría de perdida de clave", notes = "Auditoría de perdida de clave", response = ROUTPerdidaClave.class)
+	@RequestMapping(value = "/auditoria/clave", method = RequestMethod.POST)
+	public ROUTPerdidaClave obtenerClaveTramitacion(@RequestBody final RFiltroPerdidaClave pRFiltroBusqueda) {
 		ROUTPerdidaClave resClavePerdida = null;
 
 		final FiltroPerdidaClave filtro = convierteFiltroPerdidaClave(pRFiltroBusqueda);
@@ -207,9 +214,36 @@ public class ApiInternaRestController {
 
 	@ApiOperation(value = "Recuperar detalle pago", notes = "Solicita detalle de un pago.", response = RDetallePagoAuditoria.class)
 	@RequestMapping(value = "/auditoria/pago/{id}", method = RequestMethod.GET)
-	public RDetallePagoAuditoria obtenerAuditoriaPago(@PathVariable("id") final Long pIdPago) {
+	public RDetallePagoAuditoria obtenerAuditoriaDetallePago(@PathVariable("id") final Long pIdPago) {
 		final DetallePagoAuditoria detallePago = restApiInternaService.recuperarDetallePago(pIdPago);
 		return convierteDetallePago(detallePago);
+	}
+
+	@ApiOperation(value = "Auditoría de tramite", notes = "Auditoría de tramite", response = ROUTPerdidaClave.class)
+	@RequestMapping(value = "/auditoria/tramite", method = RequestMethod.POST)
+	public ROUTTramiteAuditoria obtenerAuditoriaTramite(@RequestBody final RINTramiteAuditoria pFiltros) {
+		final ROUTTramiteAuditoria resTramite = new ROUTTramiteAuditoria();
+
+		final FiltroPaginacion filtroPaginacion = convierteFiltroPaginacion(pFiltros.getPaginacion());
+		final FiltroPersistenciaAuditoria filtroBusqueda = convierteFiltroPersistenciaAuditoria(pFiltros.getFiltro());
+
+		if (filtroBusqueda != null && filtroBusqueda.isSoloContar()) {
+			resTramite.setNumElementos(restApiInternaService.contarPersistenciaArea(filtroBusqueda));
+		} else {
+			final List<PersistenciaAuditoria> listaPersistencia = restApiInternaService
+					.recuperarPersistenciaArea(filtroBusqueda, filtroPaginacion);
+
+			if (listaPersistencia != null && !listaPersistencia.isEmpty()) {
+				resTramite.setListaPersistencia(new ArrayList<>());
+				for (final PersistenciaAuditoria persistenciaAuditoria : listaPersistencia) {
+					resTramite.getListaPersistencia().add(conviertePersistenciaAuditoria(persistenciaAuditoria));
+				}
+
+			}
+
+		}
+
+		return resTramite;
 	}
 
 	private RDetallePagoAuditoria convierteDetallePago(final DetallePagoAuditoria pDetallePago) {
@@ -401,7 +435,7 @@ public class ApiInternaRestController {
 
 			rClave = new RPerdidaClave();
 
-			rClave.setClaveTramitacion(pPerdidaClave.getClaveTramitacion());
+			rClave.setIdSesionTramitacion(pPerdidaClave.getIdSesionTramitacion());
 			rClave.setFecha(pPerdidaClave.getFecha());
 			rClave.setIdTramite(pPerdidaClave.getIdTramite());
 			rClave.setVersionTramite(pPerdidaClave.getVersionTramite());
@@ -448,7 +482,7 @@ public class ApiInternaRestController {
 
 			rPago = new RPagoAuditoria();
 
-			rPago.setClaveTramitacion(pPagoAuditoria.getClaveTramitacion());
+			rPago.setIdSesionTramitacion(pPagoAuditoria.getIdSesionTramitacion());
 			rPago.setFecha(pPagoAuditoria.getFecha());
 			rPago.setIdTramite(pPagoAuditoria.getIdTramite());
 			rPago.setVersionTramite(pPagoAuditoria.getVersionTramite());
@@ -463,8 +497,77 @@ public class ApiInternaRestController {
 			rPago.setTasaId(pPagoAuditoria.getTasaId());
 			rPago.setLocalizador(pPagoAuditoria.getLocalizador());
 			rPago.setFechaPago(pPagoAuditoria.getFechaPago());
+			rPago.setPagoEstadoIncorrecto(pPagoAuditoria.getPagoEstadoIncorrecto());
 		}
 
 		return rPago;
 	}
+
+	/**
+	 * Convierte filtro auditoria busqueda.
+	 *
+	 * @param pRFiltro
+	 *            filtro
+	 * @return FiltroAuditoriaTramitacion
+	 */
+	private FiltroPersistenciaAuditoria convierteFiltroPersistenciaAuditoria(
+			final RFiltroPersistenciaAuditoria pRFiltro) {
+		FiltroPersistenciaAuditoria filtro = null;
+
+		if (pRFiltro != null) {
+
+			filtro = new FiltroPersistenciaAuditoria();
+
+			filtro.setListaAreas(pRFiltro.getListaAreas());
+			filtro.setIdSesionTramitacion(pRFiltro.getIdSesionTramitacion());
+			filtro.setNif(pRFiltro.getNif());
+			filtro.setFechaDesde(pRFiltro.getFechaDesde());
+			filtro.setFechaHasta(pRFiltro.getFechaHasta());
+
+			if (pRFiltro.getTipoTramitePersistencia() != null) {
+				filtro.setTipoTramitePersistencia(
+						TypeTramitePersistencia.valueOf(pRFiltro.getTipoTramitePersistencia()));
+			}
+
+			filtro.setIdTramite(pRFiltro.getIdTramite());
+			filtro.setVersionTramite(pRFiltro.getVersionTramite());
+			filtro.setIdProcedimientoCP(pRFiltro.getIdProcedimientoCP());
+			filtro.setIdProcedimientoSIA(pRFiltro.getIdProcedimientoSIA());
+
+			filtro.setSoloContar(pRFiltro.isSoloContar());
+		}
+
+		return filtro;
+
+	}
+
+	private RPersistenciaAuditoria conviertePersistenciaAuditoria(final PersistenciaAuditoria pPersistenciaAuditoria) {
+		RPersistenciaAuditoria rPersistencia = null;
+
+		if (pPersistenciaAuditoria != null) {
+
+			rPersistencia = new RPersistenciaAuditoria();
+
+			rPersistencia.setId(pPersistenciaAuditoria.getId());
+			rPersistencia.setIdSesionTramitacion(pPersistenciaAuditoria.getIdSesionTramitacion());
+			rPersistencia.setIdTramite(pPersistenciaAuditoria.getIdTramite());
+			rPersistencia.setVersionTramite(pPersistenciaAuditoria.getVersionTramite());
+			rPersistencia.setIdProcedimientoCP(pPersistenciaAuditoria.getIdProcedimientoCP());
+			rPersistencia.setNif(pPersistenciaAuditoria.getNif());
+			rPersistencia.setNombre(pPersistenciaAuditoria.getNombre());
+			rPersistencia.setApellido1(pPersistenciaAuditoria.getApellido1());
+			rPersistencia.setApellido2(pPersistenciaAuditoria.getApellido2());
+			rPersistencia.setFechaInicio(pPersistenciaAuditoria.getFechaInicio());
+			rPersistencia.setEstado(pPersistenciaAuditoria.getEstado());
+			rPersistencia.setCancelado(pPersistenciaAuditoria.isCancelado());
+			rPersistencia.setFechaCaducidad(pPersistenciaAuditoria.getFechaCaducidad());
+			rPersistencia.setPurgar(pPersistenciaAuditoria.isPurgar());
+			rPersistencia.setFechaPurgado(pPersistenciaAuditoria.getFechaPurgado());
+			rPersistencia.setPurgado(pPersistenciaAuditoria.isPurgado());
+
+		}
+
+		return rPersistencia;
+	}
+
 }

@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
@@ -20,9 +22,11 @@ import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.PagoAuditoria;
 import es.caib.sistramit.core.api.model.system.PerdidaClave;
+import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.VerificacionPago;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.pasos.pagar.ControladorPasoPagarHelper;
@@ -174,7 +178,10 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 				detallePago.setDatos(ControladorPasoPagarHelper.getInstance().fromXML(fichero.getContenido()));
 			}
 
-			if (!doc.getEstado().equals(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE)) {
+			if (doc.getEstado().equals(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE)
+					&& doc.getPagoEstadoIncorrecto() == TypeEstadoPagoIncorrecto.PAGO_INICIADO
+					&& detallePago.getDatos() != null
+					&& TypePresentacion.ELECTRONICA.equals(detallePago.getDatos().getPresentacion())) {
 				final PagoComponentVerificacion verificacion = pagoComponent
 						.verificarPagoElectronico(detallePago.getDatos(), true);
 
@@ -183,6 +190,17 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 		}
 
 		return detallePago;
+	}
+
+	@Override
+	public Long contarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
+		return flujoTramiteDao.countTramitesPersistencia(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		return flujoTramiteDao.obtenerTramitesPersistencia(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	/**
@@ -197,7 +215,7 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 
 		if (pPerdidaClaveFichero != null) {
 			res = new PerdidaClave();
-			res.setClaveTramitacion(pPerdidaClaveFichero.getClaveTramitacion());
+			res.setIdSesionTramitacion(pPerdidaClaveFichero.getIdSesionTramitacion());
 			res.setFecha(pPerdidaClaveFichero.getFecha());
 			res.setIdTramite(pPerdidaClaveFichero.getIdTramite());
 			res.setVersionTramite(pPerdidaClaveFichero.getVersionTramite());

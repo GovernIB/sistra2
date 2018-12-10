@@ -13,6 +13,12 @@ public enum TypeEvento {
 	 */
 	ERROR("ERROR"),
 	/**
+	 * DEBUG SCRIPT. EVENTO GENERADO CUANDO SE GENERA UN DEBUG EN UN SCRIPT.
+	 */
+	DEBUG_SCRIPT("TR_SCR"),
+
+	PROCESO_PURGA("TR_PUR"),
+	/**
 	 * INICIO DEL TRÁMITE (CORRECTO).
 	 */
 	INICIAR_TRAMITE("TR_INI"),
@@ -39,13 +45,7 @@ public enum TypeEvento {
 	/**
 	 * FIN DE TRÁMITE.
 	 */
-	FIN_TRAMITE("TR_FIN"),
-	/**
-	 * DEBUG SCRIPT. EVENTO GENERADO CUANDO SE GENERA UN DEBUG EN UN SCRIPT.
-	 */
-	DEBUG_SCRIPT("TR_SCR"),
-
-	PROCESO_PURGA("TR_PUR");
+	FIN_TRAMITE("TR_FIN");
 
 	/**
 	 * Valor como string.

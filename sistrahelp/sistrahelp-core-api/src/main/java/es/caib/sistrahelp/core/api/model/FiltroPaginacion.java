@@ -6,7 +6,9 @@ package es.caib.sistrahelp.core.api.model;
  * @author Indra
  *
  */
-public class FiltroPaginacion {
+public class FiltroPaginacion extends ModelApi {
+
+	private static final long serialVersionUID = 1L;
 
 	private Integer first;
 

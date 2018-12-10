@@ -1,13 +1,16 @@
 package es.caib.sistrahelp.core.api.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * La clase ResultadoPerdidaClave.
  */
-@SuppressWarnings("serial")
-public final class ResultadoPerdidaClave implements Serializable {
+public final class ResultadoPerdidaClave extends ModelApi {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Crea una nueva instancia de EventoAuditoriaTramitacion.

@@ -18,11 +18,11 @@ public final class PerdidaClaveFichero implements Serializable {
 		super();
 	}
 
-	public PerdidaClaveFichero(final String claveTramitacion, final Date fecha, final String idTramite,
+	public PerdidaClaveFichero(final String idSesionTramitacion, final Date fecha, final String idTramite,
 			final Integer versionTramite, final String idProcedimientoCP, final Long fichero,
 			final String ficheroClave) {
 		super();
-		this.claveTramitacion = claveTramitacion;
+		this.idSesionTramitacion = idSesionTramitacion;
 		this.fecha = fecha;
 		this.idTramite = idTramite;
 		this.versionTramite = versionTramite;
@@ -33,7 +33,7 @@ public final class PerdidaClaveFichero implements Serializable {
 	/**
 	 * clave de tramitacion
 	 */
-	private String claveTramitacion;
+	private String idSesionTramitacion;
 
 	/**
 	 * fecha.
@@ -57,12 +57,12 @@ public final class PerdidaClaveFichero implements Serializable {
 	 */
 	private String idProcedimientoCP;
 
-	public String getClaveTramitacion() {
-		return claveTramitacion;
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
 	}
 
-	public void setClaveTramitacion(final String claveTramitacion) {
-		this.claveTramitacion = claveTramitacion;
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
+		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
 	public Date getFecha() {

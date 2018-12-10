@@ -1,6 +1,5 @@
 package es.caib.sistrahelp.core.api.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
@@ -9,8 +8,9 @@ import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 /**
  * La clase EventoAuditoriaTramitacion.
  */
-@SuppressWarnings("serial")
-public final class EventoAuditoriaTramitacion implements Serializable {
+public final class EventoAuditoriaTramitacion extends ModelApi {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Crea una nueva instancia de EventoAuditoriaTramitacion.

@@ -9,28 +9,27 @@ import es.caib.sistramit.core.api.model.flujo.DatosSesionPago;
  */
 @SuppressWarnings("serial")
 public final class DetallePagoAuditoria implements Serializable {
-	public DetallePagoAuditoria() {
-		super();
-	}
 
-	DatosSesionPago datos;
+    /** Datos sesion pago que se encuentran en el asistente. */
+    private DatosSesionPago datos;
 
-	VerificacionPago verificacion;
+    /** Datos obtenidos de la pasarela de pagos (en caso necesario). */
+    private VerificacionPago verificacion;
 
-	public DatosSesionPago getDatos() {
-		return datos;
-	}
+    public DatosSesionPago getDatos() {
+        return datos;
+    }
 
-	public void setDatos(final DatosSesionPago datos) {
-		this.datos = datos;
-	}
+    public void setDatos(final DatosSesionPago datos) {
+        this.datos = datos;
+    }
 
-	public VerificacionPago getVerificacion() {
-		return verificacion;
-	}
+    public VerificacionPago getVerificacion() {
+        return verificacion;
+    }
 
-	public void setVerificacion(final VerificacionPago verificacion) {
-		this.verificacion = verificacion;
-	}
+    public void setVerificacion(final VerificacionPago verificacion) {
+        this.verificacion = verificacion;
+    }
 
 }

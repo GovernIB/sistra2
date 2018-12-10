@@ -9,8 +9,9 @@ import java.util.List;
  * @author Indra
  *
  */
-public class FiltroPerdidaClave {
+public class FiltroPerdidaClave extends ModelApi {
 
+	private static final long serialVersionUID = -257813826202155209L;
 	private List<String> listaAreas;
 	private String datoFormulario;
 	private Date fechaDesde;

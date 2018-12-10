@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogInformacionPagos.titulo']}"/></title>
+</h:head>
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogInformacionPagos.modoAcceso}"/>
+		<f:viewAction action="#{dialogInformacionPagos.init}" />
+	</f:metadata>
+	<h:form id="dialogInformacionPagos" styleClass="margin-top-10">
+			<p:outputPanel>
+				<p:fieldset legend="#{msg['dialogInformacionPagos.informacionGeneral']}" styleClass="margin-left-10 margin-right-10 noPadding">
+			 		<h:panelGrid rowClasses=",ui-datatable-odd" columnClasses="padding-left-8 w25 grid-right,padding-right-18 w30,padding-left-8 w20 grid-right,padding-right-18 w25" columns="4" styleClass="w100">
+				 		<p:outputLabel for="identificadorPago" value="#{msg['dialogInformacionPagos.identificadorPago']}:" />
+						<p:inputText id="identificadorPago" value="#{dialogInformacionPagos.datosSesionPago.identificadorPago}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="pasarelaId" value="#{msg['dialogInformacionPagos.pasarelaId']}:" />
+						<p:inputText id="pasarelaId" value="#{dialogInformacionPagos.datosSesionPago.pasarelaId}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="entidadId" value="#{msg['dialogInformacionPagos.entidadId']}:" />
+						<p:inputText id="entidadId" value="#{dialogInformacionPagos.datosSesionPago.entidadId}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="organismoId" value="#{msg['dialogInformacionPagos.organismoId']}:" />
+						<p:inputText id="organismoId" value="#{dialogInformacionPagos.datosSesionPago.organismoId}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="presentacion" value="#{msg['dialogInformacionPagos.presentacion']}:" />
+						<p:inputText id="presentacion" value="#{msg['typePresentacion.'.concat(dialogInformacionPagos.datosSesionPago.presentacion)]}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="simulado" value="#{msg['dialogInformacionPagos.simulado']}:" />
+						<p:inputText id="simulado" value="#{dialogInformacionPagos.datosSesionPago.simulado?'Si':'No'}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="sujetoPasivoNif" value="#{msg['dialogInformacionPagos.nif']}:" />
+						<p:inputText id="sujetoPasivoNif" value="#{dialogInformacionPagos.datosSesionPago.sujetoPasivo.nif}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="sujetoPasivoNombre" value="#{msg['dialogInformacionPagos.nombre']}:" />
+						<p:inputText id="sujetoPasivoNombre" value="#{dialogInformacionPagos.datosSesionPago.sujetoPasivo.nombre}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="modelo" value="#{msg['dialogInformacionPagos.modelo']}:" />
+						<p:inputText id="modelo" value="#{dialogInformacionPagos.datosSesionPago.modelo}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="concepto" value="#{msg['dialogInformacionPagos.concepto']}:" />
+						<p:inputText id="concepto" value="#{dialogInformacionPagos.datosSesionPago.concepto}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="tasaId" value="#{msg['dialogInformacionPagos.tasaId']}:" />
+						<p:inputText id="tasaId" value="#{dialogInformacionPagos.datosSesionPago.tasaId}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="importe" value="#{msg['dialogInformacionPagos.importe']}:" />
+						<p:inputText id="importe" value="#{dialogInformacionPagos.datosSesionPago.importe/100}" disabled="true" size="35"/>
+
+				 		<p:outputLabel for="fechaPago" value="#{msg['dialogInformacionPagos.fechaPago']}:" />
+				 		<p:calendar id="fechaPago" value="#{dialogInformacionPagos.dato.fechaPago}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" disabled="true"/>
+
+				 		<p:outputLabel for="localizador" value="#{msg['dialogInformacionPagos.localizador']}:" />
+						<p:inputText id="localizador" value="#{dialogInformacionPagos.datosSesionPago.localizador}" disabled="true" size="35"/>
+					</h:panelGrid>
+				</p:fieldset>
+				<p:spacer height="5px"/>
+				<p:fieldset legend="#{msg['dialogInformacionPagos.detalle']}" styleClass="margin-left-10 margin-right-10  noPadding" rendered="#{dialogInformacionPagos.mostrarDetalle}">
+			 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns="2"  styleClass="w100">
+				 		<p:outputLabel for="verificado" value="#{msg['dialogInformacionPagos.verificado']}:" />
+						<p:inputText id="verificado" value="#{dialogInformacionPagos.verificacion.verificado?'Si':'No'}" disabled="true" size="35"/>
+
+						<p:outputLabel for="pagado" value="#{msg['dialogInformacionPagos.pagado']}:" />
+						<p:inputText id="pagado" value="#{dialogInformacionPagos.verificacion.pagado?'Si':'No'}" disabled="true" size="35"/>
+
+						<p:outputLabel for="codigoError" value="#{msg['dialogInformacionPagos.codigoError']}:" />
+						<p:inputText id="codigoError" value="#{dialogInformacionPagos.verificacion.codigoError}" disabled="true" size="35"/>
+
+						<p:outputLabel for="mensajeError" value="#{msg['dialogInformacionPagos.mensajeError']}:" />
+						<p:inputText id="mensajeError" value="#{dialogInformacionPagos.verificacion.mensajeError}" disabled="true" size="35"/>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:outputPanel>
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogInformacionPagos.cerrar}" process="@this" styleClass="boton-azul"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

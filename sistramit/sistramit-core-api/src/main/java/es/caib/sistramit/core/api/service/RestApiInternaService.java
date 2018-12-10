@@ -9,8 +9,10 @@ import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
 
 /**
  * Servicio funcionalidades Rest Api Interna.
@@ -77,22 +79,22 @@ public interface RestApiInternaService {
 	/**
 	 * Contar pagos area.
 	 *
-	 * @param filtroBusqueda
+	 * @param pFiltroBusqueda
 	 *            filtro busqueda
 	 * @return Numero de pagos
 	 */
-	Long contarPagosArea(FiltroPagoAuditoria filtroBusqueda);
+	Long contarPagosArea(FiltroPagoAuditoria pFiltroBusqueda);
 
 	/**
 	 * Recuperar pagos area.
 	 *
-	 * @param filtroBusqueda
+	 * @param pFiltroBusqueda
 	 *            filtro busqueda
-	 * @param filtroPaginacion
+	 * @param pFiltroPaginacion
 	 *            filtro paginacion
 	 * @return lista de pagos
 	 */
-	List<PagoAuditoria> recuperarPagosArea(FiltroPagoAuditoria filtroBusqueda, FiltroPaginacion filtroPaginacion);
+	List<PagoAuditoria> recuperarPagosArea(FiltroPagoAuditoria pFiltroBusqueda, FiltroPaginacion pFiltroPaginacion);
 
 	/**
 	 * Recuperar detalle pago.
@@ -102,5 +104,26 @@ public interface RestApiInternaService {
 	 * @return detalle pago auditoria
 	 */
 	DetallePagoAuditoria recuperarDetallePago(Long pIdPago);
+
+	/**
+	 * Contar persistencia area.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return Numero de datos
+	 */
+	Long contarPersistenciaArea(FiltroPersistenciaAuditoria pFiltroBusqueda);
+
+	/**
+	 * Recuperar persistencia area.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @param pFiltroPaginacion
+	 *            filtro paginacion
+	 * @return lista de datos de persistencia
+	 */
+	List<PersistenciaAuditoria> recuperarPersistenciaArea(FiltroPersistenciaAuditoria pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
 
 }

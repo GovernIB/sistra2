@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewInformacionPagos.init}" />
+	</f:metadata>
+
+
+
+	<ui:define name="content">
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeAutenticacion" var="TypeAutenticacion"/>
+
+		<h:form id="form" styleClass="h100">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+
+
+        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+        	<p:panelGrid id="panelFiltro" columns="3" columnClasses="w33,w33,w34" styleClass="noBackground w100 h10 noBorders">
+        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+	        		<p:outputLabel for="filtroTipoAcceso" value="#{msg['viewInformacionPagos.filtroTipoAcceso']}:"/>
+					<p:selectOneMenu id="filtroTipoAcceso" value="#{viewInformacionPagos.filtros.tipoAcceso}" required="true">
+    					<f:selectItems value="#{TypeAutenticacion.ALL_VALUES}" var="tipoAcceso" itemLabel="#{msg['typeTipoAcceso.' += tipoAcceso]}"/>
+    					<p:ajax event="change" update="id1 id2" oncomplete="$('.ui-state-error').removeClass('ui-state-error');" />
+					</p:selectOneMenu >
+	        	</h:panelGrid>
+        		<h:panelGrid id="id1" columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPagos.filtroIdSesion']}:"/>
+		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPagos.filtros.idSesionTramitacion}" size="30" maxlength="30" required="#{viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.ANONIMO}"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid id="id2" columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+		        	<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPagos.filtroNif']}:"/>
+		        	<p:inputText id="filtroNif" value="#{viewInformacionPagos.filtros.nif}" size="12" maxlength="12" required="#{viewInformacionPagos.filtros.tipoAcceso eq null or viewInformacionPagos.filtros.tipoAcceso eq TypeAutenticacion.AUTENTICADO}"/>
+	        	</h:panelGrid>
+
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPagos.filtroFechaInicio']}:"/>
+	        		<p:calendar id="filtroFechaInicio" value="#{viewInformacionPagos.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPagos.filtroFechaFin']}:"/>
+	        		<p:calendar id="filtroFechaFin" value="#{viewInformacionPagos.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+	        	</h:panelGrid>
+          		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPagos.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+
+          	</p:panelGrid>
+
+
+			<!-- Data table -->
+			<p:outputPanel  styleClass="h80">
+			<p:dataTable id="dataTable" var="dt" value="#{viewInformacionPagos.listaDatos}"  lazy="true"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewInformacionPagos.datoSeleccionado}" rowKey="#{dt.codigoPago}">
+
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['viewInformacionPagos.headFecha']}"         width="15%" styleClass="grid-center">
+			        <h:outputText value="#{dt.fecha}">
+			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPagos.headTramite']}"       width="15%"  styleClass="grid-center" >
+			        <h:outputText value="#{dt.idTramite}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPagos.headVersion']}"       width="10%" styleClass="grid-center">
+			        <h:outputText value="#{dt.versionTramite}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPagos.headidSesionTramitacion']}"    width="25%" styleClass="grid-center">
+			        <h:outputText value="#{dt.idSesionTramitacion}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPagos.headPasarelaId']}"    width="10%" styleClass="grid-center">
+			        <h:outputText value="#{dt.pasarelaId}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPagos.headImporte']}"       width="10%"  styleClass="grid-right" >
+			        <h:outputText value="#{dt.importe/100}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPagos.headEstado']}"        width="15%" styleClass="grid-center">
+			        <h:outputText value="#{msg['typeEstadoPago.'.concat(dt.estadoPago)]}" />
+			    </p:column>
+
+
+
+			</p:dataTable></p:outputPanel>
+
+			<h:outputScript >
+		      function triggerDblClick() {
+		        	$('#form\\:btnEditarHidden').click();
+		      }
+		    </h:outputScript>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewInformacionPagos.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

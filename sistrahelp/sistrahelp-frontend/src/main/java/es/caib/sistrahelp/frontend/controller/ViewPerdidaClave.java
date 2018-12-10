@@ -76,7 +76,7 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		final ResultadoPerdidaClave datosRes = helpDeskService.obtenerAuditoriaTramite(filtros);
+		final ResultadoPerdidaClave datosRes = helpDeskService.obtenerClaveTramitacion(filtros);
 
 		if (datosRes.getResultado() == -1) {
 			listaDatos = null;

@@ -25,7 +25,10 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
@@ -149,7 +152,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		final HPaso paso = getHPaso(pIdSesionTramitacion, pIdPaso);
 
 		// Buscamos ficheros a eliminar
-		final List<ReferenciaFichero> ficherosEliminar = new ArrayList<ReferenciaFichero>();
+		final List<ReferenciaFichero> ficherosEliminar = new ArrayList<>();
 
 		// Recorremos documentos para ver los ficheros a eliminar
 		for (final HDocumento hdoc : paso.getDocumentos()) {
@@ -256,17 +259,13 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	@Override
 	public Long countTramitesPerdidaClave(final FiltroPerdidaClave pFiltroBusqueda) {
 		final CriteriaQuery<Long> queryCount = obtenerTramitesPerdidaClaveCriteria(pFiltroBusqueda, Long.class, true);
-		final Long countResult = entityManager.createQuery(queryCount).getSingleResult();
-
-		return countResult;
+		return entityManager.createQuery(queryCount).getSingleResult();
 	}
 
 	@Override
 	public Long countPagos(final FiltroPagoAuditoria pFiltroBusqueda) {
 		final CriteriaQuery<Long> queryCount = obtenerPagosCriteria(pFiltroBusqueda, Long.class, true);
-		final Long countResult = entityManager.createQuery(queryCount).getSingleResult();
-
-		return countResult;
+		return entityManager.createQuery(queryCount).getSingleResult();
 	}
 
 	@Override
@@ -287,7 +286,110 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 
 	}
 
+	@Override
+	public Long countTramitesPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
+		final CriteriaQuery<Long> queryCount = obtenerTramitesPersistenciaCriteria(pFiltroBusqueda, Long.class, true);
+		return entityManager.createQuery(queryCount).getSingleResult();
+	}
+
+	@Override
+	public List<PersistenciaAuditoria> obtenerTramitesPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda,
+			final FiltroPaginacion filtroPaginacion) {
+		List<PersistenciaAuditoria> result = null;
+
+		final CriteriaQuery<PersistenciaAuditoria> query = obtenerTramitesPersistenciaCriteria(pFiltroBusqueda,
+				PersistenciaAuditoria.class, false);
+
+		if (filtroPaginacion == null) {
+			result = entityManager.createQuery(query).getResultList();
+		} else {
+			result = entityManager.createQuery(query).setFirstResult(filtroPaginacion.getFirst())
+					.setMaxResults(filtroPaginacion.getPageSize()).getResultList();
+		}
+
+		return result;
+
+	}
+
 	// ------------ FUNCIONES PRIVADAS --------------------------------------
+	private <T> CriteriaQuery<T> obtenerTramitesPersistenciaCriteria(final FiltroPersistenciaAuditoria pFiltroBusqueda,
+			final Class<T> pTipo, final boolean pCount) {
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<T> query = builder.createQuery(pTipo);
+
+		final Root<HSesionTramitacion> tableS = query.from(HSesionTramitacion.class);
+		final Root<HTramite> tableT = query.from(HTramite.class);
+		final Root<HPaso> tableP = query.from(HPaso.class);
+		final Root<HDocumento> tableD = query.from(HDocumento.class);
+
+		Predicate predicate = builder.equal(tableT.get("sesionTramitacion"), tableS);
+		predicate = builder.and(predicate, builder.equal(tableP.get("tramitePersistencia"), tableT));
+		predicate = builder.and(predicate, builder.equal(tableD.get("paso"), tableP));
+
+		if (pFiltroBusqueda.getListaAreas() != null) {
+			predicate = builder.and(predicate, tableT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdSesionTramitacion())) {
+			predicate = builder.and(predicate, builder.equal(tableS.get("sesionTramitacion").get("idSesionTramitacion"),
+					pFiltroBusqueda.getIdSesionTramitacion()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getNif())) {
+			predicate = builder.and(predicate,
+					builder.like(tableT.get("nifIniciador"), "%" + pFiltroBusqueda.getNif() + "%"));
+		}
+
+		if (pFiltroBusqueda.getFechaDesde() != null) {
+			predicate = builder.and(predicate,
+					builder.greaterThanOrEqualTo(tableT.get("fechaInicio"), pFiltroBusqueda.getFechaDesde()));
+		}
+
+		if (pFiltroBusqueda.getFechaHasta() != null) {
+			predicate = builder.and(predicate,
+					builder.lessThanOrEqualTo(tableT.get("fechaInicio"), pFiltroBusqueda.getFechaHasta()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdTramite())) {
+			predicate = builder.and(predicate, builder.equal(tableT.get("idTramite"), pFiltroBusqueda.getIdTramite()));
+		}
+
+		if (pFiltroBusqueda.getVersionTramite() != null) {
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("versionTramite"), pFiltroBusqueda.getVersionTramite()));
+		}
+
+		if (StringUtils.isNoneBlank(pFiltroBusqueda.getIdProcedimientoCP())) {
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("idProcedimientoCP"), pFiltroBusqueda.getIdProcedimientoCP()));
+		}
+
+		if (TypeTramitePersistencia.PAGO_REALIZADO_TRAMITE_SIN_FINALIZAR
+				.equals(pFiltroBusqueda.getTipoTramitePersistencia())) {
+			predicate = builder.and(predicate, builder.equal(tableT.get("estado"), "f"));
+
+			predicate = builder.and(predicate, builder.equal(tableD.get("estado"), "p"));
+			predicate = builder.and(predicate, builder.equal(tableD.get("tipo"), "c"));
+		}
+
+		query.where(predicate);
+
+		if (pCount) {
+			query.multiselect(builder.count(tableD));
+		} else {
+			query.orderBy(builder.asc(tableT.get("fechaInicio")));
+			query.distinct(true);
+			query.multiselect(tableT.get("codigo"), tableS.get("idSesionTramitacion"), tableT.get("idTramite"),
+					tableT.get("versionTramite"), tableT.get("idProcedimientoCP"), tableT.get("nifIniciador"),
+					tableT.get("nombreIniciador"), tableT.get("apellido1Iniciador"), tableT.get("apellido2Iniciador"),
+					tableT.get("fechaInicio"), tableT.get("estado"), tableT.get("cancelado"),
+					tableT.get("fechaCaducidad"), tableT.get("purgar"), tableT.get("fechaPurgado"),
+					tableT.get("purgado"));
+		}
+
+		return query;
+	}
+
 	private <T> CriteriaQuery<T> obtenerPagosCriteria(final FiltroPagoAuditoria pFiltroBusqueda, final Class<T> pTipo,
 			final boolean pCount) {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -340,8 +442,9 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		} else {
 			query.orderBy(builder.asc(tableT.get("fechaInicio")));
 			query.multiselect(tableS.get("idSesionTramitacion"), tableT.get("fechaInicio"), tableT.get("idTramite"),
-					tableT.get("versionTramite"), tableT.get("idTramiteCP"), tableD.get("fichero"),
-					tableD.get("ficheroClave"), tableD.get("codigo"), tableD.get("estado"));
+					tableT.get("versionTramite"), tableT.get("idProcedimientoCP"), tableD.get("fichero"),
+					tableD.get("ficheroClave"), tableD.get("codigo"), tableD.get("estado"),
+					tableD.get("pagoEstadoIncorrecto"));
 		}
 
 		return query;
@@ -404,7 +507,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		} else {
 			query.orderBy(builder.asc(tableT.get("fechaInicio")));
 			query.multiselect(tableS.get("idSesionTramitacion"), tableT.get("fechaInicio"), tableT.get("idTramite"),
-					tableT.get("versionTramite"), tableT.get("idTramiteCP"), tableD.get("fichero"),
+					tableT.get("versionTramite"), tableT.get("idProcedimientoCP"), tableD.get("fichero"),
 					tableD.get("ficheroClave"));
 		}
 
@@ -423,7 +526,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		final String sql = "SELECT t FROM HSesionTramitacion t WHERE t.idSesionTramitacion = :idSesionTramitacion";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idSesionTramitacion", idSesionTramitacion);
-		final List results = query.getResultList();
+		final List<?> results = query.getResultList();
 		if (!results.isEmpty()) {
 			hSesion = (HSesionTramitacion) results.get(0);
 		}
@@ -442,7 +545,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		final String sql = "SELECT t from HTramite t where t.sesionTramitacion.idSesionTramitacion = :idSesionTramitacion";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idSesionTramitacion", idSesionTramitacion);
-		final List results = query.getResultList();
+		final List<?> results = query.getResultList();
 		if (!results.isEmpty()) {
 			hTramite = (HTramite) results.get(0);
 		}
@@ -471,12 +574,12 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 *            id sesion tramitacion
 	 * @return pasos tramite
 	 */
+	@SuppressWarnings("unchecked")
 	private List<HPaso> findHPasos(final String idSesionTramitacion) {
 		final String sql = "select p from HPaso p inner join p.tramitePersistencia t where t.sesionTramitacion.idSesionTramitacion=:idSesionTramitacion order by p.codigo";
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idSesionTramitacion", idSesionTramitacion);
-		final List<HPaso> results = query.getResultList();
-		return results;
+		return query.getResultList();
 	}
 
 	/**
@@ -486,6 +589,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 	 *            id sesion tramitacion
 	 * @return paso tramite
 	 */
+	@SuppressWarnings("unchecked")
 	private HPaso findHPaso(final String idSesionTramitacion, final String idPaso) {
 		final String sql = "select p from HPaso p inner join p.tramitePersistencia t where t.sesionTramitacion.idSesionTramitacion=:idSesionTramitacion and p.identificadorPaso = :idPaso order by p.codigo";
 		final Query query = entityManager.createQuery(sql);

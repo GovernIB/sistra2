@@ -17,8 +17,10 @@ import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.service.RestApiInternaService;
 
 @Stateless
@@ -70,6 +72,17 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@Override
 	public DetallePagoAuditoria recuperarDetallePago(final Long pIdPago) {
 		return restApiInternaService.recuperarDetallePago(pIdPago);
+	}
+
+	@Override
+	public Long contarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
+		return restApiInternaService.contarPersistenciaArea(pFiltroBusqueda);
+	}
+
+	@Override
+	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		return restApiInternaService.recuperarPersistenciaArea(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 }

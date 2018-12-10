@@ -6,6 +6,7 @@ import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
+import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 
 /**
  * Acceso a componente SISTRAGES.
@@ -53,11 +54,10 @@ public interface SistragesApiComponent {
 	 * Recupera los valores del dominio de un dominio de tipo fuente de datos.
 	 *
 	 * @param dominio
-	 * @param parametrosDominio
-	 * @param url
+	 * @param listaParametros
 	 * @return
 	 */
-	RValoresDominio resuelveDominioFuenteDatos(RDominio dominio);
+	RValoresDominio resuelveDominioFuenteDatos(RDominio dominio, final ParametrosDominio parametrosDominio);
 
 	/**
 	 * Recupera los valores del dominio de un dominio de tipo lista fija.

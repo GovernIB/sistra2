@@ -134,8 +134,9 @@ public class Area extends ModelApi {
 			if (other.descripcion != null) {
 				return false;
 			}
-		} else if (!descripcion.equals(other.descripcion))
+		} else if (!descripcion.equals(other.descripcion)) {
 			return false;
+		}
 		if (codigo == null) {
 			if (other.codigo != null) {
 				return false;

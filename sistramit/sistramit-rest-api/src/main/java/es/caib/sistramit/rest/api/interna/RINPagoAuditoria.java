@@ -12,6 +12,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RINPagoAuditoria", description = "Entrada de datos de filtro y paginacion")
 public class RINPagoAuditoria {
 
+	public RINPagoAuditoria() {
+		super();
+	}
+
 	@ApiModelProperty(value = "Filtro pago")
 	private RFiltroPagoAuditoria filtro;
 

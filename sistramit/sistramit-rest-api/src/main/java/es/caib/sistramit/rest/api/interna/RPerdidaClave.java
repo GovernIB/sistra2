@@ -17,8 +17,8 @@ public class RPerdidaClave {
 	/**
 	 * tipo de evento.
 	 */
-	@ApiModelProperty(value = "Clave Tramitacion")
-	private String claveTramitacion;
+	@ApiModelProperty(value = "id. Sesion Tramitacion")
+	private String idSesionTramitacion;
 
 	/**
 	 * Fecha del evento.
@@ -55,18 +55,18 @@ public class RPerdidaClave {
 	 *
 	 * @return el valor de clave de tramitacion
 	 */
-	public String getClaveTramitacion() {
-		return claveTramitacion;
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
 	}
 
 	/**
 	 * Establece el valor de clave de tramitacion.
 	 *
-	 * @param claveTramitacion
+	 * @param idSesionTramitacion
 	 *            el nuevo valor de clave de tramitacion
 	 */
-	public void setClaveTramitacion(final String claveTramitacion) {
-		this.claveTramitacion = claveTramitacion;
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
+		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
 	/**

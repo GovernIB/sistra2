@@ -41,8 +41,9 @@
 
 					<p:selectOneMenu id="filtroEvento" value="#{viewEventosPlataforma.filtros.evento}">
 					 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
-    					<f:selectItems value="#{TypeEvento.ALL_VALUES}" var="evento" itemLabel="#{msg['typeEvento.' += evento]}"/>
-					</p:selectOneMenu >
+					 	<f:selectItem itemLabel="#{msg['typeEvento.ERROR']}" itemValue="#{TypeEvento.ERROR}" />
+					 	<f:selectItem itemLabel="#{msg['typeEvento.TR_PUR']}" itemValue="#{TypeEvento.PROCESO_PURGA}" />
+					</p:selectOneMenu>
 
 	        	</h:panelGrid>
           		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewEventosPlataforma.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>

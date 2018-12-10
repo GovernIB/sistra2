@@ -3,6 +3,7 @@ package es.caib.sistrahelp.core.service.component;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +18,44 @@ import org.springframework.web.client.RestTemplate;
 import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistrahelp.core.api.exception.ErrorJsonException;
+import es.caib.sistrahelp.core.api.model.DatosSesionPago;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
 import es.caib.sistrahelp.core.api.model.FiltroPerdidaClave;
+import es.caib.sistrahelp.core.api.model.FiltroPersistenciaAuditoria;
+import es.caib.sistrahelp.core.api.model.PagoAuditoria;
 import es.caib.sistrahelp.core.api.model.PerdidaClave;
+import es.caib.sistrahelp.core.api.model.PersistenciaAuditoria;
+import es.caib.sistrahelp.core.api.model.Persona;
+import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaDetallePago;
+import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPago;
+import es.caib.sistrahelp.core.api.model.ResultadoAuditoriaPersistencia;
 import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
+import es.caib.sistrahelp.core.api.model.VerificacionPago;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
+import es.caib.sistrahelp.core.api.model.types.TypePresentacion;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.rest.api.interna.RDetallePagoAuditoria;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroPaginacion;
+import es.caib.sistramit.rest.api.interna.RFiltroPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroPerdidaClave;
+import es.caib.sistramit.rest.api.interna.RFiltroPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RINEventoAuditoria;
+import es.caib.sistramit.rest.api.interna.RINPagoAuditoria;
+import es.caib.sistramit.rest.api.interna.RINTramiteAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTEventoAuditoria;
+import es.caib.sistramit.rest.api.interna.ROUTPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.ROUTPerdidaClave;
+import es.caib.sistramit.rest.api.interna.ROUTTramiteAuditoria;
+import es.caib.sistramit.rest.api.interna.RPagoAuditoria;
 import es.caib.sistramit.rest.api.interna.RPerdidaClave;
+import es.caib.sistramit.rest.api.interna.RPersistenciaAuditoria;
 
 /**
  * Implementación acceso SISTRAMIT
@@ -57,6 +78,7 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			final FiltroPaginacion pFiltroPaginacion) {
 
 		ResultadoEventoAuditoria resultado = null;
+		ROUTEventoAuditoria rResultado = null;
 		List<REventoAuditoria> listaREventos = null;
 
 		final RestTemplate restTemplate = new RestTemplate();
@@ -75,14 +97,17 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		final ResponseEntity<ROUTEventoAuditoria> response = restTemplate.postForEntity(getUrl() + "/auditoria/evento",
 				request, ROUTEventoAuditoria.class);
 
-		switch (response.getStatusCodeValue()) {
-		case 200:
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
 			resultado = new ResultadoEventoAuditoria();
 
 			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
-				resultado.setNumElementos(response.getBody().getNumElementos());
+				resultado.setNumElementos(rResultado.getNumElementos());
 			} else {
-				listaREventos = response.getBody().getListaEventos();
+				listaREventos = rResultado.getListaEventos();
 
 				if (listaREventos != null) {
 					resultado.setListaEventos(new ArrayList<>());
@@ -92,14 +117,13 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 				}
 			}
-			break;
 		}
 
 		return resultado;
 	}
 
 	@Override
-	public ResultadoPerdidaClave obtenerAuditoriaTramite(final FiltroPerdidaClave pFiltroBusqueda) {
+	public ResultadoPerdidaClave obtenerClaveTramitacion(final FiltroPerdidaClave pFiltroBusqueda) {
 		ResultadoPerdidaClave resultado = null;
 		ROUTPerdidaClave rResultado = null;
 		final RestTemplate restTemplate = new RestTemplate();
@@ -112,13 +136,11 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 		final HttpEntity<RFiltroPerdidaClave> request = new HttpEntity<>(
 				convierteFiltroTramiteBusqueda(pFiltroBusqueda), headers);
 
-		final ResponseEntity<ROUTPerdidaClave> response = restTemplate.postForEntity(getUrl() + "/auditoria/tramite",
+		final ResponseEntity<ROUTPerdidaClave> response = restTemplate.postForEntity(getUrl() + "/auditoria/clave",
 				request, ROUTPerdidaClave.class);
 
-		switch (response.getStatusCodeValue()) {
-		case 200:
+		if (response != null && response.getStatusCodeValue() == 200) {
 			rResultado = response.getBody();
-			break;
 		}
 
 		if (rResultado != null) {
@@ -130,6 +152,109 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 				for (final RPerdidaClave rClave : rResultado.getListaClaves()) {
 					resultado.getListaClaves().add(conviertePerdidaClave(rClave));
+				}
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoAuditoriaPago obtenerAuditoriaPago(final FiltroAuditoriaPago pFiltroBusqueda,
+			final FiltroPaginacion pFiltroPaginacion) {
+		ResultadoAuditoriaPago resultado = null;
+		ROUTPagoAuditoria rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINPagoAuditoria param = new RINPagoAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroInformacionPagos(pFiltroBusqueda));
+
+		final HttpEntity<RINPagoAuditoria> request = new HttpEntity<>(param, headers);
+
+		final ResponseEntity<ROUTPagoAuditoria> response = restTemplate.postForEntity(getUrl() + "/auditoria/pago",
+				request, ROUTPagoAuditoria.class);
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoAuditoriaPago();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaPagos() != null) {
+					resultado.setListaPagos(new ArrayList<>());
+
+					for (final RPagoAuditoria rPago : rResultado.getListaPagos()) {
+						resultado.getListaPagos().add(conviertePago(rPago));
+					}
+				}
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResultadoAuditoriaDetallePago obtenerAuditoriaDetallePago(final Long pIdPago) {
+
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final RDetallePagoAuditoria rDetallePagoAuditoria = restTemplate
+				.getForObject(getUrl() + "/auditoria/pago/" + pIdPago, RDetallePagoAuditoria.class);
+
+		return convierteDetallePago(rDetallePagoAuditoria);
+
+	}
+
+	@Override
+	public ResultadoAuditoriaPersistencia obtenerAuditoriaPersistencia(
+			final FiltroPersistenciaAuditoria pFiltroBusqueda, final FiltroPaginacion pFiltroPaginacion) {
+		ResultadoAuditoriaPersistencia resultado = null;
+		ROUTTramiteAuditoria rResultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+		final RINTramiteAuditoria param = new RINTramiteAuditoria();
+		param.setPaginacion(convierteFiltroPaginacion(pFiltroPaginacion));
+		param.setFiltro(convierteFiltroPersistencia(pFiltroBusqueda));
+
+		final HttpEntity<RINTramiteAuditoria> request = new HttpEntity<>(param, headers);
+
+		final ResponseEntity<ROUTTramiteAuditoria> response = restTemplate
+				.postForEntity(getUrl() + "/auditoria/tramite", request, ROUTTramiteAuditoria.class);
+
+		if (response != null && response.getStatusCodeValue() == 200) {
+			rResultado = response.getBody();
+		}
+
+		if (rResultado != null) {
+			resultado = new ResultadoAuditoriaPersistencia();
+
+			if (pFiltroBusqueda != null && pFiltroBusqueda.isSoloContar()) {
+				resultado.setNumElementos(rResultado.getNumElementos());
+			} else {
+				if (rResultado.getListaPersistencia() != null) {
+					resultado.setListaPersistencia(new ArrayList<>());
+
+					for (final RPersistenciaAuditoria rPersistencia : rResultado.getListaPersistencia()) {
+						resultado.getListaPersistencia().add(conviertePersistencia(rPersistencia));
+					}
 				}
 			}
 
@@ -279,11 +404,168 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 	private PerdidaClave conviertePerdidaClave(final RPerdidaClave rClave) {
 		final PerdidaClave clave = new PerdidaClave();
 
-		clave.setClaveTramitacion(rClave.getClaveTramitacion());
+		clave.setIdSesionTramitacion(rClave.getIdSesionTramitacion());
 		clave.setFecha(rClave.getFecha());
 		clave.setIdTramite(rClave.getIdTramite());
 		clave.setVersionTramite(rClave.getVersionTramite());
 		clave.setIdProcedimientoCP(rClave.getIdProcedimientoCP());
 		return clave;
+	}
+
+	/**
+	 * Convierte filtro informacion pagos.
+	 *
+	 * @param pFiltro
+	 *            filtro
+	 * @return filtro pago auditoria
+	 */
+	private RFiltroPagoAuditoria convierteFiltroInformacionPagos(final FiltroAuditoriaPago pFiltro) {
+		RFiltroPagoAuditoria rFiltro = null;
+
+		if (pFiltro != null) {
+			rFiltro = new RFiltroPagoAuditoria();
+			rFiltro.setListaAreas(pFiltro.getListaAreas());
+			rFiltro.setIdSesionTramitacion(pFiltro.getIdSesionTramitacion());
+			rFiltro.setNif(pFiltro.getNif());
+			rFiltro.setFechaDesde(pFiltro.getFechaDesde());
+			rFiltro.setFechaHasta(pFiltro.getFechaHasta());
+
+			if (pFiltro.getTipoAcceso() != null) {
+				rFiltro.setAcceso(pFiltro.getTipoAcceso().name());
+			}
+
+			rFiltro.setSoloContar(pFiltro.isSoloContar());
+		}
+
+		return rFiltro;
+
+	}
+
+	private PagoAuditoria conviertePago(final RPagoAuditoria pRPagoAuditoria) {
+		PagoAuditoria pago = null;
+
+		if (pRPagoAuditoria != null) {
+
+			pago = new PagoAuditoria();
+
+			pago.setIdSesionTramitacion(pRPagoAuditoria.getIdSesionTramitacion());
+			pago.setFecha(pRPagoAuditoria.getFecha());
+			pago.setIdTramite(pRPagoAuditoria.getIdTramite());
+			pago.setVersionTramite(pRPagoAuditoria.getVersionTramite());
+			pago.setFichero(pRPagoAuditoria.getFichero());
+			pago.setFicheroClave(pRPagoAuditoria.getFicheroClave());
+			pago.setCodigoPago(pRPagoAuditoria.getCodigoPago());
+			pago.setEstado(pRPagoAuditoria.getEstado());
+			pago.setIdentificador(pRPagoAuditoria.getIdentificador());
+			pago.setPresentacion(pRPagoAuditoria.getPresentacion());
+			pago.setPasarelaId(pRPagoAuditoria.getPasarelaId());
+			pago.setImporte(pRPagoAuditoria.getImporte());
+			pago.setTasaId(pRPagoAuditoria.getTasaId());
+			pago.setLocalizador(pRPagoAuditoria.getLocalizador());
+			pago.setFechaPago(pRPagoAuditoria.getFechaPago());
+			pago.setPagoEstadoIncorrecto(pRPagoAuditoria.getPagoEstadoIncorrecto());
+		}
+
+		return pago;
+
+	}
+
+	private ResultadoAuditoriaDetallePago convierteDetallePago(final RDetallePagoAuditoria pRDetallePagoAuditoria) {
+		ResultadoAuditoriaDetallePago detalle = null;
+
+		if (pRDetallePagoAuditoria != null) {
+
+			detalle = new ResultadoAuditoriaDetallePago();
+
+			if (pRDetallePagoAuditoria.getDatos() != null) {
+				final DatosSesionPago datos = new DatosSesionPago();
+				datos.setPasarelaId(pRDetallePagoAuditoria.getDatos().getPasarelaId());
+				datos.setEntidadId(pRDetallePagoAuditoria.getDatos().getEntidadId());
+				datos.setOrganismoId(pRDetallePagoAuditoria.getDatos().getOrganismoId());
+				datos.setSimulado(pRDetallePagoAuditoria.getDatos().isSimulado());
+				datos.setIdentificadorPago(pRDetallePagoAuditoria.getDatos().getIdentificadorPago());
+				datos.setPresentacion(TypePresentacion.fromString(pRDetallePagoAuditoria.getDatos().getPresentacion()));
+				datos.setFechaPago(pRDetallePagoAuditoria.getDatos().getFechaPago());
+				datos.setLocalizador(pRDetallePagoAuditoria.getDatos().getLocalizador());
+				datos.setIdioma(pRDetallePagoAuditoria.getDatos().getIdioma());
+
+				final Persona sujetoPasivo = new Persona(pRDetallePagoAuditoria.getDatos().getSujetoPasivoNif(),
+						pRDetallePagoAuditoria.getDatos().getSujetoPasivoNombre());
+				datos.setSujetoPasivo(sujetoPasivo);
+
+				datos.setModelo(pRDetallePagoAuditoria.getDatos().getModelo());
+				datos.setConcepto(pRDetallePagoAuditoria.getDatos().getConcepto());
+				datos.setTasaId(pRDetallePagoAuditoria.getDatos().getTasaId());
+				datos.setImporte(pRDetallePagoAuditoria.getDatos().getImporte());
+				datos.setDetallePago(pRDetallePagoAuditoria.getDatos().getDetallePago());
+
+				detalle.setDatos(datos);
+			}
+
+			if (pRDetallePagoAuditoria.getVerificacion() != null) {
+				final VerificacionPago verificacion = new VerificacionPago();
+
+				verificacion.setVerificado(pRDetallePagoAuditoria.getVerificacion().isVerificado());
+				verificacion.setPagado(pRDetallePagoAuditoria.getVerificacion().isPagado());
+				verificacion.setCodigoError(pRDetallePagoAuditoria.getVerificacion().getCodigoError());
+				verificacion.setMensajeError(pRDetallePagoAuditoria.getVerificacion().getMensajeError());
+				verificacion.setFechaPago(pRDetallePagoAuditoria.getVerificacion().getFechaPago());
+				verificacion.setLocalizador(pRDetallePagoAuditoria.getVerificacion().getLocalizador());
+				verificacion.setJustificantePDF(
+						Base64.decodeBase64(pRDetallePagoAuditoria.getVerificacion().getJustificantePDF()));
+
+				detalle.setVerificacion(verificacion);
+			}
+
+		}
+
+		return detalle;
+	}
+
+	private PersistenciaAuditoria conviertePersistencia(final RPersistenciaAuditoria pRPersistenciaAuditoria) {
+		PersistenciaAuditoria persistencia = null;
+
+		if (pRPersistenciaAuditoria != null) {
+			persistencia = new PersistenciaAuditoria();
+			persistencia.setId(pRPersistenciaAuditoria.getId());
+			persistencia.setIdSesionTramitacion(pRPersistenciaAuditoria.getIdSesionTramitacion());
+			persistencia.setIdTramite(pRPersistenciaAuditoria.getIdTramite());
+			persistencia.setVersionTramite(pRPersistenciaAuditoria.getVersionTramite());
+			persistencia.setIdProcedimientoCP(pRPersistenciaAuditoria.getIdProcedimientoCP());
+			persistencia.setNif(pRPersistenciaAuditoria.getNif());
+			persistencia.setNombre(pRPersistenciaAuditoria.getNombre());
+			persistencia.setApellido1(pRPersistenciaAuditoria.getApellido1());
+			persistencia.setApellido2(pRPersistenciaAuditoria.getApellido2());
+			persistencia.setFechaInicio(pRPersistenciaAuditoria.getFechaInicio());
+			persistencia.setEstado(pRPersistenciaAuditoria.getEstado());
+			persistencia.setCancelado(pRPersistenciaAuditoria.isCancelado());
+			persistencia.setFechaCaducidad(pRPersistenciaAuditoria.getFechaCaducidad());
+			persistencia.setPurgar(pRPersistenciaAuditoria.isPurgar());
+			persistencia.setFechaPurgado(pRPersistenciaAuditoria.getFechaPurgado());
+			persistencia.setPurgado(pRPersistenciaAuditoria.isPurgado());
+		}
+
+		return persistencia;
+	}
+
+	private RFiltroPersistenciaAuditoria convierteFiltroPersistencia(final FiltroPersistenciaAuditoria pFiltro) {
+		RFiltroPersistenciaAuditoria rFiltro = null;
+
+		if (pFiltro != null) {
+			rFiltro = new RFiltroPersistenciaAuditoria();
+			rFiltro.setListaAreas(pFiltro.getListaAreas());
+			rFiltro.setIdSesionTramitacion(pFiltro.getIdSesionTramitacion());
+			rFiltro.setNif(pFiltro.getNif());
+			rFiltro.setFechaDesde(pFiltro.getFechaDesde());
+			rFiltro.setFechaHasta(pFiltro.getFechaHasta());
+			rFiltro.setTipoTramitePersistencia(pFiltro.getTipoTramitePersistencia().toString());
+			rFiltro.setIdTramite(pFiltro.getIdTramite());
+			rFiltro.setVersionTramite(pFiltro.getVersionTramite());
+			rFiltro.setIdProcedimientoCP(pFiltro.getIdProcedimientoCP());
+			rFiltro.setIdProcedimientoSIA(pFiltro.getIdProcedimientoSIA());
+			rFiltro.setSoloContar(pFiltro.isSoloContar());
+		}
+
+		return rFiltro;
 	}
 }

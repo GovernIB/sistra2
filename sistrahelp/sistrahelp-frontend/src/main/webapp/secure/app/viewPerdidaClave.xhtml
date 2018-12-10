@@ -74,7 +74,7 @@
 	                         paginator="true" paginatorPosition="bottom"
 	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 	                         rowsPerPageTemplate="5,10,15,30"
-				        	 selectionMode="single" selection="#{viewPerdidaClave.datoSeleccionado}" rowKey="#{dt.claveTramitacion}">
+				        	 selectionMode="single" selection="#{viewPerdidaClave.datoSeleccionado}" rowKey="#{dt.idSesionTramitacion}">
 
 
 					<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -82,7 +82,7 @@
 
 					<!-- Columnas -->
 			   		<p:column headerText="#{msg['viewPerdidaClave.headClaveTramitacion']}">
-				        <h:outputText value="#{dt.claveTramitacion}" />
+				        <h:outputText value="#{dt.idSesionTramitacion}" />
 				    </p:column>
 				    <p:column headerText="#{msg['viewPerdidaClave.headFecha']}">
 				        <h:outputText value="#{dt.fecha}">

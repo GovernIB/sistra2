@@ -12,11 +12,11 @@ public final class PagoAuditoria implements Serializable {
 		super();
 	}
 
-	public PagoAuditoria(final String claveTramitacion, final Date fecha, final String idTramite,
+	public PagoAuditoria(final String idSesionTramitacion, final Date fecha, final String idTramite,
 			final Integer versionTramite, final String idProcedimientoCP, final Long fichero, final String ficheroClave,
-			final Long codigoPago, final String estado) {
+			final Long codigoPago, final String estado, final String pagoEstadoIncorrecto) {
 		super();
-		this.claveTramitacion = claveTramitacion;
+		this.idSesionTramitacion = idSesionTramitacion;
 		this.fecha = fecha;
 		this.idTramite = idTramite;
 		this.versionTramite = versionTramite;
@@ -25,12 +25,13 @@ public final class PagoAuditoria implements Serializable {
 		this.ficheroClave = ficheroClave;
 		this.codigoPago = codigoPago;
 		this.estado = estado;
+		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
 	}
 
 	/**
 	 * clave de tramitacion
 	 */
-	private String claveTramitacion;
+	private String idSesionTramitacion;
 
 	/**
 	 * fecha.
@@ -67,13 +68,14 @@ public final class PagoAuditoria implements Serializable {
 	private String tasaId;
 	private String localizador;
 	private Date fechaPago;
+	private String pagoEstadoIncorrecto;
 
-	public String getClaveTramitacion() {
-		return claveTramitacion;
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
 	}
 
-	public void setClaveTramitacion(final String claveTramitacion) {
-		this.claveTramitacion = claveTramitacion;
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
+		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
 	public Date getFecha() {
@@ -194,6 +196,14 @@ public final class PagoAuditoria implements Serializable {
 
 	public void setFechaPago(final Date fechaPago) {
 		this.fechaPago = fechaPago;
+	}
+
+	public String getPagoEstadoIncorrecto() {
+		return pagoEstadoIncorrecto;
+	}
+
+	public void setPagoEstadoIncorrecto(final String pagoEstadoIncorrecto) {
+		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
 	}
 
 }

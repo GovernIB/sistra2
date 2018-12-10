@@ -1,13 +1,13 @@
 package es.caib.sistrahelp.core.api.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * La clase PerdidaClave.
  */
-@SuppressWarnings("serial")
-public final class PerdidaClave implements Serializable {
+public final class PerdidaClave extends ModelApi {
+
+	private static final long serialVersionUID = 2233358276679849243L;
 
 	/**
 	 * Crea una nueva instancia de PerdidaClave.
@@ -19,7 +19,7 @@ public final class PerdidaClave implements Serializable {
 	/**
 	 * clave de tramitacion
 	 */
-	private String claveTramitacion;
+	private String idSesionTramitacion;
 
 	/**
 	 * fecha.
@@ -41,12 +41,12 @@ public final class PerdidaClave implements Serializable {
 	 */
 	private String idProcedimientoCP;
 
-	public String getClaveTramitacion() {
-		return claveTramitacion;
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
 	}
 
-	public void setClaveTramitacion(final String claveTramitacion) {
-		this.claveTramitacion = claveTramitacion;
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
+		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
 	public Date getFecha() {

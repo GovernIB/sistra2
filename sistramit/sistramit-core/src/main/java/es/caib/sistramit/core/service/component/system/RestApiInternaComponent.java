@@ -7,8 +7,10 @@ import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
 import es.caib.sistramit.core.api.model.system.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
 
 /**
  * Componente para generar auditoria.
@@ -67,4 +69,26 @@ public interface RestApiInternaComponent {
 	 * @return detalle pago auditoria
 	 */
 	DetallePagoAuditoria recuperarDetallePago(final Long pIdPago);
+
+	/**
+	 * Contar persistencia area.
+	 *
+	 * @param pFiltroBusqueda
+	 *            the filtro busqueda
+	 * @return the long
+	 */
+	public Long contarPersistenciaArea(FiltroPersistenciaAuditoria pFiltroBusqueda);
+
+	/**
+	 * Recuperar persistencia area.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @param pFiltroPaginacion
+	 *            filtro paginacion
+	 * @return lista de datos de persistencia
+	 */
+	List<PersistenciaAuditoria> recuperarPersistenciaArea(FiltroPersistenciaAuditoria pFiltroBusqueda,
+			FiltroPaginacion pFiltroPaginacion);
+
 }

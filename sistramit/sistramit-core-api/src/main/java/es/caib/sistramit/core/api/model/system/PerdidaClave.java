@@ -19,7 +19,7 @@ public final class PerdidaClave implements Serializable {
 	/**
 	 * clave de tramitacion
 	 */
-	private String claveTramitacion;
+	private String idSesionTramitacion;
 
 	/**
 	 * fecha.
@@ -41,12 +41,12 @@ public final class PerdidaClave implements Serializable {
 	 */
 	private String idProcedimientoCP;
 
-	public String getClaveTramitacion() {
-		return claveTramitacion;
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
 	}
 
-	public void setClaveTramitacion(final String claveTramitacion) {
-		this.claveTramitacion = claveTramitacion;
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
+		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
 	public Date getFecha() {

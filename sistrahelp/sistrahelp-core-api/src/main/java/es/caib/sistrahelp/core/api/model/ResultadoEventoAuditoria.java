@@ -1,13 +1,13 @@
 package es.caib.sistrahelp.core.api.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * La clase ResultadoEventoAuditoria.
  */
-@SuppressWarnings("serial")
-public final class ResultadoEventoAuditoria implements Serializable {
+public final class ResultadoEventoAuditoria extends ModelApi {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Crea una nueva instancia de EventoAuditoriaTramitacion.

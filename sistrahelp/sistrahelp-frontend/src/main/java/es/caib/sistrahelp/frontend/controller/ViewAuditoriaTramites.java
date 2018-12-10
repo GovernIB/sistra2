@@ -15,6 +15,7 @@ import es.caib.sistrahelp.core.api.model.Area;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
+import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
 import es.caib.sistrahelp.frontend.model.EventoAuditoriaTramitacionLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -49,6 +50,8 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	private FiltroAuditoriaTramitacion filtros;
 
+	private List<TypeEvento> tiposEventos;
+
 	/**
 	 * Inicializa.
 	 */
@@ -57,6 +60,14 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
 		filtros = new FiltroAuditoriaTramitacion(convierteListaAreas(), false);
+
+		// cargamos los eventos quitando el de purga
+		tiposEventos = new ArrayList<>();
+		for (final TypeEvento ev : TypeEvento.values()) {
+			if (!TypeEvento.PROCESO_PURGA.equals(ev)) {
+				tiposEventos.add(ev);
+			}
+		}
 	}
 
 	/**
@@ -210,6 +221,14 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	 */
 	public void setFiltros(final FiltroAuditoriaTramitacion filtros) {
 		this.filtros = filtros;
+	}
+
+	public List<TypeEvento> getTiposEventos() {
+		return tiposEventos;
+	}
+
+	public void setTiposEventos(final List<TypeEvento> tiposEventos) {
+		this.tiposEventos = tiposEventos;
 	}
 
 }

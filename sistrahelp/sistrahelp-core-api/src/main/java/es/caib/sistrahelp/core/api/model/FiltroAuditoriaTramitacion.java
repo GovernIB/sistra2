@@ -11,8 +11,8 @@ import es.caib.sistrahelp.core.api.model.types.TypeEvento;
  * @author Indra
  *
  */
-public class FiltroAuditoriaTramitacion {
-
+public class FiltroAuditoriaTramitacion extends ModelApi {
+	private static final long serialVersionUID = 1L;
 	private List<String> listaAreas;
 	private String idSesionTramitacion;
 	private String nif;
@@ -41,6 +41,24 @@ public class FiltroAuditoriaTramitacion {
 		super();
 		this.listaAreas = listaAreas;
 		this.errorPlataforma = errorPlataforma;
+	}
+
+	public FiltroAuditoriaTramitacion(final FiltroAuditoriaTramitacion pFiltroAuditoriaTramitacion) {
+		super();
+		if (pFiltroAuditoriaTramitacion != null) {
+			this.listaAreas = pFiltroAuditoriaTramitacion.listaAreas;
+			this.idSesionTramitacion = pFiltroAuditoriaTramitacion.idSesionTramitacion;
+			this.nif = pFiltroAuditoriaTramitacion.nif;
+			this.fechaDesde = pFiltroAuditoriaTramitacion.fechaDesde;
+			this.fechaHasta = pFiltroAuditoriaTramitacion.fechaHasta;
+			this.evento = pFiltroAuditoriaTramitacion.evento;
+			this.idTramite = pFiltroAuditoriaTramitacion.idTramite;
+			this.versionTramite = pFiltroAuditoriaTramitacion.versionTramite;
+			this.idProcedimientoCP = pFiltroAuditoriaTramitacion.idProcedimientoCP;
+			this.idProcedimientoSIA = pFiltroAuditoriaTramitacion.idProcedimientoSIA;
+			this.errorPlataforma = pFiltroAuditoriaTramitacion.errorPlataforma;
+			this.soloContar = pFiltroAuditoriaTramitacion.soloContar;
+		}
 	}
 
 	public List<String> getListaAreas() {
@@ -135,7 +153,7 @@ public class FiltroAuditoriaTramitacion {
 		return soloContar;
 	}
 
-	public void setSoloContar(boolean soloContar) {
+	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
 	}
 

@@ -16,8 +16,8 @@ public class RPagoAuditoria {
 	/**
 	 * clave de tramitacion
 	 */
-	@ApiModelProperty(value = "clave de tramitacion")
-	private String claveTramitacion;
+	@ApiModelProperty(value = "id.Sesion Tramitacion")
+	private String idSesionTramitacion;
 
 	/**
 	 * fecha.
@@ -76,12 +76,15 @@ public class RPagoAuditoria {
 	@ApiModelProperty(value = "Fecha pago")
 	private Date fechaPago;
 
-	public String getClaveTramitacion() {
-		return claveTramitacion;
+	@ApiModelProperty(value = "Estado Pago")
+	private String pagoEstadoIncorrecto;
+
+	public String getIdSesionTramitacion() {
+		return idSesionTramitacion;
 	}
 
-	public void setClaveTramitacion(final String claveTramitacion) {
-		this.claveTramitacion = claveTramitacion;
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
+		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
 	public Date getFecha() {
@@ -202,5 +205,13 @@ public class RPagoAuditoria {
 
 	public void setFechaPago(final Date fechaPago) {
 		this.fechaPago = fechaPago;
+	}
+
+	public String getPagoEstadoIncorrecto() {
+		return pagoEstadoIncorrecto;
+	}
+
+	public void setPagoEstadoIncorrecto(final String pagoEstadoIncorrecto) {
+		this.pagoEstadoIncorrecto = pagoEstadoIncorrecto;
 	}
 }

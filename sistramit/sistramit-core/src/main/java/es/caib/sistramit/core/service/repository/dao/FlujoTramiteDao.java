@@ -8,7 +8,9 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
 import es.caib.sistramit.core.service.model.system.PerdidaClaveFichero;
@@ -191,6 +193,27 @@ public interface FlujoTramiteDao {
 	 * @return lista de pagos
 	 */
 	List<PagoAuditoria> obtenerPagos(FiltroPagoAuditoria pFiltroBusqueda, FiltroPaginacion filtroPaginacion);
+
+	/**
+	 * Count tramites persistencia.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @return Numero de tramites
+	 */
+	Long countTramitesPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda);
+
+	/**
+	 * Obtener tramites persistencia.
+	 *
+	 * @param pFiltroBusqueda
+	 *            filtro busqueda
+	 * @param filtroPaginacion
+	 *            filtro paginacion
+	 * @return lista de persistencia
+	 */
+	List<PersistenciaAuditoria> obtenerTramitesPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda,
+			FiltroPaginacion filtroPaginacion);
 
 	// TODO PENDIENTE FUNCIONES PERSISTENCIA CARPETA
 
