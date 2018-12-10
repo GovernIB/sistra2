@@ -1,9 +1,13 @@
 package es.caib.sistra2.commons.plugins.registro.mock;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
@@ -91,22 +95,33 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	@Override
 	public ResultadoRegistro registroEntrada(final String codigoEntidad, final AsientoRegistral asientoRegistral)
 			throws RegistroPluginException {
-		// TODO Auto-generated method stub
-		return null;
+		final ResultadoRegistro res = new ResultadoRegistro();
+		res.setFechaRegistro(new Date());
+		res.setNumeroRegistro("E-" + System.currentTimeMillis());
+		return res;
 	}
 
 	@Override
 	public ResultadoRegistro registroSalida(final String codigoEntidad, final AsientoRegistral asientoRegistral)
 			throws RegistroPluginException {
-		// TODO Auto-generated method stub
-		return null;
+		final ResultadoRegistro res = new ResultadoRegistro();
+		res.setFechaRegistro(new Date());
+		res.setNumeroRegistro("S-" + System.currentTimeMillis());
+		return res;
 	}
 
 	@Override
 	public byte[] obtenerJustificanteRegistro(final String codigoEntidad, final String numeroRegistro)
 			throws RegistroPluginException {
-		// TODO Auto-generated method stub
-		return null;
+		// Lee pdf mock del classpath
+		byte[] content = null;
+		try (final InputStream isFile = RegistroMockPlugin.class.getClassLoader()
+				.getResourceAsStream("justificanteRegistroMock.pdf");) {
+			content = IOUtils.toByteArray(isFile);
+		} catch (final IOException e) {
+			throw new RegistroPluginException("Excepcion al recuperar justificante simulado: " + e.getMessage(), e);
+		}
+		return content;
 	}
 
 	/**
