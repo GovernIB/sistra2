@@ -113,6 +113,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPlugin.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isAlta() or dialogPlugin.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlugin.cancelar()}" process="@this"  rendered="#{dialogPlugin.isConsulta()}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPlugin.ayuda}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

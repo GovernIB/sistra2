@@ -62,7 +62,7 @@
 							</p:selectOneRadio>
 					     </p:column>
 					     <p:column>
-					     	<p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionTasa.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionTasa.obligatoriedad.establecerdependencia']}"
+					     	<p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionTasa.editarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionTasa.data.scriptObligatoriedad)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
 								process="@this" update="growl" styleClass="#{dialogDefinicionVersionTasa.getColorScript(dialogDefinicionVersionTasa.data.scriptObligatoriedad)}">
 								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoObligatoriedad}" update="growl scriptObligatoriedad" />
 							</p:commandButton>

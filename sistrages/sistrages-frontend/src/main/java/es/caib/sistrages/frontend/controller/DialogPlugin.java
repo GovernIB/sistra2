@@ -408,5 +408,10 @@ public class DialogPlugin extends DialogControllerBase {
 	public void setTipos(final List<TypePlugin> tipos) {
 		this.tipos = tipos;
 	}
+	
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("pluginDialog");
+    }
 
 }

@@ -4,6 +4,10 @@ body {
 	color: #333;
 }
 
+.bodyPlugins {
+	background-color:beige;
+}
+
 h1.stgH1 {
 		 text-decoration: underline;
         font-size:1.5em;
@@ -35,7 +39,27 @@ ul {
         line-height: 1.5em;
 }
 
+ul.detalle {
+        list-style-type: circle;
+}
+
+ul.detalle2 {
+        list-style-type: disc;
+}
+
 a {
 	text-decoration: underline;
     color: #f39507;
+}
+
+.iconCopy {
+	cursor:pointer;
+	border: 1px solid #AAA;
+	padding:3px;
+	border-radius: 4px;
+	margin-left:2px;
+}
+
+.ulDescripcion {
+	list-style-type: none;
 }

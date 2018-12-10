@@ -103,5 +103,10 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	public void setData(final ConfiguracionGlobal data) {
 		this.data = data;
 	}
+	
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("propiedadConfiguracionDialog");
+    }
 
 }

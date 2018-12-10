@@ -149,6 +149,75 @@ public final class UtilJSF {
 	}
 
 	/**
+	 * Abre pantalla de dialogo (siempre al 95% de width)
+	 *
+	 * @param dialog
+	 *            Clase dialogo
+	 * @param modoAcceso
+	 *            Modo de acceso
+	 * @param params
+	 *            parametros
+	 * @param modal
+	 *            si se abre en forma modal
+	 *
+	 * @param heigth
+	 *            altura
+	 */
+	public static void openDialog(final Class<?> clase, final TypeModoAcceso modoAcceso,
+			final Map<String, String> params, final boolean modal, final int heigth) {
+		openDialog(UtilJSF.getViewNameFromClass(clase), modoAcceso, params, modal, heigth);
+	}
+
+	/**
+	 * Abre pantalla de dialogo
+	 *
+	 * @param dialog
+	 *            Nombre pantalla dialogo (dialogo.xhtml o id navegacion)
+	 * @param modoAcceso
+	 *            Modo de acceso
+	 * @param params
+	 *            parametros
+	 * @param modal
+	 *            si se abre en forma modal
+	 * @param width
+	 *            anchura
+	 * @param height
+	 *            altura
+	 */
+	public static void openDialog(final String dialog, final TypeModoAcceso modoAcceso,
+			final Map<String, String> params, final boolean modal, final int height) {
+		// Opciones dialogo
+		final Map<String, Object> options = new HashMap<>();
+		options.put("modal", modal);
+		options.put("width", "95%");
+		options.put("height", height);
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("headerElement", "customheader");
+
+		// Parametros
+		String idParam = "";
+		final Map<String, List<String>> paramsDialog = new HashMap<>();
+		paramsDialog.put(TypeParametroVentana.MODO_ACCESO.toString(), Collections.singletonList(modoAcceso.toString()));
+		if (params != null) {
+			for (final String key : params.keySet()) {
+				paramsDialog.put(key, Collections.singletonList(params.get(key)));
+				if (TypeParametroVentana.ID.toString().equals(key)) {
+					idParam = params.get(key);
+				}
+			}
+		}
+
+		// Metemos en sessionbean un parámetro de seguridad para evitar que se
+		// pueda cambiar el modo de acceso
+		final String secOpenDialog = modoAcceso.toString() + "-" + idParam + "-" + System.currentTimeMillis();
+		getSessionBean().getMochilaDatos().put(SEC_OPEN_DIALOG, secOpenDialog);
+
+		// Abre dialogo
+		RequestContext.getCurrentInstance().openDialog(dialog, options, paramsDialog);
+	}
+
+	/**
 	 * Chequea que no se ha cambiado modo de acceso en apertura dialog.
 	 *
 	 * @param modoAcceso

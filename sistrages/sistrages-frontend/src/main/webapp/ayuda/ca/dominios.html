@@ -1,0 +1,35 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">DOMINIS</h1>
+<p>
+	En la pantalla de '<i>Dominis</i>' es pot gestionar l'alta, baixa i edici&oacute; de dominis, la importaci&oacute;/exportaci&oacute; i la invocaci&oacute; de dominis (Ping). Els dominis tenen un &agrave;mbit d'aplicaci&oacute;, global, entitat i/o &agrave;rea, que es refereix a si apliquen a nivell general d'aplicaci&oacute;, a una entitat concreta o a una &agrave;rea d'una entitat.<br><br>
+	Aquesta pantalla permet la realitzaci&oacute; de cerques filtrades de dominis.<br><br>
+	El manteniment de dominis d'&agrave;mbit global l'ha de fer un usuari que disposi del rol de '<i>Superadministrador</i>', els d'&agrave;mbit entitat hauran de ser mantinguts per un usuari amb rol '<i>Administrador d'entitat</i>' i els d'&agrave;rea per un desenvolupador amb permisos d'administraci&oacute; d'&agrave;rea o tamb&eacute; per un Administrador d'entitat.
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica el domini i mitjançant el qual es podr&agrave; invocar el domini des dels diferents scripts de l'aplicaci&oacute; </li>
+		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de la funcionalitat prove&iuml;da pel domini</li>
+		<li><span class="nombreCampo">Tipus de domini:</span> tipologia de domini (Consulta BBDD, Llista fixa, Consulta Remota, Font de dades)</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Cercar</span>: introduint un text en el camp '<i>Cercar</i>' i prement el bot&oacute; amb la icona de la lupa es dur&agrave; a terme un filtratge dels dominis que continguin el text introdu&iuml;t. El criteri de cerca aplicar&agrave; en qualsevol dels camps del domini. Posteriorment es visualitzaran els resultats de la cerca filtrant-ho en el llistat de dominis.</li>
+		<li><span class="boton">Nou</span>: prement en el bot&oacute; s'obrir&agrave; la <a href="../../ayuda/ca/dominioDialog.html">fitxa</a> per donar d'alta un nou domini en el qual haur&agrave; d'emplenar els camps m&iacute;nims so&#320;licitats.</li>
+		<li><span class="boton">Editar</span>: seleccionant un domini del llistat i prement en el bot&oacute; s'obrir&agrave; la fitxa per poder realitzar les modificacions dels camps desitjats.</li>
+		<li> <span class="boton">Eliminar</span>: seleccionant un domini del llistat i prement sobre el bot&oacute; podr&agrave; suprimir un domini existent. Previ a l'eliminaci&oacute; del domini es mostrar&agrave; un missatge de confirmaci&oacute; de l'acci&oacute;.</li>
+		<li> <span class="boton">Ping</span>: seleccionant un domini del llistat i prement sobre el bot&oacute; podr&agrave; provar la invocaci&oacute; del domini. S'obrir&agrave; una pantalla en la que podr&agrave; establir un valor pels par&agrave;metres del domini, si en t&eacute;.</li>
+		<li> <span class="boton">Refrescar cach&eacute;</span>: aquest bot&oacute; &uacute;nicament est&agrave; disponible quan es selecciona un domini del llistat, i permet que es reflecteixi a l'assistent qualsevol canvi que s'hagi efectuat al domini. Una vegada hagi premut haur&agrave; de deixar passar un minut perqu&egrave; tingui efecte el canvi. </li>
+		<li> <span class="boton">Importar</span>: prement en el bot&oacute; s'obrir&agrave; una nova pantalla que ens permetr&agrave; seleccionar un domini exportat d'altre entorn per importar-lo. Mitjançant el bot&oacute; <i>Explorar</i> podr&agrave; localitzar el fitxer a importar i posteriorment podr&agrave; importar-lo prement el bot&oacute; <i>Annexar</i></li>
+		<li> <span class="boton">Exportar</span>: seleccionant un domini del llistat i prement sobre aquest bot&oacute; podr&agrave; generar un fitxer d'exportaci&oacute; del domini. Una vegada hagi premut s'obrir&agrave; una pantalla de confirmaci&oacute; de l'exportaci&oacute; i al confirmar l'acci&oacute; es generar&agrave; el corresponent fitxer que podr&agrave; emprar per importar el domini a un altre entorn</li>
+		<li> <span class="boton">Duplicar domini</span>: seleccionant un domini del llistat i prement sobre aquest bot&oacute; s'obrir&agrave; una nova pantalla de confirmaci&oacute; de l'acci&oacute;. En cas que es tracti d'un domini d'&agrave;mbit &agrave;rea es podr&agrave; seleccionar l'&agrave;rea on es vol duplicar. A m&eacute;s als dominis de tipus font de dades es permetr&agrave; seleccionar la font de dades a emprar al duplicat.</li>
+	</ul>
+</p>
+</body>
+</html>

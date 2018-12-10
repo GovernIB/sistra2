@@ -65,7 +65,7 @@
 		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
 			     </p:selectOneRadio>
 
-		     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
 					styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptObligatoriedad)}"
 					process="@this" update="growl">
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoObligatoriedad}" update="growl" />
@@ -158,14 +158,14 @@
 
 						    <p:selectBooleanCheckbox itemLabel="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{dialogDefinicionVersionAnexo.data.debeFirmarDigitalmente}" />
 
-							<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+							<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptFirmarDigitalmente)}"
 									process="@this" update="growl">
 										<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionAnexo.returnDialogoFirmarDigitalmente}" update="growl" />
 							</p:commandButton>
 						</p:panelGrid>
 
-						<p:outputLabel value="#{msg['dialogDefinicionVersionAnexo.tipopresentacion.electronica.scriptvalidacion']}" />
+						<p:outputLabel value="#{msg['script.SCRIPT_VALIDAR_ANEXO.titulo']}" />
 						<p:commandButton icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionAnexo.editarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), dialogDefinicionVersionAnexo.data.scriptValidacion)}"
 									styleClass="#{dialogDefinicionVersionAnexo.getColorScript(dialogDefinicionVersionAnexo.data.scriptValidacion)}"
 									process="@this" update="growl">

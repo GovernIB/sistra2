@@ -22,7 +22,7 @@
 	<bean id="negocioModuleConfig" class="es.caib.sistrages.frontend.model.comun.ModuleConfig">
 		<property name="entorno" value="${entorno}" />
 		<property name="version" value="0.0.1-SNAPSHOT" />
-		<property name="commit" value="bf53e92" />
+		<property name="commit" value="3f20cff" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

@@ -1,0 +1,35 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">DOMINIOS</h1>
+<p>
+	En la pantalla de '<i>Dominios</i>' se puede gestionar el alta, baja y edición de dominis, as&iacute; como la importaci&oacute;n/exportaci&oacute;n y la invocaci&oacute;n de dominios (Ping). Los dominios tienen un &aacute;mbito de aplicaci&oacute;n, global, de entitat o de &aacute;rea, que se refleja en si aplican a nivel general de aplicaci&oacute;n, a nivel de entitat concreta o a nivel de un &aacute;rea de una entidad.<br><br>
+	Esta pantalla permite la realizaci&oacute;n de b&uacute;quedas filtradas de dominios.<br><br>
+	El mantenimiento de dominios de &aacute;mbit global lo tiene que hacer un usuario que disponga del rol de '<i>Superadministrador</i>', los de &aacute;mbito entidad tendr&aacute;n que ser mantenidos por un usuario con rol '<i>Administrador de entidad</i>' y los de &aacute;rea por un desarrollador con permisos de administraci&oacute;n de &aacute;rea o tambi&eacute;n por un Administrador de entidad.
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> c&oacute;digo un&iacute;voco que identifica el dominio y mediante el cual se podr&aacute; invocar el dominio desde los diferentes scripts de la aplicaci&oacute;n</li>
+		<li><span class="nombreCampo">Descripci&oacute;n:</span> texto descriptivo de la funcionalidad provista por el dominio</li>
+		<li><span class="nombreCampo">Tipo de dominio:</span> tipolog&iacute;a de dominio (Consulta BBDD, Lista fija, Consulta Remota, Fuente de datos)</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Buscar</span>: introduciendo un texto en el campo '<i>Buscar</i>' y pulsando el bot&oacute;n con el icono de la lupa se llevar&aacute; a cabo un filtrado de los dominios que contengan el texto introducido. El criterio de b&uacute;squeda aplicar&aacute; a cualquiera de los campos del dominio. Posteriormente se visualizar&aacute;n los resultados de la b&uacute;squeda filtr&aacute;ndolos en el listado de dominios.</li>
+		<li><span class="boton">Nuevo</span>: pulsando en el bot&oacute;n se abrir&acute; la <a href="../../ayuda/es/dominioDialog.html">ficha</a> para dar de alta un nuevo dominio en el cual tendr&aacute; que rellenar los campos m&iacute;nimos solicitados.</li>
+		<li><span class="boton">Editar</span>: seleccionando un dominio del listado y pulsando en el bot&oacute;n se abrir&aacute; la ficha para poder realizar las modificaciones de los campos deseados.</li>
+		<li> <span class="boton">Eliminar</span>: seleccionando un dominio del listado y pulsando en el bot&oacute;n podr&aacute; suprimir un dominio existente. Previo a la eliminaci&oacute;n del dominio se mostrar&aacute; un mensaje de confirmaci&oacute;n de la acci&oacute;n.</li>
+		<li> <span class="boton">Ping</span>: seleccionando un dominio del listado y pulsando en el bot&oacute;n podr&aacute; probar la invocaci&oacute;n del dominio. Se abrir&aacute; una pantalla en la que podr&aacute; establecer un valor para par&aacute;metros del dominio, si es que los tiene.</li>
+		<li> <span class="boton">Refrescar caché</span>: este bot&oacute;n &uacute;nicamente est&aacute; disponible cuando se selecciona un dominio del listado, y permite que se refleje en el asistente cualquier cambio que se haya efectuado en el dominio. Una vez haya pulsado tendr&aacute; que dejar pasar un minuto para que tenga efecto el cambio. </li>
+		<li> <span class="boton">Importar</span>: pulsando en el bot&oacute;n se abrir&aacute; una nueva pantalla que nos permitir&aacute; seleccionar un dominio exportado de otro entorno para importarlo. Mediante el bot&oacute;n <i>Explorar</i> podr&aacute; localizar el fichero a importar y posteriormente podr&aacute; importarlo pulsando el bot&oacute;n <i>Anexar</i></li>
+		<li> <span class="boton">Exportar</span>: seleccionando un dominio del listado y pulsando en el bot&oacute;n podr&aacute; generar un fichero de exportaci&oacute;n del dominio. Una vez que haya pulsado se abrir&aacute; una pantalla de confirmaci&oacute;n de la exportaci&oacute;n y al confirmar la acci&oacute;n se generar&aacute; el corresponendiente fichero que podr&aacute; utilizar para importar el dominio en otro entorno</li>
+		<li> <span class="boton">Duplicar dominio</span>: seleccionando un dominio del listado y pulsando sobre este bot&oacute;n se abrir&aacute; una nueva pantalla de confirmaci&oacute;n de la acci&oacute;n. En caso que se trate de un dominio de &aacute;mbit &aacute;rea se podr&aacute; seleccionar el &aacute;rea donde se quiere duplicar. Adem&aacute;s en los dominios de tipo fuente de datos se permitir&aacute; seleccionar la fuente de datos a utilizar al duplicar.</li>
+	</ul>
+</p>
+</body>
+</html>

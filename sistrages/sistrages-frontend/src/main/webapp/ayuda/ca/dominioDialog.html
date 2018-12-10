@@ -1,0 +1,76 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENT DOMINI</h1>
+<p>
+	En la pantalla de '<i>Mateniment domini</i>' pot mantenir les dades corresponents a un domini.<br>
+	Els camps obligatoris es presenten amb un arterisc *
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica al domini dins l'aplicaci&oacute;. Aquest identificador s'emprar&agrave; a qualsevol script de l'aplicaci&oacute; per accedir al domini</li>
+		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de l'objecte del domini.</li>
+		<li><span class="nombreCampo">Configuraci&oacute; cacheo:</span> el <i>checkbox</i> "Cachear domini" permet establir una cach&eacute; referida a la invocaci&oacute; del domini. Si es marca aquest <i>checkbox</i> es cachear&aacute; el resultat d'una invocaci&oacute; durant un temps m&agrave;xim d'una hora, si no hi ha noves invocacions, i es forçar&agrave; un refresc de la cach&eacute; transcorregudes 24 hores de de la primera invocaci&oacute;. En qualsevol cas es pot forçar explicitament el refresc de la cach&eacute; mitjançant el bot&oacute; <span class="nombreCampo">Refrescar cach&eacute;</span></li>
+		<li><span class="nombreCampo">Tipus:</span> Tipologia del domini, que pot ser Consulta BBDD, Llista Fixa, Consulta Remota o Font Dades, aquesta darrera no disponible a dominis d'&agrave;mbit global. Segons el tipus de domini s'haur&agrave; de configurar:
+			<ul class="detalle">
+				<li><b>Consulta BBDD:</b> domini que consulta dades d'una base de dades:
+					<ul class="detalle2">
+						<li>JNDI Datasource: ha de contenir el JNDI del <i>datasource</i> que cont&eacute; la BBDD que consultar&agrave; el domini. S'ha de tenir en compte que aquest <i>datasource</i> ha d'estar desplegat al mateix servidor d'aplicacions que SISTRAGESBACK.</li>
+						<li>Query: consulta, en llenguatge SQL, a executar damunt la BBDD indicada al <i>datasource</i>. En cas que la consulta requereixi par&agrave;metres aquests es referenciaran mitjançant el seu codi i precedit pel s&iacute;mbol dos punts (:). A continuaci&oacute; es presenta un exemple il·lustratiu d'una query amb un par&agrave;metre <i>identificador</i>:<br><br>
+						<i>SELECT ID, DESC1, DESC2 FROM TAULA WHERE ID = :identificador</i>
+						</li>
+					</ul>
+				</li>
+				<li><b>Llista fixa:</b> domini que recupera dades d'una llista fixa de valors. El manteniment del llistat de valors permet les operacions seg&uuml;ents: 
+					<ul class="detalle2">
+						<li><span class="boton">Nou:</span> permet crear un nou element al llistat. Aquest element consta del codi de l'element i el valor del mateix</li>
+						<li><span class="boton">Editar:</span> permet editar un element ja existent al llistat. Abans de pitjar el bot&oacute; d'edici&oacute; haureu de seleccionar al llistat l'element a editar.</li>
+						<li><span class="boton">Eliminar:</span> permet eliminar un element existent al llistat. Abans de pitjar el bot&oacute; d'eliminaci&oacute; haureu de seleccionar al llistat l'element a eliminar.</li>
+						<li><span class="boton">Pujar:</span> permet pujar un element a l'ordre del llistat. Per pujar un element pr&egrave;viament ha d'estar seleccionat al llistat.</li>
+						<li><span class="boton">Baixar:</span> permet baixar un element a l'ordre del llistat. Per pujar un element pr&egrave;viament ha d'estar seleccionat al llistat.</li>
+					</ul>
+				</li>
+				<li><b>Consulta Remota:</b> domini que recupera valors d'una ubicaci&oacute; remota a partir del plugin de domini remot:
+					<ul class="detalle2">
+						<li>URL: URL contra la que es far&agrave; la consulta remota.</li>
+					</ul>
+				</li>
+				<li><b>Font Dades:</b> domini que recupera dades d'una Font de Dades definida a SISTRAGESBACK:
+					<ul class="detalle2">
+						<li>Font: desplegable que permet seleccionar la font de dades a consultar. &Uacute;nicament es mostren les fonts de dades que pertanyin a l'&agrave;mbit del domini</li>
+						<li>Query: consulta, en llenguatge pseudoSQL per consultar una font de dades. El format d'aquesta consulta ha de ser:
+							<p><i>SELECT campo (, campo)* FROM fuenteDatos WHERE expresion ( [AND | OR] expresion ] )* ORDER BY campo</i></p>
+							<p>on expresion: <i>campo [= | LIKE] ?</i>, on "?" &eacute;s un par&agrave;metre</p>
+							<p>Les part&iacute;cules de la sent&egrave;ncia pseudoSQL (SELECT, FROM, WHERE, LIKE, AND, OR, ORDER BY) han d'estar en maj&uacute;scules.<br>
+							Respecte a las comparancions en el WHERE seran <i>ignorecase</i> ( = y LIKE ).<br>
+							Respecte al LIKE es realitzar&agrave; autom&agrave;ticament la comparaci&oacute;: %parametre% .<br>
+							Respecte al ORDER BY nom&eacute;s es pot indicar un camp. A m&eacute;s com tots els camps s&oacute;n de tipus cadena, l'ordenaci&oacute; &eacute;s literal pel que si es vol crear un camp en la font de dades que permeti ordenar seq&uuml;encialment, millor emprar lletres que n&uacute;meros.
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li><span class="nombreCampo">Par&agrave;metres:</span> llistat de par&agrave;metres del domini. Les operacions que es poden realitzar damunt aquest llistat s&oacute;n:
+			<ul class="detalle">
+				<li><span class="boton">Nou:</span> permet crear un par&agrave;metre. Aquest par&agrave;metre s'identifica a partir d'un codi.</li>
+				<li><span class="boton">Editar:</span> permet editar un par&agrave;metre ja existent al llistat. Abans de pitjar el bot&oacute; d'edici&oacute; haureu de seleccionar el par&agrave;metre a editar al llistat.</li>
+				<li><span class="boton">Eliminar:</span> permet eliminar un par&agrave;metre existent al llistat. Abans de pitjar el bot&oacute; d'eliminaci&oacute; haureu de seleccionar el par&agrave;metre a eliminar al llistat.</li>
+				<li><span class="boton">Pujar:</span> permet pujar un par&agrave;metre a l'ordre del llistat de par&agrave;metres. Per pujar un par&agrave;metre pr&egrave;viament ha d'estar seleccionat al llistat de par&agrave;metres.</li>
+				<li><span class="boton">Baixar:</span> permet baixar un par&agrave;metre a l'ordre del llistat de par&agrave;metres. Per baixar un par&agrave;metre pr&egrave;viament ha d'estar seleccionat al llistat de par&agrave;metres.</li>
+			</ul> 
+		</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Desar</span>: Tanca la pantalla guardant els canvis.</li>
+		<li><span class="boton">Cancel&middot;lar</span>: Tanca la pantalla sense guardar els canvis.</li>
+	</ul>
+</p>
+</body>
+</html>

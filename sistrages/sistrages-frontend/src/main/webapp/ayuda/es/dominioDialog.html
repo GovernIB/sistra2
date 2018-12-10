@@ -1,0 +1,75 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENTO DOMINIO</h1>
+<p>
+	En la pantalla de '<i>Matenimento dominio</i>' puede mantener los datos correspondientes a un dominio.<br>
+	Los campos obligatorios se presentan con un arterisco *.
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> c&oacute;digo un&iacute;voco que identifica al dominio dentro de la aplicaci&oacute;n. Este identificador se utilizar&agrave; en cualquier script de la aplicaci&oacute;n para accedir al dominio</li>
+		<li><span class="nombreCampo">Descripci&oacute;n:</span> texto descriptivo del objeto del dominio.</li>
+		<li><span class="nombreCampo">Configuraci&oacute;n cacheo:</span> el <i>checkbox</i> "Cachear dominio" permite establecer una cach&eacute; referida a la invocaci&oacute; del dominio. Si se marca este <i>checkbox</i> se cachear&aacute; el resultado de una invocaci&oacute;n durante un tiempo m&aacute;ximo de una hora, si no hay nuevas invocaciones, y se forzar&agrave; un refresco de la caché transcurridas 24 horas desde la primera invocaci&oacute;n. En cualquier caso se puede forzar explicitamente el refresco de la cach&eacute; mediante el bot&oacute;n <span class="nombreCampo">Refrescar cach&eacute;</span></li>
+		<li><span class="nombreCampo">Tipo:</span> Tipolog&iacute;a del dominio, que puede ser Consulta BBDD, Lista Fija, Consulta Remota o Fuente Datos, esta &uacute;ltima no disponible en dominios de &aacute;mbit global. Seg&uacute;n el tipo de dominio se tendr&agrave; que configurar:
+		<ul class="detalle">
+		<li><b>Consulta BBDD:</b> dominio que consulta datos de una base de datos:
+		<ul class="detalle2">
+		<li>JNDI Datasource: ha de contener el JNDI del <i>datasource</i> que contiene la BBDD que consultar&aacute; el dominio. Se ha de tener en cuenta que este <i>datasource</i> ha de estar desplegado en el mismo servidor de aplicaciones que SISTRAGESBACK.</li>
+		<li>Query: consulta, en lenguaje SQL, a ejecutar sobre la BBDD indicada en el <i>datasource</i>. En caso que la consulta requiera par&aacute;metros estos se referenciar&aacute;n mediante su c&oacute;digo y precedido por el s&iacute;mbolo dos puntos (:). A continuaci&oacute;n se presenta un ejemplo ilustrativo de una consulta con un par&aacute;metro <i>identificador</i>:<br><br>
+		<i>SELECT ID, DESC1, DESC2 FROM TAULA WHERE ID = :identificador</i></li>
+		</ul>
+		</li>
+		<li><b>Lista fija:</b> dominio que recupera datos de una lista fija de valores. El mantenimento del listado de valores permite las operaciones siguientes: 
+		<ul class="detalle2">
+		<li><span class="boton">Nuevo:</span> permite crear un nuevo elemento en el listado. Este elemento consta del c&oacute;di del elemento y del valor del mismo</li>
+		<li><span class="boton">Editar:</span> permite editar un elemento ya existente en el listado. Antes de pulsar el bot&oacute;n de edici&oacute;n tendr&aacute; que seleccionar en el listado el elemento a editar.</li>
+		<li><span class="boton">Eliminar:</span> permite eliminar un element existent al llistat. Abans de pitjar el bot&oacute; d'eliminaci&oacute; haureu de seleccionar al llistat l'element a eliminar.</li>
+		<li><span class="boton">Subir:</span> permite subir un elemento en el orden del listado. Para subir un elemento previamente ha de estar seleccionado en el listado.</li>
+		<li><span class="boton">Bajar:</span> permite bajar un elemento en el orden del listado. Per subir un elemento previamente ha de estar seleccionado en el listado.</li>
+		</ul>
+		</li>
+		<li><b>Consulta Remota:</b> dominio que recupera valores de una ubicaci&oacute;n remota a partir del plugin de dominio remoto:
+		<ul class="detalle2">
+		<li>URL: URL contra la que se har&aacute; la consulta remota.</li>
+		</ul>
+		</li>
+		<li><b>Fuente Datos:</b> dominio que recupera datos de una Fuente de Datos definida en SISTRAGESBACK:
+		<ul class="detalle2">
+		<li>Fuente: desplegable que permite seleccionar la fuente de datos a consultar. &Uacute;nicamente se muestran las fuentes de datos que pertenecen al &aacute;mbito del dominio</li>
+		<li>Query: consulta, en lenguaje pseudoSQL para consultar una fuente de datos. El formato de esta consulta tiene que ser:
+		<p><i>SELECT campo (, campo)* FROM fuenteDatos WHERE expresion ( [AND | OR] expresion ] )* ORDER BY campo</i></p>
+		<p>donde expresion: <i>campo [= | LIKE] ?</i>, donde "?" es un par&aacute;metro</p>
+		<p>Las part&iacute;culas de la sentencia pseudoSQL (SELECT, FROM, WHERE, LIKE, AND, OR, ORDER BY) han de estar en may&uacute;sculas.<br>
+		Respecto a las comparanciones en el WHERE ser&aacute;n <i>ignorecase</i> ( = y LIKE ).<br>
+		Respecto al LIKE se realizar&aacute; autom&aacute;ticamente la comparaci&oacute;n: %parametro% .<br>
+		Respecto al ORDER BY solo se puede indicar un campo. Adem&aacute;s como todos los campos son de tipo cadena, la ordenaci&oacute;n es literal por lo que si se quiere crear un campo en la fuente de datos que permita ordenar secuencialmente, mejor utilizar letras que n&uacute;meros.
+		</p>
+		</li>
+		</ul>
+		</li>
+		</ul>
+		</li>
+		<li><span class="nombreCampo">Par&aacute;metros:</span> listado de par&aacute;metros del dominio. Las operaciones que se pueden realizar sobre este listado son:
+		<ul class="detalle">
+		<li><span class="boton">Nuevo:</span> permite crear un par&aacute;metro. Este par&aacute;metro se identifica a partir de un c&oacute;digo.</li>
+		<li><span class="boton">Editar:</span> permite editar un par&aacute;metro ya existente en el listado. Antes de pulsar el bot&oacute;n de edici&oacute;n tendr&aacute; que seleccionar el par&aacute;metro a editar en el listado.</li>
+		<li><span class="boton">Eliminar:</span> permite eliminar un par&aacute;metro existente en el listado. Antes de pulsar el bot&oacute;n de eliminaci&oacute;n tendr&aacute; que seleccionar el par&aacute;metro a eliminar en el listado.</li>
+		<li><span class="boton">Subir:</span> permite subir un par&aacute;metro en el orden del listado de par&aacute;metros. Per subir un par&aacute;metro previamente ha de estar seleccionado en el listado de par&aacute;metros.</li>
+		<li><span class="boton">Bajar:</span> permite bajar un par&aacute;metro en el orden del listado de par&aacute;metros. Per bajar un par&aacute;metro previamente ha de estar seleccionado en el listado de par&aacute;metros.</li>
+		</ul> 
+		</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Guardar</span>: Cierra la pantalla guardando los cambios.</li>
+		<li><span class="boton">Cancelar</span>: Cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+</body>
+</html>

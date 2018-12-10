@@ -48,7 +48,7 @@
 						<p:commandButton id="scriptButton1" icon="fa fa-bolt"
 							disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro eq null}"
 							actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(),viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro.codigo)}"
-							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.parametros']}"
+							value="#{msg['script.SCRIPT_PARAMETROS_REGISTRO.titulo']}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptDestinoRegistro)}" />
 					</p:column>
 				</p:row>
@@ -73,7 +73,7 @@
            		<p:commandButton id="scriptButton2"
            				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador eq null}"
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador.codigo)}"
-						process="@this" update="growl" value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion.establecer']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador)}" />
+						process="@this" update="growl" value="#{msg['script.SCRIPT_PRESENTADOR_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptPresentador)}" />
 				<p:spacer width="30" height="1"/>
        		</p:outputPanel>
 
@@ -84,7 +84,7 @@
            		<p:commandButton id="scriptButton3"
            				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante eq null}"
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
-						process="@this" update="growl" value="#{msg['viewDefinicionVersionRegistrarTramite.representacion.establecer']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
+						process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
 				<p:spacer width="30" height="1"/>
 				<p:selectBooleanCheckbox id="valida" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.validaRepresentacion}" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>
