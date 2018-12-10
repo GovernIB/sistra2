@@ -10,6 +10,7 @@ import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.service.component.integracion.SistragesApiComponent;
+import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 
 /**
  * Simula acceso SISTRAGES.
@@ -45,7 +46,8 @@ public final class SistragesApiComponentMockImpl implements SistragesApiComponen
 	}
 
 	@Override
-	public RValoresDominio resuelveDominioFuenteDatos(final RDominio dominio) {
+	public RValoresDominio resuelveDominioFuenteDatos(final RDominio dominio,
+			final ParametrosDominio parametrosDominio) {
 		final RValoresDominio valoresDominio = SistragesMock.crearValoresDominioFD(dominio);
 		return valoresDominio;
 	}

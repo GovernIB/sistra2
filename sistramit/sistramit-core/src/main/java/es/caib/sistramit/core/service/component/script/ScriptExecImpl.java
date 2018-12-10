@@ -37,7 +37,6 @@ import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersona;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersonalizacionTramite;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPlantillaInfo;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRegistro;
-import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRepresentacion;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResVariableFlujo;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
@@ -57,7 +56,6 @@ import es.caib.sistramit.core.service.model.script.ResPersonalizacionTramiteInt;
 import es.caib.sistramit.core.service.model.script.ResPlantillaInfoInt;
 import es.caib.sistramit.core.service.model.script.ResRegistroInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResParametrosFormularioInt;
-import es.caib.sistramit.core.service.model.script.flujo.ResRepresentacionInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResVariableFlujoInt;
 import es.caib.sistramit.core.service.model.script.types.TypeScript;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
@@ -295,9 +293,6 @@ public final class ScriptExecImpl implements ScriptExec {
 		case SCRIPT_VARIABLE_FLUJO:
 			res = ResVariableFlujoInt.ID;
 			break;
-		case SCRIPT_PARAMETROS_REPRESENTACION:
-			res = ResRepresentacionInt.ID;
-			break;
 		default:
 			res = null;
 		}
@@ -388,9 +383,6 @@ public final class ScriptExecImpl implements ScriptExec {
 			break;
 		case SCRIPT_PLANTILLA_INFO:
 			plugins.add(new ResPlantillaInfo());
-			break;
-		case SCRIPT_PARAMETROS_REPRESENTACION:
-			plugins.add(new ResRepresentacion());
 			break;
 		case SCRIPT_VARIABLE_FLUJO:
 			plugins.add(new ResVariableFlujo());

@@ -1,16 +1,12 @@
-package es.caib.sistramit.core.service.component.script.plugins.flujo;
+package es.caib.sistramit.core.service.model.flujo;
 
-import es.caib.sistramit.core.service.model.script.ResRegistroInt;
+import java.io.Serializable;
 
 /**
- *
- * Datos que se pueden establecer dinámicamente al registrar.
- *
- * @author Indra
- *
+ * Datos registrales.
  */
 @SuppressWarnings("serial")
-public final class ResRegistro implements ResRegistroInt {
+public final class DatosRegistrales implements Serializable {
 
 	/** Oficina. */
 	private String oficina;
@@ -23,30 +19,6 @@ public final class ResRegistro implements ResRegistroInt {
 
 	/** Expediente (para tramites continuacion). */
 	private String numeroExpediente;
-
-	@Override
-	public String getPluginId() {
-		return ID;
-	}
-
-	/**
-	 * Método de acceso a oficina.
-	 *
-	 * @return oficina
-	 */
-	public String getOficina() {
-		return oficina;
-	}
-
-	/**
-	 * Método para establecer oficina.
-	 *
-	 * @param oficina
-	 *            oficina a establecer
-	 */
-	public void setOficina(String oficina) {
-		this.oficina = oficina;
-	}
 
 	/**
 	 * Método de acceso a libro.
@@ -88,7 +60,7 @@ public final class ResRegistro implements ResRegistroInt {
 
 	/**
 	 * Método de acceso a numeroExpediente.
-	 * 
+	 *
 	 * @return numeroExpediente
 	 */
 	public String getNumeroExpediente() {
@@ -97,12 +69,31 @@ public final class ResRegistro implements ResRegistroInt {
 
 	/**
 	 * Método para establecer numeroExpediente.
-	 * 
+	 *
 	 * @param numeroExpediente
 	 *            numeroExpediente a establecer
 	 */
 	public void setNumeroExpediente(String numeroExpediente) {
 		this.numeroExpediente = numeroExpediente;
+	}
+
+	/**
+	 * Método de acceso a oficina.
+	 * 
+	 * @return oficina
+	 */
+	public String getOficina() {
+		return oficina;
+	}
+
+	/**
+	 * Método para establecer oficina.
+	 * 
+	 * @param oficina
+	 *            oficina a establecer
+	 */
+	public void setOficina(String oficina) {
+		this.oficina = oficina;
 	}
 
 }

@@ -19,7 +19,15 @@ public enum TypeDocumentoPersistencia {
 	/**
 	 * Formulario (Código String: p).
 	 */
-	PAGO("p");
+	PAGO("p"),
+	/**
+	 * Registro (Código String: r).
+	 */
+	REGISTRO("r"),
+	/**
+	 * Formulario (Código String: j).
+	 */
+	JUSTIFICANTE("j");
 
 	// TODO PENDIENTE Ver si son necesarios mas tipos
 

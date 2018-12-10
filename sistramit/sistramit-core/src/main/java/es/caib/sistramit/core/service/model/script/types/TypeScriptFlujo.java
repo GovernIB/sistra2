@@ -53,10 +53,6 @@ public enum TypeScriptFlujo implements TypeScript {
 	 */
 	SCRIPT_PARAMETROS_REGISTRO,
 	/**
-	 * Script para indicar dinámicamente los parámetros de representacion.
-	 */
-	SCRIPT_PARAMETROS_REPRESENTACION,
-	/**
 	 * Script para indicar quién debe presentar el registro.
 	 */
 	SCRIPT_PRESENTADOR_REGISTRO,
