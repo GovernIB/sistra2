@@ -23,6 +23,7 @@ import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
+import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.component.integracion.SistragesComponent;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
@@ -52,6 +53,10 @@ public class SystemServiceImpl implements SystemService {
 	/** Componente STG. */
 	@Autowired
 	private SistragesComponent sistragesComponent;
+
+	/** Componente Dominios. */
+	@Autowired
+	private DominiosComponent dominiosComponent;
 
 	/** Fecha revision invalidaciones. */
 	private Date fcRevisionInvalidaciones;
@@ -104,7 +109,7 @@ public class SystemServiceImpl implements SystemService {
 				sistragesComponent.evictConfiguracionEntidad(inv.getIdentificador());
 				break;
 			case DOMINIO:
-				// TODO PENDIENTE IMPLEMENTAR INVALIDACION DOMINIOS
+				dominiosComponent.invalidarDominio(inv.getIdentificador());
 				break;
 			case TRAMITE:
 				final String[] codigos = inv.getIdentificador().split("#");
@@ -118,6 +123,7 @@ public class SystemServiceImpl implements SystemService {
 				for (final String idioma : idiomas) {
 					sistragesComponent.evictDefinicionTramite(idTramite, version, idioma);
 				}
+				break;
 			default:
 				break;
 			}

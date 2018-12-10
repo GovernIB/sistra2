@@ -176,9 +176,8 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
-	public ValoresDominio realizarConsultaListaFija(final String idDominio,
-			final List<ValorParametroDominio> parametros) {
-		return restApiService.realizarConsultaListaFija(idDominio, parametros);
+	public ValoresDominio realizarConsultaListaFija(final String idDominio) {
+		return restApiService.realizarConsultaListaFija(idDominio);
 	}
 
 }

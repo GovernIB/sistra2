@@ -261,8 +261,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
-	public ValoresDominio realizarConsultaListaFija(final String idDominio,
-			final List<ValorParametroDominio> parametros) {
+	public ValoresDominio realizarConsultaListaFija(final String idDominio) {
 		return fuenteDatosComponent.realizarConsultaListaFija(idDominio);
 	}
 
