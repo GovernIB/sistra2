@@ -11,19 +11,10 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.plugins.documentconverter.openoffice.OpenOfficeDocumentConverterPlugin;
 import org.fundaciobit.pluginsib.documentconverter.IDocumentConverterPlugin;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 
 public class TestPluginConverter {
 
-    /** Configuracion. */
-    @Autowired
-    private static ConfiguracionComponent configuracionComponent;
-
     public static void main(String[] args) {
-
-        final String entidad = "";
 
         final IDocumentConverterPlugin plgDC = new OpenOfficeDocumentConverterPlugin();
         try {
