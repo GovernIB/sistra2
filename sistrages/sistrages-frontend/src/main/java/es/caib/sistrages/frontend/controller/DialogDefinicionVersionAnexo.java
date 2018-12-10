@@ -266,7 +266,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 950, 700);
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 	}
 
 	/**

@@ -12,11 +12,14 @@ import javax.inject.Inject;
 import org.primefaces.event.ToggleEvent;
 
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.util.UtilJSON;
+import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -55,6 +58,20 @@ public class DialogScript extends DialogControllerBase {
 	private boolean visibleDominios = true;
 
 	/**
+	 * Indicaría el texto que se añade al codeMirror pero de momento desactivado.
+	 **/
+	private String nuevoTexto;
+
+	/** Indica si hay que mostrar la ayuda o no */
+	private boolean mostrarLateralAyuda;
+
+	/** Indica los plugins que hay. **/
+	private List<TypePluginScript> plugins;
+
+	/** URL del iframe del html de ayuda del plugin. **/
+	private String urlIframe;
+
+	/**
 	 * Constructor vacio.
 	 */
 	public DialogScript() {
@@ -77,8 +94,9 @@ public class DialogScript extends DialogControllerBase {
 		} else {
 			data = (Script) UtilJSON.fromJSON(json.toString(), Script.class);
 		}
-
+		mostrarLateralAyuda = false;
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_SCRIPT);
+		setPlugins(UtilScripts.getPluginsScript(null));
 	}
 
 	/**
@@ -132,8 +150,30 @@ public class DialogScript extends DialogControllerBase {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(this.data);
+		if (estaVacio()) {
+			result.setResult(null);
+		} else {
+			result.setResult(this.data);
+		}
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Comprueba si el contenido está vacío
+	 *
+	 * @return
+	 */
+	private boolean estaVacio() {
+		if (this.data == null || this.data.getContenido() == null) {
+			return true;
+		}
+		final String contenido = this.data.getContenido().replaceAll(" ", "").replaceAll("\n", "").replaceAll("\t", "")
+				.trim();
+		if (contenido.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -160,8 +200,39 @@ public class DialogScript extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/**
+	 * De momento desactivado. Añade un texto al codeMirror.
+	 */
+	public void anyadirTexto() {
+		this.data.setContenido(this.data.getContenido() + "\n" + this.nuevoTexto);
+	}
+
+	/**
+	 * Muestra el lateral de ayuda.
+	 */
+	public void mostrarAyuda(final TypePluginScript plugin) {
+		this.urlIframe = "/sistragesback/ayuda/" + UtilJSF.getIdioma().toString() + "/plugins/" + plugin.name()
+				+ "/index.html";
+		this.mostrarLateralAyuda = true;
+	}
+
+	/**
+	 * Muestra mensaje de copy.
+	 */
+	public void mensajeCopy() {
+		// UtilJSF.getLiteral("info.copiado.ok")
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Copiat correctament");
+	}
+
+	/**
+	 * Oculta el lateral de ayuda.
+	 */
+	public void ocultarAyuda() {
+		this.mostrarLateralAyuda = false;
+	}
+
 	public List<String> getThemes() {
-		final List<String> results = new ArrayList<String>();
+		final List<String> results = new ArrayList<>();
 
 		results.add("3024-day");
 		results.add("3024-night");
@@ -215,7 +286,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	public List<String> getModes() {
-		final List<String> results = new ArrayList<String>();
+		final List<String> results = new ArrayList<>();
 
 		results.add("apl");
 		results.add("asn.1");
@@ -336,7 +407,7 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	public List<String> getKeymaps() {
-		final List<String> results = new ArrayList<String>();
+		final List<String> results = new ArrayList<>();
 
 		results.add("default");
 		results.add("emacs");
@@ -494,6 +565,81 @@ public class DialogScript extends DialogControllerBase {
 
 	public void setTipoScriptParam(final String tipoScriptParam) {
 		this.tipoScriptParam = tipoScriptParam;
+	}
+
+	/**
+	 * @return the nuevoTexto
+	 */
+	public String getNuevoTexto() {
+		return nuevoTexto;
+	}
+
+	/**
+	 * @param nuevoTexto
+	 *            the nuevoTexto to set
+	 */
+	public void setNuevoTexto(final String nuevoTexto) {
+		this.nuevoTexto = nuevoTexto;
+	}
+
+	/**
+	 * @return the mostrarLateralAyuda
+	 */
+	public boolean isMostrarLateralAyuda() {
+		return mostrarLateralAyuda;
+	}
+
+	/**
+	 * @param mostrarLateralAyuda
+	 *            the mostrarLateralAyuda to set
+	 */
+	public void setMostrarLateralAyuda(final boolean mostrarLateralAyuda) {
+		this.mostrarLateralAyuda = mostrarLateralAyuda;
+	}
+
+	/**
+	 * @return the plugins
+	 */
+	public List<TypePluginScript> getPlugins() {
+		return plugins;
+	}
+
+	/**
+	 * @param plugins
+	 *            the plugins to set
+	 */
+	public void setPlugins(final List<TypePluginScript> plugins) {
+		this.plugins = plugins;
+	}
+
+	/**
+	 * @return the urlIframe
+	 */
+	public String getUrlIframe() {
+		return urlIframe;
+	}
+
+	/**
+	 * @param urlIframe
+	 *            the urlIframe to set
+	 */
+	public void setUrlIframe(final String urlIframe) {
+		this.urlIframe = urlIframe;
+	}
+
+	/**
+	 * @return the scriptService
+	 */
+	public ScriptService getScriptService() {
+		return scriptService;
+	}
+
+	/**
+	 * @param scriptService
+	 *            the scriptService to set
+	 */
+	public void setScriptService(final ScriptService scriptService) {
+		this.scriptService = scriptService;
 	}
 
 }

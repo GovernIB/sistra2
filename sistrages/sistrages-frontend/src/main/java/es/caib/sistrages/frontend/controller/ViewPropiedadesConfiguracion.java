@@ -179,6 +179,10 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		}
 
 	}
+	
+	public void ayuda() {
+		UtilJSF.openHelp("propiedadesConfiguracion");
+	}
 
 	/**
 	 * Dbl click.

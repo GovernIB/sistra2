@@ -240,6 +240,10 @@ public class ViewPlugins extends ViewControllerBase {
 			buscar();
 		}
 	}
+	
+	public void ayuda() {
+		UtilJSF.openHelp("plugins");
+	}
 
 	/**
 	 * Obtiene el valor de permiteAlta.

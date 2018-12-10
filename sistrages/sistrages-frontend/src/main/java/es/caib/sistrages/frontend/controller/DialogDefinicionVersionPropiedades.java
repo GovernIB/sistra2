@@ -200,12 +200,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), typeScript.name());
 		if (id == null || iScript == null) {
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 670);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 		} else {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(iScript));
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 670);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 		}
 	}
 

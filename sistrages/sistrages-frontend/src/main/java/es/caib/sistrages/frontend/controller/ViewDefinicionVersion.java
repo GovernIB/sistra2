@@ -394,8 +394,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 
 		}
+
 		map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 950, 700);
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 700);
 
 	}
 
@@ -729,12 +730,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 
 		if (this.permiteEditar()) {
-
 			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.EDICION.toString());
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, map, true, 950, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, map, true, 1000, 700);
 		} else {
 			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 950, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 1000, 700);
 		}
 
 	}

@@ -699,7 +699,9 @@ public class DialogDominio extends DialogControllerBase {
 			final Map<String, String> params = new HashMap<>();
 			params.put(TypeParametroVentana.ID.toString(), this.idFuenteDato.toString());
 			params.put(TypeParametroVentana.AMBITO.toString(), this.ambito);
-			params.put(TypeParametroVentana.AREA.toString(), this.id);
+			if (this.idArea != null) {
+				params.put(TypeParametroVentana.AREA.toString(), this.idArea);
+			}
 			UtilJSF.openDialog(DialogFuente.class, TypeModoAcceso.CONSULTA, params, true, 740, 450);
 		}
 
@@ -1021,5 +1023,10 @@ public class DialogDominio extends DialogControllerBase {
 	public void setMostrarAdvertencia(final boolean mostrarAdvertencia) {
 		this.mostrarAdvertencia = mostrarAdvertencia;
 	}
+	
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("dominioDialog");
+    }
 
 }

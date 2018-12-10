@@ -51,7 +51,7 @@
 	        			<p:commandButton id="btnClonar" value="#{msg['botones.duplicarDominio']}" icon="fa fa-edit" actionListener="#{viewDominios.clonar()}" process="@this" update="growl" rendered="#{viewDominios.getPermiteEditar()}">
 		        			<p:ajax event="dialogReturn" listener="#{viewDominios.returnDialogoClonar}" update="growl dataTable"/>
 		        		</p:commandButton>
-	        			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewDominios.ayudar()}" process="@this" update="growl"/>
+	        			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewDominios.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 		    </p:toolbar>

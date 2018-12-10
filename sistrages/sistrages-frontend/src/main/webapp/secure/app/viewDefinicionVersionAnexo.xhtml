@@ -35,7 +35,7 @@
 		            <f:selectItems value="#{TypeFormularioObligatoriedad.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeFormularioObligatoriedad.' += tipo]}" />
 			     </p:selectOneRadio>
 
-		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['viewDefinicionVersionAnexo.obligatoriedad.establecerdependencia']}"
+		     	<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
 					styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad)}"
 					disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptObligatoriedad eq null}"
 					process="@this" update="growl"/>
@@ -109,13 +109,13 @@
 						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.anexarfirmado']}" id="debeAnexarFirmado" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeAnexarFirmado}" />
 						    <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.firmar']}" id="debeFirmarDigitalmente" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.debeFirmarDigitalmente}" />
 
-							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.establecerfirmantes']}"
+							<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
 									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente)}"
 									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptFirmarDigitalmente eq null}"
 									process="@this" update="growl"/>
 						</p:panelGrid>
 
-						<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.tipopresentacion.electronica.scriptvalidacion']}" />
+						<p:outputLabel value="#{msg['script.SCRIPT_VALIDAR_ANEXO.titulo']}" />
 						<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO.name(), viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion.codigo)}"
 									styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion)}"
 									disabled="#{viewDefinicionVersion.documentoTramiteSeleccionado.scriptValidacion eq null}"

@@ -242,6 +242,10 @@ public class ViewDominios extends ViewControllerBase {
 		}
 
 	}
+	
+	public void ayuda() {
+		UtilJSF.openHelp("dominios");
+	}
 
 	/**
 	 * Retorno dialogo.

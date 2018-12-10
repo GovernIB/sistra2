@@ -251,14 +251,14 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (id == null || script == null) {
 
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		} else {
 
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 950, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		}
 	}

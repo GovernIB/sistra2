@@ -57,7 +57,7 @@
 					</p>
 					<p:selectOneMenu id="tipo" layout="pageDirection" value="#{dialogDominio.data.tipo}" style="width:200px" required="true" disabled="#{dialogDominio.isConsulta()}">
 					     <f:selectItems value="#{dialogDominio.tipos}" var="tipo" itemLabel="#{msg['typeDominio.' += tipo]}" itemValue="#{tipo}"  />
-						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" process="@this" update="@form panel_tipo" />
+						 <p:ajax event="change" listener="#{dialogDominio.actualizarTipo()}" update="panel_tipo pg_labelParametros pg_gridParametros"/>
 					</p:selectOneMenu>
 
 
@@ -174,52 +174,55 @@
 						<p:outputLabel rendered="#{dialogDominio.visibleFuente}"  value="" />
 				</h:panelGrid>
 
-				<p:outputLabel id="labelParametros" for="dataTableParametros" value="#{msg['dialogDominio.headerParametros.titulo']}" rendered="#{dialogDominio.mostrarParametros()}" />
-				<h:panelGrid   id="gridParametros" columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%"  rendered="#{dialogDominio.mostrarParametros()}">
+				<h:panelGroup id="pg_labelParametros">
+					<p:outputLabel id="labelParametros" for="dataTableParametros" value="#{msg['dialogDominio.headerParametros.titulo']}" rendered="#{dialogDominio.mostrarParametros()}" />
+				</h:panelGroup>
+				<h:panelGroup id="pg_gridParametros">
+					<h:panelGrid   id="gridParametros" columnClasses=",wpx25" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%"  rendered="#{dialogDominio.mostrarParametros()}">
+						<p:dataTable  id="dataTableParametros"
+										 var="td" emptyMessage="#{msg['error.emptyRows']}"
+										 value="#{dialogDominio.data.parametros}"
+										 scrollable="true"
+										 scrollHeight="140"
+										 selectionMode="single"
+										 selection="#{dialogDominio.propiedadSeleccionada}"
+										 rowKey="#{td.codigo}"
+										 dblClickSelect="true">
 
-					<p:dataTable  id="dataTableParametros"
-									 var="td" emptyMessage="#{msg['error.emptyRows']}"
-									 value="#{dialogDominio.data.parametros}"
-									 scrollable="true"
-									 scrollHeight="140"
-									 selectionMode="single"
-									 selection="#{dialogDominio.propiedadSeleccionada}"
-									 rowKey="#{td.codigo}"
-									 dblClickSelect="true">
+								<!-- Necesario para actualizar en controlador la fila seleccionada -->
+								<p:ajax event="rowSelect" global="false" />
+								<p:ajax event="rowUnselect" />
 
-							<!-- Necesario para actualizar en controlador la fila seleccionada -->
-							<p:ajax event="rowSelect" global="false" />
-							<p:ajax event="rowUnselect" />
-
-							<!-- Columnas -->
-							<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
-								<h:outputText value="#{td.codigo}" />
-						    </p:column>
+								<!-- Columnas -->
+								<p:column headerText="#{msg['dialogDominio.headerParametros.codigo']}" class="ui-panelgrid-cell">
+									<h:outputText value="#{td.codigo}" />
+							    </p:column>
 
 
-			 		</p:dataTable>
-			 		<p:column rendered="#{!dialogDominio.consulta}">
-						<p>
-				    		<p:commandButton id="btnNuevaPropiedad" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
-	       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
-	       					</p:commandButton>
-	       				</p>
-	       				<p>
-				    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
-	       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
-	       					</p:commandButton>
-	       				</p>
-						<p>
-				    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
-				    	</p>
-				    	<p>
-				    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
-				    	</p>
-				    	<p>
-				    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
-				    	</p>
-					</p:column>
-		 		</h:panelGrid>
+				 		</p:dataTable>
+				 		<p:column rendered="#{!dialogDominio.consulta}">
+							<p>
+					    		<p:commandButton id="btnNuevaPropiedad" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogDominio.nuevaPropiedad()}" process="@this" update="growlDialog">
+		       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+		       					</p:commandButton>
+		       				</p>
+		       				<p>
+					    		<p:commandButton id="btnEditarPropiedad" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogDominio.editarPropiedad()}" process="@this" update="growlDialog">
+		       						<p:ajax event="dialogReturn" listener="#{dialogDominio.returnDialogo}" update="growlDialog dataTableParametros"/>
+		       					</p:commandButton>
+		       				</p>
+							<p>
+					    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+					    	</p>
+					    	<p>
+					    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+					    	</p>
+					    	<p>
+					    		<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogDominio.bajarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+					    	</p>
+						</p:column>
+			 		</h:panelGrid>
+		 		</h:panelGroup>
 			</h:panelGrid>
 		</p:outputPanel>
 	  	<p:outputPanel styleClass="botonera">
@@ -235,6 +238,7 @@
 	        		</p:commandButton>
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDominio.cancelar()}" process="@this" rendered="#{dialogDominio.permiteGuardar()}"/>
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDominio.cancelar()}" process="@this"  rendered="#{dialogDominio.permiteGuardar() == false}"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDominio.ayuda}" process="@this"/>
 				</f:facet>
 			</p:toolbar>
 	    </p:outputPanel>

@@ -1188,7 +1188,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), maps, true, 950, 700);
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 
 	}
 

@@ -18,15 +18,15 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ComponenteService;
-import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -56,14 +56,14 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
-	
+
 	/** Entidad service. */
 	@Inject
 	private EntidadService entidadService;
 
 	/** Id. **/
 	private String id;
-	
+
 	private Entidad entidad;
 
 	/** Tramite Paso Registrar. **/
@@ -105,8 +105,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 		iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
 		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		try {
-			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
-					TypeRegistro.REGISTRO_ENTRADA);
+			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
 			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 
 			if (this.data.getCodigoOficinaRegistro() != null) {
@@ -136,8 +135,8 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	public void onChangeOficina() {
 		try {
-			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
-					this.data.getCodigoOficinaRegistro(), TypeRegistro.REGISTRO_ENTRADA);
+			libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), this.data.getCodigoOficinaRegistro(),
+					TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
@@ -328,7 +327,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 950, 700);
+		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 	}
 
 	/**
