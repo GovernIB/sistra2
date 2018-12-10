@@ -13,13 +13,13 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica al domini dins l'aplicaci&oacute;. Aquest identificador s'emprar&agrave; a qualsevol script de l'aplicaci&oacute; per accedir al domini</li>
 		<li><span class="nombreCampo">Descripci&oacute;:</span> text descriptiu de l'objecte del domini.</li>
-		<li><span class="nombreCampo">Configuraci&oacute; cacheo:</span> el <i>checkbox</i> "Cachear domini" permet establir una cach&eacute; referida a la invocaci&oacute; del domini. Si es marca aquest <i>checkbox</i> es cachear&aacute; el resultat d'una invocaci&oacute; durant un temps m&agrave;xim d'una hora, si no hi ha noves invocacions, i es forçar&agrave; un refresc de la cach&eacute; transcorregudes 24 hores de de la primera invocaci&oacute;. En qualsevol cas es pot forçar explicitament el refresc de la cach&eacute; mitjançant el bot&oacute; <span class="nombreCampo">Refrescar cach&eacute;</span></li>
+		<li><span class="nombreCampo">Configuraci&oacute; cacheo:</span> el <i>checkbox</i> "Cachear domini" permet establir una cach&eacute; referida a la invocaci&oacute; del domini. Si es marca aquest <i>checkbox</i> es cachear&aacute; el resultat d'una invocaci&oacute; durant un temps m&agrave;xim d'una hora, si no hi ha noves invocacions, i es for&ccedil;ar&agrave; un refresc de la cach&eacute; transcorregudes 24 hores de de la primera invocaci&oacute;. En qualsevol cas es pot for&ccedil;ar explicitament el refresc de la cach&eacute; mitjan&ccedil;ant el bot&oacute; <span class="nombreCampo">Refrescar cach&eacute;</span></li>
 		<li><span class="nombreCampo">Tipus:</span> Tipologia del domini, que pot ser Consulta BBDD, Llista Fixa, Consulta Remota o Font Dades, aquesta darrera no disponible a dominis d'&agrave;mbit global. Segons el tipus de domini s'haur&agrave; de configurar:
 			<ul class="detalle">
 				<li><b>Consulta BBDD:</b> domini que consulta dades d'una base de dades:
 					<ul class="detalle2">
 						<li>JNDI Datasource: ha de contenir el JNDI del <i>datasource</i> que cont&eacute; la BBDD que consultar&agrave; el domini. S'ha de tenir en compte que aquest <i>datasource</i> ha d'estar desplegat al mateix servidor d'aplicacions que SISTRAGESBACK.</li>
-						<li>Query: consulta, en llenguatge SQL, a executar damunt la BBDD indicada al <i>datasource</i>. En cas que la consulta requereixi par&agrave;metres aquests es referenciaran mitjançant el seu codi i precedit pel s&iacute;mbol dos punts (:). A continuaci&oacute; es presenta un exemple il·lustratiu d'una query amb un par&agrave;metre <i>identificador</i>:<br><br>
+						<li>Query: consulta, en llenguatge SQL, a executar damunt la BBDD indicada al <i>datasource</i>. En cas que la consulta requereixi par&agrave;metres aquests es referenciaran mitjan&ccedil;ant el seu codi i precedit pel s&iacute;mbol dos punts (:). A continuaci&oacute; es presenta un exemple il&middot;lustratiu d'una query amb un par&agrave;metre <i>identificador</i>:<br><br>
 						<i>SELECT ID, DESC1, DESC2 FROM TAULA WHERE ID = :identificador</i>
 						</li>
 					</ul>
