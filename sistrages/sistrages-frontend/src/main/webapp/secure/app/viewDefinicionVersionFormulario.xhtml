@@ -34,7 +34,7 @@
               			</p:selectOneRadio>
              		</p:column>
              		<p:column>
-               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['viewDefinicionVersionFormulario.obligatoriedad.establecerdependencia']}"
+               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad.codigo)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
               				disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad eq null}"
               				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptObligatoriedad)}"
               				process="@this" update="growl"/>
@@ -49,7 +49,7 @@
         			    <p:selectBooleanCheckbox id="firmardigitalmente" disabled="true" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.debeFirmarse}" itemLabel="#{msg['viewDefinicionVersionFormulario.firmardigitalmente']}"/>
              		</p:column>
              		<p:column>
-               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma.codigo)}" value="#{msg['viewDefinicionVersionFormulario.establecerfirmantes']}"
+               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma.codigo)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
               				disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma eq null}"
               				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptFirma)}"
               				process="@this" update="growl"/>
@@ -62,17 +62,17 @@
 
       		<p:outputLabel value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion']}" />
            	<p:panelGrid styleClass="noBorders">
-            	<p:row>
+           		<p:row>
                 	<p:column styleClass="noPadding-left">
-           		 		<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales.codigo)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.parametrosapertura']}"
+           		 		<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales.codigo)}" value="#{msg['script.SCRIPT_DATOS_INICIALES_FORMULARIO.titulo']}"
               				disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales eq null}"
               				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptDatosIniciales)}"
               				process="@this" update="growl"/>
           			</p:column>
         		</p:row>
-        		<p:row>
+            	<p:row>
              		<p:column styleClass="noPadding-left">
-             			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros.codigo)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.cargadatos']}"
+             			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros.codigo)}" value="#{msg['script.SCRIPT_PARAMETROS_FORMULARIO.titulo']}"
              				disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros eq null}"
               				styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptParametros)}"
               			 	process="@this" update="growl"/>
@@ -80,7 +80,7 @@
         		</p:row>
         		<p:row>
              		<p:column styleClass="noPadding-left">
-               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno.codigo)}" value="#{msg['viewDefinicionVersionFormulario.scriptpersonalizacion.postguardar']}"
+               			<p:commandButton icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno.codigo)}" value="#{msg['script.SCRIPT_POSTGUARDAR_FORMULARIO.titulo']}"
 	             			disabled="#{viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno eq null}"
     	          			styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.formularioTramiteSeleccionado.scriptRetorno)}"
         	      			process="@this" update="growl"/>

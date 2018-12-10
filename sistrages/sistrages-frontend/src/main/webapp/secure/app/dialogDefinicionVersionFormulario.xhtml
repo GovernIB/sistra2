@@ -60,7 +60,7 @@
 	              </p:selectOneRadio>
 	             </p:column>
 	             <p:column>
-		               <p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionFormulario.data.scriptObligatoriedad)}" value="#{msg['dialogDefinicionVersionFormulario.obligatoriedad.establecerdependencia']}"
+		               <p:commandButton id="scriptObligatoriedad" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(), dialogDefinicionVersionFormulario.data.scriptObligatoriedad)}" value="#{msg['script.SCRIPT_DEPENDENCIA_DOCUMENTO.titulo']}"
 		              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptObligatoriedad)}"
 		                      process="@this" update="growl">
 		              <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoObligatoriedad}" update="growl scriptObligatoriedad" />
@@ -76,7 +76,7 @@
             <p:selectBooleanCheckbox id="firmardigitalmente" value="#{dialogDefinicionVersionFormulario.data.debeFirmarse}" itemLabel="#{msg['dialogDefinicionVersionFormulario.firmardigitalmente']}"/>
              </p:column>
              <p:column>
-               <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}" value="#{msg['dialogDefinicionVersionFormulario.establecerfirmantes']}"
+               <p:commandButton id="scriptFirma" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_FIRMANTES.name(), dialogDefinicionVersionFormulario.data.scriptFirma)}" value="#{msg['script.SCRIPT_FIRMANTES.titulo']}"
               styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptFirma)}"
                       process="@this" update="growl">
 		                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoFirma}" update="growl scriptFirma" />
@@ -91,33 +91,32 @@
 	      <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion']}" />
 	           <p:panelGrid styleClass="noBorders">
 	               <p:row>
-	                 <p:column styleClass="noPadding-left">
-	            	 <p:commandButton id="scriptDatosIniciales" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), dialogDefinicionVersionFormulario.data.scriptDatosIniciales)}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.parametrosapertura']}"
-	              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptDatosIniciales)}"
-	                      process="@this" update="growl">
-	                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoDatosIniciales}" update="growl scriptDatosIniciales" />
-	           		 </p:commandButton>
-	          </p:column>
-	        </p:row>
-	        <p:row>
-	             <p:column styleClass="noPadding-left">
-	              <p:commandButton id="scriptParametros" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), dialogDefinicionVersionFormulario.data.scriptParametros)}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.cargadatos']}"
-	              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptParametros)}"
-	                      	process="@this" update="growl">
-	                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoParametros}" update="growl scriptParametros" />
-	            </p:commandButton>
-
-	          </p:column>
-	        </p:row>
-	        <p:row>
-	             <p:column styleClass="noPadding-left">
-	               <p:commandButton id="scriptRetorno" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), dialogDefinicionVersionFormulario.data.scriptRetorno)}" value="#{msg['dialogDefinicionVersionFormulario.scriptpersonalizacion.postguardar']}"
-	              				styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptRetorno)}"
-	             				process="@this" update="growl">
-	              <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoRetorno}" update="growl scriptRetorno" />
-	            </p:commandButton>
-	          </p:column>
-	        </p:row>
+		                <p:column styleClass="noPadding-left">
+			            	 <p:commandButton id="scriptDatosIniciales" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(), dialogDefinicionVersionFormulario.data.scriptDatosIniciales)}" value="#{msg['script.SCRIPT_DATOS_INICIALES_FORMULARIO.titulo']}"
+			              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptDatosIniciales)}"
+			                      process="@this" update="growl">
+			                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoDatosIniciales}" update="growl scriptDatosIniciales" />
+			           		 </p:commandButton>
+		          		</p:column>
+	        		</p:row>
+	        		<p:row>
+			             <p:column styleClass="noPadding-left">
+			              <p:commandButton id="scriptParametros" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(), dialogDefinicionVersionFormulario.data.scriptParametros)}" value="#{msg['script.SCRIPT_PARAMETROS_FORMULARIO.titulo']}"
+			              			styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptParametros)}"
+			                      	process="@this" update="growl">
+			                      <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoParametros}" update="growl scriptParametros" />
+			            </p:commandButton>
+			          </p:column>
+			        </p:row>
+			        <p:row>
+			             <p:column styleClass="noPadding-left">
+			               <p:commandButton id="scriptRetorno" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionFormulario.script(TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO.name(), dialogDefinicionVersionFormulario.data.scriptRetorno)}" value="#{msg['script.SCRIPT_POSTGUARDAR_FORMULARIO.titulo']}"
+			              				styleClass="#{viewDefinicionVersion.getColorScript(dialogDefinicionVersionFormulario.data.scriptRetorno)}"
+			             				process="@this" update="growl">
+			              <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogoRetorno}" update="growl scriptRetorno" />
+			            </p:commandButton>
+			          </p:column>
+			        </p:row>
 	      	</p:panelGrid>
 
 	        <p:outputLabel value="#{msg['dialogDefinicionVersionFormulario.disenyoformulario']}" />
