@@ -106,7 +106,7 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 	
 	/** Ayuda. */
     public void ayuda() {
-        UtilJSF.openHelp("propiedadConfiguracionDialog");
+        UtilJSF.openHelp("propiedadesConfiguracionDialog");
     }
 
 }
