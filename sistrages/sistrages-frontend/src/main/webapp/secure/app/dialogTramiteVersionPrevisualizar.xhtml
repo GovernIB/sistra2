@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeIdioma" var="TypeIdioma" />
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogTramiteVersionPrevisualizar.header']}"/></title>
+</h:head>
+
+<h:body>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteVersionPrevisualizar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogTramiteVersionPrevisualizar.id}"/>
+		<f:viewAction action="#{dialogTramiteVersionPrevisualizar.init}" />
+	</f:metadata>
+
+	<h:form id="dialogTramite" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w15, w75, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
+
+					<p:outputLabel   for="idioma" value="#{msg['dialogTramiteVersionPrevisualizar.idioma']}" />
+                	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}" required="true">
+						<f:selectItems value="#{dialogTramiteVersionPrevisualizar.idiomas}" var="tipo" itemLabel="#{msg['' += tipo]}" itemValue="#{tipo.toString()}" />
+					</p:selectOneMenu >
+					<p:outputLabel   value="" />
+
+					<p:outputLabel for="procedimiento" value="#{msg['dialogTramiteVersionPrevisualizar.procedimiento']}" />
+                	<p:inputText   id="procedimiento"  value="#{dialogTramiteVersionPrevisualizar.procedimiento}" required="true" size="30"  />
+					<p:outputLabel   value=""  />
+
+					<p:outputLabel   value="#{msg['dialogTramiteVersionPrevisualizar.parametros']}" />
+                	<p:column>
+
+							<!-- Data table -->
+							<p:dataTable  id="datalistValores"
+										 var="td" emptyMessage="#{msg['error.emptyRows']}"
+										 value="#{dialogTramiteVersionPrevisualizar.parametros}"
+										 scrollable="true"
+										 scrollHeight="140"
+										 paginator="false"
+										 selectionMode="single"
+										 selection="#{dialogTramiteVersionPrevisualizar.valorSeleccionado}"
+										 rowKey="#{td.codigo}"
+										 dblClickSelect="true">
+
+								<!-- Necesario para actualizar en controlador la fila seleccionada -->
+								<p:ajax event="rowSelect" global="false" />
+								<p:ajax event="rowUnselect" />
+
+								<!-- Columnas -->
+								<p:column headerText="#{msg['dialogTramiteVersionPrevisualizar.headerParametros.codigo']}" class="ui-panelgrid-cell">
+									<h:outputText value="#{td.codigo}" />
+							    </p:column>
+
+							    <p:column headerText="#{msg['dialogTramiteVersionPrevisualizar.headerParametros.valor']}" class="ui-panelgrid-cell">
+							        <h:outputText value="#{td.valor}" />
+							    </p:column>
+				 			</p:dataTable>
+						</p:column>
+						<p:column>
+								<p>
+									<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogTramiteVersionPrevisualizar.nuevoValor()}" process="@this" update="growlDialog"  >
+		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores"/>
+		        					</p:commandButton>
+		        				</p>
+		        				<p>
+		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogTramiteVersionPrevisualizar.editarValor()}" process="@this" update="growlDialog"  >
+		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores"/>
+		        					</p:commandButton>
+		        				</p>
+							    <p>
+							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogTramiteVersionPrevisualizar.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
+							    </p>
+
+						</p:column>
+
+				</h:panelGrid>
+
+				<h:panelGroup id="popup">
+			        <ui:fragment rendered="#{not empty dialogTramiteVersionPrevisualizar.url}">
+			            <script>window.open('#{dialogTramiteVersionPrevisualizar.url}');</script>
+			        </ui:fragment>
+			    </h:panelGroup>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this" rendered="#{dialogTramiteVersionPrevisualizar.alta or dialogTramiteVersionPrevisualizar.edicion}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

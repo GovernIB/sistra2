@@ -25,7 +25,7 @@
 		<f:viewAction action="#{dialogTramiteImportar.init}" />
 	</f:metadata>
 
-	<h:form id="formTramite" styleClass="margin-top-10" enctype="multipart/form-data">
+	<h:form id="formTramite" styleClass="margin-top-10" enctype="multipart/form-data"  style="overflow-y: auto;height: 540">
 
 			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar"	life="2000" sticky="false" />
 
@@ -34,7 +34,7 @@
 					update="formTramite growlDialogImportar panelUpload panelInfo botonImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
 			</p:outputPanel>
 
-			<p:outputPanel id="panelInfo"  rendered="#{dialogTramiteImportar.mostrarPanelInfo}">
+			<p:outputPanel id="panelInfo" rendered="#{dialogTramiteImportar.mostrarPanelInfo}" >
 
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="imporTramitColumnaVT,,,," columns = "5" cellpadding = "5" cellspacing = "0"  width="100%">
 
@@ -66,26 +66,52 @@
 								</p:commandButton>
 						</p:column>
 
-						<p:outputLabel id="tramiteIcon" value="" >
-								<i class="#{dialogTramiteImportar.filaTramite.resultado.icon}" style="#{dialogTramiteImportar.filaTramite.resultado.css}" />
-						</p:outputLabel>
-
-						<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersion']}:" style="text-align:left; padding-right:3px;padding-left:13px;font-weight:bold" />
-						<p:outputLabel value="#{dialogTramiteImportar.tramiteVersion.numeroVersion} (release #{dialogTramiteImportar.tramiteVersion.release})" />
-						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramiteVersion.estado]}" />
-						<p:column>
-								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramiteVersion}" actionListener="#{dialogTramiteImportar.checkTramiteVersion()}" style="margin-left:5px" >
-									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramiteVersion}" update="tramiteVersionIcon"/>
-								</p:commandButton>
-						</p:column>
-						<p:outputLabel id="tramiteVersionIcon" value="" >
-								<i class="#{dialogTramiteImportar.filaTramiteVersion.resultado.icon}" style="#{dialogTramiteImportar.filaTramiteVersion.resultado.css}" />
-						</p:outputLabel>
 
 				</h:panelGrid>
 
 				<br />
 				<p:outputLabel value="#{msg['dialogTramiteImportar.headerElementosComunes']}" style="margin-left:5px;margin-top:30px;text-decoration: underline;font-weight: bold" />
+				<br />
+				<br />
+				<p:outputLabel value="#{msg['dialogTramiteImportar.headerTramiteRegistro']}" style="padding-left:30px;text-decoration: underline;font-weight: bold;margin-top:5px;" rendered="#{dialogTramiteImportar.mostrarRegistro}"  />
+				<br />
+				<br />
+				<h:dataTable value="#{dialogTramiteImportar.pasosRegistro}" columnClasses=",,,w50," id="datatableTVRegistro" headerClass="grid-left" var="fila" width="90%" style="margin-left:33px; margin-top:5px;padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status" rendered="#{dialogTramiteImportar.mostrarRegistro}"  >
+
+					<h:column>
+						<f:facet name = "header">
+						 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionRelease']}:" style="font-weight: bold" />
+						</f:facet>
+						<p:outputLabel value="#{dialogTramiteImportar.tramiteVersion.numeroVersion} (release #{dialogTramiteImportar.tramiteVersion.release})" />
+					</h:column>
+
+					<h:column>
+						<p:outputLabel value=" " />
+					</h:column>
+
+
+					<h:column>
+						<f:facet name = "header">
+						 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionEstado']}" style="font-weight: bold" />
+						 </f:facet>
+						 <p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramiteVersion.estado]}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name = "header">
+						 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerAccion']}" style="font-weight: bold" />
+						 </f:facet>
+						<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramiteVersion}" actionListener="#{dialogTramiteImportar.checkTramiteVersion()}" style="margin-left:5px" >
+							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramiteVersion}" update="tramiteVersionIcon"/>
+						</p:commandButton>
+					</h:column>
+
+					<h:column>
+						<p:outputLabel id="tramiteVersionIcon" value="" >
+							<i class="#{dialogTramiteImportar.filaTramiteVersion.resultado.icon}" style="#{dialogTramiteImportar.filaTramiteVersion.resultado.css}" />
+						</p:outputLabel>
+					</h:column>
+				</h:dataTable>
 				<br />
 				<br />
 				<p:outputLabel value="#{msg['dialogTramiteImportar.dominios']}" rendered="#{!empty dialogTramiteImportar.filasDominios}"  style="padding-left:30px;text-decoration: underline;font-weight: bold" />

@@ -34,6 +34,8 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
@@ -165,6 +167,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	private boolean mostrarBotonTramiteVersion = false;
 	/** Mostrar botones formateadores. **/
 	private Integer posicionDominio;
+	/** Mostrar registro. ***/
+	private boolean mostrarRegistro;
+	/** Pasos de registro. **/
+	private List<TramitePaso> pasosRegistro = new ArrayList<>();
 
 	/**
 	 * Inicialización.
@@ -346,9 +352,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		// Paso 3.2. Tramite.
-		if (tramiteActual == null)
-
-		{
+		if (tramiteActual == null) {
 
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
 					TypeImportarResultado.INFO, tramite, tramiteActual);
@@ -380,6 +384,18 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
 					TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
 
+		}
+
+		// Paso 3.3.1 Tramite Version tiene un paso registro
+		mostrarRegistro = false;
+		if (tramiteVersion != null && tramiteVersion.getListaPasos() != null) {
+			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
+				if (paso instanceof TramitePasoRegistrar) {
+					mostrarRegistro = true;
+					pasosRegistro.add(paso);
+					break;
+				}
+			}
 		}
 
 		// Paso 3.4. Dominio.
@@ -1138,6 +1154,36 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public void setMostrarBotonTramiteVersion(final boolean mostrarBotonTramiteVersion) {
 		this.mostrarBotonTramiteVersion = mostrarBotonTramiteVersion;
+	}
+
+	/**
+	 * @return the mostrarRegistro
+	 */
+	public boolean isMostrarRegistro() {
+		return mostrarRegistro;
+	}
+
+	/**
+	 * @param mostrarRegistro
+	 *            the mostrarRegistro to set
+	 */
+	public void setMostrarRegistro(final boolean mostrarRegistro) {
+		this.mostrarRegistro = mostrarRegistro;
+	}
+
+	/**
+	 * @return the pasosRegistro
+	 */
+	public List<TramitePaso> getPasosRegistro() {
+		return pasosRegistro;
+	}
+
+	/**
+	 * @param pasosRegistro
+	 *            the pasosRegistro to set
+	 */
+	public void setPasosRegistro(final List<TramitePaso> pasosRegistro) {
+		this.pasosRegistro = pasosRegistro;
 	}
 
 }

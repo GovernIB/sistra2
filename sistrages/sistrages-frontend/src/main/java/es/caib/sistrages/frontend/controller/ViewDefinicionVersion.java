@@ -18,11 +18,18 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuModel;
 
+import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
+import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
+import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
+import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
@@ -38,10 +45,12 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeExtension;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
+import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.ScriptService;
@@ -90,6 +99,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Dominio service. */
 	@Inject
 	private DominioService dominioService;
+
+	/** Componente service. */
+	@Inject
+	private ComponenteService componenteService;
 
 	/** id. */
 	private Long id;
@@ -152,6 +165,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	/** Literal error fila no seleccionada. **/
 	private static final String LITERAL_ERROR_NOSELECCIONADOFILA = "error.noseleccionadofila";
+
+	/** Texto tipo de asunto. **/
+	private String textoTipoAsunto;
+
+	/** Texto libro registro. **/
+	private String textoLibroRegistro;
+
+	/** Texto oficina registro. **/
+	private String textoOficinaRegistro;
 
 	/** Permite editar. **/
 	boolean permiteEditar = false;
@@ -355,9 +377,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre un di&aacute;logo para previsualizar tramite.
+	 */
+	public void previsualizar() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
+
+		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750, 400);
+	}
+
+	/**
 	 * Vuelve a recuperar los datos.
 	 */
 	private void recuperarDatos() {
+
 		/* recuperamos los datos */
 		tramiteVersion = tramiteService.getTramiteVersion(id);
 		area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
@@ -374,6 +407,85 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		tramiteVersion.setListaDominios(dominiosId);
 		avisoEntidad = avisoEntidadService
 				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
+
+		preparamosRegistro();
+	}
+
+	/**
+	 * Método que se encarga de rellenar los datos de registro (libro, oficina y
+	 * tipo), porque los literales hay que guardarlos.
+	 */
+	private void preparamosRegistro() {
+
+		this.textoLibroRegistro = "";
+		this.textoOficinaRegistro = "";
+		this.textoTipoAsunto = "";
+
+		if (tramiteVersion.getListaPasos() != null) {
+
+			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
+
+				if (paso instanceof TramitePasoRegistrar) {
+					final TramitePasoRegistrar pasoRegistrar = (TramitePasoRegistrar) paso;
+					final IRegistroPlugin iplugin = (IRegistroPlugin) componenteService
+							.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
+					final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+					try {
+
+						// Buscamos la oficina de registro
+						if (pasoRegistrar.getCodigoOficinaRegistro() != null
+								&& !pasoRegistrar.getCodigoOficinaRegistro().isEmpty()) {
+
+							final List<OficinaRegistro> oficinas = iplugin
+									.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
+
+							for (final OficinaRegistro oficina : oficinas) {
+								if (pasoRegistrar.getCodigoOficinaRegistro().equals(oficina.getCodigo())) {
+									this.textoOficinaRegistro = oficina.getNombre();
+
+									// Buscamos el libro
+									if (pasoRegistrar.getCodigoLibroRegistro() != null
+											&& !pasoRegistrar.getCodigoLibroRegistro().isEmpty()) {
+										final List<LibroOficina> libros = iplugin.obtenerLibrosOficina(
+												entidad.getCodigoDIR3(), oficina.getCodigo(),
+												TypeRegistro.REGISTRO_ENTRADA);
+										for (final LibroOficina libro : libros) {
+											if (libro.getCodigo().equals(pasoRegistrar.getCodigoLibroRegistro())) {
+												this.textoLibroRegistro = libro.getNombre();
+												break;
+											}
+										}
+									}
+									break;
+								}
+							}
+
+						}
+
+						// Buscamos el tipo
+						if (pasoRegistrar.getCodigoTipoAsunto() != null
+								&& !pasoRegistrar.getCodigoTipoAsunto().isEmpty()) {
+							final List<TipoAsunto> tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
+							for (final TipoAsunto tipo : tipos) {
+								if (pasoRegistrar.getCodigoTipoAsunto().equals(tipo.getCodigo())) {
+									this.textoTipoAsunto = tipo.getNombre();
+									break;
+								}
+							}
+
+						}
+
+					} catch (final RegistroPluginException e) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+								UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
+					}
+
+					break;
+
+				}
+			}
+
+		}
 	}
 
 	/**
@@ -1723,5 +1835,50 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setTramite(final Tramite tramite) {
 		this.tramite = tramite;
+	}
+
+	/**
+	 * @return the textoTipoAsunto
+	 */
+	public String getTextoTipoAsunto() {
+		return textoTipoAsunto;
+	}
+
+	/**
+	 * @param textoTipoAsunto
+	 *            the textoTipoAsunto to set
+	 */
+	public void setTextoTipoAsunto(final String textoTipoAsunto) {
+		this.textoTipoAsunto = textoTipoAsunto;
+	}
+
+	/**
+	 * @return the textoLibroRegistro
+	 */
+	public String getTextoLibroRegistro() {
+		return textoLibroRegistro;
+	}
+
+	/**
+	 * @param textoLibroRegistro
+	 *            the textoLibroRegistro to set
+	 */
+	public void setTextoLibroRegistro(final String textoLibroRegistro) {
+		this.textoLibroRegistro = textoLibroRegistro;
+	}
+
+	/**
+	 * @return the textoOficinaRegistro
+	 */
+	public String getTextoOficinaRegistro() {
+		return textoOficinaRegistro;
+	}
+
+	/**
+	 * @param textoOficinaRegistro
+	 *            the textoOficinaRegistro to set
+	 */
+	public void setTextoOficinaRegistro(final String textoOficinaRegistro) {
+		this.textoOficinaRegistro = textoOficinaRegistro;
 	}
 }

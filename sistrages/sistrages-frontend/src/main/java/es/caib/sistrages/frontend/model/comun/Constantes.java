@@ -49,6 +49,12 @@ public final class Constantes {
 	/** Constante dominio. **/
 	public static final String CLAVE_MOCHILA_DOMINIO = "DOMINIO";
 
+	/** Constante procedimiento. **/
+	public static final String CLAVE_MOCHILA_PROCEDIMIENTO = "PROCEDIMIENTO";
+
+	/** Constante procedimiento. **/
+	public static final String CLAVE_MOCHILA_CATEGORIA = "CATEGORIA";
+
 	/** Constante script. **/
 	public static final String CLAVE_MOCHILA_SCRIPT = "SCRIPT";
 
