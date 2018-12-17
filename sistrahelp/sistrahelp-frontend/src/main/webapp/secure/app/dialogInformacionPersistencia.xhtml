@@ -86,7 +86,7 @@
 					                          selectionMode="single" rowKey="#{dt.codigo}">
 
 									<!-- Columnas -->
-								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.paso']}" styleClass="grid-center ui-panelgrid-cell" width="20%">
+								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.paso']}" styleClass="grid-center ui-panelgrid-cell" width="15%">
 								        <h:outputText value="#{dt.identificadorPaso}" />
 								    </p:column>
 
@@ -98,11 +98,11 @@
 								        <h:outputText value="#{msg['typeDocumentoPersistencia.'+=dt.tipo]}" />
 								    </p:column>
 
-								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.fichero']}" styleClass="grid-center ui-panelgrid-cell" width="26%">
+								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.fichero']}" styleClass="grid-center ui-panelgrid-cell" width="27%">
 								        <h:outputText value="#{dt.nombre}" />
 								    </p:column>
 
-								     <p:column  styleClass="grid-center ui-panelgrid-cell" width="4%">
+								     <p:column  styleClass="grid-center ui-panelgrid-cell" width="8%">
 								    	<p:commandButton icon="fa fa-download" ajax="false">
 								    		<p:fileDownload value="#{dialogInformacionPersistencia.descargarFichero(dt)}" />
 								    	</p:commandButton>
