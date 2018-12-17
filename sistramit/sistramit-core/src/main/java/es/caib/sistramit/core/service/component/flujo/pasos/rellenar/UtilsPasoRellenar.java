@@ -28,95 +28,85 @@ import es.caib.sistramit.core.service.util.UtilsSTG;
  */
 public final class UtilsPasoRellenar {
 
-    /**
-     * Constructor.
-     */
-    private UtilsPasoRellenar() {
-        super();
-    }
+	/**
+	 * Constructor.
+	 */
+	private UtilsPasoRellenar() {
+		super();
+	}
 
-    /**
-     * Obtiene documentos completados paso.
-     *
-     * @param pDipa
-     *            Datos internos paso
-     * @param pDpp
-     *            Datos persistencia paso
-     * @param pDefinicionTramite
-     *            Definicion tramite
-     * @param pIdFormularioHasta
-     *            Id formulario hasta que busca (si null todos los completados)
-     *
-     * @return lista documentos completados
-     */
-    public static List<DatosDocumento> obtenerDocumentosCompletados(
-            final DatosInternosPasoRellenar pDipa,
-            final DatosPersistenciaPaso pDpp,
-            final DefinicionTramiteSTG pDefinicionTramite,
-            final String pIdFormularioHasta) {
-        // Busca definicion paso
-        final RPasoTramitacionRellenar pasoDef = (RPasoTramitacionRellenar) UtilsSTG
-                .devuelveDefinicionPaso(pDipa.getIdPaso(), pDefinicionTramite);
-        // Buscamos los formularios completados.
-        final List<DatosDocumento> res = new ArrayList<>();
-        for (final Formulario f : ((DetallePasoRellenar) pDipa.getDetallePaso())
-                .getFormularios()) {
+	/**
+	 * Obtiene documentos completados paso.
+	 *
+	 * @param pDipa
+	 *            Datos internos paso
+	 * @param pDpp
+	 *            Datos persistencia paso
+	 * @param pDefinicionTramite
+	 *            Definicion tramite
+	 * @param pIdFormularioHasta
+	 *            Id formulario hasta que busca (si null todos los completados)
+	 *
+	 * @return lista documentos completados
+	 */
+	public static List<DatosDocumento> obtenerDocumentosCompletados(final DatosInternosPasoRellenar pDipa,
+			final DatosPersistenciaPaso pDpp, final DefinicionTramiteSTG pDefinicionTramite,
+			final String pIdFormularioHasta) {
+		// Busca definicion paso
+		final RPasoTramitacionRellenar pasoDef = (RPasoTramitacionRellenar) UtilsSTG
+				.devuelveDefinicionPaso(pDipa.getIdPaso(), pDefinicionTramite);
+		// Buscamos los formularios completados.
+		final List<DatosDocumento> res = new ArrayList<>();
+		for (final Formulario f : ((DetallePasoRellenar) pDipa.getDetallePaso()).getFormularios()) {
 
-            if (pIdFormularioHasta != null
-                    && f.getId().equals(pIdFormularioHasta)) {
-                break;
-            }
+			if (pIdFormularioHasta != null && f.getId().equals(pIdFormularioHasta)) {
+				break;
+			}
 
-            if (f.getRellenado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
-                final RFormularioTramite formularioDef = UtilsSTG
-                        .devuelveDefinicionFormulario(pasoDef, f.getId());
-                if (formularioDef == null) {
-                    throw new ErrorConfiguracionException(
-                            "No existe formulario " + f.getId()
-                                    + " en la definicion del paso "
-                                    + pasoDef.getIdentificador());
-                }
+			if (f.getRellenado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
+				final RFormularioTramite formularioDef = UtilsSTG.devuelveDefinicionFormulario(pasoDef, f.getId());
+				if (formularioDef == null) {
+					throw new ErrorConfiguracionException("No existe formulario " + f.getId()
+							+ " en la definicion del paso " + pasoDef.getIdentificador());
+				}
 
-                // TODO Ver datos firmantes
+				// TODO Ver datos firmantes
 
-                final DatosDocumentoFormulario ddf = crearDatosDocumentoFormulario(
-                        pDpp, f, pDipa.getValoresFormulario(f.getId()));
-                res.add(ddf);
-            }
-        }
-        return res;
-    }
+				final DatosDocumentoFormulario ddf = crearDatosDocumentoFormulario(pDpp, f,
+						pDipa.getValoresFormulario(f.getId()));
+				res.add(ddf);
+			}
+		}
+		return res;
+	}
 
-    /**
-     * Crea datos documento accesibles desde los otros pasos.
-     *
-     * @param dpp
-     *            Datos persistencia paso
-     * @param detalleFormulario
-     *            Detalle formulario
-     * @param valoresFormulario
-     *            Valores formulario
-     * @return DatosDocumentoFormulario
-     */
-    public static DatosDocumentoFormulario crearDatosDocumentoFormulario(
-            final DatosPersistenciaPaso dpp, final Formulario detalleFormulario,
-            final ValoresFormulario valoresFormulario) {
-        final DocumentoPasoPersistencia docPers = dpp
-                .getDocumentoPasoPersistencia(detalleFormulario.getId(),
-                        ConstantesNumero.N1);
-        final DatosDocumentoFormulario ddf = DatosDocumentoFormulario
-                .createNewDatosDocumentoFormulario();
-        ddf.setId(detalleFormulario.getId());
-        ddf.setFormularioCaptura(false);
-        ddf.setTitulo(detalleFormulario.getTitulo());
-        ddf.setFichero(new ReferenciaFichero(docPers.getFichero().getId(),
-                docPers.getFichero().getClave()));
-        if (docPers.getFormularioPdf() != null) {
-            ddf.setPdf(new ReferenciaFichero(docPers.getFormularioPdf().getId(),
-                    docPers.getFormularioPdf().getClave()));
-        }
-        ddf.setCampos(valoresFormulario);
-        return ddf;
-    }
+	/**
+	 * Crea datos documento accesibles desde los otros pasos.
+	 *
+	 * @param dpp
+	 *            Datos persistencia paso
+	 * @param detalleFormulario
+	 *            Detalle formulario
+	 * @param valoresFormulario
+	 *            Valores formulario
+	 * @return DatosDocumentoFormulario
+	 */
+	public static DatosDocumentoFormulario crearDatosDocumentoFormulario(final DatosPersistenciaPaso dpp,
+			final Formulario detalleFormulario, final ValoresFormulario valoresFormulario) {
+		final DocumentoPasoPersistencia docPers = dpp.getDocumentoPasoPersistencia(detalleFormulario.getId(),
+				ConstantesNumero.N1);
+		final DatosDocumentoFormulario ddf = DatosDocumentoFormulario.createNewDatosDocumentoFormulario();
+		ddf.setIdPaso(dpp.getId());
+		ddf.setId(detalleFormulario.getId());
+		ddf.setFormularioCaptura(false);
+		ddf.setTitulo(detalleFormulario.getTitulo());
+		ddf.setFichero(new ReferenciaFichero(docPers.getFichero().getId(), docPers.getFichero().getClave()));
+		if (docPers.getFormularioPdf() != null) {
+			ddf.setPdf(
+					new ReferenciaFichero(docPers.getFormularioPdf().getId(), docPers.getFormularioPdf().getClave()));
+		}
+		ddf.setCampos(valoresFormulario);
+		return ddf;
+	}
 
 }

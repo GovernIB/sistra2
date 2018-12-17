@@ -37,185 +37,162 @@ import es.caib.sistramit.core.service.util.UtilsSTG;
 @Transactional
 public class SecurityServiceImpl implements SecurityService {
 
-    /** Acceso configuración. */
-    @Autowired
-    private ConfiguracionComponent configuracionComponent;
+	/** Acceso configuración. */
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
 
-    /** Acceso Componente Autenticacion. */
-    @Autowired
-    private AutenticacionComponent autenticacionComponent;
+	/** Acceso Componente Autenticacion. */
+	@Autowired
+	private AutenticacionComponent autenticacionComponent;
 
-    /** Acceso Catalogo Procedimientos. */
-    @Autowired
-    private CatalogoProcedimientosComponent catalogoProcedimientosComponent;
+	/** Acceso Catalogo Procedimientos. */
+	@Autowired
+	private CatalogoProcedimientosComponent catalogoProcedimientosComponent;
 
-    /** DAO Flujo tramite. */
-    @Autowired
-    private FlujoTramiteDao flujoTramiteDao;
+	/** DAO Flujo tramite. */
+	@Autowired
+	private FlujoTramiteDao flujoTramiteDao;
 
-    /** DAO Pago externo. */
-    @Autowired
-    private PagoExternoDao pagoExternoDao;
+	/** DAO Pago externo. */
+	@Autowired
+	private PagoExternoDao pagoExternoDao;
 
-    @Override
-    @NegocioInterceptor
-    public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite,
-            final int versionTramite, final String idTramiteCatalogo,
-            final String idioma, final String urlInicioTramite) {
-        return generarInfoLoginTramite(codigoTramite, versionTramite,
-                idTramiteCatalogo, idioma);
-    }
+	@Override
+	@NegocioInterceptor
+	public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite, final int versionTramite,
+			final String idTramiteCatalogo, final String idioma, final String urlInicioTramite) {
+		return generarInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo, idioma);
+	}
 
-    @Override
-    @NegocioInterceptor
-    public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(
-            String idSesionTramitacion) {
-        final DatosPersistenciaTramite dpt = flujoTramiteDao
-                .obtenerTramitePersistencia(idSesionTramitacion);
-        final InfoLoginTramite infoLogin = generarInfoLoginTramite(
-                dpt.getIdTramite(), dpt.getVersionTramite(),
-                dpt.getIdTramiteCP(), dpt.getIdioma());
-        infoLogin.setLoginAnonimoAuto(true);
-        return infoLogin;
-    }
+	@Override
+	@NegocioInterceptor
+	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(String idSesionTramitacion) {
+		final DatosPersistenciaTramite dpt = flujoTramiteDao.obtenerTramitePersistencia(idSesionTramitacion);
+		final InfoLoginTramite infoLogin = generarInfoLoginTramite(dpt.getIdTramite(), dpt.getVersionTramite(),
+				dpt.getIdTramiteCP(), dpt.getIdioma());
+		infoLogin.setLoginAnonimoAuto(true);
+		return infoLogin;
+	}
 
-    @Override
-    @NegocioInterceptor
-    public String iniciarSesionAutenticacion(final String idEntidad,
-            final String lang, List<TypeAutenticacion> authList, String qaa,
-            final String urlCallback, final boolean debug) {
-        final String urlAutenticacion = autenticacionComponent
-                .iniciarSesionAutenticacion(idEntidad, lang, authList, qaa,
-                        urlCallback, debug);
-        return urlAutenticacion;
-    }
+	@Override
+	@NegocioInterceptor
+	public String iniciarSesionAutenticacion(final String idEntidad, final String lang,
+			List<TypeAutenticacion> authList, String qaa, final String urlCallback, final String urlCallbackError,
+			final boolean debug) {
+		final String urlAutenticacion = autenticacionComponent.iniciarSesionAutenticacion(idEntidad, lang, authList,
+				qaa, urlCallback, urlCallbackError, debug);
+		return urlAutenticacion;
+	}
 
-    @Override
-    @NegocioInterceptor
-    public String iniciarLogoutSesion(final String idEntidad, final String lang,
-            final String urlCallback, final boolean debug) {
-        final String urlAutenticacion = autenticacionComponent
-                .iniciarSesionLogout(idEntidad, lang, urlCallback, debug);
-        return urlAutenticacion;
-    }
+	@Override
+	@NegocioInterceptor
+	public String iniciarLogoutSesion(final String idEntidad, final String lang, final String urlCallback,
+			final boolean debug) {
+		final String urlAutenticacion = autenticacionComponent.iniciarSesionLogout(idEntidad, lang, urlCallback, debug);
+		return urlAutenticacion;
+	}
 
-    @Override
-    @NegocioInterceptor
-    public UsuarioAutenticadoInfo validarTicketAutenticacion(
-            final SesionInfo sesionInfo, final String ticket) {
+	@Override
+	@NegocioInterceptor
+	public UsuarioAutenticadoInfo validarTicketAutenticacion(final SesionInfo sesionInfo, final String ticket) {
 
-        final DatosAutenticacionUsuario usuario = autenticacionComponent
-                .validarTicketAutenticacion(ticket);
+		final DatosAutenticacionUsuario usuario = autenticacionComponent.validarTicketAutenticacion(ticket);
 
-        final UsuarioAutenticadoInfo u = new UsuarioAutenticadoInfo();
-        if (usuario
-                .getMetodoAutenticacion() == TypeMetodoAutenticacion.ANONIMO) {
-            u.setUsername(ConstantesSeguridad.ANONIMO_USER);
-        } else {
-            u.setUsername(usuario.getNif());
-        }
-        u.setNif(usuario.getNif());
-        u.setNombre(usuario.getNombre());
-        u.setApellido1(usuario.getApellido1());
-        u.setApellido2(usuario.getApellido2());
-        u.setEmail(usuario.getEmail());
-        u.setAutenticacion(usuario.getAutenticacion());
-        u.setMetodoAutenticacion(usuario.getMetodoAutenticacion());
-        u.setSesionInfo(sesionInfo);
+		final UsuarioAutenticadoInfo u = new UsuarioAutenticadoInfo();
+		if (usuario.getMetodoAutenticacion() == TypeMetodoAutenticacion.ANONIMO) {
+			u.setUsername(ConstantesSeguridad.ANONIMO_USER);
+		} else {
+			u.setUsername(usuario.getNif());
+		}
+		u.setNif(usuario.getNif());
+		u.setNombre(usuario.getNombre());
+		u.setApellido1(usuario.getApellido1());
+		u.setApellido2(usuario.getApellido2());
+		u.setEmail(usuario.getEmail());
+		u.setAutenticacion(usuario.getAutenticacion());
+		u.setMetodoAutenticacion(usuario.getMetodoAutenticacion());
+		u.setSesionInfo(sesionInfo);
 
-        return u;
+		return u;
 
-    }
+	}
 
-    @Override
-    @NegocioInterceptor
-    public UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo) {
-        final UsuarioAutenticadoInfo u = new UsuarioAutenticadoInfo();
-        u.setUsername(ConstantesSeguridad.ANONIMO_USER);
-        u.setAutenticacion(TypeAutenticacion.ANONIMO);
-        u.setSesionInfo(sesionInfo);
-        return u;
-    }
+	@Override
+	@NegocioInterceptor
+	public UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo) {
+		final UsuarioAutenticadoInfo u = new UsuarioAutenticadoInfo();
+		u.setUsername(ConstantesSeguridad.ANONIMO_USER);
+		u.setAutenticacion(TypeAutenticacion.ANONIMO);
+		u.setSesionInfo(sesionInfo);
+		return u;
+	}
 
-    @Override
-    @NegocioInterceptor
-    public UsuarioAutenticadoInfo validarTicketGestorFormularios(
-            final SesionInfo sesionInfo, final String ticket) {
-        // TODO PENDIENTE
-        throw new ErrorNoControladoException("Pendiente implementar");
-    }
+	@Override
+	@NegocioInterceptor
+	public UsuarioAutenticadoInfo validarTicketGestorFormularios(final SesionInfo sesionInfo, final String ticket) {
+		// TODO PENDIENTE
+		throw new ErrorNoControladoException("Pendiente implementar");
+	}
 
-    @Override
-    @NegocioInterceptor
-    public UsuarioAutenticadoInfo validarTicketPasarelaPagos(
-            final SesionInfo sesionInfo, final String ticket) {
-        final RetornoPago datosTicket = pagoExternoDao
-                .consumirTicketPago(ticket);
-        return datosTicket.getUsuario();
-    }
+	@Override
+	@NegocioInterceptor
+	public UsuarioAutenticadoInfo validarTicketPasarelaPagos(final SesionInfo sesionInfo, final String ticket) {
+		final RetornoPago datosTicket = pagoExternoDao.consumirTicketPago(ticket);
+		return datosTicket.getUsuario();
+	}
 
-    @Override
-    public RetornoPago obtenerTicketPago(String ticket) {
-        return pagoExternoDao.obtenerTicketPago(ticket);
-    }
+	@Override
+	public RetornoPago obtenerTicketPago(String ticket) {
+		return pagoExternoDao.obtenerTicketPago(ticket);
+	}
 
-    @Override
-    @NegocioInterceptor
-    public UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(
-            final SesionInfo sesionInfo, final String ticket) {
-        // TODO PENDIENTE
-        throw new ErrorNoControladoException("Pendiente implementar");
-    }
+	@Override
+	@NegocioInterceptor
+	public UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(final SesionInfo sesionInfo, final String ticket) {
+		// TODO PENDIENTE
+		throw new ErrorNoControladoException("Pendiente implementar");
+	}
 
-    // ------------------------------------------------------------------------
-    // FUNCIONES PRIVADAS
-    // ------------------------------------------------------------------------
-    private InfoLoginTramite generarInfoLoginTramite(final String codigoTramite,
-            final int versionTramite, final String idTramiteCatalogo,
-            final String idioma) {
-        final DefinicionTramiteSTG defTramite = configuracionComponent
-                .recuperarDefinicionTramite(codigoTramite, versionTramite,
-                        idioma);
-        final RConfiguracionEntidad entidad = configuracionComponent
-                .obtenerConfiguracionEntidad(
-                        defTramite.getDefinicionVersion().getIdEntidad());
-        final RAvisosEntidad avisosEntidad = configuracionComponent
-                .obtenerAvisosEntidad(
-                        defTramite.getDefinicionVersion().getIdEntidad());
-        final DefinicionTramiteCP defTramiteCP = catalogoProcedimientosComponent
-                .obtenerDefinicionTramite(entidad.getIdentificador(),
-                        idTramiteCatalogo, idioma);
+	// ------------------------------------------------------------------------
+	// FUNCIONES PRIVADAS
+	// ------------------------------------------------------------------------
+	private InfoLoginTramite generarInfoLoginTramite(final String codigoTramite, final int versionTramite,
+			final String idTramiteCatalogo, final String idioma) {
+		final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(codigoTramite,
+				versionTramite, idioma);
+		final RConfiguracionEntidad entidad = configuracionComponent
+				.obtenerConfiguracionEntidad(defTramite.getDefinicionVersion().getIdEntidad());
+		final RAvisosEntidad avisosEntidad = configuracionComponent
+				.obtenerAvisosEntidad(defTramite.getDefinicionVersion().getIdEntidad());
+		final DefinicionTramiteCP defTramiteCP = catalogoProcedimientosComponent
+				.obtenerDefinicionTramite(entidad.getIdentificador(), idTramiteCatalogo, idioma);
 
-        final InfoLoginTramite res = new InfoLoginTramite();
-        res.setIdioma(idioma);
-        res.setTitulo(defTramiteCP.getDescripcion());
+		final InfoLoginTramite res = new InfoLoginTramite();
+		res.setIdioma(idioma);
+		res.setTitulo(defTramiteCP.getDescripcion());
 
-        final List<TypeAutenticacion> niveles = new ArrayList<>();
-        if (defTramite.getDefinicionVersion().getPropiedades()
-                .isAutenticado()) {
-            niveles.add(TypeAutenticacion.AUTENTICADO);
-        }
-        if (defTramite.getDefinicionVersion().getPropiedades()
-                .isNoAutenticado()) {
-            niveles.add(TypeAutenticacion.ANONIMO);
-        }
-        res.setNiveles(niveles);
-        res.setQaa(String.valueOf(defTramite.getDefinicionVersion()
-                .getPropiedades().getNivelQAA()));
-        res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma,
-                configuracionComponent.obtenerUrlResources()));
+		final List<TypeAutenticacion> niveles = new ArrayList<>();
+		if (defTramite.getDefinicionVersion().getPropiedades().isAutenticado()) {
+			niveles.add(TypeAutenticacion.AUTENTICADO);
+		}
+		if (defTramite.getDefinicionVersion().getPropiedades().isNoAutenticado()) {
+			niveles.add(TypeAutenticacion.ANONIMO);
+		}
+		res.setNiveles(niveles);
+		res.setQaa(String.valueOf(defTramite.getDefinicionVersion().getPropiedades().getNivelQAA()));
+		res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma, configuracionComponent.obtenerUrlResources()));
 
-        final List<AvisoPlataforma> avisos = new ArrayList<>();
-        for (final RAviso a : avisosEntidad.getAvisos()) {
-            final AvisoPlataforma aviso = new AvisoPlataforma();
-            aviso.setMensaje(UtilsSTG.obtenerLiteral(a.getMensaje(), idioma));
-            aviso.setBloquearAcceso(a.isBloquear());
-            avisos.add(aviso);
-        }
-        res.setAvisos(avisos);
+		final List<AvisoPlataforma> avisos = new ArrayList<>();
+		for (final RAviso a : avisosEntidad.getAvisos()) {
+			final AvisoPlataforma aviso = new AvisoPlataforma();
+			aviso.setMensaje(UtilsSTG.obtenerLiteral(a.getMensaje(), idioma));
+			aviso.setBloquearAcceso(a.isBloquear());
+			avisos.add(aviso);
+		}
+		res.setAvisos(avisos);
 
-        res.setDebug(UtilsSTG.isDebugEnabled(defTramite));
-        return res;
-    }
+		res.setDebug(UtilsSTG.isDebugEnabled(defTramite));
+		return res;
+	}
 
 }

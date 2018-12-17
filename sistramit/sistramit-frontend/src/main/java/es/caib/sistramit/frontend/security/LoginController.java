@@ -49,451 +49,403 @@ import es.caib.sistramit.frontend.model.RespuestaJSON;
 @Controller
 public final class LoginController {
 
-    /** Log. */
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(LoginController.class);
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
-    /** Atributo constante LOGIN de LoginController. */
-    private static final String LOGIN = "login";
+	/** Atributo constante LOGIN de LoginController. */
+	private static final String LOGIN = "login";
 
-    /** Atributo constante IDIOMA de LoginController. */
-    private static final String IDIOMA = "idioma";
+	/** Atributo constante IDIOMA de LoginController. */
+	private static final String IDIOMA = "idioma";
 
-    /** Configuracion. */
-    @Autowired
-    private SystemService systemService;
+	/** Configuracion. */
+	@Autowired
+	private SystemService systemService;
 
-    /** Informacion de sesion de tramitacion. */
-    @Autowired
-    private SesionHttp sesionHttp;
+	/** Informacion de sesion de tramitacion. */
+	@Autowired
+	private SesionHttp sesionHttp;
 
-    /** Generacion errores. */
-    @Autowired
-    private Errores errores;
+	/** Generacion errores. */
+	@Autowired
+	private Errores errores;
 
-    /** Servicio de seguridad. */
-    @Autowired
-    private SecurityService securityService;
+	/** Servicio de seguridad. */
+	@Autowired
+	private SecurityService securityService;
 
-    /**
-     * Muestra pantalla de login según el punto de entrada.
-     *
-     * @param request
-     *            Request
-     * @param response
-     *            Response
-     * @return Login
-     */
-    @RequestMapping("/login.html")
-    public ModelAndView login(final HttpServletRequest request,
-            final HttpServletResponse response) {
+	/**
+	 * Muestra pantalla de login según el punto de entrada.
+	 *
+	 * @param request
+	 *            Request
+	 * @param response
+	 *            Response
+	 * @return Login
+	 */
+	@RequestMapping("/login.html")
+	public ModelAndView login(final HttpServletRequest request, final HttpServletResponse response) {
 
-        // Error login
-        if ("true".equals(request.getParameter("error"))) {
-            throw new ErrorFrontException("Error login");
-        }
+		// Error login
+		if ("true".equals(request.getParameter("error"))) {
+			throw new ErrorFrontException("Error login");
+		}
 
-        // Establecemos user agent en info sesion
-        final String userAgent = request.getHeader("User-Agent");
-        final String userAgentNormalized = UserAgentUtil
-                .serializeUserAgent(userAgent);
-        sesionHttp.setUserAgent(userAgentNormalized);
+		// Establecemos user agent en info sesion
+		final String userAgent = request.getHeader("User-Agent");
+		final String userAgentNormalized = UserAgentUtil.serializeUserAgent(userAgent);
+		sesionHttp.setUserAgent(userAgentNormalized);
 
-        // Obtenemos url original
-        final SavedRequest savedRequest = new HttpSessionRequestCache()
-                .getRequest(request, response);
-        if (savedRequest == null) {
-            throw new ErrorFrontException(
-                    "Punto de entrada a la aplicación no válido");
-        }
-        final String url = savedRequest.getRedirectUrl();
+		// Obtenemos url original
+		final SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
+		if (savedRequest == null) {
+			throw new ErrorFrontException("Punto de entrada a la aplicación no válido");
+		}
+		final String url = savedRequest.getRedirectUrl();
 
-        // Obtiene punto entrada
-        final String puntoEntrada = getPuntoEntrada(url);
+		// Obtiene punto entrada
+		final String puntoEntrada = getPuntoEntrada(url);
 
-        // Guardamos url original para poder redirigir clave
-        if (!ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN
-                .equals(puntoEntrada)) {
-            sesionHttp.setUrlInicio(url);
-        }
+		// Guardamos url original para poder redirigir clave
+		if (!ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN.equals(puntoEntrada)) {
+			sesionHttp.setUrlInicio(url);
+		}
 
-        // Establecemos idioma que viene en la saved request
-        final String idiomaSavedRequest = StringUtils
-                .defaultIfEmpty(getParamValue(savedRequest, IDIOMA), "es");
-        sanitizeIdioma(idiomaSavedRequest);
-        RequestContextUtils.getLocaleResolver(request).setLocale(request,
-                response, new Locale(idiomaSavedRequest));
-        sesionHttp.setIdioma(idiomaSavedRequest);
+		// Establecemos idioma que viene en la saved request
+		final String idiomaSavedRequest = StringUtils.defaultIfEmpty(getParamValue(savedRequest, IDIOMA), "es");
+		sanitizeIdioma(idiomaSavedRequest);
+		RequestContextUtils.getLocaleResolver(request).setLocale(request, response, new Locale(idiomaSavedRequest));
+		sesionHttp.setIdioma(idiomaSavedRequest);
 
-        // En función del punto de entrada realizamos login
-        ModelAndView login = null;
-        if (ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE
-                .equals(puntoEntrada)) {
-            // Inicio tramite: mostrar pagina login
-            login = autenticarFormLogin(savedRequest);
-        } else if (ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE
-                .equals(puntoEntrada)) {
-            // Si existe ticket carpeta autenticamos via ticket, sino
-            // autenticamos de forma anonima automaticamente
-            if (existeTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM)) {
-                login = autenticarTicket(savedRequest,
-                        ConstantesSeguridad.TICKET_USER_CARPETA,
-                        ConstantesSeguridad.TICKET_PARAM);
-            } else {
-                login = autenticarFormLoginPersistenteAnonimo(savedRequest);
-            }
-        } else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN
-                .equals(puntoEntrada)) {
-            login = autenticarTicket(savedRequest,
-                    ConstantesSeguridad.TICKET_USER_CLAVE,
-                    ConstantesSeguridad.TICKET_PARAM);
-        } else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO
-                .equals(puntoEntrada)) {
-            login = autenticarTicket(savedRequest,
-                    ConstantesSeguridad.TICKET_USER_GF,
-                    ConstantesSeguridad.TICKET_PARAM);
-        } else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO
-                .equals(puntoEntrada)) {
-            login = autenticarTicket(savedRequest,
-                    ConstantesSeguridad.TICKET_USER_PAGO,
-                    ConstantesSeguridad.TICKET_PARAM);
-        } else {
-            throw new ErrorFrontException(
-                    "Punto de entrada a la aplicación no válido: " + url);
-        }
+		// En función del punto de entrada realizamos login
+		ModelAndView login = null;
+		if (ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE.equals(puntoEntrada)) {
+			// Inicio tramite: mostrar pagina login
+			login = autenticarFormLogin(savedRequest);
+		} else if (ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE.equals(puntoEntrada)) {
+			// Si existe ticket carpeta autenticamos via ticket, sino
+			// autenticamos de forma anonima automaticamente
+			if (existeTicket(savedRequest, ConstantesSeguridad.TICKET_PARAM)) {
+				login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
+						ConstantesSeguridad.TICKET_PARAM);
+			} else {
+				login = autenticarFormLoginPersistenteAnonimo(savedRequest);
+			}
+		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN.equals(puntoEntrada)) {
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CLAVE,
+					ConstantesSeguridad.TICKET_PARAM);
+		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO.equals(puntoEntrada)) {
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_GF,
+					ConstantesSeguridad.TICKET_PARAM);
+		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO.equals(puntoEntrada)) {
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_PAGO,
+					ConstantesSeguridad.TICKET_PARAM);
+		} else {
+			throw new ErrorFrontException("Punto de entrada a la aplicación no válido: " + url);
+		}
 
-        // Metemos atributo en la session para que el filtro de autologout no
-        // cierre la sesion
-        request.getSession().setAttribute(
-                ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN,
-                ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN);
+		// Metemos atributo en la session para que el filtro de autologout no
+		// cierre la sesion
+		request.getSession().setAttribute(ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN,
+				ConstantesSeguridad.AUTOLOGOUT_FROMLOGIN);
 
-        // Redirigimos a vista para realizar el login
-        return login;
-    }
+		// Redirigimos a vista para realizar el login
+		return login;
+	}
 
-    /**
-     * Redirige a componente de autenticacion.
-     *
-     * @param metodosAutenticacion
-     *            metodos autenticacion (separados por ;)
-     * @return redirige a componente de autenticacion.
-     */
-    @RequestMapping("/redirigirAutenticacionLogin.html")
-    public ModelAndView redirigirAutenticacionLogin(
-            @RequestParam("entidad") String idEntidad,
-            @RequestParam("metodosAutenticacion") String metodosAutenticacion,
-            @RequestParam(name = "qaa", required = false) String qaa,
-            @RequestParam(name = "debug", required = false) boolean debug) {
-        String lang = sesionHttp.getIdioma();
-        if (lang == null) {
-            lang = "es";
-        }
+	/**
+	 * Redirige a componente de autenticacion.
+	 *
+	 * @param metodosAutenticacion
+	 *            metodos autenticacion (separados por ;)
+	 * @return redirige a componente de autenticacion.
+	 */
+	@RequestMapping("/redirigirAutenticacionLogin.html")
+	public ModelAndView redirigirAutenticacionLogin(@RequestParam("entidad") String idEntidad,
+			@RequestParam("metodosAutenticacion") String metodosAutenticacion,
+			@RequestParam(name = "qaa", required = false) String qaa,
+			@RequestParam(name = "debug", required = false) boolean debug) {
+		String lang = sesionHttp.getIdioma();
+		if (lang == null) {
+			lang = "es";
+		}
 
-        final List<TypeAutenticacion> authList = new ArrayList<>();
-        final String[] auths = metodosAutenticacion.split(";");
-        for (final String a : auths) {
-            authList.add(TypeAutenticacion.fromString(a));
-        }
+		final List<TypeAutenticacion> authList = new ArrayList<>();
+		final String[] auths = metodosAutenticacion.split(";");
+		for (final String a : auths) {
+			authList.add(TypeAutenticacion.fromString(a));
+		}
 
-        final String urlCallback = systemService.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.SISTRAMIT_URL)
-                + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN;
-        return new ModelAndView(
-                "redirect:" + securityService.iniciarSesionAutenticacion(
-                        idEntidad, lang, authList, qaa, urlCallback, debug));
-    }
+		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN;
+		final String urlCallbackError = sesionHttp.getUrlInicio();
+		return new ModelAndView("redirect:" + securityService.iniciarSesionAutenticacion(idEntidad, lang, authList, qaa,
+				urlCallback, urlCallbackError, debug));
+	}
 
-    /**
-     * Retorno de componente de autenticacion.
-     *
-     * @return retorno de componente de autenticación redirigiendo a url de
-     *         inicio.
-     */
-    @CrossOrigin
-    @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN)
-    public ModelAndView retornoAutenticacionLogin(
-            final HttpServletRequest request,
-            final HttpServletResponse response) {
-        try {
-            response.sendRedirect(sesionHttp.getUrlInicio());
-        } catch (final IOException e) {
-            throw new LoginException(
-                    "Error al redirigir tras acceso componente autenticacion.");
-        }
-        return null;
-    }
+	/**
+	 * Retorno de componente de autenticacion.
+	 *
+	 * @return retorno de componente de autenticación redirigiendo a url de inicio.
+	 */
+	@CrossOrigin
+	@RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN)
+	public ModelAndView retornoAutenticacionLogin(final HttpServletRequest request,
+			final HttpServletResponse response) {
+		try {
+			response.sendRedirect(sesionHttp.getUrlInicio());
+		} catch (final IOException e) {
+			throw new LoginException("Error al redirigir tras acceso componente autenticacion.");
+		}
+		return null;
+	}
 
-    /**
-     * Redirección a componente autenticación para realizar logout.
-     *
-     * @return Redirección a componente autenticación para realizar logout.
-     */
-    @CrossOrigin
-    @RequestMapping("/redirigirAutenticacionLogout.html")
-    public ModelAndView redirigirAutenticacionLogout(
-            @RequestParam("entidad") String idEntidad,
-            @RequestParam(name = "debug", required = false) boolean debug) {
-        String lang = sesionHttp.getIdioma();
-        if (lang == null) {
-            lang = "es";
-        }
-        final String urlCallback = systemService.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.SISTRAMIT_URL)
-                + ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT;
-        return new ModelAndView("redirect:" + securityService
-                .iniciarLogoutSesion(idEntidad, lang, urlCallback, debug));
-    }
+	/**
+	 * Redirección a componente autenticación para realizar logout.
+	 *
+	 * @return Redirección a componente autenticación para realizar logout.
+	 */
+	@CrossOrigin
+	@RequestMapping("/redirigirAutenticacionLogout.html")
+	public ModelAndView redirigirAutenticacionLogout(@RequestParam("entidad") String idEntidad,
+			@RequestParam(name = "debug", required = false) boolean debug) {
+		String lang = sesionHttp.getIdioma();
+		if (lang == null) {
+			lang = "es";
+		}
+		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT;
+		return new ModelAndView("redirect:" + securityService.iniciarLogoutSesion(idEntidad, lang, urlCallback, debug));
+	}
 
-    /**
-     * Retorno del componente de autenticación tras logout.
-     *
-     * @param logout
-     *            indica si se ha realizado logout
-     * @param request
-     *            request
-     * @param response
-     *            response
-     * @return redirección cierre sesión
-     */
-    @CrossOrigin
-    @RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT)
-    public ModelAndView retornoAutenticacionLogout(
-            final @RequestParam(required = true) boolean logout,
-            final HttpServletRequest request,
-            final HttpServletResponse response) {
-        ModelAndView view = null;
-        if (logout) {
-            view = new ModelAndView(
-                    "redirect:" + "/asistente/cerrarSesion.html");
-        } else {
-            // Cierre de sesión exception
-            throw new ErrorFrontException(
-                    "Ha ocurrido un error al realizar el cierre de sesión");
-        }
-        return view;
-    }
+	/**
+	 * Retorno del componente de autenticación tras logout.
+	 *
+	 * @param logout
+	 *            indica si se ha realizado logout
+	 * @param request
+	 *            request
+	 * @param response
+	 *            response
+	 * @return redirección cierre sesión
+	 */
+	@CrossOrigin
+	@RequestMapping(ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGOUT)
+	public ModelAndView retornoAutenticacionLogout(final @RequestParam(required = true) boolean logout,
+			final HttpServletRequest request, final HttpServletResponse response) {
+		ModelAndView view = null;
+		if (logout) {
+			view = new ModelAndView("redirect:" + "/asistente/cerrarSesion.html");
+		} else {
+			// Cierre de sesión exception
+			throw new ErrorFrontException("Ha ocurrido un error al realizar el cierre de sesión");
+		}
+		return view;
+	}
 
-    /**
-     * Sanitiza idioma. En caso de no estar soportado generará una
-     * LoginException.
-     *
-     * @param pIdiomaSavedRequest
-     *            Idioma login
-     */
-    private void sanitizeIdioma(final String pIdiomaSavedRequest) {
-        final String idiomasSoportados = systemService
-                .obtenerPropiedadConfiguracion(
-                        TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
-        final String langs[] = idiomasSoportados.split(",");
-        boolean soportado = false;
-        for (final String lang : langs) {
-            if (lang.equals(pIdiomaSavedRequest)) {
-                soportado = true;
-                break;
-            }
-        }
-        if (!soportado) {
-            throw new ErrorFrontException("Idioma no soportado");
-        }
-    }
+	/**
+	 * Sanitiza idioma. En caso de no estar soportado generará una LoginException.
+	 *
+	 * @param pIdiomaSavedRequest
+	 *            Idioma login
+	 */
+	private void sanitizeIdioma(final String pIdiomaSavedRequest) {
+		final String idiomasSoportados = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+		final String langs[] = idiomasSoportados.split(",");
+		boolean soportado = false;
+		for (final String lang : langs) {
+			if (lang.equals(pIdiomaSavedRequest)) {
+				soportado = true;
+				break;
+			}
+		}
+		if (!soportado) {
+			throw new ErrorFrontException("Idioma no soportado");
+		}
+	}
 
-    /**
-     * Autentica via ticket.
-     *
-     * @param pSavedRequest
-     *            Request
-     * @param pTicketName
-     *            Nombre ticket
-     * @param pTicketUser
-     *            Usuario asociado al tipo de ticket
-     * @return Vista que realiza el login automáticamente
-     */
-    private ModelAndView autenticarTicket(final SavedRequest pSavedRequest,
-            final String pTicketUser, final String pTicketName) {
-        // Obtenemos ticket de la peticion
-        final String[] tickets = pSavedRequest.getParameterMap()
-                .get(pTicketName);
-        if (tickets == null || tickets.length != ConstantesNumero.N1) {
-            throw new ErrorFrontException("No existe ticket");
-        }
-        final String ticket = tickets[0];
+	/**
+	 * Autentica via ticket.
+	 *
+	 * @param pSavedRequest
+	 *            Request
+	 * @param pTicketName
+	 *            Nombre ticket
+	 * @param pTicketUser
+	 *            Usuario asociado al tipo de ticket
+	 * @return Vista que realiza el login automáticamente
+	 */
+	private ModelAndView autenticarTicket(final SavedRequest pSavedRequest, final String pTicketUser,
+			final String pTicketName) {
+		// Obtenemos ticket de la peticion
+		final String[] tickets = pSavedRequest.getParameterMap().get(pTicketName);
+		if (tickets == null || tickets.length != ConstantesNumero.N1) {
+			throw new ErrorFrontException("No existe ticket");
+		}
+		final String ticket = tickets[0];
 
-        // Autenticamos automaticamente
-        final LoginTicketInfo li = new LoginTicketInfo();
-        li.setTicketName(pTicketUser);
-        li.setTicketValue(ticket);
-        final String idiomaSavedRequest = StringUtils
-                .defaultIfEmpty(getParamValue(pSavedRequest, IDIOMA), "es");
-        li.setIdioma(idiomaSavedRequest);
-        return new ModelAndView("loginTicket", LOGIN, li);
-    }
+		// Autenticamos automaticamente
+		final LoginTicketInfo li = new LoginTicketInfo();
+		li.setTicketName(pTicketUser);
+		li.setTicketValue(ticket);
+		final String idiomaSavedRequest = StringUtils.defaultIfEmpty(getParamValue(pSavedRequest, IDIOMA), "es");
+		li.setIdioma(idiomaSavedRequest);
+		return new ModelAndView("loginTicket", LOGIN, li);
+	}
 
-    /**
-     * Autentica via formulario de login.
-     *
-     * @param savedRequest
-     *            Request
-     *
-     * @return Vista para autenticar con formulario de login
-     */
-    private ModelAndView autenticarFormLogin(final SavedRequest savedRequest) {
+	/**
+	 * Autentica via formulario de login.
+	 *
+	 * @param savedRequest
+	 *            Request
+	 *
+	 * @return Vista para autenticar con formulario de login
+	 */
+	private ModelAndView autenticarFormLogin(final SavedRequest savedRequest) {
 
-        // Obtenemos parametros inicio tramite
-        final String paramCodigoTramite = getParamValue(savedRequest,
-                "tramite");
-        final String paramVersionTramite = getParamValue(savedRequest,
-                "version");
-        final String paramIdioma = getParamValue(savedRequest, IDIOMA);
-        final String paramLogin = getParamValue(savedRequest, LOGIN);
-        final String paramIdTramiteCP = getParamValue(savedRequest,
-                "idTramiteCatalogo");
+		// Obtenemos parametros inicio tramite
+		final String paramCodigoTramite = getParamValue(savedRequest, "tramite");
+		final String paramVersionTramite = getParamValue(savedRequest, "version");
+		final String paramIdioma = getParamValue(savedRequest, IDIOMA);
+		final String paramLogin = getParamValue(savedRequest, LOGIN);
+		final String paramIdTramiteCP = getParamValue(savedRequest, "idTramiteCatalogo");
 
-        // Obtenemos info login tramite
-        final InfoLoginTramite infoLoginTramite = securityService
-                .obtenerInfoLoginTramite(paramCodigoTramite,
-                        Integer.parseInt(paramVersionTramite), paramIdTramiteCP,
-                        paramIdioma, savedRequest.getRedirectUrl());
+		// Obtenemos info login tramite
+		final InfoLoginTramite infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
+				Integer.parseInt(paramVersionTramite), paramIdTramiteCP, paramIdioma, savedRequest.getRedirectUrl());
 
-        // Comprobamos si hay que filtrar el metodo de autenticacion
-        TypeAutenticacion filtroAutenticacion = null;
-        if (paramLogin != null) {
-            filtroAutenticacion = TypeAutenticacion.fromString(paramLogin);
-            // Si no esta permitido el filtro, no lo aplicacmos
-            if (!infoLoginTramite.getNiveles().contains(filtroAutenticacion)) {
-                filtroAutenticacion = null;
-            }
-        }
-        if (filtroAutenticacion != null) {
-            infoLoginTramite.getNiveles().clear();
-            infoLoginTramite.getNiveles().add(filtroAutenticacion);
-        }
+		// Comprobamos si hay que filtrar el metodo de autenticacion
+		TypeAutenticacion filtroAutenticacion = null;
+		if (paramLogin != null) {
+			filtroAutenticacion = TypeAutenticacion.fromString(paramLogin);
+			// Si no esta permitido el filtro, no lo aplicacmos
+			if (!infoLoginTramite.getNiveles().contains(filtroAutenticacion)) {
+				filtroAutenticacion = null;
+			}
+		}
+		if (filtroAutenticacion != null) {
+			infoLoginTramite.getNiveles().clear();
+			infoLoginTramite.getNiveles().add(filtroAutenticacion);
+		}
 
-        // Devolvemos formulario de login
-        return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
-    }
+		// Devolvemos formulario de login
+		return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
+	}
 
-    /**
-     * Autentica via formulario de login persistente anónimo.
-     *
-     * @param savedRequest
-     *            Request
-     *
-     * @return Vista para autenticar con formulario de login
-     */
-    private ModelAndView autenticarFormLoginPersistenteAnonimo(
-            final SavedRequest savedRequest) {
+	/**
+	 * Autentica via formulario de login persistente anónimo.
+	 *
+	 * @param savedRequest
+	 *            Request
+	 *
+	 * @return Vista para autenticar con formulario de login
+	 */
+	private ModelAndView autenticarFormLoginPersistenteAnonimo(final SavedRequest savedRequest) {
 
-        // Obtenemos parametros inicio tramite
-        final String idSesionTramitacion = getParamValue(savedRequest,
-                "idSesionTramitacion");
+		// Obtenemos parametros inicio tramite
+		final String idSesionTramitacion = getParamValue(savedRequest, "idSesionTramitacion");
 
-        // Obtenemos info login tramite
-        final InfoLoginTramite infoLoginTramite = securityService
-                .obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
+		// Obtenemos info login tramite
+		final InfoLoginTramite infoLoginTramite = securityService
+				.obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
 
-        // Devolvemos formulario de login
-        return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
-    }
+		// Devolvemos formulario de login
+		return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
+	}
 
-    /**
-     * Obtiene valor parametro de la request.
-     *
-     * @param savedRequest
-     *            Saved request
-     * @param paramName
-     *            Nombre parametro
-     * @return Valor parametro (null si no existe)
-     */
-    protected String getParamValue(final SavedRequest savedRequest,
-            final String paramName) {
-        final String[] paramValues = savedRequest.getParameterMap()
-                .get(paramName);
-        String param = null;
-        if (paramValues != null && paramValues.length > 0) {
-            param = paramValues[0];
-        }
-        return param;
-    }
+	/**
+	 * Obtiene valor parametro de la request.
+	 *
+	 * @param savedRequest
+	 *            Saved request
+	 * @param paramName
+	 *            Nombre parametro
+	 * @return Valor parametro (null si no existe)
+	 */
+	protected String getParamValue(final SavedRequest savedRequest, final String paramName) {
+		final String[] paramValues = savedRequest.getParameterMap().get(paramName);
+		String param = null;
+		if (paramValues != null && paramValues.length > 0) {
+			param = paramValues[0];
+		}
+		return param;
+	}
 
-    /**
-     * Obtiene punto de entrada.
-     *
-     * @param urlOrg
-     *            Url origen
-     * @return Punto de entrada
-     */
-    private String getPuntoEntrada(final String urlOrg) {
-        try {
-            final URL url = new URL(urlOrg);
-            String path = url.getPath();
-            path = path.substring(ConstantesNumero.N1);
-            int pos = path.indexOf("/");
-            if (pos == ConstantesNumero.N_1) {
-                pos = 0;
-            }
-            return path.substring(pos);
-        } catch (final MalformedURLException mfe) {
-            throw new ErrorFrontException("Url incorrecta: " + urlOrg);
-        }
+	/**
+	 * Obtiene punto de entrada.
+	 *
+	 * @param urlOrg
+	 *            Url origen
+	 * @return Punto de entrada
+	 */
+	private String getPuntoEntrada(final String urlOrg) {
+		try {
+			final URL url = new URL(urlOrg);
+			String path = url.getPath();
+			path = path.substring(ConstantesNumero.N1);
+			int pos = path.indexOf("/");
+			if (pos == ConstantesNumero.N_1) {
+				pos = 0;
+			}
+			return path.substring(pos);
+		} catch (final MalformedURLException mfe) {
+			throw new ErrorFrontException("Url incorrecta: " + urlOrg);
+		}
 
-    }
+	}
 
-    /**
-     * Comprueba si existe ticket en request.
-     *
-     * @param pSavedRequest
-     *            Request
-     * @param pTicketName
-     *            Ticket
-     * @return boolean
-     */
-    private boolean existeTicket(final SavedRequest pSavedRequest,
-            final String pTicketName) {
-        boolean res = true;
-        final String[] tickets = pSavedRequest.getParameterMap()
-                .get(pTicketName);
-        if (tickets == null || tickets.length != ConstantesNumero.N1) {
-            res = false;
-        }
-        return res;
-    }
+	/**
+	 * Comprueba si existe ticket en request.
+	 *
+	 * @param pSavedRequest
+	 *            Request
+	 * @param pTicketName
+	 *            Ticket
+	 * @return boolean
+	 */
+	private boolean existeTicket(final SavedRequest pSavedRequest, final String pTicketName) {
+		boolean res = true;
+		final String[] tickets = pSavedRequest.getParameterMap().get(pTicketName);
+		if (tickets == null || tickets.length != ConstantesNumero.N1) {
+			res = false;
+		}
+		return res;
+	}
 
-    /**
-     * Handler de excepciones de negocio.
-     *
-     * @param ex
-     *            Excepción de la capa de servicio
-     * @param request
-     *            Request
-     * @return Respuesta JSON indicando el mensaje producido
-     */
-    @ExceptionHandler({Exception.class})
-    public ModelAndView handleServiceException(final Exception ex,
-            final HttpServletRequest request) {
+	/**
+	 * Handler de excepciones de negocio.
+	 *
+	 * @param ex
+	 *            Excepción de la capa de servicio
+	 * @param request
+	 *            Request
+	 * @return Respuesta JSON indicando el mensaje producido
+	 */
+	@ExceptionHandler({ Exception.class })
+	public ModelAndView handleServiceException(final Exception ex, final HttpServletRequest request) {
 
-        // TODO Auditar ErrorFrontException en login
-        LOGGER.error("Excepcion login", ex);
+		// TODO Auditar ErrorFrontException en login
+		LOGGER.error("Excepcion login", ex);
 
-        // Obtenemos idioma
-        String idioma;
-        if (request.getParameter(IDIOMA) != null) {
-            idioma = request.getParameter(IDIOMA);
-        } else {
-            idioma = "es";
-        }
+		// Obtenemos idioma
+		String idioma;
+		if (request.getParameter(IDIOMA) != null) {
+			idioma = request.getParameter(IDIOMA);
+		} else {
+			idioma = "es";
+		}
 
-        // Generamos respuesta JSON
-        final RespuestaJSON res = errores.generarRespuestaJsonExcepcion(ex,
-                idioma);
+		// Generamos respuesta JSON
+		final RespuestaJSON res = errores.generarRespuestaJsonExcepcion(ex, idioma);
 
-        // Redirigimos a pagina de error
-        final ErrorGeneral error = new ErrorGeneral();
-        error.setIdioma(idioma);
-        error.setMensaje(res.getMensaje());
-        error.setUrl(res.getUrl());
-        return new ModelAndView("error", "error", error);
+		// Redirigimos a pagina de error
+		final ErrorGeneral error = new ErrorGeneral();
+		error.setIdioma(idioma);
+		error.setMensaje(res.getMensaje());
+		error.setUrl(res.getUrl());
+		return new ModelAndView("error", "error", error);
 
-    }
+	}
 
 }

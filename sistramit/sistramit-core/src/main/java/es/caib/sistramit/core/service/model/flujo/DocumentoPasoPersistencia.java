@@ -585,7 +585,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método de acceso a registroResultado.
-	 * 
+	 *
 	 * @return registroResultado
 	 */
 	public TypeResultadoRegistro getRegistroResultado() {
@@ -594,12 +594,21 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método para establecer registroResultado.
-	 * 
+	 *
 	 * @param registroResultado
 	 *            registroResultado a establecer
 	 */
 	public void setRegistroResultado(TypeResultadoRegistro registroResultado) {
 		this.registroResultado = registroResultado;
+	}
+
+	/**
+	 * Método de acceso a firmas.
+	 * 
+	 * @return firmas
+	 */
+	public Map<Long, List<FirmaDocumentoPersistencia>> getFirmas() {
+		return firmas;
 	}
 
 }

@@ -23,15 +23,12 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramiteInfo;
-import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
-import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
-import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -39,8 +36,6 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
-import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
@@ -480,77 +475,6 @@ public final class UtilsFlujo {
 			}
 		}
 		return nuevo;
-	}
-
-	/**
-	 * Busca los documentos para registrar generados en el flujo de tramitación.
-	 *
-	 * @param pVariablesFlujo
-	 *            Variables flujo
-	 * @return Lista de documentos que se registrarán
-	 */
-	public static List<DocumentosRegistroPorTipo> buscarDocumentosParaRegistrar(final VariablesFlujo pVariablesFlujo) {
-
-		final List<DocumentoRegistro> listaFormularios = new ArrayList<>();
-		final List<DocumentoRegistro> listaAnexos = new ArrayList<>();
-		final List<DocumentoRegistro> listaPagos = new ArrayList<>();
-
-		// TODO FALTA INFO FIRMANTES
-
-		for (final DatosDocumento datosDocumento : pVariablesFlujo.getDocumentos()) {
-			final DocumentoRegistro dr = DocumentoRegistro.createNewDocumentoRegistro();
-			dr.setDescargable(TypeSiNo.SI);
-			dr.setTitulo(datosDocumento.getTitulo());
-
-			switch (datosDocumento.getTipo()) {
-			case FORMULARIO:
-				// Si es un formulario de tipo captura no se registra
-				final DatosDocumentoFormulario datosDocumentoFormulario = (DatosDocumentoFormulario) datosDocumento;
-				if (!datosDocumentoFormulario.isFormularioCaptura()) {
-					dr.setId(datosDocumento.getId());
-					dr.setInstancia(ConstantesNumero.N1);
-					// Si el formulario no tiene pdf de visualizacion no se
-					// podra descargar
-					if (datosDocumentoFormulario.getPdf() == null) {
-						dr.setDescargable(TypeSiNo.NO);
-					}
-					listaFormularios.add(dr);
-				}
-				break;
-			case ANEXO:
-				dr.setId(datosDocumento.getId());
-				dr.setInstancia(((DatosDocumentoAnexo) datosDocumento).getInstancia());
-				listaAnexos.add(dr);
-				break;
-			case PAGO:
-				dr.setId(datosDocumento.getId());
-				dr.setInstancia(ConstantesNumero.N1);
-				listaPagos.add(dr);
-				break;
-			default:
-			}
-		}
-
-		final List<DocumentosRegistroPorTipo> docsRegPorTipo = new ArrayList<DocumentosRegistroPorTipo>();
-		if (!listaFormularios.isEmpty()) {
-			final DocumentosRegistroPorTipo drpt = DocumentosRegistroPorTipo.createNewDocumentosRegistroPorTipo();
-			drpt.setTipo(TypeDocumento.FORMULARIO);
-			drpt.getListado().addAll(listaFormularios);
-			docsRegPorTipo.add(drpt);
-		}
-		if (!listaAnexos.isEmpty()) {
-			final DocumentosRegistroPorTipo drpt = DocumentosRegistroPorTipo.createNewDocumentosRegistroPorTipo();
-			drpt.setTipo(TypeDocumento.ANEXO);
-			drpt.getListado().addAll(listaAnexos);
-			docsRegPorTipo.add(drpt);
-		}
-		if (!listaPagos.isEmpty()) {
-			final DocumentosRegistroPorTipo drpt = DocumentosRegistroPorTipo.createNewDocumentosRegistroPorTipo();
-			drpt.setTipo(TypeDocumento.PAGO);
-			drpt.getListado().addAll(listaPagos);
-			docsRegPorTipo.add(drpt);
-		}
-		return docsRegPorTipo;
 	}
 
 	/**

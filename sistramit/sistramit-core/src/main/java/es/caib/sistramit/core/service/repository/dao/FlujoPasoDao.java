@@ -118,14 +118,14 @@ public interface FlujoPasoDao {
 	 *            Parámetro id sesion tramitacion
 	 * @param pIdPaso
 	 *            Parámetro id paso
-	 * @param idAnexo
-	 *            Parámetro id anexo
+	 * @param idDocumento
+	 *            Parámetro id documento
 	 * @param instancia
 	 *            Parámetro instancia
 	 * @return el documento paso persistencia
 	 */
-	DocumentoPasoPersistencia obtenerDocumentoPersistencia(String pIdSesionTramitacion, String pIdPaso, String idAnexo,
-			int instancia);
+	DocumentoPasoPersistencia obtenerDocumentoPersistencia(String pIdSesionTramitacion, String pIdPaso,
+			String idDocumento, int instancia);
 
 	/**
 	 * Recupera un fichero almacenado en persistencia no borrado.

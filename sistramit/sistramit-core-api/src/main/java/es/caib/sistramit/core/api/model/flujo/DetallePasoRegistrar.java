@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 
 /**
@@ -190,7 +191,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método de acceso a instruccionesEntregaPresencial.
-	 * 
+	 *
 	 * @return instruccionesEntregaPresencial
 	 */
 	public String getInstruccionesEntregaPresencial() {
@@ -199,12 +200,43 @@ public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
 	 * Método para establecer instruccionesEntregaPresencial.
-	 * 
+	 *
 	 * @param instruccionesEntregaPresencial
 	 *            instruccionesEntregaPresencial a establecer
 	 */
 	public void setInstruccionesEntregaPresencial(String instruccionesEntregaPresencial) {
 		this.instruccionesEntregaPresencial = instruccionesEntregaPresencial;
+	}
+
+	/**
+	 * Calcula si estan firmados todos los documentos.
+	 *
+	 * @return boolean
+	 */
+	public boolean verificarFirmas() {
+		return verificarFirmas(formularios) && verificarFirmas(anexos);
+	}
+
+	/**
+	 * Verifica si estan firmados los documentos.
+	 *
+	 * @param res
+	 * @param docsFormulario
+	 * @return
+	 */
+	private boolean verificarFirmas(List<DocumentoRegistro> docsFormulario) {
+		boolean res = true;
+		for (final DocumentoRegistro doc : docsFormulario) {
+			if (doc.getFirmar() == TypeSiNo.SI) {
+				for (final Firma fi : doc.getFirmas()) {
+					if (fi.getEstadoFirma() == TypeEstadoFirma.NO_FIRMADO) {
+						res = false;
+						break;
+					}
+				}
+			}
+		}
+		return res;
 	}
 
 }

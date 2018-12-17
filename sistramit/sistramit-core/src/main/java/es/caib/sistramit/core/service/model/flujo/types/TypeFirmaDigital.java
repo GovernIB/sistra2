@@ -8,6 +8,8 @@ package es.caib.sistramit.core.service.model.flujo.types;
  */
 public enum TypeFirmaDigital {
 
+	// TODO REVISAR TIPOS DE FIRMA DIGITAL, SI DESGLOSAMOS EN ATTACHED Y DETACHED
+
 	/**
 	 * PADES.
 	 */
@@ -15,11 +17,11 @@ public enum TypeFirmaDigital {
 	/**
 	 * XADES.
 	 */
-	XADES("XADES"),
+	XADES_DETACHED("XADES_DETACHED"),
 	/**
 	 * CADES.
 	 */
-	CADES("CADES");
+	CADES_DETACHED("CADES_DETACHED");
 
 	/**
 	 * Valor como string.

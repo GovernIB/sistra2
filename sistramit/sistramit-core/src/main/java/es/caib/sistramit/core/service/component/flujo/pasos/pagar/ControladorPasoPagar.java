@@ -158,9 +158,11 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 				ConstantesNumero.N1);
 		// Establecemos datos documento pago
 		final DatosDocumentoPago ddp = new DatosDocumentoPago();
+		ddp.setIdPaso(pDpp.getId());
 		ddp.setId(pDetallePago.getId());
 		ddp.setTitulo(pDetallePago.getTitulo());
 		ddp.setFichero(dpp.getFichero());
+		ddp.setPresentacion(pDetallePago.getPresentacion());
 		ddp.setJustificantePago(dpp.getPagoJustificantePdf());
 		return ddp;
 	}

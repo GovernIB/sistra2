@@ -290,7 +290,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 				pDefinicionTramite);
 
 		// Calculamos lista de documentos a registrar
-		final List<DocumentosRegistroPorTipo> docsRegPorTipo = UtilsFlujo
+		final List<DocumentosRegistroPorTipo> docsRegPorTipo = ControladorPasoRegistrarHelper.getInstance()
 				.buscarDocumentosParaRegistrar(pVariablesFlujo);
 
 		// Creamos detalle paso
@@ -505,6 +505,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 */
 	private DatosDocumentoJustificante obtenerDatosDocumentoJustificante(final DatosInternosPasoRegistrar pDipa) {
 		final DatosDocumentoJustificante ddj = new DatosDocumentoJustificante();
+		ddj.setIdPaso(pDipa.getIdPaso());
 		ddj.setId(ConstantesFlujo.ID_JUSTIFICANTE_REGISTRO);
 		ddj.setTitulo(pDipa.getResultadoRegistro().getAsunto());
 		ddj.setSolicitante(new Persona(pDipa.getParametrosRegistro().getDatosPresentacion().getPresentador().getNif(),

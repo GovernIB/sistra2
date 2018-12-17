@@ -11,8 +11,9 @@ public enum TypeAccionPasoRegistrar implements TypeAccionPaso {
 	// TODO PENDIENTE PARAMETROS ACCIONES FIRMA
 
 	/**
-	 * Descargar documento. Parámetros entrada: idDocumento, instancia. Parámetros
-	 * salida: nombreFichero, datosFichero.
+	 * Descargar documento. Parámetros entrada: idDocumento, instancia (opcional,
+	 * solo para anexos multiinstancia). Parámetros salida: nombreFichero,
+	 * datosFichero.
 	 */
 	DESCARGAR_DOCUMENTO(false),
 	/**
@@ -24,8 +25,8 @@ public enum TypeAccionPasoRegistrar implements TypeAccionPaso {
 	 */
 	VERIFICAR_FIRMA_DOCUMENTO,
 	/**
-	 * Registrar tramite. Parámetros entrada: reintentar (TypeSiNo). Parámetros
-	 * salida: resultado (TypeResultadoRegistro), numeroRegistro.
+	 * Registrar tramite. Parámetros entrada: reintentar (TypeSiNo, opcional).
+	 * Parámetros salida: resultado (TypeResultadoRegistro), numeroRegistro.
 	 */
 	REGISTRAR_TRAMITE;
 
