@@ -60,49 +60,49 @@ public class PurgaServiceImpl implements PurgaService {
 
 		final ListaPropiedades lp = new ListaPropiedades();
 
-		log.info("Proceso purga: inicio proceso de purga...");
+		log.info("Procés purga: inici del procés de purga...");
 
 		final long inicio = System.currentTimeMillis();
 		ResultadoProcesoProgramado res = null;
 
 		// Marcamos para purgar los tramites finalizados, no persistentes sin
 		// terminar y persistentes caducados
-		log.info("Proceso purga: marcamos para purgar los tramites...");
+		log.info("Procés purga: marquem per purgar els tràmits...");
 		procesoPurgarMarcarTramites(lp);
 
 		// Purgamos los tramites marcados para purgar
-		log.info("Proceso purga: purgando los tramites marcados para purgar...");
+		log.info("Procés purga: purgant el tràmits marcats per a purgar...");
 		procesoPurgarTramitesPurga(lp);
 
 		// Borrado definitivo de los tramites purgados
-		log.info("Proceso purga: eliminando definitivamente tramites purgados...");
+		log.info("Procés purga: eliminant definitivament els tràmites purgats...");
 		procesoPurgarEliminarTramitesPurgados(lp);
 
 		// Purgamos sesiones de formularios
-		log.info("Proceso purga: purgando sesiones formularios...");
+		log.info("Procés purga: purgant sesions de formularis...");
 		procesoPurgarSesionesFormulario(lp);
 
 		// Purgamos pagos externos
-		log.info("Proceso purga: purgando pagos externos...");
+		log.info("Procés purga: purgant pagaments externs...");
 		procesoPurgarPagosExternos(lp);
 
 		// Purgamos ficheros huerfanos
-		log.info("Proceso purga: purgando ficheros huerfanos...");
+		log.info("Procés purga: purgant fitxers orfes...");
 		procesoPurgarFicherosHuerfanos(lp);
 
 		// Purgamos invalidaciones
-		log.info("Proceso purga: purgando invalidaciones...");
+		log.info("Procés purga: purgant invalidacions...");
 		procesoPurgarInvalidaciones();
 
 		// Purgado de errores internos (excepto ligados a tramites).
-		log.info("Proceso purga: purgando errores internos...");
+		log.info("Procés purga: purgant errors interns...");
 		procesoPurgarErroresInternos(lp);
 
 		final long duracion = (System.currentTimeMillis() - inicio) / (ConstantesNumero.N1000);
 
-		lp.addPropiedad("Duracion proceso", duracion + " segs.");
+		lp.addPropiedad("Durada del procés", duracion + " segons.");
 
-		log.info("Proceso purga: fin proceso de purga (" + duracion + " segundos)");
+		log.info("Procés purga: fin proceso de purga (" + duracion + " segundos)");
 
 		res = new ResultadoProcesoProgramado();
 		res.setFinalizadoOk(true);
@@ -112,7 +112,7 @@ public class PurgaServiceImpl implements PurgaService {
 		evento.setTipoEvento(TypeEvento.PROCESO_PURGA);
 		evento.setPropiedadesEvento(lp);
 		evento.setFecha(new Date());
-		evento.setDescripcion("Proceso de purga");
+		evento.setDescripcion("Procés de purga");
 		auditoriaComponent.auditarEventoAplicacion(null, evento);
 
 		return res;
@@ -150,7 +150,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 */
 	private void procesoPurgarFicherosHuerfanos(final ListaPropiedades lp) {
 		final int ficsBorrados = purgaComponent.purgarFicherosHuerfanos();
-		lp.addPropiedad("Ficheros huerfanos borrados", String.valueOf(ficsBorrados));
+		lp.addPropiedad("Fitxers orfes esborrats", String.valueOf(ficsBorrados));
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class PurgaServiceImpl implements PurgaService {
 			final int sesionesNoFinalizadasBorradas = this.purgaComponent
 					.purgarSesionesFormularioNoFinalizadas(limiteInicio);
 
-			lp.addPropiedad("Sesiones formulario purgados",
+			lp.addPropiedad("Sessions formulari purgats",
 					String.valueOf(sesionesFinalizadasBorradas + sesionesNoFinalizadasBorradas));
 		}
 	}
@@ -201,7 +201,7 @@ public class PurgaServiceImpl implements PurgaService {
 			final int sesionesNoFinalizadasBorradas = this.purgaComponent
 					.purgarPagosExternosNoFinalizados(limiteInicio);
 
-			lp.addPropiedad("Pagos externos purgados",
+			lp.addPropiedad("Pagaments externs purgats",
 					String.valueOf(sesionesFinalizadasBorradas + sesionesNoFinalizadasBorradas));
 		}
 
@@ -218,7 +218,7 @@ public class PurgaServiceImpl implements PurgaService {
 			final Date fechaCaducidadPurgados = this.calcularFechaLimite(
 					config.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PURGA_PURGADOS), 'd');
 			final int num = this.purgaComponent.eliminarTramitesPurgados(fechaCaducidadPurgados);
-			lp.addPropiedad("Tramites purgados eliminados", Integer.toString(num));
+			lp.addPropiedad("Tràmits purgats eliminats", Integer.toString(num));
 		}
 	}
 
@@ -258,10 +258,11 @@ public class PurgaServiceImpl implements PurgaService {
 
 		final ListaPropiedades propsMarcar = this.purgaComponent.marcarPurgarTramites(fechaLimiteFinalizados,
 				fechaLimiteNPSinFinalizar, fechaLimiteCaducados, fechaLimitePendientePurgaPago);
-		lp.addPropiedad("Tramites marcados para purgar", propsMarcar.getPropiedad("MARCADOS"));
-		lp.addPropiedad("Tramites pendientes purga", propsMarcar.getPropiedad("PENDIENTES"));
-		lp.addPropiedad("Tramites pendiente purga pago realizado", propsMarcar.getPropiedad("PENDIENTEPAGOREALIZADO"));
-		lp.addPropiedad("Tramites marcados para purgar pendiente purga pago realizado",
+		lp.addPropiedad("Tràmits marcats per purgar", propsMarcar.getPropiedad("MARCADOS"));
+		lp.addPropiedad("Tràmits pendents purga", propsMarcar.getPropiedad("PENDIENTES"));
+		lp.addPropiedad("Tràmits pendents purga amb pagament realitzat",
+				propsMarcar.getPropiedad("PENDIENTEPAGOREALIZADO"));
+		lp.addPropiedad("Tràmits marcats per purgar pendent purga amb pagament realitzat",
 				propsMarcar.getPropiedad("MARCADOSPENDIENTEPAGOREALIZADO"));
 	}
 
@@ -278,7 +279,7 @@ public class PurgaServiceImpl implements PurgaService {
 					config.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PURGA_ERRORES_INTERNOS), 'd');
 
 			final int numErroresBorrados = purgaComponent.purgaErroresInternos(fechaCaducidadErrores);
-			lp.addPropiedad("Errores internos", String.valueOf(numErroresBorrados));
+			lp.addPropiedad("Errors interns", String.valueOf(numErroresBorrados));
 		}
 	}
 

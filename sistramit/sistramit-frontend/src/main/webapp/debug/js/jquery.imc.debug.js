@@ -23,7 +23,7 @@ $(function(){
 	// pinta
 	codi_opcions = "<div id=\"opcions\">";
 	codi_opcions += "<div id=\"opcions_contingut\">";
-	codi_opcions += "<p class=\"dacord\"><a class=\"bt bt-dacord\" ><span class=\"i\">&nbsp;</span><span class=\"t\">De acuerdo</span></a></p>";
+	codi_opcions += "<p class=\"dacord\"><a class=\"bt bt-dacord\" ><span class=\"i\">&nbsp;</span><span class=\"t\">"+textDeAcuerdo+"</span></a></p>";
 	codi_opcions += "<h2>&nbsp;</h2>";
 	codi_opcions += "<div class=\"llistat\"></div>";
 	codi_opcions += "</div>";
@@ -43,7 +43,7 @@ $(function(){
 		// vars
 		var enviant = function() {
 				imc_log_elm.fadeOut(200, function() {
-					imc_log_elm.html("<div class=\"de-carregant\">Cargando datos. Espere un momento, por favor.</div>").fadeIn(200, function() {
+					imc_log_elm.html("<div class=\"de-carregant\">"+textCargando+"</div>").fadeIn(200, function() {
 				 		envia();
 					});
 				});
@@ -86,14 +86,14 @@ $(function(){
 		eventos = data.datos.eventos;
 
 		if (eventos.length === 0) {
-			imc_log_elm.html("No hay eventos").fadeIn(200);
+			imc_log_elm.html(textSinEventos).fadeIn(200);
 			return false;
 		}
 
 		var codi_taula = "<div class=\"de-id\">";
-		codi_taula += "&nbsp; ID TRAMITE: <strong>" + data.datos.idTramite + "</strong>";
-		codi_taula += "&nbsp; ENTORNO: <strong>" + data.datos.entorno + "</strong>";
-		codi_taula += "&nbsp; ID SESI&Oacute;N: <strong>" + data.datos.idSesionTramitacion + "</strong>";
+		codi_taula += "&nbsp; "+textCabeceraIdTramite+": <strong>" + data.datos.idTramite + "</strong>";
+		codi_taula += "&nbsp; "+textCabeceraEntorno+": <strong>" + data.datos.entorno + "</strong>";
+		codi_taula += "&nbsp; "+textCabeceraIdSesion+": <strong>" + data.datos.idSesionTramitacion + "</strong>";
 		codi_taula += "</div>";
 
 
@@ -101,11 +101,11 @@ $(function(){
 		codi_taula += "<div class=\"table tOrdenat tPaginat tDebug\" role=\"grid\" aria-live=\"polite\" aria-atomic=\"true\" aria-relevant=\"text additions\">";
 		codi_taula += "<div class=\"thead\">";
 		codi_taula += "<div class=\"tr\" role=\"rowheader\">";
-		codi_taula += "<div class=\"th icona\" role=\"columnheader\"><span class=\"th icona\">Icona</span></div>";
-		codi_taula += "<div class=\"th data\" role=\"columnheader\"><span class=\"th data\">Fecha Log Interno</span></div>";
-		codi_taula += "<div class=\"th tipus\" role=\"columnheader\"><span class=\"th tipus\">Tipo de evento</span></div>";
-		codi_taula += "<div class=\"th descripcio\" role=\"columnheader\"><span class=\"th descripcio\">Descripci&oacute;n</span></div>";
-		codi_taula += "<div class=\"th ops\" role=\"columnheader\"><span class=\"th ops\">Opciones</span></div>";
+		codi_taula += "<div class=\"th icona\" role=\"columnheader\"><span class=\"th icona\">"+textCabeceraIcono+"</span></div>";
+		codi_taula += "<div class=\"th data\" role=\"columnheader\"><span class=\"th data\">"+textCabeceraLogInterno+"</span></div>";
+		codi_taula += "<div class=\"th tipus\" role=\"columnheader\"><span class=\"th tipus\">"+textCabeceraTipoEvento+"</span></div>";
+		codi_taula += "<div class=\"th descripcio\" role=\"columnheader\"><span class=\"th descripcio\">"+textCabeceraDescripcion+"</span></div>";
+		codi_taula += "<div class=\"th ops\" role=\"columnheader\"><span class=\"th ops\">"+textCabeceraOpciones+"</span></div>";
 		codi_taula += "</div>";
 		codi_taula += "</div>";
 		codi_taula += "<div class=\"tbody\"></div>";
@@ -126,6 +126,12 @@ $(function(){
 				class_ico = (es_error) ? " ico-error" : (es_tipus.indexOf("TR_SCR") !== -1) ? " ico-debug" : " ico-evento";
 				codi_opcions = "&nbsp;";
 
+			var es_tipus_string;
+			if (textoTipo[es_tipus] == undefined || textoTipo[es_tipus] == '') {
+				es_tipus_string = es_tipus;
+			} else {
+				es_tipus_string = textoTipo[es_tipus];
+			}
 			es_descripcio = (es_error) ? "<span class=\"error\">Error: " + es_node.excepcionError + "</span>.<br />" + es_descripcio : es_descripcio;
 
 			codi_opcions += (es_node.propiedadesEvento !== null) ? "<a class=\"bt bt-propietats\"  title=\"\"><span class=\"i\">&nbsp;</span></a>" : "";
@@ -133,7 +139,7 @@ $(function(){
 
 			codi_fila += "<div class=\"td icona" + class_ico + "\" role=\"gridcell\">&nbsp;</div>";
 			codi_fila += "<div class=\"td data\" role=\"gridcell\"><p>" + es_data + "</p></div>";
-			codi_fila += "<div class=\"td tipus\" role=\"gridcell\"><p>" + es_tipus + "</p></div>";
+			codi_fila += "<div class=\"td tipus\" role=\"gridcell\"><p>" + es_tipus_string + "</p></div>";
 			codi_fila += "<div class=\"td descripcio\" role=\"gridcell\"><p>" + es_descripcio + "</p></div>";
 			codi_fila += "<div class=\"td ops\" role=\"gridcell\"><p>" + codi_opcions + "</p></div>";
 
@@ -179,7 +185,7 @@ $(function(){
 			fila = parseInt(boto.closest("div.tr").data("fila"),10),
 			contenidor = settings.contenidor,
 			tipus = (boto.hasClass("bt-traza")) ? "traza" : settings.tipus,
-			titol = (tipus === "traza") ? "Traza de error" : "Propiedades",
+			titol = (tipus === "traza") ? textTrazaError : textPropiedades,
 			finestra_W,
 			finestra_H,
 			opcions_H,

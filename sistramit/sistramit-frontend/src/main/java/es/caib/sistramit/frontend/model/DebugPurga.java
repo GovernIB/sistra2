@@ -1,6 +1,7 @@
 package es.caib.sistramit.frontend.model;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
 
@@ -13,47 +14,14 @@ import es.caib.sistramit.core.api.model.comun.ResultadoProcesoProgramado;
 @SuppressWarnings("serial")
 public final class DebugPurga implements Serializable {
 
-	/**
-	 * Id sesion tramitacion.
-	 */
-	private String idSesionTramitacion;
+	/** Idioma. **/
+	private String idioma;
 
-	/**
-	 * Entorno.
-	 */
-	private String entorno;
-
-	/**
-	 * Id tramite.
-	 */
-	private String idTramite;
+	/** Literales. **/
+	private Properties literales;
 
 	/** Resultado. **/
 	private ResultadoProcesoProgramado resultado;
-
-	public String getIdSesionTramitacion() {
-		return idSesionTramitacion;
-	}
-
-	public void setIdSesionTramitacion(final String idSesionTramitacion) {
-		this.idSesionTramitacion = idSesionTramitacion;
-	}
-
-	public String getEntorno() {
-		return entorno;
-	}
-
-	public void setEntorno(final String entorno) {
-		this.entorno = entorno;
-	}
-
-	public String getIdTramite() {
-		return idTramite;
-	}
-
-	public void setIdTramite(final String idTramite) {
-		this.idTramite = idTramite;
-	}
 
 	/**
 	 * @return the resultado
@@ -70,14 +38,44 @@ public final class DebugPurga implements Serializable {
 		this.resultado = resultado;
 	}
 
+	/**
+	 * @return the idioma
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
+
+	/**
+	 * @param idioma
+	 *            the idioma to set
+	 */
+	public void setIdioma(final String idioma) {
+		this.idioma = idioma;
+	}
+
+	/**
+	 * @return the literales
+	 */
+	public Properties getLiterales() {
+		return literales;
+	}
+
+	/**
+	 * @param literales
+	 *            the literales to set
+	 */
+	public void setLiterales(final Properties literales) {
+		this.literales = literales;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder resultado = new StringBuilder();
 		if (this.resultado == null || this.resultado.getDetalles() == null
 				|| this.resultado.getDetalles().getPropiedades() == null) {
-			resultado.append(" Resultado , detalles o propiedades a nulo ");
+			resultado.append("Resultats, detalls o propietats a nul");
 		} else {
-			resultado.append("Detalles total : \n");
+			resultado.append("\n Detalls total : \n");
 			for (final String key : this.resultado.getDetalles().getPropiedades().keySet()) {
 				resultado.append(key);
 				resultado.append(" - ");

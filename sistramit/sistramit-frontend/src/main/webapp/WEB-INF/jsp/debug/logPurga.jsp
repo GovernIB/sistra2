@@ -1,7 +1,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${datos.idioma}" lang="${datos.idioma}">
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -32,7 +34,7 @@
 			<div id="cap_contingut">
 
 				<div class="aplicacio">
-				  <div class="tituloDebug"><p>Debug Purga</p></div>
+				  <div class="tituloDebug"><p>${datos.literales['purga.titulo']}</p></div>
 				</div>
 
 			</div>
@@ -53,12 +55,11 @@
 				<div id="escriptori_contingut">
 
 					<div id="log">
-
 						<p>
-							Finalizado OK: <input type="text" name="resultado" value="${datos.resultado.finalizadoOk}" style="width:200px" />
+							${datos.literales['purga.finalizado.ok']}: <input type="text" name="resultado" value="${datos.resultado.finalizadoOk}" style="width:200px" />
 						</p>
 						<p>
-							Detalles :
+							${datos.literales['purga.detalles']} :
 
 							<textarea rows="40" cols="100">
 								${datos}
