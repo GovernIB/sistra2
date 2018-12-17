@@ -9,7 +9,6 @@
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
 <h:head>
-
 	<title><h:outputText value="#{msg['dialogTramiteImportar.header']}"/></title>
 </h:head>
 
@@ -34,7 +33,6 @@
 				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogTramiteImportar.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"
 					update="formTramite growlDialogImportar panelUpload panelInfo botonImportar" fileLimit="1"  accept="application/zip" multiple="false" fileLimitMessage="#{msg['error.ficheros.limite']}"/>
 			</p:outputPanel>
-
 
 			<p:outputPanel id="panelInfo" rendered="#{dialogTramiteImportar.mostrarPanelInfo}" >
 
