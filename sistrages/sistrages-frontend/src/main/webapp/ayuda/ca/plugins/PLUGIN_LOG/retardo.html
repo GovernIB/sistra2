@@ -3,17 +3,30 @@
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_LOG.retardo(timeout)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./debug.html">debug</a>
-</p>
-<h1 class="stgH1">RETARDO (String pMensaje):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.RETARDO(pMensaje)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_LOG</a></li>
+       	  <li>></li>
+      	  <li><a href="./retardo.html">retardo</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	retardo (int timeout):void
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Método que genera mensajes en el debug de un trámite.</li>
+		<li>Implementa retardo para testing.</li>
 	</ul>
 </p>
 <p>
@@ -21,15 +34,17 @@
 </p>
 <p>
 	<ul>
-		<li><b>pMensaje</b>: Mensaje descriptivo</li>
+		<li><b>timeout</b>: Timeout en segundos</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 <p>
-	Indica un mensaje descriptivo en el debug de tramitación en el asistente: <br />
-	PLUGIN_LOG.Debug('Realizar debug para este proceso')
+	Aplicamos un retardo de 5 segundos:
+</p>
+<p class="codigoScript">
+	PLUGIN_LOG.retardo(5);
 </p>
 </body>
 </html>

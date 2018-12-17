@@ -92,7 +92,7 @@
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
 
 			<h:panelGrid columns="2" header="Scripts" columnClasses="w35,w65" styleClass="w100">
-	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.autorelleno']}" /></h:column>
+	         	<h:column><h:outputText value="#{msg['script.SCRIPT_AUTORELLENABLE.titulo']}" /></h:column>
 	         	<h:column>
 	         		<p:commandButton id="scriptAutorelleno" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_AUTORELLENABLE.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" >
@@ -100,7 +100,7 @@
 					</p:commandButton>
 				</h:column>
 
-	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.soloLectura']}" /></h:column>
+	         	<h:column><h:outputText value="#{msg['script.SCRIPT_ESTADO.titulo']}" /></h:column>
 	         	<h:column>
 	         		<p:commandButton id="scriptSoloLectura" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_ESTADO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" >
@@ -108,7 +108,7 @@
 					</p:commandButton>
 	         	</h:column>
 
-	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.validacion']}" /></h:column>
+	         	<h:column><h:outputText value="#{msg['script.SCRIPT_VALIDACION_CAMPO.titulo']}" /></h:column>
 	         	<h:column>
 	         		<p:commandButton id="scriptValidacion" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" >
@@ -116,7 +116,7 @@
 					</p:commandButton>
 	         	</h:column>
 
-	         	<h:column rendered="#{dialogDisenyoFormulario.isLVScript()}"><h:outputText value="#{msg['dialogDisenyoFormulario.componente.scripts.valoresPosibles']}" /></h:column>
+	         	<h:column rendered="#{dialogDisenyoFormulario.isLVScript()}"><h:outputText value="#{msg['script.SCRIPT_VALORES_POSIBLES.titulo']}" /></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isLVScript()}">
 	         		<p:commandButton id="scriptValores" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALORES_POSIBLES.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValoresPosibles)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptValoresPosibles)}" >
@@ -132,7 +132,6 @@
 	    <p:panel id="panelEstilos" header="#{msg['dialogDisenyoFormulario.componente.panelEstilos']}" toggleable="true" widgetVar="#{msg['dialogDisenyoFormulario.componente.panelEstilos']}" style="margin-bottom:2px" collapsed="#{dialogDisenyoFormulario.visibleEstilos}">
 
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
-
 			<h:panelGrid columns="2" header="Scripts" columnClasses="w35,w65" styleClass="w100">
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.alineacion']}" /></h:column>

@@ -61,7 +61,7 @@
 						</h:panelGrid>
 					</p:panel>
 
-    				<h:panelGrid columns="2" columnClasses="w50 grid-left va-top formulario-panel, w50 grid-left va-top formulario-panel" styleClass="w100"  >
+    				<h:panelGrid columns="2" columnClasses="w50 grid-left va-top formulario-panel, w50 grid-center va-top formulario-panel" styleClass="w100"  >
 
 							<pe:codeMirror  id="codeMirror"
 		        							mode="#{dialogScript.mode}"
@@ -74,12 +74,12 @@
 			    							styleClass="w100 h100" />
 
 							<p:column>
-								<p:column rendered="#{dialogScript.mostrarLateralAyuda}">
+								<p:column rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">
 									<iframe src="#{dialogScript.urlIframe}" width="100%" height="400px" />
-									<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@this"  action="#{dialogScript.ocultarAyuda()}"  update="@form" />
+									<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@this"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" />
 
 								</p:column>
-		    					<p:panel id="panelPlugins"  header="#{msg['dialogScript.plugins.header']}" toggleable="true" widgetVar="panelPlugins"  collapsed="#{dialogScript.visibleHerramientas}" styleClass="h100 w100 sin-bordes noPadding" rendered="#{!dialogScript.mostrarLateralAyuda}">
+		    					<p:panel id="panelPlugins"  header="#{msg['dialogScript.plugins.header']}" toggleable="true" widgetVar="panelPlugins"  collapsed="#{dialogScript.visibleHerramientas}" styleClass="h100 w100 sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
 
 									<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios" />
 
@@ -93,7 +93,7 @@
 									</h:dataTable>
 								</p:panel>
 
-								<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}">
+								<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left" >
 
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios" />
 										<h:panelGrid columns="2" header="Scripts">
@@ -106,7 +106,7 @@
 
 								 </p:panel>
 
-								    <p:panel id="panelDominios" header="#{msg['dialogScript.dominios.header']}" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}"  rendered="#{!dialogScript.mostrarLateralAyuda}">
+								    <p:panel id="panelDominios" header="#{msg['dialogScript.dominios.header']}" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left">
 
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios" />
 
