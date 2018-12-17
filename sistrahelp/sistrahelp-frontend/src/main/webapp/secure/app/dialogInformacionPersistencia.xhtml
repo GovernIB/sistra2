@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogInformacionPersistencia.titulo']}"/></title>
+</h:head>
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogInformacionPersistencia.modoAcceso}"/>
+		<f:viewAction action="#{dialogInformacionPersistencia.init}" />
+	</f:metadata>
+	<h:form id="dialogInformacionPersistencia" styleClass="margin-top-10">
+			<p:outputPanel>
+			 		<h:panelGrid id="bordes" rowClasses=",ui-datatable-odd" columnClasses="w15 grid-right padding-right-8, w85 padding-right-8" columns="2" styleClass="w100" cellpadding="8px">
+
+							<p:outputLabel value="#{msg['dialogInformacionPersistencia.estado']}:"/>
+							<h:panelGrid styleClass="w100" columnClasses="grid-right dipC1, dipC2,grid-right dipC3, dipC4,grid-right dipC5, dipC6" columns="6">
+				 				<p:outputLabel for="estado" value="#{msg['dialogInformacionPersistencia.estado']}:"/>
+								<p:inputText id="estado" disabled="true" value="#{msg['typeEstadoTramite.'+=dialogInformacionPersistencia.dato.estado]}" size="15"/>
+
+							 	<p:outputLabel for="cancelado" value="#{msg['dialogInformacionPersistencia.cancelado']}:"/>
+								<p:selectBooleanCheckbox id="cancelado" value="#{dialogInformacionPersistencia.dato.cancelado}" disabled="true" />
+
+								<p:spacer width="1pt"/>
+								<p:spacer width="1pt"/>
+							</h:panelGrid>
+
+							<p:outputLabel value="#{msg['dialogInformacionPersistencia.acceso']}:"/>
+							<h:panelGrid styleClass="w100" columnClasses="grid-right dipC1, dipC2,grid-right dipC3, dipC4,grid-right dipC5, dipC6" columns="6">
+				 				<p:outputLabel for="fechaInicio" value="#{msg['dialogInformacionPersistencia.fechaInicio']}:"/>
+					 			<p:calendar id="fechaInicio" value="#{dialogInformacionPersistencia.dato.fechaInicio}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" disabled="true"/>
+
+				 				<p:outputLabel for="fechaUltimoAcceso" value="#{msg['dialogInformacionPersistencia.fechaUltimoAcceso']}:"/>
+				 				<p:calendar id="fechaUltimoAcceso" value="#{dialogInformacionPersistencia.dato.fechaUltimoAcceso}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" disabled="true"/>
+
+				 				<p:outputLabel for="fechaFin" value="#{msg['dialogInformacionPersistencia.fechaFin']}:"/>
+				 				<p:calendar id="fechaFin" value="#{dialogInformacionPersistencia.dato.fechaFin}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" disabled="true"/>
+							</h:panelGrid>
+
+
+							<p:outputLabel value="#{msg['dialogInformacionPersistencia.persistencia']}:"/>
+							<h:panelGrid styleClass="w100" columnClasses="grid-right dipC1, dipC2,grid-right dipC3, dipC4,grid-right dipC5, dipC6" columns="6">
+					 			<p:outputLabel for="persistente" value="#{msg['dialogInformacionPersistencia.persistente']}:"/>
+								<p:selectBooleanCheckbox id="persistente" value="#{dialogInformacionPersistencia.dato.persistente}" disabled="true" />
+
+								<p:outputLabel for="fechaCaducidad" value="#{msg['dialogInformacionPersistencia.fechaCaducidad']}:"/>
+				 				<p:calendar id="fechaCaducidad" value="#{dialogInformacionPersistencia.dato.fechaCaducidad}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" disabled="true"/>
+
+								<p:spacer width="1pt"/>
+								<p:spacer width="1pt"/>
+							</h:panelGrid>
+
+
+							<p:outputLabel value="#{msg['dialogInformacionPersistencia.purga']}:"/>
+							<h:panelGrid styleClass="w100" columnClasses="grid-right dipC1, dipC2,grid-right dipC3, dipC4,grid-right dipC5, dipC6" columns="6">
+					 			<p:outputLabel for="purgar" value="#{msg['dialogInformacionPersistencia.purgar']}:"/>
+								<p:selectBooleanCheckbox id="purgar" value="#{dialogInformacionPersistencia.dato.purgar}" disabled="true" />
+
+					 			<p:outputLabel for="purgado" value="#{msg['dialogInformacionPersistencia.purgado']}:"/>
+								<p:selectBooleanCheckbox id="purgado" value="#{dialogInformacionPersistencia.dato.purgado}" disabled="true" />
+
+				 				<p:outputLabel for="fechaPurgado" value="#{msg['dialogInformacionPersistencia.fechaPurgado']}:"/>
+				 				<p:calendar id="fechaPurgado" value="#{dialogInformacionPersistencia.dato.fechaPurgado}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showButtonPanel="false" disabled="true"/>
+							</h:panelGrid>
+
+							<p:outputLabel for="urlInicio" value="#{msg['dialogInformacionPersistencia.urlInicio']}:" />
+							<p:inputTextarea id="urlInicio" disabled="true" value="#{dialogInformacionPersistencia.dato.urlInicio}" cols="80"/>
+
+					 		<p:outputLabel for="dataTable" value="#{msg['dialogInformacionPersistencia.ficheros']}:"/>
+							<p:dataTable  id="dataTable" var="dt" value="#{dialogInformacionPersistencia.listaFicheros}"
+											  emptyMessage="#{msg['error.emptyRows']}" scrollHeight="200"
+											  scrollable="true"
+					                          paginator="false"
+					                          selectionMode="single" rowKey="#{dt.codigo}">
+
+									<!-- Columnas -->
+								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.paso']}" styleClass="grid-center ui-panelgrid-cell" width="20%">
+								        <h:outputText value="#{dt.identificadorPaso}" />
+								    </p:column>
+
+								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.tipoPaso']}" styleClass="grid-center ui-panelgrid-cell" width="25%">
+								        <h:outputText value="#{msg['typePaso.'+=dt.tipoPaso]}" />
+								    </p:column>
+
+								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.tipo']}" styleClass="grid-center ui-panelgrid-cell" width="25%">
+								        <h:outputText value="#{msg['typeDocumentoPersistencia.'+=dt.tipo]}" />
+								    </p:column>
+
+								    <p:column headerText="#{msg['dialogInformacionPersistencia.headerFicheros.fichero']}" styleClass="grid-center ui-panelgrid-cell" width="26%">
+								        <h:outputText value="#{dt.nombre}" />
+								    </p:column>
+
+								     <p:column  styleClass="grid-center ui-panelgrid-cell" width="4%">
+								    	<p:commandButton icon="fa fa-download" ajax="false">
+								    		<p:fileDownload value="#{dialogInformacionPersistencia.descargarFichero(dt)}" />
+								    	</p:commandButton>
+								     </p:column>
+					 		</p:dataTable>
+					</h:panelGrid>
+
+			</p:outputPanel>
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogInformacionPersistencia.cerrar}" process="@this" styleClass="boton-azul"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

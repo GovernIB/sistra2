@@ -22,6 +22,8 @@ public final class RPersistenciaAuditoria {
 	private String idTramite;
 	@ApiModelProperty(value = "Version Tramite")
 	private int versionTramite;
+	@ApiModelProperty(value = "Descripcion Tramite")
+	private String descripcionTramite;
 	@ApiModelProperty(value = "Id. Procedimiento CP")
 	private String idProcedimientoCP;
 	@ApiModelProperty(value = "Nif")
@@ -34,10 +36,16 @@ public final class RPersistenciaAuditoria {
 	private String apellido2;
 	@ApiModelProperty(value = "Fecha Inicio")
 	private Date fechaInicio;
+	@ApiModelProperty(value = "Fecha Fin")
+	private Date fechaFin;
 	@ApiModelProperty(value = "Estado")
 	private String estado;
+	@ApiModelProperty(value = "Fecha Ultimo Acceso")
+	private Date fechaUltimoAcceso;
 	@ApiModelProperty(value = "Cancelado")
 	private boolean cancelado;
+	@ApiModelProperty(value = "Persistente")
+	private boolean persistente;
 	@ApiModelProperty(value = "Fecha Caducidad")
 	private Date fechaCaducidad;
 	@ApiModelProperty(value = "Purgar")
@@ -46,6 +54,8 @@ public final class RPersistenciaAuditoria {
 	private Date fechaPurgado;
 	@ApiModelProperty(value = "Purgado")
 	private boolean purgado;
+	@ApiModelProperty(value = "Url Inicio")
+	private String urlInicio;
 
 	public Long getId() {
 		return id;
@@ -173,6 +183,46 @@ public final class RPersistenciaAuditoria {
 
 	public void setPurgado(final boolean purgado) {
 		this.purgado = purgado;
+	}
+
+	public String getDescripcionTramite() {
+		return descripcionTramite;
+	}
+
+	public void setDescripcionTramite(final String descripcionTramite) {
+		this.descripcionTramite = descripcionTramite;
+	}
+
+	public Date getFechaUltimoAcceso() {
+		return fechaUltimoAcceso;
+	}
+
+	public void setFechaUltimoAcceso(final Date fechaUltimoAcceso) {
+		this.fechaUltimoAcceso = fechaUltimoAcceso;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(final Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	public boolean isPersistente() {
+		return persistente;
+	}
+
+	public void setPersistente(final boolean persistente) {
+		this.persistente = persistente;
+	}
+
+	public String getUrlInicio() {
+		return urlInicio;
+	}
+
+	public void setUrlInicio(final String urlInicio) {
+		this.urlInicio = urlInicio;
 	}
 
 }

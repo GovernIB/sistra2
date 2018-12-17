@@ -20,6 +20,8 @@ import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistrahelp.core.api.exception.ErrorJsonException;
 import es.caib.sistrahelp.core.api.model.DatosSesionPago;
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
+import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
@@ -36,11 +38,15 @@ import es.caib.sistrahelp.core.api.model.ResultadoEventoAuditoria;
 import es.caib.sistrahelp.core.api.model.ResultadoPerdidaClave;
 import es.caib.sistrahelp.core.api.model.VerificacionPago;
 import es.caib.sistrahelp.core.api.model.comun.ListaPropiedades;
+import es.caib.sistrahelp.core.api.model.types.TypeDocumentoPersistencia;
+import es.caib.sistrahelp.core.api.model.types.TypeEstadoTramite;
 import es.caib.sistrahelp.core.api.model.types.TypeEvento;
 import es.caib.sistrahelp.core.api.model.types.TypePresentacion;
 import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.rest.api.interna.RDetallePagoAuditoria;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
+import es.caib.sistramit.rest.api.interna.RFichero;
+import es.caib.sistramit.rest.api.interna.RFicheroPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroPaginacion;
 import es.caib.sistramit.rest.api.interna.RFiltroPagoAuditoria;
@@ -258,6 +264,43 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 				}
 			}
 
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public List<FicheroPersistenciaAuditoria> obtenerAuditoriaPersistenciaFichero(final Long pIdTramite) {
+		List<FicheroPersistenciaAuditoria> resultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final RFicheroPersistenciaAuditoria[] listaRFichero = restTemplate
+				.getForObject(getUrl() + "/auditoria/tramite/" + pIdTramite, RFicheroPersistenciaAuditoria[].class);
+
+		if (listaRFichero != null) {
+			resultado = new ArrayList<>();
+
+			for (final RFicheroPersistenciaAuditoria rFichero : listaRFichero) {
+				resultado.add(convierteFicheroPersistenciaAuditoria(rFichero));
+			}
+		}
+
+		return resultado;
+
+	}
+
+	@Override
+	public FicheroAuditoria obtenerAuditoriaFichero(final Long pIdFichero, final String pClave) {
+		FicheroAuditoria resultado = null;
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+
+		final RFichero rFichero = restTemplate
+				.getForObject(getUrl() + "/auditoria/fichero/" + pIdFichero + "/" + pClave, RFichero.class);
+
+		if (rFichero != null) {
+			resultado = convierteAuditoriaFichero(rFichero);
 		}
 
 		return resultado;
@@ -537,12 +580,17 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			persistencia.setApellido1(pRPersistenciaAuditoria.getApellido1());
 			persistencia.setApellido2(pRPersistenciaAuditoria.getApellido2());
 			persistencia.setFechaInicio(pRPersistenciaAuditoria.getFechaInicio());
-			persistencia.setEstado(pRPersistenciaAuditoria.getEstado());
+			persistencia.setEstado(TypeEstadoTramite.fromString(pRPersistenciaAuditoria.getEstado()));
 			persistencia.setCancelado(pRPersistenciaAuditoria.isCancelado());
 			persistencia.setFechaCaducidad(pRPersistenciaAuditoria.getFechaCaducidad());
 			persistencia.setPurgar(pRPersistenciaAuditoria.isPurgar());
 			persistencia.setFechaPurgado(pRPersistenciaAuditoria.getFechaPurgado());
 			persistencia.setPurgado(pRPersistenciaAuditoria.isPurgado());
+			persistencia.setDescripcionTramite(pRPersistenciaAuditoria.getDescripcionTramite());
+			persistencia.setFechaUltimoAcceso(pRPersistenciaAuditoria.getFechaUltimoAcceso());
+			persistencia.setFechaFin(pRPersistenciaAuditoria.getFechaFin());
+			persistencia.setPersistente(pRPersistenciaAuditoria.isPersistente());
+			persistencia.setUrlInicio(pRPersistenciaAuditoria.getUrlInicio());
 		}
 
 		return persistencia;
@@ -568,4 +616,38 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 
 		return rFiltro;
 	}
+
+	private FicheroPersistenciaAuditoria convierteFicheroPersistenciaAuditoria(
+			final RFicheroPersistenciaAuditoria pRFichero) {
+		FicheroPersistenciaAuditoria fichero = null;
+
+		if (pRFichero != null) {
+
+			fichero = new FicheroPersistenciaAuditoria();
+			fichero.setIdentificadorPaso(pRFichero.getIdentificadorPaso());
+			fichero.setTipoPaso(pRFichero.getTipoPaso());
+			fichero.setNombre(pRFichero.getNombre());
+			fichero.setCodigo(pRFichero.getCodigo());
+			fichero.setClave(pRFichero.getClave());
+			fichero.setTipo(TypeDocumentoPersistencia.fromString(pRFichero.getTipo()));
+
+		}
+
+		return fichero;
+	}
+
+	private FicheroAuditoria convierteAuditoriaFichero(final RFichero pRFichero) {
+		FicheroAuditoria fichero = null;
+
+		if (pRFichero != null) {
+
+			fichero = new FicheroAuditoria();
+
+			fichero.setContenido(Base64.decodeBase64(pRFichero.getContenido()));
+			fichero.setNombre(pRFichero.getNombre());
+		}
+
+		return fichero;
+	}
+
 }

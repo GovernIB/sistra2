@@ -34,8 +34,8 @@ public class DialogInformacionPagos extends DialogControllerBase {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 
 		if (modo == TypeModoAcceso.CONSULTA) {
-			dato = (PagoAuditoria) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_EVENTO);
-			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_EVENTO);
+			dato = (PagoAuditoria) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_PAGO);
+			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PAGO);
 
 			if (dato != null) {
 				final ResultadoAuditoriaDetallePago detallePago = helpDeskService

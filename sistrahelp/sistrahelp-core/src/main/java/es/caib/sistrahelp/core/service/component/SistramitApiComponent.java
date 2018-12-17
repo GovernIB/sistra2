@@ -1,5 +1,9 @@
 package es.caib.sistrahelp.core.service.component;
 
+import java.util.List;
+
+import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
+import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
@@ -72,5 +76,25 @@ public interface SistramitApiComponent {
 	 */
 	ResultadoAuditoriaPersistencia obtenerAuditoriaPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
+
+	/**
+	 * Obtener auditoria persistencia fichero.
+	 *
+	 * @param pIdTramite
+	 *            id tramite
+	 * @return lista de ficheros
+	 */
+	List<FicheroPersistenciaAuditoria> obtenerAuditoriaPersistenciaFichero(Long pIdTramite);
+
+	/**
+	 * Obtener auditoria fichero.
+	 *
+	 * @param pIdFichero
+	 *            id. fichero
+	 * @param pClave
+	 *            clave
+	 * @return fichero
+	 */
+	FicheroAuditoria obtenerAuditoriaFichero(Long pIdFichero, String pClave);
 
 }

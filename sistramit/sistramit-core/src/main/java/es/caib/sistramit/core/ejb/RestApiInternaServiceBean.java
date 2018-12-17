@@ -13,6 +13,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
 import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
@@ -83,6 +84,11 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		return restApiInternaService.recuperarPersistenciaArea(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(final Long pIdTramite) {
+		return restApiInternaService.recuperarPersistenciaFicheros(pIdTramite);
 	}
 
 }

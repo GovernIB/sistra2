@@ -20,6 +20,7 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
 import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
@@ -39,6 +40,7 @@ import es.caib.sistramit.rest.api.interna.RDatosSesionPago;
 import es.caib.sistramit.rest.api.interna.RDetallePagoAuditoria;
 import es.caib.sistramit.rest.api.interna.REventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFichero;
+import es.caib.sistramit.rest.api.interna.RFicheroPersistenciaAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroEventoAuditoria;
 import es.caib.sistramit.rest.api.interna.RFiltroPaginacion;
 import es.caib.sistramit.rest.api.interna.RFiltroPagoAuditoria;
@@ -219,7 +221,7 @@ public class ApiInternaRestController {
 		return convierteDetallePago(detallePago);
 	}
 
-	@ApiOperation(value = "Auditoría de tramite", notes = "Auditoría de tramite", response = ROUTPerdidaClave.class)
+	@ApiOperation(value = "Auditoría de tramite", notes = "Auditoría de tramite", response = ROUTTramiteAuditoria.class)
 	@RequestMapping(value = "/auditoria/tramite", method = RequestMethod.POST)
 	public ROUTTramiteAuditoria obtenerAuditoriaTramite(@RequestBody final RINTramiteAuditoria pFiltros) {
 		final ROUTTramiteAuditoria resTramite = new ROUTTramiteAuditoria();
@@ -244,6 +246,25 @@ public class ApiInternaRestController {
 		}
 
 		return resTramite;
+	}
+
+	@ApiOperation(value = "Recuperar ficheros de tramite", notes = "Recuperar ficheros de tramite.", response = RFicheroPersistenciaAuditoria.class, responseContainer = "List")
+	@RequestMapping(value = "/auditoria/tramite/{id}", method = RequestMethod.GET)
+	public List<RFicheroPersistenciaAuditoria> obtenerAuditoriaTramiteFicheros(
+			@PathVariable("id") final Long pIdTramite) {
+		List<RFicheroPersistenciaAuditoria> resultado = null;
+		final List<FicheroPersistenciaAuditoria> listaFicheros = restApiInternaService
+				.recuperarPersistenciaFicheros(pIdTramite);
+
+		if (listaFicheros != null && !listaFicheros.isEmpty()) {
+			resultado = new ArrayList<>();
+
+			for (final FicheroPersistenciaAuditoria fichero : listaFicheros) {
+				resultado.add(convierteFicheroPersistenciaAuditoria(fichero));
+			}
+		}
+
+		return resultado;
 	}
 
 	private RDetallePagoAuditoria convierteDetallePago(final DetallePagoAuditoria pDetallePago) {
@@ -526,7 +547,7 @@ public class ApiInternaRestController {
 
 			if (pRFiltro.getTipoTramitePersistencia() != null) {
 				filtro.setTipoTramitePersistencia(
-						TypeTramitePersistencia.valueOf(pRFiltro.getTipoTramitePersistencia()));
+						TypeTramitePersistencia.fromString(pRFiltro.getTipoTramitePersistencia()));
 			}
 
 			filtro.setIdTramite(pRFiltro.getIdTramite());
@@ -558,16 +579,39 @@ public class ApiInternaRestController {
 			rPersistencia.setApellido1(pPersistenciaAuditoria.getApellido1());
 			rPersistencia.setApellido2(pPersistenciaAuditoria.getApellido2());
 			rPersistencia.setFechaInicio(pPersistenciaAuditoria.getFechaInicio());
-			rPersistencia.setEstado(pPersistenciaAuditoria.getEstado());
+			rPersistencia.setEstado(pPersistenciaAuditoria.getEstado().toString());
 			rPersistencia.setCancelado(pPersistenciaAuditoria.isCancelado());
 			rPersistencia.setFechaCaducidad(pPersistenciaAuditoria.getFechaCaducidad());
 			rPersistencia.setPurgar(pPersistenciaAuditoria.isPurgar());
 			rPersistencia.setFechaPurgado(pPersistenciaAuditoria.getFechaPurgado());
 			rPersistencia.setPurgado(pPersistenciaAuditoria.isPurgado());
-
+			rPersistencia.setDescripcionTramite(pPersistenciaAuditoria.getDescripcionTramite());
+			rPersistencia.setFechaUltimoAcceso(pPersistenciaAuditoria.getFechaUltimoAcceso());
+			rPersistencia.setFechaFin(pPersistenciaAuditoria.getFechaFin());
+			rPersistencia.setPersistente(pPersistenciaAuditoria.isPersistente());
+			rPersistencia.setUrlInicio(pPersistenciaAuditoria.getUrlInicio());
 		}
 
 		return rPersistencia;
+	}
+
+	private RFicheroPersistenciaAuditoria convierteFicheroPersistenciaAuditoria(
+			final FicheroPersistenciaAuditoria pFichero) {
+		RFicheroPersistenciaAuditoria rFichero = null;
+
+		if (pFichero != null) {
+
+			rFichero = new RFicheroPersistenciaAuditoria();
+			rFichero.setIdentificadorPaso(pFichero.getIdentificadorPaso());
+			rFichero.setTipoPaso(pFichero.getTipoPaso());
+			rFichero.setNombre(pFichero.getNombre());
+			rFichero.setCodigo(pFichero.getCodigo());
+			rFichero.setClave(pFichero.getClave());
+			rFichero.setTipo(pFichero.getTipo());
+
+		}
+
+		return rFichero;
 	}
 
 }

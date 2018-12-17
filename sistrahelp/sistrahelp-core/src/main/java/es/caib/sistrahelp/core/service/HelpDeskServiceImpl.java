@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
+import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
@@ -120,7 +122,8 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	}
 
 	@Override
-	public Long contarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
+	@NegocioInterceptor
+	public Long countAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
 		Long resultado = null;
 		FiltroPersistenciaAuditoria filtroPersistencia = null;
 
@@ -138,7 +141,8 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 	}
 
 	@Override
-	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
+	@NegocioInterceptor
+	public List<PersistenciaAuditoria> obtenerAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		List<PersistenciaAuditoria> resultado = null;
 		FiltroPersistenciaAuditoria filtroPersistencia = null;
@@ -154,5 +158,17 @@ public class HelpDeskServiceImpl implements HelpDeskService {
 		}
 
 		return resultado;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<FicheroPersistenciaAuditoria> obtenerAuditoriaPersistenciaFichero(final Long pIdTramite) {
+		return sistramitApiComponent.obtenerAuditoriaPersistenciaFichero(pIdTramite);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public FicheroAuditoria obtenerAuditoriaFichero(final Long pIdFichero, final String pClave) {
+		return sistramitApiComponent.obtenerAuditoriaFichero(pIdFichero, pClave);
 	}
 }

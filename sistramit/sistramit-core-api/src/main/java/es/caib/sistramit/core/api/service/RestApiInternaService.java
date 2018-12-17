@@ -5,6 +5,7 @@ import java.util.List;
 import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
 import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
@@ -125,5 +126,14 @@ public interface RestApiInternaService {
 	 */
 	List<PersistenciaAuditoria> recuperarPersistenciaArea(FiltroPersistenciaAuditoria pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
+
+	/**
+	 * Recuperar persistencia ficheros.
+	 *
+	 * @param pIdTramite
+	 *            id. del tramite
+	 * @return lista de ficheros
+	 */
+	List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(Long pIdTramite);
 
 }

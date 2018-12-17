@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
+import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
@@ -79,15 +81,27 @@ public class HelpDeskServiceBean implements HelpDeskService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
-	public Long contarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
-		return helpdeskService.contarPersistenciaArea(pFiltroBusqueda);
+	public Long countAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
+		return helpdeskService.countAuditoriaPersistencia(pFiltroBusqueda);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
-	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
+	public List<PersistenciaAuditoria> obtenerAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
-		return helpdeskService.recuperarPersistenciaArea(pFiltroBusqueda, pFiltroPaginacion);
+		return helpdeskService.obtenerAuditoriaPersistencia(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	public List<FicheroPersistenciaAuditoria> obtenerAuditoriaPersistenciaFichero(final Long pIdTramite) {
+		return helpdeskService.obtenerAuditoriaPersistenciaFichero(pIdTramite);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	public FicheroAuditoria obtenerAuditoriaFichero(final Long pIdFichero, final String pClave) {
+		return helpdeskService.obtenerAuditoriaFichero(pIdFichero, pClave);
 	}
 
 }

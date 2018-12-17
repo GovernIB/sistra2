@@ -12,23 +12,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.LazyDataModel;
 
 import es.caib.sistrahelp.core.api.model.Area;
-import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
-import es.caib.sistrahelp.core.api.model.PagoAuditoria;
+import es.caib.sistrahelp.core.api.model.FiltroPersistenciaAuditoria;
+import es.caib.sistrahelp.core.api.model.PersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.comun.Constantes;
-import es.caib.sistrahelp.core.api.model.types.TypeEstadoPago;
-import es.caib.sistrahelp.core.api.model.types.TypePresentacion;
 import es.caib.sistrahelp.core.api.service.HelpDeskService;
-import es.caib.sistrahelp.frontend.model.PagoAuditoriaLazyDataModel;
+import es.caib.sistrahelp.frontend.model.PersistenciaLazyDataModel;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrahelp.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrahelp.frontend.util.UtilJSF;
 
 /**
- * La clase ViewAuditoriaTramites.
+ * La clase ViewInformacionPersistencia.
  */
 @ManagedBean
 @ViewScoped
-public class ViewInformacionPagos extends ViewControllerBase {
+public class ViewInformacionPersistencia extends ViewControllerBase {
 
 	/**
 	 * helpdesk service.
@@ -39,17 +37,17 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	/**
 	 * lista datos.
 	 */
-	private LazyDataModel<PagoAuditoria> listaDatos;
+	private LazyDataModel<PersistenciaAuditoria> listaDatos;
 
 	/**
 	 * dato seleccionado.
 	 */
-	private PagoAuditoria datoSeleccionado;
+	private PersistenciaAuditoria datoSeleccionado;
 
 	/**
 	 * filtros.
 	 */
-	private FiltroAuditoriaPago filtros;
+	private FiltroPersistenciaAuditoria filtros;
 
 	/**
 	 * Inicializa.
@@ -58,7 +56,8 @@ public class ViewInformacionPagos extends ViewControllerBase {
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		filtros = new FiltroAuditoriaPago(convierteListaAreas());
+		filtros = new FiltroPersistenciaAuditoria(convierteListaAreas());
+
 	}
 
 	/**
@@ -75,6 +74,8 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	private void normalizarFiltro() {
 		filtros.setIdSesionTramitacion(StringUtils.trim(filtros.getIdSesionTramitacion()));
 		filtros.setNif(StringUtils.trim(filtros.getNif()));
+		filtros.setIdTramite(StringUtils.trim(filtros.getIdTramite()));
+		filtros.setIdProcedimientoCP(StringUtils.trim(filtros.getIdProcedimientoCP()));
 	}
 
 	/**
@@ -82,10 +83,8 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-
-		final Long rowCount = helpDeskService.countAuditoriaPago(filtros);
-		listaDatos = new PagoAuditoriaLazyDataModel(helpDeskService, rowCount, filtros);
-
+		final Long rowCount = helpDeskService.countAuditoriaPersistencia(filtros);
+		listaDatos = new PersistenciaLazyDataModel(helpDeskService, rowCount, filtros);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -98,17 +97,12 @@ public class ViewInformacionPagos extends ViewControllerBase {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		int alto = 350;
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_PAGO, datoSeleccionado);
+		mochila.put(Constantes.CLAVE_MOCHILA_PERSISTENCIA, datoSeleccionado);
 
-		if (TypeEstadoPago.EN_CURSO.equals(datoSeleccionado.getEstadoPago()) && TypePresentacion.ELECTRONICA
-				.equals(TypePresentacion.fromString(datoSeleccionado.getPresentacion()))) {
-			alto = 500;
-		}
 		// Muestra dialogo
-		UtilJSF.openDialog(DialogInformacionPagos.class, TypeModoAcceso.CONSULTA, null, true, 900, alto);
+		UtilJSF.openDialog(DialogInformacionPersistencia.class, TypeModoAcceso.CONSULTA, null, true, 900, 600);
 	}
 
 	/**
@@ -167,7 +161,7 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	 *
 	 * @return el valor de listaDatos
 	 */
-	public LazyDataModel<PagoAuditoria> getListaDatos() {
+	public LazyDataModel<PersistenciaAuditoria> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -177,7 +171,7 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	 * @param listaDatos
 	 *            el nuevo valor de listaDatos
 	 */
-	public void setListaDatos(final LazyDataModel<PagoAuditoria> listaDatos) {
+	public void setListaDatos(final LazyDataModel<PersistenciaAuditoria> listaDatos) {
 		this.listaDatos = listaDatos;
 	}
 
@@ -186,7 +180,7 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	 *
 	 * @return el valor de datoSeleccionado
 	 */
-	public PagoAuditoria getDatoSeleccionado() {
+	public PersistenciaAuditoria getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -196,7 +190,7 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	 * @param datoSeleccionado
 	 *            el nuevo valor de datoSeleccionado
 	 */
-	public void setDatoSeleccionado(final PagoAuditoria datoSeleccionado) {
+	public void setDatoSeleccionado(final PersistenciaAuditoria datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 
@@ -205,7 +199,7 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	 *
 	 * @return el valor de filtros
 	 */
-	public FiltroAuditoriaPago getFiltros() {
+	public FiltroPersistenciaAuditoria getFiltros() {
 		return filtros;
 	}
 
@@ -215,7 +209,7 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	 * @param filtros
 	 *            el nuevo valor de filtros
 	 */
-	public void setFiltros(final FiltroAuditoriaPago filtros) {
+	public void setFiltros(final FiltroPersistenciaAuditoria filtros) {
 		this.filtros = filtros;
 	}
 

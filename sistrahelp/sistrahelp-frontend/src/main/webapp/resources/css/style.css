@@ -168,8 +168,20 @@ body{
   width: 10% !important;
 }
 
+.w11 {
+  width: 11% !important;
+}
+
+.w12 {
+  width: 12% !important;
+}
+
 .w15 {
   width: 15% !important;
+}
+
+.w18 {
+  width: 18% !important;
 }
 
 .w20 {
@@ -196,6 +208,9 @@ body{
   width: 27% !important;
 }
 
+.w29 {
+  width: 29% !important;
+}
 .w30 {
   width: 30% !important;
 }
@@ -423,6 +438,10 @@ body{
      padding-top: 0.8em !important;
 }
 
+.padding-left-2 {
+     padding-left: 0.2em !important;
+}
+
 .padding-left-4 {
      padding-left: 0.4em !important;
 }
@@ -446,6 +465,13 @@ body{
 
 .padding-right-18 {
      padding-right: 1.8em !important;
+}
+
+.padding-right-2pct {
+     padding-right: 2% !important;
+}
+.padding-right-4pct {
+     padding-right: 4% !important;
 }
 
 .noMargin {
@@ -579,3 +605,12 @@ label.ui-state-disabled {
 }
 
 .boton_derecha {float:right !important;}
+
+/* #dialogInformacionPersistencia\:bordes  td {border: 1px solid blue} */
+
+.dipC1 {width: 15% !important;}
+.dipC2 {width: 20% !important;}
+.dipC3 {width: 15% !important;}
+.dipC4 {width: 20% !important;}
+.dipC5 {width: 10% !important;}
+.dipC6 {width: 20% !important;}

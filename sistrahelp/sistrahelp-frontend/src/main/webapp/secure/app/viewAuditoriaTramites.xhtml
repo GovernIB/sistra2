@@ -21,57 +21,71 @@
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
 			<!-- Toolbar -->
-
-
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro" columns="4" columnClasses="w27,w22,w26,w25" styleClass="noBackground w100 h10 noBorders">
-        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
-	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
-		        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
-		        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
-		        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="12" maxlength="12"/>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
-	        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
-	        		<h:panelGroup>
-		        		<p:inputText id="filtroTramite" value="#{viewAuditoriaTramites.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();">
-		        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-		        		</p:inputText>
-		        		<p:outputLabel value=" / "/>
-		        		<p:inputText id="filtroVersion" value="#{viewAuditoriaTramites.filtros.versionTramite}" size="1" maxlength="2">
-		        			<p:keyFilter regEx="/[0-9]/i"/>
-		        		</p:inputText>
-	        		</h:panelGroup>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
-	        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
-	        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="20" maxlength="20">
-	        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-	        		</p:inputText>
-	        	</h:panelGrid>
+        	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 noBorders">
+        		<p:row>
+        			<p:column styleClass="w27">
+		        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
+				        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
+			        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column styleClass="w22">
+			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+				        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
+				        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="12" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
+			        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column styleClass="w26">
+			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+			        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
+			        		<h:panelGroup>
+				        		<p:inputText id="filtroTramite" value="#{viewAuditoriaTramites.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+				        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				        		</p:inputText>
+				        		<p:outputLabel value=" / "/>
+				        		<p:inputText id="filtroVersion" value="#{viewAuditoriaTramites.filtros.versionTramite}" size="1" maxlength="2">
+				        			<p:keyFilter regEx="/[0-9]/i"/>
+				        		</p:inputText>
+			        		</h:panelGroup>
+			        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column styleClass="w25">
+			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
+			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
+			        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="20" maxlength="20">
+			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			        		</p:inputText>
+			        	</h:panelGrid>
+		        	</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="2">
+							<p:outputLabel value="#{msg['viewAuditoriaTramites.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
-	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:"/>
-	        		<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
-	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:"/>
-	        		<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
-	        		<p:outputLabel for="filtroEvento" value="#{msg['viewAuditoriaTramites.filtroEvento']}:"/>
+			        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewAuditoriaTramites.filtroFechaInicio']}:" styleClass="padding-right-4"/>
+			        		<p:calendar id="filtroFechaInicio" value="#{viewAuditoriaTramites.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 
-					<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtros.evento}">
-					 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
-    					<f:selectItems value="#{viewAuditoriaTramites.tiposEventos}" var="evento" itemLabel="#{msg['typeEvento.' += evento]}"/>
-					</p:selectOneMenu >
+			        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewAuditoriaTramites.filtroFechaFin']}:" styleClass="padding-right-4"/>
+			        		<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 
-	        	</h:panelGrid>
-          		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+					</p:column>
+					<p:column>
+			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+			        		<p:outputLabel for="filtroEvento" value="#{msg['viewAuditoriaTramites.filtroEvento']}:"/>
 
-          		</p:panelGrid>
+							<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtros.evento}">
+							 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
+		    					<f:selectItems value="#{viewAuditoriaTramites.tiposEventos}" var="evento" itemLabel="#{msg['typeEvento.' += evento]}"/>
+							</p:selectOneMenu >
+
+			        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column>
+	          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+					</p:column>
+				</p:row>
+          	</p:panelGrid>
 
 
 			<!-- Data table -->

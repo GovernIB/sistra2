@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{viewInformacionPersistencia.init}" />
+	</f:metadata>
+
+
+
+	<ui:define name="content">
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+		<p:importEnum type="es.caib.sistrahelp.core.api.model.types.TypeTramitePersistencia" var="TypeTramitePersistencia"/>
+
+		<h:form id="form" styleClass="h100">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+
+
+        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+        	<p:panelGrid id="panelFiltro" columns="4" columnClasses="w29 padding-left-2 padding-right-2,w20 padding-left-2 padding-right-2,w25 padding-left-2 padding-right-2,w26 padding-left-2 padding-right-2" styleClass="noBackground w100 h10 noBorders">
+        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+	        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPersistencia.filtroIdSesion']}:"/>
+		        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPersistencia.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+		        	<p:outputLabel for="filtroNif" value="#{msg['viewInformacionPersistencia.filtroNif']}:"/>
+		        	<p:inputText id="filtroNif" value="#{viewInformacionPersistencia.filtros.nif}" size="12" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+	        		<p:outputLabel for="filtroTramite" value="#{msg['viewInformacionPersistencia.filtroTramite']}:"/>
+	        		<h:panelGroup>
+		        		<p:inputText id="filtroTramite" value="#{viewInformacionPersistencia.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+		        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+		        		</p:inputText>
+		        		<p:outputLabel value=" / "/>
+		        		<p:inputText id="filtroVersion" value="#{viewInformacionPersistencia.filtros.versionTramite}" size="1" maxlength="2">
+		        			<p:keyFilter regEx="/[0-9]/i"/>
+		        		</p:inputText>
+	        		</h:panelGroup>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
+	        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewInformacionPersistencia.filtroProcedimiento']}:"/>
+	        		<p:inputText id="filtroProcedimiento" value="#{viewInformacionPersistencia.filtros.idProcedimientoCP}" size="20" maxlength="20">
+	        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+	        		</p:inputText>
+	        	</h:panelGrid>
+
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewInformacionPersistencia.filtroFechaInicio']}:"/>
+	        		<p:calendar id="filtroFechaInicio" value="#{viewInformacionPersistencia.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
+	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewInformacionPersistencia.filtroFechaFin']}:"/>
+	        		<p:calendar id="filtroFechaFin" value="#{viewInformacionPersistencia.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+	        	</h:panelGrid>
+	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+					<p:outputLabel for="filtroTipo" value="#{msg['viewInformacionPersistencia.filtroTipo']}:"/>
+					<p:selectOneMenu id="filtroTipo" value="#{viewInformacionPersistencia.filtros.tipoTramitePersistencia}">
+    					<f:selectItems value="#{TypeTramitePersistencia.ALL_VALUES}" var="tipo" itemLabel="#{msg['typeTramitePersistencia.' += tipo]}"/>
+					</p:selectOneMenu >
+	        	</h:panelGrid>
+          		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewInformacionPersistencia.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+
+          		</p:panelGrid>
+
+
+			<!-- Data table -->
+			<p:outputPanel  styleClass="h80">
+			<p:dataTable id="dataTable" var="dt" value="#{viewInformacionPersistencia.listaDatos}" lazy="true"
+						 rows="10" emptyMessage="#{msg['error.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewInformacionPersistencia.datoSeleccionado}" rowKey="#{dt.id}">
+
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headFecha']}"         width="11%" styleClass="grid-center">
+			        <h:outputText value="#{dt.fechaInicio}">
+			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}"       width="10%" styleClass="grid-center">
+			        <h:outputText value="#{dt.idTramite}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headVersion']}"       width="4%" styleClass="grid-center">
+			        <h:outputText value="#{dt.versionTramite}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headDescripcionTramite']}"      width="20%">
+			        <h:outputText value="#{dt.descripcionTramite}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headIdSesion']}"      width="16%" styleClass="grid-center">
+			        <h:outputText value="#{dt.idSesionTramitacion}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headNif']}"           width="8%" styleClass="grid-center">
+			        <h:outputText value="#{dt.nif}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headNombre']}"           width="14%">
+			        <h:outputText value="#{dt.nombre.concat(' ').concat(dt.apellido1).concat(' ').concat(dt.apellido2)}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headFechaUltimoAcceso']}"         width="11%" styleClass="grid-center">
+			        <h:outputText value="#{dt.fechaUltimoAcceso}">
+			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headEstado']}"           width="6%" styleClass="grid-center">
+			        <h:outputText value="#{msg['typeEstadoTramite.'+=dt.estado]}" />
+			    </p:column>
+
+			</p:dataTable></p:outputPanel>
+
+			<h:outputScript >
+		      function triggerDblClick() {
+		        	$('#form\\:btnEditarHidden').click();
+		      }
+		    </h:outputScript>
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewInformacionPersistencia.rcDobleClick()}" process="@this" update="growl" style="display:none"/>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

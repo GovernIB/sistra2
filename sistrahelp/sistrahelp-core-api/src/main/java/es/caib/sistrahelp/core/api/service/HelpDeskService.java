@@ -3,6 +3,8 @@ package es.caib.sistrahelp.core.api.service;
 import java.util.List;
 
 import es.caib.sistrahelp.core.api.model.EventoAuditoriaTramitacion;
+import es.caib.sistrahelp.core.api.model.FicheroAuditoria;
+import es.caib.sistrahelp.core.api.model.FicheroPersistenciaAuditoria;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaPago;
 import es.caib.sistrahelp.core.api.model.FiltroAuditoriaTramitacion;
 import es.caib.sistrahelp.core.api.model.FiltroPaginacion;
@@ -84,7 +86,7 @@ public interface HelpDeskService {
 	 *            filtro busqueda
 	 * @return numero de elementos
 	 */
-	public Long contarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda);
+	public Long countAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda);
 
 	/**
 	 * Recuperar persistencia area.
@@ -95,6 +97,26 @@ public interface HelpDeskService {
 	 *            filtro paginacion
 	 * @return lista de persistencia
 	 */
-	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
+	public List<PersistenciaAuditoria> obtenerAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion);
+
+	/**
+	 * Obtener auditoria persistencia fichero.
+	 *
+	 * @param pIdTramite
+	 *            id tramite
+	 * @return lista de ficheros
+	 */
+	public List<FicheroPersistenciaAuditoria> obtenerAuditoriaPersistenciaFichero(final Long pIdTramite);
+
+	/**
+	 * Obtener auditoria fichero.
+	 *
+	 * @param pIdFichero
+	 *            id. fichero
+	 * @param pClave
+	 *            clave
+	 * @return fichero
+	 */
+	public FicheroAuditoria obtenerAuditoriaFichero(Long pIdFichero, String pClave);
 }

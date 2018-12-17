@@ -24,46 +24,58 @@
 
 
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro" columns="3" columnClasses="w50,w30,w20" styleClass="noBackground w100 h10 noBorders">
-        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
-	        		<p:outputLabel for="filtroDato" value="#{msg['viewPerdidaClave.filtroDatoFormulario']}:"/>
-		        	<p:inputText id="filtroDato" value="#{viewPerdidaClave.filtros.datoFormulario}" size="60" maxlength="60" required="true"/>
-	        	</h:panelGrid>
+        	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 noBorders">
+        		<p:row>
+        			<p:column styleClass="w50">
+		        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
+			        		<p:outputLabel for="filtroDato" value="#{msg['viewPerdidaClave.filtroDatoFormulario']}:"/>
+				        	<p:inputText id="filtroDato" value="#{viewPerdidaClave.filtros.datoFormulario}" size="60" maxlength="60" required="true"/>
+			        	</h:panelGrid>
+					</p:column>
+					<p:column styleClass="w30">
+		        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
+		        		<h:panelGroup>
+		        			<p:outputLabel for="filtroTramite" value="#{msg['viewPerdidaClave.filtroTramite']}" indicateRequired=""/>
+		        			<p:outputLabel value="/" />
+		        			<p:outputLabel for="filtroVersion" value="#{msg['viewPerdidaClave.filtroVersion']}:"/>
+		        		</h:panelGroup>
+		        		<h:panelGroup>
+			        		<p:inputText id="filtroTramite" value="#{viewPerdidaClave.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();" required="true">
+			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			        		</p:inputText>
+			        		<p:outputLabel value=" / "/>
+			        		<p:inputText id="filtroVersion" value="#{viewPerdidaClave.filtros.versionTramite}" size="1" maxlength="2" required="true">
+			        			<p:keyFilter regEx="/[0-9]/i"/>
+			        		</p:inputText>
+		        		</h:panelGroup>
+		        	</h:panelGrid>
+		        	</p:column>
+		        	<p:column styleClass="w20">
+			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
+			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewPerdidaClave.filtroProcedimiento']}:"/>
+			        		<p:inputText id="filtroProcedimiento" value="#{viewPerdidaClave.filtros.idProcedimientoCP}" size="20" maxlength="20">
+			        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+			        		</p:inputText>
+			        	</h:panelGrid>
+		        	</p:column>
+	        	</p:row>
+	        	<p:row>
+	        		<p:column colspan="2">
+						<p:outputLabel value="#{msg['viewPerdidaClave.filtroFecha']}:" styleClass="padding-right-2pct"/>
 
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
-	        		<h:panelGroup>
-	        			<p:outputLabel for="filtroTramite" value="#{msg['viewPerdidaClave.filtroTramite']}" indicateRequired=""/>
-	        			<p:outputLabel value="/" />
-	        			<p:outputLabel for="filtroVersion" value="#{msg['viewPerdidaClave.filtroVersion']}:"/>
-	        		</h:panelGroup>
-	        		<h:panelGroup>
-		        		<p:inputText id="filtroTramite" value="#{viewPerdidaClave.filtros.idTramite}" size="16" maxlength="20" onblur="this.value = this.value.toUpperCase();" required="true">
-		        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-		        		</p:inputText>
-		        		<p:outputLabel value=" / "/>
-		        		<p:inputText id="filtroVersion" value="#{viewPerdidaClave.filtros.versionTramite}" size="1" maxlength="2" required="true">
-		        			<p:keyFilter regEx="/[0-9]/i"/>
-		        		</p:inputText>
-	        		</h:panelGroup>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
-	        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewPerdidaClave.filtroProcedimiento']}:"/>
-	        		<p:inputText id="filtroProcedimiento" value="#{viewPerdidaClave.filtros.idProcedimientoCP}" size="20" maxlength="20">
-	        			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
-	        		</p:inputText>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
-	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:"/>
-	        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
-	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:"/>
-	        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
-	        	</h:panelGrid>
+		        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewPerdidaClave.filtroFechaInicio']}:" styleClass="padding-right-4"/>
+		        		<p:calendar id="filtroFechaInicio" value="#{viewPerdidaClave.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
 
-          		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewPerdidaClave.filtroFechaFin']}:" styleClass="padding-right-4"/>
+		        		<p:calendar id="filtroFechaFin" value="#{viewPerdidaClave.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
 
-          		</p:panelGrid>
+					</p:column>
+
+					<p:column>
+	          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewPerdidaClave.filtrar}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+	          		</p:column>
+				</p:row>
+          	</p:panelGrid>
 
 
 			<!-- Data table -->

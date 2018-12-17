@@ -2,14 +2,18 @@ package es.caib.sistrahelp.core.api.model;
 
 import java.util.Date;
 
+import es.caib.sistrahelp.core.api.model.types.TypeEstadoTramite;
+
 /**
  * Evento de persistencia.
  *
  * @author Indra
  *
  */
-@SuppressWarnings("serial")
 public final class PersistenciaAuditoria extends ModelApi {
+
+	private static final long serialVersionUID = 1L;
+
 	public PersistenciaAuditoria() {
 		super();
 	}
@@ -24,12 +28,17 @@ public final class PersistenciaAuditoria extends ModelApi {
 	private String apellido1;
 	private String apellido2;
 	private Date fechaInicio;
-	private String estado;
+	private TypeEstadoTramite estado;
 	private boolean cancelado;
 	private Date fechaCaducidad;
 	private boolean purgar;
 	private Date fechaPurgado;
 	private boolean purgado;
+	private String descripcionTramite;
+	private Date fechaUltimoAcceso;
+	private Date fechaFin;
+	private boolean persistente;
+	private String urlInicio;
 
 	public Long getId() {
 		return id;
@@ -111,11 +120,11 @@ public final class PersistenciaAuditoria extends ModelApi {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public String getEstado() {
+	public TypeEstadoTramite getEstado() {
 		return estado;
 	}
 
-	public void setEstado(final String estado) {
+	public void setEstado(final TypeEstadoTramite estado) {
 		this.estado = estado;
 	}
 
@@ -157,6 +166,46 @@ public final class PersistenciaAuditoria extends ModelApi {
 
 	public void setPurgado(final boolean purgado) {
 		this.purgado = purgado;
+	}
+
+	public String getDescripcionTramite() {
+		return descripcionTramite;
+	}
+
+	public void setDescripcionTramite(final String descripcionTramite) {
+		this.descripcionTramite = descripcionTramite;
+	}
+
+	public Date getFechaUltimoAcceso() {
+		return fechaUltimoAcceso;
+	}
+
+	public void setFechaUltimoAcceso(final Date fechaUltimoAcceso) {
+		this.fechaUltimoAcceso = fechaUltimoAcceso;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(final Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	public boolean isPersistente() {
+		return persistente;
+	}
+
+	public void setPersistente(final boolean persistente) {
+		this.persistente = persistente;
+	}
+
+	public String getUrlInicio() {
+		return urlInicio;
+	}
+
+	public void setUrlInicio(final String urlInicio) {
+		this.urlInicio = urlInicio;
 	}
 
 }

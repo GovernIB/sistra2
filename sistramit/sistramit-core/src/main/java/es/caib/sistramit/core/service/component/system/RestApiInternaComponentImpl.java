@@ -19,6 +19,7 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
@@ -201,6 +202,11 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 	public List<PersistenciaAuditoria> recuperarPersistenciaArea(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		return flujoTramiteDao.obtenerTramitesPersistencia(pFiltroBusqueda, pFiltroPaginacion);
+	}
+
+	@Override
+	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(final Long pIdTramite) {
+		return flujoTramiteDao.recuperarPersistenciaFicheros(pIdTramite);
 	}
 
 	/**

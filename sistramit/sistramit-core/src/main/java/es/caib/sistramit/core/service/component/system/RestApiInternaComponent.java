@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
@@ -90,5 +91,14 @@ public interface RestApiInternaComponent {
 	 */
 	List<PersistenciaAuditoria> recuperarPersistenciaArea(FiltroPersistenciaAuditoria pFiltroBusqueda,
 			FiltroPaginacion pFiltroPaginacion);
+
+	/**
+	 * Recuperar persistencia ficheros.
+	 *
+	 * @param pIdTramite
+	 *            id. tramite
+	 * @return lista de ficheros
+	 */
+	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(final Long pIdTramite);
 
 }

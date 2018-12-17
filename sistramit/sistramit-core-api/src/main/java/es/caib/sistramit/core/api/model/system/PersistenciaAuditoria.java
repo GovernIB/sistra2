@@ -3,6 +3,8 @@ package es.caib.sistramit.core.api.model.system;
 import java.io.Serializable;
 import java.util.Date;
 
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
+
 /**
  * Evento de persistencia.
  *
@@ -16,7 +18,8 @@ public final class PersistenciaAuditoria implements Serializable {
 			final int versionTramite, final String idProcedimientoCP, final String nif, final String nombre,
 			final String apellido1, final String apellido2, final Date fechaInicio, final String estado,
 			final boolean cancelado, final Date fechaCaducidad, final boolean purgar, final Date fechaPurgado,
-			final boolean purgado) {
+			final boolean purgado, final String descripcionTramite, final Date fechaUltimoAcceso, final Date fechaFin,
+			final boolean persistente, final String urlInicio) {
 		super();
 		this.id = id;
 		this.idSesionTramitacion = idSesionTramitacion;
@@ -28,12 +31,17 @@ public final class PersistenciaAuditoria implements Serializable {
 		this.apellido1 = apellido1;
 		this.apellido2 = apellido2;
 		this.fechaInicio = fechaInicio;
-		this.estado = estado;
+		this.estado = TypeEstadoTramite.fromString(estado);
 		this.cancelado = cancelado;
 		this.fechaCaducidad = fechaCaducidad;
 		this.purgar = purgar;
 		this.fechaPurgado = fechaPurgado;
 		this.purgado = purgado;
+		this.descripcionTramite = descripcionTramite;
+		this.fechaUltimoAcceso = fechaUltimoAcceso;
+		this.fechaFin = fechaFin;
+		this.persistente = persistente;
+		this.urlInicio = urlInicio;
 	}
 
 	public PersistenciaAuditoria() {
@@ -50,12 +58,17 @@ public final class PersistenciaAuditoria implements Serializable {
 	private String apellido1;
 	private String apellido2;
 	private Date fechaInicio;
-	private String estado;
+	private TypeEstadoTramite estado;
 	private boolean cancelado;
 	private Date fechaCaducidad;
 	private boolean purgar;
 	private Date fechaPurgado;
 	private boolean purgado;
+	private String descripcionTramite;
+	private Date fechaUltimoAcceso;
+	private Date fechaFin;
+	private boolean persistente;
+	private String urlInicio;
 
 	public Long getId() {
 		return id;
@@ -137,11 +150,11 @@ public final class PersistenciaAuditoria implements Serializable {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public String getEstado() {
+	public TypeEstadoTramite getEstado() {
 		return estado;
 	}
 
-	public void setEstado(final String estado) {
+	public void setEstado(final TypeEstadoTramite estado) {
 		this.estado = estado;
 	}
 
@@ -183,6 +196,46 @@ public final class PersistenciaAuditoria implements Serializable {
 
 	public void setPurgado(final boolean purgado) {
 		this.purgado = purgado;
+	}
+
+	public String getDescripcionTramite() {
+		return descripcionTramite;
+	}
+
+	public void setDescripcionTramite(final String descripcionTramite) {
+		this.descripcionTramite = descripcionTramite;
+	}
+
+	public Date getFechaUltimoAcceso() {
+		return fechaUltimoAcceso;
+	}
+
+	public void setFechaUltimoAcceso(final Date fechaUltimoAcceso) {
+		this.fechaUltimoAcceso = fechaUltimoAcceso;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(final Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	public boolean isPersistente() {
+		return persistente;
+	}
+
+	public void setPersistente(final boolean persistente) {
+		this.persistente = persistente;
+	}
+
+	public String getUrlInicio() {
+		return urlInicio;
+	}
+
+	public void setUrlInicio(final String urlInicio) {
+		this.urlInicio = urlInicio;
 	}
 
 }

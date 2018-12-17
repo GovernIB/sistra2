@@ -6,14 +6,13 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.fundaciobit.pluginsib.core.utils.PluginsManager;
 
 public class TestPluginFirmaServidor {
 
 	private final static String prefijoGlobal = "es.caib.sistra2.";
 	private final static String prefijoPlugin = "afirmacxf.";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception {
 
 		final String classname = "org.fundaciobit.plugins.validatesignature.afirmacxf.AfirmaCxfValidateSignaturePlugin";
 
@@ -31,32 +30,36 @@ public class TestPluginFirmaServidor {
 		prop.put(getBaseNameProperty("authorization.ks.cert.password"), "3s1rca");
 
 		/*
-		final IValidateSignaturePlugin plg = (IValidateSignaturePlugin) PluginsManager
-				.instancePluginByClassName(classname, prefijoGlobal, prop);
-
-		final ValidateSignatureRequest validateRequest = new ValidateSignatureRequest();
-		validateRequest.setLanguage("es");
-		// validateRequest.setSignedDocumentData(signedDocumentData);
-		validateRequest.setSignatureData(readResourceFromClasspath("validateSignature/firma.pdf"));
-		final SignatureRequestedInformation signatureRequestedInformation = new SignatureRequestedInformation();
-		signatureRequestedInformation.setReturnCertificateInfo(true);
-		signatureRequestedInformation.setReturnCertificates(true);
-		signatureRequestedInformation.setReturnSignatureTypeFormatProfile(true);
-		signatureRequestedInformation.setValidateCertificateRevocation(true);
-		signatureRequestedInformation.setReturnValidationChecks(true);
-		signatureRequestedInformation.setReturnTimeStampInfo(true);
-		validateRequest.setSignatureRequestedInformation(signatureRequestedInformation);
-
-		final ValidateSignatureResponse validateResponse = plg.validateSignature(validateRequest);
-
-		System.out.println("Status: " + validateResponse.getValidationStatus().getStatus());
-		*/
-
+		 * final IValidateSignaturePlugin plg = (IValidateSignaturePlugin)
+		 * PluginsManager .instancePluginByClassName(classname, prefijoGlobal, prop);
+		 *
+		 * final ValidateSignatureRequest validateRequest = new
+		 * ValidateSignatureRequest(); validateRequest.setLanguage("es"); //
+		 * validateRequest.setSignedDocumentData(signedDocumentData);
+		 * validateRequest.setSignatureData(readResourceFromClasspath(
+		 * "validateSignature/firma.pdf")); final SignatureRequestedInformation
+		 * signatureRequestedInformation = new SignatureRequestedInformation();
+		 * signatureRequestedInformation.setReturnCertificateInfo(true);
+		 * signatureRequestedInformation.setReturnCertificates(true);
+		 * signatureRequestedInformation.setReturnSignatureTypeFormatProfile(true);
+		 * signatureRequestedInformation.setValidateCertificateRevocation(true);
+		 * signatureRequestedInformation.setReturnValidationChecks(true);
+		 * signatureRequestedInformation.setReturnTimeStampInfo(true);
+		 * validateRequest.setSignatureRequestedInformation(
+		 * signatureRequestedInformation);
+		 *
+		 * final ValidateSignatureResponse validateResponse =
+		 * plg.validateSignature(validateRequest);
+		 * 
+		 * System.out.println("Status: " +
+		 * validateResponse.getValidationStatus().getStatus());
+		 */
 	}
 
-	private static String getBaseNameProperty(String prop) {
-		return "";
-		//return prefijoGlobal + IValidateSignaturePlugin.VALIDATE_SIGNATURE_BASE_PROPERTY + prefijoPlugin + prop;
+	private static String getBaseNameProperty(final String prop) {
+		return "";// return prefijoGlobal +
+					// IValidateSignaturePlugin.VALIDATE_SIGNATURE_BASE_PROPERTY + prefijoPlugin +
+					// prop;
 	}
 
 	/**

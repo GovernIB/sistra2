@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
@@ -214,6 +215,15 @@ public interface FlujoTramiteDao {
 	 */
 	List<PersistenciaAuditoria> obtenerTramitesPersistencia(FiltroPersistenciaAuditoria pFiltroBusqueda,
 			FiltroPaginacion filtroPaginacion);
+
+	/**
+	 * Recuperar persistencia ficheros.
+	 *
+	 * @param pIdTramite
+	 *            id tramite
+	 * @return lista de ficheros
+	 */
+	List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(Long pIdTramite);
 
 	// TODO PENDIENTE FUNCIONES PERSISTENCIA CARPETA
 

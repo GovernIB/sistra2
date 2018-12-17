@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
 import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
 import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
@@ -101,4 +102,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		return restApiInternaComponent.recuperarPersistenciaArea(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(final Long pIdTramite) {
+		return restApiInternaComponent.recuperarPersistenciaFicheros(pIdTramite);
+
+	}
 }

@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.repository.dao;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +21,11 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistramit.core.api.exception.RepositoryException;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
 import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
@@ -32,9 +36,11 @@ import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
+import es.caib.sistramit.core.service.model.flujo.types.TypeDocumentoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.system.PerdidaClaveFichero;
 import es.caib.sistramit.core.service.repository.model.HDocumento;
+import es.caib.sistramit.core.service.repository.model.HFichero;
 import es.caib.sistramit.core.service.repository.model.HFirma;
 import es.caib.sistramit.core.service.repository.model.HPaso;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
@@ -311,7 +317,85 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 
 	}
 
+	@Override
+	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(final Long pIdTramite) {
+
+		final List<FicheroPersistenciaAuditoria> result = recuperarPersistenciaFicherosCriteria(pIdTramite, "fichero");
+
+		result.addAll(recuperarPersistenciaFicherosCriteria(pIdTramite, "formularioPdf"));
+
+		result.addAll(recuperarPersistenciaFicherosCriteria(pIdTramite, "pagoJustificantePdf"));
+
+		Collections.sort(result, (a, b) -> a.getCodigo().compareTo(b.getCodigo()));
+
+		result.addAll(recuperarPersistenciaFicherosFirmaCriteria(pIdTramite));
+
+		return result;
+	}
+
 	// ------------ FUNCIONES PRIVADAS --------------------------------------
+
+	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicherosFirmaCriteria(final Long pIdTramite) {
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<FicheroPersistenciaAuditoria> query = builder
+				.createQuery(FicheroPersistenciaAuditoria.class);
+
+		final Root<HTramite> tableT = query.from(HTramite.class);
+		final Root<HPaso> tableP = query.from(HPaso.class);
+		final Root<HDocumento> tableD = query.from(HDocumento.class);
+		final Root<HFichero> tableFic = query.from(HFichero.class);
+		final Root<HFirma> tableFirma = query.from(HFirma.class);
+
+		Predicate predicate = builder.equal(tableP.get("tramitePersistencia"), tableT);
+		predicate = builder.and(predicate, builder.equal(tableD.get("paso"), tableP));
+		predicate = builder.and(predicate, builder.equal(tableFirma.get("documentoPersistente"), tableD));
+		predicate = builder.and(predicate, builder.equal(tableFirma.get("firma"), tableFic));
+
+		predicate = builder.and(predicate, builder.equal(tableT.get("codigo"), pIdTramite));
+		predicate = builder.and(predicate,
+				builder.equal(tableD.get("estado"), TypeEstadoDocumento.RELLENADO_CORRECTAMENTE.toString()));
+
+		query.where(predicate);
+
+		query.multiselect(tableP.get("identificadorPaso"), tableP.get("tipoPaso"), tableFic.get("nombre"),
+				tableFic.get("codigo"), tableFic.get("clave"), tableD.get("tipo"));
+
+		final List<FicheroPersistenciaAuditoria> result = entityManager.createQuery(query).getResultList();
+
+		return result;
+	}
+
+	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicherosCriteria(final Long pIdTramite,
+			final String pReferencia) {
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<FicheroPersistenciaAuditoria> query = builder
+				.createQuery(FicheroPersistenciaAuditoria.class);
+
+		final Root<HTramite> tableT = query.from(HTramite.class);
+		final Root<HPaso> tableP = query.from(HPaso.class);
+		final Root<HDocumento> tableD = query.from(HDocumento.class);
+		final Root<HFichero> tableFic = query.from(HFichero.class);
+
+		Predicate predicate = builder.equal(tableP.get("tramitePersistencia"), tableT);
+		predicate = builder.and(predicate, builder.equal(tableD.get("paso"), tableP));
+		predicate = builder.and(predicate, builder.equal(tableD.get(pReferencia), tableFic));
+
+		predicate = builder.and(predicate, builder.equal(tableT.get("codigo"), pIdTramite));
+		predicate = builder.and(predicate,
+				builder.equal(tableD.get("estado"), TypeEstadoDocumento.RELLENADO_CORRECTAMENTE.toString()));
+
+		query.where(predicate);
+
+		query.multiselect(tableP.get("identificadorPaso"), tableP.get("tipoPaso"), tableFic.get("nombre"),
+				tableFic.get("codigo"), tableFic.get("clave"), tableD.get("tipo"));
+
+		final List<FicheroPersistenciaAuditoria> result = entityManager.createQuery(query).getResultList();
+
+		return result;
+	}
+
 	private <T> CriteriaQuery<T> obtenerTramitesPersistenciaCriteria(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final Class<T> pTipo, final boolean pCount) {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -366,16 +450,19 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 
 		if (TypeTramitePersistencia.PAGO_REALIZADO_TRAMITE_SIN_FINALIZAR
 				.equals(pFiltroBusqueda.getTipoTramitePersistencia())) {
-			predicate = builder.and(predicate, builder.equal(tableT.get("estado"), "f"));
+			predicate = builder.and(predicate,
+					builder.equal(tableT.get("estado"), TypeEstadoTramite.FINALIZADO.toString()));
 
-			predicate = builder.and(predicate, builder.equal(tableD.get("estado"), "p"));
-			predicate = builder.and(predicate, builder.equal(tableD.get("tipo"), "c"));
+			predicate = builder.and(predicate,
+					builder.equal(tableD.get("tipo"), TypeDocumentoPersistencia.PAGO.toString()));
+			predicate = builder.and(predicate,
+					builder.equal(tableD.get("estado"), TypeEstadoDocumento.RELLENADO_CORRECTAMENTE.toString()));
 		}
 
 		query.where(predicate);
 
 		if (pCount) {
-			query.multiselect(builder.count(tableD));
+			query.multiselect(builder.countDistinct(tableT));
 		} else {
 			query.orderBy(builder.asc(tableT.get("fechaInicio")));
 			query.distinct(true);
@@ -384,7 +471,8 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 					tableT.get("nombreIniciador"), tableT.get("apellido1Iniciador"), tableT.get("apellido2Iniciador"),
 					tableT.get("fechaInicio"), tableT.get("estado"), tableT.get("cancelado"),
 					tableT.get("fechaCaducidad"), tableT.get("purgar"), tableT.get("fechaPurgado"),
-					tableT.get("purgado"));
+					tableT.get("purgado"), tableT.get("descripcionTramite"), tableT.get("fechaUltimoAcceso"),
+					tableT.get("fechaFin"), tableT.get("persistente"), tableT.get("urlInicio"));
 		}
 
 		return query;
@@ -400,8 +488,9 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		final Root<HDocumento> tableD = query.from(HDocumento.class);
 		final Root<HSesionTramitacion> tableS = query.from(HSesionTramitacion.class);
 
-		Predicate predicate = builder.notEqual(tableD.get("estado"), "v");
-		predicate = builder.and(predicate, builder.equal(tableD.get("tipo"), "p"));
+		Predicate predicate = builder.notEqual(tableD.get("estado"), TypeEstadoDocumento.SIN_RELLENAR.toString());
+		predicate = builder.and(predicate,
+				builder.equal(tableD.get("tipo"), TypeDocumentoPersistencia.PAGO.toString()));
 		predicate = builder.and(predicate, builder.equal(tableT.get("sesionTramitacion"), tableS));
 		predicate = builder.and(predicate, builder.equal(tableP.get("tramitePersistencia"), tableT));
 		predicate = builder.and(predicate, builder.equal(tableD.get("paso"), tableP));
@@ -460,11 +549,14 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		final Root<HDocumento> tableD = query.from(HDocumento.class);
 		final Root<HSesionTramitacion> tableS = query.from(HSesionTramitacion.class);
 
-		Predicate predicate = builder.equal(tableT.get("autenticacion"), "a");
-		predicate = builder.and(predicate, builder.equal(tableD.get("tipo"), "f"));
-		predicate = builder.and(predicate, builder.equal(tableD.get("estado"), "c"));
+		Predicate predicate = builder.equal(tableT.get("autenticacion"), TypeAutenticacion.ANONIMO.toString());
+		predicate = builder.and(predicate,
+				builder.equal(tableD.get("tipo"), TypeDocumentoPersistencia.FORMULARIO.toString()));
+		predicate = builder.and(predicate,
+				builder.equal(tableD.get("estado"), TypeEstadoDocumento.RELLENADO_CORRECTAMENTE.toString()));
 
-		predicate = builder.and(predicate, builder.notEqual(tableT.get("estado"), "f"));
+		predicate = builder.and(predicate,
+				builder.notEqual(tableT.get("estado"), TypeEstadoTramite.FINALIZADO.toString()));
 		predicate = builder.and(predicate, builder.isFalse(tableT.get("cancelado")));
 		predicate = builder.and(predicate, builder.isFalse(tableT.get("purgado")));
 		predicate = builder.and(predicate, builder.isFalse(tableT.get("purgar")));

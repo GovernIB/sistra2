@@ -31,6 +31,7 @@ import es.caib.sistrahelp.frontend.controller.SessionBean;
 import es.caib.sistrahelp.frontend.controller.ViewAuditoriaTramites;
 import es.caib.sistrahelp.frontend.controller.ViewEventosPlataforma;
 import es.caib.sistrahelp.frontend.controller.ViewInformacionPagos;
+import es.caib.sistrahelp.frontend.controller.ViewInformacionPersistencia;
 import es.caib.sistrahelp.frontend.controller.ViewPerdidaClave;
 import es.caib.sistrahelp.frontend.model.DialogResult;
 import es.caib.sistrahelp.frontend.model.types.TypeModoAcceso;
@@ -415,6 +416,9 @@ public final class UtilJSF {
 			break;
 		case INFORMACION_PAGOS:
 			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewInformacionPagos.class) + EXTENSION_XHTML;
+			break;
+		case INFORMACION_PERSISTENCIA:
+			url = PATH_VIEWS + UtilJSF.getViewNameFromClass(ViewInformacionPersistencia.class) + EXTENSION_XHTML;
 			break;
 		default:
 			url = URL_SIN_IMPLEMENTAR;
