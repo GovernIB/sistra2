@@ -11,7 +11,6 @@
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
 
-
         <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino']}" />
@@ -21,16 +20,19 @@
 						<p:outputLabel for="oficina"
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />
 					</p:column>
-					<p:column>
-						<p:inputText id="oficina" disabled="true" size="30"
-							required="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoOficinaRegistro}" />
+					<p:column style="display:flex" >
+						<p:inputText id="oficina" disabled="true" size="7"
+							value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoOficinaRegistro}" />
+						<p:inputText id="oficinaTexto" disabled="true" size="15"
+							value="#{viewDefinicionVersion.textoOficinaRegistro}" style="margin-left:4px" />
 					</p:column>
 					<p:column>
 						<p:outputLabel for="libro"
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.libro']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="libro" disabled="true" size="30" required="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}" />
+						<p:inputText id="libro" disabled="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoLibroRegistro}" />
+						<p:inputText id="libroTexto" disabled="true" size="15" value="#{viewDefinicionVersion.textoLibroRegistro}"  style="margin-left:4px" />
 					</p:column>
 				</p:row>
 				<p:row>
@@ -39,7 +41,8 @@
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.tipo']}" />
 					</p:column>
 					<p:column>
-						<p:inputText id="tipo" disabled="true" size="30" required="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoTipoAsunto}" />
+						<p:inputText id="tipo" disabled="true" size="7" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.codigoTipoAsunto}" />
+						<p:inputText id="tipoTexto" disabled="true" size="15" value="#{viewDefinicionVersion.textoTipoAsunto}"  style="margin-left:4px" />
 					</p:column>
 
 				</p:row>
@@ -58,14 +61,14 @@
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="instrucciones" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion.getTraduccion(sessionBean.lang)}" />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion)}"
-						process="@this" update="growl" />
+						process="@this" update="growl"  style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.tramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang)}"  />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
-						process="@this" update="growl" />
+						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion']}" />
