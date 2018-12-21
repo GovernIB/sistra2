@@ -127,7 +127,9 @@
 		        					</p:commandButton>
 		        				</p>
 							    <p>
-							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
+							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarValor()}" process="@this" update="growlDialog datalistValores">
+							    		<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        					</p:commandButton>
 							    </p>
 							    <p>
 						    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirValor()}" process="@this" update="growlDialog datalistValores" />
@@ -212,7 +214,9 @@
 		       					</p:commandButton>
 		       				</p>
 							<p>
-					    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros" />
+					    		<p:commandButton id="btnEliminarPropiedad" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogDominio.quitarPropiedad()}" process="@this" update="growlDialog dataTableParametros">
+					    			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+		        				</p:commandButton>
 					    	</p>
 					    	<p>
 					    		<p:commandButton icon="fa fa-arrow-up" title="#{msg['botones.subir']}" actionListener="#{dialogDominio.subirPropiedad()}" process="@this" update="growlDialog dataTableParametros" />

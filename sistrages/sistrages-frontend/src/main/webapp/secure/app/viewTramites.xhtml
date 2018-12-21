@@ -93,6 +93,7 @@
 
 			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
 	        					<p:menuitem id="btnImportar"  value="#{msg['botones.importarTramite']}" icon="fa fa-upload"  onclick="triggerImportarTramite(); return false;" rendered="#{viewTramites.permiteEditarTramite or viewTramites.permiteAltaArea and viewTramites.seleccionadaArea}"></p:menuitem>
+								<p:menuitem id="btnPrevisualizar"  value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}"  process="@this" update="growl @form"   rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
 
 	        					<p:separator rendered="#{(viewTramites.tramiteSeleccionada ne null or viewTramites.versionSeleccionada ne null) and (viewTramites.permiteAltaArea and viewTramites.seleccionadaArea)}"/>
 

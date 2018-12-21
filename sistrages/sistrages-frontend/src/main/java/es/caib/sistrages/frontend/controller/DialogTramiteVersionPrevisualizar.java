@@ -16,6 +16,7 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
+import es.caib.sistrages.core.api.model.comun.TramitePrevisualizacion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.SystemService;
@@ -55,9 +56,6 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Procedimiento. **/
 	private String procedimiento;
 
-	/** Categoria. **/
-	private String categoria;
-
 	/** Valor seleccionado. **/
 	private Propiedad valorSeleccionado;
 
@@ -77,7 +75,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 */
 	public void init() {
 		setData(tramiteService.getTramiteVersion(Long.valueOf(id)));
-		procedimiento = (String) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_PROCEDIMIENTO);
+
 		tramite = tramiteService.getTramite(this.data.getIdTramite());
 		for (final TypeIdioma tipo : TypeIdioma.values()) {
 			for (final String idi : data.getIdiomasSoportados().split(";")) {
@@ -85,6 +83,14 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 					idiomas.add(tipo);
 				}
 			}
+		}
+
+		final TramitePrevisualizacion tramitePrevisualizacion = (TramitePrevisualizacion) UtilJSF.getSessionBean()
+				.getMochilaDatos().get(Constantes.CLAVE_MOCHILA_TRAMITE + this.data.getIdTramite());
+		if (tramitePrevisualizacion != null) {
+			procedimiento = tramitePrevisualizacion.getProcedimiento();
+			idioma = tramitePrevisualizacion.getIdioma();
+			parametros = tramitePrevisualizacion.getParametros();
 		}
 	}
 
@@ -94,7 +100,12 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	public void aceptar() {
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_PROCEDIMIENTO, procedimiento);
+
+		final TramitePrevisualizacion tramitePrevisualizacion = new TramitePrevisualizacion();
+		tramitePrevisualizacion.setProcedimiento(procedimiento);
+		tramitePrevisualizacion.setIdioma(idioma);
+		tramitePrevisualizacion.setParametros(parametros);
+		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE + this.data.getIdTramite(), tramitePrevisualizacion);
 
 		final String urlBase = systemService
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL.toString());
@@ -331,21 +342,6 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 */
 	public void setProcedimiento(final String procedimiento) {
 		this.procedimiento = procedimiento;
-	}
-
-	/**
-	 * @return the categoria
-	 */
-	public String getCategoria() {
-		return categoria;
-	}
-
-	/**
-	 * @param categoria
-	 *            the categoria to set
-	 */
-	public void setCategoria(final String categoria) {
-		this.categoria = categoria;
 	}
 
 	/**

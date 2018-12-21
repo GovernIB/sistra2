@@ -9,6 +9,8 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
 
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -62,6 +64,15 @@ public class ViewFuentes extends ViewControllerBase {
 	/** Permite consultar. **/
 	private Boolean permiteConsultar = false;
 
+	/** Permite mostrar el breadcrumb. **/
+	private Boolean mostrarBreadcrumb = false;
+
+	/** Miga de pan. **/
+	private DefaultMenuModel breadCrumb;
+
+	/** Area. **/
+	private String area;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -77,6 +88,21 @@ public class ViewFuentes extends ViewControllerBase {
 		checkPermisos();
 		buscar(null);
 
+		if (ambito.equals(TypeAmbito.AREA.toString())) {
+
+			mostrarBreadcrumb = true;
+			/* inicializa breadcrum y lo creamos */
+			breadCrumb = new DefaultMenuModel();
+
+			DefaultMenuItem item = null;
+
+			item = new DefaultMenuItem(area);
+			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.addElement(item);
+
+		} else {
+			mostrarBreadcrumb = false;
+		}
 	}
 
 	/**
@@ -429,6 +455,51 @@ public class ViewFuentes extends ViewControllerBase {
 	 */
 	public void setPermiteConsultar(final Boolean permiteConsultar) {
 		this.permiteConsultar = permiteConsultar;
+	}
+
+	/**
+	 * @return the mostrarBreadcrumb
+	 */
+	public Boolean getMostrarBreadcrumb() {
+		return mostrarBreadcrumb;
+	}
+
+	/**
+	 * @param mostrarBreadcrumb
+	 *            the mostrarBreadcrumb to set
+	 */
+	public void setMostrarBreadcrumb(final Boolean mostrarBreadcrumb) {
+		this.mostrarBreadcrumb = mostrarBreadcrumb;
+	}
+
+	/**
+	 * @return the breadCrumb
+	 */
+	public DefaultMenuModel getBreadCrumb() {
+		return breadCrumb;
+	}
+
+	/**
+	 * @param breadCrumb
+	 *            the breadCrumb to set
+	 */
+	public void setBreadCrumb(final DefaultMenuModel breadCrumb) {
+		this.breadCrumb = breadCrumb;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public String getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area
+	 *            the area to set
+	 */
+	public void setArea(final String area) {
+		this.area = area;
 	}
 
 }

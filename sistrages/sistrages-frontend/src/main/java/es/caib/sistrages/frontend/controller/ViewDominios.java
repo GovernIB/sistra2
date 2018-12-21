@@ -9,6 +9,9 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -57,6 +60,9 @@ public class ViewDominios extends ViewControllerBase {
 	/** Ambito. **/
 	private String ambito;
 
+	/** Area. **/
+	private String area;
+
 	/** Lista de datos. */
 	private List<Dominio> listaDatos;
 
@@ -72,6 +78,12 @@ public class ViewDominios extends ViewControllerBase {
 	/** Literal sin permisos. **/
 	private static final String LITERAL_SIN_PERMISOS = "Sin permisos";
 
+	/** Mostrar breadcrumb. **/
+	private boolean mostrarBreadcrumb;
+
+	/** miga de pan */
+	private MenuModel breadCrumb;
+
 	/** Inicializacion. */
 	public void init() {
 
@@ -82,6 +94,22 @@ public class ViewDominios extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()) + "." + ambito);
 		checkPermisos();
 		buscar(null);
+
+		if (ambito.equals(TypeAmbito.AREA.toString())) {
+
+			mostrarBreadcrumb = true;
+			/* inicializa breadcrum y lo creamos */
+			breadCrumb = new DefaultMenuModel();
+
+			DefaultMenuItem item = null;
+
+			item = new DefaultMenuItem(area);
+			item.setUrl("/secure/app/viewTramites.xhtml?area=" + id);
+			breadCrumb.addElement(item);
+
+		} else {
+			mostrarBreadcrumb = false;
+		}
 	}
 
 	/**
@@ -242,7 +270,7 @@ public class ViewDominios extends ViewControllerBase {
 		}
 
 	}
-	
+
 	public void ayuda() {
 		UtilJSF.openHelp("dominios");
 	}
@@ -607,6 +635,51 @@ public class ViewDominios extends ViewControllerBase {
 	 */
 	public void setPermiteConsultar(final Boolean permiteConsultar) {
 		this.permiteConsultar = permiteConsultar;
+	}
+
+	/**
+	 * @return the mostrarBreadcrumb
+	 */
+	public boolean isMostrarBreadcrumb() {
+		return mostrarBreadcrumb;
+	}
+
+	/**
+	 * @param mostrarBreadcrumb
+	 *            the mostrarBreadcrumb to set
+	 */
+	public void setMostrarBreadcrumb(final boolean mostrarBreadcrumb) {
+		this.mostrarBreadcrumb = mostrarBreadcrumb;
+	}
+
+	/**
+	 * @return the breadCrumb
+	 */
+	public MenuModel getBreadCrumb() {
+		return breadCrumb;
+	}
+
+	/**
+	 * @param breadCrumb
+	 *            the breadCrumb to set
+	 */
+	public void setBreadCrumb(final MenuModel breadCrumb) {
+		this.breadCrumb = breadCrumb;
+	}
+
+	/**
+	 * @return the area
+	 */
+	public String getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area
+	 *            the area to set
+	 */
+	public void setArea(final String area) {
+		this.area = area;
 	}
 
 }

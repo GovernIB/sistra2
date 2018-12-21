@@ -170,7 +170,8 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage("/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getCodigo());
+		UtilJSF.redirectJsfPage(
+				"/secure/app/viewDominios.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
 	}
 
 	/**
@@ -183,7 +184,8 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		final Area area = listaAreasSeleccionadas.get(0);
-		UtilJSF.redirectJsfPage("/secure/app/viewFuentes.xhtml?ambito=A&id=" + area.getCodigo());
+		UtilJSF.redirectJsfPage(
+				"/secure/app/viewFuentes.xhtml?ambito=A&id=" + area.getCodigo() + "&area=" + area.getIdentificador());
 	}
 
 	/**
@@ -301,6 +303,15 @@ public class ViewTramites extends ViewControllerBase {
 			// Refrescamos datos
 			buscarAreas();
 		}
+	}
+
+	/**
+	 * Abre un dialogo para previsualizar tramite.
+	 */
+	public void previsualizar() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
+		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750, 400);
 	}
 
 	/**
