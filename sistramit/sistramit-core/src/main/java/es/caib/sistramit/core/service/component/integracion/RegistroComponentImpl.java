@@ -49,7 +49,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, asiento.getDatosOrigen().getCodigoEntidad());
 		try {
-			res = plgRegistro.registroEntrada(null, asiento);
+			res = plgRegistro.registroEntrada(asiento);
 			resultado.setResultado(TypeResultadoRegistro.CORRECTO);
 			resultado.setNumeroRegistro(res.getNumeroRegistro());
 			resultado.setFechaRegistro(res.getFechaRegistro());

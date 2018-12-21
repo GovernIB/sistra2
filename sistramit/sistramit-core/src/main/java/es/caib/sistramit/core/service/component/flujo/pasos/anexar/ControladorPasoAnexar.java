@@ -782,6 +782,8 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			ddf.setId(pDetalleAnexo.getId());
 			ddf.setInstancia(numInstancia);
 			ddf.setPresentacion(pDetalleAnexo.getPresentacion());
+			ddf.setFirmar(pDetalleAnexo.getFirmar());
+			ddf.setFirmantes(pDetalleAnexo.getFirmantes());
 
 			if (pDetalleAnexo.getMaxInstancias() > ConstantesNumero.N1) {
 				ddf.setTitulo(fichero.getTitulo());
@@ -817,6 +819,8 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 		ddf.setInstancia(ConstantesNumero.N1);
 		ddf.setPresentacion(pDetalleAnexo.getPresentacion());
 		ddf.setTitulo(pDetalleAnexo.getTitulo());
+		ddf.setFirmar(pDetalleAnexo.getFirmar());
+		ddf.setFirmantes(pDetalleAnexo.getFirmantes());
 		pListaCompletados.add(ddf);
 	}
 

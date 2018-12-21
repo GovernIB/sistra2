@@ -1,5 +1,8 @@
 package es.caib.sistramit.core.service.model.flujo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 
 /**
@@ -26,6 +29,11 @@ public final class DatosInternosPasoRegistrar extends DatosInternosPasoReferenci
 	 * Resultado de registro.
 	 */
 	private ResultadoRegistro resultadoRegistro;
+
+	/**
+	 * Sesiones firma (id documento - sesion firma).
+	 */
+	private final Map<String, String> sesionesFirma = new HashMap<>();
 
 	/**
 	 * Constructor.
@@ -96,6 +104,46 @@ public final class DatosInternosPasoRegistrar extends DatosInternosPasoReferenci
 	 */
 	public void setResultadoRegistro(ResultadoRegistro resultadoRegistro) {
 		this.resultadoRegistro = resultadoRegistro;
+	}
+
+	/**
+	 * Guarda sesion firma asociada a un documento.
+	 *
+	 * @param idDocumento
+	 *            id documento
+	 * @param instancia
+	 *            instancia
+	 * @param idSesionFirma
+	 *            sesion firma
+	 */
+	public void guardarSesionFirma(String idDocumento, int instancia, String idSesionFirma) {
+		sesionesFirma.put(idDocumento + "-" + instancia, idSesionFirma);
+	}
+
+	/**
+	 * Recupera sesion firma asociada a un documento.
+	 *
+	 * @param idDocumento
+	 *            id documento
+	 * @param instancia
+	 *            instancia
+	 * @return id
+	 */
+	public String recuperarSesionFirma(String idDocumento, int instancia) {
+		return sesionesFirma.get(idDocumento + "-" + instancia);
+	}
+
+	/**
+	 * Borra sesion firma asociada a un documento.
+	 *
+	 * @param idDocumento
+	 *            id documento
+	 * @param instancia
+	 *            instancia
+	 * @return id
+	 */
+	public void borrarSesionFirma(String idDocumento, int instancia) {
+		sesionesFirma.remove(idDocumento + "-" + instancia);
 	}
 
 }

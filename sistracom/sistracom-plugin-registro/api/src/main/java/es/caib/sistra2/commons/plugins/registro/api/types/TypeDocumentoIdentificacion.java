@@ -6,7 +6,7 @@ package es.caib.sistra2.commons.plugins.registro.api.types;
  * @author Indra
  *
  */
-public enum TypeDocumento {
+public enum TypeDocumentoIdentificacion {
     /** NIF **/
     NIF("N"),
     /** CIF **/
@@ -31,7 +31,7 @@ public enum TypeDocumento {
      * @param pValor
      *            Role name
      */
-    private TypeDocumento(final String pValor) {
+    private TypeDocumentoIdentificacion(final String pValor) {
         valor = pValor;
     }
 
@@ -42,10 +42,10 @@ public enum TypeDocumento {
      *            string
      * @return TypeDocumento
      */
-    public static TypeDocumento fromString(final String text) {
-        TypeDocumento respuesta = null;
+    public static TypeDocumentoIdentificacion fromString(final String text) {
+        TypeDocumentoIdentificacion respuesta = null;
         if (text != null) {
-            for (final TypeDocumento b : TypeDocumento
+            for (final TypeDocumentoIdentificacion b : TypeDocumentoIdentificacion
                     .values()) {
                 if (text.equalsIgnoreCase(b.toString())) {
                     respuesta = b;

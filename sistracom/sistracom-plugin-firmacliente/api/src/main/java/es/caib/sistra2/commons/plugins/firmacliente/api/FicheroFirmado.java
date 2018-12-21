@@ -17,6 +17,9 @@ public class FicheroFirmado {
 	/** Array de bytes con la firma del documento */
 	private byte[] firmaFichero;
 
+	/** Tipo firma. */
+	private TypeFirmaDigital firmaTipo;
+
 	/**
 	 * @return the nombreFichero
 	 */
@@ -60,6 +63,25 @@ public class FicheroFirmado {
 	 */
 	public void setFirmaFichero(final byte[] firmaFichero) {
 		this.firmaFichero = firmaFichero;
+	}
+
+	/**
+	 * Método de acceso a firmaTipo.
+	 * 
+	 * @return firmaTipo
+	 */
+	public TypeFirmaDigital getFirmaTipo() {
+		return firmaTipo;
+	}
+
+	/**
+	 * Método para establecer firmaTipo.
+	 * 
+	 * @param firmaTipo
+	 *            firmaTipo a establecer
+	 */
+	public void setFirmaTipo(TypeFirmaDigital firmaTipo) {
+		this.firmaTipo = firmaTipo;
 	}
 
 }

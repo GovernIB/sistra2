@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirma;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeOrigenDocumento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 
@@ -15,7 +15,7 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
  *
  */
 @SuppressWarnings("serial")
-public class DocumentoRegistro implements Serializable {
+public class DocumentoAsiento implements Serializable {
 
 	/** contenido del fichero */
 	private byte[] contenidoFichero;
@@ -39,7 +39,7 @@ public class DocumentoRegistro implements Serializable {
 	private Date fechaCaptura;
 
 	/** modo de firma (sin firma/attached/detached) */
-	private TypeFirma modoFirma;
+	private TypeFirmaAsiento modoFirma;
 
 	/** nombre del fichero de firma anexado para firma detached */
 	private String nombreFirmaAnexada;
@@ -106,11 +106,11 @@ public class DocumentoRegistro implements Serializable {
 		this.fechaCaptura = fechaCaptura;
 	}
 
-	public TypeFirma getModoFirma() {
+	public TypeFirmaAsiento getModoFirma() {
 		return modoFirma;
 	}
 
-	public void setModoFirma(TypeFirma modoFirma) {
+	public void setModoFirma(TypeFirmaAsiento modoFirma) {
 		this.modoFirma = modoFirma;
 	}
 

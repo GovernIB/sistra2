@@ -4,7 +4,7 @@ package es.caib.sistra2.commons.plugins.registro.api.types;
  * Tipo de firma de un documento.
  *
  */
-public enum TypeFirma {
+public enum TypeFirmaAsiento {
     /** Sin firma */
     SIN_FIRMA(0),
     /** Firma modo attached */
@@ -23,7 +23,7 @@ public enum TypeFirma {
      * @param valor
      *            Valor como int.
      */
-    private TypeFirma(final int pValor) {
+    private TypeFirmaAsiento(final int pValor) {
     	valor = pValor;
     }
 
@@ -52,10 +52,10 @@ public enum TypeFirma {
      *            string
      * @return TypeFirma
      */
-    public static TypeFirma fromString(final String text) {
-    	TypeFirma respuesta = null;
+    public static TypeFirmaAsiento fromString(final String text) {
+    	TypeFirmaAsiento respuesta = null;
         if (text != null) {
-            for (final TypeFirma b : TypeFirma.values()) {
+            for (final TypeFirmaAsiento b : TypeFirmaAsiento.values()) {
                 if (text.equalsIgnoreCase(b.toString())) {
                     respuesta = b;
                     break;

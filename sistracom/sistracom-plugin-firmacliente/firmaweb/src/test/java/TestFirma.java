@@ -69,7 +69,7 @@ public class TestFirma {
 				fichero.setRazon("Fichero prueba1");
 				fichero.setSignID("666");
 				fichero.setSesion(idSession);
-				plugin.ficheroAFirmar(fichero);
+				plugin.anyadirFicheroAFirmar(fichero);
 			}
 
 			try (InputStream is2 = ComponenteFirmaSimpleWebPlugin.class.getClassLoader()
@@ -85,7 +85,7 @@ public class TestFirma {
 				fichero2.setRazon("Fichero prueba1");
 				fichero2.setSignID("777");
 				fichero2.setSesion(idSession);
-				plugin.ficheroAFirmar(fichero2);
+				plugin.anyadirFicheroAFirmar(fichero2);
 			}
 
 			// Paso 3. Crear transaction y obtener url

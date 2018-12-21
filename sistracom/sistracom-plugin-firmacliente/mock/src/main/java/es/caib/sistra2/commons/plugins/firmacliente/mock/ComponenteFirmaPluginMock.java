@@ -1,12 +1,15 @@
 package es.caib.sistra2.commons.plugins.firmacliente.mock;
 
-import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
-import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
-import es.caib.sistra2.commons.plugins.autenticacion.api.TipoMetodoAutenticacion;
-import es.caib.sistra2.commons.plugins.firmacliente.api.*;
+import java.util.Properties;
+
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
-import java.util.Properties;
+import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroAFirmar;
+import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
+import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
+import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
+import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
+import es.caib.sistra2.commons.plugins.firmacliente.api.TypeFirmaDigital;
 
 /**
  * Plugin mock componente firma.
@@ -22,41 +25,13 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 	public ComponenteFirmaPluginMock(final String prefijoPropiedades, final Properties properties) {
 	}
 
-	/**
-	 * Genera usuario mock autenticado.
-	 *
-	 * @return usuario mock autenticado
-	 */
-	public DatosUsuario generarUserMock() {
-		final DatosUsuario ui = new DatosUsuario();
-		ui.setAutenticacion(TipoAutenticacion.AUTENTICADO);
-		ui.setMetodoAutenticacion(TipoMetodoAutenticacion.CLAVE_CERTIFICADO);
-		ui.setNif("11111111H");
-		ui.setNombre("José");
-		ui.setApellido1("García");
-		ui.setApellido2("Gutierrez");
-		ui.setEmail("correo@email.es");
-		return ui;
-	}
-
-	/**
-	 * Genera usuario anonimo.
-	 * @return usuario anonimo
-	 */
-	public DatosUsuario generarUsuarioAnonimo() {
-		final DatosUsuario ui = new DatosUsuario();
-		ui.setAutenticacion(TipoAutenticacion.ANONIMO);
-		ui.setMetodoAutenticacion(TipoMetodoAutenticacion.ANONIMO);
-		return ui;
-	}
-
 	@Override
 	public String generarSesionFirma(final InfoSesionFirma infoSesionFirma) {
-		return "A00000001";
+		return "SF" + System.currentTimeMillis();
 	}
 
 	@Override
-	public void ficheroAFirmar(final FicheroAFirmar ficheroAFirmar) {
+	public void anyadirFicheroAFirmar(final FicheroAFirmar ficheroAFirmar) {
 		// Vacio
 	}
 
@@ -67,16 +42,17 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 
 	@Override
 	public TypeEstadoFirmado obtenerEstadoSesionFirma(final String idSesionFirma) {
-		return TypeEstadoFirmado.EN_PROGRESO;
+		return TypeEstadoFirmado.FINALIZADO_OK;
 	}
 
 	@Override
 	public FicheroFirmado obtenerFirmaFichero(final String idSesionFirma, final String idFicheroFirma) {
 		final FicheroFirmado fichero = new FicheroFirmado();
-		final byte[] contenido = new byte[666];
+		final byte[] contenido = "firma cades".getBytes();
 		fichero.setFirmaFichero(contenido);
-		fichero.setMimetypeFichero("application/pdf");
-		fichero.setNombreFichero("fichero.pdf");
+		fichero.setMimetypeFichero("application/octet-stream");
+		fichero.setNombreFichero("fichero.cades");
+		fichero.setFirmaTipo(TypeFirmaDigital.CADES_DETACHED);
 		return fichero;
 	}
 

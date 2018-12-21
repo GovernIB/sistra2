@@ -106,6 +106,8 @@ public final class UtilsPasoRellenar {
 					new ReferenciaFichero(docPers.getFormularioPdf().getId(), docPers.getFormularioPdf().getClave()));
 		}
 		ddf.setCampos(valoresFormulario);
+		ddf.setFirmar(detalleFormulario.getFirmar());
+		ddf.setFirmantes(detalleFormulario.getFirmantes());
 		return ddf;
 	}
 

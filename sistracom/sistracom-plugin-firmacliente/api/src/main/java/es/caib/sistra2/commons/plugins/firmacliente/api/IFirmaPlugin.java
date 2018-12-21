@@ -34,7 +34,7 @@ public interface IFirmaPlugin extends IPlugin {
      *            datos del fichero a añadir para firma
      * @throws FirmaPluginException
      */
-    void ficheroAFirmar(FicheroAFirmar ficheroAFirmar)
+    void anyadirFicheroAFirmar(FicheroAFirmar ficheroAFirmar)
             throws FirmaPluginException;
 
     /**

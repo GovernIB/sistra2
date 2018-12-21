@@ -550,6 +550,27 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	}
 
 	/**
+	 * Método de acceso a firma de un fichero para un firmante.
+	 *
+	 * @param codigoFichero
+	 *            Parámetro codigo fichero
+	 * @param nif
+	 *            Parámetro nif firmante
+	 * @return firma (nulo si no esta firmado)
+	 */
+	public FirmaDocumentoPersistencia obtenerFirmaFichero(final Long codigoFichero, String nif) {
+		FirmaDocumentoPersistencia res = null;
+		final List<FirmaDocumentoPersistencia> firmasFichero = obtenerFirmasFichero(codigoFichero);
+		for (final FirmaDocumentoPersistencia fdp : firmasFichero) {
+			if (nif.equals(fdp.getNif())) {
+				res = fdp;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
 	 * Método de acceso a firmas de un fichero.
 	 *
 	 * @param codigoFichero
@@ -604,7 +625,7 @@ public final class DocumentoPasoPersistencia implements Serializable {
 
 	/**
 	 * Método de acceso a firmas.
-	 * 
+	 *
 	 * @return firmas
 	 */
 	public Map<Long, List<FirmaDocumentoPersistencia>> getFirmas() {

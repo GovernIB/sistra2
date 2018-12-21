@@ -18,7 +18,7 @@ import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.Interesado;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumento;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
 import es.caib.sistra2.commons.ws.utils.WsClientUtil;
 
@@ -208,7 +208,7 @@ public class UtilsRegweb3 {
 			Interesado interesadoAsiento) {
 		DatosInteresadoWs interesado = new DatosInteresadoWs();
 
-		TypeDocumento tipoDocumento = interesadoAsiento.getTipoDocumento();
+		TypeDocumentoIdentificacion tipoDocumento = interesadoAsiento.getTipoDocumento();
 
 		if (StringUtils.isNotBlank(interesadoAsiento.getDocIdentificacion())) {
 			interesado.setTipoInteresado(new Long(UtilsRegweb3

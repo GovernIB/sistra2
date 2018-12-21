@@ -111,7 +111,7 @@ public final class AccionTestFirma implements AccionPaso {
         fichero.setRazon(dfp.getNombre());
         fichero.setSignID(idAnexo + "-" + instancia);
         fichero.setSesion(sf);
-        plgFirma.ficheroAFirmar(fichero);
+        plgFirma.anyadirFicheroAFirmar(fichero);
 
         // Iniciar sesion firma
         final String urlRedireccion = plgFirma.iniciarSesionFirma(sf,

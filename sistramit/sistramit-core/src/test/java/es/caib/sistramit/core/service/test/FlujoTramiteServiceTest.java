@@ -786,6 +786,21 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		Assert.isTrue(((byte[]) resPaso.getParametroRetorno("datosFichero")).length > 0,
 				"El fichero no tiene contenido");
 
+		// -- Firmamos formulario
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idDocumento", formulario.getId());
+		parametros.addParametroEntrada("instancia", "1");
+		parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoRegistrar.INICIAR_FIRMA_DOCUMENTO, parametros);
+		Assert.isTrue(resPaso.getParametroRetorno("url") != null, "No se ha retornado url inicio firma");
+
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO, parametros);
+
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		this.logger.info("Detalle paso: " + dp.print());
+
 		// -- Registrar
 		parametros = new ParametrosAccionPaso();
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
@@ -795,6 +810,13 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 				"No se podido registrar");
 		Assert.isTrue(((String) resPaso.getParametroRetorno("numeroRegistro")) != null,
 				"No se devuelve numero de registro");
+
+		// -- Paso terminado
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		// TODO CUANDO ESTE PASO GUARDAR, DEBERA HABER SALTADO A PASO GUARDAR
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.REGISTRAR, "No esta en paso registrar");
+		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso registrar no esta completado");
+		this.logger.info("Detalle paso: " + dp.print());
 
 	}
 

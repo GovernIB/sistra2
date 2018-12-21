@@ -93,8 +93,7 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	}
 
 	@Override
-	public ResultadoRegistro registroEntrada(final String codigoEntidad, final AsientoRegistral asientoRegistral)
-			throws RegistroPluginException {
+	public ResultadoRegistro registroEntrada(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
 		final ResultadoRegistro res = new ResultadoRegistro();
 		res.setFechaRegistro(new Date());
 		res.setNumeroRegistro("E-" + System.currentTimeMillis());
@@ -102,8 +101,7 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	}
 
 	@Override
-	public ResultadoRegistro registroSalida(final String codigoEntidad, final AsientoRegistral asientoRegistral)
-			throws RegistroPluginException {
+	public ResultadoRegistro registroSalida(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
 		final ResultadoRegistro res = new ResultadoRegistro();
 		res.setFechaRegistro(new Date());
 		res.setNumeroRegistro("S-" + System.currentTimeMillis());

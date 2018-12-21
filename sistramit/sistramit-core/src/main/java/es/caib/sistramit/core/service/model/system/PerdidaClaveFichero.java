@@ -6,7 +6,7 @@ import java.util.Date;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 
 /**
- * La clase PerdidaClaveFichero.
+ * La clase PerdidaClaveFichero. (RestApiInternaService)
  */
 @SuppressWarnings("serial")
 public final class PerdidaClaveFichero implements Serializable {

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeCanal;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumento;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
 
 /**
@@ -20,7 +20,7 @@ public class Interesado implements Serializable {
 	private TypeInteresado actuaComo;
 
 	/** tipo documento de identificacion */
-	private TypeDocumento tipoDocumento;
+	private TypeDocumentoIdentificacion tipoDocumento;
 
 	/** tipo de documento de identificación del interesado */
 	private String docIdentificacion;
@@ -75,11 +75,11 @@ public class Interesado implements Serializable {
 		this.actuaComo = actuaComo;
 	}
 
-	public TypeDocumento getTipoDocumento() {
+	public TypeDocumentoIdentificacion getTipoDocumento() {
 		return tipoDocumento;
 	}
 
-	public void setTipoDocumento(TypeDocumento tipoDocumento) {
+	public void setTipoDocumento(TypeDocumentoIdentificacion tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
 

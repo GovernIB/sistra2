@@ -154,20 +154,20 @@ public final class DocumentoRegistro implements ModelApi {
 	}
 
 	/**
-	 * Comprueba si es true firmado de Formulario.
+	 * Comprueba si esta firmado.
 	 *
-	 * @return true, si es firmado
+	 * @return Si es firmado
 	 */
 	public TypeSiNo getFirmado() {
 		TypeSiNo firmado = TypeSiNo.SI;
-		if (this.firmas.size() == 0) {
+		if (this.firmas.isEmpty()) {
 			firmado = TypeSiNo.NO;
-		}
-
-		for (final Firma f : this.firmas) {
-			if (f.getEstadoFirma() != TypeEstadoFirma.FIRMADO) {
-				firmado = TypeSiNo.NO;
-				break;
+		} else {
+			for (final Firma f : this.firmas) {
+				if (f.getEstadoFirma() != TypeEstadoFirma.FIRMADO) {
+					firmado = TypeSiNo.NO;
+					break;
+				}
 			}
 		}
 		return firmado;
@@ -229,6 +229,24 @@ public final class DocumentoRegistro implements ModelApi {
 	 */
 	public void setPresentacion(TypePresentacion presentacion) {
 		this.presentacion = presentacion;
+	}
+
+	/**
+	 * Devuelve estado firma del firmante.
+	 *
+	 * @param nifFirmante
+	 *            Parámetro nif firmante
+	 * @return Estado firma
+	 */
+	public Firma getFirma(final String nifFirmante) {
+		Firma res = null;
+		for (final Firma f : firmas) {
+			if (f.getFirmante().getNif().equals(nifFirmante)) {
+				res = f;
+				break;
+			}
+		}
+		return res;
 	}
 
 }

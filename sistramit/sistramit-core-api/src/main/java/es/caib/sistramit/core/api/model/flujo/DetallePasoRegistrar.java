@@ -127,9 +127,22 @@ public final class DetallePasoRegistrar extends DetallePaso {
 		strb.append(ident).append("ID paso:" + getId() + "\n");
 		strb.append(ident).append("Tipo:" + getTipo() + "\n");
 		strb.append(ident).append("Completado:" + getCompletado() + "\n");
-		strb.append(ident).append("Sólo lectura:" + getSoloLectura());
-		strb.append(ident).append("Reintentar registro:" + getReintentar());
+		strb.append(ident).append("Sólo lectura:" + getSoloLectura() + "\n");
+		strb.append(ident).append("Reintentar registro:" + getReintentar() + "\n");
+		strb.append(ident).append("Formularios: \n");
+		printDocumentos(ident, strb, getFormularios());
+		strb.append(ident).append("Anexos: \n");
+		printDocumentos(ident, strb, getAnexos());
+		strb.append(ident).append("Pagos: \n");
+		printDocumentos(ident, strb, getPagos());
 		return strb.toString();
+	}
+
+	private void printDocumentos(final String ident, final StringBuffer strb, List<DocumentoRegistro> docsr) {
+		for (final DocumentoRegistro dr : docsr) {
+			strb.append(ident).append("  - " + dr.getId() + "-" + dr.getInstancia() + " - Firmar:" + dr.getFirmar()
+					+ " - Firmado:" + dr.getFirmado() + "\n");
+		}
 	}
 
 	/**
@@ -234,6 +247,39 @@ public final class DetallePasoRegistrar extends DetallePaso {
 						break;
 					}
 				}
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Busca documento de registro en formularios, anexos, pagos,...
+	 *
+	 * @param idDocumento
+	 *            id documento
+	 * @param instancia
+	 *            instancia
+	 * @return documento registro o nulo si no lo encuentra
+	 */
+	public DocumentoRegistro buscarDocumentoRegistro(String idDocumento, int instancia) {
+		DocumentoRegistro res = null;
+		res = buscarDocumentoRegistro(formularios, idDocumento, instancia);
+		if (res == null) {
+			res = buscarDocumentoRegistro(anexos, idDocumento, instancia);
+		}
+		if (res == null) {
+			res = buscarDocumentoRegistro(pagos, idDocumento, instancia);
+		}
+		return res;
+	}
+
+	private DocumentoRegistro buscarDocumentoRegistro(List<DocumentoRegistro> listaDocsRegistro, String idDocumento,
+			int instancia) {
+		DocumentoRegistro res = null;
+		for (final DocumentoRegistro dr : listaDocsRegistro) {
+			if (dr.getId().equals(idDocumento) && dr.getInstancia() == instancia) {
+				res = dr;
+				break;
 			}
 		}
 		return res;

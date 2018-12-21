@@ -1,7 +1,11 @@
 package es.caib.sistramit.core.service.model.flujo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 
@@ -14,7 +18,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 @SuppressWarnings("serial")
 public abstract class DatosDocumento implements Serializable {
 
-	// TODO Habrá que ver como se pasan firmantes para paso registro
 	/**
 	 * Id paso.
 	 */
@@ -37,14 +40,17 @@ public abstract class DatosDocumento implements Serializable {
 	 */
 	private String titulo;
 	/**
-	 * Referencia fichero (se indica referencia fichero o contenido fichero).
+	 * Referencia fichero.
 	 */
 	private ReferenciaFichero fichero;
-
 	/**
-	 * Contenido fichero (se indica referencia fichero o contenido fichero).
+	 * Firmar.
 	 */
-	private ContenidoFichero contenidoFichero;
+	private TypeSiNo firmar = TypeSiNo.NO;
+	/**
+	 * Indica lista de firmantes del documento.
+	 */
+	private List<Persona> firmantes = new ArrayList<>();
 
 	/**
 	 * Método de acceso a id DatosDocumento.
@@ -123,25 +129,6 @@ public abstract class DatosDocumento implements Serializable {
 	}
 
 	/**
-	 * Método de acceso a contenidoFichero.
-	 *
-	 * @return contenidoFichero
-	 */
-	public ContenidoFichero getContenidoFichero() {
-		return contenidoFichero;
-	}
-
-	/**
-	 * Método para establecer contenidoFichero.
-	 *
-	 * @param pContenidoFichero
-	 *            contenidoFichero a establecer
-	 */
-	public void setContenidoFichero(final ContenidoFichero pContenidoFichero) {
-		contenidoFichero = pContenidoFichero;
-	}
-
-	/**
 	 * Método de acceso a presentacion.
 	 *
 	 * @return presentacion
@@ -162,7 +149,7 @@ public abstract class DatosDocumento implements Serializable {
 
 	/**
 	 * Método de acceso a idPaso.
-	 * 
+	 *
 	 * @return idPaso
 	 */
 	public String getIdPaso() {
@@ -171,12 +158,50 @@ public abstract class DatosDocumento implements Serializable {
 
 	/**
 	 * Método para establecer idPaso.
-	 * 
+	 *
 	 * @param idPaso
 	 *            idPaso a establecer
 	 */
 	public void setIdPaso(String idPaso) {
 		this.idPaso = idPaso;
+	}
+
+	/**
+	 * Método para establecer firmar.
+	 *
+	 * @param firmar
+	 *            firmar a establecer
+	 */
+	public void setFirmar(TypeSiNo firmar) {
+		this.firmar = firmar;
+	}
+
+	/**
+	 * Método de acceso a firmantes.
+	 *
+	 * @return firmantes
+	 */
+	public List<Persona> getFirmantes() {
+		return firmantes;
+	}
+
+	/**
+	 * Método para establecer firmantes.
+	 *
+	 * @param firmantes
+	 *            firmantes a establecer
+	 */
+	public void setFirmantes(List<Persona> firmantes) {
+		this.firmantes = firmantes;
+	}
+
+	/**
+	 * Método de acceso a firmar.
+	 * 
+	 * @return firmar
+	 */
+	public TypeSiNo getFirmar() {
+		return firmar;
 	}
 
 }

@@ -9,22 +9,21 @@ import java.util.List;
 import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.IPlugin;
-import org.fundaciobit.pluginsib.core.utils.PluginsManager;
 import org.fundaciobit.pluginsib.core.utils.FileUtils;
+import org.fundaciobit.pluginsib.core.utils.PluginsManager;
 
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.DatosAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.DatosOrigen;
-import es.caib.sistra2.commons.plugins.registro.api.DocumentoRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.DocumentoAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.Interesado;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeCanal;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumento;
-import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirma;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeOrigenDocumento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
@@ -41,11 +40,12 @@ public class TestRegistro {
 	/**
 	 * Para realizar pruebas. Se tiene que: <br />
 	 * <ul>
-	 * <li>Añadir el log4j-1.2.17.jar, slf4j-log4j12-1.5.8.jar y
-	 * slf4j-api-1.5.8.jar en la ejecución (Java aplication / Classpath)</li>
+	 * <li>Añadir el log4j-1.2.17.jar, slf4j-log4j12-1.5.8.jar y slf4j-api-1.5.8.jar
+	 * en la ejecución (Java aplication / Classpath)</li>
 	 * <li>Ejecutar en modo debug, ya que hay que realizar acciones fuera del
 	 * eclipse antes de continuar.</li>
-	 * <li>Se necesitan 2 pdfs, uno con firma y otro sin, en P:/, sino, cambiar la ruta</li>
+	 * <li>Se necesitan 2 pdfs, uno con firma y otro sin, en P:/, sino, cambiar la
+	 * ruta</li>
 	 * </ul>
 	 *
 	 * @param args
@@ -62,7 +62,7 @@ public class TestRegistro {
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.endpoint.entrada",
 					"http://dev.caib.es/regweb3/ws/v3/RegWebRegistroEntrada");
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.endpoint.info",
-							"http://dev.caib.es/regweb3/ws/v3/RegWebInfo");
+					"http://dev.caib.es/regweb3/ws/v3/RegWebInfo");
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.log.peticionesWS", "true");
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.aplicacion.codigo", "SISTRA");
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.aplicacion.version", "1");
@@ -73,20 +73,20 @@ public class TestRegistro {
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.insertarDocs.formateados", "true");
 			prop.put("es.caib.sistra2.pluginsib.registro.regweb3.wsdl.dir", "/D:/app/caib/sistra/regweb3/dev/");
 			final IPlugin plg = (IPlugin) PluginsManager.instancePluginByClassName(
-					"es.caib.sistra2.commons.plugins.registro.regweb3.RegistroRegweb3Plugin",
-					"es.caib.sistra2.", prop);
+					"es.caib.sistra2.commons.plugins.registro.regweb3.RegistroRegweb3Plugin", "es.caib.sistra2.", prop);
 			final RegistroRegweb3Plugin plugin = (RegistroRegweb3Plugin) plg;
 
-
 			// Testeamos obtención de oficinas
-			final List<OficinaRegistro> oficinas = plugin.obtenerOficinasRegistro(entidad,TypeRegistro.REGISTRO_ENTRADA);
-			for (OficinaRegistro oficina : oficinas) {
+			final List<OficinaRegistro> oficinas = plugin.obtenerOficinasRegistro(entidad,
+					TypeRegistro.REGISTRO_ENTRADA);
+			for (final OficinaRegistro oficina : oficinas) {
 				System.out.println("oficina " + oficina.getCodigo() + " : " + oficina.getNombre());
 			}
 
 			// Testeamos obtencion de libros para una oficina
-			final List<LibroOficina> librosoficina = plugin.obtenerLibrosOficina(entidad, oficinas.get(4).getCodigo(), TypeRegistro.REGISTRO_ENTRADA);
-			for (LibroOficina libro : librosoficina) {
+			final List<LibroOficina> librosoficina = plugin.obtenerLibrosOficina(entidad, oficinas.get(4).getCodigo(),
+					TypeRegistro.REGISTRO_ENTRADA);
+			for (final LibroOficina libro : librosoficina) {
 				System.out.println("Libro: " + libro.getCodigo() + " : " + libro.getNombre());
 			}
 
@@ -110,9 +110,9 @@ public class TestRegistro {
 			datosAsunto.setExtractoAsunto("Prueba registro de entrada");
 
 			// Paso 3. Crear Interesados
-			List<Interesado> interesados = new ArrayList<Interesado>();
-			Interesado interesado1 = new Interesado();
-			interesado1.setTipoDocumento(TypeDocumento.NIF);
+			final List<Interesado> interesados = new ArrayList<Interesado>();
+			final Interesado interesado1 = new Interesado();
+			interesado1.setTipoDocumento(TypeDocumentoIdentificacion.NIF);
 			interesado1.setActuaComo(TypeInteresado.REPRESENTANTE);
 			interesado1.setNombre("Alejandro");
 			interesado1.setApellido1("Macià");
@@ -128,8 +128,8 @@ public class TestRegistro {
 
 			interesados.add(interesado1);
 
-			Interesado interesado2 = new Interesado();
-			interesado2.setTipoDocumento(TypeDocumento.NIF);
+			final Interesado interesado2 = new Interesado();
+			interesado2.setTipoDocumento(TypeDocumentoIdentificacion.NIF);
 			interesado2.setActuaComo(TypeInteresado.REPRESENTADO);
 			interesado2.setNombre("Usuario");
 			interesado2.setApellido1("Prueba");
@@ -146,16 +146,15 @@ public class TestRegistro {
 			interesados.add(interesado2);
 
 			// Paso 4. Crear Documentos
-			List<DocumentoRegistro> documentosRegistro = new ArrayList<DocumentoRegistro>();
+			final List<DocumentoAsiento> documentosRegistro = new ArrayList<DocumentoAsiento>();
 
 			// Anyadimos doc de tipo anexo sin firma
-			try (InputStream is = RegistroRegweb3Plugin.class.getClassLoader()
-					.getResourceAsStream("Doc prueba.pdf")) {
+			try (InputStream is = RegistroRegweb3Plugin.class.getClassLoader().getResourceAsStream("Doc prueba.pdf")) {
 				final ByteArrayOutputStream fos = new ByteArrayOutputStream();
 				FileUtils.copy(is, fos);
-				DocumentoRegistro documento1 = new DocumentoRegistro();
+				final DocumentoAsiento documento1 = new DocumentoAsiento();
 				documento1.setContenidoFichero(fos.toByteArray());
-				documento1.setModoFirma(TypeFirma.SIN_FIRMA);
+				documento1.setModoFirma(TypeFirmaAsiento.SIN_FIRMA);
 				documento1.setFechaCaptura(new Date());
 				documento1.setNombreFichero("Prueba.pdf");
 				documento1.setOrigenDocumento(TypeOrigenDocumento.CIUDADANO);
@@ -172,9 +171,9 @@ public class TestRegistro {
 					.getResourceAsStream("Doc prueba_signed.pdf")) {
 				final ByteArrayOutputStream fos2 = new ByteArrayOutputStream();
 				FileUtils.copy(is2, fos2);
-				DocumentoRegistro documento2 = new DocumentoRegistro();
+				final DocumentoAsiento documento2 = new DocumentoAsiento();
 				documento2.setContenidoFichero(fos2.toByteArray());
-				documento2.setModoFirma(TypeFirma.FIRMA_ATTACHED);
+				documento2.setModoFirma(TypeFirmaAsiento.FIRMA_ATTACHED);
 				documento2.setContenidoFirma(fos2.toByteArray());
 				documento2.setNombreFirmaAnexada("Doc prueba_signed.pdf");
 				documento2.setFechaCaptura(new Date());
@@ -194,13 +193,14 @@ public class TestRegistro {
 			asiento.setInteresados(interesados);
 			asiento.setDocumentosRegistro(documentosRegistro);
 
-			final ResultadoRegistro resultadoRegistro = plugin.registroEntrada(entidad, asiento);
+			final ResultadoRegistro resultadoRegistro = plugin.registroEntrada(asiento);
 			System.out.println("Registro de entrada realizado correctamente");
 			System.out.println("Número de registro de entrada: " + resultadoRegistro.getNumeroRegistro());
 			System.out.println("Fecha de registro de entrada: " + resultadoRegistro.getFechaRegistro());
 
 			// Obtenemos justificante de registro de entrada
-			byte[] justificanteRegistro = plugin.obtenerJustificanteRegistro(entidad, resultadoRegistro.getNumeroRegistro());
+			final byte[] justificanteRegistro = plugin.obtenerJustificanteRegistro(entidad,
+					resultadoRegistro.getNumeroRegistro());
 			final Path path = Paths.get("/justificante_" + resultadoRegistro.getNumeroRegistro());
 			Files.write(path, justificanteRegistro);
 

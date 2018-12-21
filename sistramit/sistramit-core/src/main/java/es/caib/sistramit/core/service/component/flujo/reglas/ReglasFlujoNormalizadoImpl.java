@@ -15,34 +15,33 @@ import es.caib.sistramit.core.service.model.flujo.types.TypeFaseEjecucion;
 @Component("reglasFlujoNormalizado")
 public final class ReglasFlujoNormalizadoImpl extends ReglasFlujoImpl {
 
-    /**
-     * Constructor.
-     */
-    @PostConstruct
-    public void inicializarReglas() {
+	/**
+	 * Constructor.
+	 */
+	@PostConstruct
+	public void inicializarReglas() {
 
-        // Establecemos reglas
+		// Establecemos reglas
 
-        // INICIAR TRAMITE
-        this.addRegla(new RTPasosInicialesNormalizado(),
-                TypeFaseEjecucion.PRE_INICIO);
+		// INICIAR TRAMITE
+		this.addRegla(new RTPasosInicialesNormalizado(), TypeFaseEjecucion.PRE_INICIO);
 
-        // CARGAR TRAMITE
-        this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_CARGA);
+		// CARGAR TRAMITE
+		this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_CARGA);
 
-        // IR A PASO
-        this.addRegla(new RTNavegacionAccesibilidadNormalizado(),
-                TypeFaseEjecucion.POST_NAVEGACION);
+		// IR A PASO
+		this.addRegla(new RTNavegacionAccesibilidadNormalizado(), TypeFaseEjecucion.POST_NAVEGACION);
 
-        // ACCION PASO
-        this.addRegla(new RTAccionModificacion(), TypeFaseEjecucion.PRE_ACCION);
-        this.addRegla(new RTNavegacionAccesibilidadNormalizado(),
-                TypeFaseEjecucion.POST_ACCION);
-        this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_ACCION);
+		// ACCION PASO
+		this.addRegla(new RTAccionModificacion(), TypeFaseEjecucion.PRE_ACCION);
+		this.addRegla(new RTNavegacionAccesibilidadNormalizado(), TypeFaseEjecucion.POST_ACCION);
+		this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_ACCION);
+		// TODO HABILITAR CUANDO ESTE PASO GUARDAR
+		// this.addRegla(new RTAccionNavegacionAutoNormalizado(),
+		// TypeFaseEjecucion.POST_ACCION);
 
-        // CANCELAR
-        this.addRegla(new RTCancelacionPagoIniciado(),
-                TypeFaseEjecucion.PRE_CANCELAR);
+		// CANCELAR
+		this.addRegla(new RTCancelacionPagoIniciado(), TypeFaseEjecucion.PRE_CANCELAR);
 
-    }
+	}
 }

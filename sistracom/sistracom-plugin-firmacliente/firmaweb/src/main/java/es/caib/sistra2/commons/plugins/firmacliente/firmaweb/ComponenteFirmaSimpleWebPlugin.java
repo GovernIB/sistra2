@@ -27,184 +27,162 @@ import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
  * @author Indra
  *
  */
-public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties
-        implements IFirmaPlugin {
+public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties implements IFirmaPlugin {
 
-    /** Prefix. */
-    public static final String IMPLEMENTATION_BASE_PROPERTY = "firmaweb.";
+	/** Prefix. */
+	public static final String IMPLEMENTATION_BASE_PROPERTY = "firmaweb.";
 
-    public ComponenteFirmaSimpleWebPlugin() {
-    }
+	public ComponenteFirmaSimpleWebPlugin() {
+	}
 
-    /**
-     * Constructor.
-     *
-     * @param prefijoPropiedades
-     *            prefijo props
-     * @param properties
-     *            propiedades
-     */
-    public ComponenteFirmaSimpleWebPlugin(final String prefijoPropiedades,
-            final Properties properties) {
-        super(prefijoPropiedades, properties);
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param prefijoPropiedades
+	 *            prefijo props
+	 * @param properties
+	 *            propiedades
+	 */
+	public ComponenteFirmaSimpleWebPlugin(final String prefijoPropiedades, final Properties properties) {
+		super(prefijoPropiedades, properties);
+	}
 
-    @Override
-    public String generarSesionFirma(final InfoSesionFirma infoSesionFirma)
-            throws FirmaPluginException {
+	@Override
+	public String generarSesionFirma(final InfoSesionFirma infoSesionFirma) throws FirmaPluginException {
 
-        /** Crear conexion. **/
-        try {
-            final ApiFirmaWebSimple api = new ApiFirmaWebSimple(
-                    getPropiedad("url"), getPropiedad("usr"),
-                    getPropiedad("pwd"));
+		/** Crear conexion. **/
+		try {
+			final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"), getPropiedad("usr"),
+					getPropiedad("pwd"));
 
-            final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(
-                    getPropiedad("profile"), infoSesionFirma.getIdioma(),
-                    infoSesionFirma.getNombreUsuario(),
-                    infoSesionFirma.getEntidad());
+			final FirmaSimpleCommonInfo commonInfo = new FirmaSimpleCommonInfo(getPropiedad("profile"),
+					infoSesionFirma.getIdioma(), infoSesionFirma.getNombreUsuario(), infoSesionFirma.getEntidad());
 
-            return api.getTransactionID(commonInfo);
-        } catch (final Exception e) {
-            throw new FirmaPluginException(
-                    "Error generando una sesion para firmar.", e);
-        }
+			return api.getTransactionID(commonInfo);
+		} catch (final Exception e) {
+			throw new FirmaPluginException("Error generando una sesion para firmar.", e);
+		}
 
-    }
+	}
 
-    @Override
-    public void ficheroAFirmar(final FicheroAFirmar ficheroAFirmar)
-            throws FirmaPluginException {
-        ApiFirmaWebSimple api = null;
-        try {
+	@Override
+	public void anyadirFicheroAFirmar(final FicheroAFirmar ficheroAFirmar) throws FirmaPluginException {
+		ApiFirmaWebSimple api = null;
+		try {
 
-            final FirmaSimpleFile fileToSign = new FirmaSimpleFile(
-                    ficheroAFirmar.getNombreFichero(),
-                    ficheroAFirmar.getMimetypeFichero(),
-                    ficheroAFirmar.getFichero());
+			final FirmaSimpleFile fileToSign = new FirmaSimpleFile(ficheroAFirmar.getNombreFichero(),
+					ficheroAFirmar.getMimetypeFichero(), ficheroAFirmar.getFichero());
 
-            FirmaSimpleFileInfoSignature fileInfoSignature;
-            {
-                final String signID = ficheroAFirmar.getSignID();
-                final String name = fileToSign.getNom();
-                final String reason = ficheroAFirmar.getRazon();
-                final String location = ficheroAFirmar.getLocalizacion();
-                final String signerEmail = ficheroAFirmar.getEmail();
-                final int signNumber = ficheroAFirmar.getSignNumber();
-                final String languageSign = ficheroAFirmar.getIdioma();
+			FirmaSimpleFileInfoSignature fileInfoSignature;
+			{
+				final String signID = ficheroAFirmar.getSignID();
+				final String name = fileToSign.getNom();
+				final String reason = ficheroAFirmar.getRazon();
+				final String location = ficheroAFirmar.getLocalizacion();
+				final String signerEmail = ficheroAFirmar.getEmail();
+				final int signNumber = ficheroAFirmar.getSignNumber();
+				final String languageSign = ficheroAFirmar.getIdioma();
 
-                fileInfoSignature = new FirmaSimpleFileInfoSignature(fileToSign,
-                        signID, name, reason, location, signerEmail, signNumber,
-                        languageSign);
-            }
+				fileInfoSignature = new FirmaSimpleFileInfoSignature(fileToSign, signID, name, reason, location,
+						signerEmail, signNumber, languageSign);
+			}
 
-            api = new ApiFirmaWebSimple(getPropiedad("url"),
-                    getPropiedad("usr"), getPropiedad("pwd"));
+			api = new ApiFirmaWebSimple(getPropiedad("url"), getPropiedad("usr"), getPropiedad("pwd"));
 
-            api.addFileToSign(new FirmaSimpleAddFileToSignRequest(
-                    ficheroAFirmar.getSesion(), fileInfoSignature));
+			api.addFileToSign(new FirmaSimpleAddFileToSignRequest(ficheroAFirmar.getSesion(), fileInfoSignature));
 
-        } catch (final Exception e) {
-            throw new FirmaPluginException("Error añadiendo fichero", e);
-        }
+		} catch (final Exception e) {
+			throw new FirmaPluginException("Error añadiendo fichero", e);
+		}
 
-    }
+	}
 
-    @Override
-    public String iniciarSesionFirma(final String idSesionFirma,
-            final String urlCallBack, final String paramAdic)
-            throws FirmaPluginException {
-        final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"),
-                getPropiedad("usr"), getPropiedad("pwd"));
-        final FirmaSimpleStartTransactionRequest startTransactionInfo = new FirmaSimpleStartTransactionRequest(
-                idSesionFirma, urlCallBack, paramAdic);
+	@Override
+	public String iniciarSesionFirma(final String idSesionFirma, final String urlCallBack, final String paramAdic)
+			throws FirmaPluginException {
+		final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"), getPropiedad("usr"),
+				getPropiedad("pwd"));
+		final FirmaSimpleStartTransactionRequest startTransactionInfo = new FirmaSimpleStartTransactionRequest(
+				idSesionFirma, urlCallBack, paramAdic);
 
-        if ("true".equalsIgnoreCase(getPropiedad("iframe"))) {
-            startTransactionInfo
-                    .setView(FirmaSimpleStartTransactionRequest.VIEW_IFRAME);
-        } else {
-            startTransactionInfo.setView(
-                    FirmaSimpleStartTransactionRequest.VIEW_FULLSCREEN);
-        }
+		if ("true".equalsIgnoreCase(getPropiedad("iframe"))) {
+			startTransactionInfo.setView(FirmaSimpleStartTransactionRequest.VIEW_IFRAME);
+		} else {
+			startTransactionInfo.setView(FirmaSimpleStartTransactionRequest.VIEW_FULLSCREEN);
+		}
 
-        String url;
-        try {
-            url = api.startTransaction(startTransactionInfo);
-        } catch (final Exception e) {
-            throw new FirmaPluginException("Error empezando la transaction", e);
-        }
-        return url;
-    }
+		String url;
+		try {
+			url = api.startTransaction(startTransactionInfo);
+		} catch (final Exception e) {
+			throw new FirmaPluginException("Error empezando la transaction", e);
+		}
+		return url;
+	}
 
-    @Override
-    public TypeEstadoFirmado obtenerEstadoSesionFirma(
-            final String idSesionFirma) throws FirmaPluginException {
-        final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"),
-                getPropiedad("usr"), getPropiedad("pwd"));
-        FirmaSimpleGetTransactionStatusResponse fullTransactionStatus;
-        try {
-            fullTransactionStatus = api.getTransactionStatus(idSesionFirma);
-        } catch (final Exception e) {
-            throw new FirmaPluginException(
-                    "Error viendo el status de la transaction", e);
-        }
-        final FirmaSimpleStatus transactionStatus = fullTransactionStatus
-                .getTransactionStatus();
-        final int status = transactionStatus.getStatus();
+	@Override
+	public TypeEstadoFirmado obtenerEstadoSesionFirma(final String idSesionFirma) throws FirmaPluginException {
+		final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"), getPropiedad("usr"),
+				getPropiedad("pwd"));
+		FirmaSimpleGetTransactionStatusResponse fullTransactionStatus;
+		try {
+			fullTransactionStatus = api.getTransactionStatus(idSesionFirma);
+		} catch (final Exception e) {
+			throw new FirmaPluginException("Error viendo el status de la transaction", e);
+		}
+		final FirmaSimpleStatus transactionStatus = fullTransactionStatus.getTransactionStatus();
+		final int status = transactionStatus.getStatus();
 
-        return TypeEstadoFirmado.fromInt(status);
-    }
+		return TypeEstadoFirmado.fromInt(status);
+	}
 
-    @Override
-    public FicheroFirmado obtenerFirmaFichero(final String idSesionFirma,
-            final String signID) throws FirmaPluginException {
-        final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"),
-                getPropiedad("usr"), getPropiedad("pwd"));
-        FirmaSimpleSignatureResult fssr;
-        try {
-            fssr = api.getSignatureResult(
-                    new FirmaSimpleGetSignatureResultRequest(idSesionFirma,
-                            signID));
-        } catch (final Exception e) {
-            throw new FirmaPluginException(
-                    "Error obtenido el resultado del fichero", e);
-        }
-        final FirmaSimpleFile fsf = fssr.getSignedFile();
-        final FicheroFirmado fic = new FicheroFirmado();
-        fic.setFirmaFichero(fsf.getData());
-        fic.setMimetypeFichero(fsf.getMime());
-        fic.setNombreFichero(fsf.getNom());
-        return fic;
-    }
+	@Override
+	public FicheroFirmado obtenerFirmaFichero(final String idSesionFirma, final String signID)
+			throws FirmaPluginException {
+		final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"), getPropiedad("usr"),
+				getPropiedad("pwd"));
+		FirmaSimpleSignatureResult fssr;
+		try {
+			fssr = api.getSignatureResult(new FirmaSimpleGetSignatureResultRequest(idSesionFirma, signID));
+		} catch (final Exception e) {
+			throw new FirmaPluginException("Error obtenido el resultado del fichero", e);
+		}
+		final FirmaSimpleFile fsf = fssr.getSignedFile();
+		final FicheroFirmado fic = new FicheroFirmado();
+		fic.setFirmaFichero(fsf.getData());
+		fic.setMimetypeFichero(fsf.getMime());
+		fic.setNombreFichero(fsf.getNom());
 
-    @Override
-    public void cerrarSesionFirma(final String idSesionFirma)
-            throws FirmaPluginException {
-        final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"),
-                getPropiedad("usr"), getPropiedad("pwd"));
-        try {
-            api.closeTransaction(idSesionFirma);
-        } catch (final Exception e) {
-            throw new FirmaPluginException("Error cerrando la sesion firma", e);
-        }
-    }
+		// TODO PENDIENTE ESTABLECER TIPO FIRMA FICHERO
 
-    /**
-     * Obtiene propiedad.
-     *
-     * @param propiedad
-     *            propiedad
-     * @return valor
-     * @throws FirmaPluginException
-     */
-    private String getPropiedad(String propiedad) throws FirmaPluginException {
-        final String res = getProperty(FIRMACLIENTE_BASE_PROPERTY
-                + IMPLEMENTATION_BASE_PROPERTY + propiedad);
-        if (res == null) {
-            throw new FirmaPluginException("No se ha especificado parametro "
-                    + propiedad + " en propiedades");
-        }
-        return res;
-    }
+		return fic;
+	}
+
+	@Override
+	public void cerrarSesionFirma(final String idSesionFirma) throws FirmaPluginException {
+		final ApiFirmaWebSimple api = new ApiFirmaWebSimple(getPropiedad("url"), getPropiedad("usr"),
+				getPropiedad("pwd"));
+		try {
+			api.closeTransaction(idSesionFirma);
+		} catch (final Exception e) {
+			throw new FirmaPluginException("Error cerrando la sesion firma", e);
+		}
+	}
+
+	/**
+	 * Obtiene propiedad.
+	 *
+	 * @param propiedad
+	 *            propiedad
+	 * @return valor
+	 * @throws FirmaPluginException
+	 */
+	private String getPropiedad(String propiedad) throws FirmaPluginException {
+		final String res = getProperty(FIRMACLIENTE_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+		if (res == null) {
+			throw new FirmaPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
+		}
+		return res;
+	}
 
 }
