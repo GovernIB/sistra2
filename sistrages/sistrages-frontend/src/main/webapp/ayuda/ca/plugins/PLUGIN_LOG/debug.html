@@ -1,11 +1,13 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_LOG.DEBUG(pMensaje)');
+		copiarPortapeles('PLUGIN_LOG.DEBUG(missatge)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -19,32 +21,47 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
-	debug(String mensaje):void
+	debug(String missatge)
 </h1>
 <p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Método que genera mensajes en el debug de un trámite.</li>
+		<li>Mètode que genera missatges al debug de un tràmit.</li>
+		<li>Perquè apareguin aquest missatges ha d'estar habilitada la casella "Habilitar debug" a la pantalla de control de accés de la versió del tràmit. </li>
+    	<li>Aquest mètode està disponible a PLUGIN_LOG, des de tots els scripts. </li>
+    	<li>Mitjaçant aquest plugin es pot fer un seguiment del flux d'execució d'un tràmit a l'assistent de tramitació. </li>
+    	<li>Tots els missatges que s'incloguin als scripts del tràmit es veuran reflectits a l'historial de la sesió de tramitació del tràmit. </li>
+    	<li>Per accedir a l'historial anteriorment esmentat s'ha d'anar a la pantalla de debug de l'assistent. </li>
+    	<li>Una vegada carregat l'assistent amb un tràmit, podem accedir a la pantalla de debug obrint una nova pipella al navegador on es troba la sessió de tramitació i canviant la url del assistent per /sistramit/debug/logSesionTramitacion.html.</li>
+    	<li>Des d'aquesta pantalla de debug s'accedeix als esdeveniments associats al tràmit. Els esdeveniments contemplats són: errors, esdeveniments auditats en aplicació (inici de tràmit, càrrega de tràmit, etc.) i els missatges de debug que s'incloguin als scripts. </li>
+    	<li>Segons el tipus d'esdeveniment, podrà disposar de llistes de propietats associades, i en el cas d'esdeveniments de tipus error es disposarà de la traça de l'error. Tos els esdeveniments disposaràn de la data en la qual s'han produït. </li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>mensaje</b>: Mensaje descriptivo</li>
+		<li><b>missatge</b>: Missatge que es vol mostrar al debug</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
 <p>
-	Indica un mensaje descriptivo en el debug de tramitación en el asistente:
+	Indica un missatge descriptiu en el debug de tramitació a l'assistent:
 </p>
 <p class="codigoScript">
 	PLUGIN_LOG.debug('Realizar debug para este proceso');
+</p>
+<p>
+	Mostra el valor de una variable en el debug de tramitació a l'assistent:
+</p>
+<p class="codigoScript">
+	var missatge = 'missatge de prova';<br>
+	PLUGIN_LOG.debug(missatge);
 </p>
 </body>
 </html>

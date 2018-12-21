@@ -1,34 +1,69 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DOMINIO.invocarDominio(idDominio)');
+	}
+</script>
 <body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>
+      	  <li><a href="./invocarDominio1.html">invocarDominio</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	invocarDominio(String idDominio): <a href="../VALORES_DOMINIO/index.html">ValoresDominio</a>
+</h1>
 <p>
-	 > <a href="./index.html">index</a> > <a href="./invocarDominio1.html">invocarDominio</a>
-</p>
-<h1 class="stgH1">invocarDominio( String idDominio):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_DOMINIOS.invocarDominio(idDominio)'); return false;" /> </h1>
-<p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Realiza invocación al dominio.</li>
+		<li>Aquest mètode permet la invocació d'un domini, associat a la versió del tràmit, a partir del seu identificador.</li>
+		<li>Aquest mètode retorna un objecte que modelitza els valors de domini.</li>
+    	<li>Aquest mètode està disponible des del PLUGIN_DOMINIO.</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>idDominio</b>: Id dominio.</li>
+		<li><b>idDominio</b>: Identificador del domini a invocar.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>PARÀMETRES DE SORTIDA</b>
 </p>
 <p>
-	 XXX
+	<ul>
+		<li><b><a href="../VALORES_DOMINIO/index.html">ValoresDominio</a></b>: Objecte que modelitza les dades retornades pel domini.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>
+Invocació d'un domini, amb identificador Provincias, que retorna el valor de les províncies d'Espanya:
+</p>
+<p class="codigoScript">
+	var dProvincies = PLUGIN_DOMINIOS.invocarDominio('Provincias');
+</p>
+<p>
+Un altre exemple podria ser la invocació d'un domini que retorni el llistat de països:
+</p>
+
+<p class="codigoScript">
+var dPaisos = PLUGIN_DOMINIOS.invocarDominio('Paises');
 </p>
 </body>
 </html>

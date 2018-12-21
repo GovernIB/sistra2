@@ -1,19 +1,36 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DOMINIO.invocarDominio(idDominio, parametros)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./invocarDominio2.html">invocarDominio</a>
-</p>
-<h1 class="stgH1">invocarDominio( String idDominio, ClzParametrosDominioInt parametros):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_DOMINIOS.invocarDominio(idDominio, parametros)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>
+      	  <li><a href="./invocarDominio2.html">invocarDominio</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	invocarDominio(String idDominio, ParametrosDominio parametros): <a href="../VALORES_DOMINIO/index.html">ValoresDominio</a>
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Realiza invocación al dominio pasándole parámetros.</li>
+		<li>Método que realiza la invocación de un dominio y recupera los datos que retorna. Se utiliza este método para aquellos dominios que requieran el paso de parámetros.</li>
+    	<li>El número de parámetros que necesita un dominio se puede identificar en la pantalla de edición del dominio.</li>
+    	<li>Este método está disponible en el plugin PLUGIN_DOMINIOS, que es accesible desde todos los scripts de versión, paso y de formulario.</li>
 	</ul>
 </p>
 <p>
@@ -21,15 +38,34 @@
 </p>
 <p>
 	<ul>
-		<li><b>idDominio</b>: Id dominio.</li>
-		<li><b>parametros</b>: parametros.</li>
+		<li><b>idDominio</b>: Identificador del dominio.</li>
+		<li><b>parametrosDominio</b>: Lista de parámetros que se necesita para invocar al dominio.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b><a href="../VALORES_DOMINIO/index.html">ValoresDominio</a></b>: Corresponde a los valores del dominio.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 <p>
-	 XXX
+De manera previa a la invocación de un dominio, se ha de crear en el script la lista de parámetros necesarios para la invocación, para posteriormente añadírselos al dominio. 
+Per ejemplo, en el supuesto que necesitemos recuperar las localidades de la provincia Islas Baleares, se identificaría la provincia con el parámetro correspondiente, en este caso 07:
+</p>
+<p class="codigoScript">
+	var parametrosDominio = PLUGIN_DOMINIOS.crearParametros();
+	parametrosDominio.addParametro('1', '07');
+</p>
+<p>
+ Posteriormente se invocará el dominio Localidades añadiendo la lista de parámetros al método de invocación:
+</p>
+<p class="codigoScript">
+var dLocalidades = PLUGIN_DOMINIOS.invocarDominio('Localidades', parametrosDominio);
 </p>
 </body>
 </html>

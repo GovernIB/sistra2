@@ -1,32 +1,41 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a>
-</p>
-<h1 class="stgH1">Plugin Log</h1>
+
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_LOG</a></li>
+  	</ul>
+</div>
+<h1 class="cabeceraPlugin">PLUGIN_LOG</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Plugin que permite utilizar el log de los scripts</li>
+		<li>Plugin que permite utilizar el log de los scripts para debugarlos en tiempo de desarrollo</li>
 		<li>Para que aparezca estos mensajes deberá estar habilitado el check de 'Habilitar debug' en la pantalla de control de acceso de la versión del trámite</li>
-		<li>Estos mensajes son visibles si en la misma sesión del navegador (abriendo otra pestaña en la ventana donde estamos tramitando), accedemos a la siguiente dirección: <a href="/debug/logSesionTramitacion.html">/debug/logSesionTramitacion.html</a>.</li>
-		<li>Este plugin está disponible para todos los scritps.</li>
+		<li>Estos mensajes son visibles si en la misma sesión del navegador (abriendo una pestaña en la ventana en la que estamos tramitando), accedemos a la siguiente dirección: <a href="/sistramitfront/debug/logSesionTramitacion.html" target="_blank">/sistramitfront/debug/logSesionTramitacion.html</a>.</li>
+		<li>Este plugin está disponible para su utilización en todos los scripts de versión, paso y de formulario.</li>
 	</ul>
 </p>
 <p>
 	<b>MÉTODOS</b>
 </p>
-<p>
+<div class="seccionMetodos">
 	<ul>
-		<li><a href="./debug.html">debug(pMensaje)</a><img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.DEBUG(pMensaje)'); return false;" />
+		<li>
+			<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.DEBUG(mensaje)'); return false;" />
+			<a href="./debug.html">debug(mensaje)</a>
 		</li>
-		<li><a href="./retardo.html">retardo(pMensaje)</a><img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.RETARDO(pMensaje)'); return false;" />
+		<li>
+			<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.RETARDO(timeout)'); return false;" />
+			<a href="./retardo.html">retardo(timeout)</a>
 		</li>
 	</ul>
 </p>

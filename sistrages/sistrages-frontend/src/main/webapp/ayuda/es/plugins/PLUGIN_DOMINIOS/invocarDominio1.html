@@ -1,19 +1,36 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DOMINIO.invocarDominio(idDominio)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./invocarDominio1.html">invocarDominio</a>
-</p>
-<h1 class="stgH1">invocarDominio( String idDominio):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_DOMINIOS.invocarDominio(idDominio)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>
+      	  <li><a href="./invocarDominio1.html">invocarDominio</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	invocarDominio(String idDominio): <a href="../VALORES_DOMINIO/index.html">ValoresDominio</a>
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Realiza invocación al dominio.</li>
+		<li>Este método permite la invocació de un domini, asociado a la versión del trámite, a partir de su identificador.</li>
+		<li>Este método retorna un objecto que modeliza los valores retornados por el dominio.</li>
+    	<li>Este método está disponible en el plugin PLUGIN_DOMINIO.</li>
 	</ul>
 </p>
 <p>
@@ -21,14 +38,32 @@
 </p>
 <p>
 	<ul>
-		<li><b>idDominio</b>: Id dominio.</li>
+		<li><b>idDominio</b>: Identificador del dominio a invocar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b><a href="../VALORES_DOMINIO/index.html">ValoresDominio</a></b>: Objecto que modeliza los datos retornados por el dominio.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 <p>
-	 XXX
+Invocación de un dominio, con identificador Provincias, que retorna el valor de las provincias de España:
+</p>
+<p class="codigoScript">
+	var dProvincias = PLUGIN_DOMINIOS.invocarDominio('Provincias');
+</p>
+<p>
+Otro ejemplo podría ser la invocación de un dominio que retorne el listado de paises:
+</p>
+
+<p class="codigoScript">
+var dPaises = PLUGIN_DOMINIOS.invocarDominio('Paises');
 </p>
 </body>
 </html>

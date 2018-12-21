@@ -1,5 +1,7 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
@@ -19,29 +21,29 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
-	retardo (int timeout):void
+	retardo (int timeout)
 </h1>
 <p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Implementa retardo para testing.</li>
+		<li>Implementa un retard per <i>testing</i>. <b>IMPORTANT:</b>  L'ús d'aquest mètode s'ha de restringir únicament a entorns de desenvolupament i/o proves.</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>timeout</b>: Timeout en segundos</li>
+		<li><b>timeout</b>: Temps de retard, en segons, a aplicar.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
 <p>
-	Aplicamos un retardo de 5 segundos:
+	Aplicam un retard de 5 segons per exemple a l'script "Paràmetres d'obertura del formulari" i això provocarà que l'obertura del formulari en l'execució del tràmit a l'assistent es retardi 5 segons. La línia a afegir a l'script seria la següent:
 </p>
 <p class="codigoScript">
 	PLUGIN_LOG.retardo(5);

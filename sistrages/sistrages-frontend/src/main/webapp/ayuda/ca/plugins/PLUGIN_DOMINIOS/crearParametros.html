@@ -1,34 +1,57 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DOMINIO.crearParametros()');
+	}
+</script>
 <body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>
+      	  <li><a href="./debug.html">crearParametros</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	crearParametros():<a href="../PARAMETROS_DOMINIO/index.html">ParametrosDominio</a>
+</h1>
 <p>
-	 > <a href="./index.html">index</a> > <a href="./crearParametros.html">crearParametros</a>
-</p>
-<h1 class="stgH1">crearParametros():ClzParametrosDominioInt <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_DOMINIOS.crearParametros()'); return false;" /> </h1>
-<p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Crea parámetros para alimentarlo y pasarlos después al dominio.</li>
+		<li>Mètode que permet crear la variable de paràmetres de domini, que s'haurà d'afegir al domini abans d'invocar-lo, sempre i quan aquest domini requereixi el pas de paràmetres.</li>
+		<li>La utilització d'aquest mètode NO és obligatoria al consumir un domini, únicament ho serà si el domini requereix el pas de paràmetres per la seva resolució</li>
+    	<li>Aquest mètodo està disponible al plugin PLUGIN_DOMINIOS, i és accessible des de tots els scripts de versió, de passa i de formulari.</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRE DE SORTIDA</b>
 </p>
 <p>
 	<ul>
-		<li><b>Sin parámetros</b></li>
+		<li><b>ParametrosDominio</b>: Correspon a la llista de paràmetres que es necesita per invocar el domini.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
 <p>
-	 XXX
+Per invocar el domini que requereix el pas de paràmetres, s'ha de crear prèviament la llista de paràmetres de la manera següent:
+</p>
+<p class="codigoScript">
+	var params = PLUGIN_DOMINIOS.crearParametros();
+</p>
+<p>
+Posteriorment, abans d'invocar el domini, s'hauran d'afegir els paràmetres que requereix el domini.
 </p>
 </body>
 </html>

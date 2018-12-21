@@ -1,19 +1,42 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_LOG.DEBUG(mensaje)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./debug.html">debug</a>
-</p>
-<h1 class="stgH1">DEBUG (String pMensaje):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.DEBUG(pMensaje)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_LOG</a></li>
+       	  <li>></li>
+      	  <li><a href="./debug.html">debug</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	debug(String mensaje)
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
 		<li>Método que genera mensajes en el debug de un trámite.</li>
+		<li>Para que aparezcan estos mensajes debe estar habilitado el check de "Habilitar debug" en la pantalla de control de acceso de la versión del trámite. </li>
+    	<li> Este método está disponible en PLUGIN_LOG, desde todos los scripts. </li>
+    	<li> Mediante este plugin se puede realizar un seguimiento del flujo de ejecución de un trámite en el asistente de tramitación. </li>
+    	<li> Todos los mensajes que se incluyan en los scripts del trámite se verán reflejados en el historial de la sesión de tramitación del trámite. </li>
+    	<li> Para acceder a historial anteriormente referido, se ha de ir a la pantalla de debug del asistente de tramitación. </li>
+    	<li> Una vez cargado el asistente con un trámite, podemos acceder a la pantalla de debug, abriendo una nueva pestaña en el navegador que tiene creada la sesión de tramitación del trámite y cambiando la url del asistente por /sistramit/debug/logSesionTramitacion.html.</li>
+    	<li> Desde esta pantalla se accede a los eventos asociados al trámite. Los eventos contemplados son: errores, eventos auditados en aplicación (inicio de trámite, carga, etc) y los mensajes de debug que se incluyan en los scripts. </li>
+    	<li> Según el tipo de evento, dispondrán de listas de propiedades asociadas, y en el caso de evento de tipo error se dispondrá de la traza de error. Todos los eventos dispondrán de la fecha en la que se ha producido. </li>
 	</ul>
 </p>
 <p>
@@ -21,15 +44,24 @@
 </p>
 <p>
 	<ul>
-		<li><b>pMensaje</b>: Mensaje descriptivo</li>
+		<li><b>mensaje</b>: Mensaje que se desea mostrar en el debug</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 <p>
-	Indica un mensaje descriptivo en el debug de tramitación en el asistente: <br />
-	PLUGIN_LOG.Debug('Realizar debug para este proceso')
+	Indica un mensaje descriptivo en el debug de tramitación en el asistente:
+</p>
+<p class="codigoScript">
+	PLUGIN_LOG.debug('Realizar debug para este proceso');
+</p>
+<p>
+	Muestra el valor de una variable en el debug de tramitación del asistente:
+</p>
+<p class="codigoScript">
+	var mensaje = 'mensaje de prueba';<br>
+	PLUGIN_LOG.debug(mensaje);
 </p>
 </body>
 </html>
