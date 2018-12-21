@@ -2,16 +2,16 @@ package es.caib.sistramit.core.service.component.system;
 
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
-import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
-import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
-import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
-import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
-import es.caib.sistramit.core.api.model.system.PagoAuditoria;
-import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.OUTPerdidaClave;
+import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 
 /**
  * Componente para generar auditoria.

@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.externo;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,39 +10,46 @@ import es.caib.sistramit.core.api.model.comun.ListaPropiedades;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 
 /**
- * La clase EventoAuditoriaTramitacion.
+ * La clase Evento (RestApiExternaService).
  */
 @SuppressWarnings("serial")
-public final class EventoAuditoriaTramitacion implements Serializable {
+public final class Evento implements Serializable {
 
 	/**
-	 * Crea una nueva instancia de EventoAuditoriaTramitacion.
+	 * Crea una nueva instancia de Evento.
 	 *
-	 * @param id
-	 *            the id
 	 * @param idSesionTramitacion
-	 *            the id sesion tramitacion
+	 *            id sesion tramitacion
 	 * @param tipoEvento
-	 *            the tipo evento
+	 *            tipo evento
 	 * @param fecha
-	 *            the fecha
+	 *            fecha
 	 * @param nif
-	 *            the nif
+	 *            nif
 	 * @param idTramite
-	 *            the id tramite
+	 *            id tramite
 	 * @param versionTramite
-	 *            the version tramite
+	 *            version tramite
 	 * @param idProcedimientoCP
-	 *            the id procedimiento CP
+	 *            id procedimiento CP
 	 * @param idProcedimientoSIA
-	 *            the id procedimiento SIA
+	 *            id procedimiento SIA
+	 * @param codigoError
+	 *            codigo error
+	 * @param descripcion
+	 *            descripcion
+	 * @param resultado
+	 *            resultado
+	 * @param trazaError
+	 *            traza error
+	 * @param detalle
+	 *            detalle
 	 */
-	public EventoAuditoriaTramitacion(final Long id, final String idSesionTramitacion, final String tipoEvento,
-			final Date fecha, final String nif, final String idTramite, final Integer versionTramite,
-			final String idProcedimientoCP, final String idProcedimientoSIA, final String codigoError,
-			final String descripcion, final String resultado, final String trazaError, final String detalle) {
+	public Evento(final String idSesionTramitacion, final String tipoEvento, final Date fecha, final String nif,
+			final String idTramite, final Integer versionTramite, final String idProcedimientoCP,
+			final String idProcedimientoSIA, final String codigoError, final String descripcion, final String resultado,
+			final String trazaError, final String detalle) {
 		super();
-		this.id = id;
 		this.idSesionTramitacion = idSesionTramitacion;
 		this.tipoEvento = TypeEvento.fromString(tipoEvento);
 		this.fecha = fecha;
@@ -63,30 +70,26 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	}
 
 	/**
-	 * Crea una nueva instancia de EventoAuditoriaTramitacion.
+	 * Crea una nueva instancia de Evento.
 	 *
-	 * @param id
-	 *            the id
 	 * @param tipoEvento
-	 *            the tipo evento
+	 *            tipo evento
 	 * @param fecha
-	 *            the fecha
+	 *            fecha
 	 * @param codigoError
-	 *            the codigo error
+	 *            codigo error
 	 * @param descripcion
-	 *            the descripcion
+	 *            descripcion
 	 * @param resultado
-	 *            the resultado
+	 *            resultado
 	 * @param trazaError
-	 *            the traza error
+	 *            traza error
 	 * @param detalle
-	 *            the detalle
+	 *            detalle
 	 */
-	public EventoAuditoriaTramitacion(final Long id, final String tipoEvento, final Date fecha,
-			final String codigoError, final String descripcion, final String resultado, final String trazaError,
-			final String detalle) {
+	public Evento(final String tipoEvento, final Date fecha, final String codigoError, final String descripcion,
+			final String resultado, final String trazaError, final String detalle) {
 		super();
-		this.id = id;
 		this.tipoEvento = TypeEvento.fromString(tipoEvento);
 		this.fecha = fecha;
 		this.codigoError = codigoError;
@@ -101,16 +104,11 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	}
 
 	/**
-	 * Crea una nueva instancia de EventoAuditoriaTramitacion.
+	 * Crea una nueva instancia de Evento.
 	 */
-	public EventoAuditoriaTramitacion() {
+	public Evento() {
 		super();
 	}
-
-	/**
-	 * id.
-	 */
-	private Long id;
 
 	/**
 	 * id sesion tramitacion.
@@ -332,25 +330,6 @@ public final class EventoAuditoriaTramitacion implements Serializable {
 	 */
 	public void setCodigoError(final String codigoError) {
 		this.codigoError = codigoError;
-	}
-
-	/**
-	 * Obtiene el valor de id.
-	 *
-	 * @return el valor de id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * Establece el valor de id.
-	 *
-	 * @param id
-	 *            el nuevo valor de id
-	 */
-	public void setId(final Long id) {
-		this.id = id;
 	}
 
 	/**

@@ -1,10 +1,10 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * La clase OUTPerdidaClave.
+ * La clase OUTPerdidaClave. (RestApiInternaService)
  */
 @SuppressWarnings("serial")
 public final class OUTPerdidaClave implements Serializable {

@@ -1,17 +1,19 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 
 /**
- * Filtros para la auditoria de pagos
+ * Filtros para la auditoria de pagos (RestApiInternaService)
  *
  * @author Indra
  *
  */
-public class FiltroPagoAuditoria {
+@SuppressWarnings("serial")
+public class FiltroPagoAuditoria implements Serializable {
 
 	private List<String> listaAreas;
 	private String idSesionTramitacion;

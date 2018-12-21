@@ -1,15 +1,17 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Filtros para la perdida de clave
+ * Filtros para la perdida de clave (RestApiInternaService)
  *
  * @author Indra
  *
  */
-public class FiltroPerdidaClave {
+@SuppressWarnings("serial")
+public class FiltroPerdidaClave implements Serializable {
 
 	private List<String> listaAreas;
 	private String datoFormulario;

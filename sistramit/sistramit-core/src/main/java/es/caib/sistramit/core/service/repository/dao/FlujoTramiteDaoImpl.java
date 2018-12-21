@@ -25,13 +25,15 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
-import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
-import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
-import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.PagoAuditoria;
-import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
@@ -333,7 +335,56 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		return result;
 	}
 
+	@Override
+	public List<TramitePersistencia> recuperarTramitesPersistencia(final FiltroTramitePersistencia pFiltro) {
+		return recuperarTramitesPersistenciaCriteria(pFiltro);
+	}
+
 	// ------------ FUNCIONES PRIVADAS --------------------------------------
+
+	public List<TramitePersistencia> recuperarTramitesPersistenciaCriteria(final FiltroTramitePersistencia pFiltro) {
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<TramitePersistencia> query = builder.createQuery(TramitePersistencia.class);
+
+		final Root<HTramite> tableT = query.from(HTramite.class);
+		final Root<HSesionTramitacion> tableS = query.from(HSesionTramitacion.class);
+
+		Predicate predicate = builder.equal(tableT.get("sesionTramitacion"), tableS);
+		predicate = builder.and(predicate,
+				builder.equal(tableT.get("nifIniciador"), pFiltro.getNif().trim().toUpperCase()));
+
+		predicate = builder.and(predicate,
+				builder.equal(tableT.get("estado"), TypeEstadoTramite.RELLENANDO.toString()));
+		predicate = builder.and(predicate, builder.isFalse(tableT.get("cancelado")));
+		predicate = builder.and(predicate, builder.isFalse(tableT.get("purgado")));
+
+		Predicate predicateFechaCaducidad = builder.lessThan(tableT.get("fechaCaducidad"), builder.currentTimestamp());
+		predicateFechaCaducidad = builder.or(predicateFechaCaducidad, builder.isNull(tableT.get("fechaCaducidad")));
+
+		predicate = builder.and(predicate, predicateFechaCaducidad);
+
+		if (pFiltro.getFechaDesde() != null) {
+			predicate = builder.and(predicate,
+					builder.greaterThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaDesde()));
+		}
+
+		if (pFiltro.getFechaHasta() != null) {
+			predicate = builder.and(predicate,
+					builder.lessThanOrEqualTo(tableT.get("fechaInicio"), pFiltro.getFechaHasta()));
+		}
+
+		query.where(predicate);
+		query.orderBy(builder.asc(tableT.get("fechaInicio")));
+
+		query.multiselect(tableS.get("idSesionTramitacion"), tableT.get("idioma"), tableT.get("descripcionTramite"),
+				tableT.get("idTramite"), tableT.get("versionTramite"), tableT.get("fechaInicio"),
+				tableT.get("fechaUltimoAcceso"));
+
+		final List<TramitePersistencia> result = entityManager.createQuery(query).getResultList();
+
+		return result;
+	}
 
 	public List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicherosFirmaCriteria(final Long pIdTramite) {
 

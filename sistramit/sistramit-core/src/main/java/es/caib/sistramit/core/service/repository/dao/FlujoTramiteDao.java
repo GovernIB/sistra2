@@ -5,13 +5,15 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
-import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
-import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
-import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.PagoAuditoria;
-import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroTramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.externo.TramitePersistencia;
+import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
 import es.caib.sistramit.core.service.model.system.PerdidaClaveFichero;
@@ -224,6 +226,15 @@ public interface FlujoTramiteDao {
 	 * @return lista de ficheros
 	 */
 	List<FicheroPersistenciaAuditoria> recuperarPersistenciaFicheros(Long pIdTramite);
+
+	/**
+	 * Recuperar tramites persistencia.
+	 *
+	 * @param pFiltro
+	 *            filtro
+	 * @return lista de tramites
+	 */
+	List<TramitePersistencia> recuperarTramitesPersistencia(FiltroTramitePersistencia pFiltro);
 
 	// TODO PENDIENTE FUNCIONES PERSISTENCIA CARPETA
 

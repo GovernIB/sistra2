@@ -1,10 +1,10 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * La clase PagoAuditoria.
+ * La clase PagoAuditoria. (RestApiInternaService)
  */
 @SuppressWarnings("serial")
 public final class PagoAuditoria implements Serializable {

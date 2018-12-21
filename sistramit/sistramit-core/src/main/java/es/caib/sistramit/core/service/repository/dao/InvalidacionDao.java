@@ -3,7 +3,7 @@ package es.caib.sistramit.core.service.repository.dao;
 import java.util.Date;
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 
 /**
  * DAO para invalidaciones y refresco caché: definicion tramite, datos dominio,

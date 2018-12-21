@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 
 /**
- * Evento de persistencia.
+ * Evento de persistencia. (RestApiInternaService)
  *
  * @author Indra
  *

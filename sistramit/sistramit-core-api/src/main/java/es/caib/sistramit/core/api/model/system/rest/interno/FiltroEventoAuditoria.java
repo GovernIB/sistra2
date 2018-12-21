@@ -1,37 +1,40 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
+import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 
 /**
- * Filtros para la persistencia
+ * Filtros para la auditoria de tramites (RestApiInternaService)
  *
  * @author Indra
  *
  */
-public class FiltroPersistenciaAuditoria {
+@SuppressWarnings("serial")
+public class FiltroEventoAuditoria implements Serializable {
 
 	private List<String> listaAreas;
 	private String idSesionTramitacion;
 	private String nif;
 	private Date fechaDesde;
 	private Date fechaHasta;
-	private TypeTramitePersistencia tipoTramitePersistencia;
+	private TypeEvento evento;
 
 	private String idTramite;
 	private Integer versionTramite;
 	private String idProcedimientoCP;
 	private String idProcedimientoSIA;
 
+	private boolean errorPlataforma;
 	private boolean soloContar;
 
-	public FiltroPersistenciaAuditoria() {
+	public FiltroEventoAuditoria() {
 		super();
 	}
 
-	public FiltroPersistenciaAuditoria(final List<String> listaAreas) {
+	public FiltroEventoAuditoria(final List<String> listaAreas) {
 		super();
 		this.listaAreas = listaAreas;
 	}
@@ -76,12 +79,12 @@ public class FiltroPersistenciaAuditoria {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public TypeTramitePersistencia getTipoTramitePersistencia() {
-		return tipoTramitePersistencia;
+	public TypeEvento getEvento() {
+		return evento;
 	}
 
-	public void setTipoTramitePersistencia(final TypeTramitePersistencia tipoTramitePersistencia) {
-		this.tipoTramitePersistencia = tipoTramitePersistencia;
+	public void setEvento(final TypeEvento evento) {
+		this.evento = evento;
 	}
 
 	public String getIdTramite() {
@@ -114,6 +117,14 @@ public class FiltroPersistenciaAuditoria {
 
 	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
+	}
+
+	public boolean isErrorPlataforma() {
+		return errorPlataforma;
+	}
+
+	public void setErrorPlataforma(final boolean errorPlataforma) {
+		this.errorPlataforma = errorPlataforma;
 	}
 
 	public boolean isSoloContar() {

@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
-import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.rest.externo.Evento;
+import es.caib.sistramit.core.api.model.system.rest.externo.FiltroEvento;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 
 /**
  * Interface de acceso a base de datos para servicios de auditoria.
@@ -102,5 +104,14 @@ public interface AuditoriaDao {
 	 * @return numero de errores borrados
 	 */
 	int deleteLogInterno(final Date date);
+
+	/**
+	 * Recuperar eventos.
+	 *
+	 * @param pFiltro
+	 *            filtro
+	 * @return lista de eventos
+	 */
+	List<Evento> recuperarEventos(FiltroEvento pFiltro);
 
 }

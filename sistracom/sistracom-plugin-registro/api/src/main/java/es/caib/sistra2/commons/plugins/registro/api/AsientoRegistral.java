@@ -21,7 +21,7 @@ public class AsientoRegistral implements Serializable {
 
     private List<Interesado> interesados = new ArrayList ();
 
-	private List<DocumentoRegistro> documentosRegistro = new ArrayList ();
+	private List<DocumentoAsiento> documentosRegistro = new ArrayList ();
 
 	private DatosAsunto datosAsunto;
 
@@ -50,11 +50,11 @@ public class AsientoRegistral implements Serializable {
 		this.interesados = interesados;
 	}
 
-	public List<DocumentoRegistro> getDocumentosRegistro() {
+	public List<DocumentoAsiento> getDocumentosRegistro() {
 		return documentosRegistro;
 	}
 
-	public void setDocumentosRegistro(List<DocumentoRegistro> documentosRegistro) {
+	public void setDocumentosRegistro(List<DocumentoAsiento> documentosRegistro) {
 		this.documentosRegistro = documentosRegistro;
 	}
 

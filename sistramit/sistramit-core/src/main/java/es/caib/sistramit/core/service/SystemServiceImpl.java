@@ -18,7 +18,7 @@ import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
-import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SystemService;

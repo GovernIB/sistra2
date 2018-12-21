@@ -10,7 +10,7 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
-import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.service.repository.model.HInvalidacion;
 
 /**

@@ -17,20 +17,20 @@ import es.caib.sistra2.commons.utils.JSONUtil;
 import es.caib.sistra2.commons.utils.JSONUtilException;
 import es.caib.sistramit.core.api.exception.ErrorJsonException;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
-import es.caib.sistramit.core.api.model.system.DetallePagoAuditoria;
-import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FicheroAuditoria;
-import es.caib.sistramit.core.api.model.system.FicheroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
-import es.caib.sistramit.core.api.model.system.FiltroPagoAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPerdidaClave;
-import es.caib.sistramit.core.api.model.system.FiltroPersistenciaAuditoria;
-import es.caib.sistramit.core.api.model.system.Invalidacion;
-import es.caib.sistramit.core.api.model.system.OUTPerdidaClave;
-import es.caib.sistramit.core.api.model.system.PagoAuditoria;
-import es.caib.sistramit.core.api.model.system.PerdidaClave;
-import es.caib.sistramit.core.api.model.system.PersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.DetallePagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.FicheroAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FicheroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPerdidaClave;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPersistenciaAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.OUTPerdidaClave;
+import es.caib.sistramit.core.api.model.system.rest.interno.PagoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.PerdidaClave;
+import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
@@ -267,6 +267,13 @@ public class ApiInternaRestController {
 		return resultado;
 	}
 
+	/**
+	 * Convierte detalle pago.
+	 *
+	 * @param pDetallePago
+	 *            detalle pago
+	 * @return detalle pago auditoria
+	 */
 	private RDetallePagoAuditoria convierteDetallePago(final DetallePagoAuditoria pDetallePago) {
 		RDetallePagoAuditoria rDetalle = null;
 
@@ -496,6 +503,13 @@ public class ApiInternaRestController {
 
 	}
 
+	/**
+	 * Convierte pago auditoria.
+	 *
+	 * @param pPagoAuditoria
+	 *            pago auditoria
+	 * @return RPagoAuditoria
+	 */
 	private RPagoAuditoria conviertePagoAuditoria(final PagoAuditoria pPagoAuditoria) {
 		RPagoAuditoria rPago = null;
 
@@ -562,6 +576,13 @@ public class ApiInternaRestController {
 
 	}
 
+	/**
+	 * Convierte persistencia auditoria.
+	 *
+	 * @param pPersistenciaAuditoria
+	 *            persistencia auditoria
+	 * @return RPersistenciaAuditoria
+	 */
 	private RPersistenciaAuditoria conviertePersistenciaAuditoria(final PersistenciaAuditoria pPersistenciaAuditoria) {
 		RPersistenciaAuditoria rPersistencia = null;
 
@@ -595,6 +616,13 @@ public class ApiInternaRestController {
 		return rPersistencia;
 	}
 
+	/**
+	 * Convierte fichero persistencia auditoria.
+	 *
+	 * @param pFichero
+	 *            fichero
+	 * @return RFicheroPersistenciaAuditoria
+	 */
 	private RFicheroPersistenciaAuditoria convierteFicheroPersistenciaAuditoria(
 			final FicheroPersistenciaAuditoria pFichero) {
 		RFicheroPersistenciaAuditoria rFichero = null;

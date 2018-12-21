@@ -1,9 +1,9 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
 import java.io.Serializable;
 
 /**
- * La clase FicheroAuditoria.
+ * La clase FicheroAuditoria (RestApiInternaService).
  */
 @SuppressWarnings("serial")
 public final class FicheroAuditoria implements Serializable {

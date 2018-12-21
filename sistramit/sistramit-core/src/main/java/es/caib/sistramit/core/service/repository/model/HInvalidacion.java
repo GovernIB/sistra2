@@ -11,7 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistramit.core.api.model.system.Invalidacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.Invalidacion;
 import es.caib.sistramit.core.api.model.system.types.TypeInvalidacion;
 
 /**

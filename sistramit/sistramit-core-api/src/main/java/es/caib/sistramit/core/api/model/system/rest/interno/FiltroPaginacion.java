@@ -1,12 +1,15 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
+
+import java.io.Serializable;
 
 /**
- * Filtros para la paginacion
+ * Filtros para la paginacion (RestApiInternaService)
  *
  * @author Indra
  *
  */
-public class FiltroPaginacion {
+@SuppressWarnings("serial")
+public class FiltroPaginacion implements Serializable {
 
 	private Integer first;
 

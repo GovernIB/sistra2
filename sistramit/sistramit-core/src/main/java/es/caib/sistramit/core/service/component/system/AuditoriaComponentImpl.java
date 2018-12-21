@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
-import es.caib.sistramit.core.api.model.system.EventoAuditoriaTramitacion;
-import es.caib.sistramit.core.api.model.system.FiltroEventoAuditoria;
-import es.caib.sistramit.core.api.model.system.FiltroPaginacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.EventoAuditoriaTramitacion;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroEventoAuditoria;
+import es.caib.sistramit.core.api.model.system.rest.interno.FiltroPaginacion;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
 import es.caib.sistramit.core.service.repository.dao.AuditoriaDao;
 

@@ -1,38 +1,39 @@
-package es.caib.sistramit.core.api.model.system;
+package es.caib.sistramit.core.api.model.system.rest.interno;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import es.caib.sistramit.core.api.model.system.types.TypeEvento;
+import es.caib.sistramit.core.api.model.system.types.TypeTramitePersistencia;
 
 /**
- * Filtros para la auditoria de tramites
+ * Filtros para la persistencia (RestApiInternaService)
  *
  * @author Indra
  *
  */
-public class FiltroEventoAuditoria {
+@SuppressWarnings("serial")
+public class FiltroPersistenciaAuditoria implements Serializable {
 
 	private List<String> listaAreas;
 	private String idSesionTramitacion;
 	private String nif;
 	private Date fechaDesde;
 	private Date fechaHasta;
-	private TypeEvento evento;
+	private TypeTramitePersistencia tipoTramitePersistencia;
 
 	private String idTramite;
 	private Integer versionTramite;
 	private String idProcedimientoCP;
 	private String idProcedimientoSIA;
 
-	private boolean errorPlataforma;
 	private boolean soloContar;
 
-	public FiltroEventoAuditoria() {
+	public FiltroPersistenciaAuditoria() {
 		super();
 	}
 
-	public FiltroEventoAuditoria(final List<String> listaAreas) {
+	public FiltroPersistenciaAuditoria(final List<String> listaAreas) {
 		super();
 		this.listaAreas = listaAreas;
 	}
@@ -77,12 +78,12 @@ public class FiltroEventoAuditoria {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public TypeEvento getEvento() {
-		return evento;
+	public TypeTramitePersistencia getTipoTramitePersistencia() {
+		return tipoTramitePersistencia;
 	}
 
-	public void setEvento(final TypeEvento evento) {
-		this.evento = evento;
+	public void setTipoTramitePersistencia(final TypeTramitePersistencia tipoTramitePersistencia) {
+		this.tipoTramitePersistencia = tipoTramitePersistencia;
 	}
 
 	public String getIdTramite() {
@@ -117,19 +118,11 @@ public class FiltroEventoAuditoria {
 		this.idProcedimientoSIA = idProcedimientoSIA;
 	}
 
-	public boolean isErrorPlataforma() {
-		return errorPlataforma;
-	}
-
-	public void setErrorPlataforma(final boolean errorPlataforma) {
-		this.errorPlataforma = errorPlataforma;
-	}
-
 	public boolean isSoloContar() {
 		return soloContar;
 	}
 
-	public void setSoloContar(boolean soloContar) {
+	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
 	}
 
