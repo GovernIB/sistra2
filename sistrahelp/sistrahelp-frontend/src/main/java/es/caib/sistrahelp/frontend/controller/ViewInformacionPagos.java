@@ -119,6 +119,13 @@ public class ViewInformacionPagos extends ViewControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("informacionPagos");
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada

@@ -27,6 +27,7 @@ import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.types.TypeEntorno;
 import es.caib.sistrahelp.core.api.model.types.TypeIdioma;
 import es.caib.sistrahelp.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrahelp.frontend.controller.DialogAyuda;
 import es.caib.sistrahelp.frontend.controller.SessionBean;
 import es.caib.sistrahelp.frontend.controller.ViewAuditoriaTramites;
 import es.caib.sistrahelp.frontend.controller.ViewEventosPlataforma;
@@ -548,4 +549,20 @@ public final class UtilJSF {
 				.getEntorno();
 	}
 
+	/**
+	 * abre la ayuda.
+	 *
+	 * @param id
+	 *            id. pagina ayuda
+	 */
+	public static void openHelp(final String id) {
+		final Map<String, String> params = new HashMap<>();
+		if (StringUtils.isBlank(id)) {
+			throw new FrontException("No existe identificador");
+		}
+
+		params.put(TypeParametroVentana.ID.toString(), id);
+
+		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
+	}
 }

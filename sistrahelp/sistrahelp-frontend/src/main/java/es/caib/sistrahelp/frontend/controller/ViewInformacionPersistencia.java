@@ -113,6 +113,13 @@ public class ViewInformacionPersistencia extends ViewControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("informacionPersistencia");
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada

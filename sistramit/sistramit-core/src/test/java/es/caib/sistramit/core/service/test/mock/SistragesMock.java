@@ -199,6 +199,13 @@ public class SistragesMock {
 		plugins.add(plugin);
 
 		plugin = new RPlugin();
+		plugin.setTipo(TypePluginEntidad.FIRMA.toString());
+		plugin.setClassname("es.caib.sistra2.commons.plugins.firmacliente.mock.ComponenteFirmaPluginMock");
+		plugin.setPrefijoPropiedades("prefijo");
+		plugin.setPropiedades(crearListaParametros());
+		plugins.add(plugin);
+
+		plugin = new RPlugin();
 		plugin.setTipo(TypePluginEntidad.REGISTRO.toString());
 		plugin.setClassname("es.caib.sistra2.commons.plugins.registro.mock.RegistroMockPlugin");
 		plugin.setPrefijoPropiedades("prefijo");
@@ -362,8 +369,8 @@ public class SistragesMock {
 	private static RPasoTramitacionAnexar crearPasoAnexar() {
 		final RPasoTramitacionAnexar pr = new RPasoTramitacionAnexar();
 		final List<RAnexoTramite> fl = new ArrayList<>();
-		fl.add(crearAnexoTramite("ANE1", 1));
-		fl.add(crearAnexoTramite("ANE2", 2));
+		fl.add(crearAnexoTramite("ANE1", 1, false));
+		fl.add(crearAnexoTramite("ANE2", 2, false));
 		fl.add(crearAnexoPresencialTramite("ANEP"));
 		pr.setIdentificador("AD1");
 		pr.setTipo("AD");
@@ -371,7 +378,7 @@ public class SistragesMock {
 		return pr;
 	}
 
-	private static RAnexoTramite crearAnexoTramite(final String identificador, final int instancias) {
+	private static RAnexoTramite crearAnexoTramite(final String identificador, final int instancias, boolean firmar) {
 
 		final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
 		ayuda.setUrl("http://www.google.es");
@@ -388,6 +395,7 @@ public class SistragesMock {
 		presentacionElectronica.setInstancias(instancias);
 		presentacionElectronica.setConvertirPDF(false);
 		presentacionElectronica.setAnexarFirmado(false);
+		presentacionElectronica.setFirmar(firmar);
 
 		final RScript scriptDependencia = new RScript();
 		scriptDependencia.setScript("return 'S';");
@@ -443,6 +451,7 @@ public class SistragesMock {
 		f.setDescripcion("Formulario");
 		f.setObligatoriedad("S");
 		f.setInterno(true);
+		f.setFirmar(true);
 		f.setFormularioInterno(crearFormularioDisenyo());
 
 		final RScript scriptDatosIniciales = new RScript();

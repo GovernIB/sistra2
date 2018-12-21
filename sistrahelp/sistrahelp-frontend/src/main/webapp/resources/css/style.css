@@ -614,3 +614,17 @@ label.ui-state-disabled {
 .dipC4 {width: 20% !important;}
 .dipC5 {width: 10% !important;}
 .dipC6 {width: 20% !important;}
+
+.table-centered {
+    margin: 0 auto !important;
+}
+
+.table-rightaligned {
+    margin-right: 0 !important;
+    margin-left: auto !important;
+}
+
+.table-leftaligned {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}

@@ -123,6 +123,13 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("auditoriaTramites");
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada

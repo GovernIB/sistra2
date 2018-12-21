@@ -112,6 +112,13 @@ public class ViewEventosPlataforma extends ViewControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("eventosPlataforma");
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada

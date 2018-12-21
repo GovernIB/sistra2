@@ -92,6 +92,13 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("perdidaClave");
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada

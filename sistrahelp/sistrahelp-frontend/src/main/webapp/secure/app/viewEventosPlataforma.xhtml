@@ -26,16 +26,18 @@
 
 
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-        	<p:panelGrid id="panelFiltro" columns="4" columnClasses="w27,w22,w26,w25" styleClass="noBackground w100 h10 noBorders">
+        	<p:panelGrid id="panelFiltro" columns="3" columnClasses="w50,w25,w25" styleClass="noBackground w100 h10 noBorders">
 
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
-	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewEventosPlataforma.filtroFechaInicio']}:"/>
-	        		<p:calendar id="filtroFechaInicio" value="#{viewEventosPlataforma.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true"/>
-	        	</h:panelGrid>
-	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
-	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewEventosPlataforma.filtroFechaFin']}:"/>
+	        	<h:panelGroup styleClass="va-middle">
+	        		<p:outputLabel value="#{msg['viewEventosPlataforma.filtroFecha']}:" styleClass="padding-right-2pct"/>
+
+	        		<p:outputLabel for="filtroFechaInicio" value="#{msg['viewEventosPlataforma.filtroFechaInicio']}:" styleClass="padding-right-4"/>
+	        		<p:calendar id="filtroFechaInicio" value="#{viewEventosPlataforma.filtros.fechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" required="true" styleClass="padding-right-2pct"/>
+
+	        		<p:outputLabel for="filtroFechaFin" value="#{msg['viewEventosPlataforma.filtroFechaFin']}:" styleClass="padding-right-4"/>
 	        		<p:calendar id="filtroFechaFin" value="#{viewEventosPlataforma.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-	        	</h:panelGrid>
+	        	</h:panelGroup>
+
 	        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
 	        		<p:outputLabel for="filtroEvento" value="#{msg['viewEventosPlataforma.filtroEvento']}:"/>
 
@@ -46,9 +48,12 @@
 					</p:selectOneMenu>
 
 	        	</h:panelGrid>
-          		<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewEventosPlataforma.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
 
-          		</p:panelGrid>
+	        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
+          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewEventosPlataforma.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewEventosPlataforma.ayuda}"/>
+				</h:panelGrid>
+          	</p:panelGrid>
 
 
 			<!-- Data table -->

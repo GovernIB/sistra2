@@ -24,19 +24,19 @@
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<p:panelGrid id="panelFiltro"  styleClass="noBackground w100 h10 noBorders">
         		<p:row>
-        			<p:column styleClass="w27">
+        			<p:column styleClass="w27 noPadding">
 		        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
 			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewAuditoriaTramites.filtroIdSesion']}:"/>
 				        	<p:inputText id="filtroIdSesion" value="#{viewAuditoriaTramites.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w22">
+		        	<p:column styleClass="w22 noPadding">
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w25 grid-right,w75">
 				        	<p:outputLabel for="filtroNif" value="#{msg['viewAuditoriaTramites.filtroNif']}:"/>
 				        	<p:inputText id="filtroNif" value="#{viewAuditoriaTramites.filtros.nif}" size="12" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w26">
+		        	<p:column styleClass="w26 noPadding">
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
 			        		<p:outputLabel for="filtroTramite" value="#{msg['viewAuditoriaTramites.filtroTramite']}:"/>
 			        		<h:panelGroup>
@@ -50,7 +50,7 @@
 			        		</h:panelGroup>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w25">
+		        	<p:column styleClass="w25 noPadding">
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w40 grid-right,w60">
 			        		<p:outputLabel for="filtroProcedimiento" value="#{msg['viewAuditoriaTramites.filtroProcedimiento']}:"/>
 			        		<p:inputText id="filtroProcedimiento" value="#{viewAuditoriaTramites.filtros.idProcedimientoCP}" size="20" maxlength="20">
@@ -70,7 +70,7 @@
 			        		<p:calendar id="filtroFechaFin" value="#{viewAuditoriaTramites.filtros.fechaHasta}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 
 					</p:column>
-					<p:column>
+					<p:column styleClass="noPadding">
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
 			        		<p:outputLabel for="filtroEvento" value="#{msg['viewAuditoriaTramites.filtroEvento']}:"/>
 
@@ -81,8 +81,11 @@
 
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column>
-	          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		        	<p:column styleClass="noPadding">
+			        	<h:panelGrid id="panelBotones" columns="2" cellspacing="5" styleClass="table-rightaligned">
+		          			<p:commandButton icon="fa fa-search" value="#{msg['botones.buscar']}" actionListener="#{viewAuditoriaTramites.filtrar()}" process="panelFiltro" update="dataTable growl" styleClass="boton_derecha"/>
+		          			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" update="growl" actionListener="#{viewAuditoriaTramites.ayuda}"/>
+						</h:panelGrid>
 					</p:column>
 				</p:row>
           	</p:panelGrid>
