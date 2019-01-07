@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALORES_DOMINIO.getFichero(id)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>  	
+    	  <li><a href="./index.html">VALORES_DOMINIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getFichero.html">getFichero</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getFichero(id): <a href="../FICHERO/index.html">Fichero</a>
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permite recuperar un fichero retornado por un domini.</li>
+		<li>Este método está disponible desde el método PLUGIN_DOMINIO.invocarDominio (accesible desde todos los scripts de versión, paso y formulario).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>Id</b>: Cadena de texto que representa el identificador del fichero a recuperar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>Fichero</b>: Objeto Fichero que modeliza el fichero retornado por el dominio.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Pongamos por caso que se quiere recuperar un fichero con identificador 'PDF' retornado por el 'DOMINIO'. Los pasos a efectuar son los siguientes:</p>
+<p>
+Primero se invoca el dominio mediante PLUGIN_DOMINIOS:
+</p>
+<p class="codigoScript">
+	var valores = PLUGIN_DOMINIOS.invocarDominio('DOMINIO');
+</p>
+<p>
+y se recupera el fichero, a partir de su identificador, de la siguiente manera:
+</p>
+
+<p class="codigoScript">
+var file = valores.getFichero('PDF');
+</p>
+</body>
+</html>

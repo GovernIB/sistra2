@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('FICHERO.setDescripcion(descripcion)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  	      <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>  	
+    	  <li><a href="./index.html">FICHERO</a></li>
+       	  <li>></li>
+      	  <li><a href="./setDescripcion.html">setDescripcion</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getDescripcion(descripcion):void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permite establecer la descripcion de un fichero.</li>
+    	<li>Este método está disponible desde los métodos de los plugins de DATOS_PLANTILLA.addFichero (desde el script de Datos plantilla del paso información) y ValoresDominio.getFichero (desde todos los scripts a través del plugin PLUGIN_DOMINIOS).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>descripcion</b>: String con la descripción a establecer para el fichero.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que se quiere modificar la descripción de un fichero retornado por un dominio 'DOMINIO'. Los pasos a efectuar son los siguientes:</p>
+<p>
+Primero se recupera un fichero mediante PLUGIN_DOMINIOS:
+</p>
+<p class="codigoScript">
+	var valores = PLUGIN_DOMINIOS.invocarDominio('DOMINIO'); <br />
+	var fichero = valores.getFichero('PDF');
+</p>
+<p>
+ y asignamos la nueva descripción al fichero de la siguiente forma:
+</p>
+<p class="codigoScript">
+	fichero.setDescripcion('nueva descripción');
+</p>
+</body>
+</html>

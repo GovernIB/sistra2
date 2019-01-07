@@ -1,20 +1,37 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.addParametroMensajeError(parametro)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./addParametroMensajeError.html">addParametroMensajeError</a>
-</p>
-<h1 class="stgH1">addParametroMensajeError (String parametro):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.addParametroMensajeError(parametro)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./addParametroMensajeError.html">addParametroMensajeError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addParametroMensajeError(String parametro):void
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Parámetros a substuir en el mensaje que hace referencia el código de error.
-	   ({0} {1} ...)..</li>
+		<li>Método que permite añadir el valor de los parámetros a sustituir en el mensaje de error. De esta manera se puede dotar de dinamismo al mensaje de error.</li>
+    	<li>Los parámetros se identifican en el mensaje de error mediante llaves ({0} {1} ...).</li>
+    	<li>Si el mensaje tiene más de un parámetro, se ha de tener presente que importa el orden en que se añaden los mismos.</li>
+   		<li>Este método está disponible en PLUGIN_ERROR, desde todos los scripts de versión, paso y de formulario.</li>
 	</ul>
 </p>
 <p>
@@ -22,14 +39,26 @@
 </p>
 <p>
 	<ul>
-		<li><b>parametro</b>: Parámetro a substuir.</li>
+		<li><b>parámetro</b>: String con el valor del parámetro a fijar. </li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
+<p>Pongamos por caso que se quiere controlar la disponibilidad de datos para un determinado NIF en una fecha concreta. Esta operación se podría realizar recuperando datos de un dominio y mostrando un mensaje de error en caso de no existir datos. A continuación se describe cómo se tendría que proceder para parametrizar el mensaje de error.</p>
 <p>
-	 XXX
+Previamente, en la pantalla de script se ha de definir un mensaje de error en la pestaña de mensajes validación, por ejemplo con el identificador CodErrFechas y el valor siguiente: </br >
+<i>El DNI {0} no tiene datos asociados a fecha {1}.</i><br />
+Desde el script, se hace referencia a ese mensaje de la siguiente forma: <br />
 </p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setCodigoMensajeError('CodErrFechas'); <br />
+	PLUGIN_ERROR.addParametroMensajeError('12345678T'); <br />
+	PLUGIN_ERROR.addParametroMensajeError('10/09/2012'); <br />
+</p>
+<p>
+ Como resultado de la ejecución del script se obtendrá el siguiente resultado:<br />
+   <b>El DNI 12345678T no tiene datos asociados a fecha 10/09/2012.</b>
+ </p>
 </body>
 </html>

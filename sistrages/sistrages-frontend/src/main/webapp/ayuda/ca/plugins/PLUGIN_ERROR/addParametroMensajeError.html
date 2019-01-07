@@ -1,35 +1,64 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.addParametroMensajeError(parametre)');
+	}
+</script>
 <body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./addParametroMensajeError.html">addParametroMensajeError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addParametroMensajeError(String parametre):void
+</h1>
 <p>
-	 > <a href="./index.html">index</a> > <a href="./addParametroMensajeError.html">addParametroMensajeError</a>
-</p>
-<h1 class="stgH1">addParametroMensajeError (String parametro):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.addParametroMensajeError(parametro)'); return false;" /> </h1>
-<p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Parámetros a substuir en el mensaje que hace referencia el código de error.
-	   ({0} {1} ...)..</li>
+		<li>Mètode que permet afegir el valor dels paràmetres a substituir en el missatge d'error. D'aquesta manera es pot dotar de dinamisme al missatge d'error.</li>
+    	<li>Els paràmetres s'identifiquen al missatge d'error mitjant&ccedil;ant claus ({0} {1} ...).</li>
+    	<li>Si el missatge té més d'un paràmetre, s'ha de tenir present que importa l'ordre en que s'hi afegeixin els paràmetres.</li>
+   		<li>Aquest mètode està disponible en PLUGIN_ERROR, des de tots els scripts de versió, passa i de formulari.</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>parametro</b>: Parámetro a substuir.</li>
+		<li><b>parametre</b>: String amb el valor del paràmetre a fixar.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que es vol controlar la disponibilitat de dades per un determinat NIF a una data concreta. Aquesta operació es podria fer recuperant dades d'un domini i mostrant un missatge d'error en cas de no existir-hi dades. A continuació es descriu com s'hauria de procedir per parametritzar el missatge d'error.</p>
+<p>
+Prèviament, a la pantalla de script s'ha de definir un missatge d'error a la pipella de missatges validació, per l'exemple amb l'identificador CodErrFechas i el valor seg&uuml;ent: </br >
+<i>El DNI {0} no té dades associades a data {1}.</i><br />
+Des del script, es fa referència a aquest missatge de manera seg&uuml;ent: <br />
+</p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setCodigoMensajeError('CodErrFechas'); <br />
+	PLUGIN_ERROR.addParametroMensajeError('12345678T'); <br />
+	PLUGIN_ERROR.addParametroMensajeError('10/09/2012'); <br />
 </p>
 <p>
-	 XXX
-</p>
+ Com a resultat de l'execució del script s'obtindria el resultat seg&uuml;ent:<br />
+   <b>El DNI 12345678T té dades associades a data 10/09/2012.</b>
+ </p>
 </body>
 </html>

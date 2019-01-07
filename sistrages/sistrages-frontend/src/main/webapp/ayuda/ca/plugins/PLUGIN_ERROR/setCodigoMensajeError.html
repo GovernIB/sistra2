@@ -1,34 +1,55 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.setCodigoMensajeError(codi)');
+	}
+</script>
 <body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./setCodigoMensajeError.html">setCodigoMensajeError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setCodigoMensajeError(String codi):void
+</h1>
 <p>
-	 > <a href="./index.html">index</a> > <a href="./setCodigoMensajeError.html">setCodigoMensajeError</a>
-</p>
-<h1 class="stgH1">setCodigoMensajeError (String pMensaje):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setCodigoMensajeError(pCodigoMensajeError)'); return false;" /> </h1>
-<p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Método para establecer el mensaje de error a partir de un código de mensaje.</li>
+		<li>Mètode que permet recuperar el missatge d'error a partir del codi d'error, que haurà d'estar prèviament definit.</li>
+    	<li>Els missatges es defineixen a la pantalla del script, en la pipella de missatges de validació.</li>
+    	<li>Aquest mètode està disponible en PLUGIN_ERROR, des de tots els scripts de versió, passa i de formulari.</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>pCodigoMensajeError</b>: codigoMensajeError a establecer</li>
+		<li><b>codi</b>: String amb l'identificador del missatge d'error. </li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
+<p>Posam per cas que volem referenciar des de l'script un missatge d'error, prèviament definit a la pipella de missatges de validació, amb l'identificar 'CodErrFechas'.</p>
 <p>
-	XXX
+El missatge d'error es fixaria a nivell d'script mitjan&ccedil;ant el codi seg&uuml;ent:
+</p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setCodigoMensajeError('CodErrFechas');
 </p>
 </body>
 </html>

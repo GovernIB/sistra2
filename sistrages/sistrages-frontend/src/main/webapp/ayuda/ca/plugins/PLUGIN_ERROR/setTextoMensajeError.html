@@ -1,34 +1,53 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.setTextoMensajeError(text)');
+	}
+</script>
 <body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./setTextoMensajeError.html">setTextoMensajeError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setTextoMensajeError(String text):void
+</h1>
 <p>
-	 > <a href="./index.html">index</a> > <a href="./setTextoMensajeError.html">setTextoMensajeError</a>
-</p>
-<h1 class="stgH1">setTextoMensajeError (String pMensaje):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setTextoMensajeError(pTextoMensajeError)'); return false;" /> </h1>
-<p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Método para establecer directamente el mesaje de error.</li>
+		<li>Mètode que permet fixar directament per script el text del missatge d'error.</li>
+    	<li>Aquest mètode està disponible en PLUGIN_ERROR, des de tots els scripts de versió, passa i de formulari.</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>pTextoMensajeError</b>: textoMensajeError a establecer</li>
+		<li><b>text</b>: String amb el text descriptiu que identifica el motiu de l'error. </li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
 <p>
-	X
+Posam per cas que volem establir un missatge d'error fix i en únic idioma. Ho podriem fer a través de l'script de la manera seg&uuml;ent:
+</p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setTextoMensajeError('Heu de corregir les dates emplenades ja que no es corresponen amb valors correctes');
 </p>
 </body>
 </html>

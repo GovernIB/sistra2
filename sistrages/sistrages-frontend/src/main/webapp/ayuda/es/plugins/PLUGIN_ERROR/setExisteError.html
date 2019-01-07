@@ -1,19 +1,35 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.setExisteError(existe)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./setExisteError.html">setExisteError</a>
-</p>
-<h1 class="stgH1">setExisteError (boolean pExisteError):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setExisteError(pExisteError)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./setExisteError.html">setExisteError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setExisteError(boolean existe):void
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Método para establecer existeError.</li>
+		<li>Método que permite marcar la existencia de un error.</li>
+    	<li>Este método está disponible en PLUGIN_ERROR, desde todos los scripts de versión, paso y de formulario.</li>
 	</ul>
 </p>
 <p>
@@ -21,14 +37,17 @@
 </p>
 <p>
 	<ul>
-		<li><b>pExisteError</b>: existeError a establecer</li>
+		<li><b>existe</b>: booleano que ha de tenir el valor <i>true</i> si se quiere marcar el script con error, o <i>false</i> en caso contrario. </li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 <p>
-	XXX
+Pongamos por caso que se quiere marcar el script como erróneo ante una situación concreta. El script se marcaría como erróneo de la manera siguiente:
+</p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setExisteError(true)
 </p>
 </body>
 </html>

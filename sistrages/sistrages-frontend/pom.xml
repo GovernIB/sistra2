@@ -167,7 +167,6 @@
                         </execution>
                 </executions>
                 <configuration>
-                		<skip>true</skip>
                 		<generateGitPropertiesFile>true</generateGitPropertiesFile>
                         <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
                 </configuration>
@@ -182,8 +181,7 @@
 			      <execution>
 			      	<phase>compile</phase>
                    	<configuration>
-			      	 	<skip>true</skip>
-			      		<target>
+			      	 	<target>
                             <property name="compile_classpath" refid="maven.compile.classpath" />
                             <echo message="compile classpath: ${compile_classpath}" />
                         </target>
@@ -203,8 +201,6 @@
 			      </execution>
 			    </executions>
 			  </plugin>
-
-
 
 		</plugins>
 		<finalName>sistrages-frontend</finalName>

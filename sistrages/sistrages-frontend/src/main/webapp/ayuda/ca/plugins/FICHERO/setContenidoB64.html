@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('FICHERO.setContenidoB64(contingutB64)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  	      <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>
+    	  <li><a href="./index.html">FICHERO</a></li>
+       	  <li>></li>
+      	  <li><a href="./setContenidoB64.html">setContenidoB64</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setContenidoB64(String contingutB64):void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que permet establir el contingut en Base64 d'un fitxer.</li>
+    	<li>Aquest mètode està disponible des dels mètodes dels plugins de DATOS_PLANTILLA.addFichero (des del script de Dades plantilla de la passa informació) i ValoresDominio.getFichero (des de tots els scripts a través del plugin PLUGIN_DOMINIOS).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>contingutB64</b>: String amb el contingut en Base64 del fitxer.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que volem canviar el contingut d'un fitxer retornat per un domini 'DOMINIO'. Les passes a efectuar són les seg&uuml;ents:</p>
+<p>
+Primer es recupera el fitxer mitjan&ccedil;ant PLUGIN_DOMINIOS:
+</p>
+<p class="codigoScript">
+	var valors = PLUGIN_DOMINIOS.invocarDominio('DOMINIO'); <br />
+	var fitxer = valors.getFichero('PDF');
+</p>
+<p>
+ i assignam el nou contingut al fitxer de la manera seg&uuml;ent:
+</p>
+<p class="codigoScript">
+	fitxer.setContenidoB64('xxxxxxx');
+</p>
+</body>
+</html>

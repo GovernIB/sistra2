@@ -1,19 +1,35 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.setTextoMensajeError(texto)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./setTextoMensajeError.html">setTextoMensajeError</a>
-</p>
-<h1 class="stgH1">setTextoMensajeError (String pMensaje):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setTextoMensajeError(pTextoMensajeError)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./setTextoMensajeError.html">setTextoMensajeError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setTextoMensajeError(String texto):void
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Método para establecer directamente el mesaje de error.</li>
+		<li>Método que permite fijar directamente por script el texto del mensaje de error.</li>
+    	<li>Este método está disponible en PLUGIN_ERROR, desde todos los scripts de versión, paso y de formulario.</li>
 	</ul>
 </p>
 <p>
@@ -21,14 +37,17 @@
 </p>
 <p>
 	<ul>
-		<li><b>pTextoMensajeError</b>: textoMensajeError a establecer</li>
+		<li><b>texto</b>: String con el texto descriptivo que identifica el motivo del error. </li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 <p>
-	X
+Pongamos por caso que queremos establecer un mensaje de error fijo y en un único idioma. Lo podríamos hacer a través del script de la manera siguiente:
+</p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setTextoMensajeError('Debe corregir las fechas ingresadas ya que no corresponden con valores correctos');
 </p>
 </body>
 </html>

@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALORES_DOMINIO.getNombreColumnas()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>  	
+    	  <li><a href="./index.html">VALORES_DOMINIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getNombreColumnas.html">getNombreColumnas</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getNombreColumnas(): List&#60;String&#62;
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que permet obtenir una llista amb el nom de les columnes que retorna un domini.</li>
+    	<li>Aquest mètode està disponible des del mètode PLUGIN_DOMINIO.invocarDominio (accesible des de tots els scripts de versió, passa i formulari).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>List&#60;String&#62;</b>: Retorna una llista d'objectes String que representen els noms de les columnes que retorna el domini.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que es vol recuperar el nom de les columnes que retorna el domini 'DOMINIO'. Les passes a efecutar són les seg&uuml;ents:</p>
+<p>
+Primer s'invoca el domini mitjan&ccedil;ant PLUGIN_DOMINIOS:
+</p>
+<p class="codigoScript">
+	var valors = PLUGIN_DOMINIOS.invocarDominio('DOMINIO');
+</p>
+<p>
+i es recupera la llista de noms de les columnes de la manera seg&uuml;ent:
+</p>
+
+<p class="codigoScript">
+var listColumns = valores.getNombreColumnas();
+</p>
+<p>
+Una vegada obtinguda la llista, es pot recuperar el nom de cada columna com s'indica a continuació:
+</p>
+<p class="codigoScript">
+   for (i=0; i&#60;listColumns.size(); i++) {<br/>
+   &#09;var nomcol = listColumns.get(i);<br/>
+   &#09;....<br/>}
+</p>
+</body>
+</html>

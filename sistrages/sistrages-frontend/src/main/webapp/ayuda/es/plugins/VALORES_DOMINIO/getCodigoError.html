@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALORES_DOMINIO.getCodigoError()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>    	  
+    	  <li><a href="./index.html">VALORES_DOMINIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getCodigoError.html">getCodigoError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getCodigoError():String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permite recuperar el código de error, siempre y cuando se produzca un error en la resolución del dominio.</li>
+    	<li>Este método está disponible desde el método PLUGIN_DOMINIO.invocarDominio (accesible desde todos los scripts de versión, paso y formulario).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Objeto String que modeliza el código de error producido.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que se quiere recuperar el código del error producido al invocar el domini 'DOMINIO'. Los pasos a efectuar son los siguientes:</p>
+<p>
+Primero se invoca el dominio mediante PLUGIN_DOMINIOS:
+</p>
+<p class="codigoScript">
+	var valores = PLUGIN_DOMINIOS.invocarDominio('DOMINIO');
+</p>
+<p>
+y se recupera el código de error de la siguiente manera:
+</p>
+
+<p class="codigoScript">
+var errCode = valores.getCodigoError();
+</p>
+</body>
+</html>

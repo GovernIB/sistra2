@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('MENSAJE_VALIDACION.addParametroMensaje(parametre)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_MENSAJEVALIDACION/index.html">PLUGIN_MENSAJEVALIDACION</a></li>
+       	  <li>></li>
+    	  <li><a href="./index.html">MENSAJE_VALIDACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./addParametroMensaje.html">addParametroMensaje</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addParametroMensaje(String parametre): void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir el valor del paràmetre a substituir al missatge. Aquesta funcionalitat permet establir contingut dinàmic als missatges de validació.</li>
+    	<li>Els missatges es defineixen a la pipella de missatges de validació amb un identificador.</li>
+    	<li>Dins del missatge es defineixen els paràmetres mitjan&ccedil;ant números entre claus, podent tenir-ne més d'un. P.ex. {0} {1}...</li>
+    	<li>Si el missatge conté més d'un paràmetre, s'ha de tenir en compte que importa l'ordre dels paràmetres a l'hora de sustituir-los.</li>
+    	<li>Aquest mètode està disponible des del mètode PLUGIN_MENSAJEVALIDACION.crearMensajeValidacion (accesible des de tots els scripts de versió, passa i formulari).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>parametre</b>: String amb el valor del paràmetre a sustituir.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que volem fixar el valor dels paràmetres d'un missatge de validació, per exemple MENSAJE_001, prèviament creat. Les passes a seguir serien les seg&uuml;ents:</p>
+<p>
+En la pantalla de script es defineix, a la pipella de missatges de validació, el missatge amb identificador MENSAJE_001 i dos paràmetres mitjan&ccedil;ant el text:
+</p>
+<p class="codigoScript">
+Es necessari que es dugui a terme un debug amb els paràmetres {0} y {1}.
+</p>
+<p>
+Des del script es referencia el missatge de la manera seg&uuml;ent:
+ </p>
+ <p class="codigoScript">
+var msg = PLUGIN_MENSAJEVALIDACION.crearMensajeValidacion('MENSAJE_001');
+</p>
+<p>
+posteriorment se li afegeixen els valors pels paràmetres 0 i 1:
+   </p>
+ <p class="codigoScript">
+	msg.addParametroMensaje('param 0');
+	msg.addParametroMensaje('param 1');
+</p>
+<p>
+de manera que es substituirà les cadenes {0} i {1} per param0 i param1 respectivament.
+</p>
+</body>
+</html>

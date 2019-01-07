@@ -1,19 +1,36 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.setCodigoMensajeError(codigo)');
+	}
+</script>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a> > <a href="./setCodigoMensajeError.html">setCodigoMensajeError</a>
-</p>
-<h1 class="stgH1">setCodigoMensajeError (String pMensaje):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setCodigoMensajeError(pCodigoMensajeError)'); return false;" /> </h1>
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./setCodigoMensajeError.html">setCodigoMensajeError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setCodigoMensajeError(String codigo):void
+</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Método para establecer el mensaje de error a partir de un código de mensaje.</li>
+		<li>Método que permite recuperar el mensaje de error a partir de un código del error, que tendrá que estar previamente definido.</li>
+    	<li>Los mensajes se definen en la pantalla del script, en la pestaña de mensajes validación.</li>
+    	<li>Este método está disponible en PLUGIN_ERROR, desde todos los scripts de versión, paso y de formulario.</li>
 	</ul>
 </p>
 <p>
@@ -21,14 +38,18 @@
 </p>
 <p>
 	<ul>
-		<li><b>pCodigoMensajeError</b>: codigoMensajeError a establecer</li>
+		<li><b>codigo</b>: String con el identificador del mensaje de error. </li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
 <p>
-	XXX
+Pongamos por caso que queremos referenciar desde el script un mensaje de error, previamente definido en la pestaña de mensajes de validación, con el identificador 'CodErrFechas'.
+</p>
+<p>El mensaje de error se fijaría a nivel de script mediante el código siguiente:</p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setCodigoMensajeError('CodErrFechas');
 </p>
 </body>
 </html>

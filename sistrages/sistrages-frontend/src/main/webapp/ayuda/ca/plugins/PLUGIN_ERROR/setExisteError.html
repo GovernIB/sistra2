@@ -1,34 +1,51 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ERROR.setExisteError(existeix)');
+	}
+</script>
 <body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+      	  <li>></li>
+      	  <li><a href="./setExisteError.html">setExisteError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setExisteError(boolean existeix):void
+</h1>
 <p>
-	 > <a href="./index.html">index</a> > <a href="./setExisteError.html">setExisteError</a>
-</p>
-<h1 class="stgH1">setExisteError (boolean pExisteError):void <img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setExisteError(pExisteError)'); return false;" /> </h1>
-<p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Método para establecer existeError.</li>
+		<li>Mètode que permet marcar l'existència d'un error.</li>
+    	<li>Aquest mètode està disponible en PLUGIN_ERROR, des de tots els scripts de versió, passa i de formulari.</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>pExisteError</b>: existeError a establecer</li>
+		<li><b>existeix</b>: booleà que ha de tenir el valor <i>true</i> si es vol marcar l'script amb error, o <i>false</i> en cas contrari.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLES</b>
 </p>
-<p>
-	XXX
+<p>Posam per cas que es vol marcar l'script com erroni davant una situació concreta. L'script es marcaria com erroni de la manera seg&uuml;ent:</p>
+<p class="codigoScript">
+	PLUGIN_ERROR.setExisteError(true)
 </p>
 </body>
 </html>

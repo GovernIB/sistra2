@@ -22,6 +22,13 @@ public enum TypePluginScript {
 	/**
 	 * Plugin de avisos.
 	 */
-	PLUGIN_AVISOS;
-
+	PLUGIN_AVISOS,
+	/**
+	 * Plugin mensaje de validación.
+	 */
+	PLUGIN_MENSAJEVALIDACION,
+	/**
+	 * Plugin validaciones.
+	 */
+	PLUGIN_VALIDACIONES;
 }

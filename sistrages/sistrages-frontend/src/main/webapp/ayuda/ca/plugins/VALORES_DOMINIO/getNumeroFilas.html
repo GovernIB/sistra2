@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALORES_DOMINIO.getNumeroFilas()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>  	
+    	  <li><a href="./index.html">VALORES_DOMINIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getNumeroFilas.html">getNumeroFilas</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getNumeroFilas(): int
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que permet obtenir el nombre de files retornats com a resultat de la invocació d'un domini.</li>
+    	<li>Aquest mètode està disponible des del mètode PLUGIN_DOMINIO.invocarDominio (accesible des de tots els scripts de versió, passa i formulari).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Enter que representa el nombre de files retornades pel domini.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que es vol recuperar el nombre de files que retorna el domini 'DOMINIO'. Les passes a efecutar són les seg&uuml;ents:</p>
+<p>
+Primer s'invoca el domini mitjan&ccedil;ant PLUGIN_DOMINIOS:
+</p>
+<p class="codigoScript">
+	var valors = PLUGIN_DOMINIOS.invocarDominio('DOMINIO');
+</p>
+<p>
+i es recupera el nombre de files de la manera seg&uuml;ent:
+</p>
+
+<p class="codigoScript">
+var numFilas = valors.getNumeroFilas();
+</p>
+</body>
+</html>

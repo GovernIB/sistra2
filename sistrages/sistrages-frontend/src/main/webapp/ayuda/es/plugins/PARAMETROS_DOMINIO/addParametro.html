@@ -1,0 +1,53 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PARAMETROS_DOMINIO.addParametro(codigo, parametro)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>
+  		  <li><a href="./index.html">PARAMETROS_DOMINIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./addParametro.html">addParametro</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addParametro(String codigo, String parametro): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite añadir parámetros requeridos para la invocación de un dominio.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigo</b>: String con el código del parámetro a añadir.</li>
+		<li><b>parametro</b>: String con el valor del parámetro a añadir.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que queremos invocar un dominio con identificador 'MUNICIPIOS' que requiere pasar por parámetro la provincia, cuyo código de párametro es 'prov' y al que daremos como valor '07', que es el código INE de Islas Baleares. Para incorporar dicho parámetros procederíamos de la manera siguiente: </p>
+ <p class="codigoScript">
+var params = PARAMETROS_DOMINIO.addParametro('prov','07');
+</p>
+</body>
+</html>

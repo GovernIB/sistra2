@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALORES_DOMINIO.getDescripcionError()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_DOMINIOS/index.html">PLUGIN_DOMINIO</a></li>
+       	  <li>></li>  	
+    	  <li><a href="./index.html">VALORES_DOMINIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getDescripcionError.html">getDescripcionError</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getDescripcionError():String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que permet recuperar la descripció de l'error, sempre i quan es produeixi un error en la resolució del domini.</li>
+    	<li>Aquest mètode està disponible des del mètode PLUGIN_DOMINIO.invocarDominio (accesible des de tots els scripts de versió, passa i formulari).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Objecte String que modelitza la descripció de l'error produ&iuml;t.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que es vol recuperar la descripció de l'error produ&iuml;t en invocar el domini 'DOMINIO'. Les passes a efecutar són les seg&uuml;ents:</p>
+<p>
+Primer s'invoca el domini mitjan&ccedil;ant PLUGIN_DOMINIOS:
+</p>
+<p class="codigoScript">
+	var valors = PLUGIN_DOMINIOS.invocarDominio('DOMINIO');
+</p>
+<p>
+i es recupera el codi d'error de la manera seg&uuml;ent:
+</p>
+
+<p class="codigoScript">
+var errDesc = valors.getDescripcionError();
+</p>
+</body>
+</html>

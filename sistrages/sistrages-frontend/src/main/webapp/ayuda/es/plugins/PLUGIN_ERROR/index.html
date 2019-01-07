@@ -1,33 +1,59 @@
 <html>
 <head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
 	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
 	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
 </head>
 <body class="bodyPlugins">
-<p>
-	 > <a href="./index.html">index</a>
-</p>
-<h1 class="stgH1">Plugin Error</h1>
+<div class="seccionBreadcrumb">
+  	<ul id="luBreadCrumb">
+  		  <li><a href="./index.html">PLUGIN_ERROR</a></li>
+  	</ul>
+</div>
+<h1 class="cabeceraPlugin">PLUGIN_ERROR</h1>
 <p>
 	<b>DESCRIPCIÓN</b>
 </p>
 <p>
 	<ul>
-		<li>Plugin para marcar el script con error</li>
-		<li>Este error generará una excepción de script excepto en los scripts que sean de validación, en los que el mensaje
- establecido en el plugin será el que se muestre al usuario.</li>
+		<li>Plugin que permite establecer errores en la ejecución de un script.</li>
+    	<li>Si el script es de validación, se permitirá continuar con el trámite pero se mostrará en el navegador un mensaje de alerta con el texto fijado a través de este plugin. Los scripts de validación son:</li>
+        	<ul>
+		        <li>script de personalización (accesible desde Propiedades de la versión de un trámite).</li>
+		        <li>script de Postguardar formulario (para un Formulario del paso 'Rellenar formulario').</li>
+		        <li>script de validación (para un Anexo del paso 'Anexar documento').</li>
+		        <li>script de Permite registrar (en el paso 'Registrar formulario').</li>
+        	</ul>
+    	<li>Para el resto de scripts, en caso se establezca un error se forzará la salida del trámite indicando un mensaje de error genérico. El mensaje del error establecido a través del plugin se visualizará en la ventana de debug (desde el navegador con la sesión abierta de la tramitación fallida, se deberá abrir otra pestaña en el navegador y acceder a la dirección siguiente: <a href="/sistramitfront/debug/logSesionTramitacion.html" target="_blank">/sistramitfront/debug/logSesionTramitacion.html</a>)</li>
+    	<li>Este plugin está disponible para todos los scripts de versión, paso y de formulario.</li>
+</li>
 	</ul>
 </p>
 <p>
 	<b>MÉTODOS</b>
 </p>
 <p>
-	<ul>
-		<li><a href="./setExisteError.html">setExisteError(pExisteError)</a><img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setExisteError(pExisteError)'); return false;" /></li>
-		<li><a href="./addParametroMensajeError.html">addParametroMensajeError(parametro)</a><img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.addParametroMensajeError(parametro)'); return false;" /></li>
-		<li><a href="./setCodigoMensajeError.html">setCodigoMensajeError(pCodigoMensajeError)</a><img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setCodigoMensajeError(pCodigoMensajeError)'); return false;" /></li>
-		<li><a href="./setTextoMensajeError.html">setTextoMensajeError(pTextoMensajeError)</a><img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setTextoMensajeError(pTextoMensajeError)'); return false;" /></li>
-	</ul>
+	<div class="seccionMetodos">
+		<ul>
+			<li>
+				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.addParametroMensajeError(mensaje)'); return false;" />
+				<a href="./addParametroMensajeError.html">addParametroMensajeError(parametro)</a>
+			</li>
+			<li>
+				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.addParametroMensajeError(codigo)'); return false;" />
+				<a href="./setCodigoMensajeError.html">setCodigoMensajeError(codigo)</a>
+			</li>
+			<li>
+				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setExisteError(existe)'); return false;" />
+				<a href="./setExisteError.html">setExisteError(existe)</a>
+			</li>
+			<li>
+				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_ERROR.setTextoMensajeError(texto)'); return false;" />
+				<a href="./setTextoMensajeError.html">setTextoMensajeError(texto)</a>
+			</li>
+		</ul>
+	</div>
 </p>
 </body>
 </html>
