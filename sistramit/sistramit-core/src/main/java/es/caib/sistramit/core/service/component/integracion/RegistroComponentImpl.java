@@ -9,12 +9,13 @@ import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
+import es.caib.sistramit.core.api.exception.RegistroJustificanteException;
 import es.caib.sistramit.core.api.exception.RegistroSolicitudException;
+import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
-import es.caib.sistramit.core.service.model.flujo.ResultadoRegistrar;
-import es.caib.sistramit.core.service.model.flujo.types.TypeResultadoRegistro;
 
 /**
  * Implementación componente registro.
@@ -72,6 +73,26 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	public ResultadoRegistrar reintentarRegistro(String idSesionTramitacion, boolean debugEnabled) {
 		// TODO No esta habilitado mecanismo para registro
 		throw new RuntimeException("No esta habilitado mecanismo para registro");
+	}
+
+	@Override
+	public byte[] obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro, boolean debugEnabled) {
+
+		if (debugEnabled) {
+			log.debug("Obteniendo justificante registro " + codigoEntidad + " - " + numeroRegistro);
+		}
+
+		// TODO Ver implicaciones gestion presencial
+		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
+				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
+		byte[] justificante;
+		try {
+			justificante = plgRegistro.obtenerJustificanteRegistro(codigoEntidad, numeroRegistro);
+		} catch (final RegistroPluginException e) {
+			throw new RegistroJustificanteException(
+					"Error obteniendo justificante registro: " + codigoEntidad + " - " + numeroRegistro, e);
+		}
+		return justificante;
 	}
 
 }

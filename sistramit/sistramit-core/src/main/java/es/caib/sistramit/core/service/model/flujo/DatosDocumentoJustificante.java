@@ -37,11 +37,6 @@ public final class DatosDocumentoJustificante extends DatosDocumento {
 	private Persona solicitante;
 
 	/**
-	 * Indica si tiene version imprimible o no.
-	 */
-	private TypeSiNo tieneVersionImprimible = TypeSiNo.NO;
-
-	/**
 	 * Indica numero de registro del justificante.
 	 *
 	 * @return numeroRegistro
@@ -143,25 +138,6 @@ public final class DatosDocumentoJustificante extends DatosDocumento {
 	 */
 	public void setPreregistro(final TypeSiNo pPreregistro) {
 		preregistro = pPreregistro;
-	}
-
-	/**
-	 * Método de acceso a tieneVersionImprimible.
-	 *
-	 * @return tieneVersionImprimible
-	 */
-	public TypeSiNo getTieneVersionImprimible() {
-		return tieneVersionImprimible;
-	}
-
-	/**
-	 * Método para establecer tieneVersionImprimible.
-	 *
-	 * @param pTieneVersionImprimible
-	 *            tieneVersionImprimible a establecer
-	 */
-	public void setTieneVersionImprimible(final TypeSiNo pTieneVersionImprimible) {
-		tieneVersionImprimible = pTieneVersionImprimible;
 	}
 
 }

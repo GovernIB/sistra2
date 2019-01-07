@@ -22,6 +22,7 @@ import es.caib.sistrages.rest.api.interna.RPagoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionPagar;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
@@ -75,10 +76,27 @@ public final class UtilsSTG {
 				break;
 			}
 		}
-		if (res == null) {
-			throw new ErrorConfiguracionException("No existe paso con id " + pIdPaso);
-		}
 		return res;
+	}
+
+	/**
+	 * Devuelve definición paso tramitación registrar (solo puede existir un paso
+	 * registrar).
+	 *
+	 * @param definicionTramite
+	 *            Definición trámite
+	 * @return Paso tramitación
+	 */
+	public static RPasoTramitacionRegistrar devuelveDefinicionPasoRegistrar(
+			final DefinicionTramiteSTG definicionTramite) {
+		RPasoTramitacion res = null;
+		for (final RPasoTramitacion p : definicionTramite.getDefinicionVersion().getPasos()) {
+			if (TypePaso.fromString(p.getTipo()) == TypePaso.REGISTRAR) {
+				res = p;
+				break;
+			}
+		}
+		return (RPasoTramitacionRegistrar) res;
 	}
 
 	/**

@@ -13,6 +13,4 @@ public interface PlgValidacionesInt extends PluginScriptPlg {
 	 */
 	String ID = "PLUGIN_VALIDACIONES";
 
-	// TODO PENDIENTE
-
 }

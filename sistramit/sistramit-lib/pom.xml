@@ -163,7 +163,7 @@
 			<version>${sistra2.version}</version>
 		</dependency>
 
-
+<!--
 		<dependency>
 			<groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
   			<artifactId>pluginsib-validatesignature-afirmacxf</artifactId>
@@ -199,6 +199,7 @@
 			    </exclusion>
 			  </exclusions>
 		</dependency>
+ -->
 
 		<dependency>
 			<groupId>org.fundaciobit.pluginsib.documentconverter</groupId>

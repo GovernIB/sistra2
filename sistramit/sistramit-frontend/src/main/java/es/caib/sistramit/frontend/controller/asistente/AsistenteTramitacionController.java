@@ -26,12 +26,14 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
+import es.caib.sistramit.core.api.model.flujo.FirmaVerificacion;
 import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -423,14 +425,60 @@ public class AsistenteTramitacionController extends TramitacionController {
 	}
 
 	/**
-	 * Retorno componente de firma externo.
+	 * Retorno componente de firma externo (no se gestiona con ticket, se presupone
+	 * dentro de la misma sesión).
 	 *
 	 * @param ticket
 	 *            ticket
 	 * @return retorno de componente de firma externo recargando el trámite
 	 */
 	@RequestMapping(value = "/retornoFirmaExterno.html")
-	public ModelAndView retornoFirmaExterno(@RequestParam("ticket") final String ticket) {
+	public ModelAndView retornoFirmaExterno(@RequestParam("idPaso") final String idPaso,
+			@RequestParam("idDocumento") final String idDocumento, @RequestParam("instancia") final String instancia,
+			@RequestParam("firmante") final String firmante) {
+
+		debug("Verificar firma documento registro: " + idDocumento + " - " + instancia + " para firmante " + firmante);
+
+		// Cargamos tramite de persistencia
+		final String idSesionTramitacion = getIdSesionTramitacion();
+		this.cargarTramiteImpl(idSesionTramitacion, true);
+
+		// Verificamos firma
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada("idDocumento", idDocumento);
+		pParametros.addParametroEntrada("instancia", instancia);
+		pParametros.addParametroEntrada("firmante", firmante);
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO, pParametros);
+
+		final FirmaVerificacion fv = (FirmaVerificacion) rap.getParametroRetorno("resultado");
+
+		// TODO Revisar respuesta verificacion firma (si genera excepcion o retorna
+		// datos verificacion)
+
+		// Cargamos asistente
+		debug("Firma verificada");
+
+		// En funcion del resultado, mostramos mensaje al usuario
+		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", "firmaClienteVerificada", null,
+				TypeRespuestaJSON.SUCCESS);
+		this.setMensajeAsistente(ma);
+
+		// Redirigimos a carga asistente
+		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+
+	}
+
+	/**
+	 * Retorno desde carpeta ciudadano.
+	 * 
+	 * @param ticket
+	 *            ticket
+	 * @return carga asistente
+	 */
+	@RequestMapping(value = "/retornoCarpetaCiudadano.html")
+	public ModelAndView retornoCarpetaCiudadano(@RequestParam("ticket") final String ticket) {
 		// TODO PENDIENTE
 		return null;
 	}
@@ -499,14 +547,6 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 		return generarJsonView(res);
 
-	}
-
-	@RequestMapping(value = "/retornoCarpetaCiudadano.html")
-	public ModelAndView retornoCarpetaCiudadano(@RequestParam("ticket") final String ticket) {
-
-		// TODO PENDIENTE
-
-		return null;
 	}
 
 	// -------------------------------------------------------------------

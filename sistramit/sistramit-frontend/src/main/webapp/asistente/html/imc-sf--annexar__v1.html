@@ -1,0 +1,308 @@
+<!-- annexar -->
+
+<div class="imc-pas">
+
+	<h3><span>{{txtAnnexarTitol}}</span></h3>
+
+	<div class="imc--info">{{txtInstruccions}}</div>
+
+	<div class="imc--annexes">
+
+		<div class="imc--ann imc--e" aria-hidden="true">
+
+			<h4><span>{{txtElectronicament}}</span></h4>
+
+			<p>{{txtElectronicamentInfo}}</p>
+
+			{{if annexes}}
+			<ul>
+				{{annexes}}
+				{{if presentacion|equals>e}}
+				<li>
+
+					<div class="imc--doc-fila">
+
+						<a href="javascript:;" class="imc--doc-obri" data-id="{{id}}" data-omplit="{{rellenado}}" data-tipus="{{presentacion}}" data-num="{{maxInstancias}}" data-extensions="{{extensiones}}" data-mida="{{tamMax}}" data-ajuda="{{ayuda}}" data-obligatori="{{obligatorio}}">
+							
+							<div class="imc--doc"><span></span></div>
+
+							{{if obligatorio|equals>s}}
+							<div class="imc--tipus imc--ogligatori"><span></span></div>
+							{{/if}}
+							{{if obligatorio|equals>d}}
+							<div class="imc--tipus imc--opcional"><span></span></div>
+							{{/if}}
+							{{if rellenado|equals>c}}
+							<div class="imc--estat imc--completat"><span></span></div>
+							{{/if}}
+							{{if rellenado|equals>v}}
+							<div class="imc--estat imc--no-completat"><span></span></div>
+							{{/if}}
+
+							<strong>{{titulo}}</strong>
+
+						</a>
+
+						{{if plantilla}}
+						{{if plantilla.tipo|equals>i}}
+							<button data-tipus="{{plantilla.tipo}}" data-id="{{id}}" type="button" class="imc-bt imc--ico imc--descarrega-plantilla imc--plantilla"><span>{{txtPlantilla}}</span></button>
+						{{else}}
+							<a data-tipus="{{plantilla.tipo}}" href="{{plantilla.url}}" class="imc--finestra-nova imc--plantilla" title="{{txtObriFinestra}}" target="_blank"><span>{{txtPlantilla}}</span></a>
+						{{/if}}
+						{{/if}}
+
+					</div>
+
+					{{if ficheros}}
+					{{if maxInstancias|equals>1}}
+					<div class="imc--annexats">
+						<p>{{txtDocAnnexat}}:</p>
+						<ul>
+							{{ficheros}}
+							<li>
+								<strong data-id="{{id}}" data-fitxer="{{fichero}}">{{fichero}}</strong>
+								<button data-id="{{id}}" type="button" class="imc-bt imc--ico imc--descarrega"><span>{{txtDescarrega}}</span></button>
+							</li>
+							{{/ficheros}}
+						</ul>
+					</div>
+					{{/if}}
+					{{if maxInstancias|more>1}}
+					<div class="imc--annexats">
+						<p>{{txtDocsAnnexats}}:</p>
+						<ul>
+							{{ficheros}}
+							<li>
+								<strong data-id="{{id}}" data-fitxer="{{fichero}}">{{titulo}}</strong>
+								<button data-id="{{id}}" type="button" class="imc-bt imc--ico imc--descarrega"><span>{{txtDescarrega}}</span></button>
+							</li>
+							{{/ficheros}}
+						</ul>
+					</div>
+					{{/if}}
+					{{else}}
+					<div class="imc--opcions">
+						<p>
+						{{if extensiones|notempty}}
+							{{txtDocumentsAccept}} <strong>{{extensiones}}</strong>.
+						{{/if}}
+						{{if tamMax|notempty}}
+							{{txtMidaMaxima}} <strong>{{tamMax}} MB</strong>.
+						{{/if}}
+						</p>
+					</div>
+					{{/if}}
+
+				</li>
+				{{/if}}
+				{{/annexes}}
+			</ul>
+			{{/if}}
+
+		</div>
+
+		<div class="imc--ann imc--p" aria-hidden="true">
+
+			<h4><span>{{txtPresencialment}}</span></h4>
+
+			<p>{{txtPresencialmentInfo}}</p>
+
+			{{if annexesPresencials}}
+			<ul>
+				{{annexesPresencials}}
+				{{if presentacion|equals>p}}
+				<li>
+
+					<div class="imc--doc-fila">
+
+						<a href="javascript:;" class="imc--doc-obri" data-id="{{id}}" data-omplit="{{rellenado}}" data-tipus="{{presentacion}}" data-num="{{maxInstancias}}" data-extensions="{{extensiones}}" data-mida="{{tamMax}}" data-ajuda="{{ayuda}}" data-obligatori="{{obligatorio}}">
+							
+							<div class="imc--doc imc--presencial"><span></span></div>
+
+							{{if obligatorio|equals>s}}
+							<div class="imc--tipus imc--ogligatori"><span></span></div>
+							{{/if}}
+							{{if obligatorio|equals>d}}
+							<div class="imc--tipus imc--opcional"><span></span></div>
+							{{/if}}
+							{{if rellenado|equals>c}}
+							<div class="imc--estat imc--completat"><span></span></div>
+							{{/if}}
+							{{if rellenado|equals>v}}
+							<div class="imc--estat imc--no-completat"><span></span></div>
+							{{/if}}
+
+							<strong>{{titulo}}</strong>
+
+						</a>
+
+						{{if plantilla}}
+						{{if plantilla.tipo|equals>i}}
+							<button data-tipus="{{plantilla.tipo}}" data-id="{{id}}" type="button" class="imc-bt imc--ico imc--descarrega-plantilla imc--plantilla"><span>{{txtPlantilla}}</span></button>
+						{{else}}
+							<a data-tipus="{{plantilla.tipo}}" href="{{plantilla.url}}" class="imc--finestra-nova imc--plantilla" title="{{txtObriFinestra}}" target="_blank"><span>{{txtPlantilla}}</span></a>
+						{{/if}}
+						{{/if}}
+
+					</div>
+
+				</li>
+				{{/if}}
+				{{/annexesPresencials}}
+			</ul>
+			{{/if}}
+
+		</div>
+
+	</div>
+
+	<div class="imc--icones">
+
+		<h4><span>{{txtIcones}}</span></h4>
+
+		<ul>
+			<li>
+				<div class="imc--tipus imc--ogligatori"><span>{{txtObligatori}}</span></div>
+			</li>
+			<li>
+				<div class="imc--tipus imc--opcional"><span>{{txtOpcional}}</span></div>
+			</li>
+			<li>
+				<div class="imc--estat imc--completat"><span>{{txtCompletat}}</span></div>
+			</li>
+			<li>
+				<div class="imc--estat imc--no-completat"><span>{{txtNoCompletat}}</span></div>
+			</li>
+		</ul>
+
+	</div>
+
+	<nav class="imc--navegacio">
+
+		<ul>
+			<li>
+				<a class="imc-bt imc--anterior" href=""><span>{{txtAnterior}}</span></a>
+			</li>
+			<li>
+				<a class="imc-bt imc--seguent" href=""><span>{{txtSeguent}}</span></a>
+			</li>
+		</ul>
+
+	</nav>
+
+</div>
+
+
+<!-- document -->
+<div class="imc-document" id="imc-document" aria-hidden="true">
+	<div class="imc--c">
+
+		<button type="button" id="imc-bt-iframe-tanca" class="imc-bt-capa-tanca"><span>{{txtTanca}}</span></button>
+
+		<div id="imc-document-contingut" class="imc-document-contingut">
+			
+			<h2><span></span></h2>
+
+			<div class="imc--doc-info"></div>
+
+			<div class="imc--doc imc--doc-electronic">
+
+				<form action="" method="post">
+
+					<div class="imc-input-annexe" data-tipus="multiple">
+
+						<div class="imc--afegits">
+							<ul>
+								<li>
+									<p></p>
+									<button type="button" class="imc-bt imc--ico imc-bt-esborra" title="{{txtEsborra}}"><span>{{txtEsborra}}</span></button>
+								</li>
+							</ul>
+						</div>
+
+						<div class="imc--arxiu">
+							
+							<div class="imc--titol">
+								<label>{{txtTitol}}</label>
+								<input type="text" name="" />
+							</div>
+
+							<input name="f_form_co_arxiu" type="file" />
+							<a class="imc-bt imc-bt-text imc-bt-anexa" href="javascript:;"><span>{{txtSeleccionaFitxer}}</span></a>
+
+						</div>
+
+						<div class="imc--per-afegir">
+							<ul>
+								<li>
+									<p></p>
+									<button type="button" class="imc-bt-elimina" title="{{txtElimina}}"><span>{{txtElimina}}</span></button>
+								</li>
+							</ul>
+						</div>
+
+					</div>
+
+					<ul class="imc--botonera">
+						<li>
+							<button type="submit" class="imc-bt imc--ico imc--principal" data-tipus="envia"><span>{{txtEnviar}}</span></button>
+						</li>
+						<li>
+							<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancela}}</span></button>
+						</li>
+					</ul>
+
+				</form>
+
+			</div>
+
+			<div class="imc--doc imc--doc-presencial">
+
+				<form action="" method="post">
+
+					<label>
+						<div class="imc-check">
+							<input type="checkbox" name="anexo_presencial" id="anexo_presencial" />
+							<span></span>
+						</div>
+						<span>{{txtSiAportare}}</span>
+					</label>
+
+					<ul class="imc--botonera">
+						<li>
+							<button type="submit" class="imc-bt imc--ico imc--principal" data-tipus="desa"><span>{{txtDesa}}</span></button>
+						</li>
+						<li>
+							<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancela}}</span></button>
+						</li>
+					</ul>
+
+				</form>
+
+			</div>
+
+			<div class="imc--doc imc--doc-missatge">
+				
+				<h2><span>{{txtEnviantDades}}</span></h2>
+
+				<div></div>
+
+				<ul class="imc--botonera">
+					<li>
+						<button type="button" class="imc-bt imc--ico imc--torna imc--error-torna" data-tipus="torna"><span>{{txtTornaIntentar}}</span></button>
+					</li>
+					<li>
+						<button type="button" class="imc-bt imc--tanca" data-tipus="tanca"><span>{{txtTanca}}</span></button>
+					</li>
+					<li>
+						<button type="button" class="imc-bt imc--cancela" data-tipus="cancela"><span>{{txtCancelaEnviament}}</span></button>
+					</li>
+				</ul>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>
+<!-- /document -->

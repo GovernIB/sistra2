@@ -8,8 +8,6 @@ package es.caib.sistramit.core.api.model.flujo.types;
  */
 public enum TypeAccionPasoRegistrar implements TypeAccionPaso {
 
-	// TODO PENDIENTE PARAMETROS ACCIONES FIRMA
-
 	/**
 	 * Descargar documento. Parámetros entrada: idDocumento, instancia (opcional,
 	 * solo para anexos multiinstancia). Parámetros salida: nombreFichero,
@@ -24,12 +22,12 @@ public enum TypeAccionPasoRegistrar implements TypeAccionPaso {
 	INICIAR_FIRMA_DOCUMENTO,
 	/**
 	 * Verificar firma documento. idDocumento, instancia (opcional, solo para anexos
-	 * multiinstancia), firmante. Parámetros salida:no tiene.
+	 * multiinstancia), firmante. Parámetros salida: resultado (FirmaVerificacion).
 	 */
-	VERIFICAR_FIRMA_DOCUMENTO, // TODO Verificar parametros salida
+	VERIFICAR_FIRMA_DOCUMENTO,
 	/**
 	 * Registrar tramite. Parámetros entrada: reintentar (TypeSiNo, opcional).
-	 * Parámetros salida: resultado (TypeResultadoRegistro), numeroRegistro.
+	 * Parámetros salida: resultado (ResultadoRegistroresultado).
 	 */
 	REGISTRAR_TRAMITE;
 

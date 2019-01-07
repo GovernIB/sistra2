@@ -1,7 +1,7 @@
 package es.caib.sistramit.core.service.component.integracion;
 
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
-import es.caib.sistramit.core.service.model.flujo.ResultadoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 
 /**
  * Interface RegistroComponent.
@@ -31,5 +31,18 @@ public interface RegistroComponent {
 	 * @return Resultado registro
 	 */
 	ResultadoRegistrar reintentarRegistro(String idSesionTramitacion, boolean debugEnabled);
+
+	/**
+	 * Obtiene justificante de registro.
+	 *
+	 * @param codigoEntidad
+	 *            código entidad
+	 * @param numeroRegistro
+	 *            número de registro
+	 * @param debugEnabled
+	 *            Indica si se debugea
+	 * @return justificante registro
+	 */
+	byte[] obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro, boolean debugEnabled);
 
 }

@@ -53,6 +53,13 @@
 		    <version>${itext.version}</version>
 		</dependency>
 
+		<!--  DOM 4j -->
+		<dependency>
+		   	<groupId>dom4j</groupId>
+		    <artifactId>dom4j</artifactId>
+		    <version>${dom4j.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

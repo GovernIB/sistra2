@@ -31,6 +31,7 @@ import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
@@ -38,6 +39,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
@@ -48,7 +50,6 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
-import es.caib.sistramit.core.service.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
 
@@ -805,16 +806,12 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		parametros = new ParametrosAccionPaso();
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.REGISTRAR_TRAMITE, parametros);
-		Assert.isTrue(
-				((TypeResultadoRegistro) resPaso.getParametroRetorno("resultado")) == TypeResultadoRegistro.CORRECTO,
-				"No se podido registrar");
-		Assert.isTrue(((String) resPaso.getParametroRetorno("numeroRegistro")) != null,
-				"No se devuelve numero de registro");
+		Assert.isTrue(((ResultadoRegistrar) resPaso.getParametroRetorno("resultado"))
+				.getResultado() == TypeResultadoRegistro.CORRECTO, "No se podido registrar");
 
-		// -- Paso terminado
+		// -- Paso terminado, pasa automáticamente a Guardar
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
-		// TODO CUANDO ESTE PASO GUARDAR, DEBERA HABER SALTADO A PASO GUARDAR
-		Assert.isTrue(dp.getActual().getTipo() == TypePaso.REGISTRAR, "No esta en paso registrar");
+		Assert.isTrue(dp.getActual().getTipo() == TypePaso.GUARDAR, "No esta en paso guardar");
 		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso registrar no esta completado");
 		this.logger.info("Detalle paso: " + dp.print());
 

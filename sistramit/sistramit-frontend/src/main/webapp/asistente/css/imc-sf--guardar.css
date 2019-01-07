@@ -1,0 +1,108 @@
+/* Document CSS */
+
+/* molla pa */
+
+.imc-molla-pa li { color: #999; }
+
+/* guarda */
+
+.imc-contingut h3 { margin-top: 1.5em; }
+
+.imc--guarda h4 { margin-bottom: .5em; }
+.imc--guarda h4 span { font-size: 1.2em; }
+
+.imc--guarda h5 { margin-bottom: .5em; }
+.imc--guarda h5 span { font-size: 1.2em; font-weight: normal; }
+
+.imc--guarda p { margin-bottom: 1em; }
+
+.imc--guarda p.imc--fi-bt { text-align: center; margin-bottom: 2em; }
+.imc--guarda p.imc--fi-bt button { font-size: 1.5em; }
+
+.imc--guarda p.imc--fi-bt button.imc-bt { background-color: #265d3c; }
+.imc--guarda p.imc--fi-bt button.imc-bt span { color: #fff; }
+
+.imc--guarda p.imc--fi-bt button.imc-bt:hover,
+.imc--guarda p.imc--fi-bt button.imc-bt:focus { background-color: #000; }
+
+.imc--guarda p.imc--fi-bt button.imc-bt::before { background-image: url(imgs/icones/ico_desau.svg); background-size: auto 1em; }
+
+.imc--guarda > ul { margin-bottom: 1em; }
+.imc--guarda > ul > li { padding-left: 2em; margin-bottom: .4em; }
+.imc--guarda > ul div.imc--reg { display: grid; grid-auto-flow: column; grid-template-columns: 3em auto 4em; grid-column-gap: 0; grid-row-gap: 0; min-height: 2.5em; padding: 0; background-color: #fff; }
+
+.imc--guarda > ul div.imc--reg .imc--icona { display: block; background: #8c8c8c url() no-repeat center center / auto 1em; }
+
+.imc--guarda > ul div.imc--form .imc--icona { background-image: url(imgs/icones/ico_form.svg); }
+.imc--guarda > ul div.imc--doc .imc--icona { background-image: url(imgs/icones/ico_doc.svg); }
+.imc--guarda > ul div.imc--pagament .imc--icona { background-image: url(imgs/icones/ico_pagar.svg); }
+
+.imc--guarda > ul div.imc--reg strong { align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
+
+.imc--guarda .imc--descarrega { background: #4dba79 url(imgs/icones/ico_descarrega.svg) no-repeat center center / auto 1em; }
+.imc--guarda .imc--descarrega span { position: absolute; top: -999em; left: -999em; }
+
+.imc--guarda .imc--descarrega:hover,
+.imc--guarda .imc--descarrega:focus { background-color: #368355; }
+
+
+
+
+.imc--guarda .imc--signants { width: calc(100% - 3.3em); padding: .2em 0 .2em 0; margin-left: 3.3em; }
+
+.imc--guarda .imc--signants p { font-size: 1em; padding: 0 1em; }
+
+.imc--guarda .imc--signants ul { font-size: 1em; padding: 0 0 0 1em; }
+
+.imc--guarda .imc--signants li { display: flex; align-items: center; min-height: 2em; margin-top: .3em; border: 1px solid #fff; }
+
+.imc--guarda .imc--signants li::before { content: ""; display: block; width: 2em; height: 2em; background: #006300 url(imgs/icones/ico_signar.svg) no-repeat center center / auto .9em; }
+
+.imc--guarda .imc--signants li.imc--per-signar::before { background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
+
+.imc--guarda .imc--signants li strong { display: inline-block; padding: .3em 1em; }
+
+.imc--guarda .imc--signants li.imc--per-signar strong { width: calc(100% - 2em - 5.2em); }
+
+.imc--guarda .imc--signants li .imc-bt.imc--ico::before { margin-right: .5em; }
+
+.imc--guarda .imc--signants li .imc--registre .imc--signa { width: 5.2em; }
+
+
+.imc--pagaments .imc--opcions { display: flex; align-items: center; width: calc(100% - 4.5em); margin-left: 4.5em; background-color: #dbdbdb; }
+
+.imc--guarda div.imc--presentacio {  width: calc(100% - 3em); font-size: 1em; padding: .5em 1em; margin-left: 3em; background-color: #dbdbdb; }
+
+.imc--guarda div.imc--presentacio::before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: -0.1em;
+    width: 1em;
+    height: 1em;
+    margin-right: .3em;
+    background: transparent url() no-repeat center center / 100% auto;
+    opacity: .5;
+}
+
+.imc--guarda div.imc--presentacio.imc--presencial::before {
+    background-image: url(imgs/icones/ico_presencial_000.svg);
+}
+
+.imc--registre div.imc--presentacio.imc--electronic::before {
+    background-image: url(imgs/icones/ico_electronic_000.svg);
+}
+
+
+
+
+
+
+
+
+
+
+/* navegació */
+
+nav .imc-bt.imc--sortir::before { background-image: url(imgs/icones/ico_sortiu.svg); background-size: auto 1.5em; transform: rotate(180deg); }

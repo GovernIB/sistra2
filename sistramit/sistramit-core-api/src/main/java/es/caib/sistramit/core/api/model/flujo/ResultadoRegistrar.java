@@ -1,9 +1,8 @@
-package es.caib.sistramit.core.service.model.flujo;
+package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import es.caib.sistramit.core.service.model.flujo.types.TypeResultadoRegistro;
+import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 
 /**
  * Resultado de registrar.
@@ -12,7 +11,7 @@ import es.caib.sistramit.core.service.model.flujo.types.TypeResultadoRegistro;
  *
  */
 @SuppressWarnings("serial")
-public final class ResultadoRegistrar implements Serializable {
+public final class ResultadoRegistrar implements ModelApi {
 	/**
 	 * Resultado registro.
 	 */
@@ -28,7 +27,7 @@ public final class ResultadoRegistrar implements Serializable {
 
 	/**
 	 * Método de acceso a resultado.
-	 * 
+	 *
 	 * @return resultado
 	 */
 	public TypeResultadoRegistro getResultado() {
@@ -37,7 +36,7 @@ public final class ResultadoRegistrar implements Serializable {
 
 	/**
 	 * Método para establecer resultado.
-	 * 
+	 *
 	 * @param resultado
 	 *            resultado a establecer
 	 */
@@ -47,7 +46,7 @@ public final class ResultadoRegistrar implements Serializable {
 
 	/**
 	 * Método de acceso a numeroRegistro.
-	 * 
+	 *
 	 * @return numeroRegistro
 	 */
 	public String getNumeroRegistro() {
@@ -56,7 +55,7 @@ public final class ResultadoRegistrar implements Serializable {
 
 	/**
 	 * Método para establecer numeroRegistro.
-	 * 
+	 *
 	 * @param numeroRegistro
 	 *            numeroRegistro a establecer
 	 */
@@ -66,7 +65,7 @@ public final class ResultadoRegistrar implements Serializable {
 
 	/**
 	 * Método de acceso a fechaRegistro.
-	 * 
+	 *
 	 * @return fechaRegistro
 	 */
 	public Date getFechaRegistro() {
@@ -75,7 +74,7 @@ public final class ResultadoRegistrar implements Serializable {
 
 	/**
 	 * Método para establecer fechaRegistro.
-	 * 
+	 *
 	 * @param fechaRegistro
 	 *            fechaRegistro a establecer
 	 */

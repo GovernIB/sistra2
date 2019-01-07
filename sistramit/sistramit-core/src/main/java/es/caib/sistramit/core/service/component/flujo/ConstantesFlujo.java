@@ -15,7 +15,7 @@ public final class ConstantesFlujo {
 	}
 
 	/** Id paso Guardar (paso virtual tras registro). */
-	public static final String ID_PASO_GUARDAR = "gu";
+	public static final String ID_PASO_GUARDAR = "gj";
 
 	/** Id del asiento de registro. */
 	public static final String ID_ASIENTO_REGISTRO = "ASIENTO";

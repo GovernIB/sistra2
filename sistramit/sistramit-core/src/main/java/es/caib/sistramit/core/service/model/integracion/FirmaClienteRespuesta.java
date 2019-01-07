@@ -15,10 +15,13 @@ import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 public final class FirmaClienteRespuesta implements Serializable {
 
 	/** Indica si se ha finalizado correctamente en el componente cliente. */
-	private boolean correcta;
+	private boolean finalizada;
 
 	/** Indica si se ha cancelado. */
 	private boolean cancelada;
+
+	/** Indica si se ha validado correctamente la firma. */
+	private boolean valida;
 
 	/** Indica fecha respuesta. */
 	private Date fecha;
@@ -29,13 +32,16 @@ public final class FirmaClienteRespuesta implements Serializable {
 	/** En caso correcto, indica tipo firma. */
 	private TypeFirmaDigital firmaTipo;
 
+	/** En caso error, indica detalle error. */
+	private String detalleError;
+
 	/**
 	 * Método de acceso a finalizada.
 	 *
 	 * @return finalizada
 	 */
-	public boolean isCorrecta() {
-		return correcta;
+	public boolean isFinalizada() {
+		return finalizada;
 	}
 
 	/**
@@ -44,8 +50,8 @@ public final class FirmaClienteRespuesta implements Serializable {
 	 * @param finalizada
 	 *            finalizada a establecer
 	 */
-	public void setCorrecta(boolean finalizada) {
-		this.correcta = finalizada;
+	public void setFinalizada(boolean finalizada) {
+		this.finalizada = finalizada;
 	}
 
 	/**
@@ -107,7 +113,7 @@ public final class FirmaClienteRespuesta implements Serializable {
 
 	/**
 	 * Método de acceso a fecha.
-	 * 
+	 *
 	 * @return fecha
 	 */
 	public Date getFecha() {
@@ -116,12 +122,50 @@ public final class FirmaClienteRespuesta implements Serializable {
 
 	/**
 	 * Método para establecer fecha.
-	 * 
+	 *
 	 * @param fecha
 	 *            fecha a establecer
 	 */
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+
+	/**
+	 * Método de acceso a detalleError.
+	 *
+	 * @return detalleError
+	 */
+	public String getDetalleError() {
+		return detalleError;
+	}
+
+	/**
+	 * Método para establecer detalleError.
+	 *
+	 * @param detalleError
+	 *            detalleError a establecer
+	 */
+	public void setDetalleError(String detalleError) {
+		this.detalleError = detalleError;
+	}
+
+	/**
+	 * Método de acceso a valida.
+	 * 
+	 * @return valida
+	 */
+	public boolean isValida() {
+		return valida;
+	}
+
+	/**
+	 * Método para establecer valida.
+	 * 
+	 * @param valida
+	 *            valida a establecer
+	 */
+	public void setValida(boolean valida) {
+		this.valida = valida;
 	}
 
 }

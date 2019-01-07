@@ -8,20 +8,20 @@ package es.caib.sistramit.core.api.model.flujo.types;
  */
 public enum TypeAccionPasoGuardar implements TypeAccionPaso {
 
-    /**
-     * Descargar documento. Parámetros entrada: idDocumentoRegistro Parámetros
-     * salida: nombreFichero, datosFichero (byte[])
-     */
-    DESCARGAR_DOCUMENTO,
-    /**
-     * Descargar justificante. Parámetros entrada: csv (TypeSiNo). Parámetros
-     * salida: nombreFichero, datosFichero (byte[])
-     */
-    DESCARGAR_JUSTIFICANTE;
+	/**
+	 * Descargar documento. Parámetros entrada: idDocumentoRegistro, instancia.
+	 * Parámetros salida: nombreFichero, datosFichero (byte[])
+	 */
+	DESCARGAR_DOCUMENTO,
+	/**
+	 * Descargar justificante. Parámetros entrada: no tiene. Parámetros salida:
+	 * nombreFichero, datosFichero (byte[])
+	 */
+	DESCARGAR_JUSTIFICANTE;
 
-    @Override
-    public boolean isModificaPaso() {
-        return false;
-    }
+	@Override
+	public boolean isModificaPaso() {
+		return false;
+	}
 
 }

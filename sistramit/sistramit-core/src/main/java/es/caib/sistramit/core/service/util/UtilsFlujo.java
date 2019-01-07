@@ -14,6 +14,7 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RScript;
+import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.FormatoInvalidoFechaFrontException;
 import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
@@ -23,25 +24,37 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramiteInfo;
+import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
+import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
+import es.caib.sistramit.core.api.model.flujo.Firma;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.SoporteOpcion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
+import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
+import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaTramite;
 import es.caib.sistramit.core.service.model.flujo.DatosSesionTramitacion;
+import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
+import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
+import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 
 /**
  * Clase de utilidades para flujo de tramitación.
@@ -488,6 +501,150 @@ public final class UtilsFlujo {
 		Persona res = null;
 		if (du != null) {
 			res = new Persona(du.getNif(), du.getApellidosNombre());
+		}
+		return res;
+	}
+
+	/**
+	 * Busca los documentos para registrar generados en el flujo de tramitación.
+	 *
+	 * @param flujoPasoDao
+	 *            DAO paso flujo
+	 * @param pVariablesFlujo
+	 *            Variables flujo
+	 * @return Lista de documentos que se registrarán
+	 */
+	public static List<DocumentosRegistroPorTipo> buscarDocumentosParaRegistrar(FlujoPasoDao flujoPasoDao,
+			final VariablesFlujo pVariablesFlujo) {
+
+		final List<DocumentoRegistro> listaFormularios = new ArrayList<>();
+		final List<DocumentoRegistro> listaAnexos = new ArrayList<>();
+		final List<DocumentoRegistro> listaPagos = new ArrayList<>();
+
+		for (final DatosDocumento datosDocumento : pVariablesFlujo.getDocumentos()) {
+
+			// TODO PENDIENTE DE VER COMO SE IMPLEMENTA PRESENCIAL
+			if (datosDocumento.getPresentacion() == TypePresentacion.PRESENCIAL) {
+				throw new ErrorNoControladoException("PENDIENTE IMPLEMENTAR ENTREGA PRESENCIAL");
+			}
+
+			// Obtenemos datos persistencia documento
+			int instancia = ConstantesNumero.N1;
+			if (datosDocumento.getTipo() == TypeDocumento.ANEXO) {
+				instancia = ((DatosDocumentoAnexo) datosDocumento).getInstancia();
+			}
+			final DocumentoPasoPersistencia docPersistencia = flujoPasoDao.obtenerDocumentoPersistencia(
+					pVariablesFlujo.getIdSesionTramitacion(), datosDocumento.getIdPaso(), datosDocumento.getId(),
+					instancia);
+
+			// Crea documento registro y establece datos segun tipo
+			final DocumentoRegistro dr = DocumentoRegistro.createNewDocumentoRegistro();
+			dr.setDescargable(TypeSiNo.SI);
+			dr.setTitulo(datosDocumento.getTitulo());
+			dr.setId(datosDocumento.getId());
+			dr.setInstancia(ConstantesNumero.N1);
+			dr.setFirmar(datosDocumento.getFirmar());
+
+			switch (datosDocumento.getTipo()) {
+			case FORMULARIO:
+				// Si es un formulario de tipo captura no se registra
+				final DatosDocumentoFormulario datosDocumentoFormulario = (DatosDocumentoFormulario) datosDocumento;
+				if (!datosDocumentoFormulario.isFormularioCaptura()) {
+					// Si el formulario no tiene pdf de visualizacion no se
+					// podra descargar
+					if (datosDocumentoFormulario.getPdf() == null) {
+						dr.setDescargable(TypeSiNo.NO);
+					}
+					// Info firmas
+					dr.setFirmas(
+							verificarFirmantes(datosDocumento, docPersistencia, docPersistencia.getFormularioPdf()));
+					// Añade a lista formularios
+					listaFormularios.add(dr);
+				}
+				break;
+			case ANEXO:
+				// Establecemos instancia
+				dr.setInstancia(((DatosDocumentoAnexo) datosDocumento).getInstancia());
+				// Info firmas
+				dr.setFirmas(verificarFirmantes(datosDocumento, docPersistencia, docPersistencia.getFichero()));
+				// Añade a lista anexos
+				listaAnexos.add(dr);
+				break;
+			case PAGO:
+				// Añade a lista pagos
+				listaPagos.add(dr);
+				break;
+			default:
+				// No se debe adjuntar
+			}
+		}
+
+		// Retorna diferentes listas de documentos
+		final List<DocumentosRegistroPorTipo> docsRegPorTipo = new ArrayList<>();
+		if (!listaFormularios.isEmpty()) {
+			final DocumentosRegistroPorTipo drpt = DocumentosRegistroPorTipo.createNewDocumentosRegistroPorTipo();
+			drpt.setTipo(TypeDocumento.FORMULARIO);
+			drpt.getListado().addAll(listaFormularios);
+			docsRegPorTipo.add(drpt);
+		}
+		if (!listaAnexos.isEmpty()) {
+			final DocumentosRegistroPorTipo drpt = DocumentosRegistroPorTipo.createNewDocumentosRegistroPorTipo();
+			drpt.setTipo(TypeDocumento.ANEXO);
+			drpt.getListado().addAll(listaAnexos);
+			docsRegPorTipo.add(drpt);
+		}
+		if (!listaPagos.isEmpty()) {
+			final DocumentosRegistroPorTipo drpt = DocumentosRegistroPorTipo.createNewDocumentosRegistroPorTipo();
+			drpt.setTipo(TypeDocumento.PAGO);
+			drpt.getListado().addAll(listaPagos);
+			docsRegPorTipo.add(drpt);
+		}
+		return docsRegPorTipo;
+	}
+
+	/**
+	 * Verificamos lista de firmantes si han firmado
+	 *
+	 * @param datosDocumento
+	 * @param docPersistencia
+	 * @param ficheroFirmado
+	 * @return estado firmas
+	 */
+	private static List<Firma> verificarFirmantes(final DatosDocumento datosDocumento,
+			final DocumentoPasoPersistencia docPersistencia, final ReferenciaFichero ficheroFirmado) {
+		final List<Firma> firmas = new ArrayList<>();
+		if (datosDocumento.getFirmar() == TypeSiNo.SI) {
+			for (final Persona p : datosDocumento.getFirmantes()) {
+				final Firma fdr = new Firma();
+				fdr.setFirmante(p);
+				final FirmaDocumentoPersistencia fdp = docPersistencia.obtenerFirmaFichero(ficheroFirmado.getId(),
+						p.getNif());
+				if (fdp != null) {
+					fdr.setEstadoFirma(TypeEstadoFirma.FIRMADO);
+					fdr.setFechaFirma(UtilsFlujo.formateaFechaFront(fdp.getFecha()));
+				}
+				firmas.add(fdr);
+			}
+		}
+		return firmas;
+	}
+
+	/**
+	 * Obtiene documentos del tipo.
+	 *
+	 * @param docsRegPorTipo
+	 *            lista de documentos por tipo
+	 * @param tipoDocu
+	 *            tipo documento
+	 * @return documentos del tipo
+	 */
+	public static List<DocumentoRegistro> obtenerDocumentosTipo(final List<DocumentosRegistroPorTipo> docsRegPorTipo,
+			TypeDocumento tipoDocu) {
+		List<DocumentoRegistro> res = null;
+		for (final DocumentosRegistroPorTipo drt : docsRegPorTipo) {
+			if (drt.getTipo() == tipoDocu) {
+				res = drt.getListado();
+			}
 		}
 		return res;
 	}

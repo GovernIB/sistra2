@@ -44,6 +44,11 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	private Persona representado;
 
 	/**
+	 * Indica si se cumplen las condiciones para registrar (docs firmados, etc.).
+	 */
+	private TypeSiNo registrar = TypeSiNo.NO;
+
+	/**
 	 * Indica si se debe reintentar el registro o iniciarlo de nuevo.
 	 */
 	private TypeSiNo reintentar = TypeSiNo.NO;
@@ -118,31 +123,23 @@ public final class DetallePasoRegistrar extends DetallePaso {
 		reintentar = pReintentar;
 	}
 
-	@Override
-	public String print() {
-		final String ident = "    ";
-		final int capacity = ConstantesNumero.N2 * ConstantesNumero.N1024;
-		final StringBuffer strb = new StringBuffer(capacity);
-		strb.append(ident).append("\n");
-		strb.append(ident).append("ID paso:" + getId() + "\n");
-		strb.append(ident).append("Tipo:" + getTipo() + "\n");
-		strb.append(ident).append("Completado:" + getCompletado() + "\n");
-		strb.append(ident).append("Sólo lectura:" + getSoloLectura() + "\n");
-		strb.append(ident).append("Reintentar registro:" + getReintentar() + "\n");
-		strb.append(ident).append("Formularios: \n");
-		printDocumentos(ident, strb, getFormularios());
-		strb.append(ident).append("Anexos: \n");
-		printDocumentos(ident, strb, getAnexos());
-		strb.append(ident).append("Pagos: \n");
-		printDocumentos(ident, strb, getPagos());
-		return strb.toString();
+	/**
+	 * Método de acceso a registrar.
+	 *
+	 * @return registrar
+	 */
+	public TypeSiNo getRegistrar() {
+		return registrar;
 	}
 
-	private void printDocumentos(final String ident, final StringBuffer strb, List<DocumentoRegistro> docsr) {
-		for (final DocumentoRegistro dr : docsr) {
-			strb.append(ident).append("  - " + dr.getId() + "-" + dr.getInstancia() + " - Firmar:" + dr.getFirmar()
-					+ " - Firmado:" + dr.getFirmado() + "\n");
-		}
+	/**
+	 * Método para establecer registrar.
+	 *
+	 * @param registrar
+	 *            registrar a establecer
+	 */
+	public void setRegistrar(TypeSiNo registrar) {
+		this.registrar = registrar;
 	}
 
 	/**
@@ -283,6 +280,34 @@ public final class DetallePasoRegistrar extends DetallePaso {
 			}
 		}
 		return res;
+	}
+
+	@Override
+	public String print() {
+		final String ident = "    ";
+		final int capacity = ConstantesNumero.N2 * ConstantesNumero.N1024;
+		final StringBuffer strb = new StringBuffer(capacity);
+		strb.append(ident).append("\n");
+		strb.append(ident).append("ID paso:" + getId() + "\n");
+		strb.append(ident).append("Tipo:" + getTipo() + "\n");
+		strb.append(ident).append("Completado:" + getCompletado() + "\n");
+		strb.append(ident).append("Sólo lectura:" + getSoloLectura() + "\n");
+		strb.append(ident).append("Registrar:" + getRegistrar() + "\n");
+		strb.append(ident).append("Reintentar:" + getReintentar() + "\n");
+		strb.append(ident).append("Formularios: \n");
+		printDocumentos(ident, strb, getFormularios());
+		strb.append(ident).append("Anexos: \n");
+		printDocumentos(ident, strb, getAnexos());
+		strb.append(ident).append("Pagos: \n");
+		printDocumentos(ident, strb, getPagos());
+		return strb.toString();
+	}
+
+	private void printDocumentos(final String ident, final StringBuffer strb, List<DocumentoRegistro> docsr) {
+		for (final DocumentoRegistro dr : docsr) {
+			strb.append(ident).append("  - " + dr.getId() + "-" + dr.getInstancia() + " - Firmar:" + dr.getFirmar()
+					+ " - Firmado:" + dr.getFirmado() + "\n");
+		}
 	}
 
 }

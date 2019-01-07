@@ -12,6 +12,9 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 @SuppressWarnings("serial")
 public final class DatosInternosPasoGuardar extends DatosInternosPasoReferencia {
 
+	// TODO VER SI ES NECESARIO JUSTIFICANTE (para electronico no deberia, para
+	// presencial si al final se permite)
+
 	/**
 	 * Constructor.
 	 *
@@ -26,5 +29,4 @@ public final class DatosInternosPasoGuardar extends DatosInternosPasoReferencia 
 		this.setIdPaso(idPaso);
 	}
 
-	// TODO PENDIENTE
 }

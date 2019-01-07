@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 
 /**
@@ -17,55 +20,77 @@ import es.caib.sistramit.frontend.controller.TramitacionController;
 @RequestMapping(value = "/asistente/gj")
 public final class PasoGuardarController extends TramitacionController {
 
-    /** Constante parametro id paso. */
-    private static final String PARAM_ID_PASO = "idPaso";
+	/** Constante parametro id paso. */
+	private static final String PARAM_ID_PASO = "idPaso";
 
-    /** Constante parametro id documento. */
-    private static final String PARAM_ID_DOCUMENTO = "idDocumento";
+	/** Constante parametro id documento. */
+	private static final String PARAM_ID_DOCUMENTO = "idDocumento";
 
-    /** Constante parametro instancia. */
-    private static final String PARAM_INSTANCIA = "instancia";
+	/** Constante parametro instancia. */
+	private static final String PARAM_INSTANCIA = "instancia";
 
-    /**
-     * Realiza download justificante registro.
-     *
-     * @param idPaso
-     *            Identificador paso.
-     * @param idDocumento
-     *            Identificador documento.
-     * @param instancia
-     *            Instancia documento.
-     * @return Documento para descargar.
-     */
-    @RequestMapping("/descargarJustificante.html")
-    public ModelAndView descargarJustificante(
-            @RequestParam(PARAM_ID_PASO) final String idPaso) {
+	/**
+	 * Realiza download justificante registro.
+	 *
+	 * @param idPaso
+	 *            Identificador paso.
+	 * @param idDocumento
+	 *            Identificador documento.
+	 * @param instancia
+	 *            Instancia documento.
+	 * @return Documento para descargar.
+	 */
+	@RequestMapping("/descargarJustificante.html")
+	public ModelAndView descargarJustificante(@RequestParam(PARAM_ID_PASO) final String idPaso) {
 
-        // TODO PENDIENTE
-        return null;
+		debug("Obteniendo justificante registro");
 
-    }
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
-    /**
-     * Realiza download de un documento rellenado en el trámite.
-     *
-     * @param idPaso
-     *            Identificador paso.
-     * @param idDocumento
-     *            Identificador documento.
-     * @param instancia
-     *            Instancia documento.
-     * @return Documento para descargar.
-     */
-    @RequestMapping("/descargarDocumento.html")
-    public ModelAndView descargarDocumento(
-            @RequestParam(PARAM_ID_PASO) final String idPaso,
-            @RequestParam(PARAM_ID_DOCUMENTO) final String idDocumento,
-            @RequestParam(PARAM_INSTANCIA) final String instancia) {
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
 
-        // TODO PENDIENTE
-        return null;
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, pParametros);
+		final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
+		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
 
-    }
+		return generarDownloadView(nombreFichero, datos);
+
+	}
+
+	/**
+	 * Realiza download de un documento rellenado en el trámite.
+	 *
+	 * @param idPaso
+	 *            Identificador paso.
+	 * @param idDocumento
+	 *            Identificador documento.
+	 * @param instancia
+	 *            Instancia documento.
+	 * @return Documento para descargar.
+	 */
+	@RequestMapping("/descargarDocumento.html")
+	public ModelAndView descargarDocumento(@RequestParam(PARAM_ID_PASO) final String idPaso,
+			@RequestParam(PARAM_ID_DOCUMENTO) final String idDocumento,
+			@RequestParam(PARAM_INSTANCIA) final String instancia) {
+
+		debug("Obteniendo documento registro: " + idDocumento + " - " + instancia);
+
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada(PARAM_ID_DOCUMENTO, idDocumento);
+		pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
+
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.DESCARGAR_DOCUMENTO, pParametros);
+		final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
+		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
+
+		return generarDownloadView(nombreFichero, datos);
+
+	}
 
 }

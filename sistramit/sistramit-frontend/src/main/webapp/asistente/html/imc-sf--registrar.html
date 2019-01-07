@@ -1,70 +1,185 @@
 <!-- registrar -->
 
-<div class="imc--info">
+<div class="imc-pas">
 
-	<p>Una vegada completada la sol·licitud heu de clicar el botó registrar.</p>
+	<h3><span>{{txtRegistrarTitol}}</span></h3>
 
-	<div class="imc--important">
-		<p>
-			A continuació <strong>us mostrarem un resum</strong> amb totes les passes realitzades perquè reviseu les dades aportades abans d'enviar-les. 
-		</p>
+	<div class="imc--info">
+		{{txtRegistrarInfo}}
 	</div>
 
+	<div class="imc--registre">
+
+		<h4><span>{{txtInfoResum}}</span></h4>
+
+		{{if formularis}}
+		<h5><span>{{txtFormularis}}</span></h5>
+
+		<ul>
+			{{formularis}}
+			<li class="imc--reg-doc" data-id="{{id}}" data-instancia="{{instancia}}" data-signa="{{firmar}}" data-descarrega="{{descargable}}">
+				<div class="imc--reg imc--form">
+					<span class="imc--icona"></span>
+					<strong>{{titulo}}</strong>
+					{{if descargable|equals>s}}
+					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="formulari"><span>{{txtDescarrega}}</span></button>
+					{{/if}}
+				</div>
+
+				{{if presentacion|equals>p}}
+				<div class="imc--presentacio imc--presencial">Entrega presencial</div>
+				{{/if}}
+
+				{{if firmar|equals>s}}
+
+					{{if firmantes}}
+					<div class="imc--signants">
+						<p>{{if firmantes|size|equals>1}}{{txtSignant}}{{else}}{{txtSignants}}{{/if}}:</p>
+						<ul>
+							{{firmantes}}
+							{{if estadoFirma|equals>n}}
+							<li class="imc--per-signar" data-nif="{{firmante.nif}}">
+
+								<strong>
+									{{firmante.nombre}} ({{firmante.nif}})
+								</strong>
+								<button type="button" class="imc-bt imc--ico imc--signa" data-tipus="formulari"><span>{{txtSignar}}</span></button>
+
+							</li>
+							{{else}}
+							<li class="imc--signat" data-nif="{{firmante.nif}}">
+
+								<strong>
+									{{firmante.nombre}} ({{firmante.nif}})
+								</strong>
+								<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
+
+							</li>
+							{{/if}}
+
+							{{/firmantes}}
+						</ul>
+					</div>
+					{{/if}}
+
+				{{/if}}
+
+			</li>
+			{{/formularis}}
+		</ul>
+		{{/if}}
+
+		{{if annexes}}
+		<h5><span>{{txtAnnexes}}</span></h5>
+
+		<ul>
+			{{annexes}}
+			<li class="imc--reg-doc" data-id="{{id}}" data-instancia="{{instancia}}" data-signa="{{firmar}}" data-descarrega="{{descargable}}">
+				<div class="imc--reg imc--doc">
+					<span class="imc--icona"></span>
+					<strong>{{titulo}}</strong>
+					{{if descargable|equals>s}}
+					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="annexe"><span>{{txtDescarrega}}</span></button>
+					{{/if}}
+				</div>
+
+				{{if presentacion|equals>p}}
+				<div class="imc--presentacio imc--presencial">Entrega presencial</div>
+				{{/if}}
+
+				{{if firmar|equals>s}}
+
+					{{if firmantes}}
+					<div class="imc--signants">
+						<p>{{if firmantes|size|equals>1}}{{txtSignant}}{{else}}{{txtSignants}}{{/if}}:</p>
+						<ul>
+							{{firmantes}}
+							{{if estadoFirma|equals>n}}
+							<li class="imc--per-signar" data-nif="{{firmante.nif}}">
+
+								<strong>
+									{{firmante.nombre}} ({{firmante.nif}})
+								</strong>
+								<button type="button" class="imc-bt imc--ico imc--signa" data-tipus="formulari"><span>{{txtSignar}}</span></button>
+
+							</li>
+							{{else}}
+							<li class="imc--signat" data-nif="{{firmante.nif}}">
+
+								<strong>
+									{{firmante.nombre}} ({{firmante.nif}})
+								</strong>
+								<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
+
+							</li>
+							{{/if}}
+
+							{{/firmantes}}
+						</ul>
+					</div>
+					{{/if}}
+
+				{{/if}}
+
+			</li>
+			{{/annexes}}
+		</ul>
+		{{/if}}
+
+		{{if pagaments}}
+		<h5><span>{{txtPagaments}}</span></h5>
+
+		<ul>
+			{{pagaments}}
+			<li class="imc--reg-doc" data-id="{{id}}" data-instancia="{{instancia}}" data-descarrega="{{descargable}}">
+				<div class="imc--reg imc--pagament">
+					<span class="imc--icona"></span>
+					<strong>{{titulo}}</strong>
+					{{if descargable|equals>s}}
+					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="taxa"><span>{{txtDescarrega}}</span></button>
+					{{/if}}
+				</div>
+
+				{{if presentacion|equals>p}}
+				<div class="imc--presentacio imc--presencial">Entrega presencial</div>
+				{{/if}}
+
+			</li>
+			{{/pagaments}}
+		</ul>
+		{{/if}}
+
+	</div>
+
+	<nav class="imc--navegacio">
+
+		<ul>
+			<li>
+				<a class="imc-bt imc--anterior" href="04_pas_pagar.html"><span>{{txtAnterior}}</span></a>
+			</li>
+
+			<li>
+				{{if reintentar|equals>s}}
+				<a class="imc-bt imc--reintentar" href="javascript:;" id="imc-bt-reintenta" data-accio="reintenta"><span>{{txtReintentar}}</span></a>
+				{{else}}
+				<a class="imc-bt imc--registrar" href="javascript:;" id="imc-bt-registra" data-accio="registra"><span>{{txtRegistrar}}</span></a>
+				{{/if}}
+			</li>
+
+		</ul>
+
+	</nav>
+
 </div>
 
-<div class="imc--registre">
+<!-- signatura -->
+<div class="imc-signatura" id="imc-signatura">
+	<div class="imc--c">
 
-	<h4><span>Resum de totes les passes cumplimentades</span></h4>
+		<button type="button" id="imc-bt-iframe-tanca"><span>{{txtPagamentTanca}}</span></button>
 
-	<h5><span>{{txtFormularis}}</span></h5>
+		<iframe id="imc-signatura-iframe" src="" scrolling="yes" frameborder="0"></iframe>
 
-	<ul>
-		<li>
-			<div class="imc--reg imc--form" data-id="1">
-				<span class="imc--icona"></span>
-				<strong></strong>
-				<button type="button" class="imc-bt imc--ico imc--signa"><span>{{txtSignar}}</span></button>
-				<button type="button" class="imc--descarrega"><span>{{txtDescarrega}}</span></button>
-			</div>
-		</li>
-	</ul>
-
-	<h5><span>{{txtAnnexes}}</span></h5>
-
-	<ul>
-		<li>
-			<div class="imc--reg imc--doc" data-id="1">
-				<span class="imc--icona"></span>
-				<strong></strong>
-				<button type="button" class="imc-bt imc--ico imc--signa"><span>{{txtSignar}}</span></button>
-				<button type="button" class="imc--descarrega"><span>{{txtDescarrega}}</span></button>
-			</div>
-		</li>
-	</ul>
-
-	<h5><span>{{txtPagaments}}</span></h5>
-
-	<ul>
-		<li>
-			<div class="imc--reg imc--pagament" data-id="1">
-				<span class="imc--icona"></span>
-				<strong></strong>
-				<button type="button" class="imc--descarrega"><span>{{txtDescarrega}}</span></button>
-			</div>
-		</li>
-	</ul>
-
+	</div>
 </div>
-
-<nav class="imc--navegacio">
-
-	<ul>
-		<li>
-			<a class="imc-bt imc--anterior" href="04_pas_pagar.html"><span>{{txtAnterior}}</span></a>
-		</li>
-		<li>
-			<a class="imc-bt imc--registrar" href="javascript:;" id="imc-bt-registra"><span>{{txtRegistrar}}</span></a>
-		</li>
-	</ul>
-
-</nav>
+<!-- /signatura -->

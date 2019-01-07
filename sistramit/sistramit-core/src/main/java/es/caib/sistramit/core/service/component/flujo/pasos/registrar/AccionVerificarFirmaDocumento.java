@@ -12,9 +12,11 @@ import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
 import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
 import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
 import es.caib.sistramit.core.api.exception.SesionFirmaClienteException;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
 import es.caib.sistramit.core.api.model.flujo.Firma;
+import es.caib.sistramit.core.api.model.flujo.FirmaVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
@@ -79,19 +81,19 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		// Recuperamos firma
 		final FirmaClienteRespuesta resFirma = recuperarFirma(dipa, pDefinicionTramite, idDocumento, instancia);
 
-		// Validamos firma y obtener nif firmante
-		// TODO PENDIENTE VALIDAR FIRMA Y QUE LA FIRMA SE CORRESPONDA CON EL FIRMANTE
-
-		// En funcion del resultado de la validacion actualizamos estado paso y
-		// persistencia
+		// Según resultado validacion actualizamos estado paso y persistencia
 		// - Actualizamos detalle
 		actualizarDetalle(dipa, idDocumento, instancia, nifFirmante, resFirma, pVariablesFlujo);
 		// - Actualizamos persistencia
 		actualizarPersistencia(dipa, idDocumento, instancia, nifFirmante, resFirma, pVariablesFlujo);
 
 		// Devolvemos respuesta
-		// TODO PENDIENTE VERIFICAR RESPUESTA POR SI HACE FALTA ALGO MAS
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
+		final FirmaVerificacion fv = new FirmaVerificacion();
+		fv.setRealizada(TypeSiNo.fromBoolean(resFirma.isFinalizada()));
+		fv.setVerificada(TypeSiNo.fromBoolean(resFirma.isValida()));
+		fv.setDetalleError(resFirma.getDetalleError());
+		rp.addParametroRetorno("resultado", fv);
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
 		rep.setRespuestaAccionPaso(rp);
 		return rep;
@@ -117,7 +119,8 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 	private void actualizarPersistencia(DatosInternosPasoRegistrar dipa, String idDocumento, int instancia,
 			String nifFirmante, FirmaClienteRespuesta resFirma, VariablesFlujo pVariablesFlujo) {
 
-		if (resFirma.isCorrecta()) {
+		// Si la firma es correcta, almacenamos firma
+		if (resFirma.isFinalizada() && resFirma.isValida()) {
 
 			// Obtiene datos firmante
 			final Persona firmante = UtilsPasoRegistrar.getInstance().obtieneDatosFirmante(pVariablesFlujo, idDocumento,
@@ -174,7 +177,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		final DetallePasoRegistrar dpr = (DetallePasoRegistrar) dipa.getDetallePaso();
 		final DocumentoRegistro dr = dpr.buscarDocumentoRegistro(idDocumento, instancia);
 		final Firma f = dr.getFirma(nifFirmante);
-		if (resFirma.isCorrecta()) {
+		if (resFirma.isFinalizada() && resFirma.isValida()) {
 			f.setEstadoFirma(TypeEstadoFirma.FIRMADO);
 			f.setFechaFirma(UtilsFlujo.formateaFechaFront(resFirma.getFecha()));
 		} else {
@@ -226,7 +229,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 					throw new SesionFirmaClienteException("Tipo firma no reconocida: " + fic.getFirmaTipo().toString());
 				}
 				// Establece datos firma
-				resFirma.setCorrecta(true);
+				resFirma.setFinalizada(true);
 				resFirma.setFirmaContenido(fic.getFirmaFichero());
 				resFirma.setFirmaTipo(tipoFirma);
 			} else if (estado == TypeEstadoFirmado.CANCELADO) {
@@ -241,6 +244,12 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 			plgFirma.cerrarSesionFirma(sf);
 		} catch (final FirmaPluginException ex) {
 			LOGGER.warn("Error cerrando sesion de firma cliente: " + ex.getMessage(), ex);
+		}
+
+		// Validamos firma y verificar nif firmante concuerda
+		if (resFirma.isFinalizada()) {
+			// TODO PENDIENTE PLUGIN VALIDACION FIRMA
+			resFirma.setValida(true);
 		}
 
 		// Devuelve respuesta

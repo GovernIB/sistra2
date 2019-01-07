@@ -59,12 +59,14 @@ var APP_TAXA_URL = APP_SERVIDOR + "pt/iniciarPago.json"
 
 /* pas registrar */
 
-var APP_SIGNA = APP_SERVIDOR + "bbdd/signa.php"
-	,APP_SIGNATURA_URL = APP_SERVIDOR + "bbdd/signaturaURL.php"
-	,APP_TRAMIT_REGISTRA = APP_SERVIDOR + "bbdd/tramiteRegistrar.php"
-	,APP_TRAMIT_REINTENTA = APP_SERVIDOR + "bbdd/tramiteReintentar.php";
+var APP_SIGNA = APP_SERVIDOR + "rt/firmarDocumento.json"
+	,APP_SIGNATURA_URL = APP_SERVIDOR + "rt/firmarDocumento.json"
+	,APP_TRAMIT_REGISTRA = APP_SERVIDOR + "rt//registrarTramite.json"
+	,APP_REGISTRE_DESCARREGA = APP_SERVIDOR + "rt/descargarDocumento.html"
+	,APP_TRAMIT_REINTENTA = APP_SERVIDOR + "rt/reintentar.json";
 
 /* pas guardar */
 
 var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
+	APP_GUARDA_DESCARREGA = APP_SERVIDOR + "gj/descargarDocumento.html",
 	APP_TRAMIT_SURT = "http://www.google.es"; /* TODO: HAY QUE PASARLO AL JSON DEL PASO */

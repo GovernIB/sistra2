@@ -36,9 +36,7 @@ public final class ReglasFlujoNormalizadoImpl extends ReglasFlujoImpl {
 		this.addRegla(new RTAccionModificacion(), TypeFaseEjecucion.PRE_ACCION);
 		this.addRegla(new RTNavegacionAccesibilidadNormalizado(), TypeFaseEjecucion.POST_ACCION);
 		this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_ACCION);
-		// TODO HABILITAR CUANDO ESTE PASO GUARDAR
-		// this.addRegla(new RTAccionNavegacionAutoNormalizado(),
-		// TypeFaseEjecucion.POST_ACCION);
+		this.addRegla(new RTAccionNavegacionAutoNormalizado(), TypeFaseEjecucion.POST_ACCION);
 
 		// CANCELAR
 		this.addRegla(new RTCancelacionPagoIniciado(), TypeFaseEjecucion.PRE_CANCELAR);

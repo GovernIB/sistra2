@@ -10,8 +10,8 @@ import java.util.Map;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
+import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.service.model.flujo.types.TypeDocumentoPersistencia;
-import es.caib.sistramit.core.service.model.flujo.types.TypeResultadoRegistro;
 
 /**
  *

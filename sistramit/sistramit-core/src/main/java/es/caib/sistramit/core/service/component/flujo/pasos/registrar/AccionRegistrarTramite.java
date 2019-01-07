@@ -29,8 +29,11 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
@@ -48,12 +51,10 @@ import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
-import es.caib.sistramit.core.service.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.service.model.flujo.ResultadoRegistro;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
 import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
-import es.caib.sistramit.core.service.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -112,11 +113,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 		// Devolvemos respuesta indicando resultado registro
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
-		rp.addParametroRetorno("resultado", resReg.getResultado());
-		if (resReg.getResultado() == TypeResultadoRegistro.CORRECTO) {
-			rp.addParametroRetorno("numeroRegistro", pDipa.getResultadoRegistro().getNumeroRegistro());
-		}
-
+		rp.addParametroRetorno("resultado", resReg);
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
 		rep.setRespuestaAccionPaso(rp);
 		return rep;
@@ -231,6 +228,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		final boolean preregistro = (docAsientoDpp.getRegistroPreregistro() == TypeSiNo.SI);
 
 		// Actualizamos detalle
+		final DetallePasoRegistrar detallePasoRegistrar = (DetallePasoRegistrar) pDipa.getDetallePaso();
 		switch (resReg.getResultado()) {
 		case CORRECTO:
 			// Registro realizado:
@@ -242,17 +240,18 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			rr.setAsunto(pVariablesFlujo.getTituloTramite());
 			pDipa.setResultadoRegistro(rr);
 			// - resetamos info de reintentar
-			((DetallePasoRegistrar) pDipa.getDetallePaso()).setReintentar(TypeSiNo.NO);
+			detallePasoRegistrar.setRegistrar(TypeSiNo.NO);
+			detallePasoRegistrar.setReintentar(TypeSiNo.NO);
 			break;
 		case ERROR:
 			// Registro realizado con error
 			// - resetamos info de reintentar
-			((DetallePasoRegistrar) pDipa.getDetallePaso()).setReintentar(TypeSiNo.NO);
+			detallePasoRegistrar.setReintentar(TypeSiNo.NO);
 			break;
 		case REINTENTAR:
 			// Se debe reintentar registro
 			// - indicamos que hay que reintentar el pago
-			((DetallePasoRegistrar) pDipa.getDetallePaso()).setReintentar(TypeSiNo.SI);
+			detallePasoRegistrar.setReintentar(TypeSiNo.SI);
 			break;
 		default:
 			throw new TipoNoControladoException("Tipo de resultado registro no controlado: " + resReg.getResultado());
@@ -285,6 +284,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			// Registro realizado:
 			// - updateamos estado documento asiento para indicar resultado
 			// registro
+			docAsientoDpp.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
 			docAsientoDpp.setRegistroResultado(resReg.getResultado());
 			docAsientoDpp.setRegistroNumeroRegistro(resReg.getNumeroRegistro());
 			docAsientoDpp.setRegistroFechaRegistro(resReg.getFechaRegistro());
@@ -294,11 +294,13 @@ public final class AccionRegistrarTramite implements AccionPaso {
 			// Error al registrar:
 			// - updateamos estado documento asiento para resetear estado y
 			// permitir nuevo registro
+			docAsientoDpp.setEstado(TypeEstadoDocumento.SIN_RELLENAR);
 			docAsientoDpp.setRegistroResultado(null);
 			dao.establecerDatosDocumento(pDipa.getIdSesionTramitacion(), pDipa.getIdPaso(), docAsientoDpp);
 			break;
 		case REINTENTAR:
 			// Hay que reintentar el proceso de registro
+			docAsientoDpp.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
 			docAsientoDpp.setRegistroResultado(TypeResultadoRegistro.REINTENTAR);
 			dao.establecerDatosDocumento(pDipa.getIdSesionTramitacion(), pDipa.getIdPaso(), docAsientoDpp);
 			break;
@@ -307,6 +309,17 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		}
 	}
 
+	/**
+	 * Genera asiento registral.
+	 *
+	 * @param pDipa
+	 *            Datos internos paso
+	 * @param pVariablesFlujo
+	 *            variables flujo
+	 * @param pDefinicionTramite
+	 *            Definición trámite
+	 * @return asiento registral
+	 */
 	private AsientoRegistral generarAsiento(DatosInternosPasoRegistrar pDipa, VariablesFlujo pVariablesFlujo,
 			DefinicionTramiteSTG pDefinicionTramite) {
 		final AsientoRegistral asiento = new AsientoRegistral();

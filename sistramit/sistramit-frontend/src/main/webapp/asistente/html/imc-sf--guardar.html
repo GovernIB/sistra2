@@ -19,14 +19,41 @@
 		
 		<ul>
 			{{formularis}}
-			<li>
-				<div class="imc--reg imc--form" data-id="{{id}}" data-descarrega="{{descargable}}">
+			<li class="imc--reg-doc" data-id="{{id}}" data-descarrega="{{descargable}}">
+				<div class="imc--reg imc--form">
 					<span class="imc--icona"></span>
 					<strong>{{titulo}}</strong>
 					{{if descargable|equals>s}}
 					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="formulari"><span>{{txtDescarrega}}</span></button>
 					{{/if}}
 				</div>
+
+				{{if presentacion|equals>p}}
+				<div class="imc--presentacio imc--presencial">Entrega presencial</div>
+				{{/if}}
+
+				{{if firmar|equals>s}}
+
+					{{if firmas}}
+					<div class="imc--signants">
+						<p>{{if firmas|size|equals>1}}{{txtSignant}}{{else}}{{txtSignants}}{{/if}}:</p>
+						<ul>
+							{{firmas}}
+							<li class="imc--signat" data-nif="{{firmante.nif}}">
+
+								<strong>
+									{{firmante.nombre}} ({{firmante.nif}})
+								</strong>
+								<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
+
+							</li>
+							{{/firmas}}
+						</ul>
+					</div>
+					{{/if}}
+				
+				{{/if}}
+
 			</li>
 			{{/formularis}}
 		</ul>
@@ -37,14 +64,41 @@
 		
 		<ul>
 			{{annexes}}
-			<li>
-				<div class="imc--reg imc--doc" data-id="{{id}}" data-descarrega="{{descargable}}">
+			<li class="imc--reg-doc" data-id="{{id}}" data-descarrega="{{descargable}}">
+				<div class="imc--reg imc--doc">
 					<span class="imc--icona"></span>
 					<strong>{{titulo}}</strong>
 					{{if descargable|equals>s}}
 					<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="annexe"><span>{{txtDescarrega}}</span></button>
 					{{/if}}
 				</div>
+
+				{{if presentacion|equals>p}}
+				<div class="imc--presentacio imc--presencial">Entrega presencial</div>
+				{{/if}}
+
+				{{if firmar|equals>s}}
+
+					{{if firmas}}
+					<div class="imc--signants">
+						<p>{{if firmas|size|equals>1}}{{txtSignant}}{{else}}{{txtSignants}}{{/if}}:</p>
+						<ul>
+							{{firmas}}
+							<li class="imc--signat" data-nif="{{firmante.nif}}">
+
+								<strong>
+									{{firmante.nombre}} ({{firmante.nif}})
+								</strong>
+								<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
+
+							</li>
+							{{/firmas}}
+						</ul>
+					</div>
+					{{/if}}
+				
+				{{/if}}
+				
 			</li>
 			{{/annexes}}
 		</ul>
@@ -55,8 +109,8 @@
 		
 		<ul>
 			{{pagaments}}
-			<li>
-				<div class="imc--reg imc--pagament" data-id="{{id}}" data-descarrega="{{descargable}}">
+			<li class="imc--reg-doc" data-id="{{id}}" data-descarrega="{{descargable}}">
+				<div class="imc--reg imc--pagament">
 					<span class="imc--icona"></span>
 					<strong>{{titulo}}</strong>
 					{{if descargable|equals>s}}
