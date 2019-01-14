@@ -28,10 +28,7 @@
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
-				<p>
-					<p:outputLabel value="#{dialogTramiteImportarTV.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
-				</p>
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w10, padding-left-18, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel   for="oficina" value="#{msg['dialogTramiteImportarTV.headerOficina']}:" />
 					<p:selectOneMenu id ="oficina" styleClass="w40" value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoOficina}" required="true" style="background:white" requiredMessage="#{msg['error.obligatorio']}" >

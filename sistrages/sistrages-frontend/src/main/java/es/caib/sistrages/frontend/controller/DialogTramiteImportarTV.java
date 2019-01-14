@@ -17,6 +17,7 @@ import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ComponenteService;
@@ -27,7 +28,6 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.core.api.model.Entidad;
 
 @ManagedBean
 @ViewScoped
@@ -39,7 +39,7 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 	/** Componente service. */
 	@Inject
 	private ComponenteService componenteService;
-	
+
 	/** Entidad service. */
 	@Inject
 	private EntidadService entidadService;
@@ -70,7 +70,7 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 
 	/** Tipos. **/
 	private List<TipoAsunto> tipos;
-	
+
 	private Entidad entidad;
 
 	/**
@@ -107,8 +107,7 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 		iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
 		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		try {
-			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
-					TypeRegistro.REGISTRO_ENTRADA);
+			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
 			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 
 			if (this.data.getTramiteVersionResultadoOficina() != null) {
@@ -166,6 +165,28 @@ public class DialogTramiteImportarTV extends DialogControllerBase {
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+
+		// Preparamos los textos (solo se utilizan de info en el xhtml)
+		for (final OficinaRegistro oficina : this.oficinas) {
+			if (oficina.getCodigo() != null
+					&& oficina.getCodigo().equals(this.data.getTramiteVersionResultadoOficina())) {
+				this.data.setTramiteVersionResultadoOficinaText(oficina.getNombre());
+				break;
+			}
+		}
+		for (final TipoAsunto tipo : this.tipos) {
+			if (tipo.getCodigo() != null && tipo.getCodigo().equals(this.data.getTramiteVersionResultadoTipo())) {
+				this.data.setTramiteVersionResultadoTipoText(tipo.getNombre());
+				break;
+			}
+		}
+		for (final LibroOficina libro : this.libros) {
+			if (libro.getCodigo() != null && libro.getCodigo().equals(this.data.getTramiteVersionResultadoLibro())) {
+				this.data.setTramiteVersionResultadoLibroText(libro.getNombre());
+				break;
+			}
+		}
+
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.data);
 
 		final DialogResult result = new DialogResult();

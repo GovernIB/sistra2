@@ -77,6 +77,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		setData(tramiteService.getTramiteVersion(Long.valueOf(id)));
 
 		tramite = tramiteService.getTramite(this.data.getIdTramite());
+		idioma = "ca"; // Ponemos por defecto el catalan.
 		for (final TypeIdioma tipo : TypeIdioma.values()) {
 			for (final String idi : data.getIdiomasSoportados().split(";")) {
 				if (idi.equals(tipo.toString())) {

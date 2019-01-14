@@ -89,6 +89,14 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 				return;
 			}
 
+			// Anyadido restricción para que cuando está persistencia y no es restricción
+			// infinita (por días), tenga que tener valor el num. dias
+			if (this.getTramiteVersion().isPersistencia() && !this.getTramiteVersion().isPersistenciaInfinita()
+					&& this.getTramiteVersion().getPersistenciaDias() == null) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.numdias"));
+				return;
+			}
+
 			String idiomas = "";
 			if (tramiteVersionIdiomaEsSoportado) {
 				idiomas += "es;";

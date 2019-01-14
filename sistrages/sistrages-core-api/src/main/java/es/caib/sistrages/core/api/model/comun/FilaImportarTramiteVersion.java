@@ -19,14 +19,23 @@ public class FilaImportarTramiteVersion extends FilaImportar {
 	/** TramiteVersion actual. **/
 	private TramiteVersion tramiteVersionActual;
 
-	/** Indica el resultado de oficina. **/
+	/** Indica el codigo de oficina. **/
 	private String tramiteVersionResultadoOficina;
 
-	/** Indica el resultado de libro. **/
+	/** Indica el codigo de oficina. **/
+	private String tramiteVersionResultadoOficinaText;
+
+	/** Indica el codigo de libro. **/
 	private String tramiteVersionResultadoLibro;
 
-	/** Indica el resultado de tipo. **/
+	/** Indica el codigo de libro. **/
+	private String tramiteVersionResultadoLibroText;
+
+	/** Indica el codigo de tipo. **/
 	private String tramiteVersionResultadoTipo;
+
+	/** Indica el codigo de tipo. **/
+	private String tramiteVersionResultadoTipoText;
 
 	/** Constructor básico. **/
 	public FilaImportarTramiteVersion() {
@@ -122,6 +131,51 @@ public class FilaImportarTramiteVersion extends FilaImportar {
 	 */
 	public void setTramiteVersionResultadoTipo(final String tramiteVersionResultadoTipo) {
 		this.tramiteVersionResultadoTipo = tramiteVersionResultadoTipo;
+	}
+
+	/**
+	 * @return the tramiteVersionResultadoOficinaText
+	 */
+	public String getTramiteVersionResultadoOficinaText() {
+		return tramiteVersionResultadoOficinaText;
+	}
+
+	/**
+	 * @param tramiteVersionResultadoOficinaText
+	 *            the tramiteVersionResultadoOficinaText to set
+	 */
+	public void setTramiteVersionResultadoOficinaText(final String tramiteVersionResultadoOficinaText) {
+		this.tramiteVersionResultadoOficinaText = tramiteVersionResultadoOficinaText;
+	}
+
+	/**
+	 * @return the tramiteVersionResultadoLibroText
+	 */
+	public String getTramiteVersionResultadoLibroText() {
+		return tramiteVersionResultadoLibroText;
+	}
+
+	/**
+	 * @param tramiteVersionResultadoLibroText
+	 *            the tramiteVersionResultadoLibroText to set
+	 */
+	public void setTramiteVersionResultadoLibroText(final String tramiteVersionResultadoLibroText) {
+		this.tramiteVersionResultadoLibroText = tramiteVersionResultadoLibroText;
+	}
+
+	/**
+	 * @return the tramiteVersionResultadoTipoText
+	 */
+	public String getTramiteVersionResultadoTipoText() {
+		return tramiteVersionResultadoTipoText;
+	}
+
+	/**
+	 * @param tramiteVersionResultadoTipoText
+	 *            the tramiteVersionResultadoTipoText to set
+	 */
+	public void setTramiteVersionResultadoTipoText(final String tramiteVersionResultadoTipoText) {
+		this.tramiteVersionResultadoTipoText = tramiteVersionResultadoTipoText;
 	}
 
 }

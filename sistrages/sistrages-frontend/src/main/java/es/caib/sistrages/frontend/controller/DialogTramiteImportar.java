@@ -25,6 +25,12 @@ import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
+import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
+import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
+import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
@@ -47,8 +53,10 @@ import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
+import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -91,6 +99,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private EntidadService entidadService;
+
+	/** Componente service. */
+	@Inject
+	private ComponenteService componenteService;
 
 	/** Servicio. */
 	@Inject
@@ -169,6 +181,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	private Integer posicionDominio;
 	/** Mostrar registro. ***/
 	private boolean mostrarRegistro;
+	/** Mostrar registro info (libro / tipo / oficina). ***/
+	private boolean mostrarRegistroInfo;
 	/** Pasos de registro. **/
 	private List<TramitePaso> pasosRegistro = new ArrayList<>();
 
@@ -377,7 +391,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		if (tramiteVersionActual == null) {
 
 			filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-					TypeImportarResultado.INFO, tramiteVersion, tramiteVersionActual);
+					TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
 
 		} else {
 
@@ -387,7 +401,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		// Paso 3.3.1 Tramite Version tiene un paso registro
-		mostrarRegistro = false;
+		mostrarRegistro = false; // De momento, esta variable no se utiliza porque no hay tramites con pasos
+									// personalizados.
+		mostrarRegistroInfo = true;
 		if (tramiteVersion != null && tramiteVersion.getListaPasos() != null) {
 			for (final TramitePaso paso : tramiteVersion.getListaPasos()) {
 				if (paso instanceof TramitePasoRegistrar) {
@@ -397,6 +413,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				}
 			}
 		}
+		rellenarInfoRegistro();
 
 		// Paso 3.4. Dominio.
 		for (final Map.Entry<Long, Dominio> entry : dominios.entrySet()) {
@@ -450,6 +467,53 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		setMostrarPanelInfo(true);
 		setMostrarBotonImportar(true);
 
+	}
+
+	/**
+	 * Rellenando la info de registro
+	 */
+	private void rellenarInfoRegistro() {
+		final IRegistroPlugin iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO,
+				UtilJSF.getIdEntidad());
+		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+		try {
+
+			if (this.filaTramiteVersion.getTramiteVersionResultadoOficina() != null
+					&& !this.filaTramiteVersion.getTramiteVersionResultadoOficina().isEmpty()) {
+				final List<OficinaRegistro> oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
+						TypeRegistro.REGISTRO_ENTRADA);
+				for (final OficinaRegistro oficina : oficinas) {
+					if (oficina.getCodigo().equals(this.filaTramiteVersion.getTramiteVersionResultadoOficina())) {
+						this.filaTramiteVersion.setTramiteVersionResultadoOficinaText(oficina.getNombre());
+						final List<LibroOficina> libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
+								oficina.getCodigo(), TypeRegistro.REGISTRO_ENTRADA);
+						for (final LibroOficina libro : libros) {
+							if (libro.getCodigo().equals(this.filaTramiteVersion.getTramiteVersionResultadoLibro())) {
+								this.filaTramiteVersion.setTramiteVersionResultadoLibroText(libro.getNombre());
+								break;
+							}
+						}
+						break;
+					}
+				}
+
+			}
+
+			if (this.filaTramiteVersion.getTramiteVersionResultadoTipo() != null
+					&& !this.filaTramiteVersion.getTramiteVersionResultadoTipo().isEmpty()) {
+				final List<TipoAsunto> tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
+				for (final TipoAsunto tipo : tipos) {
+					if (tipo.getCodigo().equals(this.filaTramiteVersion.getTramiteVersionResultadoTipo())) {
+						this.filaTramiteVersion.setTramiteVersionResultadoTipoText(tipo.getNombre());
+					}
+				}
+			}
+
+		} catch (final RegistroPluginException e) {
+			LOGGER.error("Error obteniendo informacion de registro", e);
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportarTV.registro.error"));
+		}
 	}
 
 	private void ocultarPaneles() {
@@ -521,7 +585,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.filaTramiteVersion);
 
-		UtilJSF.openDialog(DialogTramiteImportarTV.class, TypeModoAcceso.EDICION, null, true, 770, 350);
+		UtilJSF.openDialog(DialogTramiteImportarTV.class, TypeModoAcceso.EDICION, null, true, 500, 170);
 	}
 
 	/**
@@ -611,6 +675,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			this.filaTramiteVersion = (FilaImportarTramiteVersion) respuesta.getResult();
 			this.filaTramiteVersion.setAccion(TypeImportarAccion.REVISADO);
 			this.filaTramiteVersion.setResultado(TypeImportarResultado.OK);
+			setMostrarRegistroInfo(true);
 		}
 	}
 
@@ -1184,6 +1249,21 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public void setPasosRegistro(final List<TramitePaso> pasosRegistro) {
 		this.pasosRegistro = pasosRegistro;
+	}
+
+	/**
+	 * @return the mostrarRegistroInfo
+	 */
+	public boolean isMostrarRegistroInfo() {
+		return mostrarRegistroInfo;
+	}
+
+	/**
+	 * @param mostrarRegistroInfo
+	 *            the mostrarRegistroInfo to set
+	 */
+	public void setMostrarRegistroInfo(final boolean mostrarRegistroInfo) {
+		this.mostrarRegistroInfo = mostrarRegistroInfo;
 	}
 
 }
