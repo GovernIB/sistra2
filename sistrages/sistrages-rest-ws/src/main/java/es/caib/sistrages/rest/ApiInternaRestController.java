@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
@@ -86,13 +85,6 @@ public class ApiInternaRestController {
 
 	@Autowired
 	private RolesAdapter rolesAdapter;
-
-	// TODO Hacer que todas las clases del modelo api rest empiecen con "R" para
-	// evitar conflictos con modelo core? RENOMBRAMOS QUE EMPIECEN CON "R"
-
-	// TODO Ver gestion errores, tanto generados en capa Rest como los que
-	// vengan de negocio. Ver de gestionar con interceptor. DE MOMENTO QUE
-	// DEVUELVA 500 Y LUEGO YA VEMOS.
 
 	/**
 	 * Recupera configuración global.

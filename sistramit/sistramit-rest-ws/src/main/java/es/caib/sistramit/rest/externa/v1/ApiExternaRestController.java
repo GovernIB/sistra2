@@ -47,7 +47,7 @@ public class ApiExternaRestController {
 	private RestApiExternaService restApiExternaService;
 
 	@ApiOperation(value = "Recuperación de eventos", notes = "Solicita recuperación eventos", response = REvento.class, responseContainer = "List")
-	@RequestMapping(value = "/v1/evento", method = RequestMethod.POST)
+	@RequestMapping(value = "/evento", method = RequestMethod.POST)
 	public List<REvento> obtenerEventos(@RequestBody final RFiltroEvento pFiltro) {
 		List<REvento> rListaEventos = null;
 
@@ -68,7 +68,7 @@ public class ApiExternaRestController {
 	}
 
 	@ApiOperation(value = "Recuperación de trámites", notes = "Solicita recuperación trámites en persistencia", response = RTramitePersistencia.class, responseContainer = "List")
-	@RequestMapping(value = "/v1/tramite", method = RequestMethod.POST)
+	@RequestMapping(value = "/tramite", method = RequestMethod.POST)
 	public List<RTramitePersistencia> obtenerTramitesPersistencia(
 			@RequestBody final RFiltroTramitePersistencia pFiltro) {
 		List<RTramitePersistencia> rListaTramites = null;
@@ -90,7 +90,7 @@ public class ApiExternaRestController {
 	}
 
 	@ApiOperation(value = "Obtener ticket de acceso", notes = "Obtener ticket de acceso", response = String.class)
-	@RequestMapping(value = "/v1/ticketAcceso", method = RequestMethod.POST)
+	@RequestMapping(value = "/ticketAcceso", method = RequestMethod.POST)
 	public String obtenerTicketAcceso(@RequestBody final RInfoTicketAcceso pFiltro) {
 		String ticket = null;
 

@@ -28,34 +28,28 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "externa", produces = "application/json")
 public class ApiExternaRestController {
 
-    /** Servicio negocio. */
-    @Autowired
-    private RestApiInternaService restApiService;
+	/** Servicio negocio. */
+	@Autowired
+	private RestApiInternaService restApiService;
 
-    /**
-     * conf Global Adapter
-     */
-    @Autowired
-    private ConfiguracionGlobalAdapter confGlobalAdapter;
+	/**
+	 * conf Global Adapter
+	 */
+	@Autowired
+	private ConfiguracionGlobalAdapter confGlobalAdapter;
 
-    // TODO Ver gestion errores, tanto generados en capa Rest como los que
-    // vengan de negocio. Ver de gestionar con interceptor. DE MOMENTO QUE
-    // DEVUELVA 500 Y LUEGO YA VEMOS.
+	/**
+	 * Recupera configuración global.
+	 *
+	 * @return Configuracion global
+	 */
 
-    /**
-     * Recupera configuración global.
-     *
-     * @return Configuracion global
-     */
-
-    @ApiOperation(value = "Lista de Propiedades de configuracion global", notes = "Lista de Propiedades de configuracion global", response = RConfiguracionGlobal.class)
-    @RequestMapping(value = "/testExterna", method = RequestMethod.GET)
-    public RConfiguracionGlobal pruebaRetornaConfGlobal() {
-        final List<ConfiguracionGlobal> cg = restApiService
-                .listConfiguracionGlobal(null);
-        final List<Plugin> pg = restApiService.listPlugin(TypeAmbito.GLOBAL,
-                (long) 0, null);
-        return confGlobalAdapter.convertir(cg, pg);
-    }
+	@ApiOperation(value = "Lista de Propiedades de configuracion global", notes = "Lista de Propiedades de configuracion global", response = RConfiguracionGlobal.class)
+	@RequestMapping(value = "/testExterna", method = RequestMethod.GET)
+	public RConfiguracionGlobal pruebaRetornaConfGlobal() {
+		final List<ConfiguracionGlobal> cg = restApiService.listConfiguracionGlobal(null);
+		final List<Plugin> pg = restApiService.listPlugin(TypeAmbito.GLOBAL, (long) 0, null);
+		return confGlobalAdapter.convertir(cg, pg);
+	}
 
 }
