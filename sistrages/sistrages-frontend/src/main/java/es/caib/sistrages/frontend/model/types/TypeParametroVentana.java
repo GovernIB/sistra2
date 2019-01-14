@@ -71,5 +71,9 @@ public enum TypeParametroVentana {
 	/**
 	 * tramitepaso.
 	 */
-	TRAMITEPASO;
+	TRAMITEPASO,
+	/**
+	 * Id del script
+	 */
+	ID_SCRIPT;
 }

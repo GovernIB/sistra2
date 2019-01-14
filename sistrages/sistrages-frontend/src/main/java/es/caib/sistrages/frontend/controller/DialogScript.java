@@ -2,6 +2,7 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,8 +10,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
 
+import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.service.ScriptService;
@@ -20,6 +23,7 @@ import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -71,6 +75,12 @@ public class DialogScript extends DialogControllerBase {
 	/** URL del iframe del html de ayuda del plugin. **/
 	private String urlIframe;
 
+	/** Mensajes de validación. **/
+	private List<LiteralScript> mensajes;
+
+	/** Mensaje seleccionado. **/
+	private LiteralScript mensajeSeleccionado;
+
 	/**
 	 * Constructor vacio.
 	 */
@@ -97,6 +107,12 @@ public class DialogScript extends DialogControllerBase {
 		mostrarLateralAyuda = false;
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_SCRIPT);
 		setPlugins(UtilScripts.getPluginsScript(null));
+
+		if (data == null || data.getCodigo() == null) {
+			mensajes = new ArrayList<>();
+		} else {
+			mensajes = scriptService.getLiterales(data.getCodigo());
+		}
 	}
 
 	/**
@@ -198,6 +214,88 @@ public class DialogScript extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Verifica si hay fila seleccionada de area.
+	 *
+	 * @return
+	 */
+	private boolean verificarFilaSeleccionadaMensaje() {
+		boolean filaSeleccionada = true;
+		if (this.mensajeSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			filaSeleccionada = false;
+		}
+		return filaSeleccionada;
+	}
+
+	/**
+	 * Abre dialogo para editar mensaje.
+	 */
+	public void editarMensaje() {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaMensaje())
+			return;
+
+		// Preparamos la mochila con el mensaje
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
+		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT_LITERAL, UtilJSON.toJSON(mensajeSeleccionado));
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(mensajeSeleccionado.getCodigo()));
+		params.put(TypeParametroVentana.ID_SCRIPT.toString(), String.valueOf(this.data.getCodigo()));
+		UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.EDICION, params, true, 650, 200);
+	}
+
+	/**
+	 * Return dialogo mensaje.
+	 */
+	public void returnDialogoMensaje(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final LiteralScript mensaje = (LiteralScript) respuesta.getResult();
+			if (respuesta.getModoAcceso() == TypeModoAcceso.ALTA) {
+				this.mensajes.add(mensaje);
+			}
+
+			if (respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
+				final int posicion = this.mensajes.indexOf(this.mensajeSeleccionado);
+				this.mensajes.remove(posicion);
+				this.mensajes.add(posicion, mensaje);
+			}
+
+		}
+	}
+
+	/**
+	 * Abre dialogo de nueva mensaje.
+	 */
+	public void nuevoMensaje() {
+
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID_SCRIPT.toString(), String.valueOf(this.data.getCodigo()));
+		UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.ALTA, params, true, 650, 200);
+	}
+
+	/**
+	 * Abre dialogo para eliminar mensaje.
+	 */
+	public void eliminarMensaje() {
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaMensaje()) {
+			return;
+		}
+
+		scriptService.removeLiteralScript(this.mensajeSeleccionado.getCodigo());
+		this.mensajes.remove(this.mensajeSeleccionado);
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+
 	}
 
 	/**
@@ -640,6 +738,36 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setScriptService(final ScriptService scriptService) {
 		this.scriptService = scriptService;
+	}
+
+	/**
+	 * @return the mensajes
+	 */
+	public List<LiteralScript> getMensajes() {
+		return mensajes;
+	}
+
+	/**
+	 * @param mensajes
+	 *            the mensajes to set
+	 */
+	public void setMensajes(final List<LiteralScript> mensajes) {
+		this.mensajes = mensajes;
+	}
+
+	/**
+	 * @return the mensajeSeleccionado
+	 */
+	public LiteralScript getMensajeSeleccionado() {
+		return mensajeSeleccionado;
+	}
+
+	/**
+	 * @param mensajeSeleccionado
+	 *            the mensajeSeleccionado to set
+	 */
+	public void setMensajeSeleccionado(final LiteralScript mensajeSeleccionado) {
+		this.mensajeSeleccionado = mensajeSeleccionado;
 	}
 
 }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogScriptLiteral.titulo']}"/></title>
+</h:head>
+
+<h:body>
+
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogScriptLiteral.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogScriptLiteral.id}"/>
+		<f:viewParam name="ID_SCRIPT" value="#{dialogScriptLiteral.idScript}"/>
+		<f:viewAction action="#{dialogScriptLiteral.init}" />
+	</f:metadata>
+
+	<h:form id="dialogTramite" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+				 	<p:outputLabel for="identificador" value="#{msg['dialogScriptLiteral.codigo']}" />
+				 	<p:inputText id="identificador" value="#{dialogScriptLiteral.data.identificador}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase();">
+				   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				   	</p:inputText>
+
+				 	<p:outputLabel for="nombreHidden" value="#{msg['dialogScriptLiteral.descripcion']}" />
+				 	<p:column>
+						<p:inputText id="nombre" value="#{dialogScriptLiteral.literal}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}"/>
+						<p:inputText id="nombreHidden" value="#{dialogScriptLiteral.literal}" type="hidden" required="true" binding="#{mensajesComponent}" />
+						<p:commandButton id="btnNombre" icon="fa fa-language" actionListener="#{dialogScriptLiteral.editarDescripcion()}" process="@this" update="growlDialog" style="margin-right:5px">
+		            		<p:ajax event="dialogReturn" listener="#{dialogScriptLiteral.returnDialogo}" update="growlDialog nombre nombreHidden" />
+		        		</p:commandButton>
+					</p:column>
+
+				</h:panelGrid>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogScriptLiteral.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogScriptLiteral.alta or dialogScriptLiteral.edicion}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogScriptLiteral.cancelar}" process="@this" rendered="#{dialogScriptLiteral.alta or dialogScriptLiteral.edicion}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogScriptLiteral.cancelar}" process="@this"  rendered="#{dialogScriptLiteral.consulta}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

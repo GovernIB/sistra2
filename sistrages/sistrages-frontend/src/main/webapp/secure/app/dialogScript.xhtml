@@ -96,12 +96,33 @@
 								<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left" >
 
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios" />
-										<h:panelGrid columns="2" header="Scripts">
+										<div style="text-align:right">
+											<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" >
+							        				<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript @form"/>
+							        		</p:commandButton>
+      			   							<p:commandButton value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogScript.editarMensaje}" process="@this" update="growlScript">
+			        								<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript @form"/>
+			        						</p:commandButton>
+      			   							<p:commandButton value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.eliminarMensaje}" process="@this" update="@form growlScript">
+	        									<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+	        								</p:commandButton>
+      			   						</div>
 
-										 	<h:column><h:outputText value="#{msg['dialogScript.scripts.autorelleno']}" /></h:column>
-								         	<h:column><p:commandButton icon="fa fa-bolt" /></h:column>
 
-								        </h:panelGrid>
+      			   						 <p:dataTable id="mensaje" var="mensaje" value="#{dialogScript.mensajes}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="100%"
+									   		selection="#{dialogScript.mensajeSeleccionado}" rowKey="#{mensaje.identificador}" selectionMode="single" >
+
+											<p:ajax event="rowSelect" global="false" />
+
+									        <p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}">
+									        	<h:outputText value="#{mensaje.identificador}" />
+									        </p:column>
+
+											<p:column headerText="#{msg['dialogScript.mensaje.headerDescripcion']}">
+									        	<h:outputText value="#{mensaje.literal.getTraduccion(sessionBean.lang)}" />
+									        </p:column>
+
+									    </p:dataTable>
 
 
 								 </p:panel>

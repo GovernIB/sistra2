@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import es.caib.sistrages.core.api.model.LiteralScript;
+import es.caib.sistrages.core.api.model.Script;
 
 /**
  * JLiteraresErrorScript
@@ -31,7 +35,7 @@ public class JLiteralErrorScript implements IModelApi {
 	@JoinColumn(name = "LSC_CODSCR", nullable = false)
 	private JScript script;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "LSC_CODTRA", nullable = false)
 	private JLiteral literal;
 
@@ -39,38 +43,101 @@ public class JLiteralErrorScript implements IModelApi {
 	private String identificador;
 
 	public JLiteralErrorScript() {
+		// Constructor vacio
 	}
 
+	/**
+	 * @return the codigo
+	 */
 	public Long getCodigo() {
-		return this.codigo;
+		return codigo;
 	}
 
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
+	/**
+	 * @return the script
+	 */
 	public JScript getScript() {
-		return this.script;
+		return script;
 	}
 
+	/**
+	 * @param script
+	 *            the script to set
+	 */
 	public void setScript(final JScript script) {
 		this.script = script;
 	}
 
+	/**
+	 * @return the literal
+	 */
 	public JLiteral getLiteral() {
-		return this.literal;
+		return literal;
 	}
 
+	/**
+	 * @param literal
+	 *            the literal to set
+	 */
 	public void setLiteral(final JLiteral literal) {
 		this.literal = literal;
 	}
 
+	/**
+	 * @return the identificador
+	 */
 	public String getIdentificador() {
-		return this.identificador;
+		return identificador;
 	}
 
+	/**
+	 * @param identificador
+	 *            the identificador to set
+	 */
 	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
+	}
+
+	/**
+	 * ToModel
+	 *
+	 * @return
+	 */
+	public LiteralScript toModel() {
+		final LiteralScript literalScript = new LiteralScript();
+		literalScript.setCodigo(codigo);
+		if (literal != null) {
+			literalScript.setLiteral(literal.toModel());
+		}
+		literalScript.setIdentificador(identificador);
+		return literalScript;
+	}
+
+	/**
+	 * FromModel
+	 *
+	 * @param model
+	 * @param jscript
+	 * @return
+	 */
+	public static JLiteralErrorScript fromModel(final LiteralScript model, final Script jscript) {
+		JLiteralErrorScript jModel = null;
+		if (model != null) {
+			jModel = new JLiteralErrorScript();
+			jModel.setCodigo(model.getCodigo());
+			jModel.setIdentificador(model.getIdentificador());
+			jModel.setScript(JScript.fromModel(jscript));
+			jModel.setLiteral(JLiteral.fromModel(model.getLiteral()));
+		}
+		return jModel;
 	}
 
 }
