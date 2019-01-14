@@ -12,6 +12,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -455,11 +457,14 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		final Root<HSesionTramitacion> tableS = query.from(HSesionTramitacion.class);
 		final Root<HTramite> tableT = query.from(HTramite.class);
 		final Root<HPaso> tableP = query.from(HPaso.class);
-		final Root<HDocumento> tableD = query.from(HDocumento.class);
+		// final Root<HDocumento> tableD = query.from(HDocumento.class);
+
+		final Join<HPaso, HDocumento> tableD = tableP.join("documentos", JoinType.LEFT);
 
 		Predicate predicate = builder.equal(tableT.get("sesionTramitacion"), tableS);
 		predicate = builder.and(predicate, builder.equal(tableP.get("tramitePersistencia"), tableT));
-		predicate = builder.and(predicate, builder.equal(tableD.get("paso"), tableP));
+		// predicate = builder.and(predicate, builder.equal(tableD.get("paso"),
+		// tableP));
 
 		if (pFiltroBusqueda.getListaAreas() != null) {
 			predicate = builder.and(predicate, tableT.get("idArea").in(pFiltroBusqueda.getListaAreas()));
