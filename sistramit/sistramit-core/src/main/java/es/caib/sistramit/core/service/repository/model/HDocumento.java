@@ -3,7 +3,9 @@ package es.caib.sistramit.core.service.repository.model;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -646,17 +648,121 @@ public class HDocumento implements IModelApi {
 
 	}
 
-	public static HDocumento fromModel(final DocumentoPasoPersistencia documento) {
-		final HDocumento d = new HDocumento();
-		establecerCamposDocumento(documento, d);
-		return d;
+	/**
+	 * Crea HDocumento a partir de Documento.
+	 *
+	 * @param om
+	 *            Documento
+	 * @return HDocumento
+	 */
+	public static HDocumento fromModel(final DocumentoPasoPersistencia om) {
+		final HDocumento oh = new HDocumento();
+		mergeFromModel(oh, om);
+		return oh;
 	}
 
-	public static void fromModel(HDocumento d, final DocumentoPasoPersistencia documento) {
-		establecerCamposDocumento(documento, d);
+	/**
+	 * Realiza merge de HDocumento a partir de Documento.
+	 *
+	 * @param oh
+	 *            HDocumento
+	 * @param om
+	 *            Documento
+	 */
+	public static void mergeFromModel(HDocumento oh, final DocumentoPasoPersistencia om) {
+		mergeCamposFromModel(om, oh);
+		mergeFirmasFromModel(om, oh);
 	}
 
-	private static void establecerCamposDocumento(final DocumentoPasoPersistencia documento, final HDocumento d) {
+	private static void mergeFirmasFromModel(DocumentoPasoPersistencia documento, HDocumento hdocumento) {
+		// Actualizamos firmas existentes en documento persistencia
+		for (final FirmaDocumentoPersistencia fdp : documento.obtenerFirmasFicheros()) {
+			// Buscamos si existe firma, si no la creamos
+			HFirma hfirma = buscarHFirma(hdocumento, fdp.getNif(), fdp.getFichero().getId());
+			if (hfirma == null) {
+				hfirma = HFirma.createNewHFirma();
+				hfirma.setNif(fdp.getNif());
+				hfirma.setNombre(fdp.getNombre());
+				hfirma.setFichero(fdp.getFichero().getId());
+				hdocumento.addFirma(hfirma);
+			}
+			// Establecemos propiedades
+			hfirma.setFecha(fdp.getFecha());
+			if (fdp.getFirma() != null) {
+				hfirma.setFirma(fdp.getFirma().getId());
+				hfirma.setFirmaClave(fdp.getFirma().getClave());
+				if (fdp.getTipoFirma() != null) {
+					hfirma.setTipoFirma(fdp.getTipoFirma().toString());
+				}
+			} else {
+				hfirma.setFirma(null);
+				hfirma.setFirmaClave(null);
+				hfirma.setTipoFirma(null);
+			}
+		}
+
+		// Eliminamos las firmas sobrantes
+		final Set<HFirma> firmas = new HashSet<>(0);
+		for (final HFirma hFirmaOld : hdocumento.getFirmas()) {
+			final FirmaDocumentoPersistencia fdp = buscarFirma(documento, hFirmaOld.getNif(), hFirmaOld.getFichero());
+			if (fdp == null) {
+				firmas.add(hFirmaOld);
+			}
+
+		}
+
+		for (final HFirma hFirmaOld : firmas) {
+			hdocumento.removeFirma(hFirmaOld);
+		}
+
+	}
+
+	/**
+	 * Busca si existe firma para el fichero.
+	 *
+	 * @param documento
+	 *            Documento paso
+	 * @param nif
+	 *            Nif
+	 * @param idFichero
+	 *            Id fichero
+	 * @return FirmaDocumentoPersistencia
+	 */
+	private static FirmaDocumentoPersistencia buscarFirma(final DocumentoPasoPersistencia documento, final String nif,
+			final Long idFichero) {
+		FirmaDocumentoPersistencia res = null;
+		for (final FirmaDocumentoPersistencia firma : documento.obtenerFirmasFicheros()) {
+			if (firma.getNif().equals(nif) && (firma.getFichero().getId() == idFichero)) {
+				res = firma;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Busca si existe firma para el fichero.
+	 *
+	 * @param hdocumento
+	 *            Documento hibernate
+	 * @param nif
+	 *            Nif
+	 * @param idFichero
+	 *            Id fichero
+	 * @return HFirma
+	 */
+	private static HFirma buscarHFirma(final HDocumento hdocumento, final String nif, final Long idFichero) {
+		HFirma res = null;
+		for (final HFirma hFirmaOld : hdocumento.getFirmas()) {
+			if (hFirmaOld.getNif().equals(nif) && (hFirmaOld.getFichero().longValue() == idFichero)) {
+				res = hFirmaOld;
+				break;
+			}
+		}
+		return res;
+	}
+
+	private static void mergeCamposFromModel(final DocumentoPasoPersistencia documento, final HDocumento d) {
 		d.setAnexoDescripcionInstancia(documento.getAnexoDescripcionInstancia());
 		d.setEstado(documento.getEstado().toString());
 		d.setId(documento.getId());

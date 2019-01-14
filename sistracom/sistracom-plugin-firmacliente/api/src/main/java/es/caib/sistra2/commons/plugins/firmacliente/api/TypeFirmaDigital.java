@@ -13,15 +13,15 @@ public enum TypeFirmaDigital {
 	/**
 	 * PADES.
 	 */
-	PADES("PADES"),
+	PADES("TF06"),
 	/**
 	 * XADES.
 	 */
-	XADES_DETACHED("XADES_DETACHED"),
+	XADES_DETACHED("TF02"),
 	/**
 	 * CADES.
 	 */
-	CADES_DETACHED("CADES_DETACHED");
+	CADES_DETACHED("TF04");
 
 	/**
 	 * Valor como string.

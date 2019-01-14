@@ -59,11 +59,11 @@ var APP_TAXA_URL = APP_SERVIDOR + "pt/iniciarPago.json"
 
 /* pas registrar */
 
-var APP_SIGNA = APP_SERVIDOR + "rt/firmarDocumento.json"
-	,APP_SIGNATURA_URL = APP_SERVIDOR + "rt/firmarDocumento.json"
+var  APP_SIGNATURA_URL = APP_SERVIDOR + "rt/firmarDocumento.json"
 	,APP_TRAMIT_REGISTRA = APP_SERVIDOR + "rt//registrarTramite.json"
 	,APP_REGISTRE_DESCARREGA = APP_SERVIDOR + "rt/descargarDocumento.html"
 	,APP_TRAMIT_REINTENTA = APP_SERVIDOR + "rt/reintentar.json";
+
 
 /* pas guardar */
 

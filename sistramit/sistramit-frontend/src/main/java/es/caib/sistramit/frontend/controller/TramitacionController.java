@@ -407,6 +407,8 @@ public abstract class TramitacionController {
 	 *            Detalle mensaje error
 	 * @param tipoRespuesta
 	 *            Tipo respuesta
+	 * @param recargarTramite
+	 *            Si se recarga el trámite
 	 * @return
 	 */
 	protected final MensajeAsistente generarMensajeErrorAsistente(final String literalTitulo,

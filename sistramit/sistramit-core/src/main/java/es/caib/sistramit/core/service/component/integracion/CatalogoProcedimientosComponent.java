@@ -1,7 +1,7 @@
 package es.caib.sistramit.core.service.component.integracion;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.RolsacPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 
 /**
  * Acceso a componente Catálogo de procedimientos.
@@ -21,7 +21,7 @@ public interface CatalogoProcedimientosComponent {
 	 *            id trámite
 	 * @param idioma
 	 *            idioma
-	 * @throws RolsacPluginException
+	 * @throws CatalogoPluginException
 	 */
 	DefinicionTramiteCP obtenerDefinicionTramite(String idEntidad, String idTramiteCP, String idioma);
 

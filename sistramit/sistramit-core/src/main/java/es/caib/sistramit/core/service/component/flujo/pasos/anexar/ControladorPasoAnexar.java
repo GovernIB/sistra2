@@ -76,13 +76,6 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	/** Accion borrar documento. */
 	@Autowired
 	private AccionBorrarAnexo accionBorrarAnexo;
-	// TODO BORRAR
-	@Autowired
-	private AccionTestFirma accionTestFirma;
-	@Autowired
-	private AccionTestRetornoFirma accionRetornoFirma;
-	@Autowired
-	private AccionTestDescargarFirma accionDescargaFirma;
 
 	/** Marcador estado paso que indica que hay algun anexo pendiente. */
 	private static final String MARCADOR_PENDIENTE_ASISTENTE = "pendienteAsistente";
@@ -161,16 +154,6 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			break;
 		case BORRAR_ANEXO:
 			accionPaso = accionBorrarAnexo;
-			break;
-		// TODO BORRAR
-		case TEST_FIRMAR:
-			accionPaso = accionTestFirma;
-			break;
-		case TEST_RETORNO_FIRMA:
-			accionPaso = accionRetornoFirma;
-			break;
-		case TEST_DESCARGAR_FIRMA:
-			accionPaso = accionDescargaFirma;
 			break;
 		default:
 			throw new AccionPasoNoExisteException("No existe acción " + pAccionPaso + " en el paso Anexar");

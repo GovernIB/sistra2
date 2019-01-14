@@ -248,20 +248,19 @@ public class VersionTramiteAdapter {
 	 */
 
 	private RPasoTramitacion creaPaso(final TramitePaso paso, final String idioma) {
-
+		RPasoTramitacion res = null;
 		if (paso instanceof TramitePasoRellenar) {
-			return crearPasoRellenar((TramitePasoRellenar) paso, idioma);
+			res = crearPasoRellenar((TramitePasoRellenar) paso, idioma);
 		} else if (paso instanceof TramitePasoDebeSaber) {
-			return crearPasoDebeSaber((TramitePasoDebeSaber) paso, idioma);
+			res = crearPasoDebeSaber((TramitePasoDebeSaber) paso, idioma);
 		} else if (paso instanceof TramitePasoTasa) {
-			return crearPasoTasa((TramitePasoTasa) paso, idioma);
+			res = crearPasoTasa((TramitePasoTasa) paso, idioma);
 		} else if (paso instanceof TramitePasoAnexar) {
-			return crearPasoAnexar((TramitePasoAnexar) paso, idioma);
+			res = crearPasoAnexar((TramitePasoAnexar) paso, idioma);
 		} else if (paso instanceof TramitePasoRegistrar) {
-			return crearPasoRegistrar((TramitePasoRegistrar) paso, idioma);
+			res = crearPasoRegistrar((TramitePasoRegistrar) paso, idioma);
 		}
-
-		return null;
+		return res;
 	}
 
 	/**
@@ -302,12 +301,15 @@ public class VersionTramiteAdapter {
 	 * @return RPasoTramitacion
 	 */
 	private RPasoTramitacion crearPasoAnexar(final TramitePasoAnexar paso, final String idioma) {
-		final RPasoTramitacionAnexar resPaso = new RPasoTramitacionAnexar();
-		resPaso.setIdentificador(paso.getIdPasoTramitacion());
-		resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
-		resPaso.setPasoFinal(paso.isPasoFinal());
-		resPaso.setAnexos(generaAnexos(paso.getDocumentos(), idioma));
-		resPaso.setScriptAnexosDinamicos(AdapterUtils.generaScript(paso.getScriptAnexosDinamicos()));
+		RPasoTramitacionAnexar resPaso = null;
+		if (paso.getDocumentos() != null && !paso.getDocumentos().isEmpty()) {
+			resPaso = new RPasoTramitacionAnexar();
+			resPaso.setIdentificador(paso.getIdPasoTramitacion());
+			resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+			resPaso.setPasoFinal(paso.isPasoFinal());
+			resPaso.setAnexos(generaAnexos(paso.getDocumentos(), idioma));
+			resPaso.setScriptAnexosDinamicos(AdapterUtils.generaScript(paso.getScriptAnexosDinamicos()));
+		}
 		return resPaso;
 	}
 
@@ -335,11 +337,14 @@ public class VersionTramiteAdapter {
 	 * @return RPasoTramitacion
 	 */
 	private RPasoTramitacion crearPasoTasa(final TramitePasoTasa paso, final String idioma) {
-		final RPasoTramitacionPagar resPaso = new RPasoTramitacionPagar();
-		resPaso.setIdentificador(paso.getIdPasoTramitacion());
-		resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
-		resPaso.setPasoFinal(paso.isPasoFinal());
-		resPaso.setPagos(generarPagos(paso.getTasas(), idioma));
+		RPasoTramitacionPagar resPaso = null;
+		if (paso.getTasas() != null && !paso.getTasas().isEmpty()) {
+			resPaso = new RPasoTramitacionPagar();
+			resPaso.setIdentificador(paso.getIdPasoTramitacion());
+			resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+			resPaso.setPasoFinal(paso.isPasoFinal());
+			resPaso.setPagos(generarPagos(paso.getTasas(), idioma));
+		}
 		return resPaso;
 	}
 
@@ -351,11 +356,14 @@ public class VersionTramiteAdapter {
 	 * @return RPasoTramitacion
 	 */
 	private RPasoTramitacion crearPasoRellenar(final TramitePasoRellenar paso, final String idioma) {
-		final RPasoTramitacionRellenar resPaso = new RPasoTramitacionRellenar();
-		resPaso.setIdentificador(paso.getIdPasoTramitacion());
-		resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
-		resPaso.setPasoFinal(paso.isPasoFinal());
-		resPaso.setFormularios(generaFormularios(paso.getFormulariosTramite(), idioma));
+		RPasoTramitacionRellenar resPaso = null;
+		if (paso.getFormulariosTramite() != null && !paso.getFormulariosTramite().isEmpty()) {
+			resPaso = new RPasoTramitacionRellenar();
+			resPaso.setIdentificador(paso.getIdPasoTramitacion());
+			resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+			resPaso.setPasoFinal(paso.isPasoFinal());
+			resPaso.setFormularios(generaFormularios(paso.getFormulariosTramite(), idioma));
+		}
 		return resPaso;
 
 	}

@@ -84,7 +84,7 @@ public final class FlujoPasoDaoImpl implements FlujoPasoDao {
 		HDocumento hdoc = findHDocumento(hPaso.getCodigo(), pDocPaso.getId(), pDocPaso.getInstancia());
 		if (hdoc != null) {
 			// - Si existe lo modificamos
-			HDocumento.fromModel(hdoc, pDocPaso);
+			HDocumento.mergeFromModel(hdoc, pDocPaso);
 			// - Actualizamos BD
 			entityManager.merge(hdoc);
 		} else {

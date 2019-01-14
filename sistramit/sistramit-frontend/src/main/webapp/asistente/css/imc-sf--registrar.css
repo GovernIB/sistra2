@@ -198,5 +198,5 @@ nav.imc--navegacio .imc-bt.imc--reintentar:focus {
 
 .imc-ico-carrega-text { position: fixed; z-index: 12; top: 50%; left: 50%; width: 12em; height: 14em; color: #fff; text-align: center; transform: translate(-50%, -50%); }
 
-html.imc--iframe-mostrat,
-body.imc--iframe-mostrat { overflow: hidden; }
+html.imc--sense-scroll,
+body.imc--sense-scroll { overflow: hidden; }

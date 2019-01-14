@@ -45,17 +45,11 @@
 .imc--guarda .imc--descarrega:hover,
 .imc--guarda .imc--descarrega:focus { background-color: #368355; }
 
-
-
-
 .imc--guarda .imc--signants { width: calc(100% - 3.3em); padding: .2em 0 .2em 0; margin-left: 3.3em; }
-
-.imc--guarda .imc--signants p { font-size: 1em; padding: 0 1em; }
+.imc--guarda .imc--signants p { font-size: 1em; padding: 0 1em; margin-bottom: .3em; }
 
 .imc--guarda .imc--signants ul { font-size: 1em; padding: 0 0 0 1em; }
-
 .imc--guarda .imc--signants li { display: flex; align-items: center; min-height: 2em; margin-top: .3em; border: 1px solid #fff; }
-
 .imc--guarda .imc--signants li::before { content: ""; display: block; width: 2em; height: 2em; background: #006300 url(imgs/icones/ico_signar.svg) no-repeat center center / auto .9em; }
 
 .imc--guarda .imc--signants li.imc--per-signar::before { background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
@@ -67,7 +61,6 @@
 .imc--guarda .imc--signants li .imc-bt.imc--ico::before { margin-right: .5em; }
 
 .imc--guarda .imc--signants li .imc--registre .imc--signa { width: 5.2em; }
-
 
 .imc--pagaments .imc--opcions { display: flex; align-items: center; width: calc(100% - 4.5em); margin-left: 4.5em; background-color: #dbdbdb; }
 
@@ -95,14 +88,6 @@
 }
 
 
-
-
-
-
-
-
-
-
 /* navegació */
 
-nav .imc-bt.imc--sortir::before { background-image: url(imgs/icones/ico_sortiu.svg); background-size: auto 1.5em; transform: rotate(180deg); }
+nav .imc-bt.imc--sortir::before { background-image: url(imgs/icones/ico_desconecta.svg); background-size: auto 1.5em; }

@@ -184,6 +184,8 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 			f.setEstadoFirma(TypeEstadoFirma.NO_FIRMADO);
 			f.setFechaFirma(null);
 		}
+		// Si estan todos los documentos firmados permitimos registrar
+		dpr.setRegistrar(TypeSiNo.fromBoolean(dpr.verificarFirmas()));
 	}
 
 	/**

@@ -27,7 +27,7 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
      * @throws ParseException
      */
     DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP,
-            String idioma) throws RolsacPluginException;
+            String idioma) throws CatalogoPluginException;
 
     /**
      * Recupera procedimientos en los que se usa un trámite de Sistra.
@@ -36,9 +36,9 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
      *            id trámite sistra
      * @param idioma
      *            idioma
-     * @throws RolsacPluginException
+     * @throws CatalogoPluginException
      */
     List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(
-            String idTramite, String idioma) throws RolsacPluginException;
+            String idTramite, String idioma) throws CatalogoPluginException;
 
 }

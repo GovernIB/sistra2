@@ -520,6 +520,28 @@ public final class DocumentoPasoPersistencia implements Serializable {
 	}
 
 	/**
+	 * Elimina firmas del fichero.
+	 *
+	 * @param idFichero
+	 *            Id fichero
+	 */
+	public void removeFirmas(final Long idFichero) {
+		if (idFichero != null && this.firmas.containsKey(idFichero)) {
+			this.firmas.remove(idFichero);
+		}
+	}
+
+	/**
+	 * Elimina firmas de todos los ficheros.
+	 *
+	 */
+	public void removeFirmasFicheros() {
+		for (final Long idFichero : this.firmas.keySet()) {
+			removeFirmas(idFichero);
+		}
+	}
+
+	/**
 	 * Elimina firma de fichero.
 	 *
 	 * @param fdp

@@ -103,12 +103,12 @@ $.fn.carregaInfoTramit = function(options) {
 			envia = function() {
 
 				var pag_url = APP_TRAMIT_INFO,
-					pag_data = { id: "" };
+					pag_dades = { id: "" };
 				
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
-						data: pag_data,
+						data: pag_dades,
 						method: "post",
 						dataType: "json",
 						beforeSend: function(xhr) {
@@ -257,24 +257,24 @@ function carregaHTML() {
 			APP_USUARI_ID = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.nif : false;
 
 			var txtHTML_Cap = {
-				txtGovern: txtGovern
-				,txtAplicacioTitol: txtAplicacioTitol
-				,txtUsuari: txtUsuari
-				,txtDesconecta: txtDesconecta
-				,txtClauTramitacio: txtClauTramitacio
-				,txtDesauClau: txtDesauClau
-				,txtAccessibilitat: txtAccessibilitat
-				,txtEliminau: txtEliminau
-				,jsonAutenticacio: jsonAutenticacio
-				,jsonUsuari: jsonUsuari
-				,jsonClauTramitacio: APP_JSON_TRAMIT_T.idSesion
-				,jsonTramitTitol: APP_JSON_TRAMIT_T.titulo
-				,txtCalSaber: txtCalSaber
-				,txtEmplenar: txtEmplenar
-				,txtAnnexar: txtAnnexar
-				,txtPagar: txtPagar
-				,txtRegistrar: txtRegistrar
-			};
+					txtGovern: txtGovern
+					,txtAplicacioTitol: txtAplicacioTitol
+					,txtUsuari: txtUsuari
+					,txtDesconecta: txtDesconecta
+					,txtClauTramitacio: txtClauTramitacio
+					,txtDesauClau: txtDesauClau
+					,txtAccessibilitat: txtAccessibilitat
+					,txtEliminau: txtEliminau
+					,jsonAutenticacio: jsonAutenticacio
+					,jsonUsuari: jsonUsuari
+					,jsonClauTramitacio: APP_JSON_TRAMIT_T.idSesion
+					,jsonTramitTitol: APP_JSON_TRAMIT_T.titulo
+					,txtCalSaber: txtCalSaber
+					,txtEmplenar: txtEmplenar
+					,txtAnnexar: txtAnnexar
+					,txtPagar: txtPagar
+					,txtRegistrar: txtRegistrar
+				};
 
 			var html_cap = Mark.up(htmlCap[0], txtHTML_Cap);
 
@@ -296,52 +296,52 @@ function carregaHTML() {
 				,jsonFacebook = APP_JSON_TRAMIT_E.redes.facebook;
 
 			var txtHTML_Contacte = {
-				txtNecessitauAjuda: txtNecessitauAjuda
-				,txtTelefon: txtTelefon
-				,txtContactauAmb: txtContactauAmb
-				,txtEquipSuport: txtEquipSuport
-				,txtAjuda: txtAjuda
-				,txtAjudaIntro: txtAjudaIntro
-				,txtEmplenarSeguent: txtEmplenarSeguent
-				,txtFormIncidencias: txtFormIncidencias
-				,txtVisitePag: txtVisitePag
-				,txtSuportTecnic: txtSuportTecnic
-				,txtEnvieuCorreu: txtEnvieuCorreu
-				,txtTrucarTelf: txtTrucarTelf
-				,txtTanca: txtTanca
-				,jsonTelefon: APP_JSON_TRAMIT_E.soporte.telefono
-				,jsonSuportTecnic: APP_JSON_TRAMIT_E.soporte.url
-				,jsonSuportCorreu: APP_JSON_TRAMIT_E.soporte.correo
-				,txtEliminau: txtEliminau
-				,txtFormContacte: txtFormContacte
-				,txtNIF: txtNIF
-				,txtNom: txtNom
-				,txtTelefon: txtTelefon
-				,txtCorreu: txtCorreu
-				,txtHorariContacte: txtHorariContacte
-				,txtTipusProblema: txtTipusProblema
-				,txtDescripcioProblema: txtDescripcioProblema
-				,txtDocumentAnnex: txtDocumentAnnex
-				,txtSeleccionaFitxer: txtSeleccionaFitxer
-				,txtEnviaConsulta: txtEnviaConsulta
-				,txtTorna: txtTorna
-				,jsonTipusProblema: APP_JSON_TRAMIT_E.soporte.problemas
-				,txtEnviantDades: txtEnviantDades
-				,txtCancelaEnviament: txtCancelaEnviament
-				,txtTornaIntentar: txtTornaIntentar
-				,jsonContacte: APP_JSON_TRAMIT_E.contacto
-				,txtMapaWeb: txtMapaWeb
-				,txtAvisLegal: txtAvisLegal
-				,txtSegueixnos: txtSegueixnos
-				,jsonMapaWeb: jsonMapaWeb
-				,jsonAvisLegal: jsonAvisLegal
-				,jsonRSS: jsonRSS
-				,jsonXarxes: jsonXarxes
-				,jsonYouTube: jsonYouTube
-				,jsonInstagram: jsonInstagram
-				,jsonTwitter: jsonTwitter
-				,jsonFacebook: jsonFacebook
-			};
+					txtNecessitauAjuda: txtNecessitauAjuda
+					,txtTelefon: txtTelefon
+					,txtContactauAmb: txtContactauAmb
+					,txtEquipSuport: txtEquipSuport
+					,txtAjuda: txtAjuda
+					,txtAjudaIntro: txtAjudaIntro
+					,txtEmplenarSeguent: txtEmplenarSeguent
+					,txtFormIncidencias: txtFormIncidencias
+					,txtVisitePag: txtVisitePag
+					,txtSuportTecnic: txtSuportTecnic
+					,txtEnvieuCorreu: txtEnvieuCorreu
+					,txtTrucarTelf: txtTrucarTelf
+					,txtTanca: txtTanca
+					,jsonTelefon: APP_JSON_TRAMIT_E.soporte.telefono
+					,jsonSuportTecnic: APP_JSON_TRAMIT_E.soporte.url
+					,jsonSuportCorreu: APP_JSON_TRAMIT_E.soporte.correo
+					,txtEliminau: txtEliminau
+					,txtFormContacte: txtFormContacte
+					,txtNIF: txtNIF
+					,txtNom: txtNom
+					,txtTelefon: txtTelefon
+					,txtCorreu: txtCorreu
+					,txtHorariContacte: txtHorariContacte
+					,txtTipusProblema: txtTipusProblema
+					,txtDescripcioProblema: txtDescripcioProblema
+					,txtDocumentAnnex: txtDocumentAnnex
+					,txtSeleccionaFitxer: txtSeleccionaFitxer
+					,txtEnviaConsulta: txtEnviaConsulta
+					,txtTorna: txtTorna
+					,jsonTipusProblema: APP_JSON_TRAMIT_E.soporte.problemas
+					,txtEnviantDades: txtEnviantDades
+					,txtCancelaEnviament: txtCancelaEnviament
+					,txtTornaIntentar: txtTornaIntentar
+					,jsonContacte: APP_JSON_TRAMIT_E.contacto
+					,txtMapaWeb: txtMapaWeb
+					,txtAvisLegal: txtAvisLegal
+					,txtSegueixnos: txtSegueixnos
+					,jsonMapaWeb: jsonMapaWeb
+					,jsonAvisLegal: jsonAvisLegal
+					,jsonRSS: jsonRSS
+					,jsonXarxes: jsonXarxes
+					,jsonYouTube: jsonYouTube
+					,jsonInstagram: jsonInstagram
+					,jsonTwitter: jsonTwitter
+					,jsonFacebook: jsonFacebook
+				};
 
 			var html_contacte = Mark.up(htmlContacte[0], txtHTML_Contacte);
 
@@ -351,10 +351,12 @@ function carregaHTML() {
 			// missatge
 
 			var txtHTML_Missatge = {
-				txtAccepta: txtAccepta
-				,txtCancela: txtCancela
-				,txtTanca: txtTanca
-			};
+					txtDesarSortir: txtDesarSortir
+					,txtSortirSenseDesar: txtSortirSenseDesar
+					,txtAccepta: txtAccepta
+					,txtCancela: txtCancela
+					,txtTanca: txtTanca
+				};
 
 			var html_missatge = Mark.up(htmlMissatge[0], txtHTML_Missatge);
 

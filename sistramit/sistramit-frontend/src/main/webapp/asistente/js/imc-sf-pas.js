@@ -125,11 +125,15 @@ $.fn.appPas = function(options) {
 	var settings = $.extend({
 			pas: false
 			,recarrega: false
+			,esFormulari: false
+			,formulariId: false
 	}, options);
 	this.each(function(){
 		var element = $(this),
 			pas = settings.pas,
 			recarrega = settings.recarrega,
+			esFormulari = settings.esFormulari,
+			formulariId = settings.formulariId,
 			pas_json = false,
 			pas_tipus = false,
 			envia_ajax = false,
@@ -149,6 +153,20 @@ $.fn.appPas = function(options) {
 				imc_contenidor
 					.removeClass("imc--mostra-acc");
 
+				// es un pas emplenar amb un formulari obert?
+
+				if (typeof imc_formulari !== "undefined" && imc_formulari.length && imc_formulari.css("visibility") === "visible") {
+
+					imc_missatge
+						.appMissatge({ accio: "formSurt", titol: "Atenció. Va a sortir del formulari", text: "Recorde que pot desar el formulari amb les dades emplenades ara mateix." });
+
+					imc_missatge
+						.appMissatgeFormAccions();
+
+					document.location = "#pas/" + APP_TRAMIT_PAS_ID + "/formulari/" + imc_formulari.attr("data-id");
+
+				}
+
 				// es el mateix pas ja carregat?
 
 				if (imc_contingut.attr("data-id") === pas && !recarrega) {
@@ -159,6 +177,10 @@ $.fn.appPas = function(options) {
 					return;
 
 				}
+
+				
+
+
 
 				// missatge carregant
 				
@@ -173,7 +195,7 @@ $.fn.appPas = function(options) {
 			carregaJSON = function() {
 
 				var pag_url = APP_TRAMIT_PAS,
-					pag_data = { paso: pas };
+					pag_dades = { paso: pas };
 
 				// ajax
 
@@ -187,7 +209,7 @@ $.fn.appPas = function(options) {
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
-						data: pag_data,
+						data: pag_dades,
 						method: "post",
 						dataType: "json",
 						beforeSend: function(xhr) {
@@ -432,6 +454,7 @@ $.fn.appPas = function(options) {
 								,txtFormulariEnXML: txtFormulariEnXML
 								,txtPDF: txtPDF
 								,txtXML: txtXML
+								,pasID: APP_TRAMIT_PAS_ID
 							}
 						};
 
@@ -480,7 +503,7 @@ $.fn.appPas = function(options) {
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.anexos;
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.pagos;
 					HTML_PAS_LITERALS[pas_tipus]["representado"] = pas_json.datos.actual.representado;
-					HTML_PAS_LITERALS[pas_tipus]["preregistro"] = pas_json.datos.actual.preregistro;
+					HTML_PAS_LITERALS[pas_tipus]["registrar"] = pas_json.datos.actual.registrar;
 					HTML_PAS_LITERALS[pas_tipus]["reintentar"] = pas_json.datos.actual.reintentar;
 					HTML_PAS_LITERALS[pas_tipus]["seguent"] = pas_json.datos.siguiente;
 
@@ -633,8 +656,8 @@ $.fn.appPas = function(options) {
 					.find(".imc--formularis:first a")
 						.each(function(i) {
 
-							var el = $(this),
-								el_id = el.attr("data-id");
+							var el = $(this)
+								,el_id = el.attr("data-id");
 
 							el
 								.find(".imc--formulari:first span")
@@ -654,8 +677,6 @@ $.fn.appPas = function(options) {
 									.end()
 								.find(".imc--no-completat:first span")
 									.text( txtNoCompletat );
-									//.end()
-								//.attr("data-url", APP_URL_FORMS + "?id=" + el_id);
 
 						});
 
@@ -668,8 +689,8 @@ $.fn.appPas = function(options) {
 					.find(".imc--ann")
 						.each(function(i) {
 
-							var el = $(this),
-								hiHaDocuments = el.find("li").length;
+							var el = $(this)
+								,hiHaDocuments = el.find("li").length;
 
 							if (hiHaDocuments) {
 
@@ -952,6 +973,26 @@ jQuery(window)
 
 		imc_contingut_c
 			.appPas({ pas: pas });
+
+	} else if (URL_PARAMETRES[0] === "pas" && URL_PARAMETRES[2] === "formulari" && URL_PARAMETRES.length === 4) {
+
+		var pas = URL_PARAMETRES[1]
+			,form_id = URL_PARAMETRES[3];
+
+		APP_TRAMIT_PAS_ID = URL_PARAMETRES[1];
+
+		// està obert el formulari
+
+		if (typeof imc_formulari !== "undefined" && imc_formulari.length && imc_formulari.css("visibility") === "visible" && imc_formulari.attr("data-id") === form_id) {
+
+			return;
+
+		}
+
+		// obri formulari
+
+		imc_formularis
+			.appEmplenaFormulari({ form_id: form_id });
 		
 	} else if (URL_PARAMETRES[0] === "accessibilitat") {
 

@@ -289,7 +289,8 @@ aside address { display: inline; }
 .imc-missatge .imc--text .imc--cancela:focus,
 .imc-missatge .imc--text .imc--cancela:active { background-color: #666; }
 
-.imc-missatge button[data-tipus="tanca"] { display: none; }
+/*.imc-missatge button[data-tipus="tanca"] { display: none; }*/
+.imc-missatge button { display: none; }
 
 /* missatge tipus */
 
@@ -333,41 +334,69 @@ aside address { display: inline; }
 .imc-missatge[data-accio='carregant'] .imc--text div,
 .imc-missatge[data-accio='carregant'] .imc--text .imc--botonera { display: none; }
 
+
 .imc-missatge[data-accio='esborra'] .imc--text { background: #fff url(imgs/icones/ico_eliminau.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-missatge[data-accio='esborra'] button[data-tipus="accepta"],
+.imc-missatge[data-accio='esborra'] button[data-tipus="cancela"] { display: inline-block; }
+
 
 .imc-missatge[data-accio='informa'] .imc--text { background: #fff url(imgs/icones/ico_info.svg) no-repeat 1.5em 1em / auto 3em; }
 
-.imc-missatge[data-accio='informa'] button[data-tipus="accepta"],
-.imc-missatge[data-accio='informa'] button[data-tipus="cancela"] { display: none; }
-
 .imc-missatge[data-accio='informa'] button[data-tipus="tanca"] { display: inline-block; }
+
 
 .imc-missatge[data-accio='alerta'] .imc--text { background: #fff url(imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
 
-.imc-missatge[data-accio='alerta'] button[data-tipus="tanca"] { display: none; }
+.imc-missatge[data-accio='alerta'] button[data-tipus="accepta"],
+.imc-missatge[data-accio='alerta'] button[data-tipus="cancela"] { display: inline-block; }
+
 
 .imc-missatge[data-accio='desconecta'] .imc--text { background: #fff url(imgs/icones/ico_desconecta_cc073c.svg) no-repeat 1.5em 1em / auto 3em; }
 
+.imc-missatge[data-accio='desconecta'] button[data-tipus="accepta"],
+.imc-missatge[data-accio='desconecta'] button[data-tipus="cancela"] { display: inline-block; }
+
+
 .imc-missatge[data-accio='registra'] .imc--text { background: #fff url(imgs/icones/ico_correcte_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-missatge[data-accio='registra'] button[data-tipus="accepta"],
+.imc-missatge[data-accio='registra'] button[data-tipus="cancela"] { display: inline-block; }
+
 
 .imc-missatge[data-accio='reintenta'] .imc--text { background: #fff url(imgs/icones/ico_reintenta_f00.svg) no-repeat 1.5em 1em / auto 3em; }
 
-.imc-missatge[data-accio='error'] .imc--text { background: #fff url(imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em; }
+.imc-missatge[data-accio='reintenta'] button[data-tipus="accepta"],
+.imc-missatge[data-accio='reintenta'] button[data-tipus="cancela"] { display: inline-block; }
 
-.imc-missatge[data-accio='error'] button[data-tipus="accepta"],
-.imc-missatge[data-accio='error'] button[data-tipus="cancela"] { display: none; }
+
+.imc-missatge[data-accio='error'] .imc--text { background: #fff url(imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em; }
 
 .imc-missatge[data-accio='error'] button[data-tipus="tanca"] { display: inline-block; }
 
+
 .imc-missatge[data-accio='signa'] .imc--text { background: #fff url(imgs/icones/ico_signa_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-missatge[data-accio='signa'] button[data-tipus="accepta"],
+.imc-missatge[data-accio='signa'] button[data-tipus="cancela"] { display: inline-block; }
+
+
+.imc-missatge[data-accio='tramitat'] .imc--text { background: #fff url(imgs/icones/ico_tramitat_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-missatge[data-accio='tramitat'] button[data-tipus="accepta"] { display: inline-block; }
 
 
 .imc-missatge[data-accio='warning'] .imc--text { background: #fff url(imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
 
-.imc-missatge[data-accio='warning'] button[data-tipus="tanca"],
-.imc-missatge[data-accio='warning'] button[data-tipus="cancela"] { display: none; }
-
 .imc-missatge[data-accio='warning'] button[data-tipus="accepta"] { display: inline-block; }
+
+
+.imc-missatge[data-accio='formSurt'] .imc--text { background: #fff url(imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-missatge[data-accio='formSurt'] button[data-tipus="desa"],
+.imc-missatge[data-accio='formSurt'] button[data-tipus="surt"],
+.imc-missatge[data-accio='formSurt'] button[data-tipus="cancela"] { display: inline-block; }
+
 
 /* missatge inline */
 

@@ -478,6 +478,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		docPaso.setFichero(referenciaXML);
 		docPaso.setFormularioPdf(referenciaPDF);
 
+		// - Borramos firmas
+		docPaso.removeFirmasFicheros();
+
 		// - Establecemos estado
 		if (rs != null && rs.isError()) {
 			docPaso.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
@@ -637,6 +640,9 @@ public final class AccionGuardarFormulario implements AccionPaso {
 
 		// - Establecemos estado
 		docPaso.setEstado(TypeEstadoDocumento.SIN_RELLENAR);
+
+		// - Borramos firmas
+		docPaso.removeFirmasFicheros();
 
 		// - Actualizamos datos en BBDD
 		dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPaso);

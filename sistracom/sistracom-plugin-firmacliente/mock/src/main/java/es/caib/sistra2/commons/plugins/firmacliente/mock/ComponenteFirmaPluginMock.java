@@ -1,5 +1,7 @@
 package es.caib.sistra2.commons.plugins.firmacliente.mock;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
@@ -38,7 +40,11 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 	@Override
 	public String iniciarSesionFirma(final String idSesionFirma, final String urlCallBack, final String paramAdic) {
 		// Retornamos directamente al asistente como si se hubiese realizado la firma
-		return urlCallBack;
+		try {
+			return "/sistramitfront/redirigirUrl.jsp?url=" + URLEncoder.encode(urlCallBack, "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

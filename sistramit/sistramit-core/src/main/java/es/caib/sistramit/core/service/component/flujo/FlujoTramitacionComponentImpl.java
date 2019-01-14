@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.RolsacPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
@@ -307,7 +307,7 @@ public class FlujoTramitacionComponentImpl
      * @param pFechaCaducidad
      *            fecha caducidad
      * @return Datos sesion tramitacion
-     * @throws RolsacPluginException
+     * @throws CatalogoPluginException
      */
     private DatosSesionTramitacion generarDatosSesion(
             final String idSesionTramitacion, final TypeEstadoTramite estado,

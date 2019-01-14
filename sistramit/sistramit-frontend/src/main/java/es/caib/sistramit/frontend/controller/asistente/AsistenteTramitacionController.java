@@ -437,11 +437,14 @@ public class AsistenteTramitacionController extends TramitacionController {
 			@RequestParam("idDocumento") final String idDocumento, @RequestParam("instancia") final String instancia,
 			@RequestParam("firmante") final String firmante) {
 
-		debug("Verificar firma documento registro: " + idDocumento + " - " + instancia + " para firmante " + firmante);
+		// TODO Solo se usa firma en registro, si se usara en otro paso deberia añadirse
+		// logica para diferenciar el paso
+
+		debug("Verificar firma externa documento: " + idDocumento + " - " + instancia + " para firmante " + firmante);
 
 		// Cargamos tramite de persistencia
 		final String idSesionTramitacion = getIdSesionTramitacion();
-		this.cargarTramiteImpl(idSesionTramitacion, true);
+		// this.cargarTramiteImpl(idSesionTramitacion, true);
 
 		// Verificamos firma
 		ParametrosAccionPaso pParametros;
@@ -472,7 +475,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 	/**
 	 * Retorno desde carpeta ciudadano.
-	 * 
+	 *
 	 * @param ticket
 	 *            ticket
 	 * @return carga asistente

@@ -19,7 +19,7 @@
 
 /* ico */
 
-.imc-bt.imc--ico { text-align: left; white-space: nowrap; padding: .49em .7em; }
+.imc-bt.imc--ico { text-align: left; white-space: nowrap; padding: .45em .7em; }
 
 .imc-bt.imc--ico::before {
 	content: "";
@@ -33,6 +33,8 @@
 	background: transparent url() no-repeat left center / auto 100%;
 	opacity: .7;
 }
+
+.imc-bt.imc--ico span { display: inline-block; }
 
 
 /* desactivat */
@@ -115,8 +117,7 @@
 
 /* botó com text */
 
-.imc-bt--com-text { position: relative;
-top: -0.1em; color: #4dba79; padding: 0; background-color: transparent; }
+.imc-bt--com-text { position: relative; top: -0.1em; color: #4dba79; padding: 0; background-color: transparent; }
 
 .imc-bt--com-text:hover,
 .imc-bt--com-text:focus { color: #000; background-color: transparent; }
@@ -128,3 +129,8 @@ top: -0.1em; color: #4dba79; padding: 0; background-color: transparent; }
 	-o-transition: color .2s ease-out;
 	transition: color .2s ease-out;
 }
+
+
+/* formulari */
+
+.imc-bt.imc--form-tanca::before { background-image: url(imgs/icones/ico_tanca_fff.svg); opacity: .4; }

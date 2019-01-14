@@ -395,7 +395,7 @@ $.fn.appAnnexa = function(options) {
 							.remove();
 
 						$("html, body")
-							.addClass("imc--iframe-mostrat");
+							.addClass("imc--sense-scroll");
 
 					}, 300);
 
@@ -416,7 +416,7 @@ $.fn.appAnnexa = function(options) {
 					.addClass("imc--off");
 
 				$("html, body")
-					.removeClass("imc--iframe-mostrat");
+					.removeClass("imc--sense-scroll");
 
 				setTimeout(
 					function() {
@@ -765,7 +765,7 @@ $.fn.appAnnexa = function(options) {
 			recarrega = function() {
 
 				$("html, body")
-					.removeClass("imc--iframe-mostrat");
+					.removeClass("imc--sense-scroll");
 
 				imc_doc_missatge
 					.find(".imc--tanca")

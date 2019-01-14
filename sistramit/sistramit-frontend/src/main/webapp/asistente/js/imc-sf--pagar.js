@@ -97,7 +97,7 @@ $.fn.appPagament = function(options) {
 			carregant = function() {
 
 				var pag_url = APP_TAXA_URL,
-					pag_data = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID };
+					pag_dades = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID };
 
 				// ajax
 
@@ -111,7 +111,7 @@ $.fn.appPagament = function(options) {
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
-						data: pag_data,
+						data: pag_dades,
 						method: "post",
 						dataType: "json",
 						beforeSend: function(xhr) {
@@ -225,7 +225,7 @@ $.fn.appPagament = function(options) {
 							.remove();
 
 						$("html, body")
-							.addClass("imc--iframe-mostrat");
+							.addClass("imc--sense-scroll");
 
 
 					}, 300);
@@ -243,7 +243,7 @@ $.fn.appPagament = function(options) {
 					.addClass("imc--off");
 
 				$("html, body")
-					.removeClass("imc--iframe-mostrat");
+					.removeClass("imc--sense-scroll");
 
 				setTimeout(
 					function() {
@@ -301,7 +301,7 @@ $.fn.appPagamentPresencial = function(options) {
 			carregant = function() {
 
 				var pag_url = APP_TAXA_PRESENCIAL,
-					pag_data = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID };
+					pag_dades = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID };
 
 				// ajax
 
@@ -315,7 +315,7 @@ $.fn.appPagamentPresencial = function(options) {
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
-						data: pag_data,
+						data: pag_dades,
 						method: "post",
 						dataType: "json",
 						beforeSend: function(xhr) {
@@ -446,7 +446,7 @@ $.fn.appPagaments = function(options) {
 				// ajax!!!
 
 				var pag_url = (esDescartar) ? APP_TAXA_DESCARTAR : APP_TAXA_VALIDAR
-					,pag_data = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID }
+					,pag_dades = { idPago: elm_pagament_id, idPaso: APP_TRAMIT_PAS_ID }
 					,errorConsola = (esDescartar) ? "descartar" : "validar";
 
 				// ajax
@@ -461,7 +461,7 @@ $.fn.appPagaments = function(options) {
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
-						data: pag_data,
+						data: pag_dades,
 						method: "post",
 						dataType: "json",
 						beforeSend: function(xhr) {

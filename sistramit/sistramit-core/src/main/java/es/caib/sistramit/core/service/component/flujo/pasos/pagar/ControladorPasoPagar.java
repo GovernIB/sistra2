@@ -317,6 +317,12 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 */
 	private DatosCalculoPago calcularDatosPagoFijo(final DefinicionTramiteSTG pDefinicionTramite,
 			final RPagoTramite pPagoDef, final VariablesFlujo pVariablesFlujo) {
+
+		if (pPagoDef.getScriptPago() == null) {
+			throw new ErrorConfiguracionException(
+					"No se ha especificado script de pago para el pago " + pPagoDef.getIdentificador());
+		}
+
 		// Ejecutamos script
 		final Map<String, String> codigosError = UtilsSTG
 				.convertLiteralesToMap(pPagoDef.getScriptPago().getLiterales());

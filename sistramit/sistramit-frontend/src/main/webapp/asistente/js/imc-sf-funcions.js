@@ -148,7 +148,7 @@ $.fn.appTramitacioElimina = function(options) {
 			envia = function() {
 
 				var pag_url = APP_TRAMIT_CANCELA,
-					pag_data = { id: APP_JSON_TRAMIT_T.idSesion };
+					pag_dades = { id: APP_JSON_TRAMIT_T.idSesion };
 
 				// ajax
 
@@ -162,7 +162,7 @@ $.fn.appTramitacioElimina = function(options) {
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
-						data: pag_data,
+						data: pag_dades,
 						method: "post",
 						dataType: "json",
 						beforeSend: function(xhr) {

@@ -8,7 +8,7 @@ var imc_guarda,
 // onReady
 
 function appPasGuardarInicia() {
-
+	
 	imc_guarda = imc_contingut.find(".imc--guarda:first");
 	imc_bt_desa_justificant = $("#imc-bt-justificant-desa");
 	imc_bt_tramit_surt = $("#imc-bt-tramit-surt");
@@ -36,8 +36,8 @@ $.fn.appGuarda = function(options) {
 			inicia = function() {
 
 				element
-					.off('.appRegistre')
-					.on('click.appRegistre', ".imc--descarrega", descarrega);
+					.off('.appGuarda')
+					.on('click.appGuarda', ".imc--descarrega", descarrega);
 
 			},
 			descarrega = function(e) {
@@ -52,10 +52,10 @@ $.fn.appGuarda = function(options) {
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -79,15 +79,13 @@ $.fn.appJustificantDesa = function(options) {
 			},
 			desa = function() {
 
-				var tramit_justificant_id = JSON_PAS_ACTUAL.datos.actual.justificante.numero;
-
-				document.location = APP_TRAMIT_JUSTIFICANT + "?id=" + tramit_justificant_id;
+				document.location = APP_TRAMIT_JUSTIFICANT + "?idPaso=" + APP_TRAMIT_PAS_ID;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -115,16 +113,17 @@ $.fn.appTramitSurt = function(options) {
 
 				imc_missatge
 					.appMissatge({
-						boto: bt
+						accio: "desconecta"
+						,boto: bt
 						,titol: txtSortirSeguretatTitol
 						,alAcceptar: function() { document.location = APP_TRAMIT_SURT; }
 					});
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }

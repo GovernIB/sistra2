@@ -158,8 +158,8 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		try {
 			urlRedireccion = plgFirma.iniciarSesionFirma(sf,
 					configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
-							+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_FIRMA_REGISTRO + "?idPaso="
-							+ pDatosPaso.getIdPaso() + "&idAnexo=" + idDocumento + "&instancia=" + instancia
+							+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_FIRMA_EXTERNO + "?idPaso="
+							+ pDatosPaso.getIdPaso() + "&idDocumento=" + idDocumento + "&instancia=" + instancia
 							+ "&firmante=" + firmante.getNif(),
 					null);
 		} catch (final FirmaPluginException e) {
