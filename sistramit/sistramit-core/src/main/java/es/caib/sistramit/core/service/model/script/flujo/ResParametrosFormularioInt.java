@@ -11,7 +11,7 @@ public interface ResParametrosFormularioInt extends PluginScriptRes {
 	/**
 	 * Id plugin.
 	 */
-	String ID = "DATOS_PARAMETROS_FORMULARIO";
+	String ID = "DATOS_PARAMETROSFORMULARIO";
 
 	/**
 	 * Añade un nuevo parámetro al formulario.

@@ -25,6 +25,7 @@ import es.caib.sistramit.core.service.component.script.plugins.PlgMensajesValida
 import es.caib.sistramit.core.service.component.script.plugins.PlgValidaciones;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgFormularios;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgPago;
+import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgSesionTramitacion;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgValidacionAnexo;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResAnexosDinamicos;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResDatosInicialesFormulario;
@@ -38,9 +39,15 @@ import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPersonal
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResPlantillaInfo;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRegistro;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResVariableFlujo;
+import es.caib.sistramit.core.service.component.script.plugins.formulario.PlgDatosFormulario;
+import es.caib.sistramit.core.service.component.script.plugins.formulario.PlgSesionFormulario;
+import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
+import es.caib.sistramit.core.service.component.script.plugins.formulario.ResValorCampo;
+import es.caib.sistramit.core.service.component.script.plugins.formulario.ResValoresPosibles;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
+import es.caib.sistramit.core.service.model.formulario.VariablesFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.PlgAvisoInt;
 import es.caib.sistramit.core.service.model.script.PlgErrorInt;
@@ -57,8 +64,11 @@ import es.caib.sistramit.core.service.model.script.ResPlantillaInfoInt;
 import es.caib.sistramit.core.service.model.script.ResRegistroInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResParametrosFormularioInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResVariableFlujoInt;
+import es.caib.sistramit.core.service.model.script.formulario.ResEstadoCampoInt;
+import es.caib.sistramit.core.service.model.script.formulario.ResValorCampoInt;
 import es.caib.sistramit.core.service.model.script.types.TypeScript;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
+import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
 
 /**
  * Implementación del componente de ejecución de scripts.
@@ -109,6 +119,23 @@ public final class ScriptExecImpl implements ScriptExec {
 
 		// Retornamos resultado
 		return generarRespuestaScriptFlujo(pTipoScript, codigosError, plugins, result);
+	}
+
+	@Override
+	public RespuestaScript executeScriptFormulario(final TypeScriptFormulario pTipoScript, final String pIdElemento,
+			final String pScript, final VariablesFormulario pVariablesFormulario,
+			final Map<String, String> pCodigosError, final DefinicionTramiteSTG pDefinicionTramite) {
+
+		// Generamos plugins
+		final List<PluginScript> plugins = generarPluginsFormulario(pTipoScript, pIdElemento, pVariablesFormulario,
+				pDefinicionTramite, pCodigosError);
+
+		// Ejecutamos script
+		final String idSesion = pVariablesFormulario.getIdSesionTramitacion();
+		final Object result = ejecutarScript(pTipoScript, idSesion, pIdElemento, pScript, plugins);
+
+		// Retornamos resultado
+		return generarRespuestaScriptFormulario(pTipoScript, pCodigosError, plugins, result);
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -337,11 +364,14 @@ public final class ScriptExecImpl implements ScriptExec {
 				pVariablesFlujo.isDebugEnabled()));
 		// - Plugin dominios
 		plugins.add(new PlgDominios(pDefinicionTramite, dominiosComponent));
+
+		// Añadimos plugins flujo
+		// - Plugin sesion
+		plugins.add(new PlgSesionTramitacion(pVariablesFlujo));
 		// - Plugin formularios
 		plugins.add(crearPluginFormularios(pVariablesFlujo, pDocumentosPaso));
-
-		// Generamos plugins flujo
-		// TODO Pendiente datos sesión,...
+		// - Plugin variables flujo (personalizado)
+		// TODO Pendiente variables flujo (personalizado)
 
 		// Creamos plugins especificos segun tipo script
 		switch (pTipoScript) {
@@ -394,6 +424,73 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new PlgAviso());
 			break;
 		case SCRIPT_PERMITIR_REGISTRO:
+			plugins.add(new PlgAviso());
+			break;
+		default:
+			break;
+		}
+
+		// Devolvemos lista de plugins accesibles desde el script
+		return plugins;
+	}
+
+	/**
+	 * Prepara plugins disponibles para el script de formulario.
+	 *
+	 * @param pTipoScript
+	 *            Tipo script
+	 * @param pIdElemento
+	 *            Id elemento
+	 * @param pVariablesFormulario
+	 *            Variables formulario
+	 * @param pDefinicionTramite
+	 *            Definicion tramite
+	 * @param pCodigosError
+	 *            Mensajes error
+	 * @return Lista de plugins
+	 */
+	private List<PluginScript> generarPluginsFormulario(final TypeScriptFormulario pTipoScript,
+			final String pIdElemento, final VariablesFormulario pVariablesFormulario,
+			final DefinicionTramiteSTG pDefinicionTramite, final Map<String, String> pCodigosError) {
+
+		final List<PluginScript> plugins = new ArrayList<>();
+
+		// Añadimos plugins generales
+		// - Plugin validaciones
+		plugins.add(new PlgValidaciones(pVariablesFormulario.isDebugEnabled()));
+		// - Plugin error
+		plugins.add(new PlgError());
+		// - Plugin mensajes validacion
+		plugins.add(new PlgMensajesValidacion(pCodigosError));
+		// - Plugin log
+		plugins.add(new PlgLog(pVariablesFormulario.getIdSesionTramitacion(), pTipoScript, pIdElemento,
+				pVariablesFormulario.isDebugEnabled()));
+		// - Plugin dominios
+		plugins.add(new PlgDominios(pDefinicionTramite, dominiosComponent));
+
+		// Añadimos plugins formulario
+
+		// Generamos plugins resultantes de las vbles de flujo
+		// - Plugin sesion
+		plugins.add(new PlgSesionFormulario(pVariablesFormulario));
+		// - Parametros formulario
+		plugins.add(new PlgDatosFormulario(pVariablesFormulario.getValoresCampo()));
+
+		// Creamos plugins especificos segun tipo script
+		switch (pTipoScript) {
+		case SCRIPT_AUTORELLENABLE:
+			plugins.add(new ResValorCampo());
+			break;
+		case SCRIPT_ESTADO:
+			plugins.add(new ResEstadoCampo());
+			break;
+		case SCRIPT_VALORES_POSIBLES:
+			plugins.add(new ResValoresPosibles());
+			break;
+		case SCRIPT_VALIDACION_CAMPO:
+			plugins.add(new PlgAviso());
+			break;
+		case SCRIPT_VALIDACION_PAGINA:
 			plugins.add(new PlgAviso());
 			break;
 		default:
@@ -479,6 +576,59 @@ public final class ScriptExecImpl implements ScriptExec {
 		}
 		final PlgFormularios plgFormularios = new PlgFormularios(datosForms);
 		return plgFormularios;
+	}
+
+	/**
+	 * Método para Generar respuesta script formulario de la clase ScriptExecImpl.
+	 *
+	 * @param pTipoScript
+	 *            Tipo de script
+	 * @param pCodigosError
+	 *            Códigos de error
+	 * @param pPlugins
+	 *            Plugins
+	 * @param pResult
+	 *            Resultado script
+	 * @return Respuesta del script
+	 */
+	private RespuestaScript generarRespuestaScriptFormulario(final TypeScriptFormulario pTipoScript,
+			final Map<String, String> pCodigosError, final List<PluginScript> pPlugins, final Object pResult) {
+
+		final RespuestaScript respuestaScript = new RespuestaScript();
+		// - Evaluamos si se ha marcado con error el script
+		final PlgError plgError = (PlgError) getPlugin(pPlugins, PlgErrorInt.ID);
+		if (plgError.isExisteError()) {
+			respuestaScript.setError(true);
+			final String textoMensajeError = calcularMensaje(plgError.getCodigoMensajeError(),
+					plgError.getParametrosMensajeError(), plgError.getTextoMensajeError(), pCodigosError);
+			respuestaScript.setMensajeError(textoMensajeError);
+		}
+		// - En funcion del plugin vemos si debemos retornar el objeto o bien un
+		// plugin de tipo resultado
+		switch (pTipoScript) {
+		case SCRIPT_AUTORELLENABLE:
+			respuestaScript.setResultado(getPlugin(pPlugins, ResValorCampoInt.ID));
+			break;
+		case SCRIPT_ESTADO:
+			respuestaScript.setResultado(getPlugin(pPlugins, ResEstadoCampoInt.ID));
+			break;
+		case SCRIPT_VALORES_POSIBLES:
+			respuestaScript.setResultado(getPlugin(pPlugins, ResValoresPosibles.ID));
+			break;
+		default:
+			if (pResult != null) {
+				respuestaScript.setResultado(pResult.toString());
+			}
+			break;
+		}
+
+		// - Si el script es de validacion actualizamos info de aviso (en caso
+		// de que no haya error)
+		if (!plgError.isExisteError()) {
+			generarMensajeAviso(respuestaScript, pPlugins, pCodigosError);
+		}
+
+		return respuestaScript;
 	}
 
 }

@@ -15,14 +15,14 @@ import es.caib.sistramit.core.api.service.PurgaService;
 import es.caib.sistramit.core.api.service.SystemService;
 
 /**
- * Proceso que arranca proceso purga ficheros. Debe ejecutarse en el nodo
+ * Proceso que arranca proceso purga persistencia. Debe ejecutarse en el nodo
  * maestro.
  */
 @Component
-public final class PurgaProcess {
+public final class PurgaPersistenciaProcess {
 
 	/** Log. */
-	private static Logger log = LoggerFactory.getLogger(PurgaProcess.class);
+	private static Logger log = LoggerFactory.getLogger(PurgaPersistenciaProcess.class);
 
 	@Autowired
 	private SystemService systemService;
@@ -38,12 +38,12 @@ public final class PurgaProcess {
 	 */
 	@Scheduled(cron = "${procesos.purga.cron}")
 	public void process() {
-		log.debug("Proceso purgarFicheros");
+		log.debug("Proceso purga persistencia");
 		final String instancia = getIdServletContext();
 		if (StringUtils.isNotBlank(instancia)) {
 			if (systemService.verificarMaestro(instancia)) {
 				log.debug("Es maestro, lanza proceso purga");
-				purgaService.purgar();
+				purgaService.purgarPersistencia();
 			} else {
 				log.debug("No es maestro, no lanza proceso purga");
 			}
