@@ -158,12 +158,6 @@
 
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
 											<h:form id="formArbol">
-												<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes h100 w80" >
-													<p:treeNode>
-														<h:graphicImage value="#{node.srcIcono()}" rendered="#{node.tieneIcono()}" />
-														<h:outputText value="#{node.getName()}" />
-													</p:treeNode>
-												</p:tree>
 											</h:form>
 									</p:panel>
 		    					</p:column>

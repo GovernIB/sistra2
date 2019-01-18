@@ -144,7 +144,7 @@ public class DialogScript extends DialogControllerBase {
 		/* inicializa arbol */
 		treeFormularios = new DefaultTreeNode("Root", null);
 
-		if (permiteEditar) {
+		if (permiteEditar && false) {
 			final Object jsonForms = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIOS);
 			if (jsonForms != null) {
 

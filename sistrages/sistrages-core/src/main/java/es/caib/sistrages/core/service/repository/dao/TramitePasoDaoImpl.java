@@ -188,7 +188,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		jFormulariotramite.setFormulario(jFormularioInterno);
 		entityManager.persist(jFormulariotramite);
 		jpasoRellenar.getPasoRellenar().getFormulariosTramite().add(jFormulariotramite);
-		// entityManager.merge(jpasoRellenar);
 		return jFormulariotramite.toModel();
 	}
 
