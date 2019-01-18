@@ -26,6 +26,4 @@ public final class DatosInternosPasoDebeSaber extends DatosInternosPasoReferenci
 		this.setIdPaso(idPaso);
 	}
 
-	// TODO PENDIENTE
-
 }

@@ -231,17 +231,19 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Verifica si estan firmados los documentos.
 	 *
 	 * @param res
-	 * @param docsFormulario
+	 * @param docs
 	 * @return
 	 */
-	private boolean verificarFirmas(List<DocumentoRegistro> docsFormulario) {
+	private boolean verificarFirmas(List<DocumentoRegistro> docs) {
 		boolean res = true;
-		for (final DocumentoRegistro doc : docsFormulario) {
-			if (doc.getFirmar() == TypeSiNo.SI) {
-				for (final Firma fi : doc.getFirmas()) {
-					if (fi.getEstadoFirma() == TypeEstadoFirma.NO_FIRMADO) {
-						res = false;
-						break;
+		if (docs != null) {
+			for (final DocumentoRegistro doc : docs) {
+				if (doc.getFirmar() == TypeSiNo.SI) {
+					for (final Firma fi : doc.getFirmas()) {
+						if (fi.getEstadoFirma() == TypeEstadoFirma.NO_FIRMADO) {
+							res = false;
+							break;
+						}
 					}
 				}
 			}

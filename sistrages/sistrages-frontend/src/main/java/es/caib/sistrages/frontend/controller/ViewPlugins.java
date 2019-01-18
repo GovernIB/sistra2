@@ -240,7 +240,7 @@ public class ViewPlugins extends ViewControllerBase {
 			buscar();
 		}
 	}
-	
+
 	public void ayuda() {
 		UtilJSF.openHelp("plugins");
 	}
@@ -297,7 +297,7 @@ public class ViewPlugins extends ViewControllerBase {
 		if (modoAccesoDlg != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		}
-		UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 640, 420);
+		UtilJSF.openDialog(DialogPlugin.class, modoAccesoDlg, params, true, 640, 620);
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------

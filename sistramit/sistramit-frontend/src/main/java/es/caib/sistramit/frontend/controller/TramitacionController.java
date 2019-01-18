@@ -92,8 +92,10 @@ public abstract class TramitacionController {
 	 * @param pidSesionTramitacion
 	 *            Id sesión
 	 */
-	protected final void registraSesionTramitacion(final String pidSesionTramitacion, final boolean debug) {
+	protected final void registraSesionTramitacion(final String pidSesionTramitacion, final String idioma,
+			final boolean debug) {
 		sesionHttp.setIdSesionTramitacion(pidSesionTramitacion);
+		sesionHttp.setIdioma(idioma);
 		sesionHttp.setDebugSesionTramitacion(debug);
 	}
 
