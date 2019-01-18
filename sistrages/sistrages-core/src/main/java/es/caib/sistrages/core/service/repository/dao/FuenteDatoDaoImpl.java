@@ -604,6 +604,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 	private String generarSql(final List filtros) {
 		String select = "SELECT distinct f \nFROM  JFilasFuenteDatos f";
+		//#58 Ordena por fila codigo por defecto
 		final String orderBy = "\n ORDER BY f.codigo";
 
 		if (filtros != null && filtros.size() > 0) {
