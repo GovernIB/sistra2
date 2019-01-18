@@ -29,6 +29,9 @@ import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
+import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
+import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAccionPersonalizada;
@@ -910,6 +913,52 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		}
 
 		entityManager.remove(jFormulario);
+	}
+
+	@Override
+	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormulario) {
+		final DisenyoFormularioSimple disenyo = new DisenyoFormularioSimple();
+		final String sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo = :idFormulario ";
+		final Query query = entityManager.createQuery(sqlPaginas);
+		query.setParameter("idFormulario", idFormulario);
+		final List<Long> idPaginas = query.getResultList();
+		if (!idPaginas.isEmpty()) {
+			final DisenyoFormularioPaginaSimple pagina = new DisenyoFormularioPaginaSimple();
+
+			for (final long idPagina : idPaginas) {
+				final String sqlComponentes = "select elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina ";
+				final Query queryComponentes = entityManager.createQuery(sqlComponentes);
+				queryComponentes.setParameter("idPagina", idPagina);
+				final List<Object[]> componentes = queryComponentes.getResultList();
+				if (!componentes.isEmpty()) {
+					for (final Object[] comp : componentes) {
+
+						final DisenyoFormularioComponenteSimple componente = new DisenyoFormularioComponenteSimple();
+
+						final String identificador = comp[0].toString();
+						final String tipo = comp[1].toString();
+
+						componente.setIdentificador(identificador);
+						componente.setTipo(TypeObjetoFormulario.fromString(tipo));
+
+						pagina.getComponentes().add(componente);
+					}
+				}
+			}
+			disenyo.getPaginas().add(pagina);
+		}
+
+		return disenyo;
+
+	}
+
+	@Override
+	public String getIdentificadorFormularioInterno(final Long idFormulario) {
+		final String sqlPaginas = "Select form.identificador from JFormularioTramite form where form.formulario.codigo = :idFormulario ";
+		final Query query = entityManager.createQuery(sqlPaginas);
+		query.setParameter("idFormulario", idFormulario);
+
+		return query.getSingleResult().toString();
 	}
 
 }

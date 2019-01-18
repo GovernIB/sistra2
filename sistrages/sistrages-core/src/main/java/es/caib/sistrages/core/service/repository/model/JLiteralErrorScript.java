@@ -14,7 +14,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import es.caib.sistrages.core.api.model.LiteralScript;
-import es.caib.sistrages.core.api.model.Script;
 
 /**
  * JLiteraresErrorScript
@@ -31,7 +30,7 @@ public class JLiteralErrorScript implements IModelApi {
 	@Column(name = "LSC_CODIGO", unique = true, nullable = false, precision = 18, scale = 0)
 	private Long codigo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "LSC_CODSCR", nullable = false)
 	private JScript script;
 
@@ -128,16 +127,36 @@ public class JLiteralErrorScript implements IModelApi {
 	 * @param jscript
 	 * @return
 	 */
-	public static JLiteralErrorScript fromModel(final LiteralScript model, final Script jscript) {
+	public static JLiteralErrorScript fromModel(final LiteralScript model, final JScript jscript) {
 		JLiteralErrorScript jModel = null;
 		if (model != null) {
 			jModel = new JLiteralErrorScript();
 			jModel.setCodigo(model.getCodigo());
 			jModel.setIdentificador(model.getIdentificador());
-			jModel.setScript(JScript.fromModel(jscript));
+			jModel.setScript(jscript);
 			jModel.setLiteral(JLiteral.fromModel(model.getLiteral()));
 		}
 		return jModel;
+	}
+
+	/***
+	 * Para clonar
+	 *
+	 * @param origLiteralscript
+	 * @param jscript
+	 * @return
+	 */
+	public static JLiteralErrorScript clonar(final JLiteralErrorScript origLiteralscript, final JScript jscript) {
+		JLiteralErrorScript jliteralscript = null;
+		if (origLiteralscript != null) {
+			jliteralscript = new JLiteralErrorScript();
+			jliteralscript.setCodigo(null);
+			jliteralscript.setIdentificador(origLiteralscript.getIdentificador());
+			jliteralscript.setScript(jscript);
+			jliteralscript.setLiteral(JLiteral.clonar(origLiteralscript.getLiteral()));
+		}
+		return jliteralscript;
+
 	}
 
 }

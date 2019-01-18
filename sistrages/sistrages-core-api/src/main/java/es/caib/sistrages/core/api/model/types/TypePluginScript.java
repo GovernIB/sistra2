@@ -30,5 +30,9 @@ public enum TypePluginScript {
 	/**
 	 * Plugin validaciones.
 	 */
-	PLUGIN_VALIDACIONES;
+	PLUGIN_VALIDACIONES,
+	/**
+	 * Plugin validacion anexo.
+	 */
+	PLUGIN_VALIDACIONANEXO;
 }

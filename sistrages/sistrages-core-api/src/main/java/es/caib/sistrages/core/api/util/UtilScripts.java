@@ -31,4 +31,17 @@ public class UtilScripts {
 	public static final List<TypePluginScript> getPluginsScript(final TypeScript tipoScript) {
 		return new ArrayList<>(Arrays.asList(TypePluginScript.values()));
 	}
+
+	/**
+	 * Devuelve la lista de formularios según el paso actual, la lista de pasos y el
+	 * tipo de script.
+	 *
+	 * @return
+	 */
+	public static List<Long> getFormularios() {
+		final List<Long> formularios = new ArrayList<>();
+		formularios.add(61l);
+		formularios.add(121l);
+		return formularios;
+	}
 }

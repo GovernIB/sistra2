@@ -4,30 +4,21 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.LiteralScript;
-import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
-import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
 public class DialogScriptLiteral extends DialogControllerBase {
-
-	/**
-	 * Servicio.
-	 */
-	@Inject
-	private ScriptService scriptService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -61,41 +52,11 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
-		if (isIdentificadorRepetido()) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
-					UtilJSF.getLiteral("dialogScriptLiteral.error.identificadorDuplicado"));
-			return;
-		}
-
-		// Realizamos alta o update
-		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
-		switch (acceso) {
-		case ALTA:
-			data = scriptService.addLiteralScript(this.data, Long.valueOf(idScript));
-			break;
-		case EDICION:
-			scriptService.updateLiteralScript(data);
-			break;
-		case CONSULTA:
-			// No hay que hacer nada
-			break;
-		}
-
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
-	}
-
-	/**
-	 * Comprueba si el identificador esta repetido.
-	 *
-	 * @return
-	 */
-	private boolean isIdentificadorRepetido() {
-		return scriptService.checkIdentificadorRepetido(data.getIdentificador(), data.getCodigo(),
-				Long.valueOf(this.idScript));
 	}
 
 	/**

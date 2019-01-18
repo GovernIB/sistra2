@@ -604,6 +604,7 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 
 	private String generarSql(final List filtros) {
 		String select = "SELECT distinct f \nFROM  JFilasFuenteDatos f";
+		final String orderBy = "\n ORDER BY f.codigo";
 
 		if (filtros != null && filtros.size() > 0) {
 			select += ", ";
@@ -651,12 +652,13 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 			where += "\n ) ";
 		}
 
-		final String sql = select + where;
+		final String sql = select + where + orderBy;
 		return sql;
 	}
 
 	@Override
-	public Long importarFD(final FilaImportarDominio filaDominio) throws Exception {
+	public Long importarFD(final FilaImportarDominio filaDominio, final TypeAmbito ambito, final Long idEntidad)
+			throws Exception {
 
 		if (filaDominio.getAccion() == TypeImportarAccion.MANTENER) {
 			// No debería entrar por aquí porque por regla general, sólo se
@@ -679,6 +681,10 @@ public class FuenteDatoDaoImpl implements FuenteDatoDao {
 				final List<FuenteDatosCampo> campos = fd.getCampos();
 				final Set<JCampoFuenteDatos> jcampos = new HashSet<>();
 				jfuente.setCampos(jcampos);
+				if (ambito == TypeAmbito.ENTIDAD) {
+					final JEntidad jEntidad = entityManager.find(JEntidad.class, idEntidad);
+					jfuente.setEntidad(jEntidad);
+				}
 				entityManager.persist(jfuente);
 
 				for (final FuenteDatosCampo campo : campos) {

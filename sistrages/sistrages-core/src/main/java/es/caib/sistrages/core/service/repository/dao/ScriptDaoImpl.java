@@ -107,7 +107,7 @@ public class ScriptDaoImpl implements ScriptDao {
 			throw new NoExisteDato("No existe el script " + idScript);
 		}
 
-		final JLiteralErrorScript jLiteralErrorScript = JLiteralErrorScript.fromModel(literalScript, jScript.toModel());
+		final JLiteralErrorScript jLiteralErrorScript = JLiteralErrorScript.fromModel(literalScript, jScript);
 		entityManager.persist(jLiteralErrorScript);
 
 		return jLiteralErrorScript.toModel();

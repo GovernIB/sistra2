@@ -251,6 +251,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
 		if (id == null || script == null) {
 
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion );
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		} else {
@@ -258,6 +259,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion );
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		}

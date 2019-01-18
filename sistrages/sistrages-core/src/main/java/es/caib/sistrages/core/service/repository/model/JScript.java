@@ -1,14 +1,23 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.Script;
 
 /**
@@ -29,6 +38,9 @@ public class JScript implements IModelApi {
 	@Lob
 	@Column(name = "SCR_SCRIPT")
 	private String script;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<JLiteralErrorScript> literales = new HashSet<>(0);
 
 	/** Constructor. **/
 	public JScript() {
@@ -66,6 +78,21 @@ public class JScript implements IModelApi {
 	}
 
 	/**
+	 * @return the literales
+	 */
+	public Set<JLiteralErrorScript> getLiterales() {
+		return literales;
+	}
+
+	/**
+	 * @param literales
+	 *            the literales to set
+	 */
+	public void setLiterales(final Set<JLiteralErrorScript> literales) {
+		this.literales = literales;
+	}
+
+	/**
 	 * From model.
 	 *
 	 * @param mScript
@@ -77,6 +104,13 @@ public class JScript implements IModelApi {
 			jScript = new JScript();
 			jScript.setCodigo(mScript.getCodigo());
 			jScript.setScript(mScript.getContenido());
+			if (mScript.getMensajes() != null) {
+				final Set<JLiteralErrorScript> literales = new HashSet<>(0);
+				for (final LiteralScript literal : mScript.getMensajes()) {
+					literales.add(JLiteralErrorScript.fromModel(literal, jScript));
+				}
+				jScript.setLiterales(literales);
+			}
 		}
 		return jScript;
 	}
@@ -90,6 +124,13 @@ public class JScript implements IModelApi {
 		final Script mScript = new Script();
 		mScript.setCodigo(this.getCodigo());
 		mScript.setContenido(this.getScript());
+		if (this.getLiterales() != null) {
+			final List<LiteralScript> mensajes = new ArrayList<>();
+			for (final JLiteralErrorScript literal : this.getLiterales()) {
+				mensajes.add(literal.toModel());
+			}
+			mScript.setMensajes(mensajes);
+		}
 		return mScript;
 	}
 
@@ -105,6 +146,13 @@ public class JScript implements IModelApi {
 			jscript = new JScript();
 			jscript.setCodigo(null);
 			jscript.setScript(origScript.getScript());
+			if (origScript.getLiterales() != null) {
+				final Set<JLiteralErrorScript> literales = new HashSet<>(0);
+				for (final JLiteralErrorScript literal : origScript.getLiterales()) {
+					literales.add(JLiteralErrorScript.clonar(literal, jscript));
+				}
+				jscript.setLiterales(literales);
+			}
 		}
 		return jscript;
 	}

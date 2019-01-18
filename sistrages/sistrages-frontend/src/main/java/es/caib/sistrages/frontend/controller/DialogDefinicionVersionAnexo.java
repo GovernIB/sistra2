@@ -261,6 +261,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	public void editarScript(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion );
 		if (script != null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();

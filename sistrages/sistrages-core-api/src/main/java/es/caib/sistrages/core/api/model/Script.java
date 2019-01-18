@@ -1,5 +1,7 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.List;
+
 /**
  * La clase Script.
  */
@@ -14,6 +16,12 @@ public class Script extends ModelApi {
 
 	/** Contenido. */
 	private String contenido;
+
+	/** Mensajes. **/
+	private List<LiteralScript> mensajes;
+
+	/** Indica si los mensajes han sido alterados. Por defecto, a falso **/
+	private Boolean mensajesAlterado = false;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -51,6 +59,36 @@ public class Script extends ModelApi {
 	 */
 	public void setContenido(final String contenido) {
 		this.contenido = contenido;
+	}
+
+	/**
+	 * @return the mensajes
+	 */
+	public List<LiteralScript> getMensajes() {
+		return mensajes;
+	}
+
+	/**
+	 * @param mensajes
+	 *            the mensajes to set
+	 */
+	public void setMensajes(final List<LiteralScript> mensajes) {
+		this.mensajes = mensajes;
+	}
+
+	/**
+	 * @return the mensajesAlterado
+	 */
+	public Boolean isMensajesAlterado() {
+		return mensajesAlterado;
+	}
+
+	/**
+	 * @param mensajesAlterado
+	 *            the mensajesAlterado to set
+	 */
+	public void setMensajesAlterado(final Boolean mensajesAlterado) {
+		this.mensajesAlterado = mensajesAlterado;
 	}
 
 }

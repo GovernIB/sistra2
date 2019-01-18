@@ -1,0 +1,97 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esEntero(numero)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esEntero.html">esEntero</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esEntero(String numero): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Verifica que el número introducido no sea nulo, ni vacío y que sea un número entero.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numero</b>: Número entero a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b> : True si el número es un número entero y falso si no es un número entero.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar una cadena de caracteres vacía. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esEntero('');
+</p>
+<p>La función esEntero retorna 'false', debido a que el valor introducido no es un número.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar una cadena de caracteres nula. </p>
+ <p class="codigoScript">
+	var entero;
+	var valido = PLUGIN_VALIDACIONES.esEntero(entero);
+</p>
+<p>La función esEntero retorna 'false', debido a que el valor introducido es nulo</p>
+<br />
+
+<p><b>Ejemplo 3</b> Validar la cadena de caracteres '3A'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esEntero('3A');
+</p>
+<p>La función esEntero retorna 'false', debido a que el valor introducido no es un número entero.</p>
+<br />
+
+<p><b>Ejemplo 4</b> Validar la cadena de caracteres '12,45'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esEntero('12,45');
+	</p>
+<p>La función esEntero retorna 'false', debido a que el valor introducido no es un número entero.</p>
+<br />
+
+<p><b>Ejemplo 5</b> Validar la cadena de caracteres '12'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esEntero('12');
+	</p>
+<p>La función esEntero retorna 'true', debido a que el valor introducido es un número entero.</p>
+<br />
+
+<p><b>Ejemplo 6</b> Validar la cadena de caracteres '-23'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esEntero('-23');
+	</p>
+<p>La función esEntero retorna 'true', debido a que el valor introducido es un número entero.</p>
+<br />
+
+</body>
+</html>

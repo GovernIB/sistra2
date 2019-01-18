@@ -53,7 +53,7 @@ public interface FuenteDatoDao {
 
 	ValoresDominio realizarConsultaFuenteDatos(String idDominio, List<ValorParametroDominio> parametros);
 
-	Long importarFD(FilaImportarDominio filaDominio) throws Exception;
+	Long importarFD(FilaImportarDominio filaDominio, TypeAmbito ambito, Long idDominio) throws Exception;
 
 	ValoresDominio realizarConsultaBD(String datasource, String sql, List<ValorParametroDominio> parametros);
 

@@ -42,28 +42,4 @@ public class ScriptServiceBean implements ScriptService {
 		return scriptService.getLiteralScript(idLiteralScript);
 	}
 
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public LiteralScript addLiteralScript(final LiteralScript literalScript, final Long idScript) {
-		return scriptService.addLiteralScript(literalScript, idScript);
-	}
-
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void updateLiteralScript(final LiteralScript literalScript) {
-		scriptService.updateLiteralScript(literalScript);
-	}
-
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void removeLiteralScript(final Long idLiteralScript) {
-		scriptService.removeLiteralScript(idLiteralScript);
-	}
-
-	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo, final Long idScript) {
-		return scriptService.checkIdentificadorRepetido(identificador, codigo, idScript);
-	}
-
 }

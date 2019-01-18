@@ -12,10 +12,17 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.LiteralScript;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
+import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
+import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
+import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
@@ -36,8 +43,18 @@ public class DialogScript extends DialogControllerBase {
 	@Inject
 	private ScriptService scriptService;
 
+	/** Dominio service. */
+	@Inject
+	private FormularioInternoService formularioInternoService;
+
 	/** Id del script. **/
 	private String id;
+	/** Id tramite version. **/
+	private String idTramiteVersion;
+	/** Dominios. */
+	private List<Dominio> dominios = new ArrayList<>();
+	/** Dominio seleccionado. **/
+	private Dominio dominioSeleccionado;
 	/** Data del script. **/
 	private Script data;
 	/** Tipo script. **/
@@ -60,6 +77,8 @@ public class DialogScript extends DialogControllerBase {
 	private boolean visibleMensajes = true;
 	/** Visible dominiosId. **/
 	private boolean visibleDominios = true;
+	/** Permite editar. **/
+	private boolean permiteEditar = false;
 
 	/**
 	 * Indicaría el texto que se añade al codeMirror pero de momento desactivado.
@@ -75,11 +94,11 @@ public class DialogScript extends DialogControllerBase {
 	/** URL del iframe del html de ayuda del plugin. **/
 	private String urlIframe;
 
-	/** Mensajes de validación. **/
-	private List<LiteralScript> mensajes;
-
 	/** Mensaje seleccionado. **/
 	private LiteralScript mensajeSeleccionado;
+
+	/** Arbol */
+	private TreeNode treeFormularios;
 
 	/**
 	 * Constructor vacio.
@@ -108,10 +127,52 @@ public class DialogScript extends DialogControllerBase {
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_SCRIPT);
 		setPlugins(UtilScripts.getPluginsScript(null));
 
-		if (data == null || data.getCodigo() == null) {
-			mensajes = new ArrayList<>();
+		if (TypeModoAcceso.valueOf(this.modoAcceso) == TypeModoAcceso.CONSULTA) {
+			permiteEditar = false;
 		} else {
-			mensajes = scriptService.getLiterales(data.getCodigo());
+			permiteEditar = true;
+		}
+
+		dominios = new ArrayList<>();
+		if (permiteEditar) {
+			final Object jsonDominios = mochila.get(Constantes.CLAVE_MOCHILA_DOMINIOS);
+			if (jsonDominios != null) {
+				dominios = (List<Dominio>) UtilJSON.fromListJSON(jsonDominios.toString(), Dominio.class);
+			}
+		}
+
+		/* inicializa arbol */
+		treeFormularios = new DefaultTreeNode("Root", null);
+
+		if (permiteEditar) {
+			final Object jsonForms = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIOS);
+			if (jsonForms != null) {
+
+				final List<Long> idFormularios = (List<Long>) UtilJSON.fromListJSON(jsonForms.toString(), Long.class);
+				for (final Long idFormulario : idFormularios) {
+					final String identificadorFormulario = formularioInternoService
+							.getIdentificadorFormularioInterno(idFormulario);
+					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(identificadorFormulario);
+
+					final DisenyoFormularioSimple formulario = formularioInternoService
+							.getFormularioInternoSimple(idFormulario);
+
+					int i = 1;
+					for (final DisenyoFormularioPaginaSimple pagina : formulario.getPaginas()) {
+						final DefaultTreeNode nodoPagina = new DefaultTreeNode(
+								UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i);
+						for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
+							final DefaultTreeNode nodoComponente = new DefaultTreeNode(componente.getIdentificador());
+							nodoPagina.getChildren().add(nodoComponente);
+						}
+						nodoFormulario.getChildren().add(nodoPagina);
+						i++;
+					}
+
+					treeFormularios.getChildren().add(nodoFormulario);
+				}
+
+			}
 		}
 	}
 
@@ -124,6 +185,28 @@ public class DialogScript extends DialogControllerBase {
 		} else {
 			mode = "css";
 		}
+	}
+
+	/**
+	 * Consultar dominio.
+	 *
+	 * @param idDominio
+	 */
+	public void consultarDominio(final Long idDominio) {
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), idDominio.toString());
+		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 670);
+	}
+
+	/**
+	 * Ping.
+	 */
+	public void ping(final Long idDominio) {
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idDominio));
+		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
 	}
 
 	/**
@@ -163,6 +246,12 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
+		if (isIdentificadorMensajesRepetido()) {
+			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+					UtilJSF.getLiteral("dialogScript.error.identificadorDuplicado"));
+			return;
+		}
+
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -175,21 +264,46 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
+	 * Para comprobar si algun identificador está repetido.
+	 *
+	 * @return
+	 */
+	private boolean isIdentificadorMensajesRepetido() {
+
+		boolean repetido = false;
+		if (data.getMensajes() != null && !data.getMensajes().isEmpty()) {
+			// Map de identificadores para ver si hay alguno repetido
+			final Map<String, Boolean> identificadores = new HashMap<>();
+			for (final LiteralScript mensaje : data.getMensajes()) {
+				if (identificadores.containsKey(mensaje.getIdentificador())) {
+					repetido = true;
+					break;
+				}
+				identificadores.put(mensaje.getIdentificador(), true);
+			}
+		}
+		return repetido;
+	}
+
+	/**
 	 * Comprueba si el contenido está vacío
 	 *
 	 * @return
 	 */
 	private boolean estaVacio() {
+		boolean estaVacio;
 		if (this.data == null || this.data.getContenido() == null) {
-			return true;
-		}
-		final String contenido = this.data.getContenido().replaceAll(" ", "").replaceAll("\n", "").replaceAll("\t", "")
-				.trim();
-		if (contenido.isEmpty()) {
-			return true;
+			estaVacio = true;
 		} else {
-			return false;
+			final String contenido = this.data.getContenido().replaceAll(" ", "").replaceAll("\n", "")
+					.replaceAll("\t", "").trim();
+			if (contenido.isEmpty()) {
+				estaVacio = true;
+			} else {
+				estaVacio = false;
+			}
 		}
+		return estaVacio;
 	}
 
 	/**
@@ -259,15 +373,17 @@ public class DialogScript extends DialogControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final LiteralScript mensaje = (LiteralScript) respuesta.getResult();
 			if (respuesta.getModoAcceso() == TypeModoAcceso.ALTA) {
-				this.mensajes.add(mensaje);
+				this.data.getMensajes().add(mensaje);
 			}
 
 			if (respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
-				final int posicion = this.mensajes.indexOf(this.mensajeSeleccionado);
-				this.mensajes.remove(posicion);
-				this.mensajes.add(posicion, mensaje);
+				final int posicion = this.data.getMensajes().indexOf(this.mensajeSeleccionado);
+				this.data.getMensajes().remove(posicion);
+				this.data.getMensajes().add(posicion, mensaje);
 			}
 
+			// Indica si al guardar, se deben revisar los mensajes.
+			this.data.setMensajesAlterado(true);
 		}
 	}
 
@@ -292,10 +408,9 @@ public class DialogScript extends DialogControllerBase {
 			return;
 		}
 
-		scriptService.removeLiteralScript(this.mensajeSeleccionado.getCodigo());
-		this.mensajes.remove(this.mensajeSeleccionado);
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
-
+		this.data.getMensajes().remove(this.mensajeSeleccionado);
+		// Indica si al guardar, se deben revisar los mensajes.
+		this.data.setMensajesAlterado(true);
 	}
 
 	/**
@@ -741,21 +856,6 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the mensajes
-	 */
-	public List<LiteralScript> getMensajes() {
-		return mensajes;
-	}
-
-	/**
-	 * @param mensajes
-	 *            the mensajes to set
-	 */
-	public void setMensajes(final List<LiteralScript> mensajes) {
-		this.mensajes = mensajes;
-	}
-
-	/**
 	 * @return the mensajeSeleccionado
 	 */
 	public LiteralScript getMensajeSeleccionado() {
@@ -768,6 +868,81 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setMensajeSeleccionado(final LiteralScript mensajeSeleccionado) {
 		this.mensajeSeleccionado = mensajeSeleccionado;
+	}
+
+	/**
+	 * @return the permiteEditar
+	 */
+	public boolean isPermiteEditar() {
+		return permiteEditar;
+	}
+
+	/**
+	 * @param permiteEditar
+	 *            the permiteEditar to set
+	 */
+	public void setPermiteEditar(final boolean permiteEditar) {
+		this.permiteEditar = permiteEditar;
+	}
+
+	/**
+	 * @return the idTramiteVersion
+	 */
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
+	}
+
+	/**
+	 * @param idTramiteVersion
+	 *            the idTramiteVersion to set
+	 */
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	/**
+	 * @return the dominios
+	 */
+	public List<Dominio> getDominios() {
+		return dominios;
+	}
+
+	/**
+	 * @param dominios
+	 *            the dominios to set
+	 */
+	public void setDominios(final List<Dominio> dominios) {
+		this.dominios = dominios;
+	}
+
+	/**
+	 * @return the dominioSeleccionado
+	 */
+	public Dominio getDominioSeleccionado() {
+		return dominioSeleccionado;
+	}
+
+	/**
+	 * @param dominioSeleccionado
+	 *            the dominioSeleccionado to set
+	 */
+	public void setDominioSeleccionado(final Dominio dominioSeleccionado) {
+		this.dominioSeleccionado = dominioSeleccionado;
+	}
+
+	/**
+	 * @return the treeFormularios
+	 */
+	public TreeNode getTreeFormularios() {
+		return treeFormularios;
+	}
+
+	/**
+	 * @param treeFormularios
+	 *            the treeFormularios to set
+	 */
+	public void setTreeFormularios(final TreeNode treeFormularios) {
+		this.treeFormularios = treeFormularios;
 	}
 
 }

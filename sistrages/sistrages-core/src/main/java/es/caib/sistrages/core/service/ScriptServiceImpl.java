@@ -41,28 +41,4 @@ public class ScriptServiceImpl implements ScriptService {
 		return scriptDao.getLiteralScript(idLiteralScript);
 	}
 
-	@Override
-	@NegocioInterceptor
-	public LiteralScript addLiteralScript(final LiteralScript literalScript, final Long idScript) {
-		return scriptDao.addLiteralScript(literalScript, idScript);
-	}
-
-	@Override
-	@NegocioInterceptor
-	public void updateLiteralScript(final LiteralScript literalScript) {
-		scriptDao.updateLiteralScript(literalScript);
-	}
-
-	@Override
-	@NegocioInterceptor
-	public void removeLiteralScript(final Long literalScript) {
-		scriptDao.removeLiteralScript(literalScript);
-	}
-
-	@Override
-	@NegocioInterceptor
-	public boolean checkIdentificadorRepetido(final String identificador, final Long codigo, final Long idScript) {
-		return scriptDao.checkIdentificadorRepetido(identificador, codigo, idScript);
-	}
-
 }

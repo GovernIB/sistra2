@@ -29,6 +29,7 @@ import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
@@ -184,29 +185,46 @@ public class DialogDominioImportar extends DialogControllerBase {
 		final Dominio dominioActual = dominioService.loadDominio(data.getIdentificador());
 		FuenteDatos fdActual = null;
 
-		// En importar dominio, si no existe el dominio, pasa a tener el del propio
-		// ambito
-		if (dominioActual == null) {
-			data.setAmbito(TypeAmbito.fromString(ambito));
-		} else {
-			// Si el ambito no es igual al de ahora, no tiene que permitirte.
-			if (TypeAmbito.fromString(ambito) != dominioActual.getAmbito()) {
-				filaDominio = new FilaImportarDominio();
-				filaDominio.setAccion(TypeImportarAccion.ERROR);
-				filaDominio.setEstado(TypeImportarEstado.EXISTE);
-				filaDominio.setResultado(TypeImportarResultado.ERROR);
-				filaDominio.setVisibleBoton(false);
-				filaDominio.setMismoTipo(false);
-				filaDominio.setMensaje("importar.error.ambitoErroneo");
-				setMostrarPanelInfo(true);
-				setMostrarBotonImportar(false);
-				return;
-			}
+		// Si el dato a importar es de tipo FD y es ambito global, dar un error.
+		if (data.getTipo() == TypeDominio.FUENTE_DATOS && TypeAmbito.fromString(ambito) == TypeAmbito.GLOBAL) {
+			filaDominio = new FilaImportarDominio();
+			filaDominio.setAccion(TypeImportarAccion.ERROR);
+			filaDominio.setEstado(TypeImportarEstado.EXISTE);
+			filaDominio.setResultado(TypeImportarResultado.ERROR);
+			filaDominio.setVisibleBoton(false);
+			filaDominio.setMismoTipo(false);
+			filaDominio.setMensaje("importar.error.ambitoGlobalFD");
+			setMostrarPanelInfo(true);
+			setMostrarBotonImportar(false);
+			return;
 		}
 
 		// Cargamos FD si tiene
 		if (dominioActual != null && dominioActual.getIdFuenteDatos() != null) {
 			fdActual = dominioService.loadFuenteDato(dominioActual.getIdFuenteDatos());
+		}
+
+		// Si el dominio y la FD no existen, coger el ambito actual
+		if (dominioActual == null && fdActual == null) {
+			data.setAmbito(TypeAmbito.fromString(ambito));
+			if (fuentesDatos != null) {
+				fuentesDatos.setAmbito(TypeAmbito.fromString(ambito));
+			}
+		}
+
+		// Si el dominio no existe pero SI la FD, entonces todo tiene que ser del mismo
+		// ambito
+		if (dominioActual == null && fdActual != null && fdActual.getAmbito() != TypeAmbito.fromString(ambito)) {
+			filaDominio = new FilaImportarDominio();
+			filaDominio.setAccion(TypeImportarAccion.ERROR);
+			filaDominio.setEstado(TypeImportarEstado.EXISTE);
+			filaDominio.setResultado(TypeImportarResultado.ERROR);
+			filaDominio.setVisibleBoton(false);
+			filaDominio.setMismoTipo(false);
+			filaDominio.setMensaje("importar.error.distintoAmbitoFD");
+			setMostrarPanelInfo(true);
+			setMostrarBotonImportar(false);
+			return;
 		}
 
 		filaDominio = new FilaImportarDominio(data, dominioActual, fuentesDatos, fuentesDatosContent, fdActual,
@@ -373,13 +391,14 @@ public class DialogDominioImportar extends DialogControllerBase {
 		// Comprobamos que el dominio está checkeado
 		if (filaDominio.getResultado() == TypeImportarResultado.WARNING
 				|| filaDominio.getResultado() == TypeImportarResultado.ERROR) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.warning.check");
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportar.warning.check"));
 			return;
 		}
 
 		this.dominioService.importarDominio(filaDominio, UtilJSF.getIdEntidad());
 
-		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "info.importar.ok");
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);

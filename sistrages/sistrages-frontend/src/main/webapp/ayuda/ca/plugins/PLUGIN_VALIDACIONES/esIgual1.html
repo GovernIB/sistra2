@@ -1,0 +1,69 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esIgual(cadena1, cadena2)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esIgual.html">esIgual</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esIgual(String cadena1, String cadena2): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si les dues cadenes introduïdes són iguals. Es consideraran iguals totes aquelles cadenes que coincideixin en tots els seus caràcters, o si ambdues són nul·les.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>cadena1</b>: Primera cadena per a comparar.</li>
+		<li><b>cadena2</b>: Segona cadena per a comparar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b> : true si les cadenes són iguals i false si les cadenes no són iguals.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar si les cadenes 'abc' i 'abc' són iguals</p>
+ <p class="codigoScript">
+	var iguales = PLUGIN_VALIDACIONES.esIgual ('abc', 'abc');
+</p>
+<p>La funció esIgual retorna 'true', pel fet que el contingut de les dues cadenes és el mateix.</p>
+<br />
+
+<p><b>Exemple 2</b> Validar si les cadenes 'abc' i 'ABC' són iguals.</p>
+ <p class="codigoScript">
+	var iguales = PLUGIN_VALIDACIONES.esIgual ('abc', 'ABC');
+</p>
+<p>La funció esIgual retorna 'false', pel fet que les cadenes no tenen el mateix contingut.</p>
+<br />
+
+</body>
+</html>

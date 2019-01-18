@@ -9,6 +9,7 @@ import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
@@ -158,9 +159,25 @@ public interface FormularioInternoDao {
 
 	/**
 	 * Borra un formulario
-	 * 
+	 *
 	 * @param codigo
 	 */
 	void removeFormulario(Long codigo);
+
+	/**
+	 * Devuelve el formulario interno simple.
+	 *
+	 * @param idFormulario
+	 * @return
+	 */
+	DisenyoFormularioSimple getFormularioInternoSimple(Long idFormulario);
+
+	/**
+	 * Devuelve el identificador del formulario.
+	 * 
+	 * @param idFormulario
+	 * @return
+	 */
+	String getIdentificadorFormularioInterno(Long idFormulario);
 
 }

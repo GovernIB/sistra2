@@ -207,6 +207,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	private void cargarDialogScript(final TypeScript typeScript, final Script iScript) {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), typeScript.name());
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), id.toString());
 		if (id == null || iScript == null) {
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 		} else {
