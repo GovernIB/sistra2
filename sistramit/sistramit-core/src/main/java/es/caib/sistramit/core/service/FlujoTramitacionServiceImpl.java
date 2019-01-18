@@ -18,8 +18,8 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
-import es.caib.sistramit.core.service.component.flujo.FlujoTramitacionCacheComponent;
 import es.caib.sistramit.core.service.component.flujo.FlujoTramitacionComponent;
+import es.caib.sistramit.core.service.component.system.FlujoTramitacionCacheComponent;
 
 @Service
 @Transactional
@@ -31,22 +31,19 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 
 	@Override
 	@NegocioInterceptor
-	public String crearSesionTramitacion(final UsuarioAutenticadoInfo usuarioAutenticado) {
-		// Generamos flujo de tramitacion y almacenamos en map
+	public String iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite,
+			final int version, final String idioma, final String idTramiteCatalogo, final String urlInicio,
+			final Map<String, String> parametrosInicio) {
+		// Generamos flujo de tramitacion
 		final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
 				.getApplicationContext().getBean("flujoTramitacionComponent");
-		final String idSesionTramitacion = ft.crearSesionTramitacion(usuarioAutenticado);
+		// Iniciamos tramite
+		final String idSesionTramitacion = ft.iniciarTramite(usuarioAutenticado, idTramite, version, idioma,
+				idTramiteCatalogo, urlInicio, parametrosInicio);
+		// Almacenamos en map
 		flujoTramitacionCache.put(idSesionTramitacion, ft);
+		// Retornamos id tramitacion
 		return idSesionTramitacion;
-	}
-
-	@Override
-	@NegocioInterceptor
-	public void iniciarTramite(final String idSesionTramitacion, final String idTramite, final int version,
-			final String idioma, final String idTramiteCatalogo, final String urlInicio,
-			final Map<String, String> parametrosInicio) {
-		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
-		ft.iniciarTramite(idTramite, version, idioma, idTramiteCatalogo, urlInicio, parametrosInicio);
 	}
 
 	@Override
@@ -114,12 +111,6 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 
 	@Override
 	@NegocioInterceptor
-	public void purgar() {
-		flujoTramitacionCache.purgar();
-	}
-
-	@Override
-	@NegocioInterceptor
 	public void envioFormularioSoporte(final String idSesionTramitacion, final String nif, final String nombre,
 			final String telefono, final String email, final String problemaTipo, final String problemaDesc,
 			final AnexoFichero anexo) {
@@ -145,7 +136,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 		// ATENCION: NO DEBE PASAR POR INTERCEPTOR. SE USA DESDE EL PROPIO
 		// INTERCEPTOR.
 		FlujoTramitacionInfo dt = null;
-		final FlujoTramitacionComponent ft = flujoTramitacionCache.get(idSesionTramitacion);
+		final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) flujoTramitacionCache.get(idSesionTramitacion);
 		if (ft != null) {
 			try {
 				dt = ft.obtenerFlujoTramitacionInfo();
@@ -159,7 +150,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 
 	@Override
 	public void invalidarFlujoTramitacion(final String idSesionTramitacion) {
-		final FlujoTramitacionComponent ft = flujoTramitacionCache.get(idSesionTramitacion);
+		final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) flujoTramitacionCache.get(idSesionTramitacion);
 		if (ft != null) {
 			try {
 				ft.invalidarFlujoTramicacion();
@@ -181,7 +172,7 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	 * @return flujo tramitación
 	 */
 	private FlujoTramitacionComponent obtenerFlujoTramitacion(final String idSesionTramitacion) {
-		final FlujoTramitacionComponent ft = flujoTramitacionCache.get(idSesionTramitacion);
+		final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) flujoTramitacionCache.get(idSesionTramitacion);
 		if (ft == null) {
 			throw new NoExisteFlujoTramitacionException(idSesionTramitacion);
 		}

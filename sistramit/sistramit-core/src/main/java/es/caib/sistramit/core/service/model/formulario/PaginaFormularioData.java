@@ -9,7 +9,7 @@ import es.caib.sistramit.core.api.exception.ErrorCampoNoModificableException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TipoValorCampoFormularioException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.formulario.AccionPersonalizada;
+import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.RecursosFormulario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -55,7 +55,7 @@ public final class PaginaFormularioData implements Serializable {
      * Acciones personalizadas del formulario. Se establecerán en la última
      * página del formulario.
      */
-    private List<AccionPersonalizada> acciones = new ArrayList<>();
+    private List<AccionFormulario> acciones = new ArrayList<>();
 
     /**
      * Recursos estáticos del formulario. Se establecen las urls de estos
@@ -126,7 +126,7 @@ public final class PaginaFormularioData implements Serializable {
      *
      * @return acciones
      */
-    public List<AccionPersonalizada> getAcciones() {
+    public List<AccionFormulario> getAcciones() {
         return acciones;
     }
 
@@ -136,7 +136,7 @@ public final class PaginaFormularioData implements Serializable {
      * @param pAcciones
      *            acciones a establecer
      */
-    public void setAcciones(final List<AccionPersonalizada> pAcciones) {
+    public void setAcciones(final List<AccionFormulario> pAcciones) {
         acciones = pAcciones;
     }
 

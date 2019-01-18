@@ -2,7 +2,6 @@ package es.caib.sistramit.core.service.component.flujo;
 
 import java.util.Map;
 
-import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
@@ -12,13 +11,12 @@ import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.service.model.system.FlujoTramitacionCacheIntf;
 
-public interface FlujoTramitacionComponent {
+public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 
-	String crearSesionTramitacion(UsuarioAutenticadoInfo pUsuarioAutenticado);
-
-	void iniciarTramite(String idTramite, int version, String idioma, String idTramiteCatalogo, String urlInicio,
-			Map<String, String> parametrosInicio);
+	String iniciarTramite(UsuarioAutenticadoInfo usuarioAutenticado, String idTramite, int version, String idioma,
+			String idTramiteCatalogo, String urlInicio, Map<String, String> parametrosInicio);
 
 	void cargarTramite(String idSesionTramitacion, UsuarioAutenticadoInfo usuarioAutenticado);
 

@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.service;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
@@ -162,19 +160,6 @@ public class SystemServiceImpl implements SystemService {
 		}
 
 		invalidacionDAO.addInvalidacion(invalidacion);
-	}
-
-	/**
-	 * Purga invalidaciones.
-	 */
-	private void purgarInvalidaciones() {
-		log.debug("Purga invalidaciones: inicio...");
-		// Añadimos 1 día
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		cal.add(Calendar.DAY_OF_MONTH, ConstantesNumero.N1);
-		invalidacionDAO.purgarInvalidaciones(cal.getTime());
-		log.debug("Purga invalidaciones: fin");
 	}
 
 }

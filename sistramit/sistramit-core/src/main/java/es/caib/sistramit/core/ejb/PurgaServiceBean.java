@@ -20,8 +20,13 @@ public class PurgaServiceBean implements PurgaService {
 	private PurgaService purgaService;
 
 	@Override
-	public ResultadoProcesoProgramado purgar() {
-		return purgaService.purgar();
+	public ResultadoProcesoProgramado purgarPersistencia() {
+		return purgaService.purgarPersistencia();
+	}
+
+	@Override
+	public void purgarFlujosTramitacion() {
+		purgaService.purgarFlujosTramitacion();
 	}
 
 }

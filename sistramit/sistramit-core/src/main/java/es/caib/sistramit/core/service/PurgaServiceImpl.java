@@ -25,7 +25,14 @@ import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.integracion.PurgaComponent;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.component.system.FlujoTramitacionCacheComponent;
 
+/**
+ * Implementación proceso de purga.
+ *
+ * @author Indra
+ *
+ */
 @Service
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class PurgaServiceImpl implements PurgaService {
@@ -42,21 +49,16 @@ public class PurgaServiceImpl implements PurgaService {
 	@Autowired
 	private AuditoriaComponent auditoriaComponent;
 
+	/** Caché con con los flujos de tramitacion. */
+	@Autowired
+	private FlujoTramitacionCacheComponent flujoTramitacionCache;
+
 	/** Log. */
 	private static Logger log = LoggerFactory.getLogger(PurgaServiceImpl.class);
 
-	/**
-	 * Obtiene el atributo codigo proceso de PurgaServiceImpl.
-	 *
-	 * @return el atributo codigo proceso
-	 */
-	public String getCodigoProceso() {
-		return "STT_PURGA";
-	}
-
 	@Override
 	@NegocioInterceptor
-	public ResultadoProcesoProgramado purgar() {
+	public ResultadoProcesoProgramado purgarPersistencia() {
 
 		final ListaPropiedades lp = new ListaPropiedades();
 
@@ -110,12 +112,19 @@ public class PurgaServiceImpl implements PurgaService {
 
 		final EventoAuditoria evento = new EventoAuditoria();
 		evento.setTipoEvento(TypeEvento.PROCESO_PURGA);
+		evento.setIdSesionTramitacion(null);
 		evento.setPropiedadesEvento(lp);
 		evento.setFecha(new Date());
 		evento.setDescripcion("Procés de purga");
-		auditoriaComponent.auditarEventoAplicacion(null, evento);
+		auditoriaComponent.auditarEventoAplicacion(evento);
 
 		return res;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void purgarFlujosTramitacion() {
+		flujoTramitacionCache.purgarFlujosTramitacion();
 	}
 
 	/**

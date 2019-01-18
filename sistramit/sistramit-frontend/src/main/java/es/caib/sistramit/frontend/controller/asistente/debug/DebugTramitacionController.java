@@ -81,7 +81,7 @@ public final class DebugTramitacionController extends TramitacionController {
 			throw new WarningFrontException("Accés a DEBUG TRAMITACIÓ no permès per a producció");
 		}
 
-		final ResultadoProcesoProgramado r = purgaService.purgar();
+		final ResultadoProcesoProgramado r = purgaService.purgarPersistencia();
 		final DebugPurga resultado = new DebugPurga();
 		resultado.setResultado(r);
 		resultado.setIdioma(idioma);
