@@ -59,8 +59,7 @@
 							${datos.literales['purga.finalizado.ok']}: <input type="text" name="resultado" value="${datos.resultado.finalizadoOk}" style="width:200px" />
 						</p>
 						<p>
-							${datos.literales['purga.detalles']} :
-
+							<label style="vertical-align: top;">${datos.literales['purga.detalles']}:</label>
 							<textarea rows="40" cols="100">
 								${datos}
 							</textarea>
