@@ -427,7 +427,9 @@ public class DominioDaoImpl implements DominioDao {
 
 			// Tratamos la fuente de datos
 			if (filaDominio.getDominio().getTipo() == TypeDominio.FUENTE_DATOS) {
-				final Long idFuenteDatos = fuenteDatoDao.importarFD(filaDominio);
+
+				final Long idFuenteDatos = fuenteDatoDao.importarFD(filaDominio, filaDominio.getDominio().getAmbito(),
+						idEntidad);
 				final JFuenteDatos jfuenteDatos = entityManager.find(JFuenteDatos.class, idFuenteDatos);
 				dominioAlmacenar.setFuenteDatos(jfuenteDatos);
 			} else {

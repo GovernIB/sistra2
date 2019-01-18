@@ -12,6 +12,13 @@
 
 	<dependencies>
 
+		<!-- Dependencias jaxen para el dom4j extraer del xml -->
+		<dependency>
+    		<groupId>jaxen</groupId>
+    		<artifactId>jaxen</artifactId>
+    		<version>${jaxen.version}</version>
+		</dependency>
+
 		<!-- MODULOS INTERNOS -->
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>

@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistra2.commons.utils.UserAgentUtil;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.LoginException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
@@ -93,8 +92,7 @@ public final class LoginController {
 
 		// Establecemos user agent en info sesion
 		final String userAgent = request.getHeader("User-Agent");
-		final String userAgentNormalized = UserAgentUtil.serializeUserAgent(userAgent);
-		sesionHttp.setUserAgent(userAgentNormalized);
+		sesionHttp.setUserAgent(userAgent);
 
 		// Obtenemos url original
 		final SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);

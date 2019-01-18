@@ -28,27 +28,38 @@ public class AuditoriaComponentImpl implements AuditoriaComponent {
 	@Override
 	public void auditarExcepcionNegocio(final String idSesionTramitacion, final ServiceException excepcion) {
 		final EventoAuditoria evento = new EventoAuditoria();
+		evento.setIdSesionTramitacion(idSesionTramitacion);
 		evento.setTipoEvento(TypeEvento.ERROR);
 		evento.setDescripcion(excepcion.getMessage());
 		evento.setCodigoError(excepcion.getClass().getSimpleName());
 		evento.setTrazaError(ExceptionUtils.getStackTrace((Throwable) excepcion));
 		evento.setPropiedadesEvento(excepcion.getDetallesExcepcion());
-		auditoriaDao.add(evento, idSesionTramitacion);
+		auditoriaDao.add(evento);
 	}
 
 	@Override
-	public void auditarEventoAplicacion(final String idSesionTramitacion, final EventoAuditoria evento) {
-		auditoriaDao.add(evento, idSesionTramitacion);
+	public void auditarEventoAplicacion(final EventoAuditoria evento) {
+		auditoriaDao.add(evento);
+	}
+
+	@Override
+	public void auditarEventosAplicacion(List<EventoAuditoria> eventos) {
+		if (eventos != null) {
+			for (final EventoAuditoria evento : eventos) {
+				auditoriaDao.add(evento);
+			}
+		}
 	}
 
 	@Override
 	public void auditarErrorFront(final String idSesionTramitacion, final ErrorFrontException pFrontException) {
 		final EventoAuditoria evento = new EventoAuditoria();
+		evento.setIdSesionTramitacion(idSesionTramitacion);
 		evento.setTipoEvento(TypeEvento.ERROR);
 		evento.setDescripcion(pFrontException.getMessage());
 		evento.setCodigoError(pFrontException.getClass().getSimpleName());
 		evento.setTrazaError(ExceptionUtils.getStackTrace(pFrontException));
-		auditoriaDao.add(evento, idSesionTramitacion);
+		auditoriaDao.add(evento);
 	}
 
 	@Override

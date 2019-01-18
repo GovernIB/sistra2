@@ -65,6 +65,7 @@
 		<regweb3-ws.version>3.0.9</regweb3-ws.version>
 		<cxf.version>3.1.4</cxf.version>
 		<dom4j.version>1.6.1</dom4j.version>
+		<jaxen.version>1.1.6</jaxen.version>
 	</properties>
 
 	<repositories>

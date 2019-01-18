@@ -24,109 +24,103 @@ import es.caib.sistramit.core.service.model.script.types.TypeScript;
 @SuppressWarnings("serial")
 public final class PlgLog implements PlgLogInt {
 
-    /**
-     * Log.
-     */
-    private static Logger log = LoggerFactory.getLogger(PlgLog.class);
+	/**
+	 * Log.
+	 */
+	private static Logger log = LoggerFactory.getLogger(PlgLog.class);
 
-    /**
-     * Id sesión tramitación.
-     */
-    private final String idSesionTramitacion;
-    /**
-     * Tipo de script.
-     */
-    private final TypeScript tipoScript;
-    /**
-     * Id elemento. En caso de que el script se aplique sobre un elemento
-     * identificable se puede indicar el id (p.e. formulario, anexo, etc.)
-     */
-    private final String idElemento;
+	/**
+	 * Id sesión tramitación.
+	 */
+	private final String idSesionTramitacion;
+	/**
+	 * Tipo de script.
+	 */
+	private final TypeScript tipoScript;
+	/**
+	 * Id elemento. En caso de que el script se aplique sobre un elemento
+	 * identificable se puede indicar el id (p.e. formulario, anexo, etc.)
+	 */
+	private final String idElemento;
 
-    /**
-     * Indica si se realizara el debug.
-     */
-    private final boolean debug;
+	/**
+	 * Indica si se realizara el debug.
+	 */
+	private final boolean debug;
 
-    /**
-     * Componente auditoria.
-     */
-    private final AuditoriaComponent auditoriaComponent;
+	/**
+	 * Componente auditoria.
+	 */
+	private final AuditoriaComponent auditoriaComponent;
 
-    /**
-     * Constructor.
-     *
-     * @param pIdSesionTramitacion
-     *            Id sesión tramitación
-     * @param pTipoScript
-     *            Tipo script
-     * @param pIdElemento
-     *            Id elemento (si aplica)
-     * @param pDebug
-     *            Indica si se realizara el debug
-     */
-    public PlgLog(final String pIdSesionTramitacion,
-            final TypeScript pTipoScript, final String pIdElemento,
-            final boolean pDebug) {
-        this.idSesionTramitacion = pIdSesionTramitacion;
-        this.tipoScript = pTipoScript;
-        this.idElemento = pIdElemento;
-        this.auditoriaComponent = (AuditoriaComponent) ApplicationContextProvider
-                .getApplicationContext().getBean("auditoriaComponent");
-        this.debug = pDebug;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param pIdSesionTramitacion
+	 *            Id sesión tramitación
+	 * @param pTipoScript
+	 *            Tipo script
+	 * @param pIdElemento
+	 *            Id elemento (si aplica)
+	 * @param pDebug
+	 *            Indica si se realizara el debug
+	 */
+	public PlgLog(final String pIdSesionTramitacion, final TypeScript pTipoScript, final String pIdElemento,
+			final boolean pDebug) {
+		this.idSesionTramitacion = pIdSesionTramitacion;
+		this.tipoScript = pTipoScript;
+		this.idElemento = pIdElemento;
+		this.auditoriaComponent = (AuditoriaComponent) ApplicationContextProvider.getApplicationContext()
+				.getBean("auditoriaComponent");
+		this.debug = pDebug;
+	}
 
-    @Override
-    public String getPluginId() {
-        return ID;
-    }
+	@Override
+	public String getPluginId() {
+		return ID;
+	}
 
-    @Override
-    public void debug(final String mensaje) {
-        if (this.debug) {
-            // Generamos debug en log
-            final StringBuilder sb = new StringBuilder(
-                    mensaje.length() + ConstantesNumero.N200);
-            sb.append("[").append(idSesionTramitacion).append(" - ")
-                    .append(tipoScript.name());
-            if (StringUtils.isNotEmpty(idElemento)) {
-                sb.append(" - ").append(idElemento);
-            }
-            sb.append("] ").append(mensaje);
-            final String msgLog = sb.toString();
-            log.debug(msgLog);
+	@Override
+	public void debug(final String mensaje) {
+		if (this.debug) {
+			// Generamos debug en log
+			final StringBuilder sb = new StringBuilder(mensaje.length() + ConstantesNumero.N200);
+			sb.append("[").append(idSesionTramitacion).append(" - ").append(tipoScript.name());
+			if (StringUtils.isNotEmpty(idElemento)) {
+				sb.append(" - ").append(idElemento);
+			}
+			sb.append("] ").append(mensaje);
+			final String msgLog = sb.toString();
+			log.debug(msgLog);
 
-            // Generamos debug en auditoria
-            final EventoAuditoria evento = new EventoAuditoria();
-            evento.setFecha(new Date());
-            evento.setTipoEvento(TypeEvento.DEBUG_SCRIPT);
-            evento.setIdSesionTramitacion(idSesionTramitacion);
-            evento.setDescripcion(mensaje);
+			// Generamos debug en auditoria
+			final EventoAuditoria evento = new EventoAuditoria();
+			evento.setFecha(new Date());
+			evento.setTipoEvento(TypeEvento.DEBUG_SCRIPT);
+			evento.setIdSesionTramitacion(idSesionTramitacion);
+			evento.setDescripcion(mensaje);
 
-            final ListaPropiedades propiedadesEvento = new ListaPropiedades();
-            propiedadesEvento.addPropiedad("idSesionTramitacion",
-                    this.idSesionTramitacion);
-            if (StringUtils.isNotBlank(this.idElemento)) {
-                propiedadesEvento.addPropiedad("idElemento", this.idElemento);
-            }
-            propiedadesEvento.addPropiedad("script", this.tipoScript.name());
-            evento.setPropiedadesEvento(propiedadesEvento);
-            auditoriaComponent.auditarEventoAplicacion(idSesionTramitacion,
-                    evento);
-        }
-    }
+			final ListaPropiedades propiedadesEvento = new ListaPropiedades();
+			propiedadesEvento.addPropiedad("idSesionTramitacion", this.idSesionTramitacion);
+			if (StringUtils.isNotBlank(this.idElemento)) {
+				propiedadesEvento.addPropiedad("idElemento", this.idElemento);
+			}
+			propiedadesEvento.addPropiedad("script", this.tipoScript.name());
+			evento.setPropiedadesEvento(propiedadesEvento);
+			auditoriaComponent.auditarEventoAplicacion(evento);
+		}
+	}
 
-    @Override
-    public void retardo(final int pTimeout) {
-        debug("Simulando retardo de " + pTimeout + " segundos");
-        final long inicio = System.currentTimeMillis();
-        while (true) {
-            if ((System.currentTimeMillis() - inicio) > (pTimeout
-                    * ConstantesNumero.N1000)) {
-                break;
-            }
-        }
-        debug("Fin simulando retardo de " + pTimeout + " segundos");
-    }
+	@Override
+	public void retardo(final int pTimeout) {
+		debug("Simulando retardo de " + pTimeout + " segundos");
+		final long inicio = System.currentTimeMillis();
+		while (true) {
+			if ((System.currentTimeMillis() - inicio) > (pTimeout * ConstantesNumero.N1000)) {
+				break;
+			}
+		}
+		debug("Fin simulando retardo de " + pTimeout + " segundos");
+	}
 
 }

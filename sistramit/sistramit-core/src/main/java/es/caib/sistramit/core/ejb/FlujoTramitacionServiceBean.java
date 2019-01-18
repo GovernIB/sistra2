@@ -30,15 +30,10 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	private FlujoTramitacionService flujoTramitacionService;
 
 	@Override
-	public String crearSesionTramitacion(final UsuarioAutenticadoInfo usuarioAutenticado) {
-		return flujoTramitacionService.crearSesionTramitacion(usuarioAutenticado);
-	}
-
-	@Override
-	public void iniciarTramite(final String idSesionTramitacion, final String idTramite, final int version,
-			final String idioma, final String idTramiteCatalogo, final String urlInicio,
+	public String iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite,
+			final int version, final String idioma, final String idTramiteCatalogo, final String urlInicio,
 			final Map<String, String> parametrosInicio) {
-		flujoTramitacionService.iniciarTramite(idSesionTramitacion, idTramite, version, idioma, idTramiteCatalogo,
+		return flujoTramitacionService.iniciarTramite(usuarioAutenticado, idTramite, version, idioma, idTramiteCatalogo,
 				urlInicio, parametrosInicio);
 	}
 
@@ -91,11 +86,6 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	@Override
 	public void cancelarTramite(final String idSesionTramitacion) {
 		flujoTramitacionService.cancelarTramite(idSesionTramitacion);
-	}
-
-	@Override
-	public void purgar() {
-		flujoTramitacionService.purgar();
 	}
 
 	@Override

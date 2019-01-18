@@ -369,8 +369,33 @@ public class SistragesMock {
 	private static RPasoTramitacionAnexar crearPasoAnexar() {
 		final RPasoTramitacionAnexar pr = new RPasoTramitacionAnexar();
 		final List<RAnexoTramite> fl = new ArrayList<>();
+		// Anexos electronicos
+		// - Anexo de 1 instancia
 		fl.add(crearAnexoTramite("ANE1", 1, false));
+		// - Anexo multiinstancia
 		fl.add(crearAnexoTramite("ANE2", 2, false));
+		// - Anexo XML con validacion
+		final RAnexoTramite anexoXml = crearAnexoTramite("ANE-XML", 1, false);
+		final RScript scriptValidacionXml = new RScript();
+		scriptValidacionXml.setScript("var dni = PLUGIN_VALIDACIONANEXO.getValorXml('//xml/dni');\r\n"
+				+ "PLUGIN_LOG.debug('VALOR XML: ' + dni);\r\n"
+				+ "if (!PLUGIN_VALIDACIONES.esIgual(dni,'11111111H')) {\r\n"
+				+ "	PLUGIN_ERROR.setExisteError(true);\r\n"
+				+ "	PLUGIN_ERROR.setTextoMensajeError('No coincide valor XML');\r\n" + "}");
+		anexoXml.getPresentacionElectronica().setScriptValidacion(scriptValidacionXml);
+		fl.add(anexoXml);
+
+		// - Anexo formulario PDF con validacion
+		final RAnexoTramite anexoFormularioPDF = crearAnexoTramite("ANE-PDF", 1, false);
+		final RScript scriptValidacionPDF = new RScript();
+		scriptValidacionPDF.setScript("var dni = PLUGIN_VALIDACIONANEXO.getValorPdf('SUJETOPASIVONIF');\r\n"
+				+ "PLUGIN_LOG.debug('VALOR PDF: ' + dni);\r\n" + "if (!PLUGIN_VALIDACIONES.esIgual(dni,'6666sq')) {\r\n"
+				+ "	PLUGIN_ERROR.setExisteError(true);\r\n"
+				+ "	PLUGIN_ERROR.setTextoMensajeError('No coincide valor PDF');\r\n" + "}");
+		anexoFormularioPDF.getPresentacionElectronica().setScriptValidacion(scriptValidacionPDF);
+		fl.add(anexoFormularioPDF);
+
+		// Anexos presenciales (dependiente dato formulario F1.PRESENTACION)
 		fl.add(crearAnexoPresencialTramite("ANEP"));
 		pr.setIdentificador("AD1");
 		pr.setTipo("AD");
@@ -387,6 +412,7 @@ public class SistragesMock {
 		final List<String> extensiones = new ArrayList<>();
 		extensiones.add("pdf");
 		extensiones.add("odt");
+		extensiones.add("xml");
 
 		final RAnexoTramitePresentacionElectronica presentacionElectronica = new RAnexoTramitePresentacionElectronica();
 		presentacionElectronica.setTamanyoMax(1);

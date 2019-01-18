@@ -33,11 +33,18 @@ public interface AuditoriaComponent {
 	 *
 	 * @param evento
 	 *            Evento
-	 * @param idSesionTramitacion
-	 *            idSesionTramitacion
 	 *
 	 */
-	void auditarEventoAplicacion(String idSesionTramitacion, EventoAuditoria evento);
+	void auditarEventoAplicacion(EventoAuditoria evento);
+
+	/**
+	 * Audita eventos propio de la aplicación.
+	 *
+	 * @param eventos
+	 *            Eventos
+	 *
+	 */
+	void auditarEventosAplicacion(List<EventoAuditoria> eventos);
 
 	/**
 	 * Permite auditar en el log un error generado en el front.
@@ -76,8 +83,7 @@ public interface AuditoriaComponent {
 	 *            filtro busqueda
 	 * @return lista de eventos
 	 */
-	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(
-			final FiltroEventoAuditoria pFiltroBusqueda);
+	List<EventoAuditoriaTramitacion> recuperarLogSesionTramitacionArea(final FiltroEventoAuditoria pFiltroBusqueda);
 
 	/**
 	 * Permite recuperar la lista de eventos internos por areas parametrizada por

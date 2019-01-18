@@ -27,7 +27,7 @@ public enum TypeAccionPasoRegistrar implements TypeAccionPaso {
 	VERIFICAR_FIRMA_DOCUMENTO,
 	/**
 	 * Registrar tramite. Parámetros entrada: reintentar (TypeSiNo, opcional).
-	 * Parámetros salida: resultado (ResultadoRegistroresultado).
+	 * Parámetros salida: resultado (ResultadoRegistrar).
 	 */
 	REGISTRAR_TRAMITE;
 

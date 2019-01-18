@@ -2,8 +2,6 @@ package es.caib.sistra2.commons.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -151,129 +149,50 @@ public final class UserAgentUtil {
 	public static final String CHROME = "chrome";
 
 	/**
-	 * Serializa user agent en una cadena que contiene pares propiedad/valor.
-	 *
-	 * @param pUserAgent
-	 *            UserAgent
-	 * @return cadena que contiene pares propiedad/valor
-	 */
-	public static String serializeUserAgent(final String pUserAgent) {
-		final String navegador = getNavegador(pUserAgent);
-		final String versionNavegador = getVersionNavegador(pUserAgent);
-		final String sistemaOperativo = getSistemaOperativo(pUserAgent);
-		final String versionSistemaOperativo = getVersionSistemaOperativo(sistemaOperativo, pUserAgent);
-
-		final Map<String, String> props = new HashMap<String, String>();
-		props.put("navegador", navegador);
-		props.put("versionNavegador", versionNavegador);
-		props.put("sistemaOperativo", sistemaOperativo);
-		props.put("versionSistemaOperativo", versionSistemaOperativo);
-
-		final String userAgentSerialized = SerializadorMap.serializar(props);
-
-		return userAgentSerialized;
-	}
-
-	/**
-	 * Deserializa user agent en un map de propiedades.
-	 *
-	 * @param pUserAgentSerialized
-	 *            Parámetro user agent serialized
-	 * @return cadena que contiene pares propiedad/valor (SerializadorMap)
-	 */
-	public static Map<String, String> deserializeUserAgent(final String pUserAgentSerialized) {
-		return SerializadorMap.deserializar(pUserAgentSerialized);
-	}
-
-	/**
 	 * Obtiene el atributo navegador de UserAgent.
 	 *
 	 * @param pUserAgent
 	 *            Parámetro user agent
 	 * @return el atributo navegador
 	 */
-	public static String getNavegador(final Map<String, String> pUserAgent) {
-		return pUserAgent.get("navegador");
-	}
+	public static String getNavegador(final String pu) {
 
-	/**
-	 * Obtiene el atributo version navegador de UserAgent.
-	 *
-	 * @param pUserAgent
-	 *            Parámetro user agent
-	 * @return el atributo version navegador
-	 */
-	public static String getVersionNavegador(final Map<String, String> pUserAgent) {
-		return pUserAgent.get("versionNavegador");
-	}
-
-	/**
-	 * Obtiene el atributo sistema operativo de UserAgent.
-	 *
-	 * @param pUserAgent
-	 *            Parámetro user agent
-	 * @return el atributo sistema operativo
-	 */
-	public static String getSistemaOperativo(final Map<String, String> pUserAgent) {
-		return pUserAgent.get("sistemaOperativo");
-	}
-
-	/**
-	 * Obtiene el atributo version sistema operativo de UserAgent.
-	 *
-	 * @param pUserAgent
-	 *            Parámetro user agent
-	 * @return el atributo sistema operativo
-	 */
-	public static String getVersionSistemaOperativo(final Map<String, String> pUserAgent) {
-		return pUserAgent.get("versionSistemaOperativo");
-	}
-
-	/**
-	 * Obtiene el atributo navegador de UserAgent.
-	 *
-	 * @param pUserAgent
-	 *            Parámetro user agent
-	 * @return el atributo navegador
-	 */
-	public static String getNavegador(final String pUserAgent) {
-		String pu = "";
 		String resultado = null;
-		try {
-			if (pu != null) {
-				pu = pUserAgent;
-			}
-			final String userAgent = pu.toLowerCase();
-			// Detectamos navegador
-			if ((userAgent.indexOf(NETSCAPE) != NUMERO_MENOS_UNO)
-					|| (userAgent.indexOf("navigator") != NUMERO_MENOS_UNO)
-					|| (userAgent.indexOf("ns8") != NUMERO_MENOS_UNO)) {
-				resultado = "NS";
-			} else if (userAgent.indexOf(CHROME) > NUMERO_MENOS_UNO) {
-				resultado = "CH";
-			} else if ((userAgent.indexOf(MSIE) != NUMERO_MENOS_UNO) && (userAgent.indexOf(OPERA) == NUMERO_MENOS_UNO)
-					&& (userAgent.indexOf(WEBTV) == NUMERO_MENOS_UNO)
-					&& (userAgent.indexOf(IEMOBILE) == NUMERO_MENOS_UNO)) {
-				resultado = "IE";
-			} else if (userAgent.indexOf(OPERA) != NUMERO_MENOS_UNO) {
-				resultado = "OP";
-			} else if (userAgent.indexOf(KONQUEROR) != NUMERO_MENOS_UNO) {
-				resultado = "KQ";
-			} else if (userAgent.indexOf(IEMOBILE) != NUMERO_MENOS_UNO) {
-				resultado = "IE";
-			} else if (userAgent.indexOf(SILK) != NUMERO_MENOS_UNO) {
-				resultado = "SK";
-			} else if (userAgent.indexOf(DOLPHIN) != NUMERO_MENOS_UNO) {
-				resultado = "DP";
-			} else if (userAgent.indexOf(SAFARI) != NUMERO_MENOS_UNO) {
-				resultado = "SF";
-			} else if (userAgent.indexOf(MOZILLA) != NUMERO_MENOS_UNO) {
-				resultado = "MZ";
-			} else {
+		if (pu != null) {
+			try {
+				final String userAgent = pu.toLowerCase();
+				// Detectamos navegador
+				if ((userAgent.indexOf(NETSCAPE) != NUMERO_MENOS_UNO)
+						|| (userAgent.indexOf("navigator") != NUMERO_MENOS_UNO)
+						|| (userAgent.indexOf("ns8") != NUMERO_MENOS_UNO)) {
+					resultado = "NS";
+				} else if (userAgent.indexOf(CHROME) > NUMERO_MENOS_UNO) {
+					resultado = "CH";
+				} else if ((userAgent.indexOf(MSIE) != NUMERO_MENOS_UNO)
+						&& (userAgent.indexOf(OPERA) == NUMERO_MENOS_UNO)
+						&& (userAgent.indexOf(WEBTV) == NUMERO_MENOS_UNO)
+						&& (userAgent.indexOf(IEMOBILE) == NUMERO_MENOS_UNO)) {
+					resultado = "IE";
+				} else if (userAgent.indexOf(OPERA) != NUMERO_MENOS_UNO) {
+					resultado = "OP";
+				} else if (userAgent.indexOf(KONQUEROR) != NUMERO_MENOS_UNO) {
+					resultado = "KQ";
+				} else if (userAgent.indexOf(IEMOBILE) != NUMERO_MENOS_UNO) {
+					resultado = "IE";
+				} else if (userAgent.indexOf(SILK) != NUMERO_MENOS_UNO) {
+					resultado = "SK";
+				} else if (userAgent.indexOf(DOLPHIN) != NUMERO_MENOS_UNO) {
+					resultado = "DP";
+				} else if (userAgent.indexOf(SAFARI) != NUMERO_MENOS_UNO) {
+					resultado = "SF";
+				} else if (userAgent.indexOf(MOZILLA) != NUMERO_MENOS_UNO) {
+					resultado = "MZ";
+				} else {
+					resultado = OTROS;
+				}
+			} catch (final Exception e) {
 				resultado = OTROS;
 			}
-		} catch (final Exception e) {
-			resultado = OTROS;
 		}
 		return resultado;
 	}
@@ -285,43 +204,19 @@ public final class UserAgentUtil {
 	 *            Parámetro user agent
 	 * @return el atributo version navegador
 	 */
-	public static String getVersionNavegador(final String pUserAgent) {
-		String pu = "";
+	public static String getVersionNavegador(final String pu) {
 		String resultado = "";
-		try {
-			if (pu != null) {
-				pu = pUserAgent;
-			}
-			final String userAgent = pu.toLowerCase();
-			// Detectamos navegador
+		if (pu != null) {
+			try {
+				final String userAgent = pu.toLowerCase();
+				// Detectamos navegador
 
-			if (userAgent.indexOf(NETSCAPE) != NUMERO_MENOS_UNO || userAgent.indexOf("navigator") != NUMERO_MENOS_UNO
-					|| userAgent.indexOf("ns8") != NUMERO_MENOS_UNO
-					|| userAgent.indexOf("netscape6") != NUMERO_MENOS_UNO) {
-				final int idx1 = userAgent.indexOf(NETSCAPE + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (NETSCAPE + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (NETSCAPE + "/").length(), idx2);
-
-					resultado = version;
-				} else {
-					final int idx = userAgent.indexOf("navigator/");
-					if (idx > NUMERO_MENOS_UNO) {
+				if (userAgent.indexOf(NETSCAPE) != NUMERO_MENOS_UNO
+						|| userAgent.indexOf("navigator") != NUMERO_MENOS_UNO
+						|| userAgent.indexOf("ns8") != NUMERO_MENOS_UNO
+						|| userAgent.indexOf("netscape6") != NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(NETSCAPE + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
 						// Posibles terminaciones para delimitar parámetros
 						final Collection<String> terminaciones = new ArrayList<String>();
 						terminaciones.add(";");
@@ -329,7 +224,7 @@ public final class UserAgentUtil {
 						terminaciones.add(" ");
 
 						int idx2 = userAgent.length();
-						for (int i = (idx + "navigator/".length()); i < userAgent.length(); i++) {
+						for (int i = (idx1 + (NETSCAPE + "/").length()); i < userAgent.length(); i++) {
 							final char ch = userAgent.charAt(i);
 							if (terminaciones.contains(String.valueOf(ch))) {
 								idx2 = i;
@@ -338,12 +233,12 @@ public final class UserAgentUtil {
 						}
 
 						// Obtenemos versión
-						final String version = userAgent.substring(idx + "navigator/".length(), idx2);
+						final String version = userAgent.substring(idx1 + (NETSCAPE + "/").length(), idx2);
 
 						resultado = version;
 					} else {
-						final int id = userAgent.indexOf("ns8/");
-						if (id > NUMERO_MENOS_UNO) {
+						final int idx = userAgent.indexOf("navigator/");
+						if (idx > NUMERO_MENOS_UNO) {
 							// Posibles terminaciones para delimitar parámetros
 							final Collection<String> terminaciones = new ArrayList<String>();
 							terminaciones.add(";");
@@ -351,7 +246,7 @@ public final class UserAgentUtil {
 							terminaciones.add(" ");
 
 							int idx2 = userAgent.length();
-							for (int i = (id + "ns8/".length()); i < userAgent.length(); i++) {
+							for (int i = (idx + "navigator/".length()); i < userAgent.length(); i++) {
 								final char ch = userAgent.charAt(i);
 								if (terminaciones.contains(String.valueOf(ch))) {
 									idx2 = i;
@@ -360,21 +255,20 @@ public final class UserAgentUtil {
 							}
 
 							// Obtenemos versión
-							final String version = userAgent.substring(id + "ns8/".length(), idx2);
+							final String version = userAgent.substring(idx + "navigator/".length(), idx2);
 
 							resultado = version;
 						} else {
-							final int id6 = userAgent.indexOf("netscape6/");
-							if (id6 > NUMERO_MENOS_UNO) {
-								// Posibles terminaciones para delimitar
-								// parámetros
+							final int id = userAgent.indexOf("ns8/");
+							if (id > NUMERO_MENOS_UNO) {
+								// Posibles terminaciones para delimitar parámetros
 								final Collection<String> terminaciones = new ArrayList<String>();
 								terminaciones.add(";");
 								terminaciones.add(")");
 								terminaciones.add(" ");
 
 								int idx2 = userAgent.length();
-								for (int i = (id6 + "netscape6/".length()); i < userAgent.length(); i++) {
+								for (int i = (id + "ns8/".length()); i < userAgent.length(); i++) {
 									final char ch = userAgent.charAt(i);
 									if (terminaciones.contains(String.valueOf(ch))) {
 										idx2 = i;
@@ -383,95 +277,43 @@ public final class UserAgentUtil {
 								}
 
 								// Obtenemos versión
-								final String version = userAgent.substring(id6 + "netscape6/".length(), idx2);
+								final String version = userAgent.substring(id + "ns8/".length(), idx2);
 
 								resultado = version;
 							} else {
-								resultado = OTROS;
+								final int id6 = userAgent.indexOf("netscape6/");
+								if (id6 > NUMERO_MENOS_UNO) {
+									// Posibles terminaciones para delimitar
+									// parámetros
+									final Collection<String> terminaciones = new ArrayList<String>();
+									terminaciones.add(";");
+									terminaciones.add(")");
+									terminaciones.add(" ");
+
+									int idx2 = userAgent.length();
+									for (int i = (id6 + "netscape6/".length()); i < userAgent.length(); i++) {
+										final char ch = userAgent.charAt(i);
+										if (terminaciones.contains(String.valueOf(ch))) {
+											idx2 = i;
+											break;
+										}
+									}
+
+									// Obtenemos versión
+									final String version = userAgent.substring(id6 + "netscape6/".length(), idx2);
+
+									resultado = version;
+								} else {
+									resultado = OTROS;
+								}
 							}
 						}
 					}
-				}
 
-			} else if (userAgent.indexOf(CHROME) > NUMERO_MENOS_UNO) {
+				} else if (userAgent.indexOf(CHROME) > NUMERO_MENOS_UNO) {
 
-				final int idx1 = userAgent.indexOf(CHROME + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (CHROME + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (CHROME + "/").length(), idx2);
-
-					resultado = version;
-				} else {
-					resultado = OTROS;
-				}
-			} else if (userAgent.indexOf(SILK) > NUMERO_MENOS_UNO) {
-
-				final int idx1 = userAgent.indexOf(SILK + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (SILK + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (SILK + "/").length(), idx2);
-
-					resultado = version;
-				} else {
-					resultado = OTROS;
-				}
-
-			} else if (userAgent.indexOf(SAFARI) != NUMERO_MENOS_UNO) {
-
-				final int idx1 = userAgent.indexOf("version/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + "version/".length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + "version/".length(), idx2);
-
-					resultado = version;
-				} else {
-					final int idx = userAgent.indexOf("safari/");
-					if (idx > NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(CHROME + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
 						// Posibles terminaciones para delimitar parámetros
 						final Collection<String> terminaciones = new ArrayList<String>();
 						terminaciones.add(";");
@@ -479,7 +321,7 @@ public final class UserAgentUtil {
 						terminaciones.add(" ");
 
 						int idx2 = userAgent.length();
-						for (int i = (idx + "safari/".length()); i < userAgent.length(); i++) {
+						for (int i = (idx1 + (CHROME + "/").length()); i < userAgent.length(); i++) {
 							final char ch = userAgent.charAt(i);
 							if (terminaciones.contains(String.valueOf(ch))) {
 								idx2 = i;
@@ -488,48 +330,16 @@ public final class UserAgentUtil {
 						}
 
 						// Obtenemos versión
-						final String version = userAgent.substring(idx + "safari/".length(), idx2);
+						final String version = userAgent.substring(idx1 + (CHROME + "/").length(), idx2);
 
 						resultado = version;
 					} else {
 						resultado = OTROS;
 					}
-				}
+				} else if (userAgent.indexOf(SILK) > NUMERO_MENOS_UNO) {
 
-			} else if ((userAgent.indexOf(MSIE) != NUMERO_MENOS_UNO) && (userAgent.indexOf(OPERA) == NUMERO_MENOS_UNO)
-					&& (userAgent.indexOf(WEBTV) == NUMERO_MENOS_UNO)
-					&& (userAgent.indexOf(IEMOBILE) == NUMERO_MENOS_UNO)) {
-				final int idx1 = userAgent.indexOf(MSIE);
-				final int idx2 = userAgent.indexOf(";", idx1);
-
-				final String version = userAgent.substring(idx1 + MSIE.length() + NUMERO_UNO, idx2);
-				resultado = version;
-
-			} else if (userAgent.indexOf(OPERA) != NUMERO_MENOS_UNO) {
-				final int idx1 = userAgent.indexOf(OPERA + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (OPERA + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (OPERA + "/").length(), idx2);
-
-					resultado = version;
-				} else {
-					final int idx = userAgent.indexOf("version/");
-					if (idx > NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(SILK + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
 						// Posibles terminaciones para delimitar parámetros
 						final Collection<String> terminaciones = new ArrayList<String>();
 						terminaciones.add(";");
@@ -537,7 +347,7 @@ public final class UserAgentUtil {
 						terminaciones.add(" ");
 
 						int idx2 = userAgent.length();
-						for (int i = (idx + "version/".length()); i < userAgent.length(); i++) {
+						for (int i = (idx1 + (SILK + "/").length()); i < userAgent.length(); i++) {
 							final char ch = userAgent.charAt(i);
 							if (terminaciones.contains(String.valueOf(ch))) {
 								idx2 = i;
@@ -546,12 +356,39 @@ public final class UserAgentUtil {
 						}
 
 						// Obtenemos versión
-						final String version = userAgent.substring(idx + "version/".length(), idx2);
+						final String version = userAgent.substring(idx1 + (SILK + "/").length(), idx2);
 
 						resultado = version;
 					} else {
-						final int id = userAgent.indexOf("opera ");
-						if (id > NUMERO_MENOS_UNO) {
+						resultado = OTROS;
+					}
+
+				} else if (userAgent.indexOf(SAFARI) != NUMERO_MENOS_UNO) {
+
+					final int idx1 = userAgent.indexOf("version/");
+					if (idx1 > NUMERO_MENOS_UNO) {
+						// Posibles terminaciones para delimitar parámetros
+						final Collection<String> terminaciones = new ArrayList<String>();
+						terminaciones.add(";");
+						terminaciones.add(")");
+						terminaciones.add(" ");
+
+						int idx2 = userAgent.length();
+						for (int i = (idx1 + "version/".length()); i < userAgent.length(); i++) {
+							final char ch = userAgent.charAt(i);
+							if (terminaciones.contains(String.valueOf(ch))) {
+								idx2 = i;
+								break;
+							}
+						}
+
+						// Obtenemos versión
+						final String version = userAgent.substring(idx1 + "version/".length(), idx2);
+
+						resultado = version;
+					} else {
+						final int idx = userAgent.indexOf("safari/");
+						if (idx > NUMERO_MENOS_UNO) {
 							// Posibles terminaciones para delimitar parámetros
 							final Collection<String> terminaciones = new ArrayList<String>();
 							terminaciones.add(";");
@@ -559,7 +396,7 @@ public final class UserAgentUtil {
 							terminaciones.add(" ");
 
 							int idx2 = userAgent.length();
-							for (int i = (id + "opera ".length()); i < userAgent.length(); i++) {
+							for (int i = (idx + "safari/".length()); i < userAgent.length(); i++) {
 								final char ch = userAgent.charAt(i);
 								if (terminaciones.contains(String.valueOf(ch))) {
 									idx2 = i;
@@ -568,149 +405,231 @@ public final class UserAgentUtil {
 							}
 
 							// Obtenemos versión
-							final String version = userAgent.substring(id + "opera ".length(), idx2);
+							final String version = userAgent.substring(idx + "safari/".length(), idx2);
 
 							resultado = version;
 						} else {
 							resultado = OTROS;
 						}
 					}
-				}
-			} else if (userAgent.indexOf(KONQUEROR) != NUMERO_MENOS_UNO) {
-				final int idx1 = userAgent.indexOf(KONQUEROR + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
 
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (KONQUEROR + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
+				} else if ((userAgent.indexOf(MSIE) != NUMERO_MENOS_UNO)
+						&& (userAgent.indexOf(OPERA) == NUMERO_MENOS_UNO)
+						&& (userAgent.indexOf(WEBTV) == NUMERO_MENOS_UNO)
+						&& (userAgent.indexOf(IEMOBILE) == NUMERO_MENOS_UNO)) {
+					final int idx1 = userAgent.indexOf(MSIE);
+					final int idx2 = userAgent.indexOf(";", idx1);
+
+					final String version = userAgent.substring(idx1 + MSIE.length() + NUMERO_UNO, idx2);
+					resultado = version;
+
+				} else if (userAgent.indexOf(OPERA) != NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(OPERA + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
+						// Posibles terminaciones para delimitar parámetros
+						final Collection<String> terminaciones = new ArrayList<String>();
+						terminaciones.add(";");
+						terminaciones.add(")");
+						terminaciones.add(" ");
+
+						int idx2 = userAgent.length();
+						for (int i = (idx1 + (OPERA + "/").length()); i < userAgent.length(); i++) {
+							final char ch = userAgent.charAt(i);
+							if (terminaciones.contains(String.valueOf(ch))) {
+								idx2 = i;
+								break;
+							}
+						}
+
+						// Obtenemos versión
+						final String version = userAgent.substring(idx1 + (OPERA + "/").length(), idx2);
+
+						resultado = version;
+					} else {
+						final int idx = userAgent.indexOf("version/");
+						if (idx > NUMERO_MENOS_UNO) {
+							// Posibles terminaciones para delimitar parámetros
+							final Collection<String> terminaciones = new ArrayList<String>();
+							terminaciones.add(";");
+							terminaciones.add(")");
+							terminaciones.add(" ");
+
+							int idx2 = userAgent.length();
+							for (int i = (idx + "version/".length()); i < userAgent.length(); i++) {
+								final char ch = userAgent.charAt(i);
+								if (terminaciones.contains(String.valueOf(ch))) {
+									idx2 = i;
+									break;
+								}
+							}
+
+							// Obtenemos versión
+							final String version = userAgent.substring(idx + "version/".length(), idx2);
+
+							resultado = version;
+						} else {
+							final int id = userAgent.indexOf("opera ");
+							if (id > NUMERO_MENOS_UNO) {
+								// Posibles terminaciones para delimitar parámetros
+								final Collection<String> terminaciones = new ArrayList<String>();
+								terminaciones.add(";");
+								terminaciones.add(")");
+								terminaciones.add(" ");
+
+								int idx2 = userAgent.length();
+								for (int i = (id + "opera ".length()); i < userAgent.length(); i++) {
+									final char ch = userAgent.charAt(i);
+									if (terminaciones.contains(String.valueOf(ch))) {
+										idx2 = i;
+										break;
+									}
+								}
+
+								// Obtenemos versión
+								final String version = userAgent.substring(id + "opera ".length(), idx2);
+
+								resultado = version;
+							} else {
+								resultado = OTROS;
+							}
 						}
 					}
+				} else if (userAgent.indexOf(KONQUEROR) != NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(KONQUEROR + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
+						// Posibles terminaciones para delimitar parámetros
+						final Collection<String> terminaciones = new ArrayList<String>();
+						terminaciones.add(";");
+						terminaciones.add(")");
+						terminaciones.add(" ");
 
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (KONQUEROR + "/").length(), idx2);
+						int idx2 = userAgent.length();
+						for (int i = (idx1 + (KONQUEROR + "/").length()); i < userAgent.length(); i++) {
+							final char ch = userAgent.charAt(i);
+							if (terminaciones.contains(String.valueOf(ch))) {
+								idx2 = i;
+								break;
+							}
+						}
 
-					resultado = version;
+						// Obtenemos versión
+						final String version = userAgent.substring(idx1 + (KONQUEROR + "/").length(), idx2);
+
+						resultado = version;
+					} else {
+						resultado = OTROS;
+					}
+				} else if (userAgent.indexOf(IEMOBILE) != NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(IEMOBILE + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
+						// Posibles terminaciones para delimitar parámetros
+						final Collection<String> terminaciones = new ArrayList<String>();
+						terminaciones.add(";");
+						terminaciones.add(")");
+						terminaciones.add(" ");
+
+						int idx2 = userAgent.length();
+						for (int i = (idx1 + (IEMOBILE + "/").length()); i < userAgent.length(); i++) {
+							final char ch = userAgent.charAt(i);
+							if (terminaciones.contains(String.valueOf(ch))) {
+								idx2 = i;
+								break;
+							}
+						}
+
+						// Obtenemos versión
+						final String version = userAgent.substring(idx1 + (IEMOBILE + "/").length(), idx2);
+
+						resultado = version;
+					} else {
+						resultado = OTROS;
+					}
+				} else if (userAgent.indexOf(SILK) != NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(SILK + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
+						// Posibles terminaciones para delimitar parámetros
+						final Collection<String> terminaciones = new ArrayList<String>();
+						terminaciones.add(";");
+						terminaciones.add(")");
+						terminaciones.add(" ");
+
+						int idx2 = userAgent.length();
+						for (int i = (idx1 + (SILK + "/").length()); i < userAgent.length(); i++) {
+							final char ch = userAgent.charAt(i);
+							if (terminaciones.contains(String.valueOf(ch))) {
+								idx2 = i;
+								break;
+							}
+						}
+
+						// Obtenemos versión
+						final String version = userAgent.substring(idx1 + (SILK + "/").length(), idx2);
+
+						resultado = version;
+					} else {
+						resultado = OTROS;
+					}
+				} else if (userAgent.indexOf(DOLPHIN) != NUMERO_MENOS_UNO) {
+					final int idx1 = userAgent.indexOf(DOLPHIN + "/");
+					if (idx1 > NUMERO_MENOS_UNO) {
+						// Posibles terminaciones para delimitar parámetros
+						final Collection<String> terminaciones = new ArrayList<String>();
+						terminaciones.add(";");
+						terminaciones.add(")");
+						terminaciones.add(" ");
+
+						int idx2 = userAgent.length();
+						for (int i = (idx1 + (DOLPHIN + "/").length()); i < userAgent.length(); i++) {
+							final char ch = userAgent.charAt(i);
+							if (terminaciones.contains(String.valueOf(ch))) {
+								idx2 = i;
+								break;
+							}
+						}
+
+						// Obtenemos versión
+						final String version = userAgent.substring(idx1 + (DOLPHIN + "/").length(), idx2);
+
+						resultado = version;
+					} else {
+						resultado = OTROS;
+					}
+
+				} else if (userAgent.indexOf(MOZILLA) != NUMERO_MENOS_UNO) {
+
+					final int idx1 = userAgent.indexOf("firefox/");
+					// comprobamos que es firefox
+					if (idx1 > NUMERO_MENOS_UNO) {
+
+						// Posibles terminaciones para delimitar parámetros
+						final Collection<String> terminaciones = new ArrayList<String>();
+						terminaciones.add(";");
+						terminaciones.add(")");
+						terminaciones.add(" ");
+
+						int idx2 = userAgent.length();
+						for (int i = (idx1 + "firefox/".length()); i < userAgent.length(); i++) {
+							final char ch = userAgent.charAt(i);
+							if (terminaciones.contains(String.valueOf(ch))) {
+								idx2 = i;
+								break;
+							}
+						}
+
+						// Obtenemos versión
+						final String version = userAgent.substring(idx1 + "firefox/".length(), idx2);
+
+						resultado = version;
+					} else {
+						resultado = OTROS;
+					}
+
 				} else {
 					resultado = OTROS;
 				}
-			} else if (userAgent.indexOf(IEMOBILE) != NUMERO_MENOS_UNO) {
-				final int idx1 = userAgent.indexOf(IEMOBILE + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (IEMOBILE + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (IEMOBILE + "/").length(), idx2);
-
-					resultado = version;
-				} else {
-					resultado = OTROS;
-				}
-			} else if (userAgent.indexOf(SILK) != NUMERO_MENOS_UNO) {
-				final int idx1 = userAgent.indexOf(SILK + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (SILK + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (SILK + "/").length(), idx2);
-
-					resultado = version;
-				} else {
-					resultado = OTROS;
-				}
-			} else if (userAgent.indexOf(DOLPHIN) != NUMERO_MENOS_UNO) {
-				final int idx1 = userAgent.indexOf(DOLPHIN + "/");
-				if (idx1 > NUMERO_MENOS_UNO) {
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + (DOLPHIN + "/").length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + (DOLPHIN + "/").length(), idx2);
-
-					resultado = version;
-				} else {
-					resultado = OTROS;
-				}
-
-			} else if (userAgent.indexOf(MOZILLA) != NUMERO_MENOS_UNO) {
-
-				final int idx1 = userAgent.indexOf("firefox/");
-				// comprobamos que es firefox
-				if (idx1 > NUMERO_MENOS_UNO) {
-
-					// Posibles terminaciones para delimitar parámetros
-					final Collection<String> terminaciones = new ArrayList<String>();
-					terminaciones.add(";");
-					terminaciones.add(")");
-					terminaciones.add(" ");
-
-					int idx2 = userAgent.length();
-					for (int i = (idx1 + "firefox/".length()); i < userAgent.length(); i++) {
-						final char ch = userAgent.charAt(i);
-						if (terminaciones.contains(String.valueOf(ch))) {
-							idx2 = i;
-							break;
-						}
-					}
-
-					// Obtenemos versión
-					final String version = userAgent.substring(idx1 + "firefox/".length(), idx2);
-
-					resultado = version;
-				} else {
-					resultado = OTROS;
-				}
-
-			} else {
-				resultado = OTROS;
+			} catch (final Exception e) {
+				resultado = null;
 			}
-		} catch (final Exception e) {
-			resultado = null;
 		}
 		return resultado;
 	}
@@ -722,54 +641,52 @@ public final class UserAgentUtil {
 	 *            Parámetro user agent
 	 * @return el atributo sistema operativo
 	 */
-	public static String getSistemaOperativo(final String pUserAgent) {
-		String pu = "";
+	public static String getSistemaOperativo(final String pu) {
 		String resultado = "";
-		try {
-			if (pu != null) {
-				pu = pUserAgent;
-			}
-			final String userAgent = pu.toLowerCase();
-			// Detectamos S.O.
-			if (userAgent.indexOf("android") != NUMERO_MENOS_UNO) {
-				resultado = "ANDROID";
-			} else if (userAgent.indexOf("linux") != NUMERO_MENOS_UNO) {
-				resultado = "LINUX";
-			} else if (userAgent.indexOf("macintosh") != NUMERO_MENOS_UNO) {
-				resultado = "MAC";
-			} else if ((userAgent.indexOf("windows phone") != NUMERO_MENOS_UNO)
-					|| (userAgent.indexOf("win") != NUMERO_MENOS_UNO)) {
-				resultado = "WIN";
-			} else if (userAgent.indexOf("iphone") != NUMERO_MENOS_UNO) {
-				resultado = "IPHONE";
-			} else if (userAgent.indexOf("webos") != NUMERO_MENOS_UNO) {
-				resultado = "WEBOS";
-			} else if (userAgent.indexOf("palmos") != NUMERO_MENOS_UNO) {
-				resultado = "PALM";
-			} else if (userAgent.indexOf("ipad") != NUMERO_MENOS_UNO) {
-				resultado = "IPAD";
-			} else if (userAgent.indexOf("ipod") != NUMERO_MENOS_UNO) {
-				resultado = "IPOD";
-			} else if (userAgent.indexOf("symbian") != NUMERO_MENOS_UNO) {
-				resultado = "SY";
-			} else if (userAgent.indexOf("sonyericsson") != NUMERO_MENOS_UNO) {
-				resultado = "SE";
-			} else if (userAgent.indexOf("sunos") != NUMERO_MENOS_UNO) {
-				resultado = "SUNOS";
-			} else if (userAgent.indexOf("playstation") != NUMERO_MENOS_UNO) {
-				resultado = "PSP";
-			} else if (userAgent.indexOf("wii") != NUMERO_MENOS_UNO) {
-				resultado = "WII";
-			} else if ((userAgent.indexOf("bb10") != NUMERO_MENOS_UNO)
-					|| (userAgent.indexOf("playbook") != NUMERO_MENOS_UNO)
-					|| (userAgent.indexOf("blackberry") != NUMERO_MENOS_UNO)) {
-				resultado = "BB";
+		if (pu != null) {
+			try {
+				final String userAgent = pu.toLowerCase();
+				// Detectamos S.O.
+				if (userAgent.indexOf("android") != NUMERO_MENOS_UNO) {
+					resultado = "ANDROID";
+				} else if (userAgent.indexOf("linux") != NUMERO_MENOS_UNO) {
+					resultado = "LINUX";
+				} else if (userAgent.indexOf("macintosh") != NUMERO_MENOS_UNO) {
+					resultado = "MAC";
+				} else if ((userAgent.indexOf("windows phone") != NUMERO_MENOS_UNO)
+						|| (userAgent.indexOf("win") != NUMERO_MENOS_UNO)) {
+					resultado = "WIN";
+				} else if (userAgent.indexOf("iphone") != NUMERO_MENOS_UNO) {
+					resultado = "IPHONE";
+				} else if (userAgent.indexOf("webos") != NUMERO_MENOS_UNO) {
+					resultado = "WEBOS";
+				} else if (userAgent.indexOf("palmos") != NUMERO_MENOS_UNO) {
+					resultado = "PALM";
+				} else if (userAgent.indexOf("ipad") != NUMERO_MENOS_UNO) {
+					resultado = "IPAD";
+				} else if (userAgent.indexOf("ipod") != NUMERO_MENOS_UNO) {
+					resultado = "IPOD";
+				} else if (userAgent.indexOf("symbian") != NUMERO_MENOS_UNO) {
+					resultado = "SY";
+				} else if (userAgent.indexOf("sonyericsson") != NUMERO_MENOS_UNO) {
+					resultado = "SE";
+				} else if (userAgent.indexOf("sunos") != NUMERO_MENOS_UNO) {
+					resultado = "SUNOS";
+				} else if (userAgent.indexOf("playstation") != NUMERO_MENOS_UNO) {
+					resultado = "PSP";
+				} else if (userAgent.indexOf("wii") != NUMERO_MENOS_UNO) {
+					resultado = "WII";
+				} else if ((userAgent.indexOf("bb10") != NUMERO_MENOS_UNO)
+						|| (userAgent.indexOf("playbook") != NUMERO_MENOS_UNO)
+						|| (userAgent.indexOf("blackberry") != NUMERO_MENOS_UNO)) {
+					resultado = "BB";
 
-			} else {
-				resultado = OTROS;
+				} else {
+					resultado = OTROS;
+				}
+			} catch (final Exception e) {
+				resultado = null;
 			}
-		} catch (final Exception e) {
-			resultado = null;
 		}
 		return resultado;
 	}
@@ -799,7 +716,8 @@ public final class UserAgentUtil {
 				|| SO_ANDROID.equals(so);
 	}
 
-	public static String getVersionSistemaOperativo(final String sistemaOperativo, final String pUserAgent) {
+	public static String getVersionSistemaOperativo(final String pUserAgent) {
+		final String sistemaOperativo = getSistemaOperativo(pUserAgent);
 		String version = OTROS;
 		if (SO_ANDROID.equals(sistemaOperativo)) {
 			final int indx = pUserAgent.indexOf("Android ");

@@ -18,6 +18,7 @@
   </f:facet>
 </h:head>
 <script>
+
  	function anyadir_texto(texto) {
 	    document.getElementById("dialogScript:hiddenNuevoTexto").value(texto);
  		document.getElementById("dialogScript:hiddenCommandActualizarTexto").click();
@@ -40,6 +41,7 @@
 		<f:viewParam name="MODO_ACCESO" value="#{dialogScript.modoAcceso}"/>
 		<f:viewParam name="TIPO_SCRIPT" value="#{dialogScript.tipoScriptParam}"/>
 		<f:viewParam name="DATO" value="#{dialogScript.iData}"/>
+		<f:viewParam name="TRAMITEVERSION" value="#{dialogScript.idTramiteVersion}"/>
 		<f:viewAction action="#{dialogScript.init}" />
 	</f:metadata>
 	<h:form id="dialogScript" styleClass="margin-top-10">
@@ -73,7 +75,7 @@
 		    								readonly="#{dialogScript.isConsulta()}"
 			    							styleClass="w100 h100" />
 
-							<p:column>
+							<p:column rendered="#{dialogScript.isPermiteEditar()}">
 								<p:column rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">
 									<iframe src="#{dialogScript.urlIframe}" width="100%" height="400px" />
 									<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@this"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" />
@@ -81,7 +83,7 @@
 								</p:column>
 		    					<p:panel id="panelPlugins"  header="#{msg['dialogScript.plugins.header']}" toggleable="true" widgetVar="panelPlugins"  collapsed="#{dialogScript.visibleHerramientas}" styleClass="h100 w100 sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
 
-									<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios" />
+									<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
 
 									<h:dataTable var="plugin" value="#{dialogScript.plugins}" rowClasses="padding8" columnClasses=", wpx100" styleClass="w100">
 									    <h:column>
@@ -95,21 +97,21 @@
 
 								<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left" >
 
-										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios" />
+										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
 										<div style="text-align:right">
-											<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" >
+											<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}" >
 							        				<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript @form"/>
 							        		</p:commandButton>
-      			   							<p:commandButton value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogScript.editarMensaje}" process="@this" update="growlScript">
+      			   							<p:commandButton value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogScript.editarMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}">
 			        								<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript @form"/>
 			        						</p:commandButton>
-      			   							<p:commandButton value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.eliminarMensaje}" process="@this" update="@form growlScript">
+      			   							<p:commandButton value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.eliminarMensaje}" process="@this" update="@form growlScript" rendered="#{dialogScript.isPermiteEditar()}">
 	        									<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 	        								</p:commandButton>
       			   						</div>
 
 
-      			   						 <p:dataTable id="mensaje" var="mensaje" value="#{dialogScript.mensajes}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="100%"
+      			   						 <p:dataTable id="mensaje" var="mensaje" value="#{dialogScript.data.mensajes}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="100%"
 									   		selection="#{dialogScript.mensajeSeleccionado}" rowKey="#{mensaje.identificador}" selectionMode="single" >
 
 											<p:ajax event="rowSelect" global="false" />
@@ -127,17 +129,43 @@
 
 								 </p:panel>
 
-								    <p:panel id="panelDominios" header="#{msg['dialogScript.dominios.header']}" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left">
+								    <p:panel id="panelDominios" header="#{msg['dialogScript.dominios.header']}" toggleable="true" widgetVar="panelDominios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleDominios}"  styleClass="sin-bordes noPadding grid-left">
 
-										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios" />
+										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
 
-										<h:panelGrid columns="2" header="Scripts">
-											<h:column><h:outputText value="Dominios" /></h:column>
-								         	<h:inputText value="Dominios" />
+										<p:dataTable id="tableDominios"
+											var="dominio" value="#{dialogScript.dominios}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="100%"
+									   		 >
 
-								        </h:panelGrid>
+											<p:ajax event="rowSelect" global="false" />
+
+									        <p:column headerText="#{msg['dialogScript.mensaje.headerIdentificador']}">
+									        	<h:outputText value="#{dominio.identificador}" />
+									        </p:column>
+
+											<p:column headerText="#{msg['dialogScript.mensaje.headerDescripcion']}">
+									        	<h:outputText value="#{dominio.descripcion}" />
+									        </p:column>
+
+											<p:column headerText="">
+												<p:commandButton id="btnCons" value="#{msg['botones.consultar']}"  icon="fa fa-eye"  actionListener="#{dialogScript.consultarDominio(dominio.codigo)}" process="@this"  />
+												<p:commandButton id="btnPing" value="#{msg['botones.ping']}" icon="fa fa-arrow-up" actionListener="#{dialogScript.ping(dominio.codigo)}" process="@this" style="margin-left:10px" />
+											</p:column>
+									    </p:dataTable>
 								    </p:panel>
 
+							 		<p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left">
+
+										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
+											<h:form id="formArbol">
+												<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes h100 w80" >
+													<p:treeNode>
+														<h:graphicImage value="#{node.srcIcono()}" rendered="#{node.tieneIcono()}" />
+														<h:outputText value="#{node.getName()}" />
+													</p:treeNode>
+												</p:tree>
+											</h:form>
+									</p:panel>
 		    					</p:column>
 					</h:panelGrid>
 

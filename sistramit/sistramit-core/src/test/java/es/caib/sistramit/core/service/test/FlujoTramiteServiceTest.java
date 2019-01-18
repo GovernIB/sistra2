@@ -121,15 +121,12 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// Simula login autenticado
 		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
 
-		// Generar sesion tramitacion
-		final String idSesionTramitacion = flujoTramitacionService.crearSesionTramitacion(usuarioAutenticadoInfo);
-
 		// Iniciar trámite
 		final Map<String, String> parametrosInicio = new HashMap<>();
 
-		flujoTramitacionService.iniciarTramite(idSesionTramitacion, SistragesMock.ID_TRAMITE,
-				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
-				parametrosInicio);
+		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
+				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
+				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
 		Assert.isTrue(idSesionTramitacion != null, "No se devuelve id sesion tramitacion");
 
 		// Recargar trámite (dentro sesion)
@@ -159,14 +156,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// Simula login anonimo
 		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.ANONIMO);
 
-		// Generar sesion tramitacion
-		final String idSesionTramitacion = flujoTramitacionService.crearSesionTramitacion(usuarioAutenticadoInfo);
-
 		// Iniciar trámite
 		final Map<String, String> parametrosInicio = new HashMap<>();
-		flujoTramitacionService.iniciarTramite(idSesionTramitacion, SistragesMock.ID_TRAMITE,
-				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
-				parametrosInicio);
+		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
+				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
+				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
 		Assert.isTrue(idSesionTramitacion != null, "No se devuelve id sesion tramitacion");
 
 		// Recargar trámite (dentro sesion)
@@ -197,11 +191,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
 
-		// Generar sesion tramitacion
-		final String idSesionTramitacion = flujoTramitacionService.crearSesionTramitacion(usuarioAutenticadoInfo);
-
 		// Iniciar trámite
-		flujoTramitacion_iniciarTramite(idSesionTramitacion);
+		final String idSesionTramitacion = flujoTramitacion_iniciarTramite(usuarioAutenticadoInfo);
 
 		// Detalle paso actual: Debe saber
 		flujoTramitacion_debeSaber(idSesionTramitacion);
@@ -230,11 +221,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
 
-		// Generar sesion tramitacion
-		final String idSesionTramitacion = flujoTramitacionService.crearSesionTramitacion(usuarioAutenticadoInfo);
-
 		// Iniciar trámite
-		flujoTramitacion_iniciarTramite(idSesionTramitacion);
+		final String idSesionTramitacion = flujoTramitacion_iniciarTramite(usuarioAutenticadoInfo);
 
 		// Detalle paso actual: Debe saber
 		flujoTramitacion_debeSaber(idSesionTramitacion);
@@ -500,6 +488,24 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
 				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
 
+		// - Anexamos anexo XML y validamos datos
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(2).getId());
+		params.addParametroEntrada("presentacion", TypePresentacion.ELECTRONICA);
+		params.addParametroEntrada("nombreFichero", "fichero.xml");
+		params.addParametroEntrada("datosFichero", readResourceFromClasspath("test-files/fichero.xml"));
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
+		// - Anexamos anexo PDF y validamos datos
+		params = new ParametrosAccionPaso();
+		params.addParametroEntrada("idAnexo", ((DetallePasoAnexar) dp.getActual()).getAnexos().get(3).getId());
+		params.addParametroEntrada("presentacion", TypePresentacion.ELECTRONICA);
+		params.addParametroEntrada("nombreFichero", "anexoFormulario.pdf");
+		params.addParametroEntrada("datosFichero", readResourceFromClasspath("test-files/anexoFormulario.pdf"));
+		ra = flujoTramitacionService.accionPaso(idSesionTramitacion, idPasoAnexar,
+				TypeAccionPasoAnexar.ANEXAR_DOCUMENTO, params);
+
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		this.logger.info("Detalle paso: " + dp.print());
 
@@ -634,21 +640,24 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	/**
 	 * Inicio de un trámite.
 	 *
-	 * @param idSesionTramitacion
+	 * @param usuarioAutenticadoInfo
 	 *            id sesión tramitación
 	 */
-	private void flujoTramitacion_iniciarTramite(final String idSesionTramitacion) {
+	private String flujoTramitacion_iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticadoInfo) {
 		final Map<String, String> parametrosInicio = new HashMap<>();
-		flujoTramitacionService.iniciarTramite(idSesionTramitacion, SistragesMock.ID_TRAMITE,
-				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
-				parametrosInicio);
-		Assert.isTrue(idSesionTramitacion != null, "No se devuelve id sesion tramitacion");
-		this.logger.info("Tramite iniciado: " + idSesionTramitacion);
+
+		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
+				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
+				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
+		Assert.isTrue(usuarioAutenticadoInfo != null, "No se devuelve id sesion tramitacion");
+		this.logger.info("Tramite iniciado: " + usuarioAutenticadoInfo);
 
 		// Detalle tramite
 		final DetalleTramite dt = flujoTramitacionService.obtenerDetalleTramite(idSesionTramitacion);
 		Assert.isTrue(idSesionTramitacion.equals(dt.getTramite().getIdSesion()), "No coincide id sesion tramitacion");
 		this.logger.info("Detalle Tramite: " + dt.print());
+
+		return idSesionTramitacion;
 	}
 
 	/**
@@ -660,14 +669,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
 
-		// Generar sesion tramitacion
-		final String idSesionTramitacion = flujoTramitacionService.crearSesionTramitacion(usuarioAutenticadoInfo);
-
 		// Iniciar trámite
 		final Map<String, String> parametrosInicio = new HashMap<>();
-		flujoTramitacionService.iniciarTramite(idSesionTramitacion, SistragesMock.ID_TRAMITE,
-				SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA, SistragesMock.ID_TRAMITE_CP, URL_INICIO,
-				parametrosInicio);
+		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
+				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
+				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
 		Assert.isTrue(idSesionTramitacion != null, "No se devuelve id sesion tramitacion");
 		this.logger.info("Tramite iniciado: " + idSesionTramitacion);
 

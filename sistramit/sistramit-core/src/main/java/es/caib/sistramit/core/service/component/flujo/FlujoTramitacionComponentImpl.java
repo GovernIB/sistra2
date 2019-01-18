@@ -11,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
 import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.EmailException;
@@ -39,7 +38,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
-import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.formulario.interno.SimulacionFormularioMock;
@@ -56,443 +54,383 @@ import es.caib.sistramit.core.service.util.UtilsFormularioSoporte;
 
 @Component("flujoTramitacionComponent")
 @Scope(value = "prototype")
-public class FlujoTramitacionComponentImpl
-        implements FlujoTramitacionComponent {
+public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent {
 
-    /** Log. */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Controlador flujo tramitación. */
-    @Autowired
-    private ControladorFlujoTramitacion controladorFlujo;
+	/** Controlador flujo tramitación. */
+	@Autowired
+	private ControladorFlujoTramitacion controladorFlujo;
 
-    /** Configuracion. */
-    @Autowired
-    private ConfiguracionComponent configuracionComponent;
+	/** Configuracion. */
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
 
-    /** CatalogoProcedimientosComponent. */
-    @Autowired
-    private CatalogoProcedimientosComponent catalogoProcedimientosComponent;
+	/** CatalogoProcedimientosComponent. */
+	@Autowired
+	private CatalogoProcedimientosComponent catalogoProcedimientosComponent;
 
-    /** Acceso a persistencia. */
-    @Autowired
-    private FlujoTramiteDao dao;
+	/** Acceso a persistencia. */
+	@Autowired
+	private FlujoTramiteDao dao;
 
-    /** Acceso a literales. */
-    @Autowired
-    private Literales literalesComponent;
+	/** Acceso a literales. */
+	@Autowired
+	private Literales literalesComponent;
 
-    /**
-     * Indica si el flujo es invalido. Se marcará como inválido al generarse una
-     * excepción de tipo FATAL.
-     */
-    private boolean flujoInvalido;
+	/**
+	 * Indica si el flujo es invalido. Se marcará como inválido al generarse una
+	 * excepción de tipo FATAL.
+	 */
+	private boolean flujoInvalido;
 
-    /** Datos de la sesión de tramitación. */
-    private DatosSesionTramitacion datosSesion;
+	/** Datos de la sesión de tramitación. */
+	private DatosSesionTramitacion datosSesion;
 
-    /** Usuario autenticado. */
-    private UsuarioAutenticadoInfo usuarioAutenticadoInfo;
+	/** Usuario autenticado. */
+	private UsuarioAutenticadoInfo usuarioAutenticadoInfo;
 
-    /** Id sesion tramitacion. */
-    private String idSesionTramitacion;
+	/** Id sesion tramitacion. */
+	private String idSesionTramitacion;
 
-    @Override
-    public String crearSesionTramitacion(
-            final UsuarioAutenticadoInfo pUsuarioAutenticado) {
-        // Establecemos info usuario
-        usuarioAutenticadoInfo = pUsuarioAutenticado;
-        // Generamos id de sesión
-        idSesionTramitacion = dao.crearSesionTramitacion();
-        // Retornamos id sesion
-        return idSesionTramitacion;
-    }
+	@Override
+	public String iniciarTramite(final UsuarioAutenticadoInfo pUsuarioAutenticado, final String idTramite,
+			final int version, final String idioma, final String idTramiteCatalogo, final String urlInicio,
+			final Map<String, String> parametrosInicio) {
+		// Establecemos info usuario
+		usuarioAutenticadoInfo = pUsuarioAutenticado;
+		// Generamos id de sesión
+		idSesionTramitacion = dao.crearSesionTramitacion();
+		// Control de si el flujo es válido
+		controlFlujoInvalido();
+		// Inicializa datos generales sesión
+		this.datosSesion = generarDatosSesion(idSesionTramitacion, TypeEstadoTramite.RELLENANDO, idTramite, version,
+				idioma, idTramiteCatalogo, urlInicio, parametrosInicio, usuarioAutenticadoInfo, new Date(), null);
+		// Realizamos operacion de iniciar
+		controladorFlujo.iniciarTramite(datosSesion);
+		// Retornamos id sesion
+		return idSesionTramitacion;
+	}
 
-    @Override
-    public void iniciarTramite(final String idTramite, final int version,
-            final String idioma, final String idTramiteCatalogo,
-            final String urlInicio,
-            final Map<String, String> parametrosInicio) {
+	@Override
+	public void cargarTramite(final String pIdSesionTramitacion, final UsuarioAutenticadoInfo pUsuarioAutenticado) {
+		usuarioAutenticadoInfo = pUsuarioAutenticado;
+		idSesionTramitacion = pIdSesionTramitacion;
+		cargarImpl(idSesionTramitacion, false);
+	}
 
-        // Control de si el flujo es válido
-        controlFlujoInvalido();
+	@Override
+	public void recargarTramite(final String pIdSesionTramitacion, final UsuarioAutenticadoInfo pUsuarioAutenticado) {
+		usuarioAutenticadoInfo = pUsuarioAutenticado;
+		idSesionTramitacion = pIdSesionTramitacion;
+		cargarImpl(idSesionTramitacion, true);
+	}
 
-        // Inicializa datos generales sesión recuperando info GTT, GSE y GUC.
-        this.datosSesion = generarDatosSesion(idSesionTramitacion,
-                TypeEstadoTramite.RELLENANDO, idTramite, version, idioma,
-                idTramiteCatalogo, urlInicio, parametrosInicio,
-                usuarioAutenticadoInfo, new Date(), null);
+	@Override
+	public DetalleTramite obtenerDetalleTramite() {
+		// Control de si el flujo es válido
+		controlFlujoInvalido();
+		// Devuelve detalle
+		return controladorFlujo.detalleTramite(datosSesion);
+	}
 
-        // Realizamos operacion de iniciar
-        controladorFlujo.iniciarTramite(datosSesion);
+	@Override
+	public DetallePasos obtenerDetallePasos() {
+		// Control de si el flujo es válido
+		controlFlujoInvalido();
+		// Devuelve detalle
+		return controladorFlujo.detallePasos(datosSesion);
+	}
 
-    }
+	@Override
+	public void invalidarFlujoTramicacion() {
+		flujoInvalido = true;
+	}
 
-    @Override
-    public void cargarTramite(final String pIdSesionTramitacion,
-            final UsuarioAutenticadoInfo pUsuarioAutenticado) {
-        usuarioAutenticadoInfo = pUsuarioAutenticado;
-        idSesionTramitacion = pIdSesionTramitacion;
-        cargarImpl(idSesionTramitacion, false);
-    }
+	@Override
+	public ResultadoIrAPaso irAPaso(final String idPaso) {
+		return controladorFlujo.irAPaso(datosSesion, idPaso);
+	}
 
-    @Override
-    public void recargarTramite(final String pIdSesionTramitacion,
-            final UsuarioAutenticadoInfo pUsuarioAutenticado) {
-        usuarioAutenticadoInfo = pUsuarioAutenticado;
-        idSesionTramitacion = pIdSesionTramitacion;
-        cargarImpl(idSesionTramitacion, true);
-    }
+	@Override
+	public ResultadoIrAPaso irAPasoActual() {
+		return controladorFlujo.irAPaso(datosSesion, datosSesion.getDatosTramite().getIdPasoActual());
+	}
 
-    @Override
-    public DetalleTramite obtenerDetalleTramite() {
-        // Control de si el flujo es válido
-        controlFlujoInvalido();
-        // Devuelve detalle
-        return controladorFlujo.detalleTramite(datosSesion);
-    }
+	@Override
+	public ResultadoAccionPaso accionPaso(final String idPaso, final TypeAccionPaso accionPaso,
+			final ParametrosAccionPaso parametros) {
+		// Control de si el flujo es válido
+		controlFlujoInvalido();
+		// Ejecuta accion paso
+		final ResultadoAccionPaso respuestaAccionPaso = controladorFlujo.accionPaso(datosSesion, idPaso, accionPaso,
+				parametros);
+		// Devolvemos respuesta
+		return respuestaAccionPaso;
+	}
 
-    @Override
-    public DetallePasos obtenerDetallePasos() {
-        // Control de si el flujo es válido
-        controlFlujoInvalido();
-        // Devuelve detalle
-        return controladorFlujo.detallePasos(datosSesion);
-    }
+	@Override
+	public void cancelarTramite() {
+		// Control de si el flujo es válido
+		controlFlujoInvalido();
+		// Cancela tramite
+		controladorFlujo.cancelarTramite(datosSesion);
+		// Marcamos flujo como invalido
+		invalidarFlujoTramicacion();
+	}
 
-    @Override
-    public void invalidarFlujoTramicacion() {
-        flujoInvalido = true;
-    }
+	@Override
+	public FlujoTramitacionInfo obtenerFlujoTramitacionInfo() {
+		final FlujoTramitacionInfo f = new FlujoTramitacionInfo();
+		f.setIdSesionTramitacion(getIdSesionTramitacion());
+		f.setDebug(isDebugEnabled());
+		return f;
+	}
 
-    @Override
-    public ResultadoIrAPaso irAPaso(final String idPaso) {
-        return controladorFlujo.irAPaso(datosSesion, idPaso);
-    }
+	@Override
+	public void envioFormularioSoporte(final String nif, final String nombre, final String telefono, final String email,
+			final String problemaTipo, final String problemaDesc, final AnexoFichero anexo) {
 
-    @Override
-    public ResultadoIrAPaso irAPasoActual() {
-        return controladorFlujo.irAPaso(datosSesion,
-                datosSesion.getDatosTramite().getIdPasoActual());
-    }
+		// Obtenemos entidad
+		final RConfiguracionEntidad entidad = configuracionComponent
+				.obtenerConfiguracionEntidad(datosSesion.getDefinicionTramite().getDefinicionVersion().getIdEntidad());
 
-    @Override
-    public ResultadoAccionPaso accionPaso(final String idPaso,
-            final TypeAccionPaso accionPaso,
-            final ParametrosAccionPaso parametros) {
-        // Control de si el flujo es válido
-        controlFlujoInvalido();
-        // Ejecuta accion paso
-        final ResultadoAccionPaso respuestaAccionPaso = controladorFlujo
-                .accionPaso(datosSesion, idPaso, accionPaso, parametros);
-        // Devolvemos respuesta
-        return respuestaAccionPaso;
-    }
+		// Datos form soporte
+		final DatosFormularioSoporte datosFormSoporte = new DatosFormularioSoporte();
+		datosFormSoporte.setNif(nif);
+		datosFormSoporte.setNombre(nombre);
+		datosFormSoporte.setEmail(email);
+		datosFormSoporte.setTelefono(telefono);
+		datosFormSoporte.setProblemaTipo(problemaTipo);
+		datosFormSoporte.setProblemaDesc(problemaDesc);
 
-    @Override
-    public void cancelarTramite() {
-        // Control de si el flujo es válido
-        controlFlujoInvalido();
-        // Cancela tramite
-        controladorFlujo.cancelarTramite(datosSesion);
-        // Marcamos flujo como invalido
-        invalidarFlujoTramicacion();
-    }
+		// Generamos destinatarios, asunto y mensaje
+		final List<String> destinatarios = UtilsFormularioSoporte
+				.obtenerDestinatariosFormularioSoporte(datosFormSoporte, entidad, datosSesion);
+		final String asunto = UtilsFormularioSoporte.obtenerAsuntoFormularioSoporte(literalesComponent, datosSesion);
+		final String mensaje = UtilsFormularioSoporte.construyeMensajeSoporteIncidencias(literalesComponent,
+				datosFormSoporte, entidad, datosSesion);
 
-    @Override
-    public FlujoTramitacionInfo obtenerFlujoTramitacionInfo() {
-        final FlujoTramitacionInfo f = new FlujoTramitacionInfo();
-        f.setIdSesionTramitacion(getIdSesionTramitacion());
-        f.setDebug(isDebugEnabled());
-        return f;
-    }
+		// Anexo
+		final List<AnexoEmail> anexos = new ArrayList<>();
+		if (anexo != null) {
+			final AnexoEmail a = new AnexoEmail();
+			a.setFileName(anexo.getFileName());
+			a.setContent(anexo.getFileContent());
+			a.setContentType(anexo.getFileContentType());
+			anexos.add(a);
+		}
 
-    @Override
-    public void envioFormularioSoporte(final String nif, final String nombre,
-            final String telefono, final String email,
-            final String problemaTipo, final String problemaDesc,
-            final AnexoFichero anexo) {
+		// Enviamos mail
+		final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent.obtenerPluginGlobal(TypePluginGlobal.EMAIL);
+		try {
+			if (!plgEmail.envioEmail(destinatarios, asunto, mensaje, anexos)) {
+				throw new ErrorFormularioSoporteException("Error enviando mail");
+			}
+		} catch (final EmailPluginException e) {
+			log.error("Error al enviar email", e);
+			throw new EmailException("Error al enviar mail", e);
+		}
 
-        // Obtenemos entidad
-        final RConfiguracionEntidad entidad = configuracionComponent
-                .obtenerConfiguracionEntidad(datosSesion.getDefinicionTramite()
-                        .getDefinicionVersion().getIdEntidad());
+	}
 
-        // Datos form soporte
-        final DatosFormularioSoporte datosFormSoporte = new DatosFormularioSoporte();
-        datosFormSoporte.setNif(nif);
-        datosFormSoporte.setNombre(nombre);
-        datosFormSoporte.setEmail(email);
-        datosFormSoporte.setTelefono(telefono);
-        datosFormSoporte.setProblemaTipo(problemaTipo);
-        datosFormSoporte.setProblemaDesc(problemaDesc);
+	// TODO BORRAR
+	@Override
+	public String simularRellenarFormulario(final String xml) {
+		SimulacionFormularioMock.setDatosSimulados(xml);
+		return "123";
+	}
 
-        // Generamos destinatarios, asunto y mensaje
-        final List<String> destinatarios = UtilsFormularioSoporte
-                .obtenerDestinatariosFormularioSoporte(datosFormSoporte,
-                        entidad, datosSesion);
-        final String asunto = UtilsFormularioSoporte
-                .obtenerAsuntoFormularioSoporte(literalesComponent,
-                        datosSesion);
-        final String mensaje = UtilsFormularioSoporte
-                .construyeMensajeSoporteIncidencias(literalesComponent,
-                        datosFormSoporte, entidad, datosSesion);
+	// -------------------------------------------------------
+	// FUNCIONES PRIVADAS
+	// -------------------------------------------------------
 
-        // Anexo
-        final List<AnexoEmail> anexos = new ArrayList<>();
-        if (anexo != null) {
-            final AnexoEmail a = new AnexoEmail();
-            a.setFileName(anexo.getFileName());
-            a.setContent(anexo.getFileContent());
-            a.setContentType(anexo.getFileContentType());
-            anexos.add(a);
-        }
+	/**
+	 * En caso de que el flujo no sea válido genera una excepción.
+	 */
+	private void controlFlujoInvalido() {
+		if (flujoInvalido) {
+			throw new FlujoInvalidoException();
+		}
+	}
 
-        // Enviamos mail
-        final IEmailPlugin plgEmail = (IEmailPlugin) configuracionComponent
-                .obtenerPluginGlobal(TypePluginGlobal.EMAIL);
-        try {
-            if (!plgEmail.envioEmail(destinatarios, asunto, mensaje, anexos)) {
-                throw new ErrorFormularioSoporteException(
-                        "Error enviando mail");
-            }
-        } catch (final EmailPluginException e) {
-            log.error("Error al enviar email", e);
-            throw new EmailException("Error al enviar mail", e);
-        }
+	/**
+	 * Genera datos de sesion de tramitación.
+	 *
+	 * @param idSesionTramitacion
+	 *            id sesion tramitacion
+	 * @param estado
+	 *            estado tramite
+	 * @param pIdTramite
+	 *            id tramite
+	 * @param pVersion
+	 *            version
+	 * @param pIdioma
+	 *            idioma
+	 * @param pIdTramiteCP
+	 *            id tramite CP
+	 * @param pUrlInicio
+	 *            url inicio
+	 * @param pParametrosInicio
+	 *            parametros inicio
+	 * @param pUsuarioAutenticadoInfo
+	 *            usuario autenticado
+	 * @param pFechaCaducidad
+	 *            fecha caducidad
+	 * @return Datos sesion tramitacion
+	 * @throws CatalogoPluginException
+	 */
+	private DatosSesionTramitacion generarDatosSesion(final String idSesionTramitacion, final TypeEstadoTramite estado,
+			final String pIdTramite, final int pVersion, final String pIdioma, final String pIdTramiteCP,
+			final String pUrlInicio, final Map<String, String> pParametrosInicio,
+			final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo, final Date pFechaInicio, final Date pFechaCaducidad) {
 
-    }
+		// Obtenemos la definición del trámite del GTT (si no está el idioma
+		// disponible, se coge el idioma por defecto o bien el primero
+		// disponible)
+		final DefinicionTramiteSTG defTramGTT = configuracionComponent.recuperarDefinicionTramite(pIdTramite, pVersion,
+				pIdioma);
 
-    // TODO BORRAR
-    @Override
-    public String simularRellenarFormulario(final String xml) {
-        SimulacionFormularioMock.setDatosSimulados(xml);
-        return "123";
-    }
+		// El idioma puede variar según los idiomas disponibles
+		final String idiomaSesion = defTramGTT.getDefinicionVersion().getIdioma();
 
-    // -------------------------------------------------------
-    // FUNCIONES PRIVADAS
-    // -------------------------------------------------------
+		// Control limitacion de tramitacion
+		controlLimitacionTramitacion(defTramGTT);
 
-    /**
-     * En caso de que el flujo no sea válido genera una excepción.
-     */
-    private void controlFlujoInvalido() {
-        if (flujoInvalido) {
-            throw new FlujoInvalidoException();
-        }
-    }
+		// Obtenemos las propiedades del trámite en el Catalogo de
+		// Procedimientos
+		final DefinicionTramiteCP tramiteCP = catalogoProcedimientosComponent
+				.obtenerDefinicionTramite(defTramGTT.getDefinicionVersion().getIdEntidad(), pIdTramiteCP, pIdioma);
 
-    /**
-     * Genera datos de sesion de tramitación.
-     *
-     * @param idSesionTramitacion
-     *            id sesion tramitacion
-     * @param estado
-     *            estado tramite
-     * @param pIdTramite
-     *            id tramite
-     * @param pVersion
-     *            version
-     * @param pIdioma
-     *            idioma
-     * @param pIdTramiteCP
-     *            id tramite CP
-     * @param pUrlInicio
-     *            url inicio
-     * @param pParametrosInicio
-     *            parametros inicio
-     * @param pUsuarioAutenticadoInfo
-     *            usuario autenticado
-     * @param pFechaCaducidad
-     *            fecha caducidad
-     * @return Datos sesion tramitacion
-     * @throws CatalogoPluginException
-     */
-    private DatosSesionTramitacion generarDatosSesion(
-            final String idSesionTramitacion, final TypeEstadoTramite estado,
-            final String pIdTramite, final int pVersion, final String pIdioma,
-            final String pIdTramiteCP, final String pUrlInicio,
-            final Map<String, String> pParametrosInicio,
-            final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo,
-            final Date pFechaInicio, final Date pFechaCaducidad) {
+		// Props tipo flujo y entorno
+		final TypeFlujoTramitacion tipoFlujo = TypeFlujoTramitacion
+				.fromString(defTramGTT.getDefinicionVersion().getTipoFlujo());
+		if (tipoFlujo == null) {
+			throw new TipoNoControladoException(
+					"Tipo de flujo no controlado: " + defTramGTT.getDefinicionVersion().getTipoFlujo());
+		}
 
-        // Obtenemos la definición del trámite del GTT (si no está el idioma
-        // disponible, se coge el idioma por defecto o bien el primero
-        // disponible)
-        final DefinicionTramiteSTG defTramGTT = configuracionComponent
-                .recuperarDefinicionTramite(pIdTramite, pVersion, pIdioma);
+		final String propEntorno = configuracionComponent
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO);
+		final TypeEntorno entorno = TypeEntorno.fromString(propEntorno);
+		if (entorno == null) {
+			throw new TipoNoControladoException("Tipo de entorno no controlado: " + propEntorno);
+		}
 
-        // El idioma puede variar según los idiomas disponibles
-        final String idiomaSesion = defTramGTT.getDefinicionVersion()
-                .getIdioma();
+		// Creamos sesion
+		final DatosSesionTramitacion st = new DatosSesionTramitacion(defTramGTT);
+		st.getDatosTramite().setEstadoTramite(estado);
+		st.getDatosTramite().setIdSesionTramitacion(idSesionTramitacion);
+		st.getDatosTramite().setIdTramite(pIdTramite);
+		st.getDatosTramite().setVersionTramite(pVersion);
+		st.getDatosTramite().setTipoFlujo(tipoFlujo);
+		st.getDatosTramite()
+				.setTituloTramite(tramiteCP.getProcedimiento().getDescripcion() + " - " + tramiteCP.getDescripcion());
+		st.getDatosTramite().setUrlInicio(pUrlInicio);
+		st.getDatosTramite().setParametrosInicio(pParametrosInicio);
+		st.getDatosTramite().setDefinicionTramiteCP(tramiteCP);
+		st.getDatosTramite().setIdioma(idiomaSesion);
+		st.getDatosTramite().setEntorno(entorno);
+		st.getDatosTramite().setUsuarioAutenticado(pUsuarioAutenticadoInfo);
+		st.getDatosTramite().setNivelAutenticacion(pUsuarioAutenticadoInfo.getAutenticacion());
+		st.getDatosTramite().setMetodoAutenticacionInicio(pUsuarioAutenticadoInfo.getMetodoAutenticacion());
+		st.getDatosTramite().setIniciador(UtilsFlujo.getDatosUsuario(pUsuarioAutenticadoInfo));
+		st.getDatosTramite().setVigente(tramiteCP.isVigente());
+		st.getDatosTramite().setPlazoInicio(tramiteCP.getPlazoInicio());
+		st.getDatosTramite().setPlazoFin(tramiteCP.getPlazoFin());
+		st.getDatosTramite().setFechaCaducidad(pFechaCaducidad);
+		st.getDatosTramite().setFechaInicio(pFechaInicio);
 
-        // Control limitacion de tramitacion
-        controlLimitacionTramitacion(defTramGTT);
+		return st;
+	}
 
-        // Obtenemos las propiedades del trámite en el Catalogo de
-        // Procedimientos
-        final DefinicionTramiteCP tramiteCP = catalogoProcedimientosComponent
-                .obtenerDefinicionTramite(
-                        defTramGTT.getDefinicionVersion().getIdEntidad(),
-                        pIdTramiteCP, pIdioma);
+	/**
+	 * Control limitación
+	 *
+	 * @param defTramGTT
+	 *            Definición trámite
+	 */
+	private void controlLimitacionTramitacion(final DefinicionTramiteSTG defTramGTT) {
 
-        // Props tipo flujo y entorno
-        final TypeFlujoTramitacion tipoFlujo = TypeFlujoTramitacion
-                .fromString(defTramGTT.getDefinicionVersion().getTipoFlujo());
-        if (tipoFlujo == null) {
-            throw new TipoNoControladoException("Tipo de flujo no controlado: "
-                    + defTramGTT.getDefinicionVersion().getTipoFlujo());
-        }
+		final RVersionTramiteControlAcceso controlAcceso = defTramGTT.getDefinicionVersion().getControlAcceso();
+		if (controlAcceso.isLimitarTramitacion()) {
 
-        final String propEntorno = configuracionComponent
-                .obtenerPropiedadConfiguracion(
-                        TypePropiedadConfiguracion.ENTORNO);
-        final TypeEntorno entorno = TypeEntorno.fromString(propEntorno);
-        if (entorno == null) {
-            throw new TipoNoControladoException(
-                    "Tipo de entorno no controlado: " + propEntorno);
-        }
+			final String idTramite = defTramGTT.getDefinicionVersion().getIdentificador();
+			final int version = defTramGTT.getDefinicionVersion().getVersion();
+			final long limitNumero = controlAcceso.getLimiteTramitacionInicios();
+			final int limitIntervalo = controlAcceso.getLimiteTramitacionIntervalo();
 
-        // Creamos sesion
-        final DatosSesionTramitacion st = new DatosSesionTramitacion(
-                defTramGTT);
-        st.getDatosTramite().setEstadoTramite(estado);
-        st.getDatosTramite().setIdSesionTramitacion(idSesionTramitacion);
-        st.getDatosTramite().setIdTramite(pIdTramite);
-        st.getDatosTramite().setVersionTramite(pVersion);
-        st.getDatosTramite().setTipoFlujo(tipoFlujo);
-        st.getDatosTramite()
-                .setTituloTramite(tramiteCP.getProcedimiento().getDescripcion()
-                        + " - " + tramiteCP.getDescripcion());
-        st.getDatosTramite().setUrlInicio(pUrlInicio);
-        st.getDatosTramite().setParametrosInicio(pParametrosInicio);
-        st.getDatosTramite().setDefinicionTramiteCP(tramiteCP);
-        st.getDatosTramite().setIdioma(idiomaSesion);
-        st.getDatosTramite().setEntorno(entorno);
-        st.getDatosTramite().setUsuarioAutenticado(pUsuarioAutenticadoInfo);
-        st.getDatosTramite().setNivelAutenticacion(
-                pUsuarioAutenticadoInfo.getAutenticacion());
-        st.getDatosTramite().setMetodoAutenticacionInicio(
-                pUsuarioAutenticadoInfo.getMetodoAutenticacion());
-        st.getDatosTramite().setIniciador(
-                UtilsFlujo.getDatosUsuario(pUsuarioAutenticadoInfo));
-        st.getDatosTramite().setVigente(tramiteCP.isVigente());
-        st.getDatosTramite().setPlazoInicio(tramiteCP.getPlazoInicio());
-        st.getDatosTramite().setPlazoFin(tramiteCP.getPlazoFin());
-        st.getDatosTramite().setFechaCaducidad(pFechaCaducidad);
-        st.getDatosTramite().setFechaInicio(pFechaInicio);
+			final Long total = dao.contadorLimiteTramitacion(idTramite, version, limitIntervalo, new Date());
+			if (total.longValue() >= limitNumero) {
+				throw new LimiteTramitacionException(idTramite, version, limitNumero, limitIntervalo);
+			}
+		}
 
-        return st;
-    }
+	}
 
-    /**
-     * Control limitación
-     *
-     * @param defTramGTT
-     *            Definición trámite
-     */
-    private void controlLimitacionTramitacion(
-            final DefinicionTramiteSTG defTramGTT) {
+	/**
+	 * Devuelve id sesion tramitacion.
+	 *
+	 * @return id sesion tramitacion
+	 */
+	private String getIdSesionTramitacion() {
+		return idSesionTramitacion;
+	}
 
-        final RVersionTramiteControlAcceso controlAcceso = defTramGTT
-                .getDefinicionVersion().getControlAcceso();
-        if (controlAcceso.isLimitarTramitacion()) {
+	/**
+	 * Devuelve si esta habilitado debug.
+	 *
+	 * @return si esta habilitado debug
+	 */
+	private boolean isDebugEnabled() {
+		boolean res = false;
+		if (datosSesion != null && datosSesion.getDefinicionTramite() != null) {
+			res = datosSesion.getDefinicionTramite().getDefinicionVersion().getControlAcceso().isDebug();
+		}
+		return res;
+	}
 
-            final String idTramite = defTramGTT.getDefinicionVersion()
-                    .getIdentificador();
-            final int version = defTramGTT.getDefinicionVersion().getVersion();
-            final long limitNumero = controlAcceso
-                    .getLimiteTramitacionInicios();
-            final int limitIntervalo = controlAcceso
-                    .getLimiteTramitacionIntervalo();
+	/**
+	 * Realiza carga tramite.
+	 *
+	 * @param pIdSesionTramitacion
+	 *            Id sesion tramitacion
+	 * @param recarga
+	 *            Indica si la carga se produce tras un error
+	 */
+	private void cargarImpl(final String pIdSesionTramitacion, final boolean recarga) {
+		// Control de si el flujo es válido
+		controlFlujoInvalido();
 
-            final Long total = dao.contadorLimiteTramitacion(idTramite, version,
-                    limitIntervalo, new Date());
-            if (total.longValue() >= limitNumero) {
-                throw new LimiteTramitacionException(idTramite, version,
-                        limitNumero, limitIntervalo);
-            }
-        }
+		// Recuperamos datos de persistencia
+		final DatosPersistenciaTramite tram = dao.obtenerTramitePersistencia(pIdSesionTramitacion);
+		if (tram == null) {
+			throw new TramiteNoExisteException(pIdSesionTramitacion);
+		}
 
-    }
+		// Obtenemos usuario iniciador y nivel auth de persistencia
+		final TypeAutenticacion nivelAuthIniciador = tram.getAutenticacion();
+		DatosUsuario usuarioIniciador = null;
+		if (nivelAuthIniciador != TypeAutenticacion.ANONIMO) {
+			usuarioIniciador = new DatosUsuario();
+			usuarioIniciador.setNif(tram.getNifIniciador());
+			usuarioIniciador.setNombre(tram.getNombreIniciador());
+			usuarioIniciador.setApellido1(tram.getApellido1Iniciador());
+			usuarioIniciador.setApellido2(tram.getApellido2Iniciador());
+		}
 
-    /**
-     * Devuelve id sesion tramitacion.
-     *
-     * @return id sesion tramitacion
-     */
-    private String getIdSesionTramitacion() {
-        return idSesionTramitacion;
-    }
+		// Verificamos si usuario puede cargar el tramite
+		UtilsFlujo.controlCargaTramite(tram, usuarioAutenticadoInfo, recarga);
 
-    /**
-     * Devuelve si esta habilitado debug.
-     *
-     * @return si esta habilitado debug
-     */
-    private boolean isDebugEnabled() {
-        boolean res = false;
-        if (datosSesion != null && datosSesion.getDefinicionTramite() != null) {
-            res = datosSesion.getDefinicionTramite().getDefinicionVersion()
-                    .getControlAcceso().isDebug();
-        }
-        return res;
-    }
+		// Inicializa datos de sesión
+		datosSesion = generarDatosSesion(pIdSesionTramitacion, tram.getEstado(), tram.getIdTramite(),
+				tram.getVersionTramite(), tram.getIdioma(), tram.getIdTramiteCP(), tram.getUrlInicio(),
+				tram.getParametrosInicio(), usuarioAutenticadoInfo, tram.getFechaInicio(), tram.getFechaCaducidad());
 
-    /**
-     * Realiza carga tramite.
-     *
-     * @param pIdSesionTramitacion
-     *            Id sesion tramitacion
-     * @param recarga
-     *            Indica si la carga se produce tras un error
-     */
-    private void cargarImpl(final String pIdSesionTramitacion,
-            final boolean recarga) {
-        // Control de si el flujo es válido
-        controlFlujoInvalido();
+		// Lanzamos operación de cargar
+		controladorFlujo.cargarTramite(datosSesion);
 
-        // Recuperamos datos de persistencia
-        final DatosPersistenciaTramite tram = dao
-                .obtenerTramitePersistencia(pIdSesionTramitacion);
-        if (tram == null) {
-            throw new TramiteNoExisteException(pIdSesionTramitacion);
-        }
-
-        // Obtenemos usuario iniciador y nivel auth de persistencia
-        final TypeAutenticacion nivelAuthIniciador = tram.getAutenticacion();
-        DatosUsuario usuarioIniciador = null;
-        if (nivelAuthIniciador != TypeAutenticacion.ANONIMO) {
-            usuarioIniciador = new DatosUsuario();
-            usuarioIniciador.setNif(tram.getNifIniciador());
-            usuarioIniciador.setNombre(tram.getNombreIniciador());
-            usuarioIniciador.setApellido1(tram.getApellido1Iniciador());
-            usuarioIniciador.setApellido2(tram.getApellido2Iniciador());
-        }
-
-        // Verificamos si usuario puede cargar el tramite
-        UtilsFlujo.controlCargaTramite(tram, usuarioAutenticadoInfo, recarga);
-
-        // Inicializa datos de sesión
-        datosSesion = generarDatosSesion(pIdSesionTramitacion, tram.getEstado(),
-                tram.getIdTramite(), tram.getVersionTramite(), tram.getIdioma(),
-                tram.getIdTramiteCP(), tram.getUrlInicio(),
-                tram.getParametrosInicio(), usuarioAutenticadoInfo,
-                tram.getFechaInicio(), tram.getFechaCaducidad());
-
-        // Lanzamos operación de cargar
-        controladorFlujo.cargarTramite(datosSesion);
-
-    }
-
-    // TODO Borrar
-    private IFirmaPlugin getPluginFirmaCliente() {
-        final DetalleTramite dt = controladorFlujo.detalleTramite(datosSesion);
-        final IFirmaPlugin plgLogin = (IFirmaPlugin) configuracionComponent
-                .obtenerPluginEntidad(TypePluginEntidad.FIRMA,
-                        dt.getEntidad().getId());
-        return plgLogin;
-    }
+	}
 
 }

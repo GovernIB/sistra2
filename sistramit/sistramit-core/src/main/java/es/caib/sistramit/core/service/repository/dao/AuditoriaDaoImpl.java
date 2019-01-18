@@ -46,10 +46,10 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 	private EntityManager entityManager;
 
 	@Override
-	public void add(final EventoAuditoria evento, final String idSesionTramitacion) {
+	public void add(final EventoAuditoria evento) {
 		HSesionTramitacion hSesion = null;
-		if (idSesionTramitacion != null) {
-			hSesion = findHSesionTramitacion(idSesionTramitacion);
+		if (evento.getIdSesionTramitacion() != null) {
+			hSesion = findHSesionTramitacion(evento.getIdSesionTramitacion());
 		}
 		final HEventoAuditoria hEvento = HEventoAuditoria.fromModel(evento);
 		hEvento.setSesionTramitacion(hSesion);
@@ -219,7 +219,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		if (pCount) {
 			query.multiselect(builder.count(tableE));
 		} else {
-			query.orderBy(builder.asc(tableE.get("fecha")));
+			query.orderBy(builder.desc(tableE.get("fecha")));
 
 			query.multiselect(tableE.get("id"), p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"),
 					tableT.get("nifIniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
@@ -260,7 +260,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		if (pCount) {
 			query.multiselect(builder.count(tableE));
 		} else {
-			query.orderBy(builder.asc(tableE.get("fecha")));
+			query.orderBy(builder.desc(tableE.get("fecha")));
 
 			query.multiselect(tableE.get("id"), tableE.get("tipo"), tableE.get("fecha"), tableE.get("codigoError"),
 					tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"),
@@ -317,7 +317,7 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		}
 
 		query.where(predicate);
-		query.orderBy(builder.asc(tableE.get("fecha")));
+		query.orderBy(builder.desc(tableE.get("fecha")));
 		query.multiselect(p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"),
 				tableT.get("nifIniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
 				tableT.get("idProcedimientoCP"), tableT.get("idProcedimientoSIA"), tableE.get("codigoError"),

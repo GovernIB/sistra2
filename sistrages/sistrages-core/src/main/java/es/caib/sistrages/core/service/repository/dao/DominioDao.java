@@ -7,7 +7,6 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
-// TODO: Auto-generated Javadoc
 /**
  * La interface DominioDao.
  */
@@ -178,7 +177,7 @@ public interface DominioDao {
 
 	/**
 	 * Obtiene el valores dominio.
-	 * 
+	 *
 	 * @param identificador
 	 * @return
 	 */

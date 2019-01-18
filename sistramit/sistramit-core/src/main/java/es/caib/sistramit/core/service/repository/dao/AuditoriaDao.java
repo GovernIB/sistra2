@@ -20,11 +20,8 @@ public interface AuditoriaDao {
 	 *
 	 * @param evento
 	 *            Evento
-	 * @param idSesionTramitacion
-	 *            Indica si el evento esta asociado a una sesion de tramitacion
-	 *            (nulo si no lo esta)
 	 */
-	void add(final EventoAuditoria evento, String idSesionTramitacion);
+	void add(final EventoAuditoria evento);
 
 	/**
 	 * Borra log interno los eventos no asociados a una sesión hasta la fecha

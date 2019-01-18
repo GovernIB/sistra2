@@ -28,6 +28,15 @@ public enum TypeParametroEvento {
 	 * Idioma.
 	 */
 	IDIOMA("ID"),
+
+	/**
+	 * Para inicio tramites incorrectos: url inicio.
+	 */
+	URL_INICIO("URLINICIO"),
+	/**
+	 * Para inicio tramites incorrectos: excepcion asociada.
+	 */
+	EXCEPCION_ORIGEN("EXCEPCIONORIGEN"),
 	/**
 	 * Id sesión.
 	 */

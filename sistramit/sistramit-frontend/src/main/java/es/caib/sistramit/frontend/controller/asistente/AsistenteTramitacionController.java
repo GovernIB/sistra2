@@ -114,17 +114,13 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// Obtiene usuario autenticado
 		final UsuarioAutenticado usuarioAutenticado = SecurityUtils.obtenerUsuarioAutenticado();
 
-		// Crea sesion tramitacion
-		final String idSesionTramitacion = getFlujoTramitacionService()
-				.crearSesionTramitacion(usuarioAutenticado.getUsuario());
-
 		// Inicia tramite
-		getFlujoTramitacionService().iniciarTramite(idSesionTramitacion, tramite, version, idioma, idTramiteCatalogo,
-				urlInicio, parametrosInicio);
+		final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(usuarioAutenticado.getUsuario(),
+				tramite, version, idioma, idTramiteCatalogo, urlInicio, parametrosInicio);
 
 		// Almacena en la sesion
 		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
-		registraSesionTramitacion(idSesionTramitacion, dt.getDebug() == TypeSiNo.SI);
+		registraSesionTramitacion(idSesionTramitacion, dt.getTramite().getIdioma(), dt.getDebug() == TypeSiNo.SI);
 
 		final ModelAndView mav = new ModelAndView(URL_REDIRIGIR_ASISTENTE);
 		return mav;
@@ -582,7 +578,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(pIdSesion);
 
 		// Registra en sesion
-		registraSesionTramitacion(pIdSesion, dt.getDebug() == TypeSiNo.SI);
+		registraSesionTramitacion(pIdSesion, dt.getTramite().getIdioma(), dt.getDebug() == TypeSiNo.SI);
 
 		// Comprobamos que sea el iniciador (en caso de autenticado)
 		if (dt.getTramite().getAutenticacion() != userInfo.getAutenticacion()) {

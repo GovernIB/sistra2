@@ -44,6 +44,7 @@ public final class ResRegistro implements ResRegistroInt {
 	 * @param oficina
 	 *            oficina a establecer
 	 */
+	@Override
 	public void setOficina(String oficina) {
 		this.oficina = oficina;
 	}
@@ -63,6 +64,7 @@ public final class ResRegistro implements ResRegistroInt {
 	 * @param libro
 	 *            libro a establecer
 	 */
+	@Override
 	public void setLibro(String libro) {
 		this.libro = libro;
 	}
@@ -82,13 +84,14 @@ public final class ResRegistro implements ResRegistroInt {
 	 * @param tipoAsunto
 	 *            tipoAsunto a establecer
 	 */
+	@Override
 	public void setTipoAsunto(String tipoAsunto) {
 		this.tipoAsunto = tipoAsunto;
 	}
 
 	/**
 	 * Método de acceso a numeroExpediente.
-	 * 
+	 *
 	 * @return numeroExpediente
 	 */
 	public String getNumeroExpediente() {
@@ -97,10 +100,11 @@ public final class ResRegistro implements ResRegistroInt {
 
 	/**
 	 * Método para establecer numeroExpediente.
-	 * 
+	 *
 	 * @param numeroExpediente
 	 *            numeroExpediente a establecer
 	 */
+	@Override
 	public void setNumeroExpediente(String numeroExpediente) {
 		this.numeroExpediente = numeroExpediente;
 	}

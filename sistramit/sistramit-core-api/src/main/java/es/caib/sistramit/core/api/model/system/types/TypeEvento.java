@@ -17,10 +17,6 @@ public enum TypeEvento {
 	 */
 	INICIAR_TRAMITE("TR_INI"),
 	/**
-	 * INICIO DEL TRÁMITE (INCORRECTO).
-	 */
-	INICIAR_TRAMITE_INCORRECTO("TR_INK"),
-	/**
 	 * CARGA DEL TRÁMITE.
 	 */
 	CARGAR_TRAMITE("TR_CAR"),
@@ -32,10 +28,6 @@ public enum TypeEvento {
 	 * REGISTRO TRAMITE.
 	 */
 	REGISTRAR_TRAMITE("TR_REG"),
-	/**
-	 * ENVIO TRAMITE.
-	 */
-	ENVIAR_TRAMITE("TR_ENV"),
 	/**
 	 * FIN DE TRÁMITE.
 	 */

@@ -17,4 +17,6 @@ public final class PlgVariablesFlujo implements PlgVariablesFlujoInt {
 		return ID;
 	}
 
+	// TODO PENDIENTE
+
 }

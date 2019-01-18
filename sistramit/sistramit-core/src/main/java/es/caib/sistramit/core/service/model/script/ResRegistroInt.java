@@ -14,6 +14,36 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 */
 	String ID = "DATOS_REGISTRO";
 
-	// TODO PENDIENTE
+	/**
+	 * Método para establecer oficina.
+	 *
+	 * @param oficina
+	 *            oficina a establecer
+	 */
+	void setOficina(String oficina);
+
+	/**
+	 * Método para establecer libro.
+	 *
+	 * @param libro
+	 *            libro a establecer
+	 */
+	void setLibro(String libro);
+
+	/**
+	 * Método para establecer tipoAsunto.
+	 *
+	 * @param tipoAsunto
+	 *            tipoAsunto a establecer
+	 */
+	void setTipoAsunto(String tipoAsunto);
+
+	/**
+	 * Método para establecer numeroExpediente.
+	 *
+	 * @param numeroExpediente
+	 *            numeroExpediente a establecer
+	 */
+	void setNumeroExpediente(String numeroExpediente);
 
 }

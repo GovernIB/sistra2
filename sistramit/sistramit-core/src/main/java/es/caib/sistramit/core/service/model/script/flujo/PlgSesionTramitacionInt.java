@@ -14,7 +14,9 @@ public interface PlgSesionTramitacionInt extends PluginScriptPlg {
 	/**
 	 * Id plugin.
 	 */
-	String ID = "PLUGIN_SESION";
+	String ID = "PLUGIN_SESIONTRAMITACION";
+
+	// TODO Pendiente ver si ofrecemos datos del catalogo
 
 	/**
 	 * Devuelve id sesion tramitación.
