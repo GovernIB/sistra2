@@ -76,6 +76,12 @@ public final class Constantes {
 	/** Constante fuente datos valores. **/
 	public static final String CLAVE_MOCHILA_FUENTEVALORES = "FUENTEVALORES";
 
+	/** Ids Formularios pasados a traves de la mochila para el dialog de script. **/
+	public static final String CLAVE_MOCHILA_FORMULARIOS = "FORMULARIOS";
+
+	/** Dominios pasados a traves de la mochila para el dialog de script. **/
+	public static final String CLAVE_MOCHILA_DOMINIOS = "DOMINIOS";
+
 	public static final String SISTRAMIT_REST_PWD = "sistramit.rest.pwd";
 
 	public static final String SISTRAMIT_REST_USER = "sistramit.rest.user";
@@ -89,4 +95,5 @@ public final class Constantes {
 	public static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
 	/** Literal info alta ok. */
 	public static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
+
 }

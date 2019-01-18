@@ -127,6 +127,10 @@ a {
 	 margin-left: 4px;
 	 vertical-align:top;
 }
+.seccionMetodos ul li span {
+	 vertical-align:top;
+}
+
 
 .codigoScript {
 	color: #00d;
