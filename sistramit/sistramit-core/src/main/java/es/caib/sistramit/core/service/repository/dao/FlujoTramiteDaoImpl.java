@@ -377,7 +377,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		}
 
 		query.where(predicate);
-		query.orderBy(builder.asc(tableT.get("fechaInicio")));
+		query.orderBy(builder.desc(tableT.get("fechaInicio")));
 
 		query.multiselect(tableS.get("idSesionTramitacion"), tableT.get("idioma"), tableT.get("descripcionTramite"),
 				tableT.get("idTramite"), tableT.get("versionTramite"), tableT.get("fechaInicio"),
@@ -520,7 +520,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		if (pCount) {
 			query.multiselect(builder.countDistinct(tableT));
 		} else {
-			query.orderBy(builder.asc(tableT.get("fechaInicio")));
+			query.orderBy(builder.desc(tableT.get("fechaInicio")));
 			query.distinct(true);
 			query.multiselect(tableT.get("codigo"), tableS.get("idSesionTramitacion"), tableT.get("idTramite"),
 					tableT.get("versionTramite"), tableT.get("idProcedimientoCP"), tableT.get("nifIniciador"),
@@ -585,7 +585,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		if (pCount) {
 			query.multiselect(builder.count(tableD));
 		} else {
-			query.orderBy(builder.asc(tableT.get("fechaInicio")));
+			query.orderBy(builder.desc(tableT.get("fechaInicio")));
 			query.multiselect(tableS.get("idSesionTramitacion"), tableT.get("fechaInicio"), tableT.get("idTramite"),
 					tableT.get("versionTramite"), tableT.get("idProcedimientoCP"), tableD.get("fichero"),
 					tableD.get("ficheroClave"), tableD.get("codigo"), tableD.get("estado"),
@@ -653,7 +653,7 @@ public final class FlujoTramiteDaoImpl implements FlujoTramiteDao {
 		if (pCount) {
 			query.multiselect(builder.count(tableD));
 		} else {
-			query.orderBy(builder.asc(tableT.get("fechaInicio")));
+			query.orderBy(builder.desc(tableT.get("fechaInicio")));
 			query.multiselect(tableS.get("idSesionTramitacion"), tableT.get("fechaInicio"), tableT.get("idTramite"),
 					tableT.get("versionTramite"), tableT.get("idProcedimientoCP"), tableD.get("fichero"),
 					tableD.get("ficheroClave"));

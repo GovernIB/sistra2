@@ -31,7 +31,7 @@ import es.caib.sistramit.core.service.repository.model.HEventoAuditoria;
 import es.caib.sistramit.core.service.repository.model.HSesionTramitacion;
 import es.caib.sistramit.core.service.repository.model.HTramite;
 
-/**
+/** 
  * Implementación DAO Auditoria.
  *
  * @author Indra
