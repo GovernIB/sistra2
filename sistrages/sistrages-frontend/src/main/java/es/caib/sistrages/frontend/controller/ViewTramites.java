@@ -1059,6 +1059,13 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 		}
 
+		/** No se pueden exportar las bloqueadas. **/
+		if (this.versionSeleccionada.getBloqueada()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteExportar.error.tramiteBloqueado"));
+			return;
+		}
+
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
 		UtilJSF.openDialog(DialogTramiteExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
