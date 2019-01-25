@@ -11,6 +11,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -56,7 +57,8 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	 */
 	public void editarDialogScriptValidacion(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
-		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
+				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);

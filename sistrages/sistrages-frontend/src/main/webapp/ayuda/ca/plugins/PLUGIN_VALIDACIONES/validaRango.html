@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.validaRango(valor, minimo, maximo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./validaRango.html">validaRango</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	validaRango(int valor, int minimo, int maximo): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Compara si el paràmetre 'valor' està dins d'un rang determinat.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>valor</b>: Valor a validar dins del rang.</li>
+		<li><b>minimo</b>: Indica el límit mínim del rang.</li>
+		<li><b>maximo</b>: Indica el límit màxim del rang.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si se encuentra dentro del rango y false si no es así.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Validar si la cadena '25689' es troba dins dels límits mínim i màxim. </p>
+ <p class="codigoScript">
+var valido = PLUGIN_VALIDACIONES.validaRango(25689, 16498, 31648);
+</p>
+<p>La funció validaRango retorna 'true' ja que el valor indicat es troba dins del rang.</p>
+<br />
+
+
+</body>
+</html>

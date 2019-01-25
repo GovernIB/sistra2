@@ -22,11 +22,15 @@ import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
+import es.caib.sistrages.core.api.model.types.TypeScript;
+import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
+import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.OpcionArbol;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
@@ -58,7 +62,11 @@ public class DialogScript extends DialogControllerBase {
 	/** Data del script. **/
 	private Script data;
 	/** Tipo script. **/
-	private String tipoScriptParam;
+	private String tipoScriptFlujo;
+	/** Tipo script. **/
+	private String tipoScriptFormulario;
+	/** Tipo de typeScript. **/
+	private TypeScript tipoScript;
 	/** Data del script en formato JSON. **/
 	private String iData;
 
@@ -125,12 +133,24 @@ public class DialogScript extends DialogControllerBase {
 		}
 		mostrarLateralAyuda = false;
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_SCRIPT);
-		setPlugins(UtilScripts.getPluginsScript(null));
 
 		if (TypeModoAcceso.valueOf(this.modoAcceso) == TypeModoAcceso.CONSULTA) {
 			permiteEditar = false;
 		} else {
 			permiteEditar = true;
+		}
+
+		if (tipoScriptFormulario != null) {
+			tipoScript = (TypeScriptFormulario) UtilJSON.fromJSON(tipoScriptFormulario, TypeScriptFormulario.class);
+			if (permiteEditar) {
+				setPlugins(UtilScripts.getPluginsScript((TypeScriptFormulario) tipoScript));
+			}
+		}
+		if (tipoScriptFlujo != null) {
+			tipoScript = (TypeScriptFlujo) UtilJSON.fromJSON(tipoScriptFlujo, TypeScriptFlujo.class);
+			if (permiteEditar) {
+				setPlugins(UtilScripts.getPluginsScript((TypeScriptFlujo) tipoScript));
+			}
 		}
 
 		dominios = new ArrayList<>();
@@ -144,7 +164,7 @@ public class DialogScript extends DialogControllerBase {
 		/* inicializa arbol */
 		treeFormularios = new DefaultTreeNode("Root", null);
 
-		if (permiteEditar && false) {
+		if (permiteEditar) {
 			final Object jsonForms = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIOS);
 			if (jsonForms != null) {
 
@@ -152,7 +172,8 @@ public class DialogScript extends DialogControllerBase {
 				for (final Long idFormulario : idFormularios) {
 					final String identificadorFormulario = formularioInternoService
 							.getIdentificadorFormularioInterno(idFormulario);
-					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(identificadorFormulario);
+					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(
+							new OpcionArbol(identificadorFormulario));
 
 					final DisenyoFormularioSimple formulario = formularioInternoService
 							.getFormularioInternoSimple(idFormulario);
@@ -160,9 +181,10 @@ public class DialogScript extends DialogControllerBase {
 					int i = 1;
 					for (final DisenyoFormularioPaginaSimple pagina : formulario.getPaginas()) {
 						final DefaultTreeNode nodoPagina = new DefaultTreeNode(
-								UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i);
+								new OpcionArbol(UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i));
 						for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
-							final DefaultTreeNode nodoComponente = new DefaultTreeNode(componente.getIdentificador());
+							final DefaultTreeNode nodoComponente = new DefaultTreeNode(
+									new OpcionArbol(componente.getIdentificador(), componente.getTipo()));
 							nodoPagina.getChildren().add(nodoComponente);
 						}
 						nodoFormulario.getChildren().add(nodoPagina);
@@ -772,14 +794,6 @@ public class DialogScript extends DialogControllerBase {
 		this.iData = iData;
 	}
 
-	public String getTipoScriptParam() {
-		return tipoScriptParam;
-	}
-
-	public void setTipoScriptParam(final String tipoScriptParam) {
-		this.tipoScriptParam = tipoScriptParam;
-	}
-
 	/**
 	 * @return the nuevoTexto
 	 */
@@ -943,6 +957,51 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setTreeFormularios(final TreeNode treeFormularios) {
 		this.treeFormularios = treeFormularios;
+	}
+
+	/**
+	 * @return the tipoScript
+	 */
+	public TypeScript getTipoScript() {
+		return tipoScript;
+	}
+
+	/**
+	 * @param tipoScript
+	 *            the tipoScript to set
+	 */
+	public void setTipoScript(final TypeScript tipoScript) {
+		this.tipoScript = tipoScript;
+	}
+
+	/**
+	 * @return the tipoScriptFlujo
+	 */
+	public String getTipoScriptFlujo() {
+		return tipoScriptFlujo;
+	}
+
+	/**
+	 * @param tipoScriptFlujo
+	 *            the tipoScriptFlujo to set
+	 */
+	public void setTipoScriptFlujo(final String tipoScriptFlujo) {
+		this.tipoScriptFlujo = tipoScriptFlujo;
+	}
+
+	/**
+	 * @return the tipoScriptFormulario
+	 */
+	public String getTipoScriptFormulario() {
+		return tipoScriptFormulario;
+	}
+
+	/**
+	 * @param tipoScriptFormulario
+	 *            the tipoScriptFormulario to set
+	 */
+	public void setTipoScriptFormulario(final String tipoScriptFormulario) {
+		this.tipoScriptFormulario = tipoScriptFormulario;
 	}
 
 }

@@ -137,6 +137,10 @@ $(function(){
 			codi_opcions += (es_node.propiedadesEvento !== null) ? "<a class=\"bt bt-propietats\"  title=\"\"><span class=\"i\">&nbsp;</span></a>" : "";
 			codi_opcions += (es_node.trazaError !== null && es_node.trazaError.length > 0) ? "<a class=\"bt bt-traza\"  title=\"\"><span class=\"i\">&nbsp;</span></a>" : "";
 
+			if (es_descripcio == 'null' || es_descripcio == null) {
+				es_descripcio = '';
+			}
+
 			codi_fila += "<div class=\"td icona" + class_ico + "\" role=\"gridcell\">&nbsp;</div>";
 			codi_fila += "<div class=\"td data\" role=\"gridcell\"><p>" + es_data + "</p></div>";
 			codi_fila += "<div class=\"td tipus\" role=\"gridcell\"><p>" + es_tipus_string + "</p></div>";

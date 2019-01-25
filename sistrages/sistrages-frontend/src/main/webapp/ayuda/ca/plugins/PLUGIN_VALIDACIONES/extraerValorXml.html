@@ -1,0 +1,73 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.extraerValorXml(xml, xpath)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./extraerValorXml.html">extraerValorXml</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	extraerValorXml(String xml, String xpath): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Extreu el valor del node XML representat pel xpath indicat.</li>
+		<li>El XML ha d'estar ben format, i el xpath ha de contenir una ruta vàlida a un node del XML</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>xml</b>: Cadena amb estructura de XML. Ha de contenir un XML ben format</li>
+		<li><b>xpath</b>:Cadena que conté el xpath. Conté una seqüència de tags del XML, que marquen la ruta cap al node del qual volem extreure el valor.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Valor del node indicat en el paràmetre xpath. Si la ruta indicada en el xpath no existeix retorna un error.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+
+<p><b>Exemple 1</b> Extreure el valor del node 'dni' en el XML. Per a això, hem de revisar l'estructura completa del XML, i obtenir el xpath adequat. En aquest cas el xpath serà'/xml/persona/dni' </p>
+ <p class="codigoScript">
+	var xml = '&lt;xml>&lt;persona>&lt;nombre>juan&lt;/nombre>&lt;dni>79865432D&lt;/dni>&lt;/persona>&lt;/xml>';<br />
+	var dni = PLUGIN_VALIDACIONES.extraerValorXml(xml, '/xml/persona/dni');
+</p>
+<p>La funció extraerValorXml retorna '79865432D', que és el valor del node dni.</p>
+<br />
+
+<p><b>Exemple 2</b> Pot ocórrer que el node del qual intentem obtenir el valor no existeixi en el XML. Per exemple, si intentem usar el següent xpath '/xml/persona/apellido', fent servir el mateix XML de l'anterior exemple: </p>
+ <p class="codigoScript">
+    var xml = '&lt;xml>&lt;persona>&lt;nombre>juan&lt;/nombre>&lt;dni>79865432D&lt;/dni>&lt;/persona>&lt;/xml>';<br />
+	var persona = PLUGIN_VALIDACIONES.extraerValorXml(xml, '/xml/persona/apellido');
+</p>
+<p>La funció extraerValorXml retorna un error, ja que  '/xml/persona/apellido' no existeix com a node en el XML facilitat.</p>
+<br />
+
+</body>
+</html>

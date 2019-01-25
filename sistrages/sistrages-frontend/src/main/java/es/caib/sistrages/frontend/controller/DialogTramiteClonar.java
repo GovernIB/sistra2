@@ -62,12 +62,14 @@ public class DialogTramiteClonar extends DialogControllerBase {
 	public void init() {
 		LOGGER.debug("Entrando en dialogTramiteClonar.");
 		data = tramiteService.getTramiteVersion(Long.valueOf(id));
+
 		final Tramite tramite = tramiteService.getTramite(data.getIdTramite());
 
 		areas = tramiteService.listArea(UtilJSF.getIdEntidad(), null);
 		areaID = tramite.getIdArea();
 
 		tramites = tramiteService.listTramite(tramite.getIdArea(), null);
+		tramiteID = data.getIdTramite();
 
 	}
 

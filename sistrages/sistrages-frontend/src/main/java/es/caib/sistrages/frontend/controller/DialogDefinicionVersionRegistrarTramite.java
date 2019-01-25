@@ -24,6 +24,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -321,13 +322,14 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	public void editarScript(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
-		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		maps.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
+				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
 		if (script != null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}
-		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion );
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 	}
 

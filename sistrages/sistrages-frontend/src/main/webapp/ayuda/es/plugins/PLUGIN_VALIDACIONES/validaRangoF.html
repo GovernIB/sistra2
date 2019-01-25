@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.validaRangoF(valor, minimo, maximo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./validaRangoF.html">validaRangoF</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	validaRangoF(float valor, float minimo, float maximo): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Compara si el parámetro 'valor' (float) está dentro de un rango marcado. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>valor</b>: Valor a validar dentro del rango. Debe ser un float.</li>
+		<li><b>minimo</b>: Indica el límite mínimo del rango. Debe ser un float.</li>
+		<li><b>maximo</b>: Indica el límite máximo del rango. Debe ser un float.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si se encuentra dentro del rango y false si no es así.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Comprobar que la cadena '25689.37'  se encuentra dentro de los límites mímino y máximo. </p>
+ <p class="codigoScript">
+var valido = PLUGIN_VALIDACIONES.validaRangoF(parseFloat('25689.37',10), parseFloat('16498.12',10), parseFloat('31648',10));
+</p>
+<p>La función validaRangoF retorna 'true' ya que el valor indicado se encuentra dentro del rango.</p>
+<br />
+
+
+</body>
+</html>

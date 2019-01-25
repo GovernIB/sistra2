@@ -32,4 +32,23 @@ public enum TypeScriptFormulario implements TypeScript {
 	 */
 	SCRIPT_PLANTILLA_PDF_DINAMICA;
 
+	/**
+	 * Convierte un string en enumerado.
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	public static TypeScriptFormulario fromString(final String text) {
+		TypeScriptFormulario respuesta = null;
+		if (text != null) {
+			for (final TypeScriptFormulario b : TypeScriptFormulario.values()) {
+				if (text.equalsIgnoreCase(b.toString())) {
+					respuesta = b;
+					break;
+				}
+			}
+		}
+		return respuesta;
+	}
+
 }

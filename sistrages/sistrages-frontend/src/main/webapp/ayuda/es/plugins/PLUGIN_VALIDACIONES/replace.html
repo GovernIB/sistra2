@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.replace(cadena, oldChar, newChar)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./lpad.html">lpad</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	replace(String texto, String oldChar, String newChar): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método usado para reemplazar todas las ocurrencias de una determinada cadena de texto por otra cadena de texto.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÁMETROS DE ENTRADA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>texto</b>: Cadena de texto.</li>
+		<li><b>oldChar</b> Cadena a reemplazar por newchar</li>
+		<li><b>newChar</b>: Cadena de reemplazo.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÁMETROS DE SALIDA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>string</b>: cadena de texto en la que todas las ocurrencias de oldChar han sido reemplazadas por newchar.</li>
+	</ul>
+ </p>
+ <p>
+	<b>EJEMPLOS</b>
+ </p>
+
+ <p><b>Ejemplo 1</b> Reemplazar, en la cadena de texto 'aba', la cadena 'a' por la cadena 'z'. </p>
+ <p class="codigoScript">
+	var cadenaFinal = PLUGIN_VALIDACIONES.replace('aba', 'a', 'z');
+ </p>
+<p> La función replace retorna la cadena 'zbz'.</p>
+<br />
+
+ <p><b>Ejemplo 2</b> Reemplazar, en la cadena de texto 'adbad', la cadena 'ad' por la cadena 'mnm'. </p>
+ <p class="codigoScript">
+	var cadenaFinal = PLUGIN_VALIDACIONES.replace('adbad', 'ad', 'mnm');
+ </p>
+<p> La función replace retorna la cadena 'mnmbmnm'.</p>
+<br />
+
+
+</body>
+</html>

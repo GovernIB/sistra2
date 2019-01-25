@@ -84,6 +84,28 @@ public enum TypeScriptFlujo implements TypeScript {
 	 * Script para indicar los valores a mostrar en la plantilla del paso de
 	 * información personalizado.
 	 */
-	SCRIPT_PLANTILLA_INFO;
+	SCRIPT_PLANTILLA_INFO,
+	/**
+	 * Script plantilla info
+	 */
+	SCRIPT_VARIABLE_FLUJO;
 
+	/**
+	 * Convierte un string en enumerado.
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	public static TypeScriptFlujo fromString(final String text) {
+		TypeScriptFlujo respuesta = null;
+		if (text != null) {
+			for (final TypeScriptFlujo b : TypeScriptFlujo.values()) {
+				if (text.equalsIgnoreCase(b.toString())) {
+					respuesta = b;
+					break;
+				}
+			}
+		}
+		return respuesta;
+	}
 }

@@ -54,9 +54,14 @@ public enum TypeParametroVentana {
 	CAMPO_FICHERO,
 
 	/**
-	 * Tipo script para ventana script.
+	 * Tipo script flujo para ventana script.
 	 **/
-	TIPO_SCRIPT,
+	TIPO_SCRIPT_FLUJO,
+
+	/**
+	 * Tipo script formulario para ventana script.
+	 **/
+	TIPO_SCRIPT_FORMULARIO,
 
 	/**
 	 * tramite.

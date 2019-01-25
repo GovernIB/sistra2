@@ -1,0 +1,62 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.ltrim(cadena)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./ltrim.html">ltrim</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	ltrim(String cadena): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que elimina els espais situats a l'esquerra en la cadena.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES D'ENTRADA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>cadena</b>: Cadena de text a tractar</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES DE SORTIDA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>String</b>: Cadena de text sense espais per l'esquerra.</li>
+	</ul>
+ </p>
+ <p>
+	<b>EXEMPLES</b>
+ </p>
+
+ <p>Tractar la cadena '&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;', per a eliminar els espais de l'esquerra. </p>
+ <p class="codigoScript">
+	var pCadenaLimpia = PLUGIN_VALIDACIONES.ltrim('&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;');
+ </p>
+ <p>La funció ltrim retorna 'cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;'. </p>
+<br />
+
+</body>
+</html>

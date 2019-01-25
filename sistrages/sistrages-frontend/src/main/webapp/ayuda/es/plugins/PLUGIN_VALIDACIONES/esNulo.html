@@ -1,0 +1,69 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esNulo(objeto)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNulo.html">esNulo</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNulo(Object objeto): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el parámetro objeto es nulo.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>objeto</b>: Objeto a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b> : true si el objeto es nulo y false si el objeto no es nulo.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar una variable inicializada a null. </p>
+ <p class="codigoScript">
+	Object object = null;<br />
+	var vacio = PLUGIN_VALIDACIONES.esNulo(object);
+</p>
+<p>La función esNulo retorna 'true', debido a que el contenido de la variable es null.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar una cadena de caracteres vacía.  </p>
+ <p class="codigoScript">
+	var vacio = PLUGIN_VALIDACIONES.esNulo('');
+</p>
+<p>La función esNulo retorna 'false', debido a que el valor objeto no es null.</p>
+<br />
+
+</body>
+</html>

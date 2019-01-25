@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.validaFechaHoraFin(fecha1, fecha2)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./validaFechaHoraFin.html">validaFechaHoraFin</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	validaFechaHoraFin(String fecha1, String fecha2): int
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet comparar 2 dates. Les dates han de tenir el format dd/MM/yyyy HH:mm:ss.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+	<li><b>fecha1</b>: Cadena de text que representa la primera data. El format de la cadena ha de ser dd/MM/yyyy HH:mm:ss. </li>
+	<li><b>fecha2</b>: Cadena de text que representa la segona data. El format de la cadena ha de ser dd/MM/yyyy HH:mm:ss.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Nombre enter, els possibles valors a retornar són:
+				<ol>
+     				<li>0: Si data1 i data2 són iguals.</li>
+     				<li>1: Si data1 és superior a data2.</li>
+    				<li>-1: Si data1 és menor a data2.</li>
+    			</ol>
+		</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Comparar les següents dates '04 de junio de 2018, 10:30:12' i '11 de junio de 2018, 7:30:15'.  </p>
+ <p class="codigoScript">
+var valida = PLUGIN_VALIDACIONES.validaFechaHoraFin('04/06/2018 10:30:12', '11/06/2018 7:30:15');
+</p>
+<p>La funció validaFechaHoraFin retorna -1, ja que data2 és major que data1.</p>
+<br />
+
+<p><b>Exemple 2</b> Comparar les següents dates '15 de mayo de 2018' i '12 de mayo de 2018 7:30:15'. </p>
+ <p class="codigoScript">
+	var pValida = PLUGIN_VALIDACIONES.validaFechaHoraFin('15/05/2018 10:30:12', '12/05/2018 7:30:15');
+</p>
+<p>La funció validaFechaHoraFin retorna 1, ja que data1 és major que data2.</p>
+<br />
+
+</body>
+</html>

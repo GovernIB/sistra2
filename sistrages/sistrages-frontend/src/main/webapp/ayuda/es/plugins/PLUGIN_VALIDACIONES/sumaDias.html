@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.sumaDias(fecha, dias)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./sumaDias.html">sumaDias</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	sumaDias(String fecha, int dias): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que retorna la fecha resultante de sumar el número de días indicado en el parámetro 'dias' a la fecha indicada en el parámetro 'fecha'.</li>
+</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>fecha</b>: Cadena que contiene la fecha.</li>
+		<li><b>dias</b>: Número de días a sumar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caracteres que representa la fecha con los días sumados.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Sumar 3 días a la fecha 23/04/2012. </p>
+ <p class="codigoScript">
+	var fecha = PLUGIN_VALIDACIONES.sumaDias('23/04/2012', 3);
+</p>
+<p>La función sumaDias retorna la cadena '26/04/2012'.</p>
+<br />
+
+</body>
+</html>

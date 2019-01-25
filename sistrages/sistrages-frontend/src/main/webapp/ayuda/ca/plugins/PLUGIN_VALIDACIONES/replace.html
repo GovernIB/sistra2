@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.replace(cadena, oldChar, newChar)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./lpad.html">lpad</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	replace(String texto, String oldChar, String newChar): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode usat per a reemplaçar totes les ocurrències d'una determinada cadena de text per una altra cadena de text.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES D'ENTRADA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>texto</b>: Cadena de text.</li>
+		<li><b>oldChar</b> Cadena a reemplaçar</li>
+		<li><b>newChar</b>: Cadena de reemplaçament.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES DE SORTIDA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>string</b>: cadena de text en la qual totes les ocurrències de oldChar han estat reemplaçades per newchar.</li>
+	</ul>
+ </p>
+ <p>
+	<b>EXEMPLES</b>
+ </p>
+
+ <p><b>Exemple 1</b> Reemplaçar, en la cadena de text 'aba', la cadena 'a' per la cadena 'z'. </p>
+ <p class="codigoScript">
+	var cadenaFinal = PLUGIN_VALIDACIONES.replace('aba', 'a', 'z');
+ </p>
+<p> La funció replace retorna la cadena'zbz'.</p>
+<br />
+
+ <p><b>Exemple 2</b>Reemplaçar, en la cadena de text 'adbad', la cadena 'ad' per la cadena 'mnm'. </p>
+ <p class="codigoScript">
+	var cadenaFinal = PLUGIN_VALIDACIONES.replace('adbad', 'ad', 'mnm');
+ </p>
+<p> La funció replace retorna la cadena 'mnmbmnm'.</p>
+<br />
+
+
+</body>
+</html>

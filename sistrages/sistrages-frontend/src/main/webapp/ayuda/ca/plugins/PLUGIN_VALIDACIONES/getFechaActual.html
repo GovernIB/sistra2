@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.getFechaActual()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./getFechaActual.html">getFechaActual</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getFechaActual(): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna la data actual del sistema.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES DE SORTIDA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>string</b>: Cadena de caràcters que representa la data actual del sistema, amb el format dd/MM/yyyy.</li>
+	</ul>
+ </p>
+ <p>
+	<b>EXEMPLES</b>
+ </p>
+
+ <p>Suposem que avui és 7 de gener de 2019, i desitgem recuperar la data actual del sistema </p>
+ <p class="codigoScript">
+	var hoy = PLUGIN_VALIDACIONES.getFechaActual();
+ </p>
+<p> La funció getFechaActual retornarà '07/01/2019'.</p>
+<br />
+
+</body>
+</html>

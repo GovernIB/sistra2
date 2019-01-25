@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
+import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -248,18 +249,18 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void script(final String tipoScript, final Script script) {
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		params.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
+				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
 		if (id == null || script == null) {
 
-			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion );
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		} else {
 
-			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion );
+			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		}

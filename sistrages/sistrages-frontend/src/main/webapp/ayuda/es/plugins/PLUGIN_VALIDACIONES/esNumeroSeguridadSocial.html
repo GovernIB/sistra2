@@ -1,0 +1,68 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esNumeroSeguridadSocial(nss)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNumeroSeguridadSocial.html">esNumeroSeguridadSocial</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNumeroSeguridadSocial(String nss): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida que el valor introducido no sea nulo, que posea el formato correspondiente a un número de la seguridad social y cumpla con las reglas de validación necesarias para ser un NSS (Número Seguridad Social) Válido. Se considera válida toda aquella cadena que tenga 11 o 12 números que cumplan con las reglas de validación correspondientes a número y dígito de control.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>nss</b>: cadena que representa el número de la seguridad social a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si la cadena introducida es un NSS válido y false si la cadena introducida no es un nss válido.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar la cadena '12/01234567/89'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNumeroSeguridadSocial('12/01234567/89');
+</p>
+<p>La función esNumeroSeguridadSocial retorna 'false', debido a que la cadena no representa un número de seguridad social válido.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar la cadena '120123456787. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNumeroSeguridadSocial('12/01234567/87');
+</p>
+<p>La función esNumeroSeguridadSocial retorna 'true', debido a que la cadena sí que representa un número de seguridad social válido.</p>
+<br />
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.obtenerMes(fecha)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./obtenerMes.html">obtenerMes</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	obtenerMes(String fecha): int
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna el mes de la data introduïda.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES D'ENTRADA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>fecha</b>: Cadena que conté la data.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES DE SORTIDA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>int</b>: Mes de la data introduïda.</li>
+	</ul>
+ </p>
+ <p>
+	<b>EXEMPLES</b>
+ </p>
+
+ <p>Recuperar el mes de la data 22/06/2019. </p>
+ <p class="codigoScript">
+	var mes = PLUGIN_VALIDACIONES.obtenerMes('22/06/2019');
+ </p>
+<p>La funció obtenerMes retorna 6.</p>
+<br />
+
+</body>
+</html>

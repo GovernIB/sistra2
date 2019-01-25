@@ -42,6 +42,7 @@ import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
+import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -1185,10 +1186,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarDialogScript(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
-		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
+				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion );
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 
 	}

@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esNumeroCuentaValido(entidad, sucursal, dc, cuenta)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNumeroCuentaValido2.html">esNumeroCuentaValido</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNumeroCuentaValido(String entidad, String sucursal, String dc, String cuenta): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si els valors introduïts no són nuls, i compleix amb les regles de validació necessàries per a ser un NCC (Número Compte Corrent) Vàlid. Es consideren  vàlides tota aquella cadena que tinguin 4 números per a l'entitat, 4 números per a la sucursal, 2 números per als dígits de control i 10 números per al compte corrent i que compleixin amb les regles de validació corresponents a la combinació d'entitat, oficina, dígit de control i número de compte.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>entidad</b>: Codi de 4 dígits de l'entitat bancària.</li>
+		<li><b>sucursal</b>: Codi de 4 dígits del Número de sucursal.</li>
+		<li><b>dc</b>: Codi de 2 dígits per als digits de control.</li>
+		<li><b>cuenta</b>: Codi de 10 dígits Número de compte.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si entitat+sucursal+dc+compte formen un número de compte vàlid i false si entitat+sucursal+dc+compte no formen un número de compte vàlid.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar els següents valors: entitat: '1234', sucursal: '5678', dc: '90', compte: '1234567890'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNumeroCuentaValido('1234', '5678', '90', '1234567890');
+</p>
+<p>La función esNumeroCuentaValido retorna 'false' ya que los parámetros introducidos no forman un número de cuenta válido, el dígito de control no es correcto..</p>
+<br />
+
+<p><b>Exemple 2</b> Validar els següents valors: entitat: '1234', sucursal: '5678', dc: '06', compte: '1234567890'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNumeroCuentaValido ('1234', '5678', '06', '1234567890');
+</p>
+<p>La función esNumeroCuentaValido retorna 'true', ja que els paràmetres introduïts formen un número de compte vàlid.</p>
+<br />
+
+</body>
+</html>

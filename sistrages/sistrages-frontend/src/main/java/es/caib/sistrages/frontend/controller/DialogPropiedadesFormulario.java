@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.Script;
+import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -146,10 +147,11 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 */
 	public void editarDialogScriptPlantilla(final String tipoScript, final Script script) {
 		final Map<String, String> maps = new HashMap<>();
-		maps.put(TypeParametroVentana.TIPO_SCRIPT.toString(), tipoScript);
+		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
+				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), id );
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), id);
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), maps, true, 700);
 
 	}

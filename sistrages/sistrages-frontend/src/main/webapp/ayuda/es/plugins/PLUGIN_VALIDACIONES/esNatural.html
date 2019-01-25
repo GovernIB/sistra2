@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esNatural(numero)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNatural.html">esNatural</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNatural(String numero): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el valor introducido es no nulo, numérico, entero y positivo.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numero</b>: Número natural a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b> : true si el número es un numero natural y false si el número no es un número natural.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar si la cadena 4,0 es un número natural. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNatural('4,0');
+</p>
+<p>La función esNatural retorna 'false', debido a que la cadena no representa un número natural.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar si la cadena -77 es un número natural. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNatural('-77');
+</p>
+<p>La función esNatural retorna 'false', debido a que la cadena no representa un número natural.</p>
+<br />
+
+<p><b>Ejemplo 3</b> Validar si la cadena 5 es un número natural</p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNatural('5');
+	</p>
+<p>La función esNatural retorna 'true', debido a que la cadena representa un número natural.</p>
+<br />
+
+</body>
+</html>

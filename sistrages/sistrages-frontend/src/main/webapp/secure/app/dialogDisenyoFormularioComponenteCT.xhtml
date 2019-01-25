@@ -11,7 +11,7 @@
 	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipo']}" /></h:column>
 	<h:column>
 		<p:selectOneMenu id="tipoCampoTexto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.tipoCampoTexto}" required="true" disabled="#{dialogDisenyoFormulario.consulta}">
-		    <p:ajax event="blur" process="@this"/>
+		    <p:ajax event="blur" process="@this" />
 		    <p:ajax event="change" update="panelPropietats" />
 		    <f:selectItems value="#{TypeCampoTexto.ALL_VALUES}" var="tipoCampoTexto" itemLabel="#{msg['typeCampoTexto.' += tipoCampoTexto.name()]}" />
 		</p:selectOneMenu>

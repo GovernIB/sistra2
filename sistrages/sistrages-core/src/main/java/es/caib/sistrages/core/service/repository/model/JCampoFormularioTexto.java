@@ -309,6 +309,7 @@ public class JCampoFormularioTexto implements IModelApi {
 		jModel.setTelefonoMovil(false);
 		jModel.setPermiteRango(false);
 		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea));
+		jModel.setNumeroSeparador("PC"); // Punto y coma
 		return jModel;
 	}
 

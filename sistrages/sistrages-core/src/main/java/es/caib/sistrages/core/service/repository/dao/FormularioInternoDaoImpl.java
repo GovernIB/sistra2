@@ -926,7 +926,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			final DisenyoFormularioPaginaSimple pagina = new DisenyoFormularioPaginaSimple();
 
 			for (final long idPagina : idPaginas) {
-				final String sqlComponentes = "select elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina ";
+				// Filtramos por tipo (solo los que son de tipo textbox, checkbox, captcha y
+				// selector)
+				final String sqlComponentes = "select elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP') ";
 				final Query queryComponentes = entityManager.createQuery(sqlComponentes);
 				queryComponentes.setParameter("idPagina", idPagina);
 				final List<Object[]> componentes = queryComponentes.getResultList();

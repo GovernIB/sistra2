@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esTelefonoMovil(telefono)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esTelefonoMovil.html">esTelefonoMovil</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esTelefonoMovil(String telefono): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el valor introducido cumple con las reglas de validación necesarias para ser un número de teléfono móvil válido.</li>
+		<li>Se considera válida toda aquella cadena no nula que tenga 9 números y que empiece por 6 o 7.</li>
+    	
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>telefono</b>: Cadena que representa el número de teléfono móvil.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si la cadena representa un teléfono móvil válido y false si la cadena no representa un teléfono móvil válido</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+
+<p><b>Ejemplo 1</b> Validar la cadena '971177714'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esTelefonoMovil('971177714');
+</p>
+<p>La función esTelefonoMovil retorna 'false', debido a que el teléfono no se corresponde con el formato de un número de teléfono móvil. La cadena corresponde a un número de teléfono fijo.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar la cadena '663467284'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esTelefonoMovil('663467284');
+</p>
+<p>La función esTelefonoMovil retorna 'true', debido a que el teléfono se corresponde con el formato de un número de teléfono móvil.</p>
+<br />
+
+</body>
+</html>
