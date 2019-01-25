@@ -135,7 +135,7 @@ public class PurgaServiceImpl implements PurgaService {
 	 */
 	private void procesoPurgarTramitesPurga(final ListaPropiedades lp) {
 		final int num = this.purgaComponent.realizarPurgaTramitesMarcadosParaPurgar();
-		lp.addPropiedad("Tramites purgados", Integer.toString(num));
+		lp.addPropiedad("Tràmits purgats", Integer.toString(num));
 	}
 
 	/**
