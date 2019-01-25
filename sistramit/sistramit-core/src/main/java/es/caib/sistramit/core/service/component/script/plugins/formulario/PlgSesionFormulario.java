@@ -2,7 +2,7 @@ package es.caib.sistramit.core.service.component.script.plugins.formulario;
 
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.script.plugins.ClzDatosUsuario;
-import es.caib.sistramit.core.service.model.formulario.VariablesFormulario;
+import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.ClzDatosUsuarioInt;
 import es.caib.sistramit.core.service.model.script.formulario.PlgSesionFormularioInt;
 

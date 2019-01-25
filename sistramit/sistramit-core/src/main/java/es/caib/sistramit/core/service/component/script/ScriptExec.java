@@ -5,7 +5,7 @@ import java.util.Map;
 
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
-import es.caib.sistramit.core.service.model.formulario.VariablesFormulario;
+import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;

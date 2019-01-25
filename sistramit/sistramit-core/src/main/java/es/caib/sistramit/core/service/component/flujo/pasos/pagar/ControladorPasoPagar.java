@@ -310,7 +310,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 * @param pDefinicionTramite
 	 *            Definición trámite
 	 * @param pPagoDef
-	 *            Definición pago en GTT
+	 *            Definición pago
 	 * @param pVariablesFlujo
 	 *            Variables flujo
 	 * @return Datos del pago

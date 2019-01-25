@@ -17,6 +17,8 @@ import es.caib.sistramit.core.service.model.script.flujo.PlgSesionTramitacionInt
 @SuppressWarnings("serial")
 public final class PlgSesionTramitacion implements PlgSesionTramitacionInt {
 
+	// TODO FALTA INFO INFO TRAMITE CP
+
 	/**
 	 * Almacenamos variables flujo para permitir acceso a las propiedades generales
 	 * del trámite.

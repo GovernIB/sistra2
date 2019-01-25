@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 @SuppressWarnings("serial")
 public final class DatosUsuario implements ModelApi {
 
-	// TODO Meter tipo de identificacion
-
 	/**
 	 * Nombre.
 	 */

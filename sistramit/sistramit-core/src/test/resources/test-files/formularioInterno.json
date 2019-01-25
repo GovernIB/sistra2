@@ -1,0 +1,283 @@
+{
+    "mostrarTitulo": true,
+    "titulo": "XX",
+    "plantillas": [
+        {
+            "identificador": "P1",
+            "claseFormateador": "es.caib.formateador1",
+            "ficheroPlantilla": null,
+            "defecto": true
+              }
+            ],
+    "scriptPlantillas": null,
+    "paginas": [
+        {
+            "htmlB64": "<html/>",
+            "paginaFinal": true,
+            "scriptValidacion": null,
+            "lineas": [
+                {
+                    "componentes": [
+                        {
+                            "type": "RComponenteTextbox",
+                            "identificador": "ID_1547836002218",
+                            "tipo": "CT",
+                            "etiqueta": "Texto",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "tipoTexto": null,
+                            "textoNormal": {
+                                "tamanyoMax": 0,
+                                "multilinea": false
+                            },
+                            "textoNumero": {
+                                "precisionEntera": 0,
+                                "precisionDecimal": 0,
+                                "formatoNumero": "PC",
+                                "rango": false,
+                                "rangoDesde": 0,
+                                "rangoHasta": 0,
+                                "negativos": false
+                            },
+                            "textoIdentificacion": {
+                                "nif": false,
+                                "cif": false,
+                                "nie": false,
+                                "nss": false
+                            },
+                            "textoExpRegular": null
+                      },
+                        {
+                            "type": "RComponenteTextbox",
+                            "identificador": "ID_1547836588726",
+                            "tipo": "CT",
+                            "etiqueta": "Texto fecha",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "tipoTexto": null,
+                            "textoNormal": {
+                                "tamanyoMax": 0,
+                                "multilinea": false
+                            },
+                            "textoNumero": {
+                                "precisionEntera": 0,
+                                "precisionDecimal": 0,
+                                "formatoNumero": "PC",
+                                "rango": false,
+                                "rangoDesde": 0,
+                                "rangoHasta": 0,
+                                "negativos": false
+                            },
+                            "textoIdentificacion": {
+                                "nif": false,
+                                "cif": false,
+                                "nie": false,
+                                "nss": false
+                            },
+                            "textoExpRegular": null
+                      },
+                        {
+                            "type": "RComponenteTextbox",
+                            "identificador": "ID_1547836668250",
+                            "tipo": "CT",
+                            "etiqueta": "Texto hora",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "tipoTexto": null,
+                            "textoNormal": {
+                                "tamanyoMax": 0,
+                                "multilinea": false
+                            },
+                            "textoNumero": {
+                                "precisionEntera": 0,
+                                "precisionDecimal": 0,
+                                "formatoNumero": "PC",
+                                "rango": false,
+                                "rangoDesde": 0,
+                                "rangoHasta": 0,
+                                "negativos": false
+                            },
+                            "textoIdentificacion": {
+                                "nif": false,
+                                "cif": false,
+                                "nie": false,
+                                "nss": false
+                            },
+                            "textoExpRegular": null
+                      }
+                    ]
+                  },
+                {
+                    "componentes": [
+                        {
+                            "type": "RComponenteSelector",
+                            "identificador": "ID_1547836716001",
+                            "tipo": "SE",
+                            "etiqueta": "Lista desplegable",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "tipoSelector": null,
+                            "tipoListaValores": "F",
+                            "listaFija": [],
+                            "listaDominio": {
+                                "dominio": null,
+                                "campoCodigo": null,
+                                "campoDescripción": null,
+                                "parametros": []
+                            },
+                            "scriptListaValores": null
+                      },
+                        {
+                            "type": "RComponenteSelector",
+                            "identificador": "ID_1547837350867",
+                            "tipo": "SE",
+                            "etiqueta": "Selector",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "tipoSelector": null,
+                            "tipoListaValores": "F",
+                            "listaFija": [],
+                            "listaDominio": {
+                                "dominio": null,
+                                "campoCodigo": null,
+                                "campoDescripción": null,
+                                "parametros": []
+                            },
+                            "scriptListaValores": null
+                      },
+                        {
+                            "type": "RComponenteSelector",
+                            "identificador": "ID_1547836749774",
+                            "tipo": "SE",
+                            "etiqueta": "Selector múltiple",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "tipoSelector": null,
+                            "tipoListaValores": "F",
+                            "listaFija": [],
+                            "listaDominio": {
+                                "dominio": null,
+                                "campoCodigo": null,
+                                "campoDescripción": null,
+                                "parametros": []
+                            },
+                            "scriptListaValores": null
+                      },
+                        {
+                            "type": "RComponenteSelector",
+                            "identificador": "ID_1547836780637",
+                            "tipo": "SE",
+                            "etiqueta": "Selector único",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "tipoSelector": null,
+                            "tipoListaValores": "F",
+                            "listaFija": [],
+                            "listaDominio": {
+                                "dominio": null,
+                                "campoCodigo": null,
+                                "campoDescripción": null,
+                                "parametros": []
+                            },
+                            "scriptListaValores": null
+                      }
+                    ]
+                  },
+                {
+                    "componentes": [
+                        {
+                            "type": "RComponenteCheckbox",
+                            "identificador": "ID_1547836811958",
+                            "tipo": "CK",
+                            "etiqueta": "Check",
+                            "mostrarEtiqueta": true,
+                            "alineacion": "I",
+                            "columnas": 1,
+                            "ayuda": "",
+                            "propiedadesCampo": {
+                                "obligatorio": false,
+                                "soloLectura": false,
+                                "noModificable": false,
+                                "scriptAutorrellenable": null,
+                                "scriptEstado": null,
+                                "scriptValidacion": null
+                            },
+                            "valorChecked": "S",
+                            "valorNoChecked": "N"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+}

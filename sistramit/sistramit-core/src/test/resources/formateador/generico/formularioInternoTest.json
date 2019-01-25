@@ -1,1 +1,868 @@
-{"mostrarTitulo":true,"titulo":"Título del formulario","plantillas":[],"scriptPlantillas":null,"paginas":[{"htmlB64":"<html/>","paginaFinal":true,"scriptValidacion":null,"lineas":[{"componentes":[{"type":"RComponenteSeccion","identificador":"ID_1540200342046","tipo":"SC","etiqueta":"Datos personales","mostrarEtiqueta":true,"alineacion":"I","columnas":6,"ayuda":"","letra":"A"}]},{"componentes":[{"type":"RComponenteTextbox","identificador":"ID_1540200310032","tipo":"CT","etiqueta":"Nombre","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":true,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1540217970178","tipo":"CT","etiqueta":"Apellido1","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1540218013263","tipo":"CT","etiqueta":"Apellido 2","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null}]},{"componentes":[{"type":"RComponenteSeccion","identificador":"ID_1536852688895","tipo":"SC","etiqueta":"Estudios universitarios","mostrarEtiqueta":true,"alineacion":"I","columnas":6,"ayuda":"","letra":"B"}]},{"componentes":[{"type":"RComponenteSelector","identificador":"ID_1540219234562","tipo":"SE","etiqueta":"Títulos educativos","mostrarEtiqueta":true,"alineacion":"I","columnas":4,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoSelector":null,"tipoListaValores":"F","listaFija":[{"codigo":"FP","descripcion":"FP","porDefecto":false},{"codigo":"GS","descripcion":"Grado superior","porDefecto":false},{"codigo":"MT","descripcion":"Máster","porDefecto":false},{"codigo":"DT","descripcion":"Doctorado","porDefecto":false},{"codigo":"CA","descripcion":"Cátedra","porDefecto":false}],"listaDominio":{"dominio":null,"campoCodigo":null,"campoDescripción":null,"parametros":[]},"scriptListaValores":null},{"type":"RComponenteCheckbox","identificador":"ID_1540219396253","tipo":"CK","etiqueta":"Alguno de los títulos es de un centro educativo de España","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"valorChecked":"S","valorNoChecked":"N"}]},{"componentes":[{"type":"RComponenteTextbox","identificador":"ID_1538490286865","tipo":"CT","etiqueta":"Lugar universidad","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":150,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1538490534185","tipo":"CT","etiqueta":"Nom universitat","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":150,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteSelector","identificador":"ID_1538557979878","tipo":"SE","etiqueta":"Título","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoSelector":null,"tipoListaValores":"F","listaFija":[],"listaDominio":{"dominio":null,"campoCodigo":null,"campoDescripción":null,"parametros":[]},"scriptListaValores":null}]},{"componentes":[{"type":"RComponenteTextbox","identificador":"ID_1540219071464","tipo":"CT","etiqueta":"Títulos en idiomas","mostrarEtiqueta":true,"alineacion":"I","columnas":4,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteCheckbox","identificador":"ID_1540219110471","tipo":"CK","etiqueta":"Tiene el Mitjà","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"valorChecked":"S","valorNoChecked":"N"}]},{"componentes":[{"type":"RComponenteAviso","identificador":"ID_1536852689364","tipo":"ET","etiqueta":"Deberá llevar impreso los títulos","mostrarEtiqueta":true,"alineacion":"I","columnas":6,"ayuda":"","tipoAviso":"I"}]},{"componentes":[]}]},{"htmlB64":"<html/>","paginaFinal":false,"scriptValidacion":null,"lineas":[{"componentes":[]},{"componentes":[{"type":"RComponenteAviso","identificador":"ID_1540218418420","tipo":"ET","etiqueta":"Los siguientes datos es para mantener el contacto","mostrarEtiqueta":true,"alineacion":"I","columnas":6,"ayuda":"","tipoAviso":"I"}]},{"componentes":[{"type":"RComponenteTextbox","identificador":"ID_1540220994236","tipo":"CT","etiqueta":"Email para recibir publicidad","mostrarEtiqueta":true,"alineacion":"I","columnas":3,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteSelector","identificador":"ID_1540221034402","tipo":"SE","etiqueta":"Selector","mostrarEtiqueta":true,"alineacion":"I","columnas":1,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoSelector":null,"tipoListaValores":"F","listaFija":[],"listaDominio":{"dominio":null,"campoCodigo":null,"campoDescripción":null,"parametros":[]},"scriptListaValores":null},{"type":"RComponenteCheckbox","identificador":"ID_1540221106317","tipo":"CK","etiqueta":"Acepta recibir información","mostrarEtiqueta":true,"alineacion":"I","columnas":1,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"valorChecked":"S","valorNoChecked":"N"}]},{"componentes":[{"type":"RComponenteSeccion","identificador":"ID_1540220902783","tipo":"SC","etiqueta":"Dirección","mostrarEtiqueta":true,"alineacion":"I","columnas":6,"ayuda":"","letra":"C"}]},{"componentes":[{"type":"RComponenteSelector","identificador":"ID_1540218472145","tipo":"SE","etiqueta":"Tipo dirección","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoSelector":null,"tipoListaValores":"F","listaFija":[{"codigo":"CAL","descripcion":"Calle","porDefecto":true},{"codigo":"AVE","descripcion":"Avenida","porDefecto":false},{"codigo":"VIA","descripcion":"Vía","porDefecto":false},{"codigo":"CAM","descripcion":"Camino","porDefecto":false}],"listaDominio":{"dominio":null,"campoCodigo":null,"campoDescripción":null,"parametros":[]},"scriptListaValores":null},{"type":"RComponenteTextbox","identificador":"ID_1540218422622","tipo":"CT","etiqueta":"Nombre de la calle","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1540218786901","tipo":"CT","etiqueta":"Patio","mostrarEtiqueta":true,"alineacion":"I","columnas":1,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1540218839803","tipo":"CT","etiqueta":"Puerta","mostrarEtiqueta":true,"alineacion":"I","columnas":1,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null}]},{"componentes":[{"type":"RComponenteTextbox","identificador":"ID_1540218425516","tipo":"CT","etiqueta":"Código postal","mostrarEtiqueta":true,"alineacion":"I","columnas":1,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1540218431563","tipo":"CT","etiqueta":"Municipio","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1540218803869","tipo":"CT","etiqueta":"Provincia","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null}]},{"componentes":[{"type":"RComponenteTextbox","identificador":"ID_1540218985749","tipo":"CT","etiqueta":"Teléfono de contacto","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null},{"type":"RComponenteTextbox","identificador":"ID_1540219032190","tipo":"CT","etiqueta":"Email","mostrarEtiqueta":true,"alineacion":"I","columnas":2,"ayuda":"","propiedadesCampo":{"obligatorio":false,"soloLectura":false,"noModificable":false,"scriptAutorrellenable":null,"scriptEstado":null,"scriptValidacion":null},"tipoTexto":null,"textoNormal":{"tamanyoMax":0,"multilinea":false},"textoNumero":{"precisionEntera":0,"precisionDecimal":0,"formatoNumero":null,"rango":false,"rangoDesde":0,"rangoHasta":0,"negativos":false},"textoIdentificacion":{"nif":false,"cif":false,"nie":false,"nss":false},"textoExpRegular":null}]}]}]}
+{
+    "mostrarTitulo": true,
+    "titulo": "Título del formulario",
+    "plantillas": [],
+    "scriptPlantillas": null,
+    "paginas": [{
+        "htmlB64": "<html/>",
+        "paginaFinal": true,
+        "scriptValidacion": null,
+        "lineas": [{
+            "componentes": [{
+                "type": "RComponenteSeccion",
+                "identificador": "ID_1540200342046",
+                "tipo": "SC",
+                "etiqueta": "Datos personales",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 6,
+                "ayuda": "",
+                "letra": "A"
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540200310032",
+                "tipo": "CT",
+                "etiqueta": "Nombre",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": true,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540217970178",
+                "tipo": "CT",
+                "etiqueta": "Apellido1",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218013263",
+                "tipo": "CT",
+                "etiqueta": "Apellido 2",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteSeccion",
+                "identificador": "ID_1536852688895",
+                "tipo": "SC",
+                "etiqueta": "Estudios universitarios",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 6,
+                "ayuda": "",
+                "letra": "B"
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteSelector",
+                "identificador": "ID_1540219234562",
+                "tipo": "SE",
+                "etiqueta": "Títulos educativos",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 4,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoSelector": null,
+                "tipoListaValores": "F",
+                "listaFija": [{
+                    "codigo": "FP",
+                    "descripcion": "FP",
+                    "porDefecto": false
+                }, {
+                    "codigo": "GS",
+                    "descripcion": "Grado superior",
+                    "porDefecto": false
+                }, {
+                    "codigo": "MT",
+                    "descripcion": "Máster",
+                    "porDefecto": false
+                }, {
+                    "codigo": "DT",
+                    "descripcion": "Doctorado",
+                    "porDefecto": false
+                }, {
+                    "codigo": "CA",
+                    "descripcion": "Cátedra",
+                    "porDefecto": false
+                }],
+                "listaDominio": {
+                    "dominio": null,
+                    "campoCodigo": null,
+                    "campoDescripción": null,
+                    "parametros": []
+                },
+                "scriptListaValores": null
+            }, {
+                "type": "RComponenteCheckbox",
+                "identificador": "ID_1540219396253",
+                "tipo": "CK",
+                "etiqueta": "Alguno de los títulos es de un centro educativo de España",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "valorChecked": "S",
+                "valorNoChecked": "N"
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1538490286865",
+                "tipo": "CT",
+                "etiqueta": "Lugar universidad",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 150,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1538490534185",
+                "tipo": "CT",
+                "etiqueta": "Nom universitat",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 150,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteSelector",
+                "identificador": "ID_1538557979878",
+                "tipo": "SE",
+                "etiqueta": "Título",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoSelector": null,
+                "tipoListaValores": "F",
+                "listaFija": [],
+                "listaDominio": {
+                    "dominio": null,
+                    "campoCodigo": null,
+                    "campoDescripción": null,
+                    "parametros": []
+                },
+                "scriptListaValores": null
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540219071464",
+                "tipo": "CT",
+                "etiqueta": "Títulos en idiomas",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 4,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteCheckbox",
+                "identificador": "ID_1540219110471",
+                "tipo": "CK",
+                "etiqueta": "Tiene el Mitjà",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "valorChecked": "S",
+                "valorNoChecked": "N"
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteAviso",
+                "identificador": "ID_1536852689364",
+                "tipo": "ET",
+                "etiqueta": "Deberá llevar impreso los títulos",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 6,
+                "ayuda": "",
+                "tipoAviso": "I"
+            }]
+        }, {
+            "componentes": []
+        }]
+    }, {
+        "htmlB64": "<html/>",
+        "paginaFinal": false,
+        "scriptValidacion": null,
+        "lineas": [{
+            "componentes": []
+        }, {
+            "componentes": [{
+                "type": "RComponenteAviso",
+                "identificador": "ID_1540218418420",
+                "tipo": "ET",
+                "etiqueta": "Los siguientes datos es para mantener el contacto",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 6,
+                "ayuda": "",
+                "tipoAviso": "I"
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540220994236",
+                "tipo": "CT",
+                "etiqueta": "Email para recibir publicidad",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 3,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteSelector",
+                "identificador": "ID_1540221034402",
+                "tipo": "SE",
+                "etiqueta": "Selector",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 1,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoSelector": null,
+                "tipoListaValores": "F",
+                "listaFija": [],
+                "listaDominio": {
+                    "dominio": null,
+                    "campoCodigo": null,
+                    "campoDescripción": null,
+                    "parametros": []
+                },
+                "scriptListaValores": null
+            }, {
+                "type": "RComponenteCheckbox",
+                "identificador": "ID_1540221106317",
+                "tipo": "CK",
+                "etiqueta": "Acepta recibir información",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 1,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "valorChecked": "S",
+                "valorNoChecked": "N"
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteSeccion",
+                "identificador": "ID_1540220902783",
+                "tipo": "SC",
+                "etiqueta": "Dirección",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 6,
+                "ayuda": "",
+                "letra": "C"
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteSelector",
+                "identificador": "ID_1540218472145",
+                "tipo": "SE",
+                "etiqueta": "Tipo dirección",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoSelector": null,
+                "tipoListaValores": "F",
+                "listaFija": [{
+                    "codigo": "CAL",
+                    "descripcion": "Calle",
+                    "porDefecto": true
+                }, {
+                    "codigo": "AVE",
+                    "descripcion": "Avenida",
+                    "porDefecto": false
+                }, {
+                    "codigo": "VIA",
+                    "descripcion": "Vía",
+                    "porDefecto": false
+                }, {
+                    "codigo": "CAM",
+                    "descripcion": "Camino",
+                    "porDefecto": false
+                }],
+                "listaDominio": {
+                    "dominio": null,
+                    "campoCodigo": null,
+                    "campoDescripción": null,
+                    "parametros": []
+                },
+                "scriptListaValores": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218422622",
+                "tipo": "CT",
+                "etiqueta": "Nombre de la calle",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218786901",
+                "tipo": "CT",
+                "etiqueta": "Patio",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 1,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218839803",
+                "tipo": "CT",
+                "etiqueta": "Puerta",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 1,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218425516",
+                "tipo": "CT",
+                "etiqueta": "Código postal",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 1,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218431563",
+                "tipo": "CT",
+                "etiqueta": "Municipio",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218803869",
+                "tipo": "CT",
+                "etiqueta": "Provincia",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }]
+        }, {
+            "componentes": [{
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540218985749",
+                "tipo": "CT",
+                "etiqueta": "Teléfono de contacto",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_1540219032190",
+                "tipo": "CT",
+                "etiqueta": "Email",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 2,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }]
+        }]
+    }]
+}

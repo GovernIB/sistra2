@@ -1,0 +1,149 @@
+package es.caib.sistramit.core.service.repository.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Repository;
+
+import es.caib.sistra2.commons.utils.GeneradorId;
+import es.caib.sistra2.commons.utils.JSONUtilException;
+import es.caib.sistra2.commons.utils.Serializador;
+import es.caib.sistramit.core.api.exception.SerializacionException;
+import es.caib.sistramit.core.api.exception.TicketFormularioException;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.service.model.formulario.DatosFinalizacionFormulario;
+import es.caib.sistramit.core.service.model.formulario.DatosInicioSesionFormulario;
+import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
+import es.caib.sistramit.core.service.repository.model.HFormulario;
+
+/**
+ * Implementación DAO Formulario.
+ *
+ * @author Indra
+ */
+@Repository("formularioDao")
+public final class FormularioDaoImpl implements FormularioDao {
+
+	/**
+	 * Entity manager.
+	 */
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	@Override
+	public String crearSesionGestorFormularios(DatosInicioSesionFormulario dis) {
+		// Generamos el ticket
+		final String ticket = GeneradorId.generarId();
+		// Establecemos datos
+		final HFormulario hFormulario = new HFormulario();
+		hFormulario.setTicket(ticket);
+		hFormulario.setFechaInicio(new Date());
+		hFormulario.setIdSesionTramitacion(dis.getIdSesionTramitacion());
+		hFormulario.setIdPaso(dis.getIdPaso());
+		hFormulario.setIdTramite(dis.getIdTramite());
+		hFormulario.setVersionTramite(dis.getVersionTramite());
+		hFormulario.setReleaseTramite(dis.getReleaseTramite());
+		hFormulario.setIdFormulario(dis.getIdFormulario());
+		hFormulario.setInterno(dis.isInterno());
+		hFormulario.setDatosActuales(dis.getXmlDatosActuales());
+		try {
+			hFormulario.setInfoAutenticacion(Serializador.serializeJSON(dis.getInfoAutenticacion()));
+			hFormulario.setParametrosFormulario(Serializador.serializeJSON(dis.getParametros()));
+		} catch (final JSONUtilException e) {
+			throw new SerializacionException("Error serializando datos inicio formulario", e);
+		}
+		// Almacenamos datos inicio formulario
+		entityManager.persist(hFormulario);
+		// Retornamos ticket
+		return ticket;
+	}
+
+	@Override
+	public DatosInicioSesionFormulario obtenerDatosInicioSesionGestorFormularios(String ticket) {
+
+		// Busca datos inicio
+		final HFormulario h = obtenerSesionFormulario(ticket);
+
+		// Se usara solo para formularios internos
+		if (!h.isInterno()) {
+			throw new TicketFormularioException("Esta función solo está permitida para formularios internos " + ticket);
+		}
+
+		// TODO Establecer tiempo max de inicio
+
+		// Establecemos datos
+		final DatosInicioSesionFormulario dis = new DatosInicioSesionFormulario();
+		dis.setIdSesionTramitacion(h.getIdSesionTramitacion());
+		dis.setIdPaso(h.getIdPaso());
+		dis.setIdTramite(h.getIdTramite());
+		dis.setVersionTramite(h.getVersionTramite());
+		dis.setReleaseTramite(h.getReleaseTramite());
+		dis.setIdFormulario(h.getIdFormulario());
+		dis.setInterno(h.isInterno());
+		dis.setXmlDatosActuales(h.getDatosActuales());
+		try {
+			dis.setInfoAutenticacion((UsuarioAutenticadoInfo) Serializador.deserializeJSON(h.getInfoAutenticacion(),
+					UsuarioAutenticadoInfo.class));
+			dis.setParametros((ParametrosAperturaFormulario) Serializador.deserializeJSON(h.getParametrosFormulario(),
+					ParametrosAperturaFormulario.class));
+		} catch (final JSONUtilException e) {
+			throw new SerializacionException("Error serializando datos inicio formulario", e);
+		}
+
+		return dis;
+	}
+
+	@Override
+	public void finalizarSesionGestorFormularios(String ticket, DatosFinalizacionFormulario datosFinSesion) {
+		final HFormulario hFormulario = obtenerSesionFormulario(ticket);
+		hFormulario.setPdf(datosFinSesion.getPdf());
+		hFormulario.setXml(datosFinSesion.getXml());
+		hFormulario.setFechaFin(new Date());
+		hFormulario.setCancelado(datosFinSesion.isCancelado());
+		entityManager.merge(hFormulario);
+	}
+
+	@Override
+	public DatosFinalizacionFormulario obtenerDatosFinSesionGestorFormularios(String ticket) {
+		final HFormulario hFormulario = obtenerSesionFormulario(ticket);
+		if (hFormulario.isUsadoRetorno()) {
+			throw new TicketFormularioException("Ya se ha usado el ticket para retornar el formulario " + ticket);
+		}
+		if (hFormulario.getFechaFin() != null) {
+			throw new TicketFormularioException("La sesión de formulario no se ha finalizado " + ticket);
+		}
+		final DatosFinalizacionFormulario df = new DatosFinalizacionFormulario();
+		df.setFechaFinalizacion(hFormulario.getFechaFin());
+		df.setCancelado(hFormulario.isCancelado());
+		df.setXml(hFormulario.getXml());
+		df.setPdf(hFormulario.getPdf());
+		return df;
+	}
+
+	/**
+	 * Busca sesión formulario a partir ticket.
+	 *
+	 * @param ticket
+	 *            ticket
+	 * @return sesión formulario
+	 */
+	private HFormulario obtenerSesionFormulario(String ticket) {
+		HFormulario h = null;
+		final String sql = "SELECT t FROM HFormulario t WHERE t.ticket = :ticket";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("ticket", ticket);
+		final List results = query.getResultList();
+		if (!results.isEmpty()) {
+			h = (HFormulario) results.get(0);
+		}
+		if (h == null) {
+			throw new TicketFormularioException("No existe formulario con el ticket " + ticket);
+		}
+		return h;
+	}
+
+}

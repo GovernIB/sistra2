@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.model.formulario;
+package es.caib.sistramit.core.service.model.formulario.interno;
 
 import java.io.Serializable;
 

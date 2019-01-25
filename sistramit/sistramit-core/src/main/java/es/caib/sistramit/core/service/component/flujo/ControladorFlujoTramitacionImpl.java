@@ -429,7 +429,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 			throw new AccesoNoPermitidoException(mensaje, generarDetallesExcepcionControlAcceso(pDatosSesion));
 		}
 
-		// Recuperamos propiedades control acceso al trámite del GTT
+		// Recuperamos propiedades control acceso al trámite
 		final RVersionTramiteControlAcceso propsControlAcceso = pDatosSesion.getDefinicionTramite()
 				.getDefinicionVersion().getControlAcceso();
 

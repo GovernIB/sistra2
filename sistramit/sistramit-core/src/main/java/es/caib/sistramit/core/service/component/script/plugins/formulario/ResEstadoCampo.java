@@ -1,7 +1,7 @@
 package es.caib.sistramit.core.service.component.script.plugins.formulario;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.service.model.formulario.EstadoCampo;
+import es.caib.sistramit.core.service.model.formulario.interno.EstadoCampo;
 import es.caib.sistramit.core.service.model.script.formulario.ResEstadoCampoInt;
 
 /**

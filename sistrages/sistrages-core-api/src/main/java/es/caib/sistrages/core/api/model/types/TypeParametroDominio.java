@@ -8,7 +8,12 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypeParametroDominio {
 
-	CONSTANTE("C"), CAMPO("M"), PARAMETRO("P");
+	/** Valor constante. */
+	CONSTANTE("C"),
+	/** Valor de un campo. */
+	CAMPO("M"),
+	/** Valor de un parámetro. */
+	PARAMETRO("P");
 
 	private String valor;
 

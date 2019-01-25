@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.model.formulario;
+package es.caib.sistramit.core.service.model.formulario.interno;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,6 +8,7 @@ import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
 
 /**
  * Variables accesibles por los scripts dentro de un formulario.

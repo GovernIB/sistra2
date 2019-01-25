@@ -286,29 +286,29 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			final String pUrlInicio, final Map<String, String> pParametrosInicio,
 			final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo, final Date pFechaInicio, final Date pFechaCaducidad) {
 
-		// Obtenemos la definición del trámite del GTT (si no está el idioma
+		// Obtenemos la definición del trámite(si no está el idioma
 		// disponible, se coge el idioma por defecto o bien el primero
 		// disponible)
-		final DefinicionTramiteSTG defTramGTT = configuracionComponent.recuperarDefinicionTramite(pIdTramite, pVersion,
+		final DefinicionTramiteSTG defTramSTG = configuracionComponent.recuperarDefinicionTramite(pIdTramite, pVersion,
 				pIdioma);
 
 		// El idioma puede variar según los idiomas disponibles
-		final String idiomaSesion = defTramGTT.getDefinicionVersion().getIdioma();
+		final String idiomaSesion = defTramSTG.getDefinicionVersion().getIdioma();
 
 		// Control limitacion de tramitacion
-		controlLimitacionTramitacion(defTramGTT);
+		controlLimitacionTramitacion(defTramSTG);
 
 		// Obtenemos las propiedades del trámite en el Catalogo de
 		// Procedimientos
 		final DefinicionTramiteCP tramiteCP = catalogoProcedimientosComponent
-				.obtenerDefinicionTramite(defTramGTT.getDefinicionVersion().getIdEntidad(), pIdTramiteCP, pIdioma);
+				.obtenerDefinicionTramite(defTramSTG.getDefinicionVersion().getIdEntidad(), pIdTramiteCP, pIdioma);
 
 		// Props tipo flujo y entorno
 		final TypeFlujoTramitacion tipoFlujo = TypeFlujoTramitacion
-				.fromString(defTramGTT.getDefinicionVersion().getTipoFlujo());
+				.fromString(defTramSTG.getDefinicionVersion().getTipoFlujo());
 		if (tipoFlujo == null) {
 			throw new TipoNoControladoException(
-					"Tipo de flujo no controlado: " + defTramGTT.getDefinicionVersion().getTipoFlujo());
+					"Tipo de flujo no controlado: " + defTramSTG.getDefinicionVersion().getTipoFlujo());
 		}
 
 		final String propEntorno = configuracionComponent
@@ -319,7 +319,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		}
 
 		// Creamos sesion
-		final DatosSesionTramitacion st = new DatosSesionTramitacion(defTramGTT);
+		final DatosSesionTramitacion st = new DatosSesionTramitacion(defTramSTG);
 		st.getDatosTramite().setEstadoTramite(estado);
 		st.getDatosTramite().setIdSesionTramitacion(idSesionTramitacion);
 		st.getDatosTramite().setIdTramite(pIdTramite);

@@ -32,7 +32,7 @@ public enum TypeParametroEvento {
 	/**
 	 * Para inicio tramites incorrectos: url inicio.
 	 */
-	URL_INICIO("URLINICIO"),
+	URL_INICIO("URL"),
 	/**
 	 * Para inicio tramites incorrectos: excepcion asociada.
 	 */

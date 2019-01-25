@@ -13,7 +13,6 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
-import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
@@ -426,25 +425,54 @@ public final class UtilsSTG {
 	}
 
 	/**
-	 * Obtiene el dominio de la definicion.
+	 * Comprueba si el identificador de dominio existe en la lista de dominios de la
+	 * definicion de version.
 	 *
 	 * @param idDominio
 	 * @param defTramite
 	 * @return
 	 */
-	public static RDominio devuelveDefinicionDominio(final String idDominio, final DefinicionTramiteSTG defTramite) {
+	public static boolean existeDominioDefinicion(final String idDominio, final DefinicionTramiteSTG defTramite) {
 
-		RDominio dominio = null;
+		boolean existe = false;
 		if (defTramite != null && defTramite.getDefinicionVersion() != null
 				&& defTramite.getDefinicionVersion().getDominios() != null) {
-			for (final RDominio dom : defTramite.getDefinicionVersion().getDominios()) {
-				if (dom.getIdentificador().equals(idDominio)) {
-					dominio = dom;
+			for (final String dom : defTramite.getDefinicionVersion().getDominios()) {
+				if (dom.equals(idDominio)) {
+					existe = true;
 					break;
 				}
 			}
 		}
-		return dominio;
+		return existe;
+	}
+
+	/**
+	 * Devuelve definición formulario.
+	 *
+	 * @param defTramite
+	 *            Definición trámite
+	 * @param idPaso
+	 *            id paso
+	 * @param idFormulario
+	 *            id formulario
+	 * @return definición formulario
+	 */
+	public static RFormularioTramite devuelveDefinicionFormulario(final String idPaso, final String idFormulario,
+			final DefinicionTramiteSTG defTramite) {
+		RFormularioTramite defFormulario = null;
+		final RPasoTramitacion defPaso = UtilsSTG.devuelveDefinicionPaso(idPaso, defTramite);
+		final TypePaso tipoPaso = TypePaso.fromString(defPaso.getTipo());
+		if (tipoPaso == TypePaso.RELLENAR) {
+			defFormulario = UtilsSTG.devuelveDefinicionFormulario((RPasoTramitacionRellenar) defPaso, idFormulario);
+		} else if (tipoPaso == TypePaso.CAPTURAR) {
+			// TODO Pendiente
+			throw new ErrorConfiguracionException("Tipo de paso no implementado");
+		} else {
+			throw new ErrorConfiguracionException(
+					"Se ha indicado un tipo de paso que no tiene formularios: " + defPaso.getTipo());
+		}
+		return defFormulario;
 	}
 
 }

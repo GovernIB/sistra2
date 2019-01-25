@@ -61,6 +61,10 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_IDFORM")
 	private String idFormulario;
 
+	/** Atributo formulario interno. */
+	@Column(name = "SFR_INTERN")
+	private boolean interno;
+
 	/** Atributo datos actuales. */
 	@Lob
 	@Column(name = "SFR_DATFOR")
@@ -73,10 +77,6 @@ public final class HFormulario implements IModelApi {
 	/** Atributo parametros formulario. */
 	@Column(name = "SFR_PARFOR")
 	private String parametrosFormulario;
-
-	/** Atributo informacion procedimiento GUC (para internos). */
-	@Column(name = "SFR_INFGUC")
-	private String infoProcedimientoGUC;
 
 	/** Atributo fecha fin. */
 	@Column(name = "SFR_FECFIN")
@@ -404,20 +404,42 @@ public final class HFormulario implements IModelApi {
 		usadoRetorno = pUsadoRetorno;
 	}
 
+	/**
+	 * Método de acceso a interno.
+	 *
+	 * @return interno
+	 */
+	public boolean isInterno() {
+		return interno;
+	}
+
+	/**
+	 * Método para establecer interno.
+	 *
+	 * @param interno
+	 *            interno a establecer
+	 */
+	public void setInterno(boolean interno) {
+		this.interno = interno;
+	}
+
+	/**
+	 * Método de acceso a infoAutenticacion.
+	 * 
+	 * @return infoAutenticacion
+	 */
 	public String getInfoAutenticacion() {
 		return infoAutenticacion;
 	}
 
-	public void setInfoAutenticacion(final String infoAutenticacion) {
+	/**
+	 * Método para establecer infoAutenticacion.
+	 * 
+	 * @param infoAutenticacion
+	 *            infoAutenticacion a establecer
+	 */
+	public void setInfoAutenticacion(String infoAutenticacion) {
 		this.infoAutenticacion = infoAutenticacion;
-	}
-
-	public String getInfoProcedimientoGUC() {
-		return infoProcedimientoGUC;
-	}
-
-	public void setInfoProcedimientoGUC(final String infoProcedimientoGUC) {
-		this.infoProcedimientoGUC = infoProcedimientoGUC;
 	}
 
 }

@@ -16,7 +16,7 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 public final class DatosSesionTramitacion implements Serializable {
 
     /**
-     * Definicion del trámite en el GTT.
+     * Definicion del trámite en STG.
      */
     private final DefinicionTramiteSTG definicionTramite;
 

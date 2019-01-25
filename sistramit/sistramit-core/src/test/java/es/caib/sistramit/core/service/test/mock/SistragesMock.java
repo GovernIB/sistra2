@@ -1,30 +1,30 @@
 package es.caib.sistramit.core.service.test.mock;
 
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.apache.commons.io.IOUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.rest.api.interna.RAnexoTramite;
 import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
 import es.caib.sistrages.rest.api.interna.RAnexoTramitePresentacionElectronica;
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
-import es.caib.sistrages.rest.api.interna.RComponente;
-import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
-import es.caib.sistrages.rest.api.interna.RComponenteSelector;
-import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
 import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
-import es.caib.sistrages.rest.api.interna.RLineaComponentes;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
-import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPagoTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
@@ -65,6 +65,8 @@ public class SistragesMock {
 	public final static String ID_TRAMITE_CP = "Y";
 	/** Idioma test. */
 	public final static String IDIOMA = "es";
+	/** Id tramite test. */
+	public final static String ID_DOMINIO = "DOM";
 
 	public static RConfiguracionGlobal crearConfiguracionGlobal() {
 		final RConfiguracionGlobal configuracionGlobal = new RConfiguracionGlobal();
@@ -283,16 +285,20 @@ public class SistragesMock {
 		return vt;
 	}
 
-	private static List<RDominio> crearDominios() {
-		final List<RDominio> dominios = new ArrayList<>();
+	private static List<String> crearDominios() {
+		final List<String> dominios = new ArrayList<>();
+		dominios.add("DOM");
+		return dominios;
+	}
+
+	public static RDominio crearDominio(final String idDominio) {
 		final RDominio dom1 = new RDominio();
 		dom1.setCachear(true);
-		final String identificadorDominio = "DOM";
-		dom1.setIdentificador(identificadorDominio);
+		dom1.setIdentificador(idDominio);
 		dom1.setTipo(RDominio.TIPO_CONSULTA_BD);
 		dom1.setSql("Select 1 from dual");
-		dominios.add(dom1);
-		return dominios;
+		dom1.setTimestamp(generateTimestamp());
+		return dom1;
 	}
 
 	private static RPasoTramitacion crearPasoPagar() {
@@ -403,7 +409,8 @@ public class SistragesMock {
 		return pr;
 	}
 
-	private static RAnexoTramite crearAnexoTramite(final String identificador, final int instancias, boolean firmar) {
+	private static RAnexoTramite crearAnexoTramite(final String identificador, final int instancias,
+			final boolean firmar) {
 
 		final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
 		ayuda.setUrl("http://www.google.es");
@@ -492,54 +499,21 @@ public class SistragesMock {
 	}
 
 	private static RFormularioInterno crearFormularioDisenyo() {
-		final List<RPaginaFormulario> paginas = new ArrayList<>();
-		for (int i = 0; i < 3; i++) {
-			paginas.add(crearPaginaFormulario());
+		try {
+			final InputStream inputStream = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream("test-files/formularioInterno.json");
+			final StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer, "UTF-8");
+			final String formularioInternoJSON = writer.toString();
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			final RFormularioInterno formularioInterno = mapper.readValue(formularioInternoJSON,
+					RFormularioInterno.class);
+			return formularioInterno;
+		} catch (final Exception ex) {
+			throw new RuntimeException("Error cargando definición formulario desde json");
 		}
 
-		final RFormularioInterno fd = new RFormularioInterno();
-		fd.setPaginas(paginas);
-		return fd;
-	}
-
-	private static RPaginaFormulario crearPaginaFormulario() {
-		RPaginaFormulario p;
-		p = new RPaginaFormulario();
-		p.setHtmlB64("HTML PAGINA");
-		final List<RLineaComponentes> lineas = new ArrayList<>();
-		for (int i = 0; i < 5; i++) {
-			final RLineaComponentes li = new RLineaComponentes();
-			li.setComponentes(createLineaComponentes());
-			lineas.add(li);
-		}
-		p.setLineas(lineas);
-		return p;
-	}
-
-	private static List<RComponente> createLineaComponentes() {
-		final List<RComponente> lc = new ArrayList<>();
-
-		final RComponenteSeccion ce = new RComponenteSeccion();
-		ce.setIdentificador("ID" + System.currentTimeMillis());
-		ce.setTipo("ETQ");
-		ce.setEtiqueta("Etiqueta");
-
-		lc.add(ce);
-
-		final RComponenteTextbox ct = new RComponenteTextbox();
-		ct.setIdentificador("ID" + System.currentTimeMillis());
-		ct.setTipo("ETQ");
-		ct.setEtiqueta("Etiqueta");
-
-		lc.add(ct);
-
-		final RComponenteSelector cs = new RComponenteSelector();
-		cs.setIdentificador("ID" + System.currentTimeMillis());
-		cs.setTipo("SEL");
-		cs.setEtiqueta("Selector");
-
-		lc.add(cs);
-		return lc;
 	}
 
 	public static RAvisosEntidad crearAvisos() {

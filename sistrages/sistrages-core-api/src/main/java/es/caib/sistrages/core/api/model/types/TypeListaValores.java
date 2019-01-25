@@ -1,14 +1,19 @@
 package es.caib.sistrages.core.api.model.types;
 
 /**
- * Tipo para indicar alineacion texto.
+ * Tipo para indicar lista valores.
  *
  * @author Indra
  *
  */
 public enum TypeListaValores {
 
-	FIJA("F"), DOMINIO("D"), SCRIPT("S");
+	/** Valores fijos. */
+	FIJA("F"),
+	/** Valores provienen de un dominio. */
+	DOMINIO("D"),
+	/** Valores provienen de un script. */
+	SCRIPT("S");
 
 	private String valor;
 

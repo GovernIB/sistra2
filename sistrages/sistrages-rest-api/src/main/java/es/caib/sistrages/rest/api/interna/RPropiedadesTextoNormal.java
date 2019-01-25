@@ -12,50 +12,50 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RPropiedadesTextoNormal", description = "Descripcion de RPropiedadesTextoNormal")
 public class RPropiedadesTextoNormal {
 
-    /** Texto normal: tamaño máximo. */
+	/** Texto normal: tamaño máximo. */
 	@ApiModelProperty(value = "Texto normal: tamaño máximo")
-    private int tamanyoMax;
+	private int tamanyoMax;
 
-    /** Texto normal: multilinea. */
+	/** Texto normal: multilinea. */
 	@ApiModelProperty(value = "Texto normal: multilinea")
-    private boolean multilinea;
+	private int lineas;
 
-    /**
-     * Método de acceso a tamanyoMax.
-     *
-     * @return tamanyoMax
-     */
-    public int getTamanyoMax() {
-        return tamanyoMax;
-    }
+	/**
+	 * Método de acceso a tamanyoMax.
+	 *
+	 * @return tamanyoMax
+	 */
+	public int getTamanyoMax() {
+		return tamanyoMax;
+	}
 
-    /**
-     * Método para establecer tamanyoMax.
-     *
-     * @param tamanyoMax
-     *            tamanyoMax a establecer
-     */
-    public void setTamanyoMax(int tamanyoMax) {
-        this.tamanyoMax = tamanyoMax;
-    }
+	/**
+	 * Método para establecer tamanyoMax.
+	 *
+	 * @param tamanyoMax
+	 *            tamanyoMax a establecer
+	 */
+	public void setTamanyoMax(int tamanyoMax) {
+		this.tamanyoMax = tamanyoMax;
+	}
 
-    /**
-     * Método de acceso a multilinea.
-     *
-     * @return multilinea
-     */
-    public boolean isMultilinea() {
-        return multilinea;
-    }
+	/**
+	 * Método de acceso a lineas.
+	 * 
+	 * @return lineas
+	 */
+	public int getLineas() {
+		return lineas;
+	}
 
-    /**
-     * Método para establecer multilinea.
-     *
-     * @param multilinea
-     *            multilinea a establecer
-     */
-    public void setMultilinea(boolean multilinea) {
-        this.multilinea = multilinea;
-    }
+	/**
+	 * Método para establecer lineas.
+	 * 
+	 * @param lineas
+	 *            lineas a establecer
+	 */
+	public void setLineas(int lineas) {
+		this.lineas = lineas;
+	}
 
 }

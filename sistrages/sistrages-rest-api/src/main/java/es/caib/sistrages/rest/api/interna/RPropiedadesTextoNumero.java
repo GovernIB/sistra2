@@ -12,167 +12,167 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RPropiedadesTextoNumero", description = "Descripcion de RPropiedadesTextoNumero")
 public class RPropiedadesTextoNumero {
 
-    /** Texto número: precision parte entera. */
+	/** Texto número: precision parte entera. */
 	@ApiModelProperty(value = "Texto número: precision parte entera")
-    private int precisionEntera;
+	private int precisionEntera;
 
-    /** Texto número: precision parte decimal. */
+	/** Texto número: precision parte decimal. */
 	@ApiModelProperty(value = "Texto número: precision parte decimal")
-    private int precisionDecimal;
+	private int precisionDecimal;
 
-    /**
-     * Texto número: formato punto/coma ("PC"), coma/punto ("CP") y sin formato
-     * ("SF").
-     */
+	/**
+	 * Texto número: formato punto/coma ("PC"), coma/punto ("CP") y sin formato
+	 * ("SF").
+	 */
 	@ApiModelProperty(value = "Texto número: formato punto/coma (PC), coma/punto (CP) y sin formato (SF)")
-    private String formatoNumero;
+	private String formatoNumero;
 
-    /** Texto número: rango. */
+	/** Texto número: rango. */
 	@ApiModelProperty(value = "Texto número: rango")
-    private boolean rango;
+	private boolean rango;
 
-    /** Texto número: rango desde. */
-	@ApiModelProperty(value = "Texto número: rango desde")
-    private long rangoDesde;
+	/** Texto número: rango desde. */
+	@ApiModelProperty(value = "Texto número: rango desde (mayor o igual que cero)")
+	private int rangoDesde;
 
-    /** Texto número: rango hasta. */
-	@ApiModelProperty(value = "Texto número: rango hasta")
-    private long rangoHasta;
+	/** Texto número: rango hasta. */
+	@ApiModelProperty(value = "Texto número: rango hasta (mayor que cero)")
+	private int rangoHasta;
 
-    /** Texto número: permite negativos. */
+	/** Texto número: permite negativos. */
 	@ApiModelProperty(value = "Texto número: permite negativos")
-    private boolean negativos;
+	private boolean negativos;
 
-    /**
-     * Método de acceso a precisionEntera.
-     *
-     * @return precisionEntera
-     */
-    public int getPrecisionEntera() {
-        return precisionEntera;
-    }
+	/**
+	 * Método de acceso a precisionEntera.
+	 *
+	 * @return precisionEntera
+	 */
+	public int getPrecisionEntera() {
+		return precisionEntera;
+	}
 
-    /**
-     * Método para establecer precisionEntera.
-     *
-     * @param precisionEntera
-     *            precisionEntera a establecer
-     */
-    public void setPrecisionEntera(int precisionEntera) {
-        this.precisionEntera = precisionEntera;
-    }
+	/**
+	 * Método para establecer precisionEntera.
+	 *
+	 * @param precisionEntera
+	 *            precisionEntera a establecer
+	 */
+	public void setPrecisionEntera(int precisionEntera) {
+		this.precisionEntera = precisionEntera;
+	}
 
-    /**
-     * Método de acceso a precisionDecimal.
-     *
-     * @return precisionDecimal
-     */
-    public int getPrecisionDecimal() {
-        return precisionDecimal;
-    }
+	/**
+	 * Método de acceso a precisionDecimal.
+	 *
+	 * @return precisionDecimal
+	 */
+	public int getPrecisionDecimal() {
+		return precisionDecimal;
+	}
 
-    /**
-     * Método para establecer precisionDecimal.
-     *
-     * @param precisionDecimal
-     *            precisionDecimal a establecer
-     */
-    public void setPrecisionDecimal(int precisionDecimal) {
-        this.precisionDecimal = precisionDecimal;
-    }
+	/**
+	 * Método para establecer precisionDecimal.
+	 *
+	 * @param precisionDecimal
+	 *            precisionDecimal a establecer
+	 */
+	public void setPrecisionDecimal(int precisionDecimal) {
+		this.precisionDecimal = precisionDecimal;
+	}
 
-    /**
-     * Método de acceso a formatoNumero.
-     *
-     * @return formatoNumero
-     */
-    public String getFormatoNumero() {
-        return formatoNumero;
-    }
+	/**
+	 * Método de acceso a formatoNumero.
+	 *
+	 * @return formatoNumero
+	 */
+	public String getFormatoNumero() {
+		return formatoNumero;
+	}
 
-    /**
-     * Método para establecer formatoNumero.
-     *
-     * @param formatoNumero
-     *            formatoNumero a establecer
-     */
-    public void setFormatoNumero(String formatoNumero) {
-        this.formatoNumero = formatoNumero;
-    }
+	/**
+	 * Método para establecer formatoNumero.
+	 *
+	 * @param formatoNumero
+	 *            formatoNumero a establecer
+	 */
+	public void setFormatoNumero(String formatoNumero) {
+		this.formatoNumero = formatoNumero;
+	}
 
-    /**
-     * Método de acceso a rango.
-     *
-     * @return rango
-     */
-    public boolean isRango() {
-        return rango;
-    }
+	/**
+	 * Método de acceso a rango.
+	 *
+	 * @return rango
+	 */
+	public boolean isRango() {
+		return rango;
+	}
 
-    /**
-     * Método para establecer rango.
-     *
-     * @param rango
-     *            rango a establecer
-     */
-    public void setRango(boolean rango) {
-        this.rango = rango;
-    }
+	/**
+	 * Método para establecer rango.
+	 *
+	 * @param rango
+	 *            rango a establecer
+	 */
+	public void setRango(boolean rango) {
+		this.rango = rango;
+	}
 
-    /**
-     * Método de acceso a rangoDesde.
-     *
-     * @return rangoDesde
-     */
-    public long getRangoDesde() {
-        return rangoDesde;
-    }
+	/**
+	 * Método de acceso a rangoDesde.
+	 *
+	 * @return rangoDesde
+	 */
+	public int getRangoDesde() {
+		return rangoDesde;
+	}
 
-    /**
-     * Método para establecer rangoDesde.
-     *
-     * @param rangoDesde
-     *            rangoDesde a establecer
-     */
-    public void setRangoDesde(long rangoDesde) {
-        this.rangoDesde = rangoDesde;
-    }
+	/**
+	 * Método para establecer rangoDesde.
+	 *
+	 * @param rangoDesde
+	 *            rangoDesde a establecer
+	 */
+	public void setRangoDesde(int rangoDesde) {
+		this.rangoDesde = rangoDesde;
+	}
 
-    /**
-     * Método de acceso a rangoHasta.
-     *
-     * @return rangoHasta
-     */
-    public long getRangoHasta() {
-        return rangoHasta;
-    }
+	/**
+	 * Método de acceso a rangoHasta.
+	 *
+	 * @return rangoHasta
+	 */
+	public int getRangoHasta() {
+		return rangoHasta;
+	}
 
-    /**
-     * Método para establecer rangoHasta.
-     *
-     * @param rangoHasta
-     *            rangoHasta a establecer
-     */
-    public void setRangoHasta(long rangoHasta) {
-        this.rangoHasta = rangoHasta;
-    }
+	/**
+	 * Método para establecer rangoHasta.
+	 *
+	 * @param rangoHasta
+	 *            rangoHasta a establecer
+	 */
+	public void setRangoHasta(int rangoHasta) {
+		this.rangoHasta = rangoHasta;
+	}
 
-    /**
-     * Método de acceso a negativos.
-     *
-     * @return negativos
-     */
-    public boolean isNegativos() {
-        return negativos;
-    }
+	/**
+	 * Método de acceso a negativos.
+	 *
+	 * @return negativos
+	 */
+	public boolean isNegativos() {
+		return negativos;
+	}
 
-    /**
-     * Método para establecer negativos.
-     *
-     * @param negativos
-     *            negativos a establecer
-     */
-    public void setNegativos(boolean negativos) {
-        this.negativos = negativos;
-    }
+	/**
+	 * Método para establecer negativos.
+	 *
+	 * @param negativos
+	 *            negativos a establecer
+	 */
+	public void setNegativos(boolean negativos) {
+		this.negativos = negativos;
+	}
 }

@@ -16,52 +16,76 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 @SuppressWarnings("serial")
 public final class AbrirFormulario implements Serializable {
 
-    /**
-     * Indica si es externo o interno.
-     */
-    private TypeFormulario tipo;
+	/**
+	 * Indica si es externo o interno.
+	 */
+	private TypeFormulario tipo;
 
-    /**
-     * Url redireccion formulario.
-     */
-    private String url;
+	/**
+	 * Url redireccion formulario (para externo).
+	 */
+	private String url;
 
-    /**
-     * Método de acceso a tipo.
-     *
-     * @return tipo
-     */
-    public TypeFormulario getTipo() {
-        return tipo;
-    }
+	/**
+	 * Ticket acceso formulario (para interno).
+	 */
+	private String ticket;
 
-    /**
-     * Método para establecer tipo.
-     *
-     * @param pTipo
-     *            tipo a establecer
-     */
-    public void setTipo(final TypeFormulario pTipo) {
-        tipo = pTipo;
-    }
+	/**
+	 * Método de acceso a tipo.
+	 *
+	 * @return tipo
+	 */
+	public TypeFormulario getTipo() {
+		return tipo;
+	}
 
-    /**
-     * Método de acceso a url.
-     *
-     * @return url
-     */
-    public String getUrl() {
-        return url;
-    }
+	/**
+	 * Método para establecer tipo.
+	 *
+	 * @param pTipo
+	 *            tipo a establecer
+	 */
+	public void setTipo(final TypeFormulario pTipo) {
+		tipo = pTipo;
+	}
 
-    /**
-     * Método para establecer url.
-     *
-     * @param url
-     *            url a establecer
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	/**
+	 * Método de acceso a url.
+	 *
+	 * @return url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * Método para establecer url.
+	 *
+	 * @param url
+	 *            url a establecer
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	/**
+	 * Método de acceso a ticket.
+	 * 
+	 * @return ticket
+	 */
+	public String getTicket() {
+		return ticket;
+	}
+
+	/**
+	 * Método para establecer ticket.
+	 * 
+	 * @param ticket
+	 *            ticket a establecer
+	 */
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
+	}
 
 }

@@ -47,7 +47,7 @@ import es.caib.sistramit.core.service.component.script.plugins.formulario.ResVal
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
-import es.caib.sistramit.core.service.model.formulario.VariablesFormulario;
+import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.script.PlgAvisoInt;
 import es.caib.sistramit.core.service.model.script.PlgErrorInt;

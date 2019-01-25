@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.sistra2.commons.utils.GeneradorId;
 import es.caib.sistra2.commons.utils.Serializador;
+import es.caib.sistramit.core.api.exception.SerializacionException;
 import es.caib.sistramit.core.api.exception.TicketPagoException;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -41,7 +42,7 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
 		try {
 			h.setInfoAutenticacion(Serializador.serialize(retornoPago.getUsuario()));
 		} catch (final IOException e) {
-			throw new TicketPagoException("Error serializando informacion usuario");
+			throw new SerializacionException("Error serializando informacion usuario", e);
 		}
 
 		entityManager.persist(h);
@@ -98,7 +99,7 @@ public class PagoExternoDaoImpl implements PagoExternoDao {
 		try {
 			res.setUsuario((UsuarioAutenticadoInfo) Serializador.deserialize(h.getInfoAutenticacion()));
 		} catch (ClassNotFoundException | IOException e) {
-			throw new TicketPagoException("Error al deserializar informacion usuario para ticket " + ticket);
+			throw new SerializacionException("Error al deserializar informacion usuario para ticket " + ticket, e);
 		}
 
 		// Si se consume ticket, marcamos ticket como usado

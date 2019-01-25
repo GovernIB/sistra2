@@ -8,12 +8,17 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypeCampoIndexado {
 
-	// SELECTOR,
-	DESPLEGABLE, MULTIPLE, UNICA;
+	/** Lista desplegable. */
+	DESPLEGABLE("DESPLEGABLE"),
+	/** Lista selección múltiple (lista checks). */
+	MULTIPLE("MULTIPLE"),
+	/** Lista selección única (lista radios). */
+	UNICA("UNICA");
 
 	private String valor;
 
-	private TypeCampoIndexado() {
+	private TypeCampoIndexado(String value) {
+		valor = value;
 	}
 
 	/**

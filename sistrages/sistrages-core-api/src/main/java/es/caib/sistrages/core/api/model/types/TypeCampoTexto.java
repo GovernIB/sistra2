@@ -8,11 +8,29 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypeCampoTexto {
 
-	NORMAL, NUMERO, EMAIL, ID, CP, TELEFONO, FECHA, HORA, EXPRESION, IMPORTE;
+	/** Texto normal. */
+	NORMAL("NORMAL"),
+	/** Texto número. */
+	NUMERO("NUMERO"),
+	/** Texto email. */
+	EMAIL("EMAIL"),
+	/** Texto identificador (dni, nif,..). */
+	ID("ID"),
+	/** Texto código postal. */
+	CP("CP"),
+	/** Texto teléfono. */
+	TELEFONO("TELEFONO"),
+	/** Texto fecha. */
+	FECHA("FECHA"),
+	/** Texto hora. */
+	HORA("HORA"),
+	/** Texto expresion regular. */
+	EXPRESION("EXPRESION");
 
 	private String valor;
 
-	private TypeCampoTexto() {
+	private TypeCampoTexto(String value) {
+		valor = value;
 	}
 
 	/**

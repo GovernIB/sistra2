@@ -47,6 +47,7 @@ import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
@@ -67,6 +68,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	/** Flujo tramitación. */
 	@Autowired
 	private FlujoTramitacionService flujoTramitacionService;
+
+	/** Flujo formulario. */
+	@Autowired
+	private FlujoFormularioInternoService flujoFormularioInternoService;
 
 	/** Servicio seguridad. */
 	@Autowired
@@ -277,7 +282,11 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 				TypeAccionPasoRellenar.ABRIR_FORMULARIO, parametros);
 		final AbrirFormulario af = (AbrirFormulario) resPaso.getParametroRetorno("referencia");
 		Assert.isTrue(af.getTipo() == TypeFormulario.INTERNO, "Tipo formulario no es interno");
-		Assert.isTrue(af.getUrl() != null, "No se ha devuelto url formulario");
+		Assert.isTrue(af.getTicket() != null, "No se ha devuelto ticket formulario");
+
+		// -- Redirigimos formulario
+		// final String idSesionFormulario =
+		// flujoFormularioInternoService.cargarSesion(af.getTicket());
 
 		// -- Simulamos rellenar
 		final String campoNuevoId = "PRESENTACION";

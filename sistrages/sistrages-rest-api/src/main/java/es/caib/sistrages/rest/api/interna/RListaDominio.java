@@ -24,7 +24,7 @@ public class RListaDominio {
 
     /** Campo dominio para mapear descripción. */
 	@ApiModelProperty(value = "Campo dominio para mapear descripción")
-    private String campoDescripción;
+    private String campoDescripcion;
 
     /** Lista parámetros. */
 	@ApiModelProperty(value = "Lista parámetros")
@@ -73,8 +73,8 @@ public class RListaDominio {
      *
      * @return campoDescripción
      */
-    public String getCampoDescripción() {
-        return campoDescripción;
+    public String getCampoDescripcion() {
+        return campoDescripcion;
     }
 
     /**
@@ -83,8 +83,8 @@ public class RListaDominio {
      * @param campoDescripción
      *            campoDescripción a establecer
      */
-    public void setCampoDescripción(String campoDescripción) {
-        this.campoDescripción = campoDescripción;
+    public void setCampoDescripcion(String campoDescripción) {
+        this.campoDescripcion = campoDescripción;
     }
 
     /**

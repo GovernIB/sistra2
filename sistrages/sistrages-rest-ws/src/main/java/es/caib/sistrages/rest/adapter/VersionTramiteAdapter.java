@@ -52,7 +52,6 @@ import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
-import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RFormularioExterno;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
@@ -73,6 +72,7 @@ import es.caib.sistrages.rest.api.interna.RPropiedadesTextoExpRegular;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoIdentificacion;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNormal;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNumero;
+import es.caib.sistrages.rest.api.interna.RPropiedadesTextoTelefono;
 import es.caib.sistrages.rest.api.interna.RValorListaFija;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
@@ -140,7 +140,7 @@ public class VersionTramiteAdapter {
 		rVersionTramite.setRelease(tv.getRelease());
 
 		rVersionTramite.setPasos(pasos);
-		rVersionTramite.setDominios(generarListaDominios(tv.getListaDominios()));
+		rVersionTramite.setDominios(restApiService.getIdentificadoresDominiosByTV(tv.getCodigo()));
 		rVersionTramite.setIdioma(idiRes);
 		rVersionTramite.setTipoFlujo(tv.getTipoFlujo() == null ? null : tv.getTipoFlujo().toString());
 		rVersionTramite.setControlAcceso(generaControlAcceso(tv));
@@ -366,32 +366,6 @@ public class VersionTramiteAdapter {
 		}
 		return resPaso;
 
-	}
-
-	/**
-	 * genera una lista de dominios
-	 *
-	 * @param listaDominios
-	 * @return List<RDominio>
-	 */
-	private List<RDominio> generarListaDominios(final List<Long> listaDominios) {
-		List<RDominio> res = null;
-		if (listaDominios != null) {
-			res = new ArrayList<RDominio>();
-			for (final Long idDom : listaDominios) {
-				final Dominio dom = restApiService.loadDominio(idDom);
-				if (dom != null) {
-					final RDominio rdom = new RDominio();
-					rdom.setCachear(dom.isCacheable());
-					rdom.setIdentificador(dom.getIdentificador());
-					rdom.setSql(dom.getSqlDecoded());
-					rdom.setTipo(generaTipo(dom.getTipo()));
-					rdom.setUri(dom.getUrl());
-					res.add(rdom);
-				}
-			}
-		}
-		return res;
 	}
 
 	/**
@@ -725,9 +699,24 @@ public class VersionTramiteAdapter {
 		resTB.setTextoIdentificacion(generaTextoIdentificacion(ct));
 		resTB.setTextoNormal(generaTextoNormal(ct));
 		resTB.setTextoNumero(generaTextoNumero(ct));
+		resTB.setTextoTelefono(generaTextoTelefono(ct));
 		resTB.setTipo(ct.getTipo() == null ? null : ct.getTipo().toString());
 		resTB.setTipoTexto(ct.getTipoCampoTexto() == null ? null : ct.getTipoCampoTexto().toString());
 		return resTB;
+	}
+
+	/**
+	 * Genera texto teléfono.
+	 *
+	 * @param ct
+	 *            campo texto
+	 * @return Propiedades teléfono
+	 */
+	private RPropiedadesTextoTelefono generaTextoTelefono(final ComponenteFormularioCampoTexto ct) {
+		final RPropiedadesTextoTelefono props = new RPropiedadesTextoTelefono();
+		props.setFijo(ct.isTelefonoFijo());
+		props.setMovil(ct.isTelefonoMovil());
+		return props;
 	}
 
 	/**
@@ -761,7 +750,7 @@ public class VersionTramiteAdapter {
 	private RListaDominio generaListaDominio(final ComponenteFormularioCampoSelector cs) {
 		final RListaDominio l = new RListaDominio();
 		l.setCampoCodigo(cs.getCampoDominioCodigo());
-		l.setCampoDescripción(cs.getCampoDominioDescripcion());
+		l.setCampoDescripcion(cs.getCampoDominioDescripcion());
 		l.setDominio(generaDominio(cs.getCodDominio()));
 		l.setParametros(generaParametrosDominio(cs.getListaParametrosDominio()));
 		return l;
@@ -868,8 +857,10 @@ public class VersionTramiteAdapter {
 		res.setPrecisionDecimal(ct.getNumeroDigitosDecimales() == null ? 0 : ct.getNumeroDigitosDecimales());
 		res.setPrecisionEntera(ct.getNumeroDigitosEnteros() == null ? 0 : ct.getNumeroDigitosEnteros());
 		res.setRango(ct.isPermiteRango());
-		res.setRangoDesde(ct.getNumeroRangoMinimo() == null ? 0 : ct.getNumeroRangoMinimo());
-		res.setRangoHasta(ct.getNumeroRangoMaximo() == null ? 0 : ct.getNumeroRangoMaximo());
+		res.setRangoDesde(
+				ct.getNumeroRangoMinimo() == null ? 0 : Integer.parseInt(ct.getNumeroRangoMinimo().toString()));
+		res.setRangoHasta(
+				ct.getNumeroRangoMaximo() == null ? 0 : Integer.parseInt(ct.getNumeroRangoMaximo().toString()));
 		return res;
 	}
 
@@ -882,7 +873,11 @@ public class VersionTramiteAdapter {
 	private RPropiedadesTextoNormal generaTextoNormal(final ComponenteFormularioCampoTexto ct) {
 		if (ct != null) {
 			final RPropiedadesTextoNormal res = new RPropiedadesTextoNormal();
-			res.setMultilinea(ct.isNormalMultilinea());
+			if (ct.isNormalMultilinea()) {
+				res.setLineas(ct.getNormalNumeroLineas());
+			} else {
+				res.setLineas(1);
+			}
 			res.setTamanyoMax(ct.getNormalTamanyo() == null ? 0 : ct.getNormalTamanyo());
 			return res;
 		}
