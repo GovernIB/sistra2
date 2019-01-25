@@ -51,6 +51,19 @@ public interface SistragesApiComponent {
 	RVersionTramite recuperarDefinicionTramite(String idTramite, int version, String idioma);
 
 	/**
+	 * Recupera definición dominio.
+	 *
+	 * @param idTramite
+	 *            id trámite
+	 * @param version
+	 *            versión
+	 * @param idioma
+	 *            idioma
+	 * @return Definición versión trámite
+	 */
+	RDominio recuperarDefinicionDominio(String idDominio);
+
+	/**
 	 * Recupera los valores del dominio de un dominio de tipo fuente de datos.
 	 *
 	 * @param dominio

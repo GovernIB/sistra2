@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 
 /**
@@ -65,4 +66,13 @@ public final class SistragesComponentImpl implements SistragesComponent {
 		log.debug("evictAvisosEntidad: " + idEntidad);
 	}
 
+	@Override
+	public RDominio recuperarDefinicionDominio(final String idDominio) {
+		return sistragesApiComponent.recuperarDefinicionDominio(idDominio);
+	}
+
+	@Override
+	public void evictDefinicionDominio(final String idDominio) {
+		log.debug("evictDefinicionDominio: " + idDominio);
+	}
 }

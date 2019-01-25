@@ -36,7 +36,7 @@ public final class DominiosComponentImpl implements DominiosComponent {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	/** Nombre de la cache. **/
-	private static final String CACHENAME = "cacheDominios";
+	private static final String CACHENAME = "cacheDominiosDatos";
 
 	/** Separator. **/
 	private static final String SEPARATOR = "#@@#";
@@ -67,10 +67,11 @@ public final class DominiosComponentImpl implements DominiosComponent {
 		// Obtenemos informacion dominio
 		String cacheKey = null;
 		log.debug("Accediendo a dominio {}", idDominio);
-		final RDominio dominio = UtilsSTG.devuelveDefinicionDominio(idDominio, defTramite);
-		if (dominio == null) {
+		final boolean existe = UtilsSTG.existeDominioDefinicion(idDominio, defTramite);
+		if (!existe) {
 			throw new DominioNoExisteException("No existe dominio " + idDominio + " en la definición del tramite");
 		}
+		final RDominio dominio = configuracionComponent.recuperarDefinicionDominio(idDominio);
 
 		// Comprobamos si el dominio es cacheable y tiene los datos cacheados
 		if (dominio.isCachear()) {

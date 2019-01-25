@@ -196,8 +196,20 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Override
 	@NegocioInterceptor
+	public Dominio loadDominio(final String idDominio) {
+		return dominioDao.getByIdentificador(idDominio);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public Dominio loadDominio(final Long idDominio) {
 		return dominioDao.getByCodigo(idDominio);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<String> getIdentificadoresDominiosByTV(final Long idTramiteVersion) {
+		return tramiteDao.getTramiteDominiosIdentificador(idTramiteVersion);
 	}
 
 	@Override

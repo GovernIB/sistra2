@@ -12,6 +12,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RDominio", description = "Descripcion de RDominio")
 public class RDominio {
 
+	/** Timestamp recuperacion. */
+	@ApiModelProperty(value = "Timestamp recuperacion")
+	private String timestamp;
+
 	/** Identificador. */
 	@ApiModelProperty(value = "Identificador")
 	private String identificador;
@@ -133,6 +137,21 @@ public class RDominio {
 	 */
 	public void setSql(final String sql) {
 		this.sql = sql;
+	}
+
+	/**
+	 * @return the timestamp
+	 */
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	/**
+	 * @param timestamp
+	 *            the timestamp to set
+	 */
+	public void setTimestamp(final String timestamp) {
+		this.timestamp = timestamp;
 	}
 
 }

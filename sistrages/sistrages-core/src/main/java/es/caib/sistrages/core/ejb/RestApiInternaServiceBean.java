@@ -108,6 +108,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public Dominio loadDominio(final String idDominio) {
+		return restApiService.loadDominio(idDominio);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public Dominio loadDominio(final Long idDominio) {
 		return restApiService.loadDominio(idDominio);
 	}
@@ -178,6 +184,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public ValoresDominio realizarConsultaListaFija(final String idDominio) {
 		return restApiService.realizarConsultaListaFija(idDominio);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<String> getIdentificadoresDominiosByTV(final Long idTramiteVersion) {
+		return restApiService.getIdentificadoresDominiosByTV(idTramiteVersion);
 	}
 
 }

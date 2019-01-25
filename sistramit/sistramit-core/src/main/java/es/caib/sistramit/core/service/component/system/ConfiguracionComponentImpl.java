@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RPlugin;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
@@ -31,208 +32,183 @@ import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 @Component("configuracionComponent")
 public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
-    /** Propiedades configuración especificadas en properties. */
-    private Properties propiedadesLocales;
+	/** Propiedades configuración especificadas en properties. */
+	private Properties propiedadesLocales;
 
-    /** Componente STG. */
-    @Autowired
-    private SistragesComponent sistragesComponent;
+	/** Componente STG. */
+	@Autowired
+	private SistragesComponent sistragesComponent;
 
-    @PostConstruct
-    public void init() {
-        // Recupera propiedades configuracion especificadas en properties
-        propiedadesLocales = recuperarConfiguracionProperties();
-    }
+	@PostConstruct
+	public void init() {
+		// Recupera propiedades configuracion especificadas en properties
+		propiedadesLocales = recuperarConfiguracionProperties();
+	}
 
-    @Override
-    public String obtenerPropiedadConfiguracion(
-            final TypePropiedadConfiguracion propiedad,
-            final boolean forceLocal) {
-        return readPropiedad(propiedad, forceLocal);
-    }
+	@Override
+	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad, final boolean forceLocal) {
+		return readPropiedad(propiedad, forceLocal);
+	}
 
-    @Override
-    public String obtenerPropiedadConfiguracion(
-            final TypePropiedadConfiguracion propiedad) {
-        return readPropiedad(propiedad, false);
-    }
+	@Override
+	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad) {
+		return readPropiedad(propiedad, false);
+	}
 
-    @Override
-    public DefinicionTramiteSTG recuperarDefinicionTramite(
-            final String idTramite, final int version, final String idioma) {
-        final RVersionTramite definicionVersion = sistragesComponent
-                .recuperarDefinicionTramite(idTramite, version, idioma);
-        final DefinicionTramiteSTG dt = new DefinicionTramiteSTG(new Date(),
-                definicionVersion);
-        return dt;
-    }
+	@Override
+	public DefinicionTramiteSTG recuperarDefinicionTramite(final String idTramite, final int version,
+			final String idioma) {
+		final RVersionTramite definicionVersion = sistragesComponent.recuperarDefinicionTramite(idTramite, version,
+				idioma);
+		return new DefinicionTramiteSTG(new Date(), definicionVersion);
+	}
 
-    @Override
-    public RConfiguracionEntidad obtenerConfiguracionEntidad(
-            final String idEntidad) {
-        return sistragesComponent.obtenerConfiguracionEntidad(idEntidad);
-    }
+	@Override
+	public RDominio recuperarDefinicionDominio(final String idDominio) {
+		return sistragesComponent.recuperarDefinicionDominio(idDominio);
+	}
 
-    @Override
-    public RAvisosEntidad obtenerAvisosEntidad(final String idEntidad) {
-        return sistragesComponent.obtenerAvisosEntidad(idEntidad);
-    }
+	@Override
+	public RConfiguracionEntidad obtenerConfiguracionEntidad(final String idEntidad) {
+		return sistragesComponent.obtenerConfiguracionEntidad(idEntidad);
+	}
 
-    @Override
-    public IPlugin obtenerPluginGlobal(final TypePluginGlobal tipoPlugin) {
-        final RConfiguracionGlobal confGlobal = sistragesComponent
-                .obtenerConfiguracionGlobal();
-        return createPlugin(confGlobal.getPlugins(), tipoPlugin.toString());
-    }
+	@Override
+	public RAvisosEntidad obtenerAvisosEntidad(final String idEntidad) {
+		return sistragesComponent.obtenerAvisosEntidad(idEntidad);
+	}
 
-    @Override
-    public IPlugin obtenerPluginEntidad(final TypePluginEntidad tipoPlugin,
-            final String idEntidad) {
-        final RConfiguracionEntidad confEntidad = sistragesComponent
-                .obtenerConfiguracionEntidad(idEntidad);
-        return createPlugin(confEntidad.getPlugins(), tipoPlugin.toString());
-    }
+	@Override
+	public IPlugin obtenerPluginGlobal(final TypePluginGlobal tipoPlugin) {
+		final RConfiguracionGlobal confGlobal = sistragesComponent.obtenerConfiguracionGlobal();
+		return createPlugin(confGlobal.getPlugins(), tipoPlugin.toString());
+	}
 
-    @Override
-    public String obtenerUrlResources() {
-        final String urlResources = readPropiedad(
-                TypePropiedadConfiguracion.SISTRAMIT_URL, false) + "/resources";
-        return urlResources;
-    }
+	@Override
+	public IPlugin obtenerPluginEntidad(final TypePluginEntidad tipoPlugin, final String idEntidad) {
+		final RConfiguracionEntidad confEntidad = sistragesComponent.obtenerConfiguracionEntidad(idEntidad);
+		return createPlugin(confEntidad.getPlugins(), tipoPlugin.toString());
+	}
 
-    // ----------------------------------------------------------------------
-    // FUNCIONES PRIVADAS
-    // ----------------------------------------------------------------------
-    /**
-     * Carga propiedades locales de fichero de properties.
-     *
-     * @return properties
-     */
-    private Properties recuperarConfiguracionProperties() {
-        final String pathProperties = System
-                .getProperty("es.caib.sistramit.properties.path");
-        try (FileInputStream fis = new FileInputStream(pathProperties);) {
-            final Properties props = new Properties();
-            props.load(fis);
-            return props;
-        } catch (final IOException e) {
-            throw new CargaConfiguracionException(
-                    "Error al cargar la configuracion del properties '"
-                            + pathProperties + "' : " + e.getMessage(),
-                    e);
-        }
-    }
+	@Override
+	public String obtenerUrlResources() {
+		final String urlResources = readPropiedad(TypePropiedadConfiguracion.SISTRAMIT_URL, false) + "/resources";
+		return urlResources;
+	}
 
-    /**
-     * Obtiene valor propiedad de configuracion global.
-     *
-     * @param propiedad
-     *            propiedad
-     * @return valor
-     */
-    private String getPropiedadGlobal(
-            final TypePropiedadConfiguracion propiedad) {
-        String res = null;
-        final RConfiguracionGlobal configuracionGlobal = sistragesComponent
-                .obtenerConfiguracionGlobal();
-        if (configuracionGlobal != null
-                && configuracionGlobal.getPropiedades() != null
-                && configuracionGlobal.getPropiedades()
-                        .getParametros() != null) {
-            for (final RValorParametro vp : configuracionGlobal.getPropiedades()
-                    .getParametros()) {
-                if (propiedad.toString().equals(vp.getCodigo())) {
-                    res = vp.getValor();
-                    break;
-                }
-            }
-        }
-        return res;
-    }
+	// ----------------------------------------------------------------------
+	// FUNCIONES PRIVADAS
+	// ----------------------------------------------------------------------
+	/**
+	 * Carga propiedades locales de fichero de properties.
+	 *
+	 * @return properties
+	 */
+	private Properties recuperarConfiguracionProperties() {
+		final String pathProperties = System.getProperty("es.caib.sistramit.properties.path");
+		try (FileInputStream fis = new FileInputStream(pathProperties);) {
+			final Properties props = new Properties();
+			props.load(fis);
+			return props;
+		} catch (final IOException e) {
+			throw new CargaConfiguracionException(
+					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
+		}
+	}
 
-    private IPlugin createPlugin(final List<RPlugin> plugins,
-            final String plgTipo) {
+	/**
+	 * Obtiene valor propiedad de configuracion global.
+	 *
+	 * @param propiedad
+	 *            propiedad
+	 * @return valor
+	 */
+	private String getPropiedadGlobal(final TypePropiedadConfiguracion propiedad) {
+		String res = null;
+		final RConfiguracionGlobal configuracionGlobal = sistragesComponent.obtenerConfiguracionGlobal();
+		if (configuracionGlobal != null && configuracionGlobal.getPropiedades() != null
+				&& configuracionGlobal.getPropiedades().getParametros() != null) {
+			for (final RValorParametro vp : configuracionGlobal.getPropiedades().getParametros()) {
+				if (propiedad.toString().equals(vp.getCodigo())) {
+					res = vp.getValor();
+					break;
+				}
+			}
+		}
+		return res;
+	}
 
-        String prefijoGlobal = this
-                .getPropiedadGlobal(TypePropiedadConfiguracion.PLUGINS_PREFIJO);
-        if (prefijoGlobal == null) {
-            throw new PluginErrorException(
-                    "No se ha definido propiedad global para prefijo global para plugins: "
-                            + TypePropiedadConfiguracion.PLUGINS_PREFIJO);
-        }
-        if (!prefijoGlobal.endsWith(".")) {
-            prefijoGlobal = prefijoGlobal + ".";
-        }
+	private IPlugin createPlugin(final List<RPlugin> plugins, final String plgTipo) {
 
-        IPlugin plg = null;
-        RPlugin rplg = null;
-        String classname = null;
-        try {
-            for (final RPlugin p : plugins) {
-                if (p.getTipo().equals(plgTipo)) {
-                    rplg = p;
-                    break;
-                }
-            }
+		String prefijoGlobal = this.getPropiedadGlobal(TypePropiedadConfiguracion.PLUGINS_PREFIJO);
+		if (prefijoGlobal == null) {
+			throw new PluginErrorException("No se ha definido propiedad global para prefijo global para plugins: "
+					+ TypePropiedadConfiguracion.PLUGINS_PREFIJO);
+		}
+		if (!prefijoGlobal.endsWith(".")) {
+			prefijoGlobal = prefijoGlobal + ".";
+		}
 
-            if (rplg == null) {
-                throw new PluginErrorException(
-                        "No existe plugin de tipo " + plgTipo);
-            }
+		IPlugin plg = null;
+		RPlugin rplg = null;
+		String classname = null;
+		try {
+			for (final RPlugin p : plugins) {
+				if (p.getTipo().equals(plgTipo)) {
+					rplg = p;
+					break;
+				}
+			}
 
-            classname = rplg.getClassname();
+			if (rplg == null) {
+				throw new PluginErrorException("No existe plugin de tipo " + plgTipo);
+			}
 
-            Properties prop = null;
-            if (rplg.getPrefijoPropiedades() != null
-                    && rplg.getPropiedades() != null
-                    && rplg.getPropiedades().getParametros() != null
-                    && !rplg.getPropiedades().getParametros().isEmpty()) {
-                prop = new Properties();
-                for (final RValorParametro parametro : rplg.getPropiedades()
-                        .getParametros()) {
-                    prop.put(
-                            prefijoGlobal + rplg.getPrefijoPropiedades()
-                                    + parametro.getCodigo(),
-                            parametro.getValor());
-                }
-            }
+			classname = rplg.getClassname();
 
-            plg = (IPlugin) PluginsManager.instancePluginByClassName(classname,
-                    prefijoGlobal, prop);
+			Properties prop = null;
+			if (rplg.getPrefijoPropiedades() != null && rplg.getPropiedades() != null
+					&& rplg.getPropiedades().getParametros() != null
+					&& !rplg.getPropiedades().getParametros().isEmpty()) {
+				prop = new Properties();
+				for (final RValorParametro parametro : rplg.getPropiedades().getParametros()) {
+					prop.put(prefijoGlobal + rplg.getPrefijoPropiedades() + parametro.getCodigo(),
+							parametro.getValor());
+				}
+			}
 
-            if (plg == null) {
-                throw new PluginErrorException(
-                        "No se ha podido instanciar plugin de tipo " + plgTipo
-                                + " , PluginManager devuelve nulo.");
-            }
+			plg = (IPlugin) PluginsManager.instancePluginByClassName(classname, prefijoGlobal, prop);
 
-            return plg;
+			if (plg == null) {
+				throw new PluginErrorException(
+						"No se ha podido instanciar plugin de tipo " + plgTipo + " , PluginManager devuelve nulo.");
+			}
 
-        } catch (final Exception e) {
-            throw new PluginErrorException("Error al instanciar plugin "
-                    + plgTipo + " con classname " + classname, e);
-        }
-    }
+			return plg;
 
-    /**
-     * Lee propiedad.
-     *
-     * @param propiedad
-     *            propiedad
-     * @param forceLocal
-     *            si fuerza solo a buscar en el properties local y no buscar en
-     *            la configuración global del STG
-     * @return valor propiedad (nulo si no existe)
-     */
-    private String readPropiedad(final TypePropiedadConfiguracion propiedad,
-            final boolean forceLocal) {
-        // Busca primero en propiedades locales
-        String prop = propiedadesLocales.getProperty(propiedad.toString());
-        // Si no, busca en propiedades globales
-        if (StringUtils.isBlank(prop) && !forceLocal) {
-            prop = getPropiedadGlobal(propiedad);
-        }
-        return StringUtils.trim(prop);
-    }
+		} catch (final Exception e) {
+			throw new PluginErrorException("Error al instanciar plugin " + plgTipo + " con classname " + classname, e);
+		}
+	}
+
+	/**
+	 * Lee propiedad.
+	 *
+	 * @param propiedad
+	 *            propiedad
+	 * @param forceLocal
+	 *            si fuerza solo a buscar en el properties local y no buscar en la
+	 *            configuración global del STG
+	 * @return valor propiedad (nulo si no existe)
+	 */
+	private String readPropiedad(final TypePropiedadConfiguracion propiedad, final boolean forceLocal) {
+		// Busca primero en propiedades locales
+		String prop = propiedadesLocales.getProperty(propiedad.toString());
+		// Si no, busca en propiedades globales
+		if (StringUtils.isBlank(prop) && !forceLocal) {
+			prop = getPropiedadGlobal(propiedad);
+		}
+		return StringUtils.trim(prop);
+	}
 
 }

@@ -131,12 +131,20 @@ public interface TramiteDao {
 	void changeAreaTramite(Long idArea, Long idTramite);
 
 	/**
-	 * Devuelve los dominios de una versión de trámite.
+	 * Devuelve los códigos de dominios de una versión de trámite.
 	 *
 	 * @param idTramiteVersion
 	 * @return
 	 */
 	List<Long> getTramiteDominiosId(Long idTramiteVersion);
+
+	/**
+	 * Devuelve los identificadores de dominio de una versión de trámite.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	List<String> getTramiteDominiosIdentificador(Long idTramiteVersion);
 
 	/**
 	 * Bloquea un tramite.

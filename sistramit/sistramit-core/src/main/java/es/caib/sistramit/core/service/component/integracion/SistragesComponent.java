@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 
 /**
@@ -17,81 +18,97 @@ import es.caib.sistrages.rest.api.interna.RVersionTramite;
  */
 public interface SistragesComponent {
 
-    /**
-     * Recupera configuración global.
-     */
-    @Cacheable(value = "cacheConfiguracion", key = "'configuracionGlobal'")
-    RConfiguracionGlobal obtenerConfiguracionGlobal();
+	/**
+	 * Recupera configuración global.
+	 */
+	@Cacheable(value = "cacheConfiguracion", key = "'configuracionGlobal'")
+	RConfiguracionGlobal obtenerConfiguracionGlobal();
 
-    /**
-     * Quita de caché configuración global.
-     */
-    @CacheEvict(value = "cacheConfiguracion", key = "'configuracionGlobal'")
-    void evictConfiguracionGlobal();
+	/**
+	 * Quita de caché configuración global.
+	 */
+	@CacheEvict(value = "cacheConfiguracion", key = "'configuracionGlobal'")
+	void evictConfiguracionGlobal();
 
-    /**
-     * Recupera configuracion entidad.
-     *
-     * @param idEntidad
-     * @return configuracion entidad.
-     */
-    @Cacheable(value = "cacheConfiguracion", key = "'configuracionEntidad-' + #idEntidad")
-    RConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad);
+	/**
+	 * Recupera configuracion entidad.
+	 *
+	 * @param idEntidad
+	 * @return configuracion entidad.
+	 */
+	@Cacheable(value = "cacheConfiguracion", key = "'configuracionEntidad-' + #idEntidad")
+	RConfiguracionEntidad obtenerConfiguracionEntidad(String idEntidad);
 
-    /**
-     * Quita de caché configuracion entidad.
-     *
-     * @param idEntidad
-     * @return configuracion entidad.
-     */
-    @CacheEvict(value = "cacheConfiguracion", key = "'configuracionEntidad-' + #idEntidad")
-    void evictConfiguracionEntidad(String idEntidad);
+	/**
+	 * Quita de caché configuracion entidad.
+	 *
+	 * @param idEntidad
+	 * @return configuracion entidad.
+	 */
+	@CacheEvict(value = "cacheConfiguracion", key = "'configuracionEntidad-' + #idEntidad")
+	void evictConfiguracionEntidad(String idEntidad);
 
-    /**
-     * Recupera avisos entidad.
-     *
-     * @param idEntidad
-     * @return configuracion entidad.
-     */
-    @Cacheable(value = "cacheConfiguracion", key = "'avisosEntidad-' + #idEntidad")
-    RAvisosEntidad obtenerAvisosEntidad(String idEntidad);
+	/**
+	 * Recupera avisos entidad.
+	 *
+	 * @param idEntidad
+	 * @return configuracion entidad.
+	 */
+	@Cacheable(value = "cacheConfiguracion", key = "'avisosEntidad-' + #idEntidad")
+	RAvisosEntidad obtenerAvisosEntidad(String idEntidad);
 
-    /**
-     * Quita de caché avisos entidad.
-     *
-     * @param idEntidad
-     * @return configuracion entidad.
-     */
-    @CacheEvict(value = "cacheConfiguracion", key = "'avisosEntidad-' + #idEntidad")
-    void evictAvisosEntidad(String idEntidad);
+	/**
+	 * Quita de caché avisos entidad.
+	 *
+	 * @param idEntidad
+	 * @return configuracion entidad.
+	 */
+	@CacheEvict(value = "cacheConfiguracion", key = "'avisosEntidad-' + #idEntidad")
+	void evictAvisosEntidad(String idEntidad);
 
-    /**
-     * Recupera definición versión de trámite.
-     *
-     * @param idTramite
-     *            id trámite
-     * @param version
-     *            versión
-     * @param idioma
-     *            idioma
-     * @return Definición versión trámite
-     */
-    @Cacheable(value = "cacheTramites", key = "#idTramite + '-' + #version + '-' + #idioma")
-    RVersionTramite recuperarDefinicionTramite(String idTramite, int version,
-            String idioma);
+	/**
+	 * Recupera definición versión de trámite.
+	 *
+	 * @param idTramite
+	 *            id trámite
+	 * @param version
+	 *            versión
+	 * @param idioma
+	 *            idioma
+	 * @return Definición versión trámite
+	 */
+	@Cacheable(value = "cacheTramites", key = "#idTramite + '-' + #version + '-' + #idioma")
+	RVersionTramite recuperarDefinicionTramite(String idTramite, int version, String idioma);
 
-    /**
-     * Quita de cache definición versión de trámite.
-     *
-     * @param idTramite
-     *            id trámite
-     * @param version
-     *            versión
-     * @param idioma
-     *            idioma
-     * @return Definición versión trámite
-     */
-    @CacheEvict(value = "cacheTramites", key = "#idTramite + '-' + #version + '-' + #idioma")
-    void evictDefinicionTramite(String idTramite, int version, String idioma);
+	/**
+	 * Quita de cache definición versión de trámite.
+	 *
+	 * @param idTramite
+	 *            id trámite
+	 * @param version
+	 *            versión
+	 * @param idioma
+	 *            idioma
+	 * @return
+	 */
+	@CacheEvict(value = "cacheTramites", key = "#idTramite + '-' + #version + '-' + #idioma")
+	void evictDefinicionTramite(String idTramite, int version, String idioma);
 
+	/**
+	 * Recupera definición dominio.
+	 *
+	 * @param idDominio
+	 * @return Definición versión trámite
+	 */
+	@Cacheable(value = "cacheDominios", key = "#idDominio")
+	RDominio recuperarDefinicionDominio(String idDominio);
+
+	/**
+	 * Quita de cache definición dominio.
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	@CacheEvict(value = "cacheDominios", key = "#idDominio")
+	void evictDefinicionDominio(String idDominio);
 }

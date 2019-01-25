@@ -57,4 +57,10 @@ public final class SistragesApiComponentMockImpl implements SistragesApiComponen
 		final RValoresDominio valoresDominio = SistragesMock.crearValoresDominioLF(dominio);
 		return valoresDominio;
 	}
+
+	@Override
+	public RDominio recuperarDefinicionDominio(final String idDominio) {
+		final RDominio dominio = SistragesMock.crearDominio(idDominio);
+		return dominio;
+	}
 }

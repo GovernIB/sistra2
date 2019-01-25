@@ -588,6 +588,19 @@ public class TramiteDaoImpl implements TramiteDao {
 		return resultado;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getTramiteDominiosIdentificador(final Long idTramiteVersion) {
+		final String sql = "Select d.identificador From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
+
+		final List<String> resultado = query.getResultList();
+
+		return resultado;
+	}
+
 	@Override
 	public void bloquearTramiteVersion(final Long idTramiteVersion, final String username) {
 		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);

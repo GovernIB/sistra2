@@ -44,7 +44,9 @@ public interface RestApiInternaService {
 
 	Tramite loadTramite(Long idTramite);
 
-	Dominio loadDominio(Long id);
+	Dominio loadDominio(String idDominio);
+
+	Dominio loadDominio(Long idDominio);
 
 	String getValorConfiguracionGlobal(String propiedad);
 
@@ -71,5 +73,7 @@ public interface RestApiInternaService {
 	public List<Rol> obtenerPermisosHelpdesk();
 
 	ValoresDominio realizarConsultaListaFija(String idDominio);
+
+	List<String> getIdentificadoresDominiosByTV(final Long idTramiteVersion);
 
 }

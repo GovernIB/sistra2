@@ -35,134 +35,119 @@ import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 @Component("sistragesApiComponent")
 public final class SistragesApiComponentImpl implements SistragesApiComponent {
 
-    /** Log. */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Configuracion. */
-    @Autowired
-    private ConfiguracionComponent configuracionComponent;
+	/** Configuracion. */
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
 
-    @Override
-    public RConfiguracionGlobal obtenerConfiguracionGlobal() {
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(
-                new BasicAuthorizationInterceptor(getUser(), getPassword()));
-        return restTemplate.getForObject(getUrl() + "/configuracionGlobal",
-                RConfiguracionGlobal.class);
-    }
+	@Override
+	public RConfiguracionGlobal obtenerConfiguracionGlobal() {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		return restTemplate.getForObject(getUrl() + "/configuracionGlobal", RConfiguracionGlobal.class);
+	}
 
-    @Override
-    public RConfiguracionEntidad obtenerConfiguracionEntidad(
-            final String idEntidad) {
+	@Override
+	public RConfiguracionEntidad obtenerConfiguracionEntidad(final String idEntidad) {
 
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(
-                new BasicAuthorizationInterceptor(getUser(), getPassword()));
-        return restTemplate.getForObject(getUrl() + "/entidad/" + idEntidad,
-                RConfiguracionEntidad.class);
-    }
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		return restTemplate.getForObject(getUrl() + "/entidad/" + idEntidad, RConfiguracionEntidad.class);
+	}
 
-    @Override
-    public RVersionTramite recuperarDefinicionTramite(final String idTramite,
-            final int version, final String idioma) {
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(
-                new BasicAuthorizationInterceptor(getUser(), getPassword()));
-        return restTemplate.getForObject(getUrl() + "/tramite/" + idTramite
-                + "/" + version + "/" + idioma, RVersionTramite.class);
+	@Override
+	public RVersionTramite recuperarDefinicionTramite(final String idTramite, final int version, final String idioma) {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		return restTemplate.getForObject(getUrl() + "/tramite/" + idTramite + "/" + version + "/" + idioma,
+				RVersionTramite.class);
+	}
 
-    }
+	@Override
+	public RDominio recuperarDefinicionDominio(final String idDominio) {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		return restTemplate.getForObject(getUrl() + "/dominio/" + idDominio, RDominio.class);
+	}
 
-    @Override
-    public RAvisosEntidad obtenerAvisosEntidad(final String idEntidad) {
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(
-                new BasicAuthorizationInterceptor(getUser(), getPassword()));
-        return restTemplate.getForObject(
-                getUrl() + "/entidad/" + idEntidad + "/avisos",
-                RAvisosEntidad.class);
-    }
+	@Override
+	public RAvisosEntidad obtenerAvisosEntidad(final String idEntidad) {
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		return restTemplate.getForObject(getUrl() + "/entidad/" + idEntidad + "/avisos", RAvisosEntidad.class);
+	}
 
-    @Override
-    public RValoresDominio resuelveDominioFuenteDatos(final RDominio dominio,
-            final ParametrosDominio parametrosDominio) {
+	@Override
+	public RValoresDominio resuelveDominioFuenteDatos(final RDominio dominio,
+			final ParametrosDominio parametrosDominio) {
 
-        // Convertimos lista parametros
-        final List<RValorParametro> parametros = new ArrayList<>();
-        if (parametrosDominio != null
-                && parametrosDominio.getParametros() != null
-                && !parametrosDominio.getParametros().isEmpty()) {
-            for (final es.caib.sistramit.core.service.model.integracion.ParametroDominio parametroDominio : parametrosDominio
-                    .getParametros()) {
-                final RValorParametro rValorParametro = new RValorParametro();
-                rValorParametro.setCodigo(parametroDominio.getCodigo());
-                rValorParametro.setValor(parametroDominio.getValor());
-                parametros.add(rValorParametro);
-            }
-        }
-        final RListaParametros listaParametros = new RListaParametros();
-        listaParametros.setParametros(parametros);
+		// Convertimos lista parametros
+		final List<RValorParametro> parametros = new ArrayList<>();
+		if (parametrosDominio != null && parametrosDominio.getParametros() != null
+				&& !parametrosDominio.getParametros().isEmpty()) {
+			for (final es.caib.sistramit.core.service.model.integracion.ParametroDominio parametroDominio : parametrosDominio
+					.getParametros()) {
+				final RValorParametro rValorParametro = new RValorParametro();
+				rValorParametro.setCodigo(parametroDominio.getCodigo());
+				rValorParametro.setValor(parametroDominio.getValor());
+				parametros.add(rValorParametro);
+			}
+		}
+		final RListaParametros listaParametros = new RListaParametros();
+		listaParametros.setParametros(parametros);
 
-        // Realizamos llamada
-        final RestTemplate restTemplate = new RestTemplate();
-        final String url = getUrl();
-        final String usuario = getUser();
-        final String pass = getPassword();
-        restTemplate.getInterceptors()
-                .add(new BasicAuthorizationInterceptor(usuario, pass));
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        final HttpEntity<RListaParametros> request = new HttpEntity<>(
-                listaParametros, headers);
-        final ResponseEntity<RValoresDominio> responseRest = restTemplate
-                .postForEntity(
-                        url + "/dominioFuenteDatos/"
-                                + dominio.getIdentificador(),
-                        request, RValoresDominio.class);
-        return responseRest.getBody();
-    }
+		// Realizamos llamada
+		final RestTemplate restTemplate = new RestTemplate();
+		final String url = getUrl();
+		final String usuario = getUser();
+		final String pass = getPassword();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(usuario, pass));
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		final HttpEntity<RListaParametros> request = new HttpEntity<>(listaParametros, headers);
+		final ResponseEntity<RValoresDominio> responseRest = restTemplate.postForEntity(
+				url + "/dominioFuenteDatos/" + dominio.getIdentificador(), request, RValoresDominio.class);
+		return responseRest.getBody();
+	}
 
-    @Override
-    public RValoresDominio resuelveDominioListaFija(final RDominio dominio) {
+	@Override
+	public RValoresDominio resuelveDominioListaFija(final RDominio dominio) {
 
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(
-                new BasicAuthorizationInterceptor(getUser(), getPassword()));
-        return restTemplate.getForObject(
-                getUrl() + "/dominioListaFija/" + dominio.getIdentificador(),
-                RValoresDominio.class);
+		final RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getUser(), getPassword()));
+		return restTemplate.getForObject(getUrl() + "/dominioListaFija/" + dominio.getIdentificador(),
+				RValoresDominio.class);
 
-    }
+	}
 
-    /**** Private functions. **/
-    /**
-     * Obtiene el password.
-     *
-     * @return
-     */
-    private String getPassword() {
-        return configuracionComponent.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.SISTRAGES_PWD);
-    }
+	/**** Private functions. **/
+	/**
+	 * Obtiene el password.
+	 *
+	 * @return
+	 */
+	private String getPassword() {
+		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_PWD);
+	}
 
-    /**
-     * Obtiene el usuario
-     *
-     * @return
-     */
-    private String getUser() {
-        return configuracionComponent.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.SISTRAGES_USR);
-    }
+	/**
+	 * Obtiene el usuario
+	 *
+	 * @return
+	 */
+	private String getUser() {
+		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_USR);
+	}
 
-    /**
-     * Obtiene la url.
-     *
-     * @return
-     */
-    private String getUrl() {
-        return configuracionComponent.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.SISTRAGES_URL);
-    }
+	/**
+	 * Obtiene la url.
+	 *
+	 * @return
+	 */
+	private String getUrl() {
+		return configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAGES_URL);
+	}
 
 }

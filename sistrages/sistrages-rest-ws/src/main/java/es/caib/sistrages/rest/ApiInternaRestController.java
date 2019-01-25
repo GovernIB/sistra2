@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
 import es.caib.sistrages.core.api.model.Plugin;
@@ -23,12 +24,14 @@ import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.adapter.AvisosEntidadAdapter;
 import es.caib.sistrages.rest.adapter.ConfiguracionEntidadAdapter;
 import es.caib.sistrages.rest.adapter.ConfiguracionGlobalAdapter;
+import es.caib.sistrages.rest.adapter.DominioAdapter;
 import es.caib.sistrages.rest.adapter.RolesAdapter;
 import es.caib.sistrages.rest.adapter.ValoresDominioAdapter;
 import es.caib.sistrages.rest.adapter.VersionTramiteAdapter;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
+import es.caib.sistrages.rest.api.interna.RDominio;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RPermisoHelpDesk;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
@@ -70,6 +73,12 @@ public class ApiInternaRestController {
 	 */
 	@Autowired
 	private VersionTramiteAdapter versionTramiteAdapter;
+
+	/**
+	 * DominioAdapter
+	 */
+	@Autowired
+	private DominioAdapter dominioAdapter;
 
 	/**
 	 * AvisosEntidadAdapter
@@ -139,6 +148,26 @@ public class ApiInternaRestController {
 		}
 
 		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
+	}
+
+	/**
+	 * Recupera definición dominio.
+	 *
+	 * @param idDominio
+	 * @return versión de dominio
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "Obtiene la definición de la versión del dominio", notes = "Obtiene la definición de la versión del dominio", response = RDominio.class)
+	@RequestMapping(value = "/dominio/{idDominio}", method = RequestMethod.GET)
+	public RDominio obtenerDefinicionVersionTramite(@PathVariable("idDominio") final String idDominio)
+			throws Exception {
+
+		final Dominio dominio = restApiService.loadDominio(idDominio);
+		if (dominio == null) {
+			throw new Exception("El dominio especificado no existe");
+		}
+
+		return dominioAdapter.convertir(dominio);
 	}
 
 	/**

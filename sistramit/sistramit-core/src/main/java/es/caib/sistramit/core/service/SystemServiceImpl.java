@@ -107,6 +107,7 @@ public class SystemServiceImpl implements SystemService {
 				sistragesComponent.evictConfiguracionEntidad(inv.getIdentificador());
 				break;
 			case DOMINIO:
+				sistragesComponent.evictDefinicionDominio(inv.getIdentificador());
 				dominiosComponent.invalidarDominio(inv.getIdentificador());
 				break;
 			case TRAMITE:
