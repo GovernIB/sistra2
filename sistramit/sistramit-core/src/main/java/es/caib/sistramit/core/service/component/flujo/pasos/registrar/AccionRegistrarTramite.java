@@ -331,6 +331,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		datosOrigen.setTipoRegistro(TypeRegistro.REGISTRO_ENTRADA);
 		// - Datos asunto
 		final DatosAsunto datosAsunto = new DatosAsunto();
+		datosAsunto.setCodigoSiaProcedimiento(
+				pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
 		datosAsunto.setFechaAsunto(new Date());
 		datosAsunto.setIdiomaAsunto(pVariablesFlujo.getIdioma());
 		datosAsunto.setExtractoAsunto(pVariablesFlujo.getTituloTramite());
