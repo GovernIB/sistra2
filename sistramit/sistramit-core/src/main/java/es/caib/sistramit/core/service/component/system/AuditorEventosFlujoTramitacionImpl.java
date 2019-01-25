@@ -101,14 +101,7 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			final ListaPropiedades propiedadesEvento = new ListaPropiedades();
 			final UsuarioAutenticadoInfo user = (UsuarioAutenticadoInfo) pArgumentos[0];
 			propiedadesEvento.addPropiedad(TypeParametroEvento.URL_INICIO.toString(), (String) pArgumentos[5]);
-			propiedadesEvento.addPropiedad(TypeParametroEvento.SISTEMA_OPERATIVO.toString(),
-					UserAgentUtil.getSistemaOperativo(user.getSesionInfo().getUserAgent()));
-			propiedadesEvento.addPropiedad(TypeParametroEvento.VERSION_SISTEMA_OPERATIVO.toString(),
-					UserAgentUtil.getVersionSistemaOperativo(user.getSesionInfo().getUserAgent()));
-			propiedadesEvento.addPropiedad(TypeParametroEvento.NAVEGADOR.toString(),
-					UserAgentUtil.getNavegador(user.getSesionInfo().getUserAgent()));
-			propiedadesEvento.addPropiedad(TypeParametroEvento.VERSION_NAVEGADOR.toString(),
-					UserAgentUtil.getVersionNavegador(user.getSesionInfo().getUserAgent()));
+			addPropsUserAgent(propiedadesEvento, user.getSesionInfo().getUserAgent());
 			evento.setPropiedadesEvento(propiedadesEvento);
 			eventosFlujo.add(evento);
 		}
@@ -118,14 +111,7 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			final EventoAuditoria evento = crearEvento(TypeEvento.CARGAR_TRAMITE, idSesionTramitacion);
 			final ListaPropiedades propiedadesEvento = new ListaPropiedades();
 			final UsuarioAutenticadoInfo user = (UsuarioAutenticadoInfo) pArgumentos[1];
-			propiedadesEvento.addPropiedad(TypeParametroEvento.SISTEMA_OPERATIVO.toString(),
-					UserAgentUtil.getSistemaOperativo(user.getSesionInfo().getUserAgent()));
-			propiedadesEvento.addPropiedad(TypeParametroEvento.VERSION_SISTEMA_OPERATIVO.toString(),
-					UserAgentUtil.getSistemaOperativo(user.getSesionInfo().getUserAgent()));
-			propiedadesEvento.addPropiedad(TypeParametroEvento.NAVEGADOR.toString(),
-					UserAgentUtil.getSistemaOperativo(user.getSesionInfo().getUserAgent()));
-			propiedadesEvento.addPropiedad(TypeParametroEvento.VERSION_NAVEGADOR.toString(),
-					UserAgentUtil.getSistemaOperativo(user.getSesionInfo().getUserAgent()));
+			addPropsUserAgent(propiedadesEvento, user.getSesionInfo().getUserAgent());
 			evento.setPropiedadesEvento(propiedadesEvento);
 			eventosFlujo.add(evento);
 		}
@@ -151,6 +137,24 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		}
 
 		return eventosFlujo;
+	}
+
+	/**
+	 * Añade propiedades relativas al user agent.
+	 *
+	 * @param propiedadesEvento
+	 *            propiedades evento
+	 * @param userAgent
+	 *            user agent
+	 */
+	private void addPropsUserAgent(final ListaPropiedades propiedadesEvento, final String userAgent) {
+		propiedadesEvento.addPropiedad(TypeParametroEvento.SISTEMA_OPERATIVO.toString(),
+				UserAgentUtil.getSistemaOperativo(userAgent));
+		propiedadesEvento.addPropiedad(TypeParametroEvento.VERSION_SISTEMA_OPERATIVO.toString(),
+				UserAgentUtil.getVersionSistemaOperativo(userAgent));
+		propiedadesEvento.addPropiedad(TypeParametroEvento.NAVEGADOR.toString(), UserAgentUtil.getNavegador(userAgent));
+		propiedadesEvento.addPropiedad(TypeParametroEvento.VERSION_NAVEGADOR.toString(),
+				UserAgentUtil.getVersionNavegador(userAgent));
 	}
 
 	/**
