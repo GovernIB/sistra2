@@ -1,0 +1,50 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_VALOR.resetValor()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_VALOR</a></li>
+      	  <li>></li>
+      	  <li><a href="./resetValor.html">resetValor</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	resetValor(): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que elimina todos los valores asociados a este objeto.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Para ver la funcionalidad de esta función, primero añadimos elementos al actual campo, en este caso, el campo, indica el municipio de un usuario:</p>
+ <p class="codigoScript">
+var municipios = DATOS_VALOR.crearValorMultiple();
+municipios.addValor('0337','Manacor'); 
+municipios.addValor('0407','Palma de Mallorca'); 
+municipios.addValor('2060','Eivissa'); 
+DATOS_VALOR.setValorMultiple('municipios', municipios);
+</p>
+<p> ahora el campo actual tiene 3 valores correspondientes a municipios de les Illes Balears, si en este punto podemos inferir de otros campos que el usuario no pertenece a Les Illes Balears, existe la opción de borrar todos los valores mediante la siguiente sentencia: </p>
+<p class="codigoScript">
+DATOS_VALOR.resetValor();
+</p>
+</body>
+</html>

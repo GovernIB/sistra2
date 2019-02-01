@@ -6,12 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
+import org.primefaces.extensions.event.ClipboardSuccessEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -21,6 +24,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
+import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
@@ -108,6 +112,12 @@ public class DialogScript extends DialogControllerBase {
 	/** Arbol */
 	private TreeNode treeFormularios;
 
+	/** Nodo seleccionado. **/
+	private TreeNode selectedNode;
+
+	/** Text formulario. **/
+	private String textFormulario;
+
 	/**
 	 * Constructor vacio.
 	 */
@@ -165,16 +175,42 @@ public class DialogScript extends DialogControllerBase {
 		treeFormularios = new DefaultTreeNode("Root", null);
 
 		if (permiteEditar) {
-			final Object jsonForms = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIOS);
-			if (jsonForms != null) {
 
-				final List<Long> idFormularios = (List<Long>) UtilJSON.fromListJSON(jsonForms.toString(), Long.class);
+			if (tipoScript instanceof TypeScriptFlujo) {
+				final Object jsonTram = mochila.get(Constantes.CLAVE_MOCHILA_TRAMITE);
+				final Object jsonForms = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIO);
+				final Object jsonFormsInt = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO);
+				final Object jsonPaso = mochila.get(Constantes.CLAVE_MOCHILA_PASO);
+
+				Long idForm = null;
+				if (jsonForms != null) {
+					idForm = Long.valueOf(jsonForms.toString());
+				}
+
+				Long idFormInterno = null;
+				if (jsonFormsInt != null) {
+					idFormInterno = Long.valueOf(jsonFormsInt.toString());
+				}
+
+				Long idPasoActual = null;
+				if (jsonPaso != null) {
+					idPasoActual = Long.valueOf(jsonPaso.toString());
+				}
+
+				TramiteSimple tramiteSimple = null;
+				if (jsonTram != null) {
+					tramiteSimple = (TramiteSimple) UtilJSON.fromJSON(jsonTram.toString(), TramiteSimple.class);
+				}
+
+				final List<Long> idFormularios = UtilScripts.getFormulariosFlujo(tramiteSimple, idForm, idPasoActual,
+						(TypeScriptFlujo) tipoScript, idFormInterno);
+
 				for (final Long idFormulario : idFormularios) {
 					final String identificadorFormulario = formularioInternoService
 							.getIdentificadorFormularioInterno(idFormulario);
 					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(
 							new OpcionArbol(identificadorFormulario));
-
+					nodoFormulario.setSelectable(false);
 					final DisenyoFormularioSimple formulario = formularioInternoService
 							.getFormularioInternoSimple(idFormulario);
 
@@ -182,6 +218,7 @@ public class DialogScript extends DialogControllerBase {
 					for (final DisenyoFormularioPaginaSimple pagina : formulario.getPaginas()) {
 						final DefaultTreeNode nodoPagina = new DefaultTreeNode(
 								new OpcionArbol(UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i));
+						nodoPagina.setSelectable(false);
 						for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
 							final DefaultTreeNode nodoComponente = new DefaultTreeNode(
 									new OpcionArbol(componente.getIdentificador(), componente.getTipo()));
@@ -195,7 +232,15 @@ public class DialogScript extends DialogControllerBase {
 				}
 
 			}
+
+			if (tipoScript instanceof TypeScriptFormulario) {
+				final DisenyoFormularioSimple disenyoFormulario = null;
+
+				// DisenyoFormularioSimple disenyoFormulario =
+				// UtilScripts.getFormulariosFormulario(formulario, idComponente);
+			}
 		}
+
 	}
 
 	/**
@@ -455,8 +500,26 @@ public class DialogScript extends DialogControllerBase {
 	 * Muestra mensaje de copy.
 	 */
 	public void mensajeCopy() {
-		// UtilJSF.getLiteral("info.copiado.ok")
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Copiat correctament");
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+	}
+
+	/**
+	 * Marca como disabled si el nodo no está seleccionado.
+	 *
+	 * @return
+	 */
+	public boolean isDisabledBoton() {
+		if (this.selectedNode != null) {
+			textFormulario = this.selectedNode.getData().toString();
+		}
+		return this.selectedNode == null;
+	}
+
+	public void successListener(final ClipboardSuccessEvent successEvent) {
+		final FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+				"Component id: " + successEvent.getComponent().getId() + " Action: " + successEvent.getAction()
+						+ " Text: " + successEvent.getText());
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
 	/**
@@ -1002,6 +1065,36 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setTipoScriptFormulario(final String tipoScriptFormulario) {
 		this.tipoScriptFormulario = tipoScriptFormulario;
+	}
+
+	/**
+	 * @return the selectedNode
+	 */
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	/**
+	 * @param selectedNode
+	 *            the selectedNode to set
+	 */
+	public void setSelectedNode(final TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
+	/**
+	 * @return the textFormulario
+	 */
+	public String getTextFormulario() {
+		return textFormulario;
+	}
+
+	/**
+	 * @param textFormulario
+	 *            the textFormulario to set
+	 */
+	public void setTextFormulario(final String textFormulario) {
+		this.textFormulario = textFormulario;
 	}
 
 }

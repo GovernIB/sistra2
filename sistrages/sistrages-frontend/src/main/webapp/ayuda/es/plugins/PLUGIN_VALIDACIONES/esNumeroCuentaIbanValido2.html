@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACIONES.esNumeroCuentaIbanValido(iban, entidad, sucursal, dc, cuenta)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_VALIDACIONES</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNumeroCuentaIbanValido2.html">esNumeroCuentaIbanValido</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNumeroCuentaIbanValido(Strinbg iban, String entidad, String sucursal, String dc, String cuenta): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si los valores introducidos no son nulos, y cumple con las reglas de validación necesarias para ser un IBAN (International Bank Account Number) Válido. Se consideran válidas toda aquella cadena que tengan 4 números iban, 4 números para la entidad, 4 números para la sucursal, 2 números para los dígitos de control y 10 números para la cuenta corriente y que cumplan con las reglas de validación correspondientes a la combinación de código iban (clave del país y código de control), entidad, oficina, dígito de control y número de cuenta.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>iban</b>: Código de 4 dígitos del iban siendo los 2 primeros dígitos el código del país ('ES' para España) y los otros 2 son código de control. </li>
+		<li><b>entidad</b>: Código de 4 dígitos de la entidad bancaria.</li>
+		<li><b>sucursal</b>: Código de 4 dígitos de la sucursal.</li>
+		<li><b>dc</b>: Código de 2 dígitos para los dígitos de control.</li>
+		<li><b>cuenta</b>: Código de 10 dígitos del Número de cuenta.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si iban+entidad+sucursal+dc+cuenta forman un número de cuenta válido y false si entidad+sucursal+dc+cuenta no forman un número de cuenta válido.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar los siguientes valores: iban: 'ES66', entidad: '2100', sucursal: '0418', dc: '46', cuenta: '1234567891'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNumeroCuentaIbanValido('ES66', '2100', '0418', '46', '1234567891');
+</p>
+<p>La función esNumeroCuentaIbanValido retorna 'false' ya que los parámetros introducidos no forman un número de cuenta válido, el dígito de control no es correcto..</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar los siguientes valores: iban: 'ES66', entidad: '2100', sucursal: '0418', dc: '40', cuenta: '1234567891'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_VALIDACIONES.esNumeroCuentaIbanValido ('ES66', '2100', '0418', '40', '1234567891');
+</p>
+<p>La función esNumeroCuentaIbanValido retorna 'true', ya que los parámetros introducidos forman un número de cuenta válido.</p>
+<br />
+
+</body>
+</html>

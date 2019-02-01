@@ -1,0 +1,55 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_INICIALES_FORMULARIO.crearValorMultiple(codigo, valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_INICIALES_FORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./crearValorMultiple.html">crearValorMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	crearValorMultiple(): ValorCampoMultiple
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite crear un valor múltiple para después poder utilizarlo en un campo del formulario actual.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>ValorCampoMultiple</b>: Crea el valor del campo múltiple.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Por ejemplo, si deseamos generar un conjunto de datos geográficos predefenidos en un formulario, primero crearíamos la variable: </p>
+ <p class="codigoScript">
+var datos = DATOS_INICIALES_FORMULARIO.crearValorMultiple();<br />
+<p>y posteriormente añadiríamos los datos a la variable, siendo el primer parámetro de entrada el código y el segundo el valor:</p>
+<p class="codigoScript">
+datos.addValor('codProvincia', '07'); 
+datos.addValor('codMunicipio', '07073'); 
+datos.addValor('codPostal', '07406');
+</p>
+</body>
+</html>

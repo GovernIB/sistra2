@@ -1,0 +1,50 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.setFormularioIncorrecto(idFormulario)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./setFormularioIncorrecto.html">setFormularioIncorrecto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setFormularioIncorrecto(idFormulario): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que marca un formulario ya completado para que tenga que ser revisado</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulario.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Si por ejemplo, mediante una validación, detectamos que un campo está erróneamente introducido en un formulario (identificador 'FORM1'), podemos obligar al usuario a revisar los datos. La línea de código a introducir en el script sería: </p>
+ <p class="codigoScript">
+DATOS_FORMULARIOS.setFormularioIncorrecto('FORM1');
+</p>
+</body>
+</html>

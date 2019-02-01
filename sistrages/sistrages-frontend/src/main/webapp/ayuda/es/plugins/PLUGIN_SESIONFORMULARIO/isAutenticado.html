@@ -1,0 +1,57 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONFORMULARIO.isAutenticado()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./isAutenticado.html">isAutenticado</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	isAutenticado(): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+
+<p>
+	<ul>
+		<li>Método que indica si un usuario está autenticado en la sesión actual.</li>
+	</ul>
+</p>	
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: Retorna 'true' si el usuario está autenticado en la sesión actual y 'false' en caso contrario. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+<p>Si estamos en un trámite en el que el usuario puede acceder de manera autenticada y sin autenticar, y deseamos comprobar desde un formulario si un usuario está autenticado usaremos esta función:</p>
+ <p class="codigoScript">
+	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado();
+ </p>
+ <p>
+   La función isAutenticado retornará 'true' si el usuario de la sesión está autenticado.
+ </p>
+<br />
+
+
+</body>
+</html>

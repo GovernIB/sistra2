@@ -1,0 +1,57 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getUrlInicioTramite()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONTRAMITACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./getUrlInicioTramite.html">getUrlInicioTramite</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getUrlInicioTramite(): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que retorna la URL con la que se inició el trámite.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>string</b>: Cadena de caracteres que representa la URL con la que se inició el trámite.</li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+<p> Obtener la URL con la que se inició el trámite:</p>
+ <p class="codigoScript">
+	var url = PLUGIN_SESIONTRAMITACION.getUrlInicioTramite();
+ </p>
+ <p>
+   La función getUrlInicioTramite retorna una URL similar a :
+'www.caib.es/sistramitfront/asistente/iniciarTramite.html?tramite=ID_TRAMITE&version=1&idioma=es&idTramiteCatalogo=32'
+ </p>
+<br />
+
+
+</body>
+</html>

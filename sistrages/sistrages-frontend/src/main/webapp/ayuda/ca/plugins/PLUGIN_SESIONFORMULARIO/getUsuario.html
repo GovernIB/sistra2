@@ -1,0 +1,63 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONFORMULARIO.getUsuario()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getUsuario.html">getUsuario</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getUsuario(): <a href="../DATOS_USUARIO/index.html"> DATOS_USUARIO</a>
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna l'objecte 'DATOS_USUARIO' amb la informació de l'usuari. 
+		</li>
+		<li>Només és possible el seu ús en tràmits autenticats.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>DATOS_USUARIO</b>: Retorna l'objecte 'DATOS_USUARIO' amb la informació de l'usuari.</li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+<p>Suposem que es desitja obtenir el nom de l'usuari de la sessió actual (només per a tràmits autenticats)</p>
+<p class="codigoScript">
+	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado();
+	if (autenticado == true) {
+		var usuario = PLUGIN_SESIONFORMULARIO.getUsuario();
+	}
+ </p>
+ <p>
+   La funció getUsuario retorna l'objecte 'DADES_USUARI', a partir del qual es pot extreure la informació que ens interessa, en aquest cas el nom, mitjançant la següent funció:
+ </p>
+  <p class="codigoScript">
+	var nombre = usuario.getNombre();
+ </p>
+<br />
+
+</body>
+</html>

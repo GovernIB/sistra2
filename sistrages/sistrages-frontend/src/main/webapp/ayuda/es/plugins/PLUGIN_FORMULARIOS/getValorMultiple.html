@@ -1,0 +1,80 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getValorMultiple(idFormulario,campo,indice)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getValorMultiple.html">getValorMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getValorMultiple(String idFormulario, String campo, int indice): VALOR_CAMPOCOMPUESTO
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el valor de un campo múltiple.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Cadena que contiene el identificador del formulario.</li>
+		<li><b>campo</b>: Cadena que contiene el identificador del campo. </li>
+		<li><b>indice</b>: Valor entero que indica la posición del campo compuesto dentro del campo valor múltiple. </li>
+	</ul>
+</p>
+
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>VALOR_CAMPOCOMPUESTO</b>: Devuelve el objeto VALOR_CAMPOCOMPUESTO ubicado en el índice del campo múltiple. Este objeto está formado por 2 campos, código y descripción, los valores de los cuales se pueden obtener mediante las funciones getCodigo() y getDescripcion() respectivamente. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+  <p> Obtener el último valor del campo múltiple 'campoTitulaciones' del formulario con id 'Form1', para ello primero se debe obtener el total de valores:</p>
+ <p class="codigoScript">
+	var total = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorMultiple('Form1','campoTitulaciones');	
+</p>
+<p>
+	La función getNumeroValoresValorMultiple retornará 8 (total de valores de ese campo). Con este valor podemos calcular el índice del último elemento de la siguiente manera:
+</p>
+<p class="codigoScript">
+	var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorMultiple('Form1','campoTitulaciones', total -1);	
+ </p>
+ <p>
+   La función getValorMultiple retornará el objeto valorCompuesto ubicado en la posición indicada. Para obtener los datos del valor compuesto podemos pedir su código o descripción tal como se muestra a continuación:
+ </p>
+ <p class="codigoScript">
+	var descripcion = valorCompuesto.getDescripcion();<br />
+	var codigo = valorCompuesto.getCodigo();
+ </p>
+ <p>
+	En este caso la función getCodigo retornará la cadena 'GRAD.SUP.INFOR' y la función getDescripcion retornará la cadena 'Grado superior en informática'.
+ </p>
+<br />
+
+
+</body>
+</html>

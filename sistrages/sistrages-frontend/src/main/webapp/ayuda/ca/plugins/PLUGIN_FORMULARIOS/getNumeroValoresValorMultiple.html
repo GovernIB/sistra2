@@ -1,0 +1,65 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_FORMULARIOS.getNumeroValoresValorMultiple(idFormulario, campo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./getNumeroValoresValorMultiple.html">getNumeroValoresValorMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getNumeroValoresValorMultiple(String idFormulario, String campo): int
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna el nombre de valors possibles d'un determinat camp.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Cadena que conté l'identificador del formulari.</li>
+		<li><b>campo</b>: Cadena que conté l'identificador del camp. </li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Nombre de valors del camp múltiple. </li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+<p> Obtenir el nombre de valors del camp multivalor 'campoTitulaciones' situat en el formulari 'idForm1':</p>
+ <p class="codigoScript">
+	var numero = PLUGIN_FORMULARIOS.getNumeroValoresValorMultiple('idForm1','campoTitulaciones');	
+ </p>
+ <p>
+  La funció getNumeroValoresValorMultiple retornarà el número 3, la qual cosa indica que aquest camp té 3 possibles valors.
+ </p>
+<br />
+
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_PAGO.consultarTasa(idPasarela, idTasa)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_PAGO</a></li>
+      	  <li>></li>
+      	  <li><a href="./lpad.html">consultarTasa</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	consultarTasa(String idPasarela, String idTasa): int
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna l'import associat a una taxa i una passarel·la.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idPasarela</b>: Cadena que conté l'identificador de la passarel·la.</li>
+		<li><b>idTasa</b>: Cadena que conté l'identificador de la taxa.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Import en cèntims (nombre natural) associat a la passarel·la i la taxa.</li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+
+<p>Obtenir l'import associat a la passarel·la 'idPasarela' i a la taxa 'idTasa'.</p>
+ <p class="codigoScript">
+		var importe = PLUGIN_PAGO.consultarTasa('idPasarela', 'idTasa');
+ </p>
+<p>
+La funció consultarTasa retornarà 1450, la qual cosa indica que per a la passarel·la 'idPasarela' i la taxa 'idTasa', el valor associat és de 14 euros i 50 cèntims.
+</p>
+<br />
+
+
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_FORMULARIOS.getAccionPersonalizada(idFormulario)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getAccionPersonalizada.html">getAccionPersonalizada</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getAccionPersonalizada(String idFormulario): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el valor de una acción personalizada para un formulario (en caso de tenerla).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Cadena que contiene el identificador del formulario.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caracteres que representa la acción personalizada. En caso de no tenerla, devuelve cadena vacía. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+  <p> Obtener la acción personalizada del formulario con identificador 'Form1'</p>
+ <p class="codigoScript">
+	var accion = PLUGIN_FORMULARIOS.getAccionPersonalizada('Form1');	
+ </p>
+ <p>
+   La función getAccionPersonalizada retornará la acción personalizada del formulario 'Form1'.
+ </p>
+<br />
+
+
+</body>
+</html>

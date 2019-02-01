@@ -1,0 +1,59 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_USUARIO.getNif()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_USUARIO</a></li>
+		  <li>></li>
+      	  <li><a href="./getNif.html">getNif</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getNif(): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el NIF del usuario autenticado.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caracteres con el NIF del usuario autenticado. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+<p> Si se desea obtener el NIF del usuario de la sesión actual, en este caso '11111111H', primero se debe comprobar si la sesión es autenticada, a continuación, obtener el objeto DATOS_USUARIO mediante getUsuario. Una vez obtenido el usuario, podemos obtener su NIF mediante la función getNif:</p>
+ <p class="codigoScript">
+	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado(); <br />
+	if (autenticado == true) { <br />
+		var usuario = PLUGIN_SESIONFORMULARIO.getUsuario(); <br />
+		var nif = usuario.getNif(); <br />
+	}
+ </p>
+ <p>
+   La función getNif retornará la cadena '11111111H'.
+ </p>
+<br />
+
+</body>
+</html>

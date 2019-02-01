@@ -1,0 +1,55 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.setValorCompuesto(idFormulario, campo, codigo, descripcion)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./setValorCompuesto.html">setValorCompuesto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setValorCompuesto(idFormulario, campo, codigo, descripcion): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que estableix un valor a la llista de valors d'un camp de selecció compost.
+		Modificar un formulari implica que es marcarà amb estat incorrecte per a forçar la seva revisió
+		per part de l'usuari. Només es podrà modificar el formulari actual i posteriors.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulari en el qual vol modificar el valor del camp.</li>
+		<li><b>campo</b>: Camp al qual es desitja assignar el valor.</li>
+		<li><b>codigo</b>: Codi que es desitja assignar al camp.</li>
+		<li><b>descripcion</b>: descripció que es desitja assignar al camp.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que volem assignar a un camp de selecció múltiple (província), del formulari actual (FORM1) un valor concret format per codi i DESCRIPCIÓ. La línia de codi a introduir seria la següent:</p>
+ <p class="codigoScript">
+DATOS_FORMULARIOS.setValorCompuesto('FORM1', 'provincia', '07', 'Illes Balears');
+</p>
+</body>
+</html>

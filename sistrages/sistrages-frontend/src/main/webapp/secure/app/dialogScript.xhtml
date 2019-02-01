@@ -64,7 +64,7 @@
 						</h:panelGrid>
 					</p:panel>
 
-    				<h:panelGrid columns="2" columnClasses="w50 grid-left va-top formulario-panel, w50 grid-center va-top formulario-panel" styleClass="w100"  >
+    				<h:panelGrid id="panelLeft" columns="2" columnClasses="w50 grid-left va-top formulario-panel, w50 grid-center va-top formulario-panel" styleClass="w100"  >
 
 							<pe:codeMirror  id="codeMirror"
 		        							mode="#{dialogScript.mode}"
@@ -76,10 +76,10 @@
 		    								readonly="#{dialogScript.isConsulta()}"
 			    							styleClass="w100 h100" />
 
-							<p:column rendered="#{dialogScript.isPermiteEditar()}">
-								<p:column rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">
+							<p:column id="columnaRight" rendered="#{dialogScript.isPermiteEditar()}">
+								<p:column id="columnaIframe" rendered="#{dialogScript.mostrarLateralAyuda}" style="text-align:center">
 									<iframe src="#{dialogScript.urlIframe}" width="100%" height="400px" />
-									<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@this"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" />
+									<p:commandButton id="commandOcultarAyuda" value="#{msg['botones.ocultarAyuda']}"   styleClass="button" process="@form"  action="#{dialogScript.ocultarAyuda()}"  update="@form" style="margin-left:4px;" icon="fa fa-eye-slash" />
 
 								</p:column>
 		    					<p:panel id="panelPlugins"  header="#{msg['dialogScript.plugins.header']}" toggleable="true" widgetVar="panelPlugins"  collapsed="#{dialogScript.visibleHerramientas}" styleClass="h100 w100 sin-bordes noPadding grid-left" rendered="#{!dialogScript.mostrarLateralAyuda}">
@@ -91,7 +91,7 @@
 									        <h:outputText value="#{plugin.name()}"/>
 									    </h:column>
 									    <h:column>
-									    	<p:commandButton icon="fa fa-question" actionListener="#{dialogScript.mostrarAyuda(plugin)}" process="@this" update="@form" style="color:#c4bc20;" />
+									    	<p:commandButton icon="fa fa-question" actionListener="#{dialogScript.mostrarAyuda(plugin)}" process="@form" update="@form:columnaIframe @form:panelLeft @form:columnaRight" style="color:#c4bc20;" />
 									    </h:column>
 									</h:dataTable>
 								</p:panel>
@@ -101,12 +101,12 @@
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
 										<div style="text-align:right">
 											<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}" >
-							        				<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript @form"/>
+							        				<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
 							        		</p:commandButton>
       			   							<p:commandButton value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogScript.editarMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}">
-			        								<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript @form"/>
+			        								<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
 			        						</p:commandButton>
-      			   							<p:commandButton value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.eliminarMensaje}" process="@this" update="@form growlScript" rendered="#{dialogScript.isPermiteEditar()}">
+      			   							<p:commandButton value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.eliminarMensaje}" process="@this" update="panelPlugins panelMensajes panelDominios panelFormularios growlScript" rendered="#{dialogScript.isPermiteEditar()}">
 	        									<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 	        								</p:commandButton>
       			   						</div>
@@ -158,19 +158,55 @@
 							 		<p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left">
 
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
-											<h:form id="formArbol">
-												<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes h100 w80" >
+
+												<p:growl id="growlScript2" widgetVar="growlScript" life="2000" sticky="false" />
+												<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes h100 w80" selectionMode="single" selection="#{dialogScript.selectedNode}" >
 													<p:treeNode>
 														<h:graphicImage value="#{node.srcIcono()}" rendered="#{node.tieneIcono()}" width="35px" style="margin-right:5px" />
 														<h:outputText value="#{node.getName()}" />
 													</p:treeNode>
+
+													<p:ajax event="select" update="dialogScript:commandCopiarNodo"  />
+
 												</p:tree>
-											</h:form>
+												<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="boton-azul margin-top-3"  rendered="#{dialogScript.isEdicion()}" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" />
+
 									</p:panel>
 		    					</p:column>
 					</h:panelGrid>
 
-					<p:commandButton id="hiddenCommandActualizarTexto" styleClass="button" process="@this"  action="#{viewTramites.anyadirTexto()}"  style="display:none" />
+					<h:outputScript >
+
+				     	function triggerCopiar() {
+
+							// Valor del nodo seleccionado
+							var valor = document.getElementsByClassName("ui-state-highlight")[0].innerText;
+
+							// Crea un campo de texto "oculto"
+							var aux = document.createElement("input");
+
+							// Asigna el contenido del elemento especificado al valor del campo
+							aux.setAttribute("value", valor);
+
+							// Añade el campo a la página
+							document.body.appendChild(aux);
+
+							// Selecciona el contenido del campo
+							aux.select();
+
+							// Copia el texto seleccionado
+							document.execCommand("copy");
+
+							// Elimina el campo de la página
+							document.body.removeChild(aux);
+
+							//console.log("texto copiado fin:" + valor);
+
+							document.getElementById("dialogScript:hiddenCommandMensajeCopy").click();
+						}
+					</h:outputScript>
+
+					<p:commandButton id="hiddenCommandActualizarTexto" styleClass="button" process="@this"  action="#{dialogScript.anyadirTexto()}"  style="display:none" />
       			   	<p:commandButton id="hiddenCommandOcultarAyuda"    styleClass="button" process="@this"  action="#{dialogScript.ocultarAyuda()}"  style="display:none" update="@form" />
       			   	<p:commandButton id="hiddenCommandMensajeCopy"     styleClass="button" process="@this"  action="#{dialogScript.mensajeCopy()}"  style="display:none" update="growlScript" />
       			   	<h:inputText     id="hiddenNuevoTexto" 			value="#{dialogScript.nuevoTexto}"  style="display:none" />

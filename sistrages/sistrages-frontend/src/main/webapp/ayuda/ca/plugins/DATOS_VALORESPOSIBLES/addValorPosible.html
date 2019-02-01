@@ -1,0 +1,54 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_VALORESPOSIBLES.addValorPosible(codigo, descripcion)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_VALORESPOSIBLES</a></li>
+      	  <li>></li>
+      	  <li><a href="./addValorPosible.html">addValorPosible</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addValorPosible(String codigo, String descripcion): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet afegir un nou valor al camp actual.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigo</b>: Cadena de text que representa el codi de l'element</li>
+		<li><b>descripcion</b>: Cadena de text que representa la descripció de l'element.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Afegir valors possibles al camp actual, per exemple, si el camp actual és un selector de municipis: </p>
+ <p class="codigoScript">
+DATOS_VALORESPOSIBLES.addValorPosible('46','Provincia de Valencia');
+DATOS_VALORESPOSIBLES.addValorPosible('03','Provincia de Alicante');
+</p>
+
+<p>D'aquesta manera aquests valors quedaran afegits al camp selector. </p>
+</body>
+</html>

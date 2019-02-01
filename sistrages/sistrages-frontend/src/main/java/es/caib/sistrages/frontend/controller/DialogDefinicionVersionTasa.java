@@ -78,7 +78,6 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
 				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
 		if (script != null) {
-			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}

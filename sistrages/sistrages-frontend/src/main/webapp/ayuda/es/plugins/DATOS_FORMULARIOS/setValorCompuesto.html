@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.setValorCompuesto(idFormulario, campo, codigo, descripcion)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./setValorCompuesto.html">setValorCompuesto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setValorCompuesto(idFormulario, campo, codigo, descripcion): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que establece un valor a la lista de valores de un campo de selección
+			compuesto. Modificar un formulario implica que se marcará con estado
+			incorrecto para forzar su revisión por parte del usuario. Solo se podrá modificar el
+			formulario actual y posteriores.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulario en el que quiere modificar el valor del campo.</li>
+		<li><b>campo</b>: Campo al que se desea asignar el valor.</li>
+		<li><b>codigo</b>: Código que se desea asignar al campo.</li>
+		<li><b>descripcion</b>: Descripción que se desea asignar al campo.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que queremos asignar a un campo de selección múltiple (provincia), del formulario actual (FORM1) un valor concreto formado por código y descripción. La línea de código a introducir sería la siguiente: </p>
+ <p class="codigoScript">
+DATOS_FORMULARIOS.setValorCompuesto('FORM1', 'provincia', '07', 'Illes Balears');
+</p>
+</body>
+</html>

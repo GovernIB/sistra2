@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getValor(campo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getValor.html">getValor</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getValor(String campo): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el valor de un campo simple.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>campo</b>: Cadena que contiene el identificador del campo. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caracteres que representa el valor del campo. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+<p> Obtener el valor del campo simple 'campoNif':</p>
+ <p class="codigoScript">
+	var valor = PLUGIN_DATOSFORMULARIO.getValor('campoNif');	
+ </p>
+ <p>
+   La función getValor retornará el valor del campoNif, en este caso '11111111H'.
+ </p>
+<br />
+
+
+</body>
+</html>

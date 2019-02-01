@@ -1,0 +1,64 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONFORMULARIO.getParametro(idParametro)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getParametro.html">getParametro</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getParametro(String idParametro): String
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que permet recuperar el valor dels paràmetres enviats a través de la URL en iniciar el tràmit. Si el paràmetre no existeix, retorna una cadena buida.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idParametro</b>:Cadena de l'identificador del paràmetre d'entrada.</li>
+	</ul>
+</p>	
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caràcters amb el valor del paràmetre. </li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+<p> Suposem que tenim un tràmit que permet el pagament de taxes, i volem que en funció de l'enllaç des del qual s'accedeix, s'empleni una determinada taxa en un camp del formulari. En aquest cas podríem usar aquesta funció perquè recuperi un paràmetre de l'URL, en aquest cas el paràmetre 'taxa'. Si l'URL d'accés és com segueix: http://tramite.pruebas.com/sistra/tramiteExemple?tasa=TASA1:</p>
+ <p class="codigoScript">
+	var valor = PLUGIN_SESIONFORMULARIO.getParametro('tasa');
+ </p>
+ <p>
+   La funció getParametro retornarà la cadena 'TASA1', i podrem fer servir aquest valor per a mostrar-lo en un camp del formulari.
+ </p>
+<br />
+
+
+</body>
+</html>

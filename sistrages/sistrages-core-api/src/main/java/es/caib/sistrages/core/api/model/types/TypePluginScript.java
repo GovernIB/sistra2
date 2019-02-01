@@ -46,27 +46,27 @@ public enum TypePluginScript {
 	/**
 	 * Resultado parametros iniciales (exclusivo dentro del flujo)
 	 */
-	RES_PARAMETROSINICIALES,
+	DATOS_PARAMETROS_INICIALES,
 	/**
 	 * Resultado datos iniciales formulario (exclusivo del flujo)
 	 */
-	RES_DATOSINICIALESFORMULARIO,
+	DATOS_INICIALES_FORMULARIO,
 	/**
 	 * Resultado personalizacion tramite (exclusivo dentro del flujo)
 	 */
-	RES_PERSONALIZACIONTRAMITE,
+	DATOS_PERSONALIZACION,
 	/**
 	 * Resultado parametros formulario (exclusivo dentro del flujo)
 	 */
-	RES_PARAMETROSFORMULARIO,
+	DATOS_PARAMETROSFORMULARIO,
 	/**
 	 * Resultado modificacion formularios (exclusivo dentro del flujo)
 	 */
-	RES_MODIFICACIONFORMULARIOS,
+	DATOS_FORMULARIOS,
 	/**
 	 * Resultado anexos dinámicos (exclusivo dentro del flujo)
 	 */
-	RES_ANEXOSDINAMICOS,
+	DATOS_ANEXOS_DINAMICOS,
 	/**
 	 * Plugin de pago (exclusivo dentro del flujo)
 	 */
@@ -74,27 +74,27 @@ public enum TypePluginScript {
 	/**
 	 * Resultado del pago (exclusivo dentro del flujo)
 	 */
-	RES_PAGO,
+	DATOS_PAGO,
 	/**
 	 * Resultado firmantes (exclusivo dentro del flujo)
 	 */
-	RES_FIRMANTES,
+	DATOS_FIRMANTES,
 	/**
 	 * Resultado registro (exclusivo dentro del flujo)
 	 */
-	RES_REGISTRO,
+	DATOS_REGISTRO,
 	/**
 	 * Resultado persona (exclusivo dentro del flujo)
 	 */
-	RES_PERSONA,
+	DATOS_PERSONA,
 	/**
 	 * Resultado plantilla info (exclusivo dentro del flujo)
 	 */
-	RES_PLANTILLAINFO,
+	DATOS_PLANTILLA,
 	/**
 	 * Resultado variable flujo (exclusivo dentro del flujo)
 	 */
-	RES_VARIABLEFLUJO,
+	DATOS_VARIABLEFLUJO,
 	/**
 	 * Plugin sesion formulario (exclusivo dentro de formulario)
 	 */
@@ -102,17 +102,17 @@ public enum TypePluginScript {
 	/**
 	 * Plugin sesion formulario (exclusivo dentro de formulario)
 	 */
-	PLUGIN_DATOSFORMULARIOS,
+	PLUGIN_DATOSFORMULARIO,
 	/**
 	 * Resultado valor campo (exclusivo dentro de formulario)
 	 */
-	RES_VALORCAMPO,
+	DATOS_VALOR,
 	/**
 	 * Resultado estado campo (exclusivo dentro de formulario)
 	 */
-	RES_ESTADOCAMPO,
+	DATOS_ESTADO,
 	/**
 	 * Resultado valores posible (exclusivo dentro del formulario)
 	 */
-	RES_VALORESPOSIBLE;
+	DATOS_VALORESPOSIBLES;
 }

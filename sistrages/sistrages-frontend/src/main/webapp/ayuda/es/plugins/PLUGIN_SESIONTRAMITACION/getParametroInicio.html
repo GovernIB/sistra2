@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getParametroInicio(idParametro)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONTRAMITACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./getParametroInicio.html">getParametroInicio</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getParametroInicio(String idParametro): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permite recuperar el valor de los parámetros enviados a través de la URL al iniciar el trámite. Si el parámetro no existe, devuelve una cadena vacía.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idParametro</b>: Cadena del identificador del parámetro de entrada.</li>
+	</ul>
+</p>	
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>string</b>: Cadena de caracteres con el valor del parámetro. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+<p> Supongamos que tenemos un trámite que permite el pago de tasas, y queremos que en función del enlace desde el que se acceda se precargue una determinada tasa en el trámite. En este caso podríamos usar esta función para que recupere un parámetro de la URL, en este caso el parámetro 'tasa'. Si la URL de acceso es como sigue: http://tramite.pruebas.com/sistra/tramiteEjemplo?tasa=TASA1:</p>
+ <p class="codigoScript">
+	var valor = PLUGIN_SESIONTRAMITACION.getParametroInicio('tasa');
+ </p>
+ <p>
+   La función getParametroInicio retornará la cadena 'TASA1', y podremos usar ese valor para seleccionar la tasa a pagar.
+ </p>
+<br />
+
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PERSONALIZACION.setTituloTramite(tituloTramite)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PERSONALIZACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./setTituloTramite.html">setTituloTramite</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setTituloTramite(String tituloTramite): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir el títol de la versió d'un tràmit. </li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>tituloTramite</b>: Títol de la versió del tràmit. Aquest títol té com a restricció que no pot contenir els caràcters &#62; ni &#60;.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Per exemple, volem establir de manera dinàmica el títol de la versió d'un tràmit, a partir del valor recuperat d'un domini. Posant per cas que el títol recuperat del domini és 'Certificat de pesca CAIB', per a establir el títol faríem el següent:</p>
+ <p class="codigoScript">
+	DATOS_PERSONALIZACION.setTituloTramite('Certificado de pesca CAIB');
+</p>
+<br />
+
+</body>
+</html>

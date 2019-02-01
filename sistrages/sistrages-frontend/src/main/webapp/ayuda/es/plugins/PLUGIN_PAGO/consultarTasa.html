@@ -1,0 +1,67 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_PAGO.consultarTasa(idPasarela, idTasa)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_PAGO</a></li>
+      	  <li>></li>
+      	  <li><a href="./lpad.html">consultarTasa</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	consultarTasa(String idPasarela, String idTasa): int
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el importe asociado a una tasa y una pasarela.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idPasarela</b>: Cadena que contiene el identificador de la pasarela.</li>
+		<li><b>idTasa</b>: Cadena que contiene el identificador de la tasa.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Importe en céntimos (número natural) asociado a la pasarela y la tasa.</li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+
+<p>Obtener el importe asociado a la pasarela 'idPasarela' y a la tasa 'idTasa'.</p>
+ <p class="codigoScript">
+		var importe = PLUGIN_PAGO.consultarTasa('idPasarela', 'idTasa');
+ </p>
+<p>
+La función consultarTasa retornará 1450, lo que indica que para la pasarela 'idPasarela' y la tasa 'idTasa', el valor asociado es de 14 euros y 50 céntimos.
+</p>
+<br />
+
+
+
+</body>
+</html>

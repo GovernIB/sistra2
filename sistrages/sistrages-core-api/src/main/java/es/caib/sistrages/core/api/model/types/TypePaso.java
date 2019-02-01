@@ -1,5 +1,12 @@
 package es.caib.sistrages.core.api.model.types;
 
+import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
+import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
+
 /**
  * Tipo de paso.
  *
@@ -35,7 +42,7 @@ public enum TypePaso {
 	/**
 	 * Paso de registro del trámite (Código String: rt).
 	 */
-	REGISTRAR("rt"),;
+	REGISTRAR("rt");
 
 	/**
 	 * Valor como string.
@@ -79,6 +86,24 @@ public enum TypePaso {
 				}
 			}
 
+		}
+		return respuesta;
+	}
+
+	public static TypePaso fromPaso(final TramitePaso paso) {
+		TypePaso respuesta = null;
+		if (paso != null) {
+			if (paso instanceof TramitePasoDebeSaber) {
+				respuesta = TypePaso.DEBESABER;
+			} else if (paso instanceof TramitePasoRellenar) {
+				respuesta = TypePaso.RELLENAR;
+			} else if (paso instanceof TramitePasoAnexar) {
+				respuesta = TypePaso.ANEXAR;
+			} else if (paso instanceof TramitePasoTasa) {
+				respuesta = TypePaso.PAGAR;
+			} else if (paso instanceof TramitePasoRegistrar) {
+				respuesta = TypePaso.REGISTRAR;
+			}
 		}
 		return respuesta;
 	}

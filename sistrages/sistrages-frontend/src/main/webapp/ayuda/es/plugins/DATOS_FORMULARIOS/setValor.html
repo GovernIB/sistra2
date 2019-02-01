@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.setValor(codigo, valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./setValor.html">setValor</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setValor(idFormulario, campo, valor): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer el valor de un campo simple. Modificar un formulario implica
+		que se marcará con estado incorrecto para forzar su revisión. Solo se
+      podrán modificar campos del formulario actual o posteriores a este</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Identificador del formulario en el que quiere modificar el valor del campo.</li>
+		<li><b>campo</b>: Campo al que se desea asignar el valor.</li>
+		<li><b>valor</b>: Valor que se asigna al campo.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Podemos querer establecer el valor de un campo del formulario actual, con identificador FORM1, y rellenarlo con un valor concreto. Para ello deberemos utilizar la línea de código siguiente: </p>
+ <p class="codigoScript">
+DATOS_FORMULARIOS.setValor('FORM1', 'codProvincia', '07');
+</p>
+</body>
+</html>

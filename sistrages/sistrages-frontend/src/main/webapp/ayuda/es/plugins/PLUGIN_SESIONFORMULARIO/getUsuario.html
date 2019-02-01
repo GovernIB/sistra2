@@ -1,0 +1,64 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONFORMULARIO.getUsuario()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getUsuario.html">getUsuario</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getUsuario(): <a href="../DATOS_USUARIO/index.html"> DATOS_USUARIO</a>
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que retorna el objeto 'DATOS_USUARIO' con la información del usuario. 
+		</li>
+		<li>Sólo es posible su uso en trámites autenticados.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>DATOS_USUARIO</b>: Retorna el objeto 'DATOS_USUARIO' con la información del usuario. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+<p> Supongamos que deseamos obtener el nombre del usuario de la sesión actual (solo para trámites autenticados)</p>
+<p class="codigoScript">
+	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado();
+	if (autenticado == true) {
+		var usuario = PLUGIN_SESIONFORMULARIO.getUsuario();
+	}
+ </p>
+ <p>
+   La función getUsuario retorna el objeto 'DATOS_USUARIO' a partir del cual extraer la información que nos interesa, por ejemplo, el nombre mediante la siguiente función:
+ </p>
+  <p class="codigoScript">
+	var nombre = usuario.getNombre();
+ </p>
+<br />
+
+
+</body>
+</html>

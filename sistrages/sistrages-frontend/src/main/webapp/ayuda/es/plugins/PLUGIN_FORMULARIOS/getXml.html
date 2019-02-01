@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getXml(idFormulario)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getXml.html">getXml</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getXml(String idFormulario): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el XML con los valores del formulario.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Cadena que contiene el identificador del formulario.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>string</b>: Cadena de caracteres que representa el XML con los valores del formulario. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+   <p> Obtener el XML del formulario con identificador 'Form1'</p>
+ <p class="codigoScript">
+	var xml = PLUGIN_DATOSFORMULARIO.getXml('Form1');	
+ </p>
+ <p>
+   La función getXml retornará una cadena de texto cuyo contendido será el XML del formulario con sus valores.
+   <br />
+   De este XML se podría extraer el valor de un determinado campo, por ejemplo si sabemos que en el XML existe un campo dni con el siguiente xpath  '/xml/persona/dni' podríamos obtener el valor del campo DNI mediante:
+ </p>
+ <p class="codigoScript">
+	var dni = PLUGIN_VALIDACIONES.extraerValorXml(xml, '/xml/persona/dni');
+ </p>
+ <p>
+	La función extraerValorXml retornará el valor del campo dni dentro del XML, en este caso '11111111H'.
+ </p>
+<br />
+
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.resetValores(idFormulario)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./resetValores.html">resetValores</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	resetValores(String idFormulario): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que reinicia, és a dir estableix a buit, els valors establerts en el formulari.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+    	<li><b>idFormulario</b>: identificador del formulari en què s'han de reinciar els valors.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Per exemple, suposam que s'han introduït diversos valors incorrectes en un formulari (amb identificador FORM1) i desitjam que l'usuari torni a introduir els valors del formulari, reiniciant els valors ja introduïts. La línia de codi a introduir en el script seria:</p>
+ <p class="codigoScript">
+DATOS_FORMULARIOS.resetValores('FORM1');
+</p>
+</body>
+</html>

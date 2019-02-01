@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PERSONALIZACION.setTituloTramite(tituloTramite)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PERSONALIZACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./setTituloTramite.html">setTituloTramite</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setTituloTramite(String tituloTramite): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer el título de la versión de un trámite. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>tituloTramite</b>: Título de la versión del trámite. Este título tiene como restricción que no puede contener los caracteres &#62; ni &#60;.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Por ejemplo, queremos establecer de manera dinámica el título de la versión de un trámite, a partir del valor recuperado de un dominio. Poniendo por caso que el título recuperado del dominio es 'Certificado de pesca CAIB', para establecer el título haríamos lo siguiente:</p>
+ <p class="codigoScript">
+	DATOS_PERSONALIZACION.setTituloTramite('Certificado de pesca CAIB');
+</p>
+<br />
+
+</body>
+</html>

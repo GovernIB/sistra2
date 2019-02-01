@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getIdioma()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONTRAMITACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./getIdioma.html">getIdioma</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getIdioma(): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el idioma de tramitación.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>string</b>: Cadena de caracteres que contiene el idioma de tramitación, siendo el valor 'es' para el español, 'ca' para el catalán o 'en' para el inglés.</li>	
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+  <p> Obtener el idioma con el cuál se está tramitando. En este caso Español</p>
+ <p class="codigoScript">
+	var idioma = PLUGIN_SESIONTRAMITACION.getIdioma();
+ </p>
+ <p>
+   La función getIdioma retornará 'es'.
+ </p>
+<br />
+
+
+</body>
+</html>

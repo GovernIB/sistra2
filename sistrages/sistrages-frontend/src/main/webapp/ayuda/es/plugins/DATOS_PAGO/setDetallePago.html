@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PAGO.setDetallePago(modelo, concepto, tasa, importe)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PAGO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setDetallePago.html">setDetallePago</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setDetallePago(String modelo, String concepto, String tasa, int importe): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer el detalle del pago.</li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>modelo</b>: Modelo de pago.</li>
+		<li><b>concepto</b>: Concepto de pago.</li>		
+		<li><b>tasa</b>: Código de la tasa.</li>		
+		<li><b>importe</b>: Importe del pago en céntimos. Tiene que ser un número natural (numérico, entero y positivo).</li>		
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Por ejemplo, si se desea establecer el detalle para una tasa definida en la versión de un trámite, se debería hacer de la manera siguiente: </p>
+ <p class="codigoScript">
+DATOS_PAGO.setDetallePago('Modelo1', 'Tasa de admisión a examen', 'TASA1', '8950');
+</p>
+<p>El resultado es un pago del modelo 'Modelo1' con un importe de 89 euros con 50 céntimos con el codigo de tasa TASA1 con el concepto 'Tasa de admisión a examen'. El modelo y el código de TASA a indicar dependerá de la plataforma de pago a utilizar</p>
+</body>
+</html>

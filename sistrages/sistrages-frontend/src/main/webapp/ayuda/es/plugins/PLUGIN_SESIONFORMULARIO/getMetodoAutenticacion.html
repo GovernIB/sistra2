@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONFORMULARIO.getMetodoAutenticacion()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getMetodoAutenticacion.html">getMetodoAutenticacion</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getMetodoAutenticacion(): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el método de autenticación.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>string</b>: Cadena de caracteres que contiene el método de autenticación. Los valores posibles son:
+			<ul>
+				<li>'ANONIMO'</li>
+				<li>'CLAVE_CERTIFICADO'</li>
+				<li>'CLAVE_PIN'</li>
+				<li>'CLAVE_PERMANENTE'</li>
+			</ul>
+		</li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+<p> Obtener el método de autenticación de la actual sesión, en este caso es un usuario no autenticado:</p>
+ <p class="codigoScript">
+	var metodo = PLUGIN_SESIONFORMULARIO.getMetodoAutenticacion();
+ </p>
+ <p>
+   La función getMetodoAutenticacion retornará la cadena 'ANONIMO'.
+ </p>
+<br />
+
+
+</body>
+</html>

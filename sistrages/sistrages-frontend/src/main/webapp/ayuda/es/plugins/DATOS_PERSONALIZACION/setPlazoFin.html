@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PERSONALIZACION.setPlazoFin(plazoFin)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PERSONALIZACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./setPlazoFin.html">setPlazoFin</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setPlazoFin(String plazoFin): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer el fin del plazo en el que está activa la versión de un trámite. La fecha debe tener el formato dd/MM/yyyy HH:mm:ss. </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>plazoFin</b>: Cadena con formato de fecha/hora que representará el fin del plazo.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos que queremos que la versión de un trámite esté disponible durante un periodo concreto. Para ello deberemos establecer la fecha fin de plazo de la manera siguiente:</p>
+ <p class="codigoScript">
+	DATOS_PERSONALIZACION.setPlazoFin('01/04/2019 11:59:59');
+</p>
+<br />
+
+</body>
+</html>

@@ -265,7 +265,6 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
 		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 		if (script != null) {
-			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}

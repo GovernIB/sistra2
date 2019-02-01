@@ -1,0 +1,50 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.resetValores(idFormulario)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./resetValores.html">resetValores</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	resetValores(String idFormulario): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que resetea, es decir establece a vacío, los valores establecidos en el formulario.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+    	<li><b>idFormulario</b>: identificador del formulario en que se han de resetar los valores.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Por ejemplo, supongamos que se han introducido incorréctamente varios valores en un formulario (con id FORM1) y deseamos que el usuario vuelva a introducir los valores del formulario resetéandole los valores ya introducidos. La línea de código a introducir en el script sería: </p>
+ <p class="codigoScript">
+DATOS_FORMULARIOS.resetValores('FORM1');
+</p>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_ESTADO.setSoloLectura(soloLectura)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_ESTADO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setSoloLectura.html">setSoloLectura</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setSoloLectura(soloLectura): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite indicar si un campo es de tipo lectura o editable.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+    	<li><b>soloLectura</b>: parámetro de tipo booleano, que si es true indica que el campo es de sólo lectura, mientras que si es false establece el campo como editable.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Por ejemplo, supongamos que el valor de un campo se calcula a partir del valor de ciertos campos rellenados con anterioridad, y queremos que la persona que rellena el formulario no pueda editarlo (porque no hace falta y los datos dejarían de ser coherentes si se alterase el valor):</p>
+ <p class="codigoScript">
+DATOS_ESTADO.setSoloLectura(true);
+</p>
+<p>El resultado sería el establecimiento del campo como de sólo lectura, con lo que no podría editarse.
+</p>
+</body>
+</html>

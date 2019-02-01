@@ -1,0 +1,51 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PARAMETROS_INICIALES.addParametro(codigo, valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PARAMETROS_INICIALES</a></li>
+      	  <li>></li>
+      	  <li><a href="./addParametro.html">addParametro</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addParametro(String codigo, String valor): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet afegir un nou paràmetre a la versió d'un tràmit.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigo</b>: String amb el codi del paràmetre a afegir a la versió del tràmit.</li>
+		<li><b>valor</b>: String con el valor del parámetro a añadir a la versión del trámite.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Suposam que volem afegir un paràmetre, per exemple província, a la versió d'un tràmit. A aquest paràmetre li volem assignar el codi 07 referit a la província Illes Balears. Per a això faríem el següent:</p>
+ <p class="codigoScript">
+var params = DATOS_PARAMETROS_INICIALES.addParametro('prov','07');
+</p>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class Script extends ModelApi {
 	private String contenido;
 
 	/** Mensajes. **/
-	private List<LiteralScript> mensajes;
+	private List<LiteralScript> mensajes = new ArrayList<>();
 
 	/** Indica si los mensajes han sido alterados. Por defecto, a falso **/
 	private Boolean mensajesAlterado = false;

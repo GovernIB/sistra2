@@ -1,0 +1,50 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PAGO.setPasarela(idPasarela)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PAGO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setPasarela.html">setPasarela</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setPasarela(String idPasarela): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir la passarel·la de pagament a emprar.</li>
+    </ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idPasarela</b>: Identificador de la passarel·la de pagament.</li>		
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Atès que la plataforma de tramitació pot utilitzar diferents passarel·les de pagament, es fa necessari configurar la passarel·la a utilitzar. Un exemple podria ser l'ús de la passarel·la ATIB, que es fixaria de la següent manera:</p>
+ <p class="codigoScript">
+DATOS_PAGO.setPasarela('ATIB');
+</p>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PARAMETROSFORMULARIO.addParametro(codigo, valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PARAMETROSFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./addParametro.html">addParametro</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addParametro(String codigo, String valor): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite pasar un nuevo parámetro a un formulario.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigo</b>: String con el código del parámetro a añadir.</li>
+		<li><b>valor</b>: String con el valor del parámetro a añadir.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Supongamos por caso que queremos pasar un parámetro provincia (prov) a un formulario, indicando como valor el código 07 perteneciente a las Baleares. Para ello incluiríamos la siguiente línea de código: </p>
+ <p class="codigoScript">
+var params = DATOS_PARAMETROSFORMULARIO.addParametro('prov','07');
+</p>
+</body>
+</html>

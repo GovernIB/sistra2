@@ -1,0 +1,54 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PAGO.setDetallePago(modelo, concepto, tasa, importe)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PAGO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setDetallePago.html">setDetallePago</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setDetallePago(String modelo, String concepto, String tasa, int importe): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir el detall del pagament.</li>
+    </ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>modelo</b>: Model de pagament.</li>
+		<li><b>concepto</b>: Concepte de pagament.</li>		
+		<li><b>tasa</b>: Codi de la taxa.</li>		
+		<li><b>importe</b>: Import del pagament en cèntims. Ha de ser un nombre natural (numèric, sencer i positiu).</li>		
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Per exemple, si es desitja establir el detall per a una taxa definida en la versió d'un tràmit, s'hauria de fer de la manera següent:</p>
+ <p class="codigoScript">
+DATOS_PAGO.setDetallePago('Modelo1', 'Tasa de admisión a examen', 'TASA1', '8950');
+</p>
+<p>El resultat és un pagament del model 'Modelo1' amb un import de 89 euros amb 50 cèntims, amb el codigo de taxa TASA1 i el concepte 'Tasa de admisión a examen'. El model i el codi de taxa a indicar dependrà de la plataforma de pagament a emprar</p>
+</body>
+</html>

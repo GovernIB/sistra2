@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getIdSesionTramitacion()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONTRAMITACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./getIdSesionTramitacion.html">getIdSesionTramitacion</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getIdSesionTramitacion(): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el id de sesión de la tramitación.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>string</b>: Cadena de caracteres que contiene el id de sesión de tramitación.</li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+ <p> Obtener el id sesión de la actual tramitación</p>
+ <p class="codigoScript">
+	var idSesionTram = PLUGIN_SESIONTRAMITACION.getIdSesionTramitacion();
+ </p>
+ <p>
+   La función idSesionTramitacion retorna la cadena de caracteres que representa el identificador de la sesión de tramitación actual.
+ </p>
+<br />
+
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PAGO.setContribuyente(nif, nombre)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PAGO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setContribuyente.html">setContribuyente</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setContribuyente(String nif, String nombre): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir un contribuent en el pagament. Per defecte s'usarà l'usuari iniciador del tràmit</li>
+    </ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>nif</b>: NIF del contribuent. Ha de ser un NIF vàlid.</li>
+		<li><b>nombre</b>: Nom del contribuent.</li>		
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Si desitjam establir el contribuent d'un pagament, inclourem la línia de codi següent en el script: </p>
+ <p class="codigoScript">
+DATOS_PAGO.setContribuyente('11111111H','Pedro Álvarez Sánchez');
+</p>
+</body>
+</html>

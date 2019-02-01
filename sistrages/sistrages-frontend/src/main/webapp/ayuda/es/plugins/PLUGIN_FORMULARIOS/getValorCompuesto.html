@@ -1,0 +1,73 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getValorCompuesto(idFormulario, campo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./getValorCompuesto.html">getValorCompuesto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getValorCompuesto(String idFormulario, String campo): VALOR_CAMPOCOMPUESTO
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el valor de un campo compuesto.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>idFormulario</b>: Cadena que contiene el identificador del formulario.</li>
+		<li><b>campo</b>: Cadena que contiene el identificador del campo. </li>
+	</ul>
+</p>
+
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>VALOR_CAMPOCOMPUESTO</b>: retorna el objeto VALOR_CAMPOCOMPUESTO. Este objeto está formado por 2 campos, código y descripción,los valores de los cuales se pueden obtener mediante las funciones getCodigo() y getDescripcion() respectivamente. </li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+ <p> Obtener el valor del campo compuesto 'campoProvincia' del formulario con id 'Form1':</p>
+ <p class="codigoScript">
+	var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorCompuesto('Form1','campoProvincia');	
+ </p>
+ <p>
+	La función getValorCompuesto retornará el objeto valorCompuesto. Para obtener los datos del valor compuesto podemos pedir su código o descripción tal como se muestra a continuación:
+ </p>
+ <p class="codigoScript">
+	var descripcion = valorCompuesto.getDescripcion();<br />
+	var codigo = valorCompuesto.getCodigo();
+ </p>
+ <p>
+	En este caso la función getCodigo retornará la cadena '07' y la función getDescripcion retornará la cadena 'Illes Balears'.
+ </p>
+<br />
+
+
+</body>
+</html>

@@ -21,71 +21,63 @@ import es.caib.sistramit.core.service.model.script.ResAnexosDinamicosInt;
 @SuppressWarnings("serial")
 public final class ResAnexosDinamicos implements ResAnexosDinamicosInt {
 
-    /**
-     * Anexos definidos dinámicamente.
-     */
-    private final List<AnexoDinamico> anexos = new ArrayList<>();
+	/**
+	 * Anexos definidos dinámicamente.
+	 */
+	private final List<AnexoDinamico> anexos = new ArrayList<>();
 
-    @Override
-    public String getPluginId() {
-        return ID;
-    }
+	@Override
+	public String getPluginId() {
+		return ID;
+	}
 
-    @Override
-    public void addAnexo(final String identificador, final String descripcion,
-            final String extensiones, final String tamanyoMax,
-            final String urlPlantilla, final boolean obligatorio,
-            final boolean pConvertirPDF, final boolean pFirmar)
-            throws ScriptException {
-        if (!XssFilter.filtroXss(identificador)
-                || !XssFilter.filtroXss(descripcion)) {
-            throw new ScriptException(
-                    "El dato proporcionado como identificador o descripcion contiene caraceteres no permitidos");
-        }
+	@Override
+	public void addAnexo(final String identificador, final String descripcion, final String extensiones,
+			final String tamanyoMax, final String urlPlantilla, final boolean obligatorio, final boolean convertirPDF,
+			final boolean firmar) throws ScriptException {
+		if (!XssFilter.filtroXss(identificador) || !XssFilter.filtroXss(descripcion)) {
+			throw new ScriptException(
+					"El dato proporcionado como identificador o descripcion contiene caraceteres no permitidos");
+		}
 
-        final AnexoDinamico anexo = new AnexoDinamico();
-        anexo.setIdentificador(identificador);
-        anexo.setDescripcion(descripcion);
-        if (StringUtils.isNotBlank(tamanyoMax)) {
-            if (!tamanyoMax.endsWith("MB") && !tamanyoMax.endsWith("KB")) {
-                throw new ScriptException(
-                        "Se debe indicar el tamaño maximo con el formato 'n MB / n KB' ");
-            }
-            try {
-                Integer.parseInt(
-                        StringUtils.trim(StringUtils.substring(tamanyoMax, 0,
-                                tamanyoMax.length() - ConstantesNumero.N2)));
-            } catch (final NumberFormatException nfe) {
-                throw new ScriptException(new Exception(
-                        "El tamaño máximo se debe especificar con un número entero' ",
-                        nfe));
-            }
-            anexo.setTamanyoMaximo(tamanyoMax);
-        }
-        if (StringUtils.isBlank(extensiones)) {
-            throw new ScriptException(
-                    "No se han establecido extensiones para el anexo "
-                            + identificador);
-        }
-        anexo.setExtensiones(extensiones);
-        if (StringUtils.isNotBlank(urlPlantilla)) {
-            anexo.setUrlPlantilla(urlPlantilla);
-        }
-        anexo.setObligatorio(obligatorio);
-        anexo.setConvertirPDF(pConvertirPDF);
-        anexo.setFirmar(pFirmar);
+		final AnexoDinamico anexo = new AnexoDinamico();
+		anexo.setIdentificador(identificador);
+		anexo.setDescripcion(descripcion);
+		if (StringUtils.isNotBlank(tamanyoMax)) {
+			if (!tamanyoMax.endsWith("MB") && !tamanyoMax.endsWith("KB")) {
+				throw new ScriptException("Se debe indicar el tamaño maximo con el formato 'n MB / n KB' ");
+			}
+			try {
+				Integer.parseInt(StringUtils
+						.trim(StringUtils.substring(tamanyoMax, 0, tamanyoMax.length() - ConstantesNumero.N2)));
+			} catch (final NumberFormatException nfe) {
+				throw new ScriptException(
+						new Exception("El tamaño máximo se debe especificar con un número entero' ", nfe));
+			}
+			anexo.setTamanyoMaximo(tamanyoMax);
+		}
+		if (StringUtils.isBlank(extensiones)) {
+			throw new ScriptException("No se han establecido extensiones para el anexo " + identificador);
+		}
+		anexo.setExtensiones(extensiones);
+		if (StringUtils.isNotBlank(urlPlantilla)) {
+			anexo.setUrlPlantilla(urlPlantilla);
+		}
+		anexo.setObligatorio(obligatorio);
+		anexo.setConvertirPDF(convertirPDF);
+		anexo.setFirmar(firmar);
 
-        anexos.add(anexo);
+		anexos.add(anexo);
 
-    }
+	}
 
-    /**
-     * Método de acceso a anexos.
-     *
-     * @return anexos
-     */
-    public List<AnexoDinamico> getAnexos() {
-        return anexos;
-    }
+	/**
+	 * Método de acceso a anexos.
+	 *
+	 * @return anexos
+	 */
+	public List<AnexoDinamico> getAnexos() {
+		return anexos;
+	}
 
 }

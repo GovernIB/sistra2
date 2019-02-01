@@ -1,0 +1,56 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_SESIONTRAMITACION.getIdioma()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_SESIONTRAMITACION</a></li>
+      	  <li>></li>
+      	  <li><a href="./getIdioma.html">getIdioma</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getIdioma(): String
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna l'idioma de tramitació.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>string</b>: Cadena de caràcters que conté l'idioma de tramitació, sent el valor 'es' per a l'espanyol, 'ca' per al català o 'en' per a l'anglès.</li>	
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+</p>
+<p> Obtenir l'idioma amb el qual s'està tramitant. En aquest cas Català</p>
+ <p class="codigoScript">
+	var idioma = PLUGIN_SESIONTRAMITACION.getIdioma();
+ </p>
+ <p>
+   La funció getIdioma retornarà 'ca'.
+ </p>
+<br />
+
+
+</body>
+</html>

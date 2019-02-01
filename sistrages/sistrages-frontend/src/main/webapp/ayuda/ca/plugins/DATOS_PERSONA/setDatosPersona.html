@@ -1,0 +1,54 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_PERSONA.setDatosPersona(nif, nombre, apellido1, apellido2)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_PERSONA</a></li>
+      	  <li>></li>
+      	  <li><a href="./setDatosPersona.html">setDatosPersona</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setDatosPersona(String nif, String nombre, String apellido1, String apellido2): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir les dades d'una persona (NIF, nom i cognoms) que actuarà com a interessat en el tràmit, ja sigui com a presentador o com representat.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>nif</b>: NIF de la persona. Ha de ser un NIF vàlid.</li>
+		<li><b>nombre</b>: Nom de la persona. Dada obligatòria.</li>
+		<li><b>apellido1</b>: Primer llitnage de la persona. Dada opcional.</li>
+		<li><b>apellido2</b>: Segon llitnage de la persona. Dada opcional.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Suposam per cas que volem establir el presentador d'una sol·licitud. Per a això inclouríem el codi següent en el script "Establir presentador":</p>
+ <p class="codigoScript">
+DATOS_PERSONA.setDatosPersona('1111111H', 'Pedro', 'Pérez', null);
+</p>
+<p>D'aquesta manera s'establiria que l'interessat de la presentació és Pedro Pérez amb NIF 11111111H</p>
+</body>
+</html>

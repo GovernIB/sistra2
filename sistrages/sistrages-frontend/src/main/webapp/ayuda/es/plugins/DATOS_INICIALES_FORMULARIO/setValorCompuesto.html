@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_INICIALES_FORMULARIO.setValorCompuesto(codigo, valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_INICIALES_FORMULARIO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setValorCompuesto.html">setValorCompuesto</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setValorCompuesto(campo, codigo, descripcion): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer el valor de un campo compuesto del formulario actual.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>campo</b>: Campo al que se desea asignar el valor.</li>
+		<li><b>codigo</b>: Código que se desea asignar al campo.</li>
+		<li><b>descripcion</b>: Descripción que se desea asignar al campo.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Un ejemplo de uso podría ser la asignación de un valor compuesto al campo "provincia" del formulario actual: </p>
+ <p class="codigoScript">
+DATOS_INICIALES_FORMULARIO.setValorCompuesto('provincia', '07', 'Illes Balears');
+</p>
+</body>
+</html>

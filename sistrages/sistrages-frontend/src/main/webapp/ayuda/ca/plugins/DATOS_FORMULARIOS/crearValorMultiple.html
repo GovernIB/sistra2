@@ -1,0 +1,55 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_FORMULARIOS.crearValorMultiple(codigo, valor)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+      	  <li>></li>
+      	  <li><a href="./crearValorMultiple.html">crearValorMultiple</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	crearValorMultiple(): ValorCampoMultiple
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode per a crear un valor múltiple per a després poder utilitzar-lo en un camp del formulari actual.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>ValorCampoMultiple</b>: Crea el valor del camp múltiple.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Per exemple, si desitjam generar un conjunt de dades geogràfiques predefenides, primer crearíem la variable:</p>
+ <p class="codigoScript">
+var datos = DATOS_FORMULARIOS.crearValorMultiple();<br />
+<p>i després afegiríem les dades a la variable, essent el primer paràmetre d'entrada el codi i el segon paràmetre el valor:</p>
+<p class="codigoScript">
+datos.addValor('codProvincia', '07'); 
+datos.addValor('codMunicipio', '07073'); 
+datos.addValor('codPostal', '07406');
+</p>
+</body>
+</html>

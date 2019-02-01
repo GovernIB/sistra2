@@ -531,8 +531,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			// Pasamos a la mochila los dominios y los ids de formularios
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
-			mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIOS,
-					UtilJSON.toJSON(UtilScripts.getFormularios(this.tramiteVersion.getListaPasos())));
+			mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
+					UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
+			mochila.put(Constantes.CLAVE_MOCHILA_PASO,
+					((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
+			mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
+			mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 			final TramitePaso paso = ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
 			final Map<String, String> map = new HashMap<>();
@@ -562,8 +566,11 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Pasamos a la mochila los dominios y los ids de formularios
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIOS,
-				UtilJSON.toJSON(UtilScripts.getFormularios(this.tramiteVersion.getListaPasos())));
+		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
+				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
+		mochila.put(Constantes.CLAVE_MOCHILA_PASO, null);
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
@@ -716,8 +723,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		// Ponemos en la mochila los dominios y formularios
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIOS,
-				UtilJSON.toJSON(UtilScripts.getFormularios(this.tramiteVersion.getListaPasos())));
+		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
+				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
+		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, formulario.getCodigo().toString());
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, formulario.getIdFormularioInterno().toString());
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
@@ -861,8 +872,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS));
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIOS,
-				UtilJSON.toJSON(UtilScripts.getFormularios(this.tramiteVersion.getListaPasos())));
+		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
+				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
+		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
+
 		if (script != null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
@@ -871,10 +887,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		map.put(TypeParametroVentana.TRAMITEVERSION.toString(), id.toString());
 		if (this.permiteEditar()) {
 			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.EDICION.toString());
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, map, true, 1000, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, map, true, 700);
 		} else {
 			map.put(TypeParametroVentana.MODO_ACCESO.toString(), TypeModoAcceso.CONSULTA.toString());
-			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 1000, 700);
+			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.CONSULTA, map, true, 700);
 		}
 
 	}
@@ -906,7 +922,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_DOMINIOS);
-		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_FORMULARIOS);
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_TRAMITE);
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PASO);
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_FORMULARIO);
+		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO);
 
 	}
 
@@ -957,8 +976,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIOS,
-				UtilJSON.toJSON(UtilScripts.getFormularios(this.tramiteVersion.getListaPasos())));
+		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
+				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
+		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
@@ -1111,8 +1134,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIOS,
-				UtilJSON.toJSON(UtilScripts.getFormularios(this.tramiteVersion.getListaPasos())));
+		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
+				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
+		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
+		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 		this.editarTasaDialog(this.tasaSeleccionado.getCodigo());
 

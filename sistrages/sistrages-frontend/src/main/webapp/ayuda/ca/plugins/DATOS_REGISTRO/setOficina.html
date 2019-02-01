@@ -1,0 +1,50 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setOficina(oficina)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setOficina.html">setOficina</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setOficina(String oficina): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir l'oficina de registre sobre la qual es farà l'anotació registral d'entrada de les sol·licituds associades a la versió del tràmit.</li>
+    </ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>oficina</b>: Identificador de l'oficina de registre.</li>		
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que l'oficina sobre la qual volem registrar la sol·licitud depèn d'un valor del formulari. En tal cas emprarem el script per a fixar el valor d'aquesta propietat. Per a això incorporaríem la següent línia de codi:</p>
+ <p class="codigoScript">
+DATOS_REGISTRO.setOficina('idOficina');
+</p>
+</body>
+</html>

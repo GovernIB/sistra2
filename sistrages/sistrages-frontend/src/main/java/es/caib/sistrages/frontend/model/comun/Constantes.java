@@ -76,8 +76,14 @@ public final class Constantes {
 	/** Constante fuente datos valores. **/
 	public static final String CLAVE_MOCHILA_FUENTEVALORES = "FUENTEVALORES";
 
-	/** Ids Formularios pasados a traves de la mochila para el dialog de script. **/
-	public static final String CLAVE_MOCHILA_FORMULARIOS = "FORMULARIOS";
+	/** Paso actual. **/
+	public static final String CLAVE_MOCHILA_PASO = "PASO";
+
+	/** Formulario actual. **/
+	public static final String CLAVE_MOCHILA_FORMULARIO = "FORMULARIO";
+
+	/** Formulario actual. **/
+	public static final String CLAVE_MOCHILA_FORMULARIO_INTERNO = "FORMULARIO_INTERNO";
 
 	/** Dominios pasados a traves de la mochila para el dialog de script. **/
 	public static final String CLAVE_MOCHILA_DOMINIOS = "DOMINIOS";

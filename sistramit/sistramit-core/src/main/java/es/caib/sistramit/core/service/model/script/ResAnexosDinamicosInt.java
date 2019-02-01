@@ -42,7 +42,7 @@ public interface ResAnexosDinamicosInt extends PluginScriptRes {
     void addAnexo(final String identificador, final String descripcion,
             final String extensiones, final String tamanyoMax,
             final String urlPlantilla, final boolean obligatorio,
-            final boolean pConvertirPDF, final boolean pFirmar)
+            final boolean convertirPDF, final boolean firmar)
             throws ScriptException;
 
 }

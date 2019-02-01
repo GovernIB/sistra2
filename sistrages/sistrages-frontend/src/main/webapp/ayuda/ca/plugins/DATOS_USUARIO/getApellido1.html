@@ -1,0 +1,59 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_USUARIO.getApellido1()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_USUARIO</a></li>
+		  <li>></li>
+      	  <li><a href="./getApellido1.html">getApellido1</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getApellido1(): String
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que retorna el primer cognom de l'usuari autenticat.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Cadena de caràcters amb el primer cognom de l'usuari autenticat. </li>
+	</ul>
+</p>
+ <p>
+	<b>Exemple</b>
+ </p>
+<p> Si es desitja obtenir el primer cognom de l'usuari de la sessió actual, en aquest cas 'Jose Pérez Rodriguez', primer s'ha de comprovar si la sessió és autenticada, a continuació obtenir l'objecte DADES_USUARI mitjançant getUsuario. Una vegada obtingut l'usuari, podem obtenir el seu primer cognom mitjançant la funció getApellido1:</p>
+ <p class="codigoScript">
+	var autenticado = PLUGIN_SESIONFORMULARIO.isAutenticado(); <br />
+	if (autenticado == true) { <br />
+		var usuario = PLUGIN_SESIONFORMULARIO.getUsuario();<br />
+		var apellido = usuario.getApellido1();<br />
+	}
+ </p>
+ <p>
+  La funció getApellido1 retornarà la cadena 'Pérez'.
+ </p>
+<br />
+
+</body>
+</html>

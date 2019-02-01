@@ -1,0 +1,50 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setNumeroExpediente(numeroExpediente)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setNumeroExpediente.html">setNumeroExpediente</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setNumeroExpediente(String numeroExpediente): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir un número d'expedient. Aquest valor aplica a tràmit de continuació, no als d'inici.</li>
+    </ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numeroExpediente</b>: Identificador del numero d'expedient.</li>		
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que volem esmenar un expedient iniciat. En aquest cas podríem vincular el registre d'entrada a un número d'expedient emprant el següent:</p>
+ <p class="codigoScript">
+DATOS_REGISTRO.setNumeroExpediente('idNumeroExpediente');
+</p>
+</body>
+</html>

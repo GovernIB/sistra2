@@ -1,0 +1,52 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_ESTADO.setSoloLectura(soloLectura)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">DATOS_ESTADO</a></li>
+      	  <li>></li>
+      	  <li><a href="./setSoloLectura.html">setSoloLectura</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setSoloLectura(soloLectura): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet indicar si un camp és de tipus lectura o editable.</li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+    	<li><b>soloLectura</b>: paràmetre de tipus booleà, que si és true indica que el camp és de només lectura, mentre que si és false estableix el camp com a editable.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Per exemple, suposem que el valor d'un camp es calcula a partir del valor de certs camps emplenats amb anterioritat, i que volem que la persona que emplena el formulari no pugui editar-lo (perquè no fa falta i les dades deixarien de ser coherents si s'alteràs el valor):</p>
+ <p class="codigoScript">
+DATOS_ESTADO.setSoloLectura(true);
+</p>
+<p>El resultat seria l'establiment del camp com de només lectura, amb el que el camp no podria editar-se.
+</p>
+</body>
+</html>
