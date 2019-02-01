@@ -207,7 +207,7 @@ public final class UtilsFlujo {
 	 *            info autenticación
 	 * @return datos usuario
 	 */
-	public static DatosUsuario getDatosUsuario(UsuarioAutenticadoInfo usuInfo) {
+	public static DatosUsuario getDatosUsuario(final UsuarioAutenticadoInfo usuInfo) {
 		DatosUsuario res = null;
 		if (usuInfo.getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
 			res = new DatosUsuario();
@@ -230,7 +230,7 @@ public final class UtilsFlujo {
 	 *            Indica si la carga viene de una recarga
 	 */
 	public static void controlCargaTramite(final DatosPersistenciaTramite datosPersistenciaTramite,
-			UsuarioAutenticadoInfo usuarioAutenticadoInfo, final boolean recarga) {
+			final UsuarioAutenticadoInfo usuarioAutenticadoInfo, final boolean recarga) {
 
 		// No dejamos cargar si se ha cancelado o purgado
 		if (datosPersistenciaTramite.isCancelado() || datosPersistenciaTramite.isPurgado()
@@ -264,7 +264,8 @@ public final class UtilsFlujo {
 	 *            Url recursos
 	 * @return entidad
 	 */
-	public static Entidad detalleTramiteEntidad(RConfiguracionEntidad entidad, String idioma, String urlResources) {
+	public static Entidad detalleTramiteEntidad(final RConfiguracionEntidad entidad, final String idioma,
+			final String urlResources) {
 
 		final Entidad e = new Entidad();
 		e.setId(entidad.getIdentificador());
@@ -353,7 +354,7 @@ public final class UtilsFlujo {
 	 * @return detalle tramite
 	 */
 	public static DetalleTramite detalleTramite(final DatosSesionTramitacion pDatosSesion,
-			final RConfiguracionEntidad entidadInfo, String urlResources) {
+			final RConfiguracionEntidad entidadInfo, final String urlResources) {
 		final DetalleTramite detalleTramite = new DetalleTramite();
 		detalleTramite.setFechaDefinicion(
 				UtilsFlujo.formateaFechaFront(pDatosSesion.getDefinicionTramite().getFechaRecuperacion()));
@@ -497,7 +498,7 @@ public final class UtilsFlujo {
 	 *            datos usuario
 	 * @return persona
 	 */
-	public static Persona usuarioPersona(DatosUsuario du) {
+	public static Persona usuarioPersona(final DatosUsuario du) {
 		Persona res = null;
 		if (du != null) {
 			res = new Persona(du.getNif(), du.getApellidosNombre());
@@ -514,7 +515,7 @@ public final class UtilsFlujo {
 	 *            Variables flujo
 	 * @return Lista de documentos que se registrarán
 	 */
-	public static List<DocumentosRegistroPorTipo> buscarDocumentosParaRegistrar(FlujoPasoDao flujoPasoDao,
+	public static List<DocumentosRegistroPorTipo> buscarDocumentosParaRegistrar(final FlujoPasoDao flujoPasoDao,
 			final VariablesFlujo pVariablesFlujo) {
 
 		final List<DocumentoRegistro> listaFormularios = new ArrayList<>();
@@ -639,7 +640,7 @@ public final class UtilsFlujo {
 	 * @return documentos del tipo
 	 */
 	public static List<DocumentoRegistro> obtenerDocumentosTipo(final List<DocumentosRegistroPorTipo> docsRegPorTipo,
-			TypeDocumento tipoDocu) {
+			final TypeDocumento tipoDocu) {
 		List<DocumentoRegistro> res = null;
 		for (final DocumentosRegistroPorTipo drt : docsRegPorTipo) {
 			if (drt.getTipo() == tipoDocu) {

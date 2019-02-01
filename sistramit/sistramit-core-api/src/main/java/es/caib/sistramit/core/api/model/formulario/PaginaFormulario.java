@@ -194,4 +194,22 @@ public final class PaginaFormulario implements Serializable {
 		this.recursos = recursos;
 	}
 
+	/**
+	 * Obtiene la configuración de un campo.
+	 *
+	 * @param idCampo
+	 *            Id campo
+	 * @return Configuración campo
+	 */
+	public ConfiguracionCampo getConfiguracion(final String idCampo) {
+		ConfiguracionCampo res = null;
+		for (final ConfiguracionCampo cc : configuracion) {
+			if (cc.getId().equals(idCampo)) {
+				res = cc;
+				break;
+			}
+		}
+		return res;
+	}
+
 }

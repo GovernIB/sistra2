@@ -1,13 +1,16 @@
 package es.caib.sistrages.rest.adapter;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistrages.core.api.exception.EncodeException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
@@ -142,7 +145,7 @@ public class VersionTramiteAdapter {
 		rVersionTramite.setPasos(pasos);
 		rVersionTramite.setDominios(restApiService.getIdentificadoresDominiosByTV(tv.getCodigo()));
 		rVersionTramite.setIdioma(idiRes);
-		rVersionTramite.setTipoFlujo(tv.getTipoFlujo() == null ? null : tv.getTipoFlujo().toString());
+		rVersionTramite.setTipoFlujo(tv.getTipoFlujo().toString());
 		rVersionTramite.setControlAcceso(generaControlAcceso(tv));
 		rVersionTramite.setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite()));
 		rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
@@ -273,7 +276,7 @@ public class VersionTramiteAdapter {
 	private RPasoTramitacion crearPasoRegistrar(final TramitePasoRegistrar paso, final String idioma) {
 		final RPasoTramitacionRegistrar resPaso = new RPasoTramitacionRegistrar();
 		resPaso.setIdentificador(paso.getIdPasoTramitacion());
-		resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+		resPaso.setTipo(paso.getTipo().toString());
 		resPaso.setPasoFinal(paso.isPasoFinal());
 		resPaso.setAdmiteRepresentacion(paso.isAdmiteRepresentacion());
 		final RDestinoRegistro destinoRegistro = new RDestinoRegistro();
@@ -305,7 +308,7 @@ public class VersionTramiteAdapter {
 		if (paso.getDocumentos() != null && !paso.getDocumentos().isEmpty()) {
 			resPaso = new RPasoTramitacionAnexar();
 			resPaso.setIdentificador(paso.getIdPasoTramitacion());
-			resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+			resPaso.setTipo(paso.getTipo().toString());
 			resPaso.setPasoFinal(paso.isPasoFinal());
 			resPaso.setAnexos(generaAnexos(paso.getDocumentos(), idioma));
 			resPaso.setScriptAnexosDinamicos(AdapterUtils.generaScript(paso.getScriptAnexosDinamicos()));
@@ -323,7 +326,7 @@ public class VersionTramiteAdapter {
 	private RPasoTramitacion crearPasoDebeSaber(final TramitePasoDebeSaber paso, final String idioma) {
 		final RPasoTramitacionDebeSaber resPaso = new RPasoTramitacionDebeSaber();
 		resPaso.setIdentificador(paso.getIdPasoTramitacion());
-		resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+		resPaso.setTipo(paso.getTipo().toString());
 		resPaso.setPasoFinal(paso.isPasoFinal());
 		resPaso.setInstruccionesInicio(AdapterUtils.generarLiteralIdioma(paso.getInstruccionesIniciales(), idioma));
 		return resPaso;
@@ -341,7 +344,7 @@ public class VersionTramiteAdapter {
 		if (paso.getTasas() != null && !paso.getTasas().isEmpty()) {
 			resPaso = new RPasoTramitacionPagar();
 			resPaso.setIdentificador(paso.getIdPasoTramitacion());
-			resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+			resPaso.setTipo(paso.getTipo().toString());
 			resPaso.setPasoFinal(paso.isPasoFinal());
 			resPaso.setPagos(generarPagos(paso.getTasas(), idioma));
 		}
@@ -360,7 +363,7 @@ public class VersionTramiteAdapter {
 		if (paso.getFormulariosTramite() != null && !paso.getFormulariosTramite().isEmpty()) {
 			resPaso = new RPasoTramitacionRellenar();
 			resPaso.setIdentificador(paso.getIdPasoTramitacion());
-			resPaso.setTipo(paso.getTipo() != null ? paso.getTipo().toString() : null);
+			resPaso.setTipo(paso.getTipo().toString());
 			resPaso.setPasoFinal(paso.isPasoFinal());
 			resPaso.setFormularios(generaFormularios(paso.getFormulariosTramite(), idioma));
 		}
@@ -510,10 +513,15 @@ public class VersionTramiteAdapter {
 		List<RPaginaFormulario> lpf = null;
 
 		if (paginas != null) {
-			lpf = new ArrayList<RPaginaFormulario>();
+			lpf = new ArrayList<>();
 			for (final PaginaFormulario p : paginas) {
 				final RPaginaFormulario res = new RPaginaFormulario();
-				res.setHtmlB64(restApiService.getPaginaFormularioHTMLAsistente(p.getCodigo(), idioma));
+				final String html = restApiService.getPaginaFormularioHTMLAsistente(p.getCodigo(), idioma);
+				try {
+					res.setHtmlB64(Base64.encodeBase64String(html.getBytes("UTF-8")));
+				} catch (final UnsupportedEncodingException e) {
+					throw new EncodeException(e);
+				}
 				res.setLineas(generarLineas(p.getLineas(), idioma));
 				res.setPaginaFinal(p.isPaginaFinal());
 				res.setScriptValidacion(AdapterUtils.generaScript(p.getScriptValidacion()));
@@ -606,8 +614,8 @@ public class VersionTramiteAdapter {
 		resET.setEtiqueta(AdapterUtils.generarLiteralIdioma(ca.getTexto(), idioma));
 		resET.setIdentificador(ca.getIdComponente());
 		resET.setMostrarEtiqueta(!ca.isNoMostrarTexto());
-		resET.setTipo(ca.getTipo() == null ? null : ca.getTipo().toString());
-		resET.setTipoAviso(ca.getTipoEtiqueta() == null ? null : ca.getTipoEtiqueta().toString());
+		resET.setTipo(ca.getTipo().toString());
+		resET.setTipoAviso(ca.getTipoEtiqueta().toString());
 		return resET;
 	}
 
@@ -627,7 +635,7 @@ public class VersionTramiteAdapter {
 		resSC.setIdentificador(csc.getIdComponente());
 		resSC.setLetra(csc.getLetra());
 		resSC.setMostrarEtiqueta(!csc.isNoMostrarTexto());
-		resSC.setTipo(csc.getTipo() == null ? null : csc.getTipo().toString());
+		resSC.setTipo(csc.getTipo().toString());
 		return resSC;
 	}
 
@@ -646,13 +654,22 @@ public class VersionTramiteAdapter {
 		resSL.setColumnas(cs.getNumColumnas());
 		resSL.setEtiqueta(AdapterUtils.generarLiteralIdioma(cs.getTexto(), idioma));
 		resSL.setIdentificador(cs.getIdComponente());
-		resSL.setListaDominio(generaListaDominio(cs));
-		resSL.setListaFija(generaListaFija(cs.getListaValorListaFija(), idioma));
+		switch (cs.getTipoListaValores()) {
+		case DOMINIO:
+			resSL.setListaDominio(generaListaDominio(cs));
+			break;
+		case FIJA:
+			resSL.setListaFija(generaListaFija(cs.getListaValorListaFija(), idioma));
+			break;
+		case SCRIPT:
+			resSL.setScriptListaValores(AdapterUtils.generaScript(cs.getScriptValoresPosibles()));
+			break;
+		}
 		resSL.setMostrarEtiqueta(!cs.isNoMostrarTexto());
 		resSL.setPropiedadesCampo(generarPropiedadesCampo(cs));
-		resSL.setScriptListaValores(AdapterUtils.generaScript(cs.getScriptValoresPosibles()));
-		resSL.setTipo(cs.getTipo() == null ? null : cs.getTipo().toString());
-		resSL.setTipoListaValores(cs.getTipoListaValores() == null ? null : cs.getTipoListaValores().toString());
+		resSL.setTipo(cs.getTipo().toString());
+		resSL.setTipoSelector(cs.getTipoCampoIndexado().toString());
+		resSL.setTipoListaValores(cs.getTipoListaValores().toString());
 		return resSL;
 	}
 
@@ -673,7 +690,7 @@ public class VersionTramiteAdapter {
 		resCH.setIdentificador(cch.getIdComponente());
 		resCH.setMostrarEtiqueta(!cch.isNoMostrarTexto());
 		resCH.setPropiedadesCampo(generarPropiedadesCampo(cch));
-		resCH.setTipo(cch.getTipo() == null ? null : cch.getTipo().toString());
+		resCH.setTipo(cch.getTipo().toString());
 		resCH.setValorChecked(cch.getValorChecked());
 		resCH.setValorNoChecked(cch.getValorNoChecked());
 		return resCH;
@@ -694,14 +711,28 @@ public class VersionTramiteAdapter {
 		resTB.setEtiqueta(AdapterUtils.generarLiteralIdioma(ct.getTexto(), idioma));
 		resTB.setIdentificador(ct.getIdComponente());
 		resTB.setMostrarEtiqueta(!ct.isNoMostrarTexto());
+		resTB.setTipo(ct.getTipo().toString());
+		resTB.setTipoTexto(ct.getTipoCampoTexto().toString());
 		resTB.setPropiedadesCampo(generaPropiedadesCampo(ct));
-		resTB.setTextoExpRegular(generaExpresionRegular(ct.getExpresionRegular()));
-		resTB.setTextoIdentificacion(generaTextoIdentificacion(ct));
-		resTB.setTextoNormal(generaTextoNormal(ct));
-		resTB.setTextoNumero(generaTextoNumero(ct));
-		resTB.setTextoTelefono(generaTextoTelefono(ct));
-		resTB.setTipo(ct.getTipo() == null ? null : ct.getTipo().toString());
-		resTB.setTipoTexto(ct.getTipoCampoTexto() == null ? null : ct.getTipoCampoTexto().toString());
+		switch (ct.getTipoCampoTexto()) {
+		case NORMAL:
+			resTB.setTextoNormal(generaTextoNormal(ct));
+			break;
+		case ID:
+			resTB.setTextoIdentificacion(generaTextoIdentificacion(ct));
+			break;
+		case NUMERO:
+			resTB.setTextoNumero(generaTextoNumero(ct));
+			break;
+		case TELEFONO:
+			resTB.setTextoTelefono(generaTextoTelefono(ct));
+			break;
+		case EXPRESION:
+			resTB.setTextoExpRegular(generaExpresionRegular(ct.getExpresionRegular()));
+			break;
+		default:
+			// No se genera props específicas
+		}
 		return resTB;
 	}
 
@@ -769,7 +800,7 @@ public class VersionTramiteAdapter {
 			for (final ParametroDominio p : ori) {
 				final RParametroDominio res = new RParametroDominio();
 				res.setIdentificador(p.getParametro());
-				res.setTipo(p.getTipo() == null ? null : p.getTipo().toString());
+				res.setTipo(p.getTipo().toString());
 				res.setValor(p.getValor());
 				lpd.add(res);
 			}
@@ -787,7 +818,7 @@ public class VersionTramiteAdapter {
 		if (codDominio != null) {
 			final Dominio d = restApiService.loadDominio(codDominio);
 			if (d != null) {
-				return d.getIdString();
+				return d.getIdentificador();
 			}
 		}
 		return null;
@@ -948,7 +979,7 @@ public class VersionTramiteAdapter {
 	 * @return obligatoriedad
 	 */
 	private String generaObligatoriedad(final TypeFormularioObligatoriedad obligatoriedad) {
-		return obligatoriedad == null ? null : obligatoriedad.toString();
+		return obligatoriedad.toString();
 	}
 
 	/**
@@ -966,7 +997,7 @@ public class VersionTramiteAdapter {
 				final RPagoTramite res = new RPagoTramite();
 				res.setDescripcion(AdapterUtils.generarLiteralIdioma(t.getDescripcion(), idioma));
 				res.setIdentificador(t.getIdentificador());
-				res.setObligatoriedad(t.getObligatoriedad() == null ? null : t.getObligatoriedad().toString());
+				res.setObligatoriedad(t.getObligatoriedad().toString());
 				res.setScriptDependencia(AdapterUtils.generaScript(t.getScriptObligatoriedad()));
 				res.setScriptPago(AdapterUtils.generaScript(t.getScriptPago()));
 				res.setTipo(t.getTipo().toString());
@@ -993,8 +1024,8 @@ public class VersionTramiteAdapter {
 				res.setAyuda(generaAyudaFichero(d.getAyudaTexto(), d.getAyudaFichero(), d.getAyudaURL(), idioma));
 				res.setDescripcion(AdapterUtils.generarLiteralIdioma(d.getDescripcion(), idioma));
 				res.setIdentificador(d.getIdentificador());
-				res.setObligatoriedad(d.getObligatoriedad() == null ? null : d.getObligatoriedad().toString());
-				res.setPresentacion(d.getTipoPresentacion() == null ? null : d.getTipoPresentacion().toString());
+				res.setObligatoriedad(d.getObligatoriedad().toString());
+				res.setPresentacion(d.getTipoPresentacion().toString());
 				res.setScriptDependencia(AdapterUtils.generaScript(d.getScriptObligatoriedad()));
 
 				final RAnexoTramitePresentacionElectronica resPE = new RAnexoTramitePresentacionElectronica();

@@ -201,4 +201,21 @@ public interface FormularioInternoService {
 	 */
 	String getIdentificadorFormularioInterno(Long idFormulario);
 
+	/**
+	 * Genera pagina HTML editor.
+	 *
+	 * @param pIdForm
+	 *            id form
+	 * @param pPage
+	 *            page
+	 * @param pIdComponente
+	 *            id componente
+	 * @param pLang
+	 *            lang
+	 * @param pContexto
+	 *            contexto
+	 * @return pagina html
+	 */
+	String generaPaginaHTMLEditor(Long pIdForm, Long pPage, String pIdComponente, String pLang, String pContexto);
+
 }

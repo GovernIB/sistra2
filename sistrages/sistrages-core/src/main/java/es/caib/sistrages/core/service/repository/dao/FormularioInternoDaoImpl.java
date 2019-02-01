@@ -918,7 +918,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	@Override
 	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormulario) {
 		final DisenyoFormularioSimple disenyo = new DisenyoFormularioSimple();
-		final String sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo = :idFormulario ";
+		final String sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo = :idFormulario order by pagina.orden asc ";
 		final Query query = entityManager.createQuery(sqlPaginas);
 		query.setParameter("idFormulario", idFormulario);
 		final List<Long> idPaginas = query.getResultList();
@@ -928,7 +928,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			for (final long idPagina : idPaginas) {
 				// Filtramos por tipo (solo los que son de tipo textbox, checkbox, captcha y
 				// selector)
-				final String sqlComponentes = "select elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP') ";
+				final String sqlComponentes = "select elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP') order by elemento.lineaFormulario.orden, elemento.identificador ";
 				final Query queryComponentes = entityManager.createQuery(sqlComponentes);
 				queryComponentes.setParameter("idPagina", idPagina);
 				final List<Object[]> componentes = queryComponentes.getResultList();

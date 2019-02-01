@@ -348,16 +348,16 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	/**
 	 * Control limitación
 	 *
-	 * @param defTramGTT
+	 * @param defTram
 	 *            Definición trámite
 	 */
-	private void controlLimitacionTramitacion(final DefinicionTramiteSTG defTramGTT) {
+	private void controlLimitacionTramitacion(final DefinicionTramiteSTG defTram) {
 
-		final RVersionTramiteControlAcceso controlAcceso = defTramGTT.getDefinicionVersion().getControlAcceso();
+		final RVersionTramiteControlAcceso controlAcceso = defTram.getDefinicionVersion().getControlAcceso();
 		if (controlAcceso.isLimitarTramitacion()) {
 
-			final String idTramite = defTramGTT.getDefinicionVersion().getIdentificador();
-			final int version = defTramGTT.getDefinicionVersion().getVersion();
+			final String idTramite = defTram.getDefinicionVersion().getIdentificador();
+			final int version = defTram.getDefinicionVersion().getVersion();
 			final long limitNumero = controlAcceso.getLimiteTramitacionInicios();
 			final int limitIntervalo = controlAcceso.getLimiteTramitacionIntervalo();
 

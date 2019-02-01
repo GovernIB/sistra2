@@ -119,7 +119,14 @@ public final class DominiosResolucionComponentMockImpl implements DominiosResolu
 	public ValoresDominio resuelveDominioSQL(final RDominio dominio, final ParametrosDominio parametrosDominio) {
 		final ValoresDominio valores = new ValoresDominio();
 		valores.setError(false);
-		if (dominio.getIdentificador().contains("SQL1")) {
+		if (dominio.getIdentificador().contains(SistragesMock.ID_DOMINIO)) {
+			int fila = valores.addFila();
+			valores.setValor(fila, "CODIGO", "V1");
+			valores.setValor(fila, "DESCRIPCION", "VALOR 1");
+			fila = valores.addFila();
+			valores.setValor(fila, "CODIGO", "V2");
+			valores.setValor(fila, "DESCRIPCION", "VALOR 2");
+		} else if (dominio.getIdentificador().contains("SQL1")) {
 			int fila = valores.addFila();
 			valores.setValor(fila, "COD_SQL1", "VAL11");
 			valores.setValor(fila, "COD_SQL2", "VAL12");

@@ -15,30 +15,31 @@ public interface ValidacionesFormularioHelper {
 	/**
 	 * Realiza verificacion de la pagina actual del formulario.
 	 *
-	 * @param pDatosSesion
+	 * @param datosSesion
 	 *            Datos sesion formulario
 	 * @return Mensaje de error (nulo si pasa validacion)
 	 */
-	ResultadoValidacion validarConfiguracionCampos(final DatosSesionFormularioInterno pDatosSesion);
+	ResultadoValidacion validarConfiguracionCampos(final DatosSesionFormularioInterno datosSesion);
 
 	/**
 	 * Valida página al guardar.
 	 *
-	 * @param pDatosSesion
+	 * @param datosSesion
 	 *            Datos sesion
 	 * @return En caso de encontrar error de validación devuelve mensaje error (null
 	 *         si no hay error de validación).
 	 */
-	ResultadoValidacion validarScriptValidacionPagina(final DatosSesionFormularioInterno pDatosSesion);
+	ResultadoValidacion validarScriptValidacionPagina(final DatosSesionFormularioInterno datosSesion);
 
 	/**
 	 * Realiza validacion de los campos de la pagina segun el script de validacion
 	 * del campo.
 	 *
-	 * @param pDatosSesion
+	 * @param datosSesion
 	 *            Datos sesion
-	 * @return En caso de error devuelve error de validación.
+	 * @return En caso de error devuelve error de validación (se detiene en el
+	 *         primer error de validación encontrado).
 	 */
-	ResultadoValidacion validarScriptValidacionCampos(final DatosSesionFormularioInterno pDatosSesion);
+	ResultadoValidacion validarScriptValidacionCampos(final DatosSesionFormularioInterno datosSesion);
 
 }

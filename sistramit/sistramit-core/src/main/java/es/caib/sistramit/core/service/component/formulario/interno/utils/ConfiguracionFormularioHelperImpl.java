@@ -1,21 +1,31 @@
 package es.caib.sistramit.core.service.component.formulario.interno.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
+import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
+import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
+import es.caib.sistramit.core.api.model.formulario.AccionFormularioNormalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoCP;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoEmail;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoExpReg;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoFecha;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoHora;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoId;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNormal;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNumero;
@@ -23,14 +33,19 @@ import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoOculto
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoPassword;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoTelefono;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoVerificacion;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
 import es.caib.sistramit.core.api.model.formulario.ValoresCampoVerificacion;
+import es.caib.sistramit.core.api.model.formulario.types.TypeAccionFormularioNormalizado;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSeparador;
 import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
-import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
+import es.caib.sistramit.core.service.component.script.RespuestaScript;
+import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
+import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
+import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
@@ -43,12 +58,20 @@ import es.caib.sistramit.core.service.util.UtilsSTG;
 @Component("configuracionFormularioHelper")
 public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFormularioHelper {
 
+	/** Motor de ejecución de scritps. */
+	@Autowired
+	private ScriptExec scriptFormulario;
+
 	@Override
 	public ConfiguracionCampo obtenerConfiguracionCampo(RComponente pCampoDef) {
 		// Creamos configuracion campo segun tipo y establecemos props
 		// particulares
 		ConfiguracionCampo confCampo = null;
-		final TypeCampo tipoCampo = TypeCampo.fromString(pCampoDef.getTipo());
+		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
+		if (tipoCampo == null) {
+			throw new ErrorConfiguracionException("Campo de tipo " + pCampoDef.getTipo() + " no soportado para campo "
+					+ pCampoDef.getIdentificador());
+		}
 		switch (tipoCampo) {
 		case TEXTO:
 			confCampo = obtenerConfiguracionCampoTexto((RComponenteTextbox) pCampoDef);
@@ -66,15 +89,67 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	}
 
 	@Override
-	public ResEstadoCampo evaluarEstadoCampo(DatosSesionFormularioInterno pDatosSesion, RComponente campoDef) {
-		// TODO PENDIENTE
-		throw new RuntimeException("Pendiente implementar");
+	public List<ConfiguracionModificadaCampo> evaluarEstadoCamposPagina(
+			final DatosSesionFormularioInterno pDatosSesion) {
+
+		final List<ConfiguracionModificadaCampo> resultado = new ArrayList<>();
+
+		// Obtenemos definicion pagina actual
+		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(pDatosSesion);
+
+		// Evaluamos estado dinamico de los campos
+		for (final RComponente campoDef : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
+			final ResEstadoCampo estado = evaluarEstadoCampo(pDatosSesion, campoDef);
+			if (estado != null) {
+				final ConfiguracionModificadaCampo config = ConfiguracionModificadaCampo
+						.createNewConfiguracionModificadaCampo();
+				config.setId(campoDef.getIdentificador());
+				config.setSoloLectura(estado.getEstadoCampo().getSoloLectura());
+				resultado.add(config);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public ResEstadoCampo evaluarEstadoCampo(DatosSesionFormularioInterno pDatosSesion, RComponente pCampoDef) {
+
+		final RPropiedadesCampo propsCampo = UtilsFormularioInterno.obtenerPropiedadesCampo(pCampoDef);
+
+		ResEstadoCampo rse = null;
+		if (!propsCampo.isSoloLectura() && UtilsSTG.existeScript(propsCampo.getScriptEstado())) {
+			final VariablesFormulario variablesFormulario = UtilsFormularioInterno
+					.generarVariablesFormulario(pDatosSesion, pCampoDef.getIdentificador());
+			final Map<String, String> codigosError = UtilsSTG
+					.convertLiteralesToMap(propsCampo.getScriptEstado().getLiterales());
+			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(TypeScriptFormulario.SCRIPT_ESTADO,
+					pCampoDef.getIdentificador(), propsCampo.getScriptEstado().getScript(), variablesFormulario,
+					codigosError, pDatosSesion.getDefinicionTramite());
+			if (rs.isError()) {
+				throw new ErrorScriptException(TypeScriptFormulario.SCRIPT_ESTADO.name(),
+						pDatosSesion.getDatosInicioSesion().getIdSesionTramitacion(), pCampoDef.getIdentificador(),
+						rs.getMensajeError());
+			}
+			rse = (ResEstadoCampo) rs.getResultado();
+		}
+		return rse;
 	}
 
 	@Override
 	public byte[] obtenerPlantillaPdfVisualizacion(DatosSesionFormularioInterno pDatosSesion) {
 		// TODO PENDIENTE
 		throw new RuntimeException("Pendiente implementar");
+	}
+
+	@Override
+	public List<AccionFormulario> evaluarAccionesPaginaActual(DatosSesionFormularioInterno datosSesion) {
+		// TODO Pendiente calcular acciones (se pospone hasta implementacion multipagina
+		// y formulario personalizado)
+		final List<AccionFormulario> acciones = new ArrayList<>();
+		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.SALIR));
+		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.FINALIZAR));
+		return acciones;
 	}
 
 	// -----------------------------------------------------------------------------------------------
@@ -89,8 +164,15 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * @return configuracion campo selector.
 	 */
 	private ConfiguracionCampoSelector obtenerConfiguracionCampoSelector(final RComponenteSelector pCampoDef) {
-		final TypeSelector tipoSelector = TypeSelector.fromString(pCampoDef.getTipoSelector());
+		final TypeSelector tipoSelector = UtilsSTG.traduceTipoSelector(pCampoDef.getTipoSelector());
+		if (tipoSelector == null) {
+			throw new ErrorConfiguracionException("Campo de tipo selector " + pCampoDef.getTipoSelector()
+					+ " no soportado para campo " + pCampoDef.getIdentificador());
+		}
 		final ConfiguracionCampoSelector confCampoSelector = new ConfiguracionCampoSelector();
+		// Establecemos propiedades generales
+		establecerPropiedadesGenerales(pCampoDef, confCampoSelector);
+		// Establecemos propiedades específicas
 		confCampoSelector.setContenido(tipoSelector);
 		return confCampoSelector;
 	}
@@ -104,6 +186,9 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 */
 	private ConfiguracionCampoVerificacion obtenerConfiguracionCampoVerificacion(final RComponenteCheckbox pCampoDef) {
 		final ConfiguracionCampoVerificacion confCampoVerif = new ConfiguracionCampoVerificacion();
+		// Establecemos propiedades generales
+		establecerPropiedadesGenerales(pCampoDef, confCampoVerif);
+		// Establecemos propiedades específicas
 		final ValoresCampoVerificacion valoresVerif = new ValoresCampoVerificacion();
 		valoresVerif.setChecked(pCampoDef.getValorChecked());
 		valoresVerif.setNoChecked(pCampoDef.getValorNoChecked());
@@ -123,10 +208,10 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		ConfiguracionCampo confCampo = null;
 
 		// Creamos configuración específica según el tipo de campo de texto
-		final TypeTexto typeTexto = TypeTexto.fromString(pCampoDef.getTipoTexto());
+		final TypeTexto typeTexto = UtilsSTG.traduceTipoTexto(pCampoDef.getTipoTexto());
 		if (typeTexto == null) {
-			throw new ErrorConfiguracionException(
-					"Campo de texto de tipo " + pCampoDef.getTipoTexto() + " no soportado");
+			throw new ErrorConfiguracionException("Campo de texto de tipo " + pCampoDef.getTipoTexto()
+					+ " no soportado para campo " + pCampoDef.getIdentificador());
 		}
 
 		switch (typeTexto) {
@@ -147,6 +232,10 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		case FECHA: // Fecha
 			final ConfiguracionCampoTextoFecha confCampoFecha = new ConfiguracionCampoTextoFecha();
 			confCampo = confCampoFecha;
+			break;
+		case HORA: // Fecha
+			final ConfiguracionCampoTextoHora confCampoHora = new ConfiguracionCampoTextoHora();
+			confCampo = confCampoHora;
 			break;
 		case IDENTIFICADOR: // Identificador
 			confCampo = obtenerConfCampoTextoIdentificador(pCampoDef);
@@ -227,11 +316,9 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 
 		final ConfiguracionCampoTextoNumero confCampoNumero = new ConfiguracionCampoTextoNumero();
 
-		final TypeSeparador typeSeparador = TypeSeparador.fromString(pCampoDef.getTextoNumero().getFormatoNumero());
-		if (typeSeparador == null) {
-			throw new ErrorConfiguracionException(
-					"Formato separador número " + pCampoDef.getTextoNumero().getFormatoNumero() + " no soportado");
-		}
+		final TypeSeparador typeSeparador = UtilsSTG
+				.traduceTipoSeparador(pCampoDef.getTextoNumero().getFormatoNumero());
+
 		confCampoNumero.getOpciones().setSeparador(typeSeparador);
 
 		confCampoNumero.getOpciones().setEnteros(pCampoDef.getTextoNumero().getPrecisionEntera());
@@ -275,7 +362,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	private void establecerPropiedadesGenerales(RComponente pCampoDef, ConfiguracionCampo confCampo) {
 		// Establecemos props generales
 		confCampo.setAyuda(pCampoDef.getAyuda());
-		final RPropiedadesCampo propsGenerales = UtilsFormulario.obtenerPropiedadesCampo(pCampoDef);
+		final RPropiedadesCampo propsGenerales = UtilsFormularioInterno.obtenerPropiedadesCampo(pCampoDef);
 		confCampo.setId(pCampoDef.getIdentificador());
 		if (propsGenerales.isObligatorio()) {
 			confCampo.setObligatorio(TypeSiNo.SI);

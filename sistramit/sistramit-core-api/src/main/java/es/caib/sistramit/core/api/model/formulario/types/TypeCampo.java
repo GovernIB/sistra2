@@ -49,24 +49,4 @@ public enum TypeCampo {
 		return stringValueCampo;
 	}
 
-	/**
-	 * Convierte string a TypeCampo.
-	 *
-	 * @param text
-	 *            string
-	 * @return TypeValor
-	 */
-	public static TypeCampo fromString(final String text) {
-		TypeCampo respuesta = null;
-		if (text != null) {
-			for (final TypeCampo b : TypeCampo.values()) {
-				if (text.equalsIgnoreCase(b.toString())) {
-					respuesta = b;
-					break;
-				}
-			}
-		}
-		return respuesta;
-	}
-
 }

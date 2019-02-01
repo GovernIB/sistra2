@@ -9,8 +9,8 @@ import java.util.Map;
 
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
-import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+import es.caib.sistramit.core.service.util.UtilsFormulario;
 
 /**
  * Acceso a valores de un formulario.

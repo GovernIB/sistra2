@@ -65,8 +65,8 @@ public class SistragesMock {
 	public final static String ID_TRAMITE_CP = "Y";
 	/** Idioma test. */
 	public final static String IDIOMA = "es";
-	/** Id tramite test. */
-	public final static String ID_DOMINIO = "DOM";
+	/** ID Dominio. */
+	public static final String ID_DOMINIO = "DOM-JUNIT";
 
 	public static RConfiguracionGlobal crearConfiguracionGlobal() {
 		final RConfiguracionGlobal configuracionGlobal = new RConfiguracionGlobal();
@@ -287,7 +287,7 @@ public class SistragesMock {
 
 	private static List<String> crearDominios() {
 		final List<String> dominios = new ArrayList<>();
-		dominios.add("DOM");
+		dominios.add(ID_DOMINIO);
 		return dominios;
 	}
 
@@ -488,7 +488,9 @@ public class SistragesMock {
 		f.setFormularioInterno(crearFormularioDisenyo());
 
 		final RScript scriptDatosIniciales = new RScript();
-		scriptDatosIniciales.setScript("DATOS_INICIALES_FORMULARIO.setValor('CAMPO1', 'VALOR_INICIAL');");
+		scriptDatosIniciales.setScript("DATOS_INICIALES_FORMULARIO.setValorCompuesto('SEL_LISTA', 'V2','Valor 2'); "
+				+ "DATOS_INICIALES_FORMULARIO.setValor('CHK_ESTADO', 'S'); "
+				+ "DATOS_INICIALES_FORMULARIO.setValor('TXT_ESTADO', 'VALOR INICIAL');");
 		f.setScriptDatosIniciales(scriptDatosIniciales);
 
 		final RScript scriptPostguardar = new RScript();

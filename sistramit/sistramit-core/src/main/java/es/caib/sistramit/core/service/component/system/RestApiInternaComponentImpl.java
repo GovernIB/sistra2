@@ -31,7 +31,6 @@ import es.caib.sistramit.core.api.model.system.rest.interno.PersistenciaAuditori
 import es.caib.sistramit.core.api.model.system.rest.interno.VerificacionPago;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.flujo.pasos.pagar.ControladorPasoPagarHelper;
-import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.component.integracion.PagoComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosFicheroPersistencia;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
@@ -41,6 +40,7 @@ import es.caib.sistramit.core.service.model.integracion.PagoComponentVerificacio
 import es.caib.sistramit.core.service.model.system.PerdidaClaveFichero;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
+import es.caib.sistramit.core.service.util.UtilsFormulario;
 
 @Component("restApiInternaComponen")
 @Transactional(propagation = Propagation.REQUIRES_NEW)

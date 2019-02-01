@@ -12,9 +12,9 @@ import org.apache.commons.io.IOUtils;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
-import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl.FormateadorPlantilla;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
+import es.caib.sistramit.core.service.util.UtilsFormulario;
 
 /**
  * Test de formateador a partir de plantilla con valor campo simple.

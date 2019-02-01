@@ -28,6 +28,12 @@ import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
+import es.caib.sistramit.core.api.model.formulario.types.TypeSeparador;
+import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
+import es.caib.sistramit.core.service.model.formulario.interno.types.TypeListaValores;
+import es.caib.sistramit.core.service.model.formulario.interno.types.TypeParametroDominio;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.integracion.types.TypeAvisoEntidad;
 
@@ -433,7 +439,6 @@ public final class UtilsSTG {
 	 * @return
 	 */
 	public static boolean existeDominioDefinicion(final String idDominio, final DefinicionTramiteSTG defTramite) {
-
 		boolean existe = false;
 		if (defTramite != null && defTramite.getDefinicionVersion() != null
 				&& defTramite.getDefinicionVersion().getDominios() != null) {
@@ -473,6 +478,137 @@ public final class UtilsSTG {
 					"Se ha indicado un tipo de paso que no tiene formularios: " + defPaso.getTipo());
 		}
 		return defFormulario;
+	}
+
+	/**
+	 * Traduce tipo campo proveniente de STG.
+	 *
+	 * @param tipoComponente
+	 *            tipo componente STG
+	 * @return tipo campo
+	 */
+	public static TypeCampo traduceTipoCampo(String tipoComponente) {
+		TypeCampo tipo = null;
+		if ("CT".equals(tipoComponente)) {
+			tipo = TypeCampo.TEXTO;
+		} else if ("SE".equals(tipoComponente)) {
+			tipo = TypeCampo.SELECTOR;
+		} else if ("CK".equals(tipoComponente)) {
+			tipo = TypeCampo.VERIFICACION;
+		} else if ("CAPTCHA".equals(tipoComponente)) {
+			tipo = TypeCampo.CAPTCHA;
+		}
+		return tipo;
+	}
+
+	/**
+	 * Traduce tipo texto proveniente de STG.
+	 *
+	 * @param tipoTexto
+	 *            tipo texto STG
+	 * @return tipo texto
+	 */
+	public static TypeTexto traduceTipoTexto(String tipoTexto) {
+
+		TypeTexto res = null;
+
+		if ("NORMAL".equals(tipoTexto)) {
+			res = TypeTexto.NORMAL;
+		} else if ("NUMERO".equals(tipoTexto)) {
+			res = TypeTexto.NUMERO;
+		} else if ("EMAIL".equals(tipoTexto)) {
+			res = TypeTexto.EMAIL;
+		} else if ("ID".equals(tipoTexto)) {
+			res = TypeTexto.IDENTIFICADOR;
+		} else if ("CP".equals(tipoTexto)) {
+			res = TypeTexto.CODIGO_POSTAL;
+		} else if ("TELEFONO".equals(tipoTexto)) {
+			res = TypeTexto.TELEFONO;
+		} else if ("FECHA".equals(tipoTexto)) {
+			res = TypeTexto.FECHA;
+		} else if ("HORA".equals(tipoTexto)) {
+			res = TypeTexto.HORA;
+		} else if ("EXPRESION".equals(tipoTexto)) {
+			res = TypeTexto.EXPRESION_REGULAR;
+		}
+
+		// TODO PENDIENTE CAMPOS OCULTOS
+
+		return res;
+	}
+
+	/**
+	 * Traduce tipo proveniente de STG.
+	 *
+	 * @param tipoSelector
+	 *            tipo STG
+	 * @return tipo STT
+	 */
+	public static TypeSelector traduceTipoSelector(String tipoSelector) {
+		TypeSelector res = null;
+		if ("DESPLEGABLE".equals(tipoSelector)) {
+			res = TypeSelector.LISTA;
+		} else if ("MULTIPLE".equals(tipoSelector)) {
+			res = TypeSelector.MULTIPLE;
+		} else if ("UNICA".equals(tipoSelector)) {
+			res = TypeSelector.UNICO;
+		}
+		return res;
+	}
+
+	/**
+	 * Traduce tipo proveniente de STG.
+	 *
+	 * @param tipoSeparador
+	 *            tipo STG
+	 * @return tipo STT
+	 */
+	public static TypeSeparador traduceTipoSeparador(String tipoSeparador) {
+		TypeSeparador res = null;
+		if ("PC".equals(tipoSeparador)) {
+			res = TypeSeparador.PUNTO_COMA;
+		} else if ("CP".equals(tipoSeparador)) {
+			res = TypeSeparador.COMA_PUNTO;
+		}
+		return res;
+	}
+
+	/**
+	 * Traduce tipo proveniente de STG.
+	 *
+	 * @param tipoListaValores
+	 *            tipo STG
+	 * @return tipo STT
+	 */
+	public static TypeListaValores traduceTipoListaValores(String tipoListaValores) {
+		TypeListaValores res = null;
+		if ("F".equals(tipoListaValores)) {
+			res = TypeListaValores.FIJA;
+		} else if ("D".equals(tipoListaValores)) {
+			res = TypeListaValores.DOMINIO;
+		} else if ("S".equals(tipoListaValores)) {
+			res = TypeListaValores.SCRIPT;
+		}
+		return res;
+	}
+
+	/**
+	 * Traduce tipo proveniente de STG.
+	 *
+	 * @param tipoParametroDominio
+	 *            tipo STG
+	 * @return tipo STT
+	 */
+	public static TypeParametroDominio traduceTipoParametroDominio(String tipoParametroDominio) {
+		TypeParametroDominio res = null;
+		if ("C".equals(tipoParametroDominio)) {
+			res = TypeParametroDominio.CONSTANTE;
+		} else if ("M".equals(tipoParametroDominio)) {
+			res = TypeParametroDominio.CAMPO;
+		} else if ("P".equals(tipoParametroDominio)) {
+			res = TypeParametroDominio.PARAMETRO;
+		}
+		return res;
 	}
 
 }

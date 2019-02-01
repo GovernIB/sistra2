@@ -40,6 +40,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
+import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
@@ -50,9 +51,10 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SecurityService;
-import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
+import es.caib.sistramit.core.service.component.formulario.interno.ControladorGestorFormulariosInternoImpl;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
+import es.caib.sistramit.core.service.util.UtilsFormulario;
 
 // TODO Meter en test la funcionalidad que se pueda: convertir pdf,
 // anexar firmado, script validacion, anexos dinamicos, opcionales,...
@@ -259,6 +261,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		String nombreFichero;
 		byte[] datosFichero;
 		DetallePasos dp;
+		XmlFormulario xmlForm;
+		List<ValorCampo> valoresIniciales;
 
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		final ResultadoIrAPaso rp = flujoTramitacionService.irAPaso(idSesionTramitacion, dp.getSiguiente());
@@ -275,6 +279,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
 				TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
 		datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
+		xmlForm = UtilsFormulario.xmlToValores(datosFichero);
+		valoresIniciales = xmlForm.getValores();
 		this.logger.info("XML formulario inicial: " + new String(datosFichero, "UTF-8"));
 
 		// -- Abrimos formulario
@@ -285,54 +291,87 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		Assert.isTrue(af.getTicket() != null, "No se ha devuelto ticket formulario");
 
 		// -- Redirigimos formulario
-		// final String idSesionFormulario =
-		// flujoFormularioInternoService.cargarSesion(af.getTicket());
+		final String idSesionFormulario = flujoFormularioInternoService.cargarSesion(af.getTicket());
+
+		// Simular
+		final boolean simular = ControladorGestorFormulariosInternoImpl.SIMULAR;
+		if (!simular) {
+
+			// -- Cargamos pagina actual
+			final PaginaFormulario paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
+			// Verificamos acciones carga
+			// * Dato inicial precargado
+			final String[] camposValoresIniciales = { "SEL_LISTA", "CHK_ESTADO", "TXT_ESTADO", };
+			for (final String c : camposValoresIniciales) {
+				final ValorCampo valorInicial = UtilsFormulario.buscarValorCampo(paginaData.getValores(), c);
+				final ValorCampo valorPosterior = UtilsFormulario.buscarValorCampo(paginaData.getValores(), c);
+				Assert.isTrue(valorPosterior.esValorIgual(valorInicial), "No concuerda valor inicial campo " + c);
+			}
+			// * Estado campo
+			Assert.isTrue(paginaData.getConfiguracion("TXT_ESTADO").getSoloLectura() == TypeSiNo.SI,
+					"El campo no está como solo lectura");
+
+			if (true) {
+				throw new RuntimeException("Pendiente seguir");
+			}
+
+			// -- evaluarCambioCampoPagina
+			// TODO Pendiente
+
+			// -- Guardar formulario (modificamos dato)
+			// TODO Pendiente guardarPagina
+			// flujoFormularioInternoService.guardarPagina(idSesionFormulario,
+			// valoresPagina, null);
+
+		}
 
 		// -- Simulamos rellenar
-		final String campoNuevoId = "PRESENTACION";
-		final String campoNuevoValor = presentacion.toString();
-		final XmlFormulario xmlForm = UtilsFormulario.xmlToValores(datosFichero);
-		xmlForm.getValores().add(new ValorCampoSimple(campoNuevoId, campoNuevoValor));
-		final String xmlNuevo = new String(UtilsFormulario.valoresToXml(xmlForm), "UTF-8");
+		if (simular) {
+			final String campoNuevoId = "PRESENTACION";
+			final String campoNuevoValor = presentacion.toString();
+			xmlForm = UtilsFormulario.xmlToValores(datosFichero);
+			xmlForm.getValores().add(new ValorCampoSimple(campoNuevoId, campoNuevoValor));
+			final String xmlNuevo = new String(UtilsFormulario.valoresToXml(xmlForm), "UTF-8");
 
-		ParametrosAccionPaso pParametros;
-		pParametros = new ParametrosAccionPaso();
-		pParametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
-		final String ticketForm = flujoTramitacionService.simularRellenarFormulario(idSesionTramitacion,
-				xmlNuevo.trim());
+			ParametrosAccionPaso pParametros;
+			pParametros = new ParametrosAccionPaso();
+			pParametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+			final String ticketForm = flujoTramitacionService.simularRellenarFormulario(idSesionTramitacion,
+					xmlNuevo.trim());
 
-		// -- Guardar formulario
-		parametros = new ParametrosAccionPaso();
-		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
-		parametros.addParametroEntrada("ticket", ticketForm);
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
-				TypeAccionPasoRellenar.GUARDAR_FORMULARIO, parametros);
-		final TypeSiNo cancelado = (TypeSiNo) resPaso.getParametroRetorno("cancelado");
-		final TypeSiNo correcto = (TypeSiNo) resPaso.getParametroRetorno("correcto");
-		final String mensajeIncorrecto = (String) resPaso.getParametroRetorno("mensajeIncorrecto");
-		Assert.isTrue(cancelado == TypeSiNo.NO, "El formulario se ha cancelado");
-		Assert.isTrue(correcto == TypeSiNo.SI, "El formulario no es correcto");
-		Assert.isTrue(StringUtils.isAllBlank(mensajeIncorrecto), "Existe mensaje incorrecto");
+			// -- Guardar formulario
+			parametros = new ParametrosAccionPaso();
+			parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+			parametros.addParametroEntrada("ticket", ticketForm);
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+					TypeAccionPasoRellenar.GUARDAR_FORMULARIO, parametros);
+			final TypeSiNo cancelado = (TypeSiNo) resPaso.getParametroRetorno("cancelado");
+			final TypeSiNo correcto = (TypeSiNo) resPaso.getParametroRetorno("correcto");
+			final String mensajeIncorrecto = (String) resPaso.getParametroRetorno("mensajeIncorrecto");
+			Assert.isTrue(cancelado == TypeSiNo.NO, "El formulario se ha cancelado");
+			Assert.isTrue(correcto == TypeSiNo.SI, "El formulario no es correcto");
+			Assert.isTrue(StringUtils.isAllBlank(mensajeIncorrecto), "Existe mensaje incorrecto");
 
-		// -- Mostramos xml tras guardar
-		parametros = new ParametrosAccionPaso();
-		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
-		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
-				TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
-		datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
-		this.logger.info("XML formulario guardado: " + new String(datosFichero, "UTF-8"));
+			// -- Mostramos xml tras guardar
+			parametros = new ParametrosAccionPaso();
+			parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+					TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
+			datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
+			this.logger.info("XML formulario guardado: " + new String(datosFichero, "UTF-8"));
 
-		// Verificamos que esta el campo nuevo añadido
-		final XmlFormulario xmlFormNuevo = UtilsFormulario.xmlToValores(datosFichero);
-		boolean correctoCampoNuevo = false;
-		for (final ValorCampo vc : xmlFormNuevo.getValores()) {
-			if (vc.getId().equals(campoNuevoId) && vc.getTipo() == TypeValor.SIMPLE
-					&& ((ValorCampoSimple) vc).getValor().equals(campoNuevoValor)) {
-				correctoCampoNuevo = true;
-				break;
+			// Verificamos que esta el campo nuevo añadido
+			final XmlFormulario xmlFormNuevo = UtilsFormulario.xmlToValores(datosFichero);
+			boolean correctoCampoNuevo = false;
+			for (final ValorCampo vc : xmlFormNuevo.getValores()) {
+				if (vc.getId().equals(campoNuevoId) && vc.getTipo() == TypeValor.SIMPLE
+						&& ((ValorCampoSimple) vc).getValor().equals(campoNuevoValor)) {
+					correctoCampoNuevo = true;
+					break;
+				}
 			}
+			Assert.isTrue(correctoCampoNuevo, "No existe el nuevo campo añadido al guardar");
 		}
-		Assert.isTrue(correctoCampoNuevo, "No existe el nuevo campo añadido al guardar");
 
 		// -- Descargar pdf
 		parametros = new ParametrosAccionPaso();

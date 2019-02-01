@@ -9,11 +9,11 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
-import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
 import es.caib.sistramit.core.service.component.script.ScriptUtils;
 import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoMultiple;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
 import es.caib.sistramit.core.service.model.script.ResDatosInicialesFormularioInt;
+import es.caib.sistramit.core.service.util.UtilsFormulario;
 
 /**
  *

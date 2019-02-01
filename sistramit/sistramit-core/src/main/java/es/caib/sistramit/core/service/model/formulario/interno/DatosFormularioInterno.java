@@ -9,7 +9,7 @@ import java.util.Map;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
+import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 
 /**
  * Datos que se mantienen en memoria para un formulario interno.
@@ -19,9 +19,6 @@ import es.caib.sistramit.core.service.component.formulario.UtilsFormulario;
  */
 @SuppressWarnings("serial")
 public final class DatosFormularioInterno implements Serializable {
-
-	// TODO VER SI ES MEJOR GESTIONAR LOS CAMPOS DE FORMA PLANA SIN TENER EN
-	// CUENTA LAS PAGINAS.
 
 	/**
 	 * Indice página actual (empieza en 1).
@@ -139,7 +136,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @return Valores de los campos.
 	 */
 	public List<ValorCampo> getValoresAccesiblesCampo(final String idCampo) {
-		final List<ValorCampo> res = new ArrayList<ValorCampo>();
+		final List<ValorCampo> res = new ArrayList<>();
 
 		// Podra tener accesibles los valores de las paginas anteriores
 		for (int i = ConstantesNumero.N1; i < getIndicePaginaActual(); i++) {
@@ -187,7 +184,7 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @return Valores de los campos.
 	 */
 	public List<ValorCampo> getValoresAccesiblesPagina() {
-		final List<ValorCampo> res = new ArrayList<ValorCampo>();
+		final List<ValorCampo> res = new ArrayList<>();
 
 		// Podra tener accesibles los valores de las paginas anteriores y la
 		// actual
@@ -206,11 +203,12 @@ public final class DatosFormularioInterno implements Serializable {
 	 * @return Lista de ids de campo
 	 */
 	public List<String> getCamposEvaluables() {
-		final List<String> camposEvaluables = new ArrayList<String>();
-		for (final DependenciaCampo dependenciasCampo : dependencias.values()) {
-			final ConfiguracionCampo confCampoDependiente = getConfiguracionCampo(dependenciasCampo.getIdCampo());
-			if (!UtilsFormulario.esCampoOculto(confCampoDependiente)) {
-				camposEvaluables.addAll(dependenciasCampo.getDependencias());
+		final List<String> camposEvaluables = new ArrayList<>();
+		for (final DependenciaCampo dc : dependencias.values()) {
+			final ConfiguracionCampo confCampoDependiente = getConfiguracionCampo(dc.getIdCampo());
+			final List<String> dependenciasCampo = dc.getDependencias();
+			if (!UtilsFormularioInterno.esCampoOculto(confCampoDependiente) && !dependenciasCampo.isEmpty()) {
+				camposEvaluables.addAll(dependenciasCampo);
 			}
 		}
 		return camposEvaluables;

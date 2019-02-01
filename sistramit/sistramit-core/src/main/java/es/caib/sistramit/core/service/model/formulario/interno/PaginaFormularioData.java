@@ -31,263 +31,284 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 @SuppressWarnings("serial")
 public final class PaginaFormularioData implements Serializable {
 
-    /**
-     * Id formulario al que pertenece la pagina.
-     */
-    private String idFormulario;
+	/**
+	 * Id formulario al que pertenece la pagina.
+	 */
+	private String idFormulario;
 
-    /**
-     * Configuracion de los campos.
-     */
-    private List<ConfiguracionCampo> configuracion = new ArrayList<>();
+	/**
+	 * Indice página en la definición de formulario.
+	 */
+	private int indiceDef;
 
-    /**
-     * Valores de los campos.
-     */
-    private final List<ValorCampo> valores = new ArrayList<>();
+	/**
+	 * Configuracion de los campos.
+	 */
+	private List<ConfiguracionCampo> configuracion = new ArrayList<>();
 
-    /**
-     * Valores iniciales de los campos.
-     */
-    private final List<ValorCampo> valoresIniciales = new ArrayList<>();
+	/**
+	 * Valores de los campos.
+	 */
+	private final List<ValorCampo> valores = new ArrayList<>();
 
-    /**
-     * Acciones personalizadas del formulario. Se establecerán en la última
-     * página del formulario.
-     */
-    private List<AccionFormulario> acciones = new ArrayList<>();
+	/**
+	 * Valores iniciales de los campos.
+	 */
+	private final List<ValorCampo> valoresIniciales = new ArrayList<>();
 
-    /**
-     * Recursos estáticos del formulario. Se establecen las urls de estos
-     * recursos estáticos para establecerse en el html del formulario.
-     */
-    private RecursosFormulario recursos;
+	/**
+	 * Acciones personalizadas del formulario.
+	 */
+	private List<AccionFormulario> accionesPersonalizadas = new ArrayList<>();
 
-    /**
-     * Constructor.
-     *
-     * @param pIdFormulario
-     *            id formulario
-     */
-    public PaginaFormularioData(final String pIdFormulario) {
-        this.idFormulario = pIdFormulario;
-    }
+	/**
+	 * Recursos estáticos del formulario. Se establecen las urls de estos recursos
+	 * estáticos para establecerse en el html del formulario.
+	 */
+	private RecursosFormulario recursos;
 
-    /**
-     * Método de acceso a idFormulario.
-     *
-     * @return idFormulario
-     */
-    public String getIdFormulario() {
-        return idFormulario;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param pIdFormulario
+	 *            id formulario
+	 */
+	public PaginaFormularioData(final String pIdFormulario, final int pIndiceDef) {
+		this.idFormulario = pIdFormulario;
+		this.indiceDef = pIndiceDef;
+	}
 
-    /**
-     * Método para establecer idFormulario.
-     *
-     * @param pIdFormulario
-     *            idFormulario a establecer
-     */
-    public void setIdFormulario(final String pIdFormulario) {
-        idFormulario = pIdFormulario;
-    }
+	/**
+	 * Método de acceso a idFormulario.
+	 *
+	 * @return idFormulario
+	 */
+	public String getIdFormulario() {
+		return idFormulario;
+	}
 
-    /**
-     * Método de acceso a configuracion.
-     *
-     * @return configuracion
-     */
-    public List<ConfiguracionCampo> getConfiguracion() {
-        return configuracion;
-    }
+	/**
+	 * Método para establecer idFormulario.
+	 *
+	 * @param pIdFormulario
+	 *            idFormulario a establecer
+	 */
+	public void setIdFormulario(final String pIdFormulario) {
+		idFormulario = pIdFormulario;
+	}
 
-    /**
-     * Método para establecer configuracion.
-     *
-     * @param pConfiguracion
-     *            configuracion a establecer
-     */
-    public void setConfiguracion(
-            final List<ConfiguracionCampo> pConfiguracion) {
-        configuracion = pConfiguracion;
-    }
+	/**
+	 * Método de acceso a configuracion.
+	 *
+	 * @return configuracion
+	 */
+	public List<ConfiguracionCampo> getConfiguracion() {
+		return configuracion;
+	}
 
-    /**
-     * Método de acceso a valores.
-     *
-     * @return valores
-     */
-    public List<ValorCampo> getValores() {
-        return valores;
-    }
+	/**
+	 * Método para establecer configuracion.
+	 *
+	 * @param pConfiguracion
+	 *            configuracion a establecer
+	 */
+	public void setConfiguracion(final List<ConfiguracionCampo> pConfiguracion) {
+		configuracion = pConfiguracion;
+	}
 
-    /**
-     * Método de acceso a acciones.
-     *
-     * @return acciones
-     */
-    public List<AccionFormulario> getAcciones() {
-        return acciones;
-    }
+	/**
+	 * Método de acceso a valores.
+	 *
+	 * @return valores
+	 */
+	public List<ValorCampo> getValores() {
+		return valores;
+	}
 
-    /**
-     * Método para establecer acciones.
-     *
-     * @param pAcciones
-     *            acciones a establecer
-     */
-    public void setAcciones(final List<AccionFormulario> pAcciones) {
-        acciones = pAcciones;
-    }
+	/**
+	 * Método de acceso a acciones.
+	 *
+	 * @return acciones
+	 */
+	public List<AccionFormulario> getAccionesPersonalizadas() {
+		return accionesPersonalizadas;
+	}
 
-    /**
-     * Obtiene el valor de un campo.
-     *
-     * @param idCampo
-     *            Id campo
-     * @return Valor campo
-     */
-    public ValorCampo getValorCampo(final String idCampo) {
-        return getValorCampoLista(idCampo, valores);
-    }
+	/**
+	 * Método para establecer acciones.
+	 *
+	 * @param pAcciones
+	 *            acciones a establecer
+	 */
+	public void setAccionesPersonalizadas(final List<AccionFormulario> pAcciones) {
+		accionesPersonalizadas = pAcciones;
+	}
 
-    /**
-     * Método de acceso a recursos.
-     *
-     * @return el recursos
-     */
-    public RecursosFormulario getRecursos() {
-        return recursos;
-    }
+	/**
+	 * Obtiene el valor de un campo.
+	 *
+	 * @param idCampo
+	 *            Id campo
+	 * @return Valor campo
+	 */
+	public ValorCampo getValorCampo(final String idCampo) {
+		return getValorCampoLista(idCampo, valores);
+	}
 
-    /**
-     * Método para settear el campo recursos.
-     *
-     * @param pRecursos
-     *            el recursos a settear
-     */
-    public void setRecursos(final RecursosFormulario pRecursos) {
-        recursos = pRecursos;
-    }
+	/**
+	 * Método de acceso a recursos.
+	 *
+	 * @return el recursos
+	 */
+	public RecursosFormulario getRecursos() {
+		return recursos;
+	}
 
-    /**
-     * Método para actualizar valores modificados.
-     *
-     * @param pValores
-     *            valores a establecer
-     */
-    public void setValoresCampo(final List<ValorCampo> pValores) {
-        for (final ValorCampo vc : pValores) {
-            setValorCampo(vc);
-        }
-    }
+	/**
+	 * Método para settear el campo recursos.
+	 *
+	 * @param pRecursos
+	 *            el recursos a settear
+	 */
+	public void setRecursos(final RecursosFormulario pRecursos) {
+		recursos = pRecursos;
+	}
 
-    /**
-     * Inicializa un campo.
-     *
-     * @param pConfCampo
-     *            Configuracion campo
-     * @param pValorCampo
-     *            valor campo
-     */
-    public void inicializaCampo(final ConfiguracionCampo pConfCampo,
-            final ValorCampo pValorCampo) {
-        this.configuracion.add(pConfCampo);
-        this.valores.add(pValorCampo);
-        this.valoresIniciales.add(pValorCampo.duplicar());
-    }
+	/**
+	 * Método para actualizar valores modificados.
+	 *
+	 * @param pValores
+	 *            valores a establecer
+	 */
+	public void setValoresCampo(final List<ValorCampo> pValores) {
+		for (final ValorCampo vc : pValores) {
+			setValorCampo(vc);
+		}
+	}
 
-    /**
-     * Establece valor campo.
-     *
-     * @param pvcNew
-     *            Valor campo
-     */
-    public void setValorCampo(final ValorCampo pvcNew) {
+	/**
+	 * Inicializa un campo.
+	 *
+	 * @param pConfCampo
+	 *            Configuracion campo
+	 * @param pValorCampo
+	 *            valor campo
+	 */
+	public void inicializaCampo(final ConfiguracionCampo pConfCampo, final ValorCampo pValorCampo) {
+		this.configuracion.add(pConfCampo);
+		this.valores.add(pValorCampo);
+		this.valoresIniciales.add(pValorCampo.duplicar());
+	}
 
-        // Obtenemos valor actual campo
-        final ValorCampo vcOld = getValorCampoLista(pvcNew.getId(), valores);
+	/**
+	 * Establece valor campo.
+	 *
+	 * @param pvcNew
+	 *            Valor campo
+	 */
+	public void setValorCampo(final ValorCampo pvcNew) {
 
-        // Comprobamos si el campo existe
-        if (vcOld == null) {
-            throw new CampoFormularioNoExisteException(this.getIdFormulario(),
-                    pvcNew.getId());
-        }
+		// Obtenemos valor actual campo
+		final ValorCampo vcOld = getValorCampoLista(pvcNew.getId(), valores);
 
-        // Verificamos si es del tipo correcto
-        if (vcOld.getTipo() != pvcNew.getTipo()) {
-            throw new TipoValorCampoFormularioException(pvcNew.getId());
-        }
+		// Comprobamos si el campo existe
+		if (vcOld == null) {
+			throw new CampoFormularioNoExisteException(this.getIdFormulario(), pvcNew.getId());
+		}
 
-        if (this.getConfiguracionCampo(vcOld.getId())
-                .getModificable() == TypeSiNo.NO) {
-            final ValorCampo vcInicial = getValorCampoLista(pvcNew.getId(),
-                    valoresIniciales);
-            if (!pvcNew.esValorIgual(vcInicial)) {
-                throw new ErrorCampoNoModificableException(
-                        "El campo " + vcOld.getId() + " no es modificable");
-            }
-        }
+		// Verificamos si es del tipo correcto
+		if (vcOld.getTipo() != pvcNew.getTipo()) {
+			throw new TipoValorCampoFormularioException(pvcNew.getId());
+		}
 
-        // En funcion del tipo establecemos el valor
-        switch (vcOld.getTipo()) {
-        case SIMPLE:
-            ((ValorCampoSimple) vcOld)
-                    .setValor(((ValorCampoSimple) pvcNew).getValor());
-            break;
-        case INDEXADO:
-            ((ValorCampoIndexado) vcOld)
-                    .setValor(((ValorCampoIndexado) pvcNew).getValor());
-            break;
-        case LISTA_INDEXADOS:
-            ((ValorCampoListaIndexados) vcOld)
-                    .setValor(((ValorCampoListaIndexados) pvcNew).getValor());
-            break;
-        default:
-            throw new TipoNoControladoException(
-                    "Tipo de valor de campo no permitido: "
-                            + vcOld.getTipo().name());
-        }
+		if (this.getConfiguracionCampo(vcOld.getId()).getModificable() == TypeSiNo.NO) {
+			final ValorCampo vcInicial = getValorCampoLista(pvcNew.getId(), valoresIniciales);
+			if (!pvcNew.esValorIgual(vcInicial)) {
+				throw new ErrorCampoNoModificableException("El campo " + vcOld.getId() + " no es modificable");
+			}
+		}
 
-    }
+		// En funcion del tipo establecemos el valor
+		switch (vcOld.getTipo()) {
+		case SIMPLE:
+			((ValorCampoSimple) vcOld).setValor(((ValorCampoSimple) pvcNew).getValor());
+			break;
+		case INDEXADO:
+			((ValorCampoIndexado) vcOld).setValor(((ValorCampoIndexado) pvcNew).getValor());
+			break;
+		case LISTA_INDEXADOS:
+			((ValorCampoListaIndexados) vcOld).setValor(((ValorCampoListaIndexados) pvcNew).getValor());
+			break;
+		default:
+			throw new TipoNoControladoException("Tipo de valor de campo no permitido: " + vcOld.getTipo().name());
+		}
 
-    /**
-     * Obtiene la configuración de un campo.
-     *
-     * @param idCampo
-     *            Id campo
-     * @return Configuración campo
-     */
-    public ConfiguracionCampo getConfiguracionCampo(final String idCampo) {
-        ConfiguracionCampo res = null;
-        for (final ConfiguracionCampo cc : configuracion) {
-            if (cc.getId().equals(idCampo)) {
-                res = cc;
-                break;
-            }
-        }
-        return res;
-    }
+	}
 
-    /**
-     * Obtiene valor campo de una lista de valores.
-     *
-     * @param pIdCampo
-     *            Id campo
-     * @param pListaValores
-     *            Lista de valores
-     * @return Valor campo
-     */
-    private ValorCampo getValorCampoLista(final String pIdCampo,
-            final List<ValorCampo> pListaValores) {
-        ValorCampo res = null;
-        for (final ValorCampo vc : pListaValores) {
-            if (vc.getId().equals(pIdCampo)) {
-                res = vc;
-                break;
-            }
-        }
-        return res;
-    }
+	/**
+	 * Obtiene la configuración de un campo.
+	 *
+	 * @param idCampo
+	 *            Id campo
+	 * @return Configuración campo
+	 */
+	public ConfiguracionCampo getConfiguracionCampo(final String idCampo) {
+		ConfiguracionCampo res = null;
+		for (final ConfiguracionCampo cc : configuracion) {
+			if (cc.getId().equals(idCampo)) {
+				res = cc;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Obtiene valor campo de una lista de valores.
+	 *
+	 * @param pIdCampo
+	 *            Id campo
+	 * @param pListaValores
+	 *            Lista de valores
+	 * @return Valor campo
+	 */
+	private ValorCampo getValorCampoLista(final String pIdCampo, final List<ValorCampo> pListaValores) {
+		ValorCampo res = null;
+		for (final ValorCampo vc : pListaValores) {
+			if (vc.getId().equals(pIdCampo)) {
+				res = vc;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Método de acceso a indiceDef.
+	 *
+	 * @return indiceDef
+	 */
+	public int getIndiceDef() {
+		return indiceDef;
+	}
+
+	/**
+	 * Método para establecer indiceDef.
+	 *
+	 * @param indiceDef
+	 *            indiceDef a establecer
+	 */
+	public void setIndiceDef(int indiceDef) {
+		this.indiceDef = indiceDef;
+	}
+
+	/**
+	 * Método de acceso a valoresIniciales.
+	 *
+	 * @return valoresIniciales
+	 */
+	public List<ValorCampo> getValoresIniciales() {
+		return valoresIniciales;
+	}
 
 }

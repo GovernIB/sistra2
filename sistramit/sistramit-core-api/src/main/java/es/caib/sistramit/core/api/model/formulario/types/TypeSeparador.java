@@ -36,24 +36,4 @@ public enum TypeSeparador {
 		return stringValueSeparador;
 	}
 
-	/**
-	 * Convierte desde string.
-	 *
-	 * @param text
-	 *            string
-	 * @return tipo
-	 */
-	public static TypeSeparador fromString(final String text) {
-		TypeSeparador respuesta = null;
-		if (text != null) {
-			for (final TypeSeparador b : TypeSeparador.values()) {
-				if (text.equalsIgnoreCase(b.toString())) {
-					respuesta = b;
-					break;
-				}
-			}
-		}
-		return respuesta;
-	}
-
 }

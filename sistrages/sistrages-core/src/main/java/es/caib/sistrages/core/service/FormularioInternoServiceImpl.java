@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.component.FormRenderComponent;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 
@@ -35,6 +36,9 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	/** DAO Fichero Externo. */
 	@Autowired
 	FicheroExternoDao ficheroExternoDao;
+
+	@Autowired
+	FormRenderComponent formRenderComponent;
 
 	/*
 	 * (non-Javadoc)
@@ -200,6 +204,13 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@NegocioInterceptor
 	public String getIdentificadorFormularioInterno(final Long idFormulario) {
 		return formIntDao.getIdentificadorFormularioInterno(idFormulario);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public String generaPaginaHTMLEditor(final Long pIdForm, final Long pPage, final String pIdComponente,
+			final String pLang, final String pContexto) {
+		return formRenderComponent.generaPaginaHTMLEditor(pIdForm, pPage, pIdComponente, pLang, pContexto);
 	}
 
 }

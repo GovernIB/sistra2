@@ -40,24 +40,4 @@ public enum TypeSelector {
 		return stringValueSelector;
 	}
 
-	/**
-	 * Convierte desde string.
-	 *
-	 * @param text
-	 *            string
-	 * @return tipo
-	 */
-	public static TypeSelector fromString(final String text) {
-		TypeSelector respuesta = null;
-		if (text != null) {
-			for (final TypeSelector b : TypeSelector.values()) {
-				if (text.equalsIgnoreCase(b.toString())) {
-					respuesta = b;
-					break;
-				}
-			}
-		}
-		return respuesta;
-	}
-
 }

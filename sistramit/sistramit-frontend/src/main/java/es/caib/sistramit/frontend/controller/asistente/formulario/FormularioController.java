@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import es.caib.sistramit.core.api.model.comun.types.TypeAviso;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
+import es.caib.sistramit.core.api.model.formulario.AccionFormularioNormalizada;
+import es.caib.sistramit.core.api.model.formulario.AccionFormularioPersonalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoCP;
@@ -208,12 +210,12 @@ public final class FormularioController extends TramitacionController {
 
 		// Acciones
 		final List<AccionFormulario> acciones = new ArrayList<>();
-		acciones.add(new AccionFormulario(TypeAccionFormularioNormalizado.ANTERIOR));
-		acciones.add(new AccionFormulario(TypeAccionFormularioNormalizado.SIGUIENTE));
-		acciones.add(new AccionFormulario(TypeAccionFormularioNormalizado.FINALIZAR));
-		acciones.add(new AccionFormulario(TypeAccionFormularioNormalizado.SALIR));
-		acciones.add(new AccionFormulario(TypeAccionFormularioPersonalizado.PERSONALIZADA, "accionPersonalizada_1",
-				TypeSiNo.SI));
+		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.ANTERIOR));
+		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.SIGUIENTE));
+		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.FINALIZAR));
+		acciones.add(new AccionFormularioNormalizada(TypeAccionFormularioNormalizado.SALIR));
+		acciones.add(new AccionFormularioPersonalizada(TypeAccionFormularioPersonalizado.PERSONALIZADA, "accion 1",
+				"accionPersonalizada_1", "class1", true));
 		pf.setAcciones(acciones);
 
 		// Respuesta

@@ -27,6 +27,7 @@ import es.caib.sistrages.core.api.model.ValorParametroDominio;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.component.FormRenderComponent;
 import es.caib.sistrages.core.service.component.FuenteDatosComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
@@ -118,6 +119,9 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	 */
 	@Autowired
 	FuenteDatosComponent fuenteDatosComponent;
+
+	@Autowired
+	FormRenderComponent formRenderComponent;
 
 	@Override
 	@NegocioInterceptor
@@ -248,8 +252,7 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public String getPaginaFormularioHTMLAsistente(final Long pIdPage, final String pLang) {
-		// TODO PENDIENTE
-		return "<html/>";
+		return formRenderComponent.generaPaginaHTMLAsistente(pIdPage, pLang);
 	}
 
 	@Override

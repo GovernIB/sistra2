@@ -24,6 +24,10 @@ public enum TypeTexto {
 	 */
 	FECHA("fe"),
 	/**
+	 * Texto hora (Código String: ho).
+	 */
+	HORA("ho"),
+	/**
 	 * Texto fecha (Código String: em).
 	 */
 	EMAIL("em"),
@@ -66,26 +70,6 @@ public enum TypeTexto {
 	@Override
 	public String toString() {
 		return stringValueTexto;
-	}
-
-	/**
-	 * Convierte desde string.
-	 *
-	 * @param text
-	 *            string
-	 * @return tipo
-	 */
-	public static TypeTexto fromString(final String text) {
-		TypeTexto respuesta = null;
-		if (text != null) {
-			for (final TypeTexto b : TypeTexto.values()) {
-				if (text.equalsIgnoreCase(b.toString())) {
-					respuesta = b;
-					break;
-				}
-			}
-		}
-		return respuesta;
 	}
 
 }
