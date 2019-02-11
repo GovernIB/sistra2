@@ -23,6 +23,7 @@ import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.exception.CargaConfiguracionException;
 import es.caib.sistramit.core.api.exception.PluginErrorException;
+import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -58,8 +59,13 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	@Override
 	public DefinicionTramiteSTG recuperarDefinicionTramite(final String idTramite, final int version,
 			final String idioma) {
-		final RVersionTramite definicionVersion = sistragesComponent.recuperarDefinicionTramite(idTramite, version,
-				idioma);
+		RVersionTramite definicionVersion = null;
+		final TypeEntorno entorno = TypeEntorno.fromString(readPropiedad(TypePropiedadConfiguracion.ENTORNO, false));
+		if (entorno == TypeEntorno.DESARROLLO) {
+			definicionVersion = sistragesComponent.recuperarDefinicionTramiteNoCache(idTramite, version, idioma);
+		} else {
+			definicionVersion = sistragesComponent.recuperarDefinicionTramite(idTramite, version, idioma);
+		}
 		return new DefinicionTramiteSTG(new Date(), definicionVersion);
 	}
 

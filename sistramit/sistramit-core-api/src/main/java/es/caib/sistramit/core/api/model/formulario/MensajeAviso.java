@@ -1,4 +1,6 @@
-package es.caib.sistramit.core.service.model.formulario.interno;
+package es.caib.sistramit.core.api.model.formulario;
+
+import java.io.Serializable;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeAviso;
 
@@ -9,17 +11,18 @@ import es.caib.sistramit.core.api.model.comun.types.TypeAviso;
  * @author Indra
  *
  */
-public final class MensajeAviso {
+@SuppressWarnings("serial")
+public final class MensajeAviso implements Serializable {
 
 	/**
 	 * Tipo aviso.
 	 */
-	private TypeAviso tipoAviso;
+	private TypeAviso tipo;
 
 	/**
 	 * Mensaje aviso.
 	 */
-	private String mensajeAviso;
+	private String texto;
 
 	/**
 	 * Constructor.
@@ -38,8 +41,8 @@ public final class MensajeAviso {
 	 */
 	public MensajeAviso(final TypeAviso pTipoAviso, final String pMensajeAviso) {
 		super();
-		tipoAviso = pTipoAviso;
-		mensajeAviso = pMensajeAviso;
+		tipo = pTipoAviso;
+		texto = pMensajeAviso;
 	}
 
 	/**
@@ -47,8 +50,8 @@ public final class MensajeAviso {
 	 *
 	 * @return tipoAviso
 	 */
-	public TypeAviso getTipoAviso() {
-		return tipoAviso;
+	public TypeAviso getTipo() {
+		return tipo;
 	}
 
 	/**
@@ -57,8 +60,8 @@ public final class MensajeAviso {
 	 * @param pTipoAviso
 	 *            tipoAviso a establecer
 	 */
-	public void setTipoAviso(final TypeAviso pTipoAviso) {
-		tipoAviso = pTipoAviso;
+	public void setTipo(final TypeAviso pTipoAviso) {
+		tipo = pTipoAviso;
 	}
 
 	/**
@@ -66,8 +69,8 @@ public final class MensajeAviso {
 	 *
 	 * @return mensajeAviso
 	 */
-	public String getMensajeAviso() {
-		return mensajeAviso;
+	public String getTexto() {
+		return texto;
 	}
 
 	/**
@@ -76,8 +79,8 @@ public final class MensajeAviso {
 	 * @param pMensajeAviso
 	 *            mensajeAviso a establecer
 	 */
-	public void setMensajeAviso(final String pMensajeAviso) {
-		mensajeAviso = pMensajeAviso;
+	public void setTexto(final String pMensajeAviso) {
+		texto = pMensajeAviso;
 	}
 
 }

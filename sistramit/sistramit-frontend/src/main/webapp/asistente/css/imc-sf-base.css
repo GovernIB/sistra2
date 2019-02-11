@@ -398,6 +398,10 @@ aside address { display: inline; }
 .imc-missatge[data-accio='formSurt'] button[data-tipus="cancela"] { display: inline-block; }
 
 
+
+.imc-missatge.imc--no-pot-guardar[data-accio='formSurt'] button[data-tipus="desa"] { display: none; }
+
+
 /* missatge inline */
 
 .imc-pas--missatge-error { padding: 1.5em 1em 1.5em 6em; background: transparent url(imgs/icones/ico_error.svg) no-repeat 1.5em 1em / auto 3em; }

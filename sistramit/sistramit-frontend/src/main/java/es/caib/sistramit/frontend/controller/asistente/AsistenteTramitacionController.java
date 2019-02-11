@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import es.caib.sistra2.commons.utils.CifradoUtil;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
+import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.WarningFrontException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
@@ -32,12 +33,16 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
+import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
+import es.caib.sistramit.core.api.service.SystemService;
 import es.caib.sistramit.frontend.SesionHttp;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
@@ -56,11 +61,15 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 	/** Sesion. */
 	@Autowired
-	SesionHttp sesionHttp;
+	private SesionHttp sesionHttp;
 
 	/** Security service. */
 	@Autowired
-	SecurityService securityService;
+	private SecurityService securityService;
+	/** Security service. */
+
+	@Autowired
+	private SystemService systemService;
 
 	/** Url redireccion asistente. */
 	private static final String URL_REDIRIGIR_ASISTENTE = "asistente/redirigirAsistente";
@@ -354,6 +363,14 @@ public class AsistenteTramitacionController extends TramitacionController {
 			props.setProperty(key, value);
 		}
 
+		// Metemos version sistra2 para cachear js/css por versión (si es SNAPSHOT
+		// metemos timestamp para forzar recuperación)
+		String version = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.VERSION);
+		if (StringUtils.endsWith(version, "SNAPSHOT")) {
+			version += "-" + System.currentTimeMillis();
+		}
+		props.setProperty("sistra2_version", version);
+
 		return new ModelAndView("asistente/literales", "literales", props.entrySet());
 	}
 
@@ -463,6 +480,64 @@ public class AsistenteTramitacionController extends TramitacionController {
 		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", "firmaClienteVerificada", null,
 				TypeRespuestaJSON.SUCCESS);
 		this.setMensajeAsistente(ma);
+
+		// Redirigimos a carga asistente
+		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
+
+	}
+
+	/**
+	 * Retorno desde gestor formularios interno.
+	 *
+	 * @param idPaso
+	 *            id paso
+	 * @param idFormulario
+	 *            id formulario
+	 * @param ticket
+	 *            id sesión formulario
+	 * @return Actualiza datos formulario y recarga asistente
+	 */
+	@RequestMapping(value = "/retornoGestorFormularioInterno.html")
+	public ModelAndView retornoGestorFormularioInterno(@RequestParam("idPaso") final String idPaso,
+			@RequestParam("idFormulario") final String idFormulario, @RequestParam("ticket") final String ticket) {
+
+		debug("Retorno gestor formulario interno: " + idFormulario + " - idSesionFormulario " + ticket);
+
+		// Obtenemos detalle tramite
+		final String idSesionTramitacion = getIdSesionTramitacion();
+		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
+
+		// Ejecutamos accion paso segun tipo paso
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada("idFormulario", idFormulario);
+		pParametros.addParametroEntrada("ticket", ticket);
+
+		TypeAccionPaso accionPaso = null;
+		if (dt.getTramite().getTipoPasoActual() == TypePaso.RELLENAR) {
+			accionPaso = TypeAccionPasoRellenar.GUARDAR_FORMULARIO;
+		} else if (dt.getTramite().getTipoPasoActual() == TypePaso.CAPTURAR) {
+			throw new ErrorFrontException("PENDIENTE IMPLEMENTAR");
+		} else {
+			throw new ErrorFrontException(
+					"No se permite guardar formulario para paso " + dt.getTramite().getTipoPasoActual());
+		}
+
+		final ResultadoAccionPaso respuestaGuardarFormulario = getFlujoTramitacionService()
+				.accionPaso(idSesionTramitacion, idPaso, accionPaso, pParametros);
+
+		final TypeSiNo cancelado = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("cancelado");
+		final TypeSiNo correcto = (TypeSiNo) respuestaGuardarFormulario.getParametroRetorno("correcto");
+		final String mensajeIncorrecto = (String) respuestaGuardarFormulario.getParametroRetorno("mensajeIncorrecto");
+
+		// Evaluamos si hay que mostrar mensaje
+		if (cancelado == TypeSiNo.NO && correcto == TypeSiNo.NO) {
+			final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", "noGuardado", mensajeIncorrecto,
+					TypeRespuestaJSON.SUCCESS);
+			this.setMensajeAsistente(ma);
+		}
+
+		debug("Formulario guardado: correcto = " + correcto + " - cancelado = " + cancelado);
 
 		// Redirigimos a carga asistente
 		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);

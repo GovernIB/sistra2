@@ -96,9 +96,4 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 				problemaDesc, anexo);
 	}
 
-	@Override
-	public String simularRellenarFormulario(final String idSesionTramitacion, final String xml) {
-		return flujoTramitacionService.simularRellenarFormulario(idSesionTramitacion, xml);
-	}
-
 }

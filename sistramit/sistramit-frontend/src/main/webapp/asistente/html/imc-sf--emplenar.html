@@ -14,7 +14,7 @@
 		<ul>
 			{{formularis}}
 			<li data-completat="{{rellenado}}">
-				<a href="javascript:;" data-id="{{id}}" data-url="" data-obligatori="{{obligatorio}}">
+				<a href="#pas/{{pasID}}/formulari/{{id}}" data-id="{{id}}" data-url="" data-obligatori="{{obligatorio}}">
 					<div class="imc--formulari"><span></span></div>
 					{{if obligatorio|equals>s}}
 					<div class="imc--tipus imc--ogligatori"><span></span></div>
@@ -84,12 +84,31 @@
 </div>
 
 <!-- formulari -->
-<div class="imc-formulari" id="imc-formulari">
+<div class="imc-formulari" id="imc-formulari" aria-hidden="true">
 	<div class="imc--c">
 
-		<button type="button" id="imc-bt-iframe-tanca"><span>Tanca formulari</span></button>
+		<!--<iframe id="imc-formulari-iframe" src="" scrolling="yes" frameborder="0"></iframe>-->
 
-		<iframe id="imc-formulari-iframe" src="" scrolling="yes" frameborder="0"></iframe>
+		<div class="imc--finestra">
+
+			<div class="imc--marc">
+
+				<div id="imc-forms-ajuda" class="imc--ajuda">
+					<strong>Ayuda activada</strong>
+					<button type="button" id="imc-bt-ajuda" class="imc-bt"><span>Desactivar</span></button>
+				</div>
+
+				<button type="button" id="imc-bt-iframe-tanca" class="imc-bt imc--ico imc--form-tanca" data-accio="tanca"><span>Tanca formulari</span></button>
+
+			</div>
+
+			<h3><span>Sol·licitud de primera expedició o renovació de llicència de pesca recreativa inmediata (Únicament vàlida desde terra)</span></h3>
+
+			<div class="imc--contingut imc-form">
+
+			</div>
+
+		</div>
 
 	</div>
 </div>

@@ -52,6 +52,11 @@ public final class SistragesComponentImpl implements SistragesComponent {
 	}
 
 	@Override
+	public RVersionTramite recuperarDefinicionTramiteNoCache(String idTramite, int version, String idioma) {
+		return sistragesApiComponent.recuperarDefinicionTramite(idTramite, version, idioma);
+	}
+
+	@Override
 	public void evictDefinicionTramite(final String idTramite, final int version, final String idioma) {
 		log.debug("evictDefinicionTramite: " + idTramite + "-" + version + "-" + idioma);
 	}
@@ -75,4 +80,5 @@ public final class SistragesComponentImpl implements SistragesComponent {
 	public void evictDefinicionDominio(final String idDominio) {
 		log.debug("evictDefinicionDominio: " + idDominio);
 	}
+
 }

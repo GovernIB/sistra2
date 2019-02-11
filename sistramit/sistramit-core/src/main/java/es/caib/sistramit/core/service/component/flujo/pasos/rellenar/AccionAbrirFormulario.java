@@ -180,6 +180,7 @@ public final class AccionAbrirFormulario implements AccionPaso {
 		difi.setIdSesionTramitacion(pVariablesFlujo.getIdSesionTramitacion());
 		difi.setInfoAutenticacion(pVariablesFlujo.getUsuarioAutenticado());
 		difi.setXmlDatosActuales(pDipa.getDatosFormulario(pDefinicionFormulario.getIdentificador()));
+		difi.setTituloProcedimiento(pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getDescripcion());
 		final ParametrosAperturaFormulario p = new ParametrosAperturaFormulario();
 		if (pParametrosApertura != null) {
 			for (final String codigo : pParametrosApertura.keySet()) {

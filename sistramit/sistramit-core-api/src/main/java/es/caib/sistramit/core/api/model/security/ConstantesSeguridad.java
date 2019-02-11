@@ -33,6 +33,11 @@ public final class ConstantesSeguridad {
 	 */
 	public static final String PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_EXTERNO = "/asistente/retornoGestorFormularioExterno.html";
 	/**
+	 * Punto de entrada para retornar desde gestor de formularios interno (no
+	 * funciona a través de ticket).
+	 */
+	public static final String PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO = "/asistente/retornoGestorFormularioInterno.html";
+	/**
 	 * Punto de entrada para retornar desde firma (no funciona a través de ticket).
 	 */
 	public static final String PUNTOENTRADA_RETORNO_FIRMA_EXTERNO = "/asistente/retornoFirmaExterno.html";

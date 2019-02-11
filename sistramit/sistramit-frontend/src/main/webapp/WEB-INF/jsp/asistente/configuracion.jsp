@@ -39,6 +39,11 @@ var APP_FORM_URL = APP_SERVIDOR + "rf/abrirFormulario.json"
 	,APP_FORM_PDF = APP_SERVIDOR + "rf/descargarFormulario.html"
 	,APP_FORM_XML = APP_SERVIDOR + "rf/descargarXmlFormulario.html";
 
+var APP_FORM_CARREGA = APP_SERVIDOR + "fm/cargarFormulario.json"
+	,APP_FORM_GUARDA = APP_SERVIDOR + "fm/guardarPagina.json"
+	,APP_FORM_AVALUA_CAMP = APP_SERVIDOR + "fm/evaluarCambioCampo.json";
+
+
 
 /* pas annexar */
 

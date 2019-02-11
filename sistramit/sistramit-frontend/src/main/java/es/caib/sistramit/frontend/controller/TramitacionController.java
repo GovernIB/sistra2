@@ -111,6 +111,32 @@ public abstract class TramitacionController {
 	}
 
 	/**
+	 * Obtiene el flujo de formulario generando una excepcion si no existe.
+	 *
+	 * @return sesionFormulario
+	 */
+	protected final String getIdSesionFormuarioActiva() {
+		final String ft = getIdSesionFormulario();
+		if (ft == null) {
+			throw new WarningFrontException("No existe instancia sesion de formulario en sesion");
+		}
+		return ft;
+	}
+
+	/**
+	 * Método que obtiene el id de sesion de formulario.
+	 *
+	 * @return sesionFormulario
+	 */
+	protected final String getIdSesionFormulario() {
+		String idSesion = null;
+		if (sesionHttp != null) {
+			idSesion = sesionHttp.getIdSesionFormulario();
+		}
+		return idSesion;
+	}
+
+	/**
 	 * Obtiene el flujo de tramitación generando una excepcion si no existe.
 	 *
 	 * @return sesionTramitacion

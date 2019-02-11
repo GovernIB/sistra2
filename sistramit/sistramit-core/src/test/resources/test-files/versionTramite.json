@@ -1,0 +1,558 @@
+{
+  "timestamp": "1549379042881",
+  "identificador": "TEST-JUNIT",
+  "version": 1,
+  "release": 3,
+  "idEntidad": "A04013511",
+  "idArea": "TESTS",
+  "idioma": "es",
+  "tipoFlujo": "N",
+  "dominios": [
+    "DOM-JUNIT"
+  ],
+  "propiedades": {
+    "autenticado": true,
+    "nivelQAA": 2,
+    "noAutenticado": true,
+    "idiomas": [
+      "es",
+      "ca"
+    ],
+    "persistente": true,
+    "diasPersistencia": 0,
+    "scriptPersonalizacion": null,
+    "scriptParametrosIniciales": null
+  },
+  "controlAcceso": {
+    "activo": true,
+    "debug": false,
+    "limitarTramitacion": false,
+    "limiteTramitacionInicios": 0,
+    "limiteTramitacionIntervalo": 0
+  },
+  "pasos": [
+    {
+      "type": "RPasoTramitacionDebeSaber",
+      "identificador": "ds",
+      "tipo": "ds",
+      "pasoFinal": false,
+      "scriptNavegacion": null,
+      "instruccionesInicio": ""
+    },
+    {
+      "type": "RPasoTramitacionRellenar",
+      "identificador": "rf",
+      "tipo": "rf",
+      "pasoFinal": false,
+      "scriptNavegacion": null,
+      "formularios": [
+        {
+          "identificador": "FOR-1",
+          "descripcion": "Formulario 1",
+          "obligatoriedad": "S",
+          "scriptObligatoriedad": null,
+          "firmar": true,
+          "scriptFirmantes": null,
+          "presentarPreregistro": false,
+          "scriptParametrosApertura": null,
+          "scriptDatosIniciales": {
+            "script": "DATOS_INICIALES_FORMULARIO.setValorCompuesto('SEL_LISTA', 'V2','Valor 2');\r\nDATOS_INICIALES_FORMULARIO.setValor('CHK_ESTADO', 'S'); \r\nDATOS_INICIALES_FORMULARIO.setValor('TXT_NORMAL', 'VALOR INICIAL');",
+            "literales": null
+          },
+          "scriptPostguardar": {
+            "script": "PLUGIN_LOG.debug(PLUGIN_FORMULARIOS.getValor('FOR-1','TXT_NORMAL'));",
+            "literales": null
+          },
+          "interno": true,
+          "formularioInterno": {
+            "mostrarTitulo": true,
+            "titulo": "Formulario 1",
+            "plantillas": [
+              {
+                "identificador": "PDF",
+                "claseFormateador": "es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl.FormateadorGenerico",
+                "ficheroPlantilla": null,
+                "defecto": true
+              }
+            ],
+            "scriptPlantillas": null,
+            "paginas": [
+              {
+                "htmlB64": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGJvZHk+PGZvcm0+PGRpdiBpZD0iaW1jLWZvcm1zLWZvcm11bGFyaSIgY2xhc3M9ImltYy1mb3Jtcy1mb3JtdWxhcmkgaW1jLWZvcm0iPjxkaXYgY2xhc3M9ImltYy1mb3JtLWNvbnRpbmd1dCI+PGg0Y2xhc3M9ImltYy1lbGVtZW50IGltYy1zZWNjaW8iPjxzcGFuIGNsYXNzPSJpbWMtc2UtbWFyY2EiPkE8L3NwYW4+PHNwYW4gY2xhc3M9ImltYy1zZS10aXRvbCI+VGV4dG9zPC9zcGFuPjwvaDQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGlkPSJMNzUiPjwvZGl2PjxkaXYgZGF0YS1pZD0iVFhUX05PUk1BTCIgY2xhc3M9ImltYy1lbGVtZW50ICIgZGF0YS10eXBlPSJ0ZXh0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlRYVF9OT1JNQUwiPlRleHRvPC9sYWJlbD48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWwtY29udHJvbCI+PGlucHV0IGlkPSJUWFRfTk9STUFMIiB0eXBlPSJ0ZXh0Ii8+PC9kaXY+PC9kaXY+PGRpdiBkYXRhLWlkPSJUWFRfRkVDSEEiIGNsYXNzPSJpbWMtZWxlbWVudCAiIGRhdGEtdHlwZT0iZGF0ZSI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJUWFRfRkVDSEEiPkZlY2hhPC9sYWJlbD48L2Rpdj48ZGl2IGNsYXNzPSJpbWMtZWwtY29udHJvbCI+PGlucHV0IGlkPSJUWFRfRkVDSEEiIHR5cGU9ImRhdGUiLz48L2Rpdj48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9IT1JBIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRpbWUiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX0hPUkEiPkhvcmE8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48aW5wdXQgaWQ9IlRYVF9IT1JBIiB0eXBlPSJ0aW1lIi8+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGlkPSJMNjkiPjwvZGl2PjxoNGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5CPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPlNlbGVjdG9yZXM8L3NwYW4+PC9oND48ZGl2IGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VwYXJhZG9yIGltYy1zZXAtc2FsdC1jYXJybyIgaWQ9Ikw2OCI+PC9kaXY+PGRpdiBkYXRhLWlkPSJTRUxfTElTVEEiIGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtZWwtc2VsZWN0b3IiIGRhdGEtdHlwZT0ic2VsZWN0Ij48ZGl2IGNsYXNzPSJpbWMtZWwtZXRpcXVldGEiPjxsYWJlbCBmb3I9IlNFTF9MSVNUQSI+U2VsZWN0b3I8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48ZGl2IGNsYXNzPSJpbWMtc2VsZWN0IGltYy1vcGNpb25zIj48YSBjbGFzcz0iaW1jLXNlbGVjdCIgdGFiaW5kZXg9IjAiIGhyZWY9ImphdmFzY3JpcHQ6OyIgc3R5bGU9IiI+PC9hPjxpbnB1dCBpZD0iU0VMX0xJU1RBIiB0eXBlPSJoaWRkZW4iPjwvZGl2PjwvZGl2PjwvZGl2PjxmaWVsZHNldCBkYXRhLWlkPSJTRUxfTVVMVElQTEUiIGNsYXNzPSJpbWMtZWxlbWVudCIgZGF0YS10eXBlPSJjaGVjay1saXN0Ij48bGVnZW5kIGNsYXNzPSJpbWMtbGFiZWwiPlNlbGVjdG9yPC9sZWdlbmQ+PHVsPjwvdWw+PC9maWVsZHNldD48ZmllbGRzZXQgZGF0YS1pZD0iU0VMX1VOSUNBIiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLWVsLWhvcml6b250YWwiIGRhdGEtdHlwZT0icmFkaW8tbGlzdCI+PGxlZ2VuZCBjbGFzcz0iaW1jLWxhYmVsIj5TZWxlY3RvcjwvbGVnZW5kPjx1bD48L3VsPjwvZmllbGRzZXQ+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGlkPSJMNzMiPjwvZGl2PjxoNGNsYXNzPSJpbWMtZWxlbWVudCBpbWMtc2VjY2lvIj48c3BhbiBjbGFzcz0iaW1jLXNlLW1hcmNhIj5DPC9zcGFuPjxzcGFuIGNsYXNzPSJpbWMtc2UtdGl0b2wiPkV2YWx1YXIgY2FtYmlvIGNhbXBvIDwvc3Bhbj48L2g0PjxkaXYgY2xhc3M9ImltYy1lbGVtZW50IGltYy1zZXBhcmFkb3IgaW1jLXNlcC1zYWx0LWNhcnJvIiBpZD0iTDcxIj48L2Rpdj48ZGl2IGRhdGEtaWQ9IkNIS19FU1RBRE8iY2xhc3M9ImltYy1lbGVtZW50IGltYy1lbC1jaGVjayIgZGF0YS10eXBlPSJjaGVjayI+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxkaXYgY2xhc3M9ImltYy1pbnB1dC1jaGVjayI+PGlucHV0IGlkPSJDSEtfRVNUQURPIiB0eXBlPSJjaGVja2JveCI+PGxhYmVsIGZvcj0iQ0hLX0VTVEFETyI+U29sbyBsZWN0dXJhPC9sYWJlbD48L2Rpdj48L2Rpdj48L2Rpdj48ZGl2IGRhdGEtaWQ9IlRYVF9DQUxDIiBjbGFzcz0iaW1jLWVsZW1lbnQgIiBkYXRhLXR5cGU9InRleHQiPjxkaXYgY2xhc3M9ImltYy1lbC1ldGlxdWV0YSI+PGxhYmVsIGZvcj0iVFhUX0NBTEMiPkNhbGN1bGFkbzwvbGFiZWw+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsLWNvbnRyb2wiPjxpbnB1dCBpZD0iVFhUX0NBTEMiIHR5cGU9InRleHQiLz48L2Rpdj48L2Rpdj48ZGl2IGRhdGEtaWQ9IlNFTF9DQUxDIiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLWVsLXNlbGVjdG9yIiBkYXRhLXR5cGU9InNlbGVjdCI+PGRpdiBjbGFzcz0iaW1jLWVsLWV0aXF1ZXRhIj48bGFiZWwgZm9yPSJTRUxfQ0FMQyI+U2VsZWN0b3I8L2xhYmVsPjwvZGl2PjxkaXYgY2xhc3M9ImltYy1lbC1jb250cm9sIj48ZGl2IGNsYXNzPSJpbWMtc2VsZWN0IGltYy1vcGNpb25zIj48YSBjbGFzcz0iaW1jLXNlbGVjdCIgdGFiaW5kZXg9IjAiIGhyZWY9ImphdmFzY3JpcHQ6OyIgc3R5bGU9IiI+PC9hPjxpbnB1dCBpZD0iU0VMX0NBTEMiIHR5cGU9ImhpZGRlbiI+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iaW1jLWVsZW1lbnQgaW1jLXNlcGFyYWRvciBpbWMtc2VwLXNhbHQtY2Fycm8iIGlkPSJMNzIiPjwvZGl2PjwvZGl2PjwvZGl2PjwvZm9ybT48L2JvZHk+PC9odG1sPg==",
+                "paginaFinal": true,
+                "scriptValidacion": null,
+                "lineas": [
+                  {
+                    "componentes": [
+                      {
+                        "type": "RComponenteSeccion",
+                        "identificador": "ID_1549349633092",
+                        "tipo": "SC",
+                        "etiqueta": "Textos",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 6,
+                        "ayuda": "",
+                        "letra": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "componentes": [
+                      {
+                        "type": "RComponenteTextbox",
+                        "identificador": "TXT_NORMAL",
+                        "tipo": "CT",
+                        "etiqueta": "Texto",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoTexto": "NORMAL",
+                        "textoNormal": {
+                          "tamanyoMax": 50,
+                          "lineas": 1
+                        },
+                        "textoNumero": null,
+                        "textoIdentificacion": null,
+                        "textoExpRegular": null,
+                        "textoTelefono": null
+                      },
+                      {
+                        "type": "RComponenteTextbox",
+                        "identificador": "TXT_FECHA",
+                        "tipo": "CT",
+                        "etiqueta": "Fecha",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoTexto": "FECHA",
+                        "textoNormal": null,
+                        "textoNumero": null,
+                        "textoIdentificacion": null,
+                        "textoExpRegular": null,
+                        "textoTelefono": null
+                      },
+                      {
+                        "type": "RComponenteTextbox",
+                        "identificador": "TXT_HORA",
+                        "tipo": "CT",
+                        "etiqueta": "Hora",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoTexto": "HORA",
+                        "textoNormal": null,
+                        "textoNumero": null,
+                        "textoIdentificacion": null,
+                        "textoExpRegular": null,
+                        "textoTelefono": null
+                      }
+                    ]
+                  },
+                  {
+                    "componentes": [
+                      {
+                        "type": "RComponenteSeccion",
+                        "identificador": "ID_1549349632623",
+                        "tipo": "SC",
+                        "etiqueta": "Selectores",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 6,
+                        "ayuda": "",
+                        "letra": "B"
+                      }
+                    ]
+                  },
+                  {
+                    "componentes": [
+                      {
+                        "type": "RComponenteSelector",
+                        "identificador": "SEL_LISTA",
+                        "tipo": "SE",
+                        "etiqueta": "Selector",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoSelector": "DESPLEGABLE",
+                        "tipoListaValores": "F",
+                        "listaFija": [
+                          {
+                            "codigo": "V1",
+                            "descripcion": "Valor 1",
+                            "porDefecto": true
+                          },
+                          {
+                            "codigo": "V2",
+                            "descripcion": "Valor 2",
+                            "porDefecto": false
+                          }
+                        ],
+                        "listaDominio": null,
+                        "scriptListaValores": null
+                      },
+                      {
+                        "type": "RComponenteSelector",
+                        "identificador": "SEL_MULTIPLE",
+                        "tipo": "SE",
+                        "etiqueta": "Selector",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoSelector": "MULTIPLE",
+                        "tipoListaValores": "D",
+                        "listaFija": null,
+                        "listaDominio": {
+                          "dominio": "DOM-JUNIT",
+                          "campoCodigo": "CODIGO",
+                          "campoDescripcion": "DESCRIPCION",
+                          "parametros": []
+                        },
+                        "scriptListaValores": null
+                      },
+                      {
+                        "type": "RComponenteSelector",
+                        "identificador": "SEL_UNICA",
+                        "tipo": "SE",
+                        "etiqueta": "Selector",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoSelector": "UNICA",
+                        "tipoListaValores": "S",
+                        "listaFija": null,
+                        "listaDominio": null,
+                        "scriptListaValores": {
+                          "script": "DATOS_VALORESPOSIBLES.addValorPosible('S1','DS 1');\r\nDATOS_VALORESPOSIBLES.addValorPosible('S2','DS 2');",
+                          "literales": null
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentes": [
+                      {
+                        "type": "RComponenteSeccion",
+                        "identificador": "ID_1549349632804",
+                        "tipo": "SC",
+                        "etiqueta": "Evaluar cambio campo ",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 6,
+                        "ayuda": "",
+                        "letra": "C"
+                      }
+                    ]
+                  },
+                  {
+                    "componentes": [
+                      {
+                        "type": "RComponenteCheckbox",
+                        "identificador": "CHK_ESTADO",
+                        "tipo": "CK",
+                        "etiqueta": "Solo lectura",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": null,
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "valorChecked": "S",
+                        "valorNoChecked": "N"
+                      },
+                      {
+                        "type": "RComponenteTextbox",
+                        "identificador": "TXT_CALC",
+                        "tipo": "CT",
+                        "etiqueta": "Calculado",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": {
+                            "script": "var data = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\nDATOS_VALOR.setValor(data);",
+                            "literales": null
+                          },
+                          "scriptEstado": {
+                            "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\n\r\nDATOS_ESTADO.setSoloLectura(check == 'S');",
+                            "literales": null
+                          },
+                          "scriptValidacion": null
+                        },
+                        "tipoTexto": "NORMAL",
+                        "textoNormal": {
+                          "tamanyoMax": 50,
+                          "lineas": 1
+                        },
+                        "textoNumero": null,
+                        "textoIdentificacion": null,
+                        "textoExpRegular": null,
+                        "textoTelefono": null
+                      },
+                      {
+                        "type": "RComponenteSelector",
+                        "identificador": "SEL_CALC",
+                        "tipo": "SE",
+                        "etiqueta": "Selector",
+                        "mostrarEtiqueta": true,
+                        "alineacion": "I",
+                        "columnas": 1,
+                        "ayuda": "",
+                        "propiedadesCampo": {
+                          "obligatorio": false,
+                          "soloLectura": false,
+                          "noModificable": false,
+                          "scriptAutorrellenable": {
+                            "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\n\r\nif (PLUGIN_VALIDACIONES.esIgual(check, \"S\")) {\r\n  DATOS_VALOR.setValorCompuesto('1','DS 1');  \r\n} else {\r\n  DATOS_VALOR.setValorCompuesto('3','DS 3');  \r\n}",
+                            "literales": null
+                          },
+                          "scriptEstado": null,
+                          "scriptValidacion": null
+                        },
+                        "tipoSelector": "DESPLEGABLE",
+                        "tipoListaValores": "S",
+                        "listaFija": null,
+                        "listaDominio": null,
+                        "scriptListaValores": {
+                          "script": "var check = PLUGIN_DATOSFORMULARIO.getValor('CHK_ESTADO');\r\n\r\nif (PLUGIN_VALIDACIONES.esIgual(check, \"S\")) {\r\n  DATOS_VALORESPOSIBLES.addValorPosible('1','DS 1');\r\n  DATOS_VALORESPOSIBLES.addValorPosible('2','DS 2');\r\n} else {\r\n  DATOS_VALORESPOSIBLES.addValorPosible('3','DS 3');\r\n  DATOS_VALORESPOSIBLES.addValorPosible('4','DS 4');\r\n}",
+                          "literales": null
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "formularioExterno": null
+        }
+      ]
+    },
+    {
+      "type": "RPasoTramitacionAnexar",
+      "identificador": "ad",
+      "tipo": "ad",
+      "pasoFinal": false,
+      "scriptNavegacion": null,
+      "anexos": [
+        {
+          "identificador": "ANE-1",
+          "descripcion": "Anexo 1",
+          "obligatoriedad": "D",
+          "scriptDependencia": {
+            "script": "return 'S';",
+            "literales": null
+          },
+          "ayuda": {
+            "fichero": null,
+            "url": null,
+            "mensajeHtml": ""
+          },
+          "presentacion": "E",
+          "presentacionElectronica": {
+            "instancias": 1,
+            "extensiones": [
+              "pdf",
+              "odt"
+            ],
+            "tamanyoMax": 1024,
+            "tamanyoUnidad": "KB",
+            "convertirPDF": false,
+            "anexarFirmado": false,
+            "firmar": false,
+            "scriptFirmantes": null,
+            "scriptValidacion": null
+          }
+        },
+        {
+          "identificador": "ANE-2",
+          "descripcion": "Anexo 2",
+          "obligatoriedad": "S",
+          "scriptDependencia": null,
+          "ayuda": {
+            "fichero": null,
+            "url": null,
+            "mensajeHtml": ""
+          },
+          "presentacion": "E",
+          "presentacionElectronica": {
+            "instancias": 2,
+            "extensiones": [
+              "pdf",
+              "doc"
+            ],
+            "tamanyoMax": 1024,
+            "tamanyoUnidad": "KB",
+            "convertirPDF": false,
+            "anexarFirmado": false,
+            "firmar": false,
+            "scriptFirmantes": null,
+            "scriptValidacion": null
+          }
+        },
+        {
+          "identificador": "ANE-XML",
+          "descripcion": "Anexo XML",
+          "obligatoriedad": "S",
+          "scriptDependencia": null,
+          "ayuda": {
+            "fichero": null,
+            "url": null,
+            "mensajeHtml": ""
+          },
+          "presentacion": "E",
+          "presentacionElectronica": {
+            "instancias": 1,
+            "extensiones": [
+              "xml"
+            ],
+            "tamanyoMax": 1024,
+            "tamanyoUnidad": "KB",
+            "convertirPDF": false,
+            "anexarFirmado": false,
+            "firmar": false,
+            "scriptFirmantes": null,
+            "scriptValidacion": {
+              "script": "var dni = PLUGIN_VALIDACIONANEXO.getValorXml('//xml/dni');\r\nPLUGIN_LOG.debug('VALOR XML: ' + dni);\r\nif (!PLUGIN_VALIDACIONES.esIgual(dni,'11111111H')) {\r\n PLUGIN_ERROR.setExisteError(true);\r\n PLUGIN_ERROR.setTextoMensajeError('No coincide valor XML');\r\n}",
+              "literales": null
+            }
+          }
+        },
+        {
+          "identificador": "ANE-PDF",
+          "descripcion": "Anexo PDF",
+          "obligatoriedad": "S",
+          "scriptDependencia": null,
+          "ayuda": {
+            "fichero": null,
+            "url": null,
+            "mensajeHtml": ""
+          },
+          "presentacion": "E",
+          "presentacionElectronica": {
+            "instancias": 1,
+            "extensiones": [
+              "pdf"
+            ],
+            "tamanyoMax": 1024,
+            "tamanyoUnidad": "KB",
+            "convertirPDF": false,
+            "anexarFirmado": false,
+            "firmar": false,
+            "scriptFirmantes": null,
+            "scriptValidacion": {
+              "script": "var dni = PLUGIN_VALIDACIONANEXO.getValorPdf('SUJETOPASIVONIF');\r\nPLUGIN_LOG.debug('VALOR PDF: ' + dni);\r\nif (!PLUGIN_VALIDACIONES.esIgual(dni,'6666sq')) {\r\n\tPLUGIN_ERROR.setExisteError(true);\r\n\tPLUGIN_ERROR.setTextoMensajeError('No coincide valor PDF');\r\n}",
+              "literales": null
+            }
+          }
+        }
+      ],
+      "scriptAnexosDinamicos": null
+    },
+    {
+      "type": "RPasoTramitacionPagar",
+      "identificador": "pt",
+      "tipo": "pt",
+      "pasoFinal": false,
+      "scriptNavegacion": null,
+      "pagos": [
+        {
+          "identificador": "PAG-1",
+          "descripcion": "Pago 1",
+          "obligatoriedad": "S",
+          "tipo": "T",
+          "scriptDependencia": null,
+          "scriptPago": {
+            "script": "DATOS_PAGO.setPasarela('ATIB'); \r\nDATOS_PAGO.setOrganismo('ORG1'); \r\nDATOS_PAGO.setDetallePago('046','C1','T1', 100);",
+            "literales": null
+          },
+          "simularPago": true
+        }
+      ]
+    },
+    {
+      "type": "RPasoTramitacionRegistrar",
+      "identificador": "rt",
+      "tipo": "rt",
+      "pasoFinal": false,
+      "scriptNavegacion": null,
+      "destino": {
+        "oficinaRegistro": "codofi1",
+        "libroRegistro": "codlib.codofi1.2",
+        "tipoAsunto": "codtip3"
+      },
+      "scriptDestino": null,
+      "instruccionesPresentacionHtml": "",
+      "instruccionesTramitacionHtml": "",
+      "scriptPresentador": null,
+      "admiteRepresentacion": false,
+      "validaRepresentacion": false,
+      "scriptRepresentante": null,
+      "scriptValidar": null
+    }
+  ]
+}

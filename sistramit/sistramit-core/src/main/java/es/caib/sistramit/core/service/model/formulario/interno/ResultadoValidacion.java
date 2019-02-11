@@ -3,6 +3,8 @@ package es.caib.sistramit.core.service.model.formulario.interno;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.formulario.MensajeAviso;
+
 /**
  *
  * Resultado validacion.

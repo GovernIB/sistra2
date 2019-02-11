@@ -70,16 +70,18 @@
 	margin-right: .6em;
 }
 
-.imc--icones li div.imc--opcional { margin-right: 2em; }
+.imc--icones li div.imc--completat { margin-left: 2em; }
 
 .imc--icones li div.imc--ogligatori::before { background: #d66000 url(imgs/icones/ico_obligatori.svg) no-repeat center center / auto .9em; }
 .imc--icones li div.imc--opcional::before { background: #106fc8 url(imgs/icones/ico_opcional.svg) no-repeat center center / auto .9em; }
+.imc--icones li div.imc--depenent::before { background: #555 url(imgs/icones/ico_descendent.svg) no-repeat center center / auto .9em; }
 .imc--icones li div.imc--completat::before { background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
 .imc--icones li div.imc--no-completat::before { background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
 
 .imc--icones li div span { width: calc(100% - 4em); font-size: .8em; line-height: 1.1em; }
 
-/* iframe */
+
+/* formulari */
 
 .imc-formulari { position: fixed; z-index: -1; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
 .imc-formulari .imc--c { position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.7); }
@@ -105,19 +107,8 @@
 	transition: opacity .3s ease-out;
 }
 
-.imc-formulari button { display: none; }
 
-.imc-formulari iframe { position: fixed; z-index: 12; top: 50%; left: 50%; width: 100%; max-width: 70em; height: 100%; max-height: 50em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
-
-.imc-formulari iframe.imc--on {
-	visibility: visible;
-	opacity: 1;
-	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
-	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
-	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
-	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
-	transition: visibility 0 ease-out, opacity .3s ease-out;
-}
+/* formulari animació icona */
 
 .imc-ico-anim { position: fixed; z-index: 13; background: #8c8c8c url(imgs/icones/ico_form.svg) no-repeat center center / auto 1.7em; }
 
@@ -181,8 +172,62 @@
 
 .imc-ico-carrega-text { position: fixed; z-index: 12; top: 50%; left: 50%; width: 12em; height: 14em; color: #fff; text-align: center; transform: translate(-50%, -50%); }
 
-html.imc--iframe-mostrat,
-body.imc--iframe-mostrat { overflow: hidden; }
+html.imc--sense-scroll,
+body.imc--sense-scroll { overflow: hidden; }
+
+
+/* formulari contingut */
+
+.imc-formulari .imc--finestra { position: fixed; z-index: 12; top: 50%; left: 50%; width: 100%; max-width: 70em; height: 100%; max-height: 50em; background-color: #fff; transform: translate(-50%, -50%); visibility: hidden; opacity: 0; }
+
+.imc-formulari .imc--finestra.imc--on {
+	visibility: visible;
+	opacity: 1;
+	-webkit-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-moz-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-ms-transition: visibility 0 ease-out, opacity .3s ease-out;
+	-o-transition: visibility 0 ease-out, opacity .3s ease-out;
+	transition: visibility 0 ease-out, opacity .3s ease-out;
+}
+
+.imc-formulari .imc--marc { height: 3em; text-align: right; padding: .5em 1em; background-color: #4dba79; }
+
+.imc-formulari .imc--ajuda,
+.imc-formulari .imc--marc > button { display: inline-block; vertical-align: middle; }
+
+.imc-formulari .imc--marc > button { margin-left: 2em; }
+
+.imc-formulari .imc--marc button {
+    color: #fff;
+    background-color: #265d3c;
+}
+
+.imc-formulari .imc--marc button:hover,
+.imc-formulari .imc--marc button:focus {
+    background-color: #000;
+}
+
+.imc-formulari .imc--finestra .imc--ajuda {  }
+.imc-formulari .imc--finestra .imc--ajuda strong { font-weight: normal; color: #fff; padding-right: .7em; }
+.imc-formulari .imc--finestra .imc--ajuda strong::before {
+	content: "";
+	display: inline-block;
+	width: 2em;
+	height: 2em;
+	vertical-align: middle;
+	margin-right: .5em;
+	border-radius: 50%;
+	background: #fff url(imgs/icones/ico_info.svg) no-repeat center center / auto 1.2em;
+}
+.imc-formulari .imc--finestra .imc--ajuda button { height: 2em; }
+
+.imc-formulari .imc--finestra .imc--ajuda.imc--desactivada strong { color: #666; }
+.imc-formulari .imc--finestra .imc--ajuda.imc--desactivada strong::before { background-color: #999; }
+
+.imc-formulari .imc--finestra > h3 { height: 3.5em; padding: 1em; margin-bottom: 0; background-color: #eaeaea; }
+.imc-formulari .imc--finestra > h3 span { display: block; overflow: hidden; font-size: 1.2em; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; }
+
+.imc-formulari .imc--contingut { overflow: auto; overflow-x: hidden; position: relative; height: calc(100% - 6.5em); }
 
 
 /* media 

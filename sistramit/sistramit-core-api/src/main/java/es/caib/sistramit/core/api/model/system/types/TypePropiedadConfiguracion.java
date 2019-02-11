@@ -12,6 +12,10 @@ public enum TypePropiedadConfiguracion {
 
 	/** Entorno. */
 	ENTORNO("entorno"),
+	/** Versión. */
+	VERSION("sistra2.version"),
+	/** Ficheros externos. */
+	PATH_FICHEROS_EXTERNOS("ficherosExternos.path"),
 	/** STG Url. */
 	SISTRAGES_URL("sistrages.url"),
 	/** STG Url. */

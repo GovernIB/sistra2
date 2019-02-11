@@ -61,7 +61,5 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	void envioFormularioSoporte(String nif, String nombre, String telefono, String email, String problemaTipo,
 			String problemaDesc, AnexoFichero anexo);
 
-	// TODO BORRAR
-	String simularRellenarFormulario(String xml);
 
 }

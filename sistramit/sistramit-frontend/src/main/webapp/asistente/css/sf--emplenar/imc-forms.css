@@ -112,7 +112,7 @@
 
 /* errors */
 
-.imc-forms-errors { position: relative; max-width: 82em; padding: 1em 1em 1em 4em; margin: 1em 2em; background-color: #fff; border: 3px solid #edb2c7; }
+.imc-forms-errors { position: relative; max-width: 82em; padding: 1em 1em 1em 4em; margin: 1em; background-color: #fff; border: 3px solid #edb2c7; }
 .imc-forms-errors::before {
 	content: "";
 	display: block;
@@ -144,9 +144,10 @@
 
 /* form basic */
 
-.imc-forms-formulari { max-width: 82em; margin: 0 2em; }
+.imc-forms-formulari { max-width: 82em; margin: 0 1em; }
+.imc-forms-formulari::after { content: ""; display: table; width: 100%; }
 
-.imc-form input { display: inline-block; font: normal 110% 'Bariol Regular',Arial,Helvetica,sans-serif; height: 2em; vertical-align: middle; padding: .2em .3em; background-color: #fff; border: 3px solid #cecdcd; will-change: border; }
+.imc-form input { display: inline-block; font: normal 100% 'Bariol Regular',Arial,Helvetica,sans-serif; height: 2.2em; vertical-align: middle; padding: .2em .3em; background-color: #fff; border: 3px solid #cecdcd; will-change: border; }
 
 .imc-form input:hover { border-color: #999; }
 .imc-form input:focus { background-color: #f9f9e8; border-color: #4dba79; }
@@ -154,8 +155,8 @@
 .imc-form input[type=radio],
 .imc-form input[type=checkbox] { height: auto; }
 
-.imc-form input[type=date] { width: 8.9em; }
-.imc-form input[type=time] { width: 4.5em; }
+.imc-form input[type=date] { width: 9.9em; }
+.imc-form input[type=time] { width: 5.5em; }
 
 .imc-form textarea { font: normal 110% 'Bariol Regular',Arial,Helvetica,sans-serif; padding: .2em .3em; background-color: #fff; border: 3px solid #cecdcd; will-change: border; }
 
@@ -227,7 +228,9 @@
 .imc-form .imc-el-control { min-height: 2em; padding: 0 .8em; }
 
 .imc-form .imc-el-control input[type=text],
-.imc-form .imc-el-control input[type=number] { width: 100%; }
+.imc-form .imc-el-control input[type=number],
+.imc-form .imc-el-control input[type=email],
+.imc-form .imc-el-control input[type=password] { width: 100%; }
 
 .imc-form .imc-el-control a.imc-select,
 .imc-form .imc-el-control a.imc-select span { width: 100%; }
@@ -248,6 +251,7 @@
 .imc-form .imc-el-error input[type=number],
 .imc-form .imc-el-error input[type=date],
 .imc-form .imc-el-error input[type=time],
+.imc-form .imc-el-error input[type=email],
 .imc-form .imc-el-error textarea,
 .imc-form .imc-el-error a.imc-select { border-color: #cc073c; }
 .imc-form .imc-el-error .imc-el-etiqueta { color: #cc073c; }
@@ -256,6 +260,7 @@
 .imc-form .imc-el-error input[type=number]:focus,
 .imc-form .imc-el-error input[type=date]:focus,
 .imc-form .imc-el-error input[type=time]:focus,
+.imc-form .imc-el-error input[type=email]:focus,
 .imc-form .imc-el-error textarea:focus,
 .imc-form .imc-el-error a.imc-select:focus { border-color: #cc073c; }
 
@@ -267,7 +272,7 @@
 	top: -.2em;
 	vertical-align: middle;
 	width: .7em;
-	height: 1em;
+	height: .7em;
 	margin-right: .5em;
 	background: transparent url(imgs/icones/ico_form_obligatori_4dba79.svg) no-repeat top left / auto .7em;
 }
@@ -729,13 +734,27 @@
 
 /* nav */
 
-.imc-forms-nav { clear: both; padding: 2em 0; margin-top: 2em; }
-.imc-forms-nav ul { list-style: none; text-align: center; }
-.imc-forms-nav li { display: inline-block; width: 15em; min-height: 3.9em; vertical-align: middle; border: 1px solid #ededed; }
+.imc--forms-nav { clear: both; padding: 2em 0; margin-top: 2em; }
+.imc--forms-nav ul { list-style: none; text-align: center; }
+.imc--forms-nav li { display: inline-block; margin: 0 .3em; }
 
-.imc-forms-nav li.imc-nav-desa { }
+.imc--forms-nav li button { height: 2.1em; }
+.imc--forms-nav li button span { display: inline-block; vertical-align: middle; position: relative; top: -0.1em; }
 
-.imc-forms-nav .imc-bt {
+.imc--forms-nav .imc--anterior button::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(imgs/icones/ico_nav.svg) no-repeat center center / auto 100%; opacity: .5; transform: rotate(180deg); }
+.imc--forms-nav .imc--anterior button span { padding-left: .5em; }
+
+.imc--forms-nav .imc--seguent button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(imgs/icones/ico_nav.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--seguent button span { padding-right: .5em; }
+
+.imc--forms-nav .imc--finalitza button { background-color: #265d3c; }
+.imc--forms-nav .imc--finalitza button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(imgs/icones/ico_correcte.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--finalitza button span { padding-right: .5em; }
+
+/*
+.imc--forms-nav li.imc-nav-desa { }
+
+.imc--forms-nav .imc-bt {
 	display: block;
 	width: 100%;
 	font-size: 110%;
@@ -748,12 +767,12 @@
 	-o-transition: all .2s linear;
 	transition: all .2s linear;
 }
-.imc-forms-nav a.imc-bt span { }
+.imc--forms-nav a.imc-bt span { }
 
-.imc-forms-nav button { width: 100%; text-align: left; line-height: 1em; padding: 1em; }
+.imc--forms-nav button { width: 100%; text-align: left; line-height: 1em; padding: 1em; }
 		
-.imc-forms-nav .imc-bt,
-.imc-forms-nav .imc-bt {
+.imc--forms-nav .imc-bt,
+.imc--forms-nav .imc-bt {
 	color: #fff;
 	background-color: #4dba79;
 	-moz-transition: all .2s linear;
@@ -763,20 +782,20 @@
 	transition: all .2s linear;
 }
 
-.imc-forms-nav .imc-bt:hover,
-.imc-forms-nav .imc-bt:focus { background-color: #000; }
+.imc--forms-nav .imc-bt:hover,
+.imc--forms-nav .imc-bt:focus { background-color: #000; }
 
-.imc-forms-nav .imc-nav-desa button,
-.imc-forms-nav .imc-nav-finalitza button { line-height: 1.5em; background-color: #265d3c; }
+.imc--forms-nav .imc-nav-desa button,
+.imc--forms-nav .imc-nav-finalitza button { line-height: 1.5em; background-color: #265d3c; }
 
-.imc-forms-nav .imc-nav-desa button:hover,
-.imc-forms-nav .imc-nav-desa button:focus,
-.imc-forms-nav .imc-nav-finalitza button:hover,
-.imc-forms-nav .imc-nav-finalitza button:focus { background-color: #000; }
+.imc--forms-nav .imc-nav-desa button:hover,
+.imc--forms-nav .imc-nav-desa button:focus,
+.imc--forms-nav .imc-nav-finalitza button:hover,
+.imc--forms-nav .imc-nav-finalitza button:focus { background-color: #000; }
 
-.imc-forms-nav .imc-bt::before,
-.imc-forms-nav .imc-nav-desa button::before,
-.imc-forms-nav .imc-nav-finalitza button::before {
+.imc--forms-nav .imc-bt::before,
+.imc--forms-nav .imc-nav-desa button::before,
+.imc--forms-nav .imc-nav-finalitza button::before {
 	content: "";
 	display: inline-block;
 	float: right;
@@ -786,16 +805,16 @@
 	background: transparent url() no-repeat center center / auto 1.5em;
 }
 
-.imc-forms-nav .imc-nav-desa,
-.imc-forms-nav .imc-nav-finalitza { margin-left: 2em; }
-.imc-forms-nav .imc-nav-desa button::before { background-image: url(../imgs/icones/ico_form_guarda.svg); }
-.imc-forms-nav .imc-nav-finalitza button::before { background-image: url(../imgs/icones/ico_guarda.svg); }
+.imc--forms-nav .imc-nav-desa,
+.imc--forms-nav .imc-nav-finalitza { margin-left: 2em; }
+.imc--forms-nav .imc-nav-desa button::before { background-image: url(../imgs/icones/ico_form_guarda.svg); }
+.imc--forms-nav .imc-nav-finalitza button::before { background-image: url(../imgs/icones/ico_guarda.svg); }
 
-.imc-forms-nav .imc-nav-seguent .imc-bt::before { background-image: url(../imgs/icones/ico_form_seguent.svg); background-size: auto 1em; }
+.imc--forms-nav .imc-nav-seguent .imc-bt::before { background-image: url(../imgs/icones/ico_form_seguent.svg); background-size: auto 1em; }
 
-.imc-forms-nav .imc-nav-anterior .imc-bt { text-align: right; }
-.imc-forms-nav .imc-nav-anterior .imc-bt::before { float: left; background-image: url(../imgs/icones/ico_form_seguent.svg); background-size: auto 1em; transform: rotate(180deg); }
-
+.imc--forms-nav .imc-nav-anterior .imc-bt { text-align: right; }
+.imc--forms-nav .imc-nav-anterior .imc-bt::before { float: left; background-image: url(../imgs/icones/ico_form_seguent.svg); background-size: auto 1em; transform: rotate(180deg); }
+*/
 
 /* missatge sortir */
 
@@ -880,8 +899,8 @@
 
 @media only screen and (min-width : 1376px) {
 
-	.imc-forms-errors,
-	.imc-forms-formulari { margin: 1em auto; }
+	/*.imc-forms-errors,
+	.imc-forms-formulari { margin: 1em auto; }*/
 
 	aside { margin: 2em auto; }
 	

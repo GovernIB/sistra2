@@ -52,6 +52,9 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	/** Id formulario externo (para externos). */
 	private String idFormularioExterno;
 
+	/** Título procedimiento. */
+	private String tituloProcedimiento;
+
 	/**
 	 * Método de acceso a idSesionTramitacion.
 	 *
@@ -297,6 +300,25 @@ public final class DatosInicioSesionFormulario implements Serializable {
 	 */
 	public void setInfoAutenticacion(UsuarioAutenticadoInfo infoAutenticacion) {
 		this.infoAutenticacion = infoAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a tituloProcedimiento.
+	 * 
+	 * @return tituloProcedimiento
+	 */
+	public String getTituloProcedimiento() {
+		return tituloProcedimiento;
+	}
+
+	/**
+	 * Método para establecer tituloProcedimiento.
+	 * 
+	 * @param tituloProcedimiento
+	 *            tituloProcedimiento a establecer
+	 */
+	public void setTituloProcedimiento(String tituloProcedimiento) {
+		this.tituloProcedimiento = tituloProcedimiento;
 	}
 
 }

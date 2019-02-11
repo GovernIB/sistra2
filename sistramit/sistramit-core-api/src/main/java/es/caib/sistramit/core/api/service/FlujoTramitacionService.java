@@ -150,9 +150,6 @@ public interface FlujoTramitacionService {
 	void envioFormularioSoporte(String idSesionTramitacion, String nif, String nombre, String telefono, String email,
 			String problemaTipo, String problemaDesc, AnexoFichero anexo);
 
-	// TODO PARA BORRAR
-	String simularRellenarFormulario(String idSesionTramitacion, String xml);
-
 	// -------------------------------------------------------------------------------------------
 	// - Métodos especiales invocados desde el interceptor. No pasan por
 	// interceptor de auditoria.

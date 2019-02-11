@@ -40,7 +40,6 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
-import es.caib.sistramit.core.service.component.formulario.interno.SimulacionFormularioMock;
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
@@ -233,13 +232,6 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			throw new EmailException("Error al enviar mail", e);
 		}
 
-	}
-
-	// TODO BORRAR
-	@Override
-	public String simularRellenarFormulario(final String xml) {
-		SimulacionFormularioMock.setDatosSimulados(xml);
-		return "123";
 	}
 
 	// -------------------------------------------------------

@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
@@ -22,57 +23,49 @@ import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class FlujoFormularioInternoServiceBean implements FlujoFormularioInternoService {
 
-	// @Autowired
-	// private GestorFormulariosInternoService gestorFormulariosInternoService;
+	@Autowired
+	private FlujoFormularioInternoService flujoFormularioInternoService;
 
 	@Override
 	public String cargarSesion(String ticket) {
-		// TODO Auto-generated method stub
-		return null;
+		return flujoFormularioInternoService.cargarSesion(ticket);
 	}
 
 	@Override
 	public PaginaFormulario cargarPaginaActual(String idSesionFormulario) {
-		// TODO Auto-generated method stub
-		return null;
+		return flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
 	}
 
 	@Override
 	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(String idSesionFormulario, String idCampo,
 			List<ValorCampo> valoresPagina) {
-		// TODO Auto-generated method stub
-		return null;
+		return flujoFormularioInternoService.evaluarCambioCampoPagina(idSesionFormulario, idCampo, valoresPagina);
 	}
 
 	@Override
 	public ResultadoGuardarPagina guardarPagina(String idSesionFormulario, List<ValorCampo> valoresPagina,
 			String accionPersonalizada) {
-		// TODO Auto-generated method stub
-		return null;
+		return flujoFormularioInternoService.guardarPagina(idSesionFormulario, valoresPagina, accionPersonalizada);
 	}
 
 	@Override
 	public void cancelarFormulario(String idSesionFormulario) {
-		// TODO Auto-generated method stub
-
+		flujoFormularioInternoService.cancelarFormulario(idSesionFormulario);
 	}
 
 	@Override
 	public List<ValorCampo> deserializarValoresCampos(String idSesionFormulario, Map<String, String> valores) {
-		// TODO Auto-generated method stub
-		return null;
+		return flujoFormularioInternoService.deserializarValoresCampos(idSesionFormulario, valores);
 	}
 
 	@Override
 	public PaginaFormulario cargarPaginaAnterior(String idSesionFormulario) {
-		// TODO Auto-generated method stub
-		return null;
+		return flujoFormularioInternoService.cargarPaginaAnterior(idSesionFormulario);
 	}
 
 	@Override
 	public SesionFormularioInfo obtenerInformacionFormulario(String idSesionFormulario) {
-		// TODO Auto-generated method stub
-		return null;
+		return flujoFormularioInternoService.obtenerInformacionFormulario(idSesionFormulario);
 	}
 
 }

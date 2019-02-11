@@ -118,14 +118,6 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 		ft.envioFormularioSoporte(nif, nombre, telefono, email, problemaTipo, problemaDesc, anexo);
 	}
 
-	// TODO BORRAR
-	@Override
-	@NegocioInterceptor
-	public String simularRellenarFormulario(final String idSesionTramitacion, final String xml) {
-		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
-		return ft.simularRellenarFormulario(xml);
-	}
-
 	// -------------------------------------------------------------------------------------------
 	// - Métodos especiales invocados desde el interceptor. No pasan por
 	// interceptor

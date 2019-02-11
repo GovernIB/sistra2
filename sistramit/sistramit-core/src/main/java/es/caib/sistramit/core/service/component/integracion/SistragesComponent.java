@@ -81,6 +81,19 @@ public interface SistragesComponent {
 	RVersionTramite recuperarDefinicionTramite(String idTramite, int version, String idioma);
 
 	/**
+	 * Recupera definición versión de trámite (sin usar cache).
+	 *
+	 * @param idTramite
+	 *            id trámite
+	 * @param version
+	 *            versión
+	 * @param idioma
+	 *            idioma
+	 * @return Definición versión trámite
+	 */
+	RVersionTramite recuperarDefinicionTramiteNoCache(String idTramite, int version, String idioma);
+
+	/**
 	 * Quita de cache definición versión de trámite.
 	 *
 	 * @param idTramite

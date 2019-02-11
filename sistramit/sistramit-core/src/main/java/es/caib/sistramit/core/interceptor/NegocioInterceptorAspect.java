@@ -27,8 +27,8 @@ import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.system.EventoAuditoria;
 import es.caib.sistramit.core.api.model.system.types.TypeEvento;
-import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
+import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.PurgaService;
 import es.caib.sistramit.core.service.component.system.AuditorEventosFlujoTramitacion;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
@@ -141,7 +141,7 @@ public final class NegocioInterceptorAspect {
 
 		// Si es un flujo de tramitacion y se genera una excepcion FATAL
 		// marcamos el flujo como invalido
-		if (isFlujoTramitacionService(jp) && infoFlujo != null) {
+		if (isFlujoTramitacionService(jp)) {
 			if ((exNew != null && exNew.getNivel() == TypeNivelExcepcion.FATAL)
 					|| (exNew == null && ex instanceof ServiceException
 							&& ((ServiceException) ex).getNivel() == TypeNivelExcepcion.FATAL)) {
