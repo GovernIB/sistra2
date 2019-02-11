@@ -95,17 +95,24 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 */
 	public void eliminar() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada()) {
 			return;
-		// Eliminamos
-		if (fmtService.removeFormateadorFormulario(this.datoSeleccionado.getCodigo())) {
-			// Refrescamos datos
-			buscar();
-			// Mostramos mensaje
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
-		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
+
+		if (fmtService.tieneRelacionesFormateadorFormulario(this.datoSeleccionado.getCodigo())) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+			return;
+		}
+
+		// Eliminamos
+		fmtService.removeFormateadorFormulario(this.datoSeleccionado.getCodigo());
+
+		// Refrescamos datos
+		buscar();
+
+		// Mostramos mensaje
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+
 	}
 
 	/**

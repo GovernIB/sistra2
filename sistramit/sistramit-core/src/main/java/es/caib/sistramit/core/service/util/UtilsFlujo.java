@@ -319,6 +319,8 @@ public final class UtilsFlujo {
 	public static DetalleTramiteInfo detalleTramiteInfo(final DatosSesionTramitacion pDatosSesion) {
 		final DetalleTramiteInfo detalleTramiteInfo = new DetalleTramiteInfo();
 		detalleTramiteInfo.setIdSesion(pDatosSesion.getDatosTramite().getIdSesionTramitacion());
+		detalleTramiteInfo.setIdPasoActual(pDatosSesion.getDatosTramite().getIdPasoActual());
+		detalleTramiteInfo.setTipoPasoActual(pDatosSesion.getDatosTramite().getDatosPasoActual().getTipo());
 		detalleTramiteInfo.setId(pDatosSesion.getDatosTramite().getIdTramite());
 		detalleTramiteInfo.setVersion(pDatosSesion.getDatosTramite().getVersionTramite());
 		// Indicamos si el tramite esta recien abierto (en el primer paso)

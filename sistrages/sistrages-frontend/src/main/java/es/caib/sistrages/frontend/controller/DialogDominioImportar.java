@@ -34,6 +34,7 @@ import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -104,7 +105,8 @@ public class DialogDominioImportar extends DialogControllerBase {
 	 * @return
 	 */
 	private String getVersion() {
-		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService
+				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION);
 		return confGlobal.getValor();
 	}
 

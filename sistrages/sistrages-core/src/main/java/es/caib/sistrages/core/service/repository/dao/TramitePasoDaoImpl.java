@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,7 @@ import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Tasa;
@@ -38,6 +40,7 @@ import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
@@ -547,6 +550,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 							.setPermitirAccionesPersonalizadas(formularioInterno.isPermitirAccionesPersonalizadas());
 					if (formularioInterno.getScriptPlantilla() != null) {
 						formularioInterno.getScriptPlantilla().setCodigo(null);
+						disenyoFormularioAlmacenado.setScriptPlantilla(formularioInterno.getScriptPlantilla());
 					}
 
 					if (formularioInterno.getTextoCabecera() != null) {
@@ -556,8 +560,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 								trad.setCodigo(null);
 							}
 						}
+						disenyoFormularioAlmacenado.setTextoCabecera(formularioInterno.getTextoCabecera());
 					}
-
 					formularioInternoDao.updateFormulario(disenyoFormularioAlmacenado);
 
 					this.anyadirPaginas(formularioInterno.getPaginas(), idJFormulario, ficherosContent,
@@ -636,6 +640,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		for (final PaginaFormulario paginaFormulario : paginas) {
 
 			final List<LineaComponentesFormulario> lineas = paginaFormulario.getLineas();
+
 			paginaFormulario.setLineas(null);
 			final DisenyoFormulario formulario = formularioInternoDao.getFormularioPaginasById(idFormulario);
 			if (paginaFormulario.getScriptValidacion() != null) {
@@ -644,42 +649,69 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			paginaFormulario.setCodigo(null);
 
 			final Long idPagina = formularioInternoDao.addPagina(formulario.getCodigo(), paginaFormulario);
-
 			// Recorremos las lineas anteriormente
 			if (lineas != null) {
+				Collections.sort(lineas);
+
 				for (final LineaComponentesFormulario mlinea : lineas) {
+
+					if (isTipoEtiqueta(mlinea)) {
+						anyadirComponenteEtiqueta((ComponenteFormularioEtiqueta) mlinea.getComponentes().get(0),
+								mlinea.getOrden(), idPagina);
+						continue;
+					}
+
 					final ObjetoFormulario objetoFormularioLine = formularioInternoDao
 							.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null);
 					final Long idLinea = objetoFormularioLine.getCodigo();
-					mlinea.setCodigo(idLinea);
 					final List<ComponenteFormulario> componentes = mlinea.getComponentes();
-					mlinea.setComponentes(null);
-					formularioInternoDao.updateFormulario(formulario);
 
-					// Añadir los componentes de la linea
-					for (final ComponenteFormulario componente : componentes) {
-						if (componente instanceof ComponenteFormularioCampoCheckbox) {
-							anyadirComponenteCheckbox((ComponenteFormularioCampoCheckbox) componente, idLinea,
-									idPagina);
-						} else if (componente instanceof ComponenteFormularioCampoSelector) {
-							anyadirComponenteSelector((ComponenteFormularioCampoSelector) componente, idLinea, idPagina,
-									idDominiosEquivalencia);
-						} else if (componente instanceof ComponenteFormularioCampoTexto) {
-							anyadirComponenteCampoTexto((ComponenteFormularioCampoTexto) componente, idLinea, idPagina);
-						} else if (componente instanceof ComponenteFormularioEtiqueta) {
-							anyadirComponenteEtiqueta((ComponenteFormularioEtiqueta) componente, idLinea, idPagina);
-						} else if (componente instanceof ComponenteFormularioImagen) {
-							anyadirComponenteImagen((ComponenteFormularioImagen) componente, idLinea, idPagina,
-									ficherosContent, idEntidad);
-						} else if (componente instanceof ComponenteFormularioSeccion) {
-							anyadirComponenteSeccion((ComponenteFormularioSeccion) componente, idLinea, idPagina);
-						} else if (componente instanceof ComponenteFormularioCampo) {
-							anyadirComponenteCampo((ComponenteFormularioCampo) componente, idLinea, idPagina);
+					if (componentes != null && !componentes.isEmpty()) {
+						Collections.sort(componentes);
+
+						// Añadir los componentes de la linea
+						for (final ComponenteFormulario componente : componentes) {
+							if (componente instanceof ComponenteFormularioCampoCheckbox) {
+								anyadirComponenteCheckbox((ComponenteFormularioCampoCheckbox) componente, idLinea,
+										idPagina);
+							} else if (componente instanceof ComponenteFormularioCampoSelector) {
+								anyadirComponenteSelector((ComponenteFormularioCampoSelector) componente, idLinea,
+										idPagina, idDominiosEquivalencia);
+							} else if (componente instanceof ComponenteFormularioCampoTexto) {
+								anyadirComponenteCampoTexto((ComponenteFormularioCampoTexto) componente, idLinea,
+										idPagina);
+							} else if (componente instanceof ComponenteFormularioImagen) {
+								anyadirComponenteImagen((ComponenteFormularioImagen) componente, idLinea, idPagina,
+										ficherosContent, idEntidad);
+							} else if (componente instanceof ComponenteFormularioSeccion) {
+								anyadirComponenteSeccion((ComponenteFormularioSeccion) componente, idLinea, idPagina);
+							} else if (componente instanceof ComponenteFormularioCampo) {
+								anyadirComponenteCampo((ComponenteFormularioCampo) componente, idLinea, idPagina);
+							}
 						}
 					}
 				}
 			}
 		}
+
+	}
+
+	/**
+	 * Los tipos etiqueta se crean de tirón, se pide añadir una etiqueta y
+	 * directamente crea una linea con su etiqueta.
+	 *
+	 * @param mlinea
+	 * @return
+	 */
+	private boolean isTipoEtiqueta(final LineaComponentesFormulario mlinea) {
+		boolean tipoEtiqueta = false;
+		if (mlinea != null && mlinea.getComponentes() != null && mlinea.getComponentes().size() == 1
+				&& (mlinea.getComponentes().get(0) instanceof ComponenteFormularioEtiqueta)) {
+			tipoEtiqueta = true;
+		}
+
+		return tipoEtiqueta;
+
 	}
 
 	/**
@@ -699,6 +731,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 		final ComponenteFormularioSeccion comp = (ComponenteFormularioSeccion) formularioInternoDao
 				.getComponenteById(id);
+		comp.setAlineacionTexto(componente.getAlineacionTexto());
 		if (componente.getAyuda() != null) {
 			componente.getAyuda().setCodigo(null);
 			if (componente.getAyuda().getTraducciones() != null) {
@@ -708,10 +741,11 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setAyuda(componente.getAyuda());
 		}
-		comp.setAlineacionTexto(componente.getAlineacionTexto());
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setLetra(componente.getLetra());
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNumColumnas(componente.getNumColumnas());
+		comp.setOrden(componente.getOrden());
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);
 			if (componente.getTexto().getTraducciones() != null) {
@@ -721,6 +755,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setTexto(componente.getTexto());
 		}
+		comp.setTipo(componente.getTipo());
 		formularioInternoDao.updateComponente(comp);
 	}
 
@@ -740,6 +775,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final Long id = ((ComponenteFormularioCampoTexto) retorno).getCodigo();
 
 		final ComponenteFormularioImagen comp = (ComponenteFormularioImagen) formularioInternoDao.getComponenteById(id);
+		comp.setAlineacionTexto(componente.getAlineacionTexto());
 		if (componente.getAyuda() != null) {
 			componente.getAyuda().setCodigo(null);
 			if (componente.getAyuda().getTraducciones() != null) {
@@ -749,7 +785,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setAyuda(componente.getAyuda());
 		}
-		comp.setAlineacionTexto(componente.getAlineacionTexto());
 		if (componente.getFichero() != null) {
 			final byte[] content = ficherosContent.get(componente.getFichero().getCodigo());
 			Fichero fichero = componente.getFichero();
@@ -760,8 +795,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			ficheroExternoDao.guardarFichero(idEntidad, fichero, content);
 			comp.setFichero(componente.getFichero());
 		}
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNumColumnas(componente.getNumColumnas());
+		comp.setOrden(componente.getOrden());
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);
 			if (componente.getTexto().getTraducciones() != null) {
@@ -771,7 +808,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setTexto(componente.getTexto());
 		}
-
+		comp.setTipo(componente.getTipo());
 		formularioInternoDao.updateComponente(comp);
 	}
 
@@ -782,10 +819,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	 * @param idLinea
 	 * @param idPagina
 	 */
-	private void anyadirComponenteEtiqueta(final ComponenteFormularioEtiqueta componente, final Long idLinea,
+	private void anyadirComponenteEtiqueta(final ComponenteFormularioEtiqueta componente, final int ordenLinea,
 			final Long idPagina) {
-		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null,
+				ordenLinea, null);
 		entityManager.flush();
 		final Long id = ((LineaComponentesFormulario) retorno).getComponentes()
 				.get(((LineaComponentesFormulario) retorno).getComponentes().size() - 1).getCodigo();
@@ -802,8 +839,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			comp.setAyuda(componente.getAyuda());
 		}
 		comp.setAlineacionTexto(componente.getAlineacionTexto());
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNumColumnas(componente.getNumColumnas());
+		comp.setOrden(componente.getOrden());
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);
 			if (componente.getTexto().getTraducciones() != null) {
@@ -813,6 +852,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setTexto(componente.getTexto());
 		}
+		comp.setTipo(componente.getTipo());
 		comp.setTipoEtiqueta(componente.getTipoEtiqueta());
 		formularioInternoDao.updateComponente(comp);
 	}
@@ -844,6 +884,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 		comp.setAlineacionTexto(componente.getAlineacionTexto());
 		comp.setExpresionRegular(componente.getExpresionRegular());
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setIdentCif(componente.isIdentCif());
 		comp.setIdentNie(componente.isIdentNie());
 		comp.setIdentNif(componente.isIdentNif());
@@ -861,6 +902,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setNumeroRangoMinimo(componente.getNumeroRangoMinimo());
 		comp.setNumeroSeparador(componente.getNumeroSeparador());
 		comp.setObligatorio(componente.isObligatorio());
+		comp.setOrden(componente.getOrden());
 		comp.setOculto(componente.isOculto());
 		comp.setPermiteRango(componente.isPermiteRango());
 		if (componente.getScriptAutorrellenable() != null) {
@@ -878,7 +920,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setSoloLectura(componente.isSoloLectura());
 		comp.setTelefonoFijo(componente.isTelefonoFijo());
 		comp.setTelefonoMovil(componente.isTelefonoMovil());
-		comp.setTipoCampoTexto(componente.getTipoCampoTexto());
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);
 			if (componente.getTexto().getTraducciones() != null) {
@@ -888,6 +929,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setTexto(componente.getTexto());
 		}
+		comp.setTipo(componente.getTipo());
+		comp.setTipoCampoTexto(componente.getTipoCampoTexto());
 		formularioInternoDao.updateComponente(comp);
 	}
 
@@ -908,6 +951,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final ComponenteFormularioCampoSelector comp = (ComponenteFormularioCampoSelector) formularioInternoDao
 				.getComponenteById(id);
 		comp.setAlineacionTexto(componente.getAlineacionTexto());
+		comp.setAltura(componente.getAltura());
 		if (componente.getAyuda() != null) {
 			componente.getAyuda().setCodigo(null);
 			if (componente.getAyuda().getTraducciones() != null) {
@@ -923,13 +967,25 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			final Long idDominio = idDominiosEquivalencia.get(componente.getCodDominio());
 			comp.setCodDominio(idDominio);
 		}
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setIndiceAlfabetico(componente.isIndiceAlfabetico());
-		comp.setListaParametrosDominio(componente.getListaParametrosDominio());
-		comp.setListaValorListaFija(componente.getListaValorListaFija());
+		if (componente.getListaParametrosDominio() != null) {
+			for (final ParametroDominio parametro : componente.getListaParametrosDominio()) {
+				parametro.setCodigo(null);
+			}
+			comp.setListaParametrosDominio(componente.getListaParametrosDominio());
+		}
+		if (componente.getListaValorListaFija() != null) {
+			for (final ValorListaFija valor : componente.getListaValorListaFija()) {
+				valor.setCodigo(null);
+			}
+			comp.setListaValorListaFija(componente.getListaValorListaFija());
+		}
 		comp.setNoModificable(componente.isNoModificable());
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setObligatorio(componente.isObligatorio());
+		comp.setOrden(componente.getOrden());
 		if (componente.getScriptAutorrellenable() != null) {
 			componente.getScriptAutorrellenable().setCodigo(null);
 			comp.setScriptAutorrellenable(componente.getScriptAutorrellenable());
@@ -947,6 +1003,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			comp.setScriptValoresPosibles(componente.getScriptValoresPosibles());
 		}
 		comp.setSoloLectura(componente.isSoloLectura());
+		comp.setTipo(componente.getTipo());
 		comp.setTipoCampoIndexado(componente.getTipoCampoIndexado());
 		comp.setTipoListaValores(componente.getTipoListaValores());
 		if (componente.getTexto() != null) {
@@ -958,6 +1015,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setTexto(componente.getTexto());
 		}
+		comp.setTipo(componente.getTipo());
 		formularioInternoDao.updateComponente(comp);
 	}
 
@@ -976,6 +1034,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final Long id = ((ComponenteFormularioCampo) retorno).getCodigo();
 
 		final ComponenteFormularioCampo comp = (ComponenteFormularioCampo) formularioInternoDao.getComponenteById(id);
+		comp.setAlineacionTexto(componente.getAlineacionTexto());
 		if (componente.getAyuda() != null) {
 			componente.getAyuda().setCodigo(null);
 			if (componente.getAyuda().getTraducciones() != null) {
@@ -985,11 +1044,12 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setAyuda(componente.getAyuda());
 		}
-		comp.setAlineacionTexto(componente.getAlineacionTexto());
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setNoModificable(componente.isNoModificable());
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setObligatorio(componente.isObligatorio());
+		comp.setOrden(componente.getOrden());
 		if (componente.getScriptAutorrellenable() != null) {
 			componente.getScriptAutorrellenable().setCodigo(null);
 			comp.setScriptAutorrellenable(componente.getScriptAutorrellenable());
@@ -1012,6 +1072,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setTexto(componente.getTexto());
 		}
+		comp.setTipo(componente.getTipo());
 		formularioInternoDao.updateComponente(comp);
 	}
 
@@ -1041,19 +1102,12 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			}
 			comp.setAyuda(componente.getAyuda());
 		}
+		comp.setIdComponente(componente.getIdComponente());
 		comp.setNoModificable(componente.isNoModificable());
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setObligatorio(componente.isObligatorio());
-		if (componente.getTexto() != null) {
-			componente.getTexto().setCodigo(null);
-			if (componente.getTexto().getTraducciones() != null) {
-				for (final Traduccion traduccion : componente.getTexto().getTraducciones()) {
-					traduccion.setCodigo(null);
-				}
-			}
-			comp.setTexto(componente.getTexto());
-		}
+		comp.setOrden(componente.getOrden());
 		if (componente.getScriptAutorrellenable() != null) {
 			componente.getScriptAutorrellenable().setCodigo(null);
 			comp.setScriptAutorrellenable(componente.getScriptAutorrellenable());
@@ -1067,8 +1121,19 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			comp.setScriptValidacion(componente.getScriptValidacion());
 		}
 		comp.setSoloLectura(componente.isSoloLectura());
+		if (componente.getTexto() != null) {
+			componente.getTexto().setCodigo(null);
+			if (componente.getTexto().getTraducciones() != null) {
+				for (final Traduccion traduccion : componente.getTexto().getTraducciones()) {
+					traduccion.setCodigo(null);
+				}
+			}
+			comp.setTexto(componente.getTexto());
+		}
+
 		comp.setValorChecked(componente.getValorChecked());
 		comp.setValorNoChecked(componente.getValorNoChecked());
+		comp.setTipo(componente.getTipo());
 		formularioInternoDao.updateComponente(comp);
 	}
 

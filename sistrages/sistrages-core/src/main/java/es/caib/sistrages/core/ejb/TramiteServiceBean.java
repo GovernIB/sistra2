@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
@@ -31,6 +32,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.service.TramiteService;
 
 @Stateless
@@ -197,8 +199,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<Long> getTramiteDominiosId(final Long idTramiteVersion) {
-		return tramiteService.getTramiteDominiosId(idTramiteVersion);
+	public List<Dominio> getDominioSimpleByTramiteId(final Long idTramiteVersion) {
+		return tramiteService.getDominioSimpleByTramiteId(idTramiteVersion);
 	}
 
 	@Override
@@ -447,6 +449,12 @@ public class TramiteServiceBean implements TramiteService {
 	public boolean checkFormularioRepetido(final Long idTramiteVersion, final String identificador,
 			final Long idFormulario) {
 		return tramiteService.checkFormularioRepetido(idTramiteVersion, identificador, idFormulario);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public TramiteSimple getTramiteSimple(final String idTramiteVersion) {
+		return tramiteService.getTramiteSimple(idTramiteVersion);
 	}
 
 }

@@ -54,6 +54,7 @@ import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.api.model.types.TypeImportarResultado;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.service.ComponenteService;
@@ -200,7 +201,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * @return
 	 */
 	private String getVersion() {
-		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService
+				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION);
 		return confGlobal.getValor();
 	}
 
@@ -455,7 +457,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			} else {
 
 				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
-						TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE, TypeImportarResultado.INFO, ""));
+						TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE, TypeImportarResultado.INFO,
+						UtilJSF.getLiteral("dialogTramiteImportar.error.existeformateador")));
 			}
 
 		}

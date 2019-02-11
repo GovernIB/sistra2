@@ -3,11 +3,13 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 
 /**
  * La interface TramiteDao.
@@ -136,7 +138,7 @@ public interface TramiteDao {
 	 * @param idTramiteVersion
 	 * @return
 	 */
-	List<Long> getTramiteDominiosId(Long idTramiteVersion);
+	List<Dominio> getDominioSimpleByTramiteId(Long idTramiteVersion);
 
 	/**
 	 * Devuelve los identificadores de dominio de una versión de trámite.
@@ -275,5 +277,13 @@ public interface TramiteDao {
 	 * @return
 	 */
 	Long importar(FilaImportarTramiteVersion filaTramiteVersion, Long idTramite, List<Long> idDominios, String usuario);
+
+	/**
+	 * Obtiene el tramite simplificado.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	TramiteSimple getTramiteSimple(String idTramiteVersion);
 
 }

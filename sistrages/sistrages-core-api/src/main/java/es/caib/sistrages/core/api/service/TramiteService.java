@@ -7,6 +7,7 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
@@ -21,6 +22,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 
 /**
  * La interface TramiteService.
@@ -212,7 +214,7 @@ public interface TramiteService {
 	 * @param idTramiteVersion
 	 * @return
 	 */
-	public List<Long> getTramiteDominiosId(Long idTramiteVersion);
+	public List<Dominio> getDominioSimpleByTramiteId(Long idTramiteVersion);
 
 	/**
 	 * Actualiza un paso de trámite.
@@ -553,5 +555,13 @@ public interface TramiteService {
 	 * @return
 	 */
 	boolean checkFormularioRepetido(Long idTramiteVersion, String identificador, Long idFormulario);
+
+	/**
+	 * Genera el tramitesimple
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public TramiteSimple getTramiteSimple(String idTramiteVersion);
 
 }

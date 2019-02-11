@@ -155,8 +155,9 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormulario) {
-		return formIntService.getFormularioInternoSimple(idFormulario);
+	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
+			final String idComponente, final String idPagina) {
+		return formIntService.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina);
 	}
 
 	@Override

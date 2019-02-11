@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.ConfiguracionComponent;
@@ -62,6 +63,18 @@ public class ConfiguracionGlobalServiceImpl implements ConfiguracionGlobalServic
 	@NegocioInterceptor
 	public ConfiguracionGlobal getConfiguracionGlobal(final String propiedad) {
 		return configuracionGlobalDao.getByPropiedad(propiedad);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.ConfiguracionGlobalService#
+	 * getConfiguracionGlobal(java.lang.String)
+	 */
+	@Override
+	@NegocioInterceptor
+	public ConfiguracionGlobal getConfiguracionGlobal(final TypePropiedadConfiguracion propiedad) {
+		return configuracionGlobalDao.getByPropiedad(propiedad.toString());
 	}
 
 	/*

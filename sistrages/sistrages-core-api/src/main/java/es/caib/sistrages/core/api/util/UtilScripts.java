@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.comun.TramiteSimpleFormulario;
 import es.caib.sistrages.core.api.model.comun.TramiteSimplePaso;
+import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
@@ -50,13 +51,13 @@ public class UtilScripts {
 	 */
 	public static List<TypePluginScript> getPluginsScript(final TypeScriptFormulario tipoScript) {
 		final List<TypePluginScript> plugins = new ArrayList<>();
-		plugins.add(TypePluginScript.PLUGIN_VALIDACIONES);
+		plugins.add(TypePluginScript.PLUGIN_SESIONFORMULARIO);
 		plugins.add(TypePluginScript.PLUGIN_ERROR);
-		plugins.add(TypePluginScript.PLUGIN_MENSAJEVALIDACION);
 		plugins.add(TypePluginScript.PLUGIN_LOG);
 		plugins.add(TypePluginScript.PLUGIN_DOMINIOS);
-		plugins.add(TypePluginScript.PLUGIN_SESIONFORMULARIO);
 		plugins.add(TypePluginScript.PLUGIN_DATOSFORMULARIO);
+		plugins.add(TypePluginScript.PLUGIN_VALIDACIONES);
+		plugins.add(TypePluginScript.PLUGIN_MENSAJEVALIDACION);
 		switch (tipoScript) {
 		case SCRIPT_AUTORELLENABLE:
 			plugins.add(0, TypePluginScript.DATOS_VALOR);
@@ -88,13 +89,13 @@ public class UtilScripts {
 	 */
 	public static List<TypePluginScript> getPluginsScript(final TypeScriptFlujo tipoScript) {
 		final List<TypePluginScript> plugins = new ArrayList<>();
-		plugins.add(TypePluginScript.PLUGIN_VALIDACIONES);
+		plugins.add(TypePluginScript.PLUGIN_SESIONTRAMITACION);
 		plugins.add(TypePluginScript.PLUGIN_ERROR);
-		plugins.add(TypePluginScript.PLUGIN_MENSAJEVALIDACION);
 		plugins.add(TypePluginScript.PLUGIN_LOG);
 		plugins.add(TypePluginScript.PLUGIN_DOMINIOS);
-		plugins.add(TypePluginScript.PLUGIN_SESIONTRAMITACION);
 		plugins.add(TypePluginScript.PLUGIN_FORMULARIOS);
+		plugins.add(TypePluginScript.PLUGIN_VALIDACIONES);
+		plugins.add(TypePluginScript.PLUGIN_MENSAJEVALIDACION);
 		switch (tipoScript) {
 		case SCRIPT_PARAMETROS_INICIALES:
 			plugins.add(0, TypePluginScript.DATOS_PARAMETROS_INICIALES);
@@ -153,33 +154,44 @@ public class UtilScripts {
 
 	/**
 	 * Devuelve la lista de formularios según el paso actual, la lista de pasos y el
-	 * tipo de script.
+	 * tipo de script. Si no tiene idPasoActual es porque no es un paso sino un
+	 * script del trámite (script personalización y script parámetros iniciales).
+	 *
+	 * El funcionamiento es el siguiente: <br />
+	 * - Recorre todos los pasos del trámite. - Todo formulario que encuentra, lo
+	 * añade. <br />
+	 * - Si se encuentra en el paso actual, se para y no añade más.<br />
+	 * - Si se encuentra el formulario actual, se para y no recorre más (tampoco
+	 * recorre más pasos).<br />
+	 * - El script de datos iniciales formulario es 'especial' y sólo puede añadir
+	 * el formulario actual (sin importar si hay alguno antes) si estamos en el paso
+	 * que toca.
 	 *
 	 * @param list
 	 *
 	 * @return
 	 */
-	public static List<Long> getFormulariosFlujo(final TramiteSimple tramiteSimple, final Long idFormulario,
-			final Long idPasoActual, final TypeScriptFlujo tipoScript, final Long idFormularioInterno) {
+	public static List<Long> getFormulariosFlujo(final TramiteSimple tramiteSimple, final String idFormulario,
+			final String idPasoActual, final TypeScriptFlujo tipoScript, final String idFormularioInterno) {
 
 		final List<Long> formularios = new ArrayList<>();
 		if (tramiteSimple != null && idPasoActual != null) {
 			for (final TramiteSimplePaso paso : tramiteSimple.getPasos()) {
 
-				if (tipoScript == TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO
-						&& paso.getCodigo().compareTo(idPasoActual) == 0) {
-					formularios.add(idFormularioInterno);
+				if (tipoScript == TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO && idPasoActual != null
+						&& paso.getCodigo().compareTo(Long.valueOf(idPasoActual)) == 0 && idFormularioInterno != null) {
+					formularios.add(Long.valueOf(idFormularioInterno));
 					break;
 				} else if (paso.isTipoPasoRellenar() && paso.getFormularios() != null) {
 					for (final TramiteSimpleFormulario formulario : paso.getFormularios()) {
 						formularios.add(formulario.getIdFormularioInterno());
-						if (idFormulario != null && formulario.getCodigo().compareTo(idFormulario) == 0) {
+						if (idFormulario != null && formulario.getCodigo().compareTo(Long.valueOf(idFormulario)) == 0) {
 							break;
 						}
 					}
 				}
 
-				if (paso.getCodigo().compareTo(idPasoActual) == 0) {
+				if (idPasoActual != null && paso.getCodigo().compareTo(Long.valueOf(idPasoActual)) == 0) {
 					break;
 				}
 			}
@@ -195,8 +207,7 @@ public class UtilScripts {
 	 *
 	 * @return
 	 */
-	public static DisenyoFormularioSimple getFormulariosFormulario(final DisenyoFormulario formulario,
-			final Long idComponente) {
+	public static DisenyoFormularioSimple getFormulariosFormulario(final DisenyoFormulario formulario) {
 
 		final DisenyoFormularioSimple form = new DisenyoFormularioSimple();
 		if (formulario != null && formulario.getPaginas() != null) {
@@ -210,13 +221,12 @@ public class UtilScripts {
 
 						if (linea.getComponentes() != null) {
 							for (final ComponenteFormulario componente : linea.getComponentes()) {
-
-								if (componente.getCodigo().compareTo(idComponente) == 0) {
+								if (isTipoEditable(componente.getTipo())) {
 									final DisenyoFormularioComponenteSimple compSimple = new DisenyoFormularioComponenteSimple();
+									compSimple.setCodigo(componente.getCodigo());
 									compSimple.setIdentificador(componente.getIdComponente());
 									compSimple.setTipo(componente.getTipo());
 									compSimples.add(compSimple);
-
 								}
 							}
 						}
@@ -226,9 +236,74 @@ public class UtilScripts {
 				paginas.add(pagSimple);
 			}
 			form.setPaginas(paginas);
+		}
+		return form;
+	}
+
+	/**
+	 * Devuelve la lista de formularios según el paso actual, la lista de pasos y el
+	 * tipo de script.
+	 *
+	 * @param list
+	 *
+	 * @return
+	 */
+	public static DisenyoFormularioSimple getFormulariosFormulario(final DisenyoFormularioSimple formulario,
+			final Long idComponente, final Long idPagina) {
+
+		boolean salir = false;
+		final DisenyoFormularioSimple form = new DisenyoFormularioSimple();
+		if (formulario != null && formulario.getPaginas() != null) {
+			final List<DisenyoFormularioPaginaSimple> paginas = new ArrayList<>();
+			for (final DisenyoFormularioPaginaSimple pagina : formulario.getPaginas()) {
+
+				final DisenyoFormularioPaginaSimple pagSimple = new DisenyoFormularioPaginaSimple();
+				final List<DisenyoFormularioComponenteSimple> compSimples = new ArrayList<>();
+				if (pagina.getComponentes() != null) {
+					for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
+
+						if (isTipoEditable(componente.getTipo())) {
+							final DisenyoFormularioComponenteSimple compSimple = new DisenyoFormularioComponenteSimple();
+							compSimple.setCodigo(componente.getCodigo());
+							compSimple.setIdentificador(componente.getIdentificador());
+							compSimple.setTipo(componente.getTipo());
+							compSimples.add(compSimple);
+						}
+
+						// Si estamos en el componente, hay que salir
+						if (idComponente != null && componente.getCodigo().compareTo(idComponente) == 0) {
+							salir = true;
+							break;
+						}
+					}
+				}
+
+				if (salir) {
+					break;
+				}
+				pagSimple.setComponentes(compSimples);
+				paginas.add(pagSimple);
+
+				// Si estamos en la página que toca, hay que salir
+				if (idPagina != null && pagina.getCodigo().compareTo(idPagina) == 0) {
+					break;
+				}
+			}
+			form.setPaginas(paginas);
 
 		}
 		return form;
+	}
+
+	/**
+	 * Comprueba si es tipo editable
+	 *
+	 * @param tipo
+	 * @return
+	 */
+	private static boolean isTipoEditable(final TypeObjetoFormulario tipo) {
+		return tipo == TypeObjetoFormulario.CAMPO_TEXTO || tipo == TypeObjetoFormulario.CHECKBOX
+				|| tipo == TypeObjetoFormulario.SELECTOR;
 	}
 
 	/**
@@ -278,4 +353,5 @@ public class UtilScripts {
 		}
 		return formularios;
 	}
+
 }

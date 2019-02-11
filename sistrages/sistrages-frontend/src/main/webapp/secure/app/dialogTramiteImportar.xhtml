@@ -168,7 +168,7 @@
 				<h:outputText value="#{msg['dialogTramiteImportar.formateadores']}" rendered="#{!empty dialogTramiteImportar.filasFormateador}" style="padding-left:30px;text-decoration: underline;font-weight: bold" />
 				<br />
 				<br />
-				<h:dataTable columnClasses="padding-left-4 w15,w15,w10,w50,w10 grid-center" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" rendered="#{!empty dialogTramiteImportar.filasFormateador}"  width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" >
+				<h:dataTable columnClasses="padding-left-4 w20, w20,w50,w10 grid-center" headerClass="grid-left" value="#{dialogTramiteImportar.filasFormateador}" var="fila" rendered="#{!empty dialogTramiteImportar.filasFormateador}"  width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" >
 					<h:column style="text-align:left;margin-left:2px;">
 						 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.formateador.identificador']}" /></f:facet>
       					#{fila.formateadorFormulario.identificador}
@@ -183,7 +183,6 @@
 						 <f:facet name = "header" style="text-align: left;">
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.formateador.estado']}" />
 						 </f:facet>
-      					#{msg['typeImportar.estado.' += fila.estado]}
       					<p:outputLabel value=" #{fila.mensaje}" rendered="#{fila.mensaje != null}" />
 					</h:column>
 

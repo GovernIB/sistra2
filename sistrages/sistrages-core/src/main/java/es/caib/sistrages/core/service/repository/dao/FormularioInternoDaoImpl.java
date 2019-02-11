@@ -916,19 +916,35 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 	}
 
 	@Override
-	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormulario) {
+	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
+			final String idComponente, final String idPaginaActual) {
 		final DisenyoFormularioSimple disenyo = new DisenyoFormularioSimple();
-		final String sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo = :idFormulario order by pagina.orden asc ";
+		final String sqlPaginas;
+
+		if (idFormularioTramite != null) {
+			sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo in (select formTra.formulario.codigo from JFormularioTramite formTra where formTra.codigo = :idFormularioTramite ) order by pagina.orden asc ";
+		} else {
+			sqlPaginas = "Select pagina.codigo from JPaginaFormulario pagina where pagina.formulario.codigo = :idFormulario order by pagina.orden asc ";
+		}
 		final Query query = entityManager.createQuery(sqlPaginas);
-		query.setParameter("idFormulario", idFormulario);
+		if (idFormularioTramite != null) {
+			query.setParameter("idFormularioTramite", idFormularioTramite);
+		} else {
+			query.setParameter("idFormulario", idFormulario);
+		}
 		final List<Long> idPaginas = query.getResultList();
+		boolean salir = false;
+
 		if (!idPaginas.isEmpty()) {
-			final DisenyoFormularioPaginaSimple pagina = new DisenyoFormularioPaginaSimple();
 
 			for (final long idPagina : idPaginas) {
+
+				final DisenyoFormularioPaginaSimple pagina = new DisenyoFormularioPaginaSimple();
+				pagina.setCodigo(idPagina);
+
 				// Filtramos por tipo (solo los que son de tipo textbox, checkbox, captcha y
 				// selector)
-				final String sqlComponentes = "select elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP') order by elemento.lineaFormulario.orden, elemento.identificador ";
+				final String sqlComponentes = "select elemento.codigo, elemento.identificador, identificador.tipo from JElementoFormulario elemento where elemento.lineaFormulario.paginaFormulario.codigo = :idPagina and elemento.tipo IN ('CT','SE','CK','CP') order by elemento.lineaFormulario.orden, elemento.orden ";
 				final Query queryComponentes = entityManager.createQuery(sqlComponentes);
 				queryComponentes.setParameter("idPagina", idPagina);
 				final List<Object[]> componentes = queryComponentes.getResultList();
@@ -937,18 +953,51 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 						final DisenyoFormularioComponenteSimple componente = new DisenyoFormularioComponenteSimple();
 
-						final String identificador = comp[0].toString();
-						final String tipo = comp[1].toString();
+						final Long codigo = Long.valueOf(comp[0].toString());
+						final String identificador = comp[1].toString();
+						final String tipo = comp[2].toString();
 
 						componente.setIdentificador(identificador);
 						componente.setTipo(TypeObjetoFormulario.fromString(tipo));
 
 						pagina.getComponentes().add(componente);
+
+						if (idComponente != null && codigo.equals(Long.valueOf(idComponente))) {
+							salir = true;
+							break;
+						}
 					}
+
+				}
+
+				disenyo.getPaginas().add(pagina);
+
+				/** Salir por componente (salir==true) o por misma pagina. **/
+				if (salir || (idPaginaActual != null && Long.valueOf(idPaginaActual).compareTo(idPagina) == 0)) {
+					break;
 				}
 			}
-			disenyo.getPaginas().add(pagina);
+
 		}
+
+		final String sqlIdentificador;
+
+		if (idFormularioTramite != null) {
+			sqlIdentificador = "Select formTramite.identificador from JFormularioTramite formTramite where formTramite.codigo = :idFormularioTramite  ";
+		} else {
+			sqlIdentificador = "Select formTramite.identificador from JFormularioTramite formTramite where formTramite.formulario.codigo = :idFormulario  ";
+		}
+
+		final Query queryIdentificador = entityManager.createQuery(sqlIdentificador);
+
+		if (idFormularioTramite != null) {
+			queryIdentificador.setParameter("idFormularioTramite", idFormularioTramite);
+		} else {
+			queryIdentificador.setParameter("idFormulario", idFormulario);
+		}
+
+		final String identificador = (String) queryIdentificador.getSingleResult();
+		disenyo.setIdentificador(identificador);
 
 		return disenyo;
 

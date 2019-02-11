@@ -15,6 +15,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 
 // TODO: Auto-generated Javadoc
@@ -53,6 +54,18 @@ public class ConfiguracionGlobalServiceBean implements ConfiguracionGlobalServic
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public ConfiguracionGlobal getConfiguracionGlobal(final String propiedad) {
+		return configuracionGlobalService.getConfiguracionGlobal(propiedad);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.api.service.ConfiguracionGlobalService#
+	 * getConfiguracionGlobal(java.lang.String)
+	 */
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public ConfiguracionGlobal getConfiguracionGlobal(final TypePropiedadConfiguracion propiedad) {
 		return configuracionGlobalService.getConfiguracionGlobal(propiedad);
 	}
 

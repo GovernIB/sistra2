@@ -189,9 +189,13 @@ public interface FormularioInternoService {
 	 * dialogScript).
 	 *
 	 * @param idFormulario
+	 * @param idFormularioTramite
+	 * @param idComponente
+	 * @param idPagina
 	 * @return
 	 */
-	DisenyoFormularioSimple getFormularioInternoSimple(Long idFormulario);
+	DisenyoFormularioSimple getFormularioInternoSimple(Long idFormularioTramite, Long idFormulario, String idComponente,
+			String idPagina);
 
 	/**
 	 * Devuelve el identificador del formulario

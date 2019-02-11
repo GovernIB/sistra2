@@ -25,6 +25,7 @@ import es.caib.sistrages.core.api.model.FuenteDatosValores;
 import es.caib.sistrages.core.api.model.ModelApi;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.CsvUtil;
@@ -154,7 +155,8 @@ public class DialogDominioExportar extends DialogControllerBase {
 	 * @return
 	 */
 	private String getVersion() {
-		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService
+				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION);
 		return confGlobal.getValor();
 	}
 

@@ -330,6 +330,8 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}
 		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		maps.put(TypeParametroVentana.TRAMITEPASO.toString(), id);
+
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 	}
 

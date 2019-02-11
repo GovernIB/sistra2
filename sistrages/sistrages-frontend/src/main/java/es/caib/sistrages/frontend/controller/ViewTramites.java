@@ -791,10 +791,10 @@ public class ViewTramites extends ViewControllerBase {
 				.listTramiteVersion(this.tramiteSeleccionada.getTramite().getCodigo(), null);
 		if (tramitesVersion != null) {
 			for (final TramiteVersion tramiteVersion : tramitesVersion) {
-				final List<Long> dominiosId = tramiteService.getTramiteDominiosId(tramiteVersion.getCodigo());
-				if (dominiosId != null) {
-					for (final Long dominioId : dominiosId) {
-						final Dominio dominio = dominioService.loadDominio(dominioId);
+				final List<Dominio> dominiosSimples = tramiteService
+						.getDominioSimpleByTramiteId(tramiteVersion.getCodigo());
+				if (dominiosSimples != null) {
+					for (final Dominio dominio : dominiosSimples) {
 						if (dominio.getAmbito() == TypeAmbito.AREA) {
 							return true;
 						}

@@ -9,7 +9,8 @@ import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
  * La clase LineaComponentesFormulario.
  */
 
-public final class LineaComponentesFormulario extends ObjetoFormulario {
+public final class LineaComponentesFormulario extends ObjetoFormulario
+		implements Comparable<LineaComponentesFormulario> {
 
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
@@ -145,6 +146,17 @@ public final class LineaComponentesFormulario extends ObjetoFormulario {
 			}
 		}
 		return res;
+	}
+
+	@Override
+	public int compareTo(final LineaComponentesFormulario arg0) {
+		int comparador;
+		if (this.getOrden() < arg0.getOrden()) {
+			comparador = -1;
+		} else {
+			comparador = 1;
+		}
+		return comparador;
 	}
 
 }

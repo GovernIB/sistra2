@@ -70,9 +70,8 @@ public class FormateadorFormularioServiceImpl implements FormateadorFormularioSe
 	 */
 	@Override
 	@NegocioInterceptor
-	public boolean removeFormateadorFormulario(final Long idFmt) {
+	public void removeFormateadorFormulario(final Long idFmt) {
 		fmtDao.remove(idFmt);
-		return true;
 	}
 
 	@Override
@@ -91,6 +90,12 @@ public class FormateadorFormularioServiceImpl implements FormateadorFormularioSe
 	@NegocioInterceptor
 	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro) {
 		return fmtDao.getAllByFiltro(idEntidad, filtro);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean tieneRelacionesFormateadorFormulario(final Long idFmt) {
+		return fmtDao.tieneRelacionesFormateadorFormulario(idFmt);
 	}
 
 }

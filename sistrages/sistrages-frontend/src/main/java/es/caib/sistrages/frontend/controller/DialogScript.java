@@ -31,6 +31,7 @@ import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
 import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.ScriptService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.api.util.UtilScripts;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -51,7 +52,11 @@ public class DialogScript extends DialogControllerBase {
 	@Inject
 	private ScriptService scriptService;
 
-	/** Dominio service. */
+	/** Tramite service. */
+	@Inject
+	private TramiteService tramiteService;
+
+	/** Formulario Interno service. */
 	@Inject
 	private FormularioInternoService formularioInternoService;
 
@@ -59,6 +64,16 @@ public class DialogScript extends DialogControllerBase {
 	private String id;
 	/** Id tramite version. **/
 	private String idTramiteVersion;
+	/** Formulario actual. **/
+	private String idFormularioActual;
+	/** Id. paso actual. **/
+	private String idPasoActual;
+	/** Id. componente. **/
+	private String idComponente;
+	/** Id. pagina. **/
+	private String idPagina;
+	/** Id. formulario actual. **/
+	private String idFormularioInternoActual;
 	/** Dominios. */
 	private List<Dominio> dominios = new ArrayList<>();
 	/** Dominio seleccionado. **/
@@ -165,10 +180,8 @@ public class DialogScript extends DialogControllerBase {
 
 		dominios = new ArrayList<>();
 		if (permiteEditar) {
-			final Object jsonDominios = mochila.get(Constantes.CLAVE_MOCHILA_DOMINIOS);
-			if (jsonDominios != null) {
-				dominios = (List<Dominio>) UtilJSON.fromListJSON(jsonDominios.toString(), Dominio.class);
-			}
+			dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
+
 		}
 
 		/* inicializa arbol */
@@ -177,70 +190,61 @@ public class DialogScript extends DialogControllerBase {
 		if (permiteEditar) {
 
 			if (tipoScript instanceof TypeScriptFlujo) {
-				final Object jsonTram = mochila.get(Constantes.CLAVE_MOCHILA_TRAMITE);
-				final Object jsonForms = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIO);
-				final Object jsonFormsInt = mochila.get(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO);
-				final Object jsonPaso = mochila.get(Constantes.CLAVE_MOCHILA_PASO);
 
-				Long idForm = null;
-				if (jsonForms != null) {
-					idForm = Long.valueOf(jsonForms.toString());
-				}
+				final TramiteSimple tramiteSimple = tramiteService.getTramiteSimple(idTramiteVersion);
 
-				Long idFormInterno = null;
-				if (jsonFormsInt != null) {
-					idFormInterno = Long.valueOf(jsonFormsInt.toString());
-				}
+				final List<Long> idFormularios = UtilScripts.getFormulariosFlujo(tramiteSimple, idFormularioActual,
+						idPasoActual, (TypeScriptFlujo) tipoScript, idFormularioInternoActual);
 
-				Long idPasoActual = null;
-				if (jsonPaso != null) {
-					idPasoActual = Long.valueOf(jsonPaso.toString());
-				}
-
-				TramiteSimple tramiteSimple = null;
-				if (jsonTram != null) {
-					tramiteSimple = (TramiteSimple) UtilJSON.fromJSON(jsonTram.toString(), TramiteSimple.class);
-				}
-
-				final List<Long> idFormularios = UtilScripts.getFormulariosFlujo(tramiteSimple, idForm, idPasoActual,
-						(TypeScriptFlujo) tipoScript, idFormInterno);
-
-				for (final Long idFormulario : idFormularios) {
+				for (final Long idFormularioInterno : idFormularios) {
 					final String identificadorFormulario = formularioInternoService
-							.getIdentificadorFormularioInterno(idFormulario);
-					final DefaultTreeNode nodoFormulario = new DefaultTreeNode(
-							new OpcionArbol(identificadorFormulario));
-					nodoFormulario.setSelectable(false);
-					final DisenyoFormularioSimple formulario = formularioInternoService
-							.getFormularioInternoSimple(idFormulario);
+							.getIdentificadorFormularioInterno(idFormularioInterno);
+					final DisenyoFormularioSimple formulario = formularioInternoService.getFormularioInternoSimple(null,
+							idFormularioInterno, null, null);
 
-					int i = 1;
-					for (final DisenyoFormularioPaginaSimple pagina : formulario.getPaginas()) {
-						final DefaultTreeNode nodoPagina = new DefaultTreeNode(
-								new OpcionArbol(UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i));
-						nodoPagina.setSelectable(false);
-						for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
-							final DefaultTreeNode nodoComponente = new DefaultTreeNode(
-									new OpcionArbol(componente.getIdentificador(), componente.getTipo()));
-							nodoPagina.getChildren().add(nodoComponente);
-						}
-						nodoFormulario.getChildren().add(nodoPagina);
-						i++;
-					}
-
-					treeFormularios.getChildren().add(nodoFormulario);
+					cargarArbol(formulario, identificadorFormulario);
 				}
 
 			}
 
 			if (tipoScript instanceof TypeScriptFormulario) {
-				final DisenyoFormularioSimple disenyoFormulario = null;
 
-				// DisenyoFormularioSimple disenyoFormulario =
-				// UtilScripts.getFormulariosFormulario(formulario, idComponente);
+				final DisenyoFormularioSimple disenyoFormulario = this.formularioInternoService
+						.getFormularioInternoSimple(Long.valueOf(idFormularioActual), null, idComponente, idPagina);
+				if (disenyoFormulario != null) {
+					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
+				}
+
 			}
 		}
 
+	}
+
+	/**
+	 * Carga el arbol.
+	 *
+	 * @param formulario
+	 */
+	private void cargarArbol(final DisenyoFormularioSimple formulario, final String identificadorFormulario) {
+
+		final DefaultTreeNode nodoFormulario = new DefaultTreeNode(new OpcionArbol(identificadorFormulario));
+		nodoFormulario.setSelectable(false);
+
+		int i = 1;
+		for (final DisenyoFormularioPaginaSimple pagina : formulario.getPaginas()) {
+			final DefaultTreeNode nodoPagina = new DefaultTreeNode(
+					new OpcionArbol(UtilJSF.getLiteral("dialogDisenyoFormulario.pagina") + i));
+			nodoPagina.setSelectable(false);
+			for (final DisenyoFormularioComponenteSimple componente : pagina.getComponentes()) {
+				final DefaultTreeNode nodoComponente = new DefaultTreeNode(
+						new OpcionArbol(componente.getIdentificador(), componente.getTipo()));
+				nodoPagina.getChildren().add(nodoComponente);
+			}
+			nodoFormulario.getChildren().add(nodoPagina);
+			i++;
+		}
+
+		treeFormularios.getChildren().add(nodoFormulario);
 	}
 
 	/**
@@ -1095,6 +1099,81 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setTextFormulario(final String textFormulario) {
 		this.textFormulario = textFormulario;
+	}
+
+	/**
+	 * @return the idPasoActual
+	 */
+	public String getIdPasoActual() {
+		return idPasoActual;
+	}
+
+	/**
+	 * @param idPasoActual
+	 *            the idPasoActual to set
+	 */
+	public void setIdPasoActual(final String idPasoActual) {
+		this.idPasoActual = idPasoActual;
+	}
+
+	/**
+	 * @return the idComponente
+	 */
+	public String getIdComponente() {
+		return idComponente;
+	}
+
+	/**
+	 * @param idComponente
+	 *            the idComponente to set
+	 */
+	public void setIdComponente(final String idComponente) {
+		this.idComponente = idComponente;
+	}
+
+	/**
+	 * @return the idPagina
+	 */
+	public String getIdPagina() {
+		return idPagina;
+	}
+
+	/**
+	 * @param idPagina
+	 *            the idPagina to set
+	 */
+	public void setIdPagina(final String idPagina) {
+		this.idPagina = idPagina;
+	}
+
+	/**
+	 * @return the idFormularioActual
+	 */
+	public String getIdFormularioActual() {
+		return idFormularioActual;
+	}
+
+	/**
+	 * @param idFormularioActual
+	 *            the idFormularioActual to set
+	 */
+	public void setIdFormularioActual(final String idFormularioActual) {
+		this.idFormularioActual = idFormularioActual;
+	}
+
+	/**
+	 * @return the idFormularioInternoActual
+	 */
+	public String getIdFormularioInternoActual() {
+		return idFormularioInternoActual;
+	}
+
+	/**
+	 * @param idFormularioInternoActual
+	 *            the idFormularioInternoActual to set
+	 */
+	public void setIdFormularioInternoActual(final String idFormularioInternoActual) {
+		this.idFormularioInternoActual = idFormularioInternoActual;
 	}
 
 }

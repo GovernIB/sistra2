@@ -46,6 +46,7 @@ import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.GestorFicherosService;
@@ -135,7 +136,11 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(id));
 		idiomasTramiteVersion = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
 		pasos = tramiteService.getTramitePasos(Long.valueOf(id));
-		dominiosId = tramiteService.getTramiteDominiosId(Long.valueOf(id));
+		dominiosId = new ArrayList<>();
+		final List<Dominio> dominiosSimples = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(id));
+		for (final Dominio dominioSimple : dominiosSimples) {
+			dominiosId.add(dominioSimple.getCodigo());
+		}
 		tramiteVersion.setListaPasos(pasos);
 		tramiteVersion.setListaDominios(dominiosId);
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
@@ -453,7 +458,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 * @return
 	 */
 	private String getVersion() {
-		final ConfiguracionGlobal confGlobal = configuracionGlobalService.getConfiguracionGlobal("sistrages.version");
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService
+				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION);
 		return confGlobal.getValor();
 	}
 

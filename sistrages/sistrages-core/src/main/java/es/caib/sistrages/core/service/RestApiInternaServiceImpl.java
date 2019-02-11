@@ -1,5 +1,6 @@
 package es.caib.sistrages.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -192,7 +193,12 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	public TramiteVersion loadTramiteVersion(final String idTramite, final int version) {
 		final TramiteVersion tramiteVersion = tramiteDao.getTramiteVersionByNumVersion(idTramite, version);
 		if (tramiteVersion != null) {
-			final List<Long> dominiosId = tramiteDao.getTramiteDominiosId(tramiteVersion.getCodigo());
+
+			final List<Long> dominiosId = new ArrayList<>();
+			final List<Dominio> dominiosSimples = tramiteDao.getDominioSimpleByTramiteId(tramiteVersion.getCodigo());
+			for (final Dominio dominioSimple : dominiosSimples) {
+				dominiosId.add(dominioSimple.getCodigo());
+			}
 			tramiteVersion.setListaDominios(dominiosId);
 		}
 		return tramiteVersion;

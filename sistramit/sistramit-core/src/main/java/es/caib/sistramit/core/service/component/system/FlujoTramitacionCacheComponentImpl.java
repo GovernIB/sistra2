@@ -1,7 +1,9 @@
 package es.caib.sistramit.core.service.component.system;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,12 +56,16 @@ public class FlujoTramitacionCacheComponentImpl implements FlujoTramitacionCache
 	@Override
 	public void purgarFlujosTramitacion() {
 		synchronized (flujoTramitacionMap) {
+			final List<String> ids = new ArrayList<>();
 			for (final String idSesionTramitacion : flujoTramitacionMap.keySet()) {
 				final FlujoTramitacionCache fc = flujoTramitacionMap.get(idSesionTramitacion);
 				if (fc != null && isTimeout(fc.getFcUltimoAcceso())) {
-					log.debug("Purga flujo " + idSesionTramitacion);
-					flujoTramitacionMap.remove(idSesionTramitacion);
+					ids.add(idSesionTramitacion);
 				}
+			}
+			for (final String idSesionTramitacion : ids) {
+				log.debug("Purga flujo " + idSesionTramitacion);
+				flujoTramitacionMap.remove(idSesionTramitacion);
 			}
 		}
 	}

@@ -234,4 +234,16 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		}
 	}
 
+	@Override
+	public boolean tieneRelacionesFormateadorFormulario(final Long idFmt) {
+		final String sql = "select count(plantilla) from JPlantillaFormulario plantilla where plantilla.formateadorFormulario.codigo = :idFmt";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFmt", idFmt);
+
+		final Long resultado = (Long) query.getSingleResult();
+
+		return resultado.compareTo(0l) > 0;
+
+	}
+
 }

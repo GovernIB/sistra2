@@ -32,10 +32,14 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogPropiedadesFormulario extends DialogControllerBase {
 
-	/**
-	 * id
-	 */
+	/** id */
 	private String id;
+
+	/** Id. formulario tramite. **/
+	private String idFormularioTramite;
+
+	/** Id. tramite version. **/
+	private String idTramiteVersion;
 
 	/**
 	 * Datos elemento.
@@ -149,9 +153,13 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
 				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
+		maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+		maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormularioTramite);
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), id);
+
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.valueOf(modoAcceso), maps, true, 700);
 
 	}
@@ -225,7 +233,11 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.paginaSeleccionada));
-		UtilJSF.openDialog(DialogPaginaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 170);
+		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormularioTramite);
+		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+
+		UtilJSF.openDialog(DialogPaginaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 130);
 	}
 
 	/**
@@ -542,6 +554,36 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 	public void setFmtService(final FormateadorFormularioService fmtService) {
 		this.fmtService = fmtService;
+	}
+
+	/**
+	 * @return the idFormularioTramite
+	 */
+	public String getIdFormularioTramite() {
+		return idFormularioTramite;
+	}
+
+	/**
+	 * @param idFormularioTramite
+	 *            the idFormularioTramite to set
+	 */
+	public void setIdFormularioTramite(final String idFormularioTramite) {
+		this.idFormularioTramite = idFormularioTramite;
+	}
+
+	/**
+	 * @return the idTramiteVersion
+	 */
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
+	}
+
+	/**
+	 * @param idTramiteVersion
+	 *            the idTramiteVersion to set
+	 */
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 }

@@ -53,6 +53,9 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Id. **/
 	private String id;
 
+	/** Id del formulario al que pertenece. **/
+	private String idPaso;
+
 	/** Init. **/
 	public void init() {
 
@@ -251,16 +254,22 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
 				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		params.put(TypeParametroVentana.TRAMITEPASO.toString(), this.idPaso);
+		if (TypeScriptFlujo.fromString(tipoScript) != TypeScriptFlujo.SCRIPT_POSTGUARDAR_FORMULARIO) {
+			params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.data.getCodigo().toString());
+			params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(),
+					this.data.getIdFormularioInterno().toString());
+		}
+
 		if (id == null || script == null) {
 
-			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		} else {
 
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-			params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 			UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, params, true, 700);
 
 		}
@@ -277,6 +286,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), this.data.getIdFormularioInterno().toString());
 
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
+		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.id);
 
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.EDICION, params, true, 1200, 680);
 	}
@@ -357,6 +367,21 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	/**
+	 * @return the idPaso
+	 */
+	public String getIdPaso() {
+		return idPaso;
+	}
+
+	/**
+	 * @param idPaso
+	 *            the idPaso to set
+	 */
+	public void setIdPaso(final String idPaso) {
+		this.idPaso = idPaso;
 	}
 
 }

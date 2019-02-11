@@ -44,7 +44,7 @@ public interface FormateadorFormularioService {
 	 *            el identificador
 	 * @return true, si se realiza correctamente
 	 */
-	boolean removeFormateadorFormulario(Long idFmt);
+	void removeFormateadorFormulario(Long idFmt);
 
 	/**
 	 * Actualiza el formateador de formulario.
@@ -64,5 +64,13 @@ public interface FormateadorFormularioService {
 	 * @return la lista de formateadores de formulario
 	 */
 	List<FormateadorFormulario> listFormateadorFormulario(Long idEntidad, String filtro);
+
+	/**
+	 * Comprueba si un id de formateador tiene relaciones.
+	 *
+	 * @param idFmt
+	 * @return
+	 */
+	boolean tieneRelacionesFormateadorFormulario(Long idFmt);
 
 }

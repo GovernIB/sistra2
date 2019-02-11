@@ -196,8 +196,9 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 
 	@Override
 	@NegocioInterceptor
-	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormulario) {
-		return formIntDao.getFormularioInternoSimple(idFormulario);
+	public DisenyoFormularioSimple getFormularioInternoSimple(final Long idFormularioTramite, final Long idFormulario,
+			final String idComponente, final String idPagina) {
+		return formIntDao.getFormularioInternoSimple(idFormularioTramite, idFormulario, idComponente, idPagina);
 	}
 
 	@Override

@@ -373,7 +373,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				this.getFormularioTramiteSeleccionado().getIdFormularioInterno().toString());
 
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
-
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 680);
 	}
 
@@ -400,12 +399,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		/* obtenemos los pasos del trámite. */
 		final List<TramitePaso> pasos = tramiteService.getTramitePasos(id);
 		tramiteVersion.setListaPasos(pasos);
-		final List<Long> dominiosId = tramiteService.getTramiteDominiosId(id);
-		dominios = new ArrayList<>();
-		for (final Long dominioId : dominiosId) {
-			dominios.add(dominioService.loadDominio(dominioId));
-		}
-		tramiteVersion.setListaDominios(dominiosId);
+		dominios = tramiteService.getDominioSimpleByTramiteId(id);
 		avisoEntidad = avisoEntidadService
 				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 
@@ -530,18 +524,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			// Pasamos a la mochila los dominios y los ids de formularios
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-			mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
 			mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
 					UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
-			mochila.put(Constantes.CLAVE_MOCHILA_PASO,
-					((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-			mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
-			mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 			final TramitePaso paso = ((OpcionArbol) this.selectedNode.getData()).getTramitePaso();
 			final Map<String, String> map = new HashMap<>();
 			map.put(TypeParametroVentana.ID.toString(), paso.getCodigo().toString());
 			map.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+
 			if (paso instanceof TramitePasoDebeSaber) {
 
 				UtilJSF.openDialog(DialogDefinicionVersionDebeSaber.class, TypeModoAcceso.EDICION, map, true, 950, 500);
@@ -565,12 +555,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		// Pasamos a la mochila los dominios y los ids de formularios
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
 		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
 				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
-		mochila.put(Constantes.CLAVE_MOCHILA_PASO, null);
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id.toString());
@@ -626,12 +612,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 			dominioService.removeTramiteVersion(this.dominioSeleccionado.getCodigo(), this.tramiteVersion.getCodigo());
 
-			dominios = new ArrayList<>();
-			final List<Long> dominiosId = tramiteService.getTramiteDominiosId(id);
-			for (final Long dominioId : dominiosId) {
-				dominios.add(dominioService.loadDominio(dominioId));
-			}
-			tramiteVersion.setListaDominios(dominiosId);
+			dominios = tramiteService.getDominioSimpleByTramiteId(id);
 
 			dominioSeleccionado = null;
 		} else {
@@ -722,18 +703,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		// Ponemos en la mochila los dominios y formularios
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
 		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
 				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
-		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
-				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, formulario.getCodigo().toString());
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, formulario.getIdFormularioInterno().toString());
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getCodigo()));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 500);
 	}
 
@@ -870,14 +848,10 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> map = new HashMap<>();
 		map.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
 				UtilJSON.toJSON(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS));
-		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
-		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
-				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
-		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
+		map.put(TypeParametroVentana.TRAMITEPASO.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
+
+		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 
 		if (script != null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
@@ -921,11 +895,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		}
 
-		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_DOMINIOS);
 		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_TRAMITE);
-		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_PASO);
-		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_FORMULARIO);
-		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO);
 
 	}
 
@@ -975,18 +945,15 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private void editarDocumentoDialog(final Long idDocumento) {
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
 		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
 				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
-		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
-				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idDocumento));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		params.put(TypeParametroVentana.ENTIDAD.toString(),
 				entidadService.loadEntidadByArea(area.getCodigo()).getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionAnexo.class, TypeModoAcceso.EDICION, params, true, 950, 645);
@@ -1133,13 +1100,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		}
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-		mochila.put(Constantes.CLAVE_MOCHILA_DOMINIOS, UtilJSON.toJSON(this.dominios));
 		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE,
 				UtilJSON.toJSON(UtilScripts.getTramiteSimple(this.tramiteVersion)));
-		mochila.put(Constantes.CLAVE_MOCHILA_PASO,
-				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO, null);
-		mochila.put(Constantes.CLAVE_MOCHILA_FORMULARIO_INTERNO, null);
 
 		this.editarTasaDialog(this.tasaSeleccionado.getCodigo());
 
@@ -1164,6 +1126,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTasa));
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
+		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
+				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
 		UtilJSF.openDialog(DialogDefinicionVersionTasa.class, TypeModoAcceso.EDICION, params, true, 700, 450);
 	}
 
