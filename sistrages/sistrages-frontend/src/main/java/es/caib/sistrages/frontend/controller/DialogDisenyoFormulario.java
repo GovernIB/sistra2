@@ -79,6 +79,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	/** Id formulario **/
 	private String id;
 
+	/** Id. formulario paso. **/
+	private String idFormulario;
+
 	/**
 	 * id tramite.
 	 */
@@ -393,7 +396,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					throw new ErrorNoControladoException(e);
 				}
 
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("info.modificado.ok"));
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
 
 				// Refresca iframe formulario
 				// TODO Pasarle componente destino para posicionarse
@@ -581,7 +584,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(formulario.getCodigo()));
+		params.put(TypeParametroVentana.ID.toString(), id);
+		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormulario);
+		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), this.idTramiteVersion);
 
 		Map<String, Object> mochilaDatos = null;
 
@@ -1119,13 +1124,23 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
 	}
 
+	public void pingDominio() {
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+		final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(campo.getCodDominio()));
+		params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
+		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
+	}
+
+
 	private String getIdComponente() {
 		String idComponente = null;
 		if (objetoFormularioEdit != null) {
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				idComponente = "L" + objetoFormularioEdit.getCodigo();
 			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
-				idComponente = String.valueOf(objetoFormularioEdit.getCodigo());
+				idComponente = ((ComponenteFormulario) objetoFormularioEdit).getIdComponente();
 			}
 		}
 		return idComponente;
@@ -1188,9 +1203,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
 				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
+		maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormulario);
+		maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		maps.put(TypeParametroVentana.COMPONENTE.toString(), this.objetoFormularioEdit.getCodigo().toString());
+
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 
 	}
@@ -1461,5 +1480,20 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
+	}
+
+	/**
+	 * @return the idFormulario
+	 */
+	public String getIdFormulario() {
+		return idFormulario;
+	}
+
+	/**
+	 * @param idFormulario
+	 *            the idFormulario to set
+	 */
+	public void setIdFormulario(final String idFormulario) {
+		this.idFormulario = idFormulario;
 	}
 }

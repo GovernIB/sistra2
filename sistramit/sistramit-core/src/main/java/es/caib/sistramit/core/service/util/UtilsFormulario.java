@@ -195,26 +195,6 @@ public class UtilsFormulario {
 	}
 
 	/**
-	 * Busca valor campo.
-	 *
-	 * @param valoresCampo
-	 *            Lista de valores
-	 * @param idCampo
-	 *            Id campo
-	 * @return Valor campo (null si no lo encuentra)
-	 */
-	public static ValorCampo buscarValorCampo(final List<ValorCampo> valoresCampo, final String idCampo) {
-		ValorCampo res = null;
-		for (final ValorCampo vc : valoresCampo) {
-			if (vc.getId().equals(idCampo)) {
-				res = vc;
-				break;
-			}
-		}
-		return res;
-	}
-
-	/**
 	 * Validacion estandar de los caracteres permitidos. Todos excepto "<" y ">".
 	 *
 	 * @param valor

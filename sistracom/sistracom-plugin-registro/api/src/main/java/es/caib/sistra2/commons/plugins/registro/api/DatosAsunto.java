@@ -18,6 +18,7 @@ public class DatosAsunto implements Serializable {
 	private String extractoAsunto;
 	private String codigoOrganoDestino;
 	private String codigoSiaProcedimiento;
+	private String numeroExpediente;
 
 	public Date getFechaAsunto() {
 		return fechaAsunto;
@@ -61,7 +62,7 @@ public class DatosAsunto implements Serializable {
 
 	/**
 	 * Método de acceso a codigoSiaProcedimiento.
-	 * 
+	 *
 	 * @return codigoSiaProcedimiento
 	 */
 	public String getCodigoSiaProcedimiento() {
@@ -70,12 +71,31 @@ public class DatosAsunto implements Serializable {
 
 	/**
 	 * Método para establecer codigoSiaProcedimiento.
-	 * 
+	 *
 	 * @param codigoSiaProcedimiento
 	 *            codigoSiaProcedimiento a establecer
 	 */
 	public void setCodigoSiaProcedimiento(String codigoSiaProcedimiento) {
 		this.codigoSiaProcedimiento = codigoSiaProcedimiento;
+	}
+
+	/**
+	 * Método de acceso a numeroExpediente.
+	 * 
+	 * @return numeroExpediente
+	 */
+	public String getNumeroExpediente() {
+		return numeroExpediente;
+	}
+
+	/**
+	 * Método para establecer numeroExpediente.
+	 * 
+	 * @param numeroExpediente
+	 *            numeroExpediente a establecer
+	 */
+	public void setNumeroExpediente(String numeroExpediente) {
+		this.numeroExpediente = numeroExpediente;
 	}
 
 }

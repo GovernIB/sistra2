@@ -1,11 +1,14 @@
 package es.caib.sistramit.core.service.component.formulario.interno;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +19,29 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
+import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
+import es.caib.sistramit.core.api.exception.AccionPersonalizadaNoExisteException;
 import es.caib.sistramit.core.api.exception.EncodeException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.exception.FormularioNoExisteException;
+import es.caib.sistramit.core.api.exception.ErrorPdfFormularioException;
+import es.caib.sistramit.core.api.exception.FormularioFinalizadoException;
+import es.caib.sistramit.core.api.model.comun.types.TypeAviso;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
+import es.caib.sistramit.core.api.model.formulario.AccionFormularioPersonalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
+import es.caib.sistramit.core.api.model.formulario.MensajeAviso;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
+import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
+import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
 import es.caib.sistramit.core.service.component.formulario.interno.utils.CalculoDatosFormularioHelper;
 import es.caib.sistramit.core.service.component.formulario.interno.utils.ConfiguracionFormularioHelper;
 import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
@@ -42,7 +55,7 @@ import es.caib.sistramit.core.service.model.formulario.interno.DatosFormularioIn
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.InicializacionPagina;
-import es.caib.sistramit.core.service.model.formulario.interno.PaginaFormularioData;
+import es.caib.sistramit.core.service.model.formulario.interno.ResultadoValidacion;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FormularioDao;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
@@ -126,14 +139,9 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
 
 		// Obtenemos datos página actual
-		final DatosFormularioInterno datosFormulario = datosSesion.getDatosFormulario();
-		if (datosFormulario == null) {
-			throw new FormularioNoExisteException("No existen datos del formulario");
-		}
-		final PaginaFormularioData pagData = datosFormulario.getPaginaActualFormulario();
+		final PaginaFormularioData pagData = datosSesion.getDatosFormulario().getPaginaActualFormulario();
 
-		// Calculamos valores posibles campos selectores (excepto los de
-		// ventana)
+		// Calculamos valores posibles campos selectores
 		final List<ValoresPosiblesCampo> vpp = valoresPosiblesFormularioHelper
 				.calcularValoresPosiblesPaginaActual(datosSesion);
 
@@ -157,13 +165,10 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		}
 
 		// Devolvemos información página actual
-		final PaginaFormulario pagAct = new PaginaFormulario(datosSesion.getIdFormulario());
-		pagAct.setConfiguracion(pagData.getConfiguracion());
-		pagAct.setValores(pagData.getValores());
+		final PaginaFormulario pagAct = new PaginaFormulario(pagData);
 		pagAct.setValoresPosibles(vpp);
 		pagAct.setHtml(html);
 		pagAct.setAcciones(acciones);
-		pagAct.setRecursos(pagData.getRecursos());
 		return pagAct;
 	}
 
@@ -181,8 +186,71 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 
 	@Override
 	public ResultadoGuardarPagina guardarPagina(List<ValorCampo> valoresPagina, String accionPersonalizada) {
-		// TODO PENDIENTE IMPLEMENTAR
-		throw new RuntimeException("Pendiente implementar");
+
+		// Verificamos que no este finalizada la sesion de formulario
+		if (datosSesion.isFinalizada()) {
+			throw new FormularioFinalizadoException("No se puede guardar pagina: sesion formulario finalizada");
+		}
+
+		// Almacenamos valores campos
+		datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValoresPagina(valoresPagina);
+
+		// Recalcula campos ocultos
+		calculoDatosFormularioHelper.calcularCamposOcultosPagina(datosSesion);
+
+		// Realizamos validaciones
+		final ResultadoValidacion rv = validarGuardarPagina(datosSesion, accionPersonalizada);
+
+		final ResultadoGuardarPagina res = new ResultadoGuardarPagina();
+		if (rv.isError()) {
+			res.setError(TypeSiNo.SI);
+			res.setMensaje(new MensajeAviso(TypeAviso.ERROR, rv.getMensajeError()));
+		} else {
+			// Mensaje aviso (solo podemos avisar de un mensaje de aviso, los juntamos
+			// todos)
+			if (rv.getAvisos() != null && !rv.getAvisos().isEmpty()) {
+				final StringBuilder sbMensajeAviso = new StringBuilder(rv.getAvisos().size() * ConstantesNumero.N200);
+				TypeAviso tipoAviso = TypeAviso.INFO;
+				for (final MensajeAviso ma : rv.getAvisos()) {
+					if ((tipoAviso == TypeAviso.INFO
+							&& (ma.getTipo() == TypeAviso.WARNING || ma.getTipo() == TypeAviso.ERROR))
+							|| (tipoAviso == TypeAviso.WARNING && ma.getTipo() == TypeAviso.ERROR)) {
+						tipoAviso = ma.getTipo();
+					}
+					if (sbMensajeAviso.length() > 0) {
+						sbMensajeAviso.append("\n");
+					}
+					sbMensajeAviso.append(ma.getTexto());
+				}
+				final String msgAviso = sbMensajeAviso.toString();
+				if (StringUtils.isNotBlank(msgAviso)) {
+					res.setMensaje(new MensajeAviso(tipoAviso, msgAviso));
+				}
+			}
+
+			// Finalizacion formulario
+			final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
+			if (paginaDef.isPaginaFinal()) {
+				// Si es la ultima pagina finalizamos formulario.
+				finalizarFormulario(datosSesion, accionPersonalizada);
+				// Marcamos sesion formulario como finalizada
+				datosSesion.setFinalizada(true);
+				// Devolvemos respuesta indicando que se ha finalizado
+				res.setFinalizado(TypeSiNo.SI);
+				// Establecemos url retorno
+				res.setUrl(this.configuracionComponent
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
+						+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO + "?idPaso="
+						+ datosSesion.getDatosInicioSesion().getIdPaso() + "&idFormulario="
+						+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket=" + datosSesion.getTicket());
+			} else {
+				// Si no es la ultima pagina pasamos a la siguiente
+				// TODO FASE 2: EVALUAR PARA SIGUIENTE VERSION MULTIPAGINA
+				throw new ErrorConfiguracionException("No esta desarrollado formulario multipagina");
+			}
+		}
+
+		return res;
 	}
 
 	@Override
@@ -255,9 +323,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		int index = 0;
 		for (final RPaginaFormulario defPagina : defForm.getFormularioInterno().getPaginas()) {
 			// Inicializamos pagina
-			final InicializacionPagina ip = inicializarPagina(defForm.getIdentificador(), index, defPagina,
-					valoresCampo);
-			// Añadimos pagina a datos formularo
+			final InicializacionPagina ip = inicializarPagina(defForm.getIdentificador(), index, defForm, valoresCampo);
+			// Añadimos pagina a datos formulario
 			df.addPaginaFormulario(ip.getPagina());
 			df.addDependenciasCampos(ip.getDependencias());
 			index++;
@@ -279,9 +346,6 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	private void revisarCamposEvaluables(final DatosFormularioInterno df) {
 		for (final String idCampoEvaluable : df.getCamposEvaluables()) {
 			final ConfiguracionCampo configuracionCampoEvaluable = df.getConfiguracionCampo(idCampoEvaluable);
-			if (df == null) {
-				throw new ErrorConfiguracionException("No existe campo con id '" + idCampoEvaluable + "'");
-			}
 			if (UtilsFormularioInterno.esCampoOculto(configuracionCampoEvaluable)) {
 				throw new ErrorConfiguracionException("Un campo oculto no puede aparecer como dependencia de otros");
 			}
@@ -296,24 +360,30 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *            id formulario
 	 * @param indiceDef
 	 *            indice definición
-	 * @param defPagina
-	 *            definición página
+	 * @param defForm
+	 *            definición formulario
 	 * @param valoresCampo
 	 *            valores campo
 	 * @return
 	 */
 	private InicializacionPagina inicializarPagina(final String idFormulario, final int indiceDef,
-			final RPaginaFormulario defPagina, final List<ValorCampo> valoresCampo) {
+			final RFormularioTramite defForm, final List<ValorCampo> valoresCampo) {
+
+		// Definicion pagina
+		final RPaginaFormulario defPagina = defForm.getFormularioInterno().getPaginas().get(indiceDef);
 
 		// Añadimos pagina
 		final PaginaFormularioData paginaForm = new PaginaFormularioData(idFormulario, indiceDef);
+		paginaForm.setMostrarTitulo(TypeSiNo.fromBoolean(defForm.getFormularioInterno().isMostrarTitulo()));
+		paginaForm.setTitulo(defForm.getFormularioInterno().getTitulo());
 
 		// Establecemos campos página
 		final List<DependenciaCampo> dependenciasPagina = new ArrayList<>();
 		for (final RComponente campoDef : UtilsFormularioInterno.devuelveListaCampos(defPagina)) {
 
 			// Calculamos valor inicial campo (si no tiene valor inicial, sera valor vacio)
-			ValorCampo valorInicialCampo = UtilsFormulario.buscarValorCampo(valoresCampo, campoDef.getIdentificador());
+			ValorCampo valorInicialCampo = UtilsFormularioInterno.buscarValorCampo(valoresCampo,
+					campoDef.getIdentificador());
 			if (valorInicialCampo == null) {
 				valorInicialCampo = UtilsFormularioInterno.crearValorVacio(campoDef);
 			}
@@ -343,6 +413,120 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		ip.setPagina(paginaForm);
 		ip.setDependencias(dependenciasPagina);
 		return ip;
+	}
+
+	/**
+	 * Realiza validaciones al guardar la pagina.
+	 *
+	 * @param datosSesion
+	 *            Datos sesion formulario
+	 * @param accionPersonalizada
+	 *            Accion personalizada
+	 * @return Resultado validacion
+	 */
+	private ResultadoValidacion validarGuardarPagina(final DatosSesionFormularioInterno datosSesion,
+			final String accionPersonalizada) {
+		// - Si se ejecuta una accion personalizada comprobamos si debemos validar
+		boolean validar = true;
+		if (StringUtils.isNotBlank(accionPersonalizada)) {
+			final AccionFormularioPersonalizada accion = datosSesion.getDatosFormulario().getPaginaActualFormulario()
+					.buscarAccion(accionPersonalizada);
+			if (accion == null) {
+				throw new AccionPersonalizadaNoExisteException(datosSesion.getIdFormulario(), accionPersonalizada);
+			}
+			if (accion.getValidar() == TypeSiNo.NO) {
+				validar = false;
+			}
+		}
+
+		ResultadoValidacion rv = new ResultadoValidacion();
+		if (validar) {
+			// Formato campos (mismas validaciones que en js)
+			rv = validacionesFormularioHelper.validarConfiguracionCampos(datosSesion);
+			// Script validacion campos de formulario
+			// No hacemos caso de los mensajes de aviso de los campos, solo si hay error.
+			// Los avisos se muestran al rellenar campo.
+			if (!rv.isError()) {
+				rv = validacionesFormularioHelper.validarScriptValidacionCampos(datosSesion);
+			}
+			// Script validacion de la pagina
+			if (!rv.isError()) {
+				rv = validacionesFormularioHelper.validarScriptValidacionPagina(datosSesion);
+			}
+		}
+
+		return rv;
+	}
+
+	/**
+	 * Finaliza formulario.
+	 *
+	 * @param pDatosSesion
+	 *            Datos sesion
+	 * @param accionPersonalizada
+	 *            Accion personalizada
+	 */
+	private void finalizarFormulario(final DatosSesionFormularioInterno pDatosSesion,
+			final String accionPersonalizada) {
+		// Obtenemos valores página
+		// TODO Cuando haya captchas, hay que eliminarlos
+		final List<ValorCampo> valoresFormulario = pDatosSesion.getDatosFormulario().getValoresAccesiblesPaginaActual();
+		// Generamos xml
+		final XmlFormulario formXml = new XmlFormulario(valoresFormulario, accionPersonalizada);
+		final byte[] xml = UtilsFormulario.valoresToXml(formXml);
+		// Generamos pdf
+		final RPlantillaFormulario plantillaPdf = configuracionFormularioHelper
+				.obtenerPlantillaPdfVisualizacion(pDatosSesion);
+		final byte[] pdf = generarPdfFormulario(pDatosSesion.getDefinicionTramite(),
+				pDatosSesion.getDatosInicioSesion(), plantillaPdf, xml);
+		// Retornamos al flujo de tramitacion
+		final DatosFinalizacionFormulario datosFinSesion = new DatosFinalizacionFormulario();
+		datosFinSesion.setXml(xml);
+		datosFinSesion.setPdf(pdf);
+		dao.finalizarSesionGestorFormularios(pDatosSesion.getTicket(), datosFinSesion);
+	}
+
+	/**
+	 * Genera PDF formulario.
+	 *
+	 * @param definicionTramiteSTG
+	 *            Definición trámite
+	 * @param datosInicioSesionFormulario
+	 *            Datos inicio sesión
+	 *
+	 * @param plantillaPdf
+	 *            Plantilla PDF
+	 * @param xml
+	 *            XML Formulario
+	 * @return PDF
+	 */
+	public byte[] generarPdfFormulario(DefinicionTramiteSTG definicionTramiteSTG,
+			DatosInicioSesionFormulario datosInicioSesionFormulario, RPlantillaFormulario plantillaPdf, byte[] xml) {
+		try {
+			// Obtenemos plantilla
+			byte[] plantilla = null;
+			if (StringUtils.isNotBlank(plantillaPdf.getFicheroPlantilla())) {
+				final String pathFicherosExternos = configuracionComponent
+						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PATH_FICHEROS_EXTERNOS);
+				final String pathFile = pathFicherosExternos + plantillaPdf.getFicheroPlantilla();
+				plantilla = IOUtils.resourceToByteArray(pathFile);
+			}
+			// Obtenemos formateador
+			final FormateadorPdfFormulario formateador = (FormateadorPdfFormulario) Class
+					.forName(plantillaPdf.getClaseFormateador()).newInstance();
+			// Formateamos a PDF
+			final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
+					datosInicioSesionFormulario.getIdPaso(), datosInicioSesionFormulario.getIdFormulario(),
+					definicionTramiteSTG);
+			return formateador.formatear(xml, plantilla, definicionTramiteSTG.getDefinicionVersion().getIdioma(),
+					defFormulario.getFormularioInterno(), datosInicioSesionFormulario.getTituloProcedimiento());
+		} catch (final IOException e) {
+			throw new ErrorPdfFormularioException("Error generando pdf formulario", e);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			throw new ErrorPdfFormularioException(
+					"Error generando pdf formulario a partir classname " + plantillaPdf.getClaseFormateador(), e);
+		}
+
 	}
 
 }

@@ -3,6 +3,8 @@ package es.caib.sistramit.core.service.model.formulario.interno;
 import java.io.Serializable;
 import java.util.List;
 
+import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
+
 /**
  * Inicialización de la página.
  *

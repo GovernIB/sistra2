@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Mètode per a comprovar si la data indicada és la data actual. La data ha de tenir el format dd/MM/yyyy.</li>
+    	<li>Mètode per a comprovar si la data indicada és la data actual. La data ha de tenir el format yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -36,7 +36,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>fecha</b>: Cadena de caràcters a comparar amb la data actual, el format de la cadena ha de ser dd/MM/yyyy.</li>
+		<li><b>fecha</b>: Cadena de caràcters a comparar amb la data actual, el format de la cadena ha de ser yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -56,23 +56,23 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p><b>Exemple 1</b> Validar si la cadena de caràcters '09/01/2019' correspon amb la data actual (suposant que avui és 9 de gener de 2019). </p>
+<p><b>Exemple 1</b> Validar si la cadena de caràcters '2019-01-09' correspon amb la data actual (suposant que avui és 9 de gener de 2019). </p>
  <p class="codigoScript">
-var valida = PLUGIN_VALIDACIONES.validaFechaActual('09/01/2019');
+var valida = PLUGIN_VALIDACIONES.validaFechaActual('2019-01-09');
 </p>
 <p>La funció validaFechaActual retorna 0, ja que la data indicada correspon amb la data actual.</p>
 <br />
 
-<p><b>Exemple 2</b> Validar si la cadena de caràcters '02/01/2019' correspon amb la data actual (suposant que avui és 9 de gener de 2019).</p>
+<p><b>Exemple 2</b> Validar si la cadena de caràcters '2019-01-02' correspon amb la data actual (suposant que avui és 9 de gener de 2019).</p>
  <p class="codigoScript">
-	var valida = PLUGIN_VALIDACIONES.validaFechaActual('02/01/2019');
+	var valida = PLUGIN_VALIDACIONES.validaFechaActual('2019-01-02');
 </p>
 <p>La funció validaFechaActual retorna -1, ja que la data indicada és menor que la data actual.</p>
 <br />
 
-<p><b>Exemple 3</b> Validar si la cadena de caràcters '12/01/2019' correspon amb la data actual (suposant que avui és 9 de gener de 2019). </p>
+<p><b>Exemple 3</b> Validar si la cadena de caràcters '2019-01-12' correspon amb la data actual (suposant que avui és 9 de gener de 2019). </p>
  <p class="codigoScript">
-	var valida = PLUGIN_VALIDACIONES.validaFechaActual('12/01/2019');
+	var valida = PLUGIN_VALIDACIONES.validaFechaActual('2019-01-12');
 </p>
 <p>La funció validaFechaActual retorna 1, ja que la data indicada és major que la data actual.</p>
 <br />

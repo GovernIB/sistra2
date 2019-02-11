@@ -305,6 +305,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		registroWs.setDocFisica(new Long(ConstantesRegweb3.DOC_FISICA_REQUERIDA));
 		registroWs.setIdioma(asiento.getDatosAsunto().getIdiomaAsunto());
 		registroWs.setTipoAsunto(asiento.getDatosAsunto().getTipoAsunto());
+		registroWs.setNumExpediente(asiento.getDatosAsunto().getNumeroExpediente());
 
 		// Datos interesado: representante / representado
 		final Interesado representanteAsiento = UtilsRegweb3.obtenerDatosInteresadoAsiento(asiento,

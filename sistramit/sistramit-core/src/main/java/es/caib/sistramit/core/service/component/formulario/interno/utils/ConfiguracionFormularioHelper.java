@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.formulario.interno.utils;
 import java.util.List;
 
 import es.caib.sistrages.rest.api.interna.RComponente;
+import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
@@ -63,6 +64,6 @@ public interface ConfiguracionFormularioHelper {
 	 *            Datos sesion
 	 * @return plantilla PDF de visualizacion.
 	 */
-	byte[] obtenerPlantillaPdfVisualizacion(DatosSesionFormularioInterno pDatosSesion);
+	RPlantillaFormulario obtenerPlantillaPdfVisualizacion(DatosSesionFormularioInterno pDatosSesion);
 
 }

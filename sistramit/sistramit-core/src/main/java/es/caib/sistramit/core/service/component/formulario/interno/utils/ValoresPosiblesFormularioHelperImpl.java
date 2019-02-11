@@ -89,8 +89,7 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 		// Obtenemos definicion pagina
 		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(pDatosSesion);
 
-		// Para los campos de tipo selector (no ventana) calculamos valores
-		// posibles
+		// Para los campos de tipo selector calculamos valores posibles
 		for (final RComponente campoDef : UtilsFormularioInterno.devuelveListaCampos(paginaDef)) {
 			final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(campoDef.getTipo());
 			if (tipoCampo == TypeCampo.SELECTOR) {
@@ -211,6 +210,10 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 		final String idDominio = pCampoDef.getListaDominio().getDominio();
 		final String campoCodigo = pCampoDef.getListaDominio().getCampoCodigo();
 		final String campoDescripcion = pCampoDef.getListaDominio().getCampoDescripcion();
+		if (StringUtils.isBlank(campoCodigo) || StringUtils.isBlank(campoDescripcion)) {
+			throw new ErrorConfiguracionException("No se ha especificado campo código o descripción para el dominio "
+					+ idDominio + " en selector " + pCampoDef.getIdentificador());
+		}
 		final ParametrosDominio parametros = UtilsFormularioInterno.obtenerParametrosDominio(pDatosSesion, pCampoDef);
 		// Accedemos a dominio
 		final ValoresDominio vals = dominiosComponent.recuperarDominio(idDominio, parametros,

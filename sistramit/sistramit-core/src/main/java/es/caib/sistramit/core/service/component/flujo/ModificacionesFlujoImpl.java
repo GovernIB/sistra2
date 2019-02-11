@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
@@ -44,7 +45,6 @@ import es.caib.sistramit.core.service.model.flujo.EstadoPersistenciaPasoTramite;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
-import es.caib.sistramit.core.service.model.script.ResPersonalizacionTramiteInt;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFlujo;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -222,8 +222,8 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 
 		// Personalizacion plazo
 		final Date fcInicio = UtilsFlujo.deformateaFecha(rp.getPlazoInicio(),
-				ResPersonalizacionTramiteInt.FORMATO_FECHA);
-		final Date fcFin = UtilsFlujo.deformateaFecha(rp.getPlazoFin(), ResPersonalizacionTramiteInt.FORMATO_FECHA);
+				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+		final Date fcFin = UtilsFlujo.deformateaFecha(rp.getPlazoFin(), ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 
 		if (fcInicio != null) {
 			pDatosSesion.getDatosTramite().setPlazoInicio(fcInicio);

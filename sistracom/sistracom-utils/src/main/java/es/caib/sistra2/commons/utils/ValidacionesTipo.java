@@ -21,6 +21,18 @@ import org.apache.commons.validator.routines.UrlValidator;
  */
 public final class ValidacionesTipo {
 
+	/** Atributo formato fecha. */
+	public static final String FORMATO_FECHA = "dd/MM/yyyy";
+
+	/** Atributo formato fecha-hora. */
+	public static final String FORMATO_FECHAHORA = "dd/MM/yyyy HH:mm:ss";
+
+	/** Atributo formato fecha. */
+	public static final String FORMATO_FECHA_INTERNACIONAL = "yyyy-MM-dd";
+
+	/** Atributo formato fecha-hora. */
+	public static final String FORMATO_FECHAHORA_INTERNACIONAL = "yyyy-MM-dd HH:mm:ss";
+
 	/** Atributo constante PATRON_TELEFONO. */
 	private final Pattern patronTelefono;
 
@@ -33,11 +45,8 @@ public final class ValidacionesTipo {
 	/** Atributo patron fecha de ValidacionesTipoImpl. */
 	private final Pattern patronFecha;
 
-	/** Atributo formato fecha. */
-	private static final String FORMATO_FECHA = "dd/MM/yyyy";
-
-	/** Atributo formato fecha-hora. */
-	private static final String FORMATO_FECHAHORA = "dd/MM/yyyy HH:mm:ss";
+	/** Atributo patron hora de ValidacionesTipoImpl. */
+	private final Pattern patronHora;
 
 	/** Atributo LETRAS. */
 	private static final String LETRAS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -58,7 +67,7 @@ public final class ValidacionesTipo {
 	private static final String RE_CUENTA = "^[0-9]{20}$";
 
 	/** Literal de error. **/
-	static final private String FORMATO_FECHA_INCORRECTO = "El formato de la fecha introducida es incorrecto";
+	private static final String FORMATO_FECHA_INCORRECTO = "El formato de la fecha introducida es incorrecto";
 
 	/** Instancia. */
 	private static ValidacionesTipo instance;
@@ -101,8 +110,10 @@ public final class ValidacionesTipo {
 		super();
 		patronTelefono = Pattern.compile("^\\d{9}$");
 		patronImporte = Pattern.compile("^[0-9]+(,[0-9]{1,2})?$");
-		patronEmail = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
+		patronEmail = Pattern.compile(
+				"^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,4}$");
 		patronFecha = Pattern.compile("(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((1|2)\\d\\d\\d)");
+		patronHora = Pattern.compile("^([01]?[0-9]|2[0-3]):[0-5][0-9]$");
 	}
 
 	/**
@@ -425,6 +436,11 @@ public final class ValidacionesTipo {
 		return res;
 	}
 
+	public boolean esHora(final String hora) {
+		final boolean res = (!esCadenaVacia(hora) && compruebaRegExp(hora, patronHora));
+		return res;
+	}
+
 	public boolean esFecha(final String fecha, final String formato) {
 		boolean res;
 		if (esCadenaVacia(fecha)) {
@@ -697,17 +713,18 @@ public final class ValidacionesTipo {
 		return result;
 	}
 
-	public int validaFechaHoraFin(final String pFechaHoraUno, final String pFechaHoraDos)
+	public int validaFechaHoraFin(final String pFechaHoraUno, final String pFechaHoraDos, final String formato)
 			throws ValidacionTipoException {
-		return validaFechaFinImpl(pFechaHoraUno, pFechaHoraDos, FORMATO_FECHAHORA);
-	}
-
-	public int validaFechaHoraActual(final String pFechaHora) throws ValidacionTipoException {
-		return validaFechaActualImpl(pFechaHora, FORMATO_FECHAHORA);
+		return validaFechaFinImpl(pFechaHoraUno, pFechaHoraDos, formato);
 	}
 
 	public String getFechaActual() {
 		final SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
+		return sdf.format(new Date());
+	}
+
+	public String getFechaActual(String formato) {
+		final SimpleDateFormat sdf = new SimpleDateFormat(formato);
 		return sdf.format(new Date());
 	}
 
@@ -808,9 +825,9 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public int obtenerAnyo(final String pFecha) throws ValidacionTipoException {
+	public int obtenerAnyo(final String pFecha, String formato) throws ValidacionTipoException {
 		try {
-			final Date fecha = parseFecha(pFecha, FORMATO_FECHA);
+			final Date fecha = parseFecha(pFecha, formato);
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(fecha);
 			return cal.get(Calendar.YEAR);
@@ -819,9 +836,9 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public int obtenerMes(final String pFecha) throws ValidacionTipoException {
+	public int obtenerMes(final String pFecha, String formato) throws ValidacionTipoException {
 		try {
-			final Date fecha = parseFecha(pFecha, FORMATO_FECHA);
+			final Date fecha = parseFecha(pFecha, formato);
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(fecha);
 			return cal.get(Calendar.MONTH) + ConstantesNumero.N1;
@@ -830,9 +847,9 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public int obtenerDia(final String pFecha) throws ValidacionTipoException {
+	public int obtenerDia(final String pFecha, String formato) throws ValidacionTipoException {
 		try {
-			final Date fecha = parseFecha(pFecha, FORMATO_FECHA);
+			final Date fecha = parseFecha(pFecha, formato);
 			final Calendar cal = Calendar.getInstance();
 			cal.setTime(fecha);
 			return cal.get(Calendar.DAY_OF_MONTH);
@@ -841,12 +858,12 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public String sumaDias(final String pFecha, final int pDias) throws ValidacionTipoException {
-		final Date fecha = parseFecha(pFecha, FORMATO_FECHA);
+	public String sumaDias(final String pFecha, final int pDias, String formato) throws ValidacionTipoException {
+		final Date fecha = parseFecha(pFecha, formato);
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(fecha);
 		cal.add(Calendar.DAY_OF_MONTH, pDias);
-		return getFecha(cal.getTime(), FORMATO_FECHA);
+		return getFecha(cal.getTime(), formato);
 	}
 
 	/**
@@ -886,15 +903,18 @@ public final class ValidacionesTipo {
 	}
 
 	public int distanciaDias(final Date pFecha1, final Date pFecha2) throws ValidacionTipoException {
-		return distanciaDiasImpl(formateaFecha(pFecha1, FORMATO_FECHA), formateaFecha(pFecha2, FORMATO_FECHA), false);
+		return distanciaDiasImpl(formateaFecha(pFecha1, FORMATO_FECHA), formateaFecha(pFecha2, FORMATO_FECHA), false,
+				FORMATO_FECHA);
 	}
 
-	public int distanciaDias(final String pFecha1, final String pFecha2) throws ValidacionTipoException {
-		return distanciaDiasImpl(pFecha1, pFecha2, false);
+	public int distanciaDias(final String pFecha1, final String pFecha2, final String formato)
+			throws ValidacionTipoException {
+		return distanciaDiasImpl(pFecha1, pFecha2, false, formato);
 	}
 
-	public int distanciaDiasHabiles(final String pFecha1, final String pFecha2) throws ValidacionTipoException {
-		return distanciaDiasImpl(pFecha1, pFecha2, true);
+	public int distanciaDiasHabiles(final String pFecha1, final String pFecha2, final String formato)
+			throws ValidacionTipoException {
+		return distanciaDiasImpl(pFecha1, pFecha2, true, formato);
 	}
 
 	/**
@@ -909,17 +929,17 @@ public final class ValidacionesTipo {
 	 * @return distancia entre dias
 	 * @throws ValidacionTipoException
 	 */
-	private int distanciaDiasImpl(final String pFecha1, final String pFecha2, final boolean pHabiles)
-			throws ValidacionTipoException {
+	private int distanciaDiasImpl(final String pFecha1, final String pFecha2, final boolean pHabiles,
+			final String formato) throws ValidacionTipoException {
 		int distancia = 0;
-		final Date d1 = parseFecha(pFecha1, FORMATO_FECHA);
+		final Date d1 = parseFecha(pFecha1, formato);
 		if (d1 == null) {
 			distancia = 0;
 		} else {
 			final Calendar calendar1 = Calendar.getInstance();
 			calendar1.setTime(d1);
 
-			final Date d2 = parseFecha(pFecha2, FORMATO_FECHA);
+			final Date d2 = parseFecha(pFecha2, formato);
 			if (d2 == null) {
 				distancia = 0;
 			} else {

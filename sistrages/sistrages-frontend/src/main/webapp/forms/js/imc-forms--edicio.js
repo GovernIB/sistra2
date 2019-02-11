@@ -133,7 +133,7 @@ $.fn.appElement = function(options) {
 				element_f
 					.addClass("imc--el-seleccionat");
 
-				rcEditarComponente(element_f.attr('id'));
+				rcEditarComponente(element_f.attr('data-codigo'));
 
 			},
 			mou = function(e) {

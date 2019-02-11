@@ -41,9 +41,13 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
+import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
+import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
-import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
+import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
@@ -51,7 +55,7 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.service.FlujoFormularioInternoService;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.api.service.SecurityService;
-import es.caib.sistramit.core.service.component.formulario.interno.ControladorGestorFormulariosInternoImpl;
+import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.test.mock.SistragesMock;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
@@ -205,7 +209,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		flujoTramitacion_debeSaber(idSesionTramitacion);
 
 		// Pasamos a paso siguiente: rellenar
-		flujoTramitacion_rellenar(idSesionTramitacion, TypePresentacion.ELECTRONICA);
+		flujoTramitacion_rellenar(idSesionTramitacion);
 
 		// Pasamos a paso siguiente: anexar
 		flujoTramitacion_anexar_electronico(idSesionTramitacion);
@@ -219,33 +223,6 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	}
 
 	/**
-	 * Verificación flujo tramitación preregistro: verifica la funcionalidad básica
-	 * de los diferentes pasos de tramitación a partir de la definición simulada de
-	 * una versión de trámite.
-	 */
-	// @Test
-	public void test7_flujoTramitacionPreregistro() throws Exception {
-
-		final UsuarioAutenticadoInfo usuarioAutenticadoInfo = loginSimulado(TypeAutenticacion.AUTENTICADO);
-
-		// Iniciar trámite
-		final String idSesionTramitacion = flujoTramitacion_iniciarTramite(usuarioAutenticadoInfo);
-
-		// Detalle paso actual: Debe saber
-		flujoTramitacion_debeSaber(idSesionTramitacion);
-
-		// Pasamos a paso siguiente: rellenar
-		flujoTramitacion_rellenar(idSesionTramitacion, TypePresentacion.PRESENCIAL);
-
-		// Pasamos a paso siguiente: anexar
-		flujoTramitacion_anexar_presencial(idSesionTramitacion);
-
-		// Pasamos a paso siguiente: pagar
-		flujoTramitacion_pagar_presencial(idSesionTramitacion, usuarioAutenticadoInfo);
-
-	}
-
-	/**
 	 * Test paso rellenar.
 	 *
 	 * @param idSesionTramitacion
@@ -254,8 +231,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 	 *            presentacion
 	 * @throws UnsupportedEncodingException
 	 */
-	private void flujoTramitacion_rellenar(final String idSesionTramitacion, final TypePresentacion presentacion)
-			throws UnsupportedEncodingException {
+	private void flujoTramitacion_rellenar(final String idSesionTramitacion) throws UnsupportedEncodingException {
 		ParametrosAccionPaso parametros;
 		ResultadoAccionPaso resPaso;
 		String nombreFichero;
@@ -263,6 +239,8 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		DetallePasos dp;
 		XmlFormulario xmlForm;
 		List<ValorCampo> valoresIniciales;
+		List<ValorCampo> valoresActuales;
+		List<ValoresPosiblesCampo> valoresPosibles;
 
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		final ResultadoIrAPaso rp = flujoTramitacionService.irAPaso(idSesionTramitacion, dp.getSiguiente());
@@ -293,85 +271,83 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// -- Redirigimos formulario
 		final String idSesionFormulario = flujoFormularioInternoService.cargarSesion(af.getTicket());
 
-		// Simular
-		final boolean simular = ControladorGestorFormulariosInternoImpl.SIMULAR;
-		if (!simular) {
+		// -- Cargamos pagina actual
+		final PaginaFormulario paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
+		valoresActuales = paginaData.getValores();
+		valoresPosibles = paginaData.getValoresPosibles();
+		// Verificamos acciones carga
+		// * Dato inicial precargado
+		for (final ValorCampo valorInicial : valoresIniciales) {
+			final ValorCampo valorPosterior = UtilsFormularioInterno.buscarValorCampo(paginaData.getValores(),
+					valorInicial.getId());
+			Assert.isTrue(valorPosterior.esValorIgual(valorInicial),
+					"No concuerda valor inicial campo " + valorInicial.getId());
+		}
+		// * Estado campo
+		Assert.isTrue(paginaData.getConfiguracion("TXT_CALC").getSoloLectura() == TypeSiNo.SI,
+				"El campo no está como solo lectura");
 
-			// -- Cargamos pagina actual
-			final PaginaFormulario paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
-			// Verificamos acciones carga
-			// * Dato inicial precargado
-			final String[] camposValoresIniciales = { "SEL_LISTA", "CHK_ESTADO", "TXT_ESTADO", };
-			for (final String c : camposValoresIniciales) {
-				final ValorCampo valorInicial = UtilsFormulario.buscarValorCampo(paginaData.getValores(), c);
-				final ValorCampo valorPosterior = UtilsFormulario.buscarValorCampo(paginaData.getValores(), c);
-				Assert.isTrue(valorPosterior.esValorIgual(valorInicial), "No concuerda valor inicial campo " + c);
-			}
-			// * Estado campo
-			Assert.isTrue(paginaData.getConfiguracion("TXT_ESTADO").getSoloLectura() == TypeSiNo.SI,
-					"El campo no está como solo lectura");
-
-			if (true) {
-				throw new RuntimeException("Pendiente seguir");
-			}
-
-			// -- evaluarCambioCampoPagina
-			// TODO Pendiente
-
-			// -- Guardar formulario (modificamos dato)
-			// TODO Pendiente guardarPagina
-			// flujoFormularioInternoService.guardarPagina(idSesionFormulario,
-			// valoresPagina, null);
-
+		// -- Evaluar cambio campo
+		final ValorCampoSimple vcs = (ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales,
+				"CHK_ESTADO");
+		vcs.setValor("N");
+		final ResultadoEvaluarCambioCampo resCambioCampo = flujoFormularioInternoService
+				.evaluarCambioCampoPagina(idSesionFormulario, "CHK_ESTADO", valoresActuales);
+		// * Campo calculado (cambio valor para TXT_CALC = CHK_ESTADO)
+		Assert.isTrue(
+				UtilsFormularioInterno.buscarValorCampo(resCambioCampo.getValores(), "TXT_CALC").esValorIgual(vcs),
+				"No se ha calculado valor TXT_CALC");
+		// * Estado (cambio estado segun CHK_ESTADO)
+		Assert.isTrue(
+				UtilsFormularioInterno.buscarConfiguracionModificadaCampo(resCambioCampo.getConfiguracion(), "TXT_CALC")
+						.getSoloLectura() == TypeSiNo.fromBoolean("S".equals(vcs.getValor())),
+				"No se ha calculado estado TXT_CALC");
+		// * Valores posibles (recalculados para SEL_CALC)
+		Assert.isTrue(resCambioCampo.getValoresPosibles().get(0).getId().equals("SEL_CALC"),
+				"No se ha calculado estado TXT_CALC");
+		// * Actualizamos valores calculados
+		for (final ValorCampo vcModif : resCambioCampo.getValores()) {
+			final ValorCampo vcActual = UtilsFormularioInterno.buscarValorCampo(valoresActuales, vcModif.getId());
+			vcActual.reemplazaValor(vcModif);
 		}
 
-		// -- Simulamos rellenar
-		if (simular) {
-			final String campoNuevoId = "PRESENTACION";
-			final String campoNuevoValor = presentacion.toString();
-			xmlForm = UtilsFormulario.xmlToValores(datosFichero);
-			xmlForm.getValores().add(new ValorCampoSimple(campoNuevoId, campoNuevoValor));
-			final String xmlNuevo = new String(UtilsFormulario.valoresToXml(xmlForm), "UTF-8");
+		// -- Guardar pagina
+		// * Metemos valores campos textos
+		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_NORMAL"))
+				.setValor("Valor modificado");
+		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_FECHA"))
+				.setValor("2019-02-28");
+		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_HORA")).setValor("23:59");
+		// * Metemos valor selector (primero de valores posibles)
+		final ValorIndexado vci = UtilsFormularioInterno.buscarValoresPosibles(valoresPosibles, "SEL_LISTA")
+				.getValores().get(0);
+		((ValorCampoIndexado) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "SEL_LISTA")).setValor(vci);
 
-			ParametrosAccionPaso pParametros;
-			pParametros = new ParametrosAccionPaso();
-			pParametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
-			final String ticketForm = flujoTramitacionService.simularRellenarFormulario(idSesionTramitacion,
-					xmlNuevo.trim());
+		final ResultadoGuardarPagina resGuardar = flujoFormularioInternoService.guardarPagina(idSesionFormulario,
+				valoresActuales, null);
+		Assert.isTrue(resGuardar.getError() == TypeSiNo.NO, "El formulario tiene errores: " + resGuardar.getMensaje());
+		Assert.isTrue(resGuardar.getFinalizado() == TypeSiNo.SI, "No se ha finalizado formulario tras guardar página");
 
-			// -- Guardar formulario
-			parametros = new ParametrosAccionPaso();
-			parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
-			parametros.addParametroEntrada("ticket", ticketForm);
-			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
-					TypeAccionPasoRellenar.GUARDAR_FORMULARIO, parametros);
-			final TypeSiNo cancelado = (TypeSiNo) resPaso.getParametroRetorno("cancelado");
-			final TypeSiNo correcto = (TypeSiNo) resPaso.getParametroRetorno("correcto");
-			final String mensajeIncorrecto = (String) resPaso.getParametroRetorno("mensajeIncorrecto");
-			Assert.isTrue(cancelado == TypeSiNo.NO, "El formulario se ha cancelado");
-			Assert.isTrue(correcto == TypeSiNo.SI, "El formulario no es correcto");
-			Assert.isTrue(StringUtils.isAllBlank(mensajeIncorrecto), "Existe mensaje incorrecto");
+		// -- Guardar formulario
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+		parametros.addParametroEntrada("ticket", idSesionFormulario);
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.GUARDAR_FORMULARIO, parametros);
+		final TypeSiNo cancelado = (TypeSiNo) resPaso.getParametroRetorno("cancelado");
+		final TypeSiNo correcto = (TypeSiNo) resPaso.getParametroRetorno("correcto");
+		final String mensajeIncorrecto = (String) resPaso.getParametroRetorno("mensajeIncorrecto");
+		Assert.isTrue(cancelado == TypeSiNo.NO, "El formulario se ha cancelado");
+		Assert.isTrue(correcto == TypeSiNo.SI, "El formulario no es correcto");
+		Assert.isTrue(StringUtils.isAllBlank(mensajeIncorrecto), "Existe mensaje incorrecto");
 
-			// -- Mostramos xml tras guardar
-			parametros = new ParametrosAccionPaso();
-			parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
-			resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
-					TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
-			datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
-			this.logger.info("XML formulario guardado: " + new String(datosFichero, "UTF-8"));
-
-			// Verificamos que esta el campo nuevo añadido
-			final XmlFormulario xmlFormNuevo = UtilsFormulario.xmlToValores(datosFichero);
-			boolean correctoCampoNuevo = false;
-			for (final ValorCampo vc : xmlFormNuevo.getValores()) {
-				if (vc.getId().equals(campoNuevoId) && vc.getTipo() == TypeValor.SIMPLE
-						&& ((ValorCampoSimple) vc).getValor().equals(campoNuevoValor)) {
-					correctoCampoNuevo = true;
-					break;
-				}
-			}
-			Assert.isTrue(correctoCampoNuevo, "No existe el nuevo campo añadido al guardar");
-		}
+		// -- Mostramos xml tras guardar
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idFormulario", dpr.getFormularios().get(0).getId());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, dp.getActual().getId(),
+				TypeAccionPasoRellenar.DESCARGAR_XML, parametros);
+		datosFichero = (byte[]) resPaso.getParametroRetorno("xml");
+		this.logger.info("XML formulario guardado: " + new String(datosFichero, "UTF-8"));
 
 		// -- Descargar pdf
 		parametros = new ParametrosAccionPaso();

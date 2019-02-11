@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Método para comprobar si la fecha indicada es la fecha actual. La fecha debe tener el formato dd/MM/yyyy.</li>
+    	<li>Método para comprobar si la fecha indicada es la fecha actual. La fecha debe tener el formato yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -36,7 +36,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>fecha</b>: Cadena de caracteres a comparar con la fecha actual, el formato de la cadena debe ser dd/MM/yyyy.</li>
+		<li><b>fecha</b>: Cadena de caracteres a comparar con la fecha actual, el formato de la cadena debe ser yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -56,9 +56,9 @@
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p><b>Ejemplo 1</b> Validar si la cadena de caracteres '09/01/2019' corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
+<p><b>Ejemplo 1</b> Validar si la cadena de caracteres '2019-01-09' corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
  <p class="codigoScript">
-var valida = PLUGIN_VALIDACIONES.validaFechaActual('09/01/2019');
+var valida = PLUGIN_VALIDACIONES.validaFechaActual('2019-01-09');
 </p>
 <p>La función validaFechaActual retorna 0, ya que la fecha indicada corresponde con la fecha actual.</p>
 <br />
@@ -70,9 +70,9 @@ var valida = PLUGIN_VALIDACIONES.validaFechaActual('09/01/2019');
 <p>La función validaFechaActual retorna  -1, ya que la fecha indicada es menor que la fecha actual.</p>
 <br />
 
-<p><b>Ejemplo 3</b> Validar si la cadena de caracteres '12/01/2019' corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
+<p><b>Ejemplo 3</b> Validar si la cadena de caracteres '2019-01-12' corresponde con la fecha actual (suponiendo que hoy es 9 de enero de 2019). </p>
  <p class="codigoScript">
-	var valida = PLUGIN_VALIDACIONES.validaFechaActual('12/01/2019');
+	var valida = PLUGIN_VALIDACIONES.validaFechaActual('2019-01-12');
 </p>
 <p>La función validaFechaActual retorna 1, ya que la fecha indicada es mayor que la fecha actual.</p>
 <br />

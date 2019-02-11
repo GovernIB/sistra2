@@ -15,7 +15,7 @@
 
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats" />
 
-	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" >
+	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" styleClass="w100">
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.letra']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.letra}" maxlength="2" readonly="#{dialogDisenyoFormulario.consulta}">

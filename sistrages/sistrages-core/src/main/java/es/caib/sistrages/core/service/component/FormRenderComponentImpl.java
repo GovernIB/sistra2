@@ -21,6 +21,7 @@ import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 public class FormRenderComponentImpl implements FormRenderComponent {
 
 	private String lineSeparator;
+	private final boolean debug = false;
 
 	@Autowired
 	FormularioInternoDao formIntDao;
@@ -63,7 +64,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		escribeLinea(html, "<body>", 0);
-		escribeLinea(html, "<div id=\"imc-contenidor\" class=\"imc-contenidor\" >", 1);
+
+		if (pModoEdicion) {
+			escribeLinea(html, "<div id=\"imc-contenidor\" class=\"imc-contenidor\" >", 1);
+		}
 
 		if (formulario != null && formulario.isMostrarCabecera()) {
 			cabeceraFormulario(html, trataLiteral(formulario.getTextoCabecera().getTraduccion(pLang)));
@@ -79,7 +83,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(html, "</div>", 4);
 		escribeLinea(html, "</div>", 3);
 		escribeLinea(html, "</form>", 2);
-		escribeLinea(html, "</div>", 1);
+
+		if (pModoEdicion) {
+			escribeLinea(html, "</div>", 1);
+		}
 
 		if (pModoEdicion) {
 			scripts(html, pIdComponente);
@@ -132,16 +139,16 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 					switch (cf.getTipo()) {
 					case SECCION:
-						campoSeccion(pOut, cf, pLang);
+						campoSeccion(pOut, cf, pLang, pModoEdicion);
 						break;
 					case CAMPO_TEXTO:
-						campoTexto(pOut, cf, pLang);
+						campoTexto(pOut, cf, pLang, pModoEdicion);
 						break;
 					case ETIQUETA:
-						campoEtiqueta(pOut, cf, pLang);
+						campoEtiqueta(pOut, cf, pLang, pModoEdicion);
 						break;
 					case CHECKBOX:
-						campoCheckBox(pOut, cf, pLang);
+						campoCheckBox(pOut, cf, pLang, pModoEdicion);
 						break;
 					case SELECTOR:
 						campoSelector(pOut, cf, pLang, pModoEdicion);
@@ -156,17 +163,20 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 					escribeLinea(pOut, "<br/><br/>", 6);
 				}
 
-				escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\" id=\"L",
+				escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\"",
+						escribeCodigo("L" + String.valueOf(lc.getCodigo()), pModoEdicion), " id=\"L",
 						String.valueOf(lc.getCodigo()), "\"></div>", 5);
 
 			}
 		}
 	}
 
-	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
+	private void campoSeccion(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
 
-		escribeLinea(pOut, "<h4 ", escribeId(pCF.getCodigo()), "class=\"imc-element imc-seccio\">", 5);
+		escribeLinea(pOut, "<h4 ", escribeCodigo(pCF.getCodigo(), pModoEdicion), "class=\"imc-element imc-seccio\">",
+				5);
 
 		escribeLinea(pOut, "<span class=\"imc-se-marca\">", componente.getLetra(), "</span>", 6);
 		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {
@@ -178,11 +188,12 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	}
 
-	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
+	private void campoTexto(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion) {
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
-		estilo.append("imc-el-name-").append(String.valueOf(campo.getCodigo()));
+		// estilo.append("imc-el-name-").append(String.valueOf(campo.getCodigo()));
 
 		String tipo = null;
 		final StringBuilder elemento = new StringBuilder();
@@ -213,7 +224,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 				}
 				estilo.append(" imc-el-files-").append(String.valueOf(nfilas));
 
-				elemento.append("<textarea name=\"").append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"")
+				elemento.append("<textarea id=\"").append(campo.getIdComponente()).append("\" cols=\"20\" rows=\"")
 						.append(nfilas).append("\"></textarea>");
 			} else {
 				tipo = "text";
@@ -227,15 +238,15 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		if (tipo != null && !"textarea".equals(tipo)) {
-			elemento.append("<input name=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
+			elemento.append("<input id=\"").append(campo.getIdComponente()).append("\" type=\"" + tipo + "\"/>");
 		}
 
-		escribeLinea(pOut, "<div ", escribeId(pCF.getCodigo()), " class=\"imc-element ", estilo.toString(),
-				"\" data-type=\"", tipo, "\">", 5);
+		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
+				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getCodigo()), "\">",
-					trataLiteral(campo.getTexto().getTraduccion(pLang)), "</label></div>", 6);
+			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
+					"\">", trataLiteral(campo.getTexto().getTraduccion(pLang)), "</label></div>", 6);
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", elemento.toString(), "</div>", 6);
@@ -244,7 +255,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	}
 
-	private void campoCheckBox(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
+	private void campoCheckBox(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion) {
 		final ComponenteFormularioCampoCheckbox campo = (ComponenteFormularioCampoCheckbox) pCF;
 
 		final StringBuilder estilo = new StringBuilder();
@@ -254,17 +266,18 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(campo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(campo.getCodigo()));
+		// estilo.append(" imc-el-name-").append(String.valueOf(campo.getCodigo()));
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
-			texto = "<label for=\"" + campo.getCodigo() + "\">" + trataLiteral(campo.getTexto().getTraduccion(pLang))
-					+ "</label>";
+			texto = "<label for=\"" + campo.getIdComponente() + "\">"
+					+ trataLiteral(campo.getTexto().getTraduccion(pLang)) + "</label>";
 		}
-		escribeLinea(pOut, "<div ", escribeId(pCF.getCodigo()), "class=\"imc-element imc-el-check", estilo.toString(),
-				"\" data-type=\"check\">", 5);
+		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
+				"class=\"imc-element imc-el-check", estilo.toString(), "\" data-type=\"check\">", 5);
+
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
 		escribeLinea(pOut, "<div class=\"imc-input-check\">", 7);
-		escribeLinea(pOut, "<input name=\"", String.valueOf(campo.getIdComponente()), "\" type=\"checkbox\">", 8);
+		escribeLinea(pOut, "<input id=\"", String.valueOf(campo.getIdComponente()), "\" type=\"checkbox\">", 8);
 		escribeLinea(pOut, texto, 8);
 
 		escribeLinea(pOut, "</div>", 7);
@@ -279,7 +292,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		switch (campo.getTipoCampoIndexado()) {
 		case DESPLEGABLE:
-			campoSelectorDesplegable(pOut, campo, pLang);
+			campoSelectorDesplegable(pOut, campo, pLang, pModoEdicion);
 			break;
 		case MULTIPLE:
 			campoSelectorMultiple(pOut, campo, pLang, pModoEdicion);
@@ -293,7 +306,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private void campoSelectorDesplegable(final StringBuilder pOut, final ComponenteFormularioCampoSelector pCampo,
-			final String pLang) {
+			final String pLang, final boolean pModoEdicion) {
 
 		final StringBuilder estilo = new StringBuilder();
 		String texto = "";
@@ -302,15 +315,15 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
+		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
-			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getCodigo() + "\">"
+			texto = "<div class=\"imc-el-etiqueta\"><label for=\"" + pCampo.getIdComponente() + "\">"
 					+ trataLiteral(pCampo.getTexto().getTraduccion(pLang)) + "</label></div>";
 		}
 
-		escribeLinea(pOut, "<div ", escribeId(pCampo.getCodigo()), "class=\"imc-element imc-el-selector",
-				estilo.toString(), "\" data-type=\"select\">", 5);
+		escribeLinea(pOut, "<div", escribeId(pCampo.getIdComponente()), escribeCodigo(pCampo.getCodigo(), pModoEdicion),
+				" class=\"imc-element imc-el-selector", estilo.toString(), "\" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
 
@@ -318,7 +331,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "<div class=\"imc-select imc-opcions\">", 7);
 
 		escribeLinea(pOut, "<a class=\"imc-select\" tabindex=\"0\" href=\"javascript:;\" style=\"\"></a>", 8);
-		escribeLinea(pOut, "<input name=\"", String.valueOf(pCampo.getIdComponente()), "\" type=\"hidden\">", 8);
+		escribeLinea(pOut, "<input id=\"", String.valueOf(pCampo.getIdComponente()), "\" type=\"hidden\">", 8);
 
 		escribeLinea(pOut, "</div>", 7);
 		escribeLinea(pOut, "</div>", 6);
@@ -334,9 +347,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
+		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
-		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getCodigo()), " class=\"imc-element", estilo.toString(),
+		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
+				escribeCodigo(pCampo.getCodigo(), pModoEdicion), " class=\"imc-element", estilo.toString(),
 				"\" data-type=\"check-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
@@ -347,19 +361,19 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		if (pModoEdicion) {
 			escribeLinea(pOut, "<ul>", 7);
 			escribeLinea(pOut, "<li>", 7);
-			escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getCodigo(), "a"), " name=\"",
-					String.valueOf(pCampo.getCodigo()), "\" checked=\"checked\" type=\"checkbox\"><label for=\"",
-					String.valueOf(pCampo.getCodigo()), ".a\">Opc. A</label></div>", 8);
+			escribeLinea(pOut, "<div class=\"imc-input-check\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
+					".a\" checked=\"checked\" type=\"checkbox\"><label for=\"",
+					String.valueOf(pCampo.getIdComponente()), ".a\">Opc. A</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
-			escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getCodigo(), "b"), " name=\"",
-					String.valueOf(pCampo.getCodigo()), "\" type=\"checkbox\"><label for=\"",
-					String.valueOf(pCampo.getCodigo()), ".b\">Opc. B</label></div>", 8);
+			escribeLinea(pOut, "<div class=\"imc-input-check\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
+					".b\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".b\">Opc. B</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
-			escribeLinea(pOut, "<div class=\"imc-input-check\"><input ", escribeId(pCampo.getCodigo(), "c"), "name=\"",
-					String.valueOf(pCampo.getCodigo()), "\" type=\"checkbox\"><label for=\"",
-					String.valueOf(pCampo.getCodigo()), ".c\">Opc. C</label></div>", 8);
+			escribeLinea(pOut, "<div class=\"imc-input-check\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
+					".c\" type=\"checkbox\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".c\">Opc. C</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "</ul>", 7);
 		} else {
@@ -378,9 +392,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
+		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
-		escribeLinea(pOut, "<fieldset ", escribeId(pCampo.getCodigo()), " class=\"imc-element imc-el-horizontal",
+		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
+				escribeCodigo(pCampo.getCodigo(), pModoEdicion), " class=\"imc-element imc-el-horizontal",
 				estilo.toString(), "\" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
@@ -391,19 +406,19 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		if (pModoEdicion) {
 			escribeLinea(pOut, "<ul>", 7);
 			escribeLinea(pOut, "<li>", 7);
-			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getCodigo(), "a"), " name=\"",
-					String.valueOf(pCampo.getCodigo()), "\" checked=\"checked\" type=\"radio\"><label for=\"",
-					String.valueOf(pCampo.getCodigo()), ".a\">Opc. A</label></div>", 8);
+			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
+					".a\" checked=\"checked\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".a\">Opc. A</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
-			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getCodigo(), "b"), " name=\"",
-					String.valueOf(pCampo.getCodigo()), "\" type=\"radio\"><label for=\"",
-					String.valueOf(pCampo.getCodigo()), ".b\">Opc. B</label></div>", 8);
+			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
+					".b\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".b\">Opc. B</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "<li>", 7);
-			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input ", escribeId(pCampo.getCodigo(), "c"), "name=\"",
-					String.valueOf(pCampo.getCodigo()), "\" type=\"radio\"><label for=\"",
-					String.valueOf(pCampo.getCodigo()), ".c\">Opc. C</label></div>", 8);
+			escribeLinea(pOut, "<div class=\"imc-input-radio\"><input id=\"", String.valueOf(pCampo.getIdComponente()),
+					".c\" type=\"radio\"><label for=\"", String.valueOf(pCampo.getIdComponente()),
+					".c\">Opc. C</label></div>", 8);
 			escribeLinea(pOut, "</li>", 7);
 			escribeLinea(pOut, "</ul>", 7);
 		} else {
@@ -414,7 +429,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut, "</fieldset>", 6);
 	}
 
-	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang) {
+	private void campoEtiqueta(final StringBuilder pOut, final ComponenteFormulario pCF, final String pLang,
+			final boolean pModoEdicion) {
 		final ComponenteFormularioEtiqueta componente = (ComponenteFormularioEtiqueta) pCF;
 		final StringBuilder estilo = new StringBuilder();
 
@@ -431,7 +447,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-element imc-missatge-en-linia imc-missatge-en-linia-icona-sup ",
-				estilo.toString(), "\" ", escribeId(pCF.getCodigo()), "><p>", 5);
+				estilo.toString(), "\" ", escribeId(pCF.getIdComponente()),
+				escribeCodigo(pCF.getCodigo(), pModoEdicion), "><p>", 5);
 		if (pCF.getTexto() != null) {
 			escribeLinea(pOut, trataLiteral(pCF.getTexto().getTraduccion(pLang)), 6);
 		}
@@ -443,50 +460,84 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		escribeLinea(pOut,
 				"function rcEditarComponente(id) {parent.seleccionarElementoCommand([{name:'id', value:id}]);}", 2);
 
-		escribeLinea(pOut, "var idComponente=\"" + pIdComponente + "\"", 2);
+		escribeLinea(pOut, "var idComponente=\"" + pIdComponente + "\";", 2);
 		escribeLinea(pOut, "</script>", 1);
 	}
 
 	private void escribeLinea(final StringBuilder pOut, final String pTexto, final int pNtab) {
-		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
 		pOut.append(pTexto);
-		pOut.append(getLineSeparator());
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
 	}
 
 	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
 			final String pTexto3, final int pNtab) {
-		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
 		pOut.append(pTexto1);
 		pOut.append(pTexto2);
 		pOut.append(pTexto3);
-		pOut.append(getLineSeparator());
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
 	}
 
 	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
 			final String pTexto3, final String pTexto4, final int pNtab) {
-		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
 		pOut.append(pTexto1);
 		pOut.append(pTexto2);
 		pOut.append(pTexto3);
 		pOut.append(pTexto4);
-		pOut.append(getLineSeparator());
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
 	}
 
 	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
 			final String pTexto3, final String pTexto4, final String pTexto5, final int pNtab) {
-		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
 		pOut.append(pTexto1);
 		pOut.append(pTexto2);
 		pOut.append(pTexto3);
 		pOut.append(pTexto4);
 		pOut.append(pTexto5);
-		pOut.append(getLineSeparator());
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
+	}
+
+	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
+			final String pTexto3, final String pTexto4, final String pTexto5, final String pTexto6, final int pNtab) {
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
+		pOut.append(pTexto1);
+		pOut.append(pTexto2);
+		pOut.append(pTexto3);
+		pOut.append(pTexto4);
+		pOut.append(pTexto5);
+		pOut.append(pTexto6);
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
 	}
 
 	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
 			final String pTexto3, final String pTexto4, final String pTexto5, final String pTexto6,
 			final String pTexto7, final int pNtab) {
-		pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
 		pOut.append(pTexto1);
 		pOut.append(pTexto2);
 		pOut.append(pTexto3);
@@ -494,19 +545,63 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		pOut.append(pTexto5);
 		pOut.append(pTexto6);
 		pOut.append(pTexto7);
-		pOut.append(getLineSeparator());
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
 	}
 
-	private String escribeId(final Long pId) {
+	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
+			final String pTexto3, final String pTexto4, final String pTexto5, final String pTexto6,
+			final String pTexto7, final String pTexto8, final int pNtab) {
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
+		pOut.append(pTexto1);
+		pOut.append(pTexto2);
+		pOut.append(pTexto3);
+		pOut.append(pTexto4);
+		pOut.append(pTexto5);
+		pOut.append(pTexto6);
+		pOut.append(pTexto7);
+		pOut.append(pTexto8);
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
+	}
+
+	private String escribeId(final String pId) {
 		return escribeId(pId, null);
 	}
 
-	private String escribeId(final Long pId, final String pOrden) {
+	private String escribeId(final String pId, final String pOrden) {
 		String id = null;
 		if (pOrden == null) {
-			id = "id=\"" + pId + "\"";
+			id = " data-id=\"" + pId + "\"";
 		} else {
-			id = "id=\"" + pId + "." + pOrden + "\"";
+			id = " data-id=\"" + pId + "." + pOrden + "\"";
+		}
+		return id;
+	}
+
+	private String escribeCodigo(final Long pCodigo, final boolean pModoEdicion) {
+		return escribeCodigo(String.valueOf(pCodigo), null, pModoEdicion);
+	}
+
+	private String escribeCodigo(final String pCodigo, final boolean pModoEdicion) {
+		return escribeCodigo(pCodigo, null, pModoEdicion);
+	}
+
+	private String escribeCodigo(final String pCodigo, final String pOrden, final boolean pModoEdicion) {
+		String id = null;
+
+		if (pModoEdicion) {
+			if (pOrden == null) {
+				id = " data-codigo=\"" + pCodigo + "\"";
+			} else {
+				id = " data-codigo=\"" + pCodigo + "." + pOrden + "\"";
+			}
+		} else {
+			id = "";
 		}
 		return id;
 	}

@@ -53,6 +53,10 @@ public final class HFormulario implements IModelApi {
 	@Column(name = "SFR_RELESE")
 	private int releaseTramite;
 
+	/** Atributo idioma trámite. */
+	@Column(name = "SFR_IDIOMA")
+	private String idioma;
+
 	/** Atributo id paso. */
 	@Column(name = "SFR_IDPASO")
 	private String idPaso;
@@ -85,6 +89,10 @@ public final class HFormulario implements IModelApi {
 	/** Atributo cancelado. */
 	@Column(name = "SFR_CANCEL")
 	private boolean cancelado;
+
+	/** Atributo titulo procedimiento. */
+	@Column(name = "SFR_TITPRO")
+	private String tituloProcedimiento;
 
 	/** Atributo xml. */
 	@Lob
@@ -425,7 +433,7 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método de acceso a infoAutenticacion.
-	 * 
+	 *
 	 * @return infoAutenticacion
 	 */
 	public String getInfoAutenticacion() {
@@ -434,12 +442,50 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método para establecer infoAutenticacion.
-	 * 
+	 *
 	 * @param infoAutenticacion
 	 *            infoAutenticacion a establecer
 	 */
 	public void setInfoAutenticacion(String infoAutenticacion) {
 		this.infoAutenticacion = infoAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a idioma.
+	 *
+	 * @return idioma
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
+
+	/**
+	 * Método para establecer idioma.
+	 *
+	 * @param idioma
+	 *            idioma a establecer
+	 */
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
+	}
+
+	/**
+	 * Método de acceso a tituloProcedimiento.
+	 * 
+	 * @return tituloProcedimiento
+	 */
+	public String getTituloProcedimiento() {
+		return tituloProcedimiento;
+	}
+
+	/**
+	 * Método para establecer tituloProcedimiento.
+	 * 
+	 * @param tituloProcedimiento
+	 *            tituloProcedimiento a establecer
+	 */
+	public void setTituloProcedimiento(String tituloProcedimiento) {
+		this.tituloProcedimiento = tituloProcedimiento;
 	}
 
 }

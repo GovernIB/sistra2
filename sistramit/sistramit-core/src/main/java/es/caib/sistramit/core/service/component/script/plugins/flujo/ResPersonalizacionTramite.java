@@ -64,8 +64,9 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 
 	@Override
 	public void setPlazoInicio(final String pPlazoInicio) throws ScriptException {
-		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, FORMATO_FECHA)) {
-			throw new ScriptException("La fecha no tiene un formato correcto: " + FORMATO_FECHA);
+		if (!ValidacionesTipo.getInstance().esFecha(pPlazoInicio, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL)) {
+			throw new ScriptException(
+					"La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 		}
 		plazoInicio = pPlazoInicio;
 	}
@@ -81,8 +82,9 @@ public final class ResPersonalizacionTramite implements ResPersonalizacionTramit
 
 	@Override
 	public void setPlazoFin(final String pPlazoFin) throws ScriptException {
-		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, FORMATO_FECHA)) {
-			throw new ScriptException("La fecha no tiene un formato correcto: " + FORMATO_FECHA);
+		if (!ValidacionesTipo.getInstance().esFecha(pPlazoFin, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL)) {
+			throw new ScriptException(
+					"La fecha no tiene un formato correcto: " + ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 		}
 		plazoFin = pPlazoFin;
 	}

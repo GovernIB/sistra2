@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.model.formulario.interno;
+package es.caib.sistramit.core.api.model.formulario;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,16 +6,8 @@ import java.util.List;
 
 import es.caib.sistramit.core.api.exception.CampoFormularioNoExisteException;
 import es.caib.sistramit.core.api.exception.ErrorCampoNoModificableException;
-import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TipoValorCampoFormularioException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
-import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
-import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
-import es.caib.sistramit.core.api.model.formulario.RecursosFormulario;
-import es.caib.sistramit.core.api.model.formulario.ValorCampo;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
-import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 
 /**
  *
@@ -35,6 +27,16 @@ public final class PaginaFormularioData implements Serializable {
 	 * Id formulario al que pertenece la pagina.
 	 */
 	private String idFormulario;
+
+	/**
+	 * Mostrar titulo.
+	 */
+	private TypeSiNo mostrarTitulo;
+
+	/**
+	 * Titulo formulario.
+	 */
+	private String titulo;
 
 	/**
 	 * Indice página en la definición de formulario.
@@ -59,7 +61,7 @@ public final class PaginaFormularioData implements Serializable {
 	/**
 	 * Acciones personalizadas del formulario.
 	 */
-	private List<AccionFormulario> accionesPersonalizadas = new ArrayList<>();
+	private List<AccionFormularioPersonalizada> accionesPersonalizadas = new ArrayList<>();
 
 	/**
 	 * Recursos estáticos del formulario. Se establecen las urls de estos recursos
@@ -130,7 +132,7 @@ public final class PaginaFormularioData implements Serializable {
 	 *
 	 * @return acciones
 	 */
-	public List<AccionFormulario> getAccionesPersonalizadas() {
+	public List<AccionFormularioPersonalizada> getAccionesPersonalizadas() {
 		return accionesPersonalizadas;
 	}
 
@@ -140,7 +142,7 @@ public final class PaginaFormularioData implements Serializable {
 	 * @param pAcciones
 	 *            acciones a establecer
 	 */
-	public void setAccionesPersonalizadas(final List<AccionFormulario> pAcciones) {
+	public void setAccionesPersonalizadas(final List<AccionFormularioPersonalizada> pAcciones) {
 		accionesPersonalizadas = pAcciones;
 	}
 
@@ -180,9 +182,9 @@ public final class PaginaFormularioData implements Serializable {
 	 * @param pValores
 	 *            valores a establecer
 	 */
-	public void setValoresCampo(final List<ValorCampo> pValores) {
+	public void actualizarValoresPagina(final List<ValorCampo> pValores) {
 		for (final ValorCampo vc : pValores) {
-			setValorCampo(vc);
+			actualizarValorCampo(vc);
 		}
 	}
 
@@ -206,7 +208,7 @@ public final class PaginaFormularioData implements Serializable {
 	 * @param pvcNew
 	 *            Valor campo
 	 */
-	public void setValorCampo(final ValorCampo pvcNew) {
+	public void actualizarValorCampo(final ValorCampo pvcNew) {
 
 		// Obtenemos valor actual campo
 		final ValorCampo vcOld = getValorCampoLista(pvcNew.getId(), valores);
@@ -228,20 +230,8 @@ public final class PaginaFormularioData implements Serializable {
 			}
 		}
 
-		// En funcion del tipo establecemos el valor
-		switch (vcOld.getTipo()) {
-		case SIMPLE:
-			((ValorCampoSimple) vcOld).setValor(((ValorCampoSimple) pvcNew).getValor());
-			break;
-		case INDEXADO:
-			((ValorCampoIndexado) vcOld).setValor(((ValorCampoIndexado) pvcNew).getValor());
-			break;
-		case LISTA_INDEXADOS:
-			((ValorCampoListaIndexados) vcOld).setValor(((ValorCampoListaIndexados) pvcNew).getValor());
-			break;
-		default:
-			throw new TipoNoControladoException("Tipo de valor de campo no permitido: " + vcOld.getTipo().name());
-		}
+		// Reemplazamos valor
+		vcOld.reemplazaValor(pvcNew);
 
 	}
 
@@ -309,6 +299,64 @@ public final class PaginaFormularioData implements Serializable {
 	 */
 	public List<ValorCampo> getValoresIniciales() {
 		return valoresIniciales;
+	}
+
+	/**
+	 * Busca accion personalizada en lista de acciones.
+	 *
+	 * @param codigoAccion
+	 *            Código de acción
+	 * @return Acción personalizada
+	 */
+	public AccionFormularioPersonalizada buscarAccion(final String codigoAccion) {
+		AccionFormularioPersonalizada res = null;
+		if (accionesPersonalizadas != null) {
+			for (final AccionFormularioPersonalizada accion : accionesPersonalizadas) {
+				if (accion.getValor().equals(codigoAccion)) {
+					res = accion;
+					break;
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Método de acceso a titulo.
+	 *
+	 * @return titulo
+	 */
+	public String getTitulo() {
+		return titulo;
+	}
+
+	/**
+	 * Método para establecer titulo.
+	 *
+	 * @param titulo
+	 *            titulo a establecer
+	 */
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	/**
+	 * Método de acceso a mostrarTitulo.
+	 * 
+	 * @return mostrarTitulo
+	 */
+	public TypeSiNo getMostrarTitulo() {
+		return mostrarTitulo;
+	}
+
+	/**
+	 * Método para establecer mostrarTitulo.
+	 * 
+	 * @param mostrarTitulo
+	 *            mostrarTitulo a establecer
+	 */
+	public void setMostrarTitulo(TypeSiNo mostrarTitulo) {
+		this.mostrarTitulo = mostrarTitulo;
 	}
 
 }

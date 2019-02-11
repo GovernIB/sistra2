@@ -338,6 +338,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		datosAsunto.setExtractoAsunto(pVariablesFlujo.getTituloTramite());
 		datosAsunto.setTipoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getTipoAsunto());
 		datosAsunto.setCodigoOrganoDestino(pVariablesFlujo.getDatosTramiteCP().getOrganoDestinoDir3());
+		datosAsunto.setNumeroExpediente(pDipa.getParametrosRegistro().getDatosRegistrales().getNumeroExpediente());
 		asiento.setDatosAsunto(datosAsunto);
 		// - Interesados
 		final List<Interesado> interesados = new ArrayList<>();

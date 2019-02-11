@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.api.model.formulario;
 
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
 
 /**
@@ -11,121 +12,133 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeValor;
 @SuppressWarnings("serial")
 public final class ValorCampoIndexado extends ValorCampo {
 
-    /**
-     * Valor del campo.
-     */
-    private ValorIndexado valor;
+	/**
+	 * Valor del campo.
+	 */
+	private ValorIndexado valor;
 
-    /**
-     * Constructor.
-     *
-     * @param pId
-     *            Id campo
-     * @param pCodigo
-     *            Código
-     * @param pValor
-     *            Valor
-     */
-    public ValorCampoIndexado(final String pId, final String pCodigo,
-            final String pValor) {
-        super();
-        this.setTipo(TypeValor.INDEXADO);
-        this.setId(pId);
-        this.setValor(new ValorIndexado(pCodigo, pValor));
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param pId
+	 *            Id campo
+	 * @param pCodigo
+	 *            Código
+	 * @param pValor
+	 *            Valor
+	 */
+	public ValorCampoIndexado(final String pId, final String pCodigo, final String pValor) {
+		super();
+		this.setTipo(TypeValor.INDEXADO);
+		this.setId(pId);
+		this.setValor(new ValorIndexado(pCodigo, pValor));
+	}
 
-    /**
-     * Constructor.
-     */
-    public ValorCampoIndexado() {
-        super();
-        this.setTipo(TypeValor.INDEXADO);
-    }
+	/**
+	 * Constructor.
+	 */
+	public ValorCampoIndexado() {
+		super();
+		this.setTipo(TypeValor.INDEXADO);
+	}
 
-    /**
-     * Método de acceso a valor.
-     *
-     * @return valor
-     */
-    public ValorIndexado getValor() {
-        return valor;
-    }
+	/**
+	 * Método de acceso a valor.
+	 *
+	 * @return valor
+	 */
+	public ValorIndexado getValor() {
+		return valor;
+	}
 
-    /**
-     * Método para establecer valor.
-     *
-     * @param pValor
-     *            valor a establecer
-     */
-    public void setValor(final ValorIndexado pValor) {
-        valor = pValor;
-    }
+	/**
+	 * Método para establecer valor.
+	 *
+	 * @param pValor
+	 *            valor a establecer
+	 */
+	public void setValor(final ValorIndexado pValor) {
+		valor = pValor;
+	}
 
-    /**
-     * Crea instancia.
-     *
-     * @return ValorCampoIndexado
-     */
-    public static ValorCampoIndexado createNewValorCampoIndexado() {
-        return new ValorCampoIndexado();
-    }
+	/**
+	 * Crea instancia.
+	 *
+	 * @return ValorCampoIndexado
+	 */
+	public static ValorCampoIndexado createNewValorCampoIndexado() {
+		return new ValorCampoIndexado();
+	}
 
-    /**
-     * Crea valor vacio.
-     *
-     * @param idCampo
-     *            id campo
-     * @return ValorCampoIndexado vacio
-     */
-    public static ValorCampoIndexado createValorVacio(final String idCampo) {
-        final ValorCampoIndexado vci = new ValorCampoIndexado();
-        vci.setId(idCampo);
-        vci.setValor(null);
-        return vci;
-    }
+	/**
+	 * Crea valor vacio.
+	 *
+	 * @param idCampo
+	 *            id campo
+	 * @return ValorCampoIndexado vacio
+	 */
+	public static ValorCampoIndexado createValorVacio(final String idCampo) {
+		final ValorCampoIndexado vci = new ValorCampoIndexado();
+		vci.setId(idCampo);
+		vci.setValor(null);
+		return vci;
+	}
 
-    @Override
-    public boolean esVacio() {
-        return (getValor() == null);
-    }
+	@Override
+	public boolean esVacio() {
+		return (getValor() == null);
+	}
 
-    @Override
-    public String print() {
-        String res = null;
-        if (!this.esVacio()) {
-            res = this.getValor().getValor() + " - "
-                    + this.getValor().getDescripcion();
-        } else {
-            res = "";
-        }
-        return res;
-    }
+	@Override
+	public String print() {
+		String res = null;
+		if (!this.esVacio()) {
+			res = this.getValor().getValor() + " - " + this.getValor().getDescripcion();
+		} else {
+			res = "";
+		}
+		return res;
+	}
 
-    @Override
-    public boolean esValorIgual(final ValorCampo pValorCampo) {
-        boolean res = false;
-        if (pValorCampo.esVacio() == this.esVacio()
-                && pValorCampo.getTipo() == this.getTipo()) {
-            if (!pValorCampo.esVacio()) {
-                final ValorCampoIndexado vco = (ValorCampoIndexado) pValorCampo;
-                res = vco.getValor().equals(this.getValor());
-            } else {
-                res = true;
-            }
-        }
-        return res;
-    }
+	@Override
+	public boolean esValorIgual(final ValorCampo pValorCampo) {
+		boolean res = false;
+		if (pValorCampo.esVacio() == this.esVacio() && pValorCampo.getTipo() == this.getTipo()) {
+			if (!pValorCampo.esVacio()) {
+				final ValorCampoIndexado vco = (ValorCampoIndexado) pValorCampo;
+				res = vco.getValor().equals(this.getValor());
+			} else {
+				res = true;
+			}
+		}
+		return res;
+	}
 
-    @Override
-    public ValorCampo duplicar() {
-        ValorCampo res;
-        if (this.esVacio()) {
-            res = createValorVacio(this.getId());
-        } else {
-            res = new ValorCampoIndexado(this.getId(),
-                    this.getValor().getValor(),
-                    this.getValor().getDescripcion());
-        }
-        return res;
-    }
+	@Override
+	public ValorCampo duplicar() {
+		ValorCampo res;
+		if (this.esVacio()) {
+			res = createValorVacio(this.getId());
+		} else {
+			res = new ValorCampoIndexado(this.getId(), this.getValor().getValor(), this.getValor().getDescripcion());
+		}
+		return res;
+	}
+
+	@Override
+	public void reemplazaValor(ValorCampo valorCampo) {
+		if (!this.getId().equals(valorCampo.getId())) {
+			throw new ErrorConfiguracionException("No coincide id");
+		}
+		if (this.getTipo() != valorCampo.getTipo()) {
+			throw new ErrorConfiguracionException("No coincide tipo");
+		}
+		final ValorCampoIndexado valorNew = (ValorCampoIndexado) valorCampo;
+		final ValorIndexado valorIndexadoNew = valorNew.getValor();
+		if (valorIndexadoNew != null) {
+			this.setValor(new ValorIndexado(valorIndexadoNew.getValor(), valorIndexadoNew.getDescripcion()));
+		} else {
+			this.setValor(null);
+		}
+	}
 }

@@ -15,7 +15,7 @@
 			<h:outputText value="#{msg['dialogDisenyoFormulario.componente.' += dialogDisenyoFormulario.objetoFormularioEdit.tipo]}" />
 		</h3>
 
-		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades'].concat(' orden:').concat(dialogDisenyoFormulario.objetoFormularioEdit.orden)}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
+		<p:panel id="panelPropietats" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" toggleable="true" widgetVar="panel"  collapsed="#{dialogDisenyoFormulario.visiblePropiedades}">
 
 			<p:ajax event="toggle" listener="#{dialogDisenyoFormulario.onToggle}" update="panelPropietats panelScripts panelEstilos" />
 
@@ -96,7 +96,7 @@
 	         	<h:column>
 	         		<p:commandButton id="scriptAutorelleno" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_AUTORELLENABLE.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptAutorrellenable)}" >
-						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptAutorrelleno}" />
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptAutorrelleno}" update="scriptAutorelleno" />
 					</p:commandButton>
 				</h:column>
 
@@ -104,7 +104,7 @@
 	         	<h:column>
 	         		<p:commandButton id="scriptSoloLectura" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_ESTADO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptSoloLectura)}" >
-						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptSoloLectura}" />
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptSoloLectura}" update="scriptSoloLectura" />
 					</p:commandButton>
 	         	</h:column>
 
@@ -112,7 +112,7 @@
 	         	<h:column>
 	         		<p:commandButton id="scriptValidacion" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptValidacion)}" >
-						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptValidacion}" />
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptValidacion}" update="scriptValidacion"  />
 					</p:commandButton>
 	         	</h:column>
 
@@ -120,7 +120,7 @@
 	         	<h:column rendered="#{dialogDisenyoFormulario.isLVScript()}">
 	         		<p:commandButton id="scriptValores" icon="fa fa-bolt" actionListener="#{dialogDisenyoFormulario.editarDialogScript(TypeScriptFormulario.SCRIPT_VALORES_POSIBLES.name(), dialogDisenyoFormulario.objetoFormularioEdit.scriptValoresPosibles)}" process="@this"
 	         						 styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogDisenyoFormulario.objetoFormularioEdit.scriptValoresPosibles)}" >
-						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptValores}" />
+						<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoScriptValores}" update="scriptValores"   />
 					</p:commandButton>
 	         	</h:column>
 

@@ -13,41 +13,45 @@ package es.caib.sistramit.core.api.model.formulario;
 @SuppressWarnings("serial")
 public final class ValorResetCampos extends ValorCampo {
 
-    /**
-     * Constructor.
-     */
-    public ValorResetCampos() {
-        super();
-        this.setTipo(null);
-    }
+	/**
+	 * Constructor.
+	 */
+	public ValorResetCampos() {
+		super();
+		this.setTipo(null);
+	}
 
-    @Override
-    public boolean esVacio() {
-        return true;
-    }
+	@Override
+	public boolean esVacio() {
+		return true;
+	}
 
-    @Override
-    public String print() {
-        final String res = "RESET CAMPOS";
-        return res;
-    }
+	@Override
+	public String print() {
+		final String res = "RESET CAMPOS";
+		return res;
+	}
 
-    /**
-     * Crea instancia ValorResetCampos.
-     *
-     * @return ValorResetCampos
-     */
-    public static ValorResetCampos createNewValorResetCampos() {
-        return new ValorResetCampos();
-    }
+	/**
+	 * Crea instancia ValorResetCampos.
+	 *
+	 * @return ValorResetCampos
+	 */
+	public static ValorResetCampos createNewValorResetCampos() {
+		return new ValorResetCampos();
+	}
 
-    @Override
-    public boolean esValorIgual(final ValorCampo pValorCampo) {
-        return false;
-    }
+	@Override
+	public boolean esValorIgual(final ValorCampo pValorCampo) {
+		return false;
+	}
 
-    @Override
-    public ValorCampo duplicar() {
-        return null;
-    }
+	@Override
+	public ValorCampo duplicar() {
+		return null;
+	}
+
+	@Override
+	public void reemplazaValor(ValorCampo valorCampo) {
+	}
 }

@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.repository.dao;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -47,9 +48,11 @@ public final class FormularioDaoImpl implements FormularioDao {
 		hFormulario.setIdTramite(dis.getIdTramite());
 		hFormulario.setVersionTramite(dis.getVersionTramite());
 		hFormulario.setReleaseTramite(dis.getReleaseTramite());
+		hFormulario.setIdioma(dis.getIdioma());
 		hFormulario.setIdFormulario(dis.getIdFormulario());
 		hFormulario.setInterno(dis.isInterno());
 		hFormulario.setDatosActuales(dis.getXmlDatosActuales());
+		hFormulario.setTituloProcedimiento(dis.getTituloProcedimiento());
 		try {
 			hFormulario.setInfoAutenticacion(Serializador.serializeJSON(dis.getInfoAutenticacion()));
 			hFormulario.setParametrosFormulario(Serializador.serializeJSON(dis.getParametros()));
@@ -77,6 +80,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 
 		// Establecemos datos
 		final DatosInicioSesionFormulario dis = new DatosInicioSesionFormulario();
+		dis.setIdioma(h.getIdioma());
 		dis.setIdSesionTramitacion(h.getIdSesionTramitacion());
 		dis.setIdPaso(h.getIdPaso());
 		dis.setIdTramite(h.getIdTramite());
@@ -85,6 +89,7 @@ public final class FormularioDaoImpl implements FormularioDao {
 		dis.setIdFormulario(h.getIdFormulario());
 		dis.setInterno(h.isInterno());
 		dis.setXmlDatosActuales(h.getDatosActuales());
+		dis.setTituloProcedimiento(h.getTituloProcedimiento());
 		try {
 			dis.setInfoAutenticacion((UsuarioAutenticadoInfo) Serializador.deserializeJSON(h.getInfoAutenticacion(),
 					UsuarioAutenticadoInfo.class));
@@ -113,12 +118,18 @@ public final class FormularioDaoImpl implements FormularioDao {
 		if (hFormulario.isUsadoRetorno()) {
 			throw new TicketFormularioException("Ya se ha usado el ticket para retornar el formulario " + ticket);
 		}
-		if (hFormulario.getFechaFin() != null) {
+		if (hFormulario.getFechaFin() == null) {
 			throw new TicketFormularioException("La sesión de formulario no se ha finalizado " + ticket);
 		}
 		final DatosFinalizacionFormulario df = new DatosFinalizacionFormulario();
 		df.setFechaFinalizacion(hFormulario.getFechaFin());
 		df.setCancelado(hFormulario.isCancelado());
+		try {
+			final String xml = new String(hFormulario.getXml(), "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		df.setXml(hFormulario.getXml());
 		df.setPdf(hFormulario.getPdf());
 		return df;

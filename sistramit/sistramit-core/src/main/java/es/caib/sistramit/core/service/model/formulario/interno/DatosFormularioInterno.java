@@ -8,6 +8,7 @@ import java.util.Map;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 
@@ -178,16 +179,16 @@ public final class DatosFormularioInterno implements Serializable {
 	}
 
 	/**
-	 * Devuelve los valores de los campos accesibles desde el script de la pagina
+	 * Devuelve los valores de los campos accesibles del formulario desde la página
 	 * actual.
 	 *
 	 * @return Valores de los campos.
 	 */
-	public List<ValorCampo> getValoresAccesiblesPagina() {
+	public List<ValorCampo> getValoresAccesiblesPaginaActual() {
+		// TODO FASE2: VER COMO SE GESTIONA EL MUTIPAGINA, SOLO DEBERIA TENER ACCESO A
+		// LAS PAGINAS ANTERIORES QUE SE HAYAN RELLENADO.
+		// DE MOMENTO SE METEN TODAS LAS PAGINAS.
 		final List<ValorCampo> res = new ArrayList<>();
-
-		// Podra tener accesibles los valores de las paginas anteriores y la
-		// actual
 		for (int i = ConstantesNumero.N1; i <= getIndicePaginaActual(); i++) {
 			res.addAll(getPaginaFormulario(i).getValores());
 		}

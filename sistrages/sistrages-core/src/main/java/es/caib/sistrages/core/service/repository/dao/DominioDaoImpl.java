@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
@@ -503,8 +504,8 @@ public class DominioDaoImpl implements DominioDao {
 		final Dominio dominio = this.getByIdentificador(identificador);
 		for (final Propiedad prop : dominio.getListaFija()) {
 			final int fila = valoresDominio.addFila();
-			valoresDominio.setValor(fila, "CODIGO", prop.getCodigo());
-			valoresDominio.setValor(fila, "VALOR", prop.getValor());
+			valoresDominio.setValor(fila, ConstantesDominio.LISTAFIJA_COLUMNA_CODIGO, prop.getCodigo());
+			valoresDominio.setValor(fila, ConstantesDominio.LISTAFIJA_COLUMNA_DESCRIPCION, prop.getValor());
 		}
 		return valoresDominio;
 	}

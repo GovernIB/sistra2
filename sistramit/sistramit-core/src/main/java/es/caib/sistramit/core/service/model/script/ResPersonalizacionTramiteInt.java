@@ -14,10 +14,6 @@ public interface ResPersonalizacionTramiteInt extends PluginScriptRes {
 	 * Id plugin.
 	 */
 	String ID = "DATOS_PERSONALIZACION";
-	/**
-	 * Formato fecha.
-	 */
-	String FORMATO_FECHA = "dd/MM/yyyy HH:mm:ss";
 
 	/**
 	 * Método para establecer tituloTramite.

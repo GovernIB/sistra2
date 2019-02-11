@@ -25,11 +25,13 @@ import es.caib.sistramit.core.api.exception.ValorCampoFormularioNoValidoExceptio
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTexto;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
@@ -248,7 +250,7 @@ public class UtilsFormularioInterno {
 		if (pIdCampo != null) {
 			res.setValoresCampo(pDatosSesion.getDatosFormulario().getValoresAccesiblesCampo(pIdCampo));
 		} else {
-			res.setValoresCampo(pDatosSesion.getDatosFormulario().getValoresAccesiblesPagina());
+			res.setValoresCampo(pDatosSesion.getDatosFormulario().getValoresAccesiblesPaginaActual());
 		}
 		return res;
 	}
@@ -281,7 +283,7 @@ public class UtilsFormularioInterno {
 				case CAMPO:
 					final List<ValorCampo> camposAccesibles = pDatosSesion.getDatosFormulario()
 							.getValoresAccesiblesCampo(pCampoDef.getIdentificador());
-					final ValorCampo vc = UtilsFormulario.buscarValorCampo(camposAccesibles, parDef.getValor());
+					final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(camposAccesibles, parDef.getValor());
 					parametros.addParametro(parDef.getIdentificador(), valorCampoParametroDominio(vc));
 					break;
 				case CONSTANTE:
@@ -434,6 +436,89 @@ public class UtilsFormularioInterno {
 		for (final String idCampoDep : pModificados) {
 			if (pDependenciasCampo.contains(idCampoDep)) {
 				res = true;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Busca valor campo.
+	 *
+	 * @param valoresCampo
+	 *            Lista de valores
+	 * @param idCampo
+	 *            Id campo
+	 * @return Valor campo (null si no lo encuentra)
+	 */
+	public static ValorCampo buscarValorCampo(final List<ValorCampo> valoresCampo, final String idCampo) {
+		ValorCampo res = null;
+		for (final ValorCampo vc : valoresCampo) {
+			if (vc.getId().equals(idCampo)) {
+				res = vc;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Busca configuración campo.
+	 *
+	 * @param configuracionesCampo
+	 *            Lista de valores
+	 * @param idCampo
+	 *            Id campo
+	 * @return Valor campo (null si no lo encuentra)
+	 */
+	public static ConfiguracionCampo buscarConfiguracionCampo(final List<ConfiguracionCampo> configuracionesCampo,
+			final String idCampo) {
+		ConfiguracionCampo res = null;
+		for (final ConfiguracionCampo cc : configuracionesCampo) {
+			if (cc.getId().equals(idCampo)) {
+				res = cc;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Busca configuración campo.
+	 *
+	 * @param configuracionesCampo
+	 *            Lista de valores
+	 * @param idCampo
+	 *            Id campo
+	 * @return Valor campo (null si no lo encuentra)
+	 */
+	public static ConfiguracionModificadaCampo buscarConfiguracionModificadaCampo(
+			final List<ConfiguracionModificadaCampo> configuracionesCampo, final String idCampo) {
+		ConfiguracionModificadaCampo res = null;
+		for (final ConfiguracionModificadaCampo cc : configuracionesCampo) {
+			if (cc.getId().equals(idCampo)) {
+				res = cc;
+				break;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Busca valores posibles asociados al campo.
+	 *
+	 * @param valoresPosibles
+	 *            valores posibles
+	 * @param idCampo
+	 *            idcampo
+	 * @return valores posibles campo
+	 */
+	public static ValoresPosiblesCampo buscarValoresPosibles(List<ValoresPosiblesCampo> valoresPosibles,
+			String idCampo) {
+		ValoresPosiblesCampo res = null;
+		for (final ValoresPosiblesCampo cc : valoresPosibles) {
+			if (cc.getId().equals(idCampo)) {
+				res = cc;
 				break;
 			}
 		}

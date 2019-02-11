@@ -56,13 +56,13 @@ import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 public class SistragesMock {
 
 	/** Id entidad test. */
-	public final static String ID_ENTIDAD = "E1";
+	public final static String ID_ENTIDAD = "A04003003";
 	/** Id tramite test. */
-	public final static String ID_TRAMITE = "T1";
+	public final static String ID_TRAMITE = "TRAM_JUNIT";
 	/** Version tramite test. */
 	public final static int VERSION_TRAMITE = 1;
 	/** Id tramite CP test. */
-	public final static String ID_TRAMITE_CP = "Y";
+	public final static String ID_TRAMITE_CP = "1234";
 	/** Idioma test. */
 	public final static String IDIOMA = "es";
 	/** ID Dominio. */
@@ -263,26 +263,43 @@ public class SistragesMock {
 	}
 
 	public static RVersionTramite crearVersionTramite() {
-		final List<RPasoTramitacion> pasos = new ArrayList<>();
-		pasos.add(crearPasoDebeSaber());
-		pasos.add(crearPasoRellenar());
-		pasos.add(crearPasoAnexar());
-		pasos.add(crearPasoPagar());
-		pasos.add(crearPasoRegistrar());
 
-		final RVersionTramite vt = new RVersionTramite();
-		vt.setIdEntidad("ENTIDAD1");
-		vt.setTimestamp(generateTimestamp());
-		vt.setIdentificador("T1");
-		vt.setVersion(1);
-		vt.setIdioma("es");
-		vt.setTipoFlujo("N");
-		vt.setPropiedades(crearPropiedadesVT());
-		vt.setControlAcceso(crearControlAcceso());
-		vt.setPasos(pasos);
-		vt.setDominios(crearDominios());
+		try {
+			final InputStream inputStream = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream("test-files/versionTramite.json");
+			final StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer, "UTF-8");
+			final String json = writer.toString();
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			final RVersionTramite defTramite = mapper.readValue(json, RVersionTramite.class);
+			defTramite.setIdEntidad(ID_ENTIDAD);
+			defTramite.setTimestamp("" + System.currentTimeMillis());
+			return defTramite;
+		} catch (final Exception ex) {
+			throw new RuntimeException("Error cargando definición trámite desde json", ex);
+		}
 
-		return vt;
+		// final List<RPasoTramitacion> pasos = new ArrayList<>();
+		// pasos.add(crearPasoDebeSaber());
+		// pasos.add(crearPasoRellenar());
+		// pasos.add(crearPasoAnexar());
+		// pasos.add(crearPasoPagar());
+		// pasos.add(crearPasoRegistrar());
+		//
+		// final RVersionTramite vt = new RVersionTramite();
+		// vt.setIdEntidad("ENTIDAD1");
+		// vt.setTimestamp(generateTimestamp());
+		// vt.setIdentificador("T1");
+		// vt.setVersion(1);
+		// vt.setIdioma("es");
+		// vt.setTipoFlujo("N");
+		// vt.setPropiedades(crearPropiedadesVT());
+		// vt.setControlAcceso(crearControlAcceso());
+		// vt.setPasos(pasos);
+		// vt.setDominios(crearDominios());
+		//
+		// return vt;
 	}
 
 	private static List<String> crearDominios() {
@@ -490,7 +507,7 @@ public class SistragesMock {
 		final RScript scriptDatosIniciales = new RScript();
 		scriptDatosIniciales.setScript("DATOS_INICIALES_FORMULARIO.setValorCompuesto('SEL_LISTA', 'V2','Valor 2'); "
 				+ "DATOS_INICIALES_FORMULARIO.setValor('CHK_ESTADO', 'S'); "
-				+ "DATOS_INICIALES_FORMULARIO.setValor('TXT_ESTADO', 'VALOR INICIAL');");
+				+ "DATOS_INICIALES_FORMULARIO.setValor('TXT_NORMAL', 'VALOR INICIAL');");
 		f.setScriptDatosIniciales(scriptDatosIniciales);
 
 		final RScript scriptPostguardar = new RScript();

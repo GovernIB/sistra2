@@ -36,8 +36,8 @@
 </p>
 <p>
 	<ul>
-		<li><b>fecha1</b>: Cadena que contiene la fecha inicial, con el siguiente formato dd/MM/yyyy.</li>
-		<li><b>fecha2</b>: Cadena que contiene la fecha final, con el siguiente formato dd/MM/yyyy.</li>
+		<li><b>fecha1</b>: Cadena que contiene la fecha inicial, con el siguiente formato yyyy-MM-dd.</li>
+		<li><b>fecha2</b>: Cadena que contiene la fecha final, con el siguiente formato yyyy-MM-dd.</li>
 	</ul>
 </p>
 <p>
@@ -52,10 +52,10 @@
 	<b>EJEMPLOS</b>
 </p>
 <p>
-Si queremos averiguar el número de días hábiles, es decir sin contar fines de semana, que hay entre 2 fechas (se deben especificar usando el siguiente formato dd/MM/yyyy), por ejemplo, entre el 23/04/2012 y 13/06/2012 podemos usar la siguiente sentencia:
+Si queremos averiguar el número de días hábiles, es decir sin contar fines de semana, que hay entre 2 fechas (se deben especificar usando el siguiente formato yyyy-MM-dd), por ejemplo, entre el 23/04/2012 y 13/06/2012 podemos usar la siguiente sentencia:
 </p>
  <p class="codigoScript">
-var diasHabiles = PLUGIN_VALIDACIONES.distanciaDiasHabiles('23/04/2012', '13/06/2012');
+var diasHabiles = PLUGIN_VALIDACIONES.distanciaDiasHabiles('2012-04-23', '2012-06-13');
 </p>
 </body>
 </html>

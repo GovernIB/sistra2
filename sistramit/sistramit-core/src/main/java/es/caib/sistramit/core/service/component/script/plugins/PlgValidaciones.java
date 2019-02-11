@@ -83,7 +83,7 @@ public final class PlgValidaciones implements PlgValidacionesInt {
 
 	@Override
 	public boolean esFecha(final String fecha) {
-		return ValidacionesTipo.getInstance().esFecha(fecha);
+		return ValidacionesTipo.getInstance().esFecha(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
@@ -148,12 +148,8 @@ public final class PlgValidaciones implements PlgValidacionesInt {
 
 	@Override
 	public int validaFechaHoraFin(final String fechaHoraUno, final String fechaHoraDos) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().validaFechaHoraFin(fechaHoraUno, fechaHoraDos);
-	}
-
-	@Override
-	public int validaFechaHoraActual(final String fechaHora) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().validaFechaHoraActual(fechaHora);
+		return ValidacionesTipo.getInstance().validaFechaHoraFin(fechaHoraUno, fechaHoraDos,
+				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
@@ -164,7 +160,7 @@ public final class PlgValidaciones implements PlgValidacionesInt {
 
 	@Override
 	public String getFechaActual() {
-		return ValidacionesTipo.getInstance().getFechaActual();
+		return ValidacionesTipo.getInstance().getFechaActual(ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
@@ -182,32 +178,34 @@ public final class PlgValidaciones implements PlgValidacionesInt {
 
 	@Override
 	public int obtenerAnyo(final String fecha) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().obtenerAnyo(fecha);
+		return ValidacionesTipo.getInstance().obtenerAnyo(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
 	public int obtenerMes(final String fecha) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().obtenerMes(fecha);
+		return ValidacionesTipo.getInstance().obtenerMes(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
 	public int obtenerDia(final String fecha) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().obtenerDia(fecha);
+		return ValidacionesTipo.getInstance().obtenerDia(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
 	public String sumaDias(final String fecha, final int dias) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().sumaDias(fecha, dias);
+		return ValidacionesTipo.getInstance().sumaDias(fecha, dias, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
 	public int distanciaDias(final String fecha1, final String fecha2) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().distanciaDias(fecha1, fecha2);
+		return ValidacionesTipo.getInstance().distanciaDias(fecha1, fecha2,
+				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override
 	public int distanciaDiasHabiles(final String fecha1, final String fecha2) throws ValidacionTipoException {
-		return ValidacionesTipo.getInstance().distanciaDiasHabiles(fecha1, fecha2);
+		return ValidacionesTipo.getInstance().distanciaDiasHabiles(fecha1, fecha2,
+				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}
 
 	@Override

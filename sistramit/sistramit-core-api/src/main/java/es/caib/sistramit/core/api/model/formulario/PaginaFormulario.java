@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.SerializationUtils;
+
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+
 /**
  *
  * Página formulario: datos necesarios para la carga de la página.
@@ -21,6 +25,22 @@ public final class PaginaFormulario implements Serializable {
 	private String idFormulario;
 
 	/**
+	 * Título formulario.
+	 */
+	private String titulo;
+
+	/**
+	 * Mostrar titulo.
+	 */
+	private TypeSiNo mostrarTitulo;
+
+	/**
+	 * Pemitir salir guardando.
+	 */
+	// TODO PENDIENTE AÑADIR FUNCIONALIDAD
+	private TypeSiNo permitirGuardar = TypeSiNo.NO;
+
+	/**
 	 * Html pagina.
 	 */
 	private String html;
@@ -33,18 +53,18 @@ public final class PaginaFormulario implements Serializable {
 	/**
 	 * Valores de los campos.
 	 */
-	private List<ValorCampo> valores;
+	private List<ValorCampo> valores = new ArrayList<>();
 
 	/**
 	 * Valores posibles de los campos selectores.
 	 */
-	private List<ValoresPosiblesCampo> valoresPosibles;
+	private List<ValoresPosiblesCampo> valoresPosibles = new ArrayList<>();
 
 	/**
 	 * Recursos estáticos del formulario. Se establecen las urls de estos recursos
 	 * estáticos para establecerse en el html del formulario.
 	 */
-	private RecursosFormulario recursos;
+	private RecursosFormulario recursos = new RecursosFormulario();
 
 	/**
 	 * Acciones del formulario.
@@ -59,6 +79,26 @@ public final class PaginaFormulario implements Serializable {
 	 */
 	public PaginaFormulario(final String pIdFormulario) {
 		this.idFormulario = pIdFormulario;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param paginaData
+	 *            datos página
+	 */
+	public PaginaFormulario(PaginaFormularioData pagData) {
+		// Establece datos página creando una copia para evitar modificación
+		this.setIdFormulario(pagData.getIdFormulario());
+		this.setMostrarTitulo(pagData.getMostrarTitulo());
+		this.setTitulo(pagData.getTitulo());
+		for (final ConfiguracionCampo cc : pagData.getConfiguracion()) {
+			configuracion.add(SerializationUtils.clone(cc));
+		}
+		for (final ValorCampo vc : pagData.getValores()) {
+			valores.add(SerializationUtils.clone(vc));
+		}
+		recursos = SerializationUtils.clone(pagData.getRecursos());
 	}
 
 	/**
@@ -210,6 +250,63 @@ public final class PaginaFormulario implements Serializable {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Método de acceso a titulo.
+	 *
+	 * @return titulo
+	 */
+	public String getTitulo() {
+		return titulo;
+	}
+
+	/**
+	 * Método para establecer titulo.
+	 *
+	 * @param titulo
+	 *            titulo a establecer
+	 */
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	/**
+	 * Método de acceso a mostrarTitulo.
+	 *
+	 * @return mostrarTitulo
+	 */
+	public TypeSiNo getMostrarTitulo() {
+		return mostrarTitulo;
+	}
+
+	/**
+	 * Método para establecer mostrarTitulo.
+	 *
+	 * @param mostrarTitulo
+	 *            mostrarTitulo a establecer
+	 */
+	public void setMostrarTitulo(TypeSiNo mostrarTitulo) {
+		this.mostrarTitulo = mostrarTitulo;
+	}
+
+	/**
+	 * Método de acceso a permitirGuardar.
+	 *
+	 * @return permitirGuardar
+	 */
+	public TypeSiNo getPermitirGuardar() {
+		return permitirGuardar;
+	}
+
+	/**
+	 * Método para establecer permitirGuardar.
+	 *
+	 * @param permitirGuardar
+	 *            permitirGuardar a establecer
+	 */
+	public void setPermitirGuardar(TypeSiNo permitirGuardar) {
+		this.permitirGuardar = permitirGuardar;
 	}
 
 }

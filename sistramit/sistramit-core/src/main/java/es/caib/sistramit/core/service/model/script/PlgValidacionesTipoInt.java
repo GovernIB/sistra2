@@ -134,7 +134,7 @@ public interface PlgValidacionesTipoInt {
 			final String cuenta);
 
 	/**
-	 * Verifica que el String sea tranformable a fecha (formato dd/MM/yyyy).
+	 * Verifica que el String sea tranformable a fecha (formato yyyy-MM-yyyy).
 	 *
 	 * @param fecha
 	 *            Fecha a Validar
@@ -261,9 +261,9 @@ public interface PlgValidacionesTipoInt {
 	 * Compara dos fechas.
 	 *
 	 * @param fechaUno
-	 *            Parámetro fecha uno (formato fecha: dd/MM/yyyy)
+	 *            Parámetro fecha uno (formato fecha: yyyy-MM-yyyy)
 	 * @param fechaDos
-	 *            Parámetro fecha dos (formato fecha: dd/MM/yyyy)
+	 *            Parámetro fecha dos (formato fecha: yyyy-MM-yyyy)
 	 * @return Devuelve (0) en caso de que la fecha sea igual, (1) en el caso de que
 	 *         la fecha sea superior y (-1) si la fecha es inferior
 	 * @throws ValidacionTipoException
@@ -274,7 +274,7 @@ public interface PlgValidacionesTipoInt {
 	 * Compara fecha actual con la pasada como parametro.
 	 *
 	 * @param fecha
-	 *            Parámetro fecha (formato fecha: dd/MM/yyyy)
+	 *            Parámetro fecha (formato fecha: yyyy-MM-yyyy)
 	 * @return Devuelve (0) en caso de que la fecha sea igual, (1) en el caso de que
 	 *         la fecha sea superior a la actual y (-1) si la fecha es inferior a la
 	 *         actual
@@ -286,26 +286,14 @@ public interface PlgValidacionesTipoInt {
 	 * Compara dos fechas (incluida hora).
 	 *
 	 * @param fechaHoraUno
-	 *            Parámetro fecha uno (formato fecha: dd/MM/yyyy)
+	 *            Parámetro fecha uno (formato fecha: yyyy-MM-yyyy)
 	 * @param fechaHoraDos
-	 *            Parámetro fecha dos (formato fecha: dd/MM/yyyy)
+	 *            Parámetro fecha dos (formato fecha: yyyy-MM-yyyy)
 	 * @return Devuelve (0) en caso de que la fecha sea igual, (1) en el caso de que
 	 *         la fecha sea superior y (-1) si la fecha es inferior
 	 * @throws ValidacionTipoException
 	 */
 	int validaFechaHoraFin(final String fechaHoraUno, final String fechaHoraDos) throws ValidacionTipoException;
-
-	/**
-	 * Compara fecha actual con la pasada como parametro (incluida hora).
-	 *
-	 * @param fechaHora
-	 *            Parámetro fecha (formato fecha: dd/MM/yyyy )
-	 * @return Devuelve (0) en caso de que la fecha sea igual, (1) en el caso de que
-	 *         la fecha sea superior a la actual y (-1) si la fecha es inferior a la
-	 *         actual
-	 * @throws ValidacionTipoException
-	 */
-	int validaFechaHoraActual(final String fechaHora) throws ValidacionTipoException;
 
 	/**
 	 * Método para Formatea nombre apellidos de la clase Validaciones.
@@ -324,7 +312,7 @@ public interface PlgValidacionesTipoInt {
 			final String apellido2);
 
 	/**
-	 * Devuelve la fecha actual en formato dd/MM/yyyy.
+	 * Devuelve la fecha actual en formato yyyy-MM-yyyy.
 	 *
 	 * @return cadena resultado
 	 */
@@ -363,7 +351,7 @@ public interface PlgValidacionesTipoInt {
 			throws ValidacionTipoException;
 
 	/**
-	 * Método para Obtener el año de una fecha (dd/mm/yyyy).
+	 * Método para Obtener el año de una fecha (yyyy-MM-yyyy).
 	 *
 	 * @param fecha
 	 *            Parámetro fecha
@@ -373,7 +361,7 @@ public interface PlgValidacionesTipoInt {
 	int obtenerAnyo(String fecha) throws ValidacionTipoException;
 
 	/**
-	 * Método para Obtener el mes de una fecha (dd/mm/yyyy).
+	 * Método para Obtener el mes de una fecha (yyyy-MM-yyyy).
 	 *
 	 * @param fecha
 	 *            Parámetro fecha
@@ -383,7 +371,7 @@ public interface PlgValidacionesTipoInt {
 	int obtenerMes(String fecha) throws ValidacionTipoException;
 
 	/**
-	 * Método para Obtener el día de una fecha (dd/mm/yyyy).
+	 * Método para Obtener el día de una fecha (yyyy-MM-yyyy).
 	 *
 	 * @param fecha
 	 *            Parámetro fecha
@@ -393,7 +381,7 @@ public interface PlgValidacionesTipoInt {
 	int obtenerDia(String fecha) throws ValidacionTipoException;
 
 	/**
-	 * Método para sumar días a una fecha (dd/mm/yyyy).
+	 * Método para sumar días a una fecha (yyyy-MM-yyyy).
 	 *
 	 * @param fecha
 	 *            Parámetro fecha
