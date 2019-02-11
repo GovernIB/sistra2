@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -40,6 +41,7 @@ public class JScript implements IModelApi {
 	private String script;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OrderBy("codigo")
 	private Set<JLiteralErrorScript> literales = new HashSet<>(0);
 
 	/** Constructor. **/

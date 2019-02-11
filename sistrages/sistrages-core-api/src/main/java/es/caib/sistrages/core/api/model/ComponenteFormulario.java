@@ -7,7 +7,7 @@ import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
  * La clase ComponenteFormulario.
  */
 
-public abstract class ComponenteFormulario extends ObjetoFormulario {
+public abstract class ComponenteFormulario extends ObjetoFormulario implements Comparable<ComponenteFormulario> {
 
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
@@ -204,4 +204,14 @@ public abstract class ComponenteFormulario extends ObjetoFormulario {
 		this.alineacionTexto = alineacionTexto;
 	}
 
+	@Override
+	public int compareTo(final ComponenteFormulario arg0) {
+		int comparador;
+		if (this.getOrden() < arg0.getOrden()) {
+			comparador = -1;
+		} else {
+			comparador = 1;
+		}
+		return comparador;
+	}
 }

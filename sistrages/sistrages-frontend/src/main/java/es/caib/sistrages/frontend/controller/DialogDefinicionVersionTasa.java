@@ -52,6 +52,9 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	/** ID tramite version. **/
 	private String idTramiteVersion;
 
+	/** ID Paso. **/
+	private String idPaso;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionTasa1.
 	 */
@@ -82,6 +85,7 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		}
 		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		maps.put(TypeParametroVentana.TRAMITEPASO.toString(), idPaso);
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
 
 	}
@@ -248,6 +252,21 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	/**
+	 * @return the idPaso
+	 */
+	public String getIdPaso() {
+		return idPaso;
+	}
+
+	/**
+	 * @param idPaso
+	 *            the idPaso to set
+	 */
+	public void setIdPaso(final String idPaso) {
+		this.idPaso = idPaso;
 	}
 
 }

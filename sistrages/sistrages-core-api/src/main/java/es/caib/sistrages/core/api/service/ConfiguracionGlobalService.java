@@ -6,6 +6,7 @@ import org.fundaciobit.pluginsib.core.IPlugin;
 
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 
 /**
  * La interface ConfiguracionGlobalService.
@@ -29,6 +30,15 @@ public interface ConfiguracionGlobalService {
 	 * @return el valor de configuracion global
 	 */
 	public ConfiguracionGlobal getConfiguracionGlobal(String propiedad);
+
+	/**
+	 * Obtiene el valor de configuracion global.
+	 *
+	 * @param propiedad
+	 *            la propiedad de configuracion global
+	 * @return el valor de configuracion global
+	 */
+	public ConfiguracionGlobal getConfiguracionGlobal(TypePropiedadConfiguracion propiedad);
 
 	/**
 	 * Añade la configuracion global.

@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Clase de tramite simple.
- * 
+ *
  * @author slromero
  *
  */

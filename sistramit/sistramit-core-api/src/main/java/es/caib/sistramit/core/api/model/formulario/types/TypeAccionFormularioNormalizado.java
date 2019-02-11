@@ -10,7 +10,7 @@ public enum TypeAccionFormularioNormalizado implements TypeAccionFormulario {
 	/**
 	 * Acción salir (Código String: salir).
 	 */
-	SALIR("salir"),
+	// SALIR("salir"), // LA ACCION SALIR SE AÑADE AUTOMATICAMENTE
 	/**
 	 * Acción finalizar (Código String: finalizar).
 	 */

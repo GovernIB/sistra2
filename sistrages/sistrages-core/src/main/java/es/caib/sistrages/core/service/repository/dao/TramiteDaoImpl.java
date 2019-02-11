@@ -18,14 +18,20 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
+import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
+import es.caib.sistrages.core.api.model.comun.TramiteSimple;
+import es.caib.sistrages.core.api.model.comun.TramiteSimpleFormulario;
+import es.caib.sistrages.core.api.model.comun.TramiteSimplePaso;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeFlujo;
+import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.service.repository.model.JAnexoTramite;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JDominio;
@@ -577,15 +583,35 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Long> getTramiteDominiosId(final Long idTramiteVersion) {
-		final String sql = "Select d.codigo From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+	public List<Dominio> getDominioSimpleByTramiteId(final Long idTramiteVersion) {
+		final String sql = "Select d.codigo, d.identificador, d.descripcion, d.ambito From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 
-		final List<Long> resultado = query.getResultList();
+		final List<Object[]> resultados = query.getResultList();
+		final List<Dominio> dominios = new ArrayList<>();
+		if (resultados != null && !resultados.isEmpty()) {
+			for (final Object[] resultado : resultados) {
 
-		return resultado;
+				final Dominio dominio = new Dominio();
+				if (resultado[0] != null) {
+					dominio.setCodigo(Long.valueOf(resultado[0].toString()));
+				}
+				if (resultado[1] != null) {
+					dominio.setIdentificador(resultado[1].toString());
+				}
+				if (resultado[2] != null) {
+					dominio.setDescripcion(resultado[2].toString());
+				}
+				if (resultado[3] != null) {
+					dominio.setAmbito(TypeAmbito.fromString(resultado[3].toString()));
+				}
+				dominios.add(dominio);
+			}
+		}
+
+		return dominios;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -925,9 +951,9 @@ public class TramiteDaoImpl implements TramiteDao {
 		historialVersionDao.add(jTramiteVersion.getCodigo(), usuario, TypeAccionHistorial.IMPORTACION, "");
 
 		/** Primero borramos las asociaciones y luego las volvemos a asociar. **/
-		final List<Long> mdominios = this.getTramiteDominiosId(jTramiteVersion.getCodigo());
-		for (final Long mdominio : mdominios) {
-			dominioDao.removeTramiteVersion(mdominio, jTramiteVersion.getCodigo());
+		final List<Dominio> mdominios = this.getDominioSimpleByTramiteId(jTramiteVersion.getCodigo());
+		for (final Dominio mdominio : mdominios) {
+			dominioDao.removeTramiteVersion(mdominio.getCodigo(), jTramiteVersion.getCodigo());
 		}
 		entityManager.flush();
 
@@ -958,6 +984,53 @@ public class TramiteDaoImpl implements TramiteDao {
 			version.getMensajeDesactivacion().setCodigo(null);
 		}
 		return version;
+	}
+
+	@Override
+	public TramiteSimple getTramiteSimple(final String idTramiteVersion) {
+
+		final TramiteSimple tramite = new TramiteSimple();
+		final List<TramiteSimplePaso> pasos = new ArrayList<>();
+
+		final String sql = "Select p.codigo, p.tipoPaso From JPasoTramitacion p where p.versionTramite.codigo = :idTramiteVersion order by p.orden ";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", Long.valueOf(idTramiteVersion));
+
+		@SuppressWarnings("unchecked")
+		final List<Object[]> objectPasos = query.getResultList();
+
+		if (objectPasos != null) {
+			for (final Object[] objetPaso : objectPasos) {
+				final TramiteSimplePaso paso = new TramiteSimplePaso();
+				paso.setCodigo(Long.valueOf(objetPaso[0].toString()));
+				paso.setTipo(TypePaso.fromString(objetPaso[1].toString()));
+				if (paso.isTipoPasoRellenar()) {
+
+					final List<TramiteSimpleFormulario> formularios = new ArrayList<>();
+					final String sqlForm = "Select f.codigo, f.formulario.codigo From JPasoRellenar p JOIN  p.formulariosTramite f where p.codigo = :idPaso order by f.orden ";
+					final Query queryForm = entityManager.createQuery(sqlForm);
+					queryForm.setParameter("idPaso", paso.getCodigo());
+
+					@SuppressWarnings("unchecked")
+					final List<Object[]> objectForms = queryForm.getResultList();
+					if (objectForms != null) {
+						for (final Object[] objectForm : objectForms) {
+							final TramiteSimpleFormulario formulario = new TramiteSimpleFormulario();
+							formulario.setCodigo(Long.valueOf(objectForm[0].toString()));
+							formulario.setIdFormularioInterno(Long.valueOf(objectForm[1].toString()));
+							formularios.add(formulario);
+						}
+					}
+
+					paso.setFormularios(formularios);
+				}
+				pasos.add(paso);
+			}
+		}
+
+		tramite.setPasos(pasos);
+		return tramite;
+
 	}
 
 }

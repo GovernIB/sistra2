@@ -42,6 +42,7 @@ import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
+import es.caib.sistrages.core.api.model.comun.ConstantesDominio;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
@@ -779,10 +780,16 @@ public class VersionTramiteAdapter {
 	 * @return RListaDominio
 	 */
 	private RListaDominio generaListaDominio(final ComponenteFormularioCampoSelector cs) {
+		final Dominio d = restApiService.loadDominio(cs.getCodDominio());
 		final RListaDominio l = new RListaDominio();
-		l.setCampoCodigo(cs.getCampoDominioCodigo());
-		l.setCampoDescripcion(cs.getCampoDominioDescripcion());
-		l.setDominio(generaDominio(cs.getCodDominio()));
+		if (d.getTipo() == TypeDominio.LISTA_FIJA) {
+			l.setCampoCodigo(ConstantesDominio.LISTAFIJA_COLUMNA_CODIGO);
+			l.setCampoDescripcion(ConstantesDominio.LISTAFIJA_COLUMNA_DESCRIPCION);
+		} else {
+			l.setCampoCodigo(cs.getCampoDominioCodigo());
+			l.setCampoDescripcion(cs.getCampoDominioDescripcion());
+		}
+		l.setDominio(d.getIdentificador());
 		l.setParametros(generaParametrosDominio(cs.getListaParametrosDominio()));
 		return l;
 	}
@@ -806,22 +813,6 @@ public class VersionTramiteAdapter {
 			}
 		}
 		return lpd;
-	}
-
-	/**
-	 * Genera id Dominio
-	 *
-	 * @param codDominio
-	 * @return id del dominio
-	 */
-	private String generaDominio(final Long codDominio) {
-		if (codDominio != null) {
-			final Dominio d = restApiService.loadDominio(codDominio);
-			if (d != null) {
-				return d.getIdentificador();
-			}
-		}
-		return null;
 	}
 
 	/**

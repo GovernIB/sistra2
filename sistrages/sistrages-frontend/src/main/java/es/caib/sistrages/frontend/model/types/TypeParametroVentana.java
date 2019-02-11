@@ -80,5 +80,21 @@ public enum TypeParametroVentana {
 	/**
 	 * Id del script
 	 */
-	ID_SCRIPT;
+	ID_SCRIPT,
+	/**
+	 * Id del componente
+	 */
+	COMPONENTE,
+	/**
+	 * Página
+	 */
+	PAGINA,
+	/**
+	 * Formulario actual.
+	 */
+	FORMULARIO_ACTUAL,
+	/**
+	 * Formulario interno
+	 */
+	FORM_INTERNO_ACTUAL;
 }

@@ -69,8 +69,8 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	 */
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
-	public boolean removeFormateadorFormulario(final Long idFmt) {
-		return fmtService.removeFormateadorFormulario(idFmt);
+	public void removeFormateadorFormulario(final Long idFmt) {
+		fmtService.removeFormateadorFormulario(idFmt);
 
 	}
 
@@ -98,6 +98,12 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro) {
 		return fmtService.listFormateadorFormulario(idEntidad, filtro);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean tieneRelacionesFormateadorFormulario(final Long idFmt) {
+		return fmtService.tieneRelacionesFormateadorFormulario(idFmt);
 	}
 
 }

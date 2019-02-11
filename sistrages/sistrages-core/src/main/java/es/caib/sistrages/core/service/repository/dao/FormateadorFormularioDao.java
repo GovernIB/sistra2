@@ -91,4 +91,12 @@ public interface FormateadorFormularioDao {
 	 */
 	Long importar(FilaImportarFormateador filaFormateador, Long idEntidad);
 
+	/**
+	 * Comprueba si tiene relaciones el formateador.
+	 * 
+	 * @param idFmt
+	 * @return
+	 */
+	boolean tieneRelacionesFormateadorFormulario(Long idFmt);
+
 }

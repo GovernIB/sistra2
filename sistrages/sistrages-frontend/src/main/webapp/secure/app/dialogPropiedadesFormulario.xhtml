@@ -22,6 +22,8 @@
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogPropiedadesFormulario.modoAcceso}"/>
 		<f:viewParam name="ID" value="#{dialogPropiedadesFormulario.id}"/>
+		<f:viewParam name="FORMULARIO_ACTUAL" value="#{dialogPropiedadesFormulario.idFormularioTramite}"/>
+		<f:viewParam name="TRAMITEVERSION" value="#{dialogPropiedadesFormulario.idTramiteVersion}"/>
 		<f:viewAction action="#{dialogPropiedadesFormulario.init}" />
 	</f:metadata>
 	<h:form styleClass="margin-top-10" id="form">
@@ -148,7 +150,7 @@
 
 					<p:commandButton id="scriptPlantilla" icon="fa fa-bolt"  actionListener="#{dialogPropiedadesFormulario.editarDialogScriptPlantilla(TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA.name(), dialogPropiedadesFormulario.data.scriptPlantilla)}" process="@this" update="growlDialog"
 									styleClass="#{dialogPropiedadesFormulario.getColorScript(dialogPropiedadesFormulario.data.scriptPlantilla)}" >
-						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog" />
+						<p:ajax event="dialogReturn" listener="#{dialogPropiedadesFormulario.returnDialogoScriptPlantilla}" update="growlDialog scriptPlantilla" />
 					</p:commandButton>
 				</h:panelGrid>
 

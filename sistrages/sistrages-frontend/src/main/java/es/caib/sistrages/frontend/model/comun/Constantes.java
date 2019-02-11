@@ -46,9 +46,6 @@ public final class Constantes {
 	/** Constante tramite version. **/
 	public static final String CLAVE_MOCHILA_TRAMITE_VERSION = "TRAMVER";
 
-	/** Constante dominio. **/
-	public static final String CLAVE_MOCHILA_DOMINIO = "DOMINIO";
-
 	/** Constante procedimiento. **/
 	public static final String CLAVE_MOCHILA_PROCEDIMIENTO = "PROCEDIMIENTO";
 
@@ -75,18 +72,6 @@ public final class Constantes {
 
 	/** Constante fuente datos valores. **/
 	public static final String CLAVE_MOCHILA_FUENTEVALORES = "FUENTEVALORES";
-
-	/** Paso actual. **/
-	public static final String CLAVE_MOCHILA_PASO = "PASO";
-
-	/** Formulario actual. **/
-	public static final String CLAVE_MOCHILA_FORMULARIO = "FORMULARIO";
-
-	/** Formulario actual. **/
-	public static final String CLAVE_MOCHILA_FORMULARIO_INTERNO = "FORMULARIO_INTERNO";
-
-	/** Dominios pasados a traves de la mochila para el dialog de script. **/
-	public static final String CLAVE_MOCHILA_DOMINIOS = "DOMINIOS";
 
 	public static final String SISTRAMIT_REST_PWD = "sistramit.rest.pwd";
 

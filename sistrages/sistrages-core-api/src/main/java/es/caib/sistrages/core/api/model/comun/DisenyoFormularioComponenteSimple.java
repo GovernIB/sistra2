@@ -4,11 +4,14 @@ import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 
 /**
  * Componente simple
- * 
+ *
  * @author Indra
  *
  */
 public class DisenyoFormularioComponenteSimple {
+
+	/** Identificador. **/
+	private Long codigo;
 
 	/** Identificador. **/
 	private String identificador;
@@ -19,6 +22,21 @@ public class DisenyoFormularioComponenteSimple {
 	/** Constructor. **/
 	public DisenyoFormularioComponenteSimple() {
 		// Vacio
+	}
+
+	/**
+	 * @return the codigo
+	 */
+	public Long getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
 	}
 
 	/**

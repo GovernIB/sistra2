@@ -34,7 +34,7 @@
 
 </script>
 
-<h:body>
+<h:body style="overflow:hidden">
 
 	<!-- Parametros dialogo -->
 	<f:metadata>
@@ -43,6 +43,11 @@
 		<f:viewParam name="TIPO_SCRIPT_FORMULARIO" value="#{dialogScript.tipoScriptFormulario}"/>
 		<f:viewParam name="DATO" value="#{dialogScript.iData}"/>
 		<f:viewParam name="TRAMITEVERSION" value="#{dialogScript.idTramiteVersion}"/>
+		<f:viewParam name="TRAMITEPASO" value="#{dialogScript.idPasoActual}"/>
+		<f:viewParam name="FORMULARIO_ACTUAL" value="#{dialogScript.idFormularioActual}"/>
+		<f:viewParam name="FORM_INTERNO_ACTUAL" value="#{dialogScript.idFormularioInternoActual}"/>
+		<f:viewParam name="COMPONENTE" value="#{dialogScript.idComponente}"/>
+		<f:viewParam name="PAGINA" value="#{dialogScript.idPagina}"/>
 		<f:viewAction action="#{dialogScript.init}" />
 	</f:metadata>
 	<h:form id="dialogScript" styleClass="margin-top-10">
@@ -99,7 +104,7 @@
 								<p:panel id="panelMensajes" header="#{msg['dialogScript.validacion.header']}" toggleable="true" widgetVar="panelScripts" collapsed="#{dialogScript.visibleMensajes}"  rendered="#{!dialogScript.mostrarLateralAyuda}" styleClass="sin-bordes noPadding grid-left" >
 
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
-										<div style="text-align:right">
+										<div style="text-align:right;margin-bottom:4px">
 											<p:commandButton value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{dialogScript.nuevoMensaje}" process="@this" update="growlScript" rendered="#{dialogScript.isPermiteEditar()}" >
 							        				<p:ajax event="dialogReturn" listener="#{dialogScript.returnDialogoMensaje}" update="growlScript panelPlugins panelMensajes panelDominios panelFormularios"/>
 							        		</p:commandButton>
@@ -112,7 +117,7 @@
       			   						</div>
 
 
-      			   						 <p:dataTable id="mensaje" var="mensaje" value="#{dialogScript.data.mensajes}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="100%"
+      			   						 <p:dataTable id="mensaje" var="mensaje" value="#{dialogScript.data.mensajes}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="240"
 									   		selection="#{dialogScript.mensajeSeleccionado}" rowKey="#{mensaje.identificador}" selectionMode="single" >
 
 											<p:ajax event="rowSelect" global="false" />
@@ -135,7 +140,7 @@
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
 
 										<p:dataTable id="tableDominios"
-											var="dominio" value="#{dialogScript.dominios}" emptyMessage="#{msg['error.emptyRows']}" scrollable="true" scrollHeight="100%"
+											var="dominio" value="#{dialogScript.dominios}" emptyMessage="#{msg['error.emptyRows']}"  scrollable="true" scrollHeight="270"
 									   		 >
 
 											<p:ajax event="rowSelect" global="false" />
@@ -155,13 +160,11 @@
 									    </p:dataTable>
 								    </p:panel>
 
-							 		<p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" style="margin-bottom:2px" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left">
+							 		<p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left" style="margin-bottom:2px" rendered="#{dialogScript.treeFormularios.getChildCount() != 0}">
 
 										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
-
-												<p:growl id="growlScript2" widgetVar="growlScript" life="2000" sticky="false" />
-												<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes h100 w80" selectionMode="single" selection="#{dialogScript.selectedNode}" >
-													<p:treeNode>
+												<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes h100 w100" selectionMode="single" selection="#{dialogScript.selectedNode}" >
+													<p:treeNode  styleClass="nodoComponente">
 														<h:graphicImage value="#{node.srcIcono()}" rendered="#{node.tieneIcono()}" width="35px" style="margin-right:5px" />
 														<h:outputText value="#{node.getName()}" />
 													</p:treeNode>
@@ -169,8 +172,9 @@
 													<p:ajax event="select" update="dialogScript:commandCopiarNodo"  />
 
 												</p:tree>
-												<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="boton-azul margin-top-3"  rendered="#{dialogScript.isEdicion()}" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" />
-
+												<div class="w100 grid-center">
+													<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="button margin-top-3"  rendered="#{dialogScript.isEdicion()}" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" icon="fa fa-copy" />
+												</div>
 									</p:panel>
 		    					</p:column>
 					</h:panelGrid>

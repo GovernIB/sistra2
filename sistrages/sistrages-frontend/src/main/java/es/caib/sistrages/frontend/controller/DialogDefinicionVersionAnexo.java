@@ -62,6 +62,9 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Id entidad. **/
 	private String idEntidad;
 
+	/** Id paso. **/
+	private String idPaso;
+
 	/**
 	 * Obtiene el valor de permiteEditar.
 	 *
@@ -264,6 +267,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_FLUJO.toString(),
 				UtilJSON.toJSON(TypeScriptFlujo.fromString(tipoScript)));
 		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
+		maps.put(TypeParametroVentana.TRAMITEPASO.toString(), idPaso);
 		if (script != null) {
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 			mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
@@ -442,6 +446,21 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 */
 	public void setIdEntidad(final String idEntidad) {
 		this.idEntidad = idEntidad;
+	}
+
+	/**
+	 * @return the idPaso
+	 */
+	public String getIdPaso() {
+		return idPaso;
+	}
+
+	/**
+	 * @param idPaso
+	 *            the idPaso to set
+	 */
+	public void setIdPaso(final String idPaso) {
+		this.idPaso = idPaso;
 	}
 
 }

@@ -40,7 +40,7 @@
 
 					<p:layoutUnit id="indexDefinicionVersion" position="west" size="250">
 						<h:form id="formArbol">
-							<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w80" onNodeClick="javascript:triggerDblClickTree();">
+							<p:tree id="arbol" value="#{viewDefinicionVersion.root}" var="node" selectionMode="single" selection="#{viewDefinicionVersion.selectedNode}"  styleClass="sin-bordes h100 w100 arbolTramites" style="overflow:hidden" onNodeClick="javascript:triggerDblClickTree();">
 								<p:treeNode>
 									<h:outputText value="#{node}" />
 								</p:treeNode>

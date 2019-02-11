@@ -29,6 +29,15 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	 */
 	private String iData;
 
+	/** Id. formulario interno. **/
+	private String idFormulario;
+
+	/** Id. tramite version. **/
+	private String idTramiteversion;
+
+	/** Id. formulario interno. **/
+	private String idFormularioInterno;
+
 	/**
 	 * Datos elemento.
 	 */
@@ -45,7 +54,6 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new PaginaFormulario();
-			// data.setCodigo(System.currentTimeMillis() * -1);
 		} else {
 			data = (PaginaFormulario) UtilJSON.fromJSON(iData, PaginaFormulario.class);
 		}
@@ -59,6 +67,11 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 		final Map<String, String> maps = new HashMap<>();
 		maps.put(TypeParametroVentana.TIPO_SCRIPT_FORMULARIO.toString(),
 				UtilJSON.toJSON(TypeScriptFormulario.fromString(tipoScript)));
+		maps.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), idFormularioInterno);
+		maps.put(TypeParametroVentana.PAGINA.toString(), this.data.getCodigo().toString());
+		maps.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteversion);
+		maps.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(), this.idFormulario);
+
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
 		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
@@ -135,6 +148,51 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	 */
 	public void setData(final PaginaFormulario data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the idFormulario
+	 */
+	public String getIdFormulario() {
+		return idFormulario;
+	}
+
+	/**
+	 * @param idFormulario
+	 *            the idFormulario to set
+	 */
+	public void setIdFormulario(final String idFormulario) {
+		this.idFormulario = idFormulario;
+	}
+
+	/**
+	 * @return the idTramiteversion
+	 */
+	public String getIdTramiteversion() {
+		return idTramiteversion;
+	}
+
+	/**
+	 * @param idTramiteversion
+	 *            the idTramiteversion to set
+	 */
+	public void setIdTramiteversion(final String idTramiteversion) {
+		this.idTramiteversion = idTramiteversion;
+	}
+
+	/**
+	 * @return the idFormularioInterno
+	 */
+	public String getIdFormularioInterno() {
+		return idFormularioInterno;
+	}
+
+	/**
+	 * @param idFormularioInterno
+	 *            the idFormularioInterno to set
+	 */
+	public void setIdFormularioInterno(final String idFormularioInterno) {
+		this.idFormularioInterno = idFormularioInterno;
 	}
 
 }

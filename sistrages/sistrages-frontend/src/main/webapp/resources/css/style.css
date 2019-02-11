@@ -559,3 +559,28 @@ label.ui-state-disabled {
 }
 
 .ayuda-frame {width:100%; height:500px; overflow:auto;border: none;}
+
+/*
+.ui-tree .ui-tree-selectable .ui-treenode-label, .ui-tree .ui-tree-selectable .ui-treenode-icon {
+	 padding: 4px;
+}*/
+
+.nodoComponente ul li ul li.ui-treenode-leaf {
+	height: 25px !important;
+}
+
+.nodoComponente ul li ul li span span.ui-treenode-label{
+	padding: 4px !important;
+}
+
+.ui-tree-container{
+	margin-bottom: 12px;
+	width: 100% !important;
+	height: 275px;
+	overflow: auto;
+	display: block;
+	padding-bottom: 20px;
+}
+.arbolTramites ul {
+	height:100%;
+}

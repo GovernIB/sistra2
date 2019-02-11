@@ -44,7 +44,7 @@
 					</p:selectOneMenu>
 
 					<p:outputLabel   for="tipo" value="#{msg['dialogTramiteImportarTV.headerTipo']}:" />
-					<p:selectOneMenu id ="tipo" styleClass="w40" value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoTipo}" required="true">
+					<p:selectOneMenu id ="tipo" styleClass="w40" value="#{dialogTramiteImportarTV.data.tramiteVersionResultadoTipo}" style="background:white" required="true">
 						    <f:selectItem itemLabel="" noSelectionOption="true"></f:selectItem>
 						    <f:selectItems value="#{dialogTramiteImportarTV.tipos}"  itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}" var="tipo" />
 					</p:selectOneMenu>
