@@ -10,12 +10,12 @@ import javax.script.ScriptException;
  * @author Indra
  *
  */
-public interface PlgAvisoInt extends PluginScriptPlg {
+public interface PlgValidacionInt extends PluginScriptPlg {
 
 	/**
 	 * Id plugin.
 	 */
-	String ID = "PLUGIN_AVISO";
+	String ID = "PLUGIN_VALIDACION";
 
 	/**
 	 * Método para establecer si se genera aviso.

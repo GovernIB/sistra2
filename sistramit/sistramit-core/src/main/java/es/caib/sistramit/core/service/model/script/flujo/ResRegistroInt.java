@@ -1,4 +1,6 @@
-package es.caib.sistramit.core.service.model.script;
+package es.caib.sistramit.core.service.model.script.flujo;
+
+import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
 /**
  *

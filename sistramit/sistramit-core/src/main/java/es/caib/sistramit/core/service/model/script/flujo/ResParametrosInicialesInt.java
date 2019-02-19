@@ -1,4 +1,6 @@
-package es.caib.sistramit.core.service.model.script;
+package es.caib.sistramit.core.service.model.script.flujo;
+
+import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
 /**
  * Datos para establecer los parámetros iniciales trámite.
@@ -11,7 +13,7 @@ public interface ResParametrosInicialesInt extends PluginScriptRes {
 	/**
 	 * Id plugin.
 	 */
-	String ID = "DATOS_PARAMETROS_INICIALES";
+	String ID = "DATOS_PARAMETROSINICIALES";
 
 	/**
 	 * Añade un nuevo parámetro.

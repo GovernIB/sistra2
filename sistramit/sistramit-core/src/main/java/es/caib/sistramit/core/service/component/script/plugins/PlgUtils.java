@@ -3,7 +3,7 @@ package es.caib.sistramit.core.service.component.script.plugins;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesCadena;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
-import es.caib.sistramit.core.service.model.script.PlgValidacionesInt;
+import es.caib.sistramit.core.service.model.script.PlgUtilsInt;
 
 /**
  * Plugin que permite realizar diversas validaciones.
@@ -11,7 +11,7 @@ import es.caib.sistramit.core.service.model.script.PlgValidacionesInt;
  * @author Indra
  */
 @SuppressWarnings("serial")
-public final class PlgValidaciones implements PlgValidacionesInt {
+public final class PlgUtils implements PlgUtilsInt {
 
 	/**
 	 * Indica si esta habilitado debug.
@@ -24,7 +24,7 @@ public final class PlgValidaciones implements PlgValidacionesInt {
 	 * @param pDebugEnabled
 	 *            Debug enabled
 	 */
-	public PlgValidaciones(final boolean pDebugEnabled) {
+	public PlgUtils(final boolean pDebugEnabled) {
 		super();
 		debugEnabled = pDebugEnabled;
 	}

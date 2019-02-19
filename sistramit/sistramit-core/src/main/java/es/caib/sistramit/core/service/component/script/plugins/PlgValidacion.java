@@ -7,8 +7,8 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import es.caib.sistramit.core.api.model.comun.types.TypeAviso;
-import es.caib.sistramit.core.service.model.script.PlgAvisoInt;
+import es.caib.sistramit.core.api.model.comun.types.TypeValidacion;
+import es.caib.sistramit.core.service.model.script.PlgValidacionInt;
 
 /**
  * Plugin que permite establecer un mensaje de aviso al ejecutar el script.
@@ -17,7 +17,7 @@ import es.caib.sistramit.core.service.model.script.PlgAvisoInt;
  *
  */
 @SuppressWarnings("serial")
-public final class PlgAviso implements PlgAvisoInt {
+public final class PlgValidacion implements PlgValidacionInt {
 
     /**
      * Indica si existe aviso.
@@ -27,7 +27,7 @@ public final class PlgAviso implements PlgAvisoInt {
     /**
      * Indica tipo aviso: INFO / WARNING.
      */
-    private TypeAviso tipoAviso;
+    private TypeValidacion tipoAviso;
 
     /**
      * Código mensaje aviso. Para establecer aviso por codigo mensaje.
@@ -64,7 +64,7 @@ public final class PlgAviso implements PlgAvisoInt {
     public void setExisteAviso(final boolean pExisteaAviso, final String pTipo)
             throws ScriptException {
         existeAviso = pExisteaAviso;
-        tipoAviso = TypeAviso.fromString(StringUtils.lowerCase(pTipo));
+        tipoAviso = TypeValidacion.fromString(StringUtils.lowerCase(pTipo));
         if (tipoAviso == null) {
             throw new ScriptException("Tipo de aviso no valido: " + pTipo);
         }
@@ -117,7 +117,7 @@ public final class PlgAviso implements PlgAvisoInt {
      *
      * @return tipoAviso
      */
-    public TypeAviso getTipoAviso() {
+    public TypeValidacion getTipoAviso() {
         return tipoAviso;
     }
 

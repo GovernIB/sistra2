@@ -7,12 +7,12 @@ package es.caib.sistramit.core.service.model.script;
  * @author Indra
  *
  */
-public interface PlgMensajeValidacionInt extends PluginScriptPlg {
+public interface PlgMensajesInt extends PluginScriptPlg {
 
 	/**
 	 * Id plugin.
 	 */
-	String ID = "PLUGIN_MENSAJEVALIDACION";
+	String ID = "PLUGIN_MENSAJES";
 
 	/**
 	 * Método para crear un mensaje de validación.
@@ -21,6 +21,6 @@ public interface PlgMensajeValidacionInt extends PluginScriptPlg {
 	 *            codigo mensaje validación
 	 * @return Mensaje validacion
 	 */
-	ClzMensajeValidacionInt crearMensajeValidacion(final String codigo);
+	ClzMensajeInt crearMensaje(final String codigo);
 
 }

@@ -1,6 +1,9 @@
-package es.caib.sistramit.core.service.model.script;
+package es.caib.sistramit.core.service.model.script.flujo;
 
 import javax.script.ScriptException;
+
+import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
+import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
 /**
  * Modificación de los formularios en el script de post guardar.

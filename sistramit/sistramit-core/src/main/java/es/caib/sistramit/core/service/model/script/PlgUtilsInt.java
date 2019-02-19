@@ -6,11 +6,11 @@ package es.caib.sistramit.core.service.model.script;
  * @author Indra
  *
  */
-public interface PlgValidacionesInt extends PluginScriptPlg, PlgValidacionesTipoInt, PlgValidacionesCadenaInt {
+public interface PlgUtilsInt extends PluginScriptPlg, PlgValidacionesTipoInt, PlgValidacionesCadenaInt {
 
 	/**
 	 * Id plugin.
 	 */
-	String ID = "PLUGIN_VALIDACIONES";
+	String ID = "PLUGIN_UTILS";
 
 }

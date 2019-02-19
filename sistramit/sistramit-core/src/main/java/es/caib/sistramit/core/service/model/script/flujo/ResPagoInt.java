@@ -1,8 +1,9 @@
-package es.caib.sistramit.core.service.model.script;
+package es.caib.sistramit.core.service.model.script.flujo;
 
 import javax.script.ScriptException;
 
 import es.caib.sistramit.core.service.model.flujo.DatosCalculoPago;
+import es.caib.sistramit.core.service.model.script.PluginScriptRes;
 
 /**
  * Datos que se pueden establecer en un pago.
