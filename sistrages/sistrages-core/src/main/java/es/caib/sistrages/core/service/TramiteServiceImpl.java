@@ -899,7 +899,7 @@ public class TramiteServiceImpl implements TramiteService {
 			final List<FilaImportarFormateador> filasFormateador, final Long idEntidad,
 			final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
 			final Map<Long, byte[]> ficherosContent, final String usuario) throws Exception {
-		final Long idArea = areaDao.importar(filaArea);
+		final Long idArea = areaDao.importar(filaArea, idEntidad);
 		final Long idTramite = tramiteDao.importar(filaTramite, idArea);
 
 		/**
@@ -916,17 +916,19 @@ public class TramiteServiceImpl implements TramiteService {
 		}
 
 		final Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
+		final Map<Long, Long> mapFormateadores = new HashMap<>();
 		for (final FilaImportarFormateador filaFormateador : filasFormateador) {
 
 			final Long idFormateador = formateadorFormularioDao.importar(filaFormateador, idEntidad);
 			final FormateadorFormulario ff = formateadorFormularioDao.getById(idFormateador);
 			formateadores.put(idFormateador, ff);
+			mapFormateadores.put(filaFormateador.getFormateadorFormulario().getCodigo(), idFormateador);
 		}
 
 		final Long idTramiteVersion = tramiteDao.importar(filaTramiteVersion, idTramite, idDominios, usuario);
 		for (final TramitePaso tramitePaso : filaTramiteVersion.getTramiteVersion().getListaPasos()) {
 			tramitePasoDao.importar(filaTramiteVersion, tramitePaso, idTramiteVersion, idEntidad, formularios, ficheros,
-					ficherosContent, formateadores, idDominiosEquivalencia);
+					ficherosContent, formateadores, mapFormateadores, idDominiosEquivalencia);
 		}
 	}
 

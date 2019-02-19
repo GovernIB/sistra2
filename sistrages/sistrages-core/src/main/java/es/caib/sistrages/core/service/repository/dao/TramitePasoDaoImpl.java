@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -157,6 +158,21 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 
 		jTramitePaso.getPasoRellenar().getFormulariosTramite().remove(jFormulario);
+
+		// reordenamos formularios
+		if (!jTramitePaso.getPasoRellenar().getFormulariosTramite().isEmpty()) {
+			final List<JFormularioTramite> listaFormularioTramite = new ArrayList<>();
+			listaFormularioTramite.addAll(jTramitePaso.getPasoRellenar().getFormulariosTramite());
+			Collections.sort(listaFormularioTramite,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+			int orden = 1;
+			for (final JFormularioTramite jFormularioTramite : listaFormularioTramite) {
+				jFormularioTramite.setOrden(orden);
+				orden++;
+				entityManager.merge(jFormularioTramite);
+			}
+		}
+
 		entityManager.remove(jFormulario);
 	}
 
@@ -187,7 +203,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JFormularioTramite jFormulariotramite = JFormularioTramite.fromModel(formularioTramite);
 		final JFormulario jFormularioInterno = entityManager.find(JFormulario.class, idFormularioInterno);
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
-		jFormulariotramite.setOrden(jpasoRellenar.getPasoRellenar().getFormulariosTramite().size());
+		jFormulariotramite.setOrden((jpasoRellenar.getPasoRellenar().getFormulariosTramite().size()) + 1);
 		jFormulariotramite.setFormulario(jFormularioInterno);
 		entityManager.persist(jFormulariotramite);
 		jpasoRellenar.getPasoRellenar().getFormulariosTramite().add(jFormulariotramite);
@@ -214,7 +230,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	public Documento addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
 		final JAnexoTramite janexoTramite = JAnexoTramite.fromModel(documento);
 		final JPasoTramitacion jpasoTramitacion = entityManager.find(JPasoTramitacion.class, idTramitePaso);
-		janexoTramite.setOrden(jpasoTramitacion.getPasoAnexar().getAnexosTramite().size());
+		janexoTramite.setOrden((jpasoTramitacion.getPasoAnexar().getAnexosTramite().size()) + 1);
 		janexoTramite.setPasoAnexar(jpasoTramitacion.getPasoAnexar());
 		entityManager.persist(janexoTramite);
 		jpasoTramitacion.getPasoAnexar().getAnexosTramite().add(janexoTramite);
@@ -234,6 +250,20 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		final JAnexoTramite janexoTramite = entityManager.find(JAnexoTramite.class, idDocumento);
 		jpasoRellenar.getPasoAnexar().getAnexosTramite().remove(janexoTramite);
+
+		// reordenamos documentos
+		if (!jpasoRellenar.getPasoAnexar().getAnexosTramite().isEmpty()) {
+			final List<JAnexoTramite> listaAnexosTramite = new ArrayList<>();
+			listaAnexosTramite.addAll(jpasoRellenar.getPasoAnexar().getAnexosTramite());
+			Collections.sort(listaAnexosTramite,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+			int orden = 1;
+			for (final JAnexoTramite jAnexoTramite : listaAnexosTramite) {
+				jAnexoTramite.setOrden(orden);
+				orden++;
+				entityManager.merge(jAnexoTramite);
+			}
+		}
 		entityManager.remove(janexoTramite);
 	}
 
@@ -247,7 +277,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	public Tasa addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		final JPagoTramite jpagoTramite = JPagoTramite.fromModel(tasa);
-		jpagoTramite.setOrden(jpasoRellenar.getPasoPagos().getPagosTramite().size());
+		jpagoTramite.setOrden((jpasoRellenar.getPasoPagos().getPagosTramite().size()) + 1);
 		jpagoTramite.setPasoPagos(jpasoRellenar.getPasoPagos());
 		entityManager.persist(jpagoTramite);
 		jpasoRellenar.getPasoPagos().getPagosTramite().add(jpagoTramite);
@@ -275,6 +305,21 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		final JPasoTramitacion jpasoRellenar = entityManager.find(JPasoTramitacion.class, idTramitePaso);
 		final JPagoTramite jpagoTramite = entityManager.find(JPagoTramite.class, idTasa);
 		jpasoRellenar.getPasoPagos().getPagosTramite().remove(jpagoTramite);
+
+		// reordenamos tasas
+		if (!jpasoRellenar.getPasoPagos().getPagosTramite().isEmpty()) {
+			final List<JPagoTramite> listaTasasTramite = new ArrayList<>();
+			listaTasasTramite.addAll(jpasoRellenar.getPasoPagos().getPagosTramite());
+			Collections.sort(listaTasasTramite,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+			int orden = 1;
+			for (final JPagoTramite jPagoTramite : listaTasasTramite) {
+				jPagoTramite.setOrden(orden);
+				orden++;
+				entityManager.merge(jPagoTramite);
+			}
+		}
+
 		entityManager.remove(jpagoTramite);
 	}
 
@@ -471,7 +516,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	public Long importar(final FilaImportarTramiteVersion filaTramiteVersion, final TramitePaso tramitePaso,
 			final Long idTramiteVersion, final Long idEntidad, final Map<Long, DisenyoFormulario> formularios,
 			final Map<Long, Fichero> ficheros, final Map<Long, byte[]> ficherosContent,
-			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> idDominiosEquivalencia) {
+			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
+			final Map<Long, Long> idDominiosEquivalencia) {
 
 		final JVersionTramite jVersionTramite = entityManager.find(JVersionTramite.class, idTramiteVersion);
 
@@ -567,7 +613,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 					this.anyadirPaginas(formularioInterno.getPaginas(), idJFormulario, ficherosContent,
 							idDominiosEquivalencia, idEntidad);
 					this.anyadirPlantillas(formularioInterno.getPlantillas(), idJFormulario, formateadores,
-							ficherosContent, idEntidad);
+							mapFormateadores, ficherosContent, idEntidad);
 
 					// Refrescamos la relacion entre el formulario del paso y el formulario de
 					// diseño.
@@ -592,19 +638,26 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	 * @param formateadores
 	 */
 	private void anyadirPlantillas(final List<PlantillaFormulario> mplantillas, final Long idFormularioInterno,
-			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, byte[]> ficherosContent,
-			final Long idEntidad) {
+			final Map<Long, FormateadorFormulario> formateadores, final Map<Long, Long> mapFormateadores,
+			final Map<Long, byte[]> ficherosContent, final Long idEntidad) {
 		for (final PlantillaFormulario mplantilla : mplantillas) {
 
 			final List<PlantillaIdiomaFormulario> plantillasIdioma = mplantilla.getPlantillasIdiomaFormulario();
 
 			// Preparamos la plantilla
 			if (mplantilla.getIdFormateadorFormulario() != null) {
-				final String identificadorFormateador = formateadores.get(mplantilla.getIdFormateadorFormulario())
-						.getIdentificador();
-				final FormateadorFormulario formateador = formateadorFormularioDao
-						.getByCodigo(identificadorFormateador);
-				mplantilla.setIdFormateadorFormulario(formateador.getCodigo());
+				final Long idFormateador = mapFormateadores.get(mplantilla.getIdFormateadorFormulario());
+				mplantilla.setIdFormateadorFormulario(idFormateador);
+				/*
+				 * final FormateadorFormulario formateador = formateadorFormularioDao
+				 * .getById(idFormateador);
+				 *
+				 * final String identificadorFormateador =
+				 * formateadores.get(mplantilla.getIdFormateadorFormulario())
+				 * .getIdentificador(); final FormateadorFormulario formateador =
+				 * formateadorFormularioDao .getByCodigo(identificadorFormateador);
+				 * mplantilla.setIdFormateadorFormulario(formateador.getCodigo());
+				 */
 			}
 			mplantilla.setCodigo(null);
 
@@ -661,6 +714,12 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 						continue;
 					}
 
+					if (isTipoSeccion(mlinea)) {
+						anyadirComponenteSeccion((ComponenteFormularioSeccion) mlinea.getComponentes().get(0),
+								mlinea.getOrden(), idPagina);
+						continue;
+					}
+
 					final ObjetoFormulario objetoFormularioLine = formularioInternoDao
 							.addComponente(TypeObjetoFormulario.LINEA, idPagina, null, mlinea.getOrden(), null);
 					final Long idLinea = objetoFormularioLine.getCodigo();
@@ -683,8 +742,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 							} else if (componente instanceof ComponenteFormularioImagen) {
 								anyadirComponenteImagen((ComponenteFormularioImagen) componente, idLinea, idPagina,
 										ficherosContent, idEntidad);
-							} else if (componente instanceof ComponenteFormularioSeccion) {
-								anyadirComponenteSeccion((ComponenteFormularioSeccion) componente, idLinea, idPagina);
 							} else if (componente instanceof ComponenteFormularioCampo) {
 								anyadirComponenteCampo((ComponenteFormularioCampo) componente, idLinea, idPagina);
 							}
@@ -715,16 +772,34 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	}
 
 	/**
+	 * Los tipos etiqueta se crean de tirón, se pide añadir una etiqueta y
+	 * directamente crea una linea con su sección.
+	 *
+	 * @param mlinea
+	 * @return
+	 */
+	private boolean isTipoSeccion(final LineaComponentesFormulario mlinea) {
+		boolean tipoEtiqueta = false;
+		if (mlinea != null && mlinea.getComponentes() != null && mlinea.getComponentes().size() == 1
+				&& (mlinea.getComponentes().get(0) instanceof ComponenteFormularioSeccion)) {
+			tipoEtiqueta = true;
+		}
+
+		return tipoEtiqueta;
+
+	}
+
+	/**
 	 * Añade componente de tipo sección.
 	 *
 	 * @param componente
 	 * @param idLinea
 	 * @param idPagina
 	 */
-	private void anyadirComponenteSeccion(final ComponenteFormularioSeccion componente, final Long idLinea,
+	private void anyadirComponenteSeccion(final ComponenteFormularioSeccion componente, final int orden,
 			final Long idPagina) {
-		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, idLinea,
-				componente.getOrden(), null);
+		final ObjetoFormulario retorno = formularioInternoDao.addComponente(componente.getTipo(), idPagina, null, orden,
+				null);
 		entityManager.flush();
 		final Long id = ((LineaComponentesFormulario) retorno).getComponentes()
 				.get(((LineaComponentesFormulario) retorno).getComponentes().size() - 1).getCodigo();
@@ -964,8 +1039,13 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setCampoDominioCodigo(componente.getCampoDominioCodigo());
 		comp.setCampoDominioDescripcion(componente.getCampoDominioDescripcion());
 		if (componente.getCodDominio() != null) {
-			final Long idDominio = idDominiosEquivalencia.get(componente.getCodDominio());
-			comp.setCodDominio(idDominio);
+			for (final Entry<Long, Long> ids : idDominiosEquivalencia.entrySet()) {
+				if (ids.getValue().compareTo(componente.getCodDominio()) == 0) {
+					comp.setCodDominio(ids.getKey());
+					break;
+				}
+			}
+
 		}
 		comp.setIdComponente(componente.getIdComponente());
 		comp.setIndiceAlfabetico(componente.isIndiceAlfabetico());
@@ -978,6 +1058,12 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		if (componente.getListaValorListaFija() != null) {
 			for (final ValorListaFija valor : componente.getListaValorListaFija()) {
 				valor.setCodigo(null);
+				if (valor.getDescripcion() != null) {
+					valor.getDescripcion().setCodigo(null);
+					for (final Traduccion trad : valor.getDescripcion().getTraducciones()) {
+						trad.setCodigo(null);
+					}
+				}
 			}
 			comp.setListaValorListaFija(componente.getListaValorListaFija());
 		}
@@ -1167,5 +1253,4 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		return repetido;
 
 	}
-
 }

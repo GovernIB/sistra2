@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
+import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
 import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
 
@@ -268,10 +269,20 @@ public class AreaDaoImpl implements AreaDao {
 	}
 
 	@Override
-	public Long importar(final FilaImportarArea filaArea) {
-		final JArea jarea = entityManager.find(JArea.class, filaArea.getAreaActual().getCodigo());
-		jarea.setDescripcion(filaArea.getAreaResultado());
-		entityManager.merge(jarea);
+	public Long importar(final FilaImportarArea filaArea, final Long idEntidad) {
+		JArea jarea;
+		if (filaArea.getEstado() == TypeImportarEstado.NO_EXISTE) { // Si no existe, se debe crear.
+			jarea = new JArea();
+			jarea.setDescripcion(filaArea.getAreaResultado());
+			final JEntidad entidad = entityManager.find(JEntidad.class, idEntidad);
+			jarea.setEntidad(entidad);
+			jarea.setIdentificador(filaArea.getArea().getIdentificador());
+			entityManager.persist(jarea);
+		} else {
+			jarea = entityManager.find(JArea.class, filaArea.getAreaActual().getCodigo());
+			jarea.setDescripcion(filaArea.getAreaResultado());
+			entityManager.merge(jarea);
+		}
 		return jarea.getCodigo();
 	}
 }

@@ -91,5 +91,5 @@ public interface AreaDao {
 	 * @param filaArea
 	 * @return
 	 */
-	Long importar(FilaImportarArea filaArea);
+	Long importar(FilaImportarArea filaArea, final Long idEntidad);
 }

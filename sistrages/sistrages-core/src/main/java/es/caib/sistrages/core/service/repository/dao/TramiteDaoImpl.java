@@ -889,6 +889,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				}
 				entityManager.remove(paso);
 			}
+			entityManager.flush();
 
 			jTramiteVersion = entityManager.find(JVersionTramite.class,
 					filaTramiteVersion.getTramiteVersionActual().getCodigo());

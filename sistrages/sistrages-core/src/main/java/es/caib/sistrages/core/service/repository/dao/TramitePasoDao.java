@@ -221,7 +221,7 @@ public interface TramitePasoDao {
 	Long importar(final FilaImportarTramiteVersion filaTramiteVersion, TramitePaso tramitePaso, Long idTramite,
 			final Long idEntidad, final Map<Long, DisenyoFormulario> formularios, final Map<Long, Fichero> ficheros,
 			final Map<Long, byte[]> ficherosContent, final Map<Long, FormateadorFormulario> idFormateadores,
-			final Map<Long, Long> idDominiosEquivalencia);
+			final Map<Long, Long> mapFormateadores, final Map<Long, Long> idDominiosEquivalencia);
 
 	/**
 	 * Comprueba si un formulario se repite.
