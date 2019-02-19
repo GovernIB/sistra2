@@ -1,0 +1,76 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_ANEXO.getValorXml(xpath)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_ANEXO</a></li>
+      	  <li>></li>
+      	  <li><a href="./lpad.html">getValorXml</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getValorXml(String xpath): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que devuelve el valor de un campo del XML anexado. Este método únicamente funcionará para anexos con formato XML.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>xpath</b>: xpath del campo del XML anexado.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Contenido del campo del XML anexado. Si el campo no existe, devuelve una cadena vacía.</li>
+	</ul>
+</p>
+ <p>
+	<b>EJEMPLO</b>
+ </p>
+
+<p>
+	Para poder hacer uso de esta funcionalidad, es necesario conocer de antemano la estructura del XML.</p>
+
+<p>
+	Supongamos que deseamos validar que un determinado XML cumple con una estructura concreta, validando por ejemplo que incluye un campo 'dni'.
+	En este caso podríamos usar la siguiente sentencia para obtener el campo 'dni' ubicado en el XML, y posteriormente verificar que sea un DNI válido.
+
+</p>
+ <p class="codigoScript">
+		&lt;datos&gt;<br/>
+		  &lt;dni&gt;11111111H&lt;/dni&gt;<br/>
+		  &lt;nombre&gt;Nombre Apellido1 Apellido2&lt;/nombre&gt;<br/>
+		&lt;/datos&gt;<br/>
+
+		<br/>
+
+		var dni = PLUGIN_ANEXO.getValorXml('//datos/dni');
+ </p>
+<br />
+
+
+</body>
+</html>

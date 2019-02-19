@@ -281,11 +281,9 @@ public class JFormulario implements IModelApi {
 				} else {
 					for (final JPlantillaFormulario jPlantilla : jFormulario.getPlantillas()) {
 						if (jPlantilla.getCodigo().equals(plantilla.getCodigo())) {
-							// TODO:completar
 							jPlantilla.setIdentificador(plantilla.getIdentificador());
 							jPlantilla.setDescripcion(plantilla.getDescripcion());
 							jPlantilla.setPorDefecto(plantilla.isPorDefecto());
-
 							if (!jPlantilla.getFormateadorFormulario().getCodigo()
 									.equals(plantilla.getIdFormateadorFormulario()))
 								jPlantilla.setFormateadorFormulario(JFormateadorFormulario

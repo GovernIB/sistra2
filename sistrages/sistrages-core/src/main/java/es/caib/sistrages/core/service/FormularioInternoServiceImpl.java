@@ -187,7 +187,7 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	@Override
 	@NegocioInterceptor
 	public String getPaginaFormularioHTMLDisenyo(final Long pIdPagina, final String pLang) {
-		// TODO PENDIENTE
+		// TODO V0 Ver si esta funcion se esta usando???
 
 		// La generación del HTML debe externalizarse en un Component para que
 		// pueda ser llamado desde FormularioInternoService y RestApiService
@@ -212,6 +212,13 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	public String generaPaginaHTMLEditor(final Long pIdForm, final Long pPage, final String pIdComponente,
 			final String pLang, final String pContexto) {
 		return formRenderComponent.generaPaginaHTMLEditor(pIdForm, pPage, pIdComponente, pLang, pContexto);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean isIdElementoFormularioDuplicated(final Long idFormulario, final Long codElemento,
+			final String identificador) {
+		return formIntDao.isIdElementoFormularioDuplicated(idFormulario, codElemento, identificador);
 	}
 
 }

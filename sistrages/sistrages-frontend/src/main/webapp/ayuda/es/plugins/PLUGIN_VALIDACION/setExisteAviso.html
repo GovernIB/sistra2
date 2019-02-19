@@ -1,0 +1,51 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALIDACION.setExisteAviso(existeAviso, tipo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_VALIDACION</a></li>
+       	  <li>></li>
+      	  <li><a href="./setExisteAviso.html">setExisteAviso</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setExisteAviso(boolean existeAviso, String tipo)
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método para establecer si se genera aviso.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>existeAviso</b>: establecer si se genera aviso.</li>
+		<li><b>tipo</b>: INFO / WARNING / ERROR</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>
+	Vamos a proceder a indicar que existe un aviso de tipo WARNING:
+</p>
+<p class="codigoScript">
+	 PLUGIN_VALIDACION.setExisteAviso(true, 'WARNING');
+</p>
+</body>
+</html>

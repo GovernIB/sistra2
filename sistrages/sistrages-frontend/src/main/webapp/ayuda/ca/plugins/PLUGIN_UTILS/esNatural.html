@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNatural(numero)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNatural.html">esNatural</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNatural(String numero): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el valor introduït és no nul, numèric, sencer i positiu.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numero</b>: Nombre natural a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b> : true si la cadena és un nombre natural i false si la cadena no és un nombre natural.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar si la cadena 4,0 és un nombre natural. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNatural('4,0');
+</p>
+<p>La funció esNatural retorna 'false', pel fet que la cadena no representa un nombre natural.</p>
+<br />
+
+<p><b>Exemple 2</b> Validar si la cadena -77 és un nombre natural. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNatural('-77');
+</p>
+<p>La funció esNatural retorna 'false', pel fet que la cadena no representa un nombre natural.</p>
+<br />
+
+<p><b>Exemple 3</b> Validar si la cadena 5 és un nombre natural</p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNatural('5');
+	</p>
+<p>la funció esNatural retorna 'true', pel fet que la cadena representa un nombre natural.</p>
+<br />
+
+</body>
+</html>

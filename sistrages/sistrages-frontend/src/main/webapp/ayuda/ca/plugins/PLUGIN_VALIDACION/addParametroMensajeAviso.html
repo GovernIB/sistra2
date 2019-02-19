@@ -1,0 +1,61 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALIDACION.addParametroMensajeAviso(parametro)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_VALIDACION</a></li>
+       	  <li>></li>
+      	  <li><a href="./addParametroMensajeAviso.html">addParametroMensajeAviso</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	addParametroMensajeAviso(String parametro)
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Parámetros a substuir en el mensaje que hace referencia el código de aviso.
+	 * ({0} {1} ...).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>parametro</b>: parametro a sustituir.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>
+	Supongamos que tenemos un mensaje 'DNI_INCORRECTO' con el siguiente texto 'El dni {0} para la persona {1}, {2} {3} está incorrecto'. Si quisiéramos sustituir los parámetros, entonces primero setearíamos el mensaje de aviso y luego pasaríamos los parámetros:
+</p>
+<p class="codigoScript">
+	 PLUGIN_VALIDACION.setCodigoMensajeAviso('DNI_INCORRECTO');
+	 PLUGIN_VALIDACION.addParametroMensajeAviso(dni);
+	 PLUGIN_VALIDACION.addParametroMensajeAviso(nombre);
+	 PLUGIN_VALIDACION.addParametroMensajeAviso(apellido1);
+	 PLUGIN_VALIDACION.addParametroMensajeAviso(apellido2);
+</p>
+<p>
+	El parámetro {0} pertenecería al dni, el {1} al nombre, {2} al apellido1 y el {3} al apellido 2, quedándonos el mensaje como 'El dni dni para la persona nombre, apellido1 apellido2 está incorrecto'. También deberíamos especificar el grado del mensaje:
+</p>
+<p class="codigoScript">
+	PLUGIN_VALIDACION.setExisteAviso(true, 'ERROR');
+</p>
+</body>
+</html>

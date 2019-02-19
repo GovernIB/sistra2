@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.formateaCadenaADouble(numero,separadorMiles,separadorDecimales)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./formateaCadenaADouble.html">formateaCadenaADouble</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	formateaCadenaADouble(String numero, String separadorMiles, String separadorDecimales): double
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode per a convertir un string en un número double.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numero</b>: Cadena a convertir a doble.</li>
+		<li><b>separadorMiles</b>: Caràcter amb el qual s'identifica el separador de milers.</li>
+		<li><b>separadorDecimales</b>: Caràcter amb el qual s'identifica el separador de decimals. Dada obligatòria.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>double</b>: Número en format double. Si no es pot convertir, llança un error.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+
+<p><b>Exemple 1</b> Convertir la cadena '123.110.544.434,58' a double. </p>
+ <p class="codigoScript">
+	var nDoble = PLUGIN_UTILS.formateaCadenaADouble('123.110.544.434,58', '.', ',')
+</p>
+<p> La funció formateaCadenaADouble retorna el número 123110544434.58 en format double</p>
+<br />
+
+<p><b>Exemple 2</b> Convertir la cadena '123,110,544,434.58' a double. </p>
+ <p class="codigoScript">
+	var nDoble = PLUGIN_UTILS.formateaCadenaADouble('123,110,544,434.58', ',', '.')
+</p>
+<p> La funció formateaCadenaADouble retorna el número 123110544434.58 en format double.</p>
+<br />
+
+
+</body>
+</html>

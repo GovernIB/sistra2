@@ -27,13 +27,13 @@
 							<div style="width:100vw;">
 								<p:breadCrumb homeDisplay="text" model="#{viewDefinicionVersion.breadCrumModel}" />
 							</div>
-							<div style="width:450px;padding:3px;">
+							<div style="padding:3px;display: inherit">
 								<p:commandButton id="btnPrevisualizarTramite"
 									 	value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye"
-										actionListener="#{viewDefinicionVersion.previsualizar()}" process="@this" style="margin-left:4px" />
+										actionListener="#{viewDefinicionVersion.previsualizar()}" process="@this" style="margin-left:4px;width:170px;" />
 								<p:commandButton id="btnRefrescarCache"
-									 	value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh"
-										actionListener="#{viewTramites.refrescarCache(viewDefinicionVersion.tramite.identificador, viewDefinicionVersion.tramiteVersion.numeroVersion)}" process="@this" style="margin-left:4px" update="growl" />
+									 	value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" rendered="#{viewDefinicionVersion.isPermiteRefrescar()}"
+										actionListener="#{viewTramites.refrescarCache(viewDefinicionVersion.tramite.identificador, viewDefinicionVersion.tramiteVersion.numeroVersion)}" process="@this" style="margin-left:4px;width:150px;" update="growl" />
 							</div>
 						</p:outputPanel>
 					</p:layoutUnit>

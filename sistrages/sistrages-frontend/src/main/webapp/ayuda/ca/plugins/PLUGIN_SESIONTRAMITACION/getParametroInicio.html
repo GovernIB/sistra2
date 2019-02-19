@@ -28,7 +28,10 @@
 </p>
 <p>
 	<ul>
-		<li>Mètode que permet recuperar el valor dels paràmetres enviats a través de la URL en iniciar el tràmit. Si el paràmetre no existeix, retorna una cadena buida.</li>
+		<li>Mètode que permet recuperar el valor dels paràmetres enviats a través de la URL en iniciar el tràmit (o establerts dinàmicament mitjançant l'script de paràmetres inicials).</li>
+		<li>Per incloure paràmetres a la URL d'inici del tràmit s'ha d'establir el paràmetre "parametros" que contindrà la llista de paràmetres d'inici amb el següent format: param-_-valorParam
+	 (P.e. mitjançant la URL d'inici https://servidor/sistramitfront/asistente/iniciarTramite.html?tramite=TRAM1&amp;version=1&amp;idioma=es&amp;idTramiteCatalogo=123&amp;parametros=param1-_-valor1-_-param2-_-valor2) es passen els paràmetres param1 i param2).</li>
+		<li>Si el paràmetre no existeix, retorna una cadena buida.</li>
 	</ul>
 </p>
 <p>
@@ -38,7 +41,7 @@
 	<ul>
 		<li><b>idParametro</b>: Cadena de l'identificador del paràmetre d'entrada.</li>
 	</ul>
-</p>	
+</p>
 <p>
 	<b>PAR&#192;METRES DE SORTIDA</b>
 </p>
@@ -50,12 +53,12 @@
  <p>
 	<b>Exemple</b>
  </p>
-<p> Suposem que tenim un tràmit que permet el pagament de taxes, i volem que en funció de l'enllaç des del qual s'accedeixi, se seleccioni una determinada taxa en el tràmit. En aquest cas podríem usar aquesta funció perquè recuperi un paràmetre de la URL, en aquest cas el paràmetre 'taxa'. Si la URL d'accés és com segueix: http://tramite.pruebas.com/sistra/tramiteExemple?tasa=TASA1:</p>
+<p> Si la URL d'accés és com segueix: https://servidor/sistramitfront/asistente/iniciarTramite.html?tramite=TRAM1&amp;version=1&amp;idioma=es&amp;idTramiteCatalogo=123&amp;parametros=expediente-_-EXP1234</p>
  <p class="codigoScript">
 	var valor = PLUGIN_SESIONTRAMITACION.getParametroInicio('tasa');
  </p>
  <p>
-   La funció getParametroInicio retornarà la cadena 'TASA1', i podrem usar aquest valor per a seleccionar la taxa a pagar.
+   La funció getParametroInicio retornarà la cadena 'EXP1234', i podrem utilitzar aquest valor per recuperar dades d'aquest expedient.
  </p>
 <br />
 

@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNumeroCuentaValido(entidad, sucursal, dc, cuenta)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNumeroCuentaValido2.html">esNumeroCuentaValido</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNumeroCuentaValido(String entidad, String sucursal, String dc, String cuenta): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si los valores introducidos no son nulos, y cumple con las reglas de validación necesarias para ser un NCC (Número Cuenta Corriente) Válido. Se consideran válidas toda aquella cadena que tengan 4 números para la entidad, 4 números para la sucursal, 2 números para los dígitos de control y 10 números para la cuenta corriente y que cumplan con las reglas de validación correspondientes a la combinación de entidad, oficina, dígito de control y número de cuenta.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>entidad</b>: Código de 4 dígitos de la entidad bancaria.</li>
+		<li><b>sucursal</b>: Código de 4 dígitos de la sucursal.</li>
+		<li><b>dc</b>: Código de 2 dígitos para los dígitos de control.</li>
+		<li><b>cuenta</b>: Código de 10 dígitos del Número de cuenta.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si entidad+sucursal+dc+cuenta forman un número de cuenta válido y false si entidad+sucursal+dc+cuenta no forman un número de cuenta válido.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar los siguientes valores: entidad: '1234', sucursal: '5678', dc: '90', cuenta: '1234567890'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroCuentaValido('1234', '5678', '90', '1234567890');
+</p>
+<p>La función esNumeroCuentaValido retorna 'false' ya que los parámetros introducidos no forman un número de cuenta válido, el dígito de control no es correcto..</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar los siguientes valores: entidad: '1234', sucursal: '5678', dc: '06', cuenta: '1234567890'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroCuentaValido ('1234', '5678', '06', '1234567890');
+</p>
+<p>La función esNumeroCuentaValido retorna 'true', ya que los parámetros introducidos forman un número de cuenta válido.</p>
+<br />
+
+</body>
+</html>

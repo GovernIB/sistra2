@@ -1,0 +1,73 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.rpad(texto, longitudMinima, cadenaRelleno)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./rpad.html">rpad</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	rpad(String texto, int longitudMinima, String cadenaRelleno): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que, si es necesario, rellena una cadena, añadiendo a la derecha los caracteres especificados en el parámetro cadenaRelleno, hasta alcanzar la longitud determinada por el parámetro longitudMinima.</li>
+		<li>Si cadenaRelleno tiene más de 1 carácter, se van usando los caracteres de la cadena secuencialmente para rellenar los espacios necesarios. Es decir, si tenemos la cadena de relleno '123' se irán usando secuencialmente los caracteres 1 2 y 3 para rellenar los espacios necesarios hasta completar la longitud mínima. </li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÁMETROS DE ENTRADA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>texto</b>: Cadena original que se desea rellenar.</li>
+		<li><b>longitudMinima</b>: Longitud mínima que debe tener el texto.</li>
+		<li><b>cadenaRelleno</b>: Cadena que se usará para rellenar el texto.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÁMETROS DE SALIDA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>String</b>: Texto con la longitud mínima establecida. Si el texto original no alcanza la longitud mínima, habrá sido completado, añadiendo por la derecha la cadena cadenaRelleno, hasta alcanzar longitudMinima. Si la longitud de la cadena texto original es mayor que longitudMinima, retorna la cadena de texto original.</li>
+	</ul>
+ </p>
+ <p>
+	<b>EJEMPLOS</b>
+ </p>
+
+  <p><b>Ejemplo 1</b> Supongamos que deseamos forzar que una determinada cadena, tenga como mínimo 9 dígitos. Para este caso podemos usar esta función para rellenar con 0 a la derecha y obtener como mínimo 9 dígitos. por ejemplo, si tenemos la cadena '963467' y añadimos la siguiente sentencia:   </p>
+ <p class="codigoScript">
+	var pRelleno = PLUGIN_UTILS.rpad('963467', 9, '0');
+ </p>
+<p> La función rpad retornará '963467000'.</p>
+<br />
+
+ <p><b>Ejemplo 2</b> Supongamos que se desea que la cadena '12345' pase a tener 10 caracteres, y se rellene por la derecha con la cadena 'aA':</p>
+ <p class="codigoScript">
+	var pRelleno = PLUGIN_UTILS.rpad('12345', 10, 'aA');
+ </p>
+<p> La función rpad retornará '12345aAaAa'. </p>
+
+
+
+</body>
+</html>

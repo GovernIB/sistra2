@@ -184,7 +184,6 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	@Override
 	public void updateFormulario(final DisenyoFormulario pFormInt) {
-		// TODO: revisar
 
 		JFormulario jForm = getJFormularioById(pFormInt.getCodigo());
 
@@ -513,7 +512,6 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampoTexto.setNormalTamanyo(campoTexto.getNormalTamanyo());
 					jCampoTexto.setNormalMultilinea(campoTexto.isNormalMultilinea());
 					jCampoTexto.setNormalNumeroLineas(campoTexto.getNormalNumeroLineas());
-					jCampoTexto.setNormalExpresionRegular(campoTexto.getExpresionRegular());
 					break;
 				case NUMERO:
 					jCampoTexto.setNumeroDigitosEnteros(campoTexto.getNumeroDigitosEnteros());
@@ -522,6 +520,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampoTexto.setNumeroRangoMinimo(campoTexto.getNumeroRangoMinimo());
 					jCampoTexto.setNumeroRangoMaximo(campoTexto.getNumeroRangoMaximo());
 					jCampoTexto.setNumeroConSigno(campoTexto.isNumeroConSigno());
+					jCampoTexto.setPermiteRango(campoTexto.isPermiteRango());
 					break;
 				case ID:
 					jCampoTexto.setIdentNif(campoTexto.isIdentNif());
@@ -532,6 +531,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				case TELEFONO:
 					jCampoTexto.setTelefonoFijo(campoTexto.isTelefonoFijo());
 					jCampoTexto.setTelefonoMovil(campoTexto.isTelefonoMovil());
+					break;
+				case EXPRESION:
+					jCampoTexto.setNormalExpresionRegular(campoTexto.getExpresionRegular());
+					break;
 				}
 
 				jCampoTexto.setPermiteRango(campoTexto.isPermiteRango());
@@ -1010,6 +1013,23 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		query.setParameter("idFormulario", idFormulario);
 
 		return query.getSingleResult().toString();
+	}
+
+	@Override
+	public boolean isIdElementoFormularioDuplicated(final Long idFormulario, final Long codElemento,
+			final String identificador) {
+		final String sql = "Select e from JElementoFormulario e where e.lineaFormulario.paginaFormulario.formulario.codigo = :idFormulario and"
+				+ " e.codigo <> :codElemento and e.identificador = :identificador ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idFormulario", idFormulario);
+		query.setParameter("codElemento", codElemento);
+		query.setParameter("identificador", identificador);
+
+		final boolean res = !query.getResultList().isEmpty();
+
+		return res;
+
 	}
 
 }

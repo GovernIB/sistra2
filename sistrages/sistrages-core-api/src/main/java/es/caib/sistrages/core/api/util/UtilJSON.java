@@ -11,8 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.exception.JsonException;
 
-
-// TODO Se ha creado JSONUtil en commons, cambiar para usarla
+// TODO V0 Se ha creado JSONUtil en commons, cambiar para usarla
 
 /**
  * Utilidades conversion JSON.

@@ -8,7 +8,7 @@ package es.caib.sistra2.commons.utils;
  */
 public class CifradoUtil {
 
-    // TODO Pendiente (mirar ESAPI)
+    // TODO V0 Pendiente (mirar ESAPI)
 
     public static String encrypt(String data) {
         return data;

@@ -209,7 +209,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 				estilo.append(" imc-el-dreta");
 			}
 
-			if (campo.isObligatorio()) {
+			if (pModoEdicion && campo.isObligatorio()) {
 				estilo.append(" imc-el-obligatori");
 			}
 
@@ -315,6 +315,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
+		if (pModoEdicion && pCampo.isObligatorio()) {
+			estilo.append(" imc-el-obligatori");
+		}
+
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
@@ -345,6 +349,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		if (pCampo.getNumColumnas() > 1) {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
+		}
+
+		if (pModoEdicion && pCampo.isObligatorio()) {
+			estilo.append(" imc-el-obligatori");
 		}
 
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
@@ -390,6 +398,10 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		if (pCampo.getNumColumnas() > 1) {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
+		}
+
+		if (pModoEdicion && pCampo.isObligatorio()) {
+			estilo.append(" imc-el-obligatori");
 		}
 
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));

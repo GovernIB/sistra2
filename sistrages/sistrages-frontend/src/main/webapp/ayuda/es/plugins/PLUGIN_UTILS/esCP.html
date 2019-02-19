@@ -1,0 +1,91 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esCP(codigoPostal, provincia)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./esCP.html">esCP</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esCP(String codigoPostal, String provincia): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el código postal introducido es un código Postal válido. Se considerará código postal válido toda aquella cadena que cumpla con el formato de número de carácteres correcto y las reglas respectivas a la correspondencia alfanumérica.</li>
+		<li>Si se indica un número de provincia, se validará además que el CP pertenezca a la provincia indicada </li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigoPostal</b>: Cadena de 5 caracteres que contiene el código postal.</li>
+		<li><b>provincia</b>: Opcional. Es el código de la Provincia, p.e. el 07 para Illes Balears o el 46 para Valencia. Si se informa, se valida que sea numérico y que el CP pertenezca  a la provincia indicada</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si el codigoPostal es válido y false si el codigoPostal es no válido.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Verificar si el código Postal 07007 es válido. Se indica un código de provincia nulo </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esCP('07007', null);
+</p>
+<p>La función esCP retorna 'true', ya que el valor pasado como código postal es válido.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Verificar si el código Postal 07007 es válido. Se indica un código de provincia vacío </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esCP('07007', '');
+</p>
+<p>La función esCP retorna 'true', ya que el valor pasado como código postal es válido.</p>
+<br />
+
+<p><b>Ejemplo 3</b> Verificar si el código Postal 07007 es válido para la provincia 'Illes Balears' (07).  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esCP('07007', '07');
+</p>
+<p>La función esCP retorna 'true', ya que el valor pasado como código postal es válido y se corresponde con la provincia Illes Balears.</p>
+<br />
+
+<p><b>Ejemplo 4</b> Verificar si el código Postal 96009 es válido.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esCP('96009', '');
+	</p>
+<p>La función esCP retorna 'false', ya que el valor pasado como código postal no es un código postal válido.</p>
+<br />
+
+<p><b>Ejemplo 5</b> Verificar si el código Postal 07007 es válido para la provincia 'Las palmas' (35).  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esCP('07007', '35');
+	</p>
+<p>La función esCP retorna 'false', ya que el valor pasado como código postal es válido, pero no se corresponde con la provincia 'Las Palmas'.</p>
+<br />
+
+</body>
+</html>

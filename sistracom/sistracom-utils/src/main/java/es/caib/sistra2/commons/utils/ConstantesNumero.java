@@ -1,6 +1,6 @@
 package es.caib.sistra2.commons.utils;
 
-// TODO PENDIENTE USAR LAS DE UTILS
+// TODO V0 PENDIENTE USAR LAS DE UTILS
 
 /**
  * Constantes numéricas.

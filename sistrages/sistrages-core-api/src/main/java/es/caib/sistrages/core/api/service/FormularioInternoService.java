@@ -222,4 +222,17 @@ public interface FormularioInternoService {
 	 */
 	String generaPaginaHTMLEditor(Long pIdForm, Long pPage, String pIdComponente, String pLang, String pContexto);
 
+	/**
+	 * Verifica si el identificador de elementoFormulario está duplicado.
+	 *
+	 * @param idFormulario
+	 *            id formulario
+	 * @param codElemento
+	 *            cod elemento
+	 * @param identificador
+	 *            identificador
+	 * @return true, si el identificador de elementoFormulario es duplicado
+	 */
+	boolean isIdElementoFormularioDuplicated(Long idFormulario, Long codElemento, String identificador);
+
 }

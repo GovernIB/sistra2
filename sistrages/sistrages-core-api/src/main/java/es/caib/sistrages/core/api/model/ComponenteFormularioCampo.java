@@ -22,7 +22,7 @@ public abstract class ComponenteFormularioCampo extends ComponenteFormulario {
 	/**
 	 * no modificable.
 	 */
-	private boolean noModificable; // TODO VER SI ES NECESARIO
+	private boolean noModificable;
 
 	/**
 	 * script autorrellenable.

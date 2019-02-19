@@ -18,7 +18,6 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 
-// TODO: Auto-generated Javadoc
 /**
  * La clase ConfiguracionGlobalServiceBean.
  */

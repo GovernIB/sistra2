@@ -76,19 +76,7 @@ public class DominioResolucionServiceImpl implements DominioResolucionService {
 	@Override
 	public ValoresDominio realizarConsultaRemota(final TypeAmbito ambito, final Long idEntidad, final String idDominio,
 			final String url, final List<es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio> parametros) {
-		IDominioPlugin iplugin;
-
-		// TODO No hace falta trasladar ambito, siempre será global
-		iplugin = (IDominioPlugin) configuracionComponent.obtenerPluginGlobal(TypePlugin.DOMINIO_REMOTO);
-		// if (ambito == TypeAmbito.GLOBAL) {
-		// iplugin = (IDominioPlugin)
-		// configuracionComponent.obtenerPluginGlobal(TypePlugin.DOMINIO_REMOTO);
-		// } else {
-		// iplugin = (IDominioPlugin)
-		// configuracionComponent.obtenerPluginEntidad(TypePlugin.DOMINIO_REMOTO,
-		// idEntidad);
-		// }
-
+		IDominioPlugin iplugin = (IDominioPlugin) configuracionComponent.obtenerPluginGlobal(TypePlugin.DOMINIO_REMOTO);
 		ValoresDominio valoresDominio;
 		if (iplugin == null) {
 			valoresDominio = new ValoresDominio();

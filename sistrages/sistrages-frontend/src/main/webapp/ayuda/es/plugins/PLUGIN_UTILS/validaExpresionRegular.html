@@ -1,0 +1,69 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.validaExpresionRegular(texto, expresion)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./validaExpresionRegular.html">validaExpresionRegular</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	validaExpresionRegular(String texto, String expresion): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si un texto cumple con la expresión regular indicada.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>texto</b>: Cadena de texto a validar.</li>
+		<li><b>expresion</b>: Expresión regular que debe cumplir el texto.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>BOOLEAN</b>: true si el texto cumple con expresión regular y false si no lo cumple.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar que el texto 'correoelectronico@com' cumple con la siguiente expresión regular '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$' (expresión regular de un email).  </p>
+ <p class="codigoScript">
+var valido = PLUGIN_UTILS.validaExpresionRegular('correoelectronico@com', '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$');
+</p>
+<p>La función validaExpresionRegular retorna 'false' debido a que el texto no cumple con la expresión regular de un email.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar que el texto 'correoelectronico@correo.com' cumple con la siguiente expresión regular '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$' (expresión regular de un email). </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.validaExpresionRegular('correoelectronico@correo.com', '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$');
+</p>
+<p>La función validaExpresionRegular retorna 'true' debido a que el texto cumple con la expresión regular de un email.</p>
+<br />
+
+</body>
+</html>

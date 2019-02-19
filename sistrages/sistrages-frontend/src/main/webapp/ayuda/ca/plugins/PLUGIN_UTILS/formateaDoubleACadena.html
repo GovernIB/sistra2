@@ -1,0 +1,73 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.formateaDoubleACadena(numero,separadorMiles,separadorDecimales)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./formateaDoubleACadena.html">formateaDoubleACadena</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	formateaDoubleACadena(double numero, String separadorMiles, String separadorDecimales, int numeroDecimales): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode per a convertir un número de tipus double en un string</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>numero</b>: Número double a convertir en String.</li>
+		<li><b>separadorMiles</b>:Caràcter amb el qual s'identifica el separador de milers.</li>
+		<li><b>separadorDecimales</b>: Caràcter amb el qual s'identifica el separador de decimals. Dada obligatòria.</li>
+		<li><b>separadorDecimales</b>: Nombre de decimals.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>:Cadena de caràcters que representa el número introduït.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+
+<p><b>Exemple 1</b> Convertir el número 123110544434.58 en una cadena de caràcters</p>
+ <p class="codigoScript">
+	var pCadena = PLUGIN_UTILS.formateaDoubleACadena(123110544434.58, '.', ',', 2);
+</p>
+<p>La funció formateaDoubleACadena retorna la cadena '123.110.544.434,58'.</p>
+<br />
+
+<p><b>Exemple 2</b> Convertir el número 123110544434.58 en una cadena de caràcters sense incloure els decimals</p>
+ <p class="codigoScript">
+	var pCadena = PLUGIN_UTILS.formateaDoubleACadena(123110544434.58, '.', ',', 0);
+</p>
+<p>La funció formateaDoubleACadena retorna la cadena '123.110.544.435', sense incloure els decimals.</p>
+<br />
+
+
+</body>
+</html>

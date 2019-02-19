@@ -1,0 +1,63 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.rtrim(cadena)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./rtrim.html">rtrim</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	rtrim(String cadena): String
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+		<li>Mètode que elimina els espais situats a la dreta en la cadena.</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES D'ENTRADA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>cadena</b>: Cadena de text a tractar</li>
+	</ul>
+ </p>
+ <p>
+	<b>PARÀMETRES DE SORTIDA</b>
+ </p>
+ <p>
+	<ul>
+		<li><b>String</b>: Cadena de text sense espais per la dreta.</li>
+	</ul>
+ </p>
+ <p>
+	<b>EXEMPLES</b>
+ </p>
+
+ <p>Tractar la cadena '&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;', per a eliminar els espais de la dreta. </p>
+ <p class="codigoScript">
+	var pCadenaLimpia = PLUGIN_UTILS.rtrim('&nbsp;&nbsp;cadena ejemplo&nbsp;&nbsp;&nbsp;&nbsp;');
+ </p>
+ <p>La funció rtrim retorna '&nbsp;&nbsp;cadena ejemplo'. </p>
+<br />
+
+
+</body>
+</html>

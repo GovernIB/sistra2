@@ -144,15 +144,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		// TITULO ??
 		// setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		// TODO
-		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-		if (modo == TypeModoAcceso.ALTA) {
-			// ...
-		} else {
-			// ...
-		}
-
-		// TODO Recuperacion formulario
+		// Recuperacion formulario
 		recuperarFormulario(id);
 
 		// recupera tramite version
@@ -168,7 +160,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 		}
 
-		// TODO ¿que campo se selecciona? ninguno?
 		panelPropiedadesUrl = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
 		urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
 		paginaActual = 1;
@@ -182,11 +173,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	private void recuperarFormulario(final String idForm) {
 		formulario = formIntService.getFormularioInternoCompleto(Long.parseLong(idForm));
-
-		// formulario =
-		// formIntService.getFormularioInternoPaginas(Long.parseLong(idForm));
-		// formulario.getPaginas().set(0,
-		// formIntService.getContenidoPaginaFormulario(formulario.getPaginas().get(0).getCodigo()));
 	}
 
 	/**
@@ -216,9 +202,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 
 			if (!UtilCoreApi.equalsModelApi(ofOriginal, objetoFormularioEdit)) {
-				// TODO Pedir confirmacion cambios
-				// UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-				// UtilJSF.getLiteral("info.componente.cambiado"));
 				// Guardamos componente destino
 				codigoObjFormularioDestino = idComponente;
 				// Invocamos a boton para que dispare ventana de confirmacion
@@ -256,13 +239,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			// Buscamos nuevo componente
 			if (cf != null) {
 				objetoFormularioEdit = (ObjetoFormulario) UtilCoreApi.cloneModelApi(cf);
-				// TODO PARA QUITAR
+				// Verificamos que no haya problemas en la serialización
 				if (!UtilCoreApi.equalsModelApi(cf, objetoFormularioEdit)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Componente clonado no coincide");
+					throw new FrontException("Componente clonado no coincide");
 				}
 			}
 		}
-		// TODO Gestion pagina actual,...
+
 		String pagina = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
 		detalleComponenteUrl = null;
 		if (objetoFormularioEdit != null) {
@@ -359,6 +342,44 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit)) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("warning.componente.sinespacio"), true);
+					return;
+				}
+
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() == null) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.dominio"),
+								true);
+						return;
+					} else if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores())
+							&& campo.getCodDominio() != null) {
+						final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
+						if (!TypeDominio.LISTA_FIJA.equals(dominio.getTipo())) {
+							if (StringUtils.isEmpty(campo.getCampoDominioCodigo())) {
+								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+										UtilJSF.getLiteral("warning.dominio.codigo"), true);
+								return;
+							} else if (StringUtils.isEmpty(campo.getCampoDominioDescripcion())) {
+								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+										UtilJSF.getLiteral("warning.dominio.descripcion"), true);
+								return;
+							} else if (!dominio.getParametros().isEmpty()
+									&& campo.getListaParametrosDominio().isEmpty()) {
+								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+										UtilJSF.getLiteral("warning.dominio.parametros"), true);
+								return;
+							}
+						}
+					}
+
+				}
+
+				final boolean isDuplicado = formIntService.isIdElementoFormularioDuplicated(Long.valueOf(id),
+						objetoFormularioEdit.getCodigo(),
+						((ComponenteFormulario) objetoFormularioEdit).getIdComponente());
+				if (isDuplicado) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+							UtilJSF.getLiteral("warning.identificador.duplicado"), true);
 					return;
 				}
 
@@ -1132,7 +1153,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
 		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
 	}
-
 
 	private String getIdComponente() {
 		String idComponente = null;

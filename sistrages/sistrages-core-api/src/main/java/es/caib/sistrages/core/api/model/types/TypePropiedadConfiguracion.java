@@ -8,7 +8,7 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypePropiedadConfiguracion {
 
-	// TODO REVISAR NOMBRES PROPIEDADES
+	// TODO V0 REVISAR NOMBRES PROPIEDADES
 	/** Entorno. */
 	ENTORNO("entorno"),
 	/** Versión. */

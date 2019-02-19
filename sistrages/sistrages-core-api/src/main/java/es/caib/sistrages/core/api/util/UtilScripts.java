@@ -52,12 +52,12 @@ public class UtilScripts {
 	public static List<TypePluginScript> getPluginsScript(final TypeScriptFormulario tipoScript) {
 		final List<TypePluginScript> plugins = new ArrayList<>();
 		plugins.add(TypePluginScript.PLUGIN_SESIONFORMULARIO);
-		plugins.add(TypePluginScript.PLUGIN_ERROR);
-		plugins.add(TypePluginScript.PLUGIN_LOG);
 		plugins.add(TypePluginScript.PLUGIN_DOMINIOS);
 		plugins.add(TypePluginScript.PLUGIN_DATOSFORMULARIO);
-		plugins.add(TypePluginScript.PLUGIN_VALIDACIONES);
-		plugins.add(TypePluginScript.PLUGIN_MENSAJEVALIDACION);
+		plugins.add(TypePluginScript.PLUGIN_UTILS);
+		plugins.add(TypePluginScript.PLUGIN_LOG);
+		plugins.add(TypePluginScript.PLUGIN_MENSAJES);
+		plugins.add(TypePluginScript.PLUGIN_ERROR);
 		switch (tipoScript) {
 		case SCRIPT_AUTORELLENABLE:
 			plugins.add(0, TypePluginScript.DATOS_VALOR);
@@ -69,10 +69,10 @@ public class UtilScripts {
 			plugins.add(0, TypePluginScript.DATOS_VALORESPOSIBLES);
 			break;
 		case SCRIPT_VALIDACION_CAMPO:
-			plugins.add(TypePluginScript.PLUGIN_AVISOS);
+			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			break;
 		case SCRIPT_VALIDACION_PAGINA:
-			plugins.add(TypePluginScript.PLUGIN_AVISOS);
+			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			break;
 		default:
 			break;
@@ -90,32 +90,35 @@ public class UtilScripts {
 	public static List<TypePluginScript> getPluginsScript(final TypeScriptFlujo tipoScript) {
 		final List<TypePluginScript> plugins = new ArrayList<>();
 		plugins.add(TypePluginScript.PLUGIN_SESIONTRAMITACION);
-		plugins.add(TypePluginScript.PLUGIN_ERROR);
-		plugins.add(TypePluginScript.PLUGIN_LOG);
 		plugins.add(TypePluginScript.PLUGIN_DOMINIOS);
-		plugins.add(TypePluginScript.PLUGIN_FORMULARIOS);
-		plugins.add(TypePluginScript.PLUGIN_VALIDACIONES);
-		plugins.add(TypePluginScript.PLUGIN_MENSAJEVALIDACION);
+		if (tipoScript != TypeScriptFlujo.SCRIPT_PERSONALIZACION_TRAMITE
+				&& tipoScript != TypeScriptFlujo.SCRIPT_PARAMETROS_INICIALES) {
+			plugins.add(TypePluginScript.PLUGIN_FORMULARIOS);
+		}
+		plugins.add(TypePluginScript.PLUGIN_UTILS);
+		plugins.add(TypePluginScript.PLUGIN_LOG);
+		plugins.add(TypePluginScript.PLUGIN_MENSAJES);
+		plugins.add(TypePluginScript.PLUGIN_ERROR);
 		switch (tipoScript) {
 		case SCRIPT_PARAMETROS_INICIALES:
-			plugins.add(0, TypePluginScript.DATOS_PARAMETROS_INICIALES);
+			plugins.add(0, TypePluginScript.DATOS_PARAMETROSINICIALES);
 			break;
 		case SCRIPT_PERSONALIZACION_TRAMITE:
-			plugins.add(TypePluginScript.PLUGIN_AVISOS);
+			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			plugins.add(0, TypePluginScript.DATOS_PERSONALIZACION);
 			break;
 		case SCRIPT_DATOS_INICIALES_FORMULARIO:
-			plugins.add(0, TypePluginScript.DATOS_INICIALES_FORMULARIO);
+			plugins.add(0, TypePluginScript.DATOS_VALORESINICIALES);
 			break;
 		case SCRIPT_PARAMETROS_FORMULARIO:
 			plugins.add(0, TypePluginScript.DATOS_PARAMETROSFORMULARIO);
 			break;
 		case SCRIPT_POSTGUARDAR_FORMULARIO:
-			plugins.add(TypePluginScript.PLUGIN_AVISOS);
+			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			plugins.add(0, TypePluginScript.DATOS_FORMULARIOS);
 			break;
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
-			plugins.add(0, TypePluginScript.DATOS_ANEXOS_DINAMICOS);
+			plugins.add(0, TypePluginScript.DATOS_ANEXOSDINAMICOS);
 			break;
 		case SCRIPT_DATOS_PAGO:
 			plugins.add(TypePluginScript.PLUGIN_PAGO);
@@ -140,11 +143,11 @@ public class UtilScripts {
 			plugins.add(0, TypePluginScript.DATOS_VARIABLEFLUJO);
 			break;
 		case SCRIPT_VALIDAR_ANEXO:
-			plugins.add(TypePluginScript.PLUGIN_VALIDACIONANEXO);
-			plugins.add(TypePluginScript.PLUGIN_AVISOS);
+			plugins.add(TypePluginScript.PLUGIN_ANEXO);
+			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			break;
 		case SCRIPT_PERMITIR_REGISTRO:
-			plugins.add(TypePluginScript.PLUGIN_AVISOS);
+			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			break;
 		default:
 			break;

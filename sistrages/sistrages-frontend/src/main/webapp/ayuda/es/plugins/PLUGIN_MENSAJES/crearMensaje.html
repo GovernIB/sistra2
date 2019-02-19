@@ -1,0 +1,87 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_MENSAJES.crearMensaje(codigo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_MENSAJES</a></li>
+      	  <li>></li>
+      	  <li><a href="./crearMensaje.html">crearMensaje</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	crearMensaje(String codigo): <a href="../MENSAJE/index.html">Mensaje</a>
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permite crear un mensaje de validación a partir de un mensaje definido en pestaña de mensajes de la pantalla de script.</li>
+    	<li>El mensaje puede tener parámetros.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigo</b>: String con el código del mensaje de validación a crear.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>Mensaje</b>: Objecto que modeliza los datos del mensaje de validación. </li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que se desea utilizar en un script un mensaje de validación existente pero particularizando el valor de sus parámetros. Los pasos a seguir serían similares a los siguientes: </p>
+<p>
+Previamente en la pantalla de script, más concretamente en la pestaña de mensajes validación, se ha de definir el mensaje. Por ejemplo podríamos definir un mensaje de validación MENSAJE_001 con el siguiente valor:
+</p>
+<p class="codigoScript">
+	Es necesario que se lleve a cabo un debug con los parámetros {0} y {1}.
+</p>
+<p>
+Desde el script se referenciará ese mensaje de la siguiente forma:
+ </p>
+ <p class="codigoScript">
+	var msg = PLUGIN_MENSAJES.crearMensaje('MENSAJE_001');
+</p>
+<p>
+y se fijará el valor para los parámetros de dicho mensaje:
+  </p>
+ <p class="codigoScript">
+	msg.addParametroMensaje('param 0'); <br />
+	msg.addParametroMensaje('param 1');
+</p>
+<p>
+ finalmente se recuperará el mensaje en el script de la siguiente forma:
+  </p>
+ <p class="codigoScript">
+	var mensajeFormado = msg.getMensaje();
+</p>
+<p>
+devolviendo como resultado el mensaje formado:
+  </p>
+ <p class="codigoScript">
+	Es necesario que se lleve a cabo un debug con los parámetros param 0 y param 1.
+</p>
+</body>
+</html>

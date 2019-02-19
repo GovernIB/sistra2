@@ -96,5 +96,9 @@ public enum TypeParametroVentana {
 	/**
 	 * Formulario interno
 	 */
-	FORM_INTERNO_ACTUAL;
+	FORM_INTERNO_ACTUAL,
+	/***
+	 * Version
+	 */
+	VERSION;
 }

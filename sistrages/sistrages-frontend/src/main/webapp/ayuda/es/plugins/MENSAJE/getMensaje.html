@@ -1,0 +1,67 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('.getMensaje()');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="../PLUGIN_MENSAJES/index.html">PLUGIN_MENSAJES</a></li>
+       	  <li>></li>
+    	  <li><a href="./index.html">MENSAJES</a></li>
+      	  <li>></li>
+      	  <li><a href="./getMensaje.html">getMensaje</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	getMensaje(): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método que permet recuperar el valor del mensaje.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: String con el texto del mensaje.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que queremos recuperar el texto de un mensaje de validación, por ejemplo MENSAJE_001, previamente creado. Los pasos a seguir serían los siguientes:</p>
+<p>
+En la pantalla de script se define un mensaje, en la pestaña de mensajes validación, con el identificador MENSAJE_001 con valor:
+</p>
+<p class="codigoScript">
+	El valor del certificado no se corresponde con el valor cancelado.
+</p>
+<p>
+Desde el script se puede referenciar ese mensaje de la siguiente forma:
+ </p>
+ <p class="codigoScript">
+	var msg = PLUGIN_MENSAJES.crearMensaje('MENSAJE_001');
+</p>
+<p>
+Para obtener el valor del mensaje en el script:
+  </p>
+ <p class="codigoScript">
+	var mensaje = msg.getMensaje();
+</p>
+</body>
+</html>

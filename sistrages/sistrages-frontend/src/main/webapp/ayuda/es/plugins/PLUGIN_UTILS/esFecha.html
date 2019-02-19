@@ -1,0 +1,81 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esFecha(fecha)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./esFecha.html">esFecha</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esFecha(String fecha): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida que la fecha introducida no sea nula ni vacía, y que esté formada de la siguiente manera: yyyy-MM-dd.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>fecha</b>: Fecha a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b> : true si la fecha es válida y false si la fecha no es válida.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar una cadena de caracteres vacía '' </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFecha('');
+</p>
+<p>La función esFecha retorna 'false', debido a que el valor indicado no es una fecha válida.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar una cadena de caracteres nula. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFecha(null);
+</p>
+<p>La función esFecha retorna 'false', debido a que el valor indicado no es una fecha válida.</p>
+<br />
+
+<p><b>Ejemplo 3</b> Validar la cadena de caracteres '10/06/2012'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFecha('10/06/2012');
+</p>
+<p>La función esFecha retorna 'false', debido a que el valor indicado no es una fecha válida.</p>
+<br />
+
+<p><b>Ejemplo 4</b> Validar la cadena de caracteres '2012-12-09'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esFecha('2012-12-09');
+	</p>
+<p>La función esFecha retorna 'true', debido a que el valor indicado es una fecha válida.</p>
+<br />
+</body>
+</html>

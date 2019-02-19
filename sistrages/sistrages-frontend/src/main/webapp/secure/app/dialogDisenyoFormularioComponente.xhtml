@@ -23,6 +23,7 @@
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
 	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}">
+	         			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
 	         			<p:ajax event="blur" process="@this" />
 	         		</p:inputText>
 	         	</h:column>

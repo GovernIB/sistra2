@@ -10,8 +10,6 @@ import java.util.Arrays;
 import es.caib.sistrages.core.api.exception.CloneModelException;
 import es.caib.sistrages.core.api.model.ModelApi;
 
-// TODO Sacar a lib comun
-
 /**
  * Utilidades.
  *
@@ -29,7 +27,7 @@ public final class UtilCoreApi {
 
 	/**
 	 * Serializa un objeto ModelApi y lo devuelve en byte[]
-	 * 
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -49,7 +47,7 @@ public final class UtilCoreApi {
 
 	/**
 	 * Deserializa byte[] y lo devuelve en objeto ModelApi
-	 * 
+	 *
 	 * @param content
 	 * @return
 	 */

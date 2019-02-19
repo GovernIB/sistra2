@@ -1,0 +1,81 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.validaFechaActual(fecha)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./validaFechaActual.html">validaFechaActual</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	validaFechaActual(String fecha): int
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode per a comprovar si la data indicada és la data actual. La data ha de tenir el format yyyy-MM-dd.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>fecha</b>: Cadena de caràcters a comparar amb la data actual, el format de la cadena ha de ser yyyy-MM-dd.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>int</b>: Nombre sencer, els possibles valors a retornar són:
+				<ol>
+     				<li>0: Si data és igual a la data actual.</li>
+     				<li>1: Si data és superior a la data actual.</li>
+    				<li>-1: Si data és menor a la data actual.</li>
+    			</ol>
+		</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar si la cadena de caràcters '2019-01-09' correspon amb la data actual (suposant que avui és 9 de gener de 2019). </p>
+ <p class="codigoScript">
+var valida = PLUGIN_UTILS.validaFechaActual('2019-01-09');
+</p>
+<p>La funció validaFechaActual retorna 0, ja que la data indicada correspon amb la data actual.</p>
+<br />
+
+<p><b>Exemple 2</b> Validar si la cadena de caràcters '2019-01-02' correspon amb la data actual (suposant que avui és 9 de gener de 2019).</p>
+ <p class="codigoScript">
+	var valida = PLUGIN_UTILS.validaFechaActual('2019-01-02');
+</p>
+<p>La funció validaFechaActual retorna -1, ja que la data indicada és menor que la data actual.</p>
+<br />
+
+<p><b>Exemple 3</b> Validar si la cadena de caràcters '2019-01-12' correspon amb la data actual (suposant que avui és 9 de gener de 2019). </p>
+ <p class="codigoScript">
+	var valida = PLUGIN_UTILS.validaFechaActual('2019-01-12');
+</p>
+<p>La funció validaFechaActual retorna 1, ja que la data indicada és major que la data actual.</p>
+<br />
+
+</body>
+</html>

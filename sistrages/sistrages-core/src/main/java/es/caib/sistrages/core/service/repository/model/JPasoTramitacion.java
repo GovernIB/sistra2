@@ -336,6 +336,10 @@ public class JPasoTramitacion implements IModelApi {
 			paso.setDocumentos(docs);
 		}
 
+		if (this.getPasoAnexar().getScriptAnexosDinamicos() != null) {
+			paso.setScriptAnexosDinamicos(this.getPasoAnexar().getScriptAnexosDinamicos().toModel());
+		}
+
 		return paso;
 	}
 

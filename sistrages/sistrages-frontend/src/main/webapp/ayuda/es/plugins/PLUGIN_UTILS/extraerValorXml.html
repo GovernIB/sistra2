@@ -1,0 +1,73 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.extraerValorXml(xml, xpath)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./extraerValorXml.html">extraerValorXml</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	extraerValorXml(String xml, String xpath): String
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Extrae el valor del nodo XML representado por el xpath indicado.</li>
+		<li>El XML debe estar bien formado, y el xpath debe contener una ruta válida a un nodo del XML</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>xml</b>: Cadena con estructura de XML. Debe contener un XML bien formado</li>
+		<li><b>xpath</b>:Cadena que contiene el xpath. Contiene una secuencia de tags del XML, que marcan la ruta hacia el nodo del que queremos extraer el valor.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>String</b>: Valor del nodo indicado en el parámetro xpath. Si la ruta indicada en el xpath no existe retorna un error</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+
+<p><b>Ejemplo 1</b> Extraer el valor del nodo 'dni' en el XML. Para ello, debemos revisar la estructura completa del XML, y obtener el xpath adecuado. En este caso el xpath será '/xml/persona/dni' </p>
+ <p class="codigoScript">
+	var xml = '&lt;xml>&lt;persona>&lt;nombre>juan&lt;/nombre>&lt;dni>79865432D&lt;/dni>&lt;/persona>&lt;/xml>';<br />
+	var dni = PLUGIN_UTILS.extraerValorXml(xml, '/xml/persona/dni');
+</p>
+<p>La función extraerValorXml retorna '79865432D', que es el valor del nodo dni.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Puede ocurrir que el nodo del que intentamos obtener el valor no exista en el XML. Por ejemplo, si intentamos usar el siguiente xpath '/xml/persona/apellido' usando el mismo XML del anterior ejemplo: </p>
+ <p class="codigoScript">
+    var xml = '&lt;xml>&lt;persona>&lt;nombre>juan&lt;/nombre>&lt;dni>79865432D&lt;/dni>&lt;/persona>&lt;/xml>';<br />
+	var persona = PLUGIN_UTILS.extraerValorXml(xml, '/xml/persona/apellido');
+</p>
+<p>La función extraerValorXml retorna un error, ya que '/xml/persona/apellido' no existe como nodo en el XML facilitado.</p>
+<br />
+
+</body>
+</html>

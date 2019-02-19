@@ -1,0 +1,50 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALIDACION.setTextoMensajeAviso(textoMensajeAviso)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_VALIDACION</a></li>
+       	  <li>></li>
+      	  <li><a href="./setTextoMensajeAviso.html">setTextoMensajeAviso</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setTextoMensajeAviso(String textoMensajeAviso)
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método para establecer directamente el mesaje de aviso.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>textoMensajeAviso</b>: mensaje a establecer.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>
+	Suponiendo que deseamos mostrar un texto de mensaje por script y no por la pestaña de mensajes:
+</p>
+<p class="codigoScript">
+	 PLUGIN_VALIDACION.setTextoMensajeAviso('Código introducido repetido');
+</p>
+</body>
+</html>

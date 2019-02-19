@@ -18,7 +18,13 @@
 <p>
 	<ul>
 		<li>Objeto que permite modificar los datos de un formulario antes de guardarlo.</li>
-		<li>Este objeto está accesible desde el script "Postguardar formulario", del paso "Rellenar formulario"</li>
+		<li>Según el tipo de campo tendrá un tipo de valor:
+			<ul>
+				<li>Valor simple: Es un texto. Tendrán este valor los campos de tipo texto y checkbox.</li>
+				<li>Valor compuesto: Es un código y un texto. Tendrán este valor los selectores de tipo desplegable y de selección única.</li>
+				<li>Valor múltiple: Es una lista de valores compuestos. Tendrán este valor los selectores de tipo selección múltiple.</li>
+			</ul>
+		</li>
 	</ul>
 </p>
 <p>
@@ -33,23 +39,23 @@
 			</li>
 			<li>
 				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('DATOS_FORMULARIOS.resetValores(idFormulario)'); return false;" />
-				<a href="./resetValores.html">resetValores(idFormulario)</a> 
+				<a href="./resetValores.html">resetValores(idFormulario)</a>
 			</li>
 			<li>
 				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('DATOS_FORMULARIOS.setFormularioIncorrecto(idFormulario)'); return false;" />
-				<a href="./setFormularioIncorrecto.html">setFormularioIncorrecto(idFormulario)</a> 
+				<a href="./setFormularioIncorrecto.html">setFormularioIncorrecto(idFormulario)</a>
 			</li>
 			<li>
 				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('DATOS_FORMULARIOS.setValor(idFormulario, campo, valor)'); return false;" />
-				<a href="./setValor.html">setValor(idFormulario, campo, valor)</a> 
+				<a href="./setValor.html">setValor(idFormulario, campo, valor)</a>
 			</li>
 			<li>
 				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('DATOS_FORMULARIOS.setValorCompuesto(idFormulario, campo, codigo, descripcion)'); return false;" />
-				<a href="./setValorCompuesto.html">setValorCompuesto(idFormulario, campo, codigo, descripcion)</a> 
+				<a href="./setValorCompuesto.html">setValorCompuesto(idFormulario, campo, codigo, descripcion)</a>
 			</li>
 			<li>
 				<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('DATOS_FORMULARIOS.setValorMultiple(idFormulario, campo, valorMultiple)'); return false;" />
-				<a href="./setValorMultiple.html">setValorMultiple(idFormulario, campo, valorMultiple)</a> 
+				<a href="./setValorMultiple.html">setValorMultiple(idFormulario, campo, valorMultiple)</a>
 			</li>
 		</ul>
 	</div>

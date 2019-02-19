@@ -21,7 +21,6 @@
 		<li>Plugin que permite utilizar el log de los scripts para debugarlos en tiempo de desarrollo</li>
 		<li>Para que aparezca estos mensajes deberá estar habilitado el check de 'Habilitar debug' en la pantalla de control de acceso de la versión del trámite</li>
 		<li>Estos mensajes son visibles si en la misma sesión del navegador (abriendo una pestaña en la ventana en la que estamos tramitando), accedemos a la siguiente dirección: <a href="/sistramitfront/debug/logSesionTramitacion.html" target="_blank">/sistramitfront/debug/logSesionTramitacion.html</a>.</li>
-		<li>Este plugin está disponible para su utilización en todos los scripts de versión, paso y de formulario.</li>
 	</ul>
 </p>
 <p>
@@ -30,11 +29,11 @@
 <div class="seccionMetodos">
 	<ul>
 		<li>
-			<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.DEBUG(mensaje)'); return false;" />
+			<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.debug(mensaje)'); return false;" />
 			<a href="./debug.html">debug(mensaje)</a>
 		</li>
 		<li>
-			<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.RETARDO(timeout)'); return false;" />
+			<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiarPortapeles('PLUGIN_LOG.retardo(timeout)'); return false;" />
 			<a href="./retardo.html">retardo(timeout)</a>
 		</li>
 	</ul>

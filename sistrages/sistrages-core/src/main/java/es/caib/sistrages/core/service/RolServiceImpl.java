@@ -52,9 +52,6 @@ public class RolServiceImpl implements RolService {
 	@Override
 	@NegocioInterceptor
 	public void addRol(final Rol rol) {
-
-		// TODO Pendiente control acceso entidad
-
 		rolDao.add(rol);
 	}
 
@@ -66,8 +63,6 @@ public class RolServiceImpl implements RolService {
 	@Override
 	@NegocioInterceptor
 	public boolean removeRol(final Long idRol) {
-
-		// TODO Pendiente control acceso entidad
 		rolDao.remove(idRol);
 		return true;
 	}
@@ -82,10 +77,7 @@ public class RolServiceImpl implements RolService {
 	@Override
 	@NegocioInterceptor
 	public void updateRol(final Rol rol) {
-
-		// TODO Pendiente control acceso entidad
-		rolDao.update(rol);
-
+rolDao.update(rol);
 	}
 
 	/*

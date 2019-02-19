@@ -153,7 +153,7 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 		fic.setMimetypeFichero(fsf.getMime());
 		fic.setNombreFichero(fsf.getNom());
 
-		// TODO PENDIENTE ESTABLECER TIPO FIRMA FICHERO
+		// TODO V0 PENDIENTE ESTABLECER TIPO FIRMA FICHERO
 
 		return fic;
 	}

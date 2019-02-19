@@ -61,8 +61,7 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 	@Override
 	public String iniciarSesionLogout(final String codigoEntidad, final String pIdioma, final String pCallback)
 			throws AutenticacionPluginException {
-		// TODO PENDIENTE IMPLEMENTAR
-		return null;
+		throw new RuntimeException("No implementado en versión mock");
 	}
 
 	/**

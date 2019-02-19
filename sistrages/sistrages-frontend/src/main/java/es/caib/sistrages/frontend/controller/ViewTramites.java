@@ -100,6 +100,9 @@ public class ViewTramites extends ViewControllerBase {
 	private List<TypeRolePermisos> permisosCacheados = new ArrayList<>();
 	private Long idAreaCacheada = -1l;
 
+	/** Indica si se permite refrescar. **/
+	private boolean permiteRefrescar;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -115,6 +118,11 @@ public class ViewTramites extends ViewControllerBase {
 		idArea = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("area");
 		buscarAreas();
+		if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+			permiteRefrescar = false;
+		} else {
+			permiteRefrescar = true;
+		}
 	}
 
 	/**
@@ -301,7 +309,7 @@ public class ViewTramites extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 			// Refrescamos datos
-			buscarAreas();
+			buscarTramites();
 		}
 	}
 
@@ -540,7 +548,26 @@ public class ViewTramites extends ViewControllerBase {
 	 * Procedimientos tramite.
 	 */
 	public void procedimientosTramite() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+
+		// Verifica si no hay fila seleccionada
+		if (!verificarFilaSeleccionadaVersion() && !verificarFilaSeleccionadaTramite())
+			return;
+
+		final Map<String, String> params = new HashMap<>();
+		if (verificarFilaSeleccionadaTramite()) {
+			params.put(TypeParametroVentana.ID.toString(), this.tramiteSeleccionada.getTramite().getIdentificador());
+
+		} else if (verificarFilaSeleccionadaVersion()) {
+			final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
+			params.put(TypeParametroVentana.ID.toString(), tramite.getIdentificador());
+			params.put(TypeParametroVentana.VERSION.toString(),
+					String.valueOf(this.versionSeleccionada.getNumeroVersion()));
+
+		}
+
+		// UtilJSF.openDialog(DialogTramiteProcedimientos.class, TypeModoAcceso.EDICION,
+		// params, true, 1000, 500);
+
 	}
 
 	private boolean verificarFilasSeleccionadasArea() {
@@ -1251,6 +1278,14 @@ public class ViewTramites extends ViewControllerBase {
 
 	public void setListaAreasSeleccionadas(final List<Area> listaAreasSeleccionadas) {
 		this.listaAreasSeleccionadas = listaAreasSeleccionadas;
+	}
+
+	public boolean isPermiteRefrescar() {
+		return permiteRefrescar;
+	}
+
+	public void setPermiteRefrescar(final boolean permiteRefrescar) {
+		this.permiteRefrescar = permiteRefrescar;
 	}
 
 }

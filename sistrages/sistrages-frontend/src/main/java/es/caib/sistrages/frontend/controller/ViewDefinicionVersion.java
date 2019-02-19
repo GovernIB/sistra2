@@ -181,11 +181,18 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Permite consultar. **/
 	boolean permiteConsultar = false;
 
+	private boolean permiteRefrescar;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
 	public ViewDefinicionVersion() {
 		super();
+		if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+			setPermiteRefrescar(false);
+		} else {
+			setPermiteRefrescar(true);
+		}
 	}
 
 	/**
@@ -373,6 +380,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				this.getFormularioTramiteSeleccionado().getIdFormularioInterno().toString());
 
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), String.valueOf(tramiteVersion.getCodigo()));
+		params.put(TypeParametroVentana.FORMULARIO_ACTUAL.toString(),
+				((OpcionArbol) this.selectedNode.getData()).getFormulario().getCodigo().toString());
 		UtilJSF.openDialog(DialogDisenyoFormulario.class, TypeModoAcceso.CONSULTA, params, true, 1200, 680);
 	}
 
@@ -1914,5 +1923,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setTextoOficinaRegistro(final String textoOficinaRegistro) {
 		this.textoOficinaRegistro = textoOficinaRegistro;
+	}
+
+	public boolean isPermiteRefrescar() {
+		return permiteRefrescar;
+	}
+
+	public void setPermiteRefrescar(final boolean permiteRefrescar) {
+		this.permiteRefrescar = permiteRefrescar;
 	}
 }

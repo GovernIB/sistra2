@@ -173,4 +173,11 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 		return formIntService.generaPaginaHTMLEditor(pIdForm, pPage, pIdComponente, pLang, pContexto);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public boolean isIdElementoFormularioDuplicated(final Long idFormulario, final Long codElemento,
+			final String identificador) {
+		return formIntService.isIdElementoFormularioDuplicated(idFormulario, codElemento, identificador);
+	}
+
 }

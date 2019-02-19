@@ -573,6 +573,7 @@ label.ui-state-disabled {
 	padding: 4px !important;
 }
 
+/*
 .ui-tree-container{
 	margin-bottom: 12px;
 	width: 100% !important;
@@ -580,7 +581,8 @@ label.ui-state-disabled {
 	overflow: auto;
 	display: block;
 	padding-bottom: 20px;
-}
+}*/
+
 .arbolTramites ul {
 	height:100%;
 }

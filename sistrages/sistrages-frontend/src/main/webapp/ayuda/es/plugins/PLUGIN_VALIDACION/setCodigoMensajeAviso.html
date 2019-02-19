@@ -1,0 +1,50 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('VALIDACION.setCodigoMensajeAviso(parametro)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="./index.html">PLUGIN_VALIDACION</a></li>
+       	  <li>></li>
+      	  <li><a href="./setCodigoMensajeAviso.html">setCodigoMensajeAviso</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	setCodigoMensajeAviso(String codigoMensajeAviso)
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método para establecer el mensaje de aviso a partir de un código de mensaje.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigoMensajeAviso</b>: código a establecer.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>
+	Suponiendo que en la pestaña de mensajes ya existe uno asociada a 'CODIGO_REPETIDO' (con el literal 'Código introducido repetido'), podemos setear el mensaje a mostrar de la siguiente manera:
+</p>
+<p class="codigoScript">
+	 PLUGIN_VALIDACION.setCodigoMensajeAviso('CODIGO_REPETIDO');
+</p>
+</body>
+</html>

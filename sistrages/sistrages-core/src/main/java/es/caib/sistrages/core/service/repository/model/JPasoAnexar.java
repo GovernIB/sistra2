@@ -41,7 +41,7 @@ public class JPasoAnexar implements IModelApi {
 	private JPasoTramitacion pasoTramitacion;
 
 	/** Script para anexos dinámicos. **/
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PAN_SCRDIN")
 	private JScript scriptAnexosDinamicos;
 
@@ -137,6 +137,7 @@ public class JPasoAnexar implements IModelApi {
 				}
 				jpaso.setAnexosTramite(anexos);
 			}
+			jpaso.setScriptAnexosDinamicos(JScript.fromModel(paso.getScriptAnexosDinamicos()));
 		}
 		return jpaso;
 	}

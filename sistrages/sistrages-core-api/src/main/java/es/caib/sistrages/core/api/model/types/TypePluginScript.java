@@ -20,21 +20,21 @@ public enum TypePluginScript {
 	 */
 	PLUGIN_DOMINIOS,
 	/**
-	 * Plugin de avisos.
+	 * Plugin de validacion.
 	 */
-	PLUGIN_AVISOS,
+	PLUGIN_VALIDACION,
 	/**
-	 * Plugin mensaje de validación.
+	 * Plugin mensajes.
 	 */
-	PLUGIN_MENSAJEVALIDACION,
+	PLUGIN_MENSAJES,
 	/**
-	 * Plugin validaciones.
+	 * Plugin utils.
 	 */
-	PLUGIN_VALIDACIONES,
+	PLUGIN_UTILS,
 	/**
-	 * Plugin validacion anexo.
+	 * Plugin anexo.
 	 */
-	PLUGIN_VALIDACIONANEXO,
+	PLUGIN_ANEXO,
 	/**
 	 * Plugin sesion tramitacion (exclusivo del flujo)
 	 */
@@ -46,11 +46,11 @@ public enum TypePluginScript {
 	/**
 	 * Resultado parametros iniciales (exclusivo dentro del flujo)
 	 */
-	DATOS_PARAMETROS_INICIALES,
+	DATOS_PARAMETROSINICIALES,
 	/**
 	 * Resultado datos iniciales formulario (exclusivo del flujo)
 	 */
-	DATOS_INICIALES_FORMULARIO,
+	DATOS_VALORESINICIALES,
 	/**
 	 * Resultado personalizacion tramite (exclusivo dentro del flujo)
 	 */
@@ -66,7 +66,7 @@ public enum TypePluginScript {
 	/**
 	 * Resultado anexos dinámicos (exclusivo dentro del flujo)
 	 */
-	DATOS_ANEXOS_DINAMICOS,
+	DATOS_ANEXOSDINAMICOS,
 	/**
 	 * Plugin de pago (exclusivo dentro del flujo)
 	 */
