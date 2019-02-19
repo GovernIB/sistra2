@@ -120,7 +120,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		tramites = new ArrayList<>();
 
 		// TODO PARA QUITAR
-		final DefinicionTramiteCP tramiteDef = iplugin.obtenerDefinicionTramite("2725307", "es");
+		final DefinicionTramiteCP tramiteDef = iplugin.obtenerDefinicionTramite("3270471", "ca");
 		if (tramiteDef != null)
 			tramites.add(tramiteDef);
 
