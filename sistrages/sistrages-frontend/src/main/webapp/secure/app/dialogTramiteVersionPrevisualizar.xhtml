@@ -43,7 +43,9 @@
 					<p:outputLabel   value="" />
 
 					<p:outputLabel for="procedimiento" value="#{msg['dialogTramiteVersionPrevisualizar.tramite']}" />
-                	<p:inputText   id="procedimiento"  value="#{dialogTramiteVersionPrevisualizar.procedimiento}" required="true" size="30"  />
+					<p:selectOneMenu id="procedimiento"  value="#{dialogTramiteVersionPrevisualizar.tramiteSeleccionado}" required="true" style="width:400px">
+						<f:selectItems value="#{dialogTramiteVersionPrevisualizar.tramites}" var="tramite" itemLabel="#{tramite.procedimiento.identificador} - #{tramite.procedimiento.descripcion}" itemValue="#{tramite.identificador}" />
+					</p:selectOneMenu >
 					<p:outputLabel   value=""  />
 
 					<p:outputLabel   value="#{msg['dialogTramiteVersionPrevisualizar.parametros']}" />

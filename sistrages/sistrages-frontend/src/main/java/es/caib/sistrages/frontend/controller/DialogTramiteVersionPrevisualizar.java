@@ -13,12 +13,17 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.TramitePrevisualizacion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -41,6 +46,10 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	@Inject
 	private SystemService systemService;
 
+	/** Componente service. */
+	@Inject
+	private ComponenteService componenteService;
+
 	/** Id elemento a tratar. */
 	private String id;
 
@@ -53,14 +62,14 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Idiomas. **/
 	private List<TypeIdioma> idiomas = new ArrayList<>();
 
-	/** Procedimiento. **/
-	private String procedimiento;
-
 	/** Valor seleccionado. **/
 	private Propiedad valorSeleccionado;
 
 	/** Tramite. **/
 	private Tramite tramite;
+
+	/** Plugin rolsac. **/
+	private ICatalogoProcedimientosPlugin iplugin;
 
 	/**
 	 * JSON con la lista de valores (identificador - valor)
@@ -70,10 +79,18 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Url . **/
 	private String url;
 
+	/** Tramite seleccionado. **/
+	private String tramiteSeleccionado;
+
+	/** Tramites. **/
+	private List<DefinicionTramiteCP> tramites;
+
 	/**
 	 * Inicialización.
+	 *
+	 * @throws CatalogoPluginException
 	 */
-	public void init() {
+	public void init() throws CatalogoPluginException {
 		setData(tramiteService.getTramiteVersion(Long.valueOf(id)));
 
 		tramite = tramiteService.getTramite(this.data.getIdTramite());
@@ -89,10 +106,24 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		final TramitePrevisualizacion tramitePrevisualizacion = (TramitePrevisualizacion) UtilJSF.getSessionBean()
 				.getMochilaDatos().get(Constantes.CLAVE_MOCHILA_TRAMITE + this.data.getIdTramite());
 		if (tramitePrevisualizacion != null) {
-			procedimiento = tramitePrevisualizacion.getProcedimiento();
+			tramiteSeleccionado = tramitePrevisualizacion.getProcedimiento();
 			idioma = tramitePrevisualizacion.getIdioma();
 			parametros = tramitePrevisualizacion.getParametros();
 		}
+
+		iplugin = (ICatalogoProcedimientosPlugin) componenteService
+				.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
+
+		// tramites = iplugin.obtenerTramites(tramite.getIdentificador(),
+		// this.data.getNumeroVersion(), idioma);
+
+		tramites = new ArrayList<>();
+
+		// TODO PARA QUITAR
+		final DefinicionTramiteCP tramiteDef = iplugin.obtenerDefinicionTramite("2725307", "es");
+		if (tramiteDef != null)
+			tramites.add(tramiteDef);
+
 	}
 
 	/**
@@ -103,7 +134,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 
 		final TramitePrevisualizacion tramitePrevisualizacion = new TramitePrevisualizacion();
-		tramitePrevisualizacion.setProcedimiento(procedimiento);
+		tramitePrevisualizacion.setProcedimiento(tramiteSeleccionado);
 		tramitePrevisualizacion.setIdioma(idioma);
 		tramitePrevisualizacion.setParametros(parametros);
 		mochila.put(Constantes.CLAVE_MOCHILA_TRAMITE + this.data.getIdTramite(), tramitePrevisualizacion);
@@ -114,7 +145,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		final String params = getParamsUrl();
 
 		setUrl(urlBase + "/asistente/iniciarTramite.html?tramite=" + tramite.getIdentificador() + "&version="
-				+ data.getNumeroVersion() + "&idioma=" + idioma + "&idTramiteCatalogo=" + procedimiento + params);
+				+ data.getNumeroVersion() + "&idioma=" + idioma + "&idTramiteCatalogo=" + tramiteSeleccionado + params);
 
 	}
 
@@ -122,9 +153,13 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		final StringBuilder paramsUrl = new StringBuilder();
 		if (this.parametros != null && !this.parametros.isEmpty()) {
 			for (final Propiedad parametro : this.parametros) {
-				paramsUrl.append("&");
+				if (paramsUrl.length() == 0) {
+					paramsUrl.append("&parametros=");
+				} else {
+					paramsUrl.append("-_-");
+				}
 				paramsUrl.append(escapeHtml4(parametro.getCodigo()));
-				paramsUrl.append("=");
+				paramsUrl.append("-_-");
 				paramsUrl.append(escapeHtml4(parametro.getValor()));
 			}
 		}
@@ -331,21 +366,6 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the procedimiento
-	 */
-	public String getProcedimiento() {
-		return procedimiento;
-	}
-
-	/**
-	 * @param procedimiento
-	 *            the procedimiento to set
-	 */
-	public void setProcedimiento(final String procedimiento) {
-		this.procedimiento = procedimiento;
-	}
-
-	/**
 	 * @return the valorSeleccionado
 	 */
 	public Propiedad getValorSeleccionado() {
@@ -403,6 +423,36 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 */
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	/**
+	 * @return the tramites
+	 */
+	public List<DefinicionTramiteCP> getTramites() {
+		return tramites;
+	}
+
+	/**
+	 * @param tramites
+	 *            the tramites to set
+	 */
+	public void setTramites(final List<DefinicionTramiteCP> tramites) {
+		this.tramites = tramites;
+	}
+
+	/**
+	 * @return the tramiteSeleccionado
+	 */
+	public String getTramiteSeleccionado() {
+		return tramiteSeleccionado;
+	}
+
+	/**
+	 * @param tramiteSeleccionado
+	 *            the tramiteSeleccionado to set
+	 */
+	public void setTramiteSeleccionado(final String tramiteSeleccionado) {
+		this.tramiteSeleccionado = tramiteSeleccionado;
 	}
 
 }
