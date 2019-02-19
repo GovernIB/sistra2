@@ -85,7 +85,7 @@
 			<p:toolbar>
 				<f:facet name="right">
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{viewFormularioSoporte.cerrar}" process="@form" update="@form growlDialog" />
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFormularioSoporte.ayuda()}" process="@this" update="growl"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFormularioSoporte.ayuda()}" process="@this" update="growlDialog"/>
 				</f:facet>
 			</p:toolbar>
 		</p:outputPanel>
