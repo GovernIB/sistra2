@@ -229,7 +229,7 @@ public final class PasoAnexarController extends TramitacionController {
 		// Invocamos al flujo para borrar documento
 		final ParametrosAccionPaso parametros = new ParametrosAccionPaso();
 		parametros.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
-		// TODO QUITAR CUANDO SE ARREGLE JS
+		// TODO V0 QUITAR CUANDO SE ARREGLE JS
 		if (!"???".equals(instancia)) {
 			parametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
 		}
@@ -264,11 +264,7 @@ public final class PasoAnexarController extends TramitacionController {
 		ParametrosAccionPaso pParametros;
 		pParametros = new ParametrosAccionPaso();
 		pParametros.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
-
-		// TODO QUITAR CUANDO SE ARREGLE JS
-		if (!"???".equals(instancia)) {
-			pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
-		}
+		pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
 
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoAnexar.DESCARGAR_ANEXO, pParametros);

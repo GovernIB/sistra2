@@ -40,6 +40,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.api.service.SystemService;
@@ -194,7 +195,6 @@ public class AsistenteTramitacionController extends TramitacionController {
 		final AsistenteInfo ai = new AsistenteInfo();
 		ai.setIdSesionTramitacion(idSesionTramitacion);
 		ai.setIdioma(detalleTramite.getTramite().getIdioma());
-		// TODO Pendiente ver info a pasar
 		return new ModelAndView("asistente/asistente", "datos", ai);
 	}
 
@@ -248,6 +248,9 @@ public class AsistenteTramitacionController extends TramitacionController {
 	@RequestMapping(value = "/descargarClave.html")
 	public ModelAndView descargarClave() {
 		// TODO PENDIENTE
+
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
 		final String nombre = "clave.txt";
 		final byte[] datosFichero = ("PENDIENTE GENERAR FICHERO PDF. CLAVE: " + getIdSesionTramitacionActiva())
 				.getBytes();
@@ -553,8 +556,13 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 */
 	@RequestMapping(value = "/retornoCarpetaCiudadano.html")
 	public ModelAndView retornoCarpetaCiudadano(@RequestParam("ticket") final String ticket) {
-		// TODO PENDIENTE
-		return null;
+		// Obtenemos datos ticket
+		final InfoTicketAcceso infoTicket = securityService.obtenerTicketAccesoCDC(ticket);
+		// Cargamos tramite de persistencia
+		final String idSesionTramitacion = infoTicket.getIdSesionTramitacion();
+		this.cargarTramiteImpl(idSesionTramitacion, false);
+		// Redirigimos a carga asistente
+		return new ModelAndView(URL_REDIRIGIR_ASISTENTE);
 	}
 
 	/**

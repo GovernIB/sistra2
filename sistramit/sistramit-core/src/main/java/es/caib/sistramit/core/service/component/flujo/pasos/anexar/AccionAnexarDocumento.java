@@ -310,11 +310,8 @@ public final class AccionAnexarDocumento implements AccionPaso {
 				final RespuestaScript rs = this.scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO,
 						anexoDetalle.getId(), script.getScript(), pVariablesFlujo, variablesScript, null, codigosError,
 						pDefinicionTramite);
-				if (rs.isError()) {
-					// En caso de marcarse el error como script implica que no
-					// se ha
-					// pasado la validación del anexo
-					throw new ValidacionAnexoException(rs.getMensajeError(), anexoDetalle.getId());
+				if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
+					throw new ValidacionAnexoException(rs.getMensajeValidacion().getMensaje(), anexoDetalle.getId());
 				}
 			}
 		}

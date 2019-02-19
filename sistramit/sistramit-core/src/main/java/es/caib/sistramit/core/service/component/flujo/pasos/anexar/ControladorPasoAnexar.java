@@ -347,12 +347,6 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 					null, codigosError, pDefinicionTramite);
 
 			// Evaluamos resultado
-			// - En caso de error generamos excepcion
-			if (rs.isError()) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_LISTA_DINAMICA_ANEXOS.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), defPaso.getIdentificador(), rs.getMensajeError());
-			}
-			// - En caso correcto añadimos documentos
 			final ResAnexosDinamicos rsa = (ResAnexosDinamicos) rs.getResultado();
 			for (final AnexoDinamico anexd : rsa.getAnexos()) {
 				final Anexo anexo = Anexo.createNewAnexo();
@@ -497,11 +491,6 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 			final RespuestaScript rs = getScriptFlujo().executeScriptFlujo(TypeScriptFlujo.SCRIPT_FIRMANTES,
 					anexoDef.getIdentificador(), scriptFirmantes.getScript(), pVariablesFlujo, null, null, codigosError,
 					pDefinicionTramite);
-
-			if (rs.isError()) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), anexoDef.getIdentificador(), rs.getMensajeError());
-			}
 
 			final ResFirmantes resf = (ResFirmantes) rs.getResultado();
 			if (resf.getFirmantes().isEmpty()) {

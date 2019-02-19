@@ -18,13 +18,6 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 public final class ResultadoGuardarPagina implements Serializable {
 
 	/**
-	 * Indica si se ha producido un error en la lógica de algún script (plugin
-	 * error). Los errores de script no controlados generarán una excepción de
-	 * servicio. Se debe forzar a cancelar el formulario.
-	 */
-	private TypeSiNo error = TypeSiNo.NO;
-
-	/**
 	 * Indica si se ha finalizado el formulario. En este caso se debe retornar al
 	 * flujo de tramitación mediante la url indicada.
 	 */
@@ -37,28 +30,9 @@ public final class ResultadoGuardarPagina implements Serializable {
 	private String url;
 
 	/**
-	 * Permite establecer un mensaje.
+	 * Permite establecer un mensaje de validación.
 	 */
-	private MensajeAviso mensaje;
-
-	/**
-	 * Método de acceso a error.
-	 *
-	 * @return error
-	 */
-	public TypeSiNo getError() {
-		return error;
-	}
-
-	/**
-	 * Método para establecer error.
-	 *
-	 * @param pError
-	 *            error a establecer
-	 */
-	public void setError(final TypeSiNo pError) {
-		error = pError;
-	}
+	private MensajeValidacion validacion;
 
 	/**
 	 * Método de acceso a finalizado.
@@ -84,8 +58,8 @@ public final class ResultadoGuardarPagina implements Serializable {
 	 *
 	 * @return mensaje
 	 */
-	public MensajeAviso getMensaje() {
-		return mensaje;
+	public MensajeValidacion getValidacion() {
+		return validacion;
 	}
 
 	/**
@@ -94,13 +68,13 @@ public final class ResultadoGuardarPagina implements Serializable {
 	 * @param mensaje
 	 *            mensaje a establecer
 	 */
-	public void setMensaje(MensajeAviso mensaje) {
-		this.mensaje = mensaje;
+	public void setValidacion(MensajeValidacion mensaje) {
+		this.validacion = mensaje;
 	}
 
 	/**
 	 * Método de acceso a url.
-	 * 
+	 *
 	 * @return url
 	 */
 	public String getUrl() {
@@ -109,7 +83,7 @@ public final class ResultadoGuardarPagina implements Serializable {
 
 	/**
 	 * Método para establecer url.
-	 * 
+	 *
 	 * @param url
 	 *            url a establecer
 	 */

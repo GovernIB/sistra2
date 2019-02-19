@@ -1,8 +1,13 @@
 package es.caib.sistramit.core.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +17,7 @@ import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
+import es.caib.sistramit.core.api.exception.TicketCarpetaCiudadanaException;
 import es.caib.sistramit.core.api.model.flujo.AvisoPlataforma;
 import es.caib.sistramit.core.api.model.flujo.RetornoPago;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
@@ -20,6 +26,8 @@ import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.integracion.AutenticacionComponent;
@@ -30,12 +38,16 @@ import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionUsuari
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoTramiteDao;
 import es.caib.sistramit.core.service.repository.dao.PagoExternoDao;
+import es.caib.sistramit.core.service.repository.dao.TicketCDCDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
 @Service
 @Transactional
 public class SecurityServiceImpl implements SecurityService {
+
+	/** Timeout tickets autenticación por defecto. */
+	private static final int TIMEOUT_TICKET_DEFAULT = 30;
 
 	/** Acceso configuración. */
 	@Autowired
@@ -56,6 +68,13 @@ public class SecurityServiceImpl implements SecurityService {
 	/** DAO Pago externo. */
 	@Autowired
 	private PagoExternoDao pagoExternoDao;
+
+	/** DAO Ticket CDC. */
+	@Autowired
+	private TicketCDCDao ticketCDCDao;
+
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Override
 	@NegocioInterceptor
@@ -149,8 +168,51 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public UsuarioAutenticadoInfo validarTicketCarpetaCiudadana(final SesionInfo sesionInfo, final String ticket) {
-		// TODO PENDIENTE
-		throw new ErrorNoControladoException("Pendiente implementar");
+
+		// Recuperamos info ticket
+		final InfoTicketAcceso infoTicket = ticketCDCDao.obtieneTicketAcceso(ticket);
+
+		// Verificamos que no ha sido usado y que no se ha cumplido timeout
+		if (infoTicket.isUsado()) {
+			throw new TicketCarpetaCiudadanaException("Ticket ya ha sido usado: " + ticket);
+		}
+		int secsTimeout = TIMEOUT_TICKET_DEFAULT;
+		final String secsTimeoutStr = configuracionComponent
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.TIMEOUT_TICKET);
+		if (StringUtils.isBlank(secsTimeoutStr)) {
+			log.warn("No está configurada la propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString());
+		}
+		try {
+			secsTimeout = Integer.parseInt(secsTimeoutStr);
+			if (secsTimeout <= 0) {
+				log.warn("La propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString()
+						+ " no tiene un valor válido: " + secsTimeoutStr);
+				secsTimeout = TIMEOUT_TICKET_DEFAULT;
+			}
+		} catch (final NumberFormatException e) {
+			log.warn("La propiedad " + TypePropiedadConfiguracion.TIMEOUT_TICKET.toString()
+					+ " no tiene un valor válido: " + secsTimeoutStr);
+			secsTimeout = TIMEOUT_TICKET_DEFAULT;
+		}
+		final Date dateNow = new Date();
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(dateNow);
+		cal.add(Calendar.SECOND, secsTimeout);
+		final Date dateMax = cal.getTime();
+		if (dateNow.after(dateMax)) {
+			throw new TicketCarpetaCiudadanaException("Ticket ha expirado: " + ticket);
+		}
+
+		// Devolvemos usuario autenticado
+		final UsuarioAutenticadoInfo usu = infoTicket.getUsuarioAutenticadoInfo();
+		usu.setSesionInfo(sesionInfo);
+		return usu;
+
+	}
+
+	@Override
+	public InfoTicketAcceso obtenerTicketAccesoCDC(String ticket) {
+		return ticketCDCDao.obtieneTicketAcceso(ticket);
 	}
 
 	// ------------------------------------------------------------------------

@@ -16,6 +16,7 @@ public enum TypePropiedadConfiguracion {
 	VERSION("sistra2.version"),
 	/** Ficheros externos. */
 	PATH_FICHEROS_EXTERNOS("ficherosExternos.path"),
+
 	/** STG Url. */
 	SISTRAGES_URL("sistrages.url"),
 	/** STG Url. */
@@ -35,9 +36,15 @@ public enum TypePropiedadConfiguracion {
 	CHECK_PERSISTENCIA_POSTACCION("sistramit.checkPersistenciaPostAccion"),
 	/** Timeout sesión web (minutos). */
 	TIMEOUT_SESION_WEB("sesionweb.timeout"),
+	/**
+	 * Timeout autenticación tickets (segundos): tiempo permitido desde la
+	 * generación del ticket hasta que se consume.
+	 */
+	TIMEOUT_TICKET("sistramit.ticket.timeout"),
 	/** Prefijo plugin. */
 	PLUGINS_PREFIJO("plugins.prefix"),
 
+	/** Max. número a recuperar. */
 	PERDIDA_CLAVE_NUMMAXTRAMITES("sistrahelp.perdidaClave.numMaxTramites"),
 	/**
 	 * Propiedades en la purga.

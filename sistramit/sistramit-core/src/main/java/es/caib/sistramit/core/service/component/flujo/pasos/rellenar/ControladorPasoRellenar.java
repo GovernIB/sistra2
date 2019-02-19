@@ -405,10 +405,6 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 		final RespuestaScript rs = getScriptFlujo().executeScriptFlujo(TypeScriptFlujo.SCRIPT_FIRMANTES,
 				formularioDef.getIdentificador(), formularioDef.getScriptFirmantes().getScript(), pVariablesFlujo, null,
 				pFormulariosCompletados, codigosError, pDefinicionTramite);
-		if (rs.isError()) {
-			throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
-					pVariablesFlujo.getIdSesionTramitacion(), formularioDef.getIdentificador(), rs.getMensajeError());
-		}
 
 		// Evaluamos resultado con la lista de firmantes
 		final ResFirmantes resf = (ResFirmantes) rs.getResultado();
@@ -628,10 +624,6 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 					TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO, formDef.getIdentificador(),
 					formDef.getScriptDatosIniciales().getScript(), pVariablesFlujo, null, null, codigosError,
 					pDefinicionTramite);
-			if (rs.isError()) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_DATOS_INICIALES_FORMULARIO.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), formDef.getIdentificador(), rs.getMensajeError());
-			}
 
 			// Recuperamos datos iniciales
 			final ResDatosInicialesFormulario rsd = (ResDatosInicialesFormulario) rs.getResultado();

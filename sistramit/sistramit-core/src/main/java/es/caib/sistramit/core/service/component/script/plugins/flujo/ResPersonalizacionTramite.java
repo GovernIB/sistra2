@@ -4,7 +4,7 @@ import javax.script.ScriptException;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.XssFilter;
-import es.caib.sistramit.core.service.model.script.ResPersonalizacionTramiteInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPersonalizacionTramiteInt;
 
 /**
  *

@@ -16,7 +16,7 @@ import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
 import es.caib.sistramit.core.service.component.script.ScriptUtils;
 import es.caib.sistramit.core.service.component.script.plugins.ClzValorCampoMultiple;
 import es.caib.sistramit.core.service.model.script.ClzValorCampoMultipleInt;
-import es.caib.sistramit.core.service.model.script.ResModificacionFormulariosInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResModificacionFormulariosInt;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 
 /**

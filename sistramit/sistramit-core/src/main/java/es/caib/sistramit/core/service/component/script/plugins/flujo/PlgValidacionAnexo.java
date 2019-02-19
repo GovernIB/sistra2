@@ -117,19 +117,17 @@ public final class PlgValidacionAnexo implements PlgValidacionAnexoInt {
 		final Node nodo;
 		if (!StringUtils.isEmpty(nombreFicheroAnexo) && !StringUtils.isEmpty(xpath)
 				&& nombreFicheroAnexo.toLowerCase().indexOf(".xml") >= 0) {
-
 			if (documentoXML == null) {
 				final SAXReader reader = new SAXReader();
 				try {
 					documentoXML = reader.read(new ByteArrayInputStream(this.datosFicheroAnexo));
+					nodo = documentoXML.selectSingleNode(xpath);
+					respuesta = nodo.getText();
 				} catch (final DocumentException e) {
 					log.warn("Error extrayendo valor xml: " + xpath + ". Devolvemos valor vacío.", e);
 					respuesta = "";
 				}
 			}
-			nodo = documentoXML.selectSingleNode(xpath);
-			respuesta = nodo.getText();
-
 		} else {
 			nodo = documentoXML.selectSingleNode(xpath);
 			respuesta = nodo.getText();

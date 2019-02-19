@@ -13,7 +13,6 @@ import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RValorListaFija;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPermitidosException;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
@@ -181,11 +180,6 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 				TypeScriptFormulario.SCRIPT_VALORES_POSIBLES, pCampoDef.getIdentificador(),
 				pCampoDef.getScriptListaValores().getScript(), variablesFormulario, codigosError,
 				pDatosSesion.getDefinicionTramite());
-		if (rs.isError()) {
-			throw new ErrorScriptException(TypeScriptFormulario.SCRIPT_VALORES_POSIBLES.name(),
-					pDatosSesion.getDatosInicioSesion().getIdSesionTramitacion(), pCampoDef.getIdentificador(),
-					rs.getMensajeError());
-		}
 
 		// Generamos lista valores
 		final ResValoresPosibles rvp = (ResValoresPosibles) rs.getResultado();

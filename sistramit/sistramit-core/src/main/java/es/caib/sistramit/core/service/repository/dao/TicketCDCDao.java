@@ -3,7 +3,7 @@ package es.caib.sistramit.core.service.repository.dao;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 
 /**
- * Interfaz de acceso a base de datos para los datos de sesión de pago externo.
+ * Interfaz de acceso a base de datos para acceso desde carpeta ciudadana (CDC).
  *
  * @author Indra
  *
@@ -11,12 +11,29 @@ import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 public interface TicketCDCDao {
 
 	/**
-	 * Genera ticket de retorno para pago.
+	 * Genera ticket para acceso desde CDC.
 	 *
-	 * @param retornoPago
-	 *            datos retorno pago
+	 * @param pInfoTicketAcceso
+	 *            datos acceso CDC
 	 * @return ticket retorno
 	 */
 	String generarTicketAcceso(InfoTicketAcceso pInfoTicketAcceso);
+
+	/**
+	 * Obtiene ticket acceso.
+	 *
+	 * @param ticket
+	 *            ticket
+	 * @return Información ticket acceso
+	 */
+	InfoTicketAcceso obtieneTicketAcceso(String ticket);
+
+	/**
+	 * Consume ticket acceso.
+	 * 
+	 * @param ticket
+	 *            Ticket
+	 */
+	void consumirTicketAcceso(String ticket);
 
 }

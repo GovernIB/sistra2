@@ -1,6 +1,6 @@
 package es.caib.sistramit.core.service.component.script.plugins.flujo;
 
-import es.caib.sistramit.core.service.model.script.ResPlantillaInfoInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPlantillaInfoInt;
 
 /**
  * Resultado para establecer los datos de la plantilla para el paso de

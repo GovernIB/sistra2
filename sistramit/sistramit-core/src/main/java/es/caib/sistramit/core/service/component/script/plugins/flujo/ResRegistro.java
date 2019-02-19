@@ -1,6 +1,6 @@
 package es.caib.sistramit.core.service.component.script.plugins.flujo;
 
-import es.caib.sistramit.core.service.model.script.ResRegistroInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResRegistroInt;
 
 /**
  *

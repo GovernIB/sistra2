@@ -116,15 +116,15 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			final RespuestaScript respuestaScriptPostGuardar = ejecutarScriptPostGuardar(dipa, pDpp, idFormulario, dff,
 					pDefinicionTramite, pVariablesFlujo, borrarOpcional);
 
-			// Actualizamos persistencia para despues recalcular detalle (los
-			// datos de este formulario y los modificados en el script de
-			// postguardar).
+			// Actualizamos persistencia para despues recalcular detalle (los datos de este
+			// formulario y los modificados en el script de postguardar).
 			if (borrarOpcional == TypeSiNo.NO) {
 				actualizarPersistenciaGuardar(dipa, pDpp, pVariablesFlujo, idFormulario, dff.getXml(), dff.getPdf(),
 						respuestaScriptPostGuardar);
 			} else {
 				// No borramos si hemos indicado error en el script
-				if (respuestaScriptPostGuardar == null || !respuestaScriptPostGuardar.isError()) {
+				if (respuestaScriptPostGuardar == null
+						|| !UtilsFlujo.isErrorValidacion(respuestaScriptPostGuardar.getMensajeValidacion())) {
 					actualizarPersistenciaCancelarFormulario(dipa, pDpp, pVariablesFlujo, idFormulario,
 							respuestaScriptPostGuardar);
 				}
@@ -134,9 +134,11 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			// Devolvemos si se ha podido guardar el formulario o se ha marcado
 			// con estado incorrecto
 			rp.addParametroRetorno("cancelado", TypeSiNo.NO);
-			if (respuestaScriptPostGuardar != null && respuestaScriptPostGuardar.isError()) {
+			if (respuestaScriptPostGuardar != null
+					&& UtilsFlujo.isErrorValidacion(respuestaScriptPostGuardar.getMensajeValidacion())) {
 				rp.addParametroRetorno("correcto", TypeSiNo.NO);
-				rp.addParametroRetorno("mensajeIncorrecto", respuestaScriptPostGuardar.getMensajeError());
+				rp.addParametroRetorno("mensajeIncorrecto",
+						respuestaScriptPostGuardar.getMensajeValidacion().getMensaje());
 			} else {
 				rp.addParametroRetorno("correcto", TypeSiNo.SI);
 			}
@@ -267,7 +269,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 
 			// Si se ha ejecutado correctamente comprobamos que los cambios
 			// a realizar son sobre los demas formularios del paso
-			if (!rs.isError()) {
+			if (!UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
 				final ResModificacionFormularios resp = (ResModificacionFormularios) rs.getResultado();
 				// Verificamos que se pueden modificar los formularios que
 				// se han modificado (pasaran a estado incorrecto)
@@ -416,7 +418,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		actualizarFormularioActual(pDipa, pDpp, idFormulario, xml, pdf, rs, pVariablesFlujo);
 
 		// Actualizamos formularios modificados en post guardar
-		if (rs != null && !rs.isError()) {
+		if (rs != null && !UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
 			actualizarFormulariosPostGuardar(pDipa, pDpp, idFormulario, rs, pVariablesFlujo);
 		}
 
@@ -450,7 +452,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 
 		// Comprobamos si el formulario actual se ha modificado en el script de
 		// postguardar
-		if (rs != null && !rs.isError()) {
+		if (rs != null && !UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
 			final ResModificacionFormularios rsp = (ResModificacionFormularios) rs.getResultado();
 			if (rsp.getFormulariosModificados().contains(idFormulario)) {
 				final ValoresFormulario valoresFormulario = new ValoresFormulario(xml);
@@ -482,7 +484,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		docPaso.removeFirmasFicheros();
 
 		// - Establecemos estado
-		if (rs != null && rs.isError()) {
+		if (rs != null && UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
 			docPaso.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
 		} else {
 			docPaso.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
@@ -651,7 +653,8 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		}
 
 		// Actualizamos formularios modificados en post guardar
-		if (pRespuestaScriptPostGuardar != null && !pRespuestaScriptPostGuardar.isError()) {
+		if (pRespuestaScriptPostGuardar != null
+				&& !UtilsFlujo.isErrorValidacion(pRespuestaScriptPostGuardar.getMensajeValidacion())) {
 			actualizarFormulariosPostGuardar(pDipa, pDpp, pIdFormulario, pRespuestaScriptPostGuardar, pVariablesFlujo);
 		}
 	}

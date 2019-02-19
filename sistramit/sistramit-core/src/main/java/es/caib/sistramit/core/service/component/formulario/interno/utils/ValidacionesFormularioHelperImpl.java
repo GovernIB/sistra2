@@ -14,6 +14,7 @@ import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
@@ -25,7 +26,7 @@ import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNumero
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoPassword;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoTelefono;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoVerificacion;
-import es.caib.sistramit.core.api.model.formulario.MensajeAviso;
+import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoExpReg;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoId;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoNormal;
@@ -39,9 +40,9 @@ import es.caib.sistramit.core.service.component.literales.Literales;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
-import es.caib.sistramit.core.service.model.formulario.interno.ResultadoValidacion;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
@@ -57,9 +58,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	private Literales literales;
 
 	@Override
-	public ResultadoValidacion validarConfiguracionCampos(DatosSesionFormularioInterno pDatosSesion) {
-
-		final ResultadoValidacion rv = new ResultadoValidacion();
+	public void validarConfiguracionCampos(DatosSesionFormularioInterno pDatosSesion) {
 
 		boolean validacionCorrecta = true;
 		String idCampoError = null;
@@ -116,16 +115,15 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 		if (!validacionCorrecta) {
 			errorMsg = literales.getLiteral(Literales.GESTOR_FORMULARIOS_INTERNO, "validacion.servidor.incorrecta",
 					new String[] { idCampoError }, pDatosSesion.getDatosInicioSesion().getIdioma());
-			rv.setError(true);
-			rv.setMensajeError(errorMsg);
-			rv.setAvisos(null);
+			throw new ErrorConfiguracionException(errorMsg);
 		}
-		return rv;
+
 	}
 
 	@Override
-	public ResultadoValidacion validarScriptValidacionPagina(DatosSesionFormularioInterno datosSesion) {
-		final ResultadoValidacion rv = new ResultadoValidacion();
+	public MensajeValidacion validarScriptValidacionPagina(DatosSesionFormularioInterno datosSesion) {
+
+		MensajeValidacion mensaje = null;
 
 		// - Definicion pagina actual
 		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
@@ -145,21 +143,17 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 					TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA, idPagina,
 					paginaDef.getScriptValidacion().getScript(), variablesFormulario, codigosError,
 					datosSesion.getDefinicionTramite());
-			if (rs.isError()) {
-				rv.setError(true);
-				rv.setMensajeError(rs.getMensajeError());
-				rv.setAvisos(null);
-			} else if (rs.isAviso()) {
-				rv.getAvisos().add(new MensajeAviso(rs.getTipoMensajeAviso(), rs.getMensajeAviso()));
-			}
+			mensaje = rs.getMensajeValidacion();
 		}
 
-		return rv;
+		return mensaje;
+
 	}
 
 	@Override
-	public ResultadoValidacion validarScriptValidacionCampos(DatosSesionFormularioInterno datosSesion) {
-		final ResultadoValidacion rv = new ResultadoValidacion();
+	public MensajeValidacion validarScriptValidacionCampos(DatosSesionFormularioInterno datosSesion) {
+
+		MensajeValidacion mensaje = null;
 
 		// - Definicion pagina actual
 		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
@@ -176,22 +170,15 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 						TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO, campo.getIdentificador(),
 						propsCampo.getScriptValidacion().getScript(), variablesFormulario, codigosError,
 						datosSesion.getDefinicionTramite());
-				if (rs.isError()) {
-
-					// TODO VER SI GENERAR EXCEPCION PARA FORZAR ERROR GENERAL!!
-
-					// Paramos al primer error de validacion
-					rv.setError(true);
-					rv.setMensajeError(rs.getMensajeError());
-					rv.setAvisos(null);
+				// Al validar en conjunto los campos solo paramos si hay error
+				if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
+					mensaje = rs.getMensajeValidacion();
 					break;
-
-				} else if (rs.isAviso()) {
-					rv.getAvisos().add(new MensajeAviso(rs.getTipoMensajeAviso(), rs.getMensajeAviso()));
 				}
 			}
 		}
-		return rv;
+
+		return mensaje;
 	}
 
 	/**

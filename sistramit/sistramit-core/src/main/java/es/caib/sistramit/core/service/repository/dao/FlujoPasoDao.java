@@ -145,8 +145,5 @@ public interface FlujoPasoDao {
 	 */
 	DocumentoPasoPersistencia obtenerDocumento(Long pIdDoc);
 
-	// TODO PENDIENTE
-
-	// TODO VER GESTION FIRMAS
 
 }

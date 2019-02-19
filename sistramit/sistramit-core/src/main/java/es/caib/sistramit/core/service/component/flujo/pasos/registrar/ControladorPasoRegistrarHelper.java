@@ -76,10 +76,6 @@ public final class ControladorPasoRegistrarHelper {
 			final RespuestaScript resultadoScriptParametros = scriptFlujo.executeScriptFlujo(
 					TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO, pidPaso, scriptDestino.getScript(), pVariablesFlujo,
 					null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
-			if (resultadoScriptParametros.isError()) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_PARAMETROS_REGISTRO.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), pidPaso, resultadoScriptParametros.getMensajeError());
-			}
 			resRegistro = (ResRegistro) resultadoScriptParametros.getResultado();
 		} else {
 			// No existe script, creamos vacío
@@ -118,10 +114,6 @@ public final class ControladorPasoRegistrarHelper {
 			final RespuestaScript resultadoScriptParametros = scriptFlujo.executeScriptFlujo(
 					TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO, idPaso, scriptPresentador.getScript(), pVariablesFlujo,
 					null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
-			if (resultadoScriptParametros.isError()) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), idPaso, resultadoScriptParametros.getMensajeError());
-			}
 			final ResPersona resPresentador = (ResPersona) resultadoScriptParametros.getResultado();
 			// Validamos que se haya establecido presentador
 			if (StringUtils.isBlank(resPresentador.getNif()) || StringUtils.isBlank(resPresentador.getNombre())) {
@@ -181,10 +173,6 @@ public final class ControladorPasoRegistrarHelper {
 			final RespuestaScript resultadoScriptParametros = scriptFlujo.executeScriptFlujo(
 					TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO, idPaso, scriptRepresentante.getScript(),
 					pVariablesFlujo, null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
-			if (resultadoScriptParametros.isError()) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), idPaso, resultadoScriptParametros.getMensajeError());
-			}
 
 			final ResPersona resRepresentado = (ResPersona) resultadoScriptParametros.getResultado();
 			// Validamos que se haya establecido representado

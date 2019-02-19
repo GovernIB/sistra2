@@ -56,6 +56,9 @@ public final class ValorCampoListaIndexados extends ValorCampo {
 	 *            Descripción
 	 */
 	public void addValorIndexado(final String codigo, final String descripcion) {
+		if (valor == null) {
+			valor = new ArrayList<>();
+		}
 		valor.add(new ValorIndexado(codigo, descripcion));
 	}
 

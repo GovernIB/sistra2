@@ -352,7 +352,6 @@ public abstract class TramitacionController {
 	 * @return url asistente
 	 */
 	protected String getUrlAsistente() {
-		// TODO Ver si cachear
 		return systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL);
 	}
 
@@ -362,7 +361,6 @@ public abstract class TramitacionController {
 	 * @return url asistente
 	 */
 	protected TypeEntorno getEntorno() {
-		// TODO Ver si cachear
 		return TypeEntorno.fromString(systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ENTORNO));
 	}
 

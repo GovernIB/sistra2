@@ -236,6 +236,5 @@ public interface FlujoTramiteDao {
 	 */
 	List<TramitePersistencia> recuperarTramitesPersistencia(FiltroTramitePersistencia pFiltro);
 
-	// TODO PENDIENTE FUNCIONES PERSISTENCIA CARPETA
 
 }

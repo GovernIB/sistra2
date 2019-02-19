@@ -45,6 +45,7 @@ import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
@@ -318,14 +319,24 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_FECHA"))
 				.setValor("2019-02-28");
 		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_HORA")).setValor("23:59");
-		// * Metemos valor selector (primero de valores posibles)
+		// * Metemos valores selectores (primero de valores posibles)
 		final ValorIndexado vci = UtilsFormularioInterno.buscarValoresPosibles(valoresPosibles, "SEL_LISTA")
 				.getValores().get(0);
 		((ValorCampoIndexado) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "SEL_LISTA")).setValor(vci);
+		final ValorIndexado vci2 = UtilsFormularioInterno.buscarValoresPosibles(valoresPosibles, "SEL_MULTIPLE")
+				.getValores().get(0);
+		((ValorCampoListaIndexados) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "SEL_MULTIPLE"))
+				.addValorIndexado(vci2.getValor(), vci2.getDescripcion());
+		final ValorIndexado vci3 = UtilsFormularioInterno.buscarValoresPosibles(valoresPosibles, "SEL_UNICA")
+				.getValores().get(0);
+		((ValorCampoIndexado) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "SEL_UNICA")).setValor(vci3);
+		// * Metemos valor campo validación
+		((ValorCampoSimple) UtilsFormularioInterno.buscarValorCampo(valoresActuales, "TXT_VAL")).setValor("PRUEBA");
 
 		final ResultadoGuardarPagina resGuardar = flujoFormularioInternoService.guardarPagina(idSesionFormulario,
 				valoresActuales, null);
-		Assert.isTrue(resGuardar.getError() == TypeSiNo.NO, "El formulario tiene errores: " + resGuardar.getMensaje());
+		Assert.isTrue(resGuardar.getValidacion() == null,
+				"El formulario tiene mensaje validación: " + resGuardar.getValidacion());
 		Assert.isTrue(resGuardar.getFinalizado() == TypeSiNo.SI, "No se ha finalizado formulario tras guardar página");
 
 		// -- Guardar formulario

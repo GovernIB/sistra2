@@ -302,19 +302,17 @@ public class SistragesMock {
 		// return vt;
 	}
 
-	private static List<String> crearDominios() {
-		final List<String> dominios = new ArrayList<>();
-		dominios.add(ID_DOMINIO);
-		return dominios;
-	}
-
 	public static RDominio crearDominio(final String idDominio) {
 		final RDominio dom1 = new RDominio();
 		dom1.setCachear(true);
 		dom1.setIdentificador(idDominio);
-		dom1.setTipo(RDominio.TIPO_CONSULTA_BD);
-		dom1.setSql("Select 1 from dual");
 		dom1.setTimestamp(generateTimestamp());
+		if (SistragesMock.ID_DOMINIO.equals(idDominio)) {
+			dom1.setTipo(RDominio.TIPO_LISTA_LISTA);
+		} else {
+			dom1.setTipo(RDominio.TIPO_CONSULTA_BD);
+			dom1.setSql("Select 1 from dual");
+		}
 		return dom1;
 	}
 

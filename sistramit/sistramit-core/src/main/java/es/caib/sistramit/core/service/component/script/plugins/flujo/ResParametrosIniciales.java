@@ -3,7 +3,7 @@ package es.caib.sistramit.core.service.component.script.plugins.flujo;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.caib.sistramit.core.service.model.script.ResParametrosInicialesInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResParametrosInicialesInt;
 
 /**
  * Datos para establecer los parámetros iniciales trámite.

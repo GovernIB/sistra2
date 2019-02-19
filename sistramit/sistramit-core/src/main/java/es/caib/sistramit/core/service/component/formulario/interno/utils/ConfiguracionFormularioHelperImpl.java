@@ -17,7 +17,6 @@ import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
-import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
@@ -129,11 +128,6 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(TypeScriptFormulario.SCRIPT_ESTADO,
 					pCampoDef.getIdentificador(), propsCampo.getScriptEstado().getScript(), variablesFormulario,
 					codigosError, pDatosSesion.getDefinicionTramite());
-			if (rs.isError()) {
-				throw new ErrorScriptException(TypeScriptFormulario.SCRIPT_ESTADO.name(),
-						pDatosSesion.getDatosInicioSesion().getIdSesionTramitacion(), pCampoDef.getIdentificador(),
-						rs.getMensajeError());
-			}
 			rse = (ResEstadoCampo) rs.getResultado();
 		}
 		return rse;
@@ -161,11 +155,6 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 					TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA, pDatosSesion.getIdFormulario(),
 					scriptPlantillas.getScript(), variablesFormulario, codigosError,
 					pDatosSesion.getDefinicionTramite());
-			if (rs.isError()) {
-				throw new ErrorConfiguracionException(
-						"Error al configurar dinámicamente fichero plantilla pdf para formulario "
-								+ pDatosSesion.getIdFormulario() + ": " + rs.getMensajeError());
-			}
 			final String idPlantilla = (String) rs.getResultado();
 			for (final RPlantillaFormulario p : definicionFormulario.getFormularioInterno().getPlantillas()) {
 				if (p.getIdentificador().equals(idPlantilla)) {

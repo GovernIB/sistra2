@@ -25,13 +25,12 @@ import es.caib.sistramit.core.api.exception.EncodeException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorPdfFormularioException;
 import es.caib.sistramit.core.api.exception.FormularioFinalizadoException;
-import es.caib.sistramit.core.api.model.comun.types.TypeAviso;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioPersonalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
-import es.caib.sistramit.core.api.model.formulario.MensajeAviso;
+import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
@@ -55,9 +54,9 @@ import es.caib.sistramit.core.service.model.formulario.interno.DatosFormularioIn
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.InicializacionPagina;
-import es.caib.sistramit.core.service.model.formulario.interno.ResultadoValidacion;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FormularioDao;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
@@ -199,57 +198,39 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		calculoDatosFormularioHelper.calcularCamposOcultosPagina(datosSesion);
 
 		// Realizamos validaciones
-		final ResultadoValidacion rv = validarGuardarPagina(datosSesion, accionPersonalizada);
+		final MensajeValidacion mensaje = validarGuardarPagina(datosSesion, accionPersonalizada);
 
-		final ResultadoGuardarPagina res = new ResultadoGuardarPagina();
-		if (rv.isError()) {
-			res.setError(TypeSiNo.SI);
-			res.setMensaje(new MensajeAviso(TypeAviso.ERROR, rv.getMensajeError()));
+		// Devolvemos resultado
+		ResultadoGuardarPagina res = null;
+
+		// Si ha pasado la validacion finalizamos formulario
+		if (UtilsFlujo.isErrorValidacion(mensaje)) {
+			res = new ResultadoGuardarPagina();
+			res.setValidacion(mensaje);
 		} else {
-			// Mensaje aviso (solo podemos avisar de un mensaje de aviso, los juntamos
-			// todos)
-			if (rv.getAvisos() != null && !rv.getAvisos().isEmpty()) {
-				final StringBuilder sbMensajeAviso = new StringBuilder(rv.getAvisos().size() * ConstantesNumero.N200);
-				TypeAviso tipoAviso = TypeAviso.INFO;
-				for (final MensajeAviso ma : rv.getAvisos()) {
-					if ((tipoAviso == TypeAviso.INFO
-							&& (ma.getTipo() == TypeAviso.WARNING || ma.getTipo() == TypeAviso.ERROR))
-							|| (tipoAviso == TypeAviso.WARNING && ma.getTipo() == TypeAviso.ERROR)) {
-						tipoAviso = ma.getTipo();
-					}
-					if (sbMensajeAviso.length() > 0) {
-						sbMensajeAviso.append("\n");
-					}
-					sbMensajeAviso.append(ma.getTexto());
-				}
-				final String msgAviso = sbMensajeAviso.toString();
-				if (StringUtils.isNotBlank(msgAviso)) {
-					res.setMensaje(new MensajeAviso(tipoAviso, msgAviso));
-				}
-			}
 
-			// Finalizacion formulario
 			final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
-			if (paginaDef.isPaginaFinal()) {
-				// Si es la ultima pagina finalizamos formulario.
+
+			// TODO FASE 2: EVALUAR PARA SIGUIENTE VERSION MULTIPAGINA
+			if (!paginaDef.isPaginaFinal()) {
+				throw new ErrorConfiguracionException("No esta desarrollado formulario multipagina");
+			} else {
+				// Si es la ultima pagina finalizamos formulario
 				finalizarFormulario(datosSesion, accionPersonalizada);
 				// Marcamos sesion formulario como finalizada
 				datosSesion.setFinalizada(true);
-				// Devolvemos respuesta indicando que se ha finalizado
+
+				res = new ResultadoGuardarPagina();
+				res.setValidacion(mensaje);
 				res.setFinalizado(TypeSiNo.SI);
-				// Establecemos url retorno
 				res.setUrl(this.configuracionComponent
 						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
 						+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_FORMULARIO_INTERNO + "?idPaso="
 						+ datosSesion.getDatosInicioSesion().getIdPaso() + "&idFormulario="
 						+ datosSesion.getDatosInicioSesion().getIdFormulario() + "&ticket=" + datosSesion.getTicket());
-			} else {
-				// Si no es la ultima pagina pasamos a la siguiente
-				// TODO FASE 2: EVALUAR PARA SIGUIENTE VERSION MULTIPAGINA
-				throw new ErrorConfiguracionException("No esta desarrollado formulario multipagina");
 			}
-		}
 
+		}
 		return res;
 	}
 
@@ -422,9 +403,9 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *            Datos sesion formulario
 	 * @param accionPersonalizada
 	 *            Accion personalizada
-	 * @return Resultado validacion
+	 * @return Mensaje validación en caso de que exista
 	 */
-	private ResultadoValidacion validarGuardarPagina(final DatosSesionFormularioInterno datosSesion,
+	private MensajeValidacion validarGuardarPagina(final DatosSesionFormularioInterno datosSesion,
 			final String accionPersonalizada) {
 		// - Si se ejecuta una accion personalizada comprobamos si debemos validar
 		boolean validar = true;
@@ -439,23 +420,20 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 			}
 		}
 
-		ResultadoValidacion rv = new ResultadoValidacion();
+		MensajeValidacion mensaje = null;
 		if (validar) {
-			// Formato campos (mismas validaciones que en js)
-			rv = validacionesFormularioHelper.validarConfiguracionCampos(datosSesion);
-			// Script validacion campos de formulario
-			// No hacemos caso de los mensajes de aviso de los campos, solo si hay error.
-			// Los avisos se muestran al rellenar campo.
-			if (!rv.isError()) {
-				rv = validacionesFormularioHelper.validarScriptValidacionCampos(datosSesion);
-			}
+			// Formato campos (mismas validaciones que en js). Si no pasa formato se genera
+			// excepción.
+			validacionesFormularioHelper.validarConfiguracionCampos(datosSesion);
+			// Validacion script campos
+			mensaje = validacionesFormularioHelper.validarScriptValidacionCampos(datosSesion);
 			// Script validacion de la pagina
-			if (!rv.isError()) {
-				rv = validacionesFormularioHelper.validarScriptValidacionPagina(datosSesion);
+			if (mensaje == null) {
+				mensaje = validacionesFormularioHelper.validarScriptValidacionPagina(datosSesion);
 			}
 		}
 
-		return rv;
+		return mensaje;
 	}
 
 	/**

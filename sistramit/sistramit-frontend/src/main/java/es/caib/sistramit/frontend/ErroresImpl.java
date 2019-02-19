@@ -93,7 +93,6 @@ public final class ErroresImpl implements Errores {
 
         // Url estandar para excepciones recargar tramite
         if (pTipoError == TypeRespuestaJSON.FATAL) {
-            // TODO Revisar excepciones y urls.
             url = getUrlAsistente() + "/asistente/recargarTramite.html";
         }
 
@@ -191,7 +190,6 @@ public final class ErroresImpl implements Errores {
      * @return url asistente
      */
     private String getUrlAsistente() {
-        // TODO Ver si cachear
         return systemService.obtenerPropiedadConfiguracion(
                 TypePropiedadConfiguracion.SISTRAMIT_URL);
     }

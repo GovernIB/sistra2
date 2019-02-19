@@ -45,7 +45,6 @@ public final class UsuarioAutenticado implements UserDetails {
 	 */
 	@Override
 	public String getPassword() {
-		// TODO PASSWD NULL?
 		return "";
 	}
 

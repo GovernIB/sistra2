@@ -91,10 +91,10 @@ public class ApiExternaRestController {
 
 	@ApiOperation(value = "Obtener ticket de acceso", notes = "Obtener ticket de acceso", response = String.class)
 	@RequestMapping(value = "/ticketAcceso", method = RequestMethod.POST)
-	public String obtenerTicketAcceso(@RequestBody final RInfoTicketAcceso pFiltro) {
+	public String obtenerTicketAcceso(@RequestBody final RInfoTicketAcceso infoTicket) {
 		String ticket = null;
 
-		final InfoTicketAcceso filtro = convierteInfoTicketAcceso(pFiltro);
+		final InfoTicketAcceso filtro = convierteInfoTicketAcceso(infoTicket);
 
 		ticket = restApiExternaService.obtenerTicketAcceso(filtro);
 

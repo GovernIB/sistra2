@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.service.repository.dao;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -124,12 +123,6 @@ public final class FormularioDaoImpl implements FormularioDao {
 		final DatosFinalizacionFormulario df = new DatosFinalizacionFormulario();
 		df.setFechaFinalizacion(hFormulario.getFechaFin());
 		df.setCancelado(hFormulario.isCancelado());
-		try {
-			final String xml = new String(hFormulario.getXml(), "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		df.setXml(hFormulario.getXml());
 		df.setPdf(hFormulario.getPdf());
 		return df;

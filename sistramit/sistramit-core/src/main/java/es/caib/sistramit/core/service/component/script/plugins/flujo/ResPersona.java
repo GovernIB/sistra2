@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.utils.NifCif;
 import es.caib.sistramit.core.service.component.script.ScriptUtils;
-import es.caib.sistramit.core.service.model.script.ResPersonaInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPersonaInt;
 
 /**
  * Establece datos persona.

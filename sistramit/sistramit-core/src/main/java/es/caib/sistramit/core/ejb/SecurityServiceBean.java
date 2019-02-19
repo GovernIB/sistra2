@@ -15,6 +15,7 @@ import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.service.SecurityService;
 
 @Stateless
@@ -78,6 +79,11 @@ public class SecurityServiceBean implements SecurityService {
 	@Override
 	public RetornoPago obtenerTicketPago(String ticket) {
 		return securityService.obtenerTicketPago(ticket);
+	}
+
+	@Override
+	public InfoTicketAcceso obtenerTicketAccesoCDC(String ticket) {
+		return securityService.obtenerTicketAccesoCDC(ticket);
 	}
 
 }

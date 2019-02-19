@@ -14,7 +14,7 @@ public interface PlgValidacionAnexoInt extends PluginScriptPlg {
 	/**
 	 * Id plugin.
 	 */
-	String ID = "PLUGIN_VALIDACIONANEXO";
+	String ID = "PLUGIN_ANEXO";
 
 	/**
 	 * Método para obtener el valor de un campo del pdf anexado.

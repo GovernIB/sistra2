@@ -138,6 +138,9 @@ public final class LoginController {
 		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_GESTOR_PAGO_EXTERNO.equals(puntoEntrada)) {
 			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_PAGO,
 					ConstantesSeguridad.TICKET_PARAM);
+		} else if (ConstantesSeguridad.PUNTOENTRADA_RETORNO_CARPETA.equals(puntoEntrada)) {
+			login = autenticarTicket(savedRequest, ConstantesSeguridad.TICKET_USER_CARPETA,
+					ConstantesSeguridad.TICKET_PARAM);
 		} else {
 			throw new ErrorFrontException("Punto de entrada a la aplicación no válido: " + url);
 		}
@@ -423,7 +426,7 @@ public final class LoginController {
 	@ExceptionHandler({ Exception.class })
 	public ModelAndView handleServiceException(final Exception ex, final HttpServletRequest request) {
 
-		// TODO Auditar ErrorFrontException en login
+		// TODO V0 Auditar ErrorFrontException en login
 		LOGGER.error("Excepcion login", ex);
 
 		// Obtenemos idioma

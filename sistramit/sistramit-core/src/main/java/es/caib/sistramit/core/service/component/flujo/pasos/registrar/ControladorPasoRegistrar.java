@@ -456,8 +456,8 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 			final ScriptExec scriptFlujo = getScriptFlujo();
 			final RespuestaScript rs = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptPermitirRegistrar(
 					pDipa.getIdPaso(), pDefinicionTramite, pVariablesFlujo, scriptFlujo);
-			if (rs.getMensajeError() != null) {
-				throw new RegistroNoPermitidoException(rs.getMensajeError());
+			if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
+				throw new RegistroNoPermitidoException(rs.getMensajeValidacion().getMensaje());
 			}
 		}
 	}

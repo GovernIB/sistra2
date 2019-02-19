@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistramit.core.service.model.flujo.AnexoDinamico;
-import es.caib.sistramit.core.service.model.script.ResAnexosDinamicosInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResAnexosDinamicosInt;
 
 /**
  * Datos para establecer los anexos de forma dinámica.

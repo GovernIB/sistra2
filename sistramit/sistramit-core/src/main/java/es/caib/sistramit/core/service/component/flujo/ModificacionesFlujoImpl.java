@@ -541,13 +541,10 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 			rs = this.scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_PARAMETROS_INICIALES, null, script,
 					variablesFlujo, null, null, codigosError, pDatosSesion.getDefinicionTramite());
 
-			if (rs.isError()) {
-				// En caso de marcarse el error como script no se permite el
-				// acceso al trámite
-				throw new AccesoNoPermitidoException(rs.getMensajeError());
+			if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
+				throw new AccesoNoPermitidoException(rs.getMensajeValidacion().getMensaje());
 			} else {
-				// Si se ha añadido parametros mediante el script los añadimos a
-				// la sesion
+				// Si se ha añadido parametros mediante el script los añadimos a la sesion
 				final ResParametrosIniciales rp = (ResParametrosIniciales) rs.getResultado();
 				for (final String codParam : rp.getParametros().keySet()) {
 					pDatosSesion.getDatosTramite().getParametrosInicio().put(codParam,
@@ -685,26 +682,21 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 					pIdPaso, script, variablesFlujo, null, documentosPaso, codigosError,
 					pDatosSesion.getDefinicionTramite());
 
-			if (rs.isError()) {
-				// En caso de marcarse el error como script implica que existe
-				// error de configuración
-				throw new ErrorConfiguracionException(rs.getMensajeError());
+			idPasoSiguiente = (String) rs.getResultado();
+			if (StringUtils.isBlank(idPasoSiguiente)) {
+				// Si el script no devuelve nada
+				idPasoSiguiente = null;
 			} else {
-				idPasoSiguiente = (String) rs.getResultado();
-				if (StringUtils.isBlank(idPasoSiguiente)) {
-					// Si el script no devuelve nada
-					idPasoSiguiente = null;
-				} else {
-					// Comprobamos que existe el paso siguiente en la definición
-					final RPasoTramitacion defPasoSiguiente = UtilsSTG.devuelveDefinicionPaso(idPasoSiguiente,
-							pDatosSesion.getDefinicionTramite());
-					if (defPasoSiguiente == null) {
-						throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_NAVEGACION_PASO.name(),
-								pDatosSesion.getDatosTramite().getIdSesionTramitacion(), pIdPaso,
-								"El script de navegacion no ha devuelto un id de paso correcto: " + idPasoSiguiente);
-					}
+				// Comprobamos que existe el paso siguiente en la definición
+				final RPasoTramitacion defPasoSiguiente = UtilsSTG.devuelveDefinicionPaso(idPasoSiguiente,
+						pDatosSesion.getDefinicionTramite());
+				if (defPasoSiguiente == null) {
+					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_NAVEGACION_PASO.name(),
+							pDatosSesion.getDatosTramite().getIdSesionTramitacion(), pIdPaso,
+							"El script de navegacion no ha devuelto un id de paso correcto: " + idPasoSiguiente);
 				}
 			}
+
 		}
 		return idPasoSiguiente;
 	}

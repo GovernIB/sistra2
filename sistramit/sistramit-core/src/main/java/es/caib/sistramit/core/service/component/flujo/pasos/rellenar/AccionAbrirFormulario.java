@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
-import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.model.flujo.AbrirFormulario;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.Formulario;
@@ -138,11 +137,6 @@ public final class AccionAbrirFormulario implements AccionPaso {
 			final RespuestaScript rs = scriptFlj.executeScriptFlujo(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO,
 					pFormularioDef.getIdentificador(), pFormularioDef.getScriptParametrosApertura().getScript(),
 					pVariablesFlujo, null, documentosPaso, codigosError, pDefinicionTramite);
-			if (rs.isError()) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_PARAMETROS_FORMULARIO.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), pFormularioDef.getIdentificador(),
-						rs.getMensajeError());
-			}
 			// Establecemos parametros
 			final ResParametrosFormulario rsp = (ResParametrosFormulario) rs.getResultado();
 			paramApertura = rsp.getParametros();
@@ -193,21 +187,13 @@ public final class AccionAbrirFormulario implements AccionPaso {
 		String ticket = null;
 		TypeFormulario tipoFormulario;
 		if (pDefinicionFormulario.isInterno()) {
-			// Controlador de formularios interno
+			// Formulario interno
 			tipoFormulario = TypeFormulario.INTERNO;
 			ticket = controladorGFInterno.iniciarSesion(difi);
-
-			// TODO Borrar simulacion rellenar.
-			urlFormulario = "/sistramitfront/asistente/rf/simularRellenarFormulario.html?idPaso=" + difi.getIdPaso()
-					+ "&idFormulario=" + difi.getIdFormulario();
-
 		} else {
-			// TODO PENDIENTE
-			// difi.setIdGestorFormulariosExterno();
-			// difi.setIdFormularioExterno();
+			// Formulario externo
 			tipoFormulario = TypeFormulario.EXTERNO;
 			urlFormulario = controladorGFExterno.iniciarSesion(difi);
-			throw new RuntimeException("No implementado");
 		}
 
 		final AbrirFormulario af = new AbrirFormulario();

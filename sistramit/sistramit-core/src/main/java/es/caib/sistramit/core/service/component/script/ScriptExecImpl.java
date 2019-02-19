@@ -14,15 +14,17 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.EngineScriptException;
+import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
+import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.component.integracion.PagoComponent;
-import es.caib.sistramit.core.service.component.script.plugins.PlgAviso;
+import es.caib.sistramit.core.service.component.script.plugins.PlgValidacion;
 import es.caib.sistramit.core.service.component.script.plugins.PlgDominios;
 import es.caib.sistramit.core.service.component.script.plugins.PlgError;
 import es.caib.sistramit.core.service.component.script.plugins.PlgLog;
-import es.caib.sistramit.core.service.component.script.plugins.PlgMensajesValidacion;
-import es.caib.sistramit.core.service.component.script.plugins.PlgValidaciones;
+import es.caib.sistramit.core.service.component.script.plugins.PlgMensajes;
+import es.caib.sistramit.core.service.component.script.plugins.PlgUtils;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgFormularios;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgPago;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgSesionTramitacion;
@@ -49,20 +51,20 @@ import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
-import es.caib.sistramit.core.service.model.script.PlgAvisoInt;
+import es.caib.sistramit.core.service.model.script.PlgValidacionInt;
 import es.caib.sistramit.core.service.model.script.PlgErrorInt;
 import es.caib.sistramit.core.service.model.script.PluginScript;
-import es.caib.sistramit.core.service.model.script.ResAnexosDinamicosInt;
-import es.caib.sistramit.core.service.model.script.ResDatosInicialesFormularioInt;
-import es.caib.sistramit.core.service.model.script.ResFirmantesInt;
-import es.caib.sistramit.core.service.model.script.ResModificacionFormulariosInt;
-import es.caib.sistramit.core.service.model.script.ResPagoInt;
-import es.caib.sistramit.core.service.model.script.ResParametrosInicialesInt;
-import es.caib.sistramit.core.service.model.script.ResPersonaInt;
-import es.caib.sistramit.core.service.model.script.ResPersonalizacionTramiteInt;
-import es.caib.sistramit.core.service.model.script.ResPlantillaInfoInt;
-import es.caib.sistramit.core.service.model.script.ResRegistroInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResAnexosDinamicosInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResDatosInicialesFormularioInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResFirmantesInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResModificacionFormulariosInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPagoInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResParametrosFormularioInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResParametrosInicialesInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPersonaInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPersonalizacionTramiteInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPlantillaInfoInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResRegistroInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResVariableFlujoInt;
 import es.caib.sistramit.core.service.model.script.formulario.ResEstadoCampoInt;
 import es.caib.sistramit.core.service.model.script.formulario.ResValorCampoInt;
@@ -193,27 +195,24 @@ public final class ScriptExecImpl implements ScriptExec {
 		final RespuestaScript respuestaScript = new RespuestaScript();
 		// - Evaluamos si se ha marcado con error el script
 		final PlgError plgError = (PlgError) getPlugin(plugins, PlgErrorInt.ID);
-		if (plgError.isExisteError()) {
-			respuestaScript.setError(true);
+		if (plgError != null && plgError.isExisteError()) {
+			String msgError = "Script marcado con error (no se ha establecido mensaje error)";
 			if (StringUtils.isNotBlank(plgError.getCodigoMensajeError())) {
-				respuestaScript.setMensajeError(ScriptUtils.calculaMensajeError(codigosError,
-						plgError.getCodigoMensajeError(), plgError.getParametrosMensajeError()));
+				msgError = ScriptUtils.calculaMensajeError(codigosError, plgError.getCodigoMensajeError(),
+						plgError.getParametrosMensajeError());
 			} else if (StringUtils.isNotBlank(plgError.getTextoMensajeError())) {
-				respuestaScript.setMensajeError(plgError.getTextoMensajeError());
-			} else {
-				respuestaScript.setMensajeError("No se ha establecido mensaje error");
+				msgError = plgError.getTextoMensajeError();
 			}
+			// TODO Generar excepcion con los detalles (script, idsesion,...)
+			throw new ErrorScriptException(msgError);
 		}
 		// - En funcion del plugin vemos si debemos retornar el objeto o bien un
 		// plugin de tipo resultado
 		final Object resScr = obtenerResultadoScript(pTipoScript, plugins, result);
 		respuestaScript.setResultado(resScr);
 
-		// - Si el script es de validacion actualizamos info de aviso (en caso
-		// de que no haya error)
-		if (!plgError.isExisteError()) {
-			generarMensajeAviso(respuestaScript, plugins, codigosError);
-		}
+		// - Si el script es de validacion actualizamos info de aviso
+		respuestaScript.setMensajeValidacion(generarMensajeAviso(plugins, codigosError));
 
 		return respuestaScript;
 	}
@@ -221,23 +220,21 @@ public final class ScriptExecImpl implements ScriptExec {
 	/**
 	 * Genera mensaje aviso a partir del plugin de aviso.
 	 *
-	 * @param respuestaScript
-	 *            Respuesta script
 	 * @param plugins
 	 *            Plugins
 	 * @param codigosError
 	 *            Codigos de error
+	 * @return mensaje
 	 */
-	private void generarMensajeAviso(final RespuestaScript respuestaScript, final List<PluginScript> plugins,
-			final Map<String, String> codigosError) {
-		final PlgAviso plgAviso = (PlgAviso) getPlugin(plugins, PlgAvisoInt.ID);
+	private MensajeValidacion generarMensajeAviso(final List<PluginScript> plugins, final Map<String, String> codigosError) {
+		MensajeValidacion mensaje = null;
+		final PlgValidacion plgAviso = (PlgValidacion) getPlugin(plugins, PlgValidacionInt.ID);
 		if (plgAviso != null && plgAviso.isExisteAviso()) {
-			respuestaScript.setAviso(true);
 			final String textoMensajeAviso = calcularMensaje(plgAviso.getCodigoMensajeAviso(),
 					plgAviso.getParametrosMensajeAviso(), plgAviso.getTextoMensajeAviso(), codigosError);
-			respuestaScript.setMensajeAviso(textoMensajeAviso);
-			respuestaScript.setTipoMensajeAviso(plgAviso.getTipoAviso());
+			mensaje = new MensajeValidacion(plgAviso.getTipoAviso(), textoMensajeAviso);
 		}
+		return mensaje;
 	}
 
 	/**
@@ -354,11 +351,11 @@ public final class ScriptExecImpl implements ScriptExec {
 
 		// Añadimos plugins generales
 		// - Plugin validaciones
-		plugins.add(new PlgValidaciones(pVariablesFlujo.isDebugEnabled()));
+		plugins.add(new PlgUtils(pVariablesFlujo.isDebugEnabled()));
 		// - Plugin error
 		plugins.add(new PlgError());
 		// - Plugin mensajes validacion
-		plugins.add(new PlgMensajesValidacion(pCodigosError));
+		plugins.add(new PlgMensajes(pCodigosError));
 		// - Plugin log
 		plugins.add(new PlgLog(pVariablesFlujo.getIdSesionTramitacion(), pTipoScript, pIdElemento,
 				pVariablesFlujo.isDebugEnabled()));
@@ -379,7 +376,7 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResParametrosIniciales());
 			break;
 		case SCRIPT_PERSONALIZACION_TRAMITE:
-			plugins.add(new PlgAviso());
+			plugins.add(new PlgValidacion());
 			plugins.add(new ResPersonalizacionTramite());
 			break;
 		case SCRIPT_DATOS_INICIALES_FORMULARIO:
@@ -389,7 +386,7 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResParametrosFormulario());
 			break;
 		case SCRIPT_POSTGUARDAR_FORMULARIO:
-			plugins.add(new PlgAviso());
+			plugins.add(new PlgValidacion());
 			plugins.add(new ResModificacionFormularios());
 			break;
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
@@ -421,10 +418,10 @@ public final class ScriptExecImpl implements ScriptExec {
 			final String nomFichero = (String) pVariablesScript.get("nombreFichero");
 			final byte[] datosFichero = (byte[]) pVariablesScript.get("datosFichero");
 			plugins.add(new PlgValidacionAnexo(nomFichero, datosFichero));
-			plugins.add(new PlgAviso());
+			plugins.add(new PlgValidacion());
 			break;
 		case SCRIPT_PERMITIR_REGISTRO:
-			plugins.add(new PlgAviso());
+			plugins.add(new PlgValidacion());
 			break;
 		default:
 			break;
@@ -457,11 +454,11 @@ public final class ScriptExecImpl implements ScriptExec {
 
 		// Añadimos plugins generales
 		// - Plugin validaciones
-		plugins.add(new PlgValidaciones(pVariablesFormulario.isDebugEnabled()));
+		plugins.add(new PlgUtils(pVariablesFormulario.isDebugEnabled()));
 		// - Plugin error
 		plugins.add(new PlgError());
 		// - Plugin mensajes validacion
-		plugins.add(new PlgMensajesValidacion(pCodigosError));
+		plugins.add(new PlgMensajes(pCodigosError));
 		// - Plugin log
 		plugins.add(new PlgLog(pVariablesFormulario.getIdSesionTramitacion(), pTipoScript, pIdElemento,
 				pVariablesFormulario.isDebugEnabled()));
@@ -488,10 +485,10 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResValoresPosibles());
 			break;
 		case SCRIPT_VALIDACION_CAMPO:
-			plugins.add(new PlgAviso());
+			plugins.add(new PlgValidacion());
 			break;
 		case SCRIPT_VALIDACION_PAGINA:
-			plugins.add(new PlgAviso());
+			plugins.add(new PlgValidacion());
 			break;
 		default:
 			break;
@@ -597,12 +594,13 @@ public final class ScriptExecImpl implements ScriptExec {
 		final RespuestaScript respuestaScript = new RespuestaScript();
 		// - Evaluamos si se ha marcado con error el script
 		final PlgError plgError = (PlgError) getPlugin(pPlugins, PlgErrorInt.ID);
-		if (plgError.isExisteError()) {
-			respuestaScript.setError(true);
+		if (plgError != null && plgError.isExisteError()) {
 			final String textoMensajeError = calcularMensaje(plgError.getCodigoMensajeError(),
 					plgError.getParametrosMensajeError(), plgError.getTextoMensajeError(), pCodigosError);
-			respuestaScript.setMensajeError(textoMensajeError);
+			// TODO Generar excepcion con los detalles (script, idsesion,...)
+			throw new ErrorScriptException(textoMensajeError);
 		}
+
 		// - En funcion del plugin vemos si debemos retornar el objeto o bien un
 		// plugin de tipo resultado
 		switch (pTipoScript) {
@@ -622,11 +620,8 @@ public final class ScriptExecImpl implements ScriptExec {
 			break;
 		}
 
-		// - Si el script es de validacion actualizamos info de aviso (en caso
-		// de que no haya error)
-		if (!plgError.isExisteError()) {
-			generarMensajeAviso(respuestaScript, pPlugins, pCodigosError);
-		}
+		// - Si el script es de validacion actualizamos info de aviso
+		respuestaScript.setMensajeValidacion(generarMensajeAviso(pPlugins, pCodigosError));
 
 		return respuestaScript;
 	}

@@ -18,9 +18,9 @@ import java.util.List;
 public final class ResultadoEvaluarCambioCampo implements Serializable {
 
 	/**
-	 * Estado validación.
+	 * Mensaje validación.
 	 */
-	private ValidacionEstado validacion;
+	private MensajeValidacion validacion;
 
 	/**
 	 * Lista de campos para los que se ha modificado su valor.
@@ -97,22 +97,22 @@ public final class ResultadoEvaluarCambioCampo implements Serializable {
 	}
 
 	/**
-	 * Método de acceso a estado.
-	 * 
-	 * @return estado
+	 * Método de acceso a validacion.
+	 *
+	 * @return validacion
 	 */
-	public ValidacionEstado getValidacion() {
+	public MensajeValidacion getValidacion() {
 		return validacion;
 	}
 
 	/**
-	 * Método para establecer estado.
-	 * 
-	 * @param estado
-	 *            estado a establecer
+	 * Método para establecer validacion.
+	 *
+	 * @param validacion
+	 *            validacion a establecer
 	 */
-	public void setValidacion(ValidacionEstado estado) {
-		this.validacion = estado;
+	public void setValidacion(MensajeValidacion validacion) {
+		this.validacion = validacion;
 	}
 
 }

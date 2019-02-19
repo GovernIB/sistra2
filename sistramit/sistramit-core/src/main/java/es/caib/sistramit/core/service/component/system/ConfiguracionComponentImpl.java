@@ -22,6 +22,7 @@ import es.caib.sistrages.rest.api.interna.RPlugin;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
 import es.caib.sistramit.core.api.exception.CargaConfiguracionException;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.PluginErrorException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
@@ -178,8 +179,11 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 					&& !rplg.getPropiedades().getParametros().isEmpty()) {
 				prop = new Properties();
 				for (final RValorParametro parametro : rplg.getPropiedades().getParametros()) {
-					prop.put(prefijoGlobal + rplg.getPrefijoPropiedades() + parametro.getCodigo(),
-							parametro.getValor());
+
+					// Comprobamos si la propiedad hay que cargarla de system
+					final String valorProp = reemplazarPropsSystem(parametro.getValor());
+
+					prop.put(prefijoGlobal + rplg.getPrefijoPropiedades() + parametro.getCodigo(), valorProp);
 				}
 			}
 
@@ -195,6 +199,35 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		} catch (final Exception e) {
 			throw new PluginErrorException("Error al instanciar plugin " + plgTipo + " con classname " + classname, e);
 		}
+	}
+
+	/**
+	 * Reemplaza propiedades con valor ${system.propiedad}
+	 *
+	 * @param valor
+	 *            valores propiedades
+	 * @return valor propiedad
+	 */
+	private String reemplazarPropsSystem(String valor) {
+		final String placeholder = "${system.";
+		String res = valor;
+		if (res != null) {
+			int pos = valor.indexOf(placeholder);
+			while (pos >= 0) {
+				final int pos2 = res.indexOf("}", pos + 1);
+				if (pos2 >= 0) {
+					final String propSystem = res.substring(pos + placeholder.length(), pos2);
+					final String valueSystem = System.getProperty(propSystem);
+					if (valueSystem.indexOf(placeholder) >= 0) {
+						throw new ErrorConfiguracionException(
+								"Valor no válido para propiedad " + propSystem + ": " + valueSystem);
+					}
+					res = StringUtils.replace(res, placeholder + propSystem + "}", valueSystem);
+				}
+				pos = res.indexOf(placeholder);
+			}
+		}
+		return res;
 	}
 
 	/**

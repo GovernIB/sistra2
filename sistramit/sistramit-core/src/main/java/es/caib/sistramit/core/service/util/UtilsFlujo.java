@@ -21,6 +21,7 @@ import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosExceptio
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.comun.types.TypeValidacion;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramiteInfo;
@@ -38,6 +39,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
+import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
@@ -398,10 +400,6 @@ public final class UtilsFlujo {
 		final RespuestaScript rs = scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO,
 				idDocumento, script.getScript(), pVariablesFlujo, null, pFormulariosCompletadosPaso, codigosError,
 				pDefinicionTramite);
-		if (rs.isError()) {
-			throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO.name(),
-					pVariablesFlujo.getIdSesionTramitacion(), idDocumento, rs.getMensajeError());
-		}
 
 		// El resultado nos tiene que devolver:
 		// s (obligatorio)/n(opcional)/d(no tienes que rellenarlo)
@@ -652,4 +650,7 @@ public final class UtilsFlujo {
 		return res;
 	}
 
+	public static boolean isErrorValidacion(MensajeValidacion validacion) {
+		return (validacion != null && validacion.getEstado() == TypeValidacion.ERROR);
+	}
 }

@@ -15,7 +15,7 @@ public final class RUsuarioAutenticadoInfo {
 	/**
 	 * Tipo autenticacion.
 	 */
-	@ApiModelProperty(value = "Id. Sesion Tramitacion")
+	@ApiModelProperty(value = "Tipo autenticación: Autenticado (c) / Anónimo (a).")
 	private String autenticacion;
 
 	/**

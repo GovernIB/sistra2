@@ -329,10 +329,6 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 		final RespuestaScript rs = getScriptFlujo().executeScriptFlujo(TypeScriptFlujo.SCRIPT_DATOS_PAGO,
 				pPagoDef.getIdentificador(), pPagoDef.getScriptPago().getScript(), pVariablesFlujo, null, null,
 				codigosError, pDefinicionTramite);
-		if (rs.isError()) {
-			throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_DATOS_PAGO.name(),
-					pVariablesFlujo.getIdSesionTramitacion(), pPagoDef.getIdentificador(), rs.getMensajeError());
-		}
 		final ResPago resf = (ResPago) rs.getResultado();
 		final DatosCalculoPago dp = resf.getDatosPago();
 		// Establecemos fecha del pago

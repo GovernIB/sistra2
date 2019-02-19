@@ -9,7 +9,7 @@ import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.service.model.flujo.DatosCalculoPago;
-import es.caib.sistramit.core.service.model.script.ResPagoInt;
+import es.caib.sistramit.core.service.model.script.flujo.ResPagoInt;
 
 /**
  * Datos que se pueden establecer en un pago.

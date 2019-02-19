@@ -7,6 +7,7 @@ import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 
 /**
  * Servicio para verificar accesos de seguridad.
@@ -141,5 +142,14 @@ public interface SecurityService {
 	 * @return info usuario
 	 */
 	UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo);
+
+	/**
+	 * Obtiene información ticket acceso CDC.
+	 * 
+	 * @param ticket
+	 *            ticket
+	 * @return información ticket acceso
+	 */
+	InfoTicketAcceso obtenerTicketAccesoCDC(String ticket);
 
 }

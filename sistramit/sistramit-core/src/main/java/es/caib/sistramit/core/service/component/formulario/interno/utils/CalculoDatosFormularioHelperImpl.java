@@ -12,20 +12,15 @@ import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
 import es.caib.sistramit.core.api.exception.CampoFormularioNoExisteException;
-import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPermitidosException;
-import es.caib.sistramit.core.api.model.comun.types.TypeAviso;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
-import es.caib.sistramit.core.api.model.formulario.MensajeAviso;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
-import es.caib.sistramit.core.api.model.formulario.ValidacionEstado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
-import es.caib.sistramit.core.api.model.formulario.types.TypeValidacionEstado;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
@@ -34,6 +29,7 @@ import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormul
 import es.caib.sistramit.core.service.model.formulario.interno.DependenciaCampo;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
@@ -75,7 +71,7 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		calcularDatosPaginaValidacionCampo(datosSesion, idCampo, res);
 
 		// Ejecutamos resto de scripts solo si se pasa el script de validacion
-		if (res.getValidacion().getEstado() == TypeValidacionEstado.CORRECTO) {
+		if (!UtilsFlujo.isErrorValidacion(res.getValidacion())) {
 			// - Script autorrellenable
 			calcularDatosPaginaAutorrellenable(datosSesion, idCampo, res);
 			// - Script valores posibles para selectores
@@ -138,7 +134,6 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		final RPropiedadesCampo propsDef = UtilsFormularioInterno.obtenerPropiedadesCampo(campoDef);
 
 		// Evaluamos script de validacion
-		final ValidacionEstado estado = new ValidacionEstado();
 		if (UtilsSTG.existeScript(propsDef.getScriptValidacion())) {
 			// Ejecutamos script
 			final Map<String, String> codigosError = UtilsSTG
@@ -149,15 +144,9 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 					TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO, campoDef.getIdentificador(),
 					propsDef.getScriptValidacion().getScript(), variablesFormulario, codigosError,
 					datosSesion.getDefinicionTramite());
-			if (rs.isError()) {
-				estado.setEstado(TypeValidacionEstado.ERROR);
-				estado.setMensaje(new MensajeAviso(TypeAviso.ERROR, rs.getMensajeError()));
-			} else if (rs.isAviso()) {
-				estado.setEstado(TypeValidacionEstado.ATENCION);
-				estado.setMensaje(new MensajeAviso(rs.getTipoMensajeAviso(), rs.getMensajeAviso()));
-			}
+			res.setValidacion(rs.getMensajeValidacion());
 		}
-		res.setValidacion(estado);
+
 	}
 
 	/**
@@ -281,19 +270,13 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 		final RespuestaScript rs = scriptFormulario.executeScriptFormulario(TypeScriptFormulario.SCRIPT_AUTORELLENABLE,
 				campoDef.getIdentificador(), propsCampoDef.getScriptAutorrellenable().getScript(), variablesFormulario,
 				codigosError, datosSesion.getDefinicionTramite());
-		if (rs.isError()) {
-			throw new ErrorScriptException(TypeScriptFormulario.SCRIPT_AUTORELLENABLE.name(),
-					datosSesion.getDatosInicioSesion().getIdSesionTramitacion(), campoDef.getIdentificador(),
-					rs.getMensajeError());
-		} else {
-			final ResValorCampo rsv = (ResValorCampo) rs.getResultado();
-			if (rsv.getValorCampo() != null) {
-				vcAuto = rsv.getValorCampo();
-				vcAuto.setId(campoDef.getIdentificador());
-				if (!UtilsFormulario.comprobarCaracteresPermitidos(vcAuto)) {
-					throw new ValorCampoFormularioCaracteresNoPermitidosException(campoDef.getIdentificador(),
-							vcAuto.print());
-				}
+		final ResValorCampo rsv = (ResValorCampo) rs.getResultado();
+		if (rsv.getValorCampo() != null) {
+			vcAuto = rsv.getValorCampo();
+			vcAuto.setId(campoDef.getIdentificador());
+			if (!UtilsFormulario.comprobarCaracteresPermitidos(vcAuto)) {
+				throw new ValorCampoFormularioCaracteresNoPermitidosException(campoDef.getIdentificador(),
+						vcAuto.print());
 			}
 		}
 		return vcAuto;

@@ -17,37 +17,49 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 @SuppressWarnings("serial")
 public final class ErrorScriptException extends ServiceRollbackException {
 
-    @Override
-    public TypeNivelExcepcion getNivel() {
-        // ErrorScriptException FATAL.
-        return TypeNivelExcepcion.FATAL;
-    }
+	@Override
+	public TypeNivelExcepcion getNivel() {
+		// ErrorScriptException FATAL.
+		return TypeNivelExcepcion.FATAL;
+	}
 
-    /**
-     *
-     * Constructor ErrorScriptException.
-     *
-     * @param scriptName
-     *            Nombre script
-     * @param idSesion
-     *            Id sesion
-     * @param idElemento
-     *            Id elemento
-     * @param pMessage
-     *            Mensaje
-     */
-    public ErrorScriptException(final String scriptName, final String idSesion,
-            final String idElemento, final String pMessage) {
-        super(pMessage);
-        final ListaPropiedades detalles = new ListaPropiedades();
-        if (idSesion != null) {
-            detalles.addPropiedad("idSesion", idSesion);
-        }
-        detalles.addPropiedad("script", scriptName);
-        if (StringUtils.isNotEmpty(idElemento)) {
-            detalles.addPropiedad("elemento", idElemento);
-        }
-        this.setDetallesExcepcion(detalles);
-    }
+	/**
+	 *
+	 * Constructor ErrorScriptException.
+	 *
+	 * @param scriptName
+	 *            Nombre script
+	 * @param idSesion
+	 *            Id sesion
+	 * @param idElemento
+	 *            Id elemento
+	 * @param pMessage
+	 *            Mensaje
+	 */
+	public ErrorScriptException(final String scriptName, final String idSesion, final String idElemento,
+			final String pMessage) {
+		super(pMessage);
+		final ListaPropiedades detalles = new ListaPropiedades();
+		if (idSesion != null) {
+			detalles.addPropiedad("idSesion", idSesion);
+		}
+		detalles.addPropiedad("script", scriptName);
+		if (StringUtils.isNotEmpty(idElemento)) {
+			detalles.addPropiedad("elemento", idElemento);
+		}
+		this.setDetallesExcepcion(detalles);
+	}
+
+	/**
+	 *
+	 * Constructor ErrorScriptException.
+	 *
+	 *
+	 * @param pMessage
+	 *            Mensaje
+	 */
+	public ErrorScriptException(final String pMessage) {
+		super(pMessage);
+	}
 
 }
