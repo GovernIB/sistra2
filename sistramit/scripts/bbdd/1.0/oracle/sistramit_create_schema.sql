@@ -1,4 +1,3 @@
-
 create sequence STT_DOCPTR_SEQ;
 
 create sequence STT_FICPTR_SEQ;
@@ -16,6 +15,8 @@ create sequence STT_PAGEXT_SEQ;
 create sequence STT_PASTRP_SEQ;
 
 create sequence STT_SESION_SEQ;
+
+create sequence STT_TCKCDC_SEQ;
 
 create sequence STT_TIPEVE_SEQ;
 
@@ -45,6 +46,7 @@ create table STT_DOCPTR
    DTP_PAGEST           VARCHAR2(1 CHAR),
    DTP_PAGERR           VARCHAR2(100 CHAR),
    DTP_PAGERM           VARCHAR2(4000 CHAR),
+   DTP_REGRES           VARCHAR2(1 CHAR),
    DTP_REGNUM           VARCHAR2(500 CHAR),
    DTP_REGFEC           DATE,
    DTP_REGPRE           VARCHAR2(1 CHAR)
@@ -69,7 +71,7 @@ comment on column STT_DOCPTR.DTP_DOCTIP is
 'Tipo documento: Formulario (f), Pago (p), Anexo (a), Registro (r),  Vble flujo (v), Justificante registro (j)';
 
 comment on column STT_DOCPTR.DTP_ESTADO is
-'Estado documento:  CORRECTO (S) / INCORRECTO (N)  / VACIO (V)';
+'Estado documento:  CORRECTO (c) / INCORRECTO (i)  / VACIO (v)';
 
 comment on column STT_DOCPTR.DTP_FICHERO is
 'Fichero';
@@ -109,6 +111,9 @@ comment on column STT_DOCPTR.DTP_PAGERR is
 
 comment on column STT_DOCPTR.DTP_PAGERM is
 'En caso de ser un pago indica mensaje error pasarela';
+
+comment on column STT_DOCPTR.DTP_REGRES is
+'En caso de ser un registro indica resultado registro (reintentar (r), realizado(s))';
 
 comment on column STT_DOCPTR.DTP_REGNUM is
 'En caso de ser un registro indica numero registro';
@@ -299,12 +304,14 @@ create table STT_FORMUL
    SFR_IDTRAM           VARCHAR2(20 CHAR),
    SFR_VERSIO           NUMBER(2),
    SFR_RELESE           NUMBER(8),
+   SFR_IDIOMA 			VARCHAR2(2) 		NOT NULL,
+   SFR_TITPRO 			VARCHAR2(2000) 		NOT NULL,
    SFR_IDPASO           VARCHAR2(20 CHAR)    not null,
    SFR_IDFORM           VARCHAR2(20 CHAR)    not null,
+   SFR_INTERN           NUMBER(1)            default 0 not null,
    SFR_DATFOR           BLOB,
    SFR_INFAUT           CLOB,
    SFR_PARFOR           CLOB,
-   SFR_INFPRO           CLOB,
    SFR_FECFIN           DATE,
    SFR_CANCEL           NUMBER(1)            default 0,
    SFR_XML              BLOB,
@@ -355,11 +362,19 @@ comment on column STT_FORMUL.SFR_VERSIO is
 comment on column STT_FORMUL.SFR_RELESE is
 'Release tramite';
 
+comment on column STT_FORMUL.SFR_IDIOMA is
+'Idioma';
+comment on column STT_FORMUL.SFR_TITPRO is
+'Título procedimiento';
+
 comment on column STT_FORMUL.SFR_IDPASO is
 'Identificador paso';
 
 comment on column STT_FORMUL.SFR_IDFORM is
 'Identificador formulario';
+
+comment on column STT_FORMUL.SFR_INTERN is
+'Indica si el formulario es interno';
 
 comment on column STT_FORMUL.SFR_DATFOR is
 'Datos actuales';
@@ -369,9 +384,6 @@ comment on column STT_FORMUL.SFR_INFAUT is
 
 comment on column STT_FORMUL.SFR_PARFOR is
 'Parametros formulario (serializado)';
-
-comment on column STT_FORMUL.SFR_INFPRO is
-'Información procedimiento (serializado)';
 
 comment on column STT_FORMUL.SFR_FECFIN is
 'Fecha de finalización formulario';
@@ -449,7 +461,7 @@ create table STT_LOGINT
    LOG_CODIGO           NUMBER(19)           not null,
    LOG_EVETIP           VARCHAR2(20 CHAR)    not null,
    LOG_EVEFEC           TIMESTAMP            not null,
-   LOG_EVEDES           VARCHAR2(1000 CHAR)  not null,
+   LOG_EVEDES           VARCHAR2(1000 CHAR),
    LOG_EVERES           VARCHAR2(50 CHAR),
    LOG_EVEDET           VARCHAR2(4000 CHAR),
    LOG_CODSES           NUMBER(19),
@@ -528,7 +540,6 @@ create table STT_PAGEXT
    PAE_IDESTR           VARCHAR2(50 CHAR)    not null,
    PAE_IDPASO           VARCHAR2(20 CHAR)    not null,
    PAE_IDPAGO           VARCHAR2(20 CHAR)    not null,
-   PAE_NIVAUT           VARCHAR2(1 CHAR)     not null,
    PAE_INFAUT           BLOB,
    PAE_FECFIN           DATE,
    PAE_TCKUSA           NUMBER(1)            default 0
@@ -548,7 +559,7 @@ comment on column STT_PAGEXT.PAE_TICKET is
 'Ticket de acceso';
 
 comment on column STT_PAGEXT.PAE_FECINI is
-'Fecha de apertura del formulario';
+'Fecha inicio pago';
 
 comment on column STT_PAGEXT.PAE_IDESTR is
 'Identificador sesión tramitación';
@@ -558,9 +569,6 @@ comment on column STT_PAGEXT.PAE_IDPASO is
 
 comment on column STT_PAGEXT.PAE_IDPAGO is
 'Identificador pago';
-
-comment on column STT_PAGEXT.PAE_NIVAUT is
-'Nivel autenticación para el retorno';
 
 comment on column STT_PAGEXT.PAE_INFAUT is
 'Informacion de autenticacion serializada para el retorno';
@@ -712,6 +720,58 @@ create unique index STT_SESION_UK on STT_SESION (
 );
 
 /*==============================================================*/
+/* Table: STT_TCKCDC                                            */
+/*==============================================================*/
+create table STT_TCKCDC 
+(
+   TCC_CODIGO           NUMBER(19)           not null,
+   TCC_TICKET           VARCHAR2(200 CHAR)   not null,
+   TCC_FECINI           DATE                 not null,
+   TCC_IDESTR           VARCHAR2(50 CHAR)    not null,
+   TCC_INFAUT           BLOB,
+   TCC_FECFIN           DATE,
+   TCC_TCKUSA           NUMBER(1)            default 0
+)
+TABLESPACE SISTRAMIT
+   LOB (TCC_INFAUT) STORE AS STT_TCKCDC_INFAUT_LOB
+	 (TABLESPACE SISTRAMIT_LOB
+	 INDEX STT_TCKCDC_INFAUT_LOB_I);
+
+comment on table STT_TCKCDC is
+'Ticket acceso carpeta ciudadana';
+
+comment on column STT_TCKCDC.TCC_CODIGO is
+'Codigo interno';
+
+comment on column STT_TCKCDC.TCC_TICKET is
+'Ticket de acceso';
+
+comment on column STT_TCKCDC.TCC_FECINI is
+'Fecha inicio pago';
+
+comment on column STT_TCKCDC.TCC_IDESTR is
+'Identificador sesión tramitación';
+
+comment on column STT_TCKCDC.TCC_INFAUT is
+'Informacion de autenticacion serializada para el retorno';
+
+comment on column STT_TCKCDC.TCC_FECFIN is
+'Indica fecha fin sesion pago';
+
+comment on column STT_TCKCDC.TCC_TCKUSA is
+'Indica si el ticket se ha usado para retornar';
+
+alter table STT_TCKCDC
+   add constraint STT_TCKCDC_PK primary key (TCC_CODIGO);
+
+/*==============================================================*/
+/* Index: STT_TCKCDC_UK                                         */
+/*==============================================================*/
+create unique index STT_TCKCDC_UK on STT_TCKCDC (
+   TCC_TICKET ASC
+);
+
+/*==============================================================*/
 /* Table: STT_TRAPER                                            */
 /*==============================================================*/
 create table STT_TRAPER 
@@ -723,6 +783,7 @@ create table STT_TRAPER
    TRP_DESTRA           VARCHAR2(1000 CHAR)  not null,
    TRP_IDETCP           VARCHAR2(20 CHAR)    not null,
    TRP_IDEPCP           VARCHAR2(20 CHAR)    not null,
+   TRP_IDEARE           VARCHAR2(20 CHAR),
    TRP_PROSIA           VARCHAR2(20 CHAR)    not null,
    TRP_ESTADO           VARCHAR2(1 CHAR)     not null,
    TRP_NIVAUT           VARCHAR2(1 CHAR)     not null,
@@ -774,14 +835,15 @@ comment on column STT_TRAPER.TRP_IDETCP is
 comment on column STT_TRAPER.TRP_IDEPCP is
 'Codigo procedimiento asociado del Catalogo de Procedimientos';
 
+comment on column STT_TRAPER.TRP_IDEARE is
+'Código área';
+
 comment on column STT_TRAPER.TRP_PROSIA is
 'Código SIA procedimiento';
 
 comment on column STT_TRAPER.TRP_ESTADO is
 'Estado trámite: 
     RELLENANDO("r"): Trámite en fase de rellenado
-    PENDIENTE_ENVIAR_BANDEJAFIRMA("e"): Indica que el trámite debe enviarse a la bandeja de firma
-    ENVIADO_BANDEJAFIRMA("b"): Indica que el trámite no puede modificarse ya que se ha enviado a bandeja de firma
     FINALIZADO("f"): Indica que el trámite se ha finalizado
 
 Es calculado en función de los pasos.';
