@@ -30,7 +30,7 @@ public interface TicketCDCDao {
 
 	/**
 	 * Consume ticket acceso.
-	 * 
+	 *
 	 * @param ticket
 	 *            Ticket
 	 */

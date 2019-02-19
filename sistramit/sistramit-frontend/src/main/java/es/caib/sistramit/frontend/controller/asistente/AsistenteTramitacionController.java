@@ -60,6 +60,7 @@ import es.caib.sistramit.frontend.security.UsuarioAutenticado;
 @RequestMapping(value = "/asistente")
 public class AsistenteTramitacionController extends TramitacionController {
 
+
 	/** Sesion. */
 	@Autowired
 	private SesionHttp sesionHttp;

@@ -39,6 +39,7 @@ import es.caib.sistramit.frontend.model.ErrorGeneral;
 import es.caib.sistramit.frontend.model.LoginTicketInfo;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 
+
 /**
  * Controlador de login.
  *
