@@ -82,6 +82,11 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("formateadorFormularioDialog");
+    }
+
 	/**
 	 * Obtiene el valor de id.
 	 *

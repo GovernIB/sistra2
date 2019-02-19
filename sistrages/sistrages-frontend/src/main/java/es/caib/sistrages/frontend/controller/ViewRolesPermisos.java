@@ -120,6 +120,13 @@ public class ViewRolesPermisos extends ViewControllerBase {
 	}
 
 	/**
+	 * Abrir ayuda
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("rolesPermisos");
+	}
+
+	/**
 	 * Retorno dialogo.
 	 *
 	 * @param event

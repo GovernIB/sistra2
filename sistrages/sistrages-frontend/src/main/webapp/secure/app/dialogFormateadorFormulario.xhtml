@@ -52,6 +52,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFormateadorFormulario.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFormateadorFormulario.cancelar()}" process="@this"  rendered="#{dialogFormateadorFormulario.isConsulta()}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogFormateadorFormulario.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

@@ -146,6 +146,13 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
+	 * Abrir ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("formularioSoporte");
+	}
+
+	/**
 	 * @return the data
 	 */
 	public List<FormularioSoporte> getListaDatos() {

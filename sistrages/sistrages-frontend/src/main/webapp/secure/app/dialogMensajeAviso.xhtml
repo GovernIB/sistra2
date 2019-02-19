@@ -75,6 +75,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogMensajeAviso.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this" rendered="#{dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogMensajeAviso.cancelar()}" process="@this"  rendered="#{dialogMensajeAviso.isConsulta()}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogMensajeAviso.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

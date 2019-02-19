@@ -315,6 +315,11 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("fuenteDatosDialog");
+    }
+
 	/**
 	 * Obtiene el valor de permiteAlta.
 	 *

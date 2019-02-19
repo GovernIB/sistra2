@@ -40,7 +40,7 @@
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnRefrescarCache" value="#{msg['botones.refrescarCache']}" icon="fa fa-retweet" actionListener="#{viewMensajesAvisoEntidad.refrescarCache()}" process="@this" update="growl dataTable" rendered="#{viewMensajesAvisoEntidad.permiteEditar or viewMensajesAvisoEntidad.permiteAlta}"/>
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewMensajesAvisoEntidad.ayudar()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewMensajesAvisoEntidad.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 

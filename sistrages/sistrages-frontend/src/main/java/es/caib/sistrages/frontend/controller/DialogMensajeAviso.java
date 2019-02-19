@@ -212,6 +212,11 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("mensajeAvisoDialog");
+    }
+
 	/**
 	 * Retorno dialogo de los botones de propiedades.
 	 *

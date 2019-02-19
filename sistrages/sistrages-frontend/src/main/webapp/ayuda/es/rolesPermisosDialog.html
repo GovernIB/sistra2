@@ -1,0 +1,35 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENTO ROLES Y PERMISOS</h1>
+<p>
+	En la pantalla de '<i>Mantenimento de roles y permisos</i>' puede mantener los datos relativos a un rol/usuario.<br>
+	Los campos obligatorios se presentan con un asterisco *
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Tipo:</span> permite indicar si se define un rol ("Rol") o un usuario ("Usuario").</li>
+		<li><span class="nombreCampo">Rol/Principal:</span> este campo está relacionado con el campo "Tipo". Si se define un tipo "Rol", deberá contener el código del rol, y si por el contrario se define tipo "Usuario", deberá contener el código de usuario al que se otorgan los permisos.</li>
+		<li><span class="nombreCampo">Área:</span> área sobre la que aplicarán los permisos definidos.</li>
+		<li><span class="nombreCampo">Descripción:</span> texto descriptivo de los permisos definidos.</li>
+		<li><span class="nombreCampo">Permisos:</span> permite seleccionar los permisos que se otorgan. Los permisos disponibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Administrador:</span> permite realizar acciones de mantenimiento sobre elementos comunes del área. También permitirá promocionar entre entornos y modificar las propiedades de acceso en los entornos de Preproducción y Producción.</li>
+		<li><span class="boton">Desarrollador:</span> permite desarrollar trámites en el entorno de desarrollo para dicha área.</li>
+		<li><span class="boton">Consulta:</span> permite consultar los elementos del área.</li>
+		<li><span class="boton">Helpdesk:</span> permite realizar consulta desde el módulo SISTRAHELP sobre los eventos de trámites del área.</li>
+		</ul>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Guardar</span>: Cierra la pantalla guardando los cambios.</li>
+		<li><span class="boton">Cancelar</span>: Cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+</body>
+</html>

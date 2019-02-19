@@ -118,6 +118,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogFuente.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogFuente.permiteEdicion}" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogFuente.cancelar()}" process="@this" rendered="#{dialogFuente.alta or dialogFuente.edicion}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFuente.cancelar()}" process="@this"  rendered="#{dialogFuente.consulta}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogFuente.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

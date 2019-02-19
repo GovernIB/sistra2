@@ -51,7 +51,7 @@
 		        			<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono" disabled="#{!viewFuentes.filaSeleccionada}"/>
 		        		</p:commandButton>
 		        		<p:commandButton id="btnDatos" value="#{msg['botones.datos']}" icon="fa fa-table" actionListener="#{viewFuentes.datos()}" process="@this" update="growl dataTable form:panelBotones" rendered="#{viewFuentes.getPermiteEditar()}" />
-		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFuentes.ayudar()}" process="@this" update="growl"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewFuentes.ayuda()}" process="@this" update="growl"/>
 		        	</h:panelGrid>
 		        </f:facet>
 

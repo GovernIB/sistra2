@@ -106,6 +106,7 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogFuenteDatos.aceptar()}" process="@form" update="@form growlDialog" styleClass="boton-azul"  />
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogFuenteDatos.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

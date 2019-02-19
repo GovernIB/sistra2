@@ -155,6 +155,11 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("rolesPermisosDialog");
+    }
+
 	/**
 	 * Valida roles.
 	 *

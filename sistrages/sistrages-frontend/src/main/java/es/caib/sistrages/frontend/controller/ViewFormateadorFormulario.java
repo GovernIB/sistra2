@@ -116,6 +116,13 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	}
 
 	/**
+	 * Abrir ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("formateadorFormulario");
+	}
+
+	/**
 	 * Dbl click.
 	 */
 	public void rcDobleClick() {

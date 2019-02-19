@@ -133,6 +133,13 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	}
 
 	/**
+	 * Abrir ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("mensajesAvisoEntidad");
+	}
+
+	/**
 	 * Obtiene el valor de filaSeleccionada.
 	 *
 	 * @return el valor de filaSeleccionada

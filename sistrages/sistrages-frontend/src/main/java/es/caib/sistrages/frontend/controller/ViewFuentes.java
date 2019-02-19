@@ -192,6 +192,13 @@ public class ViewFuentes extends ViewControllerBase {
 	}
 
 	/**
+	 * Abrir ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("fuentes");
+	}
+
+	/**
 	 * Retorno dialogo.
 	 *
 	 * @param event

@@ -130,6 +130,13 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		}
 	}
 
+	/**
+	 * Abrir ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("configuracionEntidad");
+	}
+
 	private void explorarLiteral(final Literal pLiteral) {
 		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
 		if (getPermiteEditar()) {
