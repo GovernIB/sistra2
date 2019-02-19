@@ -13,7 +13,7 @@
 
       <security:intercept-url pattern="/asistente/**" access="isAuthenticated()"/>
 
-		<!--  TODO: Hablitar CSRF. Problema POST componentes externos: login, etc. -->
+		<!--  // TODO V0: Habilitar CSRF. Problema POST componentes externos: login, etc. -->
 	 	<security:csrf disabled="true" />
 
 		<security:headers>

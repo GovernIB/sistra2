@@ -264,6 +264,9 @@
 .imc-form .imc-el-error textarea:focus,
 .imc-form .imc-el-error a.imc-select:focus { border-color: #cc073c; }
 
+
+
+
 .imc-form .imc-el-obligatori { color: #000; }
 .imc-form .imc-el-obligatori .imc-el-etiqueta label::before {
 	content: "";
@@ -277,6 +280,52 @@
 	background: transparent url(imgs/icones/ico_form_obligatori_4dba79.svg) no-repeat top left / auto .7em;
 }
 .imc-form span.imc-obligatori { color: #c00; padding-right: .3em; }
+
+
+.imc-form *[data-obligatori="s"] .imc-el-etiqueta label,
+.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label,
+.imc-form *[data-obligatori="s"] legend { color: #000; }
+
+.imc-form *[data-obligatori="s"] .imc-el-etiqueta label::before,
+.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::after,
+.imc-form *[data-obligatori="s"] legend::before {
+	content: "";
+	display: inline-block;
+	position: relative;
+	top: -.2em;
+	vertical-align: middle;
+	width: .7em;
+	height: .7em;
+	margin-right: .3em;
+	background: transparent url(imgs/icones/ico_form_obligatori_4dba79.svg) no-repeat top left / auto .7em;
+}
+
+.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::after { margin-left: .3em; margin-right: 0; }
+
+
+.imc-form input[type=text][readonly],
+.imc-form input[type=number][readonly],
+.imc-form input[type=date][readonly],
+.imc-form input[type=time][readonly],
+.imc-form input[type=email][readonly],
+.imc-form textarea[readonly],
+.imc-form a.imc-select.imc-select-lectura { background-color: #f2f2f2; border-color: #cecdcd; }
+
+
+
+.imc-form input[type=text][disabled],
+.imc-form input[type=number][disabled],
+.imc-form input[type=date][disabled],
+.imc-form input[type=time][disabled],
+.imc-form input[type=email][disabled],
+.imc-form textarea[disabled],
+.imc-form a.imc-select.imc-select-deshabilitat { color: #999; background-color: #cecdcd; border-color: #cecdcd; }
+
+
+
+.imc-form a.imc-select.imc-select-deshabilitat span { color: #999; }
+
+
 
 .imc-form input.imc-data-lectura,
 .imc-form input.imc-hora-lectura { display: none; }

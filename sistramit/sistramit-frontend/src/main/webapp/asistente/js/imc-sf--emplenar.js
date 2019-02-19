@@ -194,7 +194,7 @@ $.fn.appEmplenaFormulari = function(options) {
 
 							envia_ajax = false;
 
-							consola("Formulari: error des de JSON");
+							consola("Formulari (carrega ticket): error des de JSON");
 							
 							imc_contenidor
 								.errors({ estat: data.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: data.url });
@@ -208,7 +208,7 @@ $.fn.appEmplenaFormulari = function(options) {
 							return false;
 						}
 						
-						consola("Formulari: error des de FAIL");
+						consola("Formulari (carrega ticket): error fail");
 						
 						imc_contenidor
 							.errors({ estat: "fail" });
@@ -228,15 +228,33 @@ $.fn.appEmplenaFormulari = function(options) {
 
 						var json_form = jsonForm;
 
-						imc_formulari_finestra
-							.find(".imc--contingut:first")
-								.html( json_form.datos.html );
+						if (json_form.estado === "SUCCESS" || json_form.estado === "WARNING") {
 
-						JSON_FORMULARI = json_form;
-						
-						// carregat
+							imc_formulari_finestra
+								.find(".imc--contingut:first")
+									.html( json_form.datos.html );
 
-						carregaFormArxius();
+							JSON_FORMULARI = json_form;
+							
+							// carregat
+
+							carregaFormArxius();
+
+							if (json_form.estado === "WARNING") {
+
+								imc_missatge
+									.appMissatge({ accio: "warning", titol: json_form.mensaje.titulo, text: json_form.mensaje.texto });
+
+							}
+
+						} else {
+
+							consola("Formulari (carrega dades): error des de JSON");
+							
+							imc_contenidor
+								.errors({ estat: json_form.estado, titol: json_form.mensaje.titulo, text: json_form.mensaje.texto, url: json_form.url });
+
+						}
 
 					}
 
@@ -244,7 +262,7 @@ $.fn.appEmplenaFormulari = function(options) {
 
 					function() {
 
-						consola("Formulari: error des de carregaFormArxius (FAIL)");
+						consola("Formulari (carrega dades): error fail");
 
 						imc_contenidor
 							.errors({ estat: "fail" });

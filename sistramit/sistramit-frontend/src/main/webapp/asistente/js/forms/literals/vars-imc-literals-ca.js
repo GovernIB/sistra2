@@ -6,10 +6,10 @@ var txtAjuda = "Ajuda"
 	,txtActiva = "Activa"
 	,txtDesactiva = "Desactiva"
 	,txtEnviantDades = "Enviant dades"
-	,txtEspere = "Espere una mica, si un plau"
+	,txtEspere = "Esperau una mica, si us plau"
 	,txtSenseResultats = "No hi ha resultats"
 	,txtCercantDades = "Cercant dades..."
 	,txtErrorAjax = "Ha ocorregut un error i no podem recuperar les dades"
 	,txtFinalitza = "Finalitza"
-	,txtEixir = "Eixir";
+	,txtEixir = "Sortir";
 

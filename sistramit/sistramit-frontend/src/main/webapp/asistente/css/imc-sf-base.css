@@ -341,9 +341,11 @@ aside address { display: inline; }
 .imc-missatge[data-accio='esborra'] button[data-tipus="cancela"] { display: inline-block; }
 
 
-.imc-missatge[data-accio='informa'] .imc--text { background: #fff url(imgs/icones/ico_info.svg) no-repeat 1.5em 1em / auto 3em; }
+.imc-missatge[data-accio='informa'] .imc--text,
+.imc-missatge[data-accio='info'] .imc--text { background: #fff url(imgs/icones/ico_info.svg) no-repeat 1.5em 1em / auto 3em; }
 
-.imc-missatge[data-accio='informa'] button[data-tipus="tanca"] { display: inline-block; }
+.imc-missatge[data-accio='informa'] button[data-tipus="tanca"],
+.imc-missatge[data-accio='info'] button[data-tipus="tanca"] { display: inline-block; }
 
 
 .imc-missatge[data-accio='alerta'] .imc--text { background: #fff url(imgs/icones/ico_alerta.svg) no-repeat 1.5em 1em / auto 3em; }
