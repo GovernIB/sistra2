@@ -20,6 +20,7 @@ import es.caib.sistramit.core.service.repository.model.HTicketCDC;
 /**
  * Proceso DAO.
  */
+
 @Repository("ticketCDCDao")
 public class TicketCDCDaoImpl implements TicketCDCDao {
 

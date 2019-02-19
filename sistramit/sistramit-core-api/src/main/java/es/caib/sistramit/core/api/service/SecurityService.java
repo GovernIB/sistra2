@@ -15,6 +15,7 @@ import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
  * @author Indra
  *
  */
+
 public interface SecurityService {
 
 	/**
@@ -145,7 +146,7 @@ public interface SecurityService {
 
 	/**
 	 * Obtiene información ticket acceso CDC.
-	 * 
+	 *
 	 * @param ticket
 	 *            ticket
 	 * @return información ticket acceso
