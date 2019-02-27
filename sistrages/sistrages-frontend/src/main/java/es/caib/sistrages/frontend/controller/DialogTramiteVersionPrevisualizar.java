@@ -85,6 +85,23 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Tramites. **/
 	private List<DefinicionTramiteCP> tramites;
 
+	public String getText(final DefinicionTramiteCP tramite) {
+
+		final StringBuilder texto = new StringBuilder();
+		if (!tramite.isVigente()) {
+			texto.append("*");
+		}
+		texto.append(tramite.getIdentificador());
+		texto.append(" - ");
+		texto.append(tramite.getDescripcion());
+		String respuesta = texto.toString();
+		if (texto.toString().length() >= 100) {
+			respuesta = respuesta.substring(0, 100);
+		}
+		return respuesta;
+
+	}
+
 	/**
 	 * Inicialización.
 	 *
@@ -114,15 +131,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		iplugin = (ICatalogoProcedimientosPlugin) componenteService
 				.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 
-		// tramites = iplugin.obtenerTramites(tramite.getIdentificador(),
-		// this.data.getNumeroVersion(), idioma);
-
-		tramites = new ArrayList<>();
-
-		// TODO PARA QUITAR
-		final DefinicionTramiteCP tramiteDef = iplugin.obtenerDefinicionTramite("3270471", "ca");
-		if (tramiteDef != null)
-			tramites.add(tramiteDef);
+		tramites = iplugin.obtenerTramites(tramite.getIdentificador(), this.data.getNumeroVersion(), idioma);
 
 	}
 

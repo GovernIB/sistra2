@@ -37,15 +37,20 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w15, w75, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel   for="idioma" value="#{msg['dialogTramiteVersionPrevisualizar.idioma']}" />
-                	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}" required="true">
+                	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}">
 						<f:selectItems value="#{dialogTramiteVersionPrevisualizar.idiomas}" var="tipo" itemLabel="#{msg['' += tipo]}" itemValue="#{tipo.toString()}" />
 					</p:selectOneMenu >
 					<p:outputLabel   value="" />
 
 					<p:outputLabel for="procedimiento" value="#{msg['dialogTramiteVersionPrevisualizar.tramite']}" />
-					<p:selectOneMenu id="procedimiento"  value="#{dialogTramiteVersionPrevisualizar.tramiteSeleccionado}" required="true" style="width:400px">
-						<f:selectItems value="#{dialogTramiteVersionPrevisualizar.tramites}" var="tramite" itemLabel="#{tramite.procedimiento.identificador} - #{tramite.procedimiento.descripcion}" itemValue="#{tramite.identificador}" />
-					</p:selectOneMenu >
+					<p:column>
+						<p:selectOneMenu id="procedimiento"  value="#{dialogTramiteVersionPrevisualizar.tramiteSeleccionado}" style="width:400px;" styleClass="margin-top-10">
+							<f:selectItems value="#{dialogTramiteVersionPrevisualizar.tramites}" var="tramite" itemLabel="#{dialogTramiteVersionPrevisualizar.getText(tramite)}" itemValue="#{tramite.identificador}" />
+						</p:selectOneMenu >
+						<p style="line-height:20px; padding:0px; margin:0px;">
+							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoVigente']}" />
+						</p>
+					</p:column>
 					<p:outputLabel   value=""  />
 
 					<p:outputLabel   value="#{msg['dialogTramiteVersionPrevisualizar.parametros']}" />
