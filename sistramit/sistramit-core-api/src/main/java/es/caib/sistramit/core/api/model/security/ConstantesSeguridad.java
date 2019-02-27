@@ -80,6 +80,10 @@ public final class ConstantesSeguridad {
 	 * Parámetro para autenticación con ticket.
 	 */
 	public static final String TICKET_PARAM = "ticket";
+	/**
+	 * Parámetro de acceso para carga de trámite anónimo.
+	 */
+	public static final String ANONIMO_PARAM_IDSESION = "idSesionTramitacion";
 
 	/**
 	 * Constructor.

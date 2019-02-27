@@ -39,7 +39,6 @@ import es.caib.sistramit.frontend.model.ErrorGeneral;
 import es.caib.sistramit.frontend.model.LoginTicketInfo;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 
-
 /**
  * Controlador de login.
  *
@@ -346,7 +345,7 @@ public final class LoginController {
 	private ModelAndView autenticarFormLoginPersistenteAnonimo(final SavedRequest savedRequest) {
 
 		// Obtenemos parametros inicio tramite
-		final String idSesionTramitacion = getParamValue(savedRequest, "idSesionTramitacion");
+		final String idSesionTramitacion = getParamValue(savedRequest, ConstantesSeguridad.ANONIMO_PARAM_IDSESION);
 
 		// Obtenemos info login tramite
 		final InfoLoginTramite infoLoginTramite = securityService

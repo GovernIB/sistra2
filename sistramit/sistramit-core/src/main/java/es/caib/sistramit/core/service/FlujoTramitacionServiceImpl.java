@@ -152,6 +152,13 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 		}
 	}
 
+	@Override
+	public byte[] obtenerClavePdf(final String idSesionTramitacion) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		final byte[] pdf = ft.obtenerClavePdf();
+		return pdf;
+	}
+
 	// --------------------------------------------------------------
 	// ---- FUNCIONES INTERNAS
 	// --------------------------------------------------------------

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -229,8 +230,7 @@ public final class PasoAnexarController extends TramitacionController {
 		// Invocamos al flujo para borrar documento
 		final ParametrosAccionPaso parametros = new ParametrosAccionPaso();
 		parametros.addParametroEntrada(PARAM_ID_ANEXO, idAnexo);
-		// TODO V0 QUITAR CUANDO SE ARREGLE JS
-		if (!"???".equals(instancia)) {
+		if (StringUtils.isNotBlank(instancia)) {
 			parametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
 		}
 		getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso, TypeAccionPasoAnexar.BORRAR_ANEXO,

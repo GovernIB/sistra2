@@ -61,5 +61,13 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	void envioFormularioSoporte(String nif, String nombre, String telefono, String email, String problemaTipo,
 			String problemaDesc, AnexoFichero anexo);
 
+	/**
+	 * Obtiene un pdf con la clave.
+	 *
+	 *
+	 * @return pdf
+	 *
+	 */
+	byte[] obtenerClavePdf();
 
 }

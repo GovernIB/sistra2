@@ -1,9 +1,11 @@
 package es.caib.sistramit.core.service.component.flujo;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.pdf.Linea;
+import es.caib.sistra2.commons.pdf.LineaComponente;
+import es.caib.sistra2.commons.pdf.PDFDocument;
+import es.caib.sistra2.commons.pdf.Seccion;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
@@ -21,6 +27,7 @@ import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
 import es.caib.sistramit.core.api.exception.EmailException;
 import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
+import es.caib.sistramit.core.api.exception.GenerarPdfClaveException;
 import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
@@ -36,6 +43,7 @@ import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
+import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
@@ -422,6 +430,64 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 		// Lanzamos operación de cargar
 		controladorFlujo.cargarTramite(datosSesion);
+
+	}
+
+	@Override
+	public byte[] obtenerClavePdf() {
+
+		// Literales
+		final String titulo = datosSesion.getDatosTramite().getTituloTramite();
+		final String descripcion = literalesComponent.getLiteral(Literales.FLUJO, "clave.explicacion",
+				datosSesion.getDatosTramite().getIdioma());
+		final String literalEnlaceDescrip = literalesComponent.getLiteral(Literales.FLUJO, "clave.enlace.descripcion",
+				datosSesion.getDatosTramite().getIdioma());
+		final String literalEnlacePalabra = literalesComponent.getLiteral(Literales.FLUJO, "clave.enlace.link",
+				datosSesion.getDatosTramite().getIdioma());
+		final String literalIdTramite = literalesComponent.getLiteral(Literales.FLUJO, "clave.idTramite",
+				datosSesion.getDatosTramite().getIdioma());
+
+		// Url reanudar trámite
+		// TODO V0 Ver de cifrar id sesion
+		final String url = configuracionComponent.obtenerPropiedadConfiguracion(
+				TypePropiedadConfiguracion.SISTRAMIT_URL) + ConstantesSeguridad.PUNTOENTRADA_CARGAR_TRAMITE + "?"
+				+ ConstantesSeguridad.ANONIMO_PARAM_IDSESION + "=" + idSesionTramitacion;
+
+		// Generación PDF
+		final PDFDocument documento = new PDFDocument(titulo);
+
+		final Vector<Seccion> lasSecciones = new Vector<>();
+
+		final Seccion seccion = new Seccion(false);
+
+		final List<LineaComponente> componentesDescrip = new ArrayList<>();
+		componentesDescrip.add(new LineaComponente(descripcion, documento.getContext().getDefaultFont()));
+		final Linea lineaDescrip = new Linea(componentesDescrip);
+		lineaDescrip.setPaddingTop(1f);
+		seccion.addCampo(lineaDescrip);
+
+		final List<LineaComponente> componentesEnlace = new ArrayList<>();
+		componentesEnlace.add(new LineaComponente(literalEnlaceDescrip + " ", documento.getContext().getDefaultFont()));
+		componentesEnlace.add(new LineaComponente(literalEnlacePalabra, LineaComponente.getFontEnlace(documento), url));
+		final Linea lineaEnlace = new Linea(componentesEnlace);
+		lineaEnlace.setPaddingBottom(16f);
+		seccion.addCampo(lineaEnlace);
+
+		final List<LineaComponente> componentesIdSesion = new ArrayList<>();
+		componentesIdSesion.add(new LineaComponente(literalIdTramite + ": ", documento.getContext().getDefaultFont()));
+		componentesIdSesion.add(new LineaComponente(idSesionTramitacion, documento.getContext().getDefaultFont()));
+		final Linea lineaIdSesion = new Linea(componentesIdSesion);
+		seccion.addCampo(lineaIdSesion);
+
+		lasSecciones.add(seccion);
+		documento.setSecciones(lasSecciones);
+
+		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+			documento.generate(os, "V");
+			return os.toByteArray();
+		} catch (final Exception e) {
+			throw new GenerarPdfClaveException("Error al generar PDF Clave: " + e.getMessage(), e);
+		}
 
 	}
 

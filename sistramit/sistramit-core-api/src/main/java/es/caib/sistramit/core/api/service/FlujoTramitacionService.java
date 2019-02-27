@@ -175,4 +175,14 @@ public interface FlujoTramitacionService {
 	 */
 	void invalidarFlujoTramitacion(final String idSesionTramitacion);
 
+	/**
+	 * Función interna para obtener la clave en formato pdf.
+	 *
+	 * @param idSesionTramitacion
+	 *            id sesión tramitación
+	 *
+	 * @return pdf
+	 */
+	byte[] obtenerClavePdf(String idSesionTramitacion);
+
 }

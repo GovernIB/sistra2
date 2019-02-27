@@ -96,4 +96,9 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 				problemaDesc, anexo);
 	}
 
+	@Override
+	public byte[] obtenerClavePdf(final String idSesionTramitacion) {
+		return flujoTramitacionService.obtenerClavePdf(idSesionTramitacion);
+	}
+
 }
