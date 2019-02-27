@@ -9,6 +9,7 @@ package es.caib.sistramit.core.api.model.system.types;
 public enum TypePropiedadConfiguracion {
 
 	// TODO REVISAR NOMBRES PROPIEDADES
+
 	/** Entorno. */
 	ENTORNO("entorno"),
 	/** Versión. */

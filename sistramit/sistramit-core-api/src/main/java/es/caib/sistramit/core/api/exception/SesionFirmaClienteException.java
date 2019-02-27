@@ -14,11 +14,11 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 public final class SesionFirmaClienteException extends ServiceRollbackException {
 
 	/*
-	 * SesionFirmaClienteException ERROR.
+	 * SesionFirmaClienteException FATAL.
 	 */
 	@Override
 	public TypeNivelExcepcion getNivel() {
-		return TypeNivelExcepcion.ERROR;
+		return TypeNivelExcepcion.FATAL;
 	}
 
 	/**

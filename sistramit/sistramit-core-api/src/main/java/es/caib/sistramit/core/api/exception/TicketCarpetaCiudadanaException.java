@@ -9,7 +9,6 @@ import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
  * @author Indra
  *
  */
-
 @SuppressWarnings("serial")
 public final class TicketCarpetaCiudadanaException extends ServiceRollbackException {
 

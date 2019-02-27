@@ -27,7 +27,6 @@ import es.caib.sistramit.core.api.exception.ExtensionAnexoNoValidaException;
 import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
 import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexoException;
 import es.caib.sistramit.core.api.exception.TransformacionPdfException;
-import es.caib.sistramit.core.api.exception.ValidacionAnexoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
@@ -310,9 +309,6 @@ public final class AccionAnexarDocumento implements AccionPaso {
 				final RespuestaScript rs = this.scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_VALIDAR_ANEXO,
 						anexoDetalle.getId(), script.getScript(), pVariablesFlujo, variablesScript, null, codigosError,
 						pDefinicionTramite);
-				if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
-					throw new ValidacionAnexoException(rs.getMensajeValidacion().getMensaje(), anexoDetalle.getId());
-				}
 			}
 		}
 

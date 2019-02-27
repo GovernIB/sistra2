@@ -11,7 +11,6 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
  * @author Indra
  *
  */
-
 @SuppressWarnings("serial")
 public class InfoTicketAcceso implements Serializable {
 
@@ -29,7 +28,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método de acceso a idSesionTramitacion.
-	 *
+	 * 
 	 * @return idSesionTramitacion
 	 */
 	public String getIdSesionTramitacion() {
@@ -38,7 +37,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método para establecer idSesionTramitacion.
-	 *
+	 * 
 	 * @param idSesionTramitacion
 	 *            idSesionTramitacion a establecer
 	 */
@@ -48,7 +47,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método de acceso a usuarioAutenticadoInfo.
-	 *
+	 * 
 	 * @return usuarioAutenticadoInfo
 	 */
 	public UsuarioAutenticadoInfo getUsuarioAutenticadoInfo() {
@@ -57,7 +56,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método para establecer usuarioAutenticadoInfo.
-	 *
+	 * 
 	 * @param usuarioAutenticadoInfo
 	 *            usuarioAutenticadoInfo a establecer
 	 */
@@ -67,7 +66,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método de acceso a usado.
-	 *
+	 * 
 	 * @return usado
 	 */
 	public boolean isUsado() {
@@ -76,7 +75,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método para establecer usado.
-	 *
+	 * 
 	 * @param usado
 	 *            usado a establecer
 	 */
@@ -86,7 +85,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método de acceso a fecha.
-	 *
+	 * 
 	 * @return fecha
 	 */
 	public Date getFecha() {
@@ -95,7 +94,7 @@ public class InfoTicketAcceso implements Serializable {
 
 	/**
 	 * Método para establecer fecha.
-	 *
+	 * 
 	 * @param fecha
 	 *            fecha a establecer
 	 */

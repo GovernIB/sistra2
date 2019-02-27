@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "RUsuarioAutenticadoInfo", description = "Info usuario autenticado")
 public final class RUsuarioAutenticadoInfo {
 
-
 	/**
 	 * Tipo autenticacion.
 	 */

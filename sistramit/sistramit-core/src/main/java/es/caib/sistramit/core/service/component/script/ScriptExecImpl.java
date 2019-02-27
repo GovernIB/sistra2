@@ -13,18 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.EngineScriptException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
+import es.caib.sistramit.core.api.exception.RegistroNoPermitidoException;
+import es.caib.sistramit.core.api.exception.ValidacionAnexoException;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
 import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.service.component.integracion.DominiosComponent;
 import es.caib.sistramit.core.service.component.integracion.PagoComponent;
-import es.caib.sistramit.core.service.component.script.plugins.PlgValidacion;
 import es.caib.sistramit.core.service.component.script.plugins.PlgDominios;
 import es.caib.sistramit.core.service.component.script.plugins.PlgError;
 import es.caib.sistramit.core.service.component.script.plugins.PlgLog;
 import es.caib.sistramit.core.service.component.script.plugins.PlgMensajes;
 import es.caib.sistramit.core.service.component.script.plugins.PlgUtils;
+import es.caib.sistramit.core.service.component.script.plugins.PlgValidacion;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgFormularios;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgPago;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.PlgSesionTramitacion;
@@ -51,8 +54,8 @@ import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
-import es.caib.sistramit.core.service.model.script.PlgValidacionInt;
 import es.caib.sistramit.core.service.model.script.PlgErrorInt;
+import es.caib.sistramit.core.service.model.script.PlgValidacionInt;
 import es.caib.sistramit.core.service.model.script.PluginScript;
 import es.caib.sistramit.core.service.model.script.flujo.ResAnexosDinamicosInt;
 import es.caib.sistramit.core.service.model.script.flujo.ResDatosInicialesFormularioInt;
@@ -120,7 +123,7 @@ public final class ScriptExecImpl implements ScriptExec {
 		final Object result = ejecutarScript(pTipoScript, idSesion, pIdElemento, pScript, plugins);
 
 		// Retornamos resultado
-		return generarRespuestaScriptFlujo(pTipoScript, codigosError, plugins, result);
+		return generarRespuestaScriptFlujo(pTipoScript, codigosError, plugins, result, pIdElemento);
 	}
 
 	@Override
@@ -188,10 +191,13 @@ public final class ScriptExecImpl implements ScriptExec {
 	 *            Plugins
 	 * @param result
 	 *            Resultado script
+	 * @param pIdElemento
+	 *            Id elemento
 	 * @return Respuesta del script
 	 */
 	private RespuestaScript generarRespuestaScriptFlujo(final TypeScriptFlujo pTipoScript,
-			final Map<String, String> codigosError, final List<PluginScript> plugins, final Object result) {
+			final Map<String, String> codigosError, final List<PluginScript> plugins, final Object result,
+			String pIdElemento) {
 		final RespuestaScript respuestaScript = new RespuestaScript();
 		// - Evaluamos si se ha marcado con error el script
 		final PlgError plgError = (PlgError) getPlugin(plugins, PlgErrorInt.ID);
@@ -203,8 +209,20 @@ public final class ScriptExecImpl implements ScriptExec {
 			} else if (StringUtils.isNotBlank(plgError.getTextoMensajeError())) {
 				msgError = plgError.getTextoMensajeError();
 			}
-			// TODO Generar excepcion con los detalles (script, idsesion,...)
-			throw new ErrorScriptException(msgError);
+
+			// Verificamos si generamos excepcion específica
+			switch (pTipoScript) {
+			case SCRIPT_PERSONALIZACION_TRAMITE:
+				throw new AccesoNoPermitidoException(msgError);
+			case SCRIPT_VALIDAR_ANEXO:
+				throw new ValidacionAnexoException(msgError, pIdElemento);
+			case SCRIPT_PERMITIR_REGISTRO:
+				throw new RegistroNoPermitidoException(msgError);
+			default:
+				// TODO Generar excepcion con los detalles (script, idsesion,...)
+				throw new ErrorScriptException(msgError);
+			}
+
 		}
 		// - En funcion del plugin vemos si debemos retornar el objeto o bien un
 		// plugin de tipo resultado
@@ -226,7 +244,8 @@ public final class ScriptExecImpl implements ScriptExec {
 	 *            Codigos de error
 	 * @return mensaje
 	 */
-	private MensajeValidacion generarMensajeAviso(final List<PluginScript> plugins, final Map<String, String> codigosError) {
+	private MensajeValidacion generarMensajeAviso(final List<PluginScript> plugins,
+			final Map<String, String> codigosError) {
 		MensajeValidacion mensaje = null;
 		final PlgValidacion plgAviso = (PlgValidacion) getPlugin(plugins, PlgValidacionInt.ID);
 		if (plgAviso != null && plgAviso.isExisteAviso()) {
@@ -376,7 +395,6 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResParametrosIniciales());
 			break;
 		case SCRIPT_PERSONALIZACION_TRAMITE:
-			plugins.add(new PlgValidacion());
 			plugins.add(new ResPersonalizacionTramite());
 			break;
 		case SCRIPT_DATOS_INICIALES_FORMULARIO:
@@ -386,7 +404,6 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResParametrosFormulario());
 			break;
 		case SCRIPT_POSTGUARDAR_FORMULARIO:
-			plugins.add(new PlgValidacion());
 			plugins.add(new ResModificacionFormularios());
 			break;
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
@@ -418,10 +435,6 @@ public final class ScriptExecImpl implements ScriptExec {
 			final String nomFichero = (String) pVariablesScript.get("nombreFichero");
 			final byte[] datosFichero = (byte[]) pVariablesScript.get("datosFichero");
 			plugins.add(new PlgValidacionAnexo(nomFichero, datosFichero));
-			plugins.add(new PlgValidacion());
-			break;
-		case SCRIPT_PERMITIR_REGISTRO:
-			plugins.add(new PlgValidacion());
 			break;
 		default:
 			break;

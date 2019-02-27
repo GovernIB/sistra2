@@ -31,7 +31,6 @@ import es.caib.sistramit.rest.api.externa.v1.RUsuarioAutenticadoInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-
 /**
  * Operaciones requeridas desde el resto de módulos de Sistra2. No requieren
  * versionado.

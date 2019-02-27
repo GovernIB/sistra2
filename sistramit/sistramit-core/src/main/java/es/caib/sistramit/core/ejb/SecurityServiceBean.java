@@ -18,7 +18,6 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.service.SecurityService;
 
-
 @Stateless
 @Interceptors(SpringBeanAutowiringInterceptor.class)
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)

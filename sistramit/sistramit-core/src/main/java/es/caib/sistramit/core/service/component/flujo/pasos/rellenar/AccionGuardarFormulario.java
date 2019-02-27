@@ -122,26 +122,15 @@ public final class AccionGuardarFormulario implements AccionPaso {
 				actualizarPersistenciaGuardar(dipa, pDpp, pVariablesFlujo, idFormulario, dff.getXml(), dff.getPdf(),
 						respuestaScriptPostGuardar);
 			} else {
-				// No borramos si hemos indicado error en el script
-				if (respuestaScriptPostGuardar == null
-						|| !UtilsFlujo.isErrorValidacion(respuestaScriptPostGuardar.getMensajeValidacion())) {
-					actualizarPersistenciaCancelarFormulario(dipa, pDpp, pVariablesFlujo, idFormulario,
-							respuestaScriptPostGuardar);
-				}
-
+				actualizarPersistenciaCancelarFormulario(dipa, pDpp, pVariablesFlujo, idFormulario,
+						respuestaScriptPostGuardar);
 			}
 
 			// Devolvemos si se ha podido guardar el formulario o se ha marcado
 			// con estado incorrecto
 			rp.addParametroRetorno("cancelado", TypeSiNo.NO);
-			if (respuestaScriptPostGuardar != null
-					&& UtilsFlujo.isErrorValidacion(respuestaScriptPostGuardar.getMensajeValidacion())) {
-				rp.addParametroRetorno("correcto", TypeSiNo.NO);
-				rp.addParametroRetorno("mensajeIncorrecto",
-						respuestaScriptPostGuardar.getMensajeValidacion().getMensaje());
-			} else {
-				rp.addParametroRetorno("correcto", TypeSiNo.SI);
-			}
+			rp.addParametroRetorno("correcto", TypeSiNo.SI);
+
 		}
 
 		// Indicamos que se recalculen los datos del paso en funcion de los
@@ -269,15 +258,14 @@ public final class AccionGuardarFormulario implements AccionPaso {
 
 			// Si se ha ejecutado correctamente comprobamos que los cambios
 			// a realizar son sobre los demas formularios del paso
-			if (!UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
-				final ResModificacionFormularios resp = (ResModificacionFormularios) rs.getResultado();
-				// Verificamos que se pueden modificar los formularios que
-				// se han modificado (pasaran a estado incorrecto)
-				verificarFormulariosModificados(pDipa, pasoDef, formularioDef, resp, pVariablesFlujo);
-				// Verificamos que se pueden modificar los formularios que
-				// se han marcado como incorrectos
-				verificarFormulariosIncorrectos(pDipa, pasoDef, formularioDef, resp, pVariablesFlujo);
-			}
+			final ResModificacionFormularios resp = (ResModificacionFormularios) rs.getResultado();
+			// Verificamos que se pueden modificar los formularios que
+			// se han modificado (pasaran a estado incorrecto)
+			verificarFormulariosModificados(pDipa, pasoDef, formularioDef, resp, pVariablesFlujo);
+			// Verificamos que se pueden modificar los formularios que
+			// se han marcado como incorrectos
+			verificarFormulariosIncorrectos(pDipa, pasoDef, formularioDef, resp, pVariablesFlujo);
+
 		}
 
 		return rs;
@@ -418,9 +406,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		actualizarFormularioActual(pDipa, pDpp, idFormulario, xml, pdf, rs, pVariablesFlujo);
 
 		// Actualizamos formularios modificados en post guardar
-		if (rs != null && !UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
-			actualizarFormulariosPostGuardar(pDipa, pDpp, idFormulario, rs, pVariablesFlujo);
-		}
+		actualizarFormulariosPostGuardar(pDipa, pDpp, idFormulario, rs, pVariablesFlujo);
 
 	}
 
@@ -452,7 +438,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 
 		// Comprobamos si el formulario actual se ha modificado en el script de
 		// postguardar
-		if (rs != null && !UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
+		if (rs != null) {
 			final ResModificacionFormularios rsp = (ResModificacionFormularios) rs.getResultado();
 			if (rsp.getFormulariosModificados().contains(idFormulario)) {
 				final ValoresFormulario valoresFormulario = new ValoresFormulario(xml);
@@ -484,11 +470,8 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		docPaso.removeFirmasFicheros();
 
 		// - Establecemos estado
-		if (rs != null && UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
-			docPaso.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
-		} else {
-			docPaso.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
-		}
+		docPaso.setEstado(TypeEstadoDocumento.RELLENADO_CORRECTAMENTE);
+
 		// - Actualizamos datos en BBDD
 		dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPaso);
 		for (final ReferenciaFichero ref : ficherosBorrar) {
@@ -514,75 +497,77 @@ public final class AccionGuardarFormulario implements AccionPaso {
 			final DatosPersistenciaPaso pDpp, final String pIdFormularioActual, final RespuestaScript rs,
 			final VariablesFlujo pVariablesFlujo) {
 
-		final List<ReferenciaFichero> ficherosBorrar = new ArrayList<ReferenciaFichero>();
+		if (rs != null) {
+			final List<ReferenciaFichero> ficherosBorrar = new ArrayList<ReferenciaFichero>();
 
-		final ResModificacionFormularios rsp = (ResModificacionFormularios) rs.getResultado();
+			final ResModificacionFormularios rsp = (ResModificacionFormularios) rs.getResultado();
 
-		ReferenciaFichero referenciaXML;
+			ReferenciaFichero referenciaXML;
 
-		// Para formularios en los que se han modificado datos: modificamos
-		// estado formulario modificado, actualizamos xml y borramos pdf
-		for (final String idFormModif : rsp.getFormulariosModificados()) {
+			// Para formularios en los que se han modificado datos: modificamos
+			// estado formulario modificado, actualizamos xml y borramos pdf
+			for (final String idFormModif : rsp.getFormulariosModificados()) {
 
-			// Si es el formulario actual, ya se ha modificado antes
-			if (idFormModif.equals(pIdFormularioActual)) {
-				continue;
+				// Si es el formulario actual, ya se ha modificado antes
+				if (idFormModif.equals(pIdFormularioActual)) {
+					continue;
+				}
+
+				final DocumentoPasoPersistencia docPasoModif = pDpp.getDocumentoPasoPersistencia(idFormModif,
+						ConstantesNumero.N1);
+
+				// Marcamos para borrar ficheros anteriores (xml, pdf, firmas )
+				ficherosBorrar.addAll(docPasoModif.obtenerReferenciasFicherosFormulario(true, true, true));
+
+				// Modificamos fichero xml actual y lo guardamos
+				final ValoresFormulario vf = pDipa.getValoresFormulario(idFormModif);
+				vf.modificarValoresCampos(rsp.getDatosModificadosFormulario(idFormModif));
+				referenciaXML = dao.insertarFicheroPersistencia(idFormModif + ".xml", vf.getXml(),
+						pVariablesFlujo.getIdSesionTramitacion());
+
+				// Establecemos nuevos datos
+				if (docPasoModif.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
+					docPasoModif.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
+				}
+				docPasoModif.setFichero(referenciaXML);
+				docPasoModif.setFormularioPdf(null);
+
+				// Actualizamos datos en BBDD
+				dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPasoModif);
 			}
 
-			final DocumentoPasoPersistencia docPasoModif = pDpp.getDocumentoPasoPersistencia(idFormModif,
-					ConstantesNumero.N1);
+			// Para formularios en los que se ha modificado el estado:
+			// modificamos estado formulario modificado,
+			// borramos pdf y firmas (mantenemos xml)
+			for (final String idFormModif : rsp.getFormulariosIncorrectos()) {
 
-			// Marcamos para borrar ficheros anteriores (xml, pdf, firmas )
-			ficherosBorrar.addAll(docPasoModif.obtenerReferenciasFicherosFormulario(true, true, true));
+				final DocumentoPasoPersistencia docPasoModif = pDpp.getDocumentoPasoPersistencia(idFormModif,
+						ConstantesNumero.N1);
 
-			// Modificamos fichero xml actual y lo guardamos
-			final ValoresFormulario vf = pDipa.getValoresFormulario(idFormModif);
-			vf.modificarValoresCampos(rsp.getDatosModificadosFormulario(idFormModif));
-			referenciaXML = dao.insertarFicheroPersistencia(idFormModif + ".xml", vf.getXml(),
-					pVariablesFlujo.getIdSesionTramitacion());
+				// Si ya se ha modificado estado al haber modificado datos no lo
+				// actualizamos
+				if (rsp.getFormulariosModificados().contains(idFormModif)) {
+					continue;
+				}
 
-			// Establecemos nuevos datos
-			if (docPasoModif.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
-				docPasoModif.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
-			}
-			docPasoModif.setFichero(referenciaXML);
-			docPasoModif.setFormularioPdf(null);
+				// Marcamos para borrar ficheros anteriores (solo pdf y firmas,
+				// mantenemos xml)
+				ficherosBorrar.addAll(docPasoModif.obtenerReferenciasFicherosFormulario(false, true, true));
 
-			// Actualizamos datos en BBDD
-			dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPasoModif);
-		}
+				// Establecemos nuevos datos
+				if (docPasoModif.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
+					docPasoModif.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
+				}
+				docPasoModif.setFormularioPdf(null);
 
-		// Para formularios en los que se ha modificado el estado:
-		// modificamos estado formulario modificado,
-		// borramos pdf y firmas (mantenemos xml)
-		for (final String idFormModif : rsp.getFormulariosIncorrectos()) {
-
-			final DocumentoPasoPersistencia docPasoModif = pDpp.getDocumentoPasoPersistencia(idFormModif,
-					ConstantesNumero.N1);
-
-			// Si ya se ha modificado estado al haber modificado datos no lo
-			// actualizamos
-			if (rsp.getFormulariosModificados().contains(idFormModif)) {
-				continue;
+				// Actualizamos datos en BBDD
+				dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPasoModif);
 			}
 
-			// Marcamos para borrar ficheros anteriores (solo pdf y firmas,
-			// mantenemos xml)
-			ficherosBorrar.addAll(docPasoModif.obtenerReferenciasFicherosFormulario(false, true, true));
-
-			// Establecemos nuevos datos
-			if (docPasoModif.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
-				docPasoModif.setEstado(TypeEstadoDocumento.RELLENADO_INCORRECTAMENTE);
+			// Eliminamos ficheros marcados para borrar
+			for (final ReferenciaFichero ref : ficherosBorrar) {
+				dao.eliminarFicheroPersistencia(ref);
 			}
-			docPasoModif.setFormularioPdf(null);
-
-			// Actualizamos datos en BBDD
-			dao.establecerDatosDocumento(pVariablesFlujo.getIdSesionTramitacion(), pDipa.getIdPaso(), docPasoModif);
-		}
-
-		// Eliminamos ficheros marcados para borrar
-		for (final ReferenciaFichero ref : ficherosBorrar) {
-			dao.eliminarFicheroPersistencia(ref);
 		}
 	}
 
@@ -653,9 +638,7 @@ public final class AccionGuardarFormulario implements AccionPaso {
 		}
 
 		// Actualizamos formularios modificados en post guardar
-		if (pRespuestaScriptPostGuardar != null
-				&& !UtilsFlujo.isErrorValidacion(pRespuestaScriptPostGuardar.getMensajeValidacion())) {
-			actualizarFormulariosPostGuardar(pDipa, pDpp, pIdFormulario, pRespuestaScriptPostGuardar, pVariablesFlujo);
-		}
+		actualizarFormulariosPostGuardar(pDipa, pDpp, pIdFormulario, pRespuestaScriptPostGuardar, pVariablesFlujo);
+
 	}
 }

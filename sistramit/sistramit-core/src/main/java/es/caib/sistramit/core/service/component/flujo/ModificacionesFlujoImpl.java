@@ -19,7 +19,6 @@ import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
-import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
@@ -541,16 +540,12 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 			rs = this.scriptFlujo.executeScriptFlujo(TypeScriptFlujo.SCRIPT_PARAMETROS_INICIALES, null, script,
 					variablesFlujo, null, null, codigosError, pDatosSesion.getDefinicionTramite());
 
-			if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
-				throw new AccesoNoPermitidoException(rs.getMensajeValidacion().getMensaje());
-			} else {
-				// Si se ha añadido parametros mediante el script los añadimos a la sesion
-				final ResParametrosIniciales rp = (ResParametrosIniciales) rs.getResultado();
-				for (final String codParam : rp.getParametros().keySet()) {
-					pDatosSesion.getDatosTramite().getParametrosInicio().put(codParam,
-							rp.getParametros().get(codParam));
-				}
+			// Si se ha añadido parametros mediante el script los añadimos a la sesion
+			final ResParametrosIniciales rp = (ResParametrosIniciales) rs.getResultado();
+			for (final String codParam : rp.getParametros().keySet()) {
+				pDatosSesion.getDatosTramite().getParametrosInicio().put(codParam, rp.getParametros().get(codParam));
 			}
+
 		}
 	}
 

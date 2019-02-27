@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
-import es.caib.sistramit.core.api.exception.RegistroNoPermitidoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
@@ -25,8 +24,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
-import es.caib.sistramit.core.service.component.script.RespuestaScript;
-import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRegistro;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoJustificante;
@@ -83,14 +80,6 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 
 		// Regenera datos a partir de persistencia
 		regenerarDatosRegistrar(dipa, pDpp, pDefinicionTramite, pVariablesFlujo);
-
-		// Si estamos inicializando o revisando el paso comprobamos si se permite
-		// registro.
-		// Si no se permite genera excepción RegistroNoPermitidoException
-		if (pFaseEjecucion == TypeFaseActualizacionDatosInternos.INICIALIZAR_PASO
-				|| pFaseEjecucion == TypeFaseActualizacionDatosInternos.REVISAR_PASO) {
-			permitirRegistro(dipa, pDefinicionTramite, pVariablesFlujo);
-		}
 
 	}
 
@@ -425,41 +414,6 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		datosRegistrales.setNumeroExpediente(resRegistro.getNumeroExpediente());
 
 		return datosRegistrales;
-	}
-
-	/**
-	 * Evalua si se permite el registro en función del script de permitir registro.
-	 * Si no se permite se genera una excepción del tipo
-	 * RegistroNoPermitidoException.
-	 *
-	 * @param pDipa
-	 *            Parámetro dipa
-	 * @param pDefinicionTramite
-	 *            Parámetro definicion tramite
-	 * @param pVariablesFlujo
-	 *            Parámetro variables flujo
-	 */
-	private void permitirRegistro(final DatosInternosPasoRegistrar pDipa, final DefinicionTramiteSTG pDefinicionTramite,
-			final VariablesFlujo pVariablesFlujo) {
-
-		final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
-				.devuelveDefinicionPaso(pDipa.getIdPaso(), pDefinicionTramite);
-
-		// Validar representacion
-		if (pasoRegistrar.isAdmiteRepresentacion() && pasoRegistrar.isValidaRepresentacion()) {
-			// TODO PENDIENTE IMPLEMENTACION
-			throw new RuntimeException("Validar representacion pendiente implementar");
-		}
-
-		// Script de permitir registrar
-		if (UtilsSTG.existeScript(pasoRegistrar.getScriptValidar())) {
-			final ScriptExec scriptFlujo = getScriptFlujo();
-			final RespuestaScript rs = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptPermitirRegistrar(
-					pDipa.getIdPaso(), pDefinicionTramite, pVariablesFlujo, scriptFlujo);
-			if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
-				throw new RegistroNoPermitidoException(rs.getMensajeValidacion().getMensaje());
-			}
-		}
 	}
 
 	/**

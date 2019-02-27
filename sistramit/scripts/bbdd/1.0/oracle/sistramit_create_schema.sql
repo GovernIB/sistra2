@@ -301,11 +301,11 @@ create table STT_FORMUL
    SFR_TICKET           VARCHAR2(200 CHAR)   not null,
    SFR_FECINI           DATE                 not null,
    SFR_IDESTR           VARCHAR2(50 CHAR)    not null,
-   SFR_IDTRAM           VARCHAR2(20 CHAR),
-   SFR_VERSIO           NUMBER(2),
-   SFR_RELESE           NUMBER(8),
-   SFR_IDIOMA 			VARCHAR2(2) 		NOT NULL,
-   SFR_TITPRO 			VARCHAR2(2000) 		NOT NULL,
+   SFR_IDTRAM           VARCHAR2(20 CHAR)    not null,
+   SFR_VERSIO           NUMBER(2)            not null,
+   SFR_RELESE           NUMBER(8)            not null,
+   SFR_IDIOMA           VARCHAR2(2 CHAR)     not null,
+   SFR_TITPRO           VARCHAR2(2000 CHAR)  not null,
    SFR_IDPASO           VARCHAR2(20 CHAR)    not null,
    SFR_IDFORM           VARCHAR2(20 CHAR)    not null,
    SFR_INTERN           NUMBER(1)            default 0 not null,
@@ -354,16 +354,17 @@ comment on column STT_FORMUL.SFR_IDESTR is
 'Identificador sesión tramitación';
 
 comment on column STT_FORMUL.SFR_IDTRAM is
-'Identificador tramite';
+'Identificador trámite';
 
 comment on column STT_FORMUL.SFR_VERSIO is
-'Version tramite';
+'Versión trámite';
 
 comment on column STT_FORMUL.SFR_RELESE is
-'Release tramite';
+'Release trámite';
 
 comment on column STT_FORMUL.SFR_IDIOMA is
-'Idioma';
+'Idioma trámite';
+
 comment on column STT_FORMUL.SFR_TITPRO is
 'Título procedimiento';
 
@@ -747,7 +748,7 @@ comment on column STT_TCKCDC.TCC_TICKET is
 'Ticket de acceso';
 
 comment on column STT_TCKCDC.TCC_FECINI is
-'Fecha inicio pago';
+'Fecha generación ticket';
 
 comment on column STT_TCKCDC.TCC_IDESTR is
 'Identificador sesión tramitación';
@@ -756,7 +757,7 @@ comment on column STT_TCKCDC.TCC_INFAUT is
 'Informacion de autenticacion serializada para el retorno';
 
 comment on column STT_TCKCDC.TCC_FECFIN is
-'Indica fecha fin sesion pago';
+'Indica fecha consumición ticket';
 
 comment on column STT_TCKCDC.TCC_TCKUSA is
 'Indica si el ticket se ha usado para retornar';

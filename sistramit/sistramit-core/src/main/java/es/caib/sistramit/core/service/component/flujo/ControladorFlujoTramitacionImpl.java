@@ -399,14 +399,8 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// Si existe personalizacion personalizamos tramite
 		if (rs != null) {
-			if (UtilsFlujo.isErrorValidacion(rs.getMensajeValidacion())) {
-				// En caso de marcarse el error como script implica que no se
-				// permite el acceso al trámite
-				throw new AccesoNoPermitidoException(rs.getMensajeValidacion().getMensaje());
-			} else {
-				final ResPersonalizacionTramite rp = (ResPersonalizacionTramite) rs.getResultado();
-				modificacionesFlujo.personalizarTramite(pDatosSesion, rp);
-			}
+			final ResPersonalizacionTramite rp = (ResPersonalizacionTramite) rs.getResultado();
+			modificacionesFlujo.personalizarTramite(pDatosSesion, rp);
 		}
 	}
 

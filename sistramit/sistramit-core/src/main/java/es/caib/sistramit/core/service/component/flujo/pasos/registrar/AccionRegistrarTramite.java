@@ -21,6 +21,7 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
@@ -39,6 +40,8 @@ import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.literales.Literales;
+import es.caib.sistramit.core.service.component.script.RespuestaScript;
+import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoPago;
@@ -58,6 +61,7 @@ import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
  * Acción que permite registrar tramite en el paso Registrar.
@@ -81,6 +85,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	/** Componente de registro. */
 	@Autowired
 	private RegistroComponent registroComponent;
+	/** Motor de ejecución de scritps. */
+	@Autowired
+	private ScriptExec scriptFlujo;
 
 	@Override
 	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
@@ -99,7 +106,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		final DatosInternosPasoRegistrar pDipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
 
 		// Valida si se puede registrar el tramite
-		validacionesRegistrar(pDipa, pDpp, reintentar, pVariablesFlujo);
+		validacionesRegistrar(pDipa, pDpp, reintentar, pVariablesFlujo, pDefinicionTramite);
 
 		// Realizamos proceso de registro
 		final ResultadoRegistrar resReg = registrarTramite(pDipa, pDpp, reintentar, pVariablesFlujo,
@@ -130,9 +137,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *            Indica si se debe reintentar registro
 	 * @param pVariablesFlujo
 	 *            Variables flujo
+	 * @param pDefinicionTramite
+	 *            Definición trámite
 	 */
 	private void validacionesRegistrar(final DatosInternosPasoRegistrar pDipa, final DatosPersistenciaPaso pDpp,
-			final boolean pReintentar, final VariablesFlujo pVariablesFlujo) {
+			final boolean pReintentar, final VariablesFlujo pVariablesFlujo, DefinicionTramiteSTG pDefinicionTramite) {
 
 		final DetallePasoRegistrar detallePasoRegistrar = (DetallePasoRegistrar) pDipa.getDetallePaso();
 
@@ -169,7 +178,24 @@ public final class AccionRegistrarTramite implements AccionPaso {
 				throw new AccionPasoNoPermitidaException("No están todos los documentos firmados");
 			}
 
+			// Verificamos si se permite registro
+			final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
+					.devuelveDefinicionPaso(pDipa.getIdPaso(), pDefinicionTramite);
+
+			// Validar representacion
+			if (pasoRegistrar.isAdmiteRepresentacion() && pasoRegistrar.isValidaRepresentacion()) {
+				// TODO PENDIENTE IMPLEMENTACION
+				throw new RuntimeException("Validar representacion pendiente implementar");
+			}
+
+			// Script de permitir registrar
+			if (UtilsSTG.existeScript(pasoRegistrar.getScriptValidar())) {
+				final RespuestaScript rs = ControladorPasoRegistrarHelper.getInstance().ejecutarScriptPermitirRegistrar(
+						pDipa.getIdPaso(), pDefinicionTramite, pVariablesFlujo, scriptFlujo);
+			}
+
 		}
+
 	}
 
 	/**
