@@ -60,6 +60,7 @@
 		<loginib.version>0.0.1-SNAPSHOT</loginib.version>
 		<paymentib.version>0.0.1-SNAPSHOT</paymentib.version>
 		<firmasimple.version>1.0</firmasimple.version>
+		<firmasimple.jersey.version>1.0.0</firmasimple.jersey.version>
 		<itext.version>2.1.7</itext.version>
 		<paymentib.version>0.0.1-SNAPSHOT</paymentib.version>
 		<regweb3-ws.version>3.0.9</regweb3-ws.version>

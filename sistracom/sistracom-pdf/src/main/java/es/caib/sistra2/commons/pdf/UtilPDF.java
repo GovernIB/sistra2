@@ -26,7 +26,7 @@ public class UtilPDF {
 
 	/**
 	 * Concatena varios pdfs
-	 * 
+	 *
 	 * @param pdfOut
 	 *            Outputstream al pdf de salida
 	 * @param pdfIn
@@ -41,17 +41,15 @@ public class UtilPDF {
 		int f = 0;
 
 		final PdfCopyFields writer = new PdfCopyFields(pdfOut);
-		int permission = 0;
+		final int permission = 0;
 		while (f < pdfIn.length) {
 			// we create a reader for a certain document
 			final PdfReader reader = new PdfReader(pdfIn[f]);
 			// Establecemos permisos del primer documento
-			if (f == 0) {
-				permission = reader.getPermissions();
-				if (permission != 0) {
-					writer.setEncryption(null, null, permission, PdfWriter.STRENGTH40BITS);
-				}
-			}
+			/*
+			 * if (f == 0) { permission = reader.getPermissions(); if (permission != 0) {
+			 * writer.setEncryption(null, null, permission, PdfWriter.STRENGTH40BITS); } }
+			 */
 
 			writer.addDocument(reader);
 
@@ -87,7 +85,7 @@ public class UtilPDF {
 		final PdfReader reader = new PdfReader(pdfIn);
 		permission = reader.getPermissions();
 		if (permission != 0) {
-			writer.setEncryption(null, null, permission, PdfWriter.STRENGTH40BITS);
+			// writer.setEncryption(null, null, permission, PdfWriter.STRENGTH40BITS);
 		}
 		writer.addDocument(reader, pagesToKeep);
 
@@ -100,33 +98,33 @@ public class UtilPDF {
 	 *
 	 *
 	 * Concatena dos Pdfs
-	 * 
+	 *
 	 * @param pdfOut Outputstream al pdf de salida
-	 * 
+	 *
 	 * @param pdfIn InputStreams de los pdfs a concatenar
-	 * 
+	 *
 	 * @param pdfIn2
-	 * 
+	 *
 	 * public static void concatenarPdf(OutputStream pdfOut,InputStream [] pdfIn)
 	 * throws Exception{ if (pdfIn.length < 2) { throw new
 	 * Exception("Debe concatenar al menos 2 PDFs"); }
-	 * 
+	 *
 	 * // Realizamos copia PDFs int pageOffset = 0; ArrayList master = new
 	 * ArrayList(); int f = 0;
-	 * 
+	 *
 	 * Document document = null; PdfCopy writer = null; int permission=0; while (f <
 	 * pdfIn.length) { // we create a reader for a certain document PdfReader reader
 	 * = new PdfReader(pdfIn[f]);
-	 * 
+	 *
 	 * // Establecemos permisos del primer documento if (f==0){ permission =
 	 * reader.getPermissions(); }
-	 * 
+	 *
 	 * reader.consolidateNamedDestinations(); // we retrieve the total number of
 	 * pages int n = reader.getNumberOfPages(); List bookmarks =
 	 * SimpleBookmark.getBookmark(reader); if (bookmarks != null) { if (pageOffset
 	 * != 0) SimpleBookmark.shiftPageNumbers(bookmarks, pageOffset, null);
 	 * master.addAll(bookmarks); } pageOffset += n;
-	 * 
+	 *
 	 * if (f == 0) { // step 1: creation of a document-object document = new
 	 * Document(reader.getPageSizeWithRotation(1)); // step 2: we create a writer
 	 * that listens to the document writer = new PdfCopy(document, pdfOut); // step
@@ -137,7 +135,7 @@ public class UtilPDF {
 	 * PRAcroForm form = reader.getAcroForm(); if (form != null)
 	 * writer.copyAcroForm(reader); f++; } if (master.size() > 0)
 	 * writer.setOutlines(master);
-	 * 
+	 *
 	 * // step 5: we close the document document.close(); }
 	 */
 
@@ -163,7 +161,7 @@ public class UtilPDF {
 
 		// Volvemos a establecer los permisos que tuviera
 		if (permission != 0) {
-			stamp.setEncryption(null, null, permission, PdfWriter.STRENGTH40BITS);
+			// stamp.setEncryption(null, null, permission, PdfWriter.STRENGTH40BITS);
 		}
 
 		PdfContentByte under;
@@ -305,14 +303,15 @@ public class UtilPDF {
 
 	/**
 	 * Genera un pdf vacio
-	 * 
+	 *
 	 * @param os
 	 * @throws Exception
 	 */
 	public static void generateBlankPdf(final OutputStream os) throws Exception {
 		final Document document = new Document(PageSize.A4);
 		final PdfWriter writer = PdfWriter.getInstance(document, os);
-		writer.setEncryption(null, null, PdfWriter.AllowCopy | PdfWriter.AllowPrinting, PdfWriter.STRENGTH40BITS);
+		// writer.setEncryption(null, null, PdfWriter.AllowCopy |
+		// PdfWriter.AllowPrinting, PdfWriter.STRENGTH40BITS);
 		document.open();
 		document.newPage();
 		writer.setPageEmpty(false);
@@ -321,7 +320,7 @@ public class UtilPDF {
 
 	/**
 	 * Obtiene numero de paginas de un pdf
-	 * 
+	 *
 	 * @param pdfIn
 	 * @return
 	 * @throws Exception
@@ -334,7 +333,7 @@ public class UtilPDF {
 
 	/**
 	 * Establece permisos pdf a solo impresion
-	 * 
+	 *
 	 * @param pdfOut
 	 *            Outputstream al pdf de salida con los permisos aplicados
 	 * @param pdfIn
@@ -347,7 +346,7 @@ public class UtilPDF {
 
 	/**
 	 * Eliminar permisos
-	 * 
+	 *
 	 * @param pdfOut
 	 *            Outputstream al pdf de salida sin los permisos aplicados
 	 * @param pdfIn
@@ -362,7 +361,7 @@ public class UtilPDF {
 
 	/**
 	 * Detecta si un pdf es PDF/A
-	 * 
+	 *
 	 * @param pdfIn
 	 * @return
 	 * @throws Exception

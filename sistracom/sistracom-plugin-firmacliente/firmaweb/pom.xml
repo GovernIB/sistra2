@@ -12,11 +12,19 @@
 
     <artifactId>sistracom-plugin-firmacliente-firmaweb</artifactId>
     <dependencies>
+
         <dependency>
-            <artifactId>firmasimple-api</artifactId>
-            <groupId>org.fundaciobit.pluginsib.signature.firmasimple</groupId>
-            <version>${firmasimple.version}</version>
-        </dependency>
+		  <artifactId>apifirmasimple-api</artifactId>
+		  <groupId>org.fundaciobit.apisib.apifirmasimple</groupId>
+		  <version>${firmasimple.version}</version>
+		</dependency>
+
+		<dependency>
+	      <artifactId>apifirmasimple-jersey</artifactId>
+	      <groupId>org.fundaciobit.apisib.apifirmasimple</groupId>
+	       <version>1.0.0</version>
+	    </dependency>
+
         <dependency>
             <groupId>org.fundaciobit.pluginsib.core</groupId>
             <artifactId>pluginsib-core</artifactId>

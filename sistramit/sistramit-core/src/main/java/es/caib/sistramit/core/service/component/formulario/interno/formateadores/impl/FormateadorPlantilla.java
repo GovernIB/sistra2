@@ -48,7 +48,7 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 					}
 				}
 			}
-			pdf.establecerSoloImpresion();
+			// pdf.establecerSoloImpresion();
 			pdf.ponerValor(datos);
 			return pdf.guardarEnMemoria(true);
 

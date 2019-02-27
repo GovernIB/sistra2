@@ -1,9 +1,14 @@
 package es.caib.sistra2.commons.pdf;
 
 import java.awt.Color;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import org.apache.commons.io.FileUtils;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -367,7 +372,8 @@ public class PDFDocument {
 	public void generate(final OutputStream os) throws Exception {
 		document = new Document(PageSize.A4, 36, 36, 36, 50);
 		writer = PdfWriter.getInstance(document, os);
-		writer.setEncryption(null, null, PdfWriter.AllowCopy | PdfWriter.AllowPrinting, PdfWriter.STRENGTH40BITS);
+		// writer.setEncryption(null, null, PdfWriter.AllowCopy |
+		// PdfWriter.AllowPrinting, PdfWriter.STRENGTH40BITS);
 		writer.setPageEvent(new EndPage(this.getCabecera(), this.getPie(), this.getBarcode(), this.isPaginar()));
 		document.open();
 		// Pintar la cabecera que proceda: No pitar, cabecera normal o cabecera pequenya
@@ -393,7 +399,8 @@ public class PDFDocument {
 		else
 			document = new Document(PageSize.A4, 36, 36, 36, 50);
 		writer = PdfWriter.getInstance(document, os);
-		writer.setEncryption(null, null, PdfWriter.AllowCopy | PdfWriter.AllowPrinting, PdfWriter.STRENGTH40BITS);
+		// writer.setEncryption(null, null, PdfWriter.AllowCopy |
+		// PdfWriter.AllowPrinting, PdfWriter.STRENGTH40BITS);
 		writer.setPageEvent(new EndPage(this.getCabecera(), this.getPie(), this.getBarcode(), this.isPaginar()));
 		document.open();
 		// Pintar la cabecera que proceda: No pitar, cabecera normal o cabecera pequenya
@@ -640,4 +647,56 @@ public class PDFDocument {
 		this.tipocabecera = tipocabecera;
 	}
 
+	public static void main(final String args[]) throws Exception {
+
+		// final File file = new File("P://logo_caib.gif");
+		// final byte[] imagen = Files.readAllBytes(file.toPath());
+		// final PDFDocument documento = new PDFDocument(imagen, "Titulo del trámite");
+
+		final PDFDocument documento = new PDFDocument("Titulo del trámite");
+
+		final Vector<Seccion> lasSecciones = new Vector<>();
+
+		final Seccion seccion = new Seccion(false);
+
+		final List<LineaComponente> componentesDescrip = new ArrayList<>();
+		componentesDescrip.add(new LineaComponente("Descripción larga sobre información del trámite.",
+				documento.getContext().getDefaultFont()));
+		final Linea lineaDescrip = new Linea(componentesDescrip);
+		lineaDescrip.setPaddingTop(1f);
+		seccion.addCampo(lineaDescrip);
+
+		final List<LineaComponente> componentesEnlace = new ArrayList<>();
+		componentesEnlace.add(new LineaComponente("Puede continuar la tramitación a través de este ",
+				documento.getContext().getDefaultFont()));
+		componentesEnlace
+				.add(new LineaComponente("enlace ", LineaComponente.getFontEnlace(documento), "http://www.google.es"));
+		final Linea lineaEnlace = new Linea(componentesEnlace);
+		lineaEnlace.setPaddingBottom(16f);
+		seccion.addCampo(lineaEnlace);
+
+		final List<LineaComponente> componentesIdSesion = new ArrayList<>();
+		componentesIdSesion.add(new LineaComponente("ID Trámite: ", LineaComponente.getFontNegrita(documento)));
+		componentesIdSesion
+				.add(new LineaComponente("HDU-XJIASF-ASJFIASJF-ASKJ ", documento.getContext().getDefaultFont()));
+		final Linea lineaIdSesion = new Linea(componentesIdSesion);
+		lineaIdSesion.setPaddingBottom(1f);
+		seccion.addCampo(lineaIdSesion);
+
+		// final Enlace enlace = new Enlace("Puede continuar la tramitación a través de
+		// este ", "enlace",
+		// "http://www.google.es", true);
+		// seccion.addCampo(enlace);
+
+		// final Parrafo parrafoIdSesion = new Parrafo("ID sesion tramite:
+		// HDU-XJIASF-ASJFIASJF-ASKJ");
+		// seccion.addCampo(parrafoIdSesion);
+
+		lasSecciones.add(seccion);
+		documento.setSecciones(lasSecciones);
+
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		documento.generate(os, "V");
+		FileUtils.writeByteArrayToFile(new File("P://prueba.pdf"), os.toByteArray());
+	}
 }

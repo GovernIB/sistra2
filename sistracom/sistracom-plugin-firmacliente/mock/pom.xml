@@ -11,11 +11,6 @@
 
     <artifactId>sistracom-plugin-firmacliente-mock</artifactId>
     <dependencies>
-        <dependency>
-            <artifactId>firmasimple-api</artifactId>
-            <groupId>org.fundaciobit.pluginsib.signature.firmasimple</groupId>
-            <version>${firmasimple.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.fundaciobit.pluginsib.core</groupId>

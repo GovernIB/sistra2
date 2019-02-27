@@ -70,7 +70,7 @@ public class PDFDocumentTemplate {
 
 	/**
 	 * Inicia objeto PDF (Uso interno)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private void iniciarPdf() throws Exception {
@@ -82,7 +82,7 @@ public class PDFDocumentTemplate {
 
 	/**
 	 * Obtiene la lista de campos
-	 * 
+	 *
 	 * @return
 	 */
 	public HashMap getCampos() {
@@ -121,7 +121,7 @@ public class PDFDocumentTemplate {
 	/**
 	 * Permite obtener el valor de un campo del PDF. Tiene como parametro el string
 	 * que identifica el campo del PDF del que se quiere obtener el valor.
-	 * 
+	 *
 	 * @param campo
 	 * @return
 	 */
@@ -185,7 +185,6 @@ public class PDFDocumentTemplate {
 	 * llamar a este metoco nada mas crear el objeto GLibPDF)
 	 */
 	public void establecerSoloImpresion() throws Exception {
-		// pdfs.setEncryption(null, null, PdfWriter.AllowPrinting, true);
 		// Introducimos encriptacion de 40 bits para que sea compatible con Acrobat 4.0
 		// La encriptacion de 128 solo es compatible con 5.0 o superior
 
