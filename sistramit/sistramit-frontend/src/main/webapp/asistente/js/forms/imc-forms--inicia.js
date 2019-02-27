@@ -40,7 +40,7 @@ $.fn.appFormsAjuda = function(opcions) {
 
 			},
 			activa = function() {
-				
+
 				if (imc_forms_ajuda.data("ajuda") === "off") {
 
 					imc_forms_ajuda
@@ -66,8 +66,8 @@ $.fn.appFormsAjuda = function(opcions) {
 					ajuda_data = "off";
 
 				}
-				
-				
+
+
 				imc_forms_ajuda
 					.fadeOut(200, function() {
 
@@ -77,16 +77,16 @@ $.fn.appFormsAjuda = function(opcions) {
 							.fadeIn(200);
 
 					});
-				
+
 				$.ajax({
 					  type: "POST",
 					  url: "activarAyuda.do",
 					  data: { activar: ("on" == ajuda_data)}
-					});	
-				
+					});
+
 			},
 			canvia = function() {
-				
+
 				imc_forms_ajuda
 					.find("strong")
 						.text(txtAjudaInfo)
@@ -95,9 +95,9 @@ $.fn.appFormsAjuda = function(opcions) {
 						.text(txtAjudaBoto)
 						.end()
 					.data("ajuda", ajuda_data);
-				
+
 			};
-			
+
 		// inicia
 		inicia();
 
@@ -122,11 +122,11 @@ $.fn.appFormsAjudaCamp = function(options) {
 				var elm = $(this);
 				ajuda_elm = elm.find(".imc-el-ajuda:first");
 				if (ajuda_elm.length && ajuda_elm.html() !== "") {
-					
+
 					onMouseLeave();
-					
+
 					ajuda_anterior_elm = ajuda_elm;
-					
+
 					var window_W = element.width(),
 						window_H = element.height(),
 						window_scroll_T = element.scrollTop(),
@@ -143,15 +143,15 @@ $.fn.appFormsAjudaCamp = function(options) {
 						ajuda_H = ajuda_elm.outerHeight();
 
 					consola(element.attr("class") + " - " + window_scroll_T)
-					
+
 					var ajuda_T = elm_T-ajuda_H-5+window_scroll_T,
 						ajuda_L = elm_L,
 						cueta_html = "<div class=\"imc-el-aj-pestanya\"><span></span></div>";
-					
+
 					if (!ajuda_elm.find(".imc-el-aj-pestanya").length) {
 						//ajuda_elm.append(cueta_html);
 					}
-					
+
 					if ((elm_L+ajuda_W) > window_W) {
 
 						ajuda_L = elm_L - ajuda_W + elm_control_W;
@@ -171,9 +171,9 @@ $.fn.appFormsAjudaCamp = function(options) {
 
 
 					}
-					
+
 					var ajuda_T_inici = ajuda_T+5;
-					
+
 					if (window_scroll_T > ajuda_T) {
 						ajuda_T = elm_T + elm_H;
 						ajuda_T_inici = ajuda_T-5;
@@ -191,14 +191,14 @@ $.fn.appFormsAjudaCamp = function(options) {
 							.removeClass("imc--dalt");
 
 					}
-					
+
 					ajuda_elm
 						.css({ top: ajuda_T_inici+"px", left: ajuda_L+"px", opacity: 0 })
 						.addClass("imc-el-ajuda-on")
 						.animate({ top: ajuda_T+"px", opacity:1 }, 200)
 						.off(".appFormsAjudaCamp")
 						.on("mouseenter.appFormsAjudaCamp", onMouseLeave);
-					
+
 				}
 			},
 			onMouseLeave = function() {
@@ -209,7 +209,7 @@ $.fn.appFormsAjudaCamp = function(options) {
 					}
 				}
 			};
-		
+
 		// inicia
 		element
 			.off('.appFormsAjudaCamp')
@@ -238,7 +238,7 @@ $.fn.appFormsErrors = function(options) {
 
 			},
 			marca = function(e) {
-				
+
 				var bt = $(this),
 					camp_id = bt.attr("data-id"),
 					camp_el = $("#"+camp_id);
@@ -256,10 +256,10 @@ $.fn.appFormsErrors = function(options) {
 				);
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -292,15 +292,18 @@ $.fn.appDestaca = function(options) {
 					imc_document_H = referent[0].scrollHeight,
 					imc_document_W = referent.outerWidth(true);
 
-				var el_T = el.position().top,
+				var el_T = el.position().top + imc_finestra_scroll_T;// + 20,
 					el_L = el.position().left,
 					el_W = el.outerWidth(true),
 					el_H = el.outerHeight(true);
 
+				consola("offset()TOP: " + el.offset().top + " - offset()LEFT: " + el.offset().left);
+				consola("position()TOP: " + el.position().top + " - position()LEFT: " + el.position().left);
+
 				var destacat_el_T = $("<div>").addClass("imc--dalt").css({ height: el_T+"px" }),
 					destacat_el_B = $("<div>").addClass("imc--baix").css({ top: (el_T+el_H)+"px", height: (imc_document_H - el_T - el_H)+"px" }),
 					destacat_el_L = $("<div>").addClass("imc--esquerre").css({ top: el_T+"px", width: el_L+"px", height: el_H+"px" }),
-					destacat_el_R = $("<div>").addClass("imc--dreta").css({ top: el_T+"px", left: (el_L+el_W)+"px", width: (imc_document_W - (el_L + el_W))+"px", height: el_H+"px" }); // 
+					destacat_el_R = $("<div>").addClass("imc--dreta").css({ top: el_T+"px", left: (el_L+el_W)+"px", width: (imc_document_W - (el_L + el_W))+"px", height: el_H+"px" }); //
 
 				destacat_el = $("<div>").addClass("imc-destacat").attr("id", "imc-destacat").append( destacat_el_T ).append( destacat_el_B ).append( destacat_el_L ).append( destacat_el_R ).appendTo( referent );
 
@@ -308,9 +311,18 @@ $.fn.appDestaca = function(options) {
 
 				var pos_respecte_finestra = (imc_finestra_H / 2) + imc_finestra_scroll_T;
 
+				consola( "id: " + el.attr("data-id") );
+				consola( el_T + " > "+ imc_finestra_scroll_T );
+
 				if (el_T > pos_respecte_finestra) {
 
 					var anarScroll = el_T - (imc_finestra_H / 2);
+
+					escrolletja(anarScroll);
+
+				} else if (el_T < imc_finestra_scroll_T) {
+
+					var anarScroll = el_T - 20;
 
 					escrolletja(anarScroll);
 
@@ -361,10 +373,10 @@ $.fn.appDestaca = function(options) {
 					.remove();
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -676,7 +688,7 @@ $.fn.appFormsConfiguracio = function(options) {
 						});
 
 				}
-				
+
 				// valors posibles
 
 				if (json_valors_possibles && json_valors_possibles.length) {
@@ -725,8 +737,12 @@ $.fn.appFormsConfiguracio = function(options) {
 											var opcio = this
 												,opcio_valor = opcio.valor
 												,opcio_text = opcio.descripcion;
-											
-											var opcio_a = $("<a>").attr("data-value", opcio_valor).text( opcio_text );
+
+											if (opcio_text === "") {
+												opcio_text = "&nbsp;";
+											}
+
+											var opcio_a = $("<a>").attr("data-value", opcio_valor).html( opcio_text );
 
 											$("<li>")
 												.append( opcio_a )
@@ -753,7 +769,7 @@ $.fn.appFormsConfiguracio = function(options) {
 											var opcio = this
 												,opcio_valor = opcio.valor
 												,opcio_text = opcio.descripcion;
-											
+
 											var opcio_input = $("<input>").attr({ id: va_id+"__"+i+"_"+j, name: va_id, type: tipus_type, value: opcio_valor })
 												,opcio_text = $("<label>").attr("for", va_id+"__"+i+"_"+j).text( opcio_text )
 												,opcio_div = $("<div>").addClass( tipus_class ).append( opcio_input ).append( opcio_text );
@@ -808,7 +824,7 @@ $.fn.appFormsConfiguracio = function(options) {
 									var opcio_valor = val_valor.valor || false;
 
 									if (opcio_valor) {
-										
+
 										setTimeout(
 											function() {
 
@@ -818,7 +834,7 @@ $.fn.appFormsConfiguracio = function(options) {
 
 											},50
 										);
-											
+
 									}
 
 								} else if (elm_input_tipus === "selector" && elm_input_contingut === "m") {
@@ -1047,10 +1063,10 @@ $.fn.appFormsConfiguracio = function(options) {
 				);
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -1125,29 +1141,33 @@ $.fn.appFormsValida = function(options) {
 
 				if (input.attr("data-contingut") === "identificador" && input_val !== "") {
 
+					var identificadorValido = false;
+
 					if (input.attr("data-nif") === "s") {
 
-						esError = ( !appValidaIdentificador.nif(input_val) ) ? true : false;
+						identificadorValido = ( appValidaIdentificador.nif(input_val) ) ? true : false;
 
 					}
 
-					if (input.attr("data-cif") === "s") {
+					if (!identificadorValido && input.attr("data-cif") === "s") {
 
-						esError = ( !appValidaIdentificador.cif(input_val) ) ? true : false;
-
-					}
-
-					if (input.attr("data-nie") === "s") {
-
-						esError = ( !appValidaIdentificador.nie(input_val) ) ? true : false;
+						identificadorValido = ( appValidaIdentificador.cif(input_val) ) ? true : false;
 
 					}
 
-					if (input.attr("data-nss") === "s") {
+					if (!identificadorValido && input.attr("data-nie") === "s") {
 
-						esError = ( !appValidaIdentificador.nss(input_val) ) ? true : false;
+						identificadorValido = ( appValidaIdentificador.nie(input_val) ) ? true : false;
 
 					}
+
+					if (!identificadorValido && input.attr("data-nss") === "s") {
+
+						identificadorValido = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+
+					}
+
+					esError = !identificadorValido;
 
 				}
 
@@ -1190,10 +1210,10 @@ $.fn.appFormsValida = function(options) {
 				}
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -1280,7 +1300,7 @@ $.fn.appFormsAvalua = function(options) {
 					.done(function( data ) {
 
 						envia_ajax = false;
-						
+
 						json = data;
 
 						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -1308,7 +1328,7 @@ $.fn.appFormsAvalua = function(options) {
 								.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
 
 						}
-						
+
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
@@ -1317,12 +1337,12 @@ $.fn.appFormsAvalua = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-						
+
 						consola("Avalua dada del formulari: error des de FAIL");
 
 						imc_contenidor
 							.errors({ estat: "fail" });
-						
+
 					});
 
 			},
@@ -1364,17 +1384,17 @@ $.fn.appFormsAvalua = function(options) {
 				imc_forms_contenidor
 					.appFormsConfiguracio();
 
-				
+
 				// formateig de dades
 
 				imc_forms_contenidor
 					.appFormsFormateig();
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -1401,7 +1421,7 @@ $.fn.appFormsFormateig = function(options) {
 							.datepicker({ dateFormat: "dd/mm/yy", changeMonth: true, changeYear: true });
 
 				}
-				
+
 				// hora
 
 				if (!Modernizr.inputtypes.time) {
@@ -1412,7 +1432,7 @@ $.fn.appFormsFormateig = function(options) {
 							.horaCompletar();
 
 				}
-				
+
 				// generatedcontent
 
 				if (!Modernizr.generatedcontent) {
@@ -1422,16 +1442,16 @@ $.fn.appFormsFormateig = function(options) {
 							.prepend("<span class=\"imc-obligatori\">*</span>");
 
 				}
-				
+
 				// per a tothom
-				
+
 				if (element.hasClass("imc-el-selector") && !element.hasClass("imc-el-selector-events-enlinia")) {
 
 					element
 						.selectorIMC();
 
 				}
-				
+
 				element
 					.find(".imc-el-selector:not(.imc-el-selector-events-enlinia)")
 						.selectorIMC()
@@ -1451,7 +1471,7 @@ $.fn.appFormsFormateig = function(options) {
 						.end()
 					.find(".imc-el-index")
 						.indexa();
-					
+
 				if (element.hasClass("imc-el-index")) {
 
 					element
@@ -1460,10 +1480,10 @@ $.fn.appFormsFormateig = function(options) {
 				}
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -1555,7 +1575,7 @@ $.fn.appFormsAccions = function(options) {
 						.abort();
 
 				}
-				
+
 				envia_ajax =
 					$.ajax({
 						url: pag_url,
@@ -1569,7 +1589,7 @@ $.fn.appFormsAccions = function(options) {
 					.done(function( data ) {
 
 						envia_ajax = false;
-						
+
 						json = data;
 
 						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -1595,7 +1615,7 @@ $.fn.appFormsAccions = function(options) {
 								.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
 
 						}
-						
+
 					})
 					.fail(function(dades, tipus, errorThrown) {
 
@@ -1604,12 +1624,12 @@ $.fn.appFormsAccions = function(options) {
 						if (tipus === "abort") {
 							return false;
 						}
-						
+
 						consola("Formuari GUARDA: error des de FAIL");
 
 						imc_contenidor
 							.errors({ estat: "fail" });
-						
+
 					});
 
 			},
@@ -1654,7 +1674,7 @@ $.fn.appFormsAccions = function(options) {
 				document.location = url;
 
 			};
-		
+
 		// envia o inicia
 
 		if (accio === "envia") {
@@ -1662,11 +1682,11 @@ $.fn.appFormsAccions = function(options) {
 			envia();
 
 		} else {
-		
+
 			inicia();
 
 		}
-		
+
 	});
 	return this;
 }
@@ -1678,15 +1698,15 @@ $.fn.appFormsAccions = function(options) {
 
 function appFormsCarregaScripts() {
 
-	
+
 	$.when(
-		
-		$.getScript(APP_ + "js/forms/imc-forms--comuns.js")
-		,$.getScript(APP_ + "js/forms/imc-forms--funcions.js")
-		,$.getScript(APP_ + "js/forms/imc-forms--validacions.js")
-		,$.getScript(APP_ + "js/forms/imc-forms--serialitza.js")
+
+		$.getScript(APP_ + "js/forms/imc-forms--comuns.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/forms/imc-forms--funcions.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/forms/imc-forms--validacions.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/forms/imc-forms--serialitza.js?" + APP_VERSIO)
 		//,$.getScript(APP_ + "js/forms/literals/jquery-imc-literals-calendari-" + APP_IDIOMA + ".js")
-		,$.getScript(APP_ + "js/forms/literals/vars-imc-literals-" + APP_IDIOMA + ".js")
+		,$.getScript(APP_ + "js/forms/literals/vars-imc-literals-" + APP_IDIOMA + ".js?" + APP_VERSIO)
 
 	).then(
 
@@ -1712,7 +1732,7 @@ function appFormsCarregaScripts() {
 			imc_forms_contenidor
 				.find(".imc-el-arbre")
 					.arbre();
-			
+
 			// taula
 
 			imc_forms_contenidor
@@ -1724,7 +1744,7 @@ function appFormsCarregaScripts() {
 			imc_forms_contenidor
 				.find(".imc-el-text-selector")
 					.inputSelectAjax();
-			
+
 			// formateig de dades
 
 			imc_forms_contenidor
@@ -1737,7 +1757,7 @@ function appFormsCarregaScripts() {
 		function() {
 
 			consola("Error carrega JS FORMS");
-						
+
 			imc_contenidor
 				.errors({ estat: "fail" });
 
@@ -1766,61 +1786,61 @@ appFormsCarregaScripts();
 function appEventExemple() {
 
 	// events
-				
+
 	// input text
-	
+
 	$("#imc-text-selecciona").on("click", function() {
 		control_select("input_1", "B");
 	});
-	
+
 	$("#imc-text-deshabilita").on("click", function() {
 		control_disabled("input_1", true);
 	});
-	
+
 	$("#imc-text-habilita").on("click", function() {
 		control_disabled("input_1", false);
 	});
-	
+
 	$("#imc-text-lectura").on("click", function() {
 		control_readOnly("input_1", true);
 	});
-	
+
 	$("#imc-text-escritura").on("click", function() {
 		control_readOnly("input_1", false);
 	});
-	
+
 	$("#imc-text-valor").on("click", function() {
 		var vals = control_values("input_1");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	// llista radios
-	
+
 	$("#imc-seleccionaRadio").on("click", function() {
 		control_select("input_17", "B");
 	});
-	
+
 	$("#imc-deshabilitaRadios").on("click", function() {
 		control_disabled("input_17", true);
 	});
-	
+
 	$("#imc-habilitaRadios").on("click", function() {
 		control_disabled("input_17", false);
 	});
-	
+
 	$("#imc-comLectura-17a").on("click", function() {
 		control_readOnly("input_17", true);
 	});
-	
+
 	$("#imc-comLectura-17b").on("click", function() {
 		control_readOnly("input_17", false);
 	});
-	
+
 	$("#imc-radio-seleccionat").on("click", function() {
 		var vals = control_values("input_17");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	var radios_nou = [
 										{ "etiqueta": "Opción AAAA", "valor": "AAAA", "defecto": false }
 										,{ "etiqueta": "Opción BBBB", "valor": "BBBB", "defecto": false }
@@ -1828,43 +1848,43 @@ function appEventExemple() {
 										,{ "etiqueta": "Opción DDDD", "valor": "DDDD", "defecto": true }
 										,{ "etiqueta": "Opción EEEE", "valor": "EEEE", "defecto": false }
 									];
-	
+
 	$("#imc-radio-canvia").on("click", function() {
 		control_refill("input_17", radios_nou);
 	});
-	
+
 	//
-	
+
 	$("#imc-seleccionaCheck").on("click", function() {
 		control_select("input_18", "1");
 	});
-	
+
 	$("#imc-seleccionaChecks").on("click", function() {
 		control_select("input_18", ["4", "5"], true);
 	});
-	
+
 	$("#imc-deshabilitaChecks").on("click", function() {
 		control_disabled("input_18", true);
 	});
-	
+
 	$("#imc-habilitaChecks").on("click", function() {
 		control_disabled("input_18", false);
 	});
-	
+
 	$("#imc-comLectura-18a").on("click", function() {
 		control_readOnly("input_18", true);
 	});
-	
+
 	$("#imc-comLectura-18b").on("click", function() {
 		control_readOnly("input_18", false);
 	});
-	
+
 	$("#imc-select-alguno").on("click", function() {
 		alert(
 			imc_forms_formulari.find("input[name=input_18]:checkbox:checked").length
 		);
 	});
-	
+
 	$("#imc-check-seleccionat").on("click", function() {
 		var vals = control_values("input_18"),
 			selecccionats = "";
@@ -1873,7 +1893,7 @@ function appEventExemple() {
 		}
 		alert("Total: " + vals.length + " - Seleccionats: " + selecccionats);
 	});
-	
+
 	var checks_nou = [
 										{ "etiqueta": "Opción AAAA", "valor": "AAAA", "defecto": false }
 										,{ "etiqueta": "Opción BBBB", "valor": "BBBB", "defecto": false }
@@ -1881,33 +1901,33 @@ function appEventExemple() {
 										,{ "etiqueta": "Opción DDDD", "valor": "DDDD", "defecto": true }
 										,{ "etiqueta": "Opción EEEE", "valor": "EEEE", "defecto": false }
 									];
-	
+
 	$("#imc-check-canvia").on("click", function() {
 		control_refill("input_18", checks_nou);
 	});
-	
+
 	//
-	
+
 	$("#imc-select-op3").on("click", function() {
 		control_select("input_19", "CC");
 	});
-	
+
 	$("#imc-select-deshabilita").on("click", function() {
 		control_disabled("input_19", true);
 	});
-	
+
 	$("#imc-select-habilita").on("click", function() {
 		control_disabled("input_19", false);
 	});
-	
+
 	$("#imc-select-lectura").on("click", function() {
 		control_readOnly("input_19", true);
 	});
-	
+
 	$("#imc-select-escritura").on("click", function() {
 		control_readOnly("input_19", false);
 	});
-	
+
 	var select_nou = [
 											{ "etiqueta": "Opción AAAA", "valor": "AAAA", "defecto": false }
 											,{ "etiqueta": "Opción BBBB", "valor": "BBBB", "defecto": false }
@@ -1915,48 +1935,48 @@ function appEventExemple() {
 											,{ "etiqueta": "Opción DDDD", "valor": "DDDD", "defecto": true }
 											,{ "etiqueta": "Opción EEEE", "valor": "EEEE", "defecto": false }
 										];
-									
+
 	$("#imc-select-canvia").on("click", function() {
 		control_refill("input_19", select_nou);
 	});
-	
+
 	$("#imc-select-seleccionat").on("click", function() {
 		var vals = control_values("input_19");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	$("#imc-select-canvia-i-selecciona").on("click", function() {
 		control_refill("input_19", select_nou);
 		control_select("input_19", "CCCC");
 	});
-	
+
 	//
-	
+
 	$("#imc-multipleRadio-opA").on("click", function() {
 		control_select("input_20", "A");
 	});
-	
+
 	$("#imc-multipleRadio-deshabilita").on("click", function() {
 		control_disabled("input_20", true);
 	});
-	
+
 	$("#imc-multipleRadio-habilita").on("click", function() {
 		control_disabled("input_20", false);
 	});
-	
+
 	$("#imc-multipleRadio-lectura").on("click", function() {
 		control_readOnly("input_20", true);
 	});
-	
+
 	$("#imc-multipleRadio-escritura").on("click", function() {
 		control_readOnly("input_20", false);
 	});
-	
+
 	$("#imc-multipleRadio-seleccionat").on("click", function() {
 		var vals = control_values("input_20");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	var multipleRadio_nou = [
 														{ "etiqueta": "Opción AAAA", "valor": "AAAA", "defecto": false }
 														,{ "etiqueta": "Opción BBBB", "valor": "BBBB", "defecto": false }
@@ -1964,37 +1984,37 @@ function appEventExemple() {
 														,{ "etiqueta": "Opción DDDD", "valor": "DDDD", "defecto": true }
 														,{ "etiqueta": "Opción EEEE", "valor": "EEEE", "defecto": false }
 													];
-	
+
 	$("#imc-multipleRadio-canvia").on("click", function() {
 		control_refill("input_20", multipleRadio_nou);
 	});
-	
+
 	//
-	
+
 	$("#imc-multipleCheck").on("click", function() {
 		control_select("input_21", "A");
 	});
-	
+
 	$("#imc-multipleChecks").on("click", function() {
 		control_select("input_21", ["C", "D"], true);
 	});
-	
+
 	$("#imc-multipleCheck-deshabilita").on("click", function() {
 		control_disabled("input_21", true);
 	});
-	
+
 	$("#imc-multipleCheck-habilita").on("click", function() {
 		control_disabled("input_21", false);
 	});
-	
+
 	$("#imc-multipleCheck-lectura").on("click", function() {
 		control_readOnly("input_21", true);
 	});
-	
+
 	$("#imc-multipleCheck-escritura").on("click", function() {
 		control_readOnly("input_21", false);
 	});
-	
+
 	$("#imc-multipleCheck-seleccionat").on("click", function() {
 		var vals = control_values("input_21"),
 			selecccionats = "";
@@ -2003,7 +2023,7 @@ function appEventExemple() {
 		}
 		alert("Total: " + vals.length + " - Seleccionats: " + selecccionats);
 	});
-	
+
 	var multipleCheck_nou = [
 														{ "etiqueta": "Opción AAAA", "valor": "AAAA", "defecto": true }
 														,{ "etiqueta": "Opción BBBB", "valor": "BBBB", "defecto": false }
@@ -2011,37 +2031,37 @@ function appEventExemple() {
 														,{ "etiqueta": "Opción DDDD", "valor": "DDDD", "defecto": true }
 														,{ "etiqueta": "Opción EEEE", "valor": "EEEE", "defecto": false }
 													];
-	
+
 	$("#imc-multipleCheck-canvia").on("click", function() {
 		control_refill("input_21", multipleCheck_nou);
 	});
-	
+
 	// arbre
-	
+
 	$("#imc-arbre-selecciona").on("click", function() {
 		control_select("input_checkbox1", "2");
 	});
-	
+
 	$("#imc-arbre-selecciona-n").on("click", function() {
 		control_select("input_checkbox1", ["2","3","4"]);
 	});
-	
+
 	$("#imc-arbre-deshabilita").on("click", function() {
 		control_disabled("input_checkbox1", true);
 	});
-	
+
 	$("#imc-arbre-habilita").on("click", function() {
 		control_disabled("input_checkbox1", false);
 	});
-	
+
 	$("#imc-arbre-lectura").on("click", function() {
 		control_readOnly("input_checkbox1", true);
 	});
-	
+
 	$("#imc-arbre-escritura").on("click", function() {
 		control_readOnly("input_checkbox1", false);
 	});
-	
+
 	var arbre_nou = [
 										{"valor":"e", "etiqueta":"España"},
 										{"parentValor":"e", "valor":"ca", "etiqueta":"Catalunya"},
@@ -2057,7 +2077,7 @@ function appEventExemple() {
 	$("#imc-arbre-nou").on("click", function() {
 		control_refill("input_checkbox1", arbre_nou);
 	});
-	
+
 	$("#imc-arbre-seleccionat").on("click", function() {
 		var vals = control_values("input_checkbox1"),
 			selecccionats = "";
@@ -2066,266 +2086,266 @@ function appEventExemple() {
 		}
 		alert("Total: " + vals.length + " - Seleccionats: " + selecccionats);
 	});
-	
+
 	$("#imc-arbre-canvia-i-selecciona").on("click", function() {
 		control_refill("input_checkbox1");
 		control_select("input_checkbox1", "xa");
 	});
-	
+
 	$("#imc-arbre-expandix").on("click", function() {
 		control_expandAll("input_checkbox1", true);
 	});
-	
+
 	$("#imc-arbre-contrau").on("click", function() {
 		control_expandAll("input_checkbox1", false);
 	});
-	
+
 	//
-	
+
 	$("#imc-taula-deshabilita").on("click", function() {
 		control_disabled("input_30", true);
 	});
-	
+
 	$("#imc-taula-habilita").on("click", function() {
 		control_disabled("input_30", false);
 	});
-	
+
 	$("#imc-taula-lectura").on("click", function() {
 		control_readOnly("input_30", true);
 	});
-	
+
 	$("#imc-taula-escritura").on("click", function() {
 		control_readOnly("input_30", false);
 	});
-	
+
 	$("#imc-bt-afegix-input_30").on("click", function() {
 		//document.location = "index_pag_7_taula.html";
 		var url_page = "index_pag_7_taula_iframe.html",
 			url_vars = "?listaelementos@accion=insertar&listaelementos@campo=cListaElementos&listaelementos@indice=0&ID_INSTANCIA=72181210c1cad5a1555e6ff9982bc975 <http://rsanz.indra.es:8080/formfront/ver.do?listaelementos%40accion=insertar&listaelementos%40campo=cListaElementos&listaelementos%40indice=0&ID_INSTANCIA=72181210c1cad5a1555e6ff9982bc975";
 		control_tableDetall("input_30", url_page+url_vars);
 	});
-	
+
 	//
-	
+
 	$("#imc-taula-deshabilita_2").on("click", function() {
 		control_disabled("input_40", true);
 	});
-	
+
 	$("#imc-taula-habilita_2").on("click", function() {
 		control_disabled("input_40", false);
 	});
-	
+
 	$("#imc-taula-lectura_2").on("click", function() {
 		control_readOnly("input_40", true);
 	});
-	
+
 	$("#imc-taula-escritura_2").on("click", function() {
 		control_readOnly("input_40", false);
 	});
-	
+
 	$("#imc-bt-afegix-input_40").on("click", function() {
 		//document.location = "index_pag_7_taula.html";
 		var url_page = "index_pag_7_taula_iframe.html",
 			url_vars = "?listaelementos@accion=insertar&listaelementos@campo=cListaElementos&listaelementos@indice=0&ID_INSTANCIA=72181210c1cad5a1555e6ff9982bc975 <http://rsanz.indra.es:8080/formfront/ver.do?listaelementos%40accion=insertar&listaelementos%40campo=cListaElementos&listaelementos%40indice=0&ID_INSTANCIA=72181210c1cad5a1555e6ff9982bc975";
 		control_tableDetall("input_40", url_page+url_vars);
 	});
-	
+
 	// taula pag detall
-	
+
 	$("#imc-bt-ta-guarda").on("click", function() {
 		document.location = "index_pag_7.html";
 	});
-	
+
 	$("#imc-bt-ta-cancela").on("click", function() {
 		document.location = "index_pag_7.html";
 	});
-	
+
 	$("#imc-bt-ta-guarda-iframe").on("click", function() {
 		control_tableDetall_accio("guarda");
 	});
-	
+
 	$("#imc-bt-ta-cancela-iframe").on("click", function() {
 		control_tableDetall_accio("cancela");
 	});
-	
-	
-	
+
+
+
 	// textarea
-	
+
 	$("#imc-textarea-selecciona").on("click", function() {
 		control_select("input_Textarea", "Un text per al textarea");
 	});
-	
+
 	$("#imc-textarea-deshabilita").on("click", function() {
 		control_disabled("input_Textarea", true);
 	});
-	
+
 	$("#imc-textarea-habilita").on("click", function() {
 		control_disabled("input_Textarea", false);
 	});
-	
+
 	$("#imc-textarea-lectura").on("click", function() {
 		control_readOnly("input_Textarea", true);
 	});
-	
+
 	$("#imc-textarea-escritura").on("click", function() {
 		control_readOnly("input_Textarea", false);
 	});
-	
+
 	$("#imc-textarea-valor").on("click", function() {
 		var vals = control_values("input_Textarea");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	// data
-	
+
 	$("#imc-data-selecciona").on("click", function() {
 		control_select("input_15");
 	});
-	
+
 	$("#imc-data-deshabilita").on("click", function() {
 		control_disabled("input_15", true);
 	});
-	
+
 	$("#imc-data-habilita").on("click", function() {
 		control_disabled("input_15", false);
 	});
-	
+
 	$("#imc-data-lectura").on("click", function() {
 		control_readOnly("input_15", true);
 	});
-	
+
 	$("#imc-data-escritura").on("click", function() {
 		control_readOnly("input_15", false);
 	});
-	
+
 	$("#imc-data-valor").on("click", function() {
 		var vals = control_values("input_15");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	// hora
-	
+
 	$("#imc-time-selecciona").on("click", function() {
 		control_select("input_16");
 	});
-	
+
 	$("#imc-time-deshabilita").on("click", function() {
 		control_disabled("input_16", true);
 	});
-	
+
 	$("#imc-time-habilita").on("click", function() {
 		control_disabled("input_16", false);
 	});
-	
+
 	$("#imc-time-lectura").on("click", function() {
 		control_readOnly("input_16", true);
 	});
-	
+
 	$("#imc-time-escritura").on("click", function() {
 		control_readOnly("input_16", false);
 	});
-	
+
 	$("#imc-time-valor").on("click", function() {
 		var vals = control_values("input_16");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	// data i hora
-	
+
 	$("#imc-dateTime-selecciona").on("click", function() {
 		control_select("input_17");
 	});
-	
+
 	$("#imc-dateTime-deshabilita").on("click", function() {
 		control_disabled("input_17", true);
 	});
-	
+
 	$("#imc-dateTime-habilita").on("click", function() {
 		control_disabled("input_17", false);
 	});
-	
+
 	$("#imc-dateTime-lectura").on("click", function() {
 		control_readOnly("input_17", true);
 	});
-	
+
 	$("#imc-dateTime-escritura").on("click", function() {
 		control_readOnly("input_17", false);
 	});
-	
+
 	$("#imc-dateTime-valor").on("click", function() {
 		var vals = control_values("input_17");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	// numero
-	
+
 	$("#imc-number-selecciona").on("click", function() {
 		control_select("input_19");
 	});
-	
+
 	$("#imc-number-deshabilita").on("click", function() {
 		control_disabled("input_19", true);
 	});
-	
+
 	$("#imc-number-habilita").on("click", function() {
 		control_disabled("input_19", false);
 	});
-	
+
 	$("#imc-number-lectura").on("click", function() {
 		control_readOnly("input_19", true);
 	});
-	
+
 	$("#imc-number-escritura").on("click", function() {
 		control_readOnly("input_19", false);
 	});
-	
+
 	$("#imc-number-valor").on("click", function() {
 		var vals = control_values("input_19");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	// check unitario
-	
+
 	$("#imc-check1-selecciona").on("click", function() {
 		control_select("input_check_1", true);
 	});
-	
+
 	$("#imc-check1-deselecciona").on("click", function() {
 		control_select("input_check_1", false);
 	});
-	
+
 	$("#imc-check1-deshabilita").on("click", function() {
 		control_disabled("input_check_1", true);
 	});
-	
+
 	$("#imc-check1-habilita").on("click", function() {
 		control_disabled("input_check_1", false);
 	});
-	
+
 	$("#imc-check1-lectura").on("click", function() {
 		control_readOnly("input_check_1", true);
 	});
-	
+
 	$("#imc-check1-escritura").on("click", function() {
 		control_readOnly("input_check_1", false);
 	});
-	
+
 	$("#imc-check1-valor").on("click", function() {
 		var vals = control_values("input_check_1");
 		alert("Etiqueta: " + vals.etiqueta + "- Valor: " + vals.valor);
 	});
-	
+
 	// enviant dades
 	$("#imc-capa-enviant-dades").on("click", function() {
 		mostrarCapaEnviando();
-		
+
 		setTimeout(
 			function() {
 				ocultarCapaEnviando();
 			}, 2000
 		);
-		
+
 	});
 
 }

@@ -222,16 +222,16 @@ function carregaHTML() {
 
 	$.when(
 		
-		$.get(APP_ + "css/imc-sf-botonera.css")
-		,$.get(APP_ + "css/imc-sf-base.css")
+		$.get(APP_ + "css/imc-sf-botonera.css?" + APP_VERSIO)
+		,$.get(APP_ + "css/imc-sf-base.css?" + APP_VERSIO)
 		,$.get(APP_ + "html/imc-cap.html")
 		,$.get(APP_ + "html/imc-contacte.html")
 		,$.get(APP_ + "html/imc-missatge.html")
-		,$.getScript(APP_ + "js/utils/modernizr-imc-0.3.js")
-		,$.getScript(APP_ + "js/utils/markup.min.js")
-		,$.getScript(APP_ + "js/imc-sf-pas.js")
-		,$.getScript(APP_ + "js/imc-sf-funcions.js")
-		,$.getScript(APP_ + "js/imc-sf-inicia.js")
+		,$.getScript(APP_ + "js/utils/modernizr-imc-0.3.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/utils/markup.min.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/imc-sf-pas.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/imc-sf-funcions.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/imc-sf-inicia.js?" + APP_VERSIO)
 
 	).then(
 

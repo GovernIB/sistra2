@@ -959,7 +959,7 @@ $.fn.appAccessibilitat = function(options) {
 		
 					$.get(APP_ + "css/imc-accessibilitat.css")
 					,$.get(APP_ + "html/imc-accessibilitat.html")
-					,$.getScript(APP_ + "js/imc-accessibilitat.js")
+					,$.getScript(APP_ + "js/imc-accessibilitat.js?" + APP_VERSIO)
 
 				).then(
 

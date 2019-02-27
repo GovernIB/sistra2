@@ -277,11 +277,11 @@ $.fn.appEmplenaFormulari = function(options) {
 
 				$.when(
 					
-					$.get(APP_ + "css/sf--emplenar/imc-destaca.css")
-					,$.get(APP_ + "css/sf--emplenar/imc-forms-select.css")
-					,$.get(APP_ + "css/sf--emplenar/imc-forms-taula-iframe.css")
-					,$.get(APP_ + "css/sf--emplenar/imc-forms.css")
-					,$.getScript(APP_ + "js/forms/imc-forms--inicia.js")
+					$.get(APP_ + "css/sf--emplenar/imc-destaca.css?" + APP_VERSIO)
+					,$.get(APP_ + "css/sf--emplenar/imc-forms-select.css?" + APP_VERSIO)
+					,$.get(APP_ + "css/sf--emplenar/imc-forms-taula-iframe.css?" + APP_VERSIO)
+					,$.get(APP_ + "css/sf--emplenar/imc-forms.css?" + APP_VERSIO)
+					,$.getScript(APP_ + "js/forms/imc-forms--inicia.js?" + APP_VERSIO)
 
 				).then(
 

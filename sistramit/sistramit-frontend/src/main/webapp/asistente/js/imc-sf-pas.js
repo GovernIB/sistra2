@@ -45,6 +45,9 @@ var HTML_PAS_LITERALS = {
 			,txtNoCompletat: txtNoCompletat
 			,txtAnterior: txtAnterior
 			,txtSeguent: txtSeguent
+			,txtAjudaActivada: txtAjudaActivada
+			,txtDesactivar: txtDesactivar
+			,txtTancaFormulari: txtTancaFormulari
 		},
 		"ad": {
 			txtAnnexarTitol: txtAnnexarTitol
@@ -285,9 +288,9 @@ $.fn.appPas = function(options) {
 
 				$.when(
 		
-					$.get(APP_ + "css/imc-sf--"+pas_arxius_nom+".css")
+					$.get(APP_ + "css/imc-sf--"+pas_arxius_nom+".css?" + APP_VERSIO)
 					,$.get(APP_ + "html/imc-sf--"+pas_arxius_nom+".html")
-					,$.getScript(APP_ + "js/imc-sf--"+pas_arxius_nom+".js")
+					,$.getScript(APP_ + "js/imc-sf--"+pas_arxius_nom+".js?" + APP_VERSIO)
 
 				).then(
 

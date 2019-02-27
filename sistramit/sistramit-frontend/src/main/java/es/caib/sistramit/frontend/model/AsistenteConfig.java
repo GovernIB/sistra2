@@ -8,48 +8,70 @@ package es.caib.sistramit.frontend.model;
  */
 public final class AsistenteConfig {
 
-    /** Url asistente. */
-    private String url;
+	/** Versión aplicación. */
+	private String version;
 
-    /** Idioma. */
-    private String idioma;
+	/** Url asistente. */
+	private String url;
 
-    /**
-     * Método de acceso a url.
-     *
-     * @return url
-     */
-    public String getUrl() {
-        return url;
-    }
+	/** Idioma. */
+	private String idioma;
 
-    /**
-     * Método para establecer url.
-     *
-     * @param url
-     *            url a establecer
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	/**
+	 * Método de acceso a url.
+	 *
+	 * @return url
+	 */
+	public String getUrl() {
+		return url;
+	}
 
-    /**
-     * Método de acceso a idioma.
-     * 
-     * @return idioma
-     */
-    public String getIdioma() {
-        return idioma;
-    }
+	/**
+	 * Método para establecer url.
+	 *
+	 * @param url
+	 *            url a establecer
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    /**
-     * Método para establecer idioma.
-     * 
-     * @param idioma
-     *            idioma a establecer
-     */
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
-    }
+	/**
+	 * Método de acceso a idioma.
+	 *
+	 * @return idioma
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
+
+	/**
+	 * Método para establecer idioma.
+	 *
+	 * @param idioma
+	 *            idioma a establecer
+	 */
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
+	}
+
+	/**
+	 * Método de acceso a version.
+	 * 
+	 * @return version
+	 */
+	public String getVersion() {
+		return version;
+	}
+
+	/**
+	 * Método para establecer version.
+	 * 
+	 * @param version
+	 *            version a establecer
+	 */
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
 }

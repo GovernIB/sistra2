@@ -60,7 +60,6 @@ import es.caib.sistramit.frontend.security.UsuarioAutenticado;
 @RequestMapping(value = "/asistente")
 public class AsistenteTramitacionController extends TramitacionController {
 
-
 	/** Sesion. */
 	@Autowired
 	private SesionHttp sesionHttp;
@@ -248,13 +247,9 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 */
 	@RequestMapping(value = "/descargarClave.html")
 	public ModelAndView descargarClave() {
-		// TODO PENDIENTE
-
 		final String idSesionTramitacion = getIdSesionTramitacionActiva();
-
-		final String nombre = "clave.txt";
-		final byte[] datosFichero = ("PENDIENTE GENERAR FICHERO PDF. CLAVE: " + getIdSesionTramitacionActiva())
-				.getBytes();
+		final byte[] datosFichero = getFlujoTramitacionService().obtenerClavePdf(idSesionTramitacion);
+		final String nombre = idSesionTramitacion + ".pdf";
 		return generarDownloadView(nombre, datosFichero);
 	}
 
@@ -367,14 +362,6 @@ public class AsistenteTramitacionController extends TramitacionController {
 			props.setProperty(key, value);
 		}
 
-		// Metemos version sistra2 para cachear js/css por versión (si es SNAPSHOT
-		// metemos timestamp para forzar recuperación)
-		String version = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.VERSION);
-		if (StringUtils.endsWith(version, "SNAPSHOT")) {
-			version += "-" + System.currentTimeMillis();
-		}
-		props.setProperty("sistra2_version", version);
-
 		return new ModelAndView("asistente/literales", "literales", props.entrySet());
 	}
 
@@ -385,9 +372,19 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 */
 	@RequestMapping("/js/configuracion.js")
 	public ModelAndView obtenerConfiguracionAplicacion() {
+
+		// Metemos version sistra2 para cachear js/css por versión (si es SNAPSHOT
+		// metemos timestamp para forzar recuperación)
+		String version = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.VERSION);
+		if (StringUtils.endsWith(version, "SNAPSHOT")) {
+			version += "-" + System.currentTimeMillis();
+		}
+
 		final AsistenteConfig conf = new AsistenteConfig();
 		conf.setUrl(getSystemService().obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL));
 		conf.setIdioma(this.getIdioma());
+		conf.setVersion(version);
+
 		return new ModelAndView("asistente/configuracion", "configuracion", conf);
 	}
 

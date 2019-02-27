@@ -13,6 +13,9 @@ if (headerCSRF == "") {
 	 headerCSRF = "X-CSRF-TOKEN";
 }
 
+// versió
+
+var APP_VERSIO = "version=${configuracion.version}";
 
 // configuració de URLs
 
