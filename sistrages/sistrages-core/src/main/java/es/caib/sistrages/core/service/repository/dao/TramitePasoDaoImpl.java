@@ -2,6 +2,7 @@ package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -648,16 +649,6 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			if (mplantilla.getIdFormateadorFormulario() != null) {
 				final Long idFormateador = mapFormateadores.get(mplantilla.getIdFormateadorFormulario());
 				mplantilla.setIdFormateadorFormulario(idFormateador);
-				/*
-				 * final FormateadorFormulario formateador = formateadorFormularioDao
-				 * .getById(idFormateador);
-				 *
-				 * final String identificadorFormateador =
-				 * formateadores.get(mplantilla.getIdFormateadorFormulario())
-				 * .getIdentificador(); final FormateadorFormulario formateador =
-				 * formateadorFormularioDao .getByCodigo(identificadorFormateador);
-				 * mplantilla.setIdFormateadorFormulario(formateador.getCodigo());
-				 */
 			}
 			mplantilla.setCodigo(null);
 
@@ -690,8 +681,16 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			final Map<Long, byte[]> ficherosContent, final Map<Long, Long> idDominiosEquivalencia,
 			final Long idEntidad) {
 
-		for (final PaginaFormulario paginaFormulario : paginas) {
+		int ordenPagina = 1;
+		Collections.sort(paginas, new Comparator<PaginaFormulario>() {
+			@Override
+			public int compare(final PaginaFormulario p1, final PaginaFormulario p2) {
+				return Integer.compare(p1.getOrden(), p2.getOrden());
+			}
 
+		});
+		for (final PaginaFormulario paginaFormulario : paginas) {
+			paginaFormulario.setOrden(ordenPagina);
 			final List<LineaComponentesFormulario> lineas = paginaFormulario.getLineas();
 
 			paginaFormulario.setLineas(null);
@@ -705,18 +704,20 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			// Recorremos las lineas anteriormente
 			if (lineas != null) {
 				Collections.sort(lineas);
-
+				int ordenLinea = 1;
 				for (final LineaComponentesFormulario mlinea : lineas) {
-
+					mlinea.setOrden(ordenLinea);
 					if (isTipoEtiqueta(mlinea)) {
 						anyadirComponenteEtiqueta((ComponenteFormularioEtiqueta) mlinea.getComponentes().get(0),
 								mlinea.getOrden(), idPagina);
+						ordenLinea++;
 						continue;
 					}
 
 					if (isTipoSeccion(mlinea)) {
 						anyadirComponenteSeccion((ComponenteFormularioSeccion) mlinea.getComponentes().get(0),
 								mlinea.getOrden(), idPagina);
+						ordenLinea++;
 						continue;
 					}
 
@@ -727,9 +728,11 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 
 					if (componentes != null && !componentes.isEmpty()) {
 						Collections.sort(componentes);
+						int ordenComponente = 1;
 
 						// Añadir los componentes de la linea
 						for (final ComponenteFormulario componente : componentes) {
+							componente.setOrden(ordenComponente);
 							if (componente instanceof ComponenteFormularioCampoCheckbox) {
 								anyadirComponenteCheckbox((ComponenteFormularioCampoCheckbox) componente, idLinea,
 										idPagina);
@@ -745,10 +748,13 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 							} else if (componente instanceof ComponenteFormularioCampo) {
 								anyadirComponenteCampo((ComponenteFormularioCampo) componente, idLinea, idPagina);
 							}
+							ordenComponente++;
 						}
 					}
+					ordenLinea++;
 				}
 			}
+			ordenPagina++;
 		}
 
 	}

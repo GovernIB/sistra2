@@ -315,6 +315,11 @@ public class DialogTramiteImportar extends DialogControllerBase {
 					tramiteActual.getCodigo());
 			if (tramiteVersionActual != null) {
 				tramiteVersionActual.setListaPasos(tramiteService.getTramitePasos(tramiteVersionActual.getCodigo()));
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					tramiteVersionActual.setDebug(true);
+				} else {
+					tramiteVersionActual.setDebug(false);
+				}
 			}
 		}
 
@@ -430,6 +435,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 			if (dominioActual != null && dominioActual.getIdFuenteDatos() != null) {
 				fdActual = dominioService.loadFuenteDato(dominioActual.getIdFuenteDatos());
+			} else if (fd != null) {
+				fdActual = dominioService.loadFuenteDato(fd.getIdentificador());
 			}
 
 			final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
@@ -800,6 +807,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			correcto = false;
 		}
 
+		// Comprobamos que sean el mismo codigo dir3 (el del usuario
+		final String codigoDIR3 = prop.getProperty("entidad");
+		final String dir3entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getCodigoDIR3();
+		if (codigoDIR3 == null || !codigoDIR3.equals(dir3entidad)) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteImportar.error.dir3distinto"));
+			correcto = false;
+		}
 		return correcto;
 	}
 

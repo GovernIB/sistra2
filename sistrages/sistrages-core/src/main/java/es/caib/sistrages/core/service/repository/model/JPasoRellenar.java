@@ -1,6 +1,10 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -135,8 +139,20 @@ public class JPasoRellenar implements IModelApi {
 			jpasoRellenar.setPasoTramitacion(jpasoTramitacion);
 			if (origPasoRellenar.getFormulariosTramite() != null) {
 				jpasoRellenar.setFormulariosTramite(new HashSet<JFormularioTramite>());
-				for (final JFormularioTramite formulario : origPasoRellenar.getFormulariosTramite()) {
-					jpasoRellenar.getFormulariosTramite().add(JFormularioTramite.clonar(formulario));
+				int ordenFormulario = 1;
+				final List<JFormularioTramite> formularios = new ArrayList<>(origPasoRellenar.getFormulariosTramite());
+				Collections.sort(formularios, new Comparator<JFormularioTramite>() {
+					@Override
+					public int compare(final JFormularioTramite p1, final JFormularioTramite p2) {
+						return Integer.compare(p1.getOrden(), p2.getOrden());
+					}
+
+				});
+				for (final JFormularioTramite formulario : formularios) {
+					final JFormularioTramite jform = JFormularioTramite.clonar(formulario);
+					jform.setOrden(ordenFormulario);
+					jpasoRellenar.getFormulariosTramite().add(jform);
+					ordenFormulario++;
 				}
 			}
 		}

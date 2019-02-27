@@ -153,11 +153,13 @@ public interface DominioDao {
 	 * Importa un DAO según las condiciones.
 	 *
 	 * @param filaDominio
+	 * @param idEntidad
+	 * @param idArea
 	 * @return El codigo del dominio, tanto cuando se mantiene como cuando se
 	 *         reemplaza o crea.
 	 * @throws Exception
 	 */
-	Long importar(FilaImportarDominio filaDominio, Long idDominio) throws Exception;
+	Long importar(FilaImportarDominio filaDominio, Long idEntidad, Long idArea) throws Exception;
 
 	/**
 	 * Clona un dominio.

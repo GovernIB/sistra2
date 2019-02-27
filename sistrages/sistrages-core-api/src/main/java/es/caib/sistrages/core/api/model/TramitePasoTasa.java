@@ -33,4 +33,16 @@ public class TramitePasoTasa extends TramitePaso {
 		this.tasas = tasas;
 	}
 
+	/**
+	 * Método que fuerza a reordenar la lista de tasas.
+	 */
+	public void reordenar() {
+		int ordenTasa = 1;
+		if (this.tasas != null) {
+			for (final Tasa tasa : this.tasas) {
+				tasa.setOrden(ordenTasa);
+				ordenTasa++;
+			}
+		}
+	}
 }

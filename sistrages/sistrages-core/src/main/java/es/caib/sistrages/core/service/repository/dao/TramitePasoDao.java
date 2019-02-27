@@ -215,6 +215,7 @@ public interface TramitePasoDao {
 	 * @param ficheros
 	 * @param ficherosContent
 	 * @param idFormateadores
+	 * @param mapFormateadores
 	 * @param idDominiosEquivalencia
 	 * @return
 	 */

@@ -396,7 +396,8 @@ public class DominioDaoImpl implements DominioDao {
 	 * @throws Exception
 	 */
 	@Override
-	public Long importar(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
+	public Long importar(final FilaImportarDominio filaDominio, final Long idEntidad, final Long idArea)
+			throws Exception {
 		// Si es reemplazar, hacemos la acción.
 		if (filaDominio.getAccion() == TypeImportarAccion.REEMPLAZAR) {
 			JDominio dominioAlmacenar;
@@ -407,7 +408,7 @@ public class DominioDaoImpl implements DominioDao {
 
 				if (filaDominio.getDominio().getAmbito() == TypeAmbito.AREA) {
 
-					final JArea jArea = entityManager.find(JArea.class, filaDominio.getIdArea());
+					final JArea jArea = entityManager.find(JArea.class, idArea);
 					final Set<JArea> areas = new HashSet<>(0);
 					areas.add(jArea);
 					dominioAlmacenar.setAreas(areas);

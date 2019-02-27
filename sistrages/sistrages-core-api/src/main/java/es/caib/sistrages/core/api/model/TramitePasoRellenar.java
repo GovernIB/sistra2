@@ -33,4 +33,17 @@ public class TramitePasoRellenar extends TramitePaso {
 		this.formulariosTramite = formulariosTramite;
 	}
 
+	/**
+	 * Método que reordena los formularios tramite
+	 */
+	public void reordenar() {
+		int ordenFormularios = 1;
+		if (this.formulariosTramite != null) {
+			for (final FormularioTramite documento : this.formulariosTramite) {
+				documento.setOrden(ordenFormularios);
+				ordenFormularios++;
+			}
+		}
+	}
+
 }

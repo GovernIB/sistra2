@@ -6,6 +6,7 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosCampo;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
 import es.caib.sistrages.core.api.model.types.TypeImportarEstado;
@@ -160,12 +161,46 @@ public class FilaImportarDominio extends FilaImportar {
 			return;
 		}
 
+		// Si ambos dominios son de tipo Area, tienen que ser el mismo area (sino, es
+		// probable que no se vean)
+		if (dominio != null && dominioActual != null && dominio.getAmbito() == dominioActual.getAmbito()
+				&& dominio.getAmbito() == TypeAmbito.AREA && isAreaErroneo(dominioActual, dominio)) {
+
+			this.accion = TypeImportarAccion.ERROR;
+			this.estado = TypeImportarEstado.EXISTE;
+			this.resultado = TypeImportarResultado.ERROR;
+			this.visibleBoton = false;
+			this.mismoTipo = false;
+			this.setMensaje("importar.error.ambitoAreaDistintaArea");
+			return;
+		}
+
 		if (permisosEdicion) {
 			checkDominioModoEdicion();
 		} else {
 			checkDominioModoActualizacion();
 		}
 
+	}
+
+	/**
+	 * Comprueba si el area de dos dominios son iguales
+	 *
+	 * @param dominio
+	 * @param dominio2
+	 * @return
+	 */
+	private boolean isAreaErroneo(final Dominio dominio, final Dominio dominio2) {
+		boolean retorno;
+		if (dominio.getAreas().size() != 1 || dominio2.getAreas().size() != 1) {
+			retorno = true;
+		} else {
+			final Long idArea = Long.valueOf(dominio.getAreas().toArray()[0].toString());
+			final Long idArea2 = Long.valueOf(dominio2.getAreas().toArray()[0].toString());
+			retorno = idArea.compareTo(idArea2) != 0; // Si son iguales, el valor 0 y por tanto, será false
+
+		}
+		return retorno;
 	}
 
 	/**

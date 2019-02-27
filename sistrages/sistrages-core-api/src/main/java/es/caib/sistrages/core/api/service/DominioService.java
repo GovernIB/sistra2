@@ -236,9 +236,11 @@ public interface DominioService {
 	 *
 	 * @param filaDominio
 	 * @param idEntidad
+	 * @param idArea
 	 * @throws Exception
 	 */
-	public void importarDominio(FilaImportarDominio filaDominio, final Long idEntidad) throws Exception;
+	public void importarDominio(FilaImportarDominio filaDominio, final Long idEntidad, final Long idArea)
+			throws Exception;
 
 	/**
 	 * Clonar dominio.

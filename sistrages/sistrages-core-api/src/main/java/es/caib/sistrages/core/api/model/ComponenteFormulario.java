@@ -206,12 +206,6 @@ public abstract class ComponenteFormulario extends ObjetoFormulario implements C
 
 	@Override
 	public int compareTo(final ComponenteFormulario arg0) {
-		int comparador;
-		if (this.getOrden() < arg0.getOrden()) {
-			comparador = -1;
-		} else {
-			comparador = 1;
-		}
-		return comparador;
+		return Integer.compare(this.getOrden(), arg0.getOrden());
 	}
 }

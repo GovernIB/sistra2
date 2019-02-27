@@ -268,8 +268,9 @@ public class DominioServiceBean implements DominioService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
-		dominioService.importarDominio(filaDominio, idEntidad);
+	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad, final Long idArea)
+			throws Exception {
+		dominioService.importarDominio(filaDominio, idEntidad, idArea);
 	}
 
 	@Override

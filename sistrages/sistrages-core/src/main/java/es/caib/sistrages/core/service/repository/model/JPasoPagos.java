@@ -1,6 +1,10 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -126,9 +130,21 @@ public class JPasoPagos implements IModelApi {
 			jpasoPagos.setCodigo(null);
 			jpasoPagos.setPasoTramitacion(jpasoTramitacion);
 			if (origPasoPagos.getPagosTramite() != null) {
+				int ordenPago = 1;
 				jpasoPagos.setPagosTramite(new HashSet<JPagoTramite>());
-				for (final JPagoTramite origPagoTramite : origPasoPagos.getPagosTramite()) {
-					jpasoPagos.getPagosTramite().add(JPagoTramite.clonar(origPagoTramite, jpasoPagos));
+				final List<JPagoTramite> pagos = new ArrayList<>(origPasoPagos.getPagosTramite());
+				Collections.sort(pagos, new Comparator<JPagoTramite>() {
+					@Override
+					public int compare(final JPagoTramite p1, final JPagoTramite p2) {
+						return Integer.compare(p1.getOrden(), p2.getOrden());
+					}
+
+				});
+				for (final JPagoTramite origPagoTramite : pagos) {
+					final JPagoTramite jpago = JPagoTramite.clonar(origPagoTramite, jpasoPagos);
+					jpago.setOrden(ordenPago);
+					jpasoPagos.getPagosTramite().add(jpago);
+					ordenPago++;
 				}
 			}
 		}

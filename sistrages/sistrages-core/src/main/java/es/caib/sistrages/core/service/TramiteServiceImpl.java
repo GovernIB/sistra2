@@ -1,6 +1,8 @@
 package es.caib.sistrages.core.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,9 @@ import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
+import es.caib.sistrages.core.api.model.TramitePasoAnexar;
+import es.caib.sistrages.core.api.model.TramitePasoRellenar;
+import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
@@ -910,7 +915,7 @@ public class TramiteServiceImpl implements TramiteService {
 		final Map<Long, Long> idDominiosEquivalencia = new HashMap<>();
 		final List<Long> idDominios = new ArrayList<>();
 		for (final FilaImportarDominio filaDominio : filasDominios) {
-			final Long idDominio = dominiosDao.importar(filaDominio, idEntidad);
+			final Long idDominio = dominiosDao.importar(filaDominio, idEntidad, idArea);
 			idDominios.add(idDominio);
 			idDominiosEquivalencia.put(idDominio, filaDominio.getDominio().getCodigo());
 		}
@@ -926,9 +931,38 @@ public class TramiteServiceImpl implements TramiteService {
 		}
 
 		final Long idTramiteVersion = tramiteDao.importar(filaTramiteVersion, idTramite, idDominios, usuario);
-		for (final TramitePaso tramitePaso : filaTramiteVersion.getTramiteVersion().getListaPasos()) {
+		int ordenPaso = 1;
+		final List<TramitePaso> pasos = filaTramiteVersion.getTramiteVersion().getListaPasos();
+		Collections.sort(pasos, new Comparator<TramitePaso>() {
+			@Override
+			public int compare(final TramitePaso p1, final TramitePaso p2) {
+				return Integer.compare(p1.getOrden(), p2.getOrden());
+			}
+
+		});
+		for (final TramitePaso tramitePaso : pasos) {
+			tramitePaso.setOrden(ordenPaso);
+			reordenar(tramitePaso);
 			tramitePasoDao.importar(filaTramiteVersion, tramitePaso, idTramiteVersion, idEntidad, formularios, ficheros,
 					ficherosContent, formateadores, mapFormateadores, idDominiosEquivalencia);
+			ordenPaso++;
+		}
+	}
+
+	/**
+	 * Fuerza un orden de 1 en ascendente de tasas/anexos/formularios.
+	 *
+	 * @param tramitePaso
+	 */
+	private void reordenar(final TramitePaso tramitePaso) {
+		if (tramitePaso instanceof TramitePasoTasa) {
+			((TramitePasoTasa) tramitePaso).reordenar();
+		}
+		if (tramitePaso instanceof TramitePasoAnexar) {
+			((TramitePasoAnexar) tramitePaso).reordenar();
+		}
+		if (tramitePaso instanceof TramitePasoRellenar) {
+			((TramitePasoRellenar) tramitePaso).reordenar();
 		}
 	}
 

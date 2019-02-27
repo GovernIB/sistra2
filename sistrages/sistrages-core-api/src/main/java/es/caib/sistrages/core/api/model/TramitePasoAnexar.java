@@ -51,4 +51,17 @@ public class TramitePasoAnexar extends TramitePaso {
 		this.scriptAnexosDinamicos = scriptAnexosDinamicos;
 	}
 
+	/**
+	 * Método que fuerza a reordenar la lista de documentos.
+	 */
+	public void reordenar() {
+		int ordenDocumento = 1;
+		if (this.documentos != null) {
+			for (final Documento documento : this.documentos) {
+				documento.setOrden(ordenDocumento);
+				ordenDocumento++;
+			}
+		}
+	}
+
 }

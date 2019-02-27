@@ -49,6 +49,7 @@ import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
+import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.GestorFicherosService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.CsvUtil;
@@ -85,6 +86,10 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** Servicio. */
 	@Inject
 	private TramiteService tramiteService;
+
+	/** Servicio. */
+	@Inject
+	private EntidadService entidadService;
 
 	/** Id elemento a tratar. */
 	private String id;
@@ -477,6 +482,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		prop.setProperty("fecha", Calendar.getInstance().getTime().toString());
 		prop.setProperty("usuario", UtilJSF.getSessionBean().getUserName());
 		prop.setProperty("tipo", TypeImportarTipo.TRAMITE.toString());
+		final String dir3entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getCodigoDIR3();
+		prop.setProperty("entidad", dir3entidad);
 		final ByteArrayOutputStream output = new ByteArrayOutputStream();
 		prop.store(output, null);
 

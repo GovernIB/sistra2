@@ -50,11 +50,33 @@
 	  	<p:outputPanel styleClass="botonera">
 	     	<p:toolbar>
 	     		<f:facet name="right">
-	        		<p:commandButton value="#{msg['botones.duplicar']}" actionListener="#{dialogTramiteClonar.clonar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+	        		<p:commandButton id="buttonClonar" widgetVar="buttonClonarWidget" onclick="disableClick()"  oncomplete="enableClick()"
+                  value="#{msg['botones.duplicar']}" actionListener="#{dialogTramiteClonar.clonar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul"/>
 	        		<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteClonar.cerrar()}" process="@this" />
 				</f:facet>
 			</p:toolbar>
 	    </p:outputPanel>
+	    <h:outputScript >
+
+			function getWidgetVarById(id) {
+			   for (var propertyName in PrimeFaces.widgets) {
+			     if (PrimeFaces.widgets[propertyName].id === id) {
+			       return PrimeFaces.widgets[propertyName];
+			     }
+			   }
+			}
+
+			function disableClick(){
+				var elemento = getWidgetVarById('dialogDominioClonar:buttonClonar');
+				elemento.disable();
+			}
+
+			function enableClick(){
+				var elemento = getWidgetVarById('dialogDominioClonar:buttonClonar');
+				elemento.enable();
+			}
+
+		</h:outputScript>
 	</h:form>
 </h:body>
 

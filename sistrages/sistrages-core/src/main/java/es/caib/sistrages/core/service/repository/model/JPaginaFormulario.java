@@ -1,6 +1,8 @@
 package es.caib.sistrages.core.service.repository.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -259,10 +261,22 @@ public class JPaginaFormulario implements IModelApi {
 
 			jpagina.setPaginaFinal(pagina.isPaginaFinal());
 			jpagina.setPaginaAsociadaListaElementos(pagina.isPaginaAsociadaListaElementos());
+
 			if (pagina.getLineasFormulario() != null) {
+				final List<JLineaFormulario> jlineas = new ArrayList<>(pagina.getLineasFormulario());
+				Collections.sort(jlineas, new Comparator<JLineaFormulario>() {
+					@Override
+					public int compare(final JLineaFormulario p1, final JLineaFormulario p2) {
+						return Integer.compare(p1.getOrden(), p2.getOrden());
+					}
+
+				});
 				final Set<JLineaFormulario> lineasFormulario = new HashSet<>(0);
-				for (final JLineaFormulario linea : pagina.getLineasFormulario()) {
-					lineasFormulario.add(JLineaFormulario.clonar(linea, jpagina, cambioArea));
+				int ordenLinea = 1;
+				for (final JLineaFormulario jlinea : jlineas) {
+					jlinea.setOrden(ordenLinea);
+					lineasFormulario.add(JLineaFormulario.clonar(jlinea, jpagina, cambioArea));
+					ordenLinea++;
 				}
 				jpagina.setLineasFormulario(lineasFormulario);
 			}

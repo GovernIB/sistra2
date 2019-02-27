@@ -359,7 +359,6 @@ public class TramiteDaoImpl implements TramiteDao {
 			}
 			jdominio.getVersionesTramite().add(jVersionTramite);
 			entityManager.merge(jdominio);
-
 		}
 
 		// Paso 3.0 Obtenemos formateadores
@@ -372,10 +371,13 @@ public class TramiteDaoImpl implements TramiteDao {
 		queryPasos.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
 		@SuppressWarnings("unchecked")
 		final List<JPasoTramitacion> jpasos = queryPasos.getResultList();
+		int ordenPaso = 1;
 		for (final JPasoTramitacion origPaso : jpasos) {
 
 			final Map<String, JFormulario> forms = new HashMap<>();
 			final JPasoTramitacion jpaso = JPasoTramitacion.clonar(origPaso, jVersionTramite);
+			jpaso.setOrden(ordenPaso);
+
 			if (origPaso.getPasoRellenar() != null && origPaso.getPasoRellenar().getFormulariosTramite() != null
 					&& !origPaso.getPasoRellenar().getFormulariosTramite().isEmpty()) {
 				// Habria que guardarse los diseños.
@@ -394,11 +396,13 @@ public class TramiteDaoImpl implements TramiteDao {
 						if (formTramite.getIdentificador().equals(entry.getKey())) {
 							formTramite.setFormulario(jform);
 							entityManager.merge(jform);
+							break;
 						}
 					}
 				}
 			}
 			checkFicherosPaso(jpaso, origPaso, idEntidad);
+			ordenPaso++;
 		}
 
 		return jVersionTramite.getCodigo();
@@ -899,7 +903,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			jTramiteVersion.setAdmitePersistencia(filaTramiteVersion.getTramiteVersion().isPersistencia());
 			jTramiteVersion.setAutenticado(filaTramiteVersion.getTramiteVersion().isAutenticado());
 			jTramiteVersion.setBloqueada(false);
-			jTramiteVersion.setDebug(false);
+			jTramiteVersion.setDebug(filaTramiteVersion.getTramiteVersion().isDebug());
 			jTramiteVersion.setDesactivacionTemporal(filaTramiteVersion.getTramiteVersion().isDesactivacion());
 			jTramiteVersion.setIdiomasSoportados(filaTramiteVersion.getTramiteVersion().getIdiomasSoportados());
 			if (filaTramiteVersion.getTramiteVersion().isLimiteTramitacion()) {

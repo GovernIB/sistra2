@@ -150,13 +150,7 @@ public final class LineaComponentesFormulario extends ObjetoFormulario
 
 	@Override
 	public int compareTo(final LineaComponentesFormulario arg0) {
-		int comparador;
-		if (this.getOrden() < arg0.getOrden()) {
-			comparador = -1;
-		} else {
-			comparador = 1;
-		}
-		return comparador;
+		return Integer.compare(this.getOrden(), arg0.getOrden());
 	}
 
 }

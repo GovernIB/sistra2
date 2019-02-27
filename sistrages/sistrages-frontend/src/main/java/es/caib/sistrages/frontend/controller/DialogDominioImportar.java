@@ -398,7 +398,11 @@ public class DialogDominioImportar extends DialogControllerBase {
 			return;
 		}
 
-		this.dominioService.importarDominio(filaDominio, UtilJSF.getIdEntidad());
+		Long idArea = null;
+		if (data.getAmbito().equals(TypeAmbito.AREA)) {
+			idArea = Long.valueOf(id);
+		}
+		this.dominioService.importarDominio(filaDominio, UtilJSF.getIdEntidad(), idArea);
 
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();

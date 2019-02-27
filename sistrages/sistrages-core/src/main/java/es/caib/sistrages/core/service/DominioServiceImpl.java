@@ -275,8 +275,9 @@ public class DominioServiceImpl implements DominioService {
 
 	@Override
 	@NegocioInterceptor
-	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad) throws Exception {
-		dominioDao.importar(filaDominio, idEntidad);
+	public void importarDominio(final FilaImportarDominio filaDominio, final Long idEntidad, final Long idArea)
+			throws Exception {
+		dominioDao.importar(filaDominio, idEntidad, idArea);
 	}
 
 	@Override

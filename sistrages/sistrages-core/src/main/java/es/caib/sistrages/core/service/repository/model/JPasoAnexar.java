@@ -1,6 +1,10 @@
 package es.caib.sistrages.core.service.repository.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -157,12 +161,23 @@ public class JPasoAnexar implements IModelApi {
 			jpasoAnexar.setScriptAnexosDinamicos(JScript.clonar(origPasoAnexar.getScriptAnexosDinamicos()));
 			if (origPasoAnexar.getAnexosTramite() != null) {
 				jpasoAnexar.setAnexosTramite(new HashSet<JAnexoTramite>());
-				for (final JAnexoTramite origAnexo : origPasoAnexar.getAnexosTramite()) {
+				int ordenAnexo = 1;
+				final List<JAnexoTramite> anexos = new ArrayList<>(origPasoAnexar.getAnexosTramite());
+				Collections.sort(anexos, new Comparator<JAnexoTramite>() {
+					@Override
+					public int compare(final JAnexoTramite p1, final JAnexoTramite p2) {
+						return Integer.compare(p1.getOrden(), p2.getOrden());
+					}
+
+				});
+				for (final JAnexoTramite origAnexo : anexos) {
 					if (origAnexo != null) {
 						final JAnexoTramite janexo = JAnexoTramite.clonar(origAnexo);
 						janexo.setPasoAnexar(jpasoAnexar);
+						janexo.setOrden(ordenAnexo);
 						jpasoAnexar.getAnexosTramite().add(janexo);
 					}
+					ordenAnexo++;
 				}
 			}
 		}

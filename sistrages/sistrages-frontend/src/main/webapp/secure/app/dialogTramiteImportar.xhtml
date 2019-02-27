@@ -203,12 +203,36 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton id="botonImportar" value="#{msg['botones.importar']}" actionListener="#{dialogTramiteImportar.importar}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportar.mostrarBotonImportar}"  update="@form growlDialogImportar" />
+		        		<p:commandButton id="botonImportar" widgetVar="botonImportarWidget" onclick="disableClick()"  oncomplete="enableClick()" value="#{msg['botones.importar']}" actionListener="#{dialogTramiteImportar.importar}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportar.mostrarBotonImportar}"  update="@form growlDialogImportar" />
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteImportar.cancelar}" process="@this" />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
 
+ 			<h:outputScript >
+
+				function getWidgetVarById(id) {
+				   debugger;
+				   for (var propertyName in PrimeFaces.widgets) {
+				     if (PrimeFaces.widgets[propertyName].id === id) {
+				       return PrimeFaces.widgets[propertyName];
+				     }
+				   }
+				}
+
+				function disableClick(){
+					debugger;
+					var elemento = getWidgetVarById('formTramite:botonImportar');
+					elemento.disable();
+				}
+
+				function enableClick(){
+					debugger;
+					var elemento = getWidgetVarById('formTramite:botonImportar');
+					elemento.enable();
+				}
+
+		</h:outputScript>
 	</h:form>
 
 </h:body>
