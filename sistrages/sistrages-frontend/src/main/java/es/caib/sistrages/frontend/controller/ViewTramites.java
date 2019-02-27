@@ -319,7 +319,7 @@ public class ViewTramites extends ViewControllerBase {
 	public void previsualizar() {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750, 400);
+		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 950, 400);
 	}
 
 	/**
@@ -565,8 +565,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		}
 
-		// UtilJSF.openDialog(DialogTramiteProcedimientos.class, TypeModoAcceso.EDICION,
-		// params, true, 1000, 500);
+		UtilJSF.openDialog(DialogTramiteProcedimientos.class, TypeModoAcceso.EDICION, params, true, 1000, 500);
 
 	}
 

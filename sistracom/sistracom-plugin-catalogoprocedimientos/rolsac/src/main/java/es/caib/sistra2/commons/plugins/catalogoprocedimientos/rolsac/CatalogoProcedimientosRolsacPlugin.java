@@ -1,9 +1,10 @@
 package es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
@@ -24,10 +25,9 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTram
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RLink;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RProcedimientoRolsac;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaProcedimiento;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaProcedimientos;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaSimple;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaTramite;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaTramites;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RTramiteRolsac;
 
 /**
@@ -61,23 +61,33 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("idioma", idioma);
 		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-		final ResponseEntity<RRespuestaTramite> responseTramite = restTemplate
-				.postForEntity(getPropiedad("url") + "/tramites/" + idTramiteCP, request, RRespuestaTramite.class);
+		final ResponseEntity<RRespuestaTramites> responseTramite = restTemplate
+				.postForEntity(getPropiedad("url") + "/tramites/" + idTramiteCP, request, RRespuestaTramites.class);
 		if (responseTramite == null || responseTramite.getBody() == null
 				|| responseTramite.getBody().getResultado() == null) {
 			throw new CatalogoPluginException("El tramite no existe.");
 		}
-		final RTramiteRolsac tramiteRolsac = responseTramite.getBody().getResultado();
+		final RTramiteRolsac[] tramitesRolsac = responseTramite.getBody().getResultado();
+
+		if (tramitesRolsac == null || tramitesRolsac.length == 0) {
+			throw new CatalogoPluginException("No hay tramite");
+		}
 
 		// Obtener procedimiento.
+		final RTramiteRolsac tramiteRolsac = tramitesRolsac[0];
+
 		final String codigoProc = tramiteRolsac.getLink_procedimiento().getCodigo();
 		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
-		final ResponseEntity<RRespuestaProcedimiento> responseProc = restTemplate.postForEntity(
-				getPropiedad("url") + "/procedimientos/" + codigoProc, requestProc, RRespuestaProcedimiento.class);
+		final ResponseEntity<RRespuestaProcedimientos> responseProc = restTemplate.postForEntity(
+				getPropiedad("url") + "/procedimientos/" + codigoProc, requestProc, RRespuestaProcedimientos.class);
 		if (responseProc == null || responseProc.getBody() == null || responseProc.getBody().getResultado() == null) {
 			throw new CatalogoPluginException("El procedimiento no existe.");
 		}
-		final RProcedimientoRolsac procRolsac = responseProc.getBody().getResultado();
+		final RProcedimientoRolsac[] procedimientosRolsac = responseProc.getBody().getResultado();
+		if (procedimientosRolsac == null || procedimientosRolsac.length == 0) {
+			throw new CatalogoPluginException("No hay procedimiento");
+		}
+		final RProcedimientoRolsac procRolsac = procedimientosRolsac[0];
 
 		// Codigo DIR3 responsable procedimiento
 		final String dir3organoResponsable = getCodigoDir3UA(procRolsac.getLink_unidadAdministrativa());
@@ -94,7 +104,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dt.setIdentificador(idTramiteCP);
 		dt.setDescripcion(tramiteRolsac.getNombre());
 		dt.setProcedimiento(dp);
-		dt.setVigente(esPublico(procRolsac, tramiteRolsac));
+		dt.setVigente(esVigente(procRolsac, tramiteRolsac));
 		dt.setOrganoDestinoDir3(dir3organoDestinatario);
 
 		return dt;
@@ -130,7 +140,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	}
 
 	@Override
-	public List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(final String idTramite,
+	public List<DefinicionProcedimientoCP> obtenerProcedimientos(final String idTramite, final String version,
 			final String idioma) throws CatalogoPluginException {
 
 		final List<DefinicionProcedimientoCP> res = new ArrayList<>();
@@ -144,16 +154,18 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("idioma", idioma);
-		map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+		if (version != null && !version.isEmpty()) {
+			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"versionTramiteTelematico\":\""
+					+ version + "\" }");
+		} else {
+			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+		}
 
 		// Obtener procedimiento.
 		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
 		final ResponseEntity<RRespuestaProcedimientos> responseProc = restTemplate
 				.postForEntity(getPropiedad("url") + "/procedimientos/", requestProc, RRespuestaProcedimientos.class);
 
-		if (responseProc == null || responseProc.getBody() == null || responseProc.getBody().getResultado() == null) {
-			throw new CatalogoPluginException("Los procedimientos no existen");
-		}
 		final RProcedimientoRolsac[] procedimientosRolsac = responseProc.getBody().getResultado();
 
 		if (procedimientosRolsac != null) {
@@ -175,35 +187,34 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 
 	}
 
-	public boolean esPublico(final RProcedimientoRolsac procedimiento, final RTramiteRolsac tramite)
-			throws CatalogoPluginException {
-		final Date now = new Date();
-		Date fechaCaducidad;
-		Date fechaPublicacion;
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-		if (tramite.getDataCaducitat() == null || tramite.getDataCaducitat().isEmpty()) {
-			fechaCaducidad = null;
-		} else {
-			try {
-				fechaCaducidad = sdf.parse(tramite.getDataCaducitat());
-			} catch (final Exception e) {
-				throw new CatalogoPluginException("La fecha de caducidad tiene un formato erroneo", e);
-			}
-		}
-		if (tramite.getDataPublicacio() == null || tramite.getDataPublicacio().isEmpty()) {
-			fechaPublicacion = null;
-		} else {
-			try {
-				fechaPublicacion = sdf.parse(tramite.getDataPublicacio());
-			} catch (final Exception e) {
-				throw new CatalogoPluginException("La fecha de caducidad tiene un formato erroneo", e);
-			}
-		}
-		final boolean noCaducado = (fechaCaducidad == null || fechaCaducidad.after(now));
-		final boolean publicado = (fechaPublicacion == null || fechaPublicacion.before(now));
-		final boolean visible = procedimiento != null
-				&& (procedimiento.getValidacion() == null || "1".equals(procedimiento.getValidacion().toString()));
-		return visible && noCaducado && publicado;
+	/**
+	 * Indica si es vigente el trámite. Se mira:<br />
+	 * <ul>
+	 * <li>Que el proc es público (validacion = 1, los otros valores 2 y 3, son
+	 * privado o interno</li>
+	 * <li>Que el proc tiene fechas correctas (está publicado del pasado y no está
+	 * caduco)</li>
+	 * <li>Que el trámite tiene fechas correctas (está publicado del pasado y no
+	 * está caduco)</li>
+	 * </ul>
+	 *
+	 * @param procedimiento
+	 * @param tramite
+	 * @return
+	 */
+	public boolean esVigente(final RProcedimientoRolsac procedimiento, final RTramiteRolsac tramite) {
+
+		final boolean noCaducadoProc = (procedimiento.getFechaCaducidad() == null
+				|| procedimiento.getFechaCaducidad().after(Calendar.getInstance()));
+		final boolean noCaducado = (tramite.getDataCaducitat() == null
+				|| tramite.getDataCaducitat().after(Calendar.getInstance()));
+		final boolean publicadoProc = (procedimiento.getFechaPublicacion() == null
+				|| procedimiento.getFechaPublicacion().before(Calendar.getInstance()));
+		final boolean publicado = (tramite.getDataPublicacio() == null
+				|| tramite.getDataPublicacio().before(Calendar.getInstance()));
+		final boolean visible = procedimiento.getValidacion() == null
+				|| "1".equals(procedimiento.getValidacion().toString());
+		return visible && noCaducado && publicado && noCaducadoProc && publicadoProc;
 	}
 
 	/**
@@ -221,6 +232,84 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 			throw new CatalogoPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
 		}
 		return res;
+	}
+
+	@Override
+	public List<DefinicionTramiteCP> obtenerTramites(final String idTramite, final Integer version, final String idioma)
+			throws CatalogoPluginException {
+		final List<DefinicionTramiteCP> res = new ArrayList<>();
+
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("idioma", idioma);
+		if (version == null) {
+			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+		} else {
+			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\",\"versionTramiteTelematico\" : \""
+					+ version + "\"}");
+		}
+		// Obtener procedimiento.
+		final HttpEntity<MultiValueMap<String, String>> requestTram = new HttpEntity<>(map, headers);
+		final ResponseEntity<RRespuestaTramites> responseTram = restTemplate
+				.postForEntity(getPropiedad("url") + "/tramites/", requestTram, RRespuestaTramites.class);
+
+		final RTramiteRolsac[] tramitesRolsac = responseTram.getBody().getResultado();
+
+		if (tramitesRolsac != null) {
+
+			final Map<String, RProcedimientoRolsac> procedimientos = new HashMap<>();
+
+			for (final RTramiteRolsac tramiteRolsac : tramitesRolsac) {
+
+				// Obtener procedimiento.
+				final String codigoProc = tramiteRolsac.getLink_procedimiento().getCodigo();
+				RProcedimientoRolsac procRolsac;
+				if (procedimientos.containsKey(codigoProc)) {
+					procRolsac = procedimientos.get(codigoProc);
+				} else {
+					final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
+					final ResponseEntity<RRespuestaProcedimientos> responseProc = restTemplate.postForEntity(
+							getPropiedad("url") + "/procedimientos/" + codigoProc, requestProc,
+							RRespuestaProcedimientos.class);
+					if (responseProc == null || responseProc.getBody() == null
+							|| responseProc.getBody().getResultado() == null) {
+						throw new CatalogoPluginException("El procedimiento no existe.");
+					}
+
+					procRolsac = responseProc.getBody().getResultado()[0];
+					procedimientos.put(codigoProc, procRolsac);
+				}
+
+				// Codigo DIR3 responsable procedimiento
+				final String dir3organoResponsable = getCodigoDir3UA(procRolsac.getLink_unidadAdministrativa());
+				// Codigo DIR3 destintario tramite
+				final String dir3organoDestinatario = getCodigoDir3UA(tramiteRolsac.getLink_organCompetent());
+
+				final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
+				dp.setIdentificador(codigoProc);
+				dp.setDescripcion(procRolsac.getNombre());
+				dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
+				dp.setOrganoResponsableDir3(dir3organoResponsable);
+
+				final DefinicionTramiteCP dt = new DefinicionTramiteCP();
+				dt.setIdentificador(String.valueOf(tramiteRolsac.getCodigo()));
+				dt.setDescripcion(tramiteRolsac.getNombre());
+				dt.setProcedimiento(dp);
+				dt.setVigente(esVigente(procRolsac, tramiteRolsac));
+				dt.setOrganoDestinoDir3(dir3organoDestinatario);
+				res.add(dt);
+
+			}
+		}
+
+		return res;
+
 	}
 
 }

@@ -13,32 +13,43 @@ import org.fundaciobit.pluginsib.core.IPlugin;
  */
 public interface ICatalogoProcedimientosPlugin extends IPlugin {
 
-    /** Prefix. */
-    public static final String CATALOGO_PROCEDIMIENTOS_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES
-            + "catalogoprocedimientos.";
+	/** Prefix. */
+	public static final String CATALOGO_PROCEDIMIENTOS_BASE_PROPERTY = IPLUGINSIB_BASE_PROPERTIES
+			+ "catalogoprocedimientos.";
 
-    /**
-     * Recupera configuración trámite.
-     *
-     * @param idTramiteCP
-     *            id trámite
-     * @param idioma
-     *            idioma
-     * @throws ParseException
-     */
-    DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP,
-            String idioma) throws CatalogoPluginException;
+	/**
+	 * Recupera configuración trámite.
+	 *
+	 * @param idTramiteCP
+	 *            id trámite
+	 * @param idioma
+	 *            idioma
+	 * @throws ParseException
+	 */
+	DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP, String idioma) throws CatalogoPluginException;
 
-    /**
-     * Recupera procedimientos en los que se usa un trámite de Sistra.
-     *
-     * @param idTramite
-     *            id trámite sistra
-     * @param idioma
-     *            idioma
-     * @throws CatalogoPluginException
-     */
-    List<DefinicionProcedimientoCP> obtenerProcedimientosTramiteSistra(
-            String idTramite, String idioma) throws CatalogoPluginException;
+	/**
+	 * Recupera procedimientos en los que se usa un trámite de Sistra.
+	 *
+	 * @param idTramite
+	 *            id trámite sistra
+	 * @param idioma
+	 *            idioma
+	 * @throws CatalogoPluginException
+	 */
+	List<DefinicionProcedimientoCP> obtenerProcedimientos(String idTramite, String version, String idioma)
+			throws CatalogoPluginException;
+
+	/**
+	 * Recupera tramites en los que se usa un trámite de Sistra.
+	 *
+	 * @param idTramite
+	 *            id trámite sistra
+	 * @param idioma
+	 *            idioma
+	 * @throws CatalogoPluginException
+	 */
+	List<DefinicionTramiteCP> obtenerTramites(String idTramite, Integer version, String idioma)
+			throws CatalogoPluginException;
 
 }
