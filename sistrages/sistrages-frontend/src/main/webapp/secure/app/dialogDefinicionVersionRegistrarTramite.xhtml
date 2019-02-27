@@ -114,16 +114,17 @@
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.representacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}"/>
+            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}" onchange="triggerCheck(); return false;" />
             <p:spacer width="30" height="1"/>
            		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
 						process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}"
 						styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
+						disabled="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion == false}"
 						>
 						<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptRepresentante}" update="growl buttonScript3"/>
 				</p:commandButton>
 				<p:spacer width="30" height="1"/>
-				<p:selectBooleanCheckbox id="valida" value="#{dialogDefinicionVersionRegistrarTramite.data.validaRepresentacion}" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}"/>
+				<p:selectBooleanCheckbox id="valida" value="#{dialogDefinicionVersionRegistrarTramite.data.validaRepresentacion}" itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.valida']}" disabled="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion == false}"/>
        		</p:outputPanel>
 
        		<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.registrar']}" />
@@ -142,6 +143,15 @@
 				</p:toolbar>
 		    </p:outputPanel>
 
+			<p:commandButton id="hiddenCheck" styleClass="button"  process="@form:admite" update="formdialogDefinicionVersionRegistrarTramite:buttonScript3 @form:valida" style="display:none" />
+
+			<h:outputScript >
+		 		function triggerCheck() {
+		 			alert("x3");
+					document.getElementById("formdialogDefinicionVersionRegistrarTramite:hiddenCheck").click();
+		     	}
+
+		 	</h:outputScript>
 	</h:form>
 </h:body>
 </f:view>

@@ -378,6 +378,13 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("script");
+	}
+
+	/**
 	 * Aceptar.
 	 */
 	public void borrar() {

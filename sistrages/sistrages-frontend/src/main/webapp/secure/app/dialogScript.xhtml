@@ -224,6 +224,7 @@
 		        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        			</p:commandButton>
 							<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogScript.cancelar()}" process="@this"  rendered="#{dialogScript.isEdicion()}"  />
+							<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogScript.ayuda()}" process="@this" update="growlScript"/>
 						</f:facet>
 				</p:toolbar>
 

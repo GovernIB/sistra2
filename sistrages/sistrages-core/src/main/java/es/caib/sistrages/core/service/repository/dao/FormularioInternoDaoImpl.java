@@ -294,6 +294,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
 		JLineaFormulario jLineaSeleccionada = null;
 		ObjetoFormulario objetoResultado = null;
+		Integer nuevoOrden = null;
 
 		if (pIdPagina != null) {
 			final JPaginaFormulario jPagina = getJPaginaById(pIdPagina);
@@ -306,15 +307,17 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			case LINEA:
 				// si el orden es inferior o igual al tamaño de la lista de lineas hay que
 				// hacer hueco
-				creaHuecoEnLineas(jPagina, pOrden);
-				final JLineaFormulario jLineaCreada = JLineaFormulario.createDefault(pOrden, jPagina);
+				// creaHuecoEnLineas(jPagina, pOrden);
+				nuevoOrden = creaHuecoEntreLineas(jPagina, pOrden);
+				final JLineaFormulario jLineaCreada = JLineaFormulario.createDefault(nuevoOrden, jPagina);
 				entityManager.persist(jLineaCreada);
 				entityManager.merge(jPagina);
 				objetoResultado = jLineaCreada.toModel();
 				break;
 			case CAMPO_TEXTO:
-				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
-				final JCampoFormularioTexto jObjFormCampoTexto = JCampoFormularioTexto.createDefault(pOrden,
+				// creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
+				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
+				final JCampoFormularioTexto jObjFormCampoTexto = JCampoFormularioTexto.createDefault(nuevoOrden,
 						jLineaSeleccionada);
 				jObjFormCampoTexto.getCampoFormulario().setCampoFormularioTexto(jObjFormCampoTexto);
 				jObjFormCampoTexto.getCampoFormulario().getElementoFormulario()
@@ -324,9 +327,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				objetoResultado = jObjFormCampoTexto.toModel();
 				break;
 			case CHECKBOX:
-				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
+				// creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
+				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
 				final JCampoFormularioCasillaVerificacion jObjFormCasillaVerificacion = JCampoFormularioCasillaVerificacion
-						.createDefault(pOrden, jLineaSeleccionada);
+						.createDefault(nuevoOrden, jLineaSeleccionada);
 				jObjFormCasillaVerificacion.getCampoFormulario()
 						.setCampoFormularioCasillaVerificacion(jObjFormCasillaVerificacion);
 				jObjFormCasillaVerificacion.getCampoFormulario().getElementoFormulario()
@@ -336,8 +340,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				objetoResultado = jObjFormCasillaVerificacion.toModel();
 				break;
 			case SELECTOR:
-				creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
-				final JCampoFormularioIndexado jObjFormSelector = JCampoFormularioIndexado.createDefault(pOrden,
+				// creaHuecoEnComponentes(jLineaSeleccionada, pOrden);
+				nuevoOrden = creaHuecoEntreComponentes(jLineaSeleccionada, pOrden);
+				final JCampoFormularioIndexado jObjFormSelector = JCampoFormularioIndexado.createDefault(nuevoOrden,
 						jLineaSeleccionada);
 				jObjFormSelector.getCampoFormulario().setCampoFormularioIndexado(jObjFormSelector);
 				jObjFormSelector.getCampoFormulario().getElementoFormulario()
@@ -347,8 +352,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				objetoResultado = jObjFormSelector.toModel();
 				break;
 			case SECCION:
-				creaHuecoEnLineas(jPagina, pOrden);
-				final JLineaFormulario jLineaBloqueCreadaSeccion = JLineaFormulario.createDefault(pOrden, jPagina);
+				// creaHuecoEnLineas(jPagina, pOrden);
+				nuevoOrden = creaHuecoEntreLineas(jPagina, pOrden);
+				final JLineaFormulario jLineaBloqueCreadaSeccion = JLineaFormulario.createDefault(nuevoOrden, jPagina);
 				if (jLineaBloqueCreadaSeccion != null) {
 					final JSeccionFormulario jObjFormSeccion = JSeccionFormulario.createDefault(1,
 							jLineaBloqueCreadaSeccion);
@@ -363,8 +369,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				}
 				break;
 			case ETIQUETA:
-				creaHuecoEnLineas(jPagina, pOrden);
-				final JLineaFormulario jLineaBloqueCreadaEtiqueta = JLineaFormulario.createDefault(pOrden, jPagina);
+				// creaHuecoEnLineas(jPagina, pOrden);
+				nuevoOrden = creaHuecoEntreLineas(jPagina, pOrden);
+				final JLineaFormulario jLineaBloqueCreadaEtiqueta = JLineaFormulario.createDefault(nuevoOrden, jPagina);
 				if (jLineaBloqueCreadaEtiqueta != null) {
 					final JEtiquetaFormulario jObjFormEtiqueta = JEtiquetaFormulario.createDefault(1,
 							jLineaBloqueCreadaEtiqueta);
@@ -391,13 +398,26 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		final JLineaFormulario jLinea = getJLineaById(pId);
 		final JPaginaFormulario jPagina = jLinea.getPaginaFormulario();
 
-		if (jLinea.getPaginaFormulario().getLineasFormulario().size() > 1
-				&& jLinea.getOrden() < jLinea.getPaginaFormulario().getLineasFormulario().size()) {
-			// hay que reordenar lineas
-			quitaHuecoEnLineas(jLinea.getPaginaFormulario(), jLinea.getOrden() + 1);
-		}
-
 		jPagina.removeLinea(jLinea);
+
+		if (!jPagina.getLineasFormulario().isEmpty()) {
+			final List<JLineaFormulario> lista = new ArrayList<>();
+			lista.addAll(jPagina.getLineasFormulario());
+			Collections.sort(lista,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
+			int orden = 1;
+			for (final JLineaFormulario linea : lista) {
+
+				if (orden != linea.getOrden()) {
+					linea.setOrden(orden);
+					entityManager.merge(linea);
+				}
+
+				orden++;
+
+			}
+		}
 
 		entityManager.merge(jPagina);
 	}
@@ -407,13 +427,27 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		final JElementoFormulario jElemento = getJElementoById(pId);
 		final JLineaFormulario jLineaFormulario = jElemento.getLineaFormulario();
 
-		if (jLineaFormulario.getElementoFormulario().size() > 1
-				&& jElemento.getOrden() < jLineaFormulario.getElementoFormulario().size()) {
-			// hay que reordenar componentes
-			quitaHuecoEnComponentes(jLineaFormulario, jElemento.getOrden() + 1);
-		}
-
 		jLineaFormulario.removeElemento(jElemento);
+
+		if (!jLineaFormulario.getElementoFormulario().isEmpty()) {
+
+			final List<JElementoFormulario> lista = new ArrayList<>();
+			lista.addAll(jLineaFormulario.getElementoFormulario());
+			Collections.sort(lista,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
+			int orden = 1;
+			for (final JElementoFormulario elemento : lista) {
+
+				if (orden != elemento.getOrden()) {
+					elemento.setOrden(orden);
+					entityManager.merge(elemento);
+				}
+
+				orden++;
+
+			}
+		}
 
 		entityManager.merge(jLineaFormulario);
 	}
@@ -826,6 +860,33 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		return resultado;
 	}
 
+	private Integer creaHuecoEntreLineas(final JPaginaFormulario pJPagina, final Integer pInicio) {
+		Integer pOrden = pInicio;
+		if (!pJPagina.getLineasFormulario().isEmpty()) {
+			final List<JLineaFormulario> lista = new ArrayList<>();
+			lista.addAll(pJPagina.getLineasFormulario());
+			Collections.sort(lista,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
+			int orden = 1;
+			for (final JLineaFormulario linea : lista) {
+				if (pInicio != null && pInicio == linea.getOrden()) {
+					pOrden = orden;
+					orden++;
+				}
+
+				if (orden != linea.getOrden()) {
+					linea.setOrden(orden);
+					entityManager.merge(linea);
+				}
+
+				orden++;
+
+			}
+		}
+		return pOrden;
+	}
+
 	/**
 	 * Crea un hueco en la lista de componentes.
 	 *
@@ -859,6 +920,33 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	private boolean quitaHuecoEnComponentes(final JLineaFormulario pJLineaSeleccionada, final Integer pInicio) {
 		return actualizaEntreComponentes(pJLineaSeleccionada, pInicio, -1);
+	}
+
+	private Integer creaHuecoEntreComponentes(final JLineaFormulario pJLineaSeleccionada, final Integer pInicio) {
+		Integer pOrden = pInicio;
+		if (!pJLineaSeleccionada.getElementoFormulario().isEmpty()) {
+			final List<JElementoFormulario> lista = new ArrayList<>();
+			lista.addAll(pJLineaSeleccionada.getElementoFormulario());
+			Collections.sort(lista,
+					(o1, o2) -> Integer.valueOf(o1.getOrden()).compareTo(Integer.valueOf(o2.getOrden())));
+
+			int orden = 1;
+			for (final JElementoFormulario elemento : lista) {
+				if (pInicio != null && pInicio == elemento.getOrden()) {
+					pOrden = orden;
+					orden++;
+				}
+
+				if (orden != elemento.getOrden()) {
+					elemento.setOrden(orden);
+					entityManager.merge(elemento);
+				}
+
+				orden++;
+
+			}
+		}
+		return pOrden;
 	}
 
 	@Override

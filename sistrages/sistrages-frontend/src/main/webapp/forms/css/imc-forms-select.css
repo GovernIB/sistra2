@@ -3,10 +3,10 @@
 /* enlaces.select */
 
 div.imc-select { display: inline-block; width: 100%; }
-	div.imc-select a.imc-select { overflow: hidden; display: inline-block; position: relative; height: 2em; color: #626A72; padding: .2em 2em 0 .2em; background-color: #fff; border: 3px solid #ccc; }
+	div.imc-select a.imc-select { overflow: hidden; display: inline-block; position: relative; height: 2.2em; color: #626A72; padding: .2em 2em 0 .2em; background-color: #fff; border: 3px solid #ccc; }
 	div.imc-select a.imc-select:hover { border-color: #999; }
 	div.imc-select a.imc-select:focus { background-color: #f9f9e8; border-color: #333; }
-		div.imc-select a.imc-select span { overflow: hidden; display: inline-block; white-space: nowrap; margin-right: 1.5em; }
+		div.imc-select a.imc-select span { overflow: hidden; display: inline-block; white-space: nowrap; padding-top: .1em; margin-right: 1.5em; }
 
 div.imc-select a.imc-select::before {
 	content: "";
@@ -16,17 +16,16 @@ div.imc-select a.imc-select::before {
 	right: .5em;
 	width: 1em;
 	height: 1em;
-	background: transparent url(../imgs/icones/ico_item.svg) no-repeat top left / auto .7em;
+	background: transparent url(../imgs/icones/ico_form_item.svg) no-repeat center center / auto .7em;
 	transform: rotate(90deg);
-	opacity: .4;
 }
 
 div.imc-select a.imc-select:hover::before {
-	opacity: .6;
+	/*opacity: .6;*/
 }
 
 div.imc-select a.imc-select:focus::before {
-	opacity: .8;
+	/*opacity: .8;*/
 }
 
 div.imc-select a.imc-select {
@@ -46,6 +45,12 @@ div.imc-select a.imc-select::before {
 }
 
 div.imc-select-off { display: none; }
+
+div.imc-select a.imc-select.imc-select-lectura::before,
+div.imc-select a.imc-select.imc-select-deshabilitat::before { display: none; }
+
+div.imc-select a.imc-select.imc-select-lectura:hover { border-color: #ccc; }
+div.imc-select a.imc-select.imc-select-lectura:focus { background-color: #f9f9e8; border-color: #ccc; }
 
 /* enlaces.select -> opciones */
 
@@ -276,7 +281,7 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 
 /* input check */
 
-.imc-input-check { overflow-y: hidden; display: inline-block; position: relative; vertical-align: middle; }
+.imc-input-check { /*overflow-y: hidden;*/ display: block; position: relative; vertical-align: middle; }
 .imc-input-check input { position: absolute; top: -999em; left: -999em; visibility: hidden; opacity: 0; }
 .imc-input-check label { display: block; cursor: pointer; padding-right: .5em; }
 
@@ -293,10 +298,18 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 }
 
 .imc-input-check input:checked ~ label { color: #368355; }
-.imc-input-check input:checked ~ label::before { background-color: #368355; background-image: url(../imgs/icones/ico_guarda.svg) }
+.imc-input-check input:checked ~ label::before { background-color: #368355; background-image: url(../imgs/icones/ico_input_check.svg) }
 
-.imc-input-check input:disabled ~ label { color: #999; }
+.imc-input-check input:disabled ~ label { display: none; color: #999; }
 .imc-input-check input:disabled ~ label::before { background-color: #999; }
+
+.imc-input-check input:checked:disabled ~ label { display: inline-block; color: #333; }
+.imc-input-check input:checked:disabled ~ label::before { background-color: #000; background-image: url(../imgs/icones/ico_input_check.svg) }
+
+.imc-el-error .imc-input-check input ~ label { color: #c00 !important; }
+.imc-el-error .imc-input-check input ~ label::before { background-color: #c00; }
+
+
 
 /* input radio */
 
@@ -309,20 +322,27 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 	display: inline-block;
 	vertical-align: middle;
 	position: relative;
-	top: -0.2em;
+	top: -0.1em;
 	width: 1em;
 	height: 1em;
 	margin-right: .5em;
 	border-radius: 50%;
-	background: #bbb url() no-repeat center center / .5em auto;
+	background: #bbb url() no-repeat center center / .4em auto;
 } 
+
+.imc-input-radio label:focus::before { background-color: #000; }
 
 .imc-input-radio input:checked ~ label { color: #368355; }
 .imc-input-radio input:checked ~ label::before { background-color: #368355; background-image: url(../imgs/icones/ico_input_radio.svg) }
 
-.imc-input-radio input:disabled ~ label { color: #999; }
+.imc-input-radio input:disabled ~ label { display: none; color: #999; }
 .imc-input-radio input:disabled ~ label::before { background-color: #999; }
 
+.imc-input-radio input:checked:disabled ~ label { display: inline-block; color: #333; }
+.imc-input-radio input:checked:disabled ~ label::before { background-color: #000; background-image: url(../imgs/icones/ico_input_check.svg) }
+
+.imc-el-error .imc-input-radio input ~ label { color: #c00 !important; }
+.imc-el-error .imc-input-radio input ~ label::before { background-color: #c00; }
 
 
 fieldset.imc-element .imc-input-check label::before,

@@ -57,7 +57,7 @@ public class DialogTramiteVersion extends DialogControllerBase {
 		dataVersion.setNumeroVersion(numVersion);
 		dataVersion.setTipoFlujo(TypeFlujo.NORMAL);
 		dataVersion.setActiva(true);
-		dataVersion.setDebug(false);
+		dataVersion.setDebug(true);
 		dataVersion.setAutenticado(true);
 		dataVersion.setNoAutenticado(true);
 		dataVersion.setIdiomasSoportados(UtilTraducciones.getIdiomasPorDefectoTramite());

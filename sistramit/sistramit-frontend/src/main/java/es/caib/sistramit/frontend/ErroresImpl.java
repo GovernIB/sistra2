@@ -23,175 +23,164 @@ import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 @Component("errores")
 public final class ErroresImpl implements Errores {
 
-    /** Atributo literales. */
-    @Autowired
-    private LiteralesFront literales;
+	/** Atributo literales. */
+	@Autowired
+	private LiteralesFront literales;
 
-    /** Configuracion. */
-    @Autowired
-    private SystemService systemService;
+	/** Configuracion. */
+	@Autowired
+	private SystemService systemService;
 
-    @Override
-    public RespuestaJSON generarRespuestaJsonExcepcion(final Exception pEx,
-            final String idioma) {
+	@Override
+	public RespuestaJSON generarRespuestaJsonExcepcion(final Exception pEx, final String idioma) {
 
-        // Evaluamos excepcion
-        TypeRespuestaJSON tipoError;
-        String tituloMensaje;
-        String textoMensaje;
-        String urlMensaje;
+		// Evaluamos excepcion
+		TypeRespuestaJSON tipoError;
+		String tituloMensaje;
+		String textoMensaje;
+		String urlMensaje;
 
-        // Establecemos nivel excepcion
-        TypeNivelExcepcion nivel;
-        if (pEx instanceof ServiceException) {
-            final ServiceException ex = (ServiceException) pEx;
-            nivel = ex.getNivel();
-        } else {
-            nivel = TypeNivelExcepcion.FATAL;
-        }
+		// Establecemos nivel excepcion
+		TypeNivelExcepcion nivel;
+		if (pEx instanceof ServiceException) {
+			final ServiceException ex = (ServiceException) pEx;
+			nivel = ex.getNivel();
+		} else {
+			nivel = TypeNivelExcepcion.FATAL;
+		}
 
-        // En funcion del nivel establecemos tipo respuesta y url siguiente
-        switch (nivel) {
-        case WARNING:
-            tipoError = TypeRespuestaJSON.WARNING;
-            break;
-        case ERROR:
-            tipoError = TypeRespuestaJSON.ERROR;
-            break;
-        default: // FATAL
-            tipoError = TypeRespuestaJSON.FATAL;
-        }
+		// En funcion del nivel establecemos tipo respuesta y url siguiente
+		switch (nivel) {
+		case WARNING:
+			tipoError = TypeRespuestaJSON.WARNING;
+			break;
+		case ERROR:
+			tipoError = TypeRespuestaJSON.ERROR;
+			break;
+		default: // FATAL
+			tipoError = TypeRespuestaJSON.FATAL;
+		}
 
-        // Establecemos titulo / texto excepcion
-        tituloMensaje = devolverTituloExcepcion(pEx, idioma, tipoError);
-        textoMensaje = devolverMensajeError(pEx, idioma);
-        urlMensaje = devolverUrlExcepcion(pEx, idioma, tipoError);
+		// Establecemos titulo / texto excepcion
+		tituloMensaje = devolverTituloExcepcion(pEx, idioma, tipoError);
+		textoMensaje = devolverMensajeError(pEx, idioma);
+		urlMensaje = devolverUrlExcepcion(pEx, idioma, tipoError);
 
-        // Creamos respuesta
-        final RespuestaJSON res = new RespuestaJSON();
-        res.setEstado(tipoError);
-        res.setUrl(urlMensaje);
-        res.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje));
+		// Creamos respuesta
+		final RespuestaJSON res = new RespuestaJSON();
+		res.setEstado(tipoError);
+		res.setUrl(urlMensaje);
+		res.setMensaje(new MensajeUsuario(tituloMensaje, textoMensaje));
 
-        return res;
-    }
+		return res;
+	}
 
-    /**
-     * Establece url tras excepción.
-     *
-     * @param pEx
-     *            Excepción
-     * @param pIdioma
-     *            Idioma
-     * @param pTipoError
-     *            Tipo error
-     * @return url tras excepción (nulo si no se establece ninguna)
-     */
-    private String devolverUrlExcepcion(final Exception pEx,
-            final String pIdioma, final TypeRespuestaJSON pTipoError) {
-        String url = null;
+	/**
+	 * Establece url tras excepción.
+	 *
+	 * @param pEx
+	 *            Excepción
+	 * @param pIdioma
+	 *            Idioma
+	 * @param pTipoError
+	 *            Tipo error
+	 * @return url tras excepción (nulo si no se establece ninguna)
+	 */
+	private String devolverUrlExcepcion(final Exception pEx, final String pIdioma, final TypeRespuestaJSON pTipoError) {
+		String url = getUrlAsistente() + "/asistente/asistente.html";
+		;
 
-        // Url estandar para excepciones recargar tramite
-        if (pTipoError == TypeRespuestaJSON.FATAL) {
-            url = getUrlAsistente() + "/asistente/recargarTramite.html";
-        }
+		// Url estandar para excepciones recargar tramite
+		if (pTipoError == TypeRespuestaJSON.FATAL) {
+			url = getUrlAsistente() + "/asistente/recargarTramite.html";
+		}
 
-        if (pEx instanceof ServiceException) {
-            // Comprobamos si esta particularizado por excepcion
-            final String keyLiteralExcepcion = getNombreExcepcion(pEx);
-            url = literales.getLiteralFront(LiteralesFront.EXCEPCIONES,
-                    "url." + keyLiteralExcepcion, pIdioma, url);
-        }
-        return url;
-    }
+		if (pEx instanceof ServiceException) {
+			// Comprobamos si esta particularizado por excepcion
+			final String keyLiteralExcepcion = getNombreExcepcion(pEx);
+			url = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "url." + keyLiteralExcepcion, pIdioma, url);
+		}
+		return url;
+	}
 
-    /**
-     * Devuelte titulo excepcion.
-     *
-     * @param pEx
-     *            Excepcion
-     * @param idioma
-     *            Idioma
-     * @param pTipoError
-     *            Tipo error
-     * @return Titulo excepcion
-     */
-    private String devolverTituloExcepcion(final Exception pEx,
-            final String idioma, final TypeRespuestaJSON pTipoError) {
-        // Obtenemos titulo general
-        String tituloMensaje = literales.getLiteralFront(
-                LiteralesFront.EXCEPCIONES, "title." + pTipoError.toString(),
-                idioma);
+	/**
+	 * Devuelte titulo excepcion.
+	 *
+	 * @param pEx
+	 *            Excepcion
+	 * @param idioma
+	 *            Idioma
+	 * @param pTipoError
+	 *            Tipo error
+	 * @return Titulo excepcion
+	 */
+	private String devolverTituloExcepcion(final Exception pEx, final String idioma,
+			final TypeRespuestaJSON pTipoError) {
+		// Obtenemos titulo general
+		String tituloMensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "title." + pTipoError.toString(),
+				idioma);
 
-        // Comprobamos si esta particularizado por excepcion
-        if (pEx instanceof ServiceException) {
-            final String keyLiteralExcepcion = getNombreExcepcion(pEx);
-            tituloMensaje = literales.getLiteralFront(
-                    LiteralesFront.EXCEPCIONES, "title." + keyLiteralExcepcion,
-                    idioma, tituloMensaje);
-        }
+		// Comprobamos si esta particularizado por excepcion
+		if (pEx instanceof ServiceException) {
+			final String keyLiteralExcepcion = getNombreExcepcion(pEx);
+			tituloMensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "title." + keyLiteralExcepcion,
+					idioma, tituloMensaje);
+		}
 
-        return tituloMensaje;
-    }
+		return tituloMensaje;
+	}
 
-    /**
-     * Método para devolver mensaje error de la clase TramitacionController.
-     *
-     * @param ex
-     *            Parámetro ex
-     * @param idioma
-     *            Parámetro idioma
-     * @return el string
-     */
-    private String devolverMensajeError(final Exception ex,
-            final String idioma) {
+	/**
+	 * Método para devolver mensaje error de la clase TramitacionController.
+	 *
+	 * @param ex
+	 *            Parámetro ex
+	 * @param idioma
+	 *            Parámetro idioma
+	 * @return el string
+	 */
+	private String devolverMensajeError(final Exception ex, final String idioma) {
 
-        String mensaje = null;
+		String mensaje = null;
 
-        final String nombreExcepcion = getNombreExcepcion(ex);
+		final String nombreExcepcion = getNombreExcepcion(ex);
 
-        // Obtenemos texto general
-        mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES,
-                "text.generica", idioma);
+		// Obtenemos texto general
+		mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "text.generica", idioma);
 
-        // Buscamos si existe texto particularizado para la excepcion
-        mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES,
-                "text." + nombreExcepcion, idioma, mensaje);
+		// Buscamos si existe texto particularizado para la excepcion
+		mensaje = literales.getLiteralFront(LiteralesFront.EXCEPCIONES, "text." + nombreExcepcion, idioma, mensaje);
 
-        // Reemplazamos parametros especiales
-        mensaje = StringUtils.replace(mensaje, "[#excepcion.nombre#]",
-                nombreExcepcion);
-        mensaje = StringUtils.replace(mensaje, "[#excepcion.mensaje#]",
-                ex.getMessage());
+		// Reemplazamos parametros especiales
+		mensaje = StringUtils.replace(mensaje, "[#excepcion.nombre#]", nombreExcepcion);
+		mensaje = StringUtils.replace(mensaje, "[#excepcion.mensaje#]", ex.getMessage());
 
-        return mensaje;
+		return mensaje;
 
-    }
+	}
 
-    /**
-     * Obtiene nombre excepcion.
-     *
-     * @param ex
-     *            Excepcion
-     * @return nombre excepcion
-     */
-    private String getNombreExcepcion(final Exception ex) {
-        String keyLiteralExcepcion;
-        final String name = ex.getClass().getName();
-        final int idx = name.lastIndexOf(".");
-        keyLiteralExcepcion = name.substring(idx + ConstantesNumero.N1,
-                name.length());
-        return keyLiteralExcepcion;
-    }
+	/**
+	 * Obtiene nombre excepcion.
+	 *
+	 * @param ex
+	 *            Excepcion
+	 * @return nombre excepcion
+	 */
+	private String getNombreExcepcion(final Exception ex) {
+		String keyLiteralExcepcion;
+		final String name = ex.getClass().getName();
+		final int idx = name.lastIndexOf(".");
+		keyLiteralExcepcion = name.substring(idx + ConstantesNumero.N1, name.length());
+		return keyLiteralExcepcion;
+	}
 
-    /**
-     * Obtiene url asistente.
-     *
-     * @return url asistente
-     */
-    private String getUrlAsistente() {
-        return systemService.obtenerPropiedadConfiguracion(
-                TypePropiedadConfiguracion.SISTRAMIT_URL);
-    }
+	/**
+	 * Obtiene url asistente.
+	 *
+	 * @return url asistente
+	 */
+	private String getUrlAsistente() {
+		return systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL);
+	}
 
 }

@@ -329,20 +329,67 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		codigoObjFormularioDestino = null;
 	}
 
-	/**
-	 * Aplicar cambios.
-	 **/
-	public void aplicarCambios() {
+	private boolean sonValidosRequerimientos(final PaginaFormulario pPagina) {
 
 		if (objetoFormularioEdit != null) {
-			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
-			final LineaComponentesFormulario linea = pagina.getLineaComponente(objetoFormularioEdit.getCodigo());
+			final LineaComponentesFormulario linea = pPagina.getLineaComponente(objetoFormularioEdit.getCodigo());
 
 			if (objetoFormularioEdit instanceof ComponenteFormulario) {
+
 				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit)) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("warning.componente.sinespacio"), true);
-					return;
+					return false;
+				}
+
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
+					final ComponenteFormularioCampo campo = (ComponenteFormularioCampo) objetoFormularioEdit;
+
+					if (campo.isNoModificable() && !campo.isSoloLectura()) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.soloLectura.unchecked"), true);
+						return false;
+					}
+				}
+
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampoTexto) {
+					final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
+
+					if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto()) && campo.getNormalTamanyo() <= 0) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.normal.tamaño"), true);
+						return false;
+					}
+
+					if (TypeCampoTexto.ID.equals(campo.getTipoCampoTexto()) && !campo.isIdentNif()
+							&& !campo.isIdentCif() && !campo.isIdentNie() && !campo.isIdentNss()) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.identificacion"), true);
+						return false;
+					}
+
+					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
+							&& (campo.getNumeroDigitosEnteros() == null || campo.getNumeroDigitosEnteros() <= 0)
+							&& (campo.getNumeroDigitosDecimales() == null || campo.getNumeroDigitosDecimales() <= 0)) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.numero"), true);
+						return false;
+					}
+
+					if (TypeCampoTexto.TELEFONO.equals(campo.getTipoCampoTexto()) && !campo.isTelefonoFijo()
+							&& !campo.isTelefonoMovil()) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.telefono"), true);
+						return false;
+					}
+
+					if (TypeCampoTexto.EXPRESION.equals(campo.getTipoCampoTexto())
+							&& StringUtils.isEmpty(campo.getExpresionRegular())) {
+						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								UtilJSF.getLiteral("warning.componente.expresion"), true);
+						return false;
+					}
+
 				}
 
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
@@ -350,7 +397,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() == null) {
 						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.dominio"),
 								true);
-						return;
+						return false;
 					} else if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores())
 							&& campo.getCodDominio() != null) {
 						final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
@@ -358,16 +405,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 							if (StringUtils.isEmpty(campo.getCampoDominioCodigo())) {
 								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 										UtilJSF.getLiteral("warning.dominio.codigo"), true);
-								return;
+								return false;
 							} else if (StringUtils.isEmpty(campo.getCampoDominioDescripcion())) {
 								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 										UtilJSF.getLiteral("warning.dominio.descripcion"), true);
-								return;
+								return false;
 							} else if (!dominio.getParametros().isEmpty()
 									&& campo.getListaParametrosDominio().isEmpty()) {
 								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 										UtilJSF.getLiteral("warning.dominio.parametros"), true);
-								return;
+								return false;
 							}
 						}
 					}
@@ -380,49 +427,66 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (isDuplicado) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("warning.identificador.duplicado"), true);
-					return;
+					return false;
 				}
-
-				final ComponenteFormulario cfOriginal = pagina.getComponente(objetoFormularioEdit.getCodigo());
-
-				// TODO PENDIENTE GUARDAR (ver como hacerlo, ¿beanutils?¿metodos
-				// particulares
-				// por tipo componente?) De momento no dejamos cambiar codigo
-				// para permitir
-				// dejar seleccionando
-				try {
-					BeanUtils.copyProperties(cfOriginal, objetoFormularioEdit);
-				} catch (final Exception e) {
-					throw new ErrorNoControladoException(e);
-				}
-
-				final ComponenteFormulario cfUpdate = (ComponenteFormulario) formIntService
-						.updateComponenteFormulario(cfOriginal);
-
-				// si es campo selector con dominio damos de alta el dominio si
-				// en dominios
-				// empleados no lo está ya
-				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
-					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() != null
-							&& !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
-						dominioService.addTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo());
-					}
-				}
-
-				try {
-					BeanUtils.copyProperties(objetoFormularioEdit, cfUpdate);
-					BeanUtils.copyProperties(cfOriginal, cfUpdate);
-				} catch (final Exception e) {
-					throw new ErrorNoControladoException(e);
-				}
-
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
-
-				// Refresca iframe formulario
-				// TODO Pasarle componente destino para posicionarse
-				urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
 			}
+
+		}
+
+		return true;
+	}
+
+	/**
+	 * Aplicar cambios.
+	 **/
+	public void aplicarCambios() {
+
+		if (objetoFormularioEdit != null) {
+			final PaginaFormulario pagina = formulario.getPaginas().get(paginaActual - 1);
+
+			if (!sonValidosRequerimientos(pagina)) {
+				return;
+			}
+
+			final ComponenteFormulario cfOriginal = pagina.getComponente(objetoFormularioEdit.getCodigo());
+
+			// TODO PENDIENTE GUARDAR (ver como hacerlo, ¿beanutils?¿metodos
+			// particulares
+			// por tipo componente?) De momento no dejamos cambiar codigo
+			// para permitir
+			// dejar seleccionando
+			try {
+				BeanUtils.copyProperties(cfOriginal, objetoFormularioEdit);
+			} catch (final Exception e) {
+				throw new ErrorNoControladoException(e);
+			}
+
+			final ComponenteFormulario cfUpdate = (ComponenteFormulario) formIntService
+					.updateComponenteFormulario(cfOriginal);
+
+			// si es campo selector con dominio damos de alta el dominio si
+			// en dominios
+			// empleados no lo está ya
+			if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+				final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+				if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() != null
+						&& !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
+					dominioService.addTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo());
+				}
+			}
+
+			try {
+				BeanUtils.copyProperties(objetoFormularioEdit, cfUpdate);
+				BeanUtils.copyProperties(cfOriginal, cfUpdate);
+			} catch (final Exception e) {
+				throw new ErrorNoControladoException(e);
+			}
+
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+
+			// Refresca iframe formulario
+			// TODO Pasarle componente destino para posicionarse
+			urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
 		}
 	}
 
@@ -660,8 +724,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public boolean getHabilitadoBtnObjDer() {
 		final int orden = getOrden();
+		boolean resultado = false;
 
-		return orden != 0 ? orden < ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA && orden < numObjetosLinea() : false;
+		if (objetoFormularioEdit != null) {
+			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				resultado = orden != 0 ? orden < numObjetosLinea() : false;
+			} else if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				resultado = orden != 0
+						? orden < ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA && orden < numObjetosLinea()
+						: false;
+			}
+		}
+
+		return resultado;
 	}
 
 	private int getOrden() {
@@ -767,7 +842,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						(ComponenteFormulario) componente);
 
 				// actualizamos orden
-				for (int i = orden + 1; i <= linea.getComponentes().size(); i++) {
+				for (int i = 1; i <= linea.getComponentes().size(); i++) {
 					linea.getComponentes().get(i - 1).setOrden(i);
 				}
 
@@ -821,11 +896,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			final ObjetoFormulario componente = formIntService.addComponenteFormulario(tipoCampo, pagina.getCodigo(),
 					idLineaSeleccionada, ordenLinea, posicionamiento);
 
-			// actualizamos modelo
-			pagina.getLineas().add(ordenLinea - 1, (LineaComponentesFormulario) componente);
+			// actualizamos modelo (si habia saltos en el orden de linea puede que el orden
+			// inicial no sea el que toca)
+			pagina.getLineas().add(((LineaComponentesFormulario) componente).getOrden() - 1,
+					(LineaComponentesFormulario) componente);
 
 			// actualizamos orden
-			for (int i = ordenLinea + 1; i <= pagina.getLineas().size(); i++) {
+			for (int i = 1; i <= pagina.getLineas().size(); i++) {
 				pagina.getLineas().get(i - 1).setOrden(i);
 			}
 
@@ -852,9 +929,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					.getLineas();
 
 			final LineaComponentesFormulario lineaSeleccionada = (LineaComponentesFormulario) objetoFormularioEdit;
-			lineasPagina.remove(lineaSeleccionada.getOrden() - 1);
 
-			for (int i = lineaSeleccionada.getOrden(); i <= lineasPagina.size(); i++) {
+			lineasPagina.removeIf(
+
+					linea -> (linea.getCodigo().compareTo(lineaSeleccionada.getCodigo()) == 0));
+
+			for (
+
+					int i = 1; i <= lineasPagina.size(); i++) {
 				lineasPagina.get(i - 1).setOrden(i);
 			}
 
@@ -866,8 +948,14 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			final LineaComponentesFormulario linea = formulario.getPaginas().get(paginaActual - 1)
 					.getLineaComponente(componenteSeleccionado.getCodigo());
-			linea.getComponentes().remove(componenteSeleccionado.getOrden() - 1);
-			for (int i = componenteSeleccionado.getOrden(); i <= linea.getComponentes().size(); i++) {
+
+			linea.getComponentes().removeIf(
+
+					componente -> (componente.getCodigo().compareTo(componenteSeleccionado.getCodigo()) == 0));
+
+			for (
+
+					int i = 1; i <= linea.getComponentes().size(); i++) {
 				linea.getComponentes().get(i - 1).setOrden(i);
 			}
 
@@ -1338,6 +1426,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				460);
 	}
 
+	public void changedNoModificable() {
+		if (objetoFormularioEdit instanceof ComponenteFormularioCampo) {
+			if (((ComponenteFormularioCampo) objetoFormularioEdit).isNoModificable()) {
+				((ComponenteFormularioCampo) objetoFormularioEdit).setSoloLectura(true);
+			}
+		}
+	}
 	// -- Getters / Setters
 
 	/**

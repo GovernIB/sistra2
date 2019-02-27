@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.ComponenteFormulario;
+import es.caib.sistrages.core.api.model.ComponenteFormularioCampo;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoCheckbox;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoSelector;
 import es.caib.sistrages.core.api.model.ComponenteFormularioCampoTexto;
@@ -208,11 +209,6 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			} else if (TypeAlineacionTexto.DERECHA.equals(campo.getAlineacionTexto())) {
 				estilo.append(" imc-el-dreta");
 			}
-
-			if (pModoEdicion && campo.isObligatorio()) {
-				estilo.append(" imc-el-obligatori");
-			}
-
 		}
 
 		if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())) {
@@ -242,7 +238,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
-				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
+				escribeObligatorio(campo, pModoEdicion), " class=\"imc-element ", estilo.toString(), "\" data-type=\"",
+				tipo, "\">", 5);
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
 			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
@@ -315,10 +312,6 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		if (pModoEdicion && pCampo.isObligatorio()) {
-			estilo.append(" imc-el-obligatori");
-		}
-
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
@@ -327,7 +320,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		escribeLinea(pOut, "<div", escribeId(pCampo.getIdComponente()), escribeCodigo(pCampo.getCodigo(), pModoEdicion),
-				" class=\"imc-element imc-el-selector", estilo.toString(), "\" data-type=\"select\">", 5);
+				escribeObligatorio(pCampo, pModoEdicion), " class=\"imc-element imc-el-selector", estilo.toString(),
+				"\" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
 
@@ -351,15 +345,11 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		if (pModoEdicion && pCampo.isObligatorio()) {
-			estilo.append(" imc-el-obligatori");
-		}
-
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
 		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
-				escribeCodigo(pCampo.getCodigo(), pModoEdicion), " class=\"imc-element", estilo.toString(),
-				"\" data-type=\"check-list\">", 6);
+				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
+				" class=\"imc-element", estilo.toString(), "\" data-type=\"check-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
 			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
@@ -400,15 +390,11 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			estilo.append(" imc-el-").append(pCampo.getNumColumnas());
 		}
 
-		if (pModoEdicion && pCampo.isObligatorio()) {
-			estilo.append(" imc-el-obligatori");
-		}
-
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
 		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
-				escribeCodigo(pCampo.getCodigo(), pModoEdicion), " class=\"imc-element imc-el-horizontal",
-				estilo.toString(), "\" data-type=\"radio-list\">", 6);
+				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
+				" class=\"imc-element imc-el-horizontal", estilo.toString(), "\" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
 			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
@@ -581,6 +567,26 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 	}
 
+	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
+			final String pTexto3, final String pTexto4, final String pTexto5, final String pTexto6,
+			final String pTexto7, final String pTexto8, final String pTexto9, final int pNtab) {
+		if (debug) {
+			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
+		}
+		pOut.append(pTexto1);
+		pOut.append(pTexto2);
+		pOut.append(pTexto3);
+		pOut.append(pTexto4);
+		pOut.append(pTexto5);
+		pOut.append(pTexto6);
+		pOut.append(pTexto7);
+		pOut.append(pTexto8);
+		pOut.append(pTexto9);
+		if (debug) {
+			pOut.append(getLineSeparator());
+		}
+	}
+
 	private String escribeId(final String pId) {
 		return escribeId(pId, null);
 	}
@@ -601,6 +607,14 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	private String escribeCodigo(final String pCodigo, final boolean pModoEdicion) {
 		return escribeCodigo(pCodigo, null, pModoEdicion);
+	}
+
+	private String escribeObligatorio(final ComponenteFormularioCampo comp, final boolean pModoEdicion) {
+		String res = null;
+		if (comp.isObligatorio() && pModoEdicion) {
+			res = "data-obligatori=\"s\"";
+		}
+		return res;
 	}
 
 	private String escribeCodigo(final String pCodigo, final String pOrden, final boolean pModoEdicion) {

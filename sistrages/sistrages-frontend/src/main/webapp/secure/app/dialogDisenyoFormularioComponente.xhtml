@@ -70,7 +70,7 @@
 
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.soloLectura']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
-	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}" disabled="#{dialogDisenyoFormulario.consulta}">
+	         		<p:selectBooleanCheckbox id="soloLectura" value="#{dialogDisenyoFormulario.objetoFormularioEdit.soloLectura}" disabled="#{dialogDisenyoFormulario.consulta}">
 	         			<p:ajax event="change" global="false" />
 	         		</p:selectBooleanCheckbox>
 				</h:column>
@@ -78,7 +78,7 @@
 	            <h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.noModificable']}"/></h:column>
 	         	<h:column rendered="#{dialogDisenyoFormulario.isComponenteCampo()}">
 	         		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.noModificable}" disabled="#{dialogDisenyoFormulario.consulta}">
-	         			<p:ajax event="change" global="false" />
+	         			<p:ajax event="change" global="false" update="soloLectura" listener="#{dialogDisenyoFormulario.changedNoModificable}"/>
 	         		</p:selectBooleanCheckbox>
 				</h:column>
 

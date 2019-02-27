@@ -31,11 +31,6 @@ import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
  */
 public class UtilScripts {
 
-	/** Indica si es de typeScript tipo formulario. **/
-	public static final String TIPO_FORMULARIO = "FORM";
-	/** Indica si es de typeScript tipo flujo. **/
-	public static final String TIPO_FLUJO = "FLUJ";
-
 	/**
 	 * Constructor vacio
 	 */
@@ -104,7 +99,6 @@ public class UtilScripts {
 			plugins.add(0, TypePluginScript.DATOS_PARAMETROSINICIALES);
 			break;
 		case SCRIPT_PERSONALIZACION_TRAMITE:
-			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			plugins.add(0, TypePluginScript.DATOS_PERSONALIZACION);
 			break;
 		case SCRIPT_DATOS_INICIALES_FORMULARIO:
@@ -114,7 +108,6 @@ public class UtilScripts {
 			plugins.add(0, TypePluginScript.DATOS_PARAMETROSFORMULARIO);
 			break;
 		case SCRIPT_POSTGUARDAR_FORMULARIO:
-			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			plugins.add(0, TypePluginScript.DATOS_FORMULARIOS);
 			break;
 		case SCRIPT_LISTA_DINAMICA_ANEXOS:
@@ -144,10 +137,6 @@ public class UtilScripts {
 			break;
 		case SCRIPT_VALIDAR_ANEXO:
 			plugins.add(TypePluginScript.PLUGIN_ANEXO);
-			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
-			break;
-		case SCRIPT_PERMITIR_REGISTRO:
-			plugins.add(TypePluginScript.PLUGIN_VALIDACION);
 			break;
 		default:
 			break;
@@ -187,8 +176,16 @@ public class UtilScripts {
 					break;
 				} else if (paso.isTipoPasoRellenar() && paso.getFormularios() != null) {
 					for (final TramiteSimpleFormulario formulario : paso.getFormularios()) {
+						final boolean mismoFormulario = idFormulario != null
+								&& formulario.getCodigo().compareTo(Long.valueOf(idFormulario)) == 0;
+						// Si es tipo script dependencia documento, solo salen los formularios
+						// anteriores al actual (el cual, no se debe agregar)
+						if (tipoScript == TypeScriptFlujo.SCRIPT_DEPENDENCIA_DOCUMENTO && mismoFormulario) {
+							break;
+						}
+
 						formularios.add(formulario.getIdFormularioInterno());
-						if (idFormulario != null && formulario.getCodigo().compareTo(Long.valueOf(idFormulario)) == 0) {
+						if (mismoFormulario) {
 							break;
 						}
 					}

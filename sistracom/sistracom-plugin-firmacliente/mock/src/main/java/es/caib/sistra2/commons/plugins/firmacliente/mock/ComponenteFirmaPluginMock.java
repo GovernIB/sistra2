@@ -8,6 +8,7 @@ import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroAFirmar;
 import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
+import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
 import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
 import es.caib.sistra2.commons.plugins.firmacliente.api.InfoSesionFirma;
 import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
@@ -28,17 +29,19 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 	}
 
 	@Override
-	public String generarSesionFirma(final InfoSesionFirma infoSesionFirma) {
+	public String generarSesionFirma(final InfoSesionFirma infoSesionFirma) throws FirmaPluginException {
 		return "SF" + System.currentTimeMillis();
 	}
 
 	@Override
-	public void anyadirFicheroAFirmar(final FicheroAFirmar ficheroAFirmar) {
+	public void anyadirFicheroAFirmar(final FicheroAFirmar ficheroAFirmar) throws FirmaPluginException {
 		// Vacio
 	}
 
 	@Override
-	public String iniciarSesionFirma(final String idSesionFirma, final String urlCallBack, final String paramAdic) {
+	public String iniciarSesionFirma(final String idSesionFirma, final String urlCallBack, final String paramAdic)
+			throws FirmaPluginException {
+
 		// Retornamos directamente al asistente como si se hubiese realizado la firma
 		try {
 			return "/sistramitfront/redirigirUrl.jsp?url=" + URLEncoder.encode(urlCallBack, "UTF-8");
@@ -48,12 +51,13 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 	}
 
 	@Override
-	public TypeEstadoFirmado obtenerEstadoSesionFirma(final String idSesionFirma) {
+	public TypeEstadoFirmado obtenerEstadoSesionFirma(final String idSesionFirma) throws FirmaPluginException {
 		return TypeEstadoFirmado.FINALIZADO_OK;
 	}
 
 	@Override
-	public FicheroFirmado obtenerFirmaFichero(final String idSesionFirma, final String idFicheroFirma) {
+	public FicheroFirmado obtenerFirmaFichero(final String idSesionFirma, final String idFicheroFirma)
+			throws FirmaPluginException {
 		final FicheroFirmado fichero = new FicheroFirmado();
 		final byte[] contenido = "firma cades".getBytes();
 		fichero.setFirmaFichero(contenido);
@@ -64,7 +68,7 @@ public class ComponenteFirmaPluginMock extends AbstractPluginProperties implemen
 	}
 
 	@Override
-	public void cerrarSesionFirma(final String idSesionFirma) {
+	public void cerrarSesionFirma(final String idSesionFirma) throws FirmaPluginException {
 		// Vacio
 	}
 

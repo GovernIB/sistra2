@@ -9,9 +9,7 @@ public class PlantillaIdiomaFormulario extends ModelApi {
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * codigo.
-	 */
+	/** codigo. */
 	private Long codigo;
 
 	/**

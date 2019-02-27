@@ -62,7 +62,7 @@ public class SistragesMock {
 	/** Version tramite test. */
 	public final static int VERSION_TRAMITE = 1;
 	/** Id tramite CP test. */
-	public final static String ID_TRAMITE_CP = "1234";
+	public final static String ID_TRAMITE_CP = "TC1";
 	/** Idioma test. */
 	public final static String IDIOMA = "es";
 	/** ID Dominio. */
