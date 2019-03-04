@@ -89,6 +89,9 @@ public class DialogListaValoresFija extends DialogControllerBase {
 			// Solo tiene sentido cambios para edicion
 			if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
 				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				if (traduccionesEdit == null) {
+					traduccionesEdit = new Literal();
+				}
 				BeanUtils.copyProperties(getTraduccionesEdit(), traduccionesMod);
 			} else if (respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
 				setTraduccionesEdit(null);

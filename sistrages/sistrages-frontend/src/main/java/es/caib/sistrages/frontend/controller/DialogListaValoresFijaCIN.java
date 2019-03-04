@@ -25,7 +25,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 
 	/** Datos elemento. */
 	private List<ValorListaFija> data;
-
+	private List<String> idiomas;
 	private ValorListaFija valorSeleccionado;
 
 	/**
@@ -37,6 +37,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 
 		if (!mochilaDatos.isEmpty()) {
 			data = (List<ValorListaFija>) mochilaDatos.get(Constantes.CLAVE_MOCHILA_LVFCIN);
+			setIdiomas((List<String>) mochilaDatos.get(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO));
 		}
 
 		if (data == null) {
@@ -248,6 +249,14 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 
 	public void setValorSeleccionado(final ValorListaFija valorSeleccionado) {
 		this.valorSeleccionado = valorSeleccionado;
+	}
+
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	public void setIdiomas(List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }
