@@ -86,6 +86,8 @@ public class FormularioTramite extends ModelApi {
 	/** Formulario gestor externo (si es externo) */
 	private GestorExternoFormularios formularioGestorExterno;
 
+	private DisenyoFormulario disenyoFormulario;
+
 	/**
 	 * Crea una nueva instancia de Dominio.
 	 */
@@ -389,4 +391,11 @@ public class FormularioTramite extends ModelApi {
 		this.idFormularioInterno = formulario;
 	}
 
+	public DisenyoFormulario getDisenyoFormulario() {
+		return disenyoFormulario;
+	}
+
+	public void setDisenyoFormulario(final DisenyoFormulario disenyoFormulario) {
+		this.disenyoFormulario = disenyoFormulario;
+	}
 }
