@@ -67,8 +67,6 @@ public class DialogListaValoresFija extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
-
-		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
 	}
 
 	/**
@@ -79,8 +77,6 @@ public class DialogListaValoresFija extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
-
-		UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO);
 	}
 
 	public void returnDialogoTraducciones(final SelectEvent event) {
