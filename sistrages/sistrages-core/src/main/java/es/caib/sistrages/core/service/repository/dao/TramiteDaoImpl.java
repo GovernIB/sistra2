@@ -1,6 +1,7 @@
 package es.caib.sistrages.core.service.repository.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -270,11 +271,30 @@ public class TramiteDaoImpl implements TramiteDao {
 				tramiteVersion.setTipoFlujo(TypeFlujo.fromString(jTramiteVersion.getTipoflujo()));
 				tramiteVersion.setRelease(jTramiteVersion.getRelease());
 				tramiteVersion.setIdTramite(jTramiteVersion.getTramite().getCodigo());
+				tramiteVersion.setFechaUltima(getFechaUltima(jTramiteVersion.getCodigo()));
 				resultado.add(tramiteVersion);
 			}
 		}
 
 		return resultado;
+	}
+
+	/**
+	 * Calcula de una versión de trámite la fecha más actual de su historial.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	private Date getFechaUltima(final Long idTramiteVersion) {
+		Date fecha = null;
+		final String sql = "Select max(t.fecha) From JHistorialVersion t where t.versionTramite.codigo = :idTramiteVersion ";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramiteVersion", idTramiteVersion);
+		final List<Object> resultado = query.getResultList();
+		if (resultado != null && !resultado.isEmpty()) {
+			fecha = (Date) resultado.get(0);
+		}
+		return fecha;
 	}
 
 	@Override
@@ -941,7 +961,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			final Query queryHistorial = entityManager.createQuery(sqlHistorial);
 			queryHistorial.setParameter(STRING_ID_TRAMITE_VERSION,
 					filaTramiteVersion.getTramiteVersionActual().getCodigo());
-			queryHistorial.setParameter("release", filaTramiteVersion.getTramiteVersionActual().getRelease());
+			queryHistorial.setParameter("release", filaTramiteVersion.getTramiteVersion().getRelease());
 
 			@SuppressWarnings("unchecked")
 			final List<JHistorialVersion> historiales = queryHistorial.getResultList();
@@ -995,6 +1015,16 @@ public class TramiteDaoImpl implements TramiteDao {
 	public TramiteSimple getTramiteSimple(final String idTramiteVersion) {
 
 		final TramiteSimple tramite = new TramiteSimple();
+		tramite.setCodigo(idTramiteVersion);
+		final String sqlTramite = "Select v.idiomasSoportados From JVersionTramite v where v.codigo = :idTramiteVersion ";
+		final Query queryTramite = entityManager.createQuery(sqlTramite);
+		queryTramite.setParameter("idTramiteVersion", Long.valueOf(idTramiteVersion));
+		final List<Object> objectIdiomas = queryTramite.getResultList();
+		if (objectIdiomas.size() == 1) {
+			final String oIdiomas = objectIdiomas.get(0).toString();
+			tramite.setIdiomasSoportados(oIdiomas);
+		}
+
 		final List<TramiteSimplePaso> pasos = new ArrayList<>();
 
 		final String sql = "Select p.codigo, p.tipoPaso From JPasoTramitacion p where p.versionTramite.codigo = :idTramiteVersion order by p.orden ";
@@ -1036,6 +1066,20 @@ public class TramiteDaoImpl implements TramiteDao {
 		tramite.setPasos(pasos);
 		return tramite;
 
+	}
+
+	@Override
+	public String getIdiomasDisponibles(final String idTramiteVersion) {
+		final String sqlTramite = "Select v.idiomasSoportados From JVersionTramite v where v.codigo = :idTramiteVersion ";
+		final Query queryTramite = entityManager.createQuery(sqlTramite);
+		queryTramite.setParameter("idTramiteVersion", Long.valueOf(idTramiteVersion));
+		final List<Object> objectIdiomas = queryTramite.getResultList();
+
+		String idiomas = null;
+		if (objectIdiomas.size() == 1) {
+			idiomas = objectIdiomas.get(0).toString();
+		}
+		return idiomas;
 	}
 
 }

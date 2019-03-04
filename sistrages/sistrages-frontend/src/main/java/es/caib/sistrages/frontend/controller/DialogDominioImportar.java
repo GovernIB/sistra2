@@ -39,6 +39,7 @@ import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
+import es.caib.sistrages.core.api.util.UtilImportacion;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
@@ -229,7 +230,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 			return;
 		}
 
-		filaDominio = new FilaImportarDominio(data, dominioActual, fuentesDatos, fuentesDatosContent, fdActual,
+		filaDominio = UtilImportacion.getFilaDominio(data, dominioActual, fuentesDatos, fuentesDatosContent, fdActual,
 				checkPermisos());
 
 		// Generamos el id dependiendo del ambito (el global no tiene id).

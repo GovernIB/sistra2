@@ -46,6 +46,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportar;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
+import es.caib.sistrages.core.api.model.comun.FilaImportarEntidad;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
@@ -65,6 +66,7 @@ import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.api.util.UtilCoreApi;
+import es.caib.sistrages.core.api.util.UtilImportacion;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
@@ -76,9 +78,7 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ViewScoped
 public class DialogTramiteImportar extends DialogControllerBase {
 
-	/**
-	 * Log.
-	 */
+	/** Log. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteImportar.class);
 
 	/** Servicio. */
@@ -157,14 +157,17 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Formateadores. **/
 	Map<Long, FormateadorFormulario> formateadores = new HashMap<>();
 
+	/** Fila entidad. **/
+	private FilaImportarEntidad filaEntidad = new FilaImportarEntidad();
+
 	/** Linea 1. **/
-	FilaImportarArea filaArea;
+	FilaImportarArea filaArea = new FilaImportarArea();
 
 	/** Linea 2. **/
-	FilaImportarTramite filaTramite;
+	FilaImportarTramite filaTramite = new FilaImportarTramite();
 
 	/** Linea 3. **/
-	FilaImportarTramiteVersion filaTramiteVersion;
+	FilaImportarTramiteVersion filaTramiteVersion = new FilaImportarTramiteVersion();
 
 	/** Fila dominios. **/
 	final List<FilaImportarDominio> filasDominios = new ArrayList<>();
@@ -193,17 +196,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	public void init() {
 		setMostrarPanelInfo(false);
 		mostrarBotonImportar = false;
-	}
-
-	/**
-	 * Para obtener la versión de la configuracion global.
-	 *
-	 * @return
-	 */
-	private String getVersion() {
-		final ConfiguracionGlobal confGlobal = configuracionGlobalService
-				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION);
-		return confGlobal.getValor();
 	}
 
 	/**
@@ -242,7 +234,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final File tempFile = File.createTempFile("fichero", "zip");
 		ZipFile zipFile = null;
 
-		// 1. Extraer toda la info
+		// Primero extraemos del zip todos las entidades (tramite, area, tramiteVersion,
+		// pasos, entidad, formateadores), dominios y FD)
 		try (FileOutputStream fos = new FileOutputStream(tempFile)) {
 			fos.write(contenido);
 			zipFile = new ZipFile(tempFile);
@@ -274,7 +267,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 		}
 
-		// 2. Comprobamos que tiene lo básico:
+		// Se realiza una comprobación básica que tiene lo necesario (un trámite,
+		// tramiteVersion, pasos y una area)
 		if (tramite == null || tramiteVersion == null || area == null || tramiteVersion.getListaPasos() == null
 				|| tramiteVersion.getListaPasos().isEmpty()) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
@@ -287,7 +281,153 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		this.setMostrarPanelInfo(true);
 		this.setMostrarBotonImportar(false);
 
-		// 3. Preparamos la info a mostrar de area/tramite/tramiteVersion
+		// Paso 0. Se comprueba que la entidad por codigo dir3 sean los mismos.
+		if (!prepararImportacionEntidad()) {
+			return;
+		}
+
+		// Paso 1. Preparamos la info a mostrar de area
+		if (!prepararImportacionArea()) {
+			return;
+		}
+
+		// Paso 2. Preparamos la info a mostrar de tramite
+		if (!prepararImportacionTramite()) {
+			return;
+		}
+
+		// Paso 3. Preparamos la info a mostrar de los dominios/FD
+		prepararImportacionDominioFD();
+
+		// Paso 4. Preparamos la info a mostrar de los Formateadores.
+		prepararImportacionFormeteadores();
+
+		// Seteamos si se ven los botones de area/tramite/tramiteVersion
+		this.setMostrarBotonArea(filaArea.getResultado().isWarning());
+		this.setMostrarBotonTramite(filaTramite.getResultado().isWarning());
+		this.setMostrarBotonTramiteVersion(filaTramiteVersion.getResultado().isWarning());
+
+		setMostrarPanelInfo(true);
+		setMostrarBotonImportar(true);
+
+	}
+
+	private boolean prepararImportacionEntidad() {
+		final String dir3actual = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getCodigoDIR3();
+		filaEntidad.setDir3Actual(dir3actual);
+		boolean correcto;
+		if (filaEntidad.getDir3() == null || !filaEntidad.getDir3().equals(dir3actual)) {
+			filaEntidad.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.dir3distinto"));
+			filaEntidad.setResultado(TypeImportarResultado.ERROR);
+			correcto = false;
+		} else {
+			filaEntidad.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.ok.entidadcorrecta"));
+			filaEntidad.setResultado(TypeImportarResultado.OK);
+			correcto = true;
+		}
+		return correcto;
+	}
+
+	/**
+	 * Recorremos los formateadores asociados en el zip. <br />
+	 * Se comprueba a partir del identificador si existe el formateador, si no
+	 * existe, error y no se permite importar.
+	 *
+	 * Al ser el último cálculo, en caso de error (no existe el formateador) se
+	 * permite seguir aunque no se podrá importar. Si existe, no se hace nada,
+	 * simplemente se asocia.
+	 *
+	 * @return
+	 */
+	private void prepararImportacionFormeteadores() {
+		for (final Map.Entry<Long, FormateadorFormulario> entry : formateadores.entrySet()) {
+			final FormateadorFormulario formateador = entry.getValue();
+
+			final FormateadorFormulario formateadorActual = formateadorFormularioService
+					.getFormateadorFormulario(formateador.getIdentificador());
+			if (formateadorActual == null) {
+
+				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
+						TypeImportarAccion.NADA, TypeImportarEstado.NO_EXISTE, TypeImportarResultado.ERROR,
+						UtilJSF.getLiteral("dialogTramiteImportar.error.noexisteformateador")));
+			} else {
+
+				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
+						TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE, TypeImportarResultado.INFO,
+						UtilJSF.getLiteral("dialogTramiteImportar.error.existeformateador")));
+			}
+
+		}
+	}
+
+	/**
+	 * Recorremos los dominios del zip. <br />
+	 * Obtenemos el dominio actual a partir del identificador. <br />
+	 * Si el dominio tiene fuente de datos, cargamos la FD y sus datos del zip.
+	 * <br />
+	 * Posteriormente, si el dominio actual existe y tiene FD, la cargamos. <br />
+	 * Si no tenemos FD actual pero en el zip si había, intentamos cargar la FD a
+	 * partir del identificador de la FD que había en el zip. <br />
+	 * <br />
+	 *
+	 * A partir de ello, prepararamos la fila del dominio (llamando al util de
+	 * importación que se encargará de revisar si está to_do ok y que accion/es se
+	 * puede/n realizar)
+	 *
+	 * @return
+	 */
+	private void prepararImportacionDominioFD() {
+		for (final Map.Entry<Long, Dominio> entry : dominios.entrySet()) {
+			final Dominio dominio = entry.getValue();
+			final Dominio dominioActual = dominioService.loadDominio(dominio.getIdentificador());
+			FuenteDatos fd = null;
+			byte[] fdContent = null;
+			FuenteDatos fdActual = null;
+			if (dominio.getIdFuenteDatos() != null && this.fuentesDatos.get(dominio.getIdFuenteDatos()) != null) {
+				fd = this.fuentesDatos.get(dominio.getIdFuenteDatos());
+				fdContent = this.fuentesDatosContent.get(dominio.getIdFuenteDatos());
+			}
+			if (dominioActual != null && dominioActual.getIdFuenteDatos() != null) {
+				fdActual = dominioService.loadFuenteDato(dominioActual.getIdFuenteDatos());
+			}
+
+			if (fdActual == null && fd != null) {
+				fdActual = dominioService.loadFuenteDato(fd.getIdentificador());
+			}
+
+			final FilaImportarDominio fila = UtilImportacion.getFilaDominio(dominio, dominioActual, fd, fdContent,
+					fdActual, checkPermisos(dominio));
+
+			this.filasDominios.add(fila);
+
+		}
+
+	}
+
+	/**
+	 * Obtenemos el area actual a partir del identificador del area del zip. <br />
+	 * Comprobaciones a realizar:
+	 * <ul>
+	 * <li>Si la entidad del area no es la misma que la actual, provoca un
+	 * error.</li>
+	 * </ul>
+	 * Preparamos la fila del area. Teniendo en cuenta que:
+	 * <ul>
+	 * <li>Si no existe el area actual, habrá que crearlo y se exige tener rol de
+	 * administrador de entidad (sino error!!!)</li>
+	 * <li>Si existe, entonces:
+	 * <ul>
+	 * <li>Se dará un error si no estás en el entorno de desarrollo, no eres adm.
+	 * entidad y no tienes permisos de importar.</li>
+	 * <li>Creamos la fila, será de tipo info o warning dependiendo de si cambia la
+	 * descripcion.</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 *
+	 * @return
+	 */
+	private boolean prepararImportacionArea() {
 		areaActual = tramiteService.getAreaByIdentificador(area.getIdentificador());
 		if (areaActual != null) {
 
@@ -296,7 +436,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 						UtilJSF.getLiteral("dialogTramiteImportar.error.distintaEntidad"));
 				ocultarPaneles();
-				return;
+				return false;
 			}
 			tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador());
 
@@ -306,38 +446,22 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.areaDistinta");
 			this.setMostrarPanelInfo(false);
 			this.setMostrarBotonImportar(false);
-			return;
+			return false;
 		}
 
-		if (tramiteActual != null) {
-
-			tramiteVersionActual = tramiteService.getTramiteVersionByNumVersion(tramiteVersion.getNumeroVersion(),
-					tramiteActual.getCodigo());
-			if (tramiteVersionActual != null) {
-				tramiteVersionActual.setListaPasos(tramiteService.getTramitePasos(tramiteVersionActual.getCodigo()));
-				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-					tramiteVersionActual.setDebug(true);
-				} else {
-					tramiteVersionActual.setDebug(false);
-				}
-			}
-		}
-
-		// Paso 3.1. Area.
-		// - Si no existe area, si es administrador entidad entonces se puede crear sino
-		// producir un error.
 		if (areaActual == null) {
 
 			filaArea = new FilaImportarArea(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
 					TypeImportarResultado.WARNING, area, areaActual);
 
+			// Si no existe el area y no se tiene permisos, hay que dar un error
 			if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
 
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
 						UtilJSF.getLiteral("dialogTramiteImportar.error.noexistearea"));
 
 				this.ocultarPaneles();
-				return;
+				return false;
 			}
 
 		} else {
@@ -356,7 +480,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 						UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
 
 				ocultarPaneles();
-				return;
+				return false;
 
 			} else if (area.getDescripcion().equals(areaActual.getDescripcion())) {
 
@@ -372,7 +496,71 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		}
 
-		// Paso 3.2. Tramite.
+		return true;
+	}
+
+	/**
+	 * Obtenemos el tramite actual a partir del identificador del tramite del zip.
+	 * <br />
+	 * Comprobaciones a realizar:
+	 * <ul>
+	 * <li>Si la entidad del tramite no es la misma que la del area, provoca un
+	 * error. Este error se puede producir si cambias un area de entidad.</li>
+	 * </ul>
+	 * Posteriormente, si el tramite existe, recuperamos la version. Además,
+	 * seteamos el debug a true dependiendo si el desarrollo está a true o false.
+	 *
+	 * Preparamos la fila del trámite, teniendo en cuenta que:
+	 * <ul>
+	 * <li>Si no existe, habrá que crear la fila avisando que no existe.</li>
+	 * <li>Si existe, creamos la fila, será de tipo info o warning dependiendo de si
+	 * cambia la descripcion.</li>
+	 * </ul>
+	 *
+	 * Preparamos la fila del trámite version, teniendo en cuenta que:
+	 * <ul>
+	 * <li>Si no existe, habrá que crear la fila avisando que no existe.</li>
+	 * <li>Si existe, creamos la fila y avisamos que no existe.</li>
+	 * </ul>
+	 *
+	 * Dependiendo de si tiene le paso de registro o no, se mostrará una ventana
+	 * para rellenar los datos (como no hay personalizados, siempre se muestra).
+	 *
+	 * @return
+	 */
+	private boolean prepararImportacionTramite() {
+		tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador());
+
+		// Si el area actual y el tramite actual no tienen el mismo area, provocar un
+		// error.
+		if (areaActual != null && tramiteActual != null
+				&& tramiteActual.getIdArea().compareTo(areaActual.getCodigo()) != 0) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.areaDistinta");
+			this.setMostrarPanelInfo(false);
+			this.setMostrarBotonImportar(false);
+			return false;
+		}
+
+		// Obtenemos la version y sus pasos si el trámite existe. Además, seteamos debug
+		// a true si está en desarrollo.
+		if (tramiteActual != null) {
+
+			tramiteVersionActual = tramiteService.getTramiteVersionByNumVersion(tramiteVersion.getNumeroVersion(),
+					tramiteActual.getCodigo());
+			if (tramiteVersionActual != null) {
+				tramiteVersionActual.setListaPasos(tramiteService.getTramitePasos(tramiteVersionActual.getCodigo()));
+				if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
+					tramiteVersionActual.setDebug(true);
+				} else {
+					tramiteVersionActual.setDebug(false);
+				}
+			}
+		}
+
+		// Si no existe, creamos una fila de tipo info informando que no existe el
+		// trámite.
+		// Si existe, comprobamos si cambia la descripción (si cambia entonces damos
+		// warning sino damos info)
 		if (tramiteActual == null) {
 
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
@@ -420,67 +608,21 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				}
 			}
 		}
-		rellenarInfoRegistro();
 
-		// Paso 3.4. Dominio.
-		for (final Map.Entry<Long, Dominio> entry : dominios.entrySet()) {
-			final Dominio dominio = entry.getValue();
-			final Dominio dominioActual = dominioService.loadDominio(dominio.getIdentificador());
-			FuenteDatos fd = null;
-			byte[] fdContent = null;
-			FuenteDatos fdActual = null;
-			if (dominio.getIdFuenteDatos() != null && this.fuentesDatos.get(dominio.getIdFuenteDatos()) != null) {
-				fd = this.fuentesDatos.get(dominio.getIdFuenteDatos());
-				fdContent = this.fuentesDatosContent.get(dominio.getIdFuenteDatos());
-			}
-			if (dominioActual != null && dominioActual.getIdFuenteDatos() != null) {
-				fdActual = dominioService.loadFuenteDato(dominioActual.getIdFuenteDatos());
-			} else if (fd != null) {
-				fdActual = dominioService.loadFuenteDato(fd.getIdentificador());
-			}
-
-			final FilaImportarDominio fila = new FilaImportarDominio(dominio, dominioActual, fd, fdContent, fdActual,
-					checkPermisos(dominio));
-
-			this.filasDominios.add(fila);
-
-			if (fila.getResultado() == TypeImportarResultado.ERROR) {
-				// Si hay un error paramos de seguir mirando
-				return;
-			}
+		if (mostrarRegistro) {
+			rellenarInfoRegistro();
 		}
 
-		// Paso 3.5. Formateadores.
-		for (final Map.Entry<Long, FormateadorFormulario> entry : formateadores.entrySet()) {
-			final FormateadorFormulario formateador = entry.getValue();
-
-			final FormateadorFormulario formateadorActual = formateadorFormularioService
-					.getFormateadorFormulario(formateador.getIdentificador());
-			if (formateadorActual == null) {
-
-				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
-						TypeImportarAccion.NADA, TypeImportarEstado.NO_EXISTE, TypeImportarResultado.ERROR,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.noexisteformateador")));
-			} else {
-
-				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
-						TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE, TypeImportarResultado.INFO,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.existeformateador")));
-			}
-
-		}
-
-		this.setMostrarBotonArea(filaArea.getResultado().isWarning());
-		this.setMostrarBotonTramite(filaTramite.getResultado().isWarning());
-		this.setMostrarBotonTramiteVersion(filaTramiteVersion.getResultado().isWarning());
-
-		setMostrarPanelInfo(true);
-		setMostrarBotonImportar(true);
-
+		return true;
 	}
 
 	/**
-	 * Rellenando la info de registro
+	 * Rellenando la info de registro. <br />
+	 * Primero a carga los datos de la oficina asociados a su codigoDIR3 (su
+	 * entidad). Si encuentra concordancia, intenta cargar los datos del
+	 * registro.<br />
+	 * Luego intenta ver si cuadra el tipo a partir de su codigoDIR (su entidad).
+	 *
 	 */
 	private void rellenarInfoRegistro() {
 		final IRegistroPlugin iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO,
@@ -488,6 +630,8 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		try {
 
+			// Cargamos los datos de oficina y registro (registro sólo si se encuentra la
+			// oficina desde donde viene)
 			if (this.filaTramiteVersion.getTramiteVersionResultadoOficina() != null
 					&& !this.filaTramiteVersion.getTramiteVersionResultadoOficina().isEmpty()) {
 				final List<OficinaRegistro> oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
@@ -509,6 +653,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 			}
 
+			// Cargamos los datos del tipo
 			if (this.filaTramiteVersion.getTramiteVersionResultadoTipo() != null
 					&& !this.filaTramiteVersion.getTramiteVersionResultadoTipo().isEmpty()) {
 				final List<TipoAsunto> tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
@@ -526,6 +671,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 	}
 
+	/**
+	 * Oculta todos los botones e info de importacion
+	 */
 	private void ocultarPaneles() {
 		this.setMostrarPanelInfo(false);
 		this.setMostrarBotonImportar(false);
@@ -808,13 +956,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		}
 
 		// Comprobamos que sean el mismo codigo dir3 (el del usuario
-		final String codigoDIR3 = prop.getProperty("entidad");
-		final String dir3entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getCodigoDIR3();
-		if (codigoDIR3 == null || !codigoDIR3.equals(dir3entidad)) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteImportar.error.dir3distinto"));
-			correcto = false;
-		}
+		filaEntidad = new FilaImportarEntidad();
+		filaEntidad.setDir3(prop.getProperty("entidad"));
+
 		return correcto;
 	}
 
@@ -824,6 +968,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 * @throws Exception
 	 */
 	public void importar() throws Exception {
+
+		if (isNotCheckeado(this.filaEntidad.getResultado())) {
+			return;
+		}
 
 		// Comprobamos que todas las filas están checkeadas.
 		if (isNotCheckeado(this.filaArea.getResultado()) || isNotCheckeado(this.filaTramite.getResultado())
@@ -1284,4 +1432,29 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		this.mostrarRegistroInfo = mostrarRegistroInfo;
 	}
 
+	/**
+	 * Para obtener la versión de la configuracion global.
+	 *
+	 * @return
+	 */
+	private String getVersion() {
+		final ConfiguracionGlobal confGlobal = configuracionGlobalService
+				.getConfiguracionGlobal(TypePropiedadConfiguracion.VERSION);
+		return confGlobal.getValor();
+	}
+
+	/**
+	 * @return the filaEntidad
+	 */
+	public FilaImportarEntidad getFilaEntidad() {
+		return filaEntidad;
+	}
+
+	/**
+	 * @param filaEntidad
+	 *            the filaEntidad to set
+	 */
+	public void setFilaEntidad(final FilaImportarEntidad filaEntidad) {
+		this.filaEntidad = filaEntidad;
+	}
 }

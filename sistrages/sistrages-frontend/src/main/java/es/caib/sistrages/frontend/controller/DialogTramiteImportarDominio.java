@@ -12,6 +12,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeImportarAccion;
@@ -46,6 +48,15 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 
 	/** Mostrar FD. **/
 	private boolean mostrarFD = false;
+
+	/** Mostrar FD actual. **/
+	private boolean mostrarFDActual = false;
+
+	/** Mostrar FD Actual botones de ver estructura/datos. **/
+	private boolean mostrarFDActualBotones = false;
+
+	/** Mostrar FD Actual mensaje de no existe. **/
+	private boolean mostrarFDActualLiteral = false;
 
 	/** Mostrar los textos de reemplazar. **/
 	private boolean mostrarReemplazar = true;
@@ -85,6 +96,14 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 		case FUENTE_DATOS:
 			mostrarFD = true;
 			mostrarSql = true;
+			mostrarFDActual = true;
+			if (this.data.getFuenteDatosActual() != null) {
+				setMostrarFDActualBotones(true);
+				setMostrarFDActualLiteral(false);
+			} else {
+				setMostrarFDActualLiteral(true);
+				setMostrarFDActualBotones(false);
+			}
 			break;
 		case LISTA_FIJA:
 			mostrarLista = true;
@@ -111,14 +130,13 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	/**
 	 * Consultar dominio.
 	 */
-	public void consultarDominio() {
-		if (data.getDominioActual() != null) {
+	public void consultarDominio(final Dominio dominio) {
+		if (dominio != null) {
 			final Map<String, String> params = new HashMap<>();
-			params.put(TypeParametroVentana.ID.toString(), data.getDominioActual().getCodigo().toString());
-			params.put(TypeParametroVentana.AMBITO.toString(), data.getDominioActual().getAmbito().toString());
-			if (data.getDominioActual().getAreas() != null && !data.getDominioActual().getAreas().isEmpty()) {
-				params.put(TypeParametroVentana.AREA.toString(),
-						data.getDominioActual().getAreas().toArray()[0].toString());
+			params.put(TypeParametroVentana.ID.toString(), dominio.getCodigo().toString());
+			params.put(TypeParametroVentana.AMBITO.toString(), dominio.getAmbito().toString());
+			if (dominio.getAreas() != null && !dominio.getAreas().isEmpty()) {
+				params.put(TypeParametroVentana.AREA.toString(), dominio.getAreas().toArray()[0].toString());
 			}
 			UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
 		}
@@ -127,11 +145,11 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	/**
 	 * Consultar estructura FD.
 	 */
-	public void consultarEstructura() {
-		if (data.getDominio() != null && data.getDominio().getIdFuenteDatos() != null) {
+	public void consultarEstructura(final Dominio dominio, final FuenteDatos fd) {
+		if (dominio != null && dominio.getIdFuenteDatos() != null) {
 			UtilJSF.getSessionBean().limpiaMochilaDatos();
 			final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
-			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEDATOS, UtilJSON.toJSON(data.getFuenteDatos()));
+			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEDATOS, UtilJSON.toJSON(fd));
 			UtilJSF.openDialog(DialogTramiteImportarFDE.class, TypeModoAcceso.CONSULTA, null, true, 770, 400);
 		}
 	}
@@ -146,6 +164,19 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEDATOS, UtilJSON.toJSON(data.getFuenteDatos()));
 			mochila.put(Constantes.CLAVE_MOCHILA_FUENTEVALORES, data.getFuenteDatosContent());
 			UtilJSF.openDialog(DialogTramiteImportarFDD.class, TypeModoAcceso.CONSULTA, null, true, 770, 400);
+		}
+	}
+
+	/**
+	 * Consultar datos FD.
+	 */
+	public void consultarDatosActual() {
+		if (data.getDominioActual() != null && data.getDominioActual().getIdFuenteDatos() != null) {
+
+			// Muestra dialogo
+			final Map<String, String> params = new HashMap<>();
+			params.put(TypeParametroVentana.ID.toString(), data.getDominioActual().getIdFuenteDatos().toString());
+			UtilJSF.openDialog(DialogFuenteDatos.class, TypeModoAcceso.CONSULTA, params, true, 740, 330);
 		}
 	}
 
@@ -349,6 +380,51 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 	 */
 	public void setParametros(final List<Propiedad> parametros) {
 		this.parametros = parametros;
+	}
+
+	/**
+	 * @return the mostrarFDActual
+	 */
+	public boolean isMostrarFDActual() {
+		return mostrarFDActual;
+	}
+
+	/**
+	 * @param mostrarFDActual
+	 *            the mostrarFDActual to set
+	 */
+	public void setMostrarFDActual(final boolean mostrarFDActual) {
+		this.mostrarFDActual = mostrarFDActual;
+	}
+
+	/**
+	 * @return the mostrarFDActualBotones
+	 */
+	public boolean isMostrarFDActualBotones() {
+		return mostrarFDActualBotones;
+	}
+
+	/**
+	 * @param mostrarFDActualBotones
+	 *            the mostrarFDActualBotones to set
+	 */
+	public void setMostrarFDActualBotones(final boolean mostrarFDActualBotones) {
+		this.mostrarFDActualBotones = mostrarFDActualBotones;
+	}
+
+	/**
+	 * @return the mostrarFDActualLiteral
+	 */
+	public boolean isMostrarFDActualLiteral() {
+		return mostrarFDActualLiteral;
+	}
+
+	/**
+	 * @param mostrarFDActualLiteral
+	 *            the mostrarFDActualLiteral to set
+	 */
+	public void setMostrarFDActualLiteral(final boolean mostrarFDActualLiteral) {
+		this.mostrarFDActualLiteral = mostrarFDActualLiteral;
 	}
 
 }

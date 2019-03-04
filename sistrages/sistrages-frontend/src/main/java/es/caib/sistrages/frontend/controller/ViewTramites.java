@@ -216,7 +216,7 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void importar() {
 		final Map<String, String> params = new HashMap<>();
-		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
+		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 1000, 670);
 	}
 
 	/**
@@ -1192,6 +1192,13 @@ public class ViewTramites extends ViewControllerBase {
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
 		UtilJSF.openDialog(DialogHistorialVersion.class, TypeModoAcceso.CONSULTA, params, true, 900, 520);
 
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("tramites");
 	}
 
 	/**

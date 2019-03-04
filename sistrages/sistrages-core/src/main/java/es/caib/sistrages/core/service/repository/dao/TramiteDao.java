@@ -286,4 +286,12 @@ public interface TramiteDao {
 	 */
 	TramiteSimple getTramiteSimple(String idTramiteVersion);
 
+	/**
+	 * Obtiene los idiomas disponibles de la versión del trámite.
+	 * 
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	String getIdiomasDisponibles(String idTramiteVersion);
+
 }

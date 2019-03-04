@@ -77,8 +77,15 @@
 
 				    <p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerFD']}:"  rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar}" />
 					<p:column rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar}">
-				  		<p:commandButton value="#{msg['botones.fd.estructura']}" actionListener="#{dialogTramiteImportarDominio.consultarEstructura()}" process="@this" />
+				  		<p:commandButton value="#{msg['botones.fd.estructura']}" actionListener="#{dialogTramiteImportarDominio.consultarEstructura(dialogTramiteImportarDominio.data.dominio, dialogTramiteImportarDominio.data.fuenteDatos)}" process="@this" />
 						<p:commandButton value="#{msg['botones.fd.datos']} " actionListener="#{dialogTramiteImportarDominio.consultarDatos()}" process="@this"/>
+					</p:column>
+
+					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerFDactual']}:"  rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar and dialogTramiteImportarDominio.mostrarFDActual}" />
+					<p:column rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar and dialogTramiteImportarDominio.mostrarFDActual}">
+				  		<p:commandButton value="#{msg['botones.fd.estructura']}" actionListener="#{dialogTramiteImportarDominio.consultarEstructura(dialogTramiteImportarDominio.data.dominioActual, dialogTramiteImportarDominio.data.fuenteDatosActual)}" process="@this" rendered="#{dialogTramiteImportarDominio.mostrarFDActualBotones}" />
+						<p:commandButton value="#{msg['botones.fd.datos']} " actionListener="#{dialogTramiteImportarDominio.consultarDatosActual()}" process="@this" rendered="#{dialogTramiteImportarDominio.mostrarFDActualBotones}" />
+						<h:outputText value="#{msg['dialogTramiteImportarDominio.fd.noexiste']}"  rendered="#{!dialogTramiteImportarDominio.mostrarFDActualBotones}" />
 					</p:column>
 				</h:panelGrid>
 			</p:outputPanel>
