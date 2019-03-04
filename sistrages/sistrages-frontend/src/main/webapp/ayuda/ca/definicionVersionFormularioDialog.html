@@ -1,0 +1,42 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENT DE FORMULARI</h1>
+<p>
+	En la pantalla de '<i>Manteniment de formulari</i>' podeu gestionar les configuracions i disseny del formulari.<br>
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica al formulari en l'aplicaci&oacute;. Qualsevol refer&egrave;ncia al formulari en els scripts de la versi&oacute; es realitzar&agrave; utilitzant aquest codi.</li>
+		<li><span class="nombreCampo">Descripci&oacute;:</span> text multiidioma de presentaci&oacute; del formulari en l'assistent de tramitaci&oacute;. Aquesta ser&agrave; la denominaci&oacute; del formulari per al tramitador.</li>
+		<li><span class="boton">Obligatorietat:</span> permet configurar l'obligatorietat d'emplenat del formulari en l'assistent de tramitaci&oacute;. Els valors possibles s&oacute;n:</li>
+		<ul class="detalle">
+		<li><span class="boton">Obligatori:</span> si es marca aquesta opci&oacute; ser&agrave; obligatòria l'emplenament del formulari en l'assistent. En cas contrari no es podr&agrave; amb l'emplenament del tr&agrave;mit.</li>
+		<li><span class="boton">Opcional:</span> si es marca aquesta opci&oacute; l'emplenament del formulari ser&agrave; opcional.</li>
+		<li><span class="boton">Depenent:</span> si es marca aquesta opci&oacute; l'obligatorietat del formulari dependr&agrave; del script 'Establir depend&egrave;ncia'.</li>
+		<li><span class="boton">Establir depend&egrave;ncia:</span> script que permet establir l'obligatorietat d'un document segons altres dades del tr&agrave;mit (dominis, dades d'un formulari previ, dades de sessi&oacute;, etc.). &uacute;nicament es tindr&agrave; en compte el valor d'aquest script si s'ha fixat pr&egrave;viament l'obligatorietat 'Depenent'.</li>
+		</ul>
+		<li><span class="nombreCampo">Signar digitalment:</span> permet establir que es requereixi la signatura electr&ograve;nica del formulari. Aquesta signatura se sol&middot;licitar&agrave; a la darrera passa de l'assistent, de manera pr&egrave;via al registre del tr&agrave;mit.</li>
+		<li><span class="nombreCampo">Establir signant:</span> script que permet, en cas de requerir-se signatura electr&ograve;nica del fomulari, establir el signant o signants requerits. Per a tramitacions autenticades, si no es consignen signants, es sol&middot;licitar&agrave; la signatura de l'usuari autenticat. Per a tramitacions no autenticades ser&agrave; obligatori consignar almenys un signant en el script.</li>
+		<li><span class="nombreCampo">Script personalizaci&oacute;:</span> scripts que permeten dur a terme tasques de personalitzaci&oacute; del formulari. Els scripts de personalitzaci&oacute; disponibles s&oacute;n:</li>
+		<ul class="detalle">
+		<li><span class="boton">C&agrave;rrega de dades inicials:</span> script que permet establir valors inciales en els camps del formulari.</li>
+		<li><span class="boton">Par&agrave;metres d'obertura del formulari:</span> script que permet passar par&agrave;metres a un formulari.</li>
+		<li><span class="boton">Postguardar formulari:</span> script que permet tant realitzar validacions despr&eacute;s de guardar el formulari, com alimentar valors d'un altre formulari.</li>
+		</ul>
+		<li><span class="nombreCampo">Editar disseny:</span> permet, en cas d'estar en manera edici&oacute;, accedir al disseny del formulari. Si accedim en manera consulta, el bot&oacute; es presentar&agrave; com 'Consultar disseny' i permetr&agrave; accedir al dissenyador en mode consulta.</li>
+
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Desar</span>: tanca la pantalla desant els canvis.</li>
+		<li><span class="boton">Cancel&middot;lar</span>: tanca la pantalla sense desar els canvis.</li>
+	</ul>
+</p>
+</body>
+</html>

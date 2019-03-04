@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('DATOS_VALOR.setValorMultiple(codigo, valor)');
+		copiarPortapeles('DATOS_VALOR.setValorMultiple(valor)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
-	setValorMultiple(campo, valor): void
+	setValorMultiple(valor): void
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -36,7 +36,6 @@
 </p>
 <p>
 	<ul>
-		<li><b>campo</b>: Identificador del campo al que se desea asignar el valor.</li>
 		<li><b>valor</b>: Objeto de tipo ValorCampoMultiple el cual contiene los diferentes valores a asignar al campo.</li>
 	</ul>
 </p>
@@ -46,13 +45,13 @@
 <p>Para añadir múltiples valores a un campo, por ejemplo una lista desplegable,  primero debemos crear una variable mediante crearValorMultiple. Esto permitirá añadirle valores  mediante addValor: </p>
  <p class="codigoScript">
 var municipios = DATOS_VALOR.crearValorMultiple();
-municipios.addValor('0337','Manacor'); 
-municipios.addValor('0407','Palma de Mallorca'); 
-municipios.addValor('2060','Eivissa'); 
+municipios.addValor('0337','Manacor');
+municipios.addValor('0407','Palma de Mallorca');
+municipios.addValor('2060','Eivissa');
 </p>
 <p>Una vez creada la variable municipios, se puede asignar al campo actual mediante la siguiente sentencia</p>
 <p class="codigoScript">
-DATOS_VALOR.setValorMultiple('municipios', municipios);
+DATOS_VALOR.setValorMultiple(municipios);
 </p>
 </body>
 </html>

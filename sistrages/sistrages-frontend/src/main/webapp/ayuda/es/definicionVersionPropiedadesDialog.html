@@ -1,0 +1,39 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENTO PROPIEDADES DE VERSI&Oacute;N</h1>
+<p>
+	En la pantalla de '<i>Mantenimento de propiedades de versi&oacute;n</i>' puede mantener las propiedades de la versi&oacute;n de un tr&aacute;mite que no hacen referencia a un paso espec&iacute;fico de esta.<br>
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Autenticaci&oacute;n:</span> permite establecer el tipo de autenticaci&oacute;n que soportar&aacute; la versi&oacute;n del tr&aacute;mite. Los posibles tipos son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Autenticado:</span> casilla que permite habilitar el acceso autenticado. Los m&eacute;todos de autenticaci&oacute;n ofrecidos vendr&aacute;n determinados por el plugin de login utilizado.</li>
+		<li><span class="boton">Nivel QAA:</span> en caso de acceso autenticado, permite definir el nivel de aseguramiento en la calidad de la autenticaci&oacute;n (QAA). Este valor se fija t&iacute;picamente en base a los datos que se tratan y a la clasificaci&oacute;n de seguridad siguiendo las recomendaciones del ENS.</li>
+		<li><span class="boton">Sin autenticaci&oacute;n:</span> casilla que permite habilitar el acceso sin autenticaci&oacute;n. En este tipo de acceso el asistente de tramitaci&oacute;n facilitar&aacute; una clave de tramitaci&oacute; al ciudadano que le permitir&aacute;, durante un tiempo, retomar la tramitaci&oacute;n en caso de dejarla inacabada.</li>
+		</ul>
+		<li><span class="nombreCampo">Idioma:</span> permite, mediante casillas de selección, establecer los idiomas en los que estar&aacute; disponible la versi&oacute;n del tr&aacute;mite. Durante el diseño del tr&aacute;mite ser&aacute; obligatorio consignar los textos multiidioma en todos aquellos idiomas que se hayan habilitado para la versi&oacute;n</li>
+		<li><span class="nombreCampo">Persistencia:</span> permite establecer si las tramitaciones inacabadas podr&aacute;n ser recuperadas para completarse. Si esta casilla est&aacute; desmarcada un ciudadano no podr&aacute; recuperar una tramitaci&oacute;n inacabada si abandona el asistente de tramitaci&oacute;n. La persistencia permite adem&aacute; las configuraciones siguientes:</li>
+		<ul class="detalle">
+		<li><span class="boton">Sin l&iacute;mite:</span> si se marca esta opci&oacute;n la persistencia, en caso de estar habilitada, no tiene l&iacute;mite temporal. El l&iacute;mite temporal m&aacute;ximo vendr&aacute; marcado por la fecha fin de plazo del tr&aacute;mite.</li>
+		<li><span class="boton">Por d&iacute;as:</span> permite indicar el n&uacute;mero de d&iacute;as, en caso de estar habilitada la persistencia, que se mantendr&aacute;n las tramitaciones en persistencia.</li>
+		<li><span class="boton">Num. d&iacute;as:</span> permite establecer una fecha de final hasta la que se mostrar&aacute; el mensaje. Si no se consigna valor el mensaje aplicar&aacute; en cualquier momento. El l&iacute;mite temporal m&aacute;ximo vendr&aacute; marcado por la fecha fin de plazo del tr&aacute;mite.</li>
+		</ul>
+		<li><span class="nombreCampo">Script de personalizaci&oacute;n:</span> script que permite modificar din&aacute;micamente el t&iacute;tulo del tr&aacute;mite y su plazo de inicio y fin. Tambi&eacute;n se puede emplear este script para establecer una validaci&oacute;n de inicio de tr&aacute;mite.</li>
+		<li><span class="nombreCampo">Script de par&aacute;metros iniciales:</span> script permite añadir par&aacute;metros de inicio del tr&aacute;mite (por defecto tendr&aacute; los par&aacute;metros de la url).</li>
+
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Guardar</span>: cierra la pantalla guardando los cambios.</li>
+		<li><span class="boton">Cancelar</span>: cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+</body>
+</html>

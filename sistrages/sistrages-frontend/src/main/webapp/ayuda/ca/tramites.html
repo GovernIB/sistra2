@@ -1,0 +1,72 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">TR&Agrave;MITS</h1>
+<p>
+	En la pantalla de<i>' Tr&agrave;mits</i>' es pot gestionar l'alta, baixa i edici&oacute; d'&agrave;rees, tr&agrave;mits i versions de tr&agrave;mits.<br>
+	A m&eacute;s es poden realitzar altres operatives relatives a tr&agrave;mit i versi&oacute; de tr&agrave;mit que es detallen m&eacute;s a baix (Control d'acc&eacute;s, exportaci&oacute;/importaci&oacute;, moure tr&agrave;mit, etc.).<br>
+	En aquesta pantalla &uacute;nicament es visualitzaran les &agrave;rees i tr&agrave;mits, continguts en aquestes, sobre les que l'usuari tingui permisos. Sobre aquests tr&agrave;mits la pantalla permet la realitzaci&oacute; de b&uacute;quedas filtrades.<br><br>
+	El manteniment de les &agrave;rees l'ha de fer un usuari que disposi del rol<i>' d'Administrador d'entitat</i>'.<br>
+	El manteniment de tr&agrave;mits i versions d'un tr&agrave;mit vinculats a una &agrave;rea &uacute;nicament pot ser realitzat per un usuari que disposi del rol de<i>' Administrador d'entitat</i>' o en defecte d'aix&ograve; per un usuari amb rol '<i>Desenvolupador</i>' amb permisos de desenvolupador sobre l'&agrave;rea al qual pertanyen els tr&agrave;mits i o versions d'aquests.
+</p>
+<h2 class="stgH2">OPERATIVA &Agrave;REAS</h2>
+<p>
+	<ul>
+		<li><span class="boton">Nou</span>: pitjant en el bot&oacute; s'obrir&agrave; la <a href="../../ayuda/ca/dominioDialog.html">fitxa</a> per a donar d'alta un nova &agrave;rea en la qual haur&agrave; d'emplenar els camps m&iacute;nims sol&middot;licitats. Aquesta operativa &uacute;nicament estar&agrave; disponible per als administradors d'entitat.</li>
+		<li><span class="boton">Editar</span>: el bot&oacute; d'edici&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una &agrave;rea seleccionada. Al pitjar aquest bot&oacute; s'obrir&agrave; la fitxa per a poder realitzar les modificacions dels camps desitjats.</li>
+		<li> <span class="boton">Eliminar</span>: el bot&oacute; d'eliminaci&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una &agrave;rea seleccionada a eliminar. Pr&egrave;via a l'eliminaci&oacute; de l'&agrave;rea es mostrar&agrave; un missatge de confirmaci&oacute; de l'acci&oacute;. Aquesta operativa &uacute;nicament estar&agrave; disponible per als administradors d'entitat.</li>
+	</ul>
+</p>
+<h2 class="stgH2">CAMPS TR&Agrave;MITS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Codi del tr&agrave;mit:</span> codi un&iacute;voc que identifica al tr&agrave;mit en l'aplicaci&oacute;</li>
+		<li><span class="nombreCampo">Descripci&oacute; del tr&agrave;mit:</span> text descriptiu de l'objecte del tr&agrave;mit</li>
+		<li><span class="nombreCampo">Versions actives:</span> casella de verificaci&oacute; que indica si el tr&agrave;mit compta amb versions actives</li>
+		<li><span class="nombreCampo">&Agrave;rea:</span> codi de l'&agrave;rea al qual pertany el tr&agrave;mit. Mitjan&ccedil;ant aquest camp l'usuari, amb perm&iacute;s sobre diferents &agrave;rees, pot distingir a quina &agrave;rea pertany el tr&agrave;mit</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA TR&Agrave;MITS</h2>
+<p>
+	<ul>
+		<li><span class="boton">Cercar</span>: introduint un text en el camp '<i>Buscar</i>' i pitjant el bot&oacute; amb la icona de la lupa es dur&agrave; a terme un filtrat dels tr&agrave;mits que continguin el text introdu&iuml;t. El criteri de cerca aplicar&agrave; a qualsevol dels camps del tr&agrave;mit, i nom&eacute;s es cercar&agrave; sobre els tr&agrave;mits de les &agrave;rees marcades. Posteriorment es visualitzaran els resultats de la cerca filtrant-los en el llistat de tr&agrave;mits.</li>
+		<li><span class="boton">Nou Tr&agrave;mit</span>: el bot&oacute; de nou tr&agrave;mit &uacute;nicament es mostrar&agrave; quan hi hagi una &agrave;rea seleccionada. En pitjar el bot&oacute; s'obrir&agrave; la <a href="../../ayuda/ca/dominioDialog.html">fitxa</a> per a donar d'alta un nou tr&agrave;mit en la qual haur&agrave; d'emplenar els camps m&iacute;nims sol&middot;licitats per a dur a terme l'alta.</li>
+		<li><span class="boton">Nova Versi&oacute;</span>: el bot&oacute; de nova versi&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi un tr&agrave;mit seleccionat. En pitjar el bot&oacute; s'obrir&agrave; la fitxa per a indicar el n&uacute;mero de versi&oacute; a crear i el tipus de flux d'aquesta versi&oacute;</li>
+		<li><span class="boton">Editar Tr&agrave;mit</span>: el bot&oacute; d'edici&oacute; de tr&agrave;mit &uacute;nicament es mostrar&agrave; quan hi hagi un tr&agrave;mit seleccionat en el llistat. En pitjar el bot&oacute; s'obrir&agrave; la <a href="../../ayuda/ca/dominioDialog.html">fitxa</a> per a modificar el tr&agrave;mit.</li>
+		<li><span class="boton">Nova Versi&oacute;</span>: el bot&oacute; de nova versi&oacute; de tr&agrave;mit &uacute;nicament es mostrar&agrave; quan hi hagi un tr&agrave;mit seleccionat en el llistat. En pitjar el bot&oacute; s'obrir&agrave; la <a href="../../ayuda/ca/dominioDialog.html">fitxa</a> per a donar d'alta una nova versi&oacute; del tr&agrave;mit.</li>
+		<li><span class="boton">Importar Tr&agrave;mit</span>: el bot&oacute; d'importaci&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi un tr&agrave;mit o versi&oacute; seleccionada, ja que el que s'importa &eacute;s una versi&oacute;. En pitjar el bot&oacute; s'obrir&agrave; l'assistent d'importaci&oacute;.</li>
+		<li><span class="boton">Moure Tr&agrave;mit</span>: el bot&oacute; de moure tr&agrave;mit &uacute;nicament es mostrar&agrave; quan hi hagi un tr&agrave;mit seleccionat. En pitjar el bot&oacute; s'obrir&agrave; una finestra que ens permetr&agrave; indicar l'&agrave;rea destino del tr&agrave;mit.</li>
+		<li> <span class="boton">Eliminar Tr&agrave;mit</span>: el bot&oacute; d'eliminar tr&agrave;mit &uacute;nicament es mostrar&agrave; quan hi hagi un tr&agrave;mit seleccionat. Previ a l'eliminaci&oacute; del tr&agrave;mit es mostrar&agrave; un missatge de confirmaci&oacute; de l'acci&oacute;.</li>
+		<li> <span class="boton">Procediments</span>: el bot&oacute; de procediments &uacute;nicament es mostrar&agrave; quan hi hagi un tr&agrave;mit seleccionat. En pitjar el bot&oacute; es presentar&agrave; una finestra amb el llistat de procediments del cat&agrave;leg que tenen vinculat el tr&agrave;mit seleccionat.</li>
+		<li> <span class="boton">Dominis</span>: aquest bot&oacute; est&agrave; disponible quan se selecciona una única &agrave;rea, i permet accedir al llistat de dominis de l'&agrave;rea seleccionada.</li>
+		<li> <span class="boton">Fonts de Dades</span>: aquest bot&oacute; est&agrave; disponible quan se selecciona una &uacute;nica &agrave;rea, i permet accedir al llistat de fonts de dades de l'&agrave;rea seleccionada.</li>
+	</ul>
+</p>
+<h2 class="stgH2">CAMPS VERSI&Oacute;</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Versi&oacute;:</span> codi un&iacute;voc que identifica al tr&agrave;mit en l'aplicaci&oacute;</li>
+		<li><span class="nombreCampo">Flux:</span> text descriptiu de l'objecte del tr&agrave;mit</li>
+		<li><span class="nombreCampo">Activa:</span> casella de verificaci&oacute; que indica si el tr&agrave;mit compta amb versions actives</li>
+		<li><span class="nombreCampo">Release:</span> codi de l'&agrave;rea al qual pertany el tr&agrave;mit. Mitjan&ccedil;ant aquest camp l'usuari, amb perm&iacute;s sobre diferents &agrave;rees, pot distingir a quina &agrave;rea pertany el tr&agrave;mit</li>
+		<li><span class="nombreCampo">Bloquejat per:</span> codi de l'&agrave;rea al qual pertany el tr&agrave;mit. Mitjan&ccedil;ant aquest camp l'usuari, amb perm&iacute;s sobre diferents &agrave;rees, pot distingir a quina &agrave;rea pertany el tr&agrave;mit</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA VERSI&Oacute;</h2>
+<p>
+	<ul>
+		<li><span class="boton">Editar Versi&oacute;</span>: el bot&oacute; d'edici&oacute; de versi&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; d'un tr&agrave;mit seleccionada. En pitjar el bot&oacute; s'accedir&agrave; a la definici&oacute; de versi&oacute;, que &uacute;nicament ser&agrave; editable si pr&egrave;viament s'ha bloquejat.</li>
+		<li><span class="boton">Bloquejar</span>: el bot&oacute; de bloqueig de versi&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; d'un tr&agrave;mit seleccionada. En pitjar el bot&oacute; la versi&oacute; quedar&agrave; bloquejada per l'usuari, de manera que nom&eacute;s ell pugui editar la versi&oacute; fins que aquesta sigui desbloquejada.</li>
+		<li><span class="boton">Desbloquejar</span>: el bot&oacute; de desbloqueig de versi&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; d'un tr&agrave;mit seleccionada que estigui bloquejada per un usuari. Una versi&oacute; bloquejada &uacute;nicament podrà ser desbloquejada per ell mateix o per un administrador d'àrea i/o entitat.</li>
+		<li><span class="boton">Previsualitzar Tr&aacute;mite</span>: el bot&oacute; de previsualització &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; d'un tr&agrave;mit seleccionada. En pitjar el bot&oacute; s'obrir&agrave; una finestra que ens permetr&agrave; realitzar una previsualitzaci&oacute;, en l'assistent de tramitaci&oacute;, de la versi&oacute; del tr&agrave;mit.</li>
+		<li><span class="boton">Control de acc&eacute;s</span>: el bot&oacute; de control d'accés &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; d'un tr&agrave;mit seleccionada. En pitjar el bot&oacute; s'obrir&agrave; una finestra que ens permetr&agrave; modificar par&agrave;metres relatius a l'acc&eacute;s a la versi&oacute; del tr&agrave;mit des de l'assistent de tramitaci&oacute;.</li>
+		<li> <span class="boton">Eliminar versi&oacute;</span>: el bot&oacute; d'eliminar versi&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; seleccionada. Previ a l'eliminaci&oacute; de la versi&oacute; es mostrar&agrave; un missatge de confirmaci&oacute; de l'acci&oacute;.</li>
+		<li> <span class="boton">Exportar versi&oacute;</span>: el bot&oacute; d'exportaci&oacute; de versi&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; seleccionada. Per a poder exportar una versi&oacute; de tr&agrave;mit, aquesta haur&agrave; d'estar desbloquejada. En pitjar el bot&oacute; es presentar&agrave; una finestra amb un resum de les dades de la versi&oacute; a exportar que permetr&agrave; generar el fitxer d'exportaci&oacute;.</li>
+		<li> <span class="boton">Duplicar versi&oacute;</span>: el bot&oacute; de duplicaci&oacute; &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; d'un tr&agrave;mit seleccionada. En pitjar el bot&oacute; s'obrir&agrave; una finestra que permetr&agrave; fixar l'&agrave;rea i tr&agrave;mit en el qual es duplicar&agrave; la versi&oacute;. &Eacute;s important tenir en compte que la versi&oacute; es duplicar&agrave; en el tr&agrave;mit destino amb un n&uacute;mero de versi&oacute; immediatament superior a la versi&oacute; m&eacute;s recent.</li>
+		<li> <span class="boton">Historial</span>: el bot&oacute; d'historial &uacute;nicament es mostrar&agrave; quan hi hagi una versi&oacute; d'un tr&agrave;mit seleccionada. En pitjar el bot&oacute; s'obrir&agrave; una finestra en el qual es mostra l'hist&ograve;ric de releases de la versi&oacute;, amb el detall de cada release.</li>
+	</ul>
+</p>
+</body>
+</html>

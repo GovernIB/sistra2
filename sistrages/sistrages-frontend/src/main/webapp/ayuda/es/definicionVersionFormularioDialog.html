@@ -1,0 +1,42 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENTO DE FORMULARIO</h1>
+<p>
+	En la pantalla de '<i>Mantenimento de formulario</i>' puede gestionar las configuraciones y diseño del formulario.<br>
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> c&oacute;digo un&iacute;voco que identifica al formulario en la aplicaci&oacute;n. Cualquier referencia al formulario en los scripts de la versi&oacute;n se realizar&aacute; utilizando este c&oacute;digo.</li>
+		<li><span class="nombreCampo">Descripci&oacute;n:</span> texto multiidioma de presentaci&oacute;n del formulario en el asistente de tramitaci&oacute;n. Esta ser&aacute; la denominaci&oacute;n del formulario para el tramitador.</li>
+		<li><span class="boton">Obligatoriedad:</span> permite configurar la obligatoriedad de cumplimentaci&oacute;n del formulario en el asistente de tramitaci&oacute;n. Los valores posibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Obligatorio:</span> si se marca esta opci&oacute;n ser&aacute; obligatoria la cumplimentaci&oacute;n del formulario en el asistente. En caso contrario no se podr&aacute; con la cumplimentaci&oacute;n del tr&aacute;mite.</li>
+		<li><span class="boton">Opcional:</span> si se marca esta opci&oacute;n la cumplimentaci&oacute;n del formulario ser&aacute; opcional.</li>
+		<li><span class="boton">Depende:</span> si se marca esta opci&oacute;n la obligatoriedad del formulario depender&aacute; del script 'Establecer dependencia'.</li>
+		<li><span class="boton">Establecer dependencia:</span> script que permite establecer la obligatoriedad de un documento seg&uacute;n otros datos del tr&aacute;mite (dominios, datos de un formulario previo, datos de sesi&oacute;, etc.). &uacute;nicamente se tendr&aacute; en cuenta el valor de este script si se ha fijado previamente la obligatoriedad 'Depende'.</li>
+		</ul>
+		<li><span class="boton">Firmar digitalmente:</span> permite establecer que se requiera la firma electr&oacute;nica del formulario. Esta firma se solicitar&aacute; en el &uacute;ltimo paso del asistente, de manera previa al registro del tr&aacute;mite.</li>
+		<li><span class="nombreCampo">Establecer firmante:</span> script que permite, en caso de requerirse firma electr&oacute;nica del fomulario, establecer el firmante o firmantes requeridos. Para tramitaciones autenticadas, si no se consignan firmantes, se solicitar&aacute; la firma del usuario autenticado. Para tramitaciones no autenticadas ser&aacute; obligatorio consignar por lo menos un firmante en el script.</li>
+		<li><span class="nombreCampo">Script personalizaci&oacute;n:</span> scripts que permiten llevar a cabo tareas de personalizaci&oacute;n del formulario. Los scripts de personalizaci&oacute;n disponibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Carga de datos inicial:</span> script que permite establecer valores inciales en los campos del formulario.</li>
+		<li><span class="boton">Par&aacute;metros de apertura del formulario:</span> script que permite pasar par&aacute;metros a un formulario.</li>
+		<li><span class="boton">Postguardar formulario:</span> script que permite tanto realizar validaciones tras guardar el formulario, como alimentar valores de otro formulario.</li>
+		</ul>
+		<li><span class="nombreCampo">Editar diseño:</span> permite, en caso de estar en modo edici&oacute;n, acceder al diseño del formulario. Si accedemos en modo consulta, el bot&oacute;n se presentar&aacute; como 'Consultar diseño' y permitir&aacute; acceder al diseñador en modo consulta.</li>
+
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Guardar</span>: cierra la pantalla guardando los cambios.</li>
+		<li><span class="boton">Cancelar</span>: cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+</body>
+</html>

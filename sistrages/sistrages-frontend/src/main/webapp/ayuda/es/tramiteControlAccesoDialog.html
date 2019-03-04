@@ -1,0 +1,38 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENTO CONTROL DE ACCESO</h1>
+<p>
+	En la pantalla de '<i>Mantenimento de control de acceso</i>' puede mantener las configuraciones de la versi&oacute;n de un tr&aacute;mite relativas al acceso de la misma por parte de los ciudadanos desde el asistente de tramitaci&oacute;n<br>
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Activo:</span> casilla de verificaci&oacute;n que indica si la versi&oacute;n est&aacute; activa. En caso de no estar activa no se podr&aacute; iniciar una solicitud desde el asistente de tramitaci&oacute;n.</li>
+		<li><span class="nombreCampo">Mensaje de aviso:</span> permite configurar una aviso visible por parte del ciudadano, desde el asistente de tramitaci&oacute;n al iniciar una solicitud. Las opciones relativas a estos avisos son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Mensaje:</span> permite introducir el texto multiidioma vinculado al mensaje a mostrar al ciudadano.</li>
+		<li><span class="boton">Fecha inicio:</span> permite establecer una fecha de inicio a partir de la que se mostrar&aacute; el mensaje. Si no se consigna valor el mensaje aplicar&aacute; en cualquier momento.</li>
+		<li><span class="boton">Fecha final:</span> permite establecer una fecha de final hasta la que se mostrar&aacute; el mensaje. Si no se consigna valor el mensaje aplicar&aacute; en cualquier momento.</li>
+		<li><span class="boton">Deshabilitar acceso:</span> permite establecer si, adem&aacute;s del mostrar un mensaje, se deshabilita el acceso a la versi&oacute;n del tr&aacute;mite desde el asistente de tramitaci&oacute;n</li>
+		</ul>
+		<li><span class="nombreCampo">Habilitar debug:</span> permite habilitar la impresi&oacute;n en el log de trazas de debug incluidas en la versi&oacute;n del tr&aacute;mite, como son las que puedan ser generadas desde los scripts</li>
+		<li><span class="nombreCampo">Limitar tramitaci&oacute;n:</span> permite establecer una limitaci&oacute;n respecto al inicio de solicitudes desde el asistente. Esta opci&oacute;n puede ser &uacute;til para tr&aacute;mites que puedan tener una alta concurrencia. Las opciones relativas a esta limitaci&oacute;n son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Num. de tramitaciones:</span> n&uacute;mero m&aacute;ximo de solicitudes que se permitir&aacute; iniciar en un intervalo de tiempo concreto.</li>
+		<li><span class="boton">Intervalo (minutos):</span> intervalo de tiempo, en minutos, al que aplicar&aacute; el n&uacute;mero m&aacute;ximo de tramitaciones establecido.</li>
+		</ul>
+
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Guardar</span>: cierra la pantalla guardando los cambios.</li>
+		<li><span class="boton">Cancelar</span>: cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+</body>
+</html>

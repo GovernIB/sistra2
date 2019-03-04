@@ -7,7 +7,7 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('DATOS_VALOR.setValor(codigo, valor)');
+		copiarPortapeles('DATOS_VALOR.setValor(valor)');
 	}
 </script>
 <body class="bodyPlugins">
@@ -21,7 +21,7 @@
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
-	setValor(campo, valor): void
+	setValor(valor): void
 </h1>
 <p>
 	<b>DESCRIPCIÓN</b>
@@ -36,7 +36,6 @@
 </p>
 <p>
 	<ul>
-		<li><b>campo</b>: Campo al que se desea asignar el valor.</li>
 		<li><b>valor</b>: Valor que se asigna al campo.</li>
 	</ul>
 </p>
@@ -45,7 +44,7 @@
 </p>
 <p>Establecer el valor '07' al campo con identificador 'codProvincia', : </p>
  <p class="codigoScript">
-DATOS_VALOR.setValor('codProvincia', '07');
+DATOS_VALOR.setValor('07');
 </p>
 </body>
 </html>
