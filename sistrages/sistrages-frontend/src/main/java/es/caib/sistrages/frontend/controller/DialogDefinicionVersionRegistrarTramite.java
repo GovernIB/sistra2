@@ -88,14 +88,16 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/** Plugin registro. **/
 	private IRegistroPlugin iplugin;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Init.
 	 */
 	public void init() {
 		data = (TramitePasoRegistrar) tramiteService.getTramitePaso(Long.valueOf(id));
-		if (idTramiteVersion != null) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		}
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		cargarDatosRegistro();
 	}
 
@@ -416,5 +418,20 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	public void setTipos(final List<TipoAsunto> tipos) {
 		this.tipos = tipos;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 }

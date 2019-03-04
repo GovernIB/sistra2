@@ -30,6 +30,7 @@ import es.caib.sistrages.core.api.model.TramitePasoAnexar;
 import es.caib.sistrages.core.api.model.TramitePasoRellenar;
 import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
@@ -40,6 +41,7 @@ import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
+import es.caib.sistrages.core.service.component.ValidadorComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
@@ -126,6 +128,9 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Autowired
 	AreaComponent areaComponent;
+
+	@Autowired
+	ValidadorComponent validadorComponent;
 
 	/*
 	 * (non-Javadoc)
@@ -977,6 +982,18 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public TramiteSimple getTramiteSimple(final String idTramiteVersion) {
 		return tramiteDao.getTramiteSimple(idTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public String getIdiomasDisponibles(final String idTramiteVersion) {
+		return tramiteDao.getIdiomasDisponibles(idTramiteVersion);
+	}
+	
+	@Override
+	@NegocioInterceptor
+	public List<ErrorValidacion> validarVersionTramite(final Long id, final String idioma) {
+		return validadorComponent.comprobarVersionTramite(id, idioma);
 	}
 
 }

@@ -64,6 +64,13 @@ public class DialogHistorialVersion extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("historialVersionDialog");
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {

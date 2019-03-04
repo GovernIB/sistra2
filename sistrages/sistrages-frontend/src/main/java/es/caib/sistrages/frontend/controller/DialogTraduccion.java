@@ -1,22 +1,18 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -74,44 +70,29 @@ public class DialogTraduccion extends DialogControllerBase {
 	 *
 	 */
 	public void init() {
-		try {
-			final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
-			// if (modo == TypeModoAcceso.ALTA && data == null) {
-			if (iData == null || iData.isEmpty()) {
-				// Borrar, solo de prueba.
-				data = UtilTraducciones.getTraduccionesPorDefecto();
-			} else {
-				data = (Literal) UtilJSON.fromJSON(iData, Literal.class);
-			}
 
-			if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
-				// Si no tiene los idiomas obligatorios, damos por hecho
-				// que todos los idiomas que hay de datos son obligatorios.
-				idiomasObligatorios = data.getIdiomas();
-			} else {
-				final ObjectMapper mapper = new ObjectMapper();
-				idiomasObligatorios = mapper.readValue(iIdiomasObligatorios, List.class);
-			}
-
-			if (iIdiomasPosibles == null || iIdiomasPosibles.isEmpty()) {
-				idiomasPosibles = data.getIdiomas();
-			} else {
-				final ObjectMapper mapper = new ObjectMapper();
-				idiomasPosibles = mapper.readValue(iIdiomasPosibles, List.class);
-			}
-
-			// Si en los posibles, no esa alguno de los idiomasObligatorios, hay que
-			// anyadirlo
-			for (final String idiomaObligatorio : idiomasObligatorios) {
-				if (!idiomasPosibles.contains(idiomaObligatorio)) {
-					idiomasPosibles.add(idiomaObligatorio);
-				}
-			}
-
-			inicializarTextosPermisos();
-		} catch (final IOException e) {
-			throw new FrontException("Error convirtiendo traducciones desde JSON", e);
+		if (iData == null || iData.isEmpty()) {
+			data = new Literal();
+		} else {
+			data = (Literal) UtilJSON.fromJSON(iData, Literal.class);
 		}
+
+		if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
+			idiomasObligatorios = UtilJSF.getSessionBean().getIdiomas();
+		} else {
+			idiomasObligatorios = (List<String>) UtilJSON.fromListJSON(iIdiomasObligatorios, String.class);
+		}
+
+		// Se habían creado los idiomas posibles y obligatorios, de tal manera que
+		// si se quiere se puede especificar unos mínimos obligatorios y más idiomas
+		// posibles. Por ejemplo, especificar el 'ca' como obligorio y como posibles
+		// los idiomas 'es', 'ca' y 'en'. Vamos a forzar para que ambos sean los
+		// mismos, si se desea volver al cambio anterior, se debería ver versiones
+		// anteriores del java.
+		idiomasPosibles = idiomasObligatorios;
+
+		inicializarTextosPermisos();
+
 	}
 
 	/**
@@ -165,15 +146,31 @@ public class DialogTraduccion extends DialogControllerBase {
 	public void aceptar() {
 
 		if (visibleCa) {
+			if (textoCa == null || textoCa.isEmpty()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				return;
+			}
 			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 		}
 		if (visibleEs) {
+			if (textoEs == null || textoEs.isEmpty()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				return;
+			}
 			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 		}
 		if (visibleEn) {
+			if (textoEn == null || textoEn.isEmpty()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				return;
+			}
 			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 		}
 		if (visibleDe) {
+			if (textoDe == null || textoDe.isEmpty()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				return;
+			}
 			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
 		}
 

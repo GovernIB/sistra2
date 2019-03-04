@@ -11,6 +11,12 @@ import java.util.List;
  */
 public class TramiteSimple {
 
+	/** Idiomas soportados. **/
+	private String codigo;
+
+	/** Idiomas soportados. **/
+	private String idiomasSoportados;
+
 	/** Lista de pasos simples **/
 	private List<TramiteSimplePaso> pasos;
 
@@ -31,5 +37,35 @@ public class TramiteSimple {
 	 */
 	public void setPasos(final List<TramiteSimplePaso> pasos) {
 		this.pasos = pasos;
+	}
+
+	/**
+	 * @return the codigo
+	 */
+	public String getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
+	public void setCodigo(final String codigo) {
+		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the idiomasSoportados
+	 */
+	public String getIdiomasSoportados() {
+		return idiomasSoportados;
+	}
+
+	/**
+	 * @param idiomasSoportados
+	 *            the idiomasSoportados to set
+	 */
+	public void setIdiomasSoportados(final String idiomasSoportados) {
+		this.idiomasSoportados = idiomasSoportados;
 	}
 }

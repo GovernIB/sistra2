@@ -78,7 +78,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		} else {
 			data = formIntService.getFormularioInternoPaginas(Long.valueOf(id));
 			literal = data.getTextoCabecera() != null
-					? data.getTextoCabecera().getTraduccion(UtilJSF.getSessionBean().getLang())
+					? data.getTextoCabecera().getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas)
 					: null;
 		}
 
@@ -132,7 +132,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final Literal literales = (Literal) respuesta.getResult();
 			data.setTextoCabecera(literales);
-			setLiteral(literales.getTraduccion(UtilJSF.getSessionBean().getLang()));
+			setLiteral(literales.getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas));
 		}
 	}
 

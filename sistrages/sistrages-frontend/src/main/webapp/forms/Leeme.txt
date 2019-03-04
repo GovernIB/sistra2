@@ -1,0 +1,7 @@
+Hay que trasladar los css/js/imgs de la parte de frontal.
+
+Teniendo en cuenta:
+	- css:
+		hay que reemplazar "(/imgs/" por "(../imgs/"
+		solo se requieren los css que aparecen. Para editor hay uno especial: imc-forms--edicio.css
+	- js: solo se requieren los js que aparecen. Para editor hay uno especial: imc-forms--edicio.js

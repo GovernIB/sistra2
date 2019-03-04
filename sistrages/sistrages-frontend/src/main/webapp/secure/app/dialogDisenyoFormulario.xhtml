@@ -151,6 +151,9 @@
 				 </p:outputPanel>
 
 				<p:outputPanel styleClass="confirmar_botonera">
+					<p:commandButton id="btnPrevisualizarTramite"
+									 	value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye"
+										actionListener="#{dialogDisenyoFormulario.previsualizar()}" process="@this" style="margin-right:4px;width:170px;" />
 					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDisenyoFormulario.cancelar}" process="@this"/>
 				</p:outputPanel>
 			</p:panelGrid>

@@ -76,6 +76,8 @@
 							update="@form growlDialog" />
 						<p:commandButton value="#{msg['botones.cancelar']}"
 							actionListener="#{dialogDefinicionVersionDominios.cancelar()}" process="@this" />
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+							actionListener="#{dialogDefinicionVersionDominios.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 			</p:outputPanel>

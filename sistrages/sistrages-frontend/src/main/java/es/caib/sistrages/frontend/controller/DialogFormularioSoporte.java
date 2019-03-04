@@ -1,7 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -98,12 +96,10 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 *
 	 */
 	public void editarDescripcion() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccionAlta();
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), null, null);
 		}
 
 	}
@@ -114,12 +110,10 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 *
 	 */
 	public void editarTipoIncidencia() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 		if (data.getTipoIncidencia() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccionAlta();
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getTipoIncidencia(), idiomas, idiomas);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getTipoIncidencia(), null, null);
 		}
 	}
 

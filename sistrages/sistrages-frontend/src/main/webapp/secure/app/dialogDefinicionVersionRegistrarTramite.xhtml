@@ -87,7 +87,7 @@
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instrucciones']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="instrucciones" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesPresentacion.getTraduccion(sessionBean.lang)}" styleClass="w85"/>
+           		<p:inputText id="instrucciones" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesPresentacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}" styleClass="w85"/>
            		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstPresentacion()}"
 						process="@this" update="growl">
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoPresentacion}" update="growl instrucciones"/>
@@ -96,7 +96,7 @@
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.tramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang)}"  styleClass="w85"/>
+           		<p:inputText id="tramitacion" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85"/>
            		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"
 						process="@this" update="growl">
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoInstrucciones}" update="growl tramitacion"/>
@@ -114,7 +114,9 @@
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.representacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}" onchange="triggerCheck(); return false;" />
+            <p:selectBooleanCheckbox id="admite" value="#{dialogDefinicionVersionRegistrarTramite.data.admiteRepresentacion}"  itemLabel="#{msg['dialogDefinicionVersionRegistrarTramite.representacion.admite']}">
+            	<p:ajax event="change" global="false" process="@form:admite" update="formdialogDefinicionVersionRegistrarTramite:buttonScript3 @form:valida" />
+            </p:selectBooleanCheckbox>
             <p:spacer width="30" height="1"/>
            		<p:commandButton id="buttonScript3" icon="fa fa-bolt" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), dialogDefinicionVersionRegistrarTramite.data.scriptRepresentante)}"
 						process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}"
@@ -143,15 +145,6 @@
 				</p:toolbar>
 		    </p:outputPanel>
 
-			<p:commandButton id="hiddenCheck" styleClass="button"  process="@form:admite" update="formdialogDefinicionVersionRegistrarTramite:buttonScript3 @form:valida" style="display:none" />
-
-			<h:outputScript >
-		 		function triggerCheck() {
-		 			alert("x3");
-					document.getElementById("formdialogDefinicionVersionRegistrarTramite:hiddenCheck").click();
-		     	}
-
-		 	</h:outputScript>
 	</h:form>
 </h:body>
 </f:view>

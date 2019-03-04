@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
-import javax.annotation.PostConstruct;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -47,6 +48,9 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
 	 */
@@ -55,15 +59,16 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 	}
 
-	@PostConstruct
+	/**
+	 * Init.
+	 */
 	public void init() {
 
 		data = new FormularioTramite();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
 		data.setTipo(TypeFormulario.TRAMITE);
-		if (idTramiteVersion != null) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		}
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 	}
 
 	/**
@@ -100,8 +105,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 */
 	public void editarDescripcion() {
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, UtilTraducciones.getTraduccionesPorDefecto(),
-					tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, null, tramiteVersion);
 		} else {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
@@ -140,6 +144,13 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionRellenarDialog");
 	}
 
 	/**
@@ -193,6 +204,21 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 
 	public void setIdTramitePaso(final String idTramitePaso) {
 		this.idTramitePaso = idTramitePaso;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

@@ -20,12 +20,14 @@ import org.primefaces.model.menu.MenuModel;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuSuperAdministrador;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 /**
  * Información de sesión.
@@ -66,6 +68,17 @@ public class SessionBean {
 	 * Entidad actual.
 	 */
 	private Entidad entidad;
+
+	/**
+	 * Idiomas
+	 */
+	private List<String> idiomas;
+
+	/**
+	 * Configuracion global..
+	 */
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/**
 	 * Servicio seguridad.
@@ -118,7 +131,8 @@ public class SessionBean {
 		rolesList = securityService.getRoles();
 		listaEntidadesAdministrador = securityService.getEntidadesAdministrador();
 		listaEntidadesDesarrollador = securityService.getEntidadesDesarrollador();
-
+		idiomas = UtilTraducciones
+				.getIdiomas(configuracionGlobalService.getConfiguracionGlobal("sistramit.idiomas").getValor());
 		// Eliminamos role admin y desarrollador si no tiene entidades asociadas
 		if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT) && listaEntidadesAdministrador.isEmpty()) {
 			rolesList.remove(TypeRoleAcceso.ADMIN_ENT);
@@ -502,6 +516,21 @@ public class SessionBean {
 
 	public void setMochilaDatos(final Map<String, Object> mapaDatos) {
 		this.mochilaDatos = mapaDatos;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

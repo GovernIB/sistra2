@@ -41,6 +41,7 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -133,6 +134,9 @@ public class DialogScript extends DialogControllerBase {
 	/** Text formulario. **/
 	private String textFormulario;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Constructor vacio.
 	 */
@@ -181,7 +185,6 @@ public class DialogScript extends DialogControllerBase {
 		dominios = new ArrayList<>();
 		if (permiteEditar) {
 			dominios = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(idTramiteVersion));
-
 		}
 
 		/* inicializa arbol */
@@ -192,7 +195,7 @@ public class DialogScript extends DialogControllerBase {
 			if (tipoScript instanceof TypeScriptFlujo) {
 
 				final TramiteSimple tramiteSimple = tramiteService.getTramiteSimple(idTramiteVersion);
-
+				idiomas = UtilTraducciones.getIdiomas(tramiteSimple.getIdiomasSoportados());
 				final List<Long> idFormularios = UtilScripts.getFormulariosFlujo(tramiteSimple, idFormularioActual,
 						idPasoActual, (TypeScriptFlujo) tipoScript, idFormularioInternoActual);
 
@@ -214,6 +217,7 @@ public class DialogScript extends DialogControllerBase {
 				if (disenyoFormulario != null) {
 					cargarArbol(disenyoFormulario, disenyoFormulario.getIdentificador());
 				}
+				idiomas = UtilTraducciones.getIdiomas(tramiteService.getIdiomasDisponibles(idTramiteVersion));
 
 			}
 		}
@@ -320,6 +324,12 @@ public class DialogScript extends DialogControllerBase {
 		if (isIdentificadorMensajesRepetido()) {
 			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
 					UtilJSF.getLiteral("dialogScript.error.identificadorDuplicado"));
+			return;
+		}
+
+		if (data.getMensajes() != null && !data.getMensajes().isEmpty() && estaVacio()) {
+			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+					UtilJSF.getLiteral("dialogScript.error.scriptvacioconmensajes"));
 			return;
 		}
 
@@ -440,6 +450,8 @@ public class DialogScript extends DialogControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(mensajeSeleccionado.getCodigo()));
 		params.put(TypeParametroVentana.ID_SCRIPT.toString(), String.valueOf(this.data.getCodigo()));
+		params.put(TypeParametroVentana.IDIOMAS.toString(), UtilJSON.toJSON(idiomas));
+
 		UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.EDICION, params, true, 650, 200);
 	}
 
@@ -462,6 +474,7 @@ public class DialogScript extends DialogControllerBase {
 
 			// Indica si al guardar, se deben revisar los mensajes.
 			this.data.setMensajesAlterado(true);
+			this.mensajeSeleccionado = mensaje;
 		}
 	}
 
@@ -473,6 +486,7 @@ public class DialogScript extends DialogControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID_SCRIPT.toString(), String.valueOf(this.data.getCodigo()));
+		params.put(TypeParametroVentana.IDIOMAS.toString(), UtilJSON.toJSON(idiomas));
 		UtilJSF.openDialog(DialogScriptLiteral.class, TypeModoAcceso.ALTA, params, true, 650, 200);
 	}
 
@@ -1181,6 +1195,21 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setIdFormularioInternoActual(final String idFormularioInternoActual) {
 		this.idFormularioInternoActual = idFormularioInternoActual;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

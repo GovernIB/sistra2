@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.util.UtilJSON;
@@ -46,6 +45,15 @@ public final class UtilTraducciones {
 	}
 
 	/**
+	 * Abre un dialog
+	 *
+	 * @param modoAcceso
+	 */
+	public static void openDialogTraduccionAlta() {
+		openDialogTraduccion(TypeModoAcceso.ALTA, null, null, null);
+	}
+
+	/**
 	 * Abre un dialog de tipo traduccion.
 	 *
 	 * @param modoAcceso
@@ -59,31 +67,42 @@ public final class UtilTraducciones {
 	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
 	 *            que son los que tenga traducciones.
 	 */
-	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, Literal traducciones, List<String> idiomas,
-			List<String> idiomasObligatorios) {
+	public static void openDialogTraduccion(final TypeModoAcceso modoAcceso, final Literal traducciones,
+			final List<String> idiomas, final List<String> idiomasObligatorios) {
 
 		final Map<String, String> params = new HashMap<>();
-
-		if (traducciones == null || traducciones.getIdiomas() == null || traducciones.getIdiomas().isEmpty()) {
-			traducciones = getTraduccionesPorDefecto();
+		if (traducciones != null) {
+			params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(traducciones));
 		}
 
-		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(traducciones));
-
-		if (idiomas == null) {
-			idiomas = traducciones.getIdiomas();
+		if (idiomas != null) {
+			params.put("IDIOMAS", UtilJSON.toJSON(idiomas));
 		}
 
-		if (idiomasObligatorios == null) {
-			idiomasObligatorios = traducciones.getIdiomas();
+		if (idiomasObligatorios != null) {
+			params.put("OBLIGATORIOS", UtilJSON.toJSON(idiomasObligatorios));
 		}
-
-		params.put("OBLIGATORIOS", UtilJSON.toJSON(idiomasObligatorios));
-		params.put("IDIOMAS", UtilJSON.toJSON(idiomas));
 
 		/** Calculamos la altura según el nº de idiomas a mostrar. **/
+		final int altura = getAltura(idiomas);
+
+		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 470, altura);
+
+	}
+
+	/**
+	 * Calcula la altura del dialog.
+	 *
+	 * @param size
+	 * @return
+	 */
+	private static int getAltura(final List<String> idiomas) {
 		int altura;
-		switch (idiomas.size()) {
+		int size = 2;
+		if (idiomas != null) {
+			size = idiomas.size();
+		}
+		switch (size) {
 		case 1:
 			altura = 160;
 			break;
@@ -99,21 +118,7 @@ public final class UtilTraducciones {
 		default:
 			altura = 160;
 		}
-		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 470, altura);
-
-	}
-
-	/**
-	 * Devuelve el objeto Traducciones con los idiomas mínimos por defecto (el
-	 * catalán y el castellano).
-	 *
-	 * @return
-	 */
-	public static Literal getTraduccionesPorDefecto() {
-		final Literal traducciones = new Literal();
-		traducciones.add(new Traduccion(TypeIdioma.CATALAN.toString(), ""));
-		traducciones.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), ""));
-		return traducciones;
+		return altura;
 	}
 
 	/**
@@ -138,14 +143,23 @@ public final class UtilTraducciones {
 	}
 
 	/**
-	 * Obtiene los idiomas por defecto.
+	 * Obtiene los idiomas en formato lista.
 	 *
+	 * @param iIdiomas
 	 * @return
 	 */
-	public static List<String> getIdiomasPorDefecto() {
+	public static List<String> getIdiomas(final String iIdiomas) {
 		final List<String> idiomas = new ArrayList<>();
-		idiomas.add(TypeIdioma.CATALAN.toString());
-		idiomas.add(TypeIdioma.CASTELLANO.toString());
+		if (iIdiomas != null) {
+			String caracterSeparacion = ";";
+			if (iIdiomas.contains(",")) {
+				caracterSeparacion = ",";
+			}
+			for (final String idi : iIdiomas.split(caracterSeparacion)) {
+				idiomas.add(idi);
+			}
+
+		}
 		return idiomas;
 	}
 
@@ -157,4 +171,5 @@ public final class UtilTraducciones {
 	public static String getIdiomasPorDefectoTramite() {
 		return TypeIdioma.CATALAN.toString() + ";" + TypeIdioma.CASTELLANO.toString();
 	}
+
 }

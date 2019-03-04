@@ -213,9 +213,9 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	}
 
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("mensajeAvisoDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("mensajeAvisoDialog");
+	}
 
 	/**
 	 * Retorno dialogo de los botones de propiedades.
@@ -238,8 +238,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 *
 	 */
 	public void editarMensaje() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getMensaje(), idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getMensaje(), null, null);
 	}
 
 	/**

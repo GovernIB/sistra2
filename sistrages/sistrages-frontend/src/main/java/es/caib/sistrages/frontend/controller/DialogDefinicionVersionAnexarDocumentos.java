@@ -1,5 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -45,7 +47,11 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
+	/** Id Tramite Paso. **/
 	private String idTramitePaso;
+
+	/** Idiomas. **/
+	private List<String> idiomas;
 
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionRellenar.
@@ -55,6 +61,9 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 
 	}
 
+	/**
+	 * Init.
+	 */
 	public void init() {
 		data = new Documento();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
@@ -63,9 +72,8 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		data.setNumeroInstancia(1);
 		data.setExtensiones("pdf;doc");
 		data.setTamanyoMaximo(1024);
-		if (idTramiteVersion != null) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		}
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 	}
 
 	/**
@@ -90,8 +98,7 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	public void editarDescripcion() {
 
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
 		} else {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
@@ -130,6 +137,13 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionAnexarDocumentosDialog");
 	}
 
 	/**
@@ -184,5 +198,20 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 
 	public void setIdTramitePaso(final String idTramitePaso) {
 		this.idTramitePaso = idTramitePaso;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 }

@@ -1,7 +1,5 @@
 package es.caib.sistrages.frontend.controller;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -84,8 +82,7 @@ public class DialogEntidad extends DialogControllerBase {
 	 *
 	 */
 	public void editarNombre() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getNombre(), idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getNombre(), null, null);
 	}
 
 	/**
@@ -162,7 +159,7 @@ public class DialogEntidad extends DialogControllerBase {
 	}
 
 	/** Ayuda. */
-        public void ayuda() {
-            UtilJSF.openHelp("entidadDialog");
-        }
+	public void ayuda() {
+		UtilJSF.openHelp("entidadDialog");
+	}
 }

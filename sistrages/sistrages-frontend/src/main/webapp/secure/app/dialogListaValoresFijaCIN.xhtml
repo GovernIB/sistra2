@@ -49,7 +49,7 @@
 							    </p:column>
 
 							    <p:column headerText="#{msg['dialogListaValoresFijaCIN.descripcion']}" class="ui-panelgrid-cell w55">
-							        <h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang)}" />
+							        <h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang,dialogListaValoresFijaCIN.idiomas)}" />
 							    </p:column>
 
 							    <p:column headerText="#{msg['dialogListaValoresFijaCIN.porDefecto']}" class="ui-panelgrid-cell w15 grid-center" >

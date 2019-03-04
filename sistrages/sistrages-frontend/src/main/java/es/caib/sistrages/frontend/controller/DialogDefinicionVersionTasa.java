@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -55,14 +56,16 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	/** ID Paso. **/
 	private String idPaso;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionTasa1.
 	 */
 	public void init() {
 		data = tramiteService.getTasa(Long.valueOf(id));
-		if (idTramiteVersion != null) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		}
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 	}
 
 	/**
@@ -267,6 +270,20 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	 */
 	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas the idiomas to set
+	 */
+	public void setIdiomas(List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

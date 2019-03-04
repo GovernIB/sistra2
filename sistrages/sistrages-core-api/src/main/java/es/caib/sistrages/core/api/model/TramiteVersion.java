@@ -99,6 +99,13 @@ public class TramiteVersion extends ModelApi {
 	private List<TramitePaso> listaPasos;
 
 	/**
+	 * Fecha ultima modificacion. Importante, es sólo meramente informativo, no
+	 * existe correlación con JVersionTramite. La fecha será el valor más actual del
+	 * historial de versiones.
+	 */
+	private Date fechaUltima;
+
+	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
@@ -655,5 +662,20 @@ public class TramiteVersion extends ModelApi {
 			}
 		}
 		return pasoRegistrar;
+	}
+
+	/**
+	 * @return the fechaUltima
+	 */
+	public Date getFechaUltima() {
+		return fechaUltima;
+	}
+
+	/**
+	 * @param fechaUltima
+	 *            the fechaUltima to set
+	 */
+	public void setFechaUltima(final Date fechaUltima) {
+		this.fechaUltima = fechaUltima;
 	}
 }

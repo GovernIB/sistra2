@@ -17,6 +17,7 @@ import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarArea;
 import es.caib.sistrages.core.api.model.comun.FilaImportarDominio;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
@@ -563,5 +564,24 @@ public interface TramiteService {
 	 * @return
 	 */
 	public TramiteSimple getTramiteSimple(String idTramiteVersion);
+
+	/**
+	 * Obtiene los idiomas disponbiles.
+	 *
+	 * @param idTramiteVersion
+	 * @return
+	 */
+	public String getIdiomasDisponibles(String idTramiteVersion);
+	
+	/**
+	 * Validar version tramite.
+	 *
+	 * @param id
+	 *            id. tramite
+	 * @param idioma
+	 *            idioma de los errores
+	 * @return lista de errores
+	 */
+	public List<ErrorValidacion> validarVersionTramite(Long id, String idioma);
 
 }

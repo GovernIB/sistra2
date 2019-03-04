@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -56,13 +57,15 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	/** Id del formulario al que pertenece. **/
 	private String idPaso;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/** Init. **/
 	public void init() {
 
 		data = tramiteService.getFormulario(Long.valueOf(id));
-		if (idTramiteVersion != null) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		}
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		setIdiomas(UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados()));
 	}
 
 	/**
@@ -99,8 +102,7 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void editarDescripcion() {
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
 		} else {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
@@ -133,6 +135,13 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionFormularioDialog");
 	}
 
 	/**
@@ -382,6 +391,36 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 	 */
 	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
+	}
+
+	/**
+	 * @return the tramiteVersion
+	 */
+	public final TramiteVersion getTramiteVersion() {
+		return tramiteVersion;
+	}
+
+	/**
+	 * @param tramiteVersion
+	 *            the tramiteVersion to set
+	 */
+	public final void setTramiteVersion(final TramiteVersion tramiteVersion) {
+		this.tramiteVersion = tramiteVersion;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

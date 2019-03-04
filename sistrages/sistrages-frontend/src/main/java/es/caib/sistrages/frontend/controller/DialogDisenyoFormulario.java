@@ -133,6 +133,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	private TramiteVersion tramiteVersion;
 
+	/** Idiomas. **/
 	private List<String> idiomas;
 	private String idioma;
 
@@ -164,6 +165,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
 		paginaActual = 1;
 		posicionamiento = "D";
+	}
+
+	/**
+	 * Abre un di&aacute;logo para previsualizar tramite.
+	 */
+	public void previsualizar() {
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(tramiteVersion.getCodigo()));
+
+		UtilJSF.openDialog(DialogTramiteVersionPrevisualizar.class, TypeModoAcceso.CONSULTA, params, true, 750, 400);
 	}
 
 	/**
@@ -512,6 +523,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			// Solo tiene sentido cambios para edicion
 			if (!respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
 				final Literal traduccionesMod = (Literal) respuesta.getResult();
+				if (traduccionesEdit == null) {
+					traduccionesEdit = new Literal();
+				}
 				BeanUtils.copyProperties(traduccionesEdit, traduccionesMod);
 			} else if (respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
 				traduccionesEdit = null;
@@ -534,11 +548,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * Editar texto componente.
 	 */
 	public void editarTraduccionesTexto() {
-		if (((ComponenteFormulario) objetoFormularioEdit).getTexto() == null) {
-			traduccionesEdit = UtilTraducciones.getTraduccionesPorDefecto();
-		} else {
-			traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
-		}
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getTexto();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso),
 				((ComponenteFormulario) objetoFormularioEdit).getTexto(), idiomas, idiomas);
 	}
@@ -555,11 +565,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * Editar ayuda componente.
 	 */
 	public void editarTraduccionesAyuda() {
-		if (((ComponenteFormulario) objetoFormularioEdit).getAyuda() == null) {
-			traduccionesEdit = UtilTraducciones.getTraduccionesPorDefecto();
-		} else {
-			traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
-		}
+		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas);
 	}
 

@@ -21,13 +21,15 @@ public class DominioAdapter {
 	 * @param dominio
 	 */
 	public RDominio convertir(final Dominio dominio) {
-
-		final RDominio rDominio = new RDominio();
-		rDominio.setCachear(dominio.isCacheable());
-		rDominio.setIdentificador(dominio.getIdentificador());
-		rDominio.setSql(dominio.getSql());
-		rDominio.setTipo(dominio.getTipo().toString());
-		rDominio.setUri(dominio.getUrl());
+		RDominio rDominio = null;
+		if (dominio != null) {
+			rDominio = new RDominio();
+			rDominio.setCachear(dominio.isCacheable());
+			rDominio.setIdentificador(dominio.getIdentificador());
+			rDominio.setSql(dominio.getSql());
+			rDominio.setTipo(dominio.getTipo().toString());
+			rDominio.setUri(dominio.getUrl());
+		}
 		return rDominio;
 	}
 

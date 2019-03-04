@@ -61,12 +61,11 @@
 						</p:column>
 					</p:row>
 				</p:panelGrid>
-
 	         	<p:outputLabel for="idiomaCastellano" value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
 				<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
-					<p:selectBooleanCheckbox id="idiomaCastellano" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEsSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
-					<p:selectBooleanCheckbox id="idiomaCatalan" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaCaSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
-					<p:selectBooleanCheckbox id="idiomaIngles"  value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEnSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('ca')}" id="idiomaCatalan" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaCaSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('es')}" id="idiomaCastellano" value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEsSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
+					<p:selectBooleanCheckbox rendered="#{sessionBean.idiomas.contains('en')}" id="idiomaIngles"  value="#{dialogDefinicionVersionPropiedades.tramiteVersionIdiomaEnSoportado}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
 				</p:panelGrid>
 
 	         	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />
@@ -113,6 +112,8 @@
 							update="growlDialog @form" />
 						<p:commandButton value="#{msg['botones.cancelar']}"
 							actionListener="#{dialogDefinicionVersionPropiedades.cancelar()}" process="@this" />
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+							actionListener="#{dialogDefinicionVersionPropiedades.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 			</p:outputPanel>

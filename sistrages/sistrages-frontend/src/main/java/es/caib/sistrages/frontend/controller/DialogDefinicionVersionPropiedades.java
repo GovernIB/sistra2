@@ -4,6 +4,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -24,6 +25,7 @@ import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -51,6 +53,9 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	/** tramite version idioma De soportado. */
 	private boolean tramiteVersionIdiomaDeSoportado;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Inicialización.
 	 */
@@ -58,14 +63,14 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 
 		/* recuperamos los datos */
 		tramiteVersion = tramiteService.getTramiteVersion(id);
-		final String idiomas = tramiteVersion.getIdiomasSoportados();
-		if (idiomas.contains("ca")) {
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
+		if (idiomas.contains("ca") && UtilJSF.getSessionBean().getIdiomas().contains("ca")) {
 			this.tramiteVersionIdiomaCaSoportado = true;
 		}
-		if (idiomas.contains("es")) {
+		if (idiomas.contains("es") && UtilJSF.getSessionBean().getIdiomas().contains("es")) {
 			this.tramiteVersionIdiomaEsSoportado = true;
 		}
-		if (idiomas.contains("en")) {
+		if (idiomas.contains("en") && UtilJSF.getSessionBean().getIdiomas().contains("en")) {
 			this.tramiteVersionIdiomaEnSoportado = true;
 		}
 
@@ -128,6 +133,13 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionPropiedadesDialog");
 	}
 
 	/**
@@ -331,6 +343,21 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 	 */
 	public void setTramiteVersionIdiomaDeSoportado(final boolean tramiteVersionIdiomaDeSoportado) {
 		this.tramiteVersionIdiomaDeSoportado = tramiteVersionIdiomaDeSoportado;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

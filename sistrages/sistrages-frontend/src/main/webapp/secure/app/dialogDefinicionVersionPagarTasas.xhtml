@@ -39,7 +39,7 @@
 
 			<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionPagarTasas.headerDescripcion']}" />
 			<p:column>
-				<p:inputText id="inputDescripcion" required="true" value="#{dialogDefinicionVersionPagarTasas.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" style="margin-right:10px" />
+				<p:inputText id="inputDescripcion" required="true" value="#{dialogDefinicionVersionPagarTasas.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionPagarTasas.idiomas)}" disabled="true" size="40" style="margin-right:10px" />
 				<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionPagarTasas.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" style="margin-right:5px">
             		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionPagarTasas.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
         		</p:commandButton>

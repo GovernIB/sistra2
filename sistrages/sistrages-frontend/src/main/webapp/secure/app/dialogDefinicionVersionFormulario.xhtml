@@ -46,7 +46,7 @@
 
             <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-               <p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang)}" />
+               <p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{dialogDefinicionVersionFormulario.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionFormulario.idiomas)}" />
                <p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionFormulario.editarDescripcion()}"	process="@this" update="growl">
                  <p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionFormulario.returnDialogo}" update="growl descripcion" />
             </p:commandButton>

@@ -34,11 +34,11 @@
 				</p:row>
 			</p:panelGrid>
 
-         	<p:outputLabel for="idiomaCastellano" value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
+         	<p:outputLabel value="#{msg['viewDefinicionVersionPropiedades.idioma']}" />
 			<p:panelGrid styleClass="noBorders" columns="3" columnClasses="noPadding-left,,">
-				<p:selectBooleanCheckbox id="idiomaCastellano" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.idiomasSoportados.contains('es')}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCastellano']}" required="true"/>
-				<p:selectBooleanCheckbox id="idiomaCatalan" disabled="true" value="#{viewDefinicionVersion.tramiteVersion.idiomasSoportados.contains('ca')}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaCatalan']}" required="true"/>
-				<p:selectBooleanCheckbox id="idiomaIngles"  disabled="true" value="#{viewDefinicionVersion.tramiteVersion.idiomasSoportados.contains('en')}" itemLabel="#{msg['viewDefinicionVersionPropiedades.idiomaIngles']}" required="true"/>
+				<ui:repeat var="idioma" value="#{sessionBean.idiomas}">
+					<p:selectBooleanCheckbox disabled="true" value="#{viewDefinicionVersion.idiomas.contains(idioma)}"  itemLabel="#{msg[idioma]}" required="true"/>
+				</ui:repeat>
 			</p:panelGrid>
 
          	<p:outputLabel for="persistencia" value="#{msg['viewDefinicionVersionPropiedades.persistencia']}" />

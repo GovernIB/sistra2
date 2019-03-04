@@ -22,7 +22,7 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}" columnClasses="w35,w65" styleClass="w100">
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}">
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}" onblur="this.value = this.value.toUpperCase();">
 	         			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
 	         			<p:ajax event="blur" process="@this" />
 	         		</p:inputText>
@@ -38,7 +38,7 @@
 
 	         	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.etiqueta']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang)}" readonly="true" styleClass="margin-right-10" />
+	         		<p:inputText id="texto" value="#{dialogDisenyoFormulario.objetoFormularioEdit.texto.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" readonly="true" styleClass="margin-right-10" />
 	         		<p:commandButton id="btnEtiqueta" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesTexto}" process="@this" styleClass="va-top">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesTexto}" update="texto" />
 	        		</p:commandButton>
@@ -55,7 +55,7 @@
 
 				<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.ayudaOnline']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText id="ayuda" value="#{dialogDisenyoFormulario.objetoFormularioEdit.ayuda.getTraduccion(sessionBean.lang)}" readonly="true" styleClass="margin-right-10"/>
+	         		<p:inputText id="ayuda" value="#{dialogDisenyoFormulario.objetoFormularioEdit.ayuda.getTraduccion(sessionBean.lang,dialogDisenyoFormulario.idiomas)}" readonly="true" styleClass="margin-right-10"/>
 	         		<p:commandButton id="btnAjudaOnline" icon="fa fa-language" actionListener="#{dialogDisenyoFormulario.editarTraduccionesAyuda}" process="@this" styleClass="va-top">
 	            		<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoTraduccionesAyuda}" update="ayuda" />
 	        		</p:commandButton>

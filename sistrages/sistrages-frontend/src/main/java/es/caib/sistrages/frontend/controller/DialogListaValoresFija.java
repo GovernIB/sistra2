@@ -109,9 +109,7 @@ public class DialogListaValoresFija extends DialogControllerBase {
 	 */
 	public void editarTraducciones() {
 
-		if (data.getDescripcion() == null) {
-			setTraduccionesEdit(UtilTraducciones.getTraduccionesPorDefecto());
-		} else {
+		if (data.getDescripcion() != null) {
 			setTraduccionesEdit(data.getDescripcion());
 		}
 

@@ -43,7 +43,7 @@
 					<p:column styleClass="ui-inputgroup noPadding-left">
 			           		<p:outputLabel for="mensajedesactivacion" value="#{msg['dialogTramiteControlAcceso.mensajedesactivacion']}" styleClass="center-vertical" />
 			           		<p:spacer width="8" height="1" />
-			           		<p:inputTextarea  id="mensajedesactivacion" disabled="true" styleClass="w75 va-middle" value="#{dialogTramiteControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang)}"/>
+			           		<p:inputTextarea  id="mensajedesactivacion" disabled="true" styleClass="w75 va-middle" value="#{dialogTramiteControlAcceso.avisoEntidad.mensaje.getTraduccion(sessionBean.lang,dialogTramiteControlAcceso.idiomas)}"/>
 
 			           		<p:commandButton id="buttonMensajeDesactivacion" icon="fa fa-language" actionListener="#{dialogTramiteControlAcceso.editarMensajeDesactivacion()}" styleClass="va-top margin-left-3"
 									process="@this" update="growlDialog">
@@ -126,6 +126,7 @@
 				<p:outputPanel styleClass="confirmar_botonera">
 		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
 		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteControlAcceso.ayuda()}" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 		</h:form>

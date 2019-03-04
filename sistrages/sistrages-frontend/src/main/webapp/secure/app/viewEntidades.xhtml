@@ -71,7 +71,7 @@
 			    </p:column>
 
 			    <p:column headerText="#{msg['viewEntidades.headerDescripcion']}">
-			        <h:outputText value="#{td.nombre.getTraduccion(sessionBean.lang)}" />
+			        <h:outputText value="#{td.nombre.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
 			    </p:column>
 
  				<p:column headerText="#{msg['viewEntidades.headerActivo']}">

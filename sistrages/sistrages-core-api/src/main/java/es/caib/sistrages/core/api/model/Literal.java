@@ -71,6 +71,44 @@ public class Literal extends ModelApi {
 	}
 
 	/**
+	 * Obtiene el valor de traduccion (con algún valor por defecto).
+	 *
+	 * @param idioma
+	 *            idioma
+	 * @return el valor de traduccion
+	 */
+	public String getTraduccion(final String idioma, final List<String> idiomas) {
+
+		// Si no hay traducciones devolver vacío
+		if (trads == null || idioma == null || trads.isEmpty()) {
+			return null;
+		}
+
+		// Solo se buscará si el idioma que se pida está en la lista de idiomas
+		if (idiomas.contains(idioma)) {
+			// Recorrer las traducciones buscando el idioma que se pide.
+			for (final Traduccion traduccion : trads) {
+				if (idioma.equals(traduccion.getIdioma())) {
+					return traduccion.getLiteral();
+				}
+			}
+		}
+
+		// Recorrer las traducciones buscando el idioma según lo definido en idiomas
+		// (que viene por configuracion global)
+		for (final String idi : idiomas) {
+			final String trad = this.getTraduccion(idi);
+			if (trad != null) {
+				return trad;
+			}
+		}
+
+		// Sino devolver cualquier traduccion.
+		return trads.get(0).getLiteral();
+
+	}
+
+	/**
 	 * Incluye una traducción, si la traducción:
 	 * <ul>
 	 * <li>No existe, añade la traducción.</li>

@@ -24,7 +24,7 @@
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionAnexo.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang)}" />
+           		<p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>
@@ -55,7 +55,7 @@
 
 					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
 					<p:outputPanel styleClass="ui-inputgroup">
-	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang)}" />
+	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
 	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto)}"
 							process="@this" update="growl"/>
 	       			</p:outputPanel>

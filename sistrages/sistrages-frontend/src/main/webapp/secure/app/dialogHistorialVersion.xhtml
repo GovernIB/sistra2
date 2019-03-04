@@ -32,7 +32,7 @@
 				<!-- Data table -->
 				<p:dataTable  id="dataTable" var="td" value="#{dialogHistorialVersion.data}"
 							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
-							 scrollable="true" scrollHeight="65%"
+							 scrollable="true" scrollHeight="550px"
 							 style="width:90%;margin:auto"
 							 paginator="true" paginatorPosition="bottom"
 	                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -79,6 +79,7 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogHistorialVersion.cancelar}" process="@this" />
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogHistorialVersion.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

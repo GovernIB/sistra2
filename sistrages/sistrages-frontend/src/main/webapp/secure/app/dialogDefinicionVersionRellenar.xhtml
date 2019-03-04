@@ -27,7 +27,6 @@
 		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionRellenar.modoAcceso}"/>
 		<f:viewParam name="TRAMITEVERSION" value="#{dialogDefinicionVersionRellenar.idTramiteVersion}" />
 		<f:viewParam name="TRAMITEPASO" value="#{dialogDefinicionVersionRellenar.idTramitePaso}" />
-
 		<f:viewAction action="#{dialogDefinicionVersionRellenar.init}" />
 	</f:metadata>
 	<h:form id="dialogDefinicionRellenar" styleClass="margin-top-10">
@@ -44,7 +43,7 @@
 
 					<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionRellenar.headerDescripcion']}" />
 					<p:column>
-						<p:inputText id="inputDescripcion"  value="#{dialogDefinicionVersionRellenar.data.descripcion.getTraduccion(sessionBean.lang)}" disabled="true" size="40" styleClass="margin-right-10" required="true" />
+						<p:inputText id="inputDescripcion"  value="#{dialogDefinicionVersionRellenar.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRellenar.idiomas)}" disabled="true" size="40" styleClass="margin-right-10" required="true" />
 						<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogDefinicionVersionRellenar.editarDescripcion()}" process="@this" update="growldialogDefinicionRellenar" styleClass="margin-right-3">
 		            		<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRellenar.returnDialogoDescripcion}" update="growldialogDefinicionRellenar inputDescripcion" />
 		        		</p:commandButton>
@@ -61,6 +60,7 @@
 							<f:facet name="right">
 				        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionRellenar.aceptar()}" process="@form" update="@form growldialogDefinicionRellenar" styleClass="boton-azul" />
 								<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionRellenar.cancelar()}" process="@this"/>
+								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionRellenar.ayuda()}" process="@this"/>
 							</f:facet>
 					  </p:toolbar>
 			    </p:outputPanel>

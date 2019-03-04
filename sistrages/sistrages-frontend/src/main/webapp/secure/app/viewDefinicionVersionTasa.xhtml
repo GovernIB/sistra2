@@ -22,7 +22,7 @@
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionTasa.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="descripcion" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
+           		<p:inputText id="descripcion" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" required="true" disabled="true" styleClass="w85"/>
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tasaTramiteSeleccionado.descripcion)}"
 						process="@this" update="growl"/>
        		</p:outputPanel>

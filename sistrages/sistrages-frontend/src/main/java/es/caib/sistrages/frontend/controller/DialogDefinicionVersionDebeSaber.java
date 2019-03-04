@@ -1,5 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -41,6 +43,9 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	/** Tramite version. **/
 	private TramiteVersion tramiteVersion;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Crea una nueva instancia de ViewDefinicionVersionDebeSaber.
 	 */
@@ -50,9 +55,8 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 	public void init() {
 		data = (TramitePasoDebeSaber) tramiteService.getTramitePaso(Long.valueOf(id));
-		if (idTramiteVersion != null) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		}
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 	}
 
 	/**
@@ -125,6 +129,13 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionDebeSaberDialog");
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -160,6 +171,21 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

@@ -4,7 +4,6 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -142,8 +141,7 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (getPermiteEditar()) {
 			modoAccesoDlg = TypeModoAcceso.EDICION;
 		}
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
-		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, pLiteral, idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, pLiteral, null, null);
 	}
 
 	/**

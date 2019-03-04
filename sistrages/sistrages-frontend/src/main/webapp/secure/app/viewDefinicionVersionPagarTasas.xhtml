@@ -73,7 +73,7 @@
 			</p:column>
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerDescripcion']}">
-				<h:outputText value="#{tasas.descripcion.getTraduccion(sessionBean.lang)}" />
+				<h:outputText value="#{tasas.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
 			</p:column>
 
 			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerObligatoriedad']}">

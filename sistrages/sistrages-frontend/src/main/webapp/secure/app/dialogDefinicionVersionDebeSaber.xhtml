@@ -11,7 +11,7 @@
 <p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
 
 <h:head>
-	<title><h:outputText value="#{msg['dialogArea.header']}"/></title>
+	<title><h:outputText value="#{msg['viewDefinicionVersion.indice.pasosTramitacion.debeSaber']}"/></title>
 
 
  	 <!-- Parametros dialogo -->
@@ -40,7 +40,7 @@
 					<p:outputLabel for="instrucciones"
 						value="#{msg['dialogDefinicionVersionDebeSaber.instrucciones']}" />
 					<p:outputPanel>
-						<p:inputTextarea value="#{dialogDefinicionVersionDebeSaber.data.instruccionesIniciales.getTraduccion(sessionBean.lang)}" styleClass="w90" rows="20" id="instrucciones" disabled="true" style="margin-right:10px"/>
+						<p:inputTextarea value="#{dialogDefinicionVersionDebeSaber.data.instruccionesIniciales.getTraduccion(sessionBean.lang,dialogDefinicionVersionDebeSaber.idiomas)}" styleClass="w90" rows="20" id="instrucciones" disabled="true" style="margin-right:10px"/>
 						<p:commandButton icon="fa fa-language" styleClass="va-top"
 							actionListener="#{dialogDefinicionVersionDebeSaber.editar()}"
 							process="@this" update="growlDialog">
@@ -54,6 +54,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionDebeSaber.aceptar()}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionDebeSaber.cancelar()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionDebeSaber.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

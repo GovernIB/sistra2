@@ -59,14 +59,14 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instrucciones']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="instrucciones" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion.getTraduccion(sessionBean.lang)}" />
+           		<p:inputText id="instrucciones" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion)}"
 						process="@this" update="growl"  style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.tramitacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang)}"  />
+           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
            		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
 						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>

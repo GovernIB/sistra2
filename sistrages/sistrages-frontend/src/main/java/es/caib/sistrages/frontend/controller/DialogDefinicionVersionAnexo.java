@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -65,6 +66,9 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Id paso. **/
 	private String idPaso;
 
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Obtiene el valor de permiteEditar.
 	 *
@@ -77,15 +81,15 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	/** Init. **/
 	public void init() {
 		data = tramiteService.getDocumento(Long.valueOf(id));
-		if (idTramiteVersion != null) {
-			tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
-		}
+		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 
 		if (data.getExtensiones().equals(Constantes.EXTENSIONES_TODAS)) {
 			data.setExtensionSeleccion(TypeExtension.TODAS);
 		} else {
 			data.setExtensionSeleccion(TypeExtension.PERSONALIZADAS);
 		}
+
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 
 	}
 
@@ -280,8 +284,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 */
 	public void editarDescripcion() {
 		if (data.getDescripcion() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
 		} else {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getDescripcion(), tramiteVersion);
 		}
@@ -292,8 +295,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 */
 	public void editarAyudaTexto() {
 		if (data.getAyudaTexto() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, UtilTraducciones.getTraduccionesPorDefecto(),
-					tramiteVersion);
+			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
 		} else {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getAyudaTexto(), tramiteVersion);
 		}
@@ -461,6 +463,21 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 */
 	public void setIdPaso(final String idPaso) {
 		this.idPaso = idPaso;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

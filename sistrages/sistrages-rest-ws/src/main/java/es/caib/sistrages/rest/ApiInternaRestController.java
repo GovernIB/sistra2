@@ -139,14 +139,9 @@ public class ApiInternaRestController {
 	@ApiOperation(value = "Obtiene la definición de la versión del tramite", notes = "Obtiene la definición de la versión del tramite", response = RVersionTramite.class)
 	@RequestMapping(value = "/tramite/{idTramite}/{version}/{idioma}", method = RequestMethod.GET)
 	public RVersionTramite obtenerDefinicionVersionTramite(@PathVariable("idTramite") final String idtramite,
-			@PathVariable("version") final int version, @PathVariable("idioma") final String idioma) throws Exception {
-
+			@PathVariable("version") final int version, @PathVariable("idioma") final String idioma) {
 		final String idiomaDefecto = restApiService.getValorConfiguracionGlobal("definicionTramite.lenguajeDefecto");
 		final TramiteVersion tv = restApiService.loadTramiteVersion(idtramite, version);
-		if (tv == null) {
-			throw new Exception("El tramite especificado no existe");
-		}
-
 		return versionTramiteAdapter.convertir(idtramite, tv, idioma, idiomaDefecto);
 	}
 
@@ -157,16 +152,10 @@ public class ApiInternaRestController {
 	 * @return versión de dominio
 	 * @throws Exception
 	 */
-	@ApiOperation(value = "Obtiene la definición de la versión del dominio", notes = "Obtiene la definición de la versión del dominio", response = RDominio.class)
+	@ApiOperation(value = "Obtiene la definición del dominio", notes = "Obtiene la definición del dominio", response = RDominio.class)
 	@RequestMapping(value = "/dominio/{idDominio}", method = RequestMethod.GET)
-	public RDominio obtenerDefinicionVersionTramite(@PathVariable("idDominio") final String idDominio)
-			throws Exception {
-
+	public RDominio obtenerDefinicionVersionTramite(@PathVariable("idDominio") final String idDominio) {
 		final Dominio dominio = restApiService.loadDominio(idDominio);
-		if (dominio == null) {
-			throw new Exception("El dominio especificado no existe");
-		}
-
 		return dominioAdapter.convertir(dominio);
 	}
 

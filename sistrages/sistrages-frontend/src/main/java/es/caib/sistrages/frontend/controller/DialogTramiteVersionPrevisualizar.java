@@ -140,6 +140,13 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 */
 	public void aceptar() {
 
+		if (tramiteSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite"));
+
+			return;
+		}
+
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 
 		final TramitePrevisualizacion tramitePrevisualizacion = new TramitePrevisualizacion();

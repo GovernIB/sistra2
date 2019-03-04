@@ -109,6 +109,13 @@ public class DialogDefinicionVersionDominios extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionDominiosDialog");
+	}
+
+	/**
 	 * Obtiene el valor de id.
 	 *
 	 * @return el valor de id

@@ -21,7 +21,7 @@
 
             <p:outputLabel for="descripcion" value="#{msg['viewDefinicionVersionFormulario.descripcion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-               <p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang)}" />
+               <p:inputText id="descripcion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.formularioTramiteSeleccionado.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
                <p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.formularioTramiteSeleccionado.descripcion)}"	process="@this" update="growl" />
            </p:outputPanel>
 

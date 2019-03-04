@@ -108,50 +108,54 @@ public class VersionTramiteAdapter {
 	public RVersionTramite convertir(final String idtramite, final TramiteVersion tv, final String idioma,
 			final String idiomaDefecto) {
 
-		List<String> idiSoportados;
-		String idiRes;
+		RVersionTramite rVersionTramite = null;
 
-		idiSoportados = Arrays.asList(tv.getIdiomasSoportados().split(AdapterUtils.SEPARADOR_IDIOMAS));
+		if (tv != null) {
 
-		// El idioma a usar sigue este orden:
-		// 1) idioma si es un idioma soportado
-		// 2) idioma por defecto si lo hay
-		// 3) el primero de la lista de idiomas soportados
-		idiRes = idiSoportados.get(0);
-		if (idiSoportados.contains(idioma)) {
-			idiRes = idioma;
-		} else {
-			if (!StringUtils.isEmpty(idiomaDefecto) && idiSoportados.contains(idiomaDefecto)) {
-				idiRes = idiomaDefecto;
-			}
-		}
+			List<String> idiSoportados;
+			String idiRes;
 
-		final List<RPasoTramitacion> pasos = new ArrayList<>();
-		final List<TramitePaso> ltp = restApiService.getTramitePasos(tv.getCodigo());
-		if (ltp != null) {
-			for (final TramitePaso tp : ltp) {
-				final RPasoTramitacion pt = creaPaso(tp, idiRes);
-				if (pt != null) {
-					pasos.add(pt);
+			idiSoportados = Arrays.asList(tv.getIdiomasSoportados().split(AdapterUtils.SEPARADOR_IDIOMAS));
+
+			// El idioma a usar sigue este orden:
+			// 1) idioma si es un idioma soportado
+			// 2) idioma por defecto si lo hay
+			// 3) el primero de la lista de idiomas soportados
+			idiRes = idiSoportados.get(0);
+			if (idiSoportados.contains(idioma)) {
+				idiRes = idioma;
+			} else {
+				if (!StringUtils.isEmpty(idiomaDefecto) && idiSoportados.contains(idiomaDefecto)) {
+					idiRes = idiomaDefecto;
 				}
 			}
+
+			final List<RPasoTramitacion> pasos = new ArrayList<>();
+			final List<TramitePaso> ltp = restApiService.getTramitePasos(tv.getCodigo());
+			if (ltp != null) {
+				for (final TramitePaso tp : ltp) {
+					final RPasoTramitacion pt = creaPaso(tp, idiRes);
+					if (pt != null) {
+						pasos.add(pt);
+					}
+				}
+			}
+
+			rVersionTramite = new RVersionTramite();
+			rVersionTramite.setTimestamp(System.currentTimeMillis() + "");
+			rVersionTramite.setIdentificador(idtramite);
+			rVersionTramite.setVersion(tv.getNumeroVersion());
+			rVersionTramite.setRelease(tv.getRelease());
+
+			rVersionTramite.setPasos(pasos);
+			rVersionTramite.setDominios(restApiService.getIdentificadoresDominiosByTV(tv.getCodigo()));
+			rVersionTramite.setIdioma(idiRes);
+			rVersionTramite.setTipoFlujo(tv.getTipoFlujo().toString());
+			rVersionTramite.setControlAcceso(generaControlAcceso(tv));
+			rVersionTramite.setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite()));
+			rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
+			rVersionTramite.setPropiedades(generaPropiedades(tv));
 		}
-
-		final RVersionTramite rVersionTramite = new RVersionTramite();
-		rVersionTramite.setTimestamp(System.currentTimeMillis() + "");
-		rVersionTramite.setIdentificador(idtramite);
-		rVersionTramite.setVersion(tv.getNumeroVersion());
-		rVersionTramite.setRelease(tv.getRelease());
-
-		rVersionTramite.setPasos(pasos);
-		rVersionTramite.setDominios(restApiService.getIdentificadoresDominiosByTV(tv.getCodigo()));
-		rVersionTramite.setIdioma(idiRes);
-		rVersionTramite.setTipoFlujo(tv.getTipoFlujo().toString());
-		rVersionTramite.setControlAcceso(generaControlAcceso(tv));
-		rVersionTramite.setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite()));
-		rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
-		rVersionTramite.setPropiedades(generaPropiedades(tv));
-
 		return rVersionTramite;
 
 	}

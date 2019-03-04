@@ -32,19 +32,28 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	/** Literal. **/
 	private String literal;
 
+	/** Idiomas json. **/
+	private String iIdiomas;
+
+	/** Idiomas. **/
+	private List<String> idiomas;
+
 	/**
 	 * Inicialización.
 	 */
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		UtilJSF.checkSecOpenDialog(modo, id);
+		idiomas = (List<String>) UtilJSON.fromListJSON(iIdiomas, String.class);
+
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new LiteralScript();
 		} else {
 			final Object json = UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_SCRIPT_LITERAL);
 			data = (LiteralScript) UtilJSON.fromJSON(json.toString(), LiteralScript.class);
-			setLiteral(data.getLiteral().getTraduccion(UtilJSF.getSessionBean().getLang()));
+			setLiteral(data.getLiteral().getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas));
 		}
+
 	}
 
 	/**
@@ -80,7 +89,7 @@ public class DialogScriptLiteral extends DialogControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final Literal literales = (Literal) respuesta.getResult();
 			data.setLiteral(literales);
-			setLiteral(literales.getTraduccion(UtilJSF.getSessionBean().getLang()));
+			setLiteral(literales.getTraduccion(UtilJSF.getSessionBean().getLang(), idiomas));
 		}
 	}
 
@@ -88,7 +97,6 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	 * Editar descripcion del literal script.
 	 */
 	public void editarDescripcion() {
-		final List<String> idiomas = UtilTraducciones.getIdiomasPorDefecto();
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getLiteral(), idiomas, idiomas);
 	}
 
@@ -150,6 +158,21 @@ public class DialogScriptLiteral extends DialogControllerBase {
 	 */
 	public void setLiteral(final String literal) {
 		this.literal = literal;
+	}
+
+	/**
+	 * @return the iIdiomas
+	 */
+	public String getiIdiomas() {
+		return iIdiomas;
+	}
+
+	/**
+	 * @param iIdiomas
+	 *            the iIdiomas to set
+	 */
+	public void setiIdiomas(final String iIdiomas) {
+		this.iIdiomas = iIdiomas;
 	}
 
 }

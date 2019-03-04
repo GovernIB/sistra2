@@ -55,7 +55,7 @@
 
 								<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
 									icon="fa fa-question-circle-o"
-									actionListener="#{viewDefinicionVersion.ayudar()}" process="@this"
+									actionListener="#{viewDefinicionVersion.ayudaAnexos()}" process="@this"
 									update="growl formArbol:arbol @form"  />
 							</h:panelGrid>
 						</f:facet>
@@ -79,7 +79,7 @@
 
 
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerDescripcion']}">
-							<h:outputText value="#{documentos.descripcion.getTraduccion(sessionBean.lang)}" />
+							<h:outputText value="#{documentos.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
 						</p:column>
 
 						<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionAnexarDocumentos.headerObligatoriedad']}">

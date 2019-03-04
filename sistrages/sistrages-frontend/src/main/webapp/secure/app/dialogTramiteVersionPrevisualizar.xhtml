@@ -104,6 +104,7 @@
 				<h:panelGroup id="popup">
 			        <ui:fragment rendered="#{not empty dialogTramiteVersionPrevisualizar.url}">
 			            <script>window.open('#{dialogTramiteVersionPrevisualizar.url}');</script>
+			            <script>document.getElementById("dialogTramite:btnCancelar").click();</script>
 			        </ui:fragment>
 			    </h:panelGroup>
 			</p:outputPanel>
@@ -111,7 +112,7 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
-						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this" rendered="#{dialogTramiteVersionPrevisualizar.alta or dialogTramiteVersionPrevisualizar.edicion}"/>
+						<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this" />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

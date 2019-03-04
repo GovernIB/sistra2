@@ -90,6 +90,10 @@ public enum TypeParametroVentana {
 	 */
 	PAGINA,
 	/**
+	 * IDIOMAS OBLIGATORIOS
+	 */
+	IDIOMAS,
+	/**
 	 * Formulario actual.
 	 */
 	FORMULARIO_ACTUAL,

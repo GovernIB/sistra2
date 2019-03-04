@@ -3,6 +3,8 @@
  */
 package es.caib.sistrages.frontend.controller;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -40,6 +42,9 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	@Inject
 	private TramiteService tramiteService;
 
+	/** Idiomas del tramite version. **/
+	private List<String> idiomas;
+
 	/** Id elemento a tratar. */
 	private Long id;
 
@@ -57,6 +62,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	 */
 	public void init() {
 		tramiteVersion = tramiteService.getTramiteVersion(id);
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
 		setAvisoEntidad(avisoEntidadService
 				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion()));
@@ -181,6 +187,11 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/** Ayuda. */
+    public void ayuda() {
+        UtilJSF.openHelp("tramiteControlAccesoDialog");
+    }
+
 	/**
 	 * Obtiene el valor de id.
 	 *
@@ -232,6 +243,21 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	 */
 	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
 		this.avisoEntidad = avisoEntidad;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 
 }

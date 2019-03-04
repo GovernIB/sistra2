@@ -183,6 +183,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	private boolean permiteRefrescar;
 
+	/** Idiomas del tramite version. **/
+	private List<String> idiomas;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -402,6 +405,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		/* recuperamos los datos */
 		tramiteVersion = tramiteService.getTramiteVersion(id);
+		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		area = tramiteService.getAreaTramite(tramiteVersion.getIdTramite());
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
 
@@ -645,6 +649,27 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.AMBITO.toString(), TypeAmbito.ENTIDAD.toString());
 		UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 680);
 
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaDominio() {
+		UtilJSF.openHelp("definicionVersionDominios");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaRellenar() {
+		UtilJSF.openHelp("definicionVersionRellenar");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaAnexos() {
+		UtilJSF.openHelp("definicionVersionAnexarDocumentos");
 	}
 
 	/**
@@ -1931,5 +1956,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	public void setPermiteRefrescar(final boolean permiteRefrescar) {
 		this.permiteRefrescar = permiteRefrescar;
+	}
+
+	/**
+	 * @return the idiomas
+	 */
+	public List<String> getIdiomas() {
+		return idiomas;
+	}
+
+	/**
+	 * @param idiomas
+	 *            the idiomas to set
+	 */
+	public void setIdiomas(final List<String> idiomas) {
+		this.idiomas = idiomas;
 	}
 }

@@ -45,7 +45,7 @@
 
 	            <p:outputLabel for="descripcion" value="#{msg['dialogDefinicionVersionTasa.descripcion']}" />
 	            <p:outputPanel styleClass="ui-inputgroup">
-	           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang)}" required="true" disabled="true" styleClass="w85"/>
+	           		<p:inputText id="descripcion" value="#{dialogDefinicionVersionTasa.data.descripcion.getTraduccion(sessionBean.lang,dialogDefinicionVersionTasa.idiomas)}" required="true" disabled="true" styleClass="w85"/>
 	           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionTasa.editarDescripcion()}"
 							process="@this" update="growl">
 								<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoDescripcion}" update="growl descripcion" />
