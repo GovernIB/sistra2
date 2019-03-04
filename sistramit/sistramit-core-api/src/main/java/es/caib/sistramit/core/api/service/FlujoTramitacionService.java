@@ -124,8 +124,18 @@ public interface FlujoTramitacionService {
 	 *
 	 * @param idSesionTramitacion
 	 *            Id sesión de tramitación
+	 * @return Url redirección tras cancelar
 	 */
-	void cancelarTramite(String idSesionTramitacion);
+	String cancelarTramite(String idSesionTramitacion);
+
+	/**
+	 * Sale del trámite manteniendo persistencia en su caso.
+	 *
+	 * @param idSesionTramitacion
+	 *            Id sesión de tramitación
+	 * @return Url redirección tras logout
+	 */
+	String logoutTramite(String idSesionTramitacion);
 
 	/**
 	 * Envío formulario de soporte.

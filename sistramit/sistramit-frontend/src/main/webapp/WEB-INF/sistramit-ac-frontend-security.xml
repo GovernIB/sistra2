@@ -1,39 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:security="http://www.springframework.org/schema/security"
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:security="http://www.springframework.org/schema/security"
+  xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="
+  	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
     http://www.springframework.org/schema/security
     http://www.springframework.org/schema/security/spring-security-4.2.xsd
-    http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd">
 
    <security:http use-expressions="true">
 
       <security:intercept-url pattern="/asistente/**" access="isAuthenticated()"/>
 
-		<!--  // TODO V0: Habilitar CSRF. Problema POST componentes externos: login, etc. -->
-	 	<security:csrf disabled="true" />
+		<!-- Habilitar CSRF -->
+	 	<security:csrf request-matcher-ref="csrfMatcher" />
+
+	 	<!-- POR ALGUNA RAZON PARECE QUE AL NO HACER MATCH CAUSA QUE NO SE REGISTRE EN HTTPREQUESTCACHE, DEFINIMOS CACHE PROPIA -->
+	 	<security:request-cache ref="loginRequestCache"/>
 
 		<security:headers>
 			<security:frame-options policy="SAMEORIGIN"/>
 	    </security:headers>
 
+	  <!--  Página login -->
       <security:form-login
          login-page='/login.html'
          authentication-failure-url="/login.html?error=true" />
 
-	  <!--  TODO: Ver como se hace personalizable x entidad -->
+	  <!--  Página logout -->
       <security:logout logout-success-url="/logout.html" />
 
    </security:http>
 
+	<!--  Definicion custom authentication -->
    <security:authentication-manager>
         <security:authentication-provider ref="customAuthenticationProvider" />
     </security:authentication-manager>
-
    <bean id="customAuthenticationProvider"
     	class="es.caib.sistramit.frontend.security.CustomAuthenticationProvider"/>
+
+	<!-- Cache para almacener todas las peticiones (al habilitar csrf solo cachea las que valida el csrf) -->
+	<bean id="loginRequestCache" class="es.caib.sistramit.frontend.security.LoginRequestCache" />
+
+	<!-- Configuramos CSRF para que solo aplique a las llamadas AJAX -->
+	<bean id="csrfMatcher" class="org.springframework.security.web.util.matcher.AndRequestMatcher">
+        <constructor-arg>
+        		<util:list value-type="org.springframework.security.web.util.matcher.RequestMatcher">
+      			    <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+	                    <constructor-arg name="pattern" value="/asistente/**/*.json"/>
+	                    <constructor-arg name="httpMethod" value="POST"/>
+	                </bean>
+               </util:list>
+        </constructor-arg>
+	</bean>
+
 
 </beans>

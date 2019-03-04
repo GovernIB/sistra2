@@ -10,4 +10,6 @@ public interface FlujoTramitacionCacheComponent {
 
 	void purgarFlujosTramitacion();
 
+	void remove(String idSesionTramitacion);
+
 }

@@ -84,4 +84,11 @@ public class FlujoTramitacionCacheComponentImpl implements FlujoTramitacionCache
 		return (min > timeout);
 	}
 
+	@Override
+	public void remove(String idSesionTramitacion) {
+		synchronized (flujoTramitacionMap) {
+			flujoTramitacionMap.remove(idSesionTramitacion);
+		}
+	}
+
 }

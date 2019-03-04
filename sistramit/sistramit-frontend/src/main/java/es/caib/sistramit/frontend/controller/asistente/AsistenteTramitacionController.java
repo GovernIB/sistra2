@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.caib.sistra2.commons.utils.CifradoUtil;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
@@ -96,7 +95,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 */
 	@RequestMapping(value = "/iniciarTramite.html")
 	public ModelAndView iniciarTramite(@RequestParam("tramite") final String tramite,
-			@RequestParam("version") final int version, @RequestParam("idioma") final String idioma,
+			@RequestParam("version") final int version,
+			@RequestParam(value = "idioma", required = false) final String idioma,
 			@RequestParam("idTramiteCatalogo") final String idTramiteCatalogo,
 			@RequestParam(value = "parametros", required = false) final String parametros,
 			final HttpServletRequest request) {
@@ -124,11 +124,15 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// Obtiene usuario autenticado
 		final UsuarioAutenticado usuarioAutenticado = SecurityUtils.obtenerUsuarioAutenticado();
 
+		// Intentamos crear trámite con el idioma será con el que se ha autenticado
+		final String idiomaInicio = usuarioAutenticado.getUsuario().getSesionInfo().getIdioma();
+
 		// Inicia tramite
 		final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(usuarioAutenticado.getUsuario(),
-				tramite, version, idioma, idTramiteCatalogo, urlInicio, parametrosInicio);
+				tramite, version, idiomaInicio, idTramiteCatalogo, urlInicio, parametrosInicio);
 
-		// Almacena en la sesion
+		// Almacena en la sesion (si no se puede iniciar con el idioma establecido, se
+		// cambiará al del trámite)
 		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
 		registraSesionTramitacion(idSesionTramitacion, dt.getTramite().getIdioma(), dt.getDebug() == TypeSiNo.SI);
 
@@ -147,7 +151,8 @@ public class AsistenteTramitacionController extends TramitacionController {
 	public ModelAndView cargarTramite(@RequestParam("idSesionTramitacion") final String idSesionCifrado) {
 
 		// Decodificamos id sesion
-		final String idSesion = CifradoUtil.decrypt(idSesionCifrado);
+		// final String idSesion = CifradoUtil.decrypt(idSesionCifrado);
+		final String idSesion = idSesionCifrado;
 
 		// Cargamos tramite
 		cargarTramiteImpl(idSesion, false);
@@ -210,19 +215,15 @@ public class AsistenteTramitacionController extends TramitacionController {
 		debug("Cancelar tramite");
 		final String idSesionTramitacion = getIdSesionTramitacionActiva();
 
-		// Obtiene detalle trámite
-		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
-		final String urlCarpeta = dt.getEntidad().getUrlCarpeta();
-
 		// Cancela trámite
-		getFlujoTramitacionService().cancelarTramite(idSesionTramitacion);
+		final String url = getFlujoTramitacionService().cancelarTramite(idSesionTramitacion);
 
 		final RespuestaJSON res = new RespuestaJSON();
 		final MensajeUsuario mu = new MensajeUsuario(
 				getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "atencion", getIdioma()),
 				getLiteralesFront().getLiteralFront(LiteralesFront.MENSAJES, "tramite.cancelado", getIdioma()));
 		res.setMensaje(mu);
-		res.setUrl(urlCarpeta);
+		res.setUrl(url);
 
 		return generarJsonView(res);
 	}
@@ -235,8 +236,13 @@ public class AsistenteTramitacionController extends TramitacionController {
 	 */
 	@RequestMapping(value = "/logout.html")
 	public ModelAndView logout() {
-		// TODO PENDIENTE
-		return null;
+		debug("Logout tramite");
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+		// Cancela trámite
+		final String url = getFlujoTramitacionService().logoutTramite(idSesionTramitacion);
+
+		return new ModelAndView("redirect:" + url);
 	}
 
 	/**

@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,6 +72,10 @@ public final class LoginController {
 	@Autowired
 	private SecurityService securityService;
 
+	/** Cache peticiones. */
+	@Autowired
+	private LoginRequestCache loginRequestCache;
+
 	/**
 	 * Muestra pantalla de login según el punto de entrada.
 	 *
@@ -95,7 +98,10 @@ public final class LoginController {
 		sesionHttp.setUserAgent(userAgent);
 
 		// Obtenemos url original
-		final SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
+		// final SavedRequest savedRequest = new
+		// HttpSessionRequestCache().getRequest(request, response);
+		final SavedRequest savedRequest = loginRequestCache.getRequest(request, response);
+
 		if (savedRequest == null) {
 			throw new ErrorFrontException("Punto de entrada a la aplicación no válido");
 		}
@@ -109,11 +115,14 @@ public final class LoginController {
 			sesionHttp.setUrlInicio(url);
 		}
 
-		// Establecemos idioma que viene en la saved request
-		final String idiomaSavedRequest = StringUtils.defaultIfEmpty(getParamValue(savedRequest, IDIOMA), "es");
-		sanitizeIdioma(idiomaSavedRequest);
-		RequestContextUtils.getLocaleResolver(request).setLocale(request, response, new Locale(idiomaSavedRequest));
-		sesionHttp.setIdioma(idiomaSavedRequest);
+		// Establecemos idioma que viene en la saved request y si no viene ninguno el
+		// idioma por defecto
+		final String idiomaSavedRequest = getParamValue(savedRequest, IDIOMA);
+		final String idiomasSoportados = systemService
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+		final String idioma = sanitizeIdioma(idiomaSavedRequest, idiomasSoportados);
+		RequestContextUtils.getLocaleResolver(request).setLocale(request, response, new Locale(idioma));
+		sesionHttp.setIdioma(idioma);
 
 		// En función del punto de entrada realizamos login
 		ModelAndView login = null;
@@ -178,7 +187,7 @@ public final class LoginController {
 		}
 
 		final String urlCallback = systemService.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL)
-				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN;
+				+ ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN + "?idioma=" + lang;
 		final String urlCallbackError = sesionHttp.getUrlInicio();
 		return new ModelAndView("redirect:" + securityService.iniciarSesionAutenticacion(idEntidad, lang, authList, qaa,
 				urlCallback, urlCallbackError, debug));
@@ -250,9 +259,8 @@ public final class LoginController {
 	 * @param pIdiomaSavedRequest
 	 *            Idioma login
 	 */
-	private void sanitizeIdioma(final String pIdiomaSavedRequest) {
-		final String idiomasSoportados = systemService
-				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
+	private String sanitizeIdioma(final String pIdiomaSavedRequest, final String idiomasSoportados) {
+		String res = pIdiomaSavedRequest;
 		final String langs[] = idiomasSoportados.split(",");
 		boolean soportado = false;
 		for (final String lang : langs) {
@@ -262,8 +270,9 @@ public final class LoginController {
 			}
 		}
 		if (!soportado) {
-			throw new ErrorFrontException("Idioma no soportado");
+			res = langs[0];
 		}
+		return res;
 	}
 
 	/**
@@ -290,8 +299,7 @@ public final class LoginController {
 		final LoginTicketInfo li = new LoginTicketInfo();
 		li.setTicketName(pTicketUser);
 		li.setTicketValue(ticket);
-		final String idiomaSavedRequest = StringUtils.defaultIfEmpty(getParamValue(pSavedRequest, IDIOMA), "es");
-		li.setIdioma(idiomaSavedRequest);
+		li.setIdioma(sesionHttp.getIdioma());
 		return new ModelAndView("loginTicket", LOGIN, li);
 	}
 
@@ -308,13 +316,13 @@ public final class LoginController {
 		// Obtenemos parametros inicio tramite
 		final String paramCodigoTramite = getParamValue(savedRequest, "tramite");
 		final String paramVersionTramite = getParamValue(savedRequest, "version");
-		final String paramIdioma = getParamValue(savedRequest, IDIOMA);
 		final String paramLogin = getParamValue(savedRequest, LOGIN);
 		final String paramIdTramiteCP = getParamValue(savedRequest, "idTramiteCatalogo");
 
 		// Obtenemos info login tramite
 		final InfoLoginTramite infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
-				Integer.parseInt(paramVersionTramite), paramIdTramiteCP, paramIdioma, savedRequest.getRedirectUrl());
+				Integer.parseInt(paramVersionTramite), paramIdTramiteCP, sesionHttp.getIdioma(),
+				savedRequest.getRedirectUrl());
 
 		// Comprobamos si hay que filtrar el metodo de autenticacion
 		TypeAutenticacion filtroAutenticacion = null;
@@ -431,10 +439,13 @@ public final class LoginController {
 
 		// Obtenemos idioma
 		String idioma;
-		if (request.getParameter(IDIOMA) != null) {
-			idioma = request.getParameter(IDIOMA);
-		} else {
-			idioma = "es";
+		idioma = sesionHttp.getIdioma();
+		if (StringUtils.isEmpty(idioma)) {
+			if (request.getParameter(IDIOMA) != null) {
+				idioma = request.getParameter(IDIOMA);
+			} else {
+				idioma = "ca";
+			}
 		}
 
 		// Generamos respuesta JSON

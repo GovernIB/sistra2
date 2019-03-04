@@ -178,13 +178,17 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	}
 
 	@Override
-	public void cancelarTramite() {
+	public String cancelarTramite() {
+		// Obtiene detalle trámite
+		final DetalleTramite detalleTramite = controladorFlujo.detalleTramite(datosSesion);
 		// Control de si el flujo es válido
 		controlFlujoInvalido();
 		// Cancela tramite
 		controladorFlujo.cancelarTramite(datosSesion);
 		// Marcamos flujo como invalido
 		invalidarFlujoTramicacion();
+		// Devuelve url carpeta
+		return detalleTramite.getEntidad().getUrlCarpeta();
 	}
 
 	@Override
@@ -489,6 +493,16 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 			throw new GenerarPdfClaveException("Error al generar PDF Clave: " + e.getMessage(), e);
 		}
 
+	}
+
+	@Override
+	public String logoutTramite() {
+		// Obtiene detalle trámite
+		final DetalleTramite detalleTramite = controladorFlujo.detalleTramite(datosSesion);
+		// Marcamos flujo como invalido
+		invalidarFlujoTramicacion();
+		// Devuelve url carpeta
+		return detalleTramite.getEntidad().getUrlCarpeta();
 	}
 
 }

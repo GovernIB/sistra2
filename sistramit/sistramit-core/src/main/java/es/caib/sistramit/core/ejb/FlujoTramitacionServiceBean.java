@@ -84,8 +84,8 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	}
 
 	@Override
-	public void cancelarTramite(final String idSesionTramitacion) {
-		flujoTramitacionService.cancelarTramite(idSesionTramitacion);
+	public String cancelarTramite(final String idSesionTramitacion) {
+		return flujoTramitacionService.cancelarTramite(idSesionTramitacion);
 	}
 
 	@Override
@@ -99,6 +99,11 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 	@Override
 	public byte[] obtenerClavePdf(final String idSesionTramitacion) {
 		return flujoTramitacionService.obtenerClavePdf(idSesionTramitacion);
+	}
+
+	@Override
+	public String logoutTramite(String idSesionTramitacion) {
+		return flujoTramitacionService.logoutTramite(idSesionTramitacion);
 	}
 
 }

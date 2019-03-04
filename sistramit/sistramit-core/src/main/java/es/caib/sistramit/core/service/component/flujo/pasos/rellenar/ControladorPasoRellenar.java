@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +12,7 @@ import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
 import es.caib.sistramit.core.api.exception.ConfiguracionModificadaException;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -287,6 +287,30 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 				formulariosCompletados.add(ddf);
 			}
 
+			// Si se tiene que firmar y está completado, calculamos firmantes
+			if (formulario.getFirmar() == TypeSiNo.SI && docPer != null
+					&& docPer.getEstado() == TypeEstadoDocumento.RELLENADO_CORRECTAMENTE) {
+				// Si tiene script de firmantes lo ejecutamos
+				if (UtilsSTG.existeScript(formularioDef.getScriptFirmantes())) {
+					final ResFirmantes resf = ejecutarScriptFirmantes(pVariablesFlujo, pDefinicionTramite,
+							formularioDef, formulariosCompletados);
+					formulario.setFirmantes(resf.getFirmantes());
+				} else {
+					// Si no tiene script de firmantes, pues el único
+					// firmante sería el iniciador.
+					// En caso de que el acceso sea no autenticado generamos
+					// error ya que no sabremos nif iniciador
+					if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
+						throw new ErrorConfiguracionException(
+								"No se ha establecido script de firmantes para formulario "
+										+ formularioDef.getIdentificador());
+					}
+
+					final Persona f = UtilsFlujo.usuarioPersona(pVariablesFlujo.getUsuario());
+					formulario.getFirmantes().add(f);
+				}
+			}
+
 		}
 
 		return formularios;
@@ -321,30 +345,7 @@ public final class ControladorPasoRellenar extends ControladorPasoReferenciaImpl
 
 		// Evaluamos si se debe firmar digitalmente
 		if (pFormularioDef.isFirmar() && formulario.getObligatorio() != TypeObligatoriedad.DEPENDIENTE) {
-
-			// Indicamos que debe firmarse
 			formulario.setFirmar(TypeSiNo.SI);
-
-			// Si tiene script de firmantes lo ejecutamos
-			if (pFormularioDef.getScriptFirmantes() != null
-					&& !StringUtils.isEmpty(pFormularioDef.getScriptFirmantes().getScript())) {
-				final ResFirmantes resf = ejecutarScriptFirmantes(pVariablesFlujo, pDefinicionTramite, pFormularioDef,
-						pFormulariosCompletados);
-				formulario.setFirmantes(resf.getFirmantes());
-			} else {
-				// Si no tiene script de firmantes, pues el único
-				// firmante sería el iniciador.
-				// En caso de que el acceso sea no autenticado generamos
-				// error ya que no sabremos nif iniciador
-				if (pVariablesFlujo.getNivelAutenticacion() == TypeAutenticacion.ANONIMO) {
-					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_FIRMANTES.name(),
-							pVariablesFlujo.getIdSesionTramitacion(), formulario.getId(),
-							"No se ha establecido script de firmantes");
-				}
-
-				final Persona f = UtilsFlujo.usuarioPersona(pVariablesFlujo.getUsuario());
-				formulario.getFirmantes().add(f);
-			}
 		} else {
 			formulario.setFirmar(TypeSiNo.NO);
 		}

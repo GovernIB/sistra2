@@ -34,7 +34,7 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 
 	ResultadoAccionPaso accionPaso(String idPaso, TypeAccionPaso accionPaso, ParametrosAccionPaso parametros);
 
-	void cancelarTramite();
+	String cancelarTramite();
 
 	FlujoTramitacionInfo obtenerFlujoTramitacionInfo();
 
@@ -69,5 +69,12 @@ public interface FlujoTramitacionComponent extends FlujoTramitacionCacheIntf {
 	 *
 	 */
 	byte[] obtenerClavePdf();
+
+	/**
+	 * Realiza logout del trámite.
+	 * 
+	 * @return Url redirección
+	 */
+	String logoutTramite();
 
 }

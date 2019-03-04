@@ -52,6 +52,10 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 			throw new CatalogoProcedimientosException(
 					"Error obteniendo la definición de tramites: no existe procedimiento asociado");
 		}
+		if (StringUtils.isBlank(definicionTramite.getProcedimiento().getIdProcedimientoSIA())) {
+			throw new CatalogoProcedimientosException(
+					"Error obteniendo la definición de tramites: no existe código SIA asociado al procedimiento");
+		}
 		if (StringUtils.isBlank(definicionTramite.getProcedimiento().getOrganoResponsableDir3())) {
 			throw new CatalogoProcedimientosException(
 					"Error obteniendo la definición de tramites: no existe código DIR3 asociado al procedimiento");

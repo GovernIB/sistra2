@@ -12,61 +12,67 @@ import java.util.List;
 @SuppressWarnings("serial")
 public final class ValoresPosiblesCampo implements Serializable {
 
-    /**
-     * Id campo.
-     */
-    private String id;
+	/**
+	 * Constante que indica valor no seleccionado para selectores desplegables no
+	 * obligatorios.
+	 */
+	public final static String VALUE_NO_SELECT = "NO-SELECT";
 
-    /**
-     * Valores posibles.
-     */
-    private List<ValorIndexado> valores;
+	/**
+	 * Id campo.
+	 */
+	private String id;
 
-    /**
-     * Método de acceso a idCampo.
-     *
-     * @return idCampo
-     */
-    public String getId() {
-        return id;
-    }
+	/**
+	 * Valores posibles.
+	 */
+	private List<ValorIndexado> valores;
 
-    /**
-     * Método para establecer idCampo.
-     *
-     * @param pIdCampo
-     *            idCampo a establecer
-     */
-    public void setId(final String pIdCampo) {
-        id = pIdCampo;
-    }
+	/**
+	 * Método de acceso a idCampo.
+	 *
+	 * @return idCampo
+	 */
+	public String getId() {
+		return id;
+	}
 
-    /**
-     * Método de acceso a valores.
-     *
-     * @return valores
-     */
-    public List<ValorIndexado> getValores() {
-        return valores;
-    }
+	/**
+	 * Método para establecer idCampo.
+	 *
+	 * @param pIdCampo
+	 *            idCampo a establecer
+	 */
+	public void setId(final String pIdCampo) {
+		id = pIdCampo;
+	}
 
-    /**
-     * Método para establecer valores.
-     *
-     * @param pValores
-     *            valores a establecer
-     */
-    public void setValores(final List<ValorIndexado> pValores) {
-        valores = pValores;
-    }
+	/**
+	 * Método de acceso a valores.
+	 *
+	 * @return valores
+	 */
+	public List<ValorIndexado> getValores() {
+		return valores;
+	}
 
-    /**
-     * Crea nueva instancia.
-     *
-     * @return ValoresPosiblesCampo
-     */
-    public static ValoresPosiblesCampo createNewValoresPosiblesCampo() {
-        return new ValoresPosiblesCampo();
-    }
+	/**
+	 * Método para establecer valores.
+	 *
+	 * @param pValores
+	 *            valores a establecer
+	 */
+	public void setValores(final List<ValorIndexado> pValores) {
+		valores = pValores;
+	}
+
+	/**
+	 * Crea nueva instancia.
+	 *
+	 * @return ValoresPosiblesCampo
+	 */
+	public static ValoresPosiblesCampo createNewValoresPosiblesCampo() {
+		return new ValoresPosiblesCampo();
+	}
 
 }

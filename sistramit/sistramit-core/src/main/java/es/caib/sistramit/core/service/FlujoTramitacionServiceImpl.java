@@ -104,9 +104,9 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 
 	@Override
 	@NegocioInterceptor
-	public void cancelarTramite(final String idSesionTramitacion) {
+	public String cancelarTramite(final String idSesionTramitacion) {
 		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
-		ft.cancelarTramite();
+		return ft.cancelarTramite();
 	}
 
 	@Override
@@ -157,6 +157,14 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
 		final byte[] pdf = ft.obtenerClavePdf();
 		return pdf;
+	}
+
+	@Override
+	public String logoutTramite(String idSesionTramitacion) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		final String url = ft.logoutTramite();
+		flujoTramitacionCache.remove(idSesionTramitacion);
+		return url;
 	}
 
 	// --------------------------------------------------------------

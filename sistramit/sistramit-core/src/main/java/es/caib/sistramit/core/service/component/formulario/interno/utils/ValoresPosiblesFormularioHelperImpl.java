@@ -15,6 +15,7 @@ import es.caib.sistrages.rest.api.interna.RValorListaFija;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPermitidosException;
+import es.caib.sistramit.core.api.exception.ValorPosiblePalabraReservadaException;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
@@ -71,7 +72,7 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 					+ " no controlado para campo " + pCampoDef.getIdentificador());
 		}
 
-		// Verificamos caracteres permitidos
+		// Verificamos caracteres permitidos y valores reservados
 		verificarCaracteresPermitidos(pCampoDef, valoresPosibles);
 
 		// Añadimos valores posibles.
@@ -115,8 +116,16 @@ public final class ValoresPosiblesFormularioHelperImpl implements ValoresPosible
 	 */
 	private void verificarCaracteresPermitidos(RComponenteSelector pCampoDef, List<ValorIndexado> valoresPosibles) {
 		for (final ValorIndexado vi : valoresPosibles) {
+
+			// Verifica si valor tiene algun caracter no permitido
 			if (!UtilsFormulario.comprobarCaracteresPermitidos(vi)) {
 				throw new ValorCampoFormularioCaracteresNoPermitidosException(pCampoDef.getIdentificador(),
+						vi.getValor() + " - " + vi.getDescripcion());
+			}
+
+			// Valor reservado para opción no seleccionada
+			if (UtilsFormularioInterno.esValorIndexadoNoSelect(vi)) {
+				throw new ValorPosiblePalabraReservadaException(pCampoDef.getIdentificador(),
 						vi.getValor() + " - " + vi.getDescripcion());
 			}
 		}

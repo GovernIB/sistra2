@@ -1,5 +1,6 @@
 package es.caib.sistramit.core.service.component.formulario.interno;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioPersonalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
 import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormulario;
@@ -37,7 +39,10 @@ import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
@@ -168,6 +173,10 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		pagAct.setValoresPosibles(vpp);
 		pagAct.setHtml(html);
 		pagAct.setAcciones(acciones);
+
+		// Ajuste valores selectores (no obligatorios, radios,...)
+		ajustarSelectores(pagAct);
+
 		return pagAct;
 	}
 
@@ -246,7 +255,14 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		final List<ValorCampo> lista = new ArrayList<>();
 		for (final String idCampo : valores.keySet()) {
 			final String valorSerializado = valores.get(idCampo);
-			lista.add(UtilsFormularioInterno.deserializarValorCampo(idCampo, valorSerializado));
+			final ValorCampo vc = UtilsFormularioInterno.deserializarValorCampo(idCampo, valorSerializado);
+
+			// Valor reservado para indicar no seleccion en selector
+			if (UtilsFormularioInterno.esValorIndexadoNoSelect(vc)) {
+				((ValorCampoIndexado) vc).setValor(null);
+			}
+
+			lista.add(vc);
 		}
 		return lista;
 	}
@@ -301,14 +317,12 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		df.setIndicePaginaActual(ConstantesNumero.N1);
 
 		// Inicializamos páginas
-		int index = 0;
-		for (final RPaginaFormulario defPagina : defForm.getFormularioInterno().getPaginas()) {
+		for (int index = 0; index < defForm.getFormularioInterno().getPaginas().size(); index++) {
 			// Inicializamos pagina
 			final InicializacionPagina ip = inicializarPagina(defForm.getIdentificador(), index, defForm, valoresCampo);
 			// Añadimos pagina a datos formulario
 			df.addPaginaFormulario(ip.getPagina());
 			df.addDependenciasCampos(ip.getDependencias());
-			index++;
 		}
 
 		// Marcar campos evaluables (aparecen como dependencias en otros campos)
@@ -478,33 +492,83 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *            XML Formulario
 	 * @return PDF
 	 */
-	public byte[] generarPdfFormulario(DefinicionTramiteSTG definicionTramiteSTG,
+	private byte[] generarPdfFormulario(DefinicionTramiteSTG definicionTramiteSTG,
 			DatosInicioSesionFormulario datosInicioSesionFormulario, RPlantillaFormulario plantillaPdf, byte[] xml) {
-		try {
-			// Obtenemos plantilla
-			byte[] plantilla = null;
-			if (StringUtils.isNotBlank(plantillaPdf.getFicheroPlantilla())) {
-				final String pathFicherosExternos = configuracionComponent
-						.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PATH_FICHEROS_EXTERNOS);
-				final String pathFile = pathFicherosExternos + plantillaPdf.getFicheroPlantilla();
-				plantilla = IOUtils.resourceToByteArray(pathFile);
+
+		// Obtenemos plantilla
+		byte[] plantilla = null;
+		if (StringUtils.isNotBlank(plantillaPdf.getFicheroPlantilla())) {
+			final String pathFicherosExternos = configuracionComponent
+					.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.PATH_FICHEROS_EXTERNOS);
+			final String pathFile = pathFicherosExternos + plantillaPdf.getFicheroPlantilla();
+			try (final FileInputStream fis = new FileInputStream(pathFile);) {
+				plantilla = IOUtils.toByteArray(fis);
+			} catch (final IOException e) {
+				throw new ErrorPdfFormularioException("Error generando pdf formulario", e);
 			}
-			// Obtenemos formateador
-			final FormateadorPdfFormulario formateador = (FormateadorPdfFormulario) Class
-					.forName(plantillaPdf.getClaseFormateador()).newInstance();
-			// Formateamos a PDF
-			final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
-					datosInicioSesionFormulario.getIdPaso(), datosInicioSesionFormulario.getIdFormulario(),
-					definicionTramiteSTG);
-			return formateador.formatear(xml, plantilla, definicionTramiteSTG.getDefinicionVersion().getIdioma(),
-					defFormulario.getFormularioInterno(), datosInicioSesionFormulario.getTituloProcedimiento());
-		} catch (final IOException e) {
-			throw new ErrorPdfFormularioException("Error generando pdf formulario", e);
+		}
+
+		// Obtenemos formateador
+		FormateadorPdfFormulario formateador = null;
+		try {
+			formateador = (FormateadorPdfFormulario) Class.forName(plantillaPdf.getClaseFormateador()).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new ErrorPdfFormularioException(
 					"Error generando pdf formulario a partir classname " + plantillaPdf.getClaseFormateador(), e);
 		}
 
+		// Formateamos a PDF
+		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
+				datosInicioSesionFormulario.getIdPaso(), datosInicioSesionFormulario.getIdFormulario(),
+				definicionTramiteSTG);
+		return formateador.formatear(xml, plantilla, definicionTramiteSTG.getDefinicionVersion().getIdioma(),
+				defFormulario.getFormularioInterno(), datosInicioSesionFormulario.getTituloProcedimiento());
+
+	}
+
+	/**
+	 * Ajusta selectores (no obligatorios, lista radios,...)
+	 *
+	 * @param pagAct
+	 *            Datos página
+	 */
+	private void ajustarSelectores(final PaginaFormulario pagAct) {
+
+		for (final ConfiguracionCampo cc : pagAct.getConfiguracion()) {
+			if (cc.getTipo() == TypeCampo.SELECTOR) {
+
+				final ConfiguracionCampoSelector ccs = (ConfiguracionCampoSelector) cc;
+
+				// Ajustes selector lista: si no es obligatorio se añade a valores posibles
+				// valor para no seleccionado y si esta vacío se establece como valor no
+				// seleccionado
+				if (ccs.getContenido() == TypeSelector.LISTA && cc.getObligatorio() == TypeSiNo.NO) {
+					final ValoresPosiblesCampo vp = UtilsFormularioInterno
+							.buscarValoresPosibles(pagAct.getValoresPosibles(), ccs.getId());
+					// Añadir valor NO-SELECT a valores posibles
+					vp.getValores().add(0, UtilsFormularioInterno.crearValorIndexadoNoSelect());
+					// Si no tiene valor el campo, se establece valor NO-SELECT
+					final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(pagAct.getValores(), ccs.getId());
+					if (vc != null && ((ValorCampoIndexado) vc).esVacio()) {
+						((ValorCampoIndexado) vc).setValor(UtilsFormularioInterno.crearValorIndexadoNoSelect());
+					}
+				}
+
+				// Ajustes selector unico: si esta vacío se establece primera opción
+				if (ccs.getContenido() == TypeSelector.UNICO) {
+					// Si no tiene valor el campo, se establece primer valor posible
+					final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(pagAct.getValores(), ccs.getId());
+					if (vc != null && ((ValorCampoIndexado) vc).esVacio()) {
+						final ValoresPosiblesCampo vp = UtilsFormularioInterno
+								.buscarValoresPosibles(pagAct.getValoresPosibles(), ccs.getId());
+						if (!vp.getValores().isEmpty()) {
+							((ValorCampoIndexado) vc).setValor(vp.getValores().get(0));
+						}
+					}
+				}
+
+			}
+		}
 	}
 
 }

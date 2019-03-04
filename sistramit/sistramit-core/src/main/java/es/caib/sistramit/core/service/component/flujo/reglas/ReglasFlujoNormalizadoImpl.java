@@ -30,10 +30,17 @@ public final class ReglasFlujoNormalizadoImpl extends ReglasFlujoImpl {
 		this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_CARGA);
 
 		// IR A PASO
+		// - PRE Navegación
+		this.addRegla(new RTNavegacionPagoIniciado(), TypeFaseEjecucion.PRE_NAVEGACION);
+		this.addRegla(new RTNavegacionRegistroPendienteReintento(), TypeFaseEjecucion.PRE_NAVEGACION);
+		this.addRegla(new RTNavegacionPasoFinal(), TypeFaseEjecucion.PRE_NAVEGACION);
+		// - POST Navegación
 		this.addRegla(new RTNavegacionAccesibilidadNormalizado(), TypeFaseEjecucion.POST_NAVEGACION);
 
 		// ACCION PASO
+		// - PRE Acción
 		this.addRegla(new RTAccionModificacion(), TypeFaseEjecucion.PRE_ACCION);
+		// - POST Acción
 		this.addRegla(new RTNavegacionAccesibilidadNormalizado(), TypeFaseEjecucion.POST_ACCION);
 		this.addRegla(new RTBloqueoPasos(), TypeFaseEjecucion.POST_ACCION);
 		this.addRegla(new RTAccionNavegacionAutoNormalizado(), TypeFaseEjecucion.POST_ACCION);

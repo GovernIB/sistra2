@@ -76,67 +76,62 @@ public final class PlgValidacionAnexo implements PlgValidacionAnexoInt {
 	@Override
 	public String getValorPdf(final String codigo) {
 		String respuesta = "";
-		if (!StringUtils.isEmpty(nombreFicheroAnexo) && !StringUtils.isEmpty(codigo)
+
+		// Leemos PDF si no se ha leído antes
+		if (datosPDFAnexo == null && !StringUtils.isEmpty(nombreFicheroAnexo) && !StringUtils.isEmpty(codigo)
 				&& nombreFicheroAnexo.toLowerCase().indexOf(".pdf") >= 0) {
-
-			if (datosPDFAnexo == null) {
-				datosPDFAnexo = new HashMap<>();
-
-				final InputStream is = new ByteArrayInputStream(this.datosFicheroAnexo);
-
-				PdfReader reader;
-				try {
-					reader = new PdfReader(is);
-
-					final Map mapac = reader.getAcroFields().getFields();
-					for (final Iterator it = mapac.keySet().iterator(); it.hasNext();) {
-						final String key = (String) it.next();
-						datosPDFAnexo.put(key, reader.getAcroFields().getField(key));
-					}
-
-					respuesta = datosPDFAnexo.get(codigo);
-
-				} catch (final IOException ex) {
-					datosPDFAnexo = null;
+			datosPDFAnexo = new HashMap<>();
+			final InputStream is = new ByteArrayInputStream(this.datosFicheroAnexo);
+			PdfReader reader;
+			try {
+				reader = new PdfReader(is);
+				final Map mapac = reader.getAcroFields().getFields();
+				for (final Iterator it = mapac.keySet().iterator(); it.hasNext();) {
+					final String key = (String) it.next();
+					datosPDFAnexo.put(key, reader.getAcroFields().getField(key));
 				}
-
-			} else {
-				respuesta = datosPDFAnexo.get(codigo);
+			} catch (final IOException ex) {
+				log.warn("Error extrayendo valor PDF: " + codigo + ". Devolvemos valor vacío.", ex);
+				datosPDFAnexo = null;
 			}
+		}
 
+		// Leemos campo formulario
+		if (datosPDFAnexo != null) {
+			respuesta = datosPDFAnexo.get(codigo);
 		}
-		if (respuesta == null) {
-			respuesta = "";
-		}
-		return respuesta;
+
+		// Devolvemos respuesta
+		return StringUtils.defaultString(respuesta);
 	}
 
 	@Override
 	public String getValorXml(final String xpath) {
 		String respuesta = "";
-		final Node nodo;
-		if (!StringUtils.isEmpty(nombreFicheroAnexo) && !StringUtils.isEmpty(xpath)
+		Node nodo = null;
+
+		// Leemos XML si no se ha leído antes
+		if (documentoXML == null && !StringUtils.isEmpty(nombreFicheroAnexo) && !StringUtils.isEmpty(xpath)
 				&& nombreFicheroAnexo.toLowerCase().indexOf(".xml") >= 0) {
-			if (documentoXML == null) {
-				final SAXReader reader = new SAXReader();
-				try {
-					documentoXML = reader.read(new ByteArrayInputStream(this.datosFicheroAnexo));
-					nodo = documentoXML.selectSingleNode(xpath);
-					respuesta = nodo.getText();
-				} catch (final DocumentException e) {
-					log.warn("Error extrayendo valor xml: " + xpath + ". Devolvemos valor vacío.", e);
-					respuesta = "";
-				}
+			final SAXReader reader = new SAXReader();
+			try {
+				documentoXML = reader.read(new ByteArrayInputStream(this.datosFicheroAnexo));
+			} catch (final DocumentException e) {
+				log.warn("Error extrayendo valor xml: " + xpath + ". Devolvemos valor vacío.", e);
+				documentoXML = null;
 			}
-		} else {
-			nodo = documentoXML.selectSingleNode(xpath);
-			respuesta = nodo.getText();
 		}
 
-		if (respuesta == null) {
-			respuesta = "";
+		// Obtenemos XPATH
+		if (documentoXML != null) {
+			nodo = documentoXML.selectSingleNode(xpath);
+			if (nodo != null) {
+				respuesta = nodo.getText();
+			}
 		}
-		return respuesta;
+
+		// Devolvemos repuesta
+		return StringUtils.defaultString(respuesta);
 	}
 
 	@Override
