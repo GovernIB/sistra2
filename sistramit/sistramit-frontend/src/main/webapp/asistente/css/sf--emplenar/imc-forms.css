@@ -325,6 +325,8 @@
 
 .imc-form a.imc-select.imc-select-deshabilitat span { color: #999; }
 
+.imc-form div[data-contingut="id"] input { text-transform: uppercase; }
+
 
 
 .imc-form input.imc-data-lectura,
@@ -357,7 +359,7 @@
 .imc-form .imc-el-6 a.imc-select,
 .imc-form .imc-el-6 a.imc-select span { width:51.9em !important; }
 */
-.imc-form .imc-el-ajuda { display: none; position: absolute; z-index: 5; top: 0; left: 0; width: 30em; color: #fff; padding: .3em 1em .5em; background-color: #333; }
+.imc-form .imc-el-ajuda { display: none; position: absolute; z-index: 5; top: 0; left: 0; width: 30em; color: #fff; padding: .3em 1em .5em; background-color: #4dba79; }
 .imc-form .imc-el-ajuda-on { display: block; }
 
 .imc-form .imc-el-ajuda::before {
@@ -368,7 +370,7 @@
 	bottom: -0.3em;
 	width: .6em;
 	height: .6em;
-	background-color: #333;
+	background-color: #4dba79;
 	transform: rotate(45deg);
 }
 
@@ -382,7 +384,7 @@
 	left: auto;
 }
 
-.imc-form .imc-el-ajuda-show {
+.imc-form .imc-el-ajuda-show { 
 	-moz-transition: all .3s linear;
 	-webkit-transition: all .1s linear;
 	-ms-transition: all .1s linear;
@@ -429,8 +431,8 @@
 .imc-form .imc-element fieldset { border: none; }
 .imc-form .imc-element legend { display: block; width: 100%; padding: .4em .7em .2em .7em; }
 .imc-form .imc-element ul { list-style: none; margin: 0 .7em; }
-.imc-form .imc-element ul li { padding: .1em 0; }
-.imc-form .imc-element ul li input { vertical-align: top; }
+.imc-form .imc-element ul li { padding: .1em 0; }	
+.imc-form .imc-element ul li input { vertical-align: top; }	
 
 .imc-form .imc-el-horizontal ul li { display: inline; padding-right: .5em; }
 
@@ -499,7 +501,7 @@
 /* taula */
 
 .imc-form .imc-el-taula .imc-el-taula-elements {  }
-
+		
 .imc-form fieldset.imc-element.imc-el-taula { width: 49.7%; }
 .imc-form .imc-el-taula .imc-el-taula-botonera { padding: 0 .7em .2em .7em; }
 .imc-form .imc-el-taula ul { float: left; height: 2em; margin: 0; }
@@ -590,7 +592,7 @@
 
 .imc-form .imc-el-taula-botonera-lateral .imc-el-ta-bo-posicio { padding-top: 1em; }
 
-.imc-form .imc-el-taula-botonera-lateral legend { /*width: 23.5em;*/ }
+.imc-form .imc-el-taula-botonera-lateral legend { /*width: 23.5em;*/ }	
 .imc-form .imc-el-taula-botonera-lateral div.imc-el-taula-elements { float: left; clear: none; width: calc(100% - 3.7em); /*width: 51.7em;*/ height: 14.2em; margin-right: 0; }
 /*
 .imc-form .imc-el-taula legend { width: 54em; }
@@ -609,7 +611,7 @@
 .imc-form .imc-el-taula-botonera-lateral .imc-tbody-scroll { height: 12.2em; }
 
 /* taula de elements */
-
+		
 .imc-form .imc-element.imc-el-table { width: 16.6%; padding: 0; margin-right: 0; }
 
 .imc-form .imc-el-table.imc-el-2 { width: 33.2% !important; }
@@ -729,7 +731,7 @@
 	box-shadow: 0 0 1em rgb(68,68,68);
 }
 
-.imc-iframe-fons { position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; opacity: .5; }
+.imc-iframe-fons { position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; opacity: .5; } 
 
 .no-opacity .imc-iframe-fons {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -800,6 +802,11 @@
 .imc--forms-nav .imc--finalitza button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(imgs/icones/ico_correcte.svg) no-repeat center center / auto 100%; opacity: .5; }
 .imc--forms-nav .imc--finalitza button span { padding-right: .5em; }
 
+.imc--forms-nav .imc--tanca { padding-right: 2em; }
+.imc--forms-nav .imc--tanca button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(imgs/icones/ico_tanca_fff.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--tanca button span { padding-right: .5em; }
+
+
 /*
 .imc--forms-nav li.imc-nav-desa { }
 
@@ -819,7 +826,7 @@
 .imc--forms-nav a.imc-bt span { }
 
 .imc--forms-nav button { width: 100%; text-align: left; line-height: 1em; padding: 1em; }
-
+		
 .imc--forms-nav .imc-bt,
 .imc--forms-nav .imc-bt {
 	color: #fff;
@@ -952,7 +959,7 @@
 	.imc-forms-formulari { margin: 1em auto; }*/
 
 	aside { margin: 2em auto; }
-
+	
 }
 
 @media only screen and (max-width : 770px) {

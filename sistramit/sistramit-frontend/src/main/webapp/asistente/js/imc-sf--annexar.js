@@ -325,8 +325,8 @@ $.fn.appAnnexa = function(options) {
 
 						});
 
-					el_input_file
-						.attr("accept", ext_accept);
+					//el_input_file
+						//.attr("accept", ext_accept);
 
 				}
 

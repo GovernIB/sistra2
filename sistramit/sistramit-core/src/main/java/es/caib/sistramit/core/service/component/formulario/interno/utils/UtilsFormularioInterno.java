@@ -47,8 +47,6 @@ import es.caib.sistramit.core.service.model.script.formulario.PlgDatosFormulario
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
-// TODO Ver si separamos UtilsFormulario entre generales e interno
-
 /**
  * Clase de utilidades para formularios.
  *
@@ -523,6 +521,37 @@ public class UtilsFormularioInterno {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Crea valor indexado que referencia a valor no seleccionado.
+	 *
+	 * @return valor indexado que referencia a valor no seleccionado
+	 */
+	public static ValorIndexado crearValorIndexadoNoSelect() {
+		final ValorIndexado vpNoSelect = new ValorIndexado(ValoresPosiblesCampo.VALUE_NO_SELECT, "...");
+		return vpNoSelect;
+	}
+
+	/**
+	 * Verifica si el valor referencia a valor no seleccionado de selector.
+	 *
+	 * @param vc
+	 * @return si el valor referencia a valor no seleccionado de selector.
+	 */
+	public static boolean esValorIndexadoNoSelect(final ValorCampo vc) {
+		return (vc != null && vc.getTipo() == TypeValor.INDEXADO && ((ValorCampoIndexado) vc).getValor() != null
+				&& ValoresPosiblesCampo.VALUE_NO_SELECT.equals(((ValorCampoIndexado) vc).getValor().getValor()));
+	}
+
+	/**
+	 * Verifica si el valor referencia a valor no seleccionado de selector.
+	 *
+	 * @param vc
+	 * @return si el valor referencia a valor no seleccionado de selector.
+	 */
+	public static boolean esValorIndexadoNoSelect(final ValorIndexado vc) {
+		return vc != null && (ValoresPosiblesCampo.VALUE_NO_SELECT.equals(vc.getValor()));
 	}
 
 	// ---------------------------------------------------------------------------------------------------

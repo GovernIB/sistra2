@@ -48,6 +48,8 @@ $.fn.appValida = function(opcions) {
 		"rangoMax" : null
 		*/
 
+		esCorrecte =  true;
+
 		var el_enters = parseInt(element.attr("data-enters"), 10) || false
 			,el_decimals = parseInt(element.attr("data-decimals"), 10) || false
 			,el_separador = element.attr("data-separador") || false
@@ -55,11 +57,23 @@ $.fn.appValida = function(opcions) {
 			,el_rangMin = element.attr("data-rangMin") || false
 			,el_rangMax = element.attr("data-rangMax") || false;
 
+		var validacions_arr = [];
+
 		// si no té separador, revisem si hi ha . o ,
 
 		if (!el_separador) {
 
-			esCorrecte = (valor.indexOf(".") === -1 && valor.indexOf(",") === -1) ? true : false;
+			if (valor.indexOf(".") === -1 && valor.indexOf(",") === -1) {
+
+				validacions_arr
+					.push("c");
+
+			} else {
+
+				validacions_arr
+					.push("e");
+
+			}
 
 		}
 
@@ -84,25 +98,39 @@ $.fn.appValida = function(opcions) {
 
 		var numberExpReg = /^\s*(\+|-)?((\d+(\.\d+)?)|(\.\d+))\s*$/;  
 
-		esCorrecte = ( numberExpReg.test(valor) ) ? true : false;
+		if ( !numberExpReg.test(valor) ) {
+
+			validacions_arr
+				.push("e");
+
+		}
 
 		// que és un número correcte
 
-		esCorrecte = ( !isNaN(parseFloat(valor)) && isFinite(valor) ) ? true : false;
+		alert(isNaN(parseFloat(valor)))
+
+		if ( isNaN(parseFloat(valor)) || !isFinite(valor) ) {
+
+			validacions_arr
+				.push("e");
+
+		}
 
 		// validem decimals
 
-		if (el_decimals === 0) {
+		if (el_decimals === 0 && valor.indexOf(".") !== -1) {
 
-			esCorrecte = ( valor.indexOf(".") !== -1 ) ? false : true;
+			validacions_arr
+				.push("e");
 
 		}
 
 		// permitix negatius?
 
-		if (el_negatiu === "n") {
+		if (el_negatiu === "n" && valor.substr(0,1) === "-") {
 
-			esCorrecte = ( valor.substr(0,1) === "-" ) ? false : true;
+			validacions_arr
+				.push("e");
 
 		}
 
@@ -121,30 +149,52 @@ $.fn.appValida = function(opcions) {
 
 		var valor_enter = valor.replace("-", "").split(".")[0];
 
-		esCorrecte = ( valor_enter.length <= el_enters ) ? true : false;
+		if ( valor_enter.length > el_enters ) {
+
+			validacions_arr
+				.push("e");
+
+		}
 
 		// validem decimals
 
 		var valor_decimal = valor.replace("-", "").split(".")[1];
 
-		esCorrecte = ( valor_decimal.length <= el_decimals ) ? true : false;
+		if (valor_decimal && valor_decimal.length > el_decimals) {
+
+			validacions_arr
+				.push("e");
+
+		}
 
 		// rang mínim
 
-		if (el_rangMin) {
+		if (el_rangMin && parseFloat(valor) < parseFloat(el_rangMin)) {
 
-			esCorrecte = ( parseFloat(valor) >= parseFloat(el_rangMin) ) ? true : false;
-
+			validacions_arr
+				.push("e");
 
 		}
 
 		// rang màxim
 
-		if (el_rangMax) {
+		if (el_rangMax && parseFloat(valor) > parseFloat(el_rangMax)) {
 
-			esCorrecte = ( parseFloat(valor) <= parseFloat(el_rangMax) ) ? true : false;
+			validacions_arr
+				.push("e");
 
 		}
+
+		$(validacions_arr)
+			.each(function() {
+
+				var el = this;
+
+				if (el == "e") {
+					esCorrecte = false;
+				}
+
+			});
 
 	}
 

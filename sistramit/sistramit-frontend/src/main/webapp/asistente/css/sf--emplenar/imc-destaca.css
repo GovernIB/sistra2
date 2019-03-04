@@ -30,28 +30,37 @@
 @-moz-keyframes parpadeja {
 	0% { opacity: 0; }
 	20% { opacity: .7; }
-	40% { opacity: .3; }
 	60% { opacity: .7; }
 	100% { opacity: 0; }
 }
 @-webkit-keyframes parpadeja {
 	0% { opacity: 0; }
 	20% { opacity: .7; }
-	40% { opacity: .3; }
 	60% { opacity: .7; }
 	100% { opacity: 0; }
 }
 @-o-keyframes parpadeja {
 	0% { opacity: 0; }
 	20% { opacity: .7; }
-	40% { opacity: .3; }
 	60% { opacity: .7; }
 	100% { opacity: 0; }
 }
 @keyframes parpadeja {
 	0% { opacity: 0; }
 	20% { opacity: .7; }
-	40% { opacity: .3; }
 	60% { opacity: .7; }
 	100% { opacity: 0; }
 }
+
+
+.imc-destaca--enmarca { position: absolute; z-index: 30; top: 0; left: 0; width: 100%; border: .4em solid #c00; }
+
+
+
+.imc-preevalua {  }
+.imc-preevalua div { position: absolute; z-index: 30; }
+
+.imc-preevalua .imc--dalt { top: 0; left: 0; width: 100%; }
+.imc-preevalua .imc--baix { left: 0; width: 100%; }
+.imc-preevalua .imc--esquerre { left: 0; }
+.imc-preevalua .imc--dreta { }

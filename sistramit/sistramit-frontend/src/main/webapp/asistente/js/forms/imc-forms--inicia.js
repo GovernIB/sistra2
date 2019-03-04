@@ -269,16 +269,47 @@ $.fn.appFormsErrors = function(options) {
 // appDestaca
 $.fn.appDestaca = function(options) {
 	var settings = $.extend({
-		referent: $(window)
+		referent: $(window),
+		com: "enmarca" // "resalta", "enmarca"
 	}, options);
 	this.each(function(){
 		var element = $(this),
 			referent = settings.referent,
+			com = settings.com,
+			imc_finestra_H = false,
+			imc_finestra_scroll_T = false,
+			imc_document_H = false,
+			imc_document_W = false,
 			el = element.closest(".imc-element"),
-			imc_finestra = $(window),
-			imc_document = $(document),
+			el_T = false,
+			el_L = false,
+			el_W = false,
+			el_H = false,
 			destacat_el = false,
 			inicia = function() {
+
+				imc_finestra_H = referent.height();
+				imc_finestra_scroll_T = referent.scrollTop();
+				imc_document_H = referent[0].scrollHeight;
+				imc_document_W = referent.outerWidth(true);
+
+				el_T = el.position().top + imc_finestra_scroll_T;
+				el_L = el.position().left;
+				el_W = el.outerWidth(true);
+				el_H = el.outerHeight(true);
+
+				if (com === "resalta") {
+
+					resalta();
+
+				} else {
+
+					enmarca();
+
+				}
+
+			},
+			resalta = function() {
 
 				if ($("#imc-destacat").length) {
 
@@ -287,18 +318,8 @@ $.fn.appDestaca = function(options) {
 
 				}
 
-				var imc_finestra_H = referent.height(),
-					imc_finestra_scroll_T = referent.scrollTop(),
-					imc_document_H = referent[0].scrollHeight,
-					imc_document_W = referent.outerWidth(true);
-
-				var el_T = el.position().top + imc_finestra_scroll_T;// + 20,
-					el_L = el.position().left,
-					el_W = el.outerWidth(true),
-					el_H = el.outerHeight(true);
-
-				consola("offset()TOP: " + el.offset().top + " - offset()LEFT: " + el.offset().left);
-				consola("position()TOP: " + el.position().top + " - position()LEFT: " + el.position().left);
+				//consola("offset()TOP: " + el.offset().top + " - offset()LEFT: " + el.offset().left);
+				//consola("position()TOP: " + el.position().top + " - position()LEFT: " + el.position().left);
 
 				var destacat_el_T = $("<div>").addClass("imc--dalt").css({ height: el_T+"px" }),
 					destacat_el_B = $("<div>").addClass("imc--baix").css({ top: (el_T+el_H)+"px", height: (imc_document_H - el_T - el_H)+"px" }),
@@ -309,41 +330,37 @@ $.fn.appDestaca = function(options) {
 
 				// escrolletja
 
-				var pos_respecte_finestra = (imc_finestra_H / 2) + imc_finestra_scroll_T;
+				escrolletja();
 
-				consola( "id: " + el.attr("data-id") );
-				consola( el_T + " > "+ imc_finestra_scroll_T );
+				// parpadeja
+
+				parpadeja();
+
+			},
+			escrolletja = function() {
+
+				var anarScroll = false,
+					pos_respecte_finestra = (imc_finestra_H / 2) + imc_finestra_scroll_T;
 
 				if (el_T > pos_respecte_finestra) {
 
-					var anarScroll = el_T - (imc_finestra_H / 2);
-
-					escrolletja(anarScroll);
+					anarScroll = el_T - (imc_finestra_H / 2);
 
 				} else if (el_T < imc_finestra_scroll_T) {
 
-					var anarScroll = el_T - 20;
-
-					escrolletja(anarScroll);
-
-				} else {
-
-					parpadeja();
+					anarScroll = el_T - 20;
 
 				}
 
-			},
-			escrolletja = function(anarScroll) {
+				if (anarScroll) {
 
-				referent
-					.animate(
-						{ scrollTop: anarScroll+"px" }
-						,500
-						,function() {
+					referent
+						.animate(
+							{ scrollTop: anarScroll+"px" }
+							,500
+						);
 
-							parpadeja();
-
-						});
+				}
 
 			},
 			parpadeja = function() {
@@ -371,6 +388,40 @@ $.fn.appDestaca = function(options) {
 
 				$("#imc-destacat")
 					.remove();
+
+			},
+			enmarca = function() {
+
+				if ($("#imc-destacat--enmarca").length) {
+
+					$("#imc-destacat--enmarca")
+						.remove();
+
+				}
+
+				var enmarcat_el = $("<div>")
+					.addClass("imc-destaca--enmarca")
+					.attr("id", "imc-destacat--enmarca")
+					.css({ height: imc_finestra_H+"px" })
+					.appendTo( referent );
+
+				// escrolletja
+
+				escrolletja();
+
+				// enmarca
+
+				enmarcat_el
+					.animate(
+						{ top: el_T+"px", left: el_L+"px", height: el_H+"px", width: el_W+"px", opacity: .3 }
+						,700
+					).animate(
+						{ opacity: 0 }
+						,200
+						,function() {
+							$(this).remove();
+						}
+					);
 
 			};
 
@@ -960,6 +1011,17 @@ $.fn.appFormsConfiguracio = function(options) {
 
 						});
 
+					/*
+					<button type="button" id="imc-bt-iframe-tanca" class="imc-bt imc--ico imc--form-tanca" data-accio="tanca"><span>Tanca formulari</span></button>
+					*/
+
+					var bt_finalitza_span = $("<span>").text( txtTancaFormulari )
+						,bt_finalitza_button = $("<button>").addClass("imc--form-tanca").attr({ type: "button", id: "imc-bt-iframe-tanca", "data-accio": "tanca" }).html( bt_finalitza_span )
+						,bt_li = $("<li>").addClass("imc--tanca").html( bt_finalitza_button );
+
+					acc_llistat
+						.prepend( bt_li );
+
 				}
 
 				// configuració (només lectura i modificable)
@@ -1141,33 +1203,33 @@ $.fn.appFormsValida = function(options) {
 
 				if (input.attr("data-contingut") === "identificador" && input_val !== "") {
 
-					var identificadorValido = false;
+					var idValid = false;
 
 					if (input.attr("data-nif") === "s") {
 
-						identificadorValido = ( appValidaIdentificador.nif(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.nif(input_val) ) ? true : false;
 
 					}
 
-					if (!identificadorValido && input.attr("data-cif") === "s") {
+					if (!idValid && input.attr("data-cif") === "s") {
 
-						identificadorValido = ( appValidaIdentificador.cif(input_val) ) ? true : false;
-
-					}
-
-					if (!identificadorValido && input.attr("data-nie") === "s") {
-
-						identificadorValido = ( appValidaIdentificador.nie(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.cif(input_val) ) ? true : false;
 
 					}
 
-					if (!identificadorValido && input.attr("data-nss") === "s") {
+					if (!idValid && input.attr("data-nie") === "s") {
 
-						identificadorValido = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.nie(input_val) ) ? true : false;
 
 					}
 
-					esError = !identificadorValido;
+					if (!idValid && input.attr("data-nss") === "s") {
+
+						idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+
+					}
+
+					esError = !idValid;
 
 				}
 
@@ -1235,10 +1297,66 @@ $.fn.appFormsAvalua = function(options) {
 
 				element
 					.off(".appFormsAvalua")
+					.on("focus.appFormsAvalua", "div[data-tipus='texto'] input", preevalua)
 					.on("blur.appFormsAvalua", "div[data-tipus='texto'] input", selecciona)
 					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] .imc-select-submenu a", selecciona)
 					.on("click.appFormsAvalua", "fieldset[data-tipus='selector'] label", selecciona)
 					.on("click.appFormsAvalua", "div[data-type='check'] .imc-input-check", selecciona);
+
+			},
+			preevalua = function(e) {
+
+				input = $(this);
+
+				var input_element = input.closest(".imc-element")
+					,esAvaluable = (input_element.attr("data-avalua") === "s") ? true : false;
+
+				if (esAvaluable) {
+
+					imc_forms_contenidor
+						.attr("data-preevalua", "s");
+
+					// posar capa invisible
+
+					var imc_finestra_H = imc_forms_contenidor.height()
+						,imc_finestra_scroll_T = imc_forms_contenidor.scrollTop()
+						,imc_document_H = imc_forms_contenidor[0].scrollHeight
+						,imc_document_W = imc_forms_contenidor.outerWidth(true);
+
+					var el_T = input_element.position().top + imc_finestra_scroll_T
+						,el_L = input_element.position().left
+						,el_W = input_element.outerWidth(true)
+						,el_H = input_element.outerHeight(true);
+
+					var preevaluaAmaga = function() {
+
+							$("#imc-preevalua")
+								.remove();
+
+						};
+
+					if ($("#imc-preevalua").length) {
+
+						preevaluaAmaga();
+
+					}
+
+					var preevalua_el_T = $("<div>").addClass("imc--dalt").css({ height: el_T+"px" })
+						,preevalua_el_B = $("<div>").addClass("imc--baix").css({ top: (el_T+el_H)+"px", height: (imc_document_H - el_T - el_H)+"px" })
+						,preevalua_el_L = $("<div>").addClass("imc--esquerre").css({ top: el_T+"px", width: el_L+"px", height: el_H+"px" })
+						,preevalua_el_R = $("<div>").addClass("imc--dreta").css({ top: el_T+"px", left: (el_L+el_W)+"px", width: (imc_document_W - (el_L + el_W))+"px", height: el_H+"px" });
+
+					$("<div>")
+						.addClass("imc-preevalua")
+						.attr("id", "imc-preevalua")
+						.append( preevalua_el_T )
+						.append( preevalua_el_B )
+						.append( preevalua_el_L )
+						.append( preevalua_el_R )
+						.on("click", preevaluaAmaga)
+						.appendTo( imc_forms_contenidor );
+
+				}
 
 			},
 			selecciona = function(e) {
@@ -1258,11 +1376,33 @@ $.fn.appFormsAvalua = function(options) {
 
 				input_element = input.closest(".imc-element");
 				input_id = input_element.attr("data-id");
+				input_tipus = input_element.attr("data-tipus");
+
+				// preevalua?
+
+				if (input_tipus !== "texto" && imc_forms_contenidor.attr("data-preevalua") === "s") {
+					return;
+				}
 
 				// missatge enviant
 
 				imc_missatge
-					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtAvaluantTitol, alMostrar: function() { envia(); } });
+					.attr("tabindex", "-1")
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtAvaluantTitol, alMostrar: function() { enviaRetarda(); } })
+					.focus();
+
+			},
+			enviaRetarda = function(e) {
+
+				// el selector múltiple necessita un petit retard per agafar correctament els valors
+
+				setTimeout(
+					function() {
+
+						envia();
+
+					},50
+				);
 
 			},
 			envia = function(e) {
@@ -1301,6 +1441,9 @@ $.fn.appFormsAvalua = function(options) {
 
 						envia_ajax = false;
 
+						imc_forms_contenidor
+							.removeAttr("data-preevalua");
+
 						json = data;
 
 						if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -1322,6 +1465,9 @@ $.fn.appFormsAvalua = function(options) {
 
 							envia_ajax = false;
 
+							imc_forms_contenidor
+								.removeAttr("data-preevalua");
+
 							consola("Avalua dada del formulari: error des de JSON");
 
 							imc_contenidor
@@ -1333,6 +1479,9 @@ $.fn.appFormsAvalua = function(options) {
 					.fail(function(dades, tipus, errorThrown) {
 
 						envia_ajax = false;
+
+						imc_forms_contenidor
+							.removeAttr("data-preevalua");
 
 						if (tipus === "abort") {
 							return false;
@@ -1364,8 +1513,12 @@ $.fn.appFormsAvalua = function(options) {
 
 					var destacaCamp = function() {
 
-							input_element
-								.appDestaca({ referent: imc_forms_contenidor });
+							if (validacio_estat === "error") {
+
+								input_element
+									.appDestaca({ referent: imc_forms_contenidor });
+
+							}
 
 						};
 
@@ -1706,7 +1859,6 @@ function appFormsCarregaScripts() {
 		,$.getScript(APP_ + "js/forms/imc-forms--validacions.js?" + APP_VERSIO)
 		,$.getScript(APP_ + "js/forms/imc-forms--serialitza.js?" + APP_VERSIO)
 		//,$.getScript(APP_ + "js/forms/literals/jquery-imc-literals-calendari-" + APP_IDIOMA + ".js")
-		,$.getScript(APP_ + "js/forms/literals/vars-imc-literals-" + APP_IDIOMA + ".js?" + APP_VERSIO)
 
 	).then(
 

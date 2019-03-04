@@ -17,10 +17,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { 
 	font-family: 'Bariol Regular';
 	src: url('../fonts/Bariol_Regular.ttf');
 }
-/*
-html,
-body { overflow: auto; overflow-x: hidden; }
-*/
+
 body { font: normal 100% 'Bariol Regular', Arial, Helvetica, sans-serif; color: #333; background-color: #eaeaea; }
 
 p { font-size: 1.1em; line-height: 1.2em; }

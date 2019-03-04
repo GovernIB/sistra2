@@ -34,6 +34,12 @@ $.fn.appSerialitza = function(opcions) {
 
 					input_val = input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");
 
+					if (el_contingut === "id") {
+
+						input_val = input_val.toUpperCase();
+
+					}
+
 					form_id_i_valors[el_id] = el_valortipus + "#-@" + input_val;
 
 				} else if (el_tipus === "selector" && el_contingut === "d") {
@@ -132,29 +138,33 @@ $.fn.appSerialitza = function(opcions) {
 
 						if (input_el.attr("data-contingut") === "identificador" && input_val !== "") {
 
+							var idValid = false;
+
 							if (input_el.attr("data-nif") === "s") {
 
-								esError = ( !appValidaIdentificador.nif(input_val) ) ? true : false;
+								idValid = ( appValidaIdentificador.nif(input_val) ) ? true : false;
 
 							}
 
-							if (input_el.attr("data-cif") === "s") {
+							if (!idValid && input_el.attr("data-cif") === "s") {
 
-								esError = ( !appValidaIdentificador.cif(input_val) ) ? true : false;
-
-							}
-
-							if (input_el.attr("data-nie") === "s") {
-
-								esError = ( !appValidaIdentificador.nie(input_val) ) ? true : false;
+								idValid = ( appValidaIdentificador.cif(input_val) ) ? true : false;
 
 							}
 
-							if (input_el.attr("data-nss") === "s") {
+							if (!idValid && input_el.attr("data-nie") === "s") {
 
-								esError = ( !appValidaIdentificador.nss(input_val) ) ? true : false;
+								idValid = ( appValidaIdentificador.nie(input_val) ) ? true : false;
 
 							}
+
+							if (!idValid && input_el.attr("data-nss") === "s") {
+
+								idValid = ( appValidaIdentificador.nss(input_val) ) ? true : false;
+
+							}
+
+							esError = !idValid;
 
 						}
 
@@ -184,23 +194,23 @@ $.fn.appSerialitza = function(opcions) {
 
 					} else if (el_tipus === "selector" && el_contingut === "d") {
 
-						esError = (input_val === "") ? true : false;
+						esError = (esObligatori && input_val === "") ? true : false;
 
 					} else if (el_tipus === "selector" && el_contingut === "m") {
 
-						esError = (!checks_seleccionats) ? true : false;
+						esError = (esObligatori && !checks_seleccionats) ? true : false;
 
 					} else if (el_tipus === "selector" && el_contingut === "u") {
 
-						esError = (!input_el.length) ? true : false;
+						esError = (esObligatori && !input_el.length) ? true : false;
 
 					} else if (el_tipus === "verificacion") {
 
 						esError = (esObligatori && !input_el.is(":checked")) ? true : false;
 
 					}
-					
-					
+
+
 					// hi ha error?
 
 					if (esError) {
