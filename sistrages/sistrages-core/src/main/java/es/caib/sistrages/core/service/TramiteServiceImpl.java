@@ -23,6 +23,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -297,6 +298,7 @@ public class TramiteServiceImpl implements TramiteService {
 	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite, final String usuario) {
 		final Long idTramiteVersion = tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
 		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.CREACION, "");
+		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.BLOQUEAR, "");
 	}
 
 	/*
@@ -989,11 +991,24 @@ public class TramiteServiceImpl implements TramiteService {
 	public String getIdiomasDisponibles(final String idTramiteVersion) {
 		return tramiteDao.getIdiomasDisponibles(idTramiteVersion);
 	}
-	
+
 	@Override
 	@NegocioInterceptor
 	public List<ErrorValidacion> validarVersionTramite(final Long id, final String idioma) {
 		return validadorComponent.comprobarVersionTramite(id, idioma);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<ErrorValidacion> validarVersionTramite(final TramiteVersion pTramiteVersion, final String pIdioma) {
+		return validadorComponent.comprobarVersionTramite(pTramiteVersion, pIdioma);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<ErrorValidacion> validarScript(final Script pScript, final List<Dominio> pListaDominios,
+			final List<String> pIdiomasTramiteVersion, final String pIdioma) {
+		return validadorComponent.comprobarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma);
 	}
 
 }

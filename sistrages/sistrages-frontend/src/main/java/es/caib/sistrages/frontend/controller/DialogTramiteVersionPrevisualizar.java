@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
@@ -18,6 +19,7 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTram
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.comun.TramitePrevisualizacion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
@@ -89,8 +91,13 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 		final StringBuilder texto = new StringBuilder();
 		if (!tramite.isVigente()) {
-			texto.append("*");
+			texto.append("(V) ");
 		}
+		if (tramite.getProcedimiento().getIdProcedimientoSIA() == null
+				|| tramite.getProcedimiento().getIdProcedimientoSIA().isEmpty()) {
+			texto.append("(S) ");
+		}
+
 		texto.append(tramite.getIdentificador());
 		texto.append(" - ");
 		texto.append(tramite.getDescripcion());
@@ -190,6 +197,13 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("tramiteVersionPrevisualizarDialog");
 	}
 
 	/**
@@ -334,6 +348,22 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 		final Propiedad propiedad = this.parametros.remove(posicion);
 		this.parametros.add(posicion - 1, propiedad);
+	}
+
+	public void validar() {
+		final List<ErrorValidacion> listaErrores = tramiteService.validarVersionTramite(data,
+				UtilJSF.getSessionBean().getLang());
+		if (!listaErrores.isEmpty()) {
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
+					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+
+			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 900, 520);
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
+
+		}
 	}
 
 	/**

@@ -49,6 +49,9 @@ public final class Constantes {
 	/** Constante procedimiento. **/
 	public static final String CLAVE_MOCHILA_PROCEDIMIENTO = "PROCEDIMIENTO";
 
+	/** Constante plantilla formateador. **/
+	public static final String CLAVE_MOCHILA_PLANTILLA_FORMATEADOR = "PLANTILLA_FORMATEADOR";
+
 	/** Constante procedimiento. **/
 	public static final String CLAVE_MOCHILA_CATEGORIA = "CATEGORIA";
 
@@ -72,6 +75,9 @@ public final class Constantes {
 
 	/** Constante fuente datos valores. **/
 	public static final String CLAVE_MOCHILA_FUENTEVALORES = "FUENTEVALORES";
+
+	/** Constante errores de validacion. **/
+	public static final String CLAVE_MOCHILA_ERRORESVALIDACION = "ERRORESVALIDACION";
 
 	public static final String SISTRAMIT_REST_PWD = "sistramit.rest.pwd";
 

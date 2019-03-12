@@ -12,6 +12,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
 import org.primefaces.extensions.event.ClipboardSuccessEvent;
@@ -24,6 +25,7 @@ import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
+import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypePluginScript;
 import es.caib.sistrages.core.api.model.types.TypeScript;
@@ -333,6 +335,22 @@ public class DialogScript extends DialogControllerBase {
 			return;
 		}
 
+		if (!validoScript()) {
+			return;
+		}
+
+		// Retornamos resultado
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		if (estaVacio()) {
+			result.setResult(null);
+		} else {
+			result.setResult(this.data);
+		}
+		UtilJSF.closeDialog(result);
+	}
+
+	public void cerrar() {
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
@@ -1210,6 +1228,22 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	private boolean validoScript() {
+		final List<ErrorValidacion> listaErrores = tramiteService.validarScript(data, dominios, idiomas,
+				UtilJSF.getSessionBean().getLang());
+		if (!listaErrores.isEmpty()) {
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
+					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+
+			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 900, 520);
+			return false;
+		}
+
+		return true;
 	}
 
 }

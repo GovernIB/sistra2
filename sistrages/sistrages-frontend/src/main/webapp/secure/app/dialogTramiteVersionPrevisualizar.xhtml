@@ -50,6 +50,9 @@
 						<p style="line-height:20px; padding:0px; margin:0px;">
 							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoVigente']}" />
 						</p>
+						<p style="line-height:20px; padding:0px; margin:0px;">
+							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoSia']}" />
+						</p>
 					</p:column>
 					<p:outputLabel   value=""  />
 
@@ -112,7 +115,9 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+		        		<p:commandButton value="#{msg['botones.validarVersion']}" actionListener="#{dialogTramiteVersionPrevisualizar.validar}" process="@this" update="growlDialog" />
 						<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this" />
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteVersionPrevisualizar.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

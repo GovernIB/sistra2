@@ -417,6 +417,10 @@ body{
 	margin-right: 20px !important;
 }
 
+.margin-right-25 {
+	margin-right: 25px !important;
+}
+
 .margin-left-3 {
 	margin-left: 0.3em !important;
 }
@@ -585,4 +589,9 @@ label.ui-state-disabled {
 
 .arbolTramites ul {
 	height:100%;
+}
+
+.ui-datatable-ver-scroll-460 .ui-datatable-tablewrapper{
+     overflow: auto !important;
+     height:460px !important;
 }

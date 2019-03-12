@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogErroresValidacion.titulo']}"/></title>
+</h:head>
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogErroresValidacion.modoAcceso}"/>
+		<f:viewAction action="#{dialogErroresValidacion.init}" />
+	</f:metadata>
+	<h:form id="dialogErroresValidacion" styleClass="margin-top-10">
+
+						<p:dataTable  id="dataTable" var="dt" value="#{dialogErroresValidacion.listaErrores}"
+										  emptyMessage="#{msg['error.emptyRows']}" styleClass="margin-left-25 margin-right-25 ui-datatable-ver-scroll-460"
+										  scrollable="false" scrollHeight="460"
+				                          paginator="false"
+				                          selectionMode="single" rowKey="#{dt.elemento}">
+
+								<!-- Columnas -->
+							    <p:column headerText="#{msg['dialogErroresValidacion.item']}" styleClass="grid-left ui-panelgrid-cell" width="35%">
+							        <h:outputText value="#{dt.elemento}" />
+							    </p:column>
+
+							    <p:column headerText="#{msg['dialogErroresValidacion.descripcion']}" styleClass="grid-left ui-panelgrid-cell" width="65%">
+							        <h:outputText value="#{dt.descripcion}" />
+							    </p:column>
+
+
+				 		</p:dataTable>
+
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogErroresValidacion.cerrar}" process="@this" styleClass="boton-azul"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

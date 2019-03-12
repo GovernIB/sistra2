@@ -13,6 +13,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -397,7 +398,7 @@ public interface TramiteService {
 	public boolean tieneTramiteNumVersionRepetida(Long idTramite, int release);
 
 	/**
-	 * Obtiene la release máxima de un trámite.
+	 * Obtiene la num version de un trámite.
 	 *
 	 * @param idTramite
 	 * @return Release máxima, siendo 0 el valor por defecto.
@@ -572,16 +573,43 @@ public interface TramiteService {
 	 * @return
 	 */
 	public String getIdiomasDisponibles(String idTramiteVersion);
-	
+
 	/**
-	 * Validar version tramite.
+	 * Valida que no tenga errores una version de un tramite.
 	 *
-	 * @param id
-	 *            id. tramite
-	 * @param idioma
-	 *            idioma de los errores
-	 * @return lista de errores
+	 * @param pId
+	 *            id. version tramite
+	 * @param pIdioma
+	 *            idioma para mostrar los errores
+	 * @return lista de errores de validacion
 	 */
-	public List<ErrorValidacion> validarVersionTramite(Long id, String idioma);
+	public List<ErrorValidacion> validarVersionTramite(Long pId, String pIdioma);
+
+	/**
+	 * Valida que no tenga errores una version de un tramite.
+	 *
+	 * @param pTramiteVersion
+	 *            tramite version
+	 * @param pIdioma
+	 *            idioma para mostrar los errores
+	 * @return lista de errores de validacion
+	 */
+	public List<ErrorValidacion> validarVersionTramite(TramiteVersion pTramiteVersion, String pIdioma);
+
+	/**
+	 * Valida que no tenga errores un script de un tramite.
+	 *
+	 * @param pScript
+	 *            script a validar
+	 * @param pListaDominios
+	 *            lista dominios de la version
+	 * @param pIdiomasTramiteVersion
+	 *            idiomas definidos en la version
+	 * @param pIdioma
+	 *            idioma para mostrar los errores
+	 * @return lista de errores de validacion
+	 */
+	public List<ErrorValidacion> validarScript(Script pScript, List<Dominio> pListaDominios,
+			List<String> pIdiomasTramiteVersion, String pIdioma);
 
 }

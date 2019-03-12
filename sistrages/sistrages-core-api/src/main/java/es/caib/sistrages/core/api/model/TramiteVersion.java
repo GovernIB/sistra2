@@ -106,6 +106,11 @@ public class TramiteVersion extends ModelApi {
 	private Date fechaUltima;
 
 	/**
+	 * Lista de identificadores de dominios. Esto se usa para validar los scripts
+	 */
+	private List<Dominio> listaAuxDominios;
+
+	/**
 	 * Obtiene el valor de codigo.
 	 *
 	 * @return el valor de codigo
@@ -678,4 +683,13 @@ public class TramiteVersion extends ModelApi {
 	public void setFechaUltima(final Date fechaUltima) {
 		this.fechaUltima = fechaUltima;
 	}
+
+	public List<Dominio> getListaAuxDominios() {
+		return listaAuxDominios;
+	}
+
+	public void setListaAuxDominios(List<Dominio> listaAuxDominios) {
+		this.listaAuxDominios = listaAuxDominios;
+	}
+
 }

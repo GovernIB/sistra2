@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
@@ -20,11 +21,11 @@ import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
+import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
-import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.core.api.service.TramiteService;
@@ -47,12 +48,6 @@ import es.caib.sistrages.frontend.util.UtilRest;
 @ManagedBean
 @ViewScoped
 public class ViewTramites extends ViewControllerBase {
-
-	/**
-	 * Service.
-	 */
-	@Inject
-	private DominioService dominioService;
 
 	/**
 	 * Service.
@@ -103,10 +98,14 @@ public class ViewTramites extends ViewControllerBase {
 	/** Indica si se permite refrescar. **/
 	private boolean permiteRefrescar;
 
+	/** Indica si es entorno editable (DESARROLLO) o no editable (PRE/PRO) */
+	private boolean permiteAccionEntorno;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
+
 		// Id entidad
 		final Long idEntidad = UtilJSF.getIdEntidad();
 		// Control acceso
@@ -119,10 +118,11 @@ public class ViewTramites extends ViewControllerBase {
 				.getParameter("area");
 		buscarAreas();
 		if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-			permiteRefrescar = false;
+			setPermiteAccionEntorno(true);
 		} else {
-			permiteRefrescar = true;
+			setPermiteAccionEntorno(false);
 		}
+
 	}
 
 	/**
@@ -234,7 +234,8 @@ public class ViewTramites extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 
 			// Refrescamos datos
-			this.buscarTramites();
+			buscarTramites();
+
 		}
 	}
 
@@ -1092,6 +1093,11 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 		}
 
+		// validamos antes de exportar
+		if (!validoTramiteVersion()) {
+			return;
+		}
+
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.versionSeleccionada.getCodigo().toString());
 		UtilJSF.openDialog(DialogTramiteExportar.class, TypeModoAcceso.EDICION, params, true, 900, 520);
@@ -1201,6 +1207,28 @@ public class ViewTramites extends ViewControllerBase {
 		UtilJSF.openHelp("tramites");
 	}
 
+	public void validarVersion() {
+		if (validoTramiteVersion()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
+		}
+	}
+
+	private boolean validoTramiteVersion() {
+		final List<ErrorValidacion> listaErrores = tramiteService
+				.validarVersionTramite(this.versionSeleccionada.getCodigo(), UtilJSF.getSessionBean().getLang());
+		if (!listaErrores.isEmpty()) {
+			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
+					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
+
+			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 900, 520);
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Obtiene el valor de filtro.
 	 *
@@ -1292,6 +1320,21 @@ public class ViewTramites extends ViewControllerBase {
 
 	public void setPermiteRefrescar(final boolean permiteRefrescar) {
 		this.permiteRefrescar = permiteRefrescar;
+	}
+
+	/**
+	 * @return the permiteAccionEntorno
+	 */
+	public boolean isPermiteAccionEntorno() {
+		return permiteAccionEntorno;
+	}
+
+	/**
+	 * @param permiteAccionEntorno
+	 *            the permiteAccionEntorno to set
+	 */
+	public void setPermiteAccionEntorno(final boolean permiteAccionEntorno) {
+		this.permiteAccionEntorno = permiteAccionEntorno;
 	}
 
 }

@@ -366,7 +366,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoTexto) {
 					final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
 
-					if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto()) && campo.getNormalTamanyo() <= 0) {
+					if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())
+							&& (campo.getNormalTamanyo() == null || campo.getNormalTamanyo() <= 0)) {
 						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 								UtilJSF.getLiteral("warning.componente.normal.tamaño"), true);
 						return false;
@@ -526,7 +527,11 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (traduccionesEdit == null) {
 					traduccionesEdit = new Literal();
 				}
-				BeanUtils.copyProperties(traduccionesEdit, traduccionesMod);
+				if (traduccionesMod == null) {
+					traduccionesEdit = null;
+				} else {
+					BeanUtils.copyProperties(traduccionesEdit, traduccionesMod);
+				}
 			} else if (respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
 				traduccionesEdit = null;
 			}
@@ -555,10 +560,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 	public void returnDialogoTraduccionesAyuda(final SelectEvent event) {
 		returnDialogoTraducciones(event);
-		if (traduccionesEdit != null && ((ComponenteFormulario) objetoFormularioEdit).getAyuda() == null) {
-			((ComponenteFormulario) objetoFormularioEdit).setAyuda(traduccionesEdit);
-		}
-
+		((ComponenteFormulario) objetoFormularioEdit).setAyuda(traduccionesEdit);
 	}
 
 	/**
@@ -566,7 +568,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 */
 	public void editarTraduccionesAyuda() {
 		traduccionesEdit = ((ComponenteFormulario) objetoFormularioEdit).getAyuda();
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas);
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), traduccionesEdit, idiomas, idiomas,
+				true);
 	}
 
 	public boolean isComponenteCampo() {
@@ -1060,6 +1063,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 		} else {
 			moverComponente(ConstantesDisenyo.POSICIONAMIENTO_POSTERIOR);
 		}
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("disenyoFormularioDialog");
 	}
 
 	private void moverLinea(final String pPosicion) {

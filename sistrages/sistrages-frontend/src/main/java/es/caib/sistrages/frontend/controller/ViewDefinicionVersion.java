@@ -609,7 +609,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), this.tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.AREA.toString(), this.area.getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionDominios.class, TypeModoAcceso.ALTA, params, true, 950, 450);
+		UtilJSF.openDialog(DialogDefinicionVersionDominios.class, TypeModoAcceso.ALTA, params, true, 950, 550);
 	}
 
 	/**
@@ -652,24 +652,66 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Ayuda.
+	 * Ayuda dominios empleados.
 	 */
 	public void ayudaDominio() {
 		UtilJSF.openHelp("definicionVersionDominios");
 	}
 
 	/**
-	 * Ayuda.
+	 * Ayuda paso Rellenar formulario.
 	 */
 	public void ayudaRellenar() {
 		UtilJSF.openHelp("definicionVersionRellenar");
 	}
 
 	/**
-	 * Ayuda.
+	 * Ayuda paso Anexar documento.
 	 */
 	public void ayudaAnexos() {
 		UtilJSF.openHelp("definicionVersionAnexarDocumentos");
+	}
+
+	/**
+	 * Ayuda paso Pagar tasa.
+	 */
+	public void ayudaTasas() {
+		UtilJSF.openHelp("definicionVersionPagarTasas");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaPropiedades() {
+		UtilJSF.openHelp("definicionVersionPropiedadesDialog");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaDebeSaber() {
+		UtilJSF.openHelp("definicionVersionDebeSaberDialog");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaFormulario() {
+		UtilJSF.openHelp("definicionVersionFormularioDialog");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaAnexo() {
+		UtilJSF.openHelp("definicionVersionAnexoDialog");
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayudaRegistrar() {
+		UtilJSF.openHelp("definicionVersionRegistrarTramiteDialog");
 	}
 
 	/**
@@ -1517,7 +1559,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			node.setExpanded(expanded);
 		}
 	}
-
 	// ------- GETTERS / SETTERS --------------------------------
 
 	/**

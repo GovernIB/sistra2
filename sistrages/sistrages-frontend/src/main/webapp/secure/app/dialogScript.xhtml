@@ -219,7 +219,9 @@
 			<p:toolbar>
 						<f:facet name="right">
 			        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogScript.cancelar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{!dialogScript.isEdicion()}" />
-							<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}" />
+							<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogScript.aceptar()}" process="@form" update="@form growlScript"  styleClass="boton-azul" rendered="#{dialogScript.isEdicion()}">
+								<p:ajax event="dialogReturn" listener="#{dialogScript.cerrar}"/>
+							</p:commandButton>
 							<p:commandButton id="btnEliminar" value="#{msg['botones.borrar']}" icon="fa fa-trash-o" actionListener="#{dialogScript.borrar()}" process="@this" update="growlScript" styleClass="boton-rojo" rendered="#{dialogScript.isEdicion()}" >
 		        				<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borradoScript']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
 		        			</p:commandButton>

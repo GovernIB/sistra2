@@ -144,7 +144,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		}
 
 		for (final JPlantillaFormulario jPlantilla : jForm.getPlantillas()) {
-			formInt.getPlantillas().add(jPlantilla.toModel());
+			formInt.getPlantillas().add(jPlantilla.toModelCompleto());
 		}
 
 		// ordenamos lista de paginas por campo orden

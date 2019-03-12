@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -463,11 +464,24 @@ public class TramiteServiceBean implements TramiteService {
 	public String getIdiomasDisponibles(final String idTramiteVersion) {
 		return tramiteService.getIdiomasDisponibles(idTramiteVersion);
 	}
-	
+
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<ErrorValidacion> validarVersionTramite(final Long id, final String idioma) {
 		return tramiteService.validarVersionTramite(id, idioma);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<ErrorValidacion> validarVersionTramite(final TramiteVersion pTramiteVersion, final String pIdioma) {
+		return tramiteService.validarVersionTramite(pTramiteVersion, pIdioma);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<ErrorValidacion> validarScript(final Script pScript, final List<Dominio> pListaDominios,
+			final List<String> pIdiomasTramiteVersion, final String pIdioma) {
+		return tramiteService.validarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma);
 	}
 
 }
