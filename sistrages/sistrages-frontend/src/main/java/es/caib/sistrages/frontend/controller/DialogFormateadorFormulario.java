@@ -1,5 +1,8 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -9,6 +12,7 @@ import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
+import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -25,6 +29,9 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	/** Datos elemento. */
 	private FormateadorFormulario data;
 
+	/** Indica si cuando se carga, estaba bloqueado. **/
+	private boolean estabaBloqueado;
+
 	/**
 	 * Inicialización.
 	 */
@@ -33,8 +40,12 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
 			data = new FormateadorFormulario();
+			estabaBloqueado = false;
+			data.setBloquear(false);
+			data.setPorDefecto(false);
 		} else {
 			data = fmtService.getFormateadorFormulario(new Long(id));
+			estabaBloqueado = data.isBloquear();
 		}
 	}
 
@@ -54,12 +65,19 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 			fmtService.addFormateadorFormulario(idEntidad, data);
 			break;
 		case EDICION:
+			// Comprobamos si cambia a bloqueado
+			if (!estabaBloqueado && data.isBloquear()
+					&& fmtService.tieneRelacionesFormateadorFormulario(data.getCodigo())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.formateadorNoBloqueable"));
+				return;
+			}
+			// Comprobamos si se repite
 			final FormateadorFormulario f = fmtService.getFormateadorFormulario(data.getIdentificador());
 			if (f != null && f.getCodigo().longValue() != data.getCodigo().longValue()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
-			fmtService.updateFormateadorFormulario(data);
+			fmtService.updateFormateadorFormulario(data, idEntidad);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -73,6 +91,22 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Edita la plantilla por defecto.
+	 */
+	public void editarPlantillaPorDefecto() {
+
+		if (id == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					"Primero debes crear el formateador para crear la plantilla");
+			return;
+		}
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), id);
+		UtilJSF.openDialog(DialogPlantillaFormateador.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430,
+				170);
+	}
+
+	/**
 	 * Cancelar.
 	 */
 	public void cancelar() {
@@ -83,9 +117,9 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	}
 
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("formateadorFormularioDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("formateadorFormularioDialog");
+	}
 
 	/**
 	 * Obtiene el valor de id.

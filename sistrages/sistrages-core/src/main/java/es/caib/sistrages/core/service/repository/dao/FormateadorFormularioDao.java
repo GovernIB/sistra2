@@ -3,6 +3,7 @@ package es.caib.sistrages.core.service.repository.dao;
 import java.util.List;
 
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 
 /**
@@ -59,8 +60,10 @@ public interface FormateadorFormularioDao {
 	 *
 	 * @param fmt
 	 *            el formateador de formulario
+	 * @param idEntidad
+	 *            código de la entidad
 	 */
-	void update(FormateadorFormulario fmt);
+	void update(FormateadorFormulario fmt, Long idEntidad);
 
 	/**
 	 * Obtiene la lista Formateadores de Formulario.
@@ -80,7 +83,7 @@ public interface FormateadorFormularioDao {
 	 *            filtro
 	 * @return la lista de Formateadores de Formulario
 	 */
-	List<FormateadorFormulario> getAllByFiltro(Long idEntidad, String filtro);
+	List<FormateadorFormulario> getAllByFiltro(Long idEntidad, String filtro, final Boolean bloqueado);
 
 	/**
 	 * Importa un formateador formulario.
@@ -93,10 +96,44 @@ public interface FormateadorFormularioDao {
 
 	/**
 	 * Comprueba si tiene relaciones el formateador.
-	 * 
+	 *
 	 * @param idFmt
 	 * @return
 	 */
 	boolean tieneRelacionesFormateadorFormulario(Long idFmt);
+
+	/**
+	 * Obtiene la lista de plantilla asociado a un formateador por defecto.
+	 *
+	 * @param idFormateador
+	 * @return
+	 */
+	List<PlantillaFormateador> getListaPlantillasFormateador(Long idFormateador);
+
+	/**
+	 * Sube una plantilla formateador.
+	 *
+	 * @param idPlantillaFormateador
+	 * @param plantillaFormateador
+	 * @return
+	 */
+	PlantillaFormateador uploadPlantillaFormateador(Long idPlantillaFormateador,
+			PlantillaFormateador plantillaFormateador);
+
+	/**
+	 * Obtiene el formateador por defecto de la entidad.
+	 *
+	 * @param idEntidad
+	 * @param codigoDir3
+	 * @return
+	 */
+	public FormateadorFormulario getFormateadorPorDefecto(final Long idEntidad, final String codigoDir3);
+
+	/**
+	 * Borra una plantilla formateador.
+	 * 
+	 * @param codigo
+	 */
+	void removePlantillaFormateador(Long codigo);
 
 }

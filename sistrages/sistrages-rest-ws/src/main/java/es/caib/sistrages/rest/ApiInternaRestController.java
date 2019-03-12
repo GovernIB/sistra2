@@ -14,7 +14,9 @@ import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -121,7 +123,12 @@ public class ApiInternaRestController {
 	public RConfiguracionEntidad obtenerConfiguracionEntidad(@PathVariable("id") final String codigoDIR3) {
 		final Entidad entidad = restApiService.loadEntidad(codigoDIR3);
 		final List<FormularioSoporte> formSoporte = restApiService.listOpcionesFormularioSoporte(entidad.getCodigo());
-		return confEntidadAdapter.convertir(entidad, formSoporte);
+		final FormateadorFormulario formateador = restApiService.getFormateadorPorDefecto(codigoDIR3);
+		List<PlantillaFormateador> plantillas = null;
+		if (formateador != null) {
+			plantillas = restApiService.getPlantillasFormateador(formateador.getCodigo());
+		}
+		return confEntidadAdapter.convertir(entidad, formSoporte, plantillas);
 	}
 
 	/**

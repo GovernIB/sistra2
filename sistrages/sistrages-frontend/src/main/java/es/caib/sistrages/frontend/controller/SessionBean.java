@@ -234,11 +234,17 @@ public class SessionBean {
 	public MenuModel getMenuModel() {
 		final MenuModel model = new DefaultMenuModel();
 		if (!TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
-			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(entidad.getNombre().getTraduccion(this.lang));
+			final String nombreEntidad = (entidad.getNombre().getTraduccion(this.lang).length() < 30
+					? entidad.getNombre().getTraduccion(this.lang)
+					: entidad.getNombre().getTraduccion(this.lang).substring(0, 30));
+			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(nombreEntidad);
 			entidadSubmenu.setIcon("fa-li fa fa-institution");
 			for (final Entidad newEntidad : listaEntidades) {
 				if (!entidad.equals(newEntidad)) {
-					final DefaultMenuItem item3 = new DefaultMenuItem(newEntidad.getNombre().getTraduccion(this.lang));
+					final String nombreSubEntidad = (newEntidad.getNombre().getTraduccion(this.lang).length() < 30
+							? newEntidad.getNombre().getTraduccion(this.lang)
+							: newEntidad.getNombre().getTraduccion(this.lang).substring(0, 30));
+					final DefaultMenuItem item3 = new DefaultMenuItem(nombreSubEntidad);
 					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getCodigo() + ")}");
 					item3.setIcon("fa-li fa fa-institution");
 					entidadSubmenu.addElement(item3);

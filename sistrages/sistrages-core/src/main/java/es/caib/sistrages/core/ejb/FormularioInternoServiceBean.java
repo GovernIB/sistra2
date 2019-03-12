@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
@@ -178,6 +179,20 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 	public boolean isIdElementoFormularioDuplicated(final Long idFormulario, final Long codElemento,
 			final String identificador) {
 		return formIntService.isIdElementoFormularioDuplicated(idFormulario, codElemento, identificador);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public PlantillaFormateador uploadPlantillaFormateador(final Long idEntidad, final Long idPlantillaFormateador,
+			final PlantillaFormateador plantillaFormateador, final byte[] contents) {
+		return formIntService.uploadPlantillaFormateador(idEntidad, idPlantillaFormateador, plantillaFormateador,
+				contents);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void removePlantillaFormateador(final PlantillaFormateador plantillaFormateador) {
+		formIntService.removePlantillaFormateador(plantillaFormateador);
 	}
 
 }

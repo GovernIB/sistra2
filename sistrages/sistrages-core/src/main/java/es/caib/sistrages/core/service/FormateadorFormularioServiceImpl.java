@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
@@ -76,8 +77,8 @@ public class FormateadorFormularioServiceImpl implements FormateadorFormularioSe
 
 	@Override
 	@NegocioInterceptor
-	public void updateFormateadorFormulario(final FormateadorFormulario rol) {
-		fmtDao.update(rol);
+	public void updateFormateadorFormulario(final FormateadorFormulario rol, final Long idEntidad) {
+		fmtDao.update(rol, idEntidad);
 	}
 
 	/*
@@ -88,14 +89,27 @@ public class FormateadorFormularioServiceImpl implements FormateadorFormularioSe
 	 */
 	@Override
 	@NegocioInterceptor
-	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro) {
-		return fmtDao.getAllByFiltro(idEntidad, filtro);
+	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro,
+			final Boolean bloqueado) {
+		return fmtDao.getAllByFiltro(idEntidad, filtro, bloqueado);
 	}
 
 	@Override
 	@NegocioInterceptor
 	public boolean tieneRelacionesFormateadorFormulario(final Long idFmt) {
 		return fmtDao.tieneRelacionesFormateadorFormulario(idFmt);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<PlantillaFormateador> getListaPlantillasFormateador(final Long idFormateador) {
+		return fmtDao.getListaPlantillasFormateador(idFormateador);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public FormateadorFormulario getFormateadorPorDefecto(final Long idEntidad) {
+		return fmtDao.getFormateadorPorDefecto(idEntidad, null);
 	}
 
 }

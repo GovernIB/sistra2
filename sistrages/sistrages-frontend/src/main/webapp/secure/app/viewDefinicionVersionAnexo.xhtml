@@ -145,6 +145,9 @@
 						process="@this" update="growl">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionAnexo" />
 					</p:commandButton>
+           			<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
+						actionListener="#{viewDefinicionVersion.ayudaAnexo()}"
+						process="@this" update="growl" iconPos="top"/>
 				</p:outputPanel>
 			</f:facet>
 

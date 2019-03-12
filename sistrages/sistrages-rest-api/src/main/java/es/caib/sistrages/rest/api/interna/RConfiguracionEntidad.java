@@ -108,6 +108,10 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "logo Gestor")
 	private String logoGestor;
 
+	/** Plantillas por defecto para visualización formularios. */
+	@ApiModelProperty(value = "Plantillas")
+	private List<RPlantillaIdioma> plantillasDefecto;
+
 	/**
 	 * Método de acceso a logo.
 	 *
@@ -455,6 +459,25 @@ public class RConfiguracionEntidad {
 
 	public void setLogoGestor(String logoGestor) {
 		this.logoGestor = logoGestor;
+	}
+
+	/**
+	 * Método de acceso a plantillasDefecto.
+	 * 
+	 * @return plantillasDefecto
+	 */
+	public List<RPlantillaIdioma> getPlantillasDefecto() {
+		return plantillasDefecto;
+	}
+
+	/**
+	 * Método para establecer plantillasDefecto.
+	 * 
+	 * @param plantillasDefecto
+	 *            plantillasDefecto a establecer
+	 */
+	public void setPlantillasDefecto(List<RPlantillaIdioma> plantillasDefecto) {
+		this.plantillasDefecto = plantillasDefecto;
 	}
 
 }

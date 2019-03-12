@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
+import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
+import es.caib.sistrages.rest.api.interna.RPlantillaIdioma;
 import es.caib.sistrages.rest.utils.AdapterUtils;
 
 /**
@@ -33,7 +36,8 @@ public class ConfiguracionEntidadAdapter {
 	 * @param idEntidad
 	 * @param formSoporte
 	 */
-	public RConfiguracionEntidad convertir(final Entidad idEntidad, final List<FormularioSoporte> formSoporte) {
+	public RConfiguracionEntidad convertir(final Entidad idEntidad, final List<FormularioSoporte> formSoporte,
+			final List<PlantillaFormateador> plantillas) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
@@ -65,6 +69,26 @@ public class ConfiguracionEntidadAdapter {
 		rConfiguracionEntidad.setUrlTwitter(idEntidad.getUrlTwitter());
 		rConfiguracionEntidad.setUrlYoutube(idEntidad.getUrlYoutube());
 
+		if (plantillas != null && !plantillas.isEmpty()) {
+			final List<RPlantillaIdioma> plantillasDefecto = new ArrayList<>();
+			for (final PlantillaFormateador plantilla : plantillas) {
+				final RPlantillaIdioma rplantilla = new RPlantillaIdioma();
+				rplantilla.setIdioma(plantilla.getIdioma());
+
+				final RPlantillaFormulario plantillaFormulario = new RPlantillaFormulario();
+				plantillaFormulario.setClaseFormateador(plantilla.getFormateador().getClassname());
+				plantillaFormulario.setDefecto(true);
+				if (plantilla.getFichero() != null) {
+					plantillaFormulario.setFicheroPlantilla(
+							restApiService.getReferenciaFichero(plantilla.getFichero().getCodigo()));
+				}
+				plantillaFormulario.setIdentificador(plantilla.getFormateador().getIdentificador());
+				rplantilla.setPlantilla(plantillaFormulario);
+
+				plantillasDefecto.add(rplantilla);
+			}
+			rConfiguracionEntidad.setPlantillasDefecto(plantillasDefecto);
+		}
 		return rConfiguracionEntidad;
 	}
 

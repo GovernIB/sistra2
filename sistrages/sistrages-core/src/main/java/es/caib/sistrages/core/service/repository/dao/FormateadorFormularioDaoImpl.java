@@ -13,9 +13,13 @@ import org.springframework.stereotype.Repository;
 import es.caib.sistrages.core.api.exception.FaltanDatosException;
 import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.comun.FilaImportarFormateador;
 import es.caib.sistrages.core.service.repository.model.JEntidad;
+import es.caib.sistrages.core.service.repository.model.JFichero;
 import es.caib.sistrages.core.service.repository.model.JFormateadorFormulario;
+import es.caib.sistrages.core.service.repository.model.JIdioma;
+import es.caib.sistrages.core.service.repository.model.JPlantillaFormateador;
 
 /**
  * La clase FormateadorFormularioDaoImpl.
@@ -94,10 +98,36 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 			throw new NoExisteDato("No existe entidad con id " + idEntidad);
 		}
 
+		if (fmt.isPorDefecto()) {
+			quitarPorDefecto(idEntidad, null);
+		}
+
 		final JFormateadorFormulario jFmt = JFormateadorFormulario.fromModel(fmt);
 		jFmt.setEntidad(jEntidad);
 
 		entityManager.persist(jFmt);
+	}
+
+	/**
+	 * Método que se encarga de quitar el formateador por defecto porque se va a
+	 * añadir otro distinto.
+	 *
+	 * @param idEntidad
+	 */
+	private void quitarPorDefecto(final Long idEntidad, final Long idFmt) {
+		final StringBuilder sql = new StringBuilder();
+		sql.append(
+				"UPDATE JFormateadorFormulario FORM SET FORM.porDefecto = 0 WHERE FORM.porDefecto = 1 AND FORM.entidad.codigo = :idEntidad");
+		if (idFmt != null) {
+			sql.append(" and FORM.codigo != :idFmt");
+		}
+		final Query query = entityManager.createQuery(sql.toString());
+		query.setParameter("idEntidad", idEntidad);
+		if (idFmt != null) {
+			query.setParameter("idFmt", idFmt);
+		}
+		query.executeUpdate();
+		entityManager.flush();
 	}
 
 	/*
@@ -129,9 +159,13 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * (es.caib.sistrages.core.api.model.FormateadorFormulario)
 	 */
 	@Override
-	public void update(final FormateadorFormulario fmt) {
+	public void update(final FormateadorFormulario fmt, final Long idEntidad) {
 		if (fmt == null) {
 			throw new FaltanDatosException("Falta el formateador de formulario");
+		}
+
+		if (fmt.isPorDefecto()) {
+			quitarPorDefecto(idEntidad, fmt.getCodigo());
 		}
 
 		final JFormateadorFormulario jFmt = entityManager.find(JFormateadorFormulario.class, fmt.getCodigo());
@@ -155,8 +189,9 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * getAllByFiltro(java.lang.String)
 	 */
 	@Override
-	public List<FormateadorFormulario> getAllByFiltro(final Long idEntidad, final String filtro) {
-		return listarFmt(idEntidad, filtro);
+	public List<FormateadorFormulario> getAllByFiltro(final Long idEntidad, final String filtro,
+			final Boolean bloqueado) {
+		return listarFmt(idEntidad, filtro, bloqueado);
 	}
 
 	/*
@@ -168,7 +203,7 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 */
 	@Override
 	public List<FormateadorFormulario> getAll(final Long idEntidad) {
-		return listarFmt(idEntidad, null);
+		return listarFmt(idEntidad, null, null);
 	}
 
 	/**
@@ -179,12 +214,15 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 	 * @return Listado de formateadores de Formulario
 	 */
 	@SuppressWarnings("unchecked")
-	private List<FormateadorFormulario> listarFmt(final long idEntidad, final String filtro) {
+	private List<FormateadorFormulario> listarFmt(final long idEntidad, final String filtro, final Boolean bloqueado) {
 		final List<FormateadorFormulario> listaFmt = new ArrayList<>();
 		String sql = "select f from JFormateadorFormulario f where f.entidad.codigo = :idEntidad";
 
 		if (StringUtils.isNotBlank(filtro)) {
 			sql += " AND (LOWER(f.identificador) LIKE :filtro OR LOWER(f.descripcion) LIKE :filtro OR LOWER(f.classname) LIKE :filtro)";
+		}
+		if (bloqueado != null) {
+			sql += " AND f.bloquear = :bloquear";
 		}
 		sql += " order by f.classname";
 
@@ -193,6 +231,9 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 		query.setParameter("idEntidad", idEntidad);
 		if (StringUtils.isNotBlank(filtro)) {
 			query.setParameter("filtro", "%".concat(filtro.toLowerCase()).concat("%"));
+		}
+		if (bloqueado != null) {
+			query.setParameter("bloquear", bloqueado);
 		}
 
 		final List<JFormateadorFormulario> results = query.getResultList();
@@ -246,4 +287,90 @@ public class FormateadorFormularioDaoImpl implements FormateadorFormularioDao {
 
 	}
 
+	@Override
+	public List<PlantillaFormateador> getListaPlantillasFormateador(final Long idFormateador) {
+		final List<PlantillaFormateador> listaPlantillas = new ArrayList<>();
+		final String sql = "select f from JPlantillaFormateador f where f.formateador.codigo = :idFormateador ";
+
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idFormateador", idFormateador);
+
+		final List<JPlantillaFormateador> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			for (final JPlantillaFormateador jPlantilla : results) {
+				listaPlantillas.add(jPlantilla.toModel());
+			}
+		}
+		return listaPlantillas;
+	}
+
+	@Override
+	public PlantillaFormateador uploadPlantillaFormateador(final Long idPlantillaFormateador,
+			final PlantillaFormateador plantillaFormateador) {
+		JPlantillaFormateador jPlantillaFormateador;
+		if (plantillaFormateador.getCodigo() != null) {
+			jPlantillaFormateador = entityManager.find(JPlantillaFormateador.class, plantillaFormateador.getCodigo());
+			if (jPlantillaFormateador.getFichero() != null) {
+				jPlantillaFormateador.getFichero().setNombre(plantillaFormateador.getFichero().getNombre());
+				jPlantillaFormateador.getFichero().setPublico(plantillaFormateador.getFichero().isPublico());
+			} else {
+				jPlantillaFormateador.setFichero(JFichero.fromModel(plantillaFormateador.getFichero()));
+			}
+			entityManager.merge(jPlantillaFormateador);
+		} else {
+			jPlantillaFormateador = JPlantillaFormateador.fromModel(plantillaFormateador);
+			jPlantillaFormateador
+					.setFormateador(entityManager.find(JFormateadorFormulario.class, idPlantillaFormateador));
+
+			jPlantillaFormateador.setIdioma(entityManager.find(JIdioma.class, plantillaFormateador.getIdioma()));
+			entityManager.persist(jPlantillaFormateador);
+		}
+		return jPlantillaFormateador.toModel();
+	}
+
+	@Override
+	public FormateadorFormulario getFormateadorPorDefecto(final Long idEntidad, final String codigoDir3) {
+		FormateadorFormulario formateador = null;
+		final StringBuilder sql = new StringBuilder();
+
+		sql.append("select f from JFormateadorFormulario f where ");
+
+		if (idEntidad != null) {
+			sql.append(" f.entidad.codigo = :idEntidad and ");
+		}
+		if (codigoDir3 != null && !codigoDir3.isEmpty()) {
+			sql.append(" f.entidad.codigoDir3 = :codigoDir3 and ");
+		}
+
+		sql.append(" f.porDefecto = true ");
+
+		final Query query = entityManager.createQuery(sql.toString());
+
+		if (idEntidad != null) {
+			query.setParameter("idEntidad", idEntidad);
+		}
+		if (codigoDir3 != null) {
+			query.setParameter("codigoDir3", codigoDir3);
+		}
+
+		final List<JFormateadorFormulario> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			formateador = results.get(0).toModel();
+		}
+
+		return formateador;
+	}
+
+	@Override
+	public void removePlantillaFormateador(final Long idPlantillaFormateador) {
+		final JPlantillaFormateador jPlantillaFormateador = entityManager.find(JPlantillaFormateador.class,
+				idPlantillaFormateador);
+		if (jPlantillaFormateador == null) {
+			throw new NoExisteDato("No existe plantilla formateador " + idPlantillaFormateador);
+		}
+
+		entityManager.remove(jPlantillaFormateador);
+
+	}
 }

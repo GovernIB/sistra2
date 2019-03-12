@@ -141,7 +141,8 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (getPermiteEditar()) {
 			modoAccesoDlg = TypeModoAcceso.EDICION;
 		}
-		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, pLiteral, null, null);
+		UtilTraducciones.openDialogTraduccion(modoAccesoDlg, pLiteral, UtilJSF.getSessionBean().getIdiomas(),
+				UtilJSF.getSessionBean().getIdiomas(), true);
 	}
 
 	/**

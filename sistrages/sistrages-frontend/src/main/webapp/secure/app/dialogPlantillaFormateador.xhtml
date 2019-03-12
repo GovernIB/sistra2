@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogPlantillaFormateador.titulo']}"/></title>
+</h:head>
+
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" 	value="#{dialogPlantillaFormateador.modoAcceso}"/>
+		<f:viewParam name="ID" 	value="#{dialogPlantillaFormateador.codPlantilla}"/>
+		<f:viewAction action="#{dialogPlantillaFormateador.init}" />
+	</f:metadata>
+
+	<h:form id="formDialogPlantillaIdiomaFormulario" styleClass="margin-top-10" >
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialogPlantillaIdiomaFormulario" widgetVar="growlDialogPlantillaIdiomaFormulario" life="2000" sticky="false" />
+
+				<h:dataTable value="#{dialogPlantillaFormateador.listaPlantillaFormateador}" var="plantilla" rowClasses=",ui-datatable-odd" columnClasses="w25 padding-left-18,w75" styleClass="w100" cellpadding="5">
+					<h:column>
+						<p:outputLabel value="#{msg[plantilla.idioma]}" for="idioma"/>
+					</h:column>
+					<h:column>
+						<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty plantilla.fichero}"/>
+						<p:commandLink process="@this" actionListener="#{dialogPlantillaFormateador.descargaFichero(plantilla.fichero)}" target="_blank" value="#{plantilla.fichero.nombre}" rendered="#{!empty plantilla.fichero}"/>
+						<p:spacer width="20" height="1"/>
+		           		<p:commandButton icon="fa fa-cog" process="@this" actionListener="#{dialogPlantillaFormateador.gestionFichero(plantilla)}" rendered="#{dialogPlantillaFormateador.alta or dialogPlantillaFormateador.edicion}">
+							<p:ajax event="dialogReturn" listener="#{dialogPlantillaFormateador.returnDialogoFichero}" update="@form"/>
+		           		</p:commandButton>
+						<h:inputHidden id="idioma" required="#{dialogPlantillaFormateador.requerido(plantilla.idioma)}" value="#{plantilla.fichero}" converter="#{ficheroConverter}"/>
+					</h:column>
+				</h:dataTable>
+			</p:outputPanel>
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaFormateador.aceptar}" process="@form" update="@form growlDialogPlantillaIdiomaFormulario" rendered="#{dialogPlantillaFormateador.alta or dialogPlantillaFormateador.edicion}"/>
+		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlantillaFormateador.cancelar}" process="@this" rendered="#{dialogPlantillaFormateador.consulta}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

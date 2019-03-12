@@ -11,13 +11,19 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.AvisoEntidad;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
+import es.caib.sistrages.core.api.service.EntidadService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.ResultadoError;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilRest;
 
 /**
  * Mantenimiento de mensajes de aviso entidad.
@@ -32,24 +38,22 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	@Inject
 	private AvisoEntidadService avisoEntidadService;
 
-	/**
-	 * Id entidad.
-	 */
+	@Inject
+	private EntidadService entidadService;
+
+	@Inject
+	private SystemService systemService;
+
+	/** Id entidad. */
 	private Long idEntidad;
 
-	/**
-	 * Filtro (puede venir por parametro).
-	 */
+	/** Filtro (puede venir por parametro). */
 	private String filtro;
 
-	/**
-	 * Lista de datos.
-	 */
+	/** Lista de datos. */
 	private List<AvisoEntidad> listaDatos;
 
-	/**
-	 * Dato seleccionado en la lista.
-	 */
+	/** Dato seleccionado en la lista. */
 	private AvisoEntidad datoSeleccionado;
 
 	/**
@@ -129,7 +133,18 @@ public class ViewMensajesAvisoEntidad extends ViewControllerBase {
 	 * Refrescar cache.
 	 */
 	public void refrescarCache() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		final String urlBase = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_URL);
+		final String usuario = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_USER);
+		final String pwd = systemService.obtenerPropiedadConfiguracion(Constantes.SISTRAMIT_REST_PWD);
+
+		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "E", entidad.getCodigoDIR3());
+		if (resultado.getCodigo() == 1) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
+		}
 	}
 
 	/**

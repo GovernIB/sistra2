@@ -53,16 +53,16 @@ public class UtilImportacion {
 				fila.setResultadoJndi(fila.getDominio().getJndi());
 				fila.setResultadoSQL(fila.getDominio().getSql());
 				fila.setResultadoSQLdecoded(fila.getDominio().getSqlDecoded());
-				fila.setAltura(400);
+				fila.setAltura(350);
 				break;
 			case CONSULTA_REMOTA:
 				fila.setResultadoURL(fila.getDominio().getUrl());
-				fila.setAltura(300);
+				fila.setAltura(200);
 				break;
 			case FUENTE_DATOS:
 				fila.setResultadoSQL(fila.getDominio().getSql());
 				fila.setResultadoSQLdecoded(fila.getDominio().getSqlDecoded());
-				fila.setAltura(400);
+				fila.setAltura(370);
 				break;
 			case LISTA_FIJA:
 				fila.setResultadoLista(UtilJSON.toJSON(fila.getDominio().getListaFija()));
@@ -212,7 +212,7 @@ public class UtilImportacion {
 
 			fila.setAccion(TypeImportarAccion.REVISADO);
 			fila.setEstado(TypeImportarEstado.EXISTE);
-			fila.setResultado(TypeImportarResultado.INFO);
+			fila.setResultado(TypeImportarResultado.OK);
 			fila.setVisibleBoton(false);
 			fila.setMismoTipo(false);
 			fila.setMensaje("importar.ok.soloactualizacion");

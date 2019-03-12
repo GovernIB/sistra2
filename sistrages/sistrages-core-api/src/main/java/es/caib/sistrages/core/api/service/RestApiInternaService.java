@@ -11,6 +11,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
@@ -76,4 +77,7 @@ public interface RestApiInternaService {
 
 	List<String> getIdentificadoresDominiosByTV(final Long idTramiteVersion);
 
+	FormateadorFormulario getFormateadorPorDefecto(String codigoDir3);
+
+	List<PlantillaFormateador> getPlantillasFormateador(final Long idFormateador);
 }

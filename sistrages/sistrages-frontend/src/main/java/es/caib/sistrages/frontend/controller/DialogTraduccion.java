@@ -65,6 +65,12 @@ public class DialogTraduccion extends DialogControllerBase {
 	 **/
 	private List<String> idiomasPosibles;
 
+	/** Variable que indica si se puede borrar. **/
+	private String opcional;
+
+	/** Booleano que indica si el botón de borrar puede aparecer. **/
+	private boolean borrable;
+
 	/**
 	 * Inicializacion.
 	 *
@@ -93,6 +99,11 @@ public class DialogTraduccion extends DialogControllerBase {
 
 		inicializarTextosPermisos();
 
+		if ((isAlta() || isEdicion()) && opcional != null && "S".equals(opcional)) {
+			borrable = true;
+		} else {
+			borrable = false;
+		}
 	}
 
 	/**
@@ -178,6 +189,19 @@ public class DialogTraduccion extends DialogControllerBase {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data);
+		UtilJSF.closeDialog(result);
+
+	}
+
+	/**
+	 * Borrar.
+	 */
+	public void borrar() {
+
+		// Retornamos resultado
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setResult(null);
 		UtilJSF.closeDialog(result);
 
 	}
@@ -416,6 +440,36 @@ public class DialogTraduccion extends DialogControllerBase {
 	public void setiIdiomasPosibles(final String iIdiomasPosibles) {
 		this.iIdiomasPosibles = iIdiomasPosibles;
 
+	}
+
+	/**
+	 * @return the borrable
+	 */
+	public boolean isBorrable() {
+		return borrable;
+	}
+
+	/**
+	 * @param borrable
+	 *            the borrable to set
+	 */
+	public void setBorrable(final boolean borrable) {
+		this.borrable = borrable;
+	}
+
+	/**
+	 * @return the opcional
+	 */
+	public final String getOpcional() {
+		return opcional;
+	}
+
+	/**
+	 * @param opcional
+	 *            the opcional to set
+	 */
+	public final void setOpcional(final String opcional) {
+		this.opcional = opcional;
 	}
 
 }

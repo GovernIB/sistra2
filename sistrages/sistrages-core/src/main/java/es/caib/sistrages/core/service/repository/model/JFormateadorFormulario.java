@@ -41,6 +41,12 @@ public class JFormateadorFormulario implements IModelApi {
 	@JoinColumn(name = "FMT_CODENT", nullable = false)
 	private JEntidad entidad;
 
+	@Column(name = "FMT_DEFECT", nullable = false, precision = 1, scale = 0)
+	private boolean porDefecto;
+
+	@Column(name = "FMT_BLOCK", nullable = false, precision = 1, scale = 0)
+	private boolean bloquear;
+
 	public JEntidad getEntidad() {
 		return entidad;
 	}
@@ -84,15 +90,58 @@ public class JFormateadorFormulario implements IModelApi {
 		this.identificador = identificador;
 	}
 
+	/**
+	 * @return the porDefecto
+	 */
+	public final boolean isPorDefecto() {
+		return porDefecto;
+	}
+
+	/**
+	 * @param porDefecto
+	 *            the porDefecto to set
+	 */
+	public final void setPorDefecto(final boolean porDefecto) {
+		this.porDefecto = porDefecto;
+	}
+
+	/**
+	 * @return the bloquear
+	 */
+	public final boolean isBloquear() {
+		return bloquear;
+	}
+
+	/**
+	 * @param bloquear
+	 *            the bloquear to set
+	 */
+	public final void setBloquear(final boolean bloquear) {
+		this.bloquear = bloquear;
+	}
+
+	/**
+	 * ToModel.
+	 *
+	 * @return FormateadorFormulario
+	 */
 	public FormateadorFormulario toModel() {
 		final FormateadorFormulario fmt = new FormateadorFormulario();
 		fmt.setCodigo(codigo);
 		fmt.setIdentificador(identificador);
 		fmt.setClassname(classname);
 		fmt.setDescripcion(descripcion);
+		fmt.setPorDefecto(porDefecto);
+		fmt.setBloquear(bloquear);
 		return fmt;
 	}
 
+	/**
+	 * FromModel
+	 *
+	 * @param model
+	 * @return JFormateadorFormulario
+	 */
 	public static JFormateadorFormulario fromModel(final FormateadorFormulario model) {
 		JFormateadorFormulario jModel = null;
 		if (model != null) {
@@ -101,6 +150,8 @@ public class JFormateadorFormulario implements IModelApi {
 			jModel.setIdentificador(model.getIdentificador());
 			jModel.setClassname(model.getClassname());
 			jModel.setDescripcion(model.getDescripcion());
+			jModel.setPorDefecto(model.isPorDefecto());
+			jModel.setBloquear(model.isBloquear());
 		}
 		return jModel;
 	}

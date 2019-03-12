@@ -15,6 +15,7 @@ import es.caib.sistrages.core.api.exception.FuenteDatosPkException;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.service.DominioService;
@@ -104,7 +105,11 @@ public class DialogFichero extends DialogControllerBase {
 
 	private PlantillaIdiomaFormulario plantillaIdiomaFormulario;
 
+	private PlantillaFormateador plantillaFormateador;
+
 	private Long idPlantillaFormulario;
+
+	private Long idPlantillaFormateador;
 
 	/**
 	 * Inicialización.
@@ -144,6 +149,15 @@ public class DialogFichero extends DialogControllerBase {
 						.get(Constantes.CLAVE_MOCHILA_PLTIDIOMAFORM);
 			}
 			idPlantillaFormulario = Long.valueOf(id);
+			mostrarQuitar = true;
+			break;
+		case PLANTILLA_FORMATEADOR:
+			final Map<String, Object> mochilaDatos2 = UtilJSF.getSessionBean().getMochilaDatos();
+			if (!mochilaDatos2.isEmpty()) {
+				plantillaFormateador = (PlantillaFormateador) mochilaDatos2
+						.get(Constantes.CLAVE_MOCHILA_PLANTILLA_FORMATEADOR);
+			}
+			idPlantillaFormateador = Long.valueOf(id);
 			mostrarQuitar = true;
 			break;
 		default:
@@ -227,7 +241,8 @@ public class DialogFichero extends DialogControllerBase {
 				}
 				fichero.setNombre(file.getFileName());
 
-				tramiteService.uploadDocAnexo(documento.getCodigo(), fichero, file.getContents(), Long.valueOf(idEntidad));
+				tramiteService.uploadDocAnexo(documento.getCodigo(), fichero, file.getContents(),
+						Long.valueOf(idEntidad));
 				break;
 			case PLANTILLA_IDIOMA_FORM:
 				fichero = plantillaIdiomaFormulario.getFichero();
@@ -241,6 +256,18 @@ public class DialogFichero extends DialogControllerBase {
 				plantillaIdiomaFormulario = formIntService.uploadPlantillaIdiomaFormulario(UtilJSF.getIdEntidad(),
 						idPlantillaFormulario, plantillaIdiomaFormulario, file.getContents());
 				break;
+			case PLANTILLA_FORMATEADOR:
+				fichero = plantillaFormateador.getFichero();
+				if (fichero == null) {
+					fichero = new Fichero();
+					fichero.setPublico(true);
+					plantillaFormateador.setFichero(fichero);
+				}
+				fichero.setNombre(file.getFileName());
+
+				plantillaFormateador = formIntService.uploadPlantillaFormateador(UtilJSF.getIdEntidad(),
+						idPlantillaFormateador, plantillaFormateador, file.getContents());
+				break;
 			default:
 				break;
 			}
@@ -249,7 +276,8 @@ public class DialogFichero extends DialogControllerBase {
 				this.cerrarCsv();
 			} else if (tipoCampoFichero == TypeCampoFichero.TRAMITE_DOC) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
-			} else if (tipoCampoFichero == TypeCampoFichero.PLANTILLA_IDIOMA_FORM) {
+			} else if (tipoCampoFichero == TypeCampoFichero.PLANTILLA_IDIOMA_FORM
+					|| tipoCampoFichero == TypeCampoFichero.PLANTILLA_FORMATEADOR) {
 				comprobarFichero();
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
 			} else {
@@ -289,6 +317,11 @@ public class DialogFichero extends DialogControllerBase {
 		case PLANTILLA_IDIOMA_FORM:
 			formIntService.removePlantillaIdiomaFormulario(plantillaIdiomaFormulario);
 			plantillaIdiomaFormulario = null;
+			break;
+		case PLANTILLA_FORMATEADOR:
+			formIntService.removePlantillaFormateador(plantillaFormateador);
+			plantillaFormateador = null;
+			this.cerrar();
 			break;
 		default:
 			break;
@@ -331,6 +364,14 @@ public class DialogFichero extends DialogControllerBase {
 			existeFichero = plantillaIdiomaFormulario != null && plantillaIdiomaFormulario.getFichero() != null;
 			if (existeFichero) {
 				nombreFichero = plantillaIdiomaFormulario.getFichero().getNombre();
+			} else {
+				nombreFichero = null;
+			}
+			break;
+		case PLANTILLA_FORMATEADOR:
+			existeFichero = plantillaFormateador != null && plantillaFormateador.getFichero() != null;
+			if (existeFichero) {
+				nombreFichero = plantillaFormateador.getFichero().getNombre();
 			} else {
 				nombreFichero = null;
 			}

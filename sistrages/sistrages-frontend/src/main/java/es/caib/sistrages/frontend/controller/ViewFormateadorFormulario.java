@@ -189,7 +189,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 	 */
 	private void buscar() {
 		// Filtra
-		listaDatos = fmtService.listFormateadorFormulario(idEntidad, filtro);
+		listaDatos = fmtService.listFormateadorFormulario(idEntidad, filtro, null);
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -221,7 +221,7 @@ public class ViewFormateadorFormulario extends ViewControllerBase {
 		if (modo != TypeModoAcceso.ALTA) {
 			params.put(TypeParametroVentana.ID.toString(), this.datoSeleccionado.getCodigo().toString());
 		}
-		UtilJSF.openDialog(DialogFormateadorFormulario.class, modo, params, true, 640, 180);
+		UtilJSF.openDialog(DialogFormateadorFormulario.class, modo, params, true, 640, 230);
 	}
 
 	// ------- GETTERS / SETTERS --------------------------------

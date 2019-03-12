@@ -610,7 +610,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private String escribeObligatorio(final ComponenteFormularioCampo comp, final boolean pModoEdicion) {
-		String res = null;
+		String res = "";
 		if (comp.isObligatorio() && pModoEdicion) {
 			res = "data-obligatori=\"s\"";
 		}
@@ -618,16 +618,13 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	}
 
 	private String escribeCodigo(final String pCodigo, final String pOrden, final boolean pModoEdicion) {
-		String id = null;
-
+		String id = "";
 		if (pModoEdicion) {
 			if (pOrden == null) {
 				id = " data-codigo=\"" + pCodigo + "\"";
 			} else {
 				id = " data-codigo=\"" + pCodigo + "." + pOrden + "\"";
 			}
-		} else {
-			id = "";
 		}
 		return id;
 	}

@@ -9,25 +9,23 @@ public class FormateadorFormulario extends ModelApi {
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * codigo.
-	 */
+	/** Codigo. */
 	private Long codigo;
 
-	/**
-	 * identificador.
-	 */
+	/** Identificador. */
 	private String identificador;
 
-	/**
-	 * classname.
-	 */
+	/** Classname. */
 	private String classname;
 
-	/**
-	 * descripcion.
-	 */
+	/** Descripcion. */
 	private String descripcion;
+
+	/** Bloquear. **/
+	private boolean porDefecto;
+
+	/** Bloquear. **/
+	private boolean bloquear;
 
 	/**
 	 * Crea una nueva instancia de FormateadorFormulario.
@@ -121,6 +119,36 @@ public class FormateadorFormulario extends ModelApi {
 	 */
 	public void setIdentificador(final String codigo) {
 		this.identificador = codigo;
+	}
+
+	/**
+	 * @return the bloquear
+	 */
+	public boolean isBloquear() {
+		return bloquear;
+	}
+
+	/**
+	 * @param bloquear
+	 *            the bloquear to set
+	 */
+	public void setBloquear(final boolean bloquear) {
+		this.bloquear = bloquear;
+	}
+
+	/**
+	 * @return the porDefecto
+	 */
+	public boolean isPorDefecto() {
+		return porDefecto;
+	}
+
+	/**
+	 * @param porDefecto
+	 *            the porDefecto to set
+	 */
+	public void setPorDefecto(final boolean porDefecto) {
+		this.porDefecto = porDefecto;
 	}
 
 }

@@ -20,6 +20,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
@@ -190,6 +191,18 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public List<String> getIdentificadoresDominiosByTV(final Long idTramiteVersion) {
 		return restApiService.getIdentificadoresDominiosByTV(idTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public FormateadorFormulario getFormateadorPorDefecto(final String codigoDir3) {
+		return restApiService.getFormateadorPorDefecto(codigoDir3);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<PlantillaFormateador> getPlantillasFormateador(final Long idFormateador) {
+		return restApiService.getPlantillasFormateador(idFormateador);
 	}
 
 }

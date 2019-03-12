@@ -6,6 +6,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
@@ -166,12 +167,35 @@ public interface FormularioInternoService {
 			PlantillaIdiomaFormulario plantilla, byte[] contents);
 
 	/**
+	 * Actualiza la plantilla formateador.
+	 *
+	 * @param idEntidad
+	 *            identificador de la entidad
+	 * @param idPlantillaFormateador
+	 *            identificador de la plantilla
+	 * @param plantillaFormateador
+	 *            plantilla idioma
+	 * @param contents
+	 *            contenido del fichero de la plantilla para el idioma
+	 * @return the plantilla idioma formulario
+	 */
+	PlantillaFormateador uploadPlantillaFormateador(Long idEntidad, Long idPlantillaFormateador,
+			PlantillaFormateador plantillaFormateador, byte[] contents);
+
+	/**
 	 * Elimina la plantilla idioma del formulario.
 	 *
 	 * @param plantillaIdiomaFormulario
 	 *            plantilla idioma del formulario
 	 */
 	void removePlantillaIdiomaFormulario(PlantillaIdiomaFormulario plantillaIdiomaFormulario);
+
+	/**
+	 * Elimina plantilla formateador
+	 *
+	 * @param plantillaFormateador
+	 */
+	void removePlantillaFormateador(PlantillaFormateador plantillaFormateador);
 
 	/**
 	 * Genera HTML para la página de formulario para el diseñador.

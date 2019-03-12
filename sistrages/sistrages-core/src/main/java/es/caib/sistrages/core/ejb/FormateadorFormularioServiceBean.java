@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 
@@ -83,9 +84,8 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	 */
 	@Override
 	@RolesAllowed(ConstantesRolesAcceso.ADMIN_ENT)
-	public void updateFormateadorFormulario(final FormateadorFormulario fmt) {
-		fmtService.updateFormateadorFormulario(fmt);
-
+	public void updateFormateadorFormulario(final FormateadorFormulario fmt, final Long idEntidad) {
+		fmtService.updateFormateadorFormulario(fmt, idEntidad);
 	}
 
 	/*
@@ -96,14 +96,27 @@ public class FormateadorFormularioServiceBean implements FormateadorFormularioSe
 	 */
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro) {
-		return fmtService.listFormateadorFormulario(idEntidad, filtro);
+	public List<FormateadorFormulario> listFormateadorFormulario(final Long idEntidad, final String filtro,
+			final Boolean bloqueado) {
+		return fmtService.listFormateadorFormulario(idEntidad, filtro, bloqueado);
 	}
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public boolean tieneRelacionesFormateadorFormulario(final Long idFmt) {
 		return fmtService.tieneRelacionesFormateadorFormulario(idFmt);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<PlantillaFormateador> getListaPlantillasFormateador(final Long idFormateador) {
+		return fmtService.getListaPlantillasFormateador(idFormateador);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public FormateadorFormulario getFormateadorPorDefecto(final Long idEntidad) {
+		return fmtService.getFormateadorPorDefecto(idEntidad);
 	}
 
 }

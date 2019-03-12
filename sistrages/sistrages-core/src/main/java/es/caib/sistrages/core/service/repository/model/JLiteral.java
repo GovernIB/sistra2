@@ -150,7 +150,9 @@ public class JLiteral implements IModelApi {
 	 */
 	public static JLiteral mergeModel(final JLiteral jLiteral, final Literal mLiteral) {
 		JLiteral jModel = null;
-		if (jLiteral == null) {
+		if (mLiteral == null) {
+			jModel = null;
+		} else if (jLiteral == null) {
 			jModel = JLiteral.fromModel(mLiteral);
 		} else {
 			// Borrar idiomas no pasados en modelo

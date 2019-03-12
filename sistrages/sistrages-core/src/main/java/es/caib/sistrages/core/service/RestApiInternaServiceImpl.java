@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
 import es.caib.sistrages.core.api.model.Rol;
@@ -123,6 +124,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	@Autowired
 	FormRenderComponent formRenderComponent;
+
+	/** DAO Formateador Formulario DAO. */
+	@Autowired
+	FormateadorFormularioDao formateadorFormularioDAO;
 
 	@Override
 	@NegocioInterceptor
@@ -290,6 +295,18 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@NegocioInterceptor
 	public List<Rol> obtenerPermisosHelpdesk() {
 		return rolDao.getAllByHelpDesk();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public FormateadorFormulario getFormateadorPorDefecto(final String codigoDir3) {
+		return formateadorFormularioDAO.getFormateadorPorDefecto(null, codigoDir3);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<PlantillaFormateador> getPlantillasFormateador(final Long idFormateador) {
+		return formateadorFormularioDAO.getListaPlantillasFormateador(idFormateador);
 	}
 
 }

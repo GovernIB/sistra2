@@ -12,6 +12,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormulario;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
@@ -19,6 +20,7 @@ import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.FormRenderComponent;
 import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
+import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 
 @Service
@@ -29,6 +31,9 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	 * Constante LOG.
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(FormularioInternoServiceImpl.class);
+
+	@Autowired
+	FormateadorFormularioDao formateadorFormularioDao;
 
 	@Autowired
 	FormularioInternoDao formIntDao;
@@ -176,6 +181,17 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 
 	@Override
 	@NegocioInterceptor
+	public PlantillaFormateador uploadPlantillaFormateador(final Long idEntidad, final Long idPlantillaFormateador,
+			final PlantillaFormateador plantillaFormateador, final byte[] contents) {
+		final PlantillaFormateador newPlantilla = formateadorFormularioDao
+				.uploadPlantillaFormateador(idPlantillaFormateador, plantillaFormateador);
+		ficheroExternoDao.guardarFichero(idEntidad, newPlantilla.getFichero(), contents);
+
+		return newPlantilla;
+	}
+
+	@Override
+	@NegocioInterceptor
 	public void removePlantillaIdiomaFormulario(final PlantillaIdiomaFormulario plantillaIdiomaFormulario) {
 		if (plantillaIdiomaFormulario != null && plantillaIdiomaFormulario.getFichero() != null) {
 			ficheroExternoDao.marcarBorrar(plantillaIdiomaFormulario.getFichero().getCodigo());
@@ -219,6 +235,16 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 	public boolean isIdElementoFormularioDuplicated(final Long idFormulario, final Long codElemento,
 			final String identificador) {
 		return formIntDao.isIdElementoFormularioDuplicated(idFormulario, codElemento, identificador);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removePlantillaFormateador(final PlantillaFormateador plantillaFormateador) {
+		if (plantillaFormateador != null && plantillaFormateador.getFichero() != null) {
+			ficheroExternoDao.marcarBorrar(plantillaFormateador.getFichero().getCodigo());
+			formateadorFormularioDao.removePlantillaFormateador(plantillaFormateador.getCodigo());
+		}
+
 	}
 
 }

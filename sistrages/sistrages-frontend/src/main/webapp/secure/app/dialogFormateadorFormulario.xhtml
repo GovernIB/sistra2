@@ -43,6 +43,16 @@
 					<p:outputLabel for="descripcion" value="#{msg['dialogFormateadorFormulario.descripcion']}" />
 					<p:inputText id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="255"/>
 
+					<p:outputLabel for="porDefecto" value="#{msg['dialogFormateadorFormulario.porDefecto']}" />
+					<p:column>
+						<p:selectBooleanCheckbox id="porDefecto" value="#{dialogFormateadorFormulario.data.porDefecto}" >
+							<p:ajax event="change" global="false" process="@form:porDefecto" update="dialogFormateadorFormulario:btnPlantilla" />
+            			</p:selectBooleanCheckbox>
+						<p:commandButton id="btnPlantilla" value="#{msg['dialogFormateadorFormulario.botonPlantillas']}" icon="fa fa-edit" actionListener="#{dialogFormateadorFormulario.editarPlantillaPorDefecto()}" process="@form:btnPlantilla" rendered="#{dialogFormateadorFormulario.isAlta() or dialogFormateadorFormulario.isEdicion()}" disabled="#{!dialogFormateadorFormulario.data.porDefecto}" style="margin-left:10px" />
+					</p:column>
+					<p:outputLabel for="bloqueado" value="#{msg['dialogFormateadorFormulario.bloqueado']}" />
+					<p:selectBooleanCheckbox id="bloqueado" value="#{dialogFormateadorFormulario.data.bloquear}" />
+
 				</h:panelGrid>
 
 			</p:outputPanel>

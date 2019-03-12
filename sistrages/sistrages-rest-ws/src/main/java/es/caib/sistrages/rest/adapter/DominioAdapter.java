@@ -28,7 +28,11 @@ public class DominioAdapter {
 			rDominio.setIdentificador(dominio.getIdentificador());
 			rDominio.setSql(dominio.getSql());
 			rDominio.setTipo(dominio.getTipo().toString());
-			rDominio.setUri(dominio.getUrl());
+			if (rDominio.TIPO_CONSULTA_BD.equals(rDominio.getTipo())) {
+				rDominio.setUri(dominio.getJndi());
+			}else {
+				rDominio.setUri(dominio.getUrl());
+			}
 		}
 		return rDominio;
 	}

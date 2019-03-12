@@ -90,7 +90,11 @@ public enum TypeParametroVentana {
 	 */
 	PAGINA,
 	/**
-	 * IDIOMAS OBLIGATORIOS
+	 * Obligatorios
+	 */
+	OBLIGATORIOS,
+	/**
+	 * IDIOMAS
 	 */
 	IDIOMAS,
 	/**
@@ -104,5 +108,9 @@ public enum TypeParametroVentana {
 	/***
 	 * Version
 	 */
-	VERSION;
+	VERSION,
+	/**
+	 * Indica si es opcional la entidad.
+	 */
+	ES_OPCIONAL;
 }
