@@ -50,9 +50,6 @@ public class FilaImportarDominio extends FilaImportar {
 	/** Resultado distinto. **/
 	private String resultadoDistinto;
 
-	/** Mensaje. **/
-	private String mensaje;
-
 	/** Fuente datos. **/
 	private FuenteDatos fuenteDatos;
 
@@ -196,21 +193,6 @@ public class FilaImportarDominio extends FilaImportar {
 	 */
 	public void setResultadoDistinto(final String resultadoDistinto) {
 		this.resultadoDistinto = resultadoDistinto;
-	}
-
-	/**
-	 * @return the mensaje
-	 */
-	public String getMensaje() {
-		return mensaje;
-	}
-
-	/**
-	 * @param mensaje
-	 *            the mensaje to set
-	 */
-	public void setMensaje(final String mensaje) {
-		this.mensaje = mensaje;
 	}
 
 	/**
@@ -379,7 +361,7 @@ public class FilaImportarDominio extends FilaImportar {
 
 	/**
 	 * Is permisos edicion.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isPermisosEdicion() {
@@ -388,7 +370,7 @@ public class FilaImportarDominio extends FilaImportar {
 
 	/**
 	 * Get permisos edicion.
-	 * 
+	 *
 	 * @param permisosEdicion
 	 */
 	public void setPermisosEdicion(final boolean permisosEdicion) {

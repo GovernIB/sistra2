@@ -30,12 +30,19 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
 
-			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25 va-top, padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual']}" />
 					<p:column>
 						<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerDominioActual.noexiste']}" rendered="#{dialogTramiteImportarDominio.data.dominioActual == null}" />
-						<p:commandButton value="#{msg['botones.consultar']}" actionListener="#{dialogTramiteImportarDominio.consultarDominio()}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportarDominio.data.dominioActual != null}" />
+						<p:commandButton value="#{msg['botones.consultar']}" actionListener="#{dialogTramiteImportarDominio.consultarDominio(dialogTramiteImportarDominio.data.dominioActual)}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportarDominio.data.dominioActual != null}" />
+					</p:column>
+
+					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerFDactual']}:"  rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar and dialogTramiteImportarDominio.mostrarFDActual}" />
+					<p:column rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar and dialogTramiteImportarDominio.mostrarFDActual}">
+				  		<p:commandButton value="#{msg['botones.fd.estructura']}" actionListener="#{dialogTramiteImportarDominio.consultarEstructura(dialogTramiteImportarDominio.data.dominioActual, dialogTramiteImportarDominio.data.fuenteDatosActual)}" process="@this" rendered="#{dialogTramiteImportarDominio.mostrarFDActualBotones}" />
+						<p:commandButton value="#{msg['botones.fd.datos']} " actionListener="#{dialogTramiteImportarDominio.consultarDatosActual()}" process="@this" rendered="#{dialogTramiteImportarDominio.mostrarFDActualBotones}" />
+						<h:outputText value="#{msg['dialogTramiteImportarDominio.fd.noexiste']}"  rendered="#{!dialogTramiteImportarDominio.mostrarFDActualBotones}" />
 					</p:column>
 
 					<p:outputLabel value="Acción:" />
@@ -45,18 +52,18 @@
 					</p:selectOneMenu>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerJNDI']}:" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />
-					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoJndi}"   size="40" rows="5" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />
+					<p:inputText value="#{dialogTramiteImportarDominio.data.resultadoJndi}"   size="80" rows="5" rendered="#{dialogTramiteImportarDominio.mostrarJndi  and dialogTramiteImportarDominio.mostrarReemplazar}" />
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerSQL']}:" rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}" />
 					<p:column rendered="#{dialogTramiteImportarDominio.mostrarSql  and dialogTramiteImportarDominio.mostrarReemplazar}">
-							<textarea id="sqlDecoded" cols="49" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogTramiteImportarDominio.data.resultadoSQLdecoded}" /></textarea>
+							<textarea id="sqlDecoded" cols="78" rows="8" maxlength="2000" class="va-middle ui-inputfield ui-inputtextarea ui-widget ui-state-default ui-corner-all ui-inputtextarea-resizable" role="textbox" aria-disabled="false" aria-readonly="false" aria-multiline="true" style="overflow: auto;"><h:outputText value="#{dialogTramiteImportarDominio.data.resultadoSQLdecoded}" /></textarea>
 							<p:inputTextarea id="sql" value="#{dialogTramiteImportarDominio.data.resultadoSQL}" styleClass="no-display"/>
 					</p:column>
 
 					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerURL']}:"  rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
-					<p:inputTextarea value="#{dialogTramiteImportarDominio.data.resultadoURL}"   size="40" rows="5"  rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
+					<p:inputText value="#{dialogTramiteImportarDominio.data.resultadoURL}"  size="80" rendered="#{dialogTramiteImportarDominio.mostrarUrl }" />
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerParametros']}:"  rendered="#{dialogTramiteImportarDominio.mostrarLista and dialogTramiteImportarDominio.mostrarReemplazar}" />
+					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerValores']}:"  rendered="#{dialogTramiteImportarDominio.mostrarLista and dialogTramiteImportarDominio.mostrarReemplazar}"  />
 					<p:dataTable id="datalistValores2"
 								 var="td" emptyMessage="#{msg['error.emptyRows']}"
 								 value="#{dialogTramiteImportarDominio.parametros}"
@@ -81,12 +88,7 @@
 						<p:commandButton value="#{msg['botones.fd.datos']} " actionListener="#{dialogTramiteImportarDominio.consultarDatos()}" process="@this"/>
 					</p:column>
 
-					<p:outputLabel value="#{msg['dialogTramiteImportarDominio.headerFDactual']}:"  rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar and dialogTramiteImportarDominio.mostrarFDActual}" />
-					<p:column rendered="#{dialogTramiteImportarDominio.mostrarFD and dialogTramiteImportarDominio.mostrarReemplazar and dialogTramiteImportarDominio.mostrarFDActual}">
-				  		<p:commandButton value="#{msg['botones.fd.estructura']}" actionListener="#{dialogTramiteImportarDominio.consultarEstructura(dialogTramiteImportarDominio.data.dominioActual, dialogTramiteImportarDominio.data.fuenteDatosActual)}" process="@this" rendered="#{dialogTramiteImportarDominio.mostrarFDActualBotones}" />
-						<p:commandButton value="#{msg['botones.fd.datos']} " actionListener="#{dialogTramiteImportarDominio.consultarDatosActual()}" process="@this" rendered="#{dialogTramiteImportarDominio.mostrarFDActualBotones}" />
-						<h:outputText value="#{msg['dialogTramiteImportarDominio.fd.noexiste']}"  rendered="#{!dialogTramiteImportarDominio.mostrarFDActualBotones}" />
-					</p:column>
+
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">

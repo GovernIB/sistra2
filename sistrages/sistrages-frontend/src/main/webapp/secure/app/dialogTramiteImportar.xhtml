@@ -46,14 +46,7 @@
 
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerEntidad']}:" style="text-align:left; padding-right:3px;padding-left:13px;font-weight:bold" />
 						<p:column>
-								<p>
-									<p:outputLabel value="#{msg['dialogTramiteImportar.dir3Zip']}: "/>
-									<p:outputLabel value="#{dialogTramiteImportar.filaEntidad.dir3}" />
-								</p>
-								<p>
-									<p:outputLabel value="#{msg['dialogTramiteImportar.dir3Actual']}: "/>
-									<p:outputLabel value="#{dialogTramiteImportar.filaEntidad.dir3Actual}" />
-								</p>
+								<p:outputLabel value="#{dialogTramiteImportar.filaEntidad.dir3}" />
 						</p:column>
 						<p:outputLabel value="#{dialogTramiteImportar.filaEntidad.mensaje}" />
 						<p:outputLabel value="" />
@@ -68,6 +61,7 @@
 								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonArea}" process="@form" actionListener="#{dialogTramiteImportar.checkArea()}" style="margin-left:5px" >
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoArea}" update="areaIcon"/>
 								</p:commandButton>
+								<p:outputLabel value="#{dialogTramiteImportar.filaArea.mensaje}" rendered="#{!dialogTramiteImportar.mostrarBotonArea}"  />
 						</p:column>
 						<p:outputLabel id="areaIcon" value="" rendered="#{dialogTramiteImportar.filaArea.estado != null}" >
 								<i class="#{dialogTramiteImportar.filaArea.resultado.icon}" style="#{dialogTramiteImportar.filaArea.resultado.css}" />
@@ -80,6 +74,7 @@
 								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramite}" actionListener="#{dialogTramiteImportar.checkTramite()}" style="margin-left:5px" >
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramite}" update="tramiteIcon"/>
 								</p:commandButton>
+								<p:outputLabel value="#{dialogTramiteImportar.filaTramite.mensaje}" rendered="#{!dialogTramiteImportar.mostrarBotonTramite}"  />
 						</p:column>
 						<p:outputLabel id="tramiteIcon" value="" rendered="#{dialogTramiteImportar.filaTramite.estado != null}" >
 								<i class="#{dialogTramiteImportar.filaTramite.resultado.icon}" style="#{dialogTramiteImportar.filaTramite.resultado.css}" />
@@ -87,36 +82,44 @@
 
 						<p:outputLabel value="#{msg['dialogTramiteImportar.headerVersion']}:" style="text-align:left; padding-right:3px;padding-left:13px;font-weight:bold" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"  />
 						<p:outputLabel value="#{dialogTramiteImportar.tramiteVersion.numeroVersion} (release #{dialogTramiteImportar.tramiteVersion.release})" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   />
-						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramiteVersion.estado]}" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   />
-						<p:column rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"  ></p:column>
+						<p:column rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"  >
+							<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramiteVersion.estado]}" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   />
+							<p:outputLabel value=" (#{msg['dialogTramiteImportar.headerReleaseExistente']} #{dialogTramiteImportar.filaTramiteVersion.tramiteVersionActual.release})" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado.toString() == 'E'}" />
+						</p:column>
+						<p:column rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"  >
+								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramiteVersion}" actionListener="#{dialogTramiteImportar.checkTramiteVersion()}" style="margin-left:5px" >
+									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramiteVersion}" update="tramiteVersionIcon"/>
+								</p:commandButton>
+								<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.mensaje}" rendered="#{!dialogTramiteImportar.mostrarBotonTramiteVersion}"  />
+						</p:column>
 						<p:outputLabel id="tramiteVersionIcon" value="" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"   >
-								<i class="fa fa-info-circle fa-2x" style="color:rgb(69, 69, 255)" />
+								<i class="#{dialogTramiteImportar.filaTramiteVersion.resultado.icon}" style="#{dialogTramiteImportar.filaTramiteVersion.resultado.css}" />
 						</p:outputLabel>
 
 				</h:panelGrid>
 
 				<br />
-				<p:outputLabel value="#{msg['dialogTramiteImportar.headerElementosComunes']}" style="margin-left:5px;margin-top:30px;text-decoration: underline;font-weight: bold" />
+				<p:outputLabel value="#{msg['dialogTramiteImportar.headerElementosComunes']}" style="margin-left:5px;margin-top:30px;text-decoration: underline;font-weight: bold" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}" />
 				<br />
 				<br />
 				<p:outputLabel value="#{msg['dialogTramiteImportar.headerTramiteRegistro']}" style="padding-left:30px;text-decoration: underline;font-weight: bold;margin-top:5px;" rendered="#{dialogTramiteImportar.mostrarRegistro}"  />
 				<br />
 				<br />
-				<h:dataTable id="dataTableRegistro" value="#{dialogTramiteImportar.pasosRegistro}" columnClasses="padding-left-4 w40,w50,w10 grid-center" headerClass="grid-left" var="fila" width="90%" style="margin-left:33px; margin-top:5px;padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status" >
+				<h:dataTable id="dataTableRegistro" value="#{dialogTramiteImportar.pasosRegistro}" columnClasses="padding-left-4 w40,w50,w10 grid-center" headerClass="grid-left" var="fila" width="90%" style="margin-left:33px; margin-top:5px;padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"  >
 
 					<h:column>
 						<p:outputLabel value=" " />
 						<div style="margin-bottom:7px">
 							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionOficina']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" /></b>
-							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.tramiteVersionResultadoOficina} - #{dialogTramiteImportar.filaTramiteVersion.tramiteVersionResultadoOficinaText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" />
+							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoOficina} - #{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoOficinaText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" />
 						</div>
 						<div style="margin-bottom:7px">
 							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionLibro']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo}"  /></b>
-							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.tramiteVersionResultadoLibro} - #{dialogTramiteImportar.filaTramiteVersion.tramiteVersionResultadoLibroText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" />
+							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoLibro} - #{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoLibroText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" />
 						</div>
 						<div style="margin-bottom:7px">
 							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionTipo']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo}"/></b>
-							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.tramiteVersionResultadoTipo} - #{dialogTramiteImportar.filaTramiteVersion.tramiteVersionResultadoTipoText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}"  />
+							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoTipo} - #{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoTipoText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}"  />
 						</div>
 					</h:column>
 
@@ -124,14 +127,14 @@
 						<f:facet name = "header">
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerAccion']}" style="font-weight: bold" />
 						 </f:facet>
-						<p:commandButton value="..." actionListener="#{dialogTramiteImportar.checkTramiteVersion()}" style="margin-left:5px" >
-							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramiteVersion}" update="tramiteVersionIcon @form" />
+						<p:commandButton value="..." actionListener="#{dialogTramiteImportar.checkTramiteRegistro()}" style="margin-left:5px" >
+							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoRegistro}" update="tramiteRegistro @form" />
 						</p:commandButton>
 					</h:column>
 
 					<h:column>
-						<p:outputLabel id="tramiteVersionIcon" value="" >
-							<i class="#{dialogTramiteImportar.filaTramiteVersion.resultado.icon}" style="#{dialogTramiteImportar.filaTramiteVersion.resultado.css}" />
+						<p:outputLabel id="tramiteRegistro" value="" >
+							<i class="#{dialogTramiteImportar.filaTramiteRegistro.resultado.icon}" style="#{dialogTramiteImportar.filaTramiteRegistro.resultado.css}" />
 						</p:outputLabel>
 					</h:column>
 				</h:dataTable>
@@ -140,7 +143,7 @@
 				<p:outputLabel value="#{msg['dialogTramiteImportar.dominios']}" rendered="#{!empty dialogTramiteImportar.filasDominios}"  style="padding-left:30px;text-decoration: underline;font-weight: bold" />
 				<br />
 				<br />
-				<h:dataTable columnClasses="padding-left-4 w15,w15,w10,w50,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogTramiteImportar.filasDominios}" var="fila" width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status">
+				<h:dataTable columnClasses="padding-left-4 w15,w15,w10,w50,w10 grid-center" id="dataTablaDominios" headerClass="grid-left" value="#{dialogTramiteImportar.filasDominios}" var="fila" width="90%" style="margin-left:33px; padding-right:5px;border:1px antiquewhite;border-style: groove" varStatus="status" rendered="#{!empty dialogTramiteImportar.filasDominios}" >
 
 					<h:column style="text-align:left;">
 						 <f:facet name = "header">

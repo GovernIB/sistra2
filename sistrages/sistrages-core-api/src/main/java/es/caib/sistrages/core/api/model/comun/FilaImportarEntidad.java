@@ -14,9 +14,6 @@ public class FilaImportarEntidad extends FilaImportar {
 	/** Código dir3 actual. **/
 	private String dir3Actual;
 
-	/** Mensaje. **/
-	private String mensaje;
-
 	/**
 	 * Constructor basico.
 	 */
@@ -52,21 +49,6 @@ public class FilaImportarEntidad extends FilaImportar {
 	 */
 	public final void setDir3Actual(final String dir3Actual) {
 		this.dir3Actual = dir3Actual;
-	}
-
-	/**
-	 * @return the mensaje
-	 */
-	public final String getMensaje() {
-		return mensaje;
-	}
-
-	/**
-	 * @param mensaje
-	 *            the mensaje to set
-	 */
-	public final void setMensaje(final String mensaje) {
-		this.mensaje = mensaje;
 	}
 
 }

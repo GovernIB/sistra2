@@ -351,7 +351,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 	@Override
 	public List<FormateadorFormulario> getFormateadoresTramiteVersion(final Long idTramiteVersion) {
 
-		final String sql = "Select plan.formateadorFormulario from  JPlantillaFormulario plan inner join plan.formulario fr where fr in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion) ";
+		final String sql = "Select distinct plan.formateadorFormulario from  JPlantillaFormulario plan inner join plan.formulario fr where fr in (select forms.formulario from JPasoTramitacion pasot inner join pasot.pasoRellenar pasor inner join pasor.formulariosTramite forms  where pasot.versionTramite.codigo = :idTramiteVersion) ";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter("idTramiteVersion", idTramiteVersion);

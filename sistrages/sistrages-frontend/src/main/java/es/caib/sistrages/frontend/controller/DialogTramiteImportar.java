@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -169,6 +170,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	/** Linea 3. **/
 	FilaImportarTramiteVersion filaTramiteVersion = new FilaImportarTramiteVersion();
 
+	/** Linea 3. **/
+	FilaImportarTramiteVersion filaTramiteRegistro = new FilaImportarTramiteVersion();
+
 	/** Fila dominios. **/
 	final List<FilaImportarDominio> filasDominios = new ArrayList<>();
 
@@ -300,7 +304,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		prepararImportacionDominioFD();
 
 		// Paso 4. Preparamos la info a mostrar de los Formateadores.
-		prepararImportacionFormeteadores();
+		prepararImportacionFormateadores();
 
 		// Seteamos si se ven los botones de area/tramite/tramiteVersion
 		this.setMostrarBotonArea(filaArea.getResultado().isWarning());
@@ -317,7 +321,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		filaEntidad.setDir3Actual(dir3actual);
 		boolean correcto;
 		if (filaEntidad.getDir3() == null || !filaEntidad.getDir3().equals(dir3actual)) {
-			filaEntidad.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.dir3distinto"));
+			final Object[] propiedades = new Object[1];
+			propiedades[0] = dir3actual;
+			filaEntidad.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.dir3distinto", propiedades));
 			filaEntidad.setResultado(TypeImportarResultado.ERROR);
 			correcto = false;
 		} else {
@@ -339,7 +345,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 *
 	 * @return
 	 */
-	private void prepararImportacionFormeteadores() {
+	private void prepararImportacionFormateadores() {
 		for (final Map.Entry<Long, FormateadorFormulario> entry : formateadores.entrySet()) {
 			final FormateadorFormulario formateador = entry.getValue();
 
@@ -352,9 +358,15 @@ public class DialogTramiteImportar extends DialogControllerBase {
 						UtilJSF.getLiteral("dialogTramiteImportar.error.noexisteformateador")));
 			} else {
 
-				filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
-						TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE, TypeImportarResultado.INFO,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.existeformateador")));
+				if (formateadorActual.isBloquear()) {
+					filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
+							TypeImportarAccion.NADA, TypeImportarEstado.EXISTE, TypeImportarResultado.ERROR,
+							UtilJSF.getLiteral("dialogTramiteImportar.error.existeformateadorBloqueado")));
+				} else {
+					filasFormateador.add(new FilaImportarFormateador(formateador, formateadorActual,
+							TypeImportarAccion.REEMPLAZAR, TypeImportarEstado.EXISTE, TypeImportarResultado.OK,
+							UtilJSF.getLiteral("dialogTramiteImportar.error.existeformateador")));
+				}
 			}
 
 		}
@@ -433,20 +445,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 			final Entidad entidad = entidadService.loadEntidadByArea(areaActual.getCodigo());
 			if (entidad.getCodigo().compareTo(UtilJSF.getIdEntidad()) != 0) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.distintaEntidad"));
-				ocultarPaneles();
+
+				filaArea = new FilaImportarArea(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.ERROR, area, areaActual);
+				filaArea.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.distintaEntidad"));
 				return false;
 			}
 			tramiteActual = tramiteService.getTramiteByIdentificador(tramite.getIdentificador());
 
-		}
-
-		if (tramiteActual != null && tramiteActual.getIdArea().compareTo(areaActual.getCodigo()) != 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.areaDistinta");
-			this.setMostrarPanelInfo(false);
-			this.setMostrarBotonImportar(false);
-			return false;
 		}
 
 		if (areaActual == null) {
@@ -457,10 +463,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			// Si no existe el area y no se tiene permisos, hay que dar un error
 			if (UtilJSF.getSessionBean().getActiveRole() != TypeRoleAcceso.ADMIN_ENT) {
 
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.noexistearea"));
-
-				this.ocultarPaneles();
+				filaArea = new FilaImportarArea(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.ERROR, area, areaActual);
+				filaArea.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.noexistearea"));
 				return false;
 			}
 
@@ -476,16 +481,13 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				filaArea = new FilaImportarArea(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
 						TypeImportarResultado.ERROR, area, areaActual);
 
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-						UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
-
-				ocultarPaneles();
+				filaArea.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.sinpermisopromocionar"));
 				return false;
 
 			} else if (area.getDescripcion().equals(areaActual.getDescripcion())) {
 
 				filaArea = new FilaImportarArea(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.INFO, area, areaActual);
+						TypeImportarResultado.OK, area, areaActual);
 
 			} else {
 
@@ -493,7 +495,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 						TypeImportarResultado.WARNING, area, areaActual);
 
 			}
-
 		}
 
 		return true;
@@ -535,9 +536,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		// error.
 		if (areaActual != null && tramiteActual != null
 				&& tramiteActual.getIdArea().compareTo(areaActual.getCodigo()) != 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "dialogTramiteImportar.error.areaDistinta");
-			this.setMostrarPanelInfo(false);
-			this.setMostrarBotonImportar(false);
+
+			filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+					TypeImportarResultado.ERROR, tramite, tramiteActual);
+			filaTramite.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.areaDistinta"));
 			return false;
 		}
 
@@ -564,14 +566,14 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		if (tramiteActual == null) {
 
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-					TypeImportarResultado.INFO, tramite, tramiteActual);
+					TypeImportarResultado.OK, tramite, tramiteActual);
 
 		} else {
 
 			if (tramite.getDescripcion().equals(tramiteActual.getDescripcion())) {
 
 				filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
-						TypeImportarResultado.INFO, tramite, tramiteActual);
+						TypeImportarResultado.OK, tramite, tramiteActual);
 
 			} else {
 
@@ -586,11 +588,33 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		if (tramiteVersionActual == null) {
 
 			filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.CREAR, TypeImportarEstado.NO_EXISTE,
-					TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
+					TypeImportarResultado.OK, tramiteVersion, tramiteVersionActual);
+			filaTramiteRegistro = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
+					TypeImportarEstado.NO_EXISTE, TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
+		} else if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
 
+			if (tramiteVersionActual.getRelease() > tramiteVersion.getRelease()) {
+				filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.INCREMENTAR,
+						TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
+				filaTramiteVersion.setAcciones(
+						new ArrayList<>(Arrays.asList(TypeImportarAccion.INCREMENTAR, TypeImportarAccion.REEMPLAZAR)));
+			} else {
+				filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
+						TypeImportarEstado.EXISTE, TypeImportarResultado.OK, tramiteVersion, tramiteVersionActual);
+			}
+			filaTramiteRegistro = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
+					TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
 		} else {
 
-			filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
+			if (tramiteVersionActual.getRelease() > tramiteVersion.getRelease()) {
+				filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
+						TypeImportarEstado.EXISTE, TypeImportarResultado.ERROR, tramiteVersion, tramiteVersionActual);
+				filaTramiteVersion.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.releaseAntiguo"));
+			} else {
+				filaTramiteVersion = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
+						TypeImportarEstado.EXISTE, TypeImportarResultado.OK, tramiteVersion, tramiteVersionActual);
+			}
+			filaTramiteRegistro = new FilaImportarTramiteVersion(TypeImportarAccion.REEMPLAZAR,
 					TypeImportarEstado.EXISTE, TypeImportarResultado.WARNING, tramiteVersion, tramiteVersionActual);
 
 		}
@@ -632,18 +656,18 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 			// Cargamos los datos de oficina y registro (registro sólo si se encuentra la
 			// oficina desde donde viene)
-			if (this.filaTramiteVersion.getTramiteVersionResultadoOficina() != null
-					&& !this.filaTramiteVersion.getTramiteVersionResultadoOficina().isEmpty()) {
+			if (this.filaTramiteRegistro.getTramiteVersionResultadoOficina() != null
+					&& !this.filaTramiteRegistro.getTramiteVersionResultadoOficina().isEmpty()) {
 				final List<OficinaRegistro> oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
 						TypeRegistro.REGISTRO_ENTRADA);
 				for (final OficinaRegistro oficina : oficinas) {
-					if (oficina.getCodigo().equals(this.filaTramiteVersion.getTramiteVersionResultadoOficina())) {
-						this.filaTramiteVersion.setTramiteVersionResultadoOficinaText(oficina.getNombre());
+					if (oficina.getCodigo().equals(this.filaTramiteRegistro.getTramiteVersionResultadoOficina())) {
+						this.filaTramiteRegistro.setTramiteVersionResultadoOficinaText(oficina.getNombre());
 						final List<LibroOficina> libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
 								oficina.getCodigo(), TypeRegistro.REGISTRO_ENTRADA);
 						for (final LibroOficina libro : libros) {
-							if (libro.getCodigo().equals(this.filaTramiteVersion.getTramiteVersionResultadoLibro())) {
-								this.filaTramiteVersion.setTramiteVersionResultadoLibroText(libro.getNombre());
+							if (libro.getCodigo().equals(this.filaTramiteRegistro.getTramiteVersionResultadoLibro())) {
+								this.filaTramiteRegistro.setTramiteVersionResultadoLibroText(libro.getNombre());
 								break;
 							}
 						}
@@ -654,12 +678,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 
 			// Cargamos los datos del tipo
-			if (this.filaTramiteVersion.getTramiteVersionResultadoTipo() != null
-					&& !this.filaTramiteVersion.getTramiteVersionResultadoTipo().isEmpty()) {
+			if (this.filaTramiteRegistro.getTramiteVersionResultadoTipo() != null
+					&& !this.filaTramiteRegistro.getTramiteVersionResultadoTipo().isEmpty()) {
 				final List<TipoAsunto> tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 				for (final TipoAsunto tipo : tipos) {
-					if (tipo.getCodigo().equals(this.filaTramiteVersion.getTramiteVersionResultadoTipo())) {
-						this.filaTramiteVersion.setTramiteVersionResultadoTipoText(tipo.getNombre());
+					if (tipo.getCodigo().equals(this.filaTramiteRegistro.getTramiteVersionResultadoTipo())) {
+						this.filaTramiteRegistro.setTramiteVersionResultadoTipoText(tipo.getNombre());
 					}
 				}
 			}
@@ -747,6 +771,16 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	}
 
 	/**
+	 * Check tramite version.
+	 */
+	public void checkTramiteRegistro() {
+		UtilJSF.getSessionBean().limpiaMochilaDatos();
+		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.filaTramiteRegistro);
+		UtilJSF.openDialog(DialogTramiteImportarRegistro.class, TypeModoAcceso.EDICION, null, true, 500, 170);
+	}
+
+	/**
 	 * Check dominio.
 	 *
 	 * @param idDominio
@@ -831,8 +865,23 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final DialogResult respuesta = (DialogResult) event.getObject();
 		if (!respuesta.isCanceled()) {
 			this.filaTramiteVersion = (FilaImportarTramiteVersion) respuesta.getResult();
-			this.filaTramiteVersion.setAccion(TypeImportarAccion.REVISADO);
 			this.filaTramiteVersion.setResultado(TypeImportarResultado.OK);
+			setMostrarRegistroInfo(true);
+		}
+	}
+
+	/**
+	 * Retorno dialogo del retorno dialogo tramite version.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoRegistro(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+			this.filaTramiteRegistro = (FilaImportarTramiteVersion) respuesta.getResult();
+			this.filaTramiteRegistro.setAccion(TypeImportarAccion.REVISADO);
+			this.filaTramiteRegistro.setResultado(TypeImportarResultado.OK);
 			setMostrarRegistroInfo(true);
 		}
 	}
@@ -969,12 +1018,9 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public void importar() throws Exception {
 
-		if (isNotCheckeado(this.filaEntidad.getResultado())) {
-			return;
-		}
-
-		// Comprobamos que todas las filas están checkeadas.
-		if (isNotCheckeado(this.filaArea.getResultado()) || isNotCheckeado(this.filaTramite.getResultado())
+		if (isNotCheckeado(this.filaEntidad.getResultado()) || isNotCheckeado(this.filaArea.getResultado())
+				|| isNotCheckeado(this.filaTramite.getResultado())
+				|| isNotCheckeado(this.filaTramiteRegistro.getResultado())
 				|| isNotCheckeado(this.filaTramiteVersion.getResultado())) {
 			return;
 		}
@@ -991,7 +1037,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 		}
 
-		tramiteService.importar(filaArea, filaTramite, filaTramiteVersion, filasDominios, filasFormateador,
+		if (filaTramiteVersion.getAccion() == TypeImportarAccion.INCREMENTAR) {
+			filaTramiteRegistro.getTramiteVersion()
+					.setRelease(filaTramiteRegistro.getTramiteVersionActual().getRelease() + 1);
+		}
+
+		tramiteService.importar(filaArea, filaTramite, filaTramiteRegistro, filasDominios, filasFormateador,
 				UtilJSF.getIdEntidad(), formularios, ficheros, ficherosContent, UtilJSF.getSessionBean().getUserName());
 
 		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
@@ -1456,5 +1507,20 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public void setFilaEntidad(final FilaImportarEntidad filaEntidad) {
 		this.filaEntidad = filaEntidad;
+	}
+
+	/**
+	 * @return the filaTramiteRegistro
+	 */
+	public final FilaImportarTramiteVersion getFilaTramiteRegistro() {
+		return filaTramiteRegistro;
+	}
+
+	/**
+	 * @param filaTramiteRegistro
+	 *            the filaTramiteRegistro to set
+	 */
+	public final void setFilaTramiteRegistro(final FilaImportarTramiteVersion filaTramiteRegistro) {
+		this.filaTramiteRegistro = filaTramiteRegistro;
 	}
 }

@@ -19,9 +19,6 @@ public class FilaImportarFormateador extends FilaImportar {
 	/** FormateadorFormulario actual. **/
 	private FormateadorFormulario formateadorFormularioActual;
 
-	/** Mensaje. **/
-	private String mensaje;
-
 	/** Constructor básico. **/
 	public FilaImportarFormateador() {
 		super();
@@ -70,21 +67,6 @@ public class FilaImportarFormateador extends FilaImportar {
 	 */
 	public void setFormateadorFormularioActual(final FormateadorFormulario formateadorFormularioActual) {
 		this.formateadorFormularioActual = formateadorFormularioActual;
-	}
-
-	/**
-	 * @return the mensaje
-	 */
-	public String getMensaje() {
-		return mensaje;
-	}
-
-	/**
-	 * @param mensaje
-	 *            the mensaje to set
-	 */
-	public void setMensaje(final String mensaje) {
-		this.mensaje = mensaje;
 	}
 
 }

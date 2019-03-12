@@ -11,7 +11,7 @@ public enum TypeImportarResultado {
 	/** OK **/
 	OK("fa fa-check fa-2x", "0, 204, 0"),
 	/** INFO **/
-	INFO("fa fa-info-circle fa-2x", "69, 69, 255"),
+	// INFO("fa fa-info-circle fa-2x", "69, 69, 255"),
 	/** WARNING. **/
 	WARNING("fa fa-warning fa-2x", "214, 214, 0"),
 	/** ERROR. **/

@@ -21,7 +21,9 @@ public enum TypeImportarAccion {
 	/** ERROR **/
 	ERROR("E"),
 	/** Pendiente. **/
-	PENDIENTE("P");
+	PENDIENTE("P"),
+	/** Incrementar release (sólo para la versión de trámite) */
+	INCREMENTAR("I");
 
 	/** valor. **/
 	private String valor;

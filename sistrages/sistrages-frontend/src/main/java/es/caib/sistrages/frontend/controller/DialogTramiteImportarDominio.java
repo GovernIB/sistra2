@@ -138,7 +138,7 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			if (dominio.getAreas() != null && !dominio.getAreas().isEmpty()) {
 				params.put(TypeParametroVentana.AREA.toString(), dominio.getAreas().toArray()[0].toString());
 			}
-			UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 400);
+			UtilJSF.openDialog(DialogDominio.class, TypeModoAcceso.CONSULTA, params, true, 770, 700);
 		}
 	}
 

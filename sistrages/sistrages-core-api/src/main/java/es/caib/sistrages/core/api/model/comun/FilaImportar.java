@@ -26,6 +26,9 @@ public class FilaImportar {
 	/** TypeAccion. **/
 	protected TypeImportarResultado resultado;
 
+	/** Mensaje. **/
+	protected String mensaje;
+
 	/** Constructor básico. **/
 	public FilaImportar() {
 		super();
@@ -89,6 +92,21 @@ public class FilaImportar {
 	 */
 	public void setAcciones(final List<TypeImportarAccion> acciones) {
 		this.acciones = acciones;
+	}
+
+	/**
+	 * @return the mensaje
+	 */
+	public final String getMensaje() {
+		return mensaje;
+	}
+
+	/**
+	 * @param mensaje
+	 *            the mensaje to set
+	 */
+	public final void setMensaje(final String mensaje) {
+		this.mensaje = mensaje;
 	}
 
 }
