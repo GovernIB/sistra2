@@ -309,6 +309,11 @@ body.imc--sense-scroll { overflow: hidden; }
 .imc--doc-missatge.imc--enviat-error .imc--botonera li:nth-child(1),
 .imc--doc-missatge.imc--enviat-error .imc--botonera li:nth-child(2) { display: inline-block; }
 
+.imc--doc-missatge.imc--enviat-fatal .imc--botonera li:nth-child(1),
+.imc--doc-missatge.imc--enviat-fatal .imc--botonera li:nth-child(3) { display: none; }
+
+.imc--doc-missatge.imc--enviat-fatal .imc--botonera li:nth-child(2) { display: inline-block; }
+
 
 .imc--doc-missatge.imc--enviat-correcte::before {
 	border: none;

@@ -950,6 +950,15 @@
 .imc-missatge-sortir .imc--text .imc--cancela:active span { color: #fff; }
 
 
+/* type number */
+
+input[type=number] { 
+	-webkit-appearance: none;
+	-moz-appearance: textfield;
+	appearance: none;
+}
+
+
 
 /* media */
 

@@ -8,6 +8,9 @@ var imc_formularis,
 
 var JSON_FORMULARI;
 
+var FORMS_ARXIUS = false;
+
+
 
 // onReady
 
@@ -275,17 +278,30 @@ $.fn.appEmplenaFormulari = function(options) {
 			},
 			carregaFormArxius = function() {
 
+				if (FORMS_ARXIUS) {
+
+					carregat();
+					return;
+
+				}
+
+				// carrega CSS y JS
+
 				$.when(
 					
 					$.get(APP_ + "css/sf--emplenar/imc-destaca.css?" + APP_VERSIO)
 					,$.get(APP_ + "css/sf--emplenar/imc-forms-select.css?" + APP_VERSIO)
 					,$.get(APP_ + "css/sf--emplenar/imc-forms-taula-iframe.css?" + APP_VERSIO)
 					,$.get(APP_ + "css/sf--emplenar/imc-forms.css?" + APP_VERSIO)
+					,$.getScript(APP_ + "js/forms/numeral.min.js?" + APP_VERSIO)
+					//,$.getScript(APP_ + "js/forms/numeral.min_es-es.js?" + APP_VERSIO)
 					,$.getScript(APP_ + "js/forms/imc-forms--inicia.js?" + APP_VERSIO)
 
 				).then(
 
 					function( cssFormsDestaca, cssFormsSelect, cssFormsTaulaIframe, cssForms) {
+
+						$.getScript(APP_ + "js/forms/numeral.min_es-es.js?" + APP_VERSIO);
 
 						// estils
 
@@ -307,6 +323,8 @@ $.fn.appEmplenaFormulari = function(options) {
 						
 						// carrega formulari
 
+						FORMS_ARXIUS = true;
+
 						carregat();
 
 					}
@@ -326,6 +344,12 @@ $.fn.appEmplenaFormulari = function(options) {
 
 			},
 			carregat = function() {
+
+				// --inicia.js
+
+				appFormsCarregaScripts();
+
+				// continua
 
 				if (imc_formulari_finestra.attr("data-ticket") === "") {
 					return;
@@ -562,24 +586,6 @@ $.fn.appMissatgeFormAccions = function(options) {
 	});
 	return this;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

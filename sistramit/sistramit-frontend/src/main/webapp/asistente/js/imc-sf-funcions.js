@@ -300,32 +300,6 @@ $.fn.appMissatge = function(options) {
 
 				element_c
 					.off('.appMissatge');
-				/*
-				botonera_elm
-					.attr("aria-hidden", "false")
-					.show();
-
-				cancela_bt
-					.attr("aria-hidden", "false")
-					.show();
-
-				tanca_bt
-					.attr("aria-hidden", "true")
-					.hide();
-
-				if (accio === "informa" || accio === "alerta") {
-
-					cancela_bt
-						.attr("aria-hidden", "true")
-						.hide();
-
-				} else if (accio === "carregant") {
-
-					botonera_elm
-						.attr("aria-hidden", "true")
-						.hide();
-
-				}*/
 
 				anima();
 
@@ -519,13 +493,9 @@ $.fn.appFitxerAdjunta = function(opcions){
 						arxiu_val = arxiu_val.replace("C:\\fakepath\\", "");
 					}
 
-
-
 					elm
 						.find("p")
 							.text( arxiu_val );
-
-					
 
 				}
 				
@@ -534,6 +504,11 @@ $.fn.appFitxerAdjunta = function(opcions){
 				
 				elm
 					.removeClass("imc-emplenat");
+
+				elm
+					.parent()
+						.find(".imc--annexe-error")
+							.remove();
 
 				// input original
 
@@ -577,7 +552,11 @@ $.fn.appSuport = function(options) {
 			envia_ajax = false,
 			bt_error_torna = el_suport_missatge.find(".imc--error-torna:first"),
 			bt_cancela_enviament = el_suport_missatge.find(".imc--cancela:first"),
+			input_file = el_suport.find(".imc-input-type:first input:first"),
+			url_fatal = false,
 			inicia = function() {
+
+				// events
 
 				el_suport_form_f
 					.attr("action", APP_TRAMIT_SUPORT);
@@ -610,6 +589,39 @@ $.fn.appSuport = function(options) {
 					.off('.appSuport')
 					.on('click.appSuport', aborta);
 
+				el_suport_missatge
+					.off(".appFatal");
+
+				// tipus arxius
+
+				var json_annexe = APP_JSON_TRAMIT_E.soporte.anexo || false;
+
+				if (json_annexe) {
+
+					input_file
+						.attr({ "data-extensions": json_annexe.extensiones, "data-mida": json_annexe.tamanyo });
+
+					var txt_extensions = ""
+						,el_suport_ext = json_annexe.extensiones.split(",")
+						,el_suport_ext_size = el_suport_ext.length;
+
+					$(el_suport_ext)
+						.each(function(i) {
+
+							var ex = this;
+
+							txt_extensions += (i < el_suport_ext_size-1) ? ex.toUpperCase() + ", " : ex.toUpperCase();
+
+						});
+
+					el_suport
+						.find(".imc-el--annexe:first label:first")
+							.append( ". " + txtExtensionsPermeses + " " + txt_extensions +". " + txtExtensionsMidaMaxima + " " + json_annexe.tamanyo );
+
+				}
+
+				// problemes?
+
 				problemes();
 
 			},
@@ -623,6 +635,9 @@ $.fn.appSuport = function(options) {
 				el_suport_form_f
 					.find(".imc-bt-elimina:first")
 						.trigger("click");
+
+				el_suport_missatge
+					.off(".appFatal");
 
 				// anima i mostra
 
@@ -756,6 +771,81 @@ $.fn.appSuport = function(options) {
 
 				e.preventDefault();
 
+				// revisa extensions
+
+				if (input_file.val() !== "") {
+
+					var arxiu = input_file[0].files[0]
+						,arxiu_nom = arxiu.name
+						,arxiu_extensio = arxiu_nom.split('.')[arxiu_nom.split('.').length - 1].toLowerCase()
+						,arxiu_mida = arxiu.size
+						,arxiu_mida_MB = (arxiu.size / 1048576).toFixed(2)
+						,arxiu_mida_KB = (arxiu.size / 1024).toFixed(2);
+
+					var tipus_posibles = input_file.attr("data-extensions")
+						,tipus_posibles_arr = tipus_posibles.split(",")
+						,esTipusPosible = false;
+
+					var text_error = ""
+						,revisa_error = false;
+
+					$(tipus_posibles_arr)
+						.each(function() {
+
+							var ext_tipus = this;
+
+							esTipusPosible = (arxiu_extensio.toUpperCase() == ext_tipus.toUpperCase()) ? true : false;
+
+							if (esTipusPosible) {
+								return false;
+							}
+
+						});
+						
+					if (!esTipusPosible && tipus_posibles !== "null") {
+
+						text_error = txtErrorTipusNoPermes;
+						revisa_error = true;
+
+					}
+
+					var mida_max = input_file.attr("data-mida")
+						,esMB = (mida_max.indexOf("MB") !== -1) ? true : false
+						,mida_max_num = (esMB) ? parseInt( mida_max.replace("MB", ""), 10 ) : parseInt( mida_max.replace("KB", ""), 10 )
+
+					if (esMB) {
+
+						esMidaPosible = (mida_max_num > arxiu_mida_MB) ? true : false;
+
+					} else {
+
+						esMidaPosible = (mida_max_num > arxiu_mida_KB) ? true : false;
+
+					}
+
+					if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
+
+						text_error = txtErrorMidaGran;
+						revisa_error = true;
+
+					}
+
+					if (revisa_error && text_error) {
+
+						el_suport
+							.find(".imc--annexe-error")
+								.remove();
+
+						$("<div>")
+							.addClass("imc--annexe-error")
+							.text( text_error )
+							.appendTo( el_suport.find(".imc-el--annexe:first") );
+
+					 	return;
+					}
+
+				}
+
 				// missatge
 
 				el_suport_form
@@ -768,7 +858,7 @@ $.fn.appSuport = function(options) {
 					.find("div")
 						.text( "" )
 						.end()
-					.removeClass("imc--enviat-correcte imc--enviat-error")
+					.removeClass("imc--enviat-correcte imc--enviat-error imc--enviat-fatal")
 					.addClass("imc--on imc--enviant");
 
 				// envia config
@@ -881,7 +971,33 @@ $.fn.appSuport = function(options) {
 
 				envia_ajax = false;
 
-				consola("finalitzat");
+				if (estat === "fatal") {
+
+					url_fatal = "";
+
+					el_suport_missatge
+						.addClass("imc--enviat-fatal")
+						.off(".appFatal")
+						.on("click.appFatal", "button[data-tipus='tanca']", recarrega);
+
+				}
+
+			},
+			recarrega = function(e) {
+
+				e.preventDefault();
+
+				setTimeout(
+					function() {
+
+						imc_contenidor
+							.html("");
+
+					}
+					,200
+				);
+
+				document.location = url_fatal;
 
 			},
 			errorTorna = function() {

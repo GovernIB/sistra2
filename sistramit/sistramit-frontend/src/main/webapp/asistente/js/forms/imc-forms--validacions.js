@@ -88,7 +88,7 @@ $.fn.appValida = function(opcions) {
 
 			} else {
 
-				valor = valor.replace(/,/g, '');	
+				valor = valor.replace(/,/g, '');
 
 			}
 
@@ -106,8 +106,6 @@ $.fn.appValida = function(opcions) {
 		}
 
 		// que és un número correcte
-
-		alert(isNaN(parseFloat(valor)))
 
 		if ( isNaN(parseFloat(valor)) || !isFinite(valor) ) {
 

@@ -3,6 +3,9 @@
 var imc_forms_contenidor = imc_formulari.find(".imc--contingut:first")
 	,imc_forms_ajuda = $("#imc-forms-ajuda");
 
+var FORMS_JS = false;
+
+
 
 // appFormsAjuda
 
@@ -1144,10 +1147,61 @@ $.fn.appFormsValida = function(options) {
 			valor_inicial = false,
 			inicia = function() {
 
+				
+
 				element
 					.off(".appFormsValida")
 					.on("focus.appFormsValida", "input", valora)
-					.on("blur.appFormsValida", "input", valida);
+					.on("blur.appFormsValida", "input", valida)
+					.on("blur.appFormsValida", "div[data-contingut='nu'] input", formateja);
+
+			},
+			formateja = function(e) {
+
+				var input = $(this)
+					,input_val = input.val()
+					,input_pare = input.closest(".imc-element");
+
+				if (input_val !== "") {
+
+					var elm_negatiu = input.attr("data-negatiu") || false
+						,elm_enters = parseInt( input.attr("data-enters"), 10) || false
+						,elm_decimals = parseInt( input.attr("data-decimals"), 10) || false
+						,elm_separador = input.attr("data-separador") || false;
+
+					if (elm_separador) {
+
+						var format_val = '0,0';
+
+						if (elm_decimals) {
+
+							var str_decimales = "";
+
+							for(i=0; i<elm_decimals; i++) {
+								str_decimales += "0";
+							}
+
+							var format_val = '0,0.' + str_decimales;
+
+						}
+
+						var input_val_format = numeral( input_val ).format( format_val );
+
+						input
+							.val( input_val_format );
+
+						if (elm_separador === "cp") {
+
+							var input_val_format_cp = input_val_format.replace(/,/g, "#").replace(/\./g, ",").replace(/#/g, ".");
+
+							input
+								.val( input_val_format_cp );
+
+						}
+
+					}
+
+				}
 
 			},
 			valora = function(e) {
@@ -1791,12 +1845,22 @@ $.fn.appFormsAccions = function(options) {
 				var validacio_estat = (json.datos.validacion && json.datos.validacion !== null) ? json.datos.validacion.estado : false
 					,validacio_missatge = (json.datos.validacion && json.datos.validacion !== null) ? json.datos.validacion.mensaje : false
 					,estaFinalitzat = (json.datos.finalizado === "s") ? true : false
+					,camp_id = (json.datos.validacion && json.datos.validacion !== null) ? json.datos.validacion.campo : false
 					,url = json.datos.url;
 
 				if (validacio_estat === "error") {
 
-					imc_missatge
-						.appMissatge({ accio: "error", titol: validacio_missatge, amagaDesdeFons: false });
+					if (camp_id && camp_id !== "" && camp_id !== null) {
+
+						imc_missatge
+							.appMissatge({ accio: "error", titol: validacio_missatge, text: txtFormErrorText, amagaDesdeFons: false, alTancar: function() { remarca(camp_id); } });
+
+					} else {
+
+						imc_missatge
+							.appMissatge({ accio: "error", titol: validacio_missatge, amagaDesdeFons: false });
+
+					}
 
 					return;
 
@@ -1815,6 +1879,13 @@ $.fn.appFormsAccions = function(options) {
 				}
 
 				accio();
+
+			},
+			remarca = function(camp_id) {
+
+				imc_formulari_finestra
+					.find("*[data-id='"+camp_id+"']")
+						.appDestaca({ referent: imc_forms_contenidor });
 
 			},
 			carrega = function(url) {
@@ -1851,18 +1922,7 @@ $.fn.appFormsAccions = function(options) {
 
 function appFormsCarregaScripts() {
 
-
-	$.when(
-
-		$.getScript(APP_ + "js/forms/imc-forms--comuns.js?" + APP_VERSIO)
-		,$.getScript(APP_ + "js/forms/imc-forms--funcions.js?" + APP_VERSIO)
-		,$.getScript(APP_ + "js/forms/imc-forms--validacions.js?" + APP_VERSIO)
-		,$.getScript(APP_ + "js/forms/imc-forms--serialitza.js?" + APP_VERSIO)
-		//,$.getScript(APP_ + "js/forms/literals/jquery-imc-literals-calendari-" + APP_IDIOMA + ".js")
-
-	).then(
-
-		function() {
+	var completat = function() {
 
 			// configuracio
 
@@ -1902,6 +1962,34 @@ function appFormsCarregaScripts() {
 			imc_forms_contenidor
 				.appFormsFormateig();
 
+		};
+
+	if (FORMS_JS) {
+
+		completat();
+		return;
+
+	}
+
+
+	// carrega de JS
+
+	$.when(
+
+		$.getScript(APP_ + "js/forms/imc-forms--comuns.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/forms/imc-forms--funcions.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/forms/imc-forms--validacions.js?" + APP_VERSIO)
+		,$.getScript(APP_ + "js/forms/imc-forms--serialitza.js?" + APP_VERSIO)
+		//,$.getScript(APP_ + "js/forms/literals/jquery-imc-literals-calendari-" + APP_IDIOMA + ".js")
+
+	).then(
+
+		function() {
+
+			FORMS_JS = true;
+
+			completat();
+
 		}
 
 	).fail(
@@ -1920,9 +2008,7 @@ function appFormsCarregaScripts() {
 }
 
 
-// carrega
 
-appFormsCarregaScripts();
 
 
 
