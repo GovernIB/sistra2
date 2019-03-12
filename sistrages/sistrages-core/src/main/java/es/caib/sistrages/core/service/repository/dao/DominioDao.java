@@ -73,7 +73,7 @@ public interface DominioDao {
 	 * @param idArea
 	 *            the id area
 	 */
-	void add(final Dominio entidad, final Long idEntidad, final Long idArea);
+	Long add(final Dominio entidad, final Long idEntidad, final Long idArea);
 
 	/**
 	 * Elimina.

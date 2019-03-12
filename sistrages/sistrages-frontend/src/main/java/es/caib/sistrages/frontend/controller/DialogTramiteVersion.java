@@ -67,8 +67,8 @@ public class DialogTramiteVersion extends DialogControllerBase {
 		dataVersion.setDesactivacion(false);
 		dataVersion.setRelease(0);
 		dataVersion.setNivelQAA(2);
-		dataVersion.setBloqueada(false);
-
+		dataVersion.setBloqueada(true);
+		dataVersion.setDatosUsuarioBloqueo(UtilJSF.getSessionBean().getUserName());
 	}
 
 	/**

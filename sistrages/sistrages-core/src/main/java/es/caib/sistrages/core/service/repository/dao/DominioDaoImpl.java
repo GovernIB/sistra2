@@ -90,7 +90,7 @@ public class DominioDaoImpl implements DominioDao {
 	 * sistrages.core.api.model.Dominio, java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	public void add(final Dominio dominio, final Long idEntidad, final Long idArea) {
+	public Long add(final Dominio dominio, final Long idEntidad, final Long idArea) {
 		// Añade dominio por superadministrador estableciendo datos minimos
 		final JDominio jDominio = new JDominio();
 		jDominio.fromModel(dominio);
@@ -114,6 +114,7 @@ public class DominioDaoImpl implements DominioDao {
 			jDominio.getAreas().add(jarea);
 		}
 		entityManager.persist(jDominio);
+		return jDominio.getCodigo();
 	}
 
 	/*

@@ -46,7 +46,7 @@ public interface DominioService {
 	 * @param idArea
 	 *            Id del area.
 	 */
-	public void addDominio(Dominio dominio, Long idEntidad, Long idArea);
+	public Long addDominio(Dominio dominio, Long idEntidad, Long idArea);
 
 	/**
 	 * Actualiza dominio.

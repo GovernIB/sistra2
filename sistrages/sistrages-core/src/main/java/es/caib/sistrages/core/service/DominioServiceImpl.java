@@ -81,8 +81,8 @@ public class DominioServiceImpl implements DominioService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public void addDominio(final Dominio entidad, final Long idEntidad, final Long idArea) {
-		dominioDao.add(entidad, idEntidad, idArea);
+	public Long addDominio(final Dominio entidad, final Long idEntidad, final Long idArea) {
+		return dominioDao.add(entidad, idEntidad, idArea);
 	}
 
 	/*

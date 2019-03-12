@@ -73,8 +73,8 @@ public class DominioServiceBean implements DominioService {
 	 */
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void addDominio(final Dominio entidad, final Long idEntidad, final Long idArea) {
-		dominioService.addDominio(entidad, idEntidad, idArea);
+	public Long addDominio(final Dominio entidad, final Long idEntidad, final Long idArea) {
+		return dominioService.addDominio(entidad, idEntidad, idArea);
 	}
 
 	/*

@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -47,8 +48,10 @@ public final class DominioDaoImpl implements DominioDao {
 		try {
 			final ValoresDominio res;
 
+			final String sqlDecoded = new String(Base64.decodeBase64(sql));
+
 			// Traducimos sql por si esta en formato antiguo
-			final String query = transformSql(sql, parametrosDominio);
+			final String query = transformSql(sqlDecoded, parametrosDominio);
 
 			// Obtenemos datasource
 			final DataSource ds = getDataSource(jndiPath, jndi);

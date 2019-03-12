@@ -115,6 +115,9 @@ public class DialogDominio extends DialogControllerBase {
 	/** Max long lista valores. */
 	private static final int MAXLENGTH_LISTAVALORES = 4000;
 
+	/** Se utiliza para indicar si ha habido algún cambio. **/
+	private boolean identificadorCambiado;
+
 	/**
 	 * Inicialización.
 	 */
@@ -549,20 +552,68 @@ public class DialogDominio extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
+		if (acceso != TypeModoAcceso.CONSULTA) {
+			final boolean correcto = guardar();
+			if (!correcto) {
+				return;
+			}
+		}
+
+		// Retornamos resultado
+		final DialogResult result = new DialogResult();
+		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
+		result.setResult(data.getIdentificador());
+		if (identificadorCambiado) {
+			final DialogResultMessage dm = new DialogResultMessage();
+			dm.setNivel(TypeNivelGravedad.WARNING);
+			dm.setMensaje("TODO:Pendiente controlar si se esta usando dominio para sacar aviso");
+			result.setMensaje(dm);
+		}
+
+		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Indica si hay que mostrar el aviso de guardado. Si es true (consulta), no
+	 * aparecerá el aviso mientras que si es false (alta/edición), aparecerá el
+	 * aviso.
+	 *
+	 * @return
+	 */
+	public boolean isDisabledAvisoGuardado() {
+		boolean mostrar;
+		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+		if (acceso == TypeModoAcceso.CONSULTA) {
+			mostrar = true;
+		} else {
+			mostrar = false;
+		}
+		return mostrar;
+	}
+
+	/**
+	 * Realiza la acción de guardar
+	 *
+	 * @return
+	 */
+	private boolean guardar() {
+
+		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		if (data.getSql() != null) {
 			data.setSqlDecoded(new String(Base64.decodeBase64(data.getSql())));
 		}
 
-		boolean identificadorCambiado = false;
+		identificadorCambiado = false;
 
 		if (this.data.getTipo() == TypeDominio.FUENTE_DATOS) {
 
 			if (idFuenteDato == null) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.fuenteDatos"));
-				return;
+				return false;
 			} else {
 				final FuenteDatos fuenteDato = dominioService.loadFuenteDato(idFuenteDato);
 				this.data.setIdFuenteDatos(fuenteDato.getCodigo());
@@ -574,7 +625,7 @@ public class DialogDominio extends DialogControllerBase {
 		switch (acceso) {
 		case ALTA:
 			if (!verificarGuardar()) {
-				return;
+				return false;
 			}
 
 			Long lIdEntidad = null;
@@ -588,21 +639,22 @@ public class DialogDominio extends DialogControllerBase {
 			// Verifica unicidad codigo dominio
 			if (dominioService.loadDominio(this.data.getIdentificador()) != null) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
-				return;
+				return false;
 			}
 			// Alta dominio
-			dominioService.addDominio(this.data, lIdEntidad, lIdArea);
+			final Long idDominio = dominioService.addDominio(this.data, lIdEntidad, lIdArea);
+			this.data.setCodigo(idDominio);
 			break;
 		case EDICION:
 			if (!verificarGuardar()) {
-				return;
+				return false;
 			}
 
 			// Verifica unicidad codigo dominio
 			final Dominio d = dominioService.loadDominio(this.data.getIdentificador());
 			if (d != null && d.getCodigo().longValue() != this.data.getCodigo().longValue()) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
-				return;
+				return false;
 			}
 			// En caso de cambio de identificador hay que controlar si se esta
 			// usando y
@@ -618,19 +670,41 @@ public class DialogDominio extends DialogControllerBase {
 			// No hay que hacer nada
 			break;
 		}
+		return true;
+	}
 
-		// Retornamos resultado
-		final DialogResult result = new DialogResult();
-		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
-		result.setResult(data.getIdentificador());
-		if (identificadorCambiado) {
-			final DialogResultMessage dm = new DialogResultMessage();
-			dm.setNivel(TypeNivelGravedad.WARNING);
-			dm.setMensaje("TODO:Pendiente controlar si se esta usando dominio para sacar aviso");
-			result.setMensaje(dm);
+	/**
+	 * Ping.
+	 */
+	public void ping() {
+
+		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
+		String idDominio;
+		if (modo == TypeModoAcceso.CONSULTA) {
+			idDominio = this.id;
+		} else {
+			if (!guardar()) {
+				return;
+			}
+			idDominio = this.data.getCodigo().toString();
+			modoAcceso = TypeModoAcceso.EDICION.toString();
 		}
+		realizarPing(idDominio);
+	}
 
-		UtilJSF.closeDialog(result);
+	/**
+	 * Realiza el ping.
+	 *
+	 * @param idDominio
+	 */
+	private void realizarPing(final String idDominio) {
+		// Muestra dialogo
+		final Map<String, String> params = new HashMap<>();
+		params.put(TypeParametroVentana.ID.toString(), idDominio);
+
+		params.put(TypeParametroVentana.AMBITO.toString(), ambito);
+
+		UtilJSF.openDialog(DialogDominioPing.class, TypeModoAcceso.CONSULTA, params, true, 770, 600);
 	}
 
 	/**
@@ -1023,10 +1097,10 @@ public class DialogDominio extends DialogControllerBase {
 	public void setMostrarAdvertencia(final boolean mostrarAdvertencia) {
 		this.mostrarAdvertencia = mostrarAdvertencia;
 	}
-	
+
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("dominioDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("dominioDialog");
+	}
 
 }
