@@ -95,6 +95,7 @@
 				<f:facet name="right">
 	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionTasa.aceptar()}" process="@form" update="@form growl"  styleClass="boton-azul"/>
 					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionTasa.cancelar()}" process="@this" />
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionTasa.ayuda()}" process="@this"/>
 				</f:facet>
 			</p:toolbar>
 	    </p:outputPanel>

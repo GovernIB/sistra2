@@ -161,6 +161,7 @@
 		        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogPropiedadesFormulario.guardar}" process="@form" update="@form growlDialog" styleClass="boton-azul" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPropiedadesFormulario.cancelar}" process="@this" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPropiedadesFormulario.cancelar}" process="@this"  rendered="#{dialogPropiedadesFormulario.consulta}"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPropiedadesFormulario.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

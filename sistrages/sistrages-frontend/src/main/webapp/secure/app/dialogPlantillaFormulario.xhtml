@@ -64,6 +64,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaFormulario.aceptar()}" process="@form" update="@form growlDialog"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPlantillaFormulario.cancelar()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPlantillaFormulario.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

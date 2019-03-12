@@ -51,6 +51,7 @@
 					<f:facet name="right">
 		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaIdiomaFormulario.aceptar}" process="@form" update="@form growlDialogPlantillaIdiomaFormulario" rendered="#{dialogPlantillaIdiomaFormulario.alta or dialogPlantillaIdiomaFormulario.edicion}"/>
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlantillaIdiomaFormulario.cancelar}" process="@this" rendered="#{dialogPlantillaIdiomaFormulario.consulta}"/>
+		        		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPlantillaIdiomaFormulario.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

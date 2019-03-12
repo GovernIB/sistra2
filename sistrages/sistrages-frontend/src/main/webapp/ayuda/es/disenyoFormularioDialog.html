@@ -1,0 +1,87 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">DISEÑO DEL FORMULARIO</h1>
+<p>
+	En la pantalla de '<i>Diseño del formulario</i>' se puede diseñar y previsualizar formularios asociados a la versi&oacute;n del tr&aacute;mite.<br>
+	Esta pantalla se compone de una cabecera, en la que se presentan las propiedads de formulario y la barra de diseño de componentes, un &aacute;rea en la zona izquierda en la que se presenta un editor visual del formulario, un &aacute;rea derecha de configuraci&oacute;n de propiedades de los campos, y un pie compuesto por una barra de botones con diferente funcionalidad.<br>
+	Cualquier cambio realizado sobre los campos en edici&oacute;n deber&aacute;n aplicarse mediante el bot&oacute;n 'Aplicar cambios' para que se visualicen en el &aacute;rea de edici&oacute;n
+</p>
+<h2 class="stgH2">BARRA DE DISEÑO</h2>
+<p>
+	<ul>
+		<li><span class="boton">Formulario</span>: pulsando este bot&oacute;n se abrir&aacute; la <a href="../../ayuda/es/propiedadesFormularioDialog.html">ficha</a> para configurar las propiedades del formulario (cabecera, gesti&oacute;n de p&aacute;ginas y plantillas de visualizaci&oacute;n).</li>
+		<li><span class="nombreCampo">Componentes:</span> secci&oacute;n que presenta los botones para la inserci&oacute;n de componentes en el formulario. Los tipos de campos disponibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">L&iacute;nea:</span> este bot&oacute;n permite incluir una l&iacute;nea en el formulario. Cada componente deber&aacute; posicionarse en una l&iacute;nea.</li>
+		<li><span class="boton">Secci&oacute;n:</span> este bot&oacute;n permite crear un campo secci&oacute;n. Este tipo de campos permite marcar los diferentes apartados o secciones de un formulario.</li>
+		<li><span class="boton">Aviso:</span> este bot&oacute;n permite incluir avisos informativos de diferentes tipos (info, warning y error). Cada tipo de aviso presenta una iconograf&iacute;a ilustrativa.</li>
+		<li><span class="boton">Campo de texto:</span> este bot&oacute;n permite incluir un campo de texto.</li>
+		<li><span class="boton">Campo selector:</span> este bot&oacute;n permite incluir un campo selector. Este campo permite presentar diferentes valores y permitir la selecci&oacute;n de uno o varios valores al ciudadano, dependiendo del tipo de selector (desplegable, selecci&oacute;n m&uacute;ltiple o selecci&oacute;n &uacute;nica).</li>
+		<li><span class="boton">Campo checkbox</span>: este bot&oacute;n permite incluir en el formulario un campo casilla de verificaci&oacute;n.</li>
+		</ul>
+		<li><span class="nombreCampo">Posicionamiento:</span> secci&oacute;n que permite especificar la posici&oacute;n que se asignar&aacute; a un campo al crearlo respecto a un campo seleccionado. Los valores contemplados son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Previo:</span> en caso de seleccionar este valor, el nuevo campo se crear&aacute; en una posici&oacute;n previa a un campo seleccionado.</li>
+		<li><span class="boton">Posterior:</span> en caso de seleccionar este valor, el nuevo campo se crear&aacute; en una posici&oacute;n posterior a un campo seleccionado. Esta posici&oacute;n es la fijada por defecto.</li>
+		</ul>
+		<li><span class="nombreCampo">Mover:</span> secci&oacute;n contiene los botones para mover un campo dentro de una l&iacute;nea. No se permite mover campos entre l&iacute;neas. Las opciones de movimiento disponibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Mover a la izquiera (<):</span> permite mover hacia la izquierda un campo seleccionado. Este bot&oacute;n quedar&aacute; deshabilitado cuando no exista la posibilidad de mover el componente m&aacute;s a la izquierda.</li>
+		<li><span class="boton">Mover a la derecha (>):</span> permite mover hacia la derecha un campo seleccionado. Este bot&oacute;n quedar&aacute; deshabilitado cuando no exista la posibilidad de mover el componente m&aacute;s a la derecha</li>
+		</ul>
+	</ul>
+</p>
+<h2 class="stgH2">EDITOR VISUAL</h2>
+<p>Este editor permite al desarrollador ver el resultado del formulario que se est&aacute; creando en tiempo de diseño.<br>
+Los campos incluidos en este &aacute;rea son seleccionables, haciendo clic encima, de manera que en la zona derecha de la pantalla se presenten las propiedades del componente seleccionado para su edici&oacute;n<br>
+Los formulario diseñados se componen de p&aacute;ginas, y cada una de esas p&aacute;ginas deber&aacute;n contener un conjunto de l&iacute;neas sobre las que se situar&aacute;n los componentes o campos.</p>
+<h2 class="stgH2">PROPIEDADES DE COMPONENTE</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Propiedades:</span> en esta secci&oacute;n se configuran las propiedades del componente seleccionado. </li>
+		<ul class="detalle">
+		<li><span class="boton">Identificador:</span> c&oacute;digo &uacute;nivoco que identifica al componente dentro del formulario. Este c&oacute;digo se deber&aacute; utilizar cuando se quiera referenciar en campo en algun script, ya sea de formulario o de flujo de tramitaci&oacute;n. Para mantener una convenci&oacute;n respecto a los identificadores, se recomienda la utilizaci&oacute;n de may&uacute;sculas.</li>
+		<li><span class="boton">Columnas ocupadas:</span> n&uacute;mero de columnas que ocupa el componente en una l&iacute;nea. Cada l&iacute;nea puede ocupar un m&aacute;ximo de 6 columnas.</li>
+		<li><span class="boton">Texto:</span> texto multiidioma que se presentar&aacute; como etiqueta del componente.</li>
+		<li><span class="boton">No mostrar texto:</span> <i>check</i> que en caso de estar marcado hace que no se muestre etiqueta para el componente.</li>
+		<li><span class="boton">Ayuda en l&iacute;nea:</span> texto multiidioma que se presentar&aacute; como ayuda del componente al ciudadano. Este texto se mostrar&aacute; en el frontal siempre y cuando el ciudadano mantenga las ayudas activas.</li>
+		<li><span class="boton">Obligatorio:</span> indica si la cumplimentaci&oacute; del componente es requerida.</li>
+		<li><span class="boton">S&oacute;lo lectura:</span> <i>check</i> que permite establecer el componente en modo s&oacute;lo lectura, a nivel de HTML, de manera que el ciudadano no podr&aacute; introducir ning&uacute;n valor en el mismo.</li>
+		<li><span class="boton">No modificable:</span> <i>check</i> que permite establecer que se compruebe que un campo no var&acute;a su valor respecto a los datos iniciales del formulario. Esta comprobaci&oacute;n se realiza en servidor.</li>
+		<li><span class="boton">Tipo:</span> esta opci&oacute;n est&aacute; disponible &uacute;nicamente para campos de texto y selector. Para un campo de texto permite fijar el tipo de valor esperado, de manera que se realicen unas validaciones acordes a dicho tipo (p.ej. Identificaci&oacute;n permitir&iacute;a validar si es NIF, CIF, NIE o NSS). En el caso de un selector, permitir&aacute; fijar la manera en que se presentan los valores y si se posibilita selecionar uno o m&aacute;s valores.</li>
+		<li><span class="boton">Tipo lista valores (selector):</span> esta opci&oacute;n est&aacute; disponible &uacute;nicamente para campos selector, y permite fijar de qu&acute; manera se alimentar&aacute; los valores a mostrar en el campo. Las opciones disponibles son "Fija", en la que se deber&aacute;n introducir los valores a mostrar, "Dominio", en la que se deber&aacute; seleccionar el dominio del que extraer los valores, y "Script", que requerir&aacute; la cumplimentaci&oacute;n del script "Valores posibles" de la secci&oacute;n "Scripts".</li>
+		</ul>
+		<li><span class="nombreCampo">Scripts:</span> secci&oacute;n que presenta los scripts del campo. Los scripts disponibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Autorelleno:</span> script que permite asignar un valor al campo en funci&oacute;n de valores de campos previos. Es importante que los campos de los que depende deben tener posiciones anteriores al campo sobre el que aplica el script.</li>
+		<li><span class="boton">S&oacute;lo lectura:</span> script que permite asignar el estado "s&oacute;lo lectura" al campo en funci&oacute;n de valores de campos previos. Es importante que los campos de los que depende deben tener posiciones anteriores al campo sobre el que aplica el script.</li>
+		<li><span class="boton">Validaci&oacute;n:</span> script que permite realizar una validaci&oacute;n del valor del campo. Este script permite tanto mostrar un mensaje informativo, permitiendo continuar con el tr&aacute;mite, o un error, de manera que no el ciudadano no pueda continuar con el tr&aacute;mite hasta satisfacer la validaci&oacute;n.</li>
+		<li><span class="boton">Valores posibles:</span> este script se muestra para campos selector con Tipo lista valores "Script", y permite establecer el conjunto de valores posibles del campo.</li>
+		</ul>
+		<li><span class="nombreCampo">Estilos:</span> permite modificar estilos del campo. Los estilos disponibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Alineaci&oacute;n texto:</span> permite establecer la posici&oacute;n de la etiqueta de un campo.</li>
+		</ul>
+	</ul>
+</p>
+<h2 class="stgH2">BOTONADURA PIE DE P&Aacute;GINA</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Paginaci&oacute;n:</span> permite cambiar de p&aacute;gina, en caso de formulario multip&aacute;gina, para la edici&oacute;n de componentes. La navegaci&oacute;n permitida es:</li>
+		<ul class="detalle">
+		<li><span class="boton">P&aacute;gina anterior:</span> permite ir a una p&aacute;gina posterior del formulario, en caso de haberla, para la edici&oacute;n de la misma.</li>
+		<li><span class="boton">P&aacute;gina posterior:</span> permite ir a una p&aacute;gina posterior del formulario, en caso de haberla, para la edici&oacute;n de la misma.</li>
+		</ul>
+		<li><span class="boton">Aplicar cambios:</span> permite consolidar los cambios que se hayan realizado sobre un componente. Mientras no se apliquen los cambios, estos no ser&aacute;n visibles ni en el editor visual ni en el frontal.</li>
+		<li><span class="boton">Borrar componente:</span> permite borrar un componente seleccionado en el editor visual.</li>
+		<li><span class="boton">Ver estructura:</span> permite mostrar, en forma de &aacute;rbol, la estructura de elementos del formulario (p&aacute;ginas, l&iacute;neas y componentes).</li>
+		<li><span class="boton">Idioma:</span> permite modificar el idioma a mostrar en el editor visual del formulario. Por defecto se visualiza en el mismo idioma que se est&aacute; utilizando en la aplicaci&oacute;n.</li>
+		<li><span class="boton">Previsualizar versi&oacute;n:</span> permite acceder a la pantalla de configuraci&oacute;n de previsualizaci&oacute;n de versi&oacute;n, a partir de la cual se podr&aacute; previsualizar la versi&oacute;n en desarrollo en el asistente de tramitaci&oacute;n (vista del ciudadano).</li>
+		<li><span class="boton">Cerrar:</span> cierra la pantalla de diseño del formulario.</li>
+	</ul>
+</p>
+</body>
+</html>

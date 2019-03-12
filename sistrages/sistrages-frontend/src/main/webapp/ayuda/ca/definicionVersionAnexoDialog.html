@@ -1,0 +1,49 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENT D'ANNEX</h1>
+<p>
+	En la pantalla de<i>' Manteniment d'annex</i>' pot gestionar les configuracions del document annex.<br>
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica a l'annex en l'aplicaci&oacute;. Qualsevol refer&egrave;ncia a l'annex en els scripts de la versi&oacute; es realitzar&agrave; utilitzant aquest codi.</li>
+		<li><span class="nombreCampo">Descripci&oacute;:</span> text multiidioma de presentaci&oacute; de l'annex en l'assistent de tramitaci&oacute;. Aquesta ser&agrave; la denominaci&oacute; de l'annex que visualitzar&agrave; el tramitador en l'assistent de tramitaci&oacute;.</li>
+		<li><span class="nombreCampo">Obligatorietat:</span> permet configurar l'obligatorietat d'annexar el document en l'assistent de tramitaci&oacute;. Els valors possibles s&oacute;n:</li>
+		<ul class="detalle">
+		<li><span class="boton">Obligatori:</span> si es marca aquesta opci&oacute; ser&agrave; obligatori l'annexat del document en l'assistent. En cas contrari no es podr&agrave; amb l'emplenament del tr&agrave;mit.</li>
+		<li><span class="boton">Opcional:</span> si es marca aquesta opci&oacute; l'annexat del document ser&agrave; opcional.</li>
+		<li><span class="boton">Depenent:</span> si es marca aquesta opci&oacute; l'obligatorietat d'annexat del document dependr&agrave; del script 'Establir depend&egrave;ncia'.</li>
+		<li><span class="boton">Establir depend&egrave;ncia:</span> script que permet establir l'obligatorietat d'un document segons altres dades del tr&agrave;mit (dominis, dades d'un formulari previ, dades de sessi&oacute;, etc.). &uacute;nicament es tindr&agrave; en compte el valor d'aquest script si s'ha fixat pr&egrave;viament l'obligatorietat 'Depenent'.</li>
+		</ul>
+		<li><span class="nombreCampo">Ajuda:</span>en aquest apartat es configura la informaci&oacute; relativa al document annex, que es mostrar&agrave; al ciutad&agrave; en l'assistent de tramitaci&oacute; per a facilitar l'aportaci&oacute;:</li>
+		<ul class="detalle">
+		<li><span class="boton">Fitxer:</span> aquesta opci&oacute; permet al desenvolupador adjuntar un document que es mostrar&agrave; en l'assistent de tramitaci&oacute; a manera de plantilla del document a annexar.</li>
+		<li><span class="boton">URL:</span> permet indicar un enlla&ccedil; de la qual el ciutad&agrave; pugui descarregar, des de l'assistent de tramitaci&oacute;, un document a manera de plantilla del document a annexar.</li>
+		<li><span class="boton">Missatge (HTML):</span> possibilita afegir un missatge, amb suport HTML, que es mostrar&agrave; en l'assistent de tramitaci&oacute; com a informaci&oacute; d'inter&egrave;s per al ciutad&agrave; per a l'aportaci&oacute; del document.</li>
+		</ul>
+		<li><span class="nombreCampo">Presentaci&oacute; electr&ograve;nica:</span> configuracions i restriccions relatives a l'aportaci&oacute; electr&ograve;nica del document per part del ciutad&agrave;:</li>
+		<ul class="detalle">
+		<li><span class="boton">Nre. inst&agrave;ncies:</span> indica, en format num&egrave;ric sencer, la quantitat de fitxer que es permetr&agrave; adjuntar al ciutad&agrave; per al document annex.</li>
+		<li><span class="boton">Extensions:</span> indica les extensions de fitxers que es permetran adjuntar per al document annex. Si es marca "Totes" es permetr&agrave; qualsevol extensi&oacute;, i en cas de marcar "Personalitzades" s'hauran de consignar en el camp de text les extensions desitjades, separades per punt i coma (;).</li>
+		<li><span class="boton">Mida m&aacute;xima:</span> indica, en format num&egrave;ric sencer, la grand&agrave;ria m&agrave;xima dels fitxers que es permetran adjuntar. A m&eacute;s dita grand&agrave;ria es pot expressar en kilobytes (KB) o megabytes (MB), marcant l'opci&oacute; corresponent.</li>
+		<li><span class="boton">Convertir a PDF:</span> indica si el fitxer annexat s'ha de convertir a PDF despr&eacute;s de la seva aportaci&oacute; des de l'assistent. Els formats de fitxers convertibles dependran del plugin de conversi&oacute; a PDF definit en la instal&middot;laci&oacute;.</li>
+		<li><span class="boton">Anexar signat:</span> indica si el fitxer aportat ha d'anar signat. En aquest cas es validar&agrave; la signatura continguda en el document. El format del fitxer a aportar est&agrave; restringit a PDF.</li>
+		<li><span class="boton">Signar:</span> indica si el fitxer aportat s'haur&agrave; de signar electr&ograve;nicament des de l'assistent de tramitaci&oacute;. En cas d'estar marcada aquesta opci&oacute; se sol&middot;licitar&agrave; la signatura per part del signant o signants establerts en el script "Establir signants". Per a tramitacions autenticades, si el script no t&eacute; valor se sol&middot;licitar&agrave; la signatura per part de l'usuari autenticat.</li>
+		<li><span class="boton">Establir signants:</span> script que permet, en cas de requerir-se signatura electr&ograve;nica de l'annex, establir el signant o signants requerits. Per a tramitacions autenticades, si no es consignen signants, se sol&middot;licitar&agrave; la signatura de l'usuari autenticat. Per a tramitacions no autenticades ser&agrave; obligatori consignar almenys un signant en el script.</li>
+		<li><span class="boton">Script de validaci&oacute;:</span> script que permet dur a terme validacions despr&eacute;s de l'aportaci&oacute; del document per part del ciutad&agrave;. Aquest script s'executa en annexar el document.</li>
+		</ul>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Desar</span>: tanca la pantalla desant els canvis.</li>
+		<li><span class="boton">Cancel&middot;lar</span>: tanca la pantalla sense desar els canvis.</li>
+	</ul>
+</p>
+</body>
+</html>

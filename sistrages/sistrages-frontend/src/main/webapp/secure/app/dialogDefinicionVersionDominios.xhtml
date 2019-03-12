@@ -51,9 +51,9 @@
 	           	<p:dataTable  id="dataTable" var="dominio" value="#{dialogDefinicionVersionDominios.listaDominios}"
 					 rows="10"
 					 scrollable="true"
-		             paginator="false" selectionMode="single" selection="#{dialogDefinicionVersionDominios.datoSeleccionado}"
-		             emptyMessage="#{msg['error.emptyRows']}"
-		             rowKey="#{dominio.identificador}" dblClickSelect="true">
+		             paginator="true" selectionMode="single" selection="#{dialogDefinicionVersionDominios.datoSeleccionado}"
+		             emptyMessage="#{msg['error.emptyRows']}" paginatorPosition="bottom"
+		             rowKey="#{dominio.identificador}" dblClickSelect="true"  >
 
 					<!-- Columnas -->
 				    <p:column headerText="#{msg['viewDefinicionVersionDominios.headerCodigo']}" sortBy="#{dominio.identificador}">

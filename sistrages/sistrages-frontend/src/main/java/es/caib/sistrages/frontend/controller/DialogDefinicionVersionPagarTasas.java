@@ -2,7 +2,6 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -61,7 +60,6 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 
 	}
 
-	@PostConstruct
 	public void init() {
 		data = new Tasa();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
@@ -137,6 +135,13 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionPagarTasasDialog");
 	}
 
 	/**

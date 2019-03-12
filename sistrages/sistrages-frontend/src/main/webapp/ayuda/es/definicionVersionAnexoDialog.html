@@ -1,0 +1,51 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENTO DE ANEXO</h1>
+<p>
+	En la pantalla de '<i>Mantenimento de anexo</i>' puede gestionar las configuraciones del documento anexo.<br>
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> c&oacute;digo un&iacute;voco que identifica al anexo en la aplicaci&oacute;n. Cualquier referencia al anexo en los scripts de la versi&oacute;n se realizar&aacute; utilizando este c&oacute;digo.</li>
+		<li><span class="nombreCampo">Descripci&oacute;n:</span> texto multiidioma de presentaci&oacute;n del anexo en el asistente de tramitaci&oacute;n. Esta ser&aacute; la denominaci&oacute;n del anexo que visualizar&aacute; el tramitador en el asistente de tramitaci&oacute;n.</li>
+		<li><span class="boton">Obligatoriedad:</span> permite configurar la obligatoriedad de anexar el documento en el asistente de tramitaci&oacute;n. Los valores posibles son:</li>
+		<ul class="detalle">
+		<li><span class="boton">Obligatorio:</span> si se marca esta opci&oacute;n ser&aacute; obligatorio el anexado del documento en el asistente. En caso contrario no se podr&aacute; con la cumplimentaci&oacute;n del tr&aacute;mite.</li>
+		<li><span class="boton">Opcional:</span> si se marca esta opci&oacute;n el anexado del documento ser&aacute; opcional.</li>
+		<li><span class="boton">Depende:</span> si se marca esta opci&oacute;n la obligatoriedad de anexado del documento depender&aacute; del script 'Establecer dependencia'.</li>
+		<li><span class="boton">Establecer dependencia:</span> script que permite establecer la obligatoriedad de un documento seg&uacute;n otros datos del tr&aacute;mite (dominios, datos de un formulario previo, datos de sesi&oacute;, etc.). &uacute;nicamente se tendr&aacute; en cuenta el valor de este script si se ha fijado previamente la obligatoriedad 'Depende'.</li>
+		</ul>
+		<li><span class="boton">Ayuda:</span> en este apartado se configura la información relativa al documento anexo, que se mostrar&aacute; al ciudadano en el asistente de tramitaci&oacute;n para facilitar la aportaci&oacute;n:</li>
+		<ul class="detalle">
+		<li><span class="boton">Fichero:</span> esta opción permite al desarrollador adjuntar un documento que se mostrar&aacute; en el asistente de tramitaci&oacute;n a modo de plantilla del documento a anexar.</li>
+		<li><span class="boton">URL:</span> permite indicar un enlace de la que el ciudadano pueda descargar, desde el asistente de tramitaci&oacute;n, un documento a modo de plantilla del documento a anexar.</li>
+		<li><span class="boton">Mensaje (HTML):</span> posibilita añadir un mensaje, con soporte HTML, que se mostrar&aacute; en el asistente de tramitaci&oacute;n como informaci&oacute;n de inter&eacute;s para el ciudadano para la aportaci&oacute;n del documento.</li>
+		</ul>
+		<li><span class="boton">Firmar digitalmente:</span> permite establecer que se requiera la firma electr&oacute;nica del formulario. Esta firma se solicitar&aacute; en el &uacute;ltimo paso del asistente, de manera previa al registro del tr&aacute;mite.</li>
+		<li><span class="nombreCampo">Establecer firmante:</span> script que permite, en caso de requerirse firma electr&oacute;nica del fomulario, establecer el firmante o firmantes requeridos. Para tramitaciones autenticadas, si no se consignan firmantes, se solicitar&aacute; la firma del usuario autenticado. Para tramitaciones no autenticadas ser&aacute; obligatorio consignar por lo menos un firmante en el script.</li>
+		<li><span class="nombreCampo">Presentaci&oacute;n electr&oacute;nica:</span> configuraciones y restricciones relativas a la aportaci&oacute;n electr&oacute;nica del documento por parte del ciudadano:</li>
+		<ul class="detalle">
+		<li><span class="boton">Num. instancias:</span> indica, en formato num&eacute;rico entero, la cantidad de fichero que se permitir&aacute; adjuntar al ciudadano para el documento anexo.</li>
+		<li><span class="boton">Extensiones:</span> indica las extensiones de ficheros que se permitir&aacute;n adjuntar para el documento anexo. Si se marca "Todas" se pemitir&aacute; cualquier extensi&oacute;n, y en caso de marcar "Personalizadas" se deber&aacute;n consignar en el campo de texto las extensiones deseadas, separadas por punto y coma (;).</li>
+		<li><span class="boton">Tam. m&aacute;ximo:</span> indica, en formato num&eacute;rico entero, el tamaño m&aacute;ximo de los ficheros que se permitir&aacute;n adjuntar. Adem&aacute;s dicho tamaño se puede expresar en kilobytes (KB) o megabytes (MB), marcando la opci&oacute;n correspondiente.</li>
+		<li><span class="boton">Convertir a PDF:</span> indica si el fichero anexado se ha de convertir a PDF tras su aportaci&oacute;n desde el asistente. Los formatos de ficheros convertibles depender&aacute;n del plugin de conversi&aacute;n a PDF definido en la instalaci&oacute;n.</li>
+		<li><span class="boton">Anexar firmado:</span> indica si el fichero aportado ha de ir firmado. En ese caso se validar&aacute; la firma contenida en el documento. El formato del fichero a aportar est&aacute; restringido a PDF.</li>
+		<li><span class="boton">Firmar:</span> indica si el fichero aportado se deber&aacute; firmar electr&oacute;nicamente desde el asistente de tramitaci&oacute;n. En caso de estar marcada esta opci&oacute;n se solicitar&aacute; la firma por parte del firmante o firmantes establecidos en el script "Establecer firmantes". Para tramitaciones autenticadas, si el script no tiene valor se solicitar&aacute; la firma por parte del usuario autenticado.</li>
+		<li><span class="boton">Establecer firmantes:</span> script que permite, en caso de requerirse firma electr&oacute;nica del anexo, establecer el firmante o firmantes requeridos. Para tramitaciones autenticadas, si no se consignan firmantes, se solicitar&aacute; la firma del usuario autenticado. Para tramitaciones no autenticadas ser&aacute; obligatorio consignar por lo menos un firmante en el script.</li>
+		<li><span class="boton">Script de validaci&oacute;n:</span> script que permite llevar a cabo validaciones tras la aportaci&oacute;n del documento por parte del ciudadano. Este script se ejecuta al anexar el documento.</li>
+		</ul>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Guardar</span>: cierra la pantalla guardando los cambios.</li>
+		<li><span class="boton">Cancelar</span>: cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+</body>
+</html>

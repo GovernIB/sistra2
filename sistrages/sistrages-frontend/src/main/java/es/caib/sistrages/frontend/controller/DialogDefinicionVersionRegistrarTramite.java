@@ -177,10 +177,17 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionRegistrarTramiteDialog");
+	}
+
+	/**
 	 * Editar descripcion
 	 */
 	public void editarInstPresentacion() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.data.getInstruccionesPresentacion(),
+		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.EDICION, this.data.getInstruccionesPresentacion(),
 				tramiteVersion);
 
 	}
@@ -189,8 +196,8 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 * Editar descripcion
 	 */
 	public void editarInstTramitacion() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, this.data.getInstruccionesFinTramitacion(),
-				tramiteVersion);
+		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.EDICION,
+				this.data.getInstruccionesFinTramitacion(), tramiteVersion);
 	}
 
 	/**

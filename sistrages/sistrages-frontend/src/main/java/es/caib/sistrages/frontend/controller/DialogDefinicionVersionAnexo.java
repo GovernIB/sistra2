@@ -297,7 +297,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		if (data.getAyudaTexto() == null) {
 			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
 		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getAyudaTexto(), tramiteVersion);
+			UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.EDICION, data.getAyudaTexto(), tramiteVersion);
 		}
 	}
 
@@ -341,6 +341,13 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionAnexoDialog");
 	}
 
 	/**

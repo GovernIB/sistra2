@@ -52,6 +52,7 @@
 					<f:facet name="right">
 	    	    		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionPagarTasas.aceptar()}" process="@form" update="@form growldialogDefinicionRellenar" styleClass="boton-azul" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogDefinicionVersionPagarTasas.cancelar()}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogDefinicionVersionPagarTasas.ayuda()}" process="@this"/>
 					</f:facet>
 		  		</p:toolbar>
 	    </p:outputPanel>

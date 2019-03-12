@@ -14,6 +14,7 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.FormularioInternoService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -21,6 +22,7 @@ import es.caib.sistrages.frontend.model.types.TypeCampoFichero;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 import es.caib.sistrages.frontend.util.UtilJSF;
+import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -28,6 +30,9 @@ public class DialogPlantillaIdiomaFormulario extends DialogControllerBase {
 
 	@Inject
 	FormularioInternoService formIntService;
+
+	@Inject
+	ConfiguracionGlobalService configuracionGlobalService;
 
 	private Long codPlantilla;
 
@@ -45,8 +50,11 @@ public class DialogPlantillaIdiomaFormulario extends DialogControllerBase {
 
 		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 
-		if (!mochilaDatos.isEmpty()) {
+		if (!mochilaDatos.isEmpty() && mochilaDatos.get(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO) != null) {
 			setIdiomas((List<String>) mochilaDatos.get(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO));
+		} else {
+			final String iIdiomas = configuracionGlobalService.getConfiguracionGlobal("sistramit.idiomas").getValor();
+			setIdiomas(UtilTraducciones.getIdiomas(iIdiomas));
 		}
 
 		cargarDatos();
@@ -100,6 +108,13 @@ public class DialogPlantillaIdiomaFormulario extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("plantillaIdiomaFormularioDialog");
 	}
 
 	public void descargaFichero(final Fichero fichero) {

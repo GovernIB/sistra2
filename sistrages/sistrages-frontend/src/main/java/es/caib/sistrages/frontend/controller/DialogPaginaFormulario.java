@@ -121,6 +121,13 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("paginaFormularioDialog");
+	}
+
+	/**
 	 * @return the iData
 	 */
 	public String getiData() {

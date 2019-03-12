@@ -46,7 +46,7 @@ public class DialogPlantillaFormulario extends DialogControllerBase {
 			data = (PlantillaFormulario) UtilJSON.fromJSON(iData, PlantillaFormulario.class);
 		}
 
-		setListaFormateadores(fmtService.listFormateadorFormulario(UtilJSF.getIdEntidad(), null));
+		setListaFormateadores(fmtService.listFormateadorFormulario(UtilJSF.getIdEntidad(), null, false));
 	}
 
 	/**
@@ -68,6 +68,13 @@ public class DialogPlantillaFormulario extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("plantillaFormularioDialog");
 	}
 
 	/**

@@ -1,0 +1,36 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENT DE TAXA</h1>
+<p>
+	A la pantalla de '<i>Manteniment de taxa</i>' podeu gestionar les configuracions de la taxa.<br>
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador:</span> codi un&iacute;voc que identifica la taxa a l'aplicaci&oacute;. Qualsevol refer&egrave;ncia a la taxa en els scripts de la versi&oacute; es realitzar&agrave; utilitzant aquest codi.</li>
+		<li><span class="nombreCampo">Descripci&oacute;:</span> text multiidioma de presentaci&oacute; de la taxa a l'assistent de tramitaci&oacute;. Aquesta ser&agrave; la denominaci&oacute; de la taxa que visualitzar&agrave; el tramitador a l'assistent de tramitaci&oacute;.</li>
+		<li><span class="nombreCampo">Obligatorietat:</span> permet configurar l'obligatorietat de paga la taxa a l'assistent de tramitaci&oacute;. Els valors possibles s&oacute;n:</li>
+		<ul class="detalle">
+		<li><span class="boton">Obligatori:</span> si es marca aquesta opci&oacute; ser&agrave; obligatori el pagament de la taxa a l'assistent. En cas contrari no es podr&agrave; amb l'emplenament del tr&agrave;mit.</li>
+		<li><span class="boton">Opcional:</span> si es marca aquesta opci&oacute; el pagament de la taxa ser&agrave; opcional.</li>
+		<li><span class="boton">Depenent:</span> si es marca aquesta opci&oacute; l'obligatorietat de realitzar el pagament de la taxa dependr&agrave; del script 'Establir depend&egrave;ncia'.</li>
+		<li><span class="boton">Establir depend&egrave;ncia:</span> script que permet establir l'obligatorietat del pagament de la taxa segons altres dades del tr&agrave;mit (dominis, dades d'un formulari previ, dades de sessi&oacute;, etc.). &uacute;nicament es tindr&agrave; en compte el valor d'aquest script si s'ha fixat pr&egrave;viament l'obligatorietat 'Depenent'.</li>
+		</ul>
+		<li><span class="nombreCampo">Script de pagaments:</span> script que permet configurar els detalls de la taxa (plataforma de pagament, codi de taxa, import, concepte, pagador, etc.).</li>
+		<li><span class="nombreCampo">Tipus de pagament:</span> selector que pemite fixar el tipus de pagament disponible per a la taxa.</li>
+		<li><span class="nombreCampo">Simular pagament:</span> <i>check</i> que, en cas d'estar actiu, activa la simulaci&oacute; del pagament. Aquesta opci&oacute; t&eacute; sentit per a entorns de desenvolupament.</li>
+		</ul>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Desar</span>: tanca la pantalla desant els canvis.</li>
+		<li><span class="boton">Cancel&middot;lar</span>: tanca la pantalla sense desar els canvis.</li>
+	</ul>
+</p>
+</body>
+</html>

@@ -122,6 +122,13 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("propiedadesFormularioDialog");
+	}
+
+	/**
 	 * Retorno dialogo de los botones de traducciones.
 	 *
 	 * @param event
@@ -397,7 +404,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		for (final PlantillaFormulario plantilla : data.getPlantillas()) {
 			if (plantilla.getIdentificador().equals(pPlantillaEditada.getIdentificador())
-					&& plantilla.getCodigo() != pPlantillaEditada.getCodigo()) {
+					&& !plantilla.getCodigo().equals(pPlantillaEditada.getCodigo())) {
 				duplicado = true;
 				break;
 			}

@@ -183,6 +183,13 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("definicionVersionTasaDialog");
+	}
+
+	/**
 	 * Verificar precondiciones al guardar.
 	 *
 	 * @return true, si se cumplen las todas la condiciones

@@ -1,0 +1,40 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">MANTENIMENTO DE PASO REGISTRAR FORMULARIO</h1>
+<p>
+	En la pantalla de '<i>Mantenimento de paso Registrar formulario</i>' puede gestionar las opciones relativas al registro de la solicitud.<br>
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="boton">Datos de destino:</span> en este apartado se han de consignar los datos de destino de las solicitudes vinculadas a la versi&oacute;n del tr&aacute;mite. </li>
+		<ul class="detalle">
+		<li><span class="boton">Oficina de registro:</span> oficina del registro electr&oacute;nico sobre el que se realizar&aacute; el registro de la solicitud.</li>
+		<li><span class="boton">Libro de registro:</span> libro de registro, de la oficina de registro seleccionada, sobre la que se realizar&aacute; el apunte registral de entrada de la solicitud.</li>
+		<li><span class="boton">Tipos de asunto:</span> tipo de asunto que se especificar&aacute; al realizar el apunte registral sobre el registro electr&oacute;nico.</li>
+		<li><span class="boton">Establecer datos destino:</span> script que permite establecer din&aacute;micamente los par&aacute;metros de destino descritos anteriormente. Adem&aacute;s permite establecer el n&uacute;mero de expediente (ser&iacute;a obligatorio para tr&aacute;mites que no son de inicio).</li>
+		</ul>
+		<li><span class="nombreCampo">Instrucciones de presentaci&oacute;n (HTML):</span><b>Este concepto est&aacute; en revisi&oacute;n, por lo que no deber&iacute; consignarse valores en dicho campo.</b></li>
+		<li><span class="nombreCampo">Instrucciones de tramitaci&oacute;n (HTML):</span> texto multiidioma, con soporte HTML, que permite consignar informaci&oacute;n de inter&eacute;s para el ciudadano que se mostrar&aacute; en el asistente, en el paso Registrar.</li>
+		<li><span class="nombreCampo">Establecer presentador:</span> script que permite indicar los datos de la persona f&iacute;sica o jur&iacute;dica que presenta la solicitud. Para tramitaciones autenticadas, si el script no tiene contenido, se tomar&aacute; como presentador el usuario autenticado. Para tramitaciones no autenticadas ser&aacute; necesario consignar la persona presentadora.</li>
+		<li><span class="nombreCampo">Representaci&oacute;n:</span> configuraciones y restricciones relativas a la aportaci&oacute;n electr&oacute;nica del documento por parte del ciudadano:</li>
+		<ul class="detalle">
+		<li><span class="boton">Admite representaci&oacute;n:</span> <i>check</i> para indicar si el tr&aacute;mite permite representaci&oacute;n. En caso de estar marcado, ser&aacute; necesaria la identificaci&oacute;n de la persona representada en el script "Establecer representado."</li>
+		<li><span class="boton">Establecer representado:</span> indica las extensiones de ficheros que se permitir&aacute;n adjuntar para el documento anexo. Si se marca "Todas" se pemitir&aacute; cualquier extensi&oacute;n, y en caso de marcar "Personalizadas" se deber&aacute;n consignar en el campo de texto las extensiones deseadas, separadas por punto y coma (;).</li>
+		<li><span class="boton">Valida representaci&oacute;n:</span> <i>check</i> que permite indicar si se ha de validar la representaci&oacute;n, en caso de haberla. <b>Esta opci&oacute;n no est&aacute; actualmente disponible</b>, ya que requiere del uso de un plugin de validaci&oacute;n de representaci&oacute;n.</li>
+		</ul>
+		<li><span class="nombreCampo">Permite registrar:</span> script que permite realizar validaciones previas al registro de una solicitud. Si dichas validaciones no se satisfacen, se podr&iacute; impedir el registro de la solicitud.</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Guardar</span>: cierra la pantalla guardando los cambios.</li>
+		<li><span class="boton">Cancelar</span>: cierra la pantalla sin guardar los cambios.</li>
+	</ul>
+</p>
+</body>
+</html>
