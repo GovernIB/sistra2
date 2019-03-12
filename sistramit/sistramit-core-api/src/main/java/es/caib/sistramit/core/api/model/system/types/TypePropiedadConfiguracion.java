@@ -28,6 +28,12 @@ public enum TypePropiedadConfiguracion {
 	SISTRAMIT_URL("sistramit.url"),
 	/** Idiomas soportados. */
 	IDIOMAS_SOPORTADOS("sistramit.idiomas"),
+
+	/** Anexo formulario soporte: extensiones. */
+	ANEXO_SOPORTE_EXTENSIONES("sistramit.anexoSoporte.extensiones"),
+	/** Anexo formulario soporte: tamaño. */
+	ANEXO_SOPORTE_TAMANYO("sistramit.anexoSoporte.tamanyo"),
+
 	/**
 	 * Realiza chequeo de si los datos de persistencia del paso se corresponden con
 	 * los almacenados en BBDD (true/false). Una vez depurada la aplicacion se puede

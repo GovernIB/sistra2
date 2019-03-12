@@ -251,7 +251,7 @@ public final class ScriptExecImpl implements ScriptExec {
 		if (plgAviso != null && plgAviso.isExisteAviso()) {
 			final String textoMensajeAviso = calcularMensaje(plgAviso.getCodigoMensajeAviso(),
 					plgAviso.getParametrosMensajeAviso(), plgAviso.getTextoMensajeAviso(), codigosError);
-			mensaje = new MensajeValidacion(plgAviso.getTipoAviso(), textoMensajeAviso);
+			mensaje = new MensajeValidacion(plgAviso.getCampo(), plgAviso.getTipoAviso(), textoMensajeAviso);
 		}
 		return mensaje;
 	}
@@ -498,7 +498,7 @@ public final class ScriptExecImpl implements ScriptExec {
 			plugins.add(new ResValoresPosibles());
 			break;
 		case SCRIPT_VALIDACION_CAMPO:
-			plugins.add(new PlgValidacion());
+			plugins.add(new PlgValidacion(pIdElemento));
 			break;
 		case SCRIPT_VALIDACION_PAGINA:
 			plugins.add(new PlgValidacion());

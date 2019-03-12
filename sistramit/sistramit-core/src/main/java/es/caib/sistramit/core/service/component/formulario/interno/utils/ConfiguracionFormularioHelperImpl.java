@@ -11,9 +11,11 @@ import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteCheckbox;
 import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
+import es.caib.sistrages.rest.api.interna.RPlantillaIdioma;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
 import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
@@ -45,6 +47,7 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.formulario.interno.DatosSesionFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.types.TypeScriptFormulario;
@@ -63,6 +66,10 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	/** Motor de ejecución de scritps. */
 	@Autowired
 	private ScriptExec scriptFormulario;
+
+	/** Configuracion. */
+	@Autowired
+	private ConfiguracionComponent configuracionComponent;
 
 	@Override
 	public ConfiguracionCampo obtenerConfiguracionCampo(RComponente pCampoDef) {
@@ -140,43 +147,53 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
 				pDatosSesion.getDefinicionTramite());
 
-		if (definicionFormulario.getFormularioInterno().getPlantillas().isEmpty()) {
-			throw new ErrorConfiguracionException("No se han definido plantillas de visualización para el formulario");
-		}
-
 		RPlantillaFormulario pf = null;
 
-		final RScript scriptPlantillas = definicionFormulario.getFormularioInterno().getScriptPlantillas();
-		if (UtilsSTG.existeScript(scriptPlantillas)) {
-			final Map<String, String> codigosError = UtilsSTG.convertLiteralesToMap(scriptPlantillas.getLiterales());
-			final VariablesFormulario variablesFormulario = UtilsFormularioInterno
-					.generarVariablesFormulario(pDatosSesion, null);
-			final RespuestaScript rs = scriptFormulario.executeScriptFormulario(
-					TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA, pDatosSesion.getIdFormulario(),
-					scriptPlantillas.getScript(), variablesFormulario, codigosError,
-					pDatosSesion.getDefinicionTramite());
-			final String idPlantilla = (String) rs.getResultado();
-			for (final RPlantillaFormulario p : definicionFormulario.getFormularioInterno().getPlantillas()) {
-				if (p.getIdentificador().equals(idPlantilla)) {
-					pf = p;
-					break;
+		// Plantillas definidas a nivel de formulario
+		if (!definicionFormulario.getFormularioInterno().getPlantillas().isEmpty()) {
+			final RScript scriptPlantillas = definicionFormulario.getFormularioInterno().getScriptPlantillas();
+			if (UtilsSTG.existeScript(scriptPlantillas)) {
+				final Map<String, String> codigosError = UtilsSTG
+						.convertLiteralesToMap(scriptPlantillas.getLiterales());
+				final VariablesFormulario variablesFormulario = UtilsFormularioInterno
+						.generarVariablesFormulario(pDatosSesion, null);
+				final RespuestaScript rs = scriptFormulario.executeScriptFormulario(
+						TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA, pDatosSesion.getIdFormulario(),
+						scriptPlantillas.getScript(), variablesFormulario, codigosError,
+						pDatosSesion.getDefinicionTramite());
+				final String idPlantilla = (String) rs.getResultado();
+				for (final RPlantillaFormulario p : definicionFormulario.getFormularioInterno().getPlantillas()) {
+					if (p.getIdentificador().equals(idPlantilla)) {
+						pf = p;
+						break;
+					}
 				}
-			}
-			if (pf == null) {
-				throw new ErrorConfiguracionException("No se ha podido obtener plantilla pdf para formulario "
-						+ pDatosSesion.getIdFormulario() + ": no existe plantilla con id " + idPlantilla);
+			} else {
+				for (final RPlantillaFormulario p : definicionFormulario.getFormularioInterno().getPlantillas()) {
+					if (p.isDefecto()) {
+						pf = p;
+						break;
+					}
+				}
 			}
 		} else {
-			for (final RPlantillaFormulario p : definicionFormulario.getFormularioInterno().getPlantillas()) {
-				if (p.isDefecto()) {
-					pf = p;
-					break;
+			// Plantilla definida a nivel de entidad
+			final RConfiguracionEntidad entidad = configuracionComponent.obtenerConfiguracionEntidad(
+					pDatosSesion.getDefinicionTramite().getDefinicionVersion().getIdEntidad());
+			final List<RPlantillaIdioma> plantillasDefecto = entidad.getPlantillasDefecto();
+			if (plantillasDefecto != null) {
+				for (final RPlantillaIdioma pi : plantillasDefecto) {
+					if (pi.getIdioma().equals(pDatosSesion.getDatosInicioSesion().getIdioma())) {
+						pf = pi.getPlantilla();
+						break;
+					}
 				}
 			}
-			if (pf == null) {
-				throw new ErrorConfiguracionException("No se ha podido obtener plantilla pdf para formulario "
-						+ pDatosSesion.getIdFormulario() + ": no existe plantilla por defecto.");
-			}
+		}
+
+		if (pf == null) {
+			throw new ErrorConfiguracionException(
+					"No se ha podido obtener plantilla pdf para formulario " + pDatosSesion.getIdFormulario());
 		}
 
 		return pf;

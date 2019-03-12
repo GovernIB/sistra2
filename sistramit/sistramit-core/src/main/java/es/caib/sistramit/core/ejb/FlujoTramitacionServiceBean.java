@@ -106,4 +106,9 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 		return flujoTramitacionService.logoutTramite(idSesionTramitacion);
 	}
 
+	@Override
+	public String obtenerUrlEntidad(String idTramite, int version, String idioma) {
+		return flujoTramitacionService.obtenerUrlEntidad(idTramite, version, idioma);
+	}
+
 }

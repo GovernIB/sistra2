@@ -344,7 +344,7 @@ public final class ControladorFlujoTramitacionImpl implements ControladorFlujoTr
 
 		// Establece detalle tramite
 		final DetalleTramite detalleTramite = UtilsFlujo.detalleTramite(pDatosSesion, entidadInfo,
-				configuracionComponent.obtenerUrlResources());
+				configuracionComponent);
 
 		return detalleTramite;
 	}

@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.model.script.flujo;
 
 import es.caib.sistramit.core.service.model.script.ClzDatosUsuarioInt;
+import es.caib.sistramit.core.service.model.script.ClzTramiteCPInt;
 import es.caib.sistramit.core.service.model.script.PluginScriptPlg;
 
 /**
@@ -71,5 +72,12 @@ public interface PlgSesionTramitacionInt extends PluginScriptPlg {
 	 *         autenticada).
 	 */
 	ClzDatosUsuarioInt getUsuario();
+
+	/**
+	 * Devuelve el tramite cp
+	 *
+	 * @return Devuelve el tramite.
+	 */
+	ClzTramiteCPInt getTramiteCP();
 
 }

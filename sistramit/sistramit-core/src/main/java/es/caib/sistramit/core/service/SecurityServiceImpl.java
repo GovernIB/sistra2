@@ -242,7 +242,7 @@ public class SecurityServiceImpl implements SecurityService {
 		}
 		res.setNiveles(niveles);
 		res.setQaa(String.valueOf(defTramite.getDefinicionVersion().getPropiedades().getNivelQAA()));
-		res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma, configuracionComponent.obtenerUrlResources()));
+		res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma, configuracionComponent));
 
 		final List<AvisoPlataforma> avisos = new ArrayList<>();
 		for (final RAviso a : avisosEntidad.getAvisos()) {
@@ -250,6 +250,9 @@ public class SecurityServiceImpl implements SecurityService {
 			aviso.setMensaje(UtilsSTG.obtenerLiteral(a.getMensaje(), idioma));
 			aviso.setBloquearAcceso(a.isBloquear());
 			avisos.add(aviso);
+			if (a.isBloquear()) {
+				res.setBloquear(true);
+			}
 		}
 		res.setAvisos(avisos);
 

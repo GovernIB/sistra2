@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistra2.commons.utils.ValidacionesCadena;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
 import es.caib.sistramit.core.api.exception.LoginException;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
@@ -47,14 +48,23 @@ import es.caib.sistramit.frontend.model.RespuestaJSON;
 @Controller
 public final class LoginController {
 
+	/** Parámetro trámite catálogo. */
+	private static final String PARAM_TRAMITECP = "idTramiteCatalogo";
+
+	/** Parámetro trámite. */
+	private static final String PARAM_VERSION = "version";
+
+	/** Parámetro trámite. */
+	private static final String PARAM_TRAMITE = "tramite";
+
+	/** Parámetro login. */
+	private static final String PARAM_LOGIN = "login";
+
+	/** Parámetro idioma. */
+	private static final String PARAM_IDIOMA = "idioma";
+
 	/** Log. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
-
-	/** Atributo constante LOGIN de LoginController. */
-	private static final String LOGIN = "login";
-
-	/** Atributo constante IDIOMA de LoginController. */
-	private static final String IDIOMA = "idioma";
 
 	/** Configuracion. */
 	@Autowired
@@ -98,6 +108,8 @@ public final class LoginController {
 		sesionHttp.setUserAgent(userAgent);
 
 		// Obtenemos url original
+		// SI SE ACTIVA CSRF LA CACHE POR DEFECTO NO CACHEA LAS PETICIONES QUE NO TENGAN
+		// LA VALIDACION
 		// final SavedRequest savedRequest = new
 		// HttpSessionRequestCache().getRequest(request, response);
 		final SavedRequest savedRequest = loginRequestCache.getRequest(request, response);
@@ -113,11 +125,14 @@ public final class LoginController {
 		// Guardamos url original para poder redirigir clave
 		if (!ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN.equals(puntoEntrada)) {
 			sesionHttp.setUrlInicio(url);
+			sesionHttp.setIdTramite(getParamValue(savedRequest, PARAM_TRAMITE));
+			sesionHttp
+					.setVersion(ValidacionesCadena.getInstance().parseInt(getParamValue(savedRequest, PARAM_VERSION)));
 		}
 
 		// Establecemos idioma que viene en la saved request y si no viene ninguno el
 		// idioma por defecto
-		final String idiomaSavedRequest = getParamValue(savedRequest, IDIOMA);
+		final String idiomaSavedRequest = getParamValue(savedRequest, PARAM_IDIOMA);
 		final String idiomasSoportados = systemService
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.IDIOMAS_SOPORTADOS);
 		final String idioma = sanitizeIdioma(idiomaSavedRequest, idiomasSoportados);
@@ -300,7 +315,7 @@ public final class LoginController {
 		li.setTicketName(pTicketUser);
 		li.setTicketValue(ticket);
 		li.setIdioma(sesionHttp.getIdioma());
-		return new ModelAndView("loginTicket", LOGIN, li);
+		return new ModelAndView("loginTicket", PARAM_LOGIN, li);
 	}
 
 	/**
@@ -314,10 +329,10 @@ public final class LoginController {
 	private ModelAndView autenticarFormLogin(final SavedRequest savedRequest) {
 
 		// Obtenemos parametros inicio tramite
-		final String paramCodigoTramite = getParamValue(savedRequest, "tramite");
-		final String paramVersionTramite = getParamValue(savedRequest, "version");
-		final String paramLogin = getParamValue(savedRequest, LOGIN);
-		final String paramIdTramiteCP = getParamValue(savedRequest, "idTramiteCatalogo");
+		final String paramCodigoTramite = getParamValue(savedRequest, PARAM_TRAMITE);
+		final String paramVersionTramite = getParamValue(savedRequest, PARAM_VERSION);
+		final String paramLogin = getParamValue(savedRequest, PARAM_LOGIN);
+		final String paramIdTramiteCP = getParamValue(savedRequest, PARAM_TRAMITECP);
 
 		// Obtenemos info login tramite
 		final InfoLoginTramite infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
@@ -339,7 +354,7 @@ public final class LoginController {
 		}
 
 		// Devolvemos formulario de login
-		return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
+		return new ModelAndView(PARAM_LOGIN, PARAM_LOGIN, infoLoginTramite);
 	}
 
 	/**
@@ -360,7 +375,7 @@ public final class LoginController {
 				.obtenerInfoLoginTramiteAnonimoPersistente(idSesionTramitacion);
 
 		// Devolvemos formulario de login
-		return new ModelAndView(LOGIN, LOGIN, infoLoginTramite);
+		return new ModelAndView(PARAM_LOGIN, PARAM_LOGIN, infoLoginTramite);
 	}
 
 	/**
@@ -441,8 +456,8 @@ public final class LoginController {
 		String idioma;
 		idioma = sesionHttp.getIdioma();
 		if (StringUtils.isEmpty(idioma)) {
-			if (request.getParameter(IDIOMA) != null) {
-				idioma = request.getParameter(IDIOMA);
+			if (request.getParameter(PARAM_IDIOMA) != null) {
+				idioma = request.getParameter(PARAM_IDIOMA);
 			} else {
 				idioma = "ca";
 			}

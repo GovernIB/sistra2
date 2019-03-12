@@ -5,7 +5,7 @@ import javax.script.ScriptException;
 /**
  * Plugin para generar un mensaje de aviso. Este plugin estara disponible en los
  * scripts que implementen validación y servirá para mostrar un mensaje de aviso
- * (info/warning) que no para la ejecución.
+ * (info/warning/error) que no para la ejecución.
  *
  * @author Indra
  *

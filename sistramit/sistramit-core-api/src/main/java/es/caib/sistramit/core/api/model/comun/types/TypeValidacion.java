@@ -10,8 +10,6 @@ public enum TypeValidacion {
 	/**
 	 * Información.
 	 */
-	// TODO VER DE CAMBIAR
-	// INFO("info"),
 	INFO("info"),
 	/**
 	 * Warning.

@@ -11,18 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.ErrorFrontException;
-import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
-import es.caib.sistramit.core.api.exception.LoginException;
 import es.caib.sistramit.core.api.exception.ServiceException;
-import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
-import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
-import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
 import es.caib.sistramit.core.api.exception.WarningFrontException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
-import es.caib.sistramit.core.api.model.comun.types.TypeNivelExcepcion;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
@@ -49,11 +43,13 @@ import es.caib.sistramit.frontend.view.UploadFileView;
  */
 public abstract class TramitacionController {
 
-	/**
-	 * Flujo tramitacion service.
-	 */
+	/** Flujo tramitacion service. */
 	@Autowired
 	FlujoTramitacionService flujoTramitacionService;
+
+	/** Configuracion. */
+	@Autowired
+	private SystemService systemService;
 
 	/** Atributo literales. */
 	@Autowired
@@ -62,9 +58,7 @@ public abstract class TramitacionController {
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * Informacion de sesion de tramitacion.
-	 */
+	/** Informacion de sesion de tramitacion. */
 	@Autowired
 	private SesionHttp sesionHttp;
 
@@ -74,29 +68,18 @@ public abstract class TramitacionController {
 	@Resource(name = "errores")
 	private Errores errores;
 
-	/** Configuracion. */
-	@Autowired
-	private SystemService systemService;
-
-	/**
-	 * Service excepcion para las que no se intentara recargar el tramite.
-	 */
-	private static final String[] SERVICE_EXCEPTION_NO_RECARGAR = { AccesoNoPermitidoException.class.getName(),
-			LoginException.class.getName(), TramiteFinalizadoException.class.getName(),
-			TramiteNoExisteException.class.getName(), UsuarioNoPermitidoException.class.getName(),
-			LimiteTramitacionException.class.getName() };
-
 	/**
 	 * Guarda en la sesión http la referencia al flujo de tramitación.
 	 *
 	 * @param pidSesionTramitacion
 	 *            Id sesión
 	 */
-	protected final void registraSesionTramitacion(final String pidSesionTramitacion, final String idioma,
-			final boolean debug) {
-		sesionHttp.setIdSesionTramitacion(pidSesionTramitacion);
-		sesionHttp.setIdioma(idioma);
-		sesionHttp.setDebugSesionTramitacion(debug);
+	protected final void registraSesionTramitacion(final DetalleTramite dt) {
+		sesionHttp.setIdSesionTramitacion(dt.getTramite().getIdSesion());
+		sesionHttp.setIdioma(dt.getTramite().getIdioma());
+		sesionHttp.setIdTramite(dt.getTramite().getId());
+		sesionHttp.setVersion(dt.getTramite().getVersion());
+		sesionHttp.setDebugSesionTramitacion(dt.getDebug() == TypeSiNo.SI);
 	}
 
 	/**
@@ -176,6 +159,32 @@ public abstract class TramitacionController {
 			id = "es";
 		}
 		return id;
+	}
+
+	/**
+	 * Obtiene id trámite.
+	 *
+	 * @return id trámite
+	 */
+	public final String getIdTramite() {
+		String idTramite = null;
+		if (sesionHttp != null) {
+			idTramite = sesionHttp.getIdTramite();
+		}
+		return idTramite;
+	}
+
+	/**
+	 * Obtiene version trámite.
+	 *
+	 * @return version trámite
+	 */
+	public final Integer getVersionTramite() {
+		Integer res = null;
+		if (sesionHttp != null) {
+			res = sesionHttp.getVersion();
+		}
+		return res;
 	}
 
 	/**
@@ -317,12 +326,6 @@ public abstract class TramitacionController {
 		// Generamos respuesta JSON
 		final RespuestaJSON res = errores.generarRespuestaJsonExcepcion(ex, getIdioma());
 
-		// Si es una excepcion de tipo service se intentara recargar el
-		// tramite, excepto ciertas excepciones
-		if (isExceptionServiceRecargar(ex)) {
-			res.setUrl(getUrlAsistente() + "/asistente/recargarTramite.html");
-		}
-
 		// Diferenciamos si es una llamada json
 		ModelAndView view;
 		if (request.getRequestURI().endsWith(".json")) {
@@ -398,28 +401,6 @@ public abstract class TramitacionController {
 		}
 		return res;
 
-	}
-
-	/**
-	 * Comprueba si es una excepcion de servicio para la que se intentara recargar
-	 * el tramite.
-	 *
-	 * @param pEx
-	 *            Exception
-	 * @return true si se debe intentar recargar el tramite.
-	 */
-	private boolean isExceptionServiceRecargar(final Exception pEx) {
-		boolean res = false;
-		if (pEx instanceof ServiceException && ((ServiceException) pEx).getNivel() == TypeNivelExcepcion.FATAL) {
-			res = true;
-			for (final String exceptionName : SERVICE_EXCEPTION_NO_RECARGAR) {
-				if (StringUtils.equals(exceptionName, pEx.getClass().getName())) {
-					res = false;
-					break;
-				}
-			}
-		}
-		return res;
 	}
 
 	/**

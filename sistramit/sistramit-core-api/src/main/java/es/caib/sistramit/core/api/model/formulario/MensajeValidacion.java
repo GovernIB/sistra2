@@ -25,6 +25,11 @@ public final class MensajeValidacion implements Serializable {
 	private String mensaje;
 
 	/**
+	 * Campo asociado a la validación (opcional).
+	 */
+	private String campo;
+
+	/**
 	 * Constructor.
 	 */
 	public MensajeValidacion() {
@@ -43,6 +48,25 @@ public final class MensajeValidacion implements Serializable {
 		super();
 		estado = pTipoAviso;
 		mensaje = pMensajeAviso;
+
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param pCodigoElemento
+	 *            Elemento asociado a la validación (campo formulario)
+	 * @param pTipoAviso
+	 *            Tipo aviso
+	 * @param pMensajeAviso
+	 *            Mensaje aviso
+	 */
+	public MensajeValidacion(final String pCodigoElemento, final TypeValidacion pTipoAviso,
+			final String pMensajeAviso) {
+		super();
+		estado = pTipoAviso;
+		mensaje = pMensajeAviso;
+		campo = pCodigoElemento;
 	}
 
 	/**
@@ -81,6 +105,25 @@ public final class MensajeValidacion implements Serializable {
 	 */
 	public void setMensaje(final String pMensajeAviso) {
 		mensaje = pMensajeAviso;
+	}
+
+	/**
+	 * Método de acceso a campo.
+	 *
+	 * @return campo
+	 */
+	public String getCampo() {
+		return campo;
+	}
+
+	/**
+	 * Método para establecer campo.
+	 *
+	 * @param campo
+	 *            campo a establecer
+	 */
+	public void setCampo(String campo) {
+		this.campo = campo;
 	}
 
 }

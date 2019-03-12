@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistramit.core.api.exception.NoExisteFlujoTramitacionException;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
@@ -19,7 +20,10 @@ import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.service.FlujoTramitacionService;
 import es.caib.sistramit.core.interceptor.NegocioInterceptor;
 import es.caib.sistramit.core.service.component.flujo.FlujoTramitacionComponent;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.component.system.FlujoTramitacionCacheComponent;
+import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 
 @Service
 @Transactional
@@ -28,6 +32,10 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	/** Caché con con los flujos de tramitacion. */
 	@Autowired
 	private FlujoTramitacionCacheComponent flujoTramitacionCache;
+
+	/** Configuración. */
+	@Autowired
+	private ConfiguracionComponent configuracion;
 
 	@Override
 	@NegocioInterceptor
@@ -118,9 +126,31 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 		ft.envioFormularioSoporte(nif, nombre, telefono, email, problemaTipo, problemaDesc, anexo);
 	}
 
+	@Override
+	public byte[] obtenerClavePdf(final String idSesionTramitacion) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		final byte[] pdf = ft.obtenerClavePdf();
+		return pdf;
+	}
+
+	@Override
+	public String logoutTramite(String idSesionTramitacion) {
+		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
+		final String url = ft.logoutTramite();
+		flujoTramitacionCache.remove(idSesionTramitacion);
+		return url;
+	}
+
+	@Override
+	public String obtenerUrlEntidad(String idTramite, int version, String idioma) {
+		final DefinicionTramiteSTG defTram = configuracion.recuperarDefinicionTramite(idTramite, version, idioma);
+		final String idEntidad = defTram.getDefinicionVersion().getIdEntidad();
+		final RConfiguracionEntidad entidad = configuracion.obtenerConfiguracionEntidad(idEntidad);
+		return UtilsSTG.obtenerLiteral(entidad.getUrlCarpeta(), idioma, true);
+	}
+
 	// -------------------------------------------------------------------------------------------
-	// - Métodos especiales invocados desde el interceptor. No pasan por
-	// interceptor
+	// Métodos especiales invocados desde el interceptor. No pasan por interceptor
 	// de auditoria.
 	// -------------------------------------------------------------------------------------------
 	@Override
@@ -150,21 +180,6 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 				// No hacemos nada
 			}
 		}
-	}
-
-	@Override
-	public byte[] obtenerClavePdf(final String idSesionTramitacion) {
-		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
-		final byte[] pdf = ft.obtenerClavePdf();
-		return pdf;
-	}
-
-	@Override
-	public String logoutTramite(String idSesionTramitacion) {
-		final FlujoTramitacionComponent ft = obtenerFlujoTramitacion(idSesionTramitacion);
-		final String url = ft.logoutTramite();
-		flujoTramitacionCache.remove(idSesionTramitacion);
-		return url;
 	}
 
 	// --------------------------------------------------------------

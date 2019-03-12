@@ -4,8 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.service.component.script.plugins.ClzDatosUsuario;
+import es.caib.sistramit.core.service.component.script.plugins.ClzTramiteCP;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.script.ClzDatosUsuarioInt;
+import es.caib.sistramit.core.service.model.script.ClzTramiteCPInt;
 import es.caib.sistramit.core.service.model.script.flujo.PlgSesionTramitacionInt;
 
 /**
@@ -16,8 +18,6 @@ import es.caib.sistramit.core.service.model.script.flujo.PlgSesionTramitacionInt
  */
 @SuppressWarnings("serial")
 public final class PlgSesionTramitacion implements PlgSesionTramitacionInt {
-
-	// TODO FALTA INFO INFO TRAMITE CP
 
 	/**
 	 * Almacenamos variables flujo para permitir acceso a las propiedades generales
@@ -83,6 +83,11 @@ public final class PlgSesionTramitacion implements PlgSesionTramitacionInt {
 	@Override
 	public String getUrlInicioTramite() {
 		return this.variablesFlujo.getUrlInicioTramite();
+	}
+
+	@Override
+	public ClzTramiteCPInt getTramiteCP() {
+		return new ClzTramiteCP(this.variablesFlujo.getDatosTramiteCP());
 	}
 
 }

@@ -19,106 +19,144 @@ import es.caib.sistramit.core.service.model.script.PlgValidacionInt;
 @SuppressWarnings("serial")
 public final class PlgValidacion implements PlgValidacionInt {
 
-    /**
-     * Indica si existe aviso.
-     */
-    private boolean existeAviso;
+	/**
+	 * Indica si existe aviso.
+	 */
+	private boolean existeAviso;
 
-    /**
-     * Indica tipo aviso: INFO / WARNING.
-     */
-    private TypeValidacion tipoAviso;
+	/**
+	 * Indica tipo aviso: INFO / WARNING / ERROR.
+	 */
+	private TypeValidacion tipoAviso;
 
-    /**
-     * Código mensaje aviso. Para establecer aviso por codigo mensaje.
-     */
-    private String codigoMensajeAviso;
+	/**
+	 * Código mensaje aviso. Para establecer aviso por codigo mensaje.
+	 */
+	private String codigoMensajeAviso;
 
-    /**
-     * Parámetros a substuir en el mensaje que hace referencia el código de
-     * error. ({0} {1} ...).
-     */
-    private final List<String> parametrosMensajeAviso = new ArrayList<String>();
+	/**
+	 * Parámetros a substuir en el mensaje que hace referencia el código de error.
+	 * ({0} {1} ...).
+	 */
+	private final List<String> parametrosMensajeAviso = new ArrayList<String>();
 
-    /**
-     * Mensaje aviso particularizado. Para establecer error directamente con el
-     * texto.
-     */
-    private String textoMensajeAviso;
+	/**
+	 * Mensaje aviso particularizado. Para establecer error directamente con el
+	 * texto.
+	 */
+	private String textoMensajeAviso;
 
-    @Override
-    public String getPluginId() {
-        return ID;
-    }
+	/**
+	 * Campo formulario asociado a la validación.
+	 */
+	private String campo;
 
-    /**
-     * Indica si hay error.
-     *
-     * @return Indica si hay error.
-     */
-    public boolean isExisteAviso() {
-        return existeAviso;
-    }
+	/**
+	 * Constructor.
+	 */
+	public PlgValidacion() {
+		super();
+	}
 
-    @Override
-    public void setExisteAviso(final boolean pExisteaAviso, final String pTipo)
-            throws ScriptException {
-        existeAviso = pExisteaAviso;
-        tipoAviso = TypeValidacion.fromString(StringUtils.lowerCase(pTipo));
-        if (tipoAviso == null) {
-            throw new ScriptException("Tipo de aviso no valido: " + pTipo);
-        }
-    }
+	/**
+	 * Constructor (validación asociada a un elemento).
+	 */
+	public PlgValidacion(String pIdElemento) {
+		super();
+		this.campo = pIdElemento;
+	}
 
-    /**
-     * Obtiene codigo de error.
-     *
-     * @return Obtiene codigo de error.
-     */
-    public String getCodigoMensajeAviso() {
-        return codigoMensajeAviso;
-    }
+	@Override
+	public String getPluginId() {
+		return ID;
+	}
 
-    @Override
-    public void addParametroMensajeAviso(final String parametro) {
-        parametrosMensajeAviso.add(parametro);
-    }
+	/**
+	 * Indica si hay error.
+	 *
+	 * @return Indica si hay error.
+	 */
+	public boolean isExisteAviso() {
+		return existeAviso;
+	}
 
-    @Override
-    public void setCodigoMensajeAviso(final String pCodigoMensajeError) {
-        codigoMensajeAviso = pCodigoMensajeError;
-    }
+	@Override
+	public void setExisteAviso(final boolean pExisteaAviso, final String pTipo) throws ScriptException {
+		existeAviso = pExisteaAviso;
+		tipoAviso = TypeValidacion.fromString(StringUtils.lowerCase(pTipo));
+		if (tipoAviso == null) {
+			throw new ScriptException("Tipo de aviso no valido: " + pTipo);
+		}
+	}
 
-    /**
-     * Obtiene texto de error.
-     *
-     * @return Obtiene texto de error.
-     */
-    public String getTextoMensajeAviso() {
-        return textoMensajeAviso;
-    }
+	/**
+	 * Obtiene codigo de error.
+	 *
+	 * @return Obtiene codigo de error.
+	 */
+	public String getCodigoMensajeAviso() {
+		return codigoMensajeAviso;
+	}
 
-    @Override
-    public void setTextoMensajeAviso(final String pTextoMensajeError) {
-        textoMensajeAviso = pTextoMensajeError;
-    }
+	@Override
+	public void addParametroMensajeAviso(final String parametro) {
+		parametrosMensajeAviso.add(parametro);
+	}
 
-    /**
-     * Obtiene parametros de error.
-     *
-     * @return Obtiene parametros de error.
-     */
-    public List<String> getParametrosMensajeAviso() {
-        return parametrosMensajeAviso;
-    }
+	@Override
+	public void setCodigoMensajeAviso(final String pCodigoMensajeError) {
+		codigoMensajeAviso = pCodigoMensajeError;
+	}
 
-    /**
-     * Método de acceso a tipoAviso.
-     *
-     * @return tipoAviso
-     */
-    public TypeValidacion getTipoAviso() {
-        return tipoAviso;
-    }
+	/**
+	 * Obtiene texto de error.
+	 *
+	 * @return Obtiene texto de error.
+	 */
+	public String getTextoMensajeAviso() {
+		return textoMensajeAviso;
+	}
+
+	@Override
+	public void setTextoMensajeAviso(final String pTextoMensajeError) {
+		textoMensajeAviso = pTextoMensajeError;
+	}
+
+	/**
+	 * Obtiene parametros de error.
+	 *
+	 * @return Obtiene parametros de error.
+	 */
+	public List<String> getParametrosMensajeAviso() {
+		return parametrosMensajeAviso;
+	}
+
+	/**
+	 * Método de acceso a tipoAviso.
+	 *
+	 * @return tipoAviso
+	 */
+	public TypeValidacion getTipoAviso() {
+		return tipoAviso;
+	}
+
+	/**
+	 * Método de acceso a campo.
+	 *
+	 * @return idElemento
+	 */
+	public String getCampo() {
+		return campo;
+	}
+
+	/**
+	 * Método para establecer idElemento.
+	 *
+	 * @param idElemento
+	 *            idElemento a establecer
+	 */
+	public void setCampo(String idElemento) {
+		this.campo = idElemento;
+	}
 
 }

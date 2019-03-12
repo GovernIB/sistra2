@@ -111,9 +111,11 @@ public final class UtilsSTG {
 	 *            literal multiidioma
 	 * @param idioma
 	 *            idioma
+	 * @param defecto
+	 *            si no existe el idioma, devuelve uno por defecto
 	 * @return literal
 	 */
-	public static String obtenerLiteral(final RLiteral descripcion, final String idioma) {
+	public static String obtenerLiteral(final RLiteral descripcion, final String idioma, final boolean defecto) {
 		String res = null;
 		if (descripcion != null && descripcion.getLiterales() != null) {
 			for (final RLiteralIdioma rl : descripcion.getLiterales()) {
@@ -123,7 +125,26 @@ public final class UtilsSTG {
 				}
 			}
 		}
+
+		if (res == null && defecto && descripcion != null && descripcion.getLiterales() != null
+				&& !descripcion.getLiterales().isEmpty()) {
+			res = descripcion.getLiterales().get(0).getDescripcion();
+		}
+
 		return StringUtils.defaultString(res);
+	}
+
+	/**
+	 * Obtiene literal para un idioma.
+	 *
+	 * @param descripcion
+	 *            literal multiidioma
+	 * @param idioma
+	 *            idioma
+	 * @return literal
+	 */
+	public static String obtenerLiteral(final RLiteral descripcion, final String idioma) {
+		return obtenerLiteral(descripcion, idioma, false);
 	}
 
 	/**

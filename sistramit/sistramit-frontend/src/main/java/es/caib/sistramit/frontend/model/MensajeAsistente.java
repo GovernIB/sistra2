@@ -1,5 +1,7 @@
 package es.caib.sistramit.frontend.model;
 
+import java.io.Serializable;
+
 import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
 
 /**
@@ -9,7 +11,8 @@ import es.caib.sistramit.frontend.model.types.TypeRespuestaJSON;
  * @author Indra
  *
  */
-public final class MensajeAsistente {
+@SuppressWarnings("serial")
+public final class MensajeAsistente implements Serializable {
 
 	/**
 	 * Tipo mensaje.

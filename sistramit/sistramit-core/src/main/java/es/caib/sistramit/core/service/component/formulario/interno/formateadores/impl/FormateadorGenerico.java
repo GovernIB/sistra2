@@ -1,9 +1,9 @@
 package es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistra2.commons.pdf.PDFDocument;
@@ -156,23 +156,22 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 		mostrarAviso = false;
 		mostrarTituloConProcedimiento = false;
 		if (plantilla != null) {
-			try {
+			try (ByteArrayInputStream bis = new ByteArrayInputStream(plantilla)) {
 
-				final Properties propiedades = SerializationUtils.deserialize(plantilla);
-				if (propiedades != null) {
+				final Properties propiedades = new Properties();
+				propiedades.load(bis);
 
-					urlImagen = propiedades.getProperty(PROP_LOGO_URL);
+				urlImagen = propiedades.getProperty(PROP_LOGO_URL);
 
-					if (StringUtils.isNotBlank(propiedades.getProperty(PROP_VISUALIZACION_VALOR_INDEXADO))) {
-						visualizacionValorIndexado = TipoVisualizacionValorIndexado
-								.valueOf(propiedades.getProperty(PROP_VISUALIZACION_VALOR_INDEXADO));
-					}
-
-					mostrarAviso = Boolean.valueOf(propiedades.getProperty(PROP_MOSTRAR_AVISOS));
-
-					mostrarTituloConProcedimiento = Boolean
-							.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_PROCEDIMIENTO));
+				if (StringUtils.isNotBlank(propiedades.getProperty(PROP_VISUALIZACION_VALOR_INDEXADO))) {
+					visualizacionValorIndexado = TipoVisualizacionValorIndexado
+							.valueOf(propiedades.getProperty(PROP_VISUALIZACION_VALOR_INDEXADO));
 				}
+
+				mostrarAviso = Boolean.valueOf(propiedades.getProperty(PROP_MOSTRAR_AVISOS));
+
+				mostrarTituloConProcedimiento = Boolean
+						.valueOf(propiedades.getProperty(PROP_MOSTRAR_TITULO_PROCEDIMIENTO));
 
 			} catch (final Exception e) {
 				throw new FormateadorException("Error obteniendo propiedades formateador", e);

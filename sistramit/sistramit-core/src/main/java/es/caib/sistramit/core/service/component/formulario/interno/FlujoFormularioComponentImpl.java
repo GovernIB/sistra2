@@ -240,6 +240,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 			}
 
 		}
+
 		return res;
 	}
 

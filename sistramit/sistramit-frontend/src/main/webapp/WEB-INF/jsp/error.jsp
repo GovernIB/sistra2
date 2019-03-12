@@ -5,10 +5,52 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<c:out value="${error.idioma}"/>" lang="<c:out value="${error.idioma}"/>">
+
+<!doctype html>
+<html lang="<c:out value="${error.idioma}"/>">
+<head>
+
+	<meta charset="utf-8" />
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title><spring:message code="login.titulo"/></title>
+
+	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
+	<link rel="apple-touch-icon-precomposed" href="<c:out value="${pageContext.request.contextPath}"/>/base/imgs/favicon/favicon-apple.png" />
+	<link rel="icon" href="<c:out value="${pageContext.request.contextPath}"/>/base/imgs/favicon/favicon.png" />
+
+	<link rel="stylesheet" media="screen" href="<c:out value="${pageContext.request.contextPath}"/>/base/css/imc-sf--general.css" />
+
+	<script type="text/javascript">
+
+			function redireccion() {
+				document.location="${error.url}";
+			}
+
+	</script>
+</head>
+
 <body>
-	<h1><c:out value="${error.mensaje.titulo}"/></h1>
-	<p><c:out value="${error.mensaje.texto}"/></p>
+
+		<!-- missatge: error -->
+		<div id="imc-missatge" class="imc-missatge" data-tipus="error">
+			<h1>
+				<span><c:out value="${error.mensaje.titulo}"/></span>
+			</h1>
+			<div>
+				<c:out value="${error.mensaje.texto}"/>
+			</div>
+			<div class="imc--botonera">
+				<a href="javascript:redireccion();"><span><spring:message code="error.continuar"/></span></a>
+			</div>
+		</div>
+
 </body>
 </html>
+
+
+

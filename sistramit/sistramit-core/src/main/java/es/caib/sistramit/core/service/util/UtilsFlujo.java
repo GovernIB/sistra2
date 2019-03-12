@@ -30,6 +30,7 @@ import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
 import es.caib.sistramit.core.api.model.flujo.Entidad;
 import es.caib.sistramit.core.api.model.flujo.EntidadRedesSociales;
 import es.caib.sistramit.core.api.model.flujo.EntidadSoporte;
+import es.caib.sistramit.core.api.model.flujo.EntidadSoporteAnexo;
 import es.caib.sistramit.core.api.model.flujo.Firma;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
@@ -42,8 +43,10 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
+import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
+import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
@@ -262,12 +265,14 @@ public final class UtilsFlujo {
 	 *            entidad
 	 * @param idioma
 	 *            idioma
-	 * @param urlResources
-	 *            Url recursos
+	 * @param configuracionComponent
+	 *            configuración component
 	 * @return entidad
 	 */
 	public static Entidad detalleTramiteEntidad(final RConfiguracionEntidad entidad, final String idioma,
-			final String urlResources) {
+			final ConfiguracionComponent configuracionComponent) {
+
+		final String urlResources = configuracionComponent.obtenerUrlResources();
 
 		final Entidad e = new Entidad();
 		e.setId(entidad.getIdentificador());
@@ -306,6 +311,15 @@ public final class UtilsFlujo {
 		soporte.setTelefono(entidad.getAyudaTelefono());
 		soporte.setUrl(entidad.getAyudaUrl());
 		soporte.setProblemas(soporteOpciones);
+		// Establecemos una configuración con props globales
+		// TODO Evaluar si es necesario configurarlo a nivel de entidad
+		final EntidadSoporteAnexo anexo = new EntidadSoporteAnexo();
+		anexo.setExtensiones(StringUtils.defaultString(configuracionComponent
+				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXO_SOPORTE_EXTENSIONES), "pdf"));
+		anexo.setTamanyo(StringUtils.defaultString(
+				configuracionComponent.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.ANEXO_SOPORTE_TAMANYO),
+				"1MB"));
+		soporte.setAnexo(anexo);
 		e.setSoporte(soporte);
 
 		return e;
@@ -353,12 +367,12 @@ public final class UtilsFlujo {
 	 *            Datos sesion
 	 * @param entidadInfo
 	 *            entidad info
-	 * @param urlResources
-	 *            Url recursos
+	 * @param configuracionComponent
+	 *            Configuracion component
 	 * @return detalle tramite
 	 */
 	public static DetalleTramite detalleTramite(final DatosSesionTramitacion pDatosSesion,
-			final RConfiguracionEntidad entidadInfo, final String urlResources) {
+			final RConfiguracionEntidad entidadInfo, final ConfiguracionComponent configuracionComponent) {
 		final DetalleTramite detalleTramite = new DetalleTramite();
 		detalleTramite.setFechaDefinicion(
 				UtilsFlujo.formateaFechaFront(pDatosSesion.getDefinicionTramite().getFechaRecuperacion()));
@@ -368,7 +382,7 @@ public final class UtilsFlujo {
 		detalleTramite.setTramite(detalleTramiteInfo(pDatosSesion));
 		detalleTramite.setUsuario(pDatosSesion.getDatosTramite().getIniciador());
 		detalleTramite.setEntidad(
-				detalleTramiteEntidad(entidadInfo, pDatosSesion.getDatosTramite().getIdioma(), urlResources));
+				detalleTramiteEntidad(entidadInfo, pDatosSesion.getDatosTramite().getIdioma(), configuracionComponent));
 		return detalleTramite;
 	}
 

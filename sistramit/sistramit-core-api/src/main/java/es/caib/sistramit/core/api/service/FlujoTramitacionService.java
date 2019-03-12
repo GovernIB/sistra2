@@ -160,6 +160,19 @@ public interface FlujoTramitacionService {
 	void envioFormularioSoporte(String idSesionTramitacion, String nif, String nombre, String telefono, String email,
 			String problemaTipo, String problemaDesc, AnexoFichero anexo);
 
+	/**
+	 * Obtiene url redirección a entidad.
+	 *
+	 * @param idTramite
+	 *            id trámite
+	 * @param version
+	 *            versión
+	 * @param idioma
+	 *            idioma
+	 * @return url entidad
+	 */
+	String obtenerUrlEntidad(String idTramite, int version, String idioma);
+
 	// -------------------------------------------------------------------------------------------
 	// - Métodos especiales invocados desde el interceptor. No pasan por
 	// interceptor de auditoria.

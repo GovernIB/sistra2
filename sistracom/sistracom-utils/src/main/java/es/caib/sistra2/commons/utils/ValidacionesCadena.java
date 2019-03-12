@@ -259,4 +259,23 @@ public class ValidacionesCadena {
 		return respuesta;
 	}
 
+	/**
+	 * Convierte a Integer.
+	 * 
+	 * @param intStr
+	 *            cadena
+	 * @return Integer
+	 */
+	public Integer parseInt(String intStr) {
+		Integer res = null;
+		if (intStr != null) {
+			try {
+				res = Integer.parseInt(intStr);
+			} catch (final NumberFormatException nfe) {
+				res = null;
+			}
+		}
+		return res;
+	}
+
 }

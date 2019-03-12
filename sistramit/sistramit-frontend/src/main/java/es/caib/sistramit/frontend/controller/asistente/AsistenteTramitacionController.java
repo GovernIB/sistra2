@@ -134,7 +134,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// Almacena en la sesion (si no se puede iniciar con el idioma establecido, se
 		// cambiará al del trámite)
 		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
-		registraSesionTramitacion(idSesionTramitacion, dt.getTramite().getIdioma(), dt.getDebug() == TypeSiNo.SI);
+		registraSesionTramitacion(dt);
 
 		final ModelAndView mav = new ModelAndView(URL_REDIRIGIR_ASISTENTE);
 		return mav;
@@ -665,7 +665,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		final DetalleTramite dt = getFlujoTramitacionService().obtenerDetalleTramite(pIdSesion);
 
 		// Registra en sesion
-		registraSesionTramitacion(pIdSesion, dt.getTramite().getIdioma(), dt.getDebug() == TypeSiNo.SI);
+		registraSesionTramitacion(dt);
 
 		// Comprobamos que sea el iniciador (en caso de autenticado)
 		if (dt.getTramite().getAutenticacion() != userInfo.getAutenticacion()) {
