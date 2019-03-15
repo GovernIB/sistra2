@@ -1,6 +1,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -8,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
+import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.service.FormateadorFormularioService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -32,6 +34,9 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	/** Indica si cuando se carga, estaba bloqueado. **/
 	private boolean estabaBloqueado;
 
+	/** Indica si estamos en alta. **/
+	private boolean isAlta;
+
 	/**
 	 * Inicialización.
 	 */
@@ -39,11 +44,13 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		UtilJSF.checkSecOpenDialog(modo, id);
 		if (modo == TypeModoAcceso.ALTA) {
+			setAlta(true);
 			data = new FormateadorFormulario();
 			estabaBloqueado = false;
 			data.setBloquear(false);
 			data.setPorDefecto(false);
 		} else {
+			setAlta(false);
 			data = fmtService.getFormateadorFormulario(new Long(id));
 			estabaBloqueado = data.isBloquear();
 		}
@@ -53,8 +60,39 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
+
+		/**
+		 * Comprueba si está marcado como por defecto y no tiene plantillas. Si es así,
+		 * forzamos a que primero cree plantillas y luego que guarde.
+		 **/
+		if (acceso == TypeModoAcceso.EDICION && data.isPorDefecto()) {
+			final List<PlantillaFormateador> plantillas = fmtService.getListaPlantillasFormateador(data.getCodigo());
+			if (plantillas == null || plantillas.isEmpty()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("dialogFormateadorFormulario.porDefecto.faltanPlantillas"));
+				return;
+			}
+
+			for (final String idioma : UtilJSF.getSessionBean().getIdiomas()) {
+				boolean encontrado = false;
+				for (final PlantillaFormateador plantilla : plantillas) {
+					if (plantilla.getIdioma().equals(idioma)) {
+						encontrado = true;
+						break;
+					}
+				}
+
+				if (!encontrado) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							UtilJSF.getLiteral("dialogFormateadorFormulario.porDefecto.faltanPlantillas"));
+					return;
+				}
+			}
+		}
+
 		final Long idEntidad = UtilJSF.getIdEntidad();
 		switch (acceso) {
 		case ALTA:
@@ -95,11 +133,6 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	 */
 	public void editarPlantillaPorDefecto() {
 
-		if (id == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-					"Primero debes crear el formateador para crear la plantilla");
-			return;
-		}
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), id);
 		UtilJSF.openDialog(DialogPlantillaFormateador.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430,
@@ -157,6 +190,22 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 	 */
 	public void setData(final FormateadorFormulario data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the isAlta
+	 */
+	@Override
+	public boolean isAlta() {
+		return isAlta;
+	}
+
+	/**
+	 * @param isAlta
+	 *            the isAlta to set
+	 */
+	public void setAlta(final boolean isAlta) {
+		this.isAlta = isAlta;
 	}
 
 }

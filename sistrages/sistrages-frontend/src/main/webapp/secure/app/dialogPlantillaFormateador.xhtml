@@ -26,10 +26,11 @@
 
 	<h:form id="formDialogPlantillaIdiomaFormulario" styleClass="margin-top-10" >
   			<p:outputPanel>
-				<!-- Contenido dialogo -->
-				<!-- Growl mensajes -->
-				<p:growl id="growlDialogPlantillaIdiomaFormulario" widgetVar="growlDialogPlantillaIdiomaFormulario" life="2000" sticky="false" />
 
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialogPlantillaIdiomaFormulario" widgetVar="growlDialogPlantillaIdiomaFormulario" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+				<!-- Contenido dialogo -->
 				<h:dataTable value="#{dialogPlantillaFormateador.listaPlantillaFormateador}" var="plantilla" rowClasses=",ui-datatable-odd" columnClasses="w25 padding-left-18,w75" styleClass="w100" cellpadding="5">
 					<h:column>
 						<p:outputLabel value="#{msg[plantilla.idioma]}" for="idioma"/>
@@ -49,7 +50,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaFormateador.aceptar}" process="@form" update="@form growlDialogPlantillaIdiomaFormulario" rendered="#{dialogPlantillaFormateador.alta or dialogPlantillaFormateador.edicion}"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPlantillaFormateador.aceptar}" process="@this" update="@form growlDialogPlantillaIdiomaFormulario" rendered="#{dialogPlantillaFormateador.alta or dialogPlantillaFormateador.edicion}"/>
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPlantillaFormateador.cancelar}" process="@this" rendered="#{dialogPlantillaFormateador.consulta}"/>
 					</f:facet>
 				</p:toolbar>

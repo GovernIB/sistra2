@@ -26,10 +26,10 @@
 	</f:metadata>
 	<h:form id="dialogFormateadorFormulario" styleClass="margin-top-10">
   			<p:outputPanel>
-				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
-				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
+				<!-- Contenido dialogo -->
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel for="identificador" value="#{msg['dialogFormateadorFormulario.identificador']}" />
@@ -43,8 +43,8 @@
 					<p:outputLabel for="descripcion" value="#{msg['dialogFormateadorFormulario.descripcion']}" />
 					<p:inputText id="descripcion" value="#{dialogFormateadorFormulario.data.descripcion}" disabled="#{dialogFormateadorFormulario.isConsulta()}" required="true" size="40" maxlength="255"/>
 
-					<p:outputLabel for="porDefecto" value="#{msg['dialogFormateadorFormulario.porDefecto']}" />
-					<p:column>
+					<p:outputLabel for="porDefecto" value="#{msg['dialogFormateadorFormulario.porDefecto']}" rendered="#{!dialogFormateadorFormulario.isAlta()}" />
+					<p:column rendered="#{!dialogFormateadorFormulario.isAlta()}">
 						<p:selectBooleanCheckbox id="porDefecto" value="#{dialogFormateadorFormulario.data.porDefecto}" >
 							<p:ajax event="change" global="false" process="@form:porDefecto" update="dialogFormateadorFormulario:btnPlantilla" />
             			</p:selectBooleanCheckbox>
