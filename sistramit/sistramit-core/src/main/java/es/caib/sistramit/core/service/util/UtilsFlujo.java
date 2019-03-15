@@ -18,6 +18,7 @@ import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.FormatoInvalidoFechaFrontException;
 import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
+import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexoException;
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.UsuarioNoPermitidoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -666,5 +667,44 @@ public final class UtilsFlujo {
 
 	public static boolean isErrorValidacion(MensajeValidacion validacion) {
 		return (validacion != null && validacion.getEstado() == TypeValidacion.ERROR);
+	}
+
+	/**
+	 * Verifica el tamaño máximo. Genera una excepción en caso de que se sobrepase.
+	 *
+	 * @param tamMax
+	 *            Tamaño máximo (con sufijo MB o KB)
+	 * @param numBytes
+	 *            Número de bytes del fichero
+	 */
+	public static void verificarTamanyoMaximo(final String tamMax, final int numBytes) {
+
+		final String tam = tamMax.trim();
+
+		int num = 0;
+		try {
+			final String numStr = tam.substring(0, tam.length() - ConstantesNumero.N2).trim();
+			num = Integer.parseInt(numStr);
+		} catch (final NumberFormatException nfe) {
+			throw new TamanyoMaximoAnexoException(
+					"No se ha podido verificar el tamaño maximo. La especificación de tamaño máximo no tiene un formato correcto: "
+							+ tamMax,
+					nfe);
+		}
+
+		if (tam.endsWith("MB")) {
+			num = num * ConstantesNumero.N1024 * ConstantesNumero.N1024;
+		} else if (tam.endsWith("KB")) {
+			num = num * ConstantesNumero.N1024;
+		} else {
+			throw new TamanyoMaximoAnexoException(
+					"No se ha podido verificar el tamaño maximo. La especificación de tamaño máximo no tiene un formato correcto: "
+							+ tamMax);
+		}
+
+		if (numBytes > num) {
+			throw new TamanyoMaximoAnexoException("Se ha sobrepasado el tamaño máximo");
+		}
+
 	}
 }

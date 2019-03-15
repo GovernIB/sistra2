@@ -123,7 +123,7 @@ public final class LoginController {
 		final String puntoEntrada = getPuntoEntrada(url);
 
 		// Guardamos url original para poder redirigir clave
-		if (!ConstantesSeguridad.PUNTOENTRADA_RETORNO_AUTENTICACION_LOGIN.equals(puntoEntrada)) {
+		if (ConstantesSeguridad.PUNTOENTRADA_INICIAR_TRAMITE.equals(puntoEntrada)) {
 			sesionHttp.setUrlInicio(url);
 			sesionHttp.setIdTramite(getParamValue(savedRequest, PARAM_TRAMITE));
 			sesionHttp

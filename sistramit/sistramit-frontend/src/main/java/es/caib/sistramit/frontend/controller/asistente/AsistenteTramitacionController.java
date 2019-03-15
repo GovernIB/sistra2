@@ -597,8 +597,6 @@ public class AsistenteTramitacionController extends TramitacionController {
 			@RequestParam(value = "problemaDesc", required = true) final String problemaDesc,
 			final HttpServletRequest request) {
 
-		// TODO VER SI PONEMOS LIMITE FICHERO
-
 		debug("Formulario soporte ");
 
 		final RespuestaJSON res = new RespuestaJSON();

@@ -163,7 +163,7 @@ public final class UtilsSTG {
 	public static List<AvisoPlataforma> obtenerAvisosTramite(final DefinicionTramiteSTG definicionTramiteSTG,
 			final RAvisosEntidad avisosPlataforma, final String idioma, final boolean bloqueantes) {
 
-		final List<AvisoPlataforma> avisos = new ArrayList<AvisoPlataforma>();
+		final List<AvisoPlataforma> avisos = new ArrayList<>();
 		final Date ahora = new Date();
 
 		if (definicionTramiteSTG != null && avisosPlataforma.getAvisos() != null) {

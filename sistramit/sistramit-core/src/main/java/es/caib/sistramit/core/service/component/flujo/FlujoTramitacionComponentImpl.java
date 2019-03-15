@@ -207,6 +207,9 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		final RConfiguracionEntidad entidad = configuracionComponent
 				.obtenerConfiguracionEntidad(datosSesion.getDefinicionTramite().getDefinicionVersion().getIdEntidad());
 
+		// Obtiene detalle tramite
+		final DetalleTramite detalleTramite = controladorFlujo.detalleTramite(datosSesion);
+
 		// Datos form soporte
 		final DatosFormularioSoporte datosFormSoporte = new DatosFormularioSoporte();
 		datosFormSoporte.setNif(nif);
@@ -226,6 +229,10 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		// Anexo
 		final List<AnexoEmail> anexos = new ArrayList<>();
 		if (anexo != null) {
+			// Verifica tamaño máximo
+			UtilsFlujo.verificarTamanyoMaximo(detalleTramite.getEntidad().getSoporte().getAnexo().getTamanyo(),
+					anexo.getFileContent().length);
+			// Añade anexo
 			final AnexoEmail a = new AnexoEmail();
 			a.setFileName(anexo.getFileName());
 			a.setContent(anexo.getFileContent());

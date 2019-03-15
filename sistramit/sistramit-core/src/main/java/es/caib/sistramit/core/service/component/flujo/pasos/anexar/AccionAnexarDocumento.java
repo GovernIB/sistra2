@@ -25,7 +25,6 @@ import es.caib.sistramit.core.api.exception.AnexoVacioException;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ExtensionAnexoNoValidaException;
 import es.caib.sistramit.core.api.exception.ParametrosEntradaIncorrectosException;
-import es.caib.sistramit.core.api.exception.TamanyoMaximoAnexoException;
 import es.caib.sistramit.core.api.exception.TransformacionPdfException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.Anexo;
@@ -288,7 +287,7 @@ public final class AccionAnexarDocumento implements AccionPaso {
 				throw new ErrorConfiguracionException(
 						"No se ha configurado el tamaño maximo para el anexo: " + anexoDetalle.getId());
 			}
-			verificarTamanyoMaximo(anexoDetalle.getTamMax(), datosFichero.length);
+			UtilsFlujo.verificarTamanyoMaximo(anexoDetalle.getTamMax(), datosFichero.length);
 			// - Verificar si debe anexarse firmado
 			if (anexoDetalle.getAnexarfirmado() == TypeSiNo.SI) {
 				// TODO Pendiente implementar
@@ -310,45 +309,6 @@ public final class AccionAnexarDocumento implements AccionPaso {
 						anexoDetalle.getId(), script.getScript(), pVariablesFlujo, variablesScript, null, codigosError,
 						pDefinicionTramite);
 			}
-		}
-
-	}
-
-	/**
-	 * Verifica el tamaño máximo. Genera una excepción en caso de que se sobrepase.
-	 *
-	 * @param tamMax
-	 *            Tamaño máximo (con sufijo MB o KB)
-	 * @param numBytes
-	 *            Número de bytes del fichero
-	 */
-	private void verificarTamanyoMaximo(final String tamMax, final int numBytes) {
-
-		final String tam = tamMax.trim();
-
-		int num = 0;
-		try {
-			final String numStr = tam.substring(0, tam.length() - ConstantesNumero.N2).trim();
-			num = Integer.parseInt(numStr);
-		} catch (final NumberFormatException nfe) {
-			throw new TamanyoMaximoAnexoException(
-					"No se ha podido verificar el tamaño maximo. La especificación de tamaño máximo no tiene un formato correcto: "
-							+ tamMax,
-					nfe);
-		}
-
-		if (tam.endsWith("MB")) {
-			num = num * ConstantesNumero.N1024 * ConstantesNumero.N1024;
-		} else if (tam.endsWith("KB")) {
-			num = num * ConstantesNumero.N1024;
-		} else {
-			throw new TamanyoMaximoAnexoException(
-					"No se ha podido verificar el tamaño maximo. La especificación de tamaño máximo no tiene un formato correcto: "
-							+ tamMax);
-		}
-
-		if (numBytes > num) {
-			throw new TamanyoMaximoAnexoException("Se ha sobrepasado el tamaño máximo");
 		}
 
 	}

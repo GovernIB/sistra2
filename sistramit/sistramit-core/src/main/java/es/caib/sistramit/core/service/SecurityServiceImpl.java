@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
-import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistramit.core.api.exception.ErrorNoControladoException;
@@ -229,9 +228,14 @@ public class SecurityServiceImpl implements SecurityService {
 		final DefinicionTramiteCP defTramiteCP = catalogoProcedimientosComponent
 				.obtenerDefinicionTramite(entidad.getIdentificador(), idTramiteCatalogo, idioma);
 
-		final InfoLoginTramite res = new InfoLoginTramite();
-		res.setIdioma(idioma);
-		res.setTitulo(defTramiteCP.getDescripcion());
+		final List<AvisoPlataforma> avisos = UtilsSTG.obtenerAvisosTramite(defTramite, avisosEntidad, idioma, false);
+		boolean avisosBloqueantes = false;
+		for (final AvisoPlataforma a : avisos) {
+			if (a.isBloquearAcceso()) {
+				avisosBloqueantes = true;
+				break;
+			}
+		}
 
 		final List<TypeAutenticacion> niveles = new ArrayList<>();
 		if (defTramite.getDefinicionVersion().getPropiedades().isAutenticado()) {
@@ -240,22 +244,15 @@ public class SecurityServiceImpl implements SecurityService {
 		if (defTramite.getDefinicionVersion().getPropiedades().isNoAutenticado()) {
 			niveles.add(TypeAutenticacion.ANONIMO);
 		}
+
+		final InfoLoginTramite res = new InfoLoginTramite();
+		res.setIdioma(idioma);
+		res.setTitulo(defTramiteCP.getDescripcion());
 		res.setNiveles(niveles);
 		res.setQaa(String.valueOf(defTramite.getDefinicionVersion().getPropiedades().getNivelQAA()));
 		res.setEntidad(UtilsFlujo.detalleTramiteEntidad(entidad, idioma, configuracionComponent));
-
-		final List<AvisoPlataforma> avisos = new ArrayList<>();
-		for (final RAviso a : avisosEntidad.getAvisos()) {
-			final AvisoPlataforma aviso = new AvisoPlataforma();
-			aviso.setMensaje(UtilsSTG.obtenerLiteral(a.getMensaje(), idioma));
-			aviso.setBloquearAcceso(a.isBloquear());
-			avisos.add(aviso);
-			if (a.isBloquear()) {
-				res.setBloquear(true);
-			}
-		}
 		res.setAvisos(avisos);
-
+		res.setBloquear(avisosBloqueantes);
 		res.setDebug(UtilsSTG.isDebugEnabled(defTramite));
 		return res;
 	}
