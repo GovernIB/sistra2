@@ -28,7 +28,7 @@
 
 		<h:form id="formDialogDefinicionVersionPropiedades">
 			<!-- Growl mensajes -->
-			<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 			<!-- Contenido dialogo -->
 			<h:panelGrid columns="2" columnClasses="w20 grid-left, w80 grid-left"  rowClasses=",ui-datatable-odd" styleClass="w100 h100" cellpadding="20" cellspacing="0">

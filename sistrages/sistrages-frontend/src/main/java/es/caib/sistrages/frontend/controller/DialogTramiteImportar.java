@@ -316,6 +316,11 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 	}
 
+	/**
+	 * Comprueba la importación de entidad.
+	 *
+	 * @return
+	 */
 	private boolean prepararImportacionEntidad() {
 		final String dir3actual = entidadService.loadEntidad(UtilJSF.getIdEntidad()).getCodigoDIR3();
 		filaEntidad.setDir3Actual(dir3actual);

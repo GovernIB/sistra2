@@ -27,7 +27,7 @@
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
-				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 				<p>
 					<p:outputLabel value="#{dialogTramiteImportarAR.mensaje}" styleClass="w100 padding8 margin-bottom-3" style="font-weight: bold"/>
 				</p>

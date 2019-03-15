@@ -27,7 +27,7 @@
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
-				<p:growl id="growlDialogAreaData" widgetVar="growlDialogAreaData" life="2000" sticky="false" />
+				<p:growl id="growlDialogAreaData" widgetVar="growlDialogAreaData" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				 	<p:outputLabel for="codigo" value="#{msg['dialogArea.codigo']}" />

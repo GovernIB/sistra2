@@ -20,6 +20,9 @@ $(function(){
 	imc_forms_formulari
 		.appElement();
 
+	imc_forms_formulari
+		.appScript();
+
 	/*
 	imc_forms_formulari
 		.appOnLoad();
@@ -29,6 +32,47 @@ $(function(){
 		.appSetFocus({ id: idComponente });
 
 });
+
+
+// Script
+
+$.fn.appScript = function(options) {
+    var settings = $.extend({
+        id: false
+    }, options);
+    this.each(function(){
+        var element = $(this),
+            form_elms = element.find(".imc-element"),
+            inicia = function() {
+
+                form_elms
+                    .each(function() {
+
+                        var el = $(this)
+                            ,el_script = el.attr("data-script")
+                            ,ico_script = $("<span>").addClass("imc-el--script");
+
+                        if (el_script && el_script === "s") {
+
+                            el
+                                .find(".imc-el-control")
+                                    .append( ico_script )
+                                    .addClass("imc-el--relatiu");
+
+                        }
+
+                    });
+
+            };
+
+        // inicia
+        inicia();
+
+    });
+    return this;
+}
+
+
 
 
 // appOnLoad
@@ -56,33 +100,45 @@ $.fn.appOnLoad = function(options) {
 // appSetFocus
 
 $.fn.appSetFocus = function(options) {
-	var settings = $.extend({
-		id: false
-	}, options);
-	this.each(function(){
-		var element = $(this),
-			id = settings.id,
-			inicia = function() {
+    var settings = $.extend({
+        id: false
+    }, options);
+    this.each(function(){
+        var element = $(this),
+            id = settings.id,
+            inicia = function() {
 
-				if (!id) {
-					return;
-				}
+                if (!id) {
+                    return;
+                }
 
-				var el = $("#"+id);
+                var el = $("#"+id);
 
-				el
-					.closest(".imc-element ")
-						.addClass("imc--el-seleccionat")
-						.focus();
+                $("#imc-contenidor")
+                    .animate(
+                        {
+                            scrollTop: "0px"
+                        }
+                        ,0
+                        , function() {
 
-			};
+                            el
+                                .closest(".imc-element ")
+                                    .addClass("imc--el-seleccionat")
+                                    .focus();
 
-		// inicia
-		inicia();
+                        }
+                    );
 
-	});
-	return this;
+            };
+
+        // inicia
+        inicia();
+
+    });
+    return this;
 }
+
 
 
 // appElement

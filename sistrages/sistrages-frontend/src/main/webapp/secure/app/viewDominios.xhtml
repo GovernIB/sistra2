@@ -18,7 +18,7 @@
 		<h:form id="form" style="height: 100%">
 
 			<!-- Growl mensajes -->
-			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+			<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 			<p:column rendered="#{viewDominios.mostrarBreadcrumb}">
 				<div style="width:100vw;height:35px">

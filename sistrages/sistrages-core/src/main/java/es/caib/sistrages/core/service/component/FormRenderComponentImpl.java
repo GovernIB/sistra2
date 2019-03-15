@@ -238,8 +238,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
-				escribeObligatorio(campo, pModoEdicion), " class=\"imc-element ", estilo.toString(), "\" data-type=\"",
-				tipo, "\">", 5);
+				escribeObligatorio(campo, pModoEdicion), escribeTieneScripts(campo, pModoEdicion),
+				" class=\"imc-element ", estilo.toString(), "\" data-type=\"", tipo, "\">", 5);
 
 		if (!campo.isNoMostrarTexto() && campo.getTexto() != null) {
 			escribeLinea(pOut, "<div class=\"imc-el-etiqueta\"><label for=\"", String.valueOf(campo.getIdComponente()),
@@ -270,7 +270,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 					+ trataLiteral(campo.getTexto().getTraduccion(pLang)) + "</label>";
 		}
 		escribeLinea(pOut, "<div", escribeId(campo.getIdComponente()), escribeCodigo(pCF.getCodigo(), pModoEdicion),
-				"class=\"imc-element imc-el-check", estilo.toString(), "\" data-type=\"check\">", 5);
+				escribeTieneScripts(campo, pModoEdicion), "class=\"imc-element imc-el-check", estilo.toString(),
+				"\" data-type=\"check\">", 5);
 
 		escribeLinea(pOut, "<div class=\"imc-el-control\">", 6);
 		escribeLinea(pOut, "<div class=\"imc-input-check\">", 7);
@@ -296,6 +297,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			break;
 		case UNICA:
 			campoSelectorUnica(pOut, campo, pLang, pModoEdicion);
+			break;
 		default:
 			break;
 		}
@@ -320,8 +322,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		}
 
 		escribeLinea(pOut, "<div", escribeId(pCampo.getIdComponente()), escribeCodigo(pCampo.getCodigo(), pModoEdicion),
-				escribeObligatorio(pCampo, pModoEdicion), " class=\"imc-element imc-el-selector", estilo.toString(),
-				"\" data-type=\"select\">", 5);
+				escribeObligatorio(pCampo, pModoEdicion), escribeTieneScripts(pCampo, pModoEdicion),
+				" class=\"imc-element imc-el-selector", estilo.toString(), "\" data-type=\"select\">", 5);
 
 		escribeLinea(pOut, texto, 6);
 
@@ -349,7 +351,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
 				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
-				" class=\"imc-element", estilo.toString(), "\" data-type=\"check-list\">", 6);
+				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element", estilo.toString(),
+				"\" data-type=\"check-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
 			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
@@ -394,7 +397,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
 				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
-				" class=\"imc-element imc-el-horizontal", estilo.toString(), "\" data-type=\"radio-list\">", 6);
+				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element imc-el-horizontal", estilo.toString(),
+				"\" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
 			escribeLinea(pOut, "<legend class=\"imc-label\">", trataLiteral(pCampo.getTexto().getTraduccion(pLang)),
@@ -569,7 +573,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 	private void escribeLinea(final StringBuilder pOut, final String pTexto1, final String pTexto2,
 			final String pTexto3, final String pTexto4, final String pTexto5, final String pTexto6,
-			final String pTexto7, final String pTexto8, final String pTexto9, final int pNtab) {
+			final String pTexto7, final String pTexto8, final String pTexto9, final String pTexto10, final int pNtab) {
 		if (debug) {
 			pOut.append(StringUtils.leftPad("", pNtab, "\t"));
 		}
@@ -582,6 +586,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		pOut.append(pTexto7);
 		pOut.append(pTexto8);
 		pOut.append(pTexto9);
+		pOut.append(pTexto10);
 		if (debug) {
 			pOut.append(getLineSeparator());
 		}
@@ -627,6 +632,15 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			}
 		}
 		return id;
+	}
+
+	private String escribeTieneScripts(ComponenteFormularioCampo campo, boolean pModoEdicion) {
+		String res = "";
+		if (pModoEdicion && (campo.getScriptAutorrellenable() != null || campo.getScriptSoloLectura() != null
+				|| campo.getScriptValidacion() != null)) {
+			res = " data-script=\"s\" ";
+		}
+		return res;
 	}
 
 	private String trataLiteral(final String pLiteral) {

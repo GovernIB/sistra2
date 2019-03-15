@@ -30,7 +30,7 @@
 	<h:form id="dialogFormularioSoporte" styleClass="margin-top-10">
 
   		<!-- Growl mensajes -->
-		<p:growl id="growlDialogFormularioSoporte" widgetVar="growlDialogFormularioSoporte" life="2000" sticky="false" />
+		<p:growl id="growlDialogFormularioSoporte" widgetVar="growlDialogFormularioSoporte" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 

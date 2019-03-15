@@ -27,7 +27,7 @@
 
 	<h:form id="formTramite" styleClass="margin-top-10" enctype="multipart/form-data"  style="overflow-y: auto;height: 540">
 
-			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar"	life="2000" sticky="false" />
+			<p:growl id="growlDialogImportar" widgetVar="growlDialogImportar"	life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 			<p:outputPanel id="panelUpload" styleClass="padding-right-8 padding-left-8" rendered="#{!dialogTramiteImportar.mostrarPanelInfo}">
 				<p:fileUpload id="fichero" mode="advanced" fileUploadListener="#{dialogTramiteImportar.upload}" label="#{msg['botones.explorar']}" uploadLabel="#{msg['botones.anexar']}" cancelLabel="#{msg['botones.cancelar']}"

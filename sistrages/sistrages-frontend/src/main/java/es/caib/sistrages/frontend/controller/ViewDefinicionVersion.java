@@ -1,5 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +8,10 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -180,6 +184,8 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	boolean permiteEditar = false;
 	/** Permite consultar. **/
 	boolean permiteConsultar = false;
+	/** Permite bloquear. **/
+	private boolean permiteBloquear = false;
 
 	private boolean permiteRefrescar;
 
@@ -227,14 +233,12 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem(tramite.getIdentificador());
-		// item.setUrl("/secure/app/viewTramitesVersion.xhtml?MODO_ACCESO=" +
-		// TypeModoAcceso.EDICION + "&ID="
-		// + tramite.getCodigo());
-		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo());
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo());
 		breadCrumbRoot.addElement(item);
 
 		item = new DefaultMenuItem("Version " + tramiteVersion.getNumeroVersion());
-		item.setUrl("#");
+		item.setUrl("/secure/app/viewTramites.xhtml?area=" + area.getCodigo() + "&tramite=" + tramite.getCodigo()
+				+ "&tramite_version=" + tramiteVersion.getCodigo());
 		breadCrumbRoot.addElement(item);
 		breadCrumbRoot.generateUniqueIds();
 		breadCrumb = copyMenuModel(breadCrumbRoot);
@@ -247,6 +251,77 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		checkPermiteEditar();
 		checkPermiteConsultar();
+		checkPermiteBloquear();
+	}
+
+	/**
+	 * Comprueba si se puede bloquear
+	 */
+	private void checkPermiteBloquear() {
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			permiteBloquear = false;
+			return;
+		}
+
+		if (this.tramiteVersion.getBloqueada()) {
+			permiteBloquear = false;
+			return;
+		}
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final Area areaSeleccionada = tramiteService.getArea(tramite.getIdArea());
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(areaSeleccionada.getCodigo());
+			// Si no puedes editar, no puedes bloquear
+			if (!permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+					&& !permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+				permiteBloquear = false;
+				return;
+			}
+		}
+
+		permiteBloquear = true;
+
+	}
+
+	/**
+	 * Comprueba si se puede bloquear
+	 *
+	 * @throws IOException
+	 */
+	public void bloquear() throws IOException {
+
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
+			return;
+		}
+
+		if (this.tramiteVersion.getBloqueada()) {
+			// Si está bloqueada, entonces no puedes bloquearlo.
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.bloquear.errorYaBloqueado"));
+			return;
+		}
+
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
+
+			final Area areaSeleccionada = tramiteService.getArea(tramite.getIdArea());
+			final List<TypeRolePermisos> permisos = securityService
+					.getPermisosDesarrolladorEntidadByArea(areaSeleccionada.getCodigo());
+			// Si no puedes editar, no puedes bloquear
+			if (!permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
+					&& !permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
+				return;
+			}
+		}
+
+		tramiteService.bloquearTramiteVersion(this.tramiteVersion.getCodigo(), UtilJSF.getSessionBean().getUserName());
+
+		final ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI() + "?ID=" + this.id);
 	}
 
 	/**
@@ -2012,5 +2087,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * @return the permiteBloquear
+	 */
+	public boolean isPermiteBloquear() {
+		return permiteBloquear;
+	}
+
+	/**
+	 * @param permiteBloquear
+	 *            the permiteBloquear to set
+	 */
+	public void setPermiteBloquear(final boolean permiteBloquear) {
+		this.permiteBloquear = permiteBloquear;
 	}
 }

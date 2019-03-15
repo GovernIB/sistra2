@@ -7,7 +7,7 @@
 	<h:form id="formViewDefinicionVersionPasos" styleClass="h100">
 
 		<!-- Growl mensajes -->
-		<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
 		<p:outputPanel styleClass="titulo_pasos">
 			<h:outputText value="#{msg['viewDefinicionVersionPasos.flujo']}"/>
