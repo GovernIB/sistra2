@@ -136,59 +136,43 @@ $.fn.appFormsAjudaCamp = function(options) {
 						elm_T = elm.position().top,
 						elm_L = elm.position().left,
 						elm_H = elm.outerHeight(),
-						elm_label = elm.find(".imc-el-etiqueta:first"),
+						elm_label = elm.find(".imc-el-etiqueta:first, legend:first"),
 						elm_label_W = elm_label.outerWidth(),
 						elm_label_H = elm_label.outerHeight(),
-						elm_control = elm.find(".imc-el-control:first"),
+						elm_control = elm.find(".imc-el-control:first, ul:first"),
 						elm_control_W = elm_control.outerWidth(),
 						elm_control_H = elm_control.outerHeight(),
 						ajuda_W = ajuda_elm.outerWidth(),
 						ajuda_H = ajuda_elm.outerHeight();
 
-					consola(element.attr("class") + " - " + window_scroll_T)
-
 					var ajuda_T = elm_T-ajuda_H-5+window_scroll_T,
-						ajuda_L = elm_L,
-						cueta_html = "<div class=\"imc-el-aj-pestanya\"><span></span></div>";
-
-					if (!ajuda_elm.find(".imc-el-aj-pestanya").length) {
-						//ajuda_elm.append(cueta_html);
-					}
+						ajuda_L = elm_L;
 
 					if ((elm_L+ajuda_W) > window_W) {
 
 						ajuda_L = elm_L - ajuda_W + elm_control_W;
-						//ajuda_elm.find(".imc-el-aj-pestanya").css({ left: (ajuda_W-elm_label_W+5)+"px" });
 
 						ajuda_elm
 							.addClass("imc--dreta");
 
-
-
 					} else {
-
-						//ajuda_elm.find(".imc-el-aj-pestanya").removeAttr("style");
 
 						ajuda_elm
 							.removeClass("imc--dreta");
-
 
 					}
 
 					var ajuda_T_inici = ajuda_T+5;
 
 					if (window_scroll_T > ajuda_T) {
+
 						ajuda_T = elm_T + elm_H;
 						ajuda_T_inici = ajuda_T-5;
-
-						//ajuda_elm.find(".imc-el-aj-pestanya").addClass("imc-el-aj-pestanya-dalt");
 
 						ajuda_elm
 							.addClass("imc--dalt");
 
 					} else {
-
-						//ajuda_elm.find(".imc-el-aj-pestanya").removeClass("imc-el-aj-pestanya-dalt");
 
 						ajuda_elm
 							.removeClass("imc--dalt");
@@ -205,12 +189,21 @@ $.fn.appFormsAjudaCamp = function(options) {
 				}
 			},
 			onMouseLeave = function() {
+
 				if (ajuda_elm) {
-					ajuda_elm.stop();
+
+					ajuda_elm
+						.stop();
+
 					if (ajuda_anterior_elm) {
-						ajuda_anterior_elm.removeClass("imc-el-ajuda-on").removeAttr("style");
+
+						ajuda_anterior_elm
+							.removeClass("imc-el-ajuda-on")
+							.removeAttr("style");
+
 					}
 				}
+
 			};
 
 		// inicia
@@ -855,7 +848,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								,val_valor = v.valor || false;
 
 							var elm = imc_forms_contenidor.find("*[data-id="+val_id+"]")
-								,elm_input = elm.find("input:first")
+								,elm_input = elm.find("input:first, textarea:first")
 								,elm_input_tipus = elm.attr("data-tipus")
 								,elm_input_contingut = elm.attr("data-contingut")
 								,elm_esLectura = (elm.attr("data-lectura") === "s") ? true : false;
@@ -877,14 +870,24 @@ $.fn.appFormsConfiguracio = function(options) {
 
 									var opcio_valor = val_valor.valor || false;
 
-									if (opcio_valor) {
+									if (opcio_valor && opcio_valor !== "") {
 
 										setTimeout(
 											function() {
-
+												/*
 												elm
 													.find("a[data-value='"+opcio_valor+"']:first")
 														.trigger("click");
+												*/
+
+												var elm_txt = elm.find("a[data-value='"+opcio_valor+"']:first").text();
+
+												elm_input
+													.val( opcio_valor );
+
+												elm
+													.find("a.imc-select:first")
+														.html( $("<span>").text(elm_txt) );
 
 											},50
 										);
@@ -901,12 +904,18 @@ $.fn.appFormsConfiguracio = function(options) {
 
 											setTimeout(
 												function() {
-
+													/*
 													elm
 														.find("input[value='"+selec_val+"']:first")
 															.parent()
 																.find("label")
 																	.trigger("click");
+													*/
+
+													elm
+														.find("input[value='"+selec_val+"']:first")
+															.prop("checked", true);
+
 
 													if (elm_esLectura) {
 
@@ -929,12 +938,17 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										setTimeout(
 											function() {
-
+												/*
 												elm
 													.find("input[value='"+opcio_valor+"']:first")
 														.parent()
 															.find("label")
 																.trigger("click");
+												*/
+
+												elm
+													.find("input[value='"+opcio_valor+"']:first")
+														.prop("checked", true);
 
 											},50
 										);
@@ -1119,12 +1133,18 @@ $.fn.appFormsConfiguracio = function(options) {
 				setTimeout(
 					function() {
 
+						var primer_element = imc_formulari_finestra.find("div.imc-element[data-id]:first");
+
+						primer_element
+							.find("input:first, textarea:first, a.imc-select:first")
+								.focus();
+
 						imc_formulari_finestra
 							.appFormsAccions()
 							.appFormsValida()
 							.appFormsAvalua();
 
-					},100
+					},200
 				);
 
 			};
@@ -1146,8 +1166,6 @@ $.fn.appFormsValida = function(options) {
 		var element = $(this),
 			valor_inicial = false,
 			inicia = function() {
-
-				
 
 				element
 					.off(".appFormsValida")
@@ -1185,19 +1203,22 @@ $.fn.appFormsValida = function(options) {
 
 						}
 
+						if (elm_separador === "cp") {
+
+							numeral
+								.locale('en');
+
+    					} else {
+
+							numeral
+								.locale('es-es');
+
+    					}
+
 						var input_val_format = numeral( input_val ).format( format_val );
 
 						input
 							.val( input_val_format );
-
-						if (elm_separador === "cp") {
-
-							var input_val_format_cp = input_val_format.replace(/,/g, "#").replace(/\./g, ",").replace(/#/g, ".");
-
-							input
-								.val( input_val_format_cp );
-
-						}
 
 					}
 
@@ -1361,9 +1382,9 @@ $.fn.appFormsAvalua = function(options) {
 			preevalua = function(e) {
 
 				input = $(this);
+				input_element = input.closest(".imc-element");
 
-				var input_element = input.closest(".imc-element")
-					,esAvaluable = (input_element.attr("data-avalua") === "s") ? true : false;
+				var iesAvaluable = (input_element.attr("data-avalua") === "s") ? true : false;
 
 				if (esAvaluable) {
 
@@ -1553,13 +1574,24 @@ $.fn.appFormsAvalua = function(options) {
 
 				var validacio = JSON_FORMULARI.datos.validacion
 					,validacio_estat = (validacio !== null && validacio.estado) ? validacio.estado : false
-					,validacio_missatge = (validacio !== null && validacio.mensaje) ? validacio.mensaje : false;
+					,validacio_missatge = (validacio !== null && validacio.mensaje) ? validacio.mensaje : false
+					,camp_id = (validacio !== null && validacio.campo !== null && validacio.campo !== "") ? validacio.campo : false;
 
 				if (validacio_estat === "error") {
 
-					imc_forms_contenidor
-						.find("div[data-id="+input_id+"]:first")
-							.addClass("imc-el-error");
+					if (camp_id && camp_id !== "" && camp_id !== null) {
+
+						imc_missatge
+							.appMissatge({ accio: "error", titol: validacio_missatge, text: txtFormErrorText, amagaDesdeFons: false, alTancar: function() { remarca(camp_id); enfocaAlSeguent(); } });
+
+					} else {
+
+						imc_missatge
+							.appMissatge({ accio: "error", titol: validacio_missatge, text: "", amagaDesdeFons: false, alTancar: function() { enfocaAlSeguent(); } });
+
+					}
+
+					return;
 
 				}
 
@@ -1577,12 +1609,14 @@ $.fn.appFormsAvalua = function(options) {
 						};
 
 					imc_missatge
-						.appMissatge({ accio: validacio_estat, titol: validacio_missatge, alTancar: function() { destacaCamp(); }, alAcceptar: function() { destacaCamp(); imc_missatge.appMissatge({ araAmaga: true }); } });
+						.appMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", alTancar: function() { destacaCamp(); }, alAcceptar: function() { destacaCamp(); imc_missatge.appMissatge({ araAmaga: true }); enfocaAlSeguent(); } });
 
 				} else {
 
 					imc_missatge
 						.appMissatge({ araAmaga: true });
+
+					enfocaAlSeguent();
 
 				}
 
@@ -1596,6 +1630,33 @@ $.fn.appFormsAvalua = function(options) {
 
 				imc_forms_contenidor
 					.appFormsFormateig();
+
+			},
+			remarca = function(camp_id) {
+
+				imc_forms_contenidor
+					.find("div[data-id="+camp_id+"]:first")
+						.addClass("imc-el-error")
+						.appDestaca({ referent: imc_forms_contenidor });
+
+			},
+			enfocaAlSeguent = function() {
+
+				var el_seguent = input_element.next(".imc-element[data-id]:first");
+
+				if (el_seguent.length) {
+
+					el_seguent
+						.find("input:first, textarea:first, a.imc-select:first")
+							.focus();
+
+				} else {
+
+					imc_formulari_finestra
+						.find("li.imc--finalitza:first button")
+							.focus;
+
+				}
 
 			};
 
@@ -1733,11 +1794,11 @@ $.fn.appFormsAccions = function(options) {
 					,potGuardar_class = (potGuardar === "s") ? "imc--si-pot-guardar" : "imc--no-pot-guardar";
 
 				imc_missatge
+					.removeClass("imc--si-pot-guardar imc--no-pot-guardar")
+					.addClass( potGuardar_class )
 					.appMissatge({ accio: "formSurt", titol: txtFormEixirTitol, text: text_avis });
 
 				imc_missatge
-					.removeClass("imc--si-pot-guardar imc--no-pot-guardar")
-					.addClass( potGuardar_class )
 					.appMissatgeFormAccions();
 
 			},
@@ -1858,7 +1919,7 @@ $.fn.appFormsAccions = function(options) {
 					} else {
 
 						imc_missatge
-							.appMissatge({ accio: "error", titol: validacio_missatge, amagaDesdeFons: false });
+							.appMissatge({ accio: "error", titol: validacio_missatge, text: "", amagaDesdeFons: false });
 
 					}
 
@@ -1871,7 +1932,7 @@ $.fn.appFormsAccions = function(options) {
 				if (validacio_missatge) {
 
 					imc_missatge
-						.appMissatge({ accio: validacio_estat, titol: validacio_missatge, amagaDesdeFons: false, alTancar: function() { accio(); } })
+						.appMissatge({ accio: validacio_estat, titol: validacio_missatge, text: "", amagaDesdeFons: false, alTancar: function() { accio(); } })
 						.appMissatgeFormAccions();
 
 					return;

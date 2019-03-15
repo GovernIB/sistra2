@@ -539,22 +539,26 @@ form textarea { font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif;
 }
 
 .imc-suport .imc-s--missatge .imc--botonera li:nth-child(1),
-.imc-suport .imc-s--missatge .imc--botonera li:nth-child(2) { display: none; }
+.imc-suport .imc-s--missatge .imc--botonera li:nth-child(2),
+.imc-suport .imc-s--missatge .imc--botonera li:nth-child(4) { display: none; }
 
 .imc-suport .imc-s--missatge.imc--enviat-correcte .imc--botonera li:nth-child(1),
-.imc-suport .imc-s--missatge.imc--enviat-correcte .imc--botonera li:nth-child(3) { display: none; }
+.imc-suport .imc-s--missatge.imc--enviat-correcte .imc--botonera li:nth-child(3),
+.imc-suport .imc-s--missatge.imc--enviat-correcte .imc--botonera li:nth-child(4) { display: none; }
 
 .imc-suport .imc-s--missatge.imc--enviat-correcte .imc--botonera li:nth-child(2) { display: inline-block; }
 
-.imc-suport .imc-s--missatge.imc--enviat-error .imc--botonera li:nth-child(3) { display: none; }
+.imc-suport .imc-s--missatge.imc--enviat-error .imc--botonera li:nth-child(3),
+.imc-suport .imc-s--missatge.imc--enviat-error .imc--botonera li:nth-child(4) { display: none; }
 
 .imc-suport .imc-s--missatge.imc--enviat-error .imc--botonera li:nth-child(1),
 .imc-suport .imc-s--missatge.imc--enviat-error .imc--botonera li:nth-child(2) { display: inline-block; }
 
 .imc-suport .imc-s--missatge.imc--enviat-fatal .imc--botonera li:nth-child(1),
+.imc-suport .imc-s--missatge.imc--enviat-fatal .imc--botonera li:nth-child(2),
 .imc-suport .imc-s--missatge.imc--enviat-fatal .imc--botonera li:nth-child(3) { display: none; }
 
-.imc-suport .imc-s--missatge.imc--enviat-fatal .imc--botonera li:nth-child(2) { display: inline-block; }
+.imc-suport .imc-s--missatge.imc--enviat-fatal .imc--botonera li:nth-child(4) { display: inline-block; }
 
 
 .imc-suport .imc-s--missatge.imc--enviat-correcte:before {

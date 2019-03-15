@@ -29,7 +29,7 @@ $.fn.appSerialitza = function(opcions) {
 
 				if (el_tipus === "texto") {
 
-					var input_el = el.find("input:first")
+					var input_el = el.find("input:first, textarea:first")
 						,input_val = input_el.val();
 
 					input_val = input_val.replace(/#-@/g, "").replace(/</g, "").replace(/>/g, "");

@@ -27,6 +27,7 @@ numeral
         }
     });
 
+/*
 numeral
     .locale('es-es');
-
+*/

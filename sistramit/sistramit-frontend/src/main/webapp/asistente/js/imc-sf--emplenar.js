@@ -518,7 +518,7 @@ $.fn.appMissatgeFormAccions = function(options) {
 					.off('.appMissatgeFormAccions')
 					.on('click.appMissatgeFormAccions', "button[data-tipus=desa]", desaSurt)
 					.on('click.appMissatgeFormAccions', "button[data-tipus=surt]", surt)
-					.on('click.appMissatgeFormAccions', "button[data-tipus=tanca]", surt);
+					//.on('click.appMissatgeFormAccions', "button[data-tipus=tanca]", surt);
 
 			},
 			desaSurt = function() {

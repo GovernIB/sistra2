@@ -823,7 +823,7 @@ $.fn.appSuport = function(options) {
 
 					}
 
-					if (!esMidaPosible && imc_document.attr("data-mida") !== "null") {
+					if (!esMidaPosible && input_file.attr("data-mida") !== "null") {
 
 						text_error = txtErrorMidaGran;
 						revisa_error = true;
@@ -973,19 +973,17 @@ $.fn.appSuport = function(options) {
 
 				if (estat === "fatal") {
 
-					url_fatal = "";
+					url_fatal = json.url;
 
 					el_suport_missatge
 						.addClass("imc--enviat-fatal")
 						.off(".appFatal")
-						.on("click.appFatal", "button[data-tipus='tanca']", recarrega);
+						.on("click.appFatal", "button[data-tipus='reinicia']", reinicia);
 
 				}
 
 			},
-			recarrega = function(e) {
-
-				e.preventDefault();
+			reinicia = function(e) {
 
 				setTimeout(
 					function() {
@@ -1124,9 +1122,16 @@ $.fn.appAccessibilitat = function(options) {
 
 				).fail(
 
-					function() {
+					function(dades, tipus, errorThrown) {
 
-						alert("Accessibilitat: error caregant HTML, CSS i JS");
+						if (tipus === "abort") {
+							return false;
+						}
+
+						consola("Accessibilitat càrrega arxius: error des de FAIL");
+
+						imc_contenidor
+							.errors({ estat: "fail" });
 
 					}
 

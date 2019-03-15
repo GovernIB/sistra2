@@ -329,6 +329,7 @@ function carregaHTML() {
 					,txtEnviantDades: txtEnviantDades
 					,txtCancelaEnviament: txtCancelaEnviament
 					,txtTornaIntentar: txtTornaIntentar
+					,txtReinicia: txtReinicia
 					,jsonContacte: APP_JSON_TRAMIT_E.contacto
 					,txtMapaWeb: txtMapaWeb
 					,txtAvisLegal: txtAvisLegal

@@ -160,8 +160,15 @@ $.fn.appPas = function(options) {
 
 				if (typeof imc_formulari !== "undefined" && imc_formulari.length && imc_formulari.css("visibility") === "visible") {
 
+					var potGuardar = imc_formulari.attr("data-guardar");
+
+					var text_avis = (potGuardar === "s") ? txtFormEixirText : txtFormEixirNoGuardaText
+						,potGuardar_class = (potGuardar === "s") ? "imc--si-pot-guardar" : "imc--no-pot-guardar";
+
 					imc_missatge
-						.appMissatge({ accio: "formSurt", titol: "Atenció. Va a sortir del formulari", text: "Recorde que pot desar el formulari amb les dades emplenades ara mateix." });
+						.removeClass("imc--si-pot-guardar imc--no-pot-guardar")
+						.addClass( potGuardar_class )
+						.appMissatge({ accio: "formSurt", titol: txtFormEixirTitol, text: text_avis });
 
 					imc_missatge
 						.appMissatgeFormAccions();

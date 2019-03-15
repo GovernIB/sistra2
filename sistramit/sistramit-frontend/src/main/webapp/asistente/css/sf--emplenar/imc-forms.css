@@ -952,7 +952,9 @@
 
 /* type number */
 
-input[type=number] { 
+input[type=number],
+input[type=number]:focus
+input[type=number]:hover { 
 	-webkit-appearance: none;
 	-moz-appearance: textfield;
 	appearance: none;
@@ -998,6 +1000,15 @@ input[type=number] {
 	.imc-el-taula-botonera button[class] span { position: absolute; top: -999em; left: -999em; }
 
 	.imc-el-taula-botonera button[class]::before { margin-right: 0; }
+
+	.imc-formulari .imc--finestra {
+		overflow: auto;
+	}
+
+	.imc-formulari .imc--marc,
+	.imc-formulari .imc--finestra > h3 {
+		min-width: 45em;
+	}
 
 }
 
