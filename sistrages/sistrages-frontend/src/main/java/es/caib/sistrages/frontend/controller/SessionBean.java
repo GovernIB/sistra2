@@ -118,6 +118,10 @@ public class SessionBean {
 	 */
 	private String logo; // TODO PENDIENTE CAMBIAR
 
+	/** Atributos del growl. **/
+	private Boolean growlSticky = false;
+	private Integer growlLife = 2000;
+
 	private Map<String, Object> mochilaDatos;
 
 	/** Inicio sesión. */
@@ -163,6 +167,34 @@ public class SessionBean {
 
 		// inicializamos mochila
 		mochilaDatos = new HashMap<>();
+
+		prepararGrowl(configuracionGlobalService.getConfiguracionGlobal("growl.propiedades").getValor());
+	}
+
+	/**
+	 * Para extraer la info para el growl.
+	 *
+	 * @param valor
+	 */
+	private void prepararGrowl(final String valor) {
+		if (valor != null && !valor.isEmpty()) {
+			for (final String prop : valor.split("#")) {
+				if (prop.contains("=") && prop.split("=").length == 2) {
+					final String[] propiedad = prop.split("=");
+					switch (propiedad[0]) {
+					case "sticky":
+						setGrowlSticky(Boolean.valueOf(propiedad[1]));
+						break;
+
+					case "life":
+						growlLife = Integer.valueOf(propiedad[1]);
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
 
 	}
 
@@ -234,16 +266,16 @@ public class SessionBean {
 	public MenuModel getMenuModel() {
 		final MenuModel model = new DefaultMenuModel();
 		if (!TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
-			final String nombreEntidad = (entidad.getNombre().getTraduccion(this.lang).length() < 30
+			final String nombreEntidad = (entidad.getNombre().getTraduccion(this.lang).length() < 28
 					? entidad.getNombre().getTraduccion(this.lang)
-					: entidad.getNombre().getTraduccion(this.lang).substring(0, 30));
+					: entidad.getNombre().getTraduccion(this.lang).substring(0, 28) + "...");
 			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(nombreEntidad);
 			entidadSubmenu.setIcon("fa-li fa fa-institution");
 			for (final Entidad newEntidad : listaEntidades) {
 				if (!entidad.equals(newEntidad)) {
-					final String nombreSubEntidad = (newEntidad.getNombre().getTraduccion(this.lang).length() < 30
+					final String nombreSubEntidad = (newEntidad.getNombre().getTraduccion(this.lang).length() < 28
 							? newEntidad.getNombre().getTraduccion(this.lang)
-							: newEntidad.getNombre().getTraduccion(this.lang).substring(0, 30));
+							: newEntidad.getNombre().getTraduccion(this.lang).substring(0, 28) + "...");
 					final DefaultMenuItem item3 = new DefaultMenuItem(nombreSubEntidad);
 					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getCodigo() + ")}");
 					item3.setIcon("fa-li fa fa-institution");
@@ -537,6 +569,36 @@ public class SessionBean {
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * @return the growlLife
+	 */
+	public Integer getGrowlLife() {
+		return growlLife;
+	}
+
+	/**
+	 * @param growlLife
+	 *            the growlLife to set
+	 */
+	public void setGrowlLife(final Integer growlLife) {
+		this.growlLife = growlLife;
+	}
+
+	/**
+	 * @return the growlSticky
+	 */
+	public Boolean getGrowlSticky() {
+		return growlSticky;
+	}
+
+	/**
+	 * @param growlSticky
+	 *            the growlSticky to set
+	 */
+	public void setGrowlSticky(final Boolean growlSticky) {
+		this.growlSticky = growlSticky;
 	}
 
 }

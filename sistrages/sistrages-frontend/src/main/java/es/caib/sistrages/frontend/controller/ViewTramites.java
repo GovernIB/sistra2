@@ -55,28 +55,27 @@ public class ViewTramites extends ViewControllerBase {
 	@Inject
 	private TramiteService tramiteService;
 
-	/**
-	 * security service.
-	 */
+	/** security service. */
 	@Inject
 	private SecurityService securityService;
 
+	/** System service. **/
 	@Inject
 	private SystemService systemService;
 
-	/**
-	 * Filtro (puede venir por parametro).
-	 */
+	/** Filtro (puede venir por parametro). */
 	private String filtro;
 
-	/**
-	 * Id Area.
-	 */
+	/** Id Area. */
 	private String idArea;
 
-	/**
-	 * Dato seleccionado en la lista.
-	 */
+	/** Id Area. */
+	private String idTramite;
+
+	/** Id Area. */
+	private String idTramiteVersion;
+
+	/** Dato seleccionado en la lista. */
 	private TramiteVersiones tramiteSeleccionada;
 
 	/** Lista de datos. */
@@ -85,8 +84,10 @@ public class ViewTramites extends ViewControllerBase {
 	/** Dato seleccionado en la lista. */
 	private TramiteVersion versionSeleccionada;
 
+	/** Lista de areas. **/
 	private List<Area> listaAreas;
 
+	/** Lista de areas seleccionadas. **/
 	private List<Area> listaAreasSeleccionadas;
 
 	/**
@@ -113,9 +114,14 @@ public class ViewTramites extends ViewControllerBase {
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// Recupera areas
-		// Para obtener el idArea
+
+		// Para obtener el idArea, idTramite e idTramiteVersion
 		idArea = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("area");
+		idTramite = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
+				.getParameter("tramite");
+		idTramiteVersion = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
+				.getParameter("tramite_version");
 		buscarAreas();
 		if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
 			setPermiteAccionEntorno(true);
@@ -216,7 +222,7 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void importar() {
 		final Map<String, String> params = new HashMap<>();
-		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 1000, 670);
+		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
 	}
 
 	/**
@@ -703,6 +709,7 @@ public class ViewTramites extends ViewControllerBase {
 		if (!verificarFilasSeleccionadasArea()) {
 			return;
 		}
+
 		for (final Area areaSeleccionada : listaAreasSeleccionadas) {
 
 			final List<Tramite> tramites = tramiteService.listTramite(areaSeleccionada.getCodigo(), this.filtro);
@@ -727,9 +734,48 @@ public class ViewTramites extends ViewControllerBase {
 
 		}
 
+		/**
+		 * Comprobamos si hay que marcar algo por defecto (tramite o tramite version).
+		 **/
+		if (idTramite != null && !idTramite.isEmpty()) {
+			final Long lIdTramite = Long.valueOf(idTramite);
+			for (final TramiteVersiones itemTramiteVersiones : listaTramiteVersiones) {
+				if (itemTramiteVersiones.getTramite().getCodigo().compareTo(lIdTramite) == 0) {
+					this.tramiteSeleccionada = itemTramiteVersiones;
+					break;
+				}
+			}
+
+			if (this.tramiteSeleccionada != null && idTramiteVersion != null && !idTramiteVersion.isEmpty()) {
+				final Long lIdTramiteVersion = Long.valueOf(idTramiteVersion);
+				for (final TramiteVersion version : this.tramiteSeleccionada.getListaVersiones()) {
+					if (version.getCodigo().compareTo(lIdTramiteVersion) == 0) {
+						this.versionSeleccionada = version;
+						this.tramiteSeleccionada = null;
+					}
+				}
+			}
+		}
 		Collections.sort(listaTramiteVersiones,
 				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
 
+	}
+
+	/**
+	 * Evento para expandir una fila. Sólo se expande si el código del trámite pasa
+	 * por la url.
+	 *
+	 * @param tv
+	 */
+	public boolean expandir(final TramiteVersiones tv) {
+		boolean expandir;
+		if (idTramite != null && !idTramite.isEmpty()
+				&& tv.getTramite().getCodigo().compareTo(Long.valueOf(idTramite)) == 0) {
+			expandir = true;
+		} else {
+			expandir = false;
+		}
+		return expandir;
 	}
 
 	public String getIdentificadorArea(final String idArea) {
@@ -1335,6 +1381,36 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void setPermiteAccionEntorno(final boolean permiteAccionEntorno) {
 		this.permiteAccionEntorno = permiteAccionEntorno;
+	}
+
+	/**
+	 * @return the idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * @param idTramite
+	 *            the idTramite to set
+	 */
+	public void setIdTramite(final String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * @return the idTramiteVersion
+	 */
+	public String getIdTramiteVersion() {
+		return idTramiteVersion;
+	}
+
+	/**
+	 * @param idTramiteVersion
+	 *            the idTramiteVersion to set
+	 */
+	public void setIdTramiteVersion(final String idTramiteVersion) {
+		this.idTramiteVersion = idTramiteVersion;
 	}
 
 }
