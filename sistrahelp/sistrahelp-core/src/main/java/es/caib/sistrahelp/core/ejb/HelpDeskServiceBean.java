@@ -42,64 +42,64 @@ public class HelpDeskServiceBean implements HelpDeskService {
 	HelpDeskService helpdeskService;
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public List<EventoAuditoriaTramitacion> obtenerAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		return helpdeskService.obtenerAuditoriaEvento(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public Long countAuditoriaEvento(final FiltroAuditoriaTramitacion pFiltroBusqueda) {
 		return helpdeskService.countAuditoriaEvento(pFiltroBusqueda);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public ResultadoPerdidaClave obtenerClaveTramitacion(final FiltroPerdidaClave pFiltroBusqueda) {
 		return helpdeskService.obtenerClaveTramitacion(pFiltroBusqueda);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public List<PagoAuditoria> obtenerAuditoriaPago(final FiltroAuditoriaPago pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		return helpdeskService.obtenerAuditoriaPago(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public Long countAuditoriaPago(final FiltroAuditoriaPago pFiltroBusqueda) {
 		return helpdeskService.countAuditoriaPago(pFiltroBusqueda);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public ResultadoAuditoriaDetallePago obtenerAuditoriaDetallePago(final Long pIdPago) {
 		return helpdeskService.obtenerAuditoriaDetallePago(pIdPago);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public Long countAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda) {
 		return helpdeskService.countAuditoriaPersistencia(pFiltroBusqueda);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public List<PersistenciaAuditoria> obtenerAuditoriaPersistencia(final FiltroPersistenciaAuditoria pFiltroBusqueda,
 			final FiltroPaginacion pFiltroPaginacion) {
 		return helpdeskService.obtenerAuditoriaPersistencia(pFiltroBusqueda, pFiltroPaginacion);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public List<FicheroPersistenciaAuditoria> obtenerAuditoriaPersistenciaFichero(final Long pIdTramite) {
 		return helpdeskService.obtenerAuditoriaPersistenciaFichero(pIdTramite);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public FicheroAuditoria obtenerAuditoriaFichero(final Long pIdFichero, final String pClave) {
 		return helpdeskService.obtenerAuditoriaFichero(pIdFichero, pClave);
 	}

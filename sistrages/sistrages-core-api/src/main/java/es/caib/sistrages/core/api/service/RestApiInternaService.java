@@ -80,4 +80,8 @@ public interface RestApiInternaService {
 	FormateadorFormulario getFormateadorPorDefecto(String codigoDir3);
 
 	List<PlantillaFormateador> getPlantillasFormateador(final Long idFormateador);
+
+	List<String> listIdAreasByEntidad(Long pIdEntidad);
+
+	List<Entidad> listEntidad();
 }

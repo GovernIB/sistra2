@@ -28,6 +28,7 @@ public class RolesAdapter {
 		final List<RPermisoHelpDesk> rListaPermisos = new ArrayList<>();
 		for (final Rol rol : roles) {
 			final RPermisoHelpDesk rPermiso = new RPermisoHelpDesk();
+			rPermiso.setTipoPermiso("A");
 			rPermiso.setCodigoDIR3Entidad(rol.getArea().getCodigoDIR3Entidad());
 			rPermiso.setIdentificadorArea(rol.getArea().getIdentificador());
 			rPermiso.setTipo(rol.getTipo().toString());

@@ -205,4 +205,16 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiService.getPlantillasFormateador(idFormateador);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.REST })
+	public List<Entidad> listEntidad() {
+		return restApiService.listEntidad();
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<String> listIdAreasByEntidad(final Long pIdEntidad) {
+		return restApiService.listIdAreasByEntidad(pIdEntidad);
+	}
+
 }

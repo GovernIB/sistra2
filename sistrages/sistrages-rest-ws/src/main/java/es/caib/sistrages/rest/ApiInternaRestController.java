@@ -229,6 +229,22 @@ public class ApiInternaRestController {
 	@RequestMapping(value = "/permisosHelpdesk", method = RequestMethod.GET)
 	public List<RPermisoHelpDesk> obtenerPermisosHelpdesk() {
 		final List<Rol> roles = restApiService.obtenerPermisosHelpdesk();
-		return rolesAdapter.convertir(roles);
+		final List<RPermisoHelpDesk> listaPermisos = rolesAdapter.convertir(roles);
+
+		// recuperamos entidades - areas
+		final List<Entidad> listaEntidades = restApiService.listEntidad();
+		for (final Entidad entidad : listaEntidades) {
+			if (entidad.isActivo()) {
+				final RPermisoHelpDesk permiso = new RPermisoHelpDesk();
+				permiso.setTipoPermiso("E");
+				permiso.setListaIdentificadorArea(restApiService.listIdAreasByEntidad(entidad.getCodigo()));
+				permiso.setCodigoDIR3Entidad(entidad.getCodigoDIR3());
+				permiso.setValor(entidad.getRolSTH());
+
+				listaPermisos.add(permiso);
+			}
+		}
+
+		return listaPermisos;
 	}
 }

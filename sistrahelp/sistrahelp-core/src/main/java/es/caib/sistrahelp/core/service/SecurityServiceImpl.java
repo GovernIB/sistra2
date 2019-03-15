@@ -41,16 +41,22 @@ public class SecurityServiceImpl implements SecurityService {
 	@NegocioInterceptor
 	public List<Area> obtenerAreas() {
 		final List<Area> res = new ArrayList<>();
-		if (contextService.getRoles().contains(TypeRoleAcceso.HELPDESK)) {
+		if (contextService.getRoles().contains(TypeRoleAcceso.HELPDESK)
+				|| contextService.getRoles().contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
 
 			for (final RPermisoHelpDesk permiso : sistragesApiComponent.obtenerPermisosHelpdesk()) {
-				if ("R".equals(permiso.getTipo().trim()) && contextService.hashRole(permiso.getValor().trim())
-						|| "U".equals(permiso.getTipo().trim())
-								&& contextService.getUsername().equals(permiso.getValor().trim())) {
-					final Area area = new Area();
-					area.setCodigoDIR3Entidad(permiso.getCodigoDIR3Entidad());
-					area.setIdentificador(permiso.getIdentificadorArea());
-					res.add(area);
+
+				if ("A".equals(permiso.getTipoPermiso())) {
+					if ("R".equals(permiso.getTipo().trim()) && contextService.hashRole(permiso.getValor().trim())
+							|| "U".equals(permiso.getTipo().trim())
+									&& contextService.getUsername().equals(permiso.getValor().trim())) {
+						final Area area = new Area();
+						area.setCodigoDIR3Entidad(permiso.getCodigoDIR3Entidad());
+						area.setIdentificador(permiso.getIdentificadorArea());
+						if (!res.equals(area)) {
+							res.add(area);
+						}
+					}
 				}
 			}
 		}

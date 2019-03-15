@@ -525,6 +525,7 @@ create table STG_ENTIDA
    ENT_NOMBRE           NUMBER(18)           not null,
    ENT_ACTIVA           NUMBER(1)            default 0 not null,
    ENT_ROLADM           VARCHAR2(100 CHAR)   not null,
+   ENT_ROLSUP           VARCHAR2(100 CHAR),
    ENT_LOGOTG           NUMBER(18),
    ENT_LOGOTT           NUMBER(18),
    ENT_CSSTT            NUMBER(18),
@@ -564,7 +565,11 @@ comment on column STG_ENTIDA.ENT_ACTIVA is
 'Indica si la entidad está activa';
 
 comment on column STG_ENTIDA.ENT_ROLADM is
-'Role asociado al administrador de la entidad';
+'Role asociado al administrador de la entidad (STG)';
+
+comment on column STG_ENTIDA.ENT_ROLSUP is
+'Role asociado al supervidor de la entidad (STH)';
+
 
 comment on column STG_ENTIDA.ENT_LOGOTG is
 'Logo entidad Gestor Trámites';

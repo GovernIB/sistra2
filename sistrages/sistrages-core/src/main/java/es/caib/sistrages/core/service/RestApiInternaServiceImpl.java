@@ -309,4 +309,21 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 		return formateadorFormularioDAO.getListaPlantillasFormateador(idFormateador);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<String> listIdAreasByEntidad(final Long pIdEntidad) {
+		final List<Area> listaAreas = areaDao.getAll(pIdEntidad);
+		final List<String> listaIdAreas = new ArrayList<>();
+		for (final Area area : listaAreas) {
+			listaIdAreas.add(area.getIdentificador());
+		}
+
+		return listaIdAreas;
+	}
+
+	@Override
+	public List<Entidad> listEntidad() {
+		return entidadDao.getAll();
+	}
+
 }

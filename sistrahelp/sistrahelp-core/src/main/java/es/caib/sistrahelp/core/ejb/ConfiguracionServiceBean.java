@@ -20,13 +20,13 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	ConfiguracionService configuracionService;
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public Entidad obtenerDatosEntidad(final String idEntidad) {
 		return configuracionService.obtenerDatosEntidad(idEntidad);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK })
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public ContenidoFichero getContentFicheroByPath(final String fichero) {
 		return configuracionService.getContentFicheroByPath(fichero);
 	}

@@ -108,7 +108,9 @@ public class SessionBean {
 
 		rolesList = securityService.getRoles();
 
-		if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
+		if (rolesList.contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)) {
+			activeRole = TypeRoleAcceso.SUPERVISOR_ENTIDAD;
+		} else if (rolesList.contains(TypeRoleAcceso.HELPDESK)) {
 			activeRole = TypeRoleAcceso.HELPDESK;
 		} else {
 			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
