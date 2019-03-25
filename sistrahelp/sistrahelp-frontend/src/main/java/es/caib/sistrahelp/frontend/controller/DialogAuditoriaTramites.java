@@ -54,5 +54,12 @@ public class DialogAuditoriaTramites extends DialogControllerBase {
 	public void setDato(final EventoAuditoriaTramitacion dato) {
 		this.dato = dato;
 	}
+	
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("dialogoAuditoriaTramites");
+	}
 
 }

@@ -90,7 +90,8 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogInformacionPagos.cerrar}" process="@this" styleClass="boton-azul"/>
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" actionListener="#{dialogInformacionPagos.ayuda}"/>
+					<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogInformacionPagos.cerrar}" process="@this" styleClass="boton-azul"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

@@ -115,6 +115,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" actionListener="#{dialogInformacionPersistencia.ayuda}"/>
 						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogInformacionPersistencia.cerrar}" process="@this" styleClass="boton-azul"/>
 					</f:facet>
 				</p:toolbar>

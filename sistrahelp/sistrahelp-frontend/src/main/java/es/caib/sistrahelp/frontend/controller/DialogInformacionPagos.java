@@ -95,5 +95,13 @@ public class DialogInformacionPagos extends DialogControllerBase {
 		return resultado;
 
 	}
+	
+		
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("dialogoInformacionPagos");
+	}
 
 }

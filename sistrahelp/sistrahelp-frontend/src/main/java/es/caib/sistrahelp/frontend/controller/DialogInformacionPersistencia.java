@@ -100,5 +100,13 @@ public class DialogInformacionPersistencia extends DialogControllerBase {
 	public void setListaFicheros(final List<FicheroPersistenciaAuditoria> listaFicheros) {
 		this.listaFicheros = listaFicheros;
 	}
+	
+	
+	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("dialogoInformacionPersistencia");
+	}
 
 }
