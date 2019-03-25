@@ -462,43 +462,48 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			final ComponenteFormulario cfOriginal = pagina.getComponente(objetoFormularioEdit.getCodigo());
 
-			// TODO PENDIENTE GUARDAR (ver como hacerlo, ¿beanutils?¿metodos
-			// particulares
-			// por tipo componente?) De momento no dejamos cambiar codigo
-			// para permitir
-			// dejar seleccionando
-			try {
-				BeanUtils.copyProperties(cfOriginal, objetoFormularioEdit);
-			} catch (final Exception e) {
-				throw new ErrorNoControladoException(e);
-			}
+			// TODO SI ES UNA LINEA NO SE GUARDA
+			if (cfOriginal != null) {
 
-			final ComponenteFormulario cfUpdate = (ComponenteFormulario) formIntService
-					.updateComponenteFormulario(cfOriginal);
-
-			// si es campo selector con dominio damos de alta el dominio si
-			// en dominios
-			// empleados no lo está ya
-			if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
-				final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
-				if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() != null
-						&& !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
-					dominioService.addTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo());
+				// TODO PENDIENTE GUARDAR (ver como hacerlo, ¿beanutils?¿metodos
+				// particulares
+				// por tipo componente?) De momento no dejamos cambiar codigo
+				// para permitir
+				// dejar seleccionando
+				try {
+					BeanUtils.copyProperties(cfOriginal, objetoFormularioEdit);
+				} catch (final Exception e) {
+					throw new ErrorNoControladoException(e);
 				}
+
+				final ComponenteFormulario cfUpdate = (ComponenteFormulario) formIntService
+						.updateComponenteFormulario(cfOriginal);
+
+				// si es campo selector con dominio damos de alta el dominio si
+				// en dominios
+				// empleados no lo está ya
+				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
+					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() != null
+							&& !dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
+						dominioService.addTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo());
+					}
+				}
+
+				try {
+					BeanUtils.copyProperties(objetoFormularioEdit, cfUpdate);
+					BeanUtils.copyProperties(cfOriginal, cfUpdate);
+				} catch (final Exception e) {
+					throw new ErrorNoControladoException(e);
+				}
+
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+
+				// Refresca iframe formulario
+				// TODO Pasarle componente destino para posicionarse
+				urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
+
 			}
-
-			try {
-				BeanUtils.copyProperties(objetoFormularioEdit, cfUpdate);
-				BeanUtils.copyProperties(cfOriginal, cfUpdate);
-			} catch (final Exception e) {
-				throw new ErrorNoControladoException(e);
-			}
-
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
-
-			// Refresca iframe formulario
-			// TODO Pasarle componente destino para posicionarse
-			urlIframe = "FormRenderServlet?ts=" + System.currentTimeMillis();
 		}
 	}
 
@@ -855,7 +860,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					linea.getComponentes().get(i - 1).setOrden(i);
 				}
 
-				limpiaSeleccion();
+				// limpiaSeleccion();
+				seleccionaComponente(componente);
+
 			} else {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("warning.componente.sinespacio"), true);
@@ -915,7 +922,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				pagina.getLineas().get(i - 1).setOrden(i);
 			}
 
-			limpiaSeleccion();
+			// limpiaSeleccion();
+			switch (tipoCampo) {
+			case SECCION:
+			case ETIQUETA:
+				seleccionaComponente(((LineaComponentesFormulario) componente).getComponentes().get(0));
+				break;
+			case LINEA:
+				seleccionaComponente(componente);
+				break;
+			default:
+				break;
+			}
+
 		}
 
 	}
@@ -1047,6 +1066,44 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	private void limpiaSeleccion() {
 		panelPropiedadesUrl = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
 		objetoFormularioEdit = null;
+	}
+
+	private void seleccionaComponente(final ObjetoFormulario pComponente) {
+		objetoFormularioEdit = pComponente;
+
+		String pagina = "/secure/app/dialogDisenyoFormularioVacio.xhtml";
+		detalleComponenteUrl = null;
+		if (objetoFormularioEdit != null) {
+			if (objetoFormularioEdit instanceof ComponenteFormulario) {
+				switch (((ComponenteFormulario) objetoFormularioEdit).getTipo()) {
+				case CAMPO_TEXTO:
+					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+					break;
+				case SELECTOR:
+					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+					break;
+				case ETIQUETA:
+					pagina = "/secure/app/dialogDisenyoFormularioEtiqueta.xhtml";
+					break;
+				case SECCION:
+					pagina = "/secure/app/dialogDisenyoFormularioSeccion.xhtml";
+					break;
+				case CHECKBOX:
+					pagina = "/secure/app/dialogDisenyoFormularioComponente.xhtml";
+					break;
+				// TODO PENDIENTE
+				default:
+					break;
+				}
+
+				detalleComponenteUrl = "/secure/app/dialogDisenyoFormularioComponente"
+						+ ((ComponenteFormulario) objetoFormularioEdit).getTipo() + ".xhtml";
+			} else if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
+				pagina = "/secure/app/dialogDisenyoFormularioLinea.xhtml";
+			}
+		}
+
+		panelPropiedadesUrl = pagina;
 	}
 
 	public void moverObjetoIzq() {

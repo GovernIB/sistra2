@@ -165,8 +165,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 				}
 
 				escribeLinea(pOut, "<div class=\"imc-element imc-separador imc-sep-salt-carro\"",
-						escribeCodigo("L" + String.valueOf(lc.getCodigo()), pModoEdicion), " id=\"L",
-						String.valueOf(lc.getCodigo()), "\"></div>", 5);
+						escribeCodigo("L" + String.valueOf(lc.getCodigo()), pModoEdicion),
+						escribeId("L" + String.valueOf(lc.getCodigo())), " id=\"L", String.valueOf(lc.getCodigo()),
+						"\"></div>", 5);
 
 			}
 		}
@@ -176,8 +177,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 			final boolean pModoEdicion) {
 		final ComponenteFormularioSeccion componente = (ComponenteFormularioSeccion) pCF;
 
-		escribeLinea(pOut, "<h4 ", escribeCodigo(pCF.getCodigo(), pModoEdicion), "class=\"imc-element imc-seccio\">",
-				5);
+		escribeLinea(pOut, "<h4 ", escribeCodigo(pCF.getCodigo(), pModoEdicion), escribeId(pCF.getIdComponente()),
+				"class=\"imc-element imc-seccio\">", 5);
 
 		escribeLinea(pOut, "<span class=\"imc-se-marca\">", componente.getLetra(), "</span>", 6);
 		if (!pCF.isNoMostrarTexto() && pCF.getTexto() != null) {

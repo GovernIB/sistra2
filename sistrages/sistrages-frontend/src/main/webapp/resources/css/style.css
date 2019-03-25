@@ -4,6 +4,10 @@ body{
 }
 
 /****  cabecera *****/
+/** Para el growl . **/
+.ui-growl-item-container{
+	opacity: 1;
+}
 
 /* para que salga fresa la cabecera */
 .header-color, .ui-dialog-titlebar {background-color: #CC073C;}

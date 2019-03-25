@@ -97,38 +97,49 @@ $.fn.appOnLoad = function(options) {
 }
 
 
-// appSetFocus
+//appSetFocus
 
 $.fn.appSetFocus = function(options) {
+
     var settings = $.extend({
-        id: false
-    }, options);
+            id: false
+            ,referent: $("#imc-contenidor")
+        }, options);
+
     this.each(function(){
-        var element = $(this),
-            id = settings.id,
-            inicia = function() {
+
+        var element = $(this)
+            ,id = settings.id
+            ,referent = settings.referent
+            ,inicia = function() {
 
                 if (!id) {
                     return;
                 }
 
-                var el = $("#"+id);
+                var el = referent.find("[data-id='"+id+"']:first");
 
-                $("#imc-contenidor")
-                    .animate(
-                        {
-                            scrollTop: "0px"
-                        }
-                        ,0
-                        , function() {
+                if (el.length) {
 
-                            el
-                                .closest(".imc-element ")
+                    var referent_scroll_T = referent.scrollTop()
+                        ,el_T = el.position().top + referent_scroll_T;
+
+                    referent
+                        .animate(
+                            {
+                                scrollTop: el_T+"0px"
+                            }
+                            ,500
+                            , function() {
+
+                                el
                                     .addClass("imc--el-seleccionat")
                                     .focus();
 
-                        }
-                    );
+                            }
+                        );
+
+                }
 
             };
 
@@ -138,6 +149,7 @@ $.fn.appSetFocus = function(options) {
     });
     return this;
 }
+
 
 
 
