@@ -16,6 +16,9 @@ public final class FirmaVerificacion {
 	/** Indica si se ha podido verificar la firma realizada. */
 	private TypeSiNo verificada = TypeSiNo.NO;
 
+	/** Indica si se ha cancelado la firma. */
+	private TypeSiNo cancelada = TypeSiNo.NO;
+
 	/** Mensaje error. */
 	private String detalleError;
 
@@ -45,6 +48,25 @@ public final class FirmaVerificacion {
 	 */
 	public TypeSiNo getVerificada() {
 		return verificada;
+	}
+
+	/**
+	 * Método para establecer verificada.
+	 *
+	 * @param verificada
+	 *            verificada a establecer
+	 */
+	public void setCancelada(TypeSiNo cancelada) {
+		this.cancelada = cancelada;
+	}
+
+	/**
+	 * Método de acceso a verificada.
+	 *
+	 * @return verificada
+	 */
+	public TypeSiNo getCancelada() {
+		return cancelada;
 	}
 
 	/**

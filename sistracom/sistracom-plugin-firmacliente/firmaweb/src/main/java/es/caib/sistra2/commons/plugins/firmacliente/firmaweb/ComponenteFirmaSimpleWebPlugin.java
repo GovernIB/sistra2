@@ -150,6 +150,12 @@ public class ComponenteFirmaSimpleWebPlugin extends AbstractPluginProperties imp
 			throw new FirmaPluginException("Error obtenido el resultado del fichero", e);
 		}
 
+		final TypeEstadoFirmado fst = TypeEstadoFirmado.fromInt(fssr.getStatus().getStatus());
+
+		if (fst == TypeEstadoFirmado.FINALIZADO_CON_ERROR) {
+			throw new FirmaPluginException(fssr.getStatus().getErrorMessage());
+		}
+
 		final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fssr.getSignedFileInfo().getEniTipoFirma());
 		if (tipoFirma == null) {
 			throw new FirmaPluginException(

@@ -126,7 +126,7 @@ public final class AccionIniciarFirmaDocumento implements AccionPaso {
 		try {
 			sf = plgFirma.generarSesionFirma(infoSesionFirma);
 		} catch (final FirmaPluginException e) {
-			throw new SesionFirmaClienteException("Excepción al generar sesión firma");
+			throw new SesionFirmaClienteException("Excepción al generar sesión firma: " + e.getMessage(), e);
 		}
 
 		// Añade fichero

@@ -92,6 +92,7 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 		final FirmaVerificacion fv = new FirmaVerificacion();
 		fv.setRealizada(TypeSiNo.fromBoolean(resFirma.isFinalizada()));
 		fv.setVerificada(TypeSiNo.fromBoolean(resFirma.isValida()));
+		fv.setCancelada(TypeSiNo.fromBoolean(resFirma.isCancelada()));
 		fv.setDetalleError(resFirma.getDetalleError());
 		rp.addParametroRetorno("resultado", fv);
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();

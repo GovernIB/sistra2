@@ -43,7 +43,6 @@ import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.api.service.SecurityService;
 import es.caib.sistramit.core.api.service.SystemService;
-import es.caib.sistramit.frontend.SesionHttp;
 import es.caib.sistramit.frontend.controller.TramitacionController;
 import es.caib.sistramit.frontend.literales.LiteralesFront;
 import es.caib.sistramit.frontend.model.AsistenteConfig;
@@ -58,10 +57,6 @@ import es.caib.sistramit.frontend.security.UsuarioAutenticado;
 @Controller
 @RequestMapping(value = "/asistente")
 public class AsistenteTramitacionController extends TramitacionController {
-
-	/** Sesion. */
-	@Autowired
-	private SesionHttp sesionHttp;
 
 	/** Security service. */
 	@Autowired
@@ -480,11 +475,17 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// TODO Revisar respuesta verificacion firma (si genera excepcion o retorna
 		// datos verificacion)
 
+		String mensaje = "firmaClienteVerificada";
+
+		if(fv.getCancelada() == TypeSiNo.SI) {
+			mensaje = "firmaClienteCancelada";
+		}
+
 		// Cargamos asistente
 		debug("Firma verificada");
 
 		// En funcion del resultado, mostramos mensaje al usuario
-		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", "firmaClienteVerificada", null,
+		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, null,
 				TypeRespuestaJSON.SUCCESS);
 		this.setMensajeAsistente(ma);
 
