@@ -570,7 +570,7 @@ public final class UtilJSF {
 	public static void verificarAcceso() {
 		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.get("sessionBean");
-		if (sb.getActiveRole() != TypeRoleAcceso.HELPDESK || sb.getActiveRole() != TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+		if (sb.getActiveRole() != TypeRoleAcceso.HELPDESK && sb.getActiveRole() != TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
 			throw new FrontException("No se está accediendo con perfil adecuado");
 		}
 	}
