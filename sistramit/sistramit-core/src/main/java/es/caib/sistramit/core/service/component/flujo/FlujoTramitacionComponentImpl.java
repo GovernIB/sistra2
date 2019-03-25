@@ -17,6 +17,8 @@ import es.caib.sistra2.commons.pdf.Linea;
 import es.caib.sistra2.commons.pdf.LineaComponente;
 import es.caib.sistra2.commons.pdf.PDFDocument;
 import es.caib.sistra2.commons.pdf.Seccion;
+import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
+import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
 import es.caib.sistra2.commons.plugins.email.api.AnexoEmail;
@@ -24,6 +26,7 @@ import es.caib.sistra2.commons.plugins.email.api.EmailPluginException;
 import es.caib.sistra2.commons.plugins.email.api.IEmailPlugin;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
+import es.caib.sistramit.core.api.exception.AutenticacionException;
 import es.caib.sistramit.core.api.exception.EmailException;
 import es.caib.sistramit.core.api.exception.ErrorFormularioSoporteException;
 import es.caib.sistramit.core.api.exception.FlujoInvalidoException;
@@ -506,10 +509,23 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	public String logoutTramite() {
 		// Obtiene detalle trámite
 		final DetalleTramite detalleTramite = controladorFlujo.detalleTramite(datosSesion);
+
+		// Preparamos logout
+		String urlLogout = null;
+		final IComponenteAutenticacionPlugin plgLogin = (IComponenteAutenticacionPlugin) configuracionComponent
+				.obtenerPluginGlobal(TypePluginGlobal.LOGIN);
+		try {
+			final String urlCarpeta = detalleTramite.getEntidad().getUrlCarpeta();
+			urlLogout = plgLogin.iniciarSesionLogout(detalleTramite.getEntidad().getId(),
+					detalleTramite.getTramite().getIdioma(), urlCarpeta);
+		} catch (final AutenticacionPluginException e) {
+			throw new AutenticacionException("Error haciendo logout", e);
+		}
+
 		// Marcamos flujo como invalido
 		invalidarFlujoTramicacion();
-		// Devuelve url carpeta
-		return detalleTramite.getEntidad().getUrlCarpeta();
+
+		return urlLogout;
 	}
 
 }
