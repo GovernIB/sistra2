@@ -92,4 +92,26 @@ public class Script extends ModelApi {
 		this.mensajesAlterado = mensajesAlterado;
 	}
 
+	/**
+	 * Clonar.
+	 * 
+	 * @param iScript
+	 * @return
+	 */
+	public static Script clonar(final Script iScript) {
+		Script script = null;
+		if (iScript != null) {
+			script = new Script();
+			script.setContenido(iScript.getContenido());
+			if (iScript.getMensajes() != null && !iScript.getMensajes().isEmpty()) {
+				final List<LiteralScript> mensajes = new ArrayList<>();
+				for (final LiteralScript mensaje : iScript.getMensajes()) {
+					mensajes.add(LiteralScript.clonar(mensaje));
+				}
+				script.setMensajes(mensajes);
+			}
+		}
+		return script;
+	}
+
 }

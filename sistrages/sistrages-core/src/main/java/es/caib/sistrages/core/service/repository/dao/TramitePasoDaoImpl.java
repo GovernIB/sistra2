@@ -37,6 +37,7 @@ import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.ParametroDominio;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -986,18 +987,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setOrden(componente.getOrden());
 		comp.setOculto(componente.isOculto());
 		comp.setPermiteRango(componente.isPermiteRango());
-		if (componente.getScriptAutorrellenable() != null) {
-			componente.getScriptAutorrellenable().setCodigo(null);
-			comp.setScriptAutorrellenable(componente.getScriptAutorrellenable());
-		}
-		if (componente.getScriptSoloLectura() != null) {
-			componente.getScriptSoloLectura().setCodigo(null);
-			comp.setScriptSoloLectura(componente.getScriptSoloLectura());
-		}
-		if (componente.getScriptValidacion() != null) {
-			componente.getScriptValidacion().setCodigo(null);
-			comp.setScriptValidacion(componente.getScriptValidacion());
-		}
+		comp.setScriptAutorrellenable(Script.clonar(componente.getScriptAutorrellenable()));
+		comp.setScriptSoloLectura(Script.clonar(componente.getScriptSoloLectura()));
+		comp.setScriptValidacion(Script.clonar(componente.getScriptValidacion()));
 		comp.setSoloLectura(componente.isSoloLectura());
 		comp.setTelefonoFijo(componente.isTelefonoFijo());
 		comp.setTelefonoMovil(componente.isTelefonoMovil());
@@ -1078,22 +1070,10 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setObligatorio(componente.isObligatorio());
 		comp.setOrden(componente.getOrden());
-		if (componente.getScriptAutorrellenable() != null) {
-			componente.getScriptAutorrellenable().setCodigo(null);
-			comp.setScriptAutorrellenable(componente.getScriptAutorrellenable());
-		}
-		if (componente.getScriptSoloLectura() != null) {
-			componente.getScriptSoloLectura().setCodigo(null);
-			comp.setScriptSoloLectura(componente.getScriptSoloLectura());
-		}
-		if (componente.getScriptValidacion() != null) {
-			componente.getScriptValidacion().setCodigo(null);
-			comp.setScriptValidacion(componente.getScriptValidacion());
-		}
-		if (componente.getScriptValoresPosibles() != null) {
-			componente.getScriptValoresPosibles().setCodigo(null);
-			comp.setScriptValoresPosibles(componente.getScriptValoresPosibles());
-		}
+		comp.setScriptAutorrellenable(Script.clonar(componente.getScriptAutorrellenable()));
+		comp.setScriptSoloLectura(Script.clonar(componente.getScriptSoloLectura()));
+		comp.setScriptValidacion(Script.clonar(componente.getScriptValidacion()));
+		comp.setScriptValoresPosibles(Script.clonar(componente.getScriptValoresPosibles()));
 		comp.setSoloLectura(componente.isSoloLectura());
 		comp.setTipo(componente.getTipo());
 		comp.setTipoCampoIndexado(componente.getTipoCampoIndexado());
@@ -1142,18 +1122,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setObligatorio(componente.isObligatorio());
 		comp.setOrden(componente.getOrden());
-		if (componente.getScriptAutorrellenable() != null) {
-			componente.getScriptAutorrellenable().setCodigo(null);
-			comp.setScriptAutorrellenable(componente.getScriptAutorrellenable());
-		}
-		if (componente.getScriptSoloLectura() != null) {
-			componente.getScriptSoloLectura().setCodigo(null);
-			comp.setScriptSoloLectura(componente.getScriptSoloLectura());
-		}
-		if (componente.getScriptValidacion() != null) {
-			componente.getScriptValidacion().setCodigo(null);
-			comp.setScriptValidacion(componente.getScriptValidacion());
-		}
+		comp.setScriptAutorrellenable(Script.clonar(componente.getScriptAutorrellenable()));
+		comp.setScriptSoloLectura(Script.clonar(componente.getScriptSoloLectura()));
+		comp.setScriptValidacion(Script.clonar(componente.getScriptValidacion()));
 		comp.setSoloLectura(componente.isSoloLectura());
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);
@@ -1200,18 +1171,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setObligatorio(componente.isObligatorio());
 		comp.setOrden(componente.getOrden());
-		if (componente.getScriptAutorrellenable() != null) {
-			componente.getScriptAutorrellenable().setCodigo(null);
-			comp.setScriptAutorrellenable(componente.getScriptAutorrellenable());
-		}
-		if (componente.getScriptSoloLectura() != null) {
-			componente.getScriptSoloLectura().setCodigo(null);
-			comp.setScriptSoloLectura(componente.getScriptSoloLectura());
-		}
-		if (componente.getScriptValidacion() != null) {
-			componente.getScriptValidacion().setCodigo(null);
-			comp.setScriptValidacion(componente.getScriptValidacion());
-		}
+		comp.setScriptAutorrellenable(Script.clonar(componente.getScriptAutorrellenable()));
+		comp.setScriptSoloLectura(Script.clonar(componente.getScriptSoloLectura()));
+		comp.setScriptValidacion(Script.clonar(componente.getScriptValidacion()));
 		comp.setSoloLectura(componente.isSoloLectura());
 		if (componente.getTexto() != null) {
 			componente.getTexto().setCodigo(null);

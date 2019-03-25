@@ -21,6 +21,7 @@ import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
@@ -42,7 +43,10 @@ import es.caib.sistrages.core.service.repository.model.JFormulario;
 import es.caib.sistrages.core.service.repository.model.JFormularioTramite;
 import es.caib.sistrages.core.service.repository.model.JHistorialVersion;
 import es.caib.sistrages.core.service.repository.model.JLiteral;
+import es.caib.sistrages.core.service.repository.model.JPasoRellenar;
 import es.caib.sistrages.core.service.repository.model.JPasoTramitacion;
+import es.caib.sistrages.core.service.repository.model.JPlantillaFormulario;
+import es.caib.sistrages.core.service.repository.model.JPlantillaIdiomaFormulario;
 import es.caib.sistrages.core.service.repository.model.JScript;
 import es.caib.sistrages.core.service.repository.model.JTramite;
 import es.caib.sistrages.core.service.repository.model.JVersionTramite;
@@ -398,6 +402,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			final JPasoTramitacion jpaso = JPasoTramitacion.clonar(origPaso, jVersionTramite);
 			jpaso.setOrden(ordenPaso);
 
+			// Si el paso es de tipo rellenar
 			if (origPaso.getPasoRellenar() != null && origPaso.getPasoRellenar().getFormulariosTramite() != null
 					&& !origPaso.getPasoRellenar().getFormulariosTramite().isEmpty()) {
 				// Habria que guardarse los diseños.
@@ -405,8 +410,11 @@ public class TramiteDaoImpl implements TramiteDao {
 					forms.put(formulario.getIdentificador(), formulario.getFormulario());
 				}
 			}
+
 			entityManager.persist(jpaso);
 			entityManager.flush();
+
+			// Después de guardar los pasos se encarga de clonar los formularios
 			if (!forms.isEmpty()) {
 				for (final Map.Entry<String, JFormulario> entry : forms.entrySet()) {
 					final JFormulario jform = JFormulario.clonar(entry.getValue(), formateadores, cambioArea);
@@ -421,7 +429,7 @@ public class TramiteDaoImpl implements TramiteDao {
 					}
 				}
 			}
-			checkFicherosPaso(jpaso, origPaso, idEntidad);
+			guardarContenidoFicheros(jpaso, origPaso, idEntidad);
 			ordenPaso++;
 		}
 
@@ -457,12 +465,14 @@ public class TramiteDaoImpl implements TramiteDao {
 
 	/**
 	 * Este método privado se encarga de clonar un fichero hacia ficheroexterno.
+	 * <br />
+	 * Se basa en coger el paso original,
 	 *
 	 * @param jpaso
 	 * @param origPaso
 	 * @param idEntidad
 	 */
-	private void checkFicherosPaso(final JPasoTramitacion jpaso, final JPasoTramitacion origPaso,
+	private void guardarContenidoFicheros(final JPasoTramitacion jpaso, final JPasoTramitacion origPaso,
 			final Long idEntidad) {
 
 		if (origPaso.getPasoAnexar() != null) {
@@ -472,7 +482,7 @@ public class TramiteDaoImpl implements TramiteDao {
 				if (anexo.getFicheroPlantilla() != null) {
 					final byte[] content = ficheroExternoDao.getContentById(anexo.getFicheroPlantilla().getCodigo())
 							.getContent();
-					final JFichero fichero = getAnexoTramite(jpaso, anexo.getCodigo());
+					final JFichero fichero = getFicheroAnexoTramite(jpaso, anexo.getCodigo());
 					if (fichero != null) {
 						ficheroExternoDao.guardarFichero(idEntidad, fichero.toModel(), content);
 					}
@@ -492,10 +502,52 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		// Los formularios.
 		if (origPaso.getPasoRellenar() != null && origPaso.getPasoRellenar().getFormulariosTramite() != null) {
-			for (final JFormularioTramite formulario : origPaso.getPasoRellenar().getFormulariosTramite()) {
-				// Pendiente de hacerlo
+
+			final List<JPlantillaIdiomaFormulario> plantillas = getPlantillasIdiomas(jpaso.getPasoRellenar());
+			final List<JPlantillaIdiomaFormulario> plantillasOriginales = getPlantillasIdiomas(
+					origPaso.getPasoRellenar());
+
+			for (final JPlantillaIdiomaFormulario plantilla : plantillas) {
+				for (final JPlantillaIdiomaFormulario plantillaOriginal : plantillasOriginales) {
+					if (plantilla.getFichero() != null
+							&& plantilla.getCodigoClonado().compareTo(plantillaOriginal.getCodigo()) == 0
+							&& plantillaOriginal.getFichero() != null) {
+						final byte[] content = ficheroExternoDao
+								.getContentById(plantillaOriginal.getFichero().getCodigo()).getContent();
+						final JFichero fichero = plantilla.getFichero();
+						if (fichero != null) {
+							ficheroExternoDao.guardarFichero(idEntidad, fichero.toModel(), content);
+						}
+					}
+				}
 			}
 		}
+	}
+
+	/**
+	 * Busca las JPlantillasIdioma a partir del paso de tipo rellenar
+	 * (JPasoRellenar)
+	 *
+	 * @param paso
+	 * @return Lista de plantillas idiomas formulario.
+	 */
+	private List<JPlantillaIdiomaFormulario> getPlantillasIdiomas(final JPasoRellenar paso) {
+		final List<JPlantillaIdiomaFormulario> plantillas = new ArrayList<>();
+		if (paso.getFormulariosTramite() != null) {
+			for (final JFormularioTramite formulario : paso.getFormulariosTramite()) {
+				if (formulario.getFormulario() != null && formulario.getFormulario().getPlantillas() != null) {
+					for (final JPlantillaFormulario plantilla : formulario.getFormulario().getPlantillas()) {
+						if (plantilla.getPlantillaIdiomaFormulario() != null) {
+							for (final JPlantillaIdiomaFormulario plantillaIdioma : plantilla
+									.getPlantillaIdiomaFormulario()) {
+								plantillas.add(plantillaIdioma);
+							}
+						}
+					}
+				}
+			}
+		}
+		return plantillas;
 	}
 
 	/**
@@ -505,7 +557,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	 * @param ficheroPlantilla
 	 * @return
 	 */
-	private JFichero getAnexoTramite(final JPasoTramitacion jpaso, final Long codigo) {
+	private JFichero getFicheroAnexoTramite(final JPasoTramitacion jpaso, final Long codigo) {
 		JFichero jfichero = null;
 		for (final JAnexoTramite anexo : jpaso.getPasoAnexar().getAnexosTramite()) {
 			if (anexo.getFicheroPlantilla() != null && anexo.getCodigoClonado().compareTo(codigo) == 0) {
@@ -935,8 +987,8 @@ public class TramiteDaoImpl implements TramiteDao {
 					.setLimiteTramitacionIntervalo(filaTramiteVersion.getTramiteVersion().getIntLimiteTramitacion());
 			jTramiteVersion
 					.setLimiteTramitacionNumero(filaTramiteVersion.getTramiteVersion().getNumLimiteTramitacion());
-			jTramiteVersion.setMensajeDesactivacion(
-					JLiteral.fromModel(filaTramiteVersion.getTramiteVersion().getMensajeDesactivacion()));
+			jTramiteVersion.setMensajeDesactivacion(JLiteral
+					.clonar(JLiteral.fromModel(filaTramiteVersion.getTramiteVersion().getMensajeDesactivacion())));
 			jTramiteVersion.setNivelQAA(filaTramiteVersion.getTramiteVersion().getNivelQAA());
 			jTramiteVersion.setNoAutenticado(filaTramiteVersion.getTramiteVersion().isNoAutenticado());
 			jTramiteVersion.setNumeroVersion(filaTramiteVersion.getTramiteVersion().getNumeroVersion());
@@ -946,10 +998,10 @@ public class TramiteDaoImpl implements TramiteDao {
 			jTramiteVersion
 					.setPlazoInicioDesactivacion(filaTramiteVersion.getTramiteVersion().getPlazoInicioDesactivacion());
 			jTramiteVersion.setRelease(filaTramiteVersion.getTramiteVersion().getRelease());
-			jTramiteVersion.setScriptInicializacionTramite(
-					JScript.fromModel(filaTramiteVersion.getTramiteVersion().getScriptInicializacionTramite()));
-			jTramiteVersion.setScriptPersonalizacion(
-					JScript.fromModel(filaTramiteVersion.getTramiteVersion().getScriptPersonalizacion()));
+			jTramiteVersion.setScriptInicializacionTramite(JScript
+					.fromModel(Script.clonar(filaTramiteVersion.getTramiteVersion().getScriptInicializacionTramite())));
+			jTramiteVersion.setScriptPersonalizacion(JScript
+					.fromModel(Script.clonar(filaTramiteVersion.getTramiteVersion().getScriptPersonalizacion())));
 			jTramiteVersion.setUsuarioDatosBloqueo("");
 			jTramiteVersion.setUsuarioIdBloqueo("");
 			jTramiteVersion.setTipoflujo(filaTramiteVersion.getTramiteVersion().getTipoFlujo().toString());

@@ -1,5 +1,8 @@
 package es.caib.sistrages.core.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * La clase Literal Script.
  */
@@ -73,6 +76,32 @@ public class LiteralScript extends ModelApi {
 	 */
 	public void setLiteral(final Literal literal) {
 		this.literal = literal;
+	}
+
+	/**
+	 * Clonar.
+	 * 
+	 * @param mensaje
+	 * @return
+	 */
+	public static LiteralScript clonar(final LiteralScript iLiteralScript) {
+		LiteralScript literalScript = null;
+		if (iLiteralScript != null) {
+			literalScript = new LiteralScript();
+			literalScript.setIdentificador(iLiteralScript.getIdentificador());
+			iLiteralScript.getLiteral().setCodigo(null);
+			final Literal literal = new Literal();
+			final List<Traduccion> traducciones = new ArrayList<>();
+			for (final Traduccion trad : iLiteralScript.getLiteral().getTraducciones()) {
+				final Traduccion traduccion = new Traduccion();
+				traduccion.setIdioma(trad.getIdioma());
+				traduccion.setLiteral(trad.getLiteral());
+				traducciones.add(traduccion);
+			}
+			literal.setTraducciones(traducciones);
+			literalScript.setLiteral(literal);
+		}
+		return literalScript;
 	}
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 
@@ -40,6 +41,9 @@ public class JPlantillaIdiomaFormulario implements IModelApi {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PLI_CODIDI", nullable = false)
 	private JIdioma idioma;
+
+	@Transient
+	private Long codigoClonado;
 
 	public JPlantillaIdiomaFormulario() {
 		super();
@@ -77,6 +81,21 @@ public class JPlantillaIdiomaFormulario implements IModelApi {
 		this.idioma = idioma;
 	}
 
+	/**
+	 * @return the codigoClonado
+	 */
+	public final Long getCodigoClonado() {
+		return codigoClonado;
+	}
+
+	/**
+	 * @param codigoClonado
+	 *            the codigoClonado to set
+	 */
+	public final void setCodigoClonado(final Long codigoClonado) {
+		this.codigoClonado = codigoClonado;
+	}
+
 	public PlantillaIdiomaFormulario toModel() {
 		final PlantillaIdiomaFormulario plantilla = new PlantillaIdiomaFormulario();
 		plantilla.setCodigo(codigo);
@@ -112,6 +131,8 @@ public class JPlantillaIdiomaFormulario implements IModelApi {
 		JPlantillaIdiomaFormulario jplantillaIdioma = null;
 		if (jplan != null) {
 			jplantillaIdioma = new JPlantillaIdiomaFormulario();
+			jplantillaIdioma.setCodigo(null);
+			jplantillaIdioma.setCodigoClonado(jplan.getCodigo());
 			jplantillaIdioma.setFichero(JFichero.clonar(jplan.getFichero()));
 			jplantillaIdioma.setIdioma(jplan.getIdioma());
 			jplantillaIdioma.setPlantillaFormulario(jplantilla);

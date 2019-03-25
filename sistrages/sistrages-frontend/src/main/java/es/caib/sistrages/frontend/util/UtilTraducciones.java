@@ -143,8 +143,10 @@ public final class UtilTraducciones {
 	 */
 	private static int getAltura(final List<String> idiomas) {
 		int altura;
-		int size = 2;
-		if (idiomas != null) {
+		int size;
+		if (idiomas == null) {
+			size = UtilJSF.getSessionBean().getIdiomas().size();
+		} else {
 			size = idiomas.size();
 		}
 		switch (size) {
