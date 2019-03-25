@@ -281,7 +281,7 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 
 /* input check */
 
-.imc-input-check { /*overflow-y: hidden;*/ display: block; position: relative; vertical-align: middle; }
+.imc-input-check { /*overflow-y: hidden;*/ display: inline-block; position: relative; vertical-align: middle; }
 .imc-input-check input { position: absolute; top: -999em; left: -999em; visibility: hidden; opacity: 0; }
 .imc-input-check label { display: block; cursor: pointer; padding-right: .5em; }
 
@@ -296,6 +296,8 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 	margin-right: .5em;
 	background: #bbb url() no-repeat center center / .5em auto;
 }
+
+.imc-input-check label:focus::before { background-color: #000; }
 
 .imc-input-check input:checked ~ label { color: #368355; }
 .imc-input-check input:checked ~ label::before { background-color: #368355; background-image: url(imgs/icones/ico_input_check.svg) }
@@ -313,7 +315,7 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 
 /* input radio */
 
-.imc-input-radio { overflow-y: hidden; display: inline-block; position: relative; vertical-align: middle; }
+.imc-input-radio { /*overflow-y: hidden;*/ display: inline-block; position: relative; vertical-align: middle; }
 .imc-input-radio input { position: absolute; top: -999em; left: -999em; visibility: hidden; opacity: 0; }
 .imc-input-radio label { display: block; cursor: pointer; padding-right: .5em; }
 
@@ -343,6 +345,14 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 
 .imc-el-error .imc-input-radio input ~ label { color: #c00 !important; }
 .imc-el-error .imc-input-radio input ~ label::before { background-color: #c00; }
+
+
+
+
+.imc-input-check.imc--focus input,
+.imc-input-radio.imc--focus input {
+	top: 0; left: 0; visibility: visible; opacity: 0;
+}
 
 
 fieldset.imc-element .imc-input-check label::before,

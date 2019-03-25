@@ -174,7 +174,7 @@
 
 .imc-form button { display: inline-block; font: normal 110% 'Bariol Regular',Arial,Helvetica,sans-serif; color: #fff; vertical-align: middle; padding: .4em 1em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
 .imc-form button:hover,
-.imc-form button:focus { background-color: #000; }
+.imc-form button:focus { background-color: #265d3c; }
 .imc-form button {
 	-webkit-transition: background-color .2s ease-out;
 	-moz-transition: background-color .2s ease-out;
@@ -311,6 +311,20 @@
 .imc-form textarea[readonly],
 .imc-form a.imc-select.imc-select-lectura { background-color: #f2f2f2; border-color: #cecdcd; }
 
+.imc-form input[type=text][readonly]:hover,
+.imc-form input[type=number][readonly]:hover,
+.imc-form input[type=date][readonly]:hover,
+.imc-form input[type=time][readonly]:hover,
+.imc-form input[type=email][readonly]:hover,
+.imc-form textarea[readonly]:hover,
+.imc-form a.imc-select.imc-select-lectura:hover,
+.imc-form input[type=text][readonly]:focus,
+.imc-form input[type=number][readonly]:focus,
+.imc-form input[type=date][readonly]:focus,
+.imc-form input[type=time][readonly]:focus,
+.imc-form input[type=email][readonly]:focus,
+.imc-form textarea[readonly]:focus,
+.imc-form a.imc-select.imc-select-lectura:focus { border-color: #000; }
 
 
 .imc-form input[type=text][disabled],
@@ -321,12 +335,25 @@
 .imc-form textarea[disabled],
 .imc-form a.imc-select.imc-select-deshabilitat { color: #999; background-color: #cecdcd; border-color: #cecdcd; }
 
+.imc-form input[type=text][disabled]:hover,
+.imc-form input[type=number][disabled]:hover,
+.imc-form input[type=date][disabled]:hover,
+.imc-form input[type=time][disabled]:hover,
+.imc-form input[type=email][disabled]:hover,
+.imc-form textarea[disabled]:hover,
+.imc-form a.imc-select.imc-select-deshabilitat:hover,
+.imc-form input[type=text][disabled]:focus,
+.imc-form input[type=number][disabled]:focus,
+.imc-form input[type=date][disabled]:focus,
+.imc-form input[type=time][disabled]:focus,
+.imc-form input[type=email][disabled]:focus,
+.imc-form textarea[disabled]:focus,
+.imc-form a.imc-select.imc-select-deshabilitat:focus { border-color: #000; }
 
 
 .imc-form a.imc-select.imc-select-deshabilitat span { color: #999; }
 
 .imc-form div[data-contingut="id"] input { text-transform: uppercase; }
-
 
 
 .imc-form input.imc-data-lectura,
@@ -801,6 +828,9 @@
 .imc--forms-nav .imc--finalitza button { background-color: #265d3c; }
 .imc--forms-nav .imc--finalitza button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(imgs/icones/ico_correcte.svg) no-repeat center center / auto 100%; opacity: .5; }
 .imc--forms-nav .imc--finalitza button span { padding-right: .5em; }
+
+.imc--forms-nav .imc--finalitza button:hover,
+.imc--forms-nav .imc--finalitza button:focus { background-color: #000; }
 
 .imc--forms-nav .imc--tanca { padding-right: 2em; }
 .imc--forms-nav .imc--tanca button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(imgs/icones/ico_tanca_fff.svg) no-repeat center center / auto 100%; opacity: .5; }

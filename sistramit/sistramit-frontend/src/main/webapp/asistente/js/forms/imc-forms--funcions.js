@@ -169,6 +169,7 @@ $.fn.indexa = function(options) {
 								);
 							}
 						);
+						
 				} else {
 					
 					element.removeClass("imc-el-index-marcant");
