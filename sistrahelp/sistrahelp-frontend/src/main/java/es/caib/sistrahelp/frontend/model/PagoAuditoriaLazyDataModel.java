@@ -32,7 +32,8 @@ public class PagoAuditoriaLazyDataModel extends LazyDataModel<PagoAuditoria> {
 	@Override
 	public List<PagoAuditoria> load(final int first, final int pageSize, final String sortField,
 			final SortOrder sortOrder, final Map<String, Object> filters) {
-
+		filtros.setSortField(sortField);
+		filtros.setSortOrder(sortOrder.name());
 		setLista(helpDeskService.obtenerAuditoriaPago(filtros, new FiltroPaginacion(first, pageSize)));
 
 		return getLista();

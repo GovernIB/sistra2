@@ -354,6 +354,9 @@ public class ApiInternaRestController {
 
 			filtro.setErrorPlataforma(pRFiltro.isErrorPlataforma());
 			filtro.setSoloContar(pRFiltro.isSoloContar());
+
+			filtro.setSortField(pRFiltro.getSortField());
+			filtro.setSortOrder(pRFiltro.getSortOrder());
 		}
 
 		return filtro;
@@ -497,6 +500,9 @@ public class ApiInternaRestController {
 			}
 
 			filtro.setSoloContar(pRFiltro.isSoloContar());
+
+			filtro.setSortField(pRFiltro.getSortField());
+			filtro.setSortOrder(pRFiltro.getSortOrder());
 		}
 
 		return filtro;
@@ -570,6 +576,9 @@ public class ApiInternaRestController {
 			filtro.setIdProcedimientoSIA(pRFiltro.getIdProcedimientoSIA());
 
 			filtro.setSoloContar(pRFiltro.isSoloContar());
+
+			filtro.setSortField(pRFiltro.getSortField());
+			filtro.setSortOrder(pRFiltro.getSortOrder());
 		}
 
 		return filtro;

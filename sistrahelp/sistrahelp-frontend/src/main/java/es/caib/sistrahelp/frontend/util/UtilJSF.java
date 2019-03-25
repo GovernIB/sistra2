@@ -453,6 +453,7 @@ public final class UtilJSF {
 			url = "/error/errorUsuarioSinRol.xhtml";
 		} else {
 			switch (role) {
+			case SUPERVISOR_ENTIDAD:
 			case HELPDESK:
 				url = getUrlOpcionMenu(getDefaultOpcion(), idEntidad);
 				break;
@@ -564,5 +565,13 @@ public final class UtilJSF {
 		params.put(TypeParametroVentana.ID.toString(), id);
 
 		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
+	}
+
+	public static void verificarAcceso() {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.HELPDESK || sb.getActiveRole() != TypeRoleAcceso.SUPERVISOR_ENTIDAD) {
+			throw new FrontException("No se está accediendo con perfil adecuado");
+		}
 	}
 }

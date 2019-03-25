@@ -3,6 +3,7 @@ package es.caib.sistrahelp.core.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,15 +47,29 @@ public class SecurityServiceImpl implements SecurityService {
 
 			for (final RPermisoHelpDesk permiso : sistragesApiComponent.obtenerPermisosHelpdesk()) {
 
-				if ("A".equals(permiso.getTipoPermiso())) {
-					if ("R".equals(permiso.getTipo().trim()) && contextService.hashRole(permiso.getValor().trim())
-							|| "U".equals(permiso.getTipo().trim())
-									&& contextService.getUsername().equals(permiso.getValor().trim())) {
-						final Area area = new Area();
-						area.setCodigoDIR3Entidad(permiso.getCodigoDIR3Entidad());
-						area.setIdentificador(permiso.getIdentificadorArea());
-						if (!res.equals(area)) {
-							res.add(area);
+				if (StringUtils.isNoneEmpty(permiso.getValor())) {
+					if ("A".equals(permiso.getTipoPermiso())) {
+						if ("R".equals(permiso.getTipo().trim()) && contextService.hashRole(permiso.getValor().trim())
+								|| "U".equals(permiso.getTipo().trim())
+										&& contextService.getUsername().equals(permiso.getValor().trim())) {
+							final Area area = new Area();
+							area.setCodigoDIR3Entidad(permiso.getCodigoDIR3Entidad());
+							area.setIdentificador(permiso.getIdentificadorArea());
+							if (!res.contains(area)) {
+								res.add(area);
+							}
+						}
+					} else if ("E".equals(permiso.getTipoPermiso())
+							&& contextService.hashRole(permiso.getValor().trim())
+							&& contextService.getRoles().contains(TypeRoleAcceso.SUPERVISOR_ENTIDAD)
+							&& permiso.getListaIdentificadorArea() != null) {
+						for (final String idArea : permiso.getListaIdentificadorArea()) {
+							final Area area = new Area();
+							area.setCodigoDIR3Entidad(permiso.getCodigoDIR3Entidad());
+							area.setIdentificador(idArea);
+							if (!res.contains(area)) {
+								res.add(area);
+							}
 						}
 					}
 				}

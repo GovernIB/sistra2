@@ -24,6 +24,9 @@ public class FiltroPagoAuditoria implements Serializable {
 
 	private boolean soloContar;
 
+	private String sortField;
+	private String sortOrder;
+
 	public FiltroPagoAuditoria() {
 		super();
 	}
@@ -87,6 +90,22 @@ public class FiltroPagoAuditoria implements Serializable {
 
 	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
+	}
+
+	public String getSortField() {
+		return sortField;
+	}
+
+	public void setSortField(final String sortField) {
+		this.sortField = sortField;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(final String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 }

@@ -49,6 +49,8 @@ public class ViewPerdidaClave extends ViewControllerBase {
 	 * Inicializa.
 	 */
 	public void init() {
+		UtilJSF.verificarAcceso();
+
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 

@@ -76,7 +76,7 @@
 
 							<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtros.evento}">
 							 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
-		    					<f:selectItems value="#{viewAuditoriaTramites.tiposEventos}" var="evento" itemLabel="#{msg['typeEvento.' += evento]}"/>
+		    					<f:selectItems value="#{viewAuditoriaTramites.tiposEventos}" var="evento" itemLabel="#{evento} - #{msg['typeEvento.' += evento]}"/>
 							</p:selectOneMenu >
 
 			        	</h:panelGrid>
@@ -107,34 +107,34 @@
 				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}"        width="15%">
-			        <h:outputText value="#{msg['typeEvento.' += dt.tipoEvento]}" />
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headEvento']}" style="width:15% !important;" sortBy="#{dt.tipoEvento}">
+			        <h:outputText value="#{dt.tipoEvento} - #{msg['typeEvento.' += dt.tipoEvento]}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}"         width="11%">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headFecha']}" style="width:11% !important;" sortBy="#{dt.fecha}">
 			        <h:outputText value="#{dt.fecha}">
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}"      width="19%">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headIdSesion']}" style="width:19% !important;" sortBy="#{dt.idSesionTramitacion}">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}"           width="7%">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headNif']}" style="width:7% !important;" sortBy="#{dt.nif}">
 			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}"       width="12%">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headTramite']}" style="width:12% !important;" sortBy="#{dt.idTramite}">
 			        <h:outputText value="#{dt.idTramite}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}"       width="5%">
+			    <p:column headerText="#{msg['viewAuditoriaTramites.headVersion']}" style="width:5% !important;" sortBy="#{dt.versionTramite}">
 			        <h:outputText value="#{dt.versionTramite}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}" width="8%">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headProcedimiento']}" style="width:8% !important;" sortBy="#{dt.idProcedimientoCP}">
 			        <h:outputText value="#{dt.idProcedimientoCP}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}"           width="6%">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headSIA']}" style="width:6% !important;" sortBy="#{dt.idProcedimientoSIA}">
 			        <h:outputText value="#{dt.idProcedimientoSIA}" />
 			    </p:column>
-			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}"         width="17%">
+			   	<p:column headerText="#{msg['viewAuditoriaTramites.headError']}" style="width:17% !important;" sortBy="#{dt.codigoError}">
 			        <h:outputText value="#{dt.codigoError}" />
 			    </p:column>
 			</p:dataTable></p:outputPanel>

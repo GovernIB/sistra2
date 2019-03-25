@@ -85,7 +85,7 @@ public class ViewEntidades extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 570, 190);
+		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.ALTA, null, true, 570, 250);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class ViewEntidades extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true, 570, 190);
+		UtilJSF.openDialog(DialogEntidad.class, TypeModoAcceso.EDICION, params, true, 570, 250);
 	}
 
 	/**

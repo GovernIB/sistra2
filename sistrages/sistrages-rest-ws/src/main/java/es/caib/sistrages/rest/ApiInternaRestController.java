@@ -239,7 +239,7 @@ public class ApiInternaRestController {
 				permiso.setTipoPermiso("E");
 				permiso.setListaIdentificadorArea(restApiService.listIdAreasByEntidad(entidad.getCodigo()));
 				permiso.setCodigoDIR3Entidad(entidad.getCodigoDIR3());
-				permiso.setValor(entidad.getRolSTH());
+				permiso.setValor(entidad.getRolSup());
 
 				listaPermisos.add(permiso);
 			}

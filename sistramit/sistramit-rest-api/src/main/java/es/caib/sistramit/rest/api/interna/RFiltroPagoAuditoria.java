@@ -36,6 +36,9 @@ public class RFiltroPagoAuditoria {
 	@ApiModelProperty(value = "Solo contar numero de elementos")
 	private boolean soloContar;
 
+	private String sortField;
+	private String sortOrder;
+
 	public List<String> getListaAreas() {
 		return listaAreas;
 	}
@@ -88,8 +91,24 @@ public class RFiltroPagoAuditoria {
 		return acceso;
 	}
 
-	public void setAcceso(String acceso) {
+	public void setAcceso(final String acceso) {
 		this.acceso = acceso;
+	}
+
+	public String getSortField() {
+		return sortField;
+	}
+
+	public void setSortField(final String sortField) {
+		this.sortField = sortField;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(final String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 }

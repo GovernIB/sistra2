@@ -81,4 +81,53 @@ public final class PerdidaClave implements Serializable {
 		this.idProcedimientoCP = idProcedimientoCP;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + ((idProcedimientoCP == null) ? 0 : idProcedimientoCP.hashCode());
+		result = prime * result + ((idSesionTramitacion == null) ? 0 : idSesionTramitacion.hashCode());
+		result = prime * result + ((idTramite == null) ? 0 : idTramite.hashCode());
+		result = prime * result + ((versionTramite == null) ? 0 : versionTramite.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PerdidaClave))
+			return false;
+		final PerdidaClave other = (PerdidaClave) obj;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idProcedimientoCP == null) {
+			if (other.idProcedimientoCP != null)
+				return false;
+		} else if (!idProcedimientoCP.equals(other.idProcedimientoCP))
+			return false;
+		if (idSesionTramitacion == null) {
+			if (other.idSesionTramitacion != null)
+				return false;
+		} else if (!idSesionTramitacion.equals(other.idSesionTramitacion))
+			return false;
+		if (idTramite == null) {
+			if (other.idTramite != null)
+				return false;
+		} else if (!idTramite.equals(other.idTramite))
+			return false;
+		if (versionTramite == null) {
+			if (other.versionTramite != null)
+				return false;
+		} else if (!versionTramite.equals(other.versionTramite))
+			return false;
+		return true;
+	}
+
 }

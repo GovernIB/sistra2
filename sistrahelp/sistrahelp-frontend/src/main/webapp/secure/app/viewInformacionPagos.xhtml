@@ -86,37 +86,35 @@
 				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewInformacionPagos.headFecha']}"         width="15%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPagos.headFecha']}" style="width:15% !important;" styleClass="grid-center" sortBy="#{dt.fecha}">
 			        <h:outputText value="#{dt.fecha}">
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPagos.headTramite']}"       width="15%"  styleClass="grid-center" >
+			    <p:column headerText="#{msg['viewInformacionPagos.headTramite']}" style="width:15% !important;" styleClass="grid-center" sortBy="#{dt.idTramite}">
 			        <h:outputText value="#{dt.idTramite}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPagos.headVersion']}"       width="10%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPagos.headVersion']}" style="width:10% !important;" styleClass="grid-center" sortBy="#{dt.versionTramite}">
 			        <h:outputText value="#{dt.versionTramite}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPagos.headidSesionTramitacion']}"    width="25%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPagos.headidSesionTramitacion']}" style="width:25% !important;" styleClass="grid-center" sortBy="#{dt.idSesionTramitacion}">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPagos.headPasarelaId']}"    width="10%" styleClass="grid-center">
-			        <h:outputText value="#{dt.pasarelaId}" />
-			    </p:column>
-
-			    <p:column headerText="#{msg['viewInformacionPagos.headImporte']}"       width="10%"  styleClass="grid-right" >
-			        <h:outputText value="#{dt.importe/100}" />
-			    </p:column>
-
-			    <p:column headerText="#{msg['viewInformacionPagos.headEstado']}"        width="15%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPagos.headEstado']}" style="width:15% !important;" styleClass="grid-center" sortBy="#{dt.estadoPago}">
 			        <h:outputText value="#{msg['typeEstadoPago.'.concat(dt.estadoPago)]}" />
 			    </p:column>
 
+			    <p:column headerText="#{msg['viewInformacionPagos.headPasarelaId']}"  style="width:10% !important;" styleClass="grid-center">
+			        <h:outputText value="#{dt.pasarelaId}" />
+			    </p:column>
 
+			    <p:column headerText="#{msg['viewInformacionPagos.headImporte']}" style="width:10% !important;" styleClass="grid-right">
+			        <h:outputText value="#{dt.importe/100}" />
+			    </p:column>
 
 			</p:dataTable></p:outputPanel>
 

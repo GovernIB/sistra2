@@ -139,7 +139,7 @@ public class Entidad extends ModelApi {
 	 */
 	private String urlFacebook;
 
-	private String rolSTH;
+	private String rolSup;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -558,12 +558,12 @@ public class Entidad extends ModelApi {
 		this.urlFacebook = urlFacebook;
 	}
 
-	public String getRolSTH() {
-		return rolSTH;
+	public String getRolSup() {
+		return rolSup;
 	}
 
-	public void setRolSTH(final String rolSTH) {
-		this.rolSTH = rolSTH;
+	public void setRolSup(final String rolSup) {
+		this.rolSup = rolSup;
 	}
 
 }

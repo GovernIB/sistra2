@@ -60,6 +60,7 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 
 	@Override
 	public OUTPerdidaClave recuperarClaveTramitacionArea(final FiltroPerdidaClave pFiltroBusqueda) {
+		PerdidaClave perdidaClave = null;
 		final OUTPerdidaClave resPedidaClave = new OUTPerdidaClave();
 
 		final String numMax = configuracionComponent
@@ -87,19 +88,28 @@ public class RestApiInternaComponentImpl implements RestApiInternaComponent {
 					for (final ValorCampo valorCampo : xmlFormulario.getValores()) {
 
 						if (valorCampo instanceof ValorCampoSimple) {
-							if (((ValorCampoSimple) valorCampo).getValor()
-									.equals(pFiltroBusqueda.getDatoFormulario())) {
-								resPedidaClave.getListaClaves().add(convertPerdidaClave(perdidaClaveFichero));
+							if (pFiltroBusqueda.getDatoFormulario()
+									.equals(((ValorCampoSimple) valorCampo).getValor())) {
+								perdidaClave = convertPerdidaClave(perdidaClaveFichero);
+								if (!resPedidaClave.getListaClaves().contains(perdidaClave)) {
+									resPedidaClave.getListaClaves().add(perdidaClave);
+								}
 							}
 						} else if (valorCampo instanceof ValorCampoIndexado) {
-							if (((ValorCampoIndexado) valorCampo).getValor().getDescripcion()
-									.equals(pFiltroBusqueda.getDatoFormulario())) {
-								resPedidaClave.getListaClaves().add(convertPerdidaClave(perdidaClaveFichero));
+							if (pFiltroBusqueda.getDatoFormulario()
+									.equals(((ValorCampoIndexado) valorCampo).getValor().getDescripcion())) {
+								perdidaClave = convertPerdidaClave(perdidaClaveFichero);
+								if (!resPedidaClave.getListaClaves().contains(perdidaClave)) {
+									resPedidaClave.getListaClaves().add(perdidaClave);
+								}
 							}
 						} else if (valorCampo instanceof ValorCampoListaIndexados) {
 							for (final ValorIndexado valor : ((ValorCampoListaIndexados) valorCampo).getValor()) {
-								if (valor.getDescripcion().equals(pFiltroBusqueda.getDatoFormulario())) {
-									resPedidaClave.getListaClaves().add(convertPerdidaClave(perdidaClaveFichero));
+								if (pFiltroBusqueda.getDatoFormulario().equals(valor.getDescripcion())) {
+									perdidaClave = convertPerdidaClave(perdidaClaveFichero);
+									if (!resPedidaClave.getListaClaves().contains(perdidaClave)) {
+										resPedidaClave.getListaClaves().add(perdidaClave);
+									}
 								}
 							}
 						}

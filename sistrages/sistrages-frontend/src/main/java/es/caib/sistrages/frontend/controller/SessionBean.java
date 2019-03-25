@@ -135,8 +135,7 @@ public class SessionBean {
 		rolesList = securityService.getRoles();
 		listaEntidadesAdministrador = securityService.getEntidadesAdministrador();
 		listaEntidadesDesarrollador = securityService.getEntidadesDesarrollador();
-		idiomas = UtilTraducciones
-				.getIdiomas(configuracionGlobalService.getConfiguracionGlobal("sistramit.idiomas").getValor());
+
 		// Eliminamos role admin y desarrollador si no tiene entidades asociadas
 		if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT) && listaEntidadesAdministrador.isEmpty()) {
 			rolesList.remove(TypeRoleAcceso.ADMIN_ENT);
@@ -158,9 +157,12 @@ public class SessionBean {
 			listaEntidades = listaEntidadesDesarrollador;
 			entidad = listaEntidades.get(0);
 		} else {
-			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
+			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", null);
 			return;
 		}
+
+		idiomas = UtilTraducciones
+				.getIdiomas(configuracionGlobalService.getConfiguracionGlobal("sistramit.idiomas").getValor());
 
 		// Establece logo segun role y entidad
 		cambiarLogo();
@@ -268,14 +270,14 @@ public class SessionBean {
 		if (!TypeRoleAcceso.SUPER_ADMIN.equals(activeRole)) {
 			final String nombreEntidad = (entidad.getNombre().getTraduccion(this.lang).length() < 28
 					? entidad.getNombre().getTraduccion(this.lang)
-					: entidad.getNombre().getTraduccion(this.lang).substring(0, 28) + "...");
+					: entidad.getNombre().getTraduccion(this.lang).substring(0, 25) + "...");
 			final DefaultSubMenu entidadSubmenu = new DefaultSubMenu(nombreEntidad);
 			entidadSubmenu.setIcon("fa-li fa fa-institution");
 			for (final Entidad newEntidad : listaEntidades) {
 				if (!entidad.equals(newEntidad)) {
 					final String nombreSubEntidad = (newEntidad.getNombre().getTraduccion(this.lang).length() < 28
 							? newEntidad.getNombre().getTraduccion(this.lang)
-							: newEntidad.getNombre().getTraduccion(this.lang).substring(0, 28) + "...");
+							: newEntidad.getNombre().getTraduccion(this.lang).substring(0, 25) + "...");
 					final DefaultMenuItem item3 = new DefaultMenuItem(nombreSubEntidad);
 					item3.setCommand("#{sessionBean.cambiarEntidadActivo(" + newEntidad.getCodigo() + ")}");
 					item3.setIcon("fa-li fa fa-institution");

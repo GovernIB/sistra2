@@ -72,20 +72,20 @@
 				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
 
 				<!-- Columnas -->
-				 <p:column headerText="#{msg['viewEventosPlataforma.headEvento']}"       width="7%">
+				 <p:column headerText="#{msg['viewEventosPlataforma.headEvento']}" style="width:8% !important;" sortBy="#{dt.tipoEvento}">
 			        <h:outputText value="#{msg['typeEvento.' += dt.tipoEvento]}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewEventosPlataforma.headFecha']}"         width="12%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewEventosPlataforma.headFecha']}" style="width:12% !important;" styleClass="grid-center" sortBy="#{dt.fecha}">
 			        <h:outputText value="#{dt.fecha}">
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
 
-			   	<p:column headerText="#{msg['viewEventosPlataforma.headError']}"         width="20%">
+			   	<p:column headerText="#{msg['viewEventosPlataforma.headError']}" style="width:20% !important;" sortBy="#{dt.codigoError}">
 			        <h:outputText value="#{dt.codigoError}" />
 			    </p:column>
 
-			   	<p:column headerText="#{msg['viewEventosPlataforma.headTrazaError']}"    width="61%">
+			   	<p:column headerText="#{msg['viewEventosPlataforma.headTrazaError']}" style="width:60% !important;">
 			        <h:outputText value="#{fn:substring(dt.trazaError,0,300)}" />
 			    </p:column>
 			</p:dataTable></p:outputPanel>

@@ -39,6 +39,7 @@ import es.caib.sistramit.core.service.repository.model.HTramite;
 @Repository("auditoriaDao")
 public final class AuditoriaDaoImpl implements AuditoriaDao {
 
+	private static final String ASCENDING = "ASCENDING";
 	/**
 	 * Entity manager.
 	 */
@@ -219,7 +220,66 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		if (pCount) {
 			query.multiselect(builder.count(tableE));
 		} else {
-			query.orderBy(builder.desc(tableE.get("fecha")));
+			if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
+				query.orderBy(builder.desc(tableE.get("fecha")));
+			} else {
+				if ("tipoEvento".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableE.get("tipo")));
+					} else {
+						query.orderBy(builder.desc(tableE.get("tipo")));
+					}
+				} else if ("fecha".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableE.get("fecha")));
+					} else {
+						query.orderBy(builder.desc(tableE.get("fecha")));
+					}
+				} else if ("idSesionTramitacion".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(p.get("idSesionTramitacion")));
+					} else {
+						query.orderBy(builder.desc(p.get("idSesionTramitacion")));
+					}
+				} else if ("nif".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableT.get("nifIniciador")));
+					} else {
+						query.orderBy(builder.desc(tableT.get("nifIniciador")));
+					}
+				} else if ("idTramite".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableT.get("idTramite")));
+					} else {
+						query.orderBy(builder.desc(tableT.get("idTramite")));
+					}
+				} else if ("versionTramite".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableT.get("versionTramite")));
+					} else {
+						query.orderBy(builder.desc(tableT.get("versionTramite")));
+					}
+				} else if ("idProcedimientoCP".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableT.get("idProcedimientoCP")));
+					} else {
+						query.orderBy(builder.desc(tableT.get("idProcedimientoCP")));
+					}
+				} else if ("idProcedimientoSIA".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableT.get("idProcedimientoSIA")));
+					} else {
+						query.orderBy(builder.desc(tableT.get("idProcedimientoSIA")));
+					}
+				} else if ("codigoError".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableE.get("codigoError")));
+					} else {
+						query.orderBy(builder.desc(tableE.get("codigoError")));
+					}
+				}
+
+			}
 
 			query.multiselect(tableE.get("id"), p.get("idSesionTramitacion"), tableE.get("tipo"), tableE.get("fecha"),
 					tableT.get("nifIniciador"), tableT.get("idTramite"), tableT.get("versionTramite"),
@@ -260,7 +320,29 @@ public final class AuditoriaDaoImpl implements AuditoriaDao {
 		if (pCount) {
 			query.multiselect(builder.count(tableE));
 		} else {
-			query.orderBy(builder.desc(tableE.get("fecha")));
+			if (StringUtils.isEmpty(pFiltroBusqueda.getSortField())) {
+				query.orderBy(builder.desc(tableE.get("fecha")));
+			} else {
+				if ("tipoEvento".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableE.get("tipo")));
+					} else {
+						query.orderBy(builder.desc(tableE.get("tipo")));
+					}
+				} else if ("fecha".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableE.get("fecha")));
+					} else {
+						query.orderBy(builder.desc(tableE.get("fecha")));
+					}
+				} else if ("codigoError".equals(pFiltroBusqueda.getSortField())) {
+					if (ASCENDING.equals(pFiltroBusqueda.getSortOrder())) {
+						query.orderBy(builder.asc(tableE.get("codigoError")));
+					} else {
+						query.orderBy(builder.desc(tableE.get("codigoError")));
+					}
+				}
+			}
 
 			query.multiselect(tableE.get("id"), tableE.get("tipo"), tableE.get("fecha"), tableE.get("codigoError"),
 					tableE.get("descripcion"), tableE.get("resultado"), tableE.get("trazaError"),

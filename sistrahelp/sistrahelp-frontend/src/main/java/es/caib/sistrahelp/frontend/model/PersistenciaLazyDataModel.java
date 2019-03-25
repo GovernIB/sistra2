@@ -32,7 +32,8 @@ public class PersistenciaLazyDataModel extends LazyDataModel<PersistenciaAuditor
 	@Override
 	public List<PersistenciaAuditoria> load(final int first, final int pageSize, final String sortField,
 			final SortOrder sortOrder, final Map<String, Object> filters) {
-
+		filtros.setSortField(sortField);
+		filtros.setSortOrder(sortOrder.name());
 		setLista(helpDeskService.obtenerAuditoriaPersistencia(filtros, new FiltroPaginacion(first, pageSize)));
 
 		return getLista();

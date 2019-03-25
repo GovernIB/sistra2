@@ -135,6 +135,10 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_FACEBK", length = 255)
 	private String urlFacebook;
 
+	/** Role asociado al administrador de la entidad */
+	@Column(name = "ENT_ROLSUP", nullable = false, length = 100)
+	private String roleSup;
+
 	/**
 	 * @return the codigo
 	 */
@@ -476,6 +480,14 @@ public class JEntidad implements IModelApi {
 		this.urlFacebook = urlFacebook;
 	}
 
+	public String getRoleSup() {
+		return roleSup;
+	}
+
+	public void setRoleSup(final String roleSup) {
+		this.roleSup = roleSup;
+	}
+
 	/**
 	 * toModel.
 	 */
@@ -531,6 +543,7 @@ public class JEntidad implements IModelApi {
 		entidad.setUrlTwitter(urlTwitter);
 		entidad.setUrlFacebook(urlFacebook);
 
+		entidad.setRolSup(roleSup);
 		return entidad;
 
 	}

@@ -83,7 +83,7 @@
 
 			<!-- Data table -->
 			<p:outputPanel  styleClass="h80">
-				<p:dataTable id="dataTable" var="dt" value="#{viewPerdidaClave.listaDatos}" lazy="true" liveResize="true"
+				<p:dataTable id="dataTable" var="dt" value="#{viewPerdidaClave.listaDatos}" liveResize="true"
 							 rows="10" emptyMessage="#{msg['error.emptyRows']}"
 							 scrollable="true" scrollHeight="90%"
 	                         paginator="true" paginatorPosition="bottom"
@@ -96,21 +96,21 @@
 					<p:ajax event="rowSelect" global="false"/>
 
 					<!-- Columnas -->
-			   		<p:column headerText="#{msg['viewPerdidaClave.headClaveTramitacion']}">
+			   		<p:column headerText="#{msg['viewPerdidaClave.headClaveTramitacion']}" sortBy="#{dt.idSesionTramitacion}">
 				        <h:outputText value="#{dt.idSesionTramitacion}" />
 				    </p:column>
-				    <p:column headerText="#{msg['viewPerdidaClave.headFecha']}">
+				    <p:column headerText="#{msg['viewPerdidaClave.headFecha']}" sortBy="#{dt.fecha}">
 				        <h:outputText value="#{dt.fecha}">
 				        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 				        </h:outputText>
 				    </p:column>
-				    <p:column headerText="#{msg['viewPerdidaClave.headTramite']}">
+				    <p:column headerText="#{msg['viewPerdidaClave.headTramite']}" sortBy="#{dt.idTramite}">
 				        <h:outputText value="#{dt.idTramite}" />
 				    </p:column>
-				    <p:column headerText="#{msg['viewPerdidaClave.headVersion']}">
+				    <p:column headerText="#{msg['viewPerdidaClave.headVersion']}" sortBy="#{dt.versionTramite}">
 				        <h:outputText value="#{dt.versionTramite}" />
 				    </p:column>
-				   	<p:column headerText="#{msg['viewPerdidaClave.headProcedimiento']}">
+				   	<p:column headerText="#{msg['viewPerdidaClave.headProcedimiento']}" sortBy="#{dt.idProcedimientoCP}">
 				        <h:outputText value="#{dt.idProcedimientoCP}" />
 				    </p:column>
 

@@ -48,6 +48,9 @@ public class RFiltroPersistenciaAuditoria {
 	@ApiModelProperty(value = "Solo contar numero de elementos")
 	private boolean soloContar;
 
+	private String sortField;
+	private String sortOrder;
+
 	public List<String> getListaAreas() {
 		return listaAreas;
 	}
@@ -134,6 +137,22 @@ public class RFiltroPersistenciaAuditoria {
 
 	public void setSoloContar(final boolean soloContar) {
 		this.soloContar = soloContar;
+	}
+
+	public String getSortField() {
+		return sortField;
+	}
+
+	public void setSortField(String sortField) {
+		this.sortField = sortField;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 }

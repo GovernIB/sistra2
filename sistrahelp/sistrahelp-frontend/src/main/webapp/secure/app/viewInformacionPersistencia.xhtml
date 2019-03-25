@@ -27,7 +27,7 @@
         	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
         	<p:panelGrid id="panelFiltro" styleClass="noBackground w100 h10 noBorders">
         		<p:row>
-        			<p:column styleClass="w29">
+        			<p:column styleClass="w28">
 		        		<h:panelGrid columns="2" styleClass="w100" columnClasses="w26 grid-right,w74">
 			        		<p:outputLabel for="filtroIdSesion" value="#{msg['viewInformacionPersistencia.filtroIdSesion']}:"/>
 				        	<p:inputText id="filtroIdSesion" value="#{viewInformacionPersistencia.filtros.idSesionTramitacion}" size="30" maxlength="30"/>
@@ -39,7 +39,7 @@
 				        	<p:inputText id="filtroNif" value="#{viewInformacionPersistencia.filtros.nif}" size="12" maxlength="12" onblur="this.value = this.value.toUpperCase();"/>
 			        	</h:panelGrid>
 		        	</p:column>
-		        	<p:column styleClass="w25">
+		        	<p:column styleClass="w26">
 			        	<h:panelGrid columns="2" styleClass="w100" columnClasses="w31 grid-right,w69">
 			        		<p:outputLabel for="filtroTramite" value="#{msg['viewInformacionPersistencia.filtroTramite']}:"/>
 			        		<h:panelGroup>
@@ -105,42 +105,42 @@
 				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();" update=":form:dataTable"/>
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headFecha']}"         width="11%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headFecha']}" style="width:11% !important;" styleClass="grid-center" sortBy="#{dt.fechaInicio}">
 			        <h:outputText value="#{dt.fechaInicio}">
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}"       width="10%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headTramite']}" style="width:10% !important;" styleClass="grid-center" sortBy="#{dt.idTramite}">
 			        <h:outputText value="#{dt.idTramite}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headVersion']}"       width="4%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headVersion']}" style="width:5% !important;" styleClass="grid-center" sortBy="#{dt.versionTramite}">
 			        <h:outputText value="#{dt.versionTramite}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headDescripcionTramite']}"      width="20%">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headDescripcionTramite']}" style="width:20% !important;" sortBy="#{dt.descripcionTramite}">
 			        <h:outputText value="#{dt.descripcionTramite}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headIdSesion']}"      width="16%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headIdSesion']}" style="width:16% !important;" styleClass="grid-center" sortBy="#{dt.idSesionTramitacion}">
 			        <h:outputText value="#{dt.idSesionTramitacion}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headNif']}"           width="8%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headNif']}" style="width:7% !important;" styleClass="grid-center" sortBy="#{dt.nif}">
 			        <h:outputText value="#{dt.nif}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headNombre']}"           width="14%">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headNombre']}" style="width:14% !important;" sortBy="#{dt.nombre}">
 			        <h:outputText value="#{dt.nombre.concat(' ').concat(dt.apellido1).concat(' ').concat(dt.apellido2)}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headFechaUltimoAcceso']}"         width="11%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headFechaUltimoAcceso']}" style="width:11% !important;" styleClass="grid-center" sortBy="#{dt.fechaUltimoAcceso}">
 			        <h:outputText value="#{dt.fechaUltimoAcceso}">
 			        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewInformacionPersistencia.headEstado']}"           width="6%" styleClass="grid-center">
+			    <p:column headerText="#{msg['viewInformacionPersistencia.headEstado']}" style="width:6% !important;" styleClass="grid-center" sortBy="#{dt.estado}">
 			        <h:outputText value="#{msg['typeEstadoTramite.'+=dt.estado]}" />
 			    </p:column>
 

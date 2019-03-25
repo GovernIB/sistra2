@@ -367,6 +367,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setIdProcedimientoSIA(pFiltro.getIdProcedimientoSIA());
 			rFiltro.setErrorPlataforma(pFiltro.isErrorPlataforma());
 			rFiltro.setSoloContar(pFiltro.isSoloContar());
+
+			rFiltro.setSortField(pFiltro.getSortField());
+			rFiltro.setSortOrder(pFiltro.getSortOrder());
 		}
 
 		return rFiltro;
@@ -478,6 +481,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			}
 
 			rFiltro.setSoloContar(pFiltro.isSoloContar());
+
+			rFiltro.setSortField(pFiltro.getSortField());
+			rFiltro.setSortOrder(pFiltro.getSortOrder());
 		}
 
 		return rFiltro;
@@ -612,6 +618,9 @@ public final class SistramitApiComponentImpl implements SistramitApiComponent {
 			rFiltro.setIdProcedimientoCP(pFiltro.getIdProcedimientoCP());
 			rFiltro.setIdProcedimientoSIA(pFiltro.getIdProcedimientoSIA());
 			rFiltro.setSoloContar(pFiltro.isSoloContar());
+
+			rFiltro.setSortField(pFiltro.getSortField());
+			rFiltro.setSortOrder(pFiltro.getSortOrder());
 		}
 
 		return rFiltro;

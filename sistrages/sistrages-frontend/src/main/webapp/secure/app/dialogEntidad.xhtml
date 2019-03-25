@@ -48,6 +48,10 @@
 					<p:outputLabel for="rol" value="#{msg['dialogEntidad.headerRol']}" />
 					<p:inputText id="rol" value="#{dialogEntidad.data.rol}" disabled="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
 
+					<p:outputLabel for="rolSup" value="#{msg['dialogEntidad.headerRolSup']}" />
+					<p:inputText id="rolSup" value="#{dialogEntidad.data.rolSup}" disabled="#{dialogEntidad.isConsulta()}" required="true" size="40" maxlength="100"/>
+
+
 					<p:outputLabel for="activo" value="#{msg['dialogEntidad.headerActivo']}" />
 					<p:selectBooleanCheckbox  id="activo" value="#{dialogEntidad.data.activo}" />
 
