@@ -195,4 +195,19 @@ public class FormularioInternoServiceBean implements FormularioInternoService {
 		formIntService.removePlantillaFormateador(plantillaFormateador);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public ObjetoFormulario copyCutComponenteFormulario(final Long pIdPagina, final Long pIdLinea, final Integer pOrden,
+			final String pPosicion, final Long idComponenteOriginal, final boolean cut) {
+		return formIntService.copyCutComponenteFormulario(pIdPagina, pIdLinea, pOrden, pPosicion, idComponenteOriginal,
+				cut);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public ObjetoFormulario copyCutLineaFormulario(final Long idPagina, final Long idLinea, final Integer orden,
+			final String posicionamiento, final boolean cut) {
+		return formIntService.copyCutLineaFormulario(idPagina, idLinea, orden, posicionamiento, cut);
+	}
+
 }

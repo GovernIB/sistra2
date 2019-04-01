@@ -70,9 +70,14 @@
            		</h:panelGroup>
 
 				<h:panelGroup id="bh-mover" class="barra-herramientas-disenyo" rendered="#{dialogDisenyoFormulario.isNotConsulta()}">
-					<p:outputLabel for="posicionamiento" value="#{msg['dialogDisenyoFormulario.mover']}"/>
-					<p:commandButton icon="fa fa-chevron-left"  id="MoverObjIzq" actionListener="#{dialogDisenyoFormulario.moverObjetoIzq}" process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjIzq}" title="#{msg['dialogDisenyoFormulario.title.moverIzq']}"/>
-					<p:commandButton icon="fa fa-chevron-right" id="MoverObjDer" actionListener="#{dialogDisenyoFormulario.moverObjetoDer}" process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover" disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDer}" title="#{msg['dialogDisenyoFormulario.title.moverDer']}"/>
+					<p:outputLabel for="posicionamiento" value="#{msg['dialogDisenyoFormulario.acciones']}"/>
+					<p:commandButton icon="fa fa-chevron-left"  id="MoverObjIzq" 	actionListener="#{dialogDisenyoFormulario.moverObjetoIzq}" 	process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover" 	disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjIzq}" title="#{msg['dialogDisenyoFormulario.title.moverIzq']}"/>
+					<p:commandButton icon="fa fa-chevron-right" id="MoverObjDer" 	actionListener="#{dialogDisenyoFormulario.moverObjetoDer}" 	process="@this" update="growlDisenyoFormulario formulario-panel componente-panel bh-mover"	disabled="#{!dialogDisenyoFormulario.habilitadoBtnObjDer}" title="#{msg['dialogDisenyoFormulario.title.moverDer']}"/>
+					<p:commandButton icon="fa fa-copy"  		id="btnCopy"  		actionListener="#{dialogDisenyoFormulario.copy}"  			process="@this" update="growlDisenyoFormulario" 											title="#{msg['dialogDisenyoFormulario.title.copy']}"/>
+					<p:commandButton icon="fa fa-cut"   		id="btnCut"   		actionListener="#{dialogDisenyoFormulario.cut}"   			process="@this" update="growlDisenyoFormulario" 											title="#{msg['dialogDisenyoFormulario.title.cut']}"/>
+					<p:commandButton icon="fa fa-paste" 		id="btnPaste" 		actionListener="#{dialogDisenyoFormulario.paste}" 			process="@form" update="growlDisenyoFormulario" 											title="#{msg['dialogDisenyoFormulario.title.paste']}" oncomplete="if (!args.validationFailed) {updateUI();}"  />
+					<p:commandButton icon="fa fa-trash" 		id="btnBorrar"		actionListener="#{dialogDisenyoFormulario.validarEliminarObjetoFormulario}"  process="@this" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}" title="#{msg['dialogDisenyoFormulario.title.borrar']}" />
+
 				</h:panelGroup>
 
 			</p:toolbarGroup>
@@ -138,7 +143,6 @@
 
 				<p:outputPanel>
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.aplicarCambios']}" actionListener="#{dialogDisenyoFormulario.aplicarCambios}" process="@form" oncomplete="if (!args.validationFailed) {updateUI();}" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}"/>
-					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.borrarComponente']}" actionListener="#{dialogDisenyoFormulario.validarEliminarObjetoFormulario}" process="@this" update="growlDisenyoFormulario" rendered="#{dialogDisenyoFormulario.isNotConsulta()}" />
 					<p:commandButton value="#{msg['dialogDisenyoFormulario.botones.verEstructura']}" actionListener="#{dialogDisenyoFormulario.abrirDialogoEstructura}" process="@this" update="growlDisenyoFormulario" />
 				</p:outputPanel>
 

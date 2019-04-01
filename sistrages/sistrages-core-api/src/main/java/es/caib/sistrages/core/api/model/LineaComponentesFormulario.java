@@ -153,4 +153,21 @@ public final class LineaComponentesFormulario extends ObjetoFormulario
 		return Integer.compare(this.getOrden(), arg0.getOrden());
 	}
 
+	/**
+	 * Método que se encarga de añadir un componente en una posición concreta y
+	 * posteriormente los reordena. Método exclusivo del dialogDisenyoFormulario.
+	 *
+	 * @param componente
+	 * @param posicion
+	 * @return
+	 */
+	public void addComponente(final ComponenteFormulario componente) {
+		getComponentes().add(componente.getOrden() - 1, componente);
+
+		// actualizamos orden
+		for (int i = 1; i <= getComponentes().size(); i++) {
+			getComponentes().get(i - 1).setOrden(i);
+		}
+
+	}
 }

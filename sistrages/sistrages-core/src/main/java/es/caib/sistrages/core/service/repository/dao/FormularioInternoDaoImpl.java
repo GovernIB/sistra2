@@ -32,9 +32,11 @@ import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeObjetoFormulario;
 import es.caib.sistrages.core.service.repository.model.JAccionPersonalizada;
+import es.caib.sistrages.core.service.repository.model.JArea;
 import es.caib.sistrages.core.service.repository.model.JCampoFormulario;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioCasillaVerificacion;
 import es.caib.sistrages.core.service.repository.model.JCampoFormularioIndexado;
@@ -1120,4 +1122,199 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	}
 
+	@Override
+	public ObjetoFormulario copyCutComponenteFormulario(final Long idPagina, final Long idLinea, final Integer orden,
+			final String posicion, final Long idComponenteOriginal, final boolean cut) {
+
+		// Obtenemos el componente original y añadimos un componente del mismo tipo
+		final JElementoFormulario componenteOriginal = entityManager.find(JElementoFormulario.class,
+				idComponenteOriginal);
+		final JLineaFormulario jlineaFormulario = entityManager.find(JLineaFormulario.class, idLinea);
+		final JPaginaFormulario jpagina = entityManager.find(JPaginaFormulario.class, idPagina);
+		final JElementoFormulario elem = JElementoFormulario.clonar(componenteOriginal, jlineaFormulario, jpagina,
+				false);
+		elem.setOrden(orden);
+		if (cut) {
+			elem.setIdentificador(elem.getIdentificador());
+		} else {
+			elem.setIdentificador("ID_" + System.currentTimeMillis());
+		}
+		entityManager.persist(elem);
+		entityManager.flush();
+
+		// Reordenamos (ya que ha sido introducido en una posición, que puede ser en
+		// medio de otros componentes,
+		// y debemos desplazar una posición todos los elementos que estén a su derecha)
+		reordenar(idLinea, elem.getCodigo(), orden);
+
+		if (cut) { // Si se corta, hay que borrar el componente original
+			this.removeComponenteFormulario(idComponenteOriginal);
+		}
+
+		return getComponenteById(elem.getCodigo());
+	}
+
+	/**
+	 * Método privado que desplaza todos los elementos de una linea que sean mayores
+	 * a un orden. La idea es que se ha pegado un elemento en una posición y tots
+	 * los de su derecha tendrían que moverse una posición para hacerle hueco.
+	 *
+	 * @param idLinea
+	 *            Id de la linea.
+	 * @param idElemento
+	 *            Id del elemento recién copiado que debe mantener su posición
+	 * @param orden
+	 *            Posición a partir del cual hay que mover al resto
+	 */
+	private void reordenar(final Long idLinea, final Long idElemento, final int orden) {
+		final JLineaFormulario jlineaFormulario = entityManager.find(JLineaFormulario.class, idLinea);
+		for (final JElementoFormulario elemento : jlineaFormulario.getElementoFormulario()) {
+			if (elemento.getOrden() >= orden && elemento.getCodigo().compareTo(idElemento) != 0) {
+				elemento.setOrden(elemento.getOrden() + 1);
+				entityManager.merge(elemento);
+			}
+		}
+	}
+
+	@Override
+	public ObjetoFormulario copyCutLineaFormulario(final Long idPagina, final Long idLinea, final Integer orden,
+			final String posicionamiento, final boolean cut) {
+		final JLineaFormulario jlineaFormularioOriginal = entityManager.find(JLineaFormulario.class, idLinea);
+		final JPaginaFormulario jpagina = entityManager.find(JPaginaFormulario.class, idPagina);
+		final JLineaFormulario jlinea = JLineaFormulario.clonar(jlineaFormularioOriginal, jpagina, false);
+		jlinea.setOrden(orden);
+		if (!cut) { // Vamos, copiamos y por tanto, hay que recalcular el identificador de todos los
+					// componentes.
+			int contador = 0; // El contador es pq parece que el system.currentTimeMillis() es el mismo en
+								// todos los identificador
+			for (final JElementoFormulario elemento : jlinea.getElementoFormulario()) {
+				elemento.setIdentificador("ID_" + contador + System.currentTimeMillis());
+				contador++;
+			}
+		}
+		entityManager.persist(jlinea);
+		entityManager.flush();
+
+		// Reordenamos (ya que ha sido introducido en una posición, que puede ser en
+		// medio de otras lineas,
+		// y debemos desplazar una posición todas las lineas que estén por debajo)
+		reordenarLinea(idPagina, jlinea.getCodigo(), orden);
+
+		if (cut) { // Si se corta, hay que borrar el componente original
+			this.removeLineaFormulario(idLinea);
+		}
+		final LineaComponentesFormulario linea = jlinea.toModel();
+		for (final JElementoFormulario elemento : jlinea.getElementoFormulario()) {
+			if (elemento.getSeccionFormulario() != null) {
+				linea.getComponentes().add(elemento.getSeccionFormulario().toModel());
+			}
+			if (elemento.getEtiquetaFormulario() != null) {
+				linea.getComponentes().add(elemento.getEtiquetaFormulario().toModel());
+			}
+			if (elemento.getImagenFormulario() != null) {
+				linea.getComponentes().add(elemento.getImagenFormulario().toModel());
+			}
+			if (elemento.getCampoFormulario() != null
+					&& elemento.getCampoFormulario().getCampoFormularioCasillaVerificacion() != null) {
+				linea.getComponentes()
+						.add(elemento.getCampoFormulario().getCampoFormularioCasillaVerificacion().toModel());
+			}
+			if (elemento.getCampoFormulario() != null
+					&& elemento.getCampoFormulario().getCampoFormularioIndexado() != null) {
+				linea.getComponentes().add(elemento.getCampoFormulario().getCampoFormularioIndexado().toModel());
+			}
+			if (elemento.getCampoFormulario() != null
+					&& elemento.getCampoFormulario().getCampoFormularioTexto() != null) {
+				linea.getComponentes().add(elemento.getCampoFormulario().getCampoFormularioTexto().toModel());
+			}
+
+		}
+
+		return linea;
+	}
+
+	/**
+	 * Método privado que desplaza todas las líneas de una página que sean mayores a
+	 * un orden. La idea es que se ha pegado una linea en una posición y tots los de
+	 * abajo tendrían que moverse una posicion.
+	 *
+	 * @param idPagina
+	 *            Id de la página
+	 * @param idLinea
+	 *            Id de la linea que se ha copiado
+	 * @param orden
+	 *            Orden donde se ha copiado la linea a copiar
+	 */
+	private void reordenarLinea(final Long idPagina, final Long idLinea, final int orden) {
+		final JPaginaFormulario jpagina = entityManager.find(JPaginaFormulario.class, idPagina);
+		for (final JLineaFormulario linea : jpagina.getLineasFormulario()) {
+			if (linea.getOrden() >= orden && linea.getCodigo().compareTo(idLinea) != 0) {
+				linea.setOrden(linea.getOrden() + 1);
+				entityManager.merge(linea);
+			}
+		}
+	}
+
+	@Override
+	public void borrarReferencias(final Long idTramite, final Long idAreaAntigua) {
+
+		// Obtenemos los ids de formularios que pertenezcan al tramite
+		final List<Long> idTramitesFormularios = getTramitesFormularioByIdtramite(idTramite);
+
+		// Buscamos todos los componentes de tipo selector.
+		for (final Long idTramiteFormulario : idTramitesFormularios) {
+			final List<JCampoFormularioIndexado> selectores = getSelectoresByIdTramite(idTramiteFormulario);
+
+			// Miramos en todos los selector, cual tiene un selector con un dominio del area
+			// antigua y lo
+			// quitamos
+			for (final JCampoFormularioIndexado selector : selectores) {
+				if (selector.getDominio() != null
+						&& selector.getDominio().getAmbito().equals(TypeAmbito.AREA.toString())
+						&& selector.getDominio().getAreas() != null) {
+					boolean contieneArea = false;
+					for (final JArea area : selector.getDominio().getAreas()) {
+						if (area.getCodigo().compareTo(idAreaAntigua) == 0) {
+							contieneArea = true;
+						}
+					}
+
+					if (contieneArea) {
+						selector.setDominio(null);
+						entityManager.merge(selector);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Devuelve los selectores que pertenecen al
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	private List<Long> getTramitesFormularioByIdtramite(final Long idTramite) {
+
+		final String sqlTramites = "Select distinct formularioTram.formulario.codigo from  JFormularioTramite formularioTram inner join formularioTram.pasosRellenar c where c.pasoTramitacion.versionTramite.tramite.codigo = :idTramite";
+		final Query query = entityManager.createQuery(sqlTramites);
+		query.setParameter("idTramite", idTramite);
+
+		return query.getResultList();
+	}
+
+	/**
+	 * Devuelve los selectores que pertenecen al
+	 *
+	 * @param idTramite
+	 * @return
+	 */
+	private List<JCampoFormularioIndexado> getSelectoresByIdTramite(final Long idTramite) {
+
+		final String sqlSelectores = "Select distinct selector from JCampoFormularioIndexado selector where selector.campoFormulario.elementoFormulario.lineaFormulario.paginaFormulario.formulario.codigo = :idTramite ";
+		final Query query = entityManager.createQuery(sqlSelectores);
+		query.setParameter("idTramite", idTramite);
+
+		return query.getResultList();
+	}
 }

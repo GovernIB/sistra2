@@ -247,4 +247,19 @@ public class FormularioInternoServiceImpl implements FormularioInternoService {
 
 	}
 
+	@Override
+	@NegocioInterceptor
+	public ObjetoFormulario copyCutComponenteFormulario(final Long pIdPagina, final Long pIdLinea, final Integer pOrden,
+			final String pPosicion, final Long idComponenteOriginal, final boolean cut) {
+		return formIntDao.copyCutComponenteFormulario(pIdPagina, pIdLinea, pOrden, pPosicion, idComponenteOriginal,
+				cut);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public ObjetoFormulario copyCutLineaFormulario(final Long idPagina, final Long idLinea, final Integer orden,
+			final String posicionamiento, final boolean cut) {
+		return formIntDao.copyCutLineaFormulario(idPagina, idLinea, orden, posicionamiento, cut);
+	}
+
 }

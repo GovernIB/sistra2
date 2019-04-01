@@ -88,6 +88,28 @@ public interface FormularioInternoService {
 			Integer pOrden, String pPosicion);
 
 	/**
+	 * Copia un componente.
+	 *
+	 * @param pIdPagina
+	 *            identificador de la pagina
+	 * @param pIdLinea
+	 *            identificador de la linea
+	 * @param pOrden
+	 *            orden
+	 * @param pPosicion
+	 *            posicion
+	 * @param idComponenteOriginal
+	 *            Id componente original que se desea copy/cut
+	 * @param cut
+	 *            True si quiere cortar (y por tanto se borrará el original) y False
+	 *            si sólo se quiere clonar (no se borrará el original)
+	 *
+	 * @return objeto formulario
+	 */
+	ObjetoFormulario copyCutComponenteFormulario(Long pIdPagina, Long pIdLinea, Integer pOrden, String pPosicion,
+			Long idComponenteOriginal, boolean cut);
+
+	/**
 	 * Actualiza un componente del formulario.
 	 *
 	 * @param pComponente
@@ -258,5 +280,24 @@ public interface FormularioInternoService {
 	 * @return true, si el identificador de elementoFormulario es duplicado
 	 */
 	boolean isIdElementoFormularioDuplicated(Long idFormulario, Long codElemento, String identificador);
+
+	/**
+	 * Copia pega una linea
+	 *
+	 * @param idPagina
+	 *            identificador de la pagina
+	 * @param idLinea
+	 *            identificador de la linea a copiar
+	 * @param orden
+	 *            orden
+	 * @param posicionamiento
+	 *            posicion
+	 * @param cut
+	 *            True si quiere cortar (y por tanto se borrará el original) y False
+	 *            si sólo se quiere clonar (no se borrará el original)
+	 *
+	 */
+	ObjetoFormulario copyCutLineaFormulario(Long idPagina, Long idLinea, Integer orden, String posicionamiento,
+			boolean cut);
 
 }

@@ -79,6 +79,9 @@ public final class Constantes {
 	/** Constante errores de validacion. **/
 	public static final String CLAVE_MOCHILA_ERRORESVALIDACION = "ERRORESVALIDACION";
 
+	/** Constante errores de validacion. **/
+	public static final String CLAVE_MOCHILA_ERRORES_MSG = "ERRORESMSG";
+
 	public static final String SISTRAMIT_REST_PWD = "sistramit.rest.pwd";
 
 	public static final String SISTRAMIT_REST_USER = "sistramit.rest.user";

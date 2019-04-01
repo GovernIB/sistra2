@@ -197,4 +197,40 @@ public interface FormularioInternoDao {
 	 */
 	boolean isIdElementoFormularioDuplicated(Long idFormulario, Long codElemento, String identificador);
 
+	/**
+	 * Copia/Corta un componente.
+	 *
+	 * @param pIdPagina
+	 * @param pIdLinea
+	 * @param pOrden
+	 * @param pPosicion
+	 * @param idComponenteOriginal
+	 * @param cut
+	 * @return
+	 */
+	ObjetoFormulario copyCutComponenteFormulario(Long pIdPagina, Long pIdLinea, Integer pOrden, String pPosicion,
+			Long idComponenteOriginal, boolean cut);
+
+	/**
+	 * Copia/Corta una linea
+	 *
+	 * @param idPagina
+	 * @param idLinea
+	 * @param orden
+	 * @param posicionamiento
+	 * @param cut
+	 * @return
+	 */
+	ObjetoFormulario copyCutLineaFormulario(Long idPagina, Long idLinea, Integer orden, String posicionamiento,
+			boolean cut);
+
+	/**
+	 * Borra todos las referencias entre componentes de tipo selector y trámites
+	 * (normalmente producido por un cambio de area al mover trámite o clonar).
+	 *
+	 * @param idTramite
+	 * @param idArea
+	 */
+	void borrarReferencias(Long idTramite, Long idAreaAntigua);
+
 }

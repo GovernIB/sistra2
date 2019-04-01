@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -24,6 +25,7 @@ import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
 import es.caib.sistrages.frontend.model.comun.Constantes;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuSuperAdministrador;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -198,6 +200,30 @@ public class SessionBean {
 			}
 		}
 
+	}
+
+	/**
+	 * Muestra el mensaje de error
+	 */
+	public void showError() {
+		if (getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_MSG) != null) {
+			final String literalError = (String) getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_MSG);
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, literalError);
+			limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_ERRORES_MSG);
+		}
+	}
+
+	/**
+	 * Se encarga de llamar al botón que generará el evento del botón
+	 *
+	 * @param literal
+	 */
+	public void prepararErrorGrowl(final String literal) {
+		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_ERRORES_MSG,
+				UtilJSF.getLiteral(literal));
+		final RequestContext context = RequestContext.getCurrentInstance();
+		final String evento = "window.parent.document.getElementById('formHeader:hiddenGrowl').click()";
+		context.execute(evento);
 	}
 
 	/** Cambio de idioma. */

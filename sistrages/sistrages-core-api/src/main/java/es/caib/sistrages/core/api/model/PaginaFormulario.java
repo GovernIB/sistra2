@@ -248,4 +248,18 @@ public final class PaginaFormulario extends ModelApi {
 	public void setPaginaAsociadaListaElementos(final boolean paginaAsociadaListaElementos) {
 		this.paginaAsociadaListaElementos = paginaAsociadaListaElementos;
 	}
+
+	/**
+	 *
+	 * @param componente
+	 * @param i
+	 */
+	public void addLinea(final LineaComponentesFormulario componente) {
+		getLineas().add(componente.getOrden() - 1, componente);
+
+		// actualizamos orden
+		for (int i = 1; i <= getLineas().size(); i++) {
+			getLineas().get(i - 1).setOrden(i);
+		}
+	}
 }

@@ -33,6 +33,8 @@ public interface FlujoTramitacionService {
 	 *            idioma
 	 * @param idTramiteCatalogo
 	 *            id procedimiento
+	 * @param servicioCatalogo
+	 *            indica si es servicio
 	 * @param urlInicio
 	 *            url inicio
 	 * @param parametrosInicio
@@ -40,7 +42,7 @@ public interface FlujoTramitacionService {
 	 *
 	 */
 	String iniciarTramite(UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite, final int version,
-			final String idioma, final String idTramiteCatalogo, final String urlInicio,
+			final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo, final String urlInicio,
 			final Map<String, String> parametrosInicio);
 
 	/**
