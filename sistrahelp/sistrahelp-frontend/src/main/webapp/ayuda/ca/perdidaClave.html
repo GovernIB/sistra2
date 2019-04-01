@@ -1,18 +1,44 @@
 <html>
 <head>
-<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">perdidaClave</h1>
+<h1 class="stgH1">PERDUDA DE CLAU DE TRAMITACIÓ</h1>
 <p>
-	A la pantalla de<i>'perdidaClave</i>' es pot gestionar l'alta, baixa i edici&oacute; d'&agrave;rees, tr&agrave;mits i versions de tr&agrave;mits.<br> TEXTO DE PRUEBA
+
+A la finestra de <i>'Pèrdua de clau de tramitació</i>' es possibilita la recuperació de la clau de tramitació per a aquelles tramitacions iniciades sense autenticació. Atès que no es disposen de dades de sessió per a poder recuperar la clau de tramitació, s'ha de dur a terme la cerca en les dades contingudes en el formulari o formularis associats a la sol·licitud. 
 </p>
-<h2 class="stgH2">h2</h2>
+
+<h2 class="stgH2">FILTRES:</h2>
 <p>
 	<ul>
-		<li><span class="boton">Nou</span>: texto de prueba.</li>
-		
+		<li><span class="nombreCampo">Dada cerca formulari:</span> Cadena de text que ha de coincidir amb algun dels camps en el formulari o formularis associats a la sol·licitud, ha de coincidir exactament amb el camp.</li>
+		<li><span class="nombreCampo">Tràmit/Versió:</span> Identificador del tràmit de SISTRAGES, codi de tràmit i la seva versió corresponent</li>
+		<li><span class="nombreCampo">Cód. Proc. Catàleg:</span> Codi del procediment en el catàleg</li>
+		<li><span class="nombreCampo">Data inici Tràmit (Des de / Fins a):</span> Els camps "Des de" i "Fins a" permeten fitar la cerca als elements que compleixin que la seva data d'inici estigui entre aquests dos valors. Tots dos valors són obligatoris. És convenient tractar de fitar les Dates, per a simplificar el procés de cerca.</li>
 	</ul>
+</p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="boton">Cercar:</span> Llança el procés de cerca en funció dels filtres indicats </li>
+		<li><span class="boton">Ordenació de resultats:</span> Els resultats de les cerques, podran ser ordenats per columna, prement sobre la capçalera de la columna per la qual es vol ordenar. En la primera pulsació s'ordenarà de manera ascendent, i si es prem novament s'ordenarà de manera descendent.
+	</ul>
+</p>
+
+<h2 class="stgH2">CAMPOS:</h2>
+<p>
+<ul>
+	<li><span class="nombreCampo">Clau Tramitació:</span> Clau de tramitació. Aquesta clau és la que ha d'usar el ciutadà per a recuperar la sol·licitud inacabada.</li>
+	<li><span class="nombreCampo">Data:</span> Data de la tramitació</li>
+	<li><span class="nombreCampo">Tràmit:</span> Identificador del tràmit de SISTRAGES</li>
+	<li><span class="nombreCampo">Versió:</span> Versió del tràmit</li>
+	<li><span class="nombreCampo">Cód. Proc. Catàleg:</span> Codi del procediment en el catàleg</li>
+</ul>
+
 </p>
 </body>
 </html>

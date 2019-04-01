@@ -1,18 +1,49 @@
 <html>
 <head>
-<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">auditoriaTramites</h1>
+<h1 class="stgH1">AUDITORIA DE TRAMITS</h1>
 <p>
-	A la pantalla de<i>' auditoriaTramites</i>' es pot gestionar l'alta, baixa i edici&oacute; d'&agrave;rees, tr&agrave;mits i versions de tr&agrave;mits.<br> TEXTO DE PRUEBA
+
+A la finestra <i>' Auditoria de Tramits</i>' es poden consultar els esdeveniments emmagatzemats, podent així determinar les accions realitzades per un usuari o sobre un tràmit en concret.
 </p>
-<h2 class="stgH2">h2</h2>
+
+<h2 class="stgH2">FILTRES DE CERCA:</h2>
 <p>
 	<ul>
-		<li><span class="boton">Nou</span>: texto de prueba.</li>
-		
+		<li><span class="nombreCampo">Id. Sessió:</span> Identificador de la sessió de tramitació. Aquest identificador és facilitat per l'assistent de tramitació al ciutadà quan s'inicia un tràmit sense autenticació.</li>
+		<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal de l'usuari autenticat. Aquest filtre de cerca aplica a tramitacions autenticades. </li>
+		<li><span class="nombreCampo">Tràmit/Versió:</span> Identificador del tràmit de SISTRAGES, codi de tràmit i la seva versió corresponent. Aquest filtre permet restringir les cerques, filtrant per tràmit versió.</li>
+		<li><span class="nombreCampo">Data inici (Des de / Fins a):</span> Els camps "Des de" i "Fins a" permeten fitar la cerca als elements que compleixin que la seva data d'inici estigui entre aquests dos valors. És obligatori establir una data inicial, i en el cas de no indicar una data final, es considerarà la data actual com a data final. </li>
+		<li><span class="nombreCampo">Cod. Proc. Catàleg.:</span> Codi del procediment en el catàleg. Aquest codi representa l'identificador intern del procediment/servei al qual està vinculat el tràmit en el catàleg de procediments de l'entitat.</li>
+		<li><span class="nombreCampo">Esdeveniment:</span> Tipus d'esdeveniment a cercar. Els esdeveniments representen estats possibles pels quals passa la tramitació. (ej: Inici del tràmit, càrrega del tràmit des de la carpeta, Registre del tràmit, ..." ). </li>
 	</ul>
 </p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="boton">Cercar:</span> Llança el procés de cerca en funció dels filtres indicats </li>
+		<li><span class="boton">Ordenació de resultats:</span> Els resultats de les cerques, podran ser ordenats per columna, prement sobre la capçalera de la columna per la qual es vol ordenar. En la primera pulsació s'ordenarà de manera ascendent, i si es prem novament s'ordenarà de manera descendent.
+	</ul>
+</p>
+
+<h2 class="stgH2">CAMPS:</h2>
+	<p>
+		<ul>
+			<li><span class="nombreCampo">Esdeveniment:</span> Tipus d'esdeveniment</li>
+			<li><span class="nombreCampo">Data inici:</span> Data en la qual va tenir lloc l'esdeveniment</li>
+			<li><span class="nombreCampo">Id. Sessió:</span> Identificador de la sessió de tramitació</li>
+			<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal del tramitador</li>
+			<li><span class="nombreCampo">Tràmit:</span> Identificador del tràmit de SISTRAGES</li>
+			<li><span class="nombreCampo">Versió:</span> Versió del tràmit</li>
+			<li><span class="nombreCampo">Cod. Proc. Cat.:</span> Codi del procediment en el catàleg</li>
+			<li><span class="nombreCampo">Cód. SIA:</span> Codi SIA</li>
+			<li><span class="nombreCampo">Error:</span> Descripció de l'error. Aquest camp tan sols tindrà valor en cas que l'esdeveniment sigui del tipus ERROR-Error</li>
+		</ul>
+	</p>
 </body>
 </html>

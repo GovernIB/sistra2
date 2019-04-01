@@ -8,19 +8,26 @@
 <h1 class="stgH1">INFORMACIÓN DE PERSISTENCIA</h1>
 <p>
 
-En la pantalla de '<i>Información de persistencia</i>' se puede consultar la Información de persistencia almacenada.
+En la pantalla de '<i>Información de persistencia</i>' se puede consultar la Información de de las solicitudes inacabadas, incluyendo la documentación adjunta.
 </p>
 
 <h2 class="stgH2">FILTROS:</h2>
 <p>
 	<ul>
-		<li><span class="nombreCampo">Id. Sesion:</span> Identificador de la sesión de tramitación</li>
-		<li><span class="nombreCampo">NIF:</span> Número de identificación fiscal del tramitador</li>
-		<li><span class="nombreCampo">Trámite/Versión:</span> Identificador del trámite de SISTRAGES, código de trámite y su versión correspondiente)</li>
+		<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesión. Únicamente tiene sentido para tramitaciones no autenticadas.</li>
+		<li><span class="nombreCampo">NIF:</span> Número de identificación fiscal del tramitador.</li>
+		<li><span class="nombreCampo">Trámite/Versión:</span> Identificador del trámite de SISTRAGES, código de trámite y su versión correspondiente</li>
 		<li><span class="nombreCampo">Cod. Proc. Catálogo.:</span> Código del procedimiento en el catálogo</li>
-		<li><span class="nombreCampo">Fecha inicio (Desde / Hasta):</span> Los campos "Desde" y "Hasta" permiten acotar la búsqueda a los elementos que cumplan que su fecha de inicio esté entre estos dos valores. </li>
-		<li><span class="nombreCampo">Tipo:</span> Este filtro permite acotar mas la busqueda permitiendo filtrar por aquellos tramites en los que le pago ha sido realizado y el trámite está por finalizar.</li>
-		<li><span class="boton">Buscar:</span> Inicia el proceso de busqueda en función de los filtros indicados</li>
+		<li><span class="nombreCampo">Fecha inicio (Desde / Hasta):</span> Los campos "Desde" y "Hasta" permiten acotar la búsqueda a los elementos que cumplan que la fecha del evento esté entre estos dos valores. </li>
+		<li><span class="nombreCampo">Tipo:</span> Este filtro permite acotar mas la búsqueda permitiendo filtrar por aquellos tramites en los que le pago ha sido realizado y el trámite está por finalizar.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="boton">Buscar:</span> Lanza el proceso de búsqueda en función de los filtros indicados </li>
+		<li><span class="boton">Ordenación de resultados:</span> Los resultados de las búsquedas, podrán ser ordenados por columna, pulsando sobre la cabecera de la columna por la que se quiere ordenar. En la primera pulsación se ordenará de manera ascendente, y si se pulsa nuevamente se ordenará de manera descendente.
 	</ul>
 </p>
 
@@ -34,8 +41,8 @@ En la pantalla de '<i>Información de persistencia</i>' se puede consultar la In
 	<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesión de tramitación</li>
 	<li><span class="nombreCampo">Nif:</span> Número de identificación fiscal del tramitador</li>
 	<li><span class="nombreCampo">Nombre:</span> Nombre del tramitador</li>	
-	<li><span class="nombreCampo">Fecha último acceso:</span> Fecha del último acceso</li>
-	<li><span class="nombreCampo">Estado:</span> Estado del trámite</li>	
+	<li><span class="nombreCampo">Fecha último acceso:</span> Fecha en la que el ciudadano accedió a la solicitud por última vez.</li>
+	<li><span class="nombreCampo">Estado:</span> Estado actual del trámite</li>	
 </ul>
 </p>
 </body>

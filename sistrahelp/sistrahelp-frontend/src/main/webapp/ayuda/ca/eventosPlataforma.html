@@ -1,18 +1,42 @@
 <html>
 <head>
-<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">eventosPlataforma</h1>
+<h1 class="stgH1">AUDITORIA D'ESDEVENIMENTS DE LA PLATAFORMA</h1>
 <p>
-	A la pantalla de<i>'eventosPlataforma</i>' es pot gestionar l'alta, baixa i edici&oacute; d'&agrave;rees, tr&agrave;mits i versions de tr&agrave;mits.<br> TEXTO DE PRUEBA
+A la finestra <i>' Auditoria d'esdeveniments de plataforma</i>' es poden consultar els diferents esdeveniments emmagatzemats a nivell de plataforma.
 </p>
-<h2 class="stgH2">h2</h2>
+
+<h2 class="stgH2">FILTRES:</h2>
+<p>
+	<ul>	
+		<li><span class="nombreCampo">Data esdeveniment (Des de / Fins a):</span> Els camps "Des de" i "Fins a" permeten fitar la cerca als elements que compleixin que la seva data d'inici estigui entre aquests dos valors. És obligatori establir una data inicial, i en el cas de no indicar una data final, es considerarà la data actual com a data final.</li>
+		<li><span class="nombreCampo">Esdeveniment:</span> Tipus d'esdeveniment a cercar.</li>
+	</ul>
+</p>
+
+
+<h2 class="stgH2">OPERATIVA:</h2>
 <p>
 	<ul>
-		<li><span class="boton">Nou</span>: texto de prueba.</li>
-		
+		<li><span class="boton">Cercar:</span> Llança el procés de cerca en funció dels filtres indicats </li>
+		<li><span class="boton">Ordenació de resultats:</span> Els resultats de les cerques, podran ser ordenats per columna, prement sobre la capçalera de la columna per la qual es vol ordenar. En la primera pulsació s'ordenarà de manera ascendent, i si es prem novament s'ordenarà de manera descendent.
 	</ul>
+</p>
+
+
+<h2 class="stgH2">CAMPS:</h2>
+<p>
+<ul>
+	<li><span class="nombreCampo">Esdeveniment:</span> Tipus d'esdeveniment</li>
+	<li><span class="nombreCampo">Data:</span> Data en la qual va tenir lloc l'esdeveniment</li>
+	<li><span class="nombreCampo">Error:</span> Descripció de l'error </li>
+	<li><span class="nombreCampo">Traça error:</span> Traça completa de l'error </li>
+</ul>
+
 </p>
 </body>
 </html>

@@ -1,18 +1,49 @@
 <html>
 <head>
-<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">informacionPersistencia</h1>
+<h1 class="stgH1">INFORMACIÓ DE PERSISTÈNCIA</h1>
 <p>
-	A la pantalla de<i>'informacionPersistencia</i>' es pot gestionar l'alta, baixa i edici&oacute; d'&agrave;rees, tr&agrave;mits i versions de tr&agrave;mits.<br> TEXTO DE PRUEBA
+
+A la finestra de<i>' Informació de persistència</i>' es pot consultar la Informació de de les sol·licituds inacabades, incloent la documentació anexada.
 </p>
-<h2 class="stgH2">h2</h2>
+
+<h2 class="stgH2">FILTRES:</h2>
 <p>
 	<ul>
-		<li><span class="boton">Nou</span>: texto de prueba.</li>
-		
+		<li><span class="nombreCampo">Id. Sesió:</span> Identificador de la sesió. Únicament té sentit per a tramitacions no autenticades.</li>
+		<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal del tramitador.</li>
+		<li><span class="nombreCampo">Tràmit/Versió:</span> Identificador del tràmit de SISTRAGES, codi de tràmit i la seva versió corresponent</li>
+		<li><span class="nombreCampo">Cod. Proc. Catàleg.:</span> Codi del procediment en el catàleg</li>
+		<li><span class="nombreCampo">Data inici (Des de / Fins a):</span> Els camps "Des de" i "Fins a" permeten fitar la cerca als elements que compleixin que la data de l'esdeveniment estigui entre aquests dos valors. </li>
+		<li><span class="nombreCampo">Tipus:</span> Aquest filtre permet fitar mes la cerca permetent filtrar per aquells tramitis en els que el pagament ha estat realitzat i el tràmit està per finalitzar.</li>
 	</ul>
+</p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="boton">Cercar:</span> Llança el procés de cerca en funció dels filtres indicats </li>
+		<li><span class="boton">Ordenació de resultats:</span> Els resultats de les cerques, podran ser ordenats per columna, prement sobre la capçalera de la columna per la qual es vol ordenar. En la primera pulsació s'ordenarà de manera ascendent, i si es prem novament s'ordenarà de manera descendent.
+	</ul>
+</p>
+
+<h2 class="stgH2">CAMPS:</h2>
+<p>
+<ul>
+	<li><span class="nombreCampo">Data:</span> Data en la qual es va iniciar el tràmit</li>
+	<li><span class="nombreCampo">Tràmit:</span> Identificador del tràmit de SISTRAGES</li>
+	<li><span class="nombreCampo">Versió:</span> Versió del tràmit</li>
+	<li><span class="nombreCampo">Descripció tràmit:</span> Descripció del tràmit </li>
+	<li><span class="nombreCampo">Id. Sessió:</span> Identificador de la sessió de tramitació</li>
+	<li><span class="nombreCampo">NIF:</span> Número d'identificació fiscal del tramitador</li>
+	<li><span class="nombreCampo">Nom:</span> Nom del tramitador</li>	
+	<li><span class="nombreCampo">Data últim accés:</span> Data en la qual el ciutadà va accedir a la sol·licitud per última vegada.</li>
+	<li><span class="nombreCampo">Estat:</span> Estat actual del tràmit</li>	
+</ul>
 </p>
 </body>
 </html>

@@ -7,17 +7,24 @@
 <body>
 <h1 class="stgH1">INFORMACIÓN DE PAGOS</h1>
 <p>
-En la pantalla de '<i>Información de pagos</i>' se presentan los pagos que cumplan con los criterios introducidos en los filtros de búsqueda. La información de pagos mostrada en el grid es aquella de la que dispone el asistente de tramitación. Una vez que el operador acceda al detalle de un pago concreto, se recuperará de la pasarela de pagos utilizada la información de detalle del mismo. En función del tipo de acceso del ciudadano al trámite será necesaria la cumplimentación del filtro clave de tramitación, en caso de solicitud no autenticada, o del filtro NIF/NIE/Pasaporte para aquellas solicitudes que sean autenticadas.
+En la pantalla de '<i>Información de pagos</i>' se presentan los pagos que cumplan con los criterios introducidos en los filtros de búsqueda. La información de pagos mostrada en el grid es aquella de la que dispone el asistente de tramitación. Una vez que el operador acceda al detalle de un pago concreto, se recuperará de la pasarela de pagos utilizada la información de detalle del mismo. En función del tipo de acceso del ciudadano al trámite, será necesaria la cumplimentación del filtro clave de tramitación, en caso de solicitud no autenticada, o del filtro NIF/NIE/Pasaporte para aquellas solicitudes que sean autenticadas.
 </p>
 
 <h2 class="stgH2">FILTROS:</h2>
 <p>
 	<ul>	
-		<li><span class="nombreCampo">Tipo de acceso:</span> Tipo de acceso sobre el que realizar la busqueda.</li>
-		<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesion.</li>
-		<li><span class="nombreCampo">NIF:</span> NIF del usuario que ha iniciado el trámite. este campo es obligatorio si el tipo de acceso es autenticado.</li>
+		<li><span class="nombreCampo">Tipo de acceso:</span> Filtro que permite acotar la búsqueda por tipo de autenticación.</li>
+		<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesión. Únicamente tiene sentido para tramitaciones no autenticadas.</li>
+		<li><span class="nombreCampo">NIF:</span> NIF del usuario que ha iniciado el trámite. Este campo es obligatorio si el tipo de acceso es autenticado.</li>
 		<li><span class="nombreCampo">Fecha evento (Desde / Hasta):</span> Los campos "Desde" y "Hasta" permiten acotar la búsqueda a los elementos que cumplan que la fecha del evento esté entre estos dos valores. </li>
-		<li><span class="boton">Buscar:</span> Inicia el proceso de busqueda en función de los filtros indicados.</li>
+	</ul>
+</p>
+
+<h2 class="stgH2">OPERATIVA:</h2>
+<p>
+	<ul>
+		<li><span class="boton">Buscar:</span> Lanza el proceso de búsqueda en función de los filtros indicados </li>
+		<li><span class="boton">Ordenación de resultados:</span> Los resultados de las búsquedas, podrán ser ordenados por columna, pulsando sobre la cabecera de la columna por la que se quiere ordenar. En la primera pulsación se ordenará de manera ascendente, y si se pulsa nuevamente se ordenará de manera descendente.
 	</ul>
 </p>
 
@@ -28,9 +35,9 @@ En la pantalla de '<i>Información de pagos</i>' se presentan los pagos que cump
 	<li><span class="nombreCampo">Trámite:</span> Identificador del trámite de SISTRAGES.</li>
 	<li><span class="nombreCampo">Versión:</span> Versión del trámite de SISTRAGES.</li>
 	<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesión de tramitación.</li>
-	<li><span class="nombreCampo">Pasarela de pagos:</span>Pasarela de pagos usada para realizar el pago.</li>
+	<li><span class="nombreCampo">Pasarela de pagos:</span> Pasarela de pagos usada para realizar el pago.</li>
 	<li><span class="nombreCampo">Importe:</span> Importe de la transacción.</li>
-	<li><span class="nombreCampo">Estado del pago:</span> Estado en que ha quedado el pago.</li>
+	<li><span class="nombreCampo">Estado del pago:</span> Estado en que se encuentra el pago.</li>
 	
 </ul>
 

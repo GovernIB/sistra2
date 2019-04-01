@@ -15,8 +15,8 @@ En la pantalla de '<i>Detalle de persistencia</i>' se puede consultar la Informa
 <ul>
 	<li><span class="nombreCampo">Estado:</span> Indica el estado del trámite
 		<ul>
-			<li><span class="nombreCampo">Estado:</span> Indica el estado del trámite.</li>
-			<li><span class="nombreCampo">Cancelado:</span> Indica si el trámite ha sido cancelado.</li>
+			<li><span class="nombreCampo">Estado:</span> Indica el estado del trámite, pudiendo ser 'Rellenando' y 'Finalizado'.</li>
+			<li><span class="nombreCampo">Cancelado:</span> Indica si el trámite ha sido cancelado por el ciudadano.</li>
 		</ul>
 	</li>
 	
@@ -30,27 +30,27 @@ En la pantalla de '<i>Detalle de persistencia</i>' se puede consultar la Informa
 
 	<li><span class="nombreCampo">Persistencia:</span> Información referente a la persistencia del trámite
 		<ul>
-			<li><span class="nombreCampo">Persistente:</span> Indica si el trámite es persistente o no.</li>
-			<li><span class="nombreCampo">F. caducidad:</span> fecha de caducidad del trámite.</li>			
+			<li><span class="nombreCampo">Persistente:</span> Indica si el trámite podrá ser retomado por el ciudadano para su finalización.</li>
+			<li><span class="nombreCampo">F. caducidad:</span> fecha de caducidad del trámite. Si se ha superado esta fecha el ciudadano no podrá recuperar la solicitud para finalizarla.</li>			
 		</ul>
 	</li>
 
 	<li><span class="nombreCampo">Purga:</span> Información referente a la purga de datos
 		<ul>
-			<li><span class="nombreCampo">Purgar:</span> Indica si el trámite debe ser purgado o no.</li>
+			<li><span class="nombreCampo">Purgar:</span> Indica si el trámite ha sido marcado para purgar.</li>
 			<li><span class="nombreCampo">Purgado:</span> Indica si el trámite ha sido purgado o no.</li>
 			<li><span class="nombreCampo">F. purgado:</span> Indica la fecha en que se realizó el purgado (Solo si procede).</li>			
 		</ul>
 	</li>
-
-
-
-	<li><span class="nombreCampo">Descripción trámite:</span> Descripción del trámite </li>
-	<li><span class="nombreCampo">Id. Sesión:</span> Identificador de la sesión de tramitación</li>
-	<li><span class="nombreCampo">Nif:</span> Número de identificación fiscal del tramitador</li>
-	<li><span class="nombreCampo">Nombre:</span> Nombre del tramitador</li>	
-	<li><span class="nombreCampo">Fecha último acceso:</span> Fecha del último acceso</li>
-	<li><span class="nombreCampo">Estado:</span> Estado del trámite</li>	
+	<li><span class="nombreCampo">URL inicio::</span> Indica la URL con la que se inició el trámite.</li>
+	<li><span class="nombreCampo">Ficheros:</span> Listado con información de los ficheros adjuntados en el trámite. Cada fichero dispone de un botón que permite su descarga.
+		<ul>
+			<li><span class="nombreCampo">Paso:</span> Indica el paso de tramitación al que pertenece el documento.</li>
+			<li><span class="nombreCampo">Tipo Paso:</span> Indica el tipo de paso en el que se ha anexado/generado el fichero.</li>
+			<li><span class="nombreCampo">Tipo:</span> Indica el tipo de fichero.</li>			
+			<li><span class="nombreCampo">Fichero:</span> Indica el nombre del fichero.</li>		
+		</ul>	
+	</li>
 </ul>
 </p>
 </body>

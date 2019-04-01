@@ -5,14 +5,37 @@
 	<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
 </head>
 <body>
-<h1 class="stgH1">Dialogo Información de Pagos</h1>
+<h1 class="stgH1">DETALLE DEL PAGO</h1>
 <p>
-	En la pantalla de '<i>Dialogo Información de Pagos</i>' se puede gestionar el alta, baja y edici&oacute;n de &aacute;reas, tr&aacute;mites y versiones de tr&aacute;mites. TEXTO DE PRUEBA
+	En la pantalla de '<i>Detalle del pago</i>' se puede ver el detalle del pago seleccionado. En el caso de que se trate de un pago no finalizado, se recuperará, de la pasarela de pagos utilizada, la información de detalle del mismo.
 </p>
-<h2 class="stgH2">H2</h2>
+<h2 class="stgH2">Información asistente de tramitación</h2>
 <p>
 	<ul>
-		<li><span class="boton">Nuevo</span>: TEXTO DE PRUEBA</li>		
+		<li><span class="nombreCampo">Id. del pago:</span> Identificador interno del pago.</li>
+		<li><span class="nombreCampo">Entidad:</span> Entidad del pago.</li>
+		<li><span class="nombreCampo">Presentación:</span> Indica si es un pago presencial o electrónico.</li>
+		<li><span class="nombreCampo">NIF:</span> Número de identificación fiscal del pagador.</li>
+		<li><span class="nombreCampo">Modelo:</span> Modelo del pago.</li>
+		<li><span class="nombreCampo">Id. tasa:</span> Identificador de la tasa.</li>
+		<li><span class="nombreCampo">Fecha del pago:</span> Fecha de devengo del pago.</li>
+		<li><span class="nombreCampo">Pasarela de pagos:</span> Pasarela de pagos usada para realizar el pago.</li>
+		<li><span class="nombreCampo">Organismo:</span> Organismo del pago.</li>
+		<li><span class="nombreCampo">Simulado:</span> Indica si se trata de un pago simulado o no.</li>
+		<li><span class="nombreCampo">Nombre:</span> Nombre de la persona que realiza el pago.</li>
+		<li><span class="nombreCampo">Concepto:</span> Concepto del pago.</li>
+		<li><span class="nombreCampo">Importe:</span> Importe del pago.</li>
+		<li><span class="nombreCampo">Localizador:</span> Localizador de la pasarela de pago.</li>		
+	</ul>
+</p>
+
+<h2 class="stgH2">Información pasarela de pagos</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Verificado:</span> Indica si el pago ha sido verificado</li>
+		<li><span class="nombreCampo">Pagado:</span> Indica si el pago ha sido realizado o no.</li>
+		<li><span class="nombreCampo">Código Error:</span> Muestra el código de error ocurrido al realizar el pago.</li>
+		<li><span class="nombreCampo">Mensaje Error:</span> Muestra un mensaje descriptivo del código de error asociado.</li>
 	</ul>
 </p>
 </body>
