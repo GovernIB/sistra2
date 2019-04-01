@@ -184,4 +184,13 @@ public interface DominioDao {
 	 * @return
 	 */
 	ValoresDominio realizarConsultaListaFija(String identificador);
+
+	/**
+	 * Borra todos las referencias entre dominios y trámites (normalmente producido
+	 * por un cambio de area al mover trámite o clonar)
+	 *
+	 * @param idTramite
+	 * @param idArea
+	 */
+	void borrarReferencias(Long idTramite, Long idArea);
 }

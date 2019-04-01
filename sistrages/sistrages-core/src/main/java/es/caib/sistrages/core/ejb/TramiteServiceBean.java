@@ -195,8 +195,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void changeAreaTramite(final Long idArea, final Long idTramite) {
-		tramiteService.changeAreaTramite(idArea, idTramite);
+	public void changeAreaTramite(final Long idArea, final Long idTramite, final Long idAreaAntigua) {
+		tramiteService.changeAreaTramite(idArea, idTramite, idAreaAntigua);
 	}
 
 	@Override
@@ -482,6 +482,12 @@ public class TramiteServiceBean implements TramiteService {
 	public List<ErrorValidacion> validarScript(final Script pScript, final List<Dominio> pListaDominios,
 			final List<String> pIdiomasTramiteVersion, final String pIdioma) {
 		return tramiteService.validarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<Tramite> listTramiteByEntidad(final Long idEntidad) {
+		return tramiteService.listTramiteByEntidad(idEntidad);
 	}
 
 }

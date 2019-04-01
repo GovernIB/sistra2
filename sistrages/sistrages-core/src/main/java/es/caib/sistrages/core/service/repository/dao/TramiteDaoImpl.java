@@ -1051,15 +1051,9 @@ public class TramiteDaoImpl implements TramiteDao {
 	private JVersionTramite limpiar(final JVersionTramite version) {
 
 		version.setCodigo(null);
-		if (version.getScriptInicializacionTramite() != null) {
-			version.getScriptInicializacionTramite().setCodigo(null);
-		}
-		if (version.getScriptPersonalizacion() != null) {
-			version.getScriptPersonalizacion().setCodigo(null);
-		}
-		if (version.getMensajeDesactivacion() != null) {
-			version.getMensajeDesactivacion().setCodigo(null);
-		}
+		version.setScriptInicializacionTramite(JScript.clonar(version.getScriptInicializacionTramite()));
+		version.setScriptPersonalizacion(JScript.clonar(version.getScriptPersonalizacion()));
+		version.setMensajeDesactivacion(JLiteral.clonar(version.getMensajeDesactivacion()));
 		return version;
 	}
 
@@ -1132,6 +1126,45 @@ public class TramiteDaoImpl implements TramiteDao {
 			idiomas = objectIdiomas.get(0).toString();
 		}
 		return idiomas;
+	}
+
+	@Override
+	public List<Tramite> getAllByEntidad(final Long idEntidad) {
+		return listarTramitesByEntidad(idEntidad, null);
+	}
+
+	@Override
+	public List<Tramite> getAllByEntidad(final Long idEntidad, final String filtro) {
+		return listarTramitesByEntidad(idEntidad, null);
+	}
+
+	private List<Tramite> listarTramitesByEntidad(final Long idEntidad, final String pFiltro) {
+		final List<Tramite> resultado = new ArrayList<>();
+
+		String sql = "Select t From JTramite t where t.area.entidad.codigo = :idEntidad";
+
+		if (StringUtils.isNotBlank(pFiltro)) {
+			sql += " AND (upper(t.descripcion) like :filtro OR upper(t.identificador) like :filtro)";
+		}
+		sql += " ORDER BY t.codigo";
+
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("idEntidad", idEntidad);
+		if (StringUtils.isNotBlank(pFiltro)) {
+			query.setParameter("filtro", "%" + pFiltro.toUpperCase() + "%");
+		}
+
+		final List<JTramite> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final Iterator<JTramite> iterator = results.iterator(); iterator.hasNext();) {
+				final JTramite jTramite = iterator.next();
+				resultado.add(jTramite.toModel());
+			}
+		}
+
+		return resultado;
 	}
 
 }

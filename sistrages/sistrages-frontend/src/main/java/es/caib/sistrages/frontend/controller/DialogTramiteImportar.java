@@ -548,6 +548,15 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			return false;
 		}
 
+		// Si existe el trámite en el entorno pero no el area, es que algo está mal.
+		if (areaActual == null && tramiteActual != null) {
+
+			filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
+					TypeImportarResultado.ERROR, tramite, tramiteActual);
+			filaTramite.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.tramiteareaincorrecto"));
+			return false;
+		}
+
 		// Obtenemos la version y sus pasos si el trámite existe. Además, seteamos debug
 		// a true si está en desarrollo.
 		if (tramiteActual != null) {
@@ -575,7 +584,19 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 		} else {
 
-			if (tramite.getDescripcion().equals(tramiteActual.getDescripcion())) {
+			final Area areaTramite = tramiteService.getArea(tramiteActual.getIdArea());
+			final Entidad entidadTramite = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+
+			if (!areaTramite.getCodigoDIR3Entidad().equals(entidadTramite.getCodigoDIR3())) {
+
+				filaTramite = new FilaImportarTramite(TypeImportarAccion.ERROR, TypeImportarEstado.EXISTE,
+						TypeImportarResultado.ERROR, tramite, tramiteActual);
+				final Object[] parametros = new Object[1];
+				parametros[0] = areaTramite.getCodigoDIR3Entidad();
+				filaTramite
+						.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.tramiteOtraEntidad", parametros));
+
+			} else if (tramite.getDescripcion().equals(tramiteActual.getDescripcion())) {
 
 				filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
 						TypeImportarResultado.OK, tramite, tramiteActual);

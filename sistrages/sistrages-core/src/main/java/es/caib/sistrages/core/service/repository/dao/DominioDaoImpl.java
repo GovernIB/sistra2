@@ -512,4 +512,45 @@ public class DominioDaoImpl implements DominioDao {
 		return valoresDominio;
 	}
 
+	/**
+	 * Recorre todos los dominios asociados a un trámite, sólo nos interesa los de
+	 * tipo área. <br />
+	 * Posteriormente, recorre todas las versiones que tenga asociadas e introduce
+	 * en una lista las versiones que pertezcan al trámite (idTramite).<br />
+	 * Luego con la lista (que al menos debería haber uno), borramos las versiones
+	 * asociadas al dominio y mergeamos.
+	 */
+	@Override
+	public void borrarReferencias(final Long idTramite, final Long idArea) {
+
+		// Todos los dominios asociados a un tramite
+		final List<JDominio> jDominios = getDominioAreaByTramite(idTramite);
+		for (final JDominio jdominio : jDominios) {
+
+			// Buscamos las versiones que pertenezcan al trámite
+			final List<JVersionTramite> versionesBorrarReferencias = new ArrayList<>();
+			for (final JVersionTramite version : jdominio.getVersionesTramite()) {
+				if (version.getTramite().getCodigo().compareTo(idTramite) == 0) {
+					versionesBorrarReferencias.add(version);
+				}
+			}
+
+			// Borramos las referencias y mergeamos
+			if (!versionesBorrarReferencias.isEmpty()) {
+				jdominio.getVersionesTramite().removeAll(versionesBorrarReferencias);
+				entityManager.merge(jdominio);
+			}
+
+		}
+	}
+
+	private List<JDominio> getDominioAreaByTramite(final Long idTramite) {
+		final String sql = "select distinct d from JDominio d LEFT JOIN d.versionesTramite versiones where d.ambito = 'A' and versiones.tramite.codigo = :idTramite ORDER BY d.identificador ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramite", idTramite);
+
+		return query.getResultList();
+	}
+
 }

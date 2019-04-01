@@ -100,6 +100,7 @@ public class JArea implements IModelApi {
 		area.setCodigo(this.codigo);
 		area.setDescripcion(this.descripcion);
 		area.setIdentificador(this.identificador);
+		area.setCodigoDIR3Entidad(this.entidad.getCodigoDir3());
 		return area;
 	}
 

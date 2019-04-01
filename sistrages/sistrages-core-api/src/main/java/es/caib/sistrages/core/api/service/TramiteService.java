@@ -125,7 +125,7 @@ public interface TramiteService {
 	 * @param idTramite
 	 *            id trámite
 	 */
-	public void changeAreaTramite(Long idArea, Long idTramite);
+	public void changeAreaTramite(Long idArea, Long idTramite, final Long idAreaAntigua);
 
 	/**
 	 * Elimina un Tramite.
@@ -611,5 +611,13 @@ public interface TramiteService {
 	 */
 	public List<ErrorValidacion> validarScript(Script pScript, List<Dominio> pListaDominios,
 			List<String> pIdiomasTramiteVersion, String pIdioma);
+
+	/**
+	 * Lista de trámites de la entidad.
+	 *
+	 * @param idEntidad
+	 * @return
+	 */
+	public List<Tramite> listTramiteByEntidad(Long idEntidad);
 
 }

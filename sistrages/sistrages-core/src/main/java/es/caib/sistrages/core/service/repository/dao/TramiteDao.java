@@ -288,10 +288,27 @@ public interface TramiteDao {
 
 	/**
 	 * Obtiene los idiomas disponibles de la versión del trámite.
-	 * 
+	 *
 	 * @param idTramiteVersion
 	 * @return
 	 */
 	String getIdiomasDisponibles(String idTramiteVersion);
+
+	/**
+	 * Obtiene todos los trámites de una entidad.
+	 *
+	 * @param idEntidad
+	 * @return
+	 */
+	List<Tramite> getAllByEntidad(Long idEntidad);
+
+	/**
+	 * Obtiene todos los trámites de una entidad con filtro.
+	 *
+	 * @param idEntidad
+	 * @param filtro
+	 * @return
+	 */
+	List<Tramite> getAllByEntidad(Long idEntidad, String filtro);
 
 }

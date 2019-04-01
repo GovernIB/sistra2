@@ -220,6 +220,12 @@ public class TramiteServiceImpl implements TramiteService {
 		return tramiteDao.getAllByFiltro(idArea, pFiltro);
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<Tramite> listTramiteByEntidad(final Long idEntidad) {
+		return tramiteDao.getAllByEntidad(idEntidad);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -387,12 +393,14 @@ public class TramiteServiceImpl implements TramiteService {
 	 *
 	 * @see
 	 * es.caib.sistrages.core.api.service.TramiteService#changeAreaTramite(java.lang
-	 * .Long, java.lang.Long)
+	 * .Long, java.lang.Long, java.lang.Long)
 	 */
 	@Override
 	@NegocioInterceptor
-	public void changeAreaTramite(final Long idArea, final Long idTramite) {
+	public void changeAreaTramite(final Long idArea, final Long idTramite, final Long idAreaAntigua) {
 		tramiteDao.changeAreaTramite(idArea, idTramite);
+		dominiosDao.borrarReferencias(idTramite, idAreaAntigua);
+		formularioInternoDao.borrarReferencias(idTramite, idAreaAntigua);
 	}
 
 	/*

@@ -360,6 +360,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 				jcampoIndexado.setTipoListaValores("F");
 				jcampoIndexado.setCampoDominioCodigo(null);
 				jcampoIndexado.setParametrosDominio(null);
+				jcampoIndexado.setDominio(null);
 			} else {
 				jcampoIndexado.setTipoListaValores(campoFormularioIndexado.getTipoListaValores());
 				jcampoIndexado.setCampoDominioCodigo(campoFormularioIndexado.getCampoDominioCodigo());

@@ -841,11 +841,11 @@ public class ViewTramites extends ViewControllerBase {
 		// versiones,
 		// no
 		// sea ninguno de ambito area.
-		if (checkDominioArea()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("viewTramites.error.tramiteConDominioAreas"));
-			return;
-		}
+		/*
+		 * if (checkDominioArea()) {
+		 * UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+		 * UtilJSF.getLiteral("viewTramites.error.tramiteConDominioAreas")); return; }
+		 */
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();

@@ -217,7 +217,7 @@
 		    		<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoClonar}" update="growl form:dataTableTramites"/>
 		    </p:commandButton>
 
-	        <p:commandButton id="hiddenCommandMover" styleClass="button"  process="@this"  action="#{viewTramites.moverTramite()}"  style="display:none">
+	        <p:commandButton id="hiddenCommandMover" styleClass="button"  process="@this"  action="#{viewTramites.moverTramite()}"  style="display:none" update="growl">
       			   <p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoMoverTramite}" update="growl form:dataTableTramites"  />
 	        </p:commandButton>
 

@@ -11,6 +11,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
+import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
@@ -58,8 +59,14 @@ public class DialogMoverTramite extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (data.getIdArea().compareTo(idAreaDestino) == 0) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogMoverTramite.error.mismarea"));
+			return;
+		}
+
 		// Realizamos update
-		tramiteService.changeAreaTramite(idAreaDestino, data.getCodigo());
+		tramiteService.changeAreaTramite(idAreaDestino, data.getCodigo(), data.getIdArea());
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();
