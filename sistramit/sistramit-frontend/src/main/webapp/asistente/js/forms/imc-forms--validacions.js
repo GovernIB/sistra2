@@ -198,21 +198,61 @@ $.fn.appValida = function(opcions) {
 
 	if (format === "telefon") {
 
-		esCorrecte = (isNaN(valor)) ? false : true;
+		esCorrecte =  true;
+
+		var validacions_arr = [];
+
+		if (isNaN(valor)) {
+
+			validacions_arr
+				.push("e");
+
+		}
 
 		var valor_primerDigit = parseInt( valor.substr(0,1), 10),
 			valor_string = valor.toString();
 
-		esCorrecte = (valor_primerDigit !== 9 && valor_primerDigit !== 8 && valor_primerDigit !== 6 && valor_primerDigit !== 7) ? false : true;
+		if (valor_primerDigit !== 9 && valor_primerDigit !== 8 && valor_primerDigit !== 6 && valor_primerDigit !== 7) {
 
-		esCorrecte = (valor_string.length !== 9) ? false : true;
+			validacions_arr
+				.push("e");
+
+		}
+
+		if (valor_string.length !== 9) {
+
+			validacions_arr
+				.push("e");
+
+		}
 
 		var el_fixe = element.attr("data-fixe") || false,
 			el_mobil = element.attr("data-mobil") || false;
 
-		esCorrecte = (el_fixe === "n" && (valor_primerDigit === 9 || valor_primerDigit === 8)) ? false : esCorrecte;
+		if (el_fixe === "n" && (valor_primerDigit === 9 || valor_primerDigit === 8)) {
 
-		esCorrecte = (el_mobil === "n" && (valor_primerDigit === 6 || valor_primerDigit === 7)) ? false : esCorrecte;
+			validacions_arr
+				.push("e");
+
+		}
+
+		if (el_mobil === "n" && (valor_primerDigit === 6 || valor_primerDigit === 7)) {
+
+			validacions_arr
+				.push("e");
+
+		}
+
+		$(validacions_arr)
+			.each(function() {
+
+				var el = this;
+
+				if (el == "e") {
+					esCorrecte = false;
+				}
+
+			});
 
 	}
 

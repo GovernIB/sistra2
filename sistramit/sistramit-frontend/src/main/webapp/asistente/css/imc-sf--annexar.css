@@ -467,9 +467,9 @@ border: 2px solid #ddd;
 
 
 .imc--annexe-error {
-	min-height: 1.8em;
+	min-height: 2.2em;
 	color: #cc073c;
-	padding: .4em 1.5em .4em 4em;
+	padding: .5em 1.5em .5em 4em;
 	background: transparent url(imgs/icones/ico_error.svg) no-repeat 1.3em 50% / auto 1.5em;
 }
 
