@@ -100,7 +100,8 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 			final EventoAuditoria evento = crearEvento(TypeEvento.INICIAR_TRAMITE, (String) pResult);
 			final ListaPropiedades propiedadesEvento = new ListaPropiedades();
 			final UsuarioAutenticadoInfo user = (UsuarioAutenticadoInfo) pArgumentos[0];
-			propiedadesEvento.addPropiedad(TypeParametroEvento.URL_INICIO.toString(), (String) pArgumentos[5]);
+			propiedadesEvento.addPropiedad(TypeParametroEvento.URL_INICIO.toString(),
+					(String) pArgumentos[ConstantesNumero.N6]);
 			addPropsUserAgent(propiedadesEvento, user.getSesionInfo().getUserAgent());
 			evento.setPropiedadesEvento(propiedadesEvento);
 			eventosFlujo.add(evento);

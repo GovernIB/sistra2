@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.CatalogoPluginException;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.DefinicionTramiteCP;
-import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.CatalogoProcedimientosRolsacPlugin;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProcedimientosPlugin;
 import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.service.ComponenteService;
@@ -45,8 +45,8 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	/** Area **/
 	private String area;
 
-	/** Plugin rolsac. **/
-	private CatalogoProcedimientosRolsacPlugin iplugin;
+	/** Plugin catalogo. **/
+	private ICatalogoProcedimientosPlugin iplugin;
 
 	/**
 	 * Inicialización.
@@ -55,7 +55,7 @@ public class DialogTramiteProcedimientos extends DialogControllerBase {
 	 */
 	public void init() throws CatalogoPluginException {
 
-		iplugin = (CatalogoProcedimientosRolsacPlugin) componenteService
+		iplugin = (ICatalogoProcedimientosPlugin) componenteService
 				.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 		Integer intVersion = null;
 		if (this.version != null && !this.version.isEmpty()) {

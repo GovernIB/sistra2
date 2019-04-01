@@ -31,13 +31,13 @@ public final class CatalogoProcedimientosImpl implements CatalogoProcedimientosC
 
 	@Override
 	public DefinicionTramiteCP obtenerDefinicionTramite(final String idEntidad, final String idTramiteCP,
-			final String idioma) {
+			final boolean servicio, final String idioma) {
 		DefinicionTramiteCP definicionTramite = null;
 
 		// Obtenemos definicion a traves del plugin
 		final ICatalogoProcedimientosPlugin plgCP = getPlugin(idEntidad);
 		try {
-			definicionTramite = plgCP.obtenerDefinicionTramite(idTramiteCP, idioma);
+			definicionTramite = plgCP.obtenerDefinicionTramite(idTramiteCP, servicio, idioma);
 		} catch (final CatalogoPluginException e) {
 			log.error("Error obteniendo la info del tramite", e);
 			throw new CatalogoProcedimientosException("Error obteniendo la definición de tramites", e);

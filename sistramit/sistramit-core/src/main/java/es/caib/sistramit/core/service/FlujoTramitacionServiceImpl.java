@@ -40,14 +40,14 @@ public class FlujoTramitacionServiceImpl implements FlujoTramitacionService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite,
-			final int version, final String idioma, final String idTramiteCatalogo, final String urlInicio,
-			final Map<String, String> parametrosInicio) {
+			final int version, final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo,
+			final String urlInicio, final Map<String, String> parametrosInicio) {
 		// Generamos flujo de tramitacion
 		final FlujoTramitacionComponent ft = (FlujoTramitacionComponent) ApplicationContextProvider
 				.getApplicationContext().getBean("flujoTramitacionComponent");
 		// Iniciamos tramite
 		final String idSesionTramitacion = ft.iniciarTramite(usuarioAutenticado, idTramite, version, idioma,
-				idTramiteCatalogo, urlInicio, parametrosInicio);
+				idTramiteCatalogo, servicioCatalogo, urlInicio, parametrosInicio);
 		// Almacenamos en map
 		flujoTramitacionCache.put(idSesionTramitacion, ft);
 		// Retornamos id tramitacion

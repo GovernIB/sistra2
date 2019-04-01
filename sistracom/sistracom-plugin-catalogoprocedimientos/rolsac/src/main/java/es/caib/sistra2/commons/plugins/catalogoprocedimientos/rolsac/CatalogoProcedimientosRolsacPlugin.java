@@ -47,8 +47,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	}
 
 	@Override
-	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, final String idioma)
+	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, boolean servicio, final String idioma)
 			throws CatalogoPluginException {
+
+		// TODO PENDIENTE DE DISTINGUIR SI ES SERVICIO
 
 		final RestTemplate restTemplate = new RestTemplate();
 
@@ -139,54 +141,6 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		return responseCodDIR3.getBody().getResultado();
 	}
 
-	@Override
-	public List<DefinicionProcedimientoCP> obtenerProcedimientos(final String idTramite, final String version,
-			final String idioma) throws CatalogoPluginException {
-
-		final List<DefinicionProcedimientoCP> res = new ArrayList<>();
-
-		final RestTemplate restTemplate = new RestTemplate();
-
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
-
-		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("idioma", idioma);
-		if (version != null && !version.isEmpty()) {
-			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\", \"versionTramiteTelematico\":\""
-					+ version + "\" }");
-		} else {
-			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
-		}
-
-		// Obtener procedimiento.
-		final HttpEntity<MultiValueMap<String, String>> requestProc = new HttpEntity<>(map, headers);
-		final ResponseEntity<RRespuestaProcedimientos> responseProc = restTemplate
-				.postForEntity(getPropiedad("url") + "/procedimientos/", requestProc, RRespuestaProcedimientos.class);
-
-		final RProcedimientoRolsac[] procedimientosRolsac = responseProc.getBody().getResultado();
-
-		if (procedimientosRolsac != null) {
-
-			for (final RProcedimientoRolsac procedimiento : procedimientosRolsac) {
-
-				final String organoResponsable = getCodigoDir3UA(procedimiento.getLink_unidadAdministrativa());
-
-				final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
-				dp.setIdentificador(String.valueOf(procedimiento.getCodigo()));
-				dp.setDescripcion(procedimiento.getNombre());
-				dp.setIdProcedimientoSIA(procedimiento.getCodigoSIA());
-				dp.setOrganoResponsableDir3(organoResponsable);
-				res.add(dp);
-			}
-		}
-
-		return res;
-
-	}
-
 	/**
 	 * Indica si es vigente el trámite. Se mira:<br />
 	 * <ul>
@@ -237,6 +191,9 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	@Override
 	public List<DefinicionTramiteCP> obtenerTramites(final String idTramite, final Integer version, final String idioma)
 			throws CatalogoPluginException {
+
+		// TODO PENDIENTE DE RECUPERAR TAMBIEN LOS SERVICIOS
+
 		final List<DefinicionTramiteCP> res = new ArrayList<>();
 
 		final RestTemplate restTemplate = new RestTemplate();

@@ -28,9 +28,10 @@ public class SecurityServiceBean implements SecurityService {
 
 	@Override
 	public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite, final int versionTramite,
-			final String idTramiteCatalogo, final String idioma, final String urlInicioTramite) {
-		return securityService.obtenerInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo, idioma,
-				urlInicioTramite);
+			final String idTramiteCatalogo, final boolean servicioCatalogo, final String idioma,
+			final String urlInicioTramite) {
+		return securityService.obtenerInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo,
+				servicioCatalogo, idioma, urlInicioTramite);
 	}
 
 	@Override

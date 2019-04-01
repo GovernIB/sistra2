@@ -62,7 +62,8 @@ public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
 	}
 
 	@Override
-	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, final String idioma) {
+	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, boolean servicio,
+			final String idioma) {
 		DefinicionTramiteCP res = null;
 		for (final DefinicionTramiteCP t : tramites) {
 			if (t.getIdentificador().equals(idTramiteCP)) {
@@ -71,12 +72,6 @@ public class CatalogoProcedimientosPluginMock extends AbstractPluginProperties
 			}
 		}
 		return res;
-	}
-
-	@Override
-	public List<DefinicionProcedimientoCP> obtenerProcedimientos(final String idTramite, final String version,
-			final String idioma) {
-		return procedimientos;
 	}
 
 	@Override

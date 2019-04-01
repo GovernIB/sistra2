@@ -11,92 +11,114 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class DefinicionProcedimientoCP implements Serializable {
 
-    /** Código procedimiento CP. */
-    private String identificador;
+	/** Código procedimiento CP. */
+	private String identificador;
 
-    /** Código procedimiento SIA. */
-    private String idProcedimientoSIA;
+	/** Código procedimiento SIA. */
+	private String idProcedimientoSIA;
 
-    /** Descripción. */
-    private String descripcion;
+	/** Descripción. */
+	private String descripcion;
 
-    /** Código DIR3 órgano responsable. */
-    private String organoResponsableDir3;
+	/** Código DIR3 órgano responsable. */
+	private String organoResponsableDir3;
 
-    /**
-     * Método de acceso a identificador.
-     * 
-     * @return identificador
-     */
-    public String getIdentificador() {
-        return identificador;
-    }
+	/** Indica si el procedimiento es un servicio. */
+	private boolean servicio;
 
-    /**
-     * Método para establecer identificador.
-     * 
-     * @param identificador
-     *            identificador a establecer
-     */
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
-    }
+	/**
+	 * Método de acceso a identificador.
+	 *
+	 * @return identificador
+	 */
+	public String getIdentificador() {
+		return identificador;
+	}
 
-    /**
-     * Método de acceso a idProcedimientoSIA.
-     * 
-     * @return idProcedimientoSIA
-     */
-    public String getIdProcedimientoSIA() {
-        return idProcedimientoSIA;
-    }
+	/**
+	 * Método para establecer identificador.
+	 *
+	 * @param identificador
+	 *            identificador a establecer
+	 */
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
+	}
 
-    /**
-     * Método para establecer idProcedimientoSIA.
-     * 
-     * @param idProcedimientoSIA
-     *            idProcedimientoSIA a establecer
-     */
-    public void setIdProcedimientoSIA(String idProcedimientoSIA) {
-        this.idProcedimientoSIA = idProcedimientoSIA;
-    }
+	/**
+	 * Método de acceso a idProcedimientoSIA.
+	 *
+	 * @return idProcedimientoSIA
+	 */
+	public String getIdProcedimientoSIA() {
+		return idProcedimientoSIA;
+	}
 
-    /**
-     * Método de acceso a descripcion.
-     * 
-     * @return descripcion
-     */
-    public String getDescripcion() {
-        return descripcion;
-    }
+	/**
+	 * Método para establecer idProcedimientoSIA.
+	 *
+	 * @param idProcedimientoSIA
+	 *            idProcedimientoSIA a establecer
+	 */
+	public void setIdProcedimientoSIA(String idProcedimientoSIA) {
+		this.idProcedimientoSIA = idProcedimientoSIA;
+	}
 
-    /**
-     * Método para establecer descripcion.
-     * 
-     * @param descripcion
-     *            descripcion a establecer
-     */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+	/**
+	 * Método de acceso a descripcion.
+	 *
+	 * @return descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
 
-    /**
-     * Método de acceso a organoResponsableDir3.
-     * 
-     * @return organoResponsableDir3
-     */
-    public String getOrganoResponsableDir3() {
-        return organoResponsableDir3;
-    }
+	/**
+	 * Método para establecer descripcion.
+	 *
+	 * @param descripcion
+	 *            descripcion a establecer
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
-    /**
-     * Método para establecer organoResponsableDir3.
-     * 
-     * @param organoResponsableDir3
-     *            organoResponsableDir3 a establecer
-     */
-    public void setOrganoResponsableDir3(String organoResponsableDir3) {
-        this.organoResponsableDir3 = organoResponsableDir3;
-    }
+	/**
+	 * Método de acceso a organoResponsableDir3.
+	 *
+	 * @return organoResponsableDir3
+	 */
+	public String getOrganoResponsableDir3() {
+		return organoResponsableDir3;
+	}
+
+	/**
+	 * Método para establecer organoResponsableDir3.
+	 *
+	 * @param organoResponsableDir3
+	 *            organoResponsableDir3 a establecer
+	 */
+	public void setOrganoResponsableDir3(String organoResponsableDir3) {
+		this.organoResponsableDir3 = organoResponsableDir3;
+	}
+
+	/**
+	 * Método de acceso a servicio.
+	 * 
+	 * @return servicio
+	 */
+	public boolean isServicio() {
+		return servicio;
+	}
+
+	/**
+	 * Método para establecer servicio.
+	 * 
+	 * @param servicio
+	 *            servicio a establecer
+	 */
+	public void setServicio(boolean servicio) {
+		this.servicio = servicio;
+	}
 
 }

@@ -106,8 +106,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 	@Override
 	public String iniciarTramite(final UsuarioAutenticadoInfo pUsuarioAutenticado, final String idTramite,
-			final int version, final String idioma, final String idTramiteCatalogo, final String urlInicio,
-			final Map<String, String> parametrosInicio) {
+			final int version, final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo,
+			final String urlInicio, final Map<String, String> parametrosInicio) {
 		// Establecemos info usuario
 		usuarioAutenticadoInfo = pUsuarioAutenticado;
 		// Generamos id de sesión
@@ -116,7 +116,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		controlFlujoInvalido();
 		// Inicializa datos generales sesión
 		this.datosSesion = generarDatosSesion(idSesionTramitacion, TypeEstadoTramite.RELLENANDO, idTramite, version,
-				idioma, idTramiteCatalogo, urlInicio, parametrosInicio, usuarioAutenticadoInfo, new Date(), null);
+				idioma, idTramiteCatalogo, servicioCatalogo, urlInicio, parametrosInicio, usuarioAutenticadoInfo,
+				new Date(), null);
 		// Realizamos operacion de iniciar
 		controladorFlujo.iniciarTramite(datosSesion);
 		// Retornamos id sesion
@@ -284,6 +285,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	 *            idioma
 	 * @param pIdTramiteCP
 	 *            id tramite CP
+	 * @param servicioCP
+	 *            Indica si procedimiento es un servicio
 	 * @param pUrlInicio
 	 *            url inicio
 	 * @param pParametrosInicio
@@ -297,7 +300,7 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 	 */
 	private DatosSesionTramitacion generarDatosSesion(final String idSesionTramitacion, final TypeEstadoTramite estado,
 			final String pIdTramite, final int pVersion, final String pIdioma, final String pIdTramiteCP,
-			final String pUrlInicio, final Map<String, String> pParametrosInicio,
+			final boolean servicioCP, final String pUrlInicio, final Map<String, String> pParametrosInicio,
 			final UsuarioAutenticadoInfo pUsuarioAutenticadoInfo, final Date pFechaInicio, final Date pFechaCaducidad) {
 
 		// Obtenemos la definición del trámite(si no está el idioma
@@ -314,8 +317,8 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 		// Obtenemos las propiedades del trámite en el Catalogo de
 		// Procedimientos
-		final DefinicionTramiteCP tramiteCP = catalogoProcedimientosComponent
-				.obtenerDefinicionTramite(defTramSTG.getDefinicionVersion().getIdEntidad(), pIdTramiteCP, pIdioma);
+		final DefinicionTramiteCP tramiteCP = catalogoProcedimientosComponent.obtenerDefinicionTramite(
+				defTramSTG.getDefinicionVersion().getIdEntidad(), pIdTramiteCP, servicioCP, pIdioma);
 
 		// Props tipo flujo y entorno
 		final TypeFlujoTramitacion tipoFlujo = TypeFlujoTramitacion
@@ -439,8 +442,9 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 
 		// Inicializa datos de sesión
 		datosSesion = generarDatosSesion(pIdSesionTramitacion, tram.getEstado(), tram.getIdTramite(),
-				tram.getVersionTramite(), tram.getIdioma(), tram.getIdTramiteCP(), tram.getUrlInicio(),
-				tram.getParametrosInicio(), usuarioAutenticadoInfo, tram.getFechaInicio(), tram.getFechaCaducidad());
+				tram.getVersionTramite(), tram.getIdioma(), tram.getIdTramiteCP(), tram.isServicioCP(),
+				tram.getUrlInicio(), tram.getParametrosInicio(), usuarioAutenticadoInfo, tram.getFechaInicio(),
+				tram.getFechaCaducidad());
 
 		// Lanzamos operación de cargar
 		controladorFlujo.cargarTramite(datosSesion);

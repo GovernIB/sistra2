@@ -31,10 +31,10 @@ public class FlujoTramitacionServiceBean implements FlujoTramitacionService {
 
 	@Override
 	public String iniciarTramite(final UsuarioAutenticadoInfo usuarioAutenticado, final String idTramite,
-			final int version, final String idioma, final String idTramiteCatalogo, final String urlInicio,
-			final Map<String, String> parametrosInicio) {
+			final int version, final String idioma, final String idTramiteCatalogo, final boolean servicioCatalogo,
+			final String urlInicio, final Map<String, String> parametrosInicio) {
 		return flujoTramitacionService.iniciarTramite(usuarioAutenticado, idTramite, version, idioma, idTramiteCatalogo,
-				urlInicio, parametrosInicio);
+				servicioCatalogo, urlInicio, parametrosInicio);
 	}
 
 	@Override

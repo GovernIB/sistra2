@@ -51,6 +51,9 @@ public final class LoginController {
 	/** Parámetro trámite catálogo. */
 	private static final String PARAM_TRAMITECP = "idTramiteCatalogo";
 
+	/** Parámetro servicio catálogo. */
+	private static final String PARAM_SERVICIOCP = "servicio";
+
 	/** Parámetro trámite. */
 	private static final String PARAM_VERSION = "version";
 
@@ -333,11 +336,12 @@ public final class LoginController {
 		final String paramVersionTramite = getParamValue(savedRequest, PARAM_VERSION);
 		final String paramLogin = getParamValue(savedRequest, PARAM_LOGIN);
 		final String paramIdTramiteCP = getParamValue(savedRequest, PARAM_TRAMITECP);
+		final String servicioCP = getParamValue(savedRequest, PARAM_SERVICIOCP, "false");
 
 		// Obtenemos info login tramite
 		final InfoLoginTramite infoLoginTramite = securityService.obtenerInfoLoginTramite(paramCodigoTramite,
-				Integer.parseInt(paramVersionTramite), paramIdTramiteCP, sesionHttp.getIdioma(),
-				savedRequest.getRedirectUrl());
+				Integer.parseInt(paramVersionTramite), paramIdTramiteCP, Boolean.parseBoolean(servicioCP.toLowerCase()),
+				sesionHttp.getIdioma(), savedRequest.getRedirectUrl());
 
 		// Comprobamos si hay que filtrar el metodo de autenticacion
 		TypeAutenticacion filtroAutenticacion = null;
@@ -394,6 +398,22 @@ public final class LoginController {
 			param = paramValues[0];
 		}
 		return param;
+	}
+
+	/**
+	 * Obtiene valor parametro de la request.
+	 *
+	 * @param savedRequest
+	 *            Saved request
+	 * @param paramName
+	 *            Nombre parametro
+	 * @param defaultValue
+	 *            Valor por defecto si no existe
+	 * @return Valor parametro
+	 */
+	protected String getParamValue(final SavedRequest savedRequest, final String paramName, final String defaultValue) {
+		final String param = getParamValue(savedRequest, paramName);
+		return StringUtils.defaultString(param, defaultValue);
 	}
 
 	/**

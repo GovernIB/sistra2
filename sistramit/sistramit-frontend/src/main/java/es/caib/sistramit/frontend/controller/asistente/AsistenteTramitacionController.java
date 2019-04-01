@@ -93,6 +93,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 			@RequestParam("version") final int version,
 			@RequestParam(value = "idioma", required = false) final String idioma,
 			@RequestParam("idTramiteCatalogo") final String idTramiteCatalogo,
+			@RequestParam(value = "servicioCatalogo", required = false, defaultValue = "false") boolean servicioCatalogo,
 			@RequestParam(value = "parametros", required = false) final String parametros,
 			final HttpServletRequest request) {
 
@@ -124,7 +125,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 		// Inicia tramite
 		final String idSesionTramitacion = getFlujoTramitacionService().iniciarTramite(usuarioAutenticado.getUsuario(),
-				tramite, version, idiomaInicio, idTramiteCatalogo, urlInicio, parametrosInicio);
+				tramite, version, idiomaInicio, idTramiteCatalogo, servicioCatalogo, urlInicio, parametrosInicio);
 
 		// Almacena en la sesion (si no se puede iniciar con el idioma establecido, se
 		// cambiará al del trámite)
@@ -477,7 +478,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 
 		String mensaje = "firmaClienteVerificada";
 
-		if(fv.getCancelada() == TypeSiNo.SI) {
+		if (fv.getCancelada() == TypeSiNo.SI) {
 			mensaje = "firmaClienteCancelada";
 		}
 
@@ -485,8 +486,7 @@ public class AsistenteTramitacionController extends TramitacionController {
 		debug("Firma verificada");
 
 		// En funcion del resultado, mostramos mensaje al usuario
-		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, null,
-				TypeRespuestaJSON.SUCCESS);
+		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, null, TypeRespuestaJSON.SUCCESS);
 		this.setMensajeAsistente(ma);
 
 		// Redirigimos a carga asistente

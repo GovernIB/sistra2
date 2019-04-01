@@ -138,7 +138,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
 				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
-				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
+				SistragesMock.ID_TRAMITE_CP, false, URL_INICIO, parametrosInicio);
 		Assert.isTrue(idSesionTramitacion != null, "No se devuelve id sesion tramitacion");
 
 		// Recargar trámite (dentro sesion)
@@ -172,7 +172,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		final Map<String, String> parametrosInicio = new HashMap<>();
 		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
 				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
-				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
+				SistragesMock.ID_TRAMITE_CP, false, URL_INICIO, parametrosInicio);
 		Assert.isTrue(idSesionTramitacion != null, "No se devuelve id sesion tramitacion");
 
 		// Recargar trámite (dentro sesion)
@@ -683,7 +683,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
 				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
-				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
+				SistragesMock.ID_TRAMITE_CP, false, URL_INICIO, parametrosInicio);
 		Assert.isTrue(usuarioAutenticadoInfo != null, "No se devuelve id sesion tramitacion");
 		this.logger.info("Tramite iniciado: " + usuarioAutenticadoInfo);
 
@@ -708,7 +708,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		final Map<String, String> parametrosInicio = new HashMap<>();
 		final String idSesionTramitacion = flujoTramitacionService.iniciarTramite(usuarioAutenticadoInfo,
 				SistragesMock.ID_TRAMITE, SistragesMock.VERSION_TRAMITE, SistragesMock.IDIOMA,
-				SistragesMock.ID_TRAMITE_CP, URL_INICIO, parametrosInicio);
+				SistragesMock.ID_TRAMITE_CP, false, URL_INICIO, parametrosInicio);
 		Assert.isTrue(idSesionTramitacion != null, "No se devuelve id sesion tramitacion");
 		this.logger.info("Tramite iniciado: " + idSesionTramitacion);
 
@@ -733,7 +733,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		// Recuperacion info login
 		final InfoLoginTramite infoLogin = securityService.obtenerInfoLoginTramite(SistragesMock.ID_TRAMITE,
-				SistragesMock.VERSION_TRAMITE, SistragesMock.ID_TRAMITE_CP, SistragesMock.IDIOMA, URL_INICIO);
+				SistragesMock.VERSION_TRAMITE, SistragesMock.ID_TRAMITE_CP, false, SistragesMock.IDIOMA, URL_INICIO);
 
 		// Inicio sesion hacia redireccion
 		final List<TypeAutenticacion> authList = new ArrayList<>();

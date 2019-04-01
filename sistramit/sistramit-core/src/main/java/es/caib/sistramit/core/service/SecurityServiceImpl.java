@@ -78,8 +78,9 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public InfoLoginTramite obtenerInfoLoginTramite(final String codigoTramite, final int versionTramite,
-			final String idTramiteCatalogo, final String idioma, final String urlInicioTramite) {
-		return generarInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo, idioma);
+			final String idTramiteCatalogo, final boolean servicioCatalogo, final String idioma,
+			final String urlInicioTramite) {
+		return generarInfoLoginTramite(codigoTramite, versionTramite, idTramiteCatalogo, servicioCatalogo, idioma);
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class SecurityServiceImpl implements SecurityService {
 	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(String idSesionTramitacion) {
 		final DatosPersistenciaTramite dpt = flujoTramiteDao.obtenerTramitePersistencia(idSesionTramitacion);
 		final InfoLoginTramite infoLogin = generarInfoLoginTramite(dpt.getIdTramite(), dpt.getVersionTramite(),
-				dpt.getIdTramiteCP(), dpt.getIdioma());
+				dpt.getIdTramiteCP(), dpt.isServicioCP(), dpt.getIdioma());
 		infoLogin.setLoginAnonimoAuto(true);
 		return infoLogin;
 	}
@@ -218,7 +219,7 @@ public class SecurityServiceImpl implements SecurityService {
 	// FUNCIONES PRIVADAS
 	// ------------------------------------------------------------------------
 	private InfoLoginTramite generarInfoLoginTramite(final String codigoTramite, final int versionTramite,
-			final String idTramiteCatalogo, final String idioma) {
+			final String idTramiteCatalogo, final boolean servicioCatalogo, final String idioma) {
 		final DefinicionTramiteSTG defTramite = configuracionComponent.recuperarDefinicionTramite(codigoTramite,
 				versionTramite, idioma);
 		final RConfiguracionEntidad entidad = configuracionComponent
@@ -226,7 +227,7 @@ public class SecurityServiceImpl implements SecurityService {
 		final RAvisosEntidad avisosEntidad = configuracionComponent
 				.obtenerAvisosEntidad(defTramite.getDefinicionVersion().getIdEntidad());
 		final DefinicionTramiteCP defTramiteCP = catalogoProcedimientosComponent
-				.obtenerDefinicionTramite(entidad.getIdentificador(), idTramiteCatalogo, idioma);
+				.obtenerDefinicionTramite(entidad.getIdentificador(), idTramiteCatalogo, servicioCatalogo, idioma);
 
 		final List<AvisoPlataforma> avisos = UtilsSTG.obtenerAvisosTramite(defTramite, avisosEntidad, idioma, false);
 		boolean avisosBloqueantes = false;

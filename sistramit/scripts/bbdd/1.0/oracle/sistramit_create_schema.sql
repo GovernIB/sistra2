@@ -3,7 +3,7 @@ create sequence STT_DOCPTR_SEQ;
 create sequence STT_FICPTR_SEQ;
 
 create sequence STT_FIRDPT_SEQ;
-
+TRAPER
 create sequence STT_FORMUL_SEQ;
 
 create sequence STT_INVALI_SEQ;
@@ -25,7 +25,7 @@ create sequence STT_TRAPER_SEQ;
 /*==============================================================*/
 /* Table: STT_DOCPTR                                            */
 /*==============================================================*/
-create table STT_DOCPTR 
+create table STT_DOCPTR
 (
    DTP_CODIGO           NUMBER(19)           not null,
    DTP_CODPTR           NUMBER(19)           not null,
@@ -160,7 +160,7 @@ create index STT_DOCPTR_PAGJUS_I on STT_DOCPTR (
 /*==============================================================*/
 /* Table: STT_FICPTR                                            */
 /*==============================================================*/
-create table STT_FICPTR 
+create table STT_FICPTR
 (
    FIC_CODIGO           NUMBER(19)           not null,
    FIC_CLAVE            VARCHAR2(50 CHAR)    not null,
@@ -216,7 +216,7 @@ create index STT_FICCPTR_BORRAR_I on STT_FICPTR (
 /*==============================================================*/
 /* Table: STT_FIRDPT                                            */
 /*==============================================================*/
-create table STT_FIRDPT 
+create table STT_FIRDPT
 (
    FDP_CODIGO           NUMBER(19)           not null,
    FDP_CODDPT           NUMBER(19)           not null,
@@ -252,11 +252,11 @@ comment on column STT_FIRDPT.FDP_FECFIR is
 
 comment on column STT_FIRDPT.FDP_TIPFIR is
 'Tipo de firma
-- TF01 - CSV. 	
-- TF02 - XAdES internally detached signature.	
-- TF03 - XAdES enveloped signature. 	
-- TF04 - CAdES detached/explicit signature.	
-- TF05 - CAdES attached/implicit signature.	
+- TF01 - CSV.
+- TF02 - XAdES internally detached signature.
+- TF03 - XAdES enveloped signature.
+- TF04 - CAdES detached/explicit signature.
+- TF05 - CAdES attached/implicit signature.
 - TF06 - PAdES.
 ';
 
@@ -295,7 +295,7 @@ create index STT_FIRDPT_CODFIC_I on STT_FIRDPT (
 /*==============================================================*/
 /* Table: STT_FORMUL                                            */
 /*==============================================================*/
-create table STT_FORMUL 
+create table STT_FORMUL
 (
    SFR_CODIGO           NUMBER(19)           not null,
    SFR_TICKET           VARCHAR2(200 CHAR)   not null,
@@ -428,7 +428,7 @@ create index STT_FORMUL_FECFIN_I on STT_FORMUL (
 /*==============================================================*/
 /* Table: STT_INVALI                                            */
 /*==============================================================*/
-create table STT_INVALI 
+create table STT_INVALI
 (
    INV_CODIGO           NUMBER(19)           not null,
    INV_TIPO             VARCHAR2(1 CHAR)     not null,
@@ -457,7 +457,7 @@ alter table STT_INVALI
 /*==============================================================*/
 /* Table: STT_LOGINT                                            */
 /*==============================================================*/
-create table STT_LOGINT 
+create table STT_LOGINT
 (
    LOG_CODIGO           NUMBER(19)           not null,
    LOG_EVETIP           VARCHAR2(20 CHAR)    not null,
@@ -533,7 +533,7 @@ create index STT_LOGINT_EVFC_EVTI_I on STT_LOGINT (
 /*==============================================================*/
 /* Table: STT_PAGEXT                                            */
 /*==============================================================*/
-create table STT_PAGEXT 
+create table STT_PAGEXT
 (
    PAE_CODIGO           NUMBER(19)           not null,
    PAE_TICKET           VARCHAR2(200 CHAR)   not null,
@@ -607,7 +607,7 @@ create index STT_PAGEXT_FECFIN_I on STT_PAGEXT (
 /*==============================================================*/
 /* Table: STT_PASTRP                                            */
 /*==============================================================*/
-create table STT_PASTRP 
+create table STT_PASTRP
 (
    PTR_CODIGO           NUMBER(19)           not null,
    PTR_CODTRP           NUMBER(19)           not null,
@@ -665,7 +665,7 @@ create unique index STT_PASTRP_UK on STT_PASTRP (
 /*==============================================================*/
 /* Table: STT_PROCES                                            */
 /*==============================================================*/
-create table STT_PROCES 
+create table STT_PROCES
 (
    PROC_IDENT           VARCHAR2(20 CHAR)    not null,
    PROC_INSTAN          VARCHAR2(50 CHAR),
@@ -691,7 +691,7 @@ alter table STT_PROCES
 /*==============================================================*/
 /* Table: STT_SESION                                            */
 /*==============================================================*/
-create table STT_SESION 
+create table STT_SESION
 (
    SES_CODIGO           NUMBER(19)           not null,
    SES_IDESTR           VARCHAR2(50 CHAR)    not null,
@@ -723,7 +723,7 @@ create unique index STT_SESION_UK on STT_SESION (
 /*==============================================================*/
 /* Table: STT_TCKCDC                                            */
 /*==============================================================*/
-create table STT_TCKCDC 
+create table STT_TCKCDC
 (
    TCC_CODIGO           NUMBER(19)           not null,
    TCC_TICKET           VARCHAR2(200 CHAR)   not null,
@@ -775,7 +775,7 @@ create unique index STT_TCKCDC_UK on STT_TCKCDC (
 /*==============================================================*/
 /* Table: STT_TRAPER                                            */
 /*==============================================================*/
-create table STT_TRAPER 
+create table STT_TRAPER
 (
    TRP_CODIGO           NUMBER(19)           not null,
    TRP_CODSTR           NUMBER(19)           not null,
@@ -784,6 +784,7 @@ create table STT_TRAPER
    TRP_DESTRA           VARCHAR2(1000 CHAR)  not null,
    TRP_IDETCP           VARCHAR2(20 CHAR)    not null,
    TRP_IDEPCP           VARCHAR2(20 CHAR)    not null,
+   TRP_SERVCP  			NUMBER(1) 			default 0 not null,
    TRP_IDEARE           VARCHAR2(20 CHAR),
    TRP_PROSIA           VARCHAR2(20 CHAR)    not null,
    TRP_ESTADO           VARCHAR2(1 CHAR)     not null,
@@ -836,6 +837,9 @@ comment on column STT_TRAPER.TRP_IDETCP is
 comment on column STT_TRAPER.TRP_IDEPCP is
 'Codigo procedimiento asociado del Catalogo de Procedimientos';
 
+comment on column STT_TRAPER.TRP_SERVCP is
+'Indica si es un servicio';
+
 comment on column STT_TRAPER.TRP_IDEARE is
 'Código área';
 
@@ -843,7 +847,7 @@ comment on column STT_TRAPER.TRP_PROSIA is
 'Código SIA procedimiento';
 
 comment on column STT_TRAPER.TRP_ESTADO is
-'Estado trámite: 
+'Estado trámite:
     RELLENANDO("r"): Trámite en fase de rellenado
     FINALIZADO("f"): Indica que el trámite se ha finalizado
 

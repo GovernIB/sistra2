@@ -22,26 +22,17 @@ public interface ICatalogoProcedimientosPlugin extends IPlugin {
 	 *
 	 * @param idTramiteCP
 	 *            id trámite
+	 * @param servicio
+	 *            indica si es un servicio
 	 * @param idioma
 	 *            idioma
 	 * @throws ParseException
 	 */
-	DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP, String idioma) throws CatalogoPluginException;
-
-	/**
-	 * Recupera procedimientos en los que se usa un trámite de Sistra.
-	 *
-	 * @param idTramite
-	 *            id trámite sistra
-	 * @param idioma
-	 *            idioma
-	 * @throws CatalogoPluginException
-	 */
-	List<DefinicionProcedimientoCP> obtenerProcedimientos(String idTramite, String version, String idioma)
+	DefinicionTramiteCP obtenerDefinicionTramite(String idTramiteCP, boolean servicio, String idioma)
 			throws CatalogoPluginException;
 
 	/**
-	 * Recupera tramites en los que se usa un trámite de Sistra.
+	 * Recupera trámites en los que se usa un trámite de Sistra.
 	 *
 	 * @param idTramite
 	 *            id trámite sistra

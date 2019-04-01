@@ -26,6 +26,8 @@ public interface SecurityService {
 	 *            versión trámite
 	 * @param idTramiteCatalogo
 	 *            id trámite en catálogo trámites
+	 * @param servicioCatalogo
+	 *            indica si es servicio
 	 * @param idioma
 	 *            idioma
 	 * @param urlInicioTramite
@@ -33,7 +35,7 @@ public interface SecurityService {
 	 * @return información para mostrar login
 	 */
 	InfoLoginTramite obtenerInfoLoginTramite(String codigoTramite, int versionTramite, String idTramiteCatalogo,
-			String idioma, String urlInicioTramite);
+			final boolean servicioCatalogo, String idioma, String urlInicioTramite);
 
 	/**
 	 * Obtiene información para mostrar el login en la carga trámite anónimo
@@ -145,7 +147,7 @@ public interface SecurityService {
 
 	/**
 	 * Obtiene información ticket acceso CDC.
-	 * 
+	 *
 	 * @param ticket
 	 *            ticket
 	 * @return información ticket acceso
