@@ -599,3 +599,6 @@ label.ui-state-disabled {
      overflow: auto !important;
      height:460px !important;
 }
+#dialogScript\:arbol.ui-tree .ui-tree-container {
+	height: 330px;
+}

@@ -217,4 +217,10 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 		return restApiService.listIdAreasByEntidad(pIdEntidad);
 	}
 
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public String getIdentificadorByCodigoVersion(final Long codigoTramiteVersion) {
+		return restApiService.getIdentificadorByCodigoVersion(codigoTramiteVersion);
+	}
+
 }

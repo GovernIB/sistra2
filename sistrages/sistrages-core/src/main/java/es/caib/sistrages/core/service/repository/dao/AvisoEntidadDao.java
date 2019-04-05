@@ -84,7 +84,6 @@ public interface AvisoEntidadDao {
 	 */
 	AvisoEntidad getAvisoEntidadByTramite(String identificadorTramite);
 
-	
 	/**
 	 * Lista de avisos de entidad
 	 *
@@ -93,5 +92,13 @@ public interface AvisoEntidadDao {
 	 * @return la lista de avisos de entidad
 	 */
 	List<AvisoEntidad> getAll(String codDir3);
+
+	/**
+	 * Borra referencias de mensajes de activación hacia versiones de trámite.
+	 *
+	 * @param idTramiteVersion
+	 * @param numVersion
+	 */
+	void removeMensajes(Long idTramiteVersion, int numVersion);
 
 }

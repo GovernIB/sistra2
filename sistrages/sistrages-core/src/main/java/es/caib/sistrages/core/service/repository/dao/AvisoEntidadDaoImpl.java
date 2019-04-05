@@ -162,8 +162,7 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		}
 		return listarAvisos(pIdEntidad, null, null);
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -177,7 +176,6 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		}
 		return listarAvisos(codDir3);
 	}
-	
 
 	/**
 	 * Listar avisos.
@@ -220,8 +218,7 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		}
 		return listaAvisoEntidad;
 	}
-	
-	
+
 	/**
 	 * Listar avisos por cod DIR3
 	 *
@@ -233,7 +230,7 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 	 *            filtro
 	 * @return Listado de avisos
 	 */
-	@SuppressWarnings("unchecked")	
+	@SuppressWarnings("unchecked")
 	private List<AvisoEntidad> listarAvisos(final String codDir3) {
 		final List<AvisoEntidad> listaAvisoEntidad = new ArrayList<>();
 		String sql = "select a from JAvisoEntidad as a";
@@ -250,9 +247,6 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		}
 		return listaAvisoEntidad;
 	}
-	
-	
-	
 
 	@Override
 	public void removeByEntidad(final Long pIdEntidad) {
@@ -288,6 +282,37 @@ public class AvisoEntidadDaoImpl implements AvisoEntidadDao {
 		}
 
 		return avisoEntidad;
+	}
+
+	@Override
+	public void removeMensajes(final Long idTramiteVersion, final int numVersion) {
+
+		final String tramite = idTramiteVersion + "#" + numVersion;
+		final String literal = "%" + tramite + "%";
+		final String sql = "select a from JAvisoEntidad as a  where a.listaSerializadaTramites like :literal ";
+
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("literal", literal);
+
+		final List<JAvisoEntidad> javisos = query.getResultList();
+		if (javisos != null && !javisos.isEmpty()) {
+			for (final JAvisoEntidad javiso : javisos) {
+				// Borramos la referencia, posibles ;; y si termina en ; .
+				String listaSerializadaTramites = javiso.getListaSerializadaTramites();
+				listaSerializadaTramites = listaSerializadaTramites.replaceAll(tramite, "");
+				listaSerializadaTramites = listaSerializadaTramites.replaceAll(";;", "");
+				if (listaSerializadaTramites.startsWith(";")) {
+					listaSerializadaTramites = listaSerializadaTramites.substring(1);
+				}
+				if (listaSerializadaTramites.endsWith(";")) {
+					listaSerializadaTramites = listaSerializadaTramites.substring(0,
+							listaSerializadaTramites.length() - 1);
+				}
+				javiso.setListaSerializadaTramites(listaSerializadaTramites);
+				entityManager.merge(javiso);
+			}
+		}
+
 	}
 
 }

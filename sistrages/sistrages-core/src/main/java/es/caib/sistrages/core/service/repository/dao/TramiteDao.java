@@ -311,4 +311,12 @@ public interface TramiteDao {
 	 */
 	List<Tramite> getAllByEntidad(Long idEntidad, String filtro);
 
+	/**
+	 * Obtiene el identificador a partir de un código de una versión.
+	 *
+	 * @param codigo
+	 * @return
+	 */
+	String getIdentificadorByCodigoVersion(Long codigo);
+
 }

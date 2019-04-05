@@ -30,7 +30,6 @@ import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
@@ -53,7 +52,6 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
-import es.caib.sistrages.core.api.service.AvisoEntidadService;
 import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -80,10 +78,6 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ManagedBean
 @ViewScoped
 public class ViewDefinicionVersion extends ViewControllerBase {
-
-	/** Service. **/
-	@Inject
-	private AvisoEntidadService avisoEntidadService;
 
 	/** Service. */
 	@Inject
@@ -137,7 +131,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	private String opcionUrl;
 
 	/** Aviso entidad. **/
-	private AvisoEntidad avisoEntidad;
+	// private AvisoEntidad avisoEntidad;
 
 	/** tramite version. */
 	private TramiteVersion tramiteVersion;
@@ -488,8 +482,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		final List<TramitePaso> pasos = tramiteService.getTramitePasos(id);
 		tramiteVersion.setListaPasos(pasos);
 		dominios = tramiteService.getDominioSimpleByTramiteId(id);
-		avisoEntidad = avisoEntidadService
-				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 
 		preparamosRegistro();
 	}
@@ -1769,9 +1761,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 				}
 			}
 
-			// El aviso entidad se pregunta cada vez por si se actualiza fuera
-			avisoEntidad = avisoEntidadService
-					.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
 		}
 	}
 
@@ -1989,21 +1978,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setDominios(final List<Dominio> dominios) {
 		this.dominios = dominios;
-	}
-
-	/**
-	 * @return the avisoEntidad
-	 */
-	public AvisoEntidad getAvisoEntidad() {
-		return avisoEntidad;
-	}
-
-	/**
-	 * @param avisoEntidad
-	 *            the avisoEntidad to set
-	 */
-	public void setAvisoEntidad(final AvisoEntidad avisoEntidad) {
-		this.avisoEntidad = avisoEntidad;
 	}
 
 	/**

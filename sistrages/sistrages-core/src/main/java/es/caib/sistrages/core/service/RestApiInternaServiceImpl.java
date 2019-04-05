@@ -322,8 +322,15 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	}
 
 	@Override
+	@NegocioInterceptor
 	public List<Entidad> listEntidad() {
 		return entidadDao.getAll();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public String getIdentificadorByCodigoVersion(final Long codigoTramiteVersion) {
+		return tramiteDao.getIdentificadorByCodigoVersion(codigoTramiteVersion);
 	}
 
 }

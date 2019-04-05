@@ -974,7 +974,8 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 
 		// Eliminamos
-		this.tramiteService.removeTramiteVersion(this.versionSeleccionada.getCodigo());
+		this.tramiteService.removeTramiteVersion(this.versionSeleccionada.getCodigo(),
+				this.versionSeleccionada.getNumeroVersion());
 
 		// Refrescamos datos
 		buscarTramites();

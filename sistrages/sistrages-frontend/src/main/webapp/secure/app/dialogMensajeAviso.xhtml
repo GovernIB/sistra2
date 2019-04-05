@@ -34,13 +34,13 @@
 				<!-- Growl mensajes -->
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 
-					<p:outputLabel value="" style="margin-top:10px" />
+				<p:outputLabel value="" style="margin-top:10px" />
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
-					<p:outputLabel for="mensajeHidden" value="#{msg['dialogMensajeAviso.headerDescripcion']}" />
+					<p:outputLabel for="mensajeHidden" value="#{msg['dialogMensajeAviso.headerDescripcion']}*" />
 					<p:column>
-						<p:inputTextarea id="mensaje" value="#{dialogMensajeAviso.literal}" disabled="true" required="true" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}" rows="4" cols="50" />
-						<p:inputText id="mensajeHidden" value="#{dialogMensajeAviso.literal}" type="hidden" required="true" binding="#{mensajesComponent}"/>
+						<p:inputTextarea id="mensaje" value="#{dialogMensajeAviso.literal}" disabled="true" styleClass="margin-right-10 #{not mensajesComponent.valid ? 'ui-state-error' : ''}" rows="4" cols="60" />
+						<p:inputText id="mensajeHidden" value="#{dialogMensajeAviso.literal}" type="hidden" binding="#{mensajesComponent}"/>
 						<p:commandButton id="btnMensaje" icon="fa fa-language" actionListener="#{dialogMensajeAviso.editarMensaje()}" process="@this" update="growlDialog" style="margin-bottom: 15px;" >
 	            			<p:ajax event="dialogReturn" listener="#{dialogMensajeAviso.returnDialogo}" update="growlDialog mensaje mensajeHidden" />
 	        			</p:commandButton>
@@ -49,6 +49,7 @@
 					<p:outputLabel for="tipo" value="#{msg['dialogMensajeAviso.headerTipo']}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" />
 					<p:selectOneMenu id="tipo" value="#{dialogMensajeAviso.data.tipo}" style="width:200px" required="true" disabled="#{dialogMensajeAviso.isConsulta()}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" >
 					    <f:selectItems value="#{dialogMensajeAviso.tipos}" var="tipo" itemLabel="#{msg['typeMensajeAviso.' += tipo]}" />
+					    <p:ajax event="change" update="labelListaTramites columnaListaTramites" />
 					</p:selectOneMenu>
 
 					<p:outputLabel for="activo" value="#{msg['dialogMensajeAviso.headerBloqueado']}" />
@@ -60,11 +61,58 @@
 					<p:outputLabel for="fechaFin" value="#{msg['dialogMensajeAviso.headerFechaFin']}" />
 					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" />
 
-					<p:outputLabel for="listaTramites" value="#{msg['dialogMensajeAviso.headerListaTramites']}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}"  />
-					<p:inputTextarea  id="listaTramites" value="#{dialogMensajeAviso.data.listaSerializadaTramites}" rows="4" cols="50" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" disabled="#{dialogMensajeAviso.disabledActivo}" />
+					<h:panelGrid id="labelListaTramites" columns="1" styleClass="w100">
+						<p:outputLabel value="#{msg['dialogMensajeAviso.headerListaTramites']}DD" rendered="#{dialogMensajeAviso.mostrarListaTramites() }"  />
+					</h:panelGrid>
+					<h:panelGrid id="columnaListaTramites" style="margin-bottom:0px" columns="1" styleClass="w100">
 
-					<p:spacer width="5" height="1" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" />
-					<p:outputLabel styleClass="outputlabel-nota" value="#{msg['dialogMensajeAviso.headerListaTramitesFormato']}" rendered="#{dialogMensajeAviso.isNotTipoTramite()}" />
+								<h:panelGrid  style="margin-bottom:0px" columns="5" styleClass="w100" rendered="#{dialogMensajeAviso.mostrarListaTramites() and dialogMensajeAviso.isNotTipoTramite()}">
+										<p:outputLabel value="#{msg['dialogMensajeAviso.headerTramite']}:" styleClass="margin-right-10" ></p:outputLabel>
+										<p:selectOneMenu id="comboTramites" value="#{dialogMensajeAviso.tramiteSeleccionado}" styleClass="margin-right-10"   >
+												<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
+										     	<f:selectItems value="#{dialogMensajeAviso.tramites}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}"  />
+			 							      	<p:ajax event="change" listener="#{dialogMensajeAviso.actualizarVersion()}" process="@this" update="@form" />
+										</p:selectOneMenu>
+
+										<p:outputLabel value="#{msg['dialogMensajeAviso.headerVersion']}:" styleClass="margin-right-10"  ></p:outputLabel>
+										<p:selectOneMenu id="comboVersiones" value="#{dialogMensajeAviso.versionSeleccionado}" styleClass="margin-right-10" style="width:100px" >
+										     <f:selectItem  itemLabel="" noSelectionOption="true"></f:selectItem>
+										     <f:selectItems value="#{dialogMensajeAviso.versiones}" var="version" itemLabel="#{version.numeroVersion}" itemValue="#{version.numeroVersion}"  />
+										</p:selectOneMenu>
+										<p:commandButton value="#{msg['botones.anyadir']}" actionListener="#{dialogMensajeAviso.anyadirTram()}" process="@form" update="@form"  styleClass="boton-azul" rendered="#{(dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()) and dialogMensajeAviso.isNotTipoTramite()}"   />
+
+								</h:panelGrid>
+
+
+								<p:dataTable id="listaTramites"
+										 	var="td" emptyMessage="#{msg['error.emptyRows']}"
+										 	value="#{dialogMensajeAviso.listaTramites}"
+										 	scrollable="true"
+										 	scrollHeight="140"
+										 	style="margin-top:10px;width:500px"
+										 	selectionMode="single"
+										 	selection="#{dialogMensajeAviso.tramiteMensajeAvisoSeleccionado}"
+										 	rowKey="#{td.tramite}"
+										 	dblClickSelect="true"
+										 	rendered="#{dialogMensajeAviso.mostrarListaTramites() }"
+										>
+
+										<!-- Columnas -->
+										<p:column headerText="#{msg['dialogMensajeAviso.headerTramite']}" class="ui-panelgrid-cell" width="60%">
+											<h:outputText value="#{td.identificador}" />
+									    </p:column>
+
+									    <p:column headerText="#{msg['dialogMensajeAviso.headerNumVersion']}" class="ui-panelgrid-cell" width="30%">
+											<h:outputText value="#{td.versionTramite}" />
+									    </p:column>
+
+										<p:column width="10%" style="text-align:center" rendered="#{(dialogMensajeAviso.isAlta() or dialogMensajeAviso.isEdicion()) and dialogMensajeAviso.isNotTipoTramite()}" >
+									    	<p:commandButton id="btnEliminar" value=" " icon="fa fa-trash-o" actionListener="#{dialogMensajeAviso.borrarTramite(td)}" process="@this" update="listaTramites" style="width:32px;height:25px"></p:commandButton>
+										</p:column>
+
+				 				</p:dataTable>
+
+					</h:panelGrid>
 
 				</h:panelGrid>
 

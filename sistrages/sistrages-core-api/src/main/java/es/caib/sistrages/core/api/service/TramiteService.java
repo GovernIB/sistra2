@@ -182,8 +182,9 @@ public interface TramiteService {
 	 * Borra una versión de tramite.
 	 *
 	 * @param id
+	 * @param numVersion
 	 */
-	public void removeTramiteVersion(Long id);
+	public void removeTramiteVersion(Long id, int numVersion);
 
 	/**
 	 * Obtiene la versión de trámite.
@@ -619,5 +620,13 @@ public interface TramiteService {
 	 * @return
 	 */
 	public List<Tramite> listTramiteByEntidad(Long idEntidad);
+
+	/**
+	 * Obtiene el identificador del trámite a partir del código de una version.
+	 *
+	 * @param tramTramite
+	 * @return
+	 */
+	public String getIdentificadorByCodigoVersion(Long codigo);
 
 }

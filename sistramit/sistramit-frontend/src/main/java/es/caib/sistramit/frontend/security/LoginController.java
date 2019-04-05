@@ -52,7 +52,7 @@ public final class LoginController {
 	private static final String PARAM_TRAMITECP = "idTramiteCatalogo";
 
 	/** Parámetro servicio catálogo. */
-	private static final String PARAM_SERVICIOCP = "servicio";
+	private static final String PARAM_SERVICIOCP = "servicioCatalogo";
 
 	/** Parámetro trámite. */
 	private static final String PARAM_VERSION = "version";
@@ -189,10 +189,10 @@ public final class LoginController {
 	 * @return redirige a componente de autenticacion.
 	 */
 	@RequestMapping("/redirigirAutenticacionLogin.html")
-	public ModelAndView redirigirAutenticacionLogin(@RequestParam("entidad") String idEntidad,
-			@RequestParam("metodosAutenticacion") String metodosAutenticacion,
-			@RequestParam(name = "qaa", required = false) String qaa,
-			@RequestParam(name = "debug", required = false) boolean debug) {
+	public ModelAndView redirigirAutenticacionLogin(@RequestParam("entidad") final String idEntidad,
+			@RequestParam("metodosAutenticacion") final String metodosAutenticacion,
+			@RequestParam(name = "qaa", required = false) final String qaa,
+			@RequestParam(name = "debug", required = false) final boolean debug) {
 		String lang = sesionHttp.getIdioma();
 		if (lang == null) {
 			lang = "es";
@@ -235,8 +235,8 @@ public final class LoginController {
 	 */
 	@CrossOrigin
 	@RequestMapping("/redirigirAutenticacionLogout.html")
-	public ModelAndView redirigirAutenticacionLogout(@RequestParam("entidad") String idEntidad,
-			@RequestParam(name = "debug", required = false) boolean debug) {
+	public ModelAndView redirigirAutenticacionLogout(@RequestParam("entidad") final String idEntidad,
+			@RequestParam(name = "debug", required = false) final boolean debug) {
 		String lang = sesionHttp.getIdioma();
 		if (lang == null) {
 			lang = "es";

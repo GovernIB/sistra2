@@ -1167,4 +1167,20 @@ public class TramiteDaoImpl implements TramiteDao {
 		return resultado;
 	}
 
+	@Override
+	public String getIdentificadorByCodigoVersion(final Long codigo) {
+		final String sql = "Select t.tramite.identificador From JVersionTramite t where t.codigo = :codigo";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("codigo", codigo);
+		String identificador = null;
+
+		final List<String> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			identificador = results.get(0);
+		}
+
+		return identificador;
+	}
+
 }

@@ -345,8 +345,9 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public void removeTramiteVersion(final Long idTramiteVersion) {
+	public void removeTramiteVersion(final Long idTramiteVersion, final int numVersion) {
 		tramiteDao.removeTramiteVersion(idTramiteVersion);
+		avisoEntidadDao.removeMensajes(idTramiteVersion, numVersion);
 	}
 
 	/*
@@ -1017,6 +1018,12 @@ public class TramiteServiceImpl implements TramiteService {
 	public List<ErrorValidacion> validarScript(final Script pScript, final List<Dominio> pListaDominios,
 			final List<String> pIdiomasTramiteVersion, final String pIdioma) {
 		return validadorComponent.comprobarScript(pScript, pListaDominios, pIdiomasTramiteVersion, pIdioma);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public String getIdentificadorByCodigoVersion(final Long codigo) {
+		return tramiteDao.getIdentificadorByCodigoVersion(codigo);
 	}
 
 }

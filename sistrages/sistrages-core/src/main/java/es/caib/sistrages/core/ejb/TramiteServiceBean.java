@@ -171,8 +171,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void removeTramiteVersion(final Long idTramiteVersion) {
-		tramiteService.removeTramiteVersion(idTramiteVersion);
+	public void removeTramiteVersion(final Long idTramiteVersion, final int numVersion) {
+		tramiteService.removeTramiteVersion(idTramiteVersion, numVersion);
 	}
 
 	@Override
@@ -488,6 +488,12 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public List<Tramite> listTramiteByEntidad(final Long idEntidad) {
 		return tramiteService.listTramiteByEntidad(idEntidad);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public String getIdentificadorByCodigoVersion(final Long codigo) {
+		return tramiteService.getIdentificadorByCodigoVersion(codigo);
 	}
 
 }

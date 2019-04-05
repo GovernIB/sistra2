@@ -65,7 +65,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 		tramite = tramiteService.getTramite(tramiteVersion.getIdTramite());
 		setAvisoEntidad(avisoEntidadService
-				.getAvisoEntidadByTramite(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion()));
+				.getAvisoEntidadByTramite(tramiteVersion.getCodigo() + "#" + tramiteVersion.getNumeroVersion()));
 		if (avisoEntidad == null) {
 			crearAvisoEntidad();
 		}
@@ -78,7 +78,7 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		avisoEntidad = new AvisoEntidad();
 		avisoEntidad.setTipo(TypeAvisoEntidad.TRAMITE_VERSION);
 		avisoEntidad.setBloqueado(false);
-		avisoEntidad.setListaSerializadaTramites(tramite.getIdentificador() + "#" + tramiteVersion.getNumeroVersion());
+		avisoEntidad.setListaSerializadaTramites(tramiteVersion.getCodigo() + "#" + tramiteVersion.getNumeroVersion());
 	}
 
 	/**
@@ -188,9 +188,9 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 	}
 
 	/** Ayuda. */
-    public void ayuda() {
-        UtilJSF.openHelp("tramiteControlAccesoDialog");
-    }
+	public void ayuda() {
+		UtilJSF.openHelp("tramiteControlAccesoDialog");
+	}
 
 	/**
 	 * Obtiene el valor de id.

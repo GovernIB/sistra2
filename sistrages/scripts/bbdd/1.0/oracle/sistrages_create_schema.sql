@@ -2442,6 +2442,39 @@ comment on column STG_VERTRA.VTR_DESMEN is
 alter table STG_VERTRA
    add constraint STG_VERTRA_PK primary key (VTR_CODIGO);
 
+
+
+create table STG_SESION
+(
+   SESI_USUA            VARCHAR2(100 CHAR)   not null,
+   SESI_FECHA           DATE                 not null,
+   SESI_PERFIL          VARCHAR2(50)         not null,
+   SESI_IDIOMA          VARCHAR2(2 CHAR)     not null,
+   SESI_ENTIDA          NUMBER(18)
+);
+
+comment on table STG_SESION is
+'Sesiones usuario';
+
+comment on column STG_SESION.SESI_USUA is
+'Identificador fijo';
+
+comment on column STG_SESION.SESI_FECHA is
+'Fecha ultima sesión';
+
+comment on column STG_SESION.SESI_PERFIL is
+'Perfil usado';
+
+comment on column STG_SESION.SESI_IDIOMA is
+'Idioma';
+
+comment on column STG_SESION.SESI_ENTIDA is
+'Entidad (opcional según perfil)';
+
+alter table STG_SESION
+   add constraint STG_SESION_PK primary key (SESI_USUA);
+
+
 /*==============================================================*/
 /* Index: STG_VERTRA_CODTRM_NUMVER_UK                           */
 /*==============================================================*/

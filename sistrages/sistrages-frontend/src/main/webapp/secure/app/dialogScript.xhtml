@@ -33,7 +33,6 @@
  	}
 
 </script>
-
 <h:body style="overflow:hidden">
 
 	<!-- Parametros dialogo -->
@@ -162,21 +161,21 @@
 
 							 	  <p:panel id="panelFormularios" header="#{msg['dialogScript.formularios.header']}" toggleable="true" widgetVar="panelFormularios" collapsed="#{dialogScript.visibleFormularios}"  styleClass="sin-bordes noPadding grid-left" style="margin-bottom:2px" rendered="#{!dialogScript.mostrarLateralAyuda and dialogScript.treeFormularios.getChildCount() != 0}">
 
-										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios" />
-												<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes h100 w100" selectionMode="single" selection="#{dialogScript.selectedNode}" >
-													<p:treeNode  styleClass="nodoComponente">
-														<h:graphicImage value="#{node.srcIcono()}" rendered="#{node.tieneIcono()}" width="35px" style="margin-right:5px" />
-														<h:outputText value="#{node.getName()}" />
-													</p:treeNode>
+										<p:ajax event="toggle" listener="#{dialogScript.onToggle}" update="panelPlugins panelMensajes panelDominios panelFormularios"  />
+										<p:tree id="arbol" value="#{dialogScript.treeFormularios}" var="node" styleClass="sin-bordes w100" style="height: 350px;" selectionMode="single" selection="#{dialogScript.selectedNode}" widgetVar="arbol" >
+											<p:treeNode  styleClass="nodoComponente">
+												<h:graphicImage value="#{node.srcIcono()}" rendered="#{node.tieneIcono()}" width="35px" style="margin-right:5px" />
+												<h:outputText value="#{node.getName()}" />
+											</p:treeNode>
 
-													<p:ajax event="select" update="dialogScript:commandCopiarNodo"  />
+											<p:ajax event="select" update="dialogScript:commandCopiarNodo"  />
 
-												</p:tree>
-												<div class="w100 grid-center">
-													<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="button margin-top-3"  rendered="#{dialogScript.isEdicion()}" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" icon="fa fa-copy" />
-												</div>
-									</p:panel>
-		    					</p:column>
+										</p:tree>
+										<div class="w100 grid-center">
+											<p:commandButton id="commandCopiarNodo" value="#{msg['botones.copiar']}" process="@this" styleClass="button margin-top-3"  rendered="#{dialogScript.isEdicion()}" disabled="#{dialogScript.isDisabledBoton()}" onclick="triggerCopiar();" icon="fa fa-copy" />
+										</div>
+								</p:panel>
+		    				</p:column>
 					</h:panelGrid>
 
 					<h:outputScript >

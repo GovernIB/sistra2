@@ -84,4 +84,6 @@ public interface RestApiInternaService {
 	List<String> listIdAreasByEntidad(Long pIdEntidad);
 
 	List<Entidad> listEntidad();
+
+	String getIdentificadorByCodigoVersion(Long codigoTramiteVersion);
 }

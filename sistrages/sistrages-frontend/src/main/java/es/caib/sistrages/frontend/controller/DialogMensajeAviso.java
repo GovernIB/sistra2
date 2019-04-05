@@ -2,6 +2,8 @@ package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,9 +15,13 @@ import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.AvisoEntidad;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.Tramite;
+import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAvisoEntidad;
 import es.caib.sistrages.core.api.service.AvisoEntidadService;
+import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.TramiteMensajeAviso;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -25,11 +31,13 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class DialogMensajeAviso extends DialogControllerBase {
 
-	/**
-	 * Servicio.
-	 */
+	/** Servicio. */
 	@Inject
 	private AvisoEntidadService avisoEntidadService;
+
+	/** Servicio. */
+	@Inject
+	private TramiteService tramiteService;
 
 	/**
 	 * Id elemento a tratar.
@@ -78,6 +86,24 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	/** Disabled desactivado. Afecta a tipo y los tramites. **/
 	private boolean disabledActivo = false;
 
+	/** Tramite seleccionado. **/
+	private String tramiteSeleccionado;
+
+	/** Version seleccionado. **/
+	private String versionSeleccionado;
+
+	/** Tramites. **/
+	private List<Tramite> tramites;
+
+	/** Tramites. **/
+	private List<TramiteVersion> versiones;
+
+	/** Lista de tramites en el datagrid. **/
+	private List<TramiteMensajeAviso> listaTramites;
+
+	/** Lista de tramites en el datagrid. **/
+	private TramiteMensajeAviso tramiteMensajeAvisoSeleccionado;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -123,6 +149,110 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			}
 		}
 
+		/** Cargamos el grid de trámites. **/
+		tramites = tramiteService.listTramiteByEntidad(UtilJSF.getIdEntidad());
+		listaTramites = new ArrayList<>();
+		if (data != null && data.getListaSerializadaTramites() != null) {
+			final String[] trams = data.getListaSerializadaTramites().split(";");
+			if (trams.length > 0) {
+				for (final String tram : trams) {
+					final String tramCodigo = tram.split("#")[0];
+					final String tramNumeroVersion = tram.split("#")[1];
+					final String tramIdentificador = tramiteService
+							.getIdentificadorByCodigoVersion(Long.valueOf(tramCodigo));
+					listaTramites.add(new TramiteMensajeAviso(tramCodigo, tramIdentificador, tramNumeroVersion));
+				}
+				Collections.sort(listaTramites, new Comparator<TramiteMensajeAviso>() {
+					@Override
+					public int compare(final TramiteMensajeAviso tram1, final TramiteMensajeAviso tram2) {
+						if (tram1.getTramite().equals(tram2.getTramite())) {
+							return tram1.getVersionTramite().compareTo(tram2.getVersionTramite());
+						} else {
+							return tram2.getTramite().compareTo(tram1.getTramite());
+						}
+					}
+				});
+			}
+		}
+
+	}
+
+	/**
+	 * Añade un trámite a la lista
+	 */
+	public void anyadirTram() {
+		if (tramiteSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogMensajeAviso.error.seleccioneTramite"));
+			return;
+		}
+
+		if (versionSeleccionado == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogMensajeAviso.error.seleccioneVersion"));
+			return;
+		}
+
+		String codigoVersion = null;
+		for (final TramiteVersion version : versiones) {
+			if (version.getNumeroVersion() == Integer.parseInt(versionSeleccionado)) {
+				codigoVersion = version.getCodigo().toString();
+				break;
+			}
+		}
+
+		for (final TramiteMensajeAviso mensajeAviso : listaTramites) {
+			if (mensajeAviso.contains(codigoVersion, versionSeleccionado)) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogMensajeAviso.error.yaintroducido"));
+				return;
+			}
+		}
+
+		String tramIdentificador = null;
+		for (final Tramite tramit : tramites) {
+			if (tramit.getCodigo().compareTo(Long.valueOf(tramiteSeleccionado)) == 0) {
+				tramIdentificador = tramit.getIdentificador();
+				break;
+			}
+		}
+
+		listaTramites.add(new TramiteMensajeAviso(codigoVersion, tramIdentificador, versionSeleccionado));
+	}
+
+	/**
+	 * Comprueba si es del tipo correcto para mostrar la lista de trámites admitido
+	 *
+	 * @return
+	 */
+	public boolean mostrarListaTramites() {
+		return data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION || data.getTipo() == TypeAvisoEntidad.LISTA;
+	}
+
+	/**
+	 * Borra un trámite seleccinado.
+	 *
+	 * @param tram
+	 *
+	 */
+	public void borrarTramite(final TramiteMensajeAviso tram) {
+		listaTramites.remove(tram);
+	}
+
+	/**
+	 * Actualiza el combo de versiones
+	 */
+	public void actualizarVersion() {
+		if (tramiteSeleccionado == null || tramiteSeleccionado.isEmpty()) {
+			versiones = new ArrayList<>();
+		} else {
+			for (final Tramite tramit : tramites) {
+				if (tramit.getCodigo().compareTo(Long.valueOf(tramiteSeleccionado)) == 0) {
+					versiones = tramiteService.listTramiteVersion(Long.valueOf(tramiteSeleccionado), null);
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -131,9 +261,14 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 * @return
 	 */
 	public boolean isNotTipoTramite() {
-		return !tipoTramite;
+		return data.getTipo() != TypeAvisoEntidad.TRAMITE_VERSION;
 	}
 
+	/**
+	 * Comprueba si son válidas dos fechas.
+	 *
+	 * @return
+	 */
 	public boolean validasFechas() {
 		boolean resultado = true;
 
@@ -157,17 +292,11 @@ public class DialogMensajeAviso extends DialogControllerBase {
 			return false;
 		}
 
-		// if (TypeExtension.PERSONALIZADAS.equals(data.getExtensionSeleccion())) {
-		// final String[] listaExtensiones =
-		// data.getExtensiones().split(Constantes.LISTAS_SEPARADOR);
-		// for (final String cadena : listaExtensiones) {
-		// if (!cadena.matches("^\\.\\w{3}$")) {
-		// UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-		// UtilJSF.getLiteral("error.extensiones.formato"));
-		// return false;
-		// }
-		// }
-		// }
+		if (data.getMensaje() == null) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogMensajeAviso.error.descripcionvacia"));
+			return false;
+		}
 
 		return true;
 	}
@@ -179,6 +308,17 @@ public class DialogMensajeAviso extends DialogControllerBase {
 
 		// verificamos precondiciones
 		if (!verificarGuardar()) {
+			return;
+		}
+
+		if (data.getTipo() == TypeAvisoEntidad.LISTA) {
+			this.data.setListaSerializadaTramites(getListaSerializada());
+		}
+
+		if ((data.getTipo() == TypeAvisoEntidad.LISTA || data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION)
+				&& data.getListaSerializadaTramites().isEmpty()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					UtilJSF.getLiteral("dialogMensajeAviso.error.tramitesvacios"));
 			return;
 		}
 
@@ -200,6 +340,23 @@ public class DialogMensajeAviso extends DialogControllerBase {
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setResult(data.getCodigo());
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Obtiene la lista serializada a partir de la lista de trámites seleccionados
+	 *
+	 * @return
+	 */
+	private String getListaSerializada() {
+		final StringBuilder tramitMensaje = new StringBuilder();
+		for (final TramiteMensajeAviso tramit : this.listaTramites) {
+			tramitMensaje.append(tramit.getTramite() + "#" + tramit.getVersionTramite() + ";");
+		}
+		String tramiteMensaje = tramitMensaje.toString();
+		if (tramiteMensaje.endsWith(";")) {
+			tramiteMensaje = tramiteMensaje.substring(0, tramiteMensaje.length() - 1);
+		}
+		return tramiteMensaje;
 	}
 
 	/**
@@ -238,7 +395,17 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 *
 	 */
 	public void editarMensaje() {
-		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getMensaje(), null, null);
+		List<String> idiomas = UtilJSF.getSessionBean().getIdiomas();
+
+		if (data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION) {
+			for (final String fila : this.data.getListaSerializadaTramites().split(";")) {
+				final String codigo = fila.split("#")[0];
+				final TramiteVersion tramVersion = tramiteService.getTramiteVersion(Long.valueOf(codigo));
+				idiomas = UtilTraducciones.getIdiomas(tramVersion.getIdiomasSoportados());
+				break;
+			}
+		}
+		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.valueOf(modoAcceso), data.getMensaje(), idiomas, idiomas);
 	}
 
 	/**
@@ -365,6 +532,96 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 */
 	public void setDisabledActivo(final boolean disabledActivo) {
 		this.disabledActivo = disabledActivo;
+	}
+
+	/**
+	 * @return the tramiteSeleccionado
+	 */
+	public String getTramiteSeleccionado() {
+		return tramiteSeleccionado;
+	}
+
+	/**
+	 * @param tramiteSeleccionado
+	 *            the tramiteSeleccionado to set
+	 */
+	public void setTramiteSeleccionado(final String tramiteSeleccionado) {
+		this.tramiteSeleccionado = tramiteSeleccionado;
+	}
+
+	/**
+	 * @return the versionSeleccionado
+	 */
+	public String getVersionSeleccionado() {
+		return versionSeleccionado;
+	}
+
+	/**
+	 * @param versionSeleccionado
+	 *            the versionSeleccionado to set
+	 */
+	public void setVersionSeleccionado(final String versionSeleccionado) {
+		this.versionSeleccionado = versionSeleccionado;
+	}
+
+	/**
+	 * @return the tramites
+	 */
+	public List<Tramite> getTramites() {
+		return tramites;
+	}
+
+	/**
+	 * @param tramites
+	 *            the tramites to set
+	 */
+	public void setTramites(final List<Tramite> tramites) {
+		this.tramites = tramites;
+	}
+
+	/**
+	 * @return the versiones
+	 */
+	public List<TramiteVersion> getVersiones() {
+		return versiones;
+	}
+
+	/**
+	 * @param versiones
+	 *            the versiones to set
+	 */
+	public void setVersiones(final List<TramiteVersion> versiones) {
+		this.versiones = versiones;
+	}
+
+	/**
+	 * @return the listaTramites
+	 */
+	public final List<TramiteMensajeAviso> getListaTramites() {
+		return listaTramites;
+	}
+
+	/**
+	 * @param listaTramites
+	 *            the listaTramites to set
+	 */
+	public final void setListaTramites(final List<TramiteMensajeAviso> listaTramites) {
+		this.listaTramites = listaTramites;
+	}
+
+	/**
+	 * @return the tramiteMensajeAvisoSeleccionado
+	 */
+	public TramiteMensajeAviso getTramiteMensajeAvisoSeleccionado() {
+		return tramiteMensajeAvisoSeleccionado;
+	}
+
+	/**
+	 * @param tramiteMensajeAvisoSeleccionado
+	 *            the tramiteMensajeAvisoSeleccionado to set
+	 */
+	public void setTramiteMensajeAvisoSeleccionado(final TramiteMensajeAviso tramiteMensajeAvisoSeleccionado) {
+		this.tramiteMensajeAvisoSeleccionado = tramiteMensajeAvisoSeleccionado;
 	}
 
 }
