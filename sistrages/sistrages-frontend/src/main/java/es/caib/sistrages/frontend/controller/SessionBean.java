@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -20,10 +21,12 @@ import org.primefaces.model.menu.MenuModel;
 
 import es.caib.sistrages.core.api.exception.FrontException;
 import es.caib.sistrages.core.api.model.Entidad;
+import es.caib.sistrages.core.api.model.Sesion;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SecurityService;
+import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.model.types.TypeOpcionMenuAdmOper;
@@ -94,6 +97,9 @@ public class SessionBean {
 	@Inject
 	private EntidadService entidadService;
 
+	@Inject
+	private SystemService systemService;
+
 	/**
 	 * Lista entidades a las que tiene acceso desde el menú (si es Admin Entidad o
 	 * Desarrollador).
@@ -122,16 +128,29 @@ public class SessionBean {
 
 	/** Atributos del growl. **/
 	private Boolean growlSticky = false;
-	private Integer growlLife = 2000;
+	private Integer growlLife = 4000;
 
 	private Map<String, Object> mochilaDatos;
 
 	/** Inicio sesión. */
 	@PostConstruct
 	public void init() {
+		Sesion sesion = null;
 
 		// Recupera info usuario
 		userName = securityService.getUsername();
+
+		// recuperamos datos por defecto del usuario
+		if (StringUtils.isNotEmpty(userName)) {
+			sesion = systemService.getSesion(userName);
+		}
+
+		// asignamos idioma por defecto si lo tiene
+		if (sesion != null && StringUtils.isNotEmpty(sesion.getIdioma())
+				&& ("es".equals(sesion.getIdioma()) || "ca".equals(sesion.getIdioma()))) {
+			FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(sesion.getIdioma()));
+		}
+
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 		rolesList = securityService.getRoles();
@@ -148,7 +167,40 @@ public class SessionBean {
 
 		// Establece role activo por defecto
 		activeRole = null;
-		if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
+		if (sesion != null && StringUtils.isNotEmpty(sesion.getPerfil())
+				&& rolesList.contains(TypeRoleAcceso.fromString(sesion.getPerfil()))) {
+
+			if (TypeRoleAcceso.SUPER_ADMIN.equals(TypeRoleAcceso.fromString(sesion.getPerfil()))) {
+				activeRole = TypeRoleAcceso.SUPER_ADMIN;
+			} else if (TypeRoleAcceso.ADMIN_ENT.equals(TypeRoleAcceso.fromString(sesion.getPerfil()))) {
+				activeRole = TypeRoleAcceso.ADMIN_ENT;
+				listaEntidades = listaEntidadesAdministrador;
+
+				if (sesion.getEntidad() != null) {
+					final Long idEntidad = sesion.getEntidad();
+					entidad = listaEntidades.stream().filter(o -> o.getCodigo().equals(idEntidad)).findAny()
+							.orElse(null);
+				}
+
+				if (entidad == null) {
+					entidad = listaEntidades.get(0);
+				}
+			} else if (TypeRoleAcceso.DESAR.equals(TypeRoleAcceso.fromString(sesion.getPerfil()))) {
+				activeRole = TypeRoleAcceso.DESAR;
+				listaEntidades = listaEntidadesDesarrollador;
+
+				if (sesion.getEntidad() != null) {
+					final Long idEntidad = sesion.getEntidad();
+					entidad = listaEntidades.stream().filter(o -> o.getCodigo().equals(idEntidad)).findAny()
+							.orElse(null);
+				}
+
+				if (entidad == null) {
+					entidad = listaEntidades.get(0);
+				}
+			}
+
+		} else if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
 			activeRole = TypeRoleAcceso.SUPER_ADMIN;
 		} else if (rolesList.contains(TypeRoleAcceso.ADMIN_ENT)) {
 			activeRole = TypeRoleAcceso.ADMIN_ENT;
@@ -232,6 +284,10 @@ public class SessionBean {
 		FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(idioma));
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+
+		// actualizamos sesion usuario
+		systemService.updateSesionIdioma(userName, idioma);
+
 		// Recarga pagina principal
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
@@ -272,6 +328,9 @@ public class SessionBean {
 		// Cambia logo
 		cambiarLogo();
 
+		// actualizamos sesion usuario
+		systemService.updateSesionPerfil(userName, role);
+
 		// Recarga pagina principal segun role
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
@@ -286,6 +345,10 @@ public class SessionBean {
 		}
 		// Cambio logo
 		cambiarLogo();
+
+		// actualizamos sesion usuario
+		systemService.updateSesionEntidad(userName, idEntidad);
+
 		// Recarga pagina principal
 		UtilJSF.redirectJsfDefaultPageRole(activeRole, obtenerIdEntidad());
 	}
@@ -627,6 +690,14 @@ public class SessionBean {
 	 */
 	public void setGrowlSticky(final Boolean growlSticky) {
 		this.growlSticky = growlSticky;
+	}
+
+	public SystemService getSystemService() {
+		return systemService;
+	}
+
+	public void setSystemService(final SystemService systemService) {
+		this.systemService = systemService;
 	}
 
 }
