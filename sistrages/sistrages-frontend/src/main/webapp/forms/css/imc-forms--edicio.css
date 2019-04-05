@@ -253,3 +253,7 @@ pre { font: normal 1.2em 'Bariol Regular', Arial, Helvetica, sans-serif; white-s
 .imc-el-control.imc-el--relatiu { position: relative; }
 
 span.imc-el--script { display: block; position: absolute; top: -0.3em; left: 0; width: 1.3em; height: 1.3em; background: #3597d4 url(../imgs/icones/ico_script.svg) no-repeat center center / .7em auto; border-radius: 50%; }
+
+fieldset[data-script="s"] { position: relative; }
+fieldset[data-script="s"]::before { content: ""; display: block; position: absolute; top: -0.5em; left: 0; width: 1.3em; height: 1.3em; background: #3597d4 url(../imgs/icones/ico_script.svg) no-repeat center center / .7em auto; border-radius: 50%; }
+

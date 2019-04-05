@@ -55,7 +55,7 @@
 						<p:dataTable  id="dataTablePaginas" var="td" value="#{dialogPropiedadesFormulario.data.paginas}"
 										  rows="0" emptyMessage="#{msg['error.emptyRows']}"
 										  scrollable="true" scrollHeight="98%"
-				                          paginator="false" style="height:162px;width:220px"
+				                          paginator="false" style="height:162px;width:340px"
 				                          selectionMode="single" selection="#{dialogPropiedadesFormulario.paginaSeleccionada}" rowKey="#{td.orden}">
 
 							<!-- Necesario para actualizar en controlador la fila seleccionada -->
@@ -63,15 +63,15 @@
 							<p:ajax event="rowUnselect"/>
 
 							<!-- Columnas -->
-						    <p:column class="ui-panelgrid-cell w85" headerText="#{msg['dialogPropiedadesFormulario.pagina']}">
+						    <p:column class="ui-panelgrid-cell w75" headerText="#{msg['dialogPropiedadesFormulario.pagina']}">
 						        <h:outputText value="#{msg['dialogDisenyoFormulario.pagina'].concat(' ').concat(td.orden)}" />
 						    </p:column>
-						    <p:column class="ui-panelgrid-cell w15 grid-center" headerText="#{msg['dialogPropiedadesFormulario.paginaFinal']}" >
+						    <p:column class="ui-panelgrid-cell w25 grid-center" headerText="#{msg['dialogPropiedadesFormulario.paginaFinal']}" >
 						       <p:selectBooleanCheckbox value="#{td.paginaFinal}" disabled="true"/>
 						    </p:column>
 
 				 		</p:dataTable>
-				 		 	<p:outputPanel styleClass="barra-herramientas-vertical" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}">
+				 		<p:outputPanel styleClass="barra-herramientas-vertical" rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}" style="margin-left:5px">
 						    	<p:commandButton id="btnNuevaPagina" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogPropiedadesFormulario.nuevaPagina}" process="@this" update="growlDialog dataTablePaginas" />
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
@@ -87,7 +87,7 @@
 								<ui:fragment rendered="#{dialogPropiedadesFormulario.alta or dialogPropiedadesFormulario.edicion}"><br /></ui:fragment>
 
 						    	<p:commandButton icon="fa fa-arrow-down" title="#{msg['botones.bajar']}" actionListener="#{dialogPropiedadesFormulario.bajarPagina}" process="@this" update="growlDialog dataTablePaginas" />
-							</p:outputPanel>
+						</p:outputPanel>
 			 		</h:panelGrid>
 
 			 		<p:outputLabel value="#{msg['dialogPropiedadesFormulario.plantillaPDF']}"/>

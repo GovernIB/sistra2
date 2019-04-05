@@ -53,6 +53,9 @@ public class DialogFuenteFila extends DialogControllerBase {
 	/** Fila seleccionada. **/
 	private FuenteFila valorSeleccionado;
 
+	/** Literal que indica el valor que tenía la pk. **/
+	private String pkOriginal = "";
+
 	/**
 	 * Inicialización.
 	 *
@@ -73,25 +76,45 @@ public class DialogFuenteFila extends DialogControllerBase {
 		} else {
 			data = dominioService.loadFuenteDatoFila(Long.valueOf(id));
 			data.sortValores();
+			pkOriginal = getPk(data);
 		}
 
 	}
 
 	/**
-	 * Aceptar.
+	 * Obtiene los valores de filas de tipo pk.
+	 *
+	 * @param fila
+	 * @return
+	 */
+	private String getPk(final FuenteFila fila) {
+		final StringBuilder pk = new StringBuilder();
+		for (final FuenteDatosValor dato : fila.getDatos()) {
+			if (dato.getCampo().isClavePrimaria()) {
+				pk.append(dato.getValor() + "#");
+			}
+		}
+		return pk.toString();
+	}
+
+	/**
+	 * Aceptar. Se cerrará la ventana si:
+	 * <ul>
+	 * <li>Los valores de campos de tipo pk no se han alterado.</li>
+	 * <li>Los valores de campos de tipo pk se han alterado pero aun así, no se
+	 * repiten los valores en otra fila de la FD</li>
+	 * </ul>
+	 * Si no se produce ninguno de esos casos, se muestra un error.
 	 */
 	public void aceptar() {
 
-		if (dominioService.isCorrectoPK(data, Long.valueOf(idFuenteDato))) {
-
+		if (pkOriginal.equals(getPk(data)) || dominioService.isCorrectoPK(data, Long.valueOf(idFuenteDato))) {
 			// Retornamos resultado
 			final DialogResult result = new DialogResult();
 			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 			result.setResult(data);
 			UtilJSF.closeDialog(result);
-
 		} else {
-
 			final String message = UtilJSF.getLiteral("error.fuentedatos.pk");
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 		}

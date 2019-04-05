@@ -398,7 +398,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
 				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
-				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element imc-el-horizontal", estilo.toString(),
+				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element imc-el-vertical", estilo.toString(),
 				"\" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {
@@ -638,7 +638,8 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 	private String escribeTieneScripts(ComponenteFormularioCampo campo, boolean pModoEdicion) {
 		String res = "";
 		if (pModoEdicion && (campo.getScriptAutorrellenable() != null || campo.getScriptSoloLectura() != null
-				|| campo.getScriptValidacion() != null)) {
+				|| campo.getScriptValidacion() != null || ((campo instanceof ComponenteFormularioCampoSelector)
+						&& ((ComponenteFormularioCampoSelector) campo).getScriptValoresPosibles() != null))) {
 			res = " data-script=\"s\" ";
 		}
 		return res;
