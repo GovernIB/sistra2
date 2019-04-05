@@ -166,12 +166,25 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 				.obtenerPropiedadConfiguracion(TypePropiedadConfiguracion.SISTRAMIT_URL.toString());
 
 		final String params = getParamsUrl();
+		boolean servicioCatalogo = false;
+		for (final DefinicionTramiteCP tram : tramites) {
+			if (tram.getIdentificador().equals(tramiteSeleccionado)) {
+				servicioCatalogo = tram.getProcedimiento().isServicio();
+				break;
+			}
+		}
 
 		setUrl(urlBase + "/asistente/iniciarTramite.html?tramite=" + tramite.getIdentificador() + "&version="
-				+ data.getNumeroVersion() + "&idioma=" + idioma + "&idTramiteCatalogo=" + tramiteSeleccionado + params);
+				+ data.getNumeroVersion() + "&idioma=" + idioma + "&servicioCatalogo=" + servicioCatalogo
+				+ "&idTramiteCatalogo=" + tramiteSeleccionado + params);
 
 	}
 
+	/**
+	 * Obtiene la lista de parametros
+	 *
+	 * @return
+	 */
 	private String getParamsUrl() {
 		final StringBuilder paramsUrl = new StringBuilder();
 		if (this.parametros != null && !this.parametros.isEmpty()) {

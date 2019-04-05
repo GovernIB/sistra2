@@ -41,7 +41,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * @param identificador
 	 *            identificador a establecer
 	 */
-	public void setIdentificador(String identificador) {
+	public void setIdentificador(final String identificador) {
 		this.identificador = identificador;
 	}
 
@@ -60,7 +60,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * @param idProcedimientoSIA
 	 *            idProcedimientoSIA a establecer
 	 */
-	public void setIdProcedimientoSIA(String idProcedimientoSIA) {
+	public void setIdProcedimientoSIA(final String idProcedimientoSIA) {
 		this.idProcedimientoSIA = idProcedimientoSIA;
 	}
 
@@ -79,7 +79,7 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * @param descripcion
 	 *            descripcion a establecer
 	 */
-	public void setDescripcion(String descripcion) {
+	public void setDescripcion(final String descripcion) {
 		this.descripcion = descripcion;
 	}
 
@@ -98,13 +98,13 @@ public class DefinicionProcedimientoCP implements Serializable {
 	 * @param organoResponsableDir3
 	 *            organoResponsableDir3 a establecer
 	 */
-	public void setOrganoResponsableDir3(String organoResponsableDir3) {
+	public void setOrganoResponsableDir3(final String organoResponsableDir3) {
 		this.organoResponsableDir3 = organoResponsableDir3;
 	}
 
 	/**
 	 * Método de acceso a servicio.
-	 * 
+	 *
 	 * @return servicio
 	 */
 	public boolean isServicio() {
@@ -112,12 +112,21 @@ public class DefinicionProcedimientoCP implements Serializable {
 	}
 
 	/**
+	 * Método de acceso a servicio.
+	 *
+	 * @return servicio
+	 */
+	public boolean isProcedimiento() {
+		return !servicio;
+	}
+
+	/**
 	 * Método para establecer servicio.
-	 * 
+	 *
 	 * @param servicio
 	 *            servicio a establecer
 	 */
-	public void setServicio(boolean servicio) {
+	public void setServicio(final boolean servicio) {
 		this.servicio = servicio;
 	}
 

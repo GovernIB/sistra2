@@ -50,11 +50,16 @@
 				<p:ajax event="rowSelect" global="false" />
 				<p:ajax event="rowUnselect" />
 
-			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerIdentificadorPROC']}">
+				<p:column headerText="#{msg['dialogTramiteProcedimientos.headerTipo']}">
+			       	<h:outputText value="#{msg['dialogTramiteProcedimientos.tramite']}"  rendered="#{td.procedimiento.isProcedimiento()}" 	/>
+			       	<h:outputText value="#{msg['dialogTramiteProcedimientos.servicio']}" rendered="#{td.procedimiento.isServicio()}" 		/>
+			    </p:column>
+
+			    <p:column headerText="#{msg['dialogTramiteProcedimientos.headerIdentificador']}">
 			        <h:outputText value="${td.procedimiento.identificador}" />
 			    </p:column>
 
-				 <p:column headerText="#{msg['dialogTramiteProcedimientos.headerDescripcionPROC']}">
+				 <p:column headerText="#{msg['dialogTramiteProcedimientos.headerDescripcion']}">
 			        <h:outputText value="${td.procedimiento.descripcion}" />
 			    </p:column>
 

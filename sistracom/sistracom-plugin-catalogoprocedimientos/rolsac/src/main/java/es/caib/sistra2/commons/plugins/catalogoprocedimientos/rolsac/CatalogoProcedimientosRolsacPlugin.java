@@ -26,8 +26,10 @@ import es.caib.sistra2.commons.plugins.catalogoprocedimientos.api.ICatalogoProce
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RLink;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RProcedimientoRolsac;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaProcedimientos;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaServicios;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaSimple;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RRespuestaTramites;
+import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RServicioRolsac;
 import es.caib.sistra2.commons.plugins.catalogoprocedimientos.rolsac.modelo.RTramiteRolsac;
 
 /**
@@ -47,10 +49,90 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	}
 
 	@Override
-	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, boolean servicio, final String idioma)
-			throws CatalogoPluginException {
+	public DefinicionTramiteCP obtenerDefinicionTramite(final String idTramiteCP, final boolean servicio,
+			final String idioma) throws CatalogoPluginException {
 
-		// TODO PENDIENTE DE DISTINGUIR SI ES SERVICIO
+		DefinicionTramiteCP definicion;
+		if (servicio) {
+			definicion = obtenerDefinicionTramiteServicio(idTramiteCP, idioma);
+		} else {
+			definicion = obtenerDefinicionTramiteProcedimiento(idTramiteCP, idioma);
+		}
+		return definicion;
+	}
+
+	/**
+	 * Método que calcula la definición de trámite de un servicio.
+	 *
+	 * @param idServicioCP
+	 *            ID Servicio
+	 * @param idioma
+	 *            Idioma (es/ca/en)
+	 * @return
+	 * @throws CatalogoPluginException
+	 */
+	private DefinicionTramiteCP obtenerDefinicionTramiteServicio(final String idServicioCP, final String idioma)
+			throws CatalogoPluginException {
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		// Obtener tramite.
+		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("idioma", idioma);
+		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		final ResponseEntity<RRespuestaServicios> responseTramite = restTemplate
+				.postForEntity(getPropiedad("url") + "/servicios/" + idServicioCP, request, RRespuestaServicios.class);
+		if (responseTramite == null || responseTramite.getBody() == null
+				|| responseTramite.getBody().getResultado() == null) {
+			throw new CatalogoPluginException("El tramite no existe.");
+		}
+		final RServicioRolsac[] serviciosRolsac = responseTramite.getBody().getResultado();
+
+		if (serviciosRolsac == null || serviciosRolsac.length == 0) {
+			throw new CatalogoPluginException("No hay servicio");
+		}
+
+		// Obtener servicio.
+		final RServicioRolsac servicioRolsac = serviciosRolsac[0];
+
+		// Codigo DIR3 responsable procedimiento
+		final String dir3organoInstructor = getCodigoDir3UA(servicioRolsac.getLink_organoInstructor());
+		final String dir3servicioResponsable = getCodigoDir3UA(servicioRolsac.getLink_servicioResponsable());
+
+		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
+		dp.setIdentificador(servicioRolsac.getCodigoServicio());
+		dp.setDescripcion(servicioRolsac.getNombre());
+		dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
+		dp.setOrganoResponsableDir3(dir3servicioResponsable);
+		dp.setServicio(true);
+
+		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
+		dt.setIdentificador(servicioRolsac.getCodigoServicio());
+		dt.setDescripcion(servicioRolsac.getNombre());
+		dt.setVigente(esVigente(servicioRolsac));
+		dt.setOrganoDestinoDir3(dir3organoInstructor);
+		dt.setProcedimiento(dp);
+
+		return dt;
+	}
+
+	/**
+	 * Método privado que calcula la definicion de trámite de un procedimiento.
+	 *
+	 * @param idTramiteCP
+	 *            ID Trámite
+	 * @param idioma
+	 *            Idioma (es/ca/en)
+	 * @return
+	 * @throws CatalogoPluginException
+	 */
+
+	private DefinicionTramiteCP obtenerDefinicionTramiteProcedimiento(final String idTramiteCP, final String idioma)
+			throws CatalogoPluginException {
 
 		final RestTemplate restTemplate = new RestTemplate();
 
@@ -101,9 +183,10 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		dp.setDescripcion(procRolsac.getNombre());
 		dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
 		dp.setOrganoResponsableDir3(dir3organoResponsable);
+		dp.setServicio(false);
 
 		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
-		dt.setIdentificador(idTramiteCP);
+		dt.setIdentificador(String.valueOf(tramiteRolsac.getCodigo()));
 		dt.setDescripcion(tramiteRolsac.getNombre());
 		dt.setProcedimiento(dp);
 		dt.setVigente(esVigente(procRolsac, tramiteRolsac));
@@ -172,6 +255,28 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	}
 
 	/**
+	 * Indica si es vigente el trámite. Se mira:<br />
+	 * <ul>
+	 * <li>Que el serv es público (validacion = 1, los otros valores 2 y 3, son
+	 * privado o interno</li>
+	 * <li>Que el serv tiene fechas correctas (está publicado del pasado y no está
+	 * caduco)</li>
+	 * </ul>
+	 *
+	 * @param servicio
+	 * @return
+	 */
+	public boolean esVigente(final RServicioRolsac servicio) {
+
+		final boolean noCaducadoServ = (servicio.getFechaDespublicacion() == null
+				|| servicio.getFechaDespublicacion().after(Calendar.getInstance()));
+		final boolean publicadoServ = (servicio.getFechaPublicacion() == null
+				|| servicio.getFechaPublicacion().before(Calendar.getInstance()));
+		final boolean visible = servicio.getValidacion() == null || "1".equals(servicio.getValidacion().toString());
+		return visible && noCaducadoServ && publicadoServ;
+	}
+
+	/**
 	 * Obtiene propiedad.
 	 *
 	 * @param propiedad
@@ -192,7 +297,90 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 	public List<DefinicionTramiteCP> obtenerTramites(final String idTramite, final Integer version, final String idioma)
 			throws CatalogoPluginException {
 
-		// TODO PENDIENTE DE RECUPERAR TAMBIEN LOS SERVICIOS
+		final List<DefinicionTramiteCP> trams = new ArrayList<>();
+		trams.addAll(obtenerTramitesServicios(idTramite, version, idioma));
+		trams.addAll(obtenerTramitesProcedimientos(idTramite, version, idioma));
+
+		return trams;
+	}
+
+	/**
+	 * Devuelve los trámites de los servicios
+	 *
+	 * @param idTramite
+	 * @param version
+	 * @param idioma
+	 * @return
+	 * @throws CatalogoPluginException
+	 */
+	private List<DefinicionTramiteCP> obtenerTramitesServicios(final String idTramite, final Integer version,
+			final String idioma) throws CatalogoPluginException {
+
+		final List<DefinicionTramiteCP> res = new ArrayList<>();
+
+		final RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("idioma", idioma);
+		if (version == null) {
+			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\"}");
+		} else {
+			map.add("filtro", "{\"codigoTramiteTelematico\":\"" + idTramite + "\",\"versionTramiteTelematico\" : \""
+					+ version + "\"}");
+		}
+		// Obtener procedimiento.
+		final HttpEntity<MultiValueMap<String, String>> requestTram = new HttpEntity<>(map, headers);
+		final ResponseEntity<RRespuestaServicios> responseTram = restTemplate
+				.postForEntity(getPropiedad("url") + "/servicios/", requestTram, RRespuestaServicios.class);
+
+		final RServicioRolsac[] serviciosRolsac = responseTram.getBody().getResultado();
+
+		if (serviciosRolsac != null) {
+
+			for (final RServicioRolsac servicioRolsac : serviciosRolsac) {
+
+				// Codigo DIR3 responsable procedimiento
+				final String dir3organoInstructor = getCodigoDir3UA(servicioRolsac.getLink_organoInstructor());
+				final String dir3servicioResponsable = getCodigoDir3UA(servicioRolsac.getLink_servicioResponsable());
+
+				final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
+				dp.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
+				dp.setDescripcion(servicioRolsac.getNombre());
+				dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
+				dp.setOrganoResponsableDir3(dir3servicioResponsable);
+				dp.setServicio(true);
+
+				final DefinicionTramiteCP dt = new DefinicionTramiteCP();
+				dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
+				dt.setDescripcion(servicioRolsac.getNombre());
+				dt.setVigente(esVigente(servicioRolsac));
+				dt.setOrganoDestinoDir3(dir3organoInstructor);
+				dt.setProcedimiento(dp);
+
+				res.add(dt);
+			}
+		}
+
+		return res;
+
+	}
+
+	/**
+	 * Devuelve los trámites de los procedimientos.
+	 *
+	 * @param idTramite
+	 * @param version
+	 * @param idioma
+	 * @return
+	 * @throws CatalogoPluginException
+	 */
+	private List<DefinicionTramiteCP> obtenerTramitesProcedimientos(final String idTramite, final Integer version,
+			final String idioma) throws CatalogoPluginException {
 
 		final List<DefinicionTramiteCP> res = new ArrayList<>();
 
@@ -253,6 +441,7 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 				dp.setDescripcion(procRolsac.getNombre());
 				dp.setIdProcedimientoSIA(procRolsac.getCodigoSIA());
 				dp.setOrganoResponsableDir3(dir3organoResponsable);
+				dp.setServicio(false);
 
 				final DefinicionTramiteCP dt = new DefinicionTramiteCP();
 				dt.setIdentificador(String.valueOf(tramiteRolsac.getCodigo()));
