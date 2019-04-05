@@ -28,6 +28,15 @@ public interface FlujoFormularioInternoService {
 	String cargarSesion(String ticket);
 
 	/**
+	 * Inicializa sesión formulario (separada de la carga de sesión para poder
+	 * registrar errores en auditoría).
+	 * 
+	 * @param idSesionFormulario
+	 *            id sesion formulario
+	 */
+	void inicializarSesion(String idSesionFormulario);
+
+	/**
 	 * Realiza la carga de la página actual.
 	 *
 	 * @param idSesionFormulario

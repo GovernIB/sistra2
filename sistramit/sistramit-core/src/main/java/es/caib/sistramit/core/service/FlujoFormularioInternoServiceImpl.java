@@ -42,6 +42,13 @@ public class FlujoFormularioInternoServiceImpl implements FlujoFormularioInterno
 
 	@Override
 	@NegocioInterceptor
+	public void inicializarSesion(String idSesionFormulario) {
+		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
+		ff.inicializarSesion();
+	}
+
+	@Override
+	@NegocioInterceptor
 	public PaginaFormulario cargarPaginaActual(String idSesionFormulario) {
 		final FlujoFormularioComponent ff = obtenerFlujoFormulario(idSesionFormulario);
 		return ff.cargarPaginaActual();

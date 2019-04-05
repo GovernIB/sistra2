@@ -77,4 +77,4 @@ var  APP_SIGNATURA_URL = APP_SERVIDOR + "rt/firmarDocumento.json"
 
 var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
 	APP_GUARDA_DESCARREGA = APP_SERVIDOR + "gj/descargarDocumento.html",
-	APP_TRAMIT_SURT = "http://www.google.es"; /* TODO: HAY QUE PASARLO AL JSON DEL PASO */
+	APP_TRAMIT_SURT = APP_SERVIDOR + "gj/salirTramite.html";

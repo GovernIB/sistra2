@@ -32,6 +32,11 @@ public class FlujoFormularioInternoServiceBean implements FlujoFormularioInterno
 	}
 
 	@Override
+	public void inicializarSesion(String idSesionFormulario) {
+		flujoFormularioInternoService.inicializarSesion(idSesionFormulario);
+	}
+
+	@Override
 	public PaginaFormulario cargarPaginaActual(String idSesionFormulario) {
 		return flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
 	}

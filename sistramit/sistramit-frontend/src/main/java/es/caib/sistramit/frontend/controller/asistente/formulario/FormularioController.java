@@ -49,6 +49,7 @@ public final class FormularioController extends TramitacionController {
 
 		// Carga sesion formulario y registrarlo en la sesion
 		final String idSesionFormulario = formService.cargarSesion(ticket);
+		formService.inicializarSesion(idSesionFormulario);
 		this.registraSesionFormulario(idSesionFormulario);
 
 		// Carga pagina inicial

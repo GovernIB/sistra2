@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -174,6 +175,9 @@ public final class DatosFormularioInterno implements Serializable {
 					break;
 				}
 			}
+		}
+		if (res == null) {
+			throw new ErrorConfiguracionException("No existe campo con id: " + idCampo);
 		}
 		return res;
 	}

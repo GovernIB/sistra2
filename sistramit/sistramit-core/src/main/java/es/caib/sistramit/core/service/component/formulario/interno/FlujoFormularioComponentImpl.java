@@ -123,17 +123,21 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		datosSesion.setDatosInicioSesion(dis);
 		datosSesion.setDebugEnabled(UtilsSTG.isDebugEnabled(defTramite));
 
-		// Inicializamos datos formulario y los almacenamos en sesion
-		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(dis.getIdPaso(),
-				dis.getIdFormulario(), defTramite);
-		final DatosFormularioInterno datForm = inicializarConfiguracionFormulario(defFormulario,
-				dis.getXmlDatosActuales());
-		datosSesion.setDatosFormulario(datForm);
-
 		// Devolvemos id sesion (usamos ticket)
 		// TODO id sesion formulario?? separamos en campo nuevo??
 		return ticket;
 
+	}
+
+	@Override
+	public void inicializarSesion() {
+		// Inicializamos datos formulario y los almacenamos en sesion
+		final DatosInicioSesionFormulario dis = datosSesion.getDatosInicioSesion();
+		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(dis.getIdPaso(),
+				dis.getIdFormulario(), datosSesion.getDefinicionTramite());
+		final DatosFormularioInterno datForm = inicializarConfiguracionFormulario(defFormulario,
+				dis.getXmlDatosActuales());
+		datosSesion.setDatosFormulario(datForm);
 	}
 
 	@Override

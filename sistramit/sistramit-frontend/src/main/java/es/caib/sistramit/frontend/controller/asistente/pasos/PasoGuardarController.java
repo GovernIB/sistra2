@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
@@ -90,6 +91,29 @@ public final class PasoGuardarController extends TramitacionController {
 		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
 
 		return generarDownloadView(nombreFichero, datos);
+
+	}
+
+	/**
+	 * Sale del trámite.
+	 *
+	 * @return Sale del trámite.
+	 */
+	@RequestMapping("/salirTramite.html")
+	public ModelAndView salirTramite() {
+
+		debug("Salir trámite");
+
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+		// Obtenemos url tras finalizar
+		final DetalleTramite detalleTramite = getFlujoTramitacionService().obtenerDetalleTramite(idSesionTramitacion);
+		final String url = detalleTramite.getEntidad().getUrlCarpeta();
+
+		// Invalidamos flujo
+		getFlujoTramitacionService().invalidarFlujoTramitacion(idSesionTramitacion);
+
+		return new ModelAndView("redirect:" + url);
 
 	}
 

@@ -28,6 +28,12 @@ public interface FlujoFormularioComponent extends FlujoTramitacionCacheIntf {
 	String cargarSesion(String ticket);
 
 	/**
+	 * Inicializa sesión formulario (separada de la carga de sesión para poder
+	 * registrar errores en auditoría).
+	 */
+	public void inicializarSesion();
+
+	/**
 	 * Realiza la carga de la página actual.
 	 *
 	 * @return Página formulario (html, configuracion y datos)

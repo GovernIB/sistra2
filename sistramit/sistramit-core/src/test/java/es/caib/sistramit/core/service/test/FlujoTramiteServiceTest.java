@@ -271,6 +271,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		// -- Redirigimos formulario
 		final String idSesionFormulario = flujoFormularioInternoService.cargarSesion(af.getTicket());
+		flujoFormularioInternoService.inicializarSesion(idSesionFormulario);
 
 		// -- Cargamos pagina actual
 		final PaginaFormulario paginaData = flujoFormularioInternoService.cargarPaginaActual(idSesionFormulario);
