@@ -110,14 +110,17 @@ public final class LineaComponentesFormulario extends ObjetoFormulario
 	 *
 	 * @param pComponente
 	 *            componente
+	 * @param esCopyPaste
+	 *            este parámetro es para no comprobar el if porque en el copy/paste,
+	 *            puedes copiar sobre la misma fila
 	 * @return true, si cabe
 	 */
-	public boolean cabenComponentes(final ComponenteFormulario pComponente) {
+	public boolean cabenComponentes(final ComponenteFormulario pComponente, final boolean esCopyPaste) {
 		boolean res = true;
 		int ncolumnas = pComponente.getNumColumnas();
 		if (!componentes.isEmpty()) {
 			for (final ComponenteFormulario elementoFormulario : componentes) {
-				if (!elementoFormulario.getCodigo().equals(pComponente.getCodigo())) {
+				if (!elementoFormulario.getCodigo().equals(pComponente.getCodigo()) || esCopyPaste) {
 					switch (elementoFormulario.getTipo()) {
 					case SECCION:
 						ncolumnas += elementoFormulario.getNumColumnas();

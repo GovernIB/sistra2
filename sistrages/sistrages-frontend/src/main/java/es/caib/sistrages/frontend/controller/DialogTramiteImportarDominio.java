@@ -79,6 +79,20 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 			accion = data.getAccion().toString();
 		}
 		this.mostrarReemplazar = accion.equals(TypeImportarAccion.REEMPLAZAR.toString());
+		checkAcciones();
+	}
+
+	/**
+	 * Método que se encarga de cambi
+	 */
+	private void checkAcciones() {
+		if (this.data.getAcciones().size() == 1 && this.data.getAcciones().get(0) == TypeImportarAccion.REEMPLAZAR
+				&& this.data.getDominioActual() == null) {
+			final List<TypeImportarAccion> acciones = new java.util.ArrayList<>();
+			acciones.add(TypeImportarAccion.IMPORTAR);
+			this.data.setAcciones(acciones);
+			this.data.setAccion(TypeImportarAccion.IMPORTAR);
+		}
 	}
 
 	/**
@@ -193,9 +207,16 @@ public class DialogTramiteImportarDominio extends DialogControllerBase {
 				data.setResultadoSQLdecoded(new String(Base64.decodeBase64(data.getResultadoSQL())));
 
 			}
+			data.setAccion(TypeImportarAccion.fromString(accion));
+
+			// Cambiamos el importar por reemplazar
+			if (data.getAccion() == TypeImportarAccion.IMPORTAR) {
+				this.data.setAccion(TypeImportarAccion.REEMPLAZAR);
+				this.data.getAcciones().remove(0);
+				this.data.getAcciones().add(TypeImportarAccion.REEMPLAZAR);
+			}
 			result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 			result.setCanceled(false);
-			data.setAccion(TypeImportarAccion.fromString(accion));
 			result.setResult(data);
 			UtilJSF.closeDialog(result);
 		}

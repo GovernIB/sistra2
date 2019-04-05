@@ -23,7 +23,9 @@ public enum TypeImportarAccion {
 	/** Pendiente. **/
 	PENDIENTE("P"),
 	/** Incrementar release (sólo para la versión de trámite) */
-	INCREMENTAR("I");
+	INCREMENTAR("I"),
+	/** Importar, cuando no existe el trámite (se comporta como el reemplazar) **/
+	IMPORTAR("X");
 
 	/** valor. **/
 	private String valor;

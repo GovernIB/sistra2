@@ -58,7 +58,7 @@
 						<p:outputLabel value="#{dialogTramiteImportar.area.identificador} - #{dialogTramiteImportar.area.descripcion}" rendered="#{dialogTramiteImportar.filaArea.estado != null}" />
 						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaArea.estado]}" rendered="#{dialogTramiteImportar.filaArea.estado != null}"  />
 						<p:column rendered="#{dialogTramiteImportar.filaArea.estado != null}"  >
-								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonArea}" process="@form" actionListener="#{dialogTramiteImportar.checkArea()}" style="margin-left:5px" >
+								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonArea and dialogTramiteImportar.isTodoCorrecto()}" process="@form" actionListener="#{dialogTramiteImportar.checkArea()}" style="margin-left:5px" >
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoArea}" update="areaIcon"/>
 								</p:commandButton>
 								<p:outputLabel value="#{dialogTramiteImportar.filaArea.mensaje}" rendered="#{!dialogTramiteImportar.mostrarBotonArea}"  />
@@ -71,7 +71,7 @@
 						<p:outputLabel value="#{dialogTramiteImportar.tramite.identificador} - #{dialogTramiteImportar.tramite.descripcion}" rendered="#{dialogTramiteImportar.filaTramite.estado != null}"  />
 						<p:outputLabel value="#{msg['typeImportar.estado.' += dialogTramiteImportar.filaTramite.estado]}" rendered="#{dialogTramiteImportar.filaTramite.estado != null}"  />
 						<p:column rendered="#{dialogTramiteImportar.filaTramite.estado != null}" >
-								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramite}" actionListener="#{dialogTramiteImportar.checkTramite()}" style="margin-left:5px" >
+								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramite and dialogTramiteImportar.isTodoCorrecto()}" actionListener="#{dialogTramiteImportar.checkTramite()}" style="margin-left:5px" >
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramite}" update="tramiteIcon"/>
 								</p:commandButton>
 								<p:outputLabel value="#{dialogTramiteImportar.filaTramite.mensaje}" rendered="#{!dialogTramiteImportar.mostrarBotonTramite}"  />
@@ -87,7 +87,7 @@
 							<p:outputLabel value=" (#{msg['dialogTramiteImportar.headerReleaseExistente']} #{dialogTramiteImportar.filaTramiteVersion.tramiteVersionActual.release})" rendered="#{dialogTramiteImportar.filaTramiteVersion.estado.toString() == 'E'}" />
 						</p:column>
 						<p:column rendered="#{dialogTramiteImportar.filaTramiteVersion.estado != null}"  >
-								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramiteVersion}" actionListener="#{dialogTramiteImportar.checkTramiteVersion()}" style="margin-left:5px" >
+								<p:commandButton value="..." rendered="#{dialogTramiteImportar.mostrarBotonTramiteVersion and dialogTramiteImportar.isTodoCorrecto()}" actionListener="#{dialogTramiteImportar.checkTramiteVersion()}" style="margin-left:5px" >
 									<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoTramiteVersion}" update="tramiteVersionIcon"/>
 								</p:commandButton>
 								<p:outputLabel value="#{dialogTramiteImportar.filaTramiteVersion.mensaje}" rendered="#{!dialogTramiteImportar.mostrarBotonTramiteVersion}"  />
@@ -127,7 +127,7 @@
 						<f:facet name = "header">
 						 	<p:outputLabel value="#{msg['dialogTramiteImportar.headerAccion']}" style="font-weight: bold" />
 						 </f:facet>
-						<p:commandButton value="..." actionListener="#{dialogTramiteImportar.checkTramiteRegistro()}" style="margin-left:5px" >
+						<p:commandButton value="..." actionListener="#{dialogTramiteImportar.checkTramiteRegistro()}" style="margin-left:5px" rendered="#{dialogTramiteImportar.isTodoCorrecto()}">
 							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoRegistro}" update="tramiteRegistro @form" />
 						</p:commandButton>
 					</h:column>
@@ -169,7 +169,7 @@
 					<h:column>
 						 <f:facet name = "header"><p:outputLabel value="#{msg['dialogTramiteImportar.dominio.accion']}" style="font-weight: bold" /></f:facet>
 						 <p:outputLabel  value="#{msg[fila.mensaje]}"  rendered="#{fila.visibleBoton == false}"/>
-      					 <p:commandButton value="..." rendered="#{fila.visibleBoton}"  actionListener="#{dialogTramiteImportar.checkDominio(fila.dominio.identificador)}" style="margin-left:5px" >
+      					 <p:commandButton value="..." rendered="#{fila.visibleBoton and dialogTramiteImportar.isTodoCorrecto()}"  actionListener="#{dialogTramiteImportar.checkDominio(fila.dominio.identificador)}" style="margin-left:5px" >
       							<p:ajax event="dialogReturn" listener="#{dialogTramiteImportar.returnDialogoDominio}" />
 						</p:commandButton>
 					</h:column>
@@ -221,7 +221,7 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton id="botonImportar" widgetVar="botonImportarWidget" onclick="disableClick()"  oncomplete="enableClick()" value="#{msg['botones.importar']}" actionListener="#{dialogTramiteImportar.importar}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportar.mostrarBotonImportar}"  update="@form growlDialogImportar" />
+		        		<p:commandButton id="botonImportar" widgetVar="botonImportarWidget" onclick="disableClick()"  oncomplete="enableClick()" value="#{msg['botones.importar']}" actionListener="#{dialogTramiteImportar.importar}" process="@this" styleClass="boton-azul" rendered="#{dialogTramiteImportar.mostrarBotonImportar and dialogTramiteImportar.isTodoCorrecto()}"  update="@form growlDialogImportar" />
 		        		<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTramiteImportar.cancelar}" process="@this" />
 					</f:facet>
 				</p:toolbar>

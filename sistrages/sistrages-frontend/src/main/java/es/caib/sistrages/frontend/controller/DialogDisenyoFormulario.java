@@ -356,7 +356,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			if (objetoFormularioEdit instanceof ComponenteFormulario) {
 
-				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit)) {
+				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit, false)) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("warning.componente.sinespacio"), true);
 					return false;
@@ -838,7 +838,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				ordenSeleccionado = campo.getOrden();
 			}
 
-			if (!linea.cabenComponentes((ComponenteFormulario) objetoCopy)) {
+			if (!linea.cabenComponentes((ComponenteFormulario) objetoCopy, true)) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("warning.componente.sinespacio"));
 				return;
@@ -857,8 +857,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 				// borramos el elemento original
 				if (cut) {
-					formulario.getPaginas().get(idPaginaCopy - 1).getLinea(idLineaCopy).getComponentes()
-							.remove(objetoCopy);
+					ComponenteFormulario objetoBorrar = null;
+					for (final ComponenteFormulario comp : formulario.getPaginas().get(idPaginaCopy - 1)
+							.getLinea(idLineaCopy).getComponentes()) {
+						if (comp.getCodigo().compareTo(idObjetoCopy) == 0) {
+							objetoBorrar = comp;
+							break;
+						}
+					}
+
+					if (objetoBorrar != null) {
+						formulario.getPaginas().get(idPaginaCopy - 1).getLinea(idLineaCopy).getComponentes()
+								.remove(objetoBorrar);
+					}
 				}
 
 				// actualizamos modelo
@@ -916,7 +927,19 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						lineaOriginal.getCodigo(), orden, posicionamiento, cut);
 
 				if (cut) {
-					pagina.getLineas().remove(lineaOriginal);
+					LineaComponentesFormulario objetoBorrar = null;
+					for (final LineaComponentesFormulario comp : formulario.getPaginas().get(idPaginaCopy - 1)
+							.getLineas()) {
+						if (comp.getCodigo().compareTo(idLineaCopy) == 0) {
+							objetoBorrar = comp;
+							break;
+						}
+					}
+
+					if (objetoBorrar != null) {
+						formulario.getPaginas().get(idPaginaCopy - 1).getLineas().remove(objetoBorrar);
+					}
+
 				}
 
 				// actualizamos modelo (si habia saltos en el orden de linea puede que el orden
@@ -1239,7 +1262,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 			campoNuevo.setNumColumnas(ConstantesDisenyo.TAM_MIN_COMPONENTE_MULTILINEA);
 
-			if (linea.cabenComponentes(campoNuevo)) {
+			if (linea.cabenComponentes(campoNuevo, false)) {
 				campo.setNumColumnas(ConstantesDisenyo.TAM_MIN_COMPONENTE_MULTILINEA);
 				campo.setNormalNumeroLineas(1);
 			} else {
