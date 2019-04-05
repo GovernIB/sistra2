@@ -298,8 +298,6 @@ $.missatge = function(options){
 					
 			} else {
 				
-				//alert(nom);
-				
 				if (nom != "") {
 					contingut_elm.find(".modul").each(function() {
 						var modul_node = $(this);

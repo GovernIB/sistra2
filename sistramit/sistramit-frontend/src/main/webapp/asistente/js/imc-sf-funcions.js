@@ -288,15 +288,15 @@ $.fn.appMissatge = function(options) {
 
 				// text HTML
 
-				if (text_txt) {
+				if (text_txt !== "") {
 
 					text_txt = text_txt.replace("script", "");
 
-					element
-						.find(".imc--text:first div")
-							.html( text_txt );
-
 				}
+
+				element
+					.find(".imc--text:first div")
+						.html( text_txt );
 
 				element_c
 					.off('.appMissatge');
@@ -491,6 +491,10 @@ $.fn.appFitxerAdjunta = function(opcions){
 
 					if (arxiu_val.indexOf("fakepath") !== -1) {
 						arxiu_val = arxiu_val.replace("C:\\fakepath\\", "");
+					}
+
+					if (arxiu_val.indexOf("\\") !== -1) {
+						arxiu_val = arxiu_val.split('\\')[arxiu_val.split('\\').length - 1];
 					}
 
 					elm

@@ -31,6 +31,9 @@
 					{{if rellenado|equals>v}}
 					<div class="imc--estat imc--no-completat"><span></span></div>
 					{{/if}}
+					{{if rellenado|equals>i}}
+					<div class="imc--estat imc--revisa"><span></span></div>
+					{{/if}}
 					<strong>{{titulo}}</strong>
 				</a>
 				{{if rellenado|equals>c}}
@@ -54,6 +57,9 @@
 			</li>
 			<li>
 				<div class="imc--tipus imc--opcional"><span>{{txtOpcional}}</span></div>
+			</li>
+			<li>
+				<div class="imc--tipus imc--revisa"><span>{{txtRevisa}}</span></div>
 			</li>
 			<li>
 				<div class="imc--tipus imc--depenent"><span>{{txtDepenent}}</span></div>

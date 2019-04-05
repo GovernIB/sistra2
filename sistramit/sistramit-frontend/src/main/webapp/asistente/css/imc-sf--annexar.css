@@ -395,7 +395,8 @@ body.imc--sense-scroll { overflow: hidden; }
 .imc--no-annexar .imc-input-annexe .imc--arxiu,
 .imc--no-annexar .imc--doc-electronic .imc--botonera li:first-child { display: none; }
 
-.imc--num-maxim .imc-input-annexe .imc--arxiu { display: none; }
+.imc--num-maxim .imc-input-annexe .imc--arxiu { position: absolute; top: 0; left: 0; width: 1px; height: 1px; line-height: 0; visibility: hidden; opacity: 0; }
+.imc--num-maxim .imc-input-annexe .imc--arxiu a { display: none; }
 
 
 .imc-input-annexe .imc--arxiu input { position: absolute;

@@ -14,6 +14,8 @@
 .imc--formularis a .imc--depenent { grid-area: 1 / 2 / 1 / 2; width: 1.5em; min-height: 1.5em; background: #555 url(imgs/icones/ico_descendent.svg) no-repeat center center / auto .9em; border-bottom:  1px solid #fff; }
 .imc--formularis a .imc--completat { grid-area: 2 / 2 / 2 / 2; width: 1.5em; min-height: 1.5em; background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .7em; }
 .imc--formularis a .imc--no-completat { grid-area: 2 / 2 / 2 / 2; width: 1.5em; min-height: 1.5em; background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
+.imc--formularis a .imc--revisa { grid-area: 2 / 2 / 2 / 2; width: 1.5em; min-height: 1.5em; background: #ad1414 url(imgs/icones/ico_revisa_fff.svg) no-repeat center center / auto .9em; }
+
 
 .imc--formularis a strong { grid-area: 1 / 3 / span 2 / 3; align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
 
@@ -77,6 +79,7 @@
 .imc--icones li div.imc--depenent::before { background: #555 url(imgs/icones/ico_descendent.svg) no-repeat center center / auto .9em; }
 .imc--icones li div.imc--completat::before { background: #006300 url(imgs/icones/ico_correcte.svg) no-repeat center center / auto .9em; }
 .imc--icones li div.imc--no-completat::before { background: #f00 url(imgs/icones/ico_errat.svg) no-repeat center center / auto .7em; }
+.imc--icones li div.imc--revisa::before { background: #ad1414 url(imgs/icones/ico_revisa_fff.svg) no-repeat center center / auto .9em; }
 
 .imc--icones li div span { width: calc(100% - 4em); font-size: .8em; line-height: 1.1em; }
 
@@ -228,6 +231,23 @@ body.imc--sense-scroll { overflow: hidden; }
 .imc-formulari .imc--finestra > h3 span { display: block; overflow: hidden; font-size: 1.2em; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; }
 
 .imc-formulari .imc--contingut { overflow: auto; position: relative; min-width: 45em; height: calc(100% - 6.5em); }
+
+
+/* suporta */
+
+@supports not (display: grid) {
+
+	.imc--formularis a {
+		display: block;
+		position: relative;
+	}
+
+	.imc--formularis a .imc--formulari {
+		width: 3em;
+		height: 100%;
+	}
+
+}
 
 
 /* media 

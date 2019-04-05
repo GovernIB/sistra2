@@ -1,0 +1,42 @@
+/* Document CSS */
+
+
+/* formularis */
+
+.imc--pagaments > ul .imc--pagament-fila a {
+	display: block;
+	position: relative;
+	height: 3em;
+}
+
+.imc--pagaments > ul .imc--pagament-fila a .imc--pagament {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 3em;
+	height: 100%;
+}
+
+.imc--pagaments > ul .imc--pagament-fila a .imc--tipus {
+	position: absolute;
+	top: 0;
+	left: 3em;
+	width: 1.5em;
+	height: 1.5em;
+}
+
+.imc--pagaments > ul .imc--pagament-fila a .imc--estat {
+	position: absolute;
+	top: 1.5em;
+	left: 3em;
+	width: 1.5em;
+	height: 1.5em;
+}
+
+.imc--pagaments > ul .imc--pagament-fila a strong {
+	position: absolute;
+	top: 0;
+	left: 5em;
+	width: calc(100% - 5em);
+	height: 3em;
+}

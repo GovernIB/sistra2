@@ -1,0 +1,42 @@
+/* Document CSS */
+
+
+/* formularis */
+
+.imc--ann > ul a.imc--doc-obri {
+	display: block;
+	position: relative;
+	height: 3em;
+}
+
+.imc--ann > ul a.imc--doc-obri .imc--doc {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 3em;
+	height: 100%;
+}
+
+.imc--ann > ul a.imc--doc-obri .imc--tipus {
+	position: absolute;
+	top: 0;
+	left: 3em;
+	width: 1.5em;
+	height: 1.5em;
+}
+
+.imc--ann > ul a.imc--doc-obri .imc--estat {
+	position: absolute;
+	top: 1.5em;
+	left: 3em;
+	width: 1.5em;
+	height: 1.5em;
+}
+
+.imc--ann > ul a.imc--doc-obri strong {
+	position: absolute;
+	top: 0;
+	left: 5em;
+	width: calc(100% - 5em);
+	height: 3em;
+}

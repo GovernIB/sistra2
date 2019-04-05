@@ -1,0 +1,34 @@
+/* Document CSS */
+
+
+/* per a registrar */
+
+.imc--guarda > ul div.imc--reg {
+	display: block;
+	position: relative;
+	height: 3em;
+}
+
+.imc--guarda > ul div.imc--reg .imc--icona {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 3em;
+	height: 100%;
+}
+
+.imc--guarda > ul div.imc--reg strong {
+	position: absolute;
+	top: 0;
+	left: 3em;
+	width: calc(100% - 5em);
+	height: 3em;
+}
+
+.imc--guarda > ul div.imc--reg button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 3em;
+	height: 100%;
+}

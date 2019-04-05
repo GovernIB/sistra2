@@ -467,7 +467,7 @@ $.fn.appAnnexa = function(options) {
 					} else {
 
 						imc_doc_electronic_form
-							.find(".imc--per-afegir:first input[type=file]")
+							.find(".imc--arxiu:first input[type=file]:first")
 								.each(function() {
 
 									var el_inputs_file = $(this),
@@ -1083,18 +1083,14 @@ $.fn.appFitxerAnnexa = function(opcions){
 			},
 			pinta = function(e) {
 				
-				var input_elm = $(this);
+				input_elm = $(this);
 
 				var arxiu_val = input_elm.val(),
 					hiHaValor = (arxiu_val !== "") ? true : false;
 
-
-
 				if (hiHaValor) {
 
 					// hi ha llista?
-
-
 
 					if ( !elm_perAfegir.find("ul").length ) {
 
@@ -1111,7 +1107,11 @@ $.fn.appFitxerAnnexa = function(opcions){
 						arxiu_val = arxiu_val.replace("C:\\fakepath\\", "");
 					}
 
-					var input_clonat = input_elm.clone();
+					if (arxiu_val.indexOf("\\") !== -1) {
+						arxiu_val = arxiu_val.split('\\')[arxiu_val.split('\\').length - 1];
+					}
+
+					var input_clonat = input_elm.clone(true);
 
 					$("<li>")
 						.html( html_arxiu )
@@ -1126,13 +1126,13 @@ $.fn.appFitxerAnnexa = function(opcions){
 						.append( input_clonat );
 
 					// input original
-
+					/*
 					input_elm
 						.val("");
 
 					if (input_elm.val() !== "") {
 						input_elm.replaceWith( input_elm = input_elm.clone( true ) );
-					}
+					}*/
 
 					// revisem número màxim
 
@@ -1154,6 +1154,15 @@ $.fn.appFitxerAnnexa = function(opcions){
 				bt_elimina
 					.closest("li")
 						.remove();
+
+				// input original
+				
+				input_elm
+					.val("");
+
+				if (input_elm.val() !== "") {
+					input_elm.replaceWith( input_elm = input_elm.clone( true ) );
+				}
 
 				// revisem número màxim
 

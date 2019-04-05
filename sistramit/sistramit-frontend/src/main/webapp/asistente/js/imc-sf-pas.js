@@ -40,6 +40,7 @@ var HTML_PAS_LITERALS = {
 			,txtFormulari: txtFormulari
 			,txtObligatori: txtObligatori
 			,txtOpcional: txtOpcional
+			,txtRevisa: txtRevisa
 			,txtDepenent: txtDepenent
 			,txtCompletat: txtCompletat
 			,txtNoCompletat: txtNoCompletat
@@ -187,10 +188,6 @@ $.fn.appPas = function(options) {
 					return;
 
 				}
-
-				
-
-
 
 				// missatge carregant
 				
@@ -619,6 +616,11 @@ $.fn.appPas = function(options) {
 				// mostra
 
 				mostra();
+
+				// dalt
+
+				window
+					.scrollTo(0, 0);
 				
 			},
 			pinta_ds = function() {
@@ -660,223 +662,373 @@ $.fn.appPas = function(options) {
 						});
 
 			},
+			arxius_rf = false,
 			pinta_rf = function() {
 
-				imc_contingut_c
-					.find(".imc--formularis:first a")
-						.each(function(i) {
+				var inicia_rf = function() {
 
-							var el = $(this)
-								,el_id = el.attr("data-id");
+						imc_contingut_c
+							.find(".imc--formularis:first a")
+								.each(function(i) {
 
-							el
-								.find(".imc--formulari:first span")
-									.text( txtFormulari )
-									.end()
-								.find(".imc--ogligatori:first span")
-									.text( txtObligatori )
-									.end()
-								.find(".imc--opcional:first span")
-									.text( txtOpcional )
-									.end()
-								.find(".imc--depenent:first span")
-									.text( txtDepenent )
-									.end()
-								.find(".imc--completat:first span")
-									.text( txtCompletat )
-									.end()
-								.find(".imc--no-completat:first span")
-									.text( txtNoCompletat );
+									var el = $(this)
+										,el_id = el.attr("data-id");
 
-						});
+									el
+										.find(".imc--formulari:first span")
+											.text( txtFormulari )
+											.end()
+										.find(".imc--ogligatori:first span")
+											.text( txtObligatori )
+											.end()
+										.find(".imc--opcional:first span")
+											.text( txtOpcional )
+											.end()
+										.find(".imc--depenent:first span")
+											.text( txtDepenent )
+											.end()
+										.find(".imc--completat:first span")
+											.text( txtCompletat )
+											.end()
+										.find(".imc--no-completat:first span")
+											.text( txtNoCompletat );
 
-				appPasEmplenarInicia();
+								});
+
+						appPasEmplenarInicia();
+
+					};
+
+				// IE11?
+
+				if (!Modernizr.cssgrid && !arxius_rf) {
+
+					$.get(
+						APP_ + "css/imc-sf--emplenar-ie.css?" + APP_VERSIO
+						,function(cssPas) {
+
+							$("<style>")
+								.html( cssPas )
+									.appendTo( imc_head );
+
+							inicia_rf();
+
+							arxius_rf = true;
+
+						}
+					);
+
+				} else {
+
+					inicia_rf();
+
+				}
 
 			},
+			arxius_ad = false,
 			pinta_ad= function() {
 
-				imc_contingut_c
-					.find(".imc--ann")
-						.each(function(i) {
+				var inicia_ad = function() {
 
-							var el = $(this)
-								,hiHaDocuments = el.find("li").length;
+						imc_contingut_c
+							.find(".imc--ann")
+								.each(function(i) {
 
-							if (hiHaDocuments) {
+									var el = $(this)
+										,hiHaDocuments = el.find("li").length;
 
-								el
-									.attr("aria-hidden", "false");
+									if (hiHaDocuments) {
 
-							} else {
+										el
+											.attr("aria-hidden", "false");
 
-								el
-									.remove()
+									} else {
 
-							}
+										el
+											.remove()
 
-						});
+									}
 
-				imc_contingut_c
-					.find(".imc--annexes:first a")
-						.each(function(i) {
+								});
 
-							var el = $(this),
-								el_id = el.attr("data-id");
+						imc_contingut_c
+							.find(".imc--annexes:first a")
+								.each(function(i) {
 
-							var doc_txt = (el.closest(".imc--e").length) ? txtDocumentElectronic : txtDocumentPresencial;
+									var el = $(this),
+										el_id = el.attr("data-id");
 
-							el
-								.find(".imc--doc:first span")
-									.text( doc_txt )
-									.end()
-								.find(".imc--ogligatori:first span")
-									.text( txtObligatori )
-									.end()
-								.find(".imc--opcional:first span")
-									.text( txtOpcional )
-									.end()
-								.find(".imc--completat:first span")
-									.text( txtCompletat )
-									.end()
-								.find(".imc--no-completat:first span")
-									.text( txtNoCompletat );
+									var doc_txt = (el.closest(".imc--e").length) ? txtDocumentElectronic : txtDocumentPresencial;
 
-						});
+									el
+										.find(".imc--doc:first span")
+											.text( doc_txt )
+											.end()
+										.find(".imc--ogligatori:first span")
+											.text( txtObligatori )
+											.end()
+										.find(".imc--opcional:first span")
+											.text( txtOpcional )
+											.end()
+										.find(".imc--completat:first span")
+											.text( txtCompletat )
+											.end()
+										.find(".imc--no-completat:first span")
+											.text( txtNoCompletat );
 
-				imc_contingut_c
-					.find(".imc-document:first form")
-						.attr("action", APP_ANNEXE_ANNEXA);
+								});
+
+						imc_contingut_c
+							.find(".imc-document:first form")
+								.attr("action", APP_ANNEXE_ANNEXA);
 
 
-				imc_contingut_c
-					.find(".imc--opcions")
-						.each(function(i) {
+						imc_contingut_c
+							.find(".imc--opcions")
+								.each(function(i) {
 
-							var el = $(this),
-								el_data_extension = el.attr("data-extensions");
+									var el = $(this),
+										el_data_extension = el.attr("data-extensions");
 
-							if (el_data_extension !== "null") {
+									if (el_data_extension !== "null") {
 
-								var el_data_extension_arr = el_data_extension.split(","),
-									el_data_extension_arr_size = el_data_extension_arr.length,
-									el_codi = "";
+										var el_data_extension_arr = el_data_extension.split(","),
+											el_data_extension_arr_size = el_data_extension_arr.length,
+											el_codi = "";
 
-								$(el_data_extension_arr)
-									.each(function(j) {
+										$(el_data_extension_arr)
+											.each(function(j) {
 
-										var d_e = this;
+												var d_e = this;
 
-										el_codi += d_e.toUpperCase();
-										el_codi += (j < el_data_extension_arr_size-1) ? ", " : "";
+												el_codi += d_e.toUpperCase();
+												el_codi += (j < el_data_extension_arr_size-1) ? ", " : "";
 
-									});
+											});
 
-								el
-									.find(".imc--extensions strong")
-										.text( el_codi );
+										el
+											.find(".imc--extensions strong")
+												.text( el_codi );
 
-							}
+									}
 
-							// hi ha algo que mostrar a opcions?
+									// hi ha algo que mostrar a opcions?
 
-							if ($.trim( el.html() ) === "") {
+									if ($.trim( el.html() ) === "") {
 
-								el
-									.remove();
+										el
+											.remove();
 
-							}
+									}
 
-						});
+								});
 
-				imc_contingut_c
-					.find(".imc--doc-li")
-						.each(function(i) {
+						imc_contingut_c
+							.find(".imc--doc-li")
+								.each(function(i) {
 
-							var el = $(this),
-								num_max = parseInt( el.attr("data-num") ),
-								num_annexats = el.find(".imc--annexats li").length;
+									var el = $(this),
+										num_max = parseInt( el.attr("data-num") ),
+										num_annexats = el.find(".imc--annexats li").length;
 
-							if (num_max === num_annexats) {
+									if (num_max === num_annexats) {
 
-								el
-									.addClass("imc--completat");
+										el
+											.addClass("imc--completat");
 
-							}
+									}
 
-						});
+								});
 
-				appPasAnnexarInicia();
+						appPasAnnexarInicia();
+
+					};
+
+				// IE11?
+
+				if (!Modernizr.cssgrid && !arxius_ad) {
+
+					$.get(
+						APP_ + "css/imc-sf--annexar-ie.css?" + APP_VERSIO
+						,function(cssPas) {
+
+							$("<style>")
+								.html( cssPas )
+									.appendTo( imc_head );
+
+							inicia_ad();
+
+							arxius_ad = true;
+
+						}
+					);
+
+				} else {
+
+					inicia_ad();
+
+				}
 
 			},
+			arxius_pt = false,
 			pinta_pt = function() {
 
 				// informació pagaments
 
-				var esPresencial = esElectronic = false;
+				var inicia_pt = function() {
 
-				var items = imc_contingut_c.find(".imc--pagaments li")
-					,items_size = items.length;
+						var esPresencial = esElectronic = false;
 
-				if (items_size) {
+						var items = imc_contingut_c.find(".imc--pagaments li")
+							,items_size = items.length;
 
-					items
-						.each(function() {
+						if (items_size) {
 
-							var it = $(this)
-								,presentacio = it.attr("data-presentacio");
+							items
+								.each(function() {
 
-							if (presentacio === "p") {
-								esPresencial = true;
-							}
+									var it = $(this)
+										,presentacio = it.attr("data-presentacio");
 
-							if (presentacio === "e") {
-								esElectronic = true;
-							}
+									if (presentacio === "p") {
+										esPresencial = true;
+									}
 
-							if (presentacio === "" || presentacio === "null") {
-								
-								if (it.find(".imc--pagament-presencial").length) {
-									esPresencial = true;
-								}
-								if (it.find(".imc--pagament-electronic").length) {
-									esElectronic = true;
-								}
+									if (presentacio === "e") {
+										esElectronic = true;
+									}
 
-							}
+									if (presentacio === "" || presentacio === "null") {
+										
+										if (it.find(".imc--pagament-presencial").length) {
+											esPresencial = true;
+										}
+										if (it.find(".imc--pagament-electronic").length) {
+											esElectronic = true;
+										}
 
-						})
+									}
+
+								})
+
+						}
+
+						if (esPresencial) {
+
+							imc_contingut_c
+								.find(".imc--info-pagament:first")
+									.addClass("imc--es-presencial");
+
+						}
+
+						if (esElectronic) {
+
+							imc_contingut_c
+								.find(".imc--info-pagament:first")
+									.addClass("imc--es-electronic");
+
+						}
+
+						// inicia
+
+						appPasPagarInicia();
+
+					};
+
+				// IE11?
+
+				if (!Modernizr.cssgrid && !arxius_pt) {
+
+					$.get(
+						APP_ + "css/imc-sf--pagar-ie.css?" + APP_VERSIO
+						,function(cssPas) {
+
+							$("<style>")
+								.html( cssPas )
+									.appendTo( imc_head );
+
+							inicia_pt();
+
+							arxius_pt = true;
+
+						}
+					);
+
+				} else {
+
+					inicia_pt();
 
 				}
-
-				if (esPresencial) {
-
-					imc_contingut_c
-						.find(".imc--info-pagament:first")
-							.addClass("imc--es-presencial");
-
-				}
-
-				if (esElectronic) {
-
-					imc_contingut_c
-						.find(".imc--info-pagament:first")
-							.addClass("imc--es-electronic");
-
-				}
-
-				// inicia
-
-				appPasPagarInicia()
 
 			},
+			arxius_rt = false,
 			pinta_rt = function() {
 
-				appPasRegistrarInicia();
+				var inicia_rt = function() {
+
+						appPasRegistrarInicia();
+
+					};
+
+				// IE11?
+
+				if (!Modernizr.cssgrid && !arxius_rt) {
+
+					$.get(
+						APP_ + "css/imc-sf--registrar-ie.css?" + APP_VERSIO
+						,function(cssPas) {
+
+							$("<style>")
+								.html( cssPas )
+									.appendTo( imc_head );
+
+							inicia_rt();
+
+							arxius_rt = true;
+
+						}
+					);
+
+				} else {
+
+					inicia_rt();
+
+				}
 
 			},
+			arxius_gj = false,
 			pinta_gj = function() {
 
-				appPasGuardarInicia();
+				var inicia_gj = function() {
+
+						appPasGuardarInicia();
+
+					};
+
+				// IE11?
+
+				if (!Modernizr.cssgrid && !arxius_gj) {
+
+					$.get(
+						APP_ + "css/imc-sf--guardar-ie.css?" + APP_VERSIO
+						,function(cssPas) {
+
+							$("<style>")
+								.html( cssPas )
+									.appendTo( imc_head );
+
+							inicia_rt();
+
+							arxius_gj = true;
+
+						}
+					);
+
+				} else {
+
+					inicia_gj();
+
+				}
 
 			},
 			mostra = function(text) {

@@ -1728,17 +1728,72 @@ $.fn.appFormsFormateig = function(options) {
 	}, options);
 	this.each(function(){
 		var element = $(this),
+			arxius_data = false,
+			arxius_hora = false,
 			inicia = function() {
 
 				// data
 
 				if (!Modernizr.inputtypes.date) {
 
-					element
-						.find(".imc-data")
-							.addClass("imc-no-type-date")
-							.dataCompletar()
-							.datepicker({ dateFormat: "dd/mm/yy", changeMonth: true, changeYear: true });
+					var configura_data = function() {
+
+							element
+								.find(".imc-data")
+									.addClass("imc-no-type-date")
+									.dataCompletar()
+									.datepicker({ dateFormat: "dd/mm/yy", changeMonth: true, changeYear: true });
+
+						};
+
+					if (!arxius_data) {
+
+						$.when(
+			
+							//$.get(APP_ + "css/ui-lightness/jquery-ui-1.10.3.custom.min.css?" + APP_VERSIO)
+							$.getScript(APP_ + "js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
+							,$.getScript(APP_ + "js/utils/jquery-ui-1.10.3.custom.min.js?" + APP_VERSIO)
+
+						).then(
+
+							function( cssPas ) {
+
+								// estils
+
+								//<link rel="stylesheet" media="screen" href="css/imc-sf.css" />
+
+								$("<link>")
+									.attr({ rel: "stylesheet", media: "screen", href: APP_ + "css/ui-lightness/jquery-ui-1.10.3.custom.min.css?" + APP_VERSIO })
+										.appendTo( imc_head );
+
+								arxius_data = true;
+
+								// configura
+
+								configura_data();
+
+							}
+
+						).fail(
+
+							function() {
+
+								envia_ajax = false;
+
+								consola("Forms inicia (data): error caregant CSS i JS");
+
+								imc_contenidor
+									.errors({ estat: "fail" });
+
+							}
+
+						);
+
+					} else {
+
+						configura_data();
+
+					}
 
 				}
 
@@ -1746,10 +1801,54 @@ $.fn.appFormsFormateig = function(options) {
 
 				if (!Modernizr.inputtypes.time) {
 
-					element
-						.find("input[type=time]")
-							.addClass("imc-no-type-time")
-							.horaCompletar();
+					var configura_hora = function() {
+
+							element
+								.find("input[type=time]")
+									.addClass("imc-no-type-time")
+									.horaCompletar();
+
+
+						};
+
+					if (!arxius_hora) {
+
+						$.when(
+			
+							$.getScript(APP_ + "js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
+
+						).then(
+
+							function() {
+
+								arxius_hora = true;
+
+								// configura
+
+								configura_hora();
+								
+							}
+
+						).fail(
+
+							function() {
+
+								envia_ajax = false;
+
+								consola("Forms inicia (hora): error caregant CSS i JS");
+
+								imc_contenidor
+									.errors({ estat: "fail" });
+
+							}
+
+						);
+
+					} else {
+
+						configura_hora();
+
+					}
 
 				}
 
