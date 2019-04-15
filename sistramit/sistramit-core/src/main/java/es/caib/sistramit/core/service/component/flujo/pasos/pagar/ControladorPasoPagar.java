@@ -269,21 +269,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 			}
 			pago.setObligatorio(rs);
 
-			// TODO SUBSANACION REVISAR SEGUN REQUISITOS A ESTABLECER
-			// Tipos presentacion según definición
-			if ("T".equalsIgnoreCase(detalle.getTipo())) {
-				pago.getPresentacionesPermitidas().add(TypePresentacion.ELECTRONICA);
-			}
-			if ("P".equalsIgnoreCase(detalle.getTipo()) && pVariablesFlujo.existeDocumentacionPresencial()) {
-				pago.getPresentacionesPermitidas().add(TypePresentacion.PRESENCIAL);
-
-			}
-			if ("A".equalsIgnoreCase(detalle.getTipo())) {
-				pago.getPresentacionesPermitidas().add(TypePresentacion.ELECTRONICA);
-				if (pVariablesFlujo.existeDocumentacionPresencial()) {
-					pago.getPresentacionesPermitidas().add(TypePresentacion.PRESENCIAL);
-				}
-			}
+			pago.getPresentacionesPermitidas().add(TypePresentacion.ELECTRONICA);
 
 			// Verificamos que existe un tipo de presentacion permitida
 			if (pago.getPresentacionesPermitidas().isEmpty()) {
