@@ -51,13 +51,6 @@
 							 disabled="#{viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago eq null}"
 							process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tasaTramiteSeleccionado.scriptPago)}" />
 
-          	<p:outputLabel value="#{msg['viewDefinicionVersionTasa.tipopago']}" />
-          	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">
-          		<p:selectOneMenu id="tipo" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.tipo}" disabled="true">
-					<f:selectItems value="#{tipoPago.ALL_VALUES}"  itemLabel="#{msg['typePago.'+=tipo]}" var="tipo" />
-				</p:selectOneMenu>
-			</p:panelGrid>
-
 			<p:outputLabel value="#{msg['viewDefinicionVersionTasa.simularpago']}" />
 			<p:selectBooleanCheckbox id="simularpago" disabled="true" value="#{viewDefinicionVersion.tasaTramiteSeleccionado.simulado}" />
 

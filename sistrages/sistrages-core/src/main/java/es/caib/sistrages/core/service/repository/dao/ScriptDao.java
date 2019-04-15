@@ -67,4 +67,12 @@ public interface ScriptDao {
 	 */
 	public boolean checkIdentificadorRepetido(String identificador, Long codigo, Long idScript);
 
+	/**
+	 * Actualiza script.
+	 *
+	 * @param pScript
+	 *            script
+	 */
+	void updateScript(Script pScript);
+
 }

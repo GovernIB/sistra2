@@ -139,22 +139,27 @@ $.fn.appSerialitza = function(opcions) {
 						if (input_el.attr("data-contingut") === "identificador" && input_val !== "") {
 
 							var idValid = false;
+							if (input_el.attr("data-dni") === "s") {
 
-							if (input_el.attr("data-nif") === "s") {
-
-								idValid = ( appValidaIdentificador.nif(input_val) ) ? true : false;
-
-							}
-
-							if (!idValid && input_el.attr("data-cif") === "s") {
-
-								idValid = ( appValidaIdentificador.cif(input_val) ) ? true : false;
+								idValid = ( appValidaIdentificador.dni(input_val) ) ? true : false;
 
 							}
 
 							if (!idValid && input_el.attr("data-nie") === "s") {
 
 								idValid = ( appValidaIdentificador.nie(input_val) ) ? true : false;
+
+							}
+
+							if (!idValid && input_el.attr("data-nifOtros") === "s") {
+
+								idValid = ( appValidaIdentificador.nifOtros(input_val) ) ? true : false;
+
+							}
+
+							if (!idValid && input_el.attr("data-nifPJ") === "s") {
+
+								idValid = ( appValidaIdentificador.nifPJ(input_val) ) ? true : false;
 
 							}
 

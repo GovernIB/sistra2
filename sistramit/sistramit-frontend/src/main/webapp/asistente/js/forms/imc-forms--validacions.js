@@ -26,7 +26,7 @@ $.fn.appValida = function(opcions) {
 	if (format === "correuelectronic") {
 
 		esCorrecte = (/^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,4}$/.test(valor)) ? true : false;
-		
+
 	}
 
 	if (format === "expresioregular") {
@@ -96,7 +96,7 @@ $.fn.appValida = function(opcions) {
 
 		// verifiquem que s'usen caracters numèrics
 
-		var numberExpReg = /^\s*(\+|-)?((\d+(\.\d+)?)|(\.\d+))\s*$/;  
+		var numberExpReg = /^\s*(\+|-)?((\d+(\.\d+)?)|(\.\d+))\s*$/;
 
 		if ( !numberExpReg.test(valor) ) {
 
@@ -287,71 +287,112 @@ $.fn.appValida = function(opcions) {
 // valida identificador
 
 var appValidaIdentificador = (function(){
- 
-	var LETRAS_DNI="TRWAGMYFPDXBNJZSQVHLCKE";
-	
+
+	var LETRAS_DNI = "TRWAGMYFPDXBNJZSQVHLCKE";
+
 	var calcularLetraDni = function(valor) {
 		var dni = parseInt(valor, 10);
 		var modulo = dni % 23;
 		var letra = LETRAS_DNI.charAt(modulo);
-		return letra;			
+		return letra;
 	};
-	
+
 	var obtenerDigitos = function(valor) {
 		var digitos = "";
 		for (i = 0; i < valor.length; i++) {
 			if (!isNaN(valor.charAt(i))) {
 				digitos += valor.charAt(i);
-			}                    
+			}
         }
 		return digitos;
 	}
- 
+
+	// dni, nie, nifOtros, nifPJ, nss  (abans: nif, cif, nie, nss)
+
 	return {
-		nss: function(valor) {
-			if (!valor) { return false; }
-			if (valor.length != 11 && valor.length != 12) { return false; }
-			if (valor.substr(2, 1) == 0) { valor = "" + valor.substr(0, 2) + valor.substr(3, valor.length-1); }
-			return (valor.substr(0, valor.length-2)%97 == valor.substr(valor.length-2, 2)) ? true : false;
-		},
-		nif: function(valor) {
-			
+		dni: function(valor) {
 			valor = valor.toUpperCase();
-			
-			if (valor.length != 9) { 
+
+			if (valor.length != 9) {
 				return false;
 			}
-			
+
 			var patronNif = "^[0-9]{0,8}[" + LETRAS_DNI + "]{1}$";
-			var regExp=new RegExp(patronNif);
+			var regExp = new RegExp(patronNif);
 			if (!regExp.test(valor)) {
 				return false;
 			}
 			var digitos = obtenerDigitos(valor);
 			var letra = calcularLetraDni(digitos);
-			return (valor.charAt(8) ==  letra);
-	        				
+
+			return (valor.charAt(8) == letra);
+
 		},
-		cif: function(valor) {
+		nie: function(valor) {
 			valor = valor.toUpperCase();
-			
-			var patronCif = "^[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}([0-9]||[ABCDEFGHIJ]){1}$";
-			var regExp=new RegExp(patronCif);
+
+			if (valor.length != 9) {
+				return false;
+			}
+
+			var patronNie = "^[X|Y|Z][0-9]{1,8}[A-Z]{1}$";
+			var regExp=new RegExp(patronNie);
 			if (!regExp.test(valor)) {
 				return false;
 			}
-			
+
+			var numero = "0";
+			if (valor.charAt(0) == "Y") {
+				numero = "1";
+			} else if (valor.charAt(0) == "Z"){
+				numero = "2";
+			}
+
+			var digitos = obtenerDigitos(valor);
+
+			var letra = calcularLetraDni(numero + digitos);
+
+			return (valor.charAt(8) ==  letra);
+
+		},
+		nifOtros: function(valor) {
+			valor = valor.toUpperCase();
+
+			if (valor.length != 9) {
+				return false;
+			}
+
+			var patronNifOtros = "^[K|L|M][0-9]{1,8}[A-Z]{1}$";
+			var regExp = new RegExp(patronNifOtros);
+			if (!regExp.test(valor)) {
+				return false;
+			}
+			var digitos = obtenerDigitos(valor);
+			var letra = calcularLetraDni(digitos);
+
+			return (valor.charAt(8) == letra);
+
+		},
+		nifPJ: function(valor) {
+			valor = valor.toUpperCase();
+
+			var patronCif = "^[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}([0-9]||[ABCDEFGHIJ]){1}$";
+			var regExp = new RegExp(patronCif);
+			if (!regExp.test(valor)) {
+				return false;
+			}
+
 			var codigoControl = valor.substring(valor.length - 1, valor.length);
-			
+
 			var v1 = [ 0, 2, 4, 6, 8, 1, 3, 5, 7, 9 ];
 			var v2 = [ "J", "A", "B", "C", "D", "E", "F", "G", "H", "I" ];
-			
+
 			var suma = 0;
             for (i = 2; i <= 6; i += 2) {
             	suma += v1[parseInt(valor.substring(i - 1, i), 10)];
                 suma += parseInt(valor.substring(i, i + 1));
             }
-			
+
             suma += v1[parseInt(valor.substring(7, 8))];
             suma = (10 - (suma % 10));
             if (suma == 10) {
@@ -359,35 +400,18 @@ var appValidaIdentificador = (function(){
             }
             var letraControl = v2[suma];
             res = (codigoControl == (suma + "") || codigoControl.toUpperCase() == letraControl);
-            return res;                
+
+            return res;
+
 		},
-		nie: function(valor) {
-			valor = valor.toUpperCase();
-			
-			if (valor.length != 9) { 
-				return false;
-			}
-			
-			var patronNie = "^[X|Y|Z][0-9]{1,8}[A-Z]{1}$";
-			var regExp=new RegExp(patronNie);
-			if (!regExp.test(valor)) {
-				return false;
-			}
-			
-			var numero = "0";
-			if (valor.charAt(0) == "Y") {
-				numero = "1";
-			} else if (valor.charAt(0) == "Z"){
-				numero = "2";
-			}
-			
-			var digitos = obtenerDigitos(valor);
-			
-			var letra = calcularLetraDni(numero + digitos);
-			
-			return (valor.charAt(8) ==  letra);
-							
+		nss: function(valor) {
+			if (!valor) { return false; }
+			if (valor.length != 11 && valor.length != 12) { return false; }
+			if (valor.substr(2, 1) == 0) { valor = "" + valor.substr(0, 2) + valor.substr(3, valor.length-1); }
+
+			return (valor.substr(0, valor.length-2)%97 == valor.substr(valor.length-2, 2)) ? true : false;
+
 		}
 	}
-	
+
 })();

@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.frontend.model.types.TypeParametroVentana" var="TypeParametroDialogo"/>
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogTraduccionHTML.titulo']}"/></title>
+
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+</h:head>
+<script src="../../tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+		   // General options
+		    mode : "textareas",
+
+		 });
+
+
+    /** Organiza los tabs. **/
+    function mostrar(idioma) {
+    	mostrarTab(idioma);
+    	mostrarButton(idioma);
+    }
+
+   /** Funcion que muestra el tab con la traducción de cada idioma ***/
+   function mostrarButton(idioma) {
+	    ocultarButton("formTraduccion:btnCa");
+	    ocultarButton("formTraduccion:btnEs");
+	    ocultarButton("formTraduccion:btnEn");
+	    ocultarButton("formTraduccion:btnDe");
+
+	   	if (idioma == 'ca') {
+	   		document.getElementById("formTraduccion:btnCa").classList.add("marcado");
+	   		return;
+	   	}
+	   	if (idioma == 'es') {
+	   		document.getElementById("formTraduccion:btnEs").classList.add("marcado");
+	   		return;
+	   	}
+	   	if (idioma == 'en') {
+	   		document.getElementById("formTraduccion:btnEn").classList.add("marcado");
+	   		return;
+	   	}
+	   	if (idioma == 'de') {
+	   		document.getElementById("formTraduccion:btnDe").classList.add("marcado");
+	   		return;
+	   	}
+   }
+
+   /** Ocultar button. **/
+   function ocultarButton(elId) {
+	   	if (document.getElementById(elId) != null) {
+	   		document.getElementById(elId).classList.remove("marcado");
+	   	}
+   }
+
+    /** Funcion que muestra el tab con la traducción de cada idioma ***/
+    function mostrarTab(idioma) {
+    	ocultarTab("formTraduccion:traduccion_ca");
+    	ocultarTab("formTraduccion:traduccion_es");
+    	ocultarTab("formTraduccion:traduccion_en");
+    	ocultarTab("formTraduccion:traduccion_de");
+    	if (idioma == 'ca') {
+    		document.getElementById("formTraduccion:traduccion_ca").parentNode.style.display="";
+    		return;
+    	}
+    	if (idioma == 'es') {
+    		document.getElementById("formTraduccion:traduccion_es").parentNode.style.display="";
+    		return;
+    	}
+    	if (idioma == 'en') {
+    		document.getElementById("formTraduccion:traduccion_en").parentNode.style.display="";
+    		return;
+    	}
+    	if (idioma == 'de') {
+    		document.getElementById("formTraduccion:traduccion_de").parentNode.style.display="";
+    		return;
+    	}
+    }
+
+    /** Ocultar tab. **/
+    function ocultarTab(elId) {
+    	if (document.getElementById(elId) != null) {
+    		document.getElementById(elId).parentNode.style.display="none";
+    	}
+    }
+
+    var visibleCa = #{dialogTraduccionHTML.visibleCa};
+    var visibleEs = #{dialogTraduccionHTML.visibleEs};
+    var visibleEn = #{dialogTraduccionHTML.visibleEn};
+    var visibleDe = #{dialogTraduccionHTML.visibleDe};
+    function guardar() {
+    	if (visibleCa) {
+    		if (!checkTiny("formTraduccion:traduccion_ca")) {
+				debugger;
+				document.getElementById("formTraduccion:btnErrorCa").click();
+    			return;
+    		}
+    	}
+    	if (visibleEs) {
+    		if (!checkTiny("formTraduccion:traduccion_es")) {
+				debugger;
+				document.getElementById("formTraduccion:btnErrorEs").click();
+    			return;
+    		}
+    	}
+    	if (visibleEn) {
+    		if (!checkTiny("formTraduccion:traduccion_en")) {
+				debugger;
+				document.getElementById("formTraduccion:btnErrorEn").click();
+    			return;
+    		}
+    	}
+    	if (visibleDe) {
+    		if (!checkTiny("formTraduccion:traduccion_de")) {
+				debugger;
+				document.getElementById("formTraduccion:btnErrorDe").click();
+    			return;
+    		}
+    	}
+    	document.getElementById("formTraduccion:btnGuardar").click();
+
+    }
+
+    /** Comprueba si esta vacio, En caso de no estarlo, rellena el campo. **/
+    function checkTiny(id) {
+    	var correcto = false;
+    	var contenido = tinyMCE.get(id).getContent();
+    	if (isVacio(contenido)) {
+    		correcto = false;
+    	} else {
+    		debugger;
+    		correcto = true;
+    		document.getElementById(id).value = contenido;
+    	}
+    	return correcto;
+    }
+
+  //<![CDATA[
+    function isVacio(texto)  {
+    	debugger;
+    	while (texto.indexOf('&nbsp;') >= 0) {
+    		texto = texto.replace('&nbsp;',"");
+    	}
+    	while (texto.indexOf('</p>') >= 0) {
+    		texto = texto.replace('</p>',"");
+    	}
+    	while (texto.indexOf('<p>') >= 0) {
+    		texto = texto.replace('<p>',"");
+    	}
+    	while (texto.indexOf('\n') >= 0) {
+    		texto = texto.replace('\n',"");
+    	}
+    	texto = texto.trim();
+    	debugger;
+    	if (texto == '') {
+    		return true;
+   		}
+    	return false;
+    }
+  //]]>
+    </script>
+<style>
+	.marcado {
+		background-color: rgb(0, 127, 255);
+		color: #EEE;
+	}
+
+</style>
+<h:body onload="mostrar('#{dialogTraduccionHTML.idiomaInicial}')">
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccionHTML.modoAcceso}" />
+		<f:viewParam name="OBLIGATORIOS" value="#{dialogTraduccionHTML.iIdiomasObligatorios}" />
+		<f:viewParam name="POSIBLES" value="#{dialogTraduccionHTML.iIdiomasPosibles}" />
+		<f:viewParam name="ES_OPCIONAL" value="#{dialogTraduccionHTML.opcional}" />
+		<f:viewAction action="#{dialogTraduccionHTML.init}" />
+	</f:metadata>
+
+	<h:form id="formTraduccion">
+				<p:growl id="growlDialogTraduccion" widgetVar="growlDialogTraduccion" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+						<div class="ui-inputgroup" align="center" style="margin-top:5px;margin-bottom:5px">
+            				<p:commandButton id="btnCa" value="#{msg['ca']}" 	rendered="#{dialogTraduccionHTML.visibleCa}" oncomplete="mostrar('ca')"  />
+            				<p:commandButton id="btnEs" value="#{msg['es']}" 	rendered="#{dialogTraduccionHTML.visibleEs}" oncomplete="mostrar('es')"  />
+            				<p:commandButton id="btnEn" value="#{msg['en']}" 	rendered="#{dialogTraduccionHTML.visibleEn}" oncomplete="mostrar('en')"  />
+            				<p:commandButton id="btnDe" value="#{msg['de']}" 	rendered="#{dialogTraduccionHTML.visibleDe}" oncomplete="mostrar('de')"  />
+        				</div>
+
+        				<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleCa}" >
+							<p:inputTextarea id="traduccion_ca" value="#{dialogTraduccionHTML.textoCa}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false" maxlength="4000" style="height:600px"  />
+						</div>
+						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleEs}" >
+							<p:inputTextarea id="traduccion_es" value="#{dialogTraduccionHTML.textoEs}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
+						</div>
+						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleEn}" >
+							<p:inputTextarea id="traduccion_en" value="#{dialogTraduccionHTML.textoEn}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px"  />
+						</div>
+						<div style="margin:10px" rendered="#{dialogTraduccionHTML.visibleDe}" >
+							<p:inputTextarea id="traduccion_de" value="#{dialogTraduccionHTML.textoDe}" disabled="#{dialogTraduccionHTML.isConsulta()}" rows="14" cols="140" autoResize="false"  maxlength="4000" style="height:600px" />
+						</div>
+
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+		        		<p:commandButton value="#{msg['botones.aceptar']}" onclick="guardar()" process="formTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}"/>
+						<p:commandButton id="btnGuardar" value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccionHTML.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}" style="display:none"/>
+						<p:commandButton value="#{msg['botones.borrar']}" actionListener="#{dialogTraduccionHTML.borrar()}" process="@this" update="formTraduccion growlDialogTraduccion" styleClass="boton-rojo" rendered="#{dialogTraduccionHTML.isBorrable()}"/>
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccionHTML.cancelar()}" process="@this"  rendered="#{dialogTraduccionHTML.isAlta() or dialogTraduccionHTML.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTraduccionHTML.cancelar()}" process="@this"  rendered="#{dialogTraduccionHTML.isConsulta()}"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+			<p:commandButton id="btnErrorCa" actionListener="#{dialogTraduccionHTML.errorCa()}" update="growlDialogTraduccion" style="display:none" />
+			<p:commandButton id="btnErrorEs" actionListener="#{dialogTraduccionHTML.errorEs()}" update="growlDialogTraduccion" style="display:none" />
+			<p:commandButton id="btnErrorEn" actionListener="#{dialogTraduccionHTML.errorEn()}" update="growlDialogTraduccion" style="display:none" />
+			<p:commandButton id="btnErrorDe" actionListener="#{dialogTraduccionHTML.errorDe()}" update="growlDialogTraduccion" style="display:none" />
+
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

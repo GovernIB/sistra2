@@ -7,8 +7,7 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import es.caib.sistra2.commons.utils.NifCif;
-import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.service.model.script.flujo.ResFirmantesInt;
@@ -23,43 +22,37 @@ import es.caib.sistramit.core.service.model.script.flujo.ResFirmantesInt;
 @SuppressWarnings("serial")
 public final class ResFirmantes implements ResFirmantesInt {
 
-    /**
-     * Indica lista de firmantes.
-     */
-    private final List<Persona> firmantes = new ArrayList<>();
+	/**
+	 * Indica lista de firmantes.
+	 */
+	private final List<Persona> firmantes = new ArrayList<>();
 
-    @Override
-    public String getPluginId() {
-        return ID;
-    }
+	@Override
+	public String getPluginId() {
+		return ID;
+	}
 
-    @Override
-    public void addFirmante(final String nif, final String nombre)
-            throws ScriptException {
+	@Override
+	public void addFirmante(final String nif, final String nombre) throws ScriptException {
 
-        final String nifNormalizado = NifCif.normalizarNif(nif);
+		final String nifNormalizado = NifUtils.normalizarNif(nif);
+		if (!NifUtils.esNifPersonaFisica(nifNormalizado) && !NifUtils.esNifPersonaJuridica(nifNormalizado)) {
+			throw new ScriptException("El dato proporcionado como nif persona no es un nif válido: " + nifNormalizado);
+		}
+		if (StringUtils.isEmpty(nombre) || !XssFilter.filtroXss(nombre)) {
+			throw new ScriptException(
+					"El dato proporcionado como nombre persona esta vacio o contiene caracteres no permitidos");
+		}
+		firmantes.add(new Persona(nifNormalizado, nombre));
+	}
 
-        if (!ValidacionesTipo.getInstance().esNif(nifNormalizado)
-                && !ValidacionesTipo.getInstance().esCif(nifNormalizado)
-                && !ValidacionesTipo.getInstance().esNie(nifNormalizado)) {
-            throw new ScriptException(
-                    "El dato proporcionado como nif persona no es nif/nie/cif: "
-                            + nifNormalizado);
-        }
-        if (StringUtils.isEmpty(nombre) || !XssFilter.filtroXss(nombre)) {
-            throw new ScriptException(
-                    "El dato proporcionado como nombre persona esta vacio o contiene caraceteres no permitidos");
-        }
-        firmantes.add(new Persona(nifNormalizado, nombre));
-    }
-
-    /**
-     * Método de acceso a firmantes.
-     * 
-     * @return firmantes
-     */
-    public List<Persona> getFirmantes() {
-        return firmantes;
-    }
+	/**
+	 * Método de acceso a firmantes.
+	 *
+	 * @return firmantes
+	 */
+	public List<Persona> getFirmantes() {
+		return firmantes;
+	}
 
 }

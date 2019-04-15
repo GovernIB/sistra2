@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Valida si el valor introduït és no nul, i posseeix el format i validacions necessàries per a ser un NIF vàlid. Es considera vàlid tota aquella cadena que tingui 8 números i un caràcter alfanumèric que compleixi amb la regla de validació.</li>
+    	<li>Valida si el valor introduït posseeix el format requerit per a ser un NIF (de persona física o jurídica) vàlid.</li>
 </li>
 	</ul>
 </p>
@@ -51,18 +51,18 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p><b>Exemple 1</b> Validar la cadena '79865432D'. </p>
+<p><b>Exemple 1</b> Validar la cadena 'B88018098'. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esNif('79865432D');
+	var valido = PLUGIN_UTILS.esNif('B88018098');
 </p>
 <p>La funció esNif retorna 'true', pel fet que la cadena conté un NIF vàlid.</p>
 <br />
 
-<p><b>Exemple 2</b> Validar la cadena '4854391C. </p>
+<p><b>Exemple 2</b> Validar la cadena 'A76381906. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esNif('4854391C');
+	var valido = PLUGIN_UTILS.esNif('A76381906');
 </p>
-<p>La funció esNif retorna 'false', pel fet que el valor de la cadena no es correspon a un nif vàlid.</p>
+<p>La funció esNif retorna 'false', pel fet que el valor de la cadena no es correspon a un NIF vàlid.</p>
 <br />
 
 </body>

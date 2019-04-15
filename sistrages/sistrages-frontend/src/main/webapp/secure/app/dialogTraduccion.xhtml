@@ -25,7 +25,6 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTraduccion.modoAcceso}" />
-		<f:viewParam name="DATO" value="#{dialogTraduccion.iData}" />
 		<f:viewParam name="OBLIGATORIOS" value="#{dialogTraduccion.iIdiomasObligatorios}" />
 		<f:viewParam name="POSIBLES" value="#{dialogTraduccion.iIdiomasPosibles}" />
 		<f:viewParam name="ES_OPCIONAL" value="#{dialogTraduccion.opcional}" />
@@ -55,8 +54,8 @@
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.borrar']}" actionListener="#{dialogTraduccion.borrar()}" process="@this" update="formTraduccion growlDialogTraduccion" styleClass="boton-rojo" rendered="#{dialogTraduccion.isBorrable()}"/>
-						<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccion.isAlta() or dialogTraduccion.isEdicion()}"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogTraduccion.aceptar()}" process="formTraduccion" update="formTraduccion growlDialogTraduccion" styleClass="boton-azul" rendered="#{dialogTraduccion.isAlta() or dialogTraduccion.isEdicion()}"/>
+						<p:commandButton value="#{msg['botones.borrar']}" actionListener="#{dialogTraduccion.borrar()}" process="@this" update="formTraduccion growlDialogTraduccion" styleClass="boton-rojo" rendered="#{dialogTraduccion.isBorrable()}"/>
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"  rendered="#{dialogTraduccion.isAlta() or dialogTraduccion.isEdicion()}"/>
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogTraduccion.cancelar()}" process="@this"  rendered="#{dialogTraduccion.isConsulta()}"/>
 					</f:facet>

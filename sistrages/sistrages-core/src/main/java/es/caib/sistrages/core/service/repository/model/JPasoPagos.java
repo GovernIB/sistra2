@@ -48,6 +48,10 @@ public class JPasoPagos implements IModelApi {
 	@OrderBy("orden ASC")
 	private Set<JPagoTramite> pagosTramite = new HashSet<>(0);
 
+	/** Indica si se habilita subsanación. **/
+	@Column(name = "PPG_SUBSAN", nullable = false, precision = 1, scale = 0)
+	private boolean permiteSubsanar;
+
 	/** Constructor. **/
 	public JPasoPagos() {
 		super();
@@ -66,6 +70,21 @@ public class JPasoPagos implements IModelApi {
 	 */
 	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the permiteSubsanar
+	 */
+	public final boolean isPermiteSubsanar() {
+		return permiteSubsanar;
+	}
+
+	/**
+	 * @param permiteSubsanar
+	 *            the permiteSubsanar to set
+	 */
+	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
+		this.permiteSubsanar = permiteSubsanar;
 	}
 
 	/**
@@ -103,6 +122,7 @@ public class JPasoPagos implements IModelApi {
 		if (paso != null) {
 			jpaso = new JPasoPagos();
 			jpaso.setCodigo(paso.getCodigo());
+			jpaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 			if (paso.getTasas() != null) {
 				final Set<JPagoTramite> pagos = new HashSet<>(0);
 				for (final Tasa tasa : paso.getTasas()) {
@@ -129,6 +149,8 @@ public class JPasoPagos implements IModelApi {
 			jpasoPagos = new JPasoPagos();
 			jpasoPagos.setCodigo(null);
 			jpasoPagos.setPasoTramitacion(jpasoTramitacion);
+			jpasoPagos.setPermiteSubsanar(origPasoPagos.isPermiteSubsanar());
+
 			if (origPasoPagos.getPagosTramite() != null) {
 				int ordenPago = 1;
 				jpasoPagos.setPagosTramite(new HashSet<JPagoTramite>());

@@ -40,18 +40,23 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
-	public boolean esNif(final String valor) {
-		return ValidacionesTipo.getInstance().esNif(valor);
-	}
-
-	@Override
-	public boolean esCif(final String valor) {
-		return ValidacionesTipo.getInstance().esCif(valor);
+	public boolean esDni(final String valor) {
+		return ValidacionesTipo.getInstance().esDni(valor);
 	}
 
 	@Override
 	public boolean esNie(final String nie) {
 		return ValidacionesTipo.getInstance().esNie(nie);
+	}
+
+	@Override
+	public boolean esNifOtros(final String valor) {
+		return ValidacionesTipo.getInstance().esNifOtros(valor);
+	}
+
+	@Override
+	public boolean esNifPersonaJuridica(final String valor) {
+		return ValidacionesTipo.getInstance().esNifPersonaJuridica(valor);
 	}
 
 	@Override
@@ -271,6 +276,16 @@ public final class PlgUtils implements PlgUtilsInt {
 	@Override
 	public String extraerValorXml(final String xml, final String xpath) {
 		return ValidacionesCadena.getInstance().extraerValorXml(xml, xpath);
+	}
+
+	@Override
+	public boolean esNifPersonaFisica(final String valor) {
+		return ValidacionesTipo.getInstance().esNifPersonaFisica(valor);
+	}
+
+	@Override
+	public boolean esNif(final String valor) {
+		return ValidacionesTipo.getInstance().esNif(valor);
 	}
 
 }

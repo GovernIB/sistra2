@@ -72,7 +72,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	private ConfiguracionComponent configuracionComponent;
 
 	@Override
-	public ConfiguracionCampo obtenerConfiguracionCampo(RComponente pCampoDef) {
+	public ConfiguracionCampo obtenerConfiguracionCampo(final RComponente pCampoDef) {
 		// Creamos configuracion campo segun tipo y establecemos props
 		// particulares
 		ConfiguracionCampo confCampo = null;
@@ -122,7 +122,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	}
 
 	@Override
-	public ResEstadoCampo evaluarEstadoCampo(DatosSesionFormularioInterno pDatosSesion, RComponente pCampoDef) {
+	public ResEstadoCampo evaluarEstadoCampo(final DatosSesionFormularioInterno pDatosSesion,
+			final RComponente pCampoDef) {
 
 		final RPropiedadesCampo propsCampo = UtilsFormularioInterno.obtenerPropiedadesCampo(pCampoDef);
 
@@ -141,7 +142,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	}
 
 	@Override
-	public RPlantillaFormulario obtenerPlantillaPdfVisualizacion(DatosSesionFormularioInterno pDatosSesion) {
+	public RPlantillaFormulario obtenerPlantillaPdfVisualizacion(final DatosSesionFormularioInterno pDatosSesion) {
 
 		final RFormularioTramite definicionFormulario = UtilsSTG.devuelveDefinicionFormulario(
 				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
@@ -200,7 +201,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	}
 
 	@Override
-	public List<AccionFormulario> evaluarAccionesPaginaActual(DatosSesionFormularioInterno datosSesion) {
+	public List<AccionFormulario> evaluarAccionesPaginaActual(final DatosSesionFormularioInterno datosSesion) {
 		// TODO Pendiente calcular acciones (se pospone hasta implementacion multipagina
 		// y formulario personalizado)
 		final List<AccionFormulario> acciones = new ArrayList<>();
@@ -261,7 +262,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 *            Definición campo
 	 * @return configuración
 	 */
-	private ConfiguracionCampo obtenerConfiguracionCampoTexto(RComponenteTextbox pCampoDef) {
+	private ConfiguracionCampo obtenerConfiguracionCampoTexto(final RComponenteTextbox pCampoDef) {
 
 		ConfiguracionCampo confCampo = null;
 
@@ -354,7 +355,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 *            Definicion campo
 	 * @return configuracion campo
 	 */
-	private ConfiguracionCampo obtenerConfCampoTextoNormal(RComponenteTextbox pCampoDef) {
+	private ConfiguracionCampo obtenerConfCampoTextoNormal(final RComponenteTextbox pCampoDef) {
 		ConfiguracionCampo confCampo;
 		final ConfiguracionCampoTextoNormal confCampoNormal = new ConfiguracionCampoTextoNormal();
 		confCampo = confCampoNormal;
@@ -402,9 +403,10 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 */
 	private ConfiguracionCampo obtenerConfCampoTextoIdentificador(final RComponenteTextbox pCampoDef) {
 		final ConfiguracionCampoTextoId confCampoId = new ConfiguracionCampoTextoId();
-		confCampoId.getOpciones().setNif(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNif()));
+		confCampoId.getOpciones().setDni(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isDni()));
 		confCampoId.getOpciones().setNie(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNie()));
-		confCampoId.getOpciones().setCif(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isCif()));
+		confCampoId.getOpciones().setNifOtros(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNifOtros()));
+		confCampoId.getOpciones().setNifPJ(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNif()));
 		confCampoId.getOpciones().setNss(TypeSiNo.fromBoolean(pCampoDef.getTextoIdentificacion().isNss()));
 		return confCampoId;
 	}
@@ -417,7 +419,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 	 * @param confCampo
 	 *            Configuración campo
 	 */
-	private void establecerPropiedadesGenerales(RComponente pCampoDef, ConfiguracionCampo confCampo) {
+	private void establecerPropiedadesGenerales(final RComponente pCampoDef, final ConfiguracionCampo confCampo) {
 		// Establecemos props generales
 		confCampo.setAyuda(pCampoDef.getAyuda());
 		final RPropiedadesCampo propsGenerales = UtilsFormularioInterno.obtenerPropiedadesCampo(pCampoDef);

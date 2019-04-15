@@ -186,8 +186,9 @@ public class ViewDominios extends ViewControllerBase {
 		}
 
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada()) {
 			return;
+		}
 
 		// Eliminamos
 		if (this.dominioService.removeDominio(this.datoSeleccionado.getCodigo())) {
@@ -197,7 +198,7 @@ public class ViewDominios extends ViewControllerBase {
 			// Mostramos mensaje
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
 	}
 

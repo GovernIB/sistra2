@@ -14,100 +14,112 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 @SuppressWarnings("serial")
 public final class OpcionesCampoTextoId implements Serializable {
 
-    /**
-     * Indica si admite nif.
-     */
-    private TypeSiNo nif = TypeSiNo.NO;
+	/**
+	 * Indica si admite dni.
+	 */
+	private TypeSiNo dni = TypeSiNo.NO;
 
-    /**
-     * Indica si admite cif.
-     */
-    private TypeSiNo cif = TypeSiNo.NO;
+	/**
+	 * Indica si admite nie.
+	 */
+	private TypeSiNo nie = TypeSiNo.NO;
 
-    /**
-     * Indica si admite nie.
-     */
-    private TypeSiNo nie = TypeSiNo.NO;
+	/**
+	 * Indica si admite nif.
+	 */
+	private TypeSiNo nifOtros = TypeSiNo.NO;
 
-    /**
-     * Indica si admite número seguridad social.
-     */
-    private TypeSiNo nss = TypeSiNo.NO;
+	/**
+	 * Indica si admite nif de personas jurídicas.
+	 */
+	private TypeSiNo nifPJ = TypeSiNo.NO;
 
-    /**
-     * Método de acceso a nif.
-     *
-     * @return nif
-     */
-    public TypeSiNo getNif() {
-        return nif;
-    }
+	/**
+	 * Indica si admite número seguridad social.
+	 */
+	private TypeSiNo nss = TypeSiNo.NO;
 
-    /**
-     * Método para establecer nif.
-     *
-     * @param pNif
-     *            nif a establecer
-     */
-    public void setNif(final TypeSiNo pNif) {
-        nif = pNif;
-    }
+	/**
+	 * Método de acceso a nie.
+	 *
+	 * @return nie
+	 */
+	public TypeSiNo getNie() {
+		return nie;
+	}
 
-    /**
-     * Método de acceso a cif.
-     *
-     * @return cif
-     */
-    public TypeSiNo getCif() {
-        return cif;
-    }
+	/**
+	 * Método para establecer nie.
+	 *
+	 * @param pNie
+	 *            nie a establecer
+	 */
+	public void setNie(final TypeSiNo pNie) {
+		nie = pNie;
+	}
 
-    /**
-     * Método para establecer cif.
-     *
-     * @param pCif
-     *            cif a establecer
-     */
-    public void setCif(final TypeSiNo pCif) {
-        cif = pCif;
-    }
+	/**
+	 * Método de acceso a nss.
+	 *
+	 * @return nss
+	 */
+	public TypeSiNo getNss() {
+		return nss;
+	}
 
-    /**
-     * Método de acceso a nie.
-     *
-     * @return nie
-     */
-    public TypeSiNo getNie() {
-        return nie;
-    }
+	/**
+	 * Método para establecer nss.
+	 *
+	 * @param pNss
+	 *            nss a establecer
+	 */
+	public void setNss(final TypeSiNo pNss) {
+		nss = pNss;
+	}
 
-    /**
-     * Método para establecer nie.
-     *
-     * @param pNie
-     *            nie a establecer
-     */
-    public void setNie(final TypeSiNo pNie) {
-        nie = pNie;
-    }
+	/**
+	 * @return the dni
+	 */
+	public final TypeSiNo getDni() {
+		return dni;
+	}
 
-    /**
-     * Método de acceso a nss.
-     *
-     * @return nss
-     */
-    public TypeSiNo getNss() {
-        return nss;
-    }
+	/**
+	 * @param dni
+	 *            the dni to set
+	 */
+	public final void setDni(final TypeSiNo dni) {
+		this.dni = dni;
+	}
 
-    /**
-     * Método para establecer nss.
-     *
-     * @param pNss
-     *            nss a establecer
-     */
-    public void setNss(final TypeSiNo pNss) {
-        nss = pNss;
-    }
+	/**
+	 * @return the nifOtros
+	 */
+	public final TypeSiNo getNifOtros() {
+		return nifOtros;
+	}
+
+	/**
+	 * @param nifOtros
+	 *            the nifOtros to set
+	 */
+	public final void setNifOtros(final TypeSiNo nifOtros) {
+		this.nifOtros = nifOtros;
+	}
+
+	/**
+	 * @return the nifPJ
+	 */
+	public TypeSiNo getNifPJ() {
+		return nifPJ;
+	}
+
+	/**
+	 * @param nifPJ
+	 *            the nifPJ to set
+	 */
+	public void setNifPJ(final TypeSiNo nifPJ) {
+		this.nifPJ = nifPJ;
+	}
 
 }

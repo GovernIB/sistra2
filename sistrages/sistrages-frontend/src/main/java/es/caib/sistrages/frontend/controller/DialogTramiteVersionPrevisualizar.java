@@ -372,7 +372,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
-			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 900, 520);
+			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
 

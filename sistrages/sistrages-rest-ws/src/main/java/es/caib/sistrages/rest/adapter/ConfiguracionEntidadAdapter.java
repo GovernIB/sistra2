@@ -33,41 +33,49 @@ public class ConfiguracionEntidadAdapter {
 	/**
 	 * Conversion a modelo rest.
 	 *
-	 * @param idEntidad
+	 * @param entidad
 	 * @param formSoporte
 	 */
-	public RConfiguracionEntidad convertir(final Entidad idEntidad, final List<FormularioSoporte> formSoporte,
+	public RConfiguracionEntidad convertir(final Entidad entidad, final List<FormularioSoporte> formSoporte,
 			final List<PlantillaFormateador> plantillas) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
-		rConfiguracionEntidad.setIdentificador(idEntidad.getCodigoDIR3() != null ? idEntidad.getCodigoDIR3() : null);
+		rConfiguracionEntidad.setIdentificador(entidad.getCodigoDIR3() != null ? entidad.getCodigoDIR3() : null);
 		rConfiguracionEntidad.setLogo(restApiService.getReferenciaFichero(
-				idEntidad.getLogoAsistente() != null ? idEntidad.getLogoAsistente().getCodigo() : null));
+				entidad.getLogoAsistente() != null ? entidad.getLogoAsistente().getCodigo() : null));
 		rConfiguracionEntidad.setLogoGestor(restApiService.getReferenciaFichero(
-				idEntidad.getLogoGestor() != null ? idEntidad.getLogoGestor().getCodigo() : null));
+				entidad.getLogoGestor() != null ? entidad.getLogoGestor().getCodigo() : null));
 		rConfiguracionEntidad.setCss(restApiService
-				.getReferenciaFichero(idEntidad.getCss() != null ? idEntidad.getCss().getCodigo() : null));
-		rConfiguracionEntidad.setEmail(idEntidad.getEmail());
-		rConfiguracionEntidad.setContactoHTML(AdapterUtils.generarLiteral(idEntidad.getPie()));
-		rConfiguracionEntidad.setUrlCarpeta(AdapterUtils.generarLiteral(idEntidad.getUrlCarpetaCiudadana()));
-		rConfiguracionEntidad.setAyudaTelefono(idEntidad.getTelefono());
-		rConfiguracionEntidad.setAyudaUrl(idEntidad.getUrlSoporte());
+				.getReferenciaFichero(entidad.getCss() != null ? entidad.getCss().getCodigo() : null));
+		rConfiguracionEntidad.setEmail(entidad.getEmail());
+		rConfiguracionEntidad.setContactoHTML(AdapterUtils.generarLiteral(entidad.getPie()));
+		rConfiguracionEntidad.setUrlCarpeta(AdapterUtils.generarLiteral(entidad.getUrlCarpetaCiudadana()));
+		rConfiguracionEntidad.setAyudaTelefono(entidad.getTelefono());
+		rConfiguracionEntidad.setAyudaUrl(entidad.getUrlSoporte());
 		rConfiguracionEntidad.setPlugins(
-				AdapterUtils.crearPlugins(restApiService.listPlugin(TypeAmbito.ENTIDAD, idEntidad.getCodigo(), null)));
+				AdapterUtils.crearPlugins(restApiService.listPlugin(TypeAmbito.ENTIDAD, entidad.getCodigo(), null)));
 		rConfiguracionEntidad.setAyudaFormulario(generaFormularios(formSoporte));
-		rConfiguracionEntidad.setAyudaEmail(idEntidad.isEmailHabilitado());
-		rConfiguracionEntidad.setDescripcion(AdapterUtils.generarLiteral(idEntidad.getNombre()));
-		rConfiguracionEntidad.setDiasPreregistro(idEntidad.getDiasPreregistro());
-		rConfiguracionEntidad.setInfoLopdHTML(AdapterUtils.generarLiteral(idEntidad.getLopd()));
+		rConfiguracionEntidad.setAyudaEmail(entidad.isEmailHabilitado());
+		rConfiguracionEntidad.setDescripcion(AdapterUtils.generarLiteral(entidad.getNombre()));
+		rConfiguracionEntidad.setDiasPreregistro(entidad.getDiasPreregistro());
+		rConfiguracionEntidad.setInfoLopdHTML(AdapterUtils.generarLiteral(entidad.getLopd()));
 
-		rConfiguracionEntidad.setMapaWeb(AdapterUtils.generarLiteral(idEntidad.getMapaWeb()));
-		rConfiguracionEntidad.setAvisoLegal(AdapterUtils.generarLiteral(idEntidad.getAvisoLegal()));
-		rConfiguracionEntidad.setRss(AdapterUtils.generarLiteral(idEntidad.getRss()));
-		rConfiguracionEntidad.setUrlFacebook(idEntidad.getUrlFacebook());
-		rConfiguracionEntidad.setUrlInstagram(idEntidad.getUrlInstagram());
-		rConfiguracionEntidad.setUrlTwitter(idEntidad.getUrlTwitter());
-		rConfiguracionEntidad.setUrlYoutube(idEntidad.getUrlYoutube());
+		rConfiguracionEntidad.setMapaWeb(AdapterUtils.generarLiteral(entidad.getMapaWeb()));
+		rConfiguracionEntidad.setAvisoLegal(AdapterUtils.generarLiteral(entidad.getAvisoLegal()));
+		rConfiguracionEntidad.setRss(AdapterUtils.generarLiteral(entidad.getRss()));
+		rConfiguracionEntidad.setUrlFacebook(entidad.getUrlFacebook());
+		rConfiguracionEntidad.setUrlInstagram(entidad.getUrlInstagram());
+		rConfiguracionEntidad.setUrlTwitter(entidad.getUrlTwitter());
+		rConfiguracionEntidad.setUrlYoutube(entidad.getUrlYoutube());
+		rConfiguracionEntidad.setDiasTramitesPresenciales(entidad.getDiasTramitesPresenciales());
+		rConfiguracionEntidad.setPermiteSubsanarAnexar(entidad.isPermiteSubsanarAnexar());
+		rConfiguracionEntidad.setPermiteSubsanarPagar(entidad.isPermiteSubsanarPagar());
+		rConfiguracionEntidad.setPermiteSubsanarRegistrar(entidad.isPermiteSubsanarRegistrar());
+		rConfiguracionEntidad
+				.setInstruccionesPresencial(AdapterUtils.generarLiteral(entidad.getInstruccionesPresencial()));
+		rConfiguracionEntidad
+				.setInstruccionesSubsanacion(AdapterUtils.generarLiteral(entidad.getInstruccionesSubsanacion()));
 
 		if (plantillas != null && !plantillas.isEmpty()) {
 			final List<RPlantillaIdioma> plantillasDefecto = new ArrayList<>();

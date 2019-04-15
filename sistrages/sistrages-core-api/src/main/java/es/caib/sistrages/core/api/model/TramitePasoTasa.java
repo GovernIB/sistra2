@@ -18,6 +18,9 @@ public class TramitePasoTasa extends TramitePaso {
 	/** Tasas. **/
 	private List<Tasa> tasas;
 
+	/** Permite subsanación paso registrar. **/
+	private boolean permiteSubsanar;
+
 	/**
 	 * @return the tasas
 	 */
@@ -31,6 +34,21 @@ public class TramitePasoTasa extends TramitePaso {
 	 */
 	public void setTasas(final List<Tasa> tasas) {
 		this.tasas = tasas;
+	}
+
+	/**
+	 * @return the permiteSubsanar
+	 */
+	public boolean isPermiteSubsanar() {
+		return permiteSubsanar;
+	}
+
+	/**
+	 * @param permiteSubsanar
+	 *            the permiteSubsanar to set
+	 */
+	public void setPermiteSubsanar(final boolean permiteSubsanar) {
+		this.permiteSubsanar = permiteSubsanar;
 	}
 
 	/**

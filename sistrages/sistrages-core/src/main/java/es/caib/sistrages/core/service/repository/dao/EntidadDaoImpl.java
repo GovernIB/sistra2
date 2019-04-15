@@ -184,6 +184,14 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setUrlInstagram(entidad.getUrlInstagram());
 		jEntidad.setUrlTwitter(entidad.getUrlTwitter());
 		jEntidad.setUrlFacebook(entidad.getUrlFacebook());
+		jEntidad.setPermiteSubsanarAnexar(entidad.isPermiteSubsanarAnexar());
+		jEntidad.setPermiteSubsanarPagar(entidad.isPermiteSubsanarPagar());
+		jEntidad.setPermiteSubsanarRegistrar(entidad.isPermiteSubsanarRegistrar());
+		jEntidad.setInstruccionesSubsanacion(
+				JLiteral.mergeModel(jEntidad.getInstruccionesSubsanacion(), entidad.getInstruccionesSubsanacion()));
+		jEntidad.setDiasTramitesPresenciales(entidad.getDiasTramitesPresenciales());
+		jEntidad.setInstruccionesPresencial(
+				JLiteral.mergeModel(jEntidad.getInstruccionesPresencial(), entidad.getInstruccionesPresencial()));
 		entityManager.merge(jEntidad);
 	}
 

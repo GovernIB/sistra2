@@ -382,8 +382,9 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						return false;
 					}
 
-					if (TypeCampoTexto.ID.equals(campo.getTipoCampoTexto()) && !campo.isIdentNif()
-							&& !campo.isIdentCif() && !campo.isIdentNie() && !campo.isIdentNss()) {
+					if (TypeCampoTexto.ID.equals(campo.getTipoCampoTexto()) && !campo.isIdentDni()
+							&& !campo.isIdentNie() && !campo.isIdentNifOtros() && !campo.isIdentNif()
+							&& !campo.isIdentNss()) {
 						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 								UtilJSF.getLiteral("warning.componente.identificacion"), true);
 						return false;

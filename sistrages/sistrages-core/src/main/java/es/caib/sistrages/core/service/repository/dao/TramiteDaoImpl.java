@@ -21,6 +21,7 @@ import es.caib.sistrages.core.api.exception.TramiteVersionException;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
@@ -1181,6 +1182,21 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		return identificador;
+	}
+
+	@Override
+	public void updateLiteral(final Literal pLiteral) {
+		if (pLiteral == null) {
+			throw new FaltanDatosException("Falta el literal");
+		}
+
+		final JLiteral jLiteral = entityManager.find(JLiteral.class, pLiteral.getCodigo());
+		if (jLiteral == null) {
+			throw new NoExisteDato("No existe el literal " + pLiteral.getCodigo());
+		}
+
+		final JLiteral jLiteralNew = JLiteral.fromModel(pLiteral);
+		entityManager.merge(jLiteralNew);
 	}
 
 }

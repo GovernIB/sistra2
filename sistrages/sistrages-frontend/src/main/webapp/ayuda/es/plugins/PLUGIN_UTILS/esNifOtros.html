@@ -1,0 +1,69 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNifOtros(nif)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNifOtros.html">esNifOtros</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNifOtros(String nif): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el valor introducido posee el formato requerido para ser un NIF para españoles menores de 14 años o extranjeros sin NIE que de forma transitoria necesitan una identificación válida. Se considera válido toda aquella cadena que tenga 7 números, un carácter alfanumérico al principio para marcar que es un tipo NIF (letra K/L/M) y un carácter alfanumérico que cumpla con la regla de validación.</li>
+</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>nif</b>: cadena que representa el NIF para españoles menores de 14 años o extranjeros sin NIE que de forma transitoria necesitan una identificación a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si la cadena es un NIF para españoles menores de 14 años o extranjeros sin NIE que de forma transitoria necesitan una identificación válida y false si la cadena no se corresponde con dicho formato.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar la cadena 'K2481154Y'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNifOtros('K2481154Y');
+</p>
+<p>La función esNifOtros retorna 'true', debido a que la cadena contiene un NIF para españoles menores de 14 años o extranjeros sin NIE que de forma transitoria necesitan una identificación válida.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar la cadena 'J2411154Y'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNifOtros('J2411154Y');
+</p>
+<p>La función esNifOtros retorna 'false', debido a que el valor de la cadena no se corresponde a un NIF para españoles menores de 14 años o extranjeros sin NIE que de forma transitoria necesitan una identificación válida.</p>
+<br />
+
+</body>
+</html>

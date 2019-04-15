@@ -1017,7 +1017,7 @@ $.fn.appPas = function(options) {
 								.html( cssPas )
 									.appendTo( imc_head );
 
-							inicia_rt();
+							inicia_gj();
 
 							arxius_gj = true;
 

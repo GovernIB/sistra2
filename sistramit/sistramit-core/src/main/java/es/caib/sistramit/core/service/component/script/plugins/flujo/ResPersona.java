@@ -4,7 +4,7 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import es.caib.sistra2.commons.utils.NifCif;
+import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistramit.core.service.component.script.ScriptUtils;
 import es.caib.sistramit.core.service.model.script.flujo.ResPersonaInt;
 
@@ -46,7 +46,7 @@ public final class ResPersona implements ResPersonaInt {
 	public void setDatosPersona(final String pNif, final String pNombre, final String pApellido1,
 			final String pApellido2) throws ScriptException {
 
-		nif = NifCif.normalizarNif(pNif);
+		nif = NifUtils.normalizarNif(pNif);
 
 		ScriptUtils.validarDatosPersona(nif, pNombre, pApellido1, pApellido2);
 

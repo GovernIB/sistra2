@@ -7,13 +7,13 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getValorCompuesto(idFormulario, campo)');
+		copiarPortapeles('PLUGIN_FORMULARIOS.getValorCompuesto(idFormulario, campo)');
 	}
 </script>
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+  		  <li><a href="./index.html">PLUGIN_FORMULARIOS</a></li>
       	  <li>></li>
       	  <li><a href="./getValorCompuesto.html">getValorCompuesto</a></li>
   	</ul>
@@ -54,7 +54,7 @@
  </p>
  <p> Obtener el valor del campo compuesto 'campoProvincia' del formulario con id 'Form1':</p>
  <p class="codigoScript">
-	var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorCompuesto('Form1','campoProvincia');	
+	var valorCompuesto = PLUGIN_FORMULARIOS.getValorCompuesto('Form1','campoProvincia');	
  </p>
  <p>
 	La función getValorCompuesto retornará el objeto valorCompuesto. Para obtener los datos del valor compuesto podemos pedir su código o descripción tal como se muestra a continuación:

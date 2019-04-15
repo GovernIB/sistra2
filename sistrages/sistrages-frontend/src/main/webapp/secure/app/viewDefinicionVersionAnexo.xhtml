@@ -56,7 +56,7 @@
 					<p:outputLabel value="#{msg['viewDefinicionVersionAnexo.ayuda.mensaje']}" />
 					<p:outputPanel styleClass="ui-inputgroup">
 	           			<p:inputText id="mensaje_input" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
-	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto)}"
+	           			<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.documentoTramiteSeleccionado.ayudaTexto)}"
 							process="@this" update="growl"/>
 	       			</p:outputPanel>
 

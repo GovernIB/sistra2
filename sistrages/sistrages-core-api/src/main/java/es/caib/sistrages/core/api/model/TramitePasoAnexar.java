@@ -21,6 +21,9 @@ public class TramitePasoAnexar extends TramitePaso {
 	/** Script anexos dinámicos. **/
 	private Script scriptAnexosDinamicos;
 
+	/** Indica si se habilita subsanación. **/
+	private boolean permiteSubsanar;
+
 	/**
 	 * @return the documentos
 	 */
@@ -62,6 +65,20 @@ public class TramitePasoAnexar extends TramitePaso {
 				ordenDocumento++;
 			}
 		}
+	}
+
+	/**
+	 * @return the permiteSubsanar
+	 */
+	public boolean isPermiteSubsanar() {
+		return permiteSubsanar;
+	}
+
+	/**
+	 * @param permiteSubsanar the permiteSubsanar to set
+	 */
+	public void setPermiteSubsanar(boolean permiteSubsanar) {
+		this.permiteSubsanar = permiteSubsanar;
 	}
 
 }

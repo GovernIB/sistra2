@@ -82,11 +82,23 @@ public final class Constantes {
 	/** Constante errores de validacion. **/
 	public static final String CLAVE_MOCHILA_ERRORES_MSG = "ERRORESMSG";
 
+	/** Constante mochila literal. **/
+	public static final String CLAVE_MOCHILA_LITERALES = "LITERALES";
+
+	/** Constante mochila literal. **/
+	public static final String CLAVE_MOCHILA_LITERALES_HTML = "LITERALESHTML";
+
+	/** Sistramit rest password. **/
 	public static final String SISTRAMIT_REST_PWD = "sistramit.rest.pwd";
 
+	/** Sistramit rest usuario. **/
 	public static final String SISTRAMIT_REST_USER = "sistramit.rest.user";
 
+	/** Sistramit rest url. **/
 	public static final String SISTRAMIT_REST_URL = "sistramit.rest.url";
+
+	/** Sistrages ayuda de los scripts. **/
+	public static final String SISTRAGES_AYUDA_URL = "sistrages.ayuda.url";
 
 	public static final String EXTENSIONES_TODAS = "*";
 	public static final String LISTAS_SEPARADOR = ";";

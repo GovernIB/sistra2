@@ -139,6 +139,37 @@ public class JEntidad implements IModelApi {
 	@Column(name = "ENT_ROLSUP", nullable = false, length = 100)
 	private String roleSup;
 
+	/** Texto respecto LOPD (introducción). **/
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_LOPDI")
+	private JLiteral lopdIntroduccion;
+
+	/** Permite subsanación paso anexar. **/
+	@Column(name = "ENT_SUBANE", nullable = false, precision = 1, scale = 0)
+	private boolean permiteSubsanarAnexar;
+
+	/** Permite subsanación paso pagar. **/
+	@Column(name = "ENT_SUBPAG", nullable = false, precision = 1, scale = 0)
+	private boolean permiteSubsanarPagar;
+
+	/** Permite subsanación paso registrar. **/
+	@Column(name = "ENT_SUBREG", nullable = false, precision = 1, scale = 0)
+	private boolean permiteSubsanarRegistrar;
+
+	/** Instrucciones subsanación */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_SUBINS")
+	private JLiteral instruccionesSubsanacion;
+
+	/** Días a mantener los trámites presenciales. **/
+	@Column(name = "ENT_PRSDIA", nullable = false, precision = 1, scale = 0)
+	private Integer diasTramitesPresenciales;
+
+	/** Instrucciones presencial */
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "ENT_PRSINS")
+	private JLiteral instruccionesPresencial;
+
 	/**
 	 * @return the codigo
 	 */
@@ -489,6 +520,111 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
+	 * @return the lopdIntroduccion
+	 */
+	public final JLiteral getLopdIntroduccion() {
+		return lopdIntroduccion;
+	}
+
+	/**
+	 * @param lopdIntroduccion
+	 *            the lopdIntroduccion to set
+	 */
+	public final void setLopdIntroduccion(final JLiteral lopdIntroduccion) {
+		this.lopdIntroduccion = lopdIntroduccion;
+	}
+
+	/**
+	 * @return the permiteSubsanarAnexar
+	 */
+	public final boolean isPermiteSubsanarAnexar() {
+		return permiteSubsanarAnexar;
+	}
+
+	/**
+	 * @param permiteSubsanarAnexar
+	 *            the permiteSubsanarAnexar to set
+	 */
+	public final void setPermiteSubsanarAnexar(final boolean permiteSubsanarAnexar) {
+		this.permiteSubsanarAnexar = permiteSubsanarAnexar;
+	}
+
+	/**
+	 * @return the permiteSubsanarPagar
+	 */
+	public final boolean isPermiteSubsanarPagar() {
+		return permiteSubsanarPagar;
+	}
+
+	/**
+	 * @param permiteSubsanarPagar
+	 *            the permiteSubsanarPagar to set
+	 */
+	public final void setPermiteSubsanarPagar(final boolean permiteSubsanarPagar) {
+		this.permiteSubsanarPagar = permiteSubsanarPagar;
+	}
+
+	/**
+	 * @return the permiteSubsanarRegistrar
+	 */
+	public final boolean isPermiteSubsanarRegistrar() {
+		return permiteSubsanarRegistrar;
+	}
+
+	/**
+	 * @param permiteSubsanarRegistrar
+	 *            the permiteSubsanarRegistrar to set
+	 */
+	public final void setPermiteSubsanarRegistrar(final boolean permiteSubsanarRegistrar) {
+		this.permiteSubsanarRegistrar = permiteSubsanarRegistrar;
+	}
+
+	/**
+	 * @return the instruccionesSubsanacion
+	 */
+	public final JLiteral getInstruccionesSubsanacion() {
+		return instruccionesSubsanacion;
+	}
+
+	/**
+	 * @param instruccionesSubsanacion
+	 *            the instruccionesSubsanacion to set
+	 */
+	public final void setInstruccionesSubsanacion(final JLiteral instruccionesSubsanacion) {
+		this.instruccionesSubsanacion = instruccionesSubsanacion;
+	}
+
+	/**
+	 * @return the diasTramitesPresenciales
+	 */
+	public final Integer isDiasTramitesPresenciales() {
+		return diasTramitesPresenciales;
+	}
+
+	/**
+	 * @param diasTramitesPresenciales
+	 *            the diasTramitesPresenciales to set
+	 */
+	public final void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
+		this.diasTramitesPresenciales = diasTramitesPresenciales;
+	}
+
+	/**
+	 * @return the instruccionesPresencial
+	 */
+	public final JLiteral getInstruccionesPresencial() {
+		return instruccionesPresencial;
+	}
+
+	/**
+	 * @param instruccionesPresencial
+	 *            the instruccionesPresencial to set
+	 */
+	public final void setInstruccionesPresencial(final JLiteral instruccionesPresencial) {
+		this.instruccionesPresencial = instruccionesPresencial;
+	}
+
+	/**
 	 * toModel.
 	 */
 	public Entidad toModel() {
@@ -544,8 +680,21 @@ public class JEntidad implements IModelApi {
 		entidad.setUrlFacebook(urlFacebook);
 
 		entidad.setRolSup(roleSup);
-		return entidad;
 
+		if (lopdIntroduccion != null) {
+			entidad.setLopdIntroduccion(lopdIntroduccion.toModel());
+		}
+		entidad.setPermiteSubsanarAnexar(permiteSubsanarAnexar);
+		entidad.setPermiteSubsanarPagar(permiteSubsanarPagar);
+		entidad.setPermiteSubsanarRegistrar(permiteSubsanarRegistrar);
+		if (instruccionesSubsanacion != null) {
+			entidad.setInstruccionesSubsanacion(instruccionesSubsanacion.toModel());
+		}
+		if (instruccionesPresencial != null) {
+			entidad.setInstruccionesPresencial(instruccionesPresencial.toModel());
+		}
+		entidad.setDiasTramitesPresenciales(diasTramitesPresenciales);
+		return entidad;
 	}
 
 }

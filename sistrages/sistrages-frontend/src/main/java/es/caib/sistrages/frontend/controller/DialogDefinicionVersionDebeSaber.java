@@ -92,12 +92,13 @@ public class DialogDefinicionVersionDebeSaber extends DialogControllerBase {
 	 *
 	 */
 	public void editar() {
+
 		if (data.getInstruccionesIniciales() == null) {
-			UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.ALTA, data.getInstruccionesIniciales(),
-					tramiteVersion);
+			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.ALTA, data.getInstruccionesIniciales(), idiomas,
+					idiomas, false);
 		} else {
-			UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.EDICION, data.getInstruccionesIniciales(),
-					tramiteVersion);
+			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, data.getInstruccionesIniciales(), idiomas,
+					idiomas, false);
 		}
 	}
 

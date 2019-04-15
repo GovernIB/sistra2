@@ -104,14 +104,14 @@ public class CatalogoProcedimientosRolsacPlugin extends AbstractPluginProperties
 		final String dir3servicioResponsable = getCodigoDir3UA(servicioRolsac.getLink_servicioResponsable());
 
 		final DefinicionProcedimientoCP dp = new DefinicionProcedimientoCP();
-		dp.setIdentificador(servicioRolsac.getCodigoServicio());
+		dp.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
 		dp.setDescripcion(servicioRolsac.getNombre());
 		dp.setIdProcedimientoSIA(servicioRolsac.getCodigoSIA());
 		dp.setOrganoResponsableDir3(dir3servicioResponsable);
 		dp.setServicio(true);
 
 		final DefinicionTramiteCP dt = new DefinicionTramiteCP();
-		dt.setIdentificador(servicioRolsac.getCodigoServicio());
+		dt.setIdentificador(String.valueOf(servicioRolsac.getCodigo()));
 		dt.setDescripcion(servicioRolsac.getNombre());
 		dt.setVigente(esVigente(servicioRolsac));
 		dt.setOrganoDestinoDir3(dir3organoInstructor);

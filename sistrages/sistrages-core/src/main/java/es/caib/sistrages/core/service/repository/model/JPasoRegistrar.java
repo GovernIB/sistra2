@@ -84,6 +84,15 @@ public class JPasoRegistrar implements IModelApi {
 	@Column(name = "PRG_REPVAL", nullable = false, precision = 1, scale = 0)
 	private boolean validaRepresentacion;
 
+	/** Indica si se habilita subsanación. **/
+	@Column(name = "PRG_SUBSAN", nullable = false, precision = 1, scale = 0)
+	private boolean permiteSubsanar;
+
+	/** Instrucciones subsanación */
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "PRG_INSSUB")
+	private JLiteral instruccionesSubsanacion;
+
 	/**
 	 * Constructor.
 	 */
@@ -287,6 +296,36 @@ public class JPasoRegistrar implements IModelApi {
 	}
 
 	/**
+	 * @return the permiteSubsanar
+	 */
+	public final boolean isPermiteSubsanar() {
+		return permiteSubsanar;
+	}
+
+	/**
+	 * @param permiteSubsanar
+	 *            the permiteSubsanar to set
+	 */
+	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
+		this.permiteSubsanar = permiteSubsanar;
+	}
+
+	/**
+	 * @return the instruccionesSubsanacion
+	 */
+	public final JLiteral getInstruccionesSubsanacion() {
+		return instruccionesSubsanacion;
+	}
+
+	/**
+	 * @param instruccionesSubsanacion
+	 *            the instruccionesSubsanacion to set
+	 */
+	public final void setInstruccionesSubsanacion(final JLiteral instruccionesSubsanacion) {
+		this.instruccionesSubsanacion = instruccionesSubsanacion;
+	}
+
+	/**
 	 * From model.
 	 *
 	 * @param paso
@@ -308,7 +347,8 @@ public class JPasoRegistrar implements IModelApi {
 			jpaso.setScriptPresentador(JScript.fromModel(paso.getScriptPresentador()));
 			jpaso.setScriptRepresentante(JScript.fromModel(paso.getScriptRepresentante()));
 			jpaso.setScriptValidarRegistrar(JScript.fromModel(paso.getScriptValidarRegistrar()));
-
+			jpaso.setInstruccionesSubsanacion(JLiteral.fromModel(paso.getInstruccionesSubsanacion()));
+			jpaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 		}
 		return jpaso;
 	}
@@ -339,7 +379,9 @@ public class JPasoRegistrar implements IModelApi {
 			jpasoRegistrar.setScriptPresentador(JScript.clonar(origPasoRegistrar.getScriptPresentador()));
 			jpasoRegistrar.setScriptRepresentante(JScript.clonar(origPasoRegistrar.getScriptRepresentante()));
 			jpasoRegistrar.setScriptValidarRegistrar(JScript.clonar(origPasoRegistrar.getScriptValidarRegistrar()));
-
+			jpasoRegistrar
+					.setInstruccionesSubsanacion(JLiteral.clonar(origPasoRegistrar.getInstruccionesSubsanacion()));
+			jpasoRegistrar.setPermiteSubsanar(origPasoRegistrar.isPermiteSubsanar());
 		}
 		return jpasoRegistrar;
 	}

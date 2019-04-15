@@ -1141,7 +1141,7 @@ public class ViewTramites extends ViewControllerBase {
 		}
 
 		// validamos antes de exportar
-		if (!validoTramiteVersion()) {
+		if (!validoTramiteVersion(false)) {
 			return;
 		}
 
@@ -1228,7 +1228,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
-		UtilJSF.openDialog(DialogTramiteClonar.class, TypeModoAcceso.ALTA, params, true, 500, 150);
+		UtilJSF.openDialog(DialogTramiteClonar.class, TypeModoAcceso.ALTA, params, true, 550, 200);
 
 	}
 
@@ -1255,21 +1255,40 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	public void validarVersion() {
-		if (validoTramiteVersion()) {
+		if (validoTramiteVersion(true)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
 		}
 	}
 
-	private boolean validoTramiteVersion() {
+	private boolean validoTramiteVersion(final boolean pEdicion) {
 		final List<ErrorValidacion> listaErrores = tramiteService
 				.validarVersionTramite(this.versionSeleccionada.getCodigo(), UtilJSF.getSessionBean().getLang());
 		if (!listaErrores.isEmpty()) {
+			Map<String, String> params = null;
+			TypeModoAcceso modoAccesoErrores;
+
 			final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
-			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 900, 520);
+			if (pEdicion) {
+				params = new HashMap<>();
+				params.put(TypeParametroVentana.IDIOMAS.toString(),
+						tramiteService.getIdiomasDisponibles(String.valueOf(this.versionSeleccionada.getCodigo())));
+
+				params.put(TypeParametroVentana.TRAMITE.toString(),
+						String.valueOf(this.versionSeleccionada.getIdTramite()));
+
+				params.put(TypeParametroVentana.TRAMITEVERSION.toString(),
+						String.valueOf(this.versionSeleccionada.getCodigo()));
+
+				modoAccesoErrores = TypeModoAcceso.EDICION;
+			} else {
+				modoAccesoErrores = TypeModoAcceso.CONSULTA;
+			}
+
+			UtilJSF.openDialog(DialogErroresValidacion.class, modoAccesoErrores, params, true, 1050, 520);
 			return false;
 		}
 

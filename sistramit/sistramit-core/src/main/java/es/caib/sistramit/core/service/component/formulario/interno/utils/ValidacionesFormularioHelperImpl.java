@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesCadena;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
@@ -58,7 +59,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	private Literales literales;
 
 	@Override
-	public void validarConfiguracionCampos(DatosSesionFormularioInterno pDatosSesion) {
+	public void validarConfiguracionCampos(final DatosSesionFormularioInterno pDatosSesion) {
 
 		boolean validacionCorrecta = true;
 		String idCampoError = null;
@@ -121,7 +122,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	}
 
 	@Override
-	public MensajeValidacion validarScriptValidacionPagina(DatosSesionFormularioInterno datosSesion) {
+	public MensajeValidacion validarScriptValidacionPagina(final DatosSesionFormularioInterno datosSesion) {
 
 		MensajeValidacion mensaje = null;
 
@@ -151,7 +152,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 	}
 
 	@Override
-	public MensajeValidacion validarScriptValidacionCampos(DatosSesionFormularioInterno datosSesion) {
+	public MensajeValidacion validarScriptValidacionCampos(final DatosSesionFormularioInterno datosSesion) {
 
 		MensajeValidacion mensaje = null;
 
@@ -462,18 +463,20 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 		if (!StringUtils.isEmpty(vcs.getValor())) {
 			vcs.setValor(vcs.getValor().toUpperCase());
 		}
-
-		if (opciones.getCif() == TypeSiNo.SI) {
-			valido = ValidacionesTipo.getInstance().esCif(vcs.getValor());
-		}
-		if (!valido && opciones.getNif() == TypeSiNo.SI) {
-			valido = ValidacionesTipo.getInstance().esNif(vcs.getValor());
+		if (opciones.getDni() == TypeSiNo.SI) {
+			valido = NifUtils.esDni(vcs.getValor());
 		}
 		if (!valido && opciones.getNie() == TypeSiNo.SI) {
-			valido = ValidacionesTipo.getInstance().esNie(vcs.getValor());
+			valido = NifUtils.esNie(vcs.getValor());
+		}
+		if (!valido && opciones.getNifOtros() == TypeSiNo.SI) {
+			valido = NifUtils.esNifOtros(vcs.getValor());
+		}
+		if (!valido && opciones.getNifPJ() == TypeSiNo.SI) {
+			valido = NifUtils.esNifPersonaJuridica(vcs.getValor());
 		}
 		if (!valido && opciones.getNss() == TypeSiNo.SI) {
-			valido = ValidacionesTipo.getInstance().esNumeroSeguridadSocial(vcs.getValor());
+			valido = NifUtils.esNSS(vcs.getValor());
 		}
 		return valido;
 	}

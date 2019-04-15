@@ -1,0 +1,69 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNifPersonaJuridica(nif)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNifPersonaJuridica.html">esNifPersonaJuridica</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNifPersonaJuridica(String nif): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el valor introduït posseeix el format requerit per a ser un NIF de persona jurídica i entitats (antic CIF) vàlid. Es considera vàlid tota aquella cadena que tingui 1 lletra segons la naturalesa jurídica de l'entitat, 7 números i un caràcter alfanumèric que compleixi amb la regla de validació (que segons la naturalesa jurídica de l'entitat és un número o una lletra).</li>
+</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>nif</b>: Cadena que representa el NIF de persona jurídica a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>:true si la cadena és un NIF de persona jurídica vàlid i false si la cadena no és un NIF de persona jurídica vàlid.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar la cadena 'B88018098'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNifPersonaJuridica('B88018098');
+</p>
+<p>La funció esNifPersonaJuridica retorna 'true', pel fet que la cadena conté un NIF de persona jurídica vàlid.</p>
+<br />
+
+<p><b>Exemple 2</b> Validar la cadena 'A76381906. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNifPersonaJuridica('A76381906');
+</p>
+<p>La funció esNifPersonaJuridica retorna 'false', pel fet que el valor de la cadena no es correspon a un NIF de persona jurídica vàlid.</p>
+<br />
+
+</body>
+</html>

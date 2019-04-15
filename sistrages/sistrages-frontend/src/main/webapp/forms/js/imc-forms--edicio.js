@@ -222,6 +222,7 @@ $.fn.appElement = function(options) {
 							.addClass("imc--el-seleccionat");
 
 						revisaVisibilitat(el_selec_nou);
+						rcEditarComponente(el_selec_nou.attr('data-codigo'));
 
 					}
 
@@ -264,7 +265,7 @@ $.fn.appElement = function(options) {
 							.addClass("imc--el-seleccionat");
 
 						revisaVisibilitat(el_selec_nou, e_keyCode);
-
+						rcEditarComponente(el_selec_nou.attr('data-codigo'));
 					}
 
 					e.preventDefault();

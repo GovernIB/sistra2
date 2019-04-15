@@ -149,7 +149,12 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 * Abre explorar asistente pie.
 	 */
 	public void explorarAssistentPie() {
-		explorarLiteral(data.getPie());
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getPie(), UtilJSF.getSessionBean().getIdiomas(),
+				UtilJSF.getSessionBean().getIdiomas(), true);
 	}
 
 	/**
@@ -189,7 +194,13 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 * Abre explorar lopd.
 	 */
 	public void explorarLopd() {
-		explorarLiteral(data.getLopd());
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getLopd(), UtilJSF.getSessionBean().getIdiomas(),
+				UtilJSF.getSessionBean().getIdiomas(), true);
+
 	}
 
 	/**
@@ -202,6 +213,84 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
 			final Literal literales = (Literal) respuesta.getResult();
 			data.setLopd(literales);
+		}
+	}
+
+	/**
+	 * Abre explorar lopd introduccion.
+	 */
+	public void explorarLopdIntroduccion() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getLopdIntroduccion(),
+				UtilJSF.getSessionBean().getIdiomas(), UtilJSF.getSessionBean().getIdiomas(), true);
+
+	}
+
+	/**
+	 * Gestión de retorno lopd introduccion.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoLopdIntroduccion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setLopdIntroduccion(literales);
+		}
+	}
+
+	/**
+	 * Abre explorar instrucciones subsanacion.
+	 */
+	public void explorarInstruccionesSubsanacion() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getInstruccionesSubsanacion(),
+				UtilJSF.getSessionBean().getIdiomas(), UtilJSF.getSessionBean().getIdiomas(), true);
+
+	}
+
+	/**
+	 * Gestión de retorno instrucciones subsansacion.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoInstruccionesSubsanacion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setInstruccionesSubsanacion(literales);
+		}
+	}
+
+	/**
+	 * Abre explorar instrucciones presencial.
+	 */
+	public void explorarInstruccionesPresencial() {
+		TypeModoAcceso modoAccesoDlg = TypeModoAcceso.CONSULTA;
+		if (getPermiteEditar()) {
+			modoAccesoDlg = TypeModoAcceso.EDICION;
+		}
+		UtilTraducciones.openDialogTraduccionHTML(modoAccesoDlg, data.getInstruccionesPresencial(),
+				UtilJSF.getSessionBean().getIdiomas(), UtilJSF.getSessionBean().getIdiomas(), true);
+
+	}
+
+	/**
+	 * Gestión de retorno instrucciones subsansacion.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoInstruccionesPresencial(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
+			final Literal literales = (Literal) respuesta.getResult();
+			data.setInstruccionesPresencial(literales);
 		}
 	}
 

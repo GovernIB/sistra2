@@ -48,21 +48,6 @@ public final class ValidacionesTipo {
 	/** Atributo patron hora de ValidacionesTipoImpl. */
 	private final Pattern patronHora;
 
-	/** Atributo LETRAS. */
-	private static final String LETRAS = "TRWAGMYFPDXBNJZSQVHLCKE";
-
-	/** Atributo SI n_ nif. */
-	private static final String SIN_NIF = "[0-9]{0,8}[" + LETRAS + "]{1}";
-
-	/** Atributo SI n_ cif. */
-	private static final String SIN_CIF = "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}([0-9]||[ABCDEFGHIJ]){1}";
-
-	/** Atributo SI n_ nie. */
-	private static final String SIN_NIE = "[X|Y|Z][0-9]{1,8}[A-Z]{1}";
-
-	/** Atributo SI n_ ss. */
-	private static final String SIN_SS = "^\\s*[0-9]{2}[\\/|\\s\\-]?[0-9]{7,8}[\\/|\\s\\-]?[0-9]{2}\\s*$";
-
 	/** Atributo R e_ cuenta. */
 	private static final String RE_CUENTA = "^[0-9]{20}$";
 
@@ -73,11 +58,12 @@ public final class ValidacionesTipo {
 	private static ValidacionesTipo instance;
 
 	public static final int DOCUMENTO_NO_VALIDO = -1;
-	public static final int TIPO_DOCUMENTO_NIF = 1;
-	public static final int TIPO_DOCUMENTO_CIF = 2;
-	public static final int TIPO_DOCUMENTO_NIE = 3;
-	public static final int TIPO_DOCUMENTO_NSS = 4;
-	public static final int TIPO_DOCUMENTO_PASAPORTE = 5;
+
+	public static final int TIPO_DOCUMENTO_DNI = 1;
+	public static final int TIPO_DOCUMENTO_NIE = 2;
+	public static final int TIPO_DOCUMENTO_NIF_OTROS = 3;
+	public static final int TIPO_DOCUMENTO_NIF_PJ = 4;
+	public static final int TIPO_DOCUMENTO_NSS = 5;
 
 	/** Variable codigosB para code128. */
 	static final String[] codigosB = new String[] { " ", "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",",
@@ -102,6 +88,11 @@ public final class ValidacionesTipo {
 			"67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84",
 			"85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101",
 			"102", "103", "104", "105", "na" };
+
+	/** Constantes para el IBAN. **/
+	private static final int IBANNUMBER_MIN_SIZE = 15;
+	private static final int IBANNUMBER_MAX_SIZE = 34;
+	private static final BigInteger IBANNUMBER_MAGIC_NUMBER = new BigInteger("97");
 
 	/**
 	 * Constructor.
@@ -159,148 +150,48 @@ public final class ValidacionesTipo {
 		return res;
 	}
 
-	/**
-	 * Devuelve la letra de control del NIF completo a partir de un DNI.
-	 *
-	 * @param dniNumerico
-	 *            dni al que se quiere añadir la letra del NIF
-	 * @return el atributo letra nif Letra control NIF.
-	 */
-	private static String getLetraNIF(final String dniNumerico) {
-		final int dni = Integer.parseInt(dniNumerico, ConstantesNumero.N10);
-		final int modulo = dni % ConstantesNumero.N23;
-		final char letra = LETRAS.charAt(modulo);
-		return String.valueOf(letra);
+	public boolean esIdentificacion(final String identificacion, final boolean esDni, final boolean esNie,
+			final boolean esOtrosNif, final boolean esNif, final boolean esNss) {
+		return NifUtils.esIdentificacion(identificacion, esDni, esNie, esOtrosNif, esNif, esNss);
+	}
+
+	public boolean esDni(final String valor) {
+		return NifUtils.esDni(valor);
+	}
+
+	public boolean esNie(final String valor) {
+		return NifUtils.esNie(valor);
+	}
+
+	public boolean esNifOtros(final String valor) {
+		return NifUtils.esNifOtros(valor);
+	}
+
+	public boolean esNifPersonaJuridica(final String valor) {
+		return NifUtils.esNifPersonaJuridica(valor);
+	}
+
+	public boolean esNifPersonaFisica(final String valor) {
+		return NifUtils.esNifPersonaFisica(valor);
 	}
 
 	public boolean esNif(final String valor) {
-		boolean res = false;
-		try {
-			if (esCadenaVacia(valor) || !Pattern.matches(SIN_NIF, valor) || valor.length() != ConstantesNumero.N9) {
-				res = false;
-			} else {
-				final String letraNif = valor.substring(8);
-
-				final StringBuilder sb = new StringBuilder(20);
-				for (int i = 0; i < valor.length(); i++) {
-					final char c = valor.substring(i, i + ConstantesNumero.N1).toCharArray()[0];
-					if (Character.isDigit(c)) {
-						sb.append(c);
-					}
-				}
-				final String digitos = sb.toString();
-
-				final String letra = getLetraNIF(digitos);
-				if (letra == null) {
-					res = false;
-				} else {
-					res = letraNif.equals(letra);
-				}
-			}
-		} catch (final IllegalArgumentException e) {
-			res = false;
-		}
-		return res;
-	}
-
-	public boolean esCif(final String valor) {
-		boolean res = false;
-		try {
-			if (esCadenaVacia(valor) || !Pattern.matches(SIN_CIF, valor) || valor.length() != ConstantesNumero.N9) {
-				res = false;
-			} else {
-				final String codigoControl = valor.substring(valor.length() - ConstantesNumero.N1, valor.length());
-				final int[] v1 = { 0, ConstantesNumero.N2, ConstantesNumero.N4, ConstantesNumero.N6,
-						ConstantesNumero.N8, ConstantesNumero.N1, ConstantesNumero.N3, ConstantesNumero.N5,
-						ConstantesNumero.N7, ConstantesNumero.N9 };
-				final String[] v2 = { "J", "A", "B", "C", "D", "E", "F", "G", "H", "I" };
-				int suma = 0;
-				for (int i = ConstantesNumero.N2; i <= ConstantesNumero.N6; i += ConstantesNumero.N2) {
-					suma += v1[Integer.parseInt(valor.substring(i - ConstantesNumero.N1, i))];
-					suma += Integer.parseInt(valor.substring(i, i + ConstantesNumero.N1));
-				}
-				suma += v1[Integer.parseInt(valor.substring(ConstantesNumero.N7, ConstantesNumero.N8))];
-				suma = (ConstantesNumero.N10 - (suma % ConstantesNumero.N10));
-				if (suma == ConstantesNumero.N10) {
-					suma = 0;
-				}
-
-				final String letraControl = v2[suma];
-				res = (codigoControl.equals(Integer.toString(suma)) || codigoControl.equalsIgnoreCase(letraControl));
-			}
-		} catch (final IllegalArgumentException e) {
-			res = false;
-		}
-		return res;
-	}
-
-	public boolean esNie(final String nie) {
-		boolean res = false;
-		try {
-			if (isNull(nie) || !Pattern.matches(SIN_NIE, nie) || (nie.length() != ConstantesNumero.N9)) {
-				res = false;
-			} else {
-				final String numero = nie.replaceAll("[a-zA-Z]", StringUtils.EMPTY);
-				String inicio = "";
-				if (nie.startsWith("Y")) {
-					inicio = "1";
-				} else if (nie.startsWith("Z")) {
-					inicio = "2";
-				}
-				final String letra = nie.substring(ConstantesNumero.N1).replaceAll("[^a-z^A-Z]", StringUtils.EMPTY);
-				if (!letra.equals(getLetraNIF(inicio + numero))) {
-					res = false;
-				} else {
-					res = true;
-				}
-			}
-		} catch (final IllegalArgumentException exc) {
-			res = false;
-		}
-		return res;
+		return NifUtils.esNifPersonaFisica(valor) || NifUtils.esNifPersonaJuridica(valor);
 	}
 
 	public boolean esNumeroSeguridadSocial(final String nss) {
-		boolean result = false;
-		try {
-			if (esCadenaVacia(nss) || !Pattern.matches(SIN_SS, nss)) {
-				result = false;
-			} else {
-				final String numeross = nss.replaceAll("[\\/\\s\\-]", StringUtils.EMPTY);
-				if (!Pattern.matches("^[0-9]{11,12}$", numeross)) {
-					result = false;
-				} else {
-					final String part1 = numeross.substring(0, ConstantesNumero.N2);
-					String part2 = numeross.substring(ConstantesNumero.N2, numeross.length() - ConstantesNumero.N2);
-					final String part3 = numeross.substring(numeross.length() - ConstantesNumero.N2);
-					if ((part2.length() == ConstantesNumero.N8) && (part2.charAt(0) == '0')) {
-						part2 = part2.substring(ConstantesNumero.N1);
-					}
-					final String numero = part1 + part2;
-					final String dc = part3;
-					final long iNumero = Long.parseLong(numero, ConstantesNumero.N10);
-					final long iDc = Long.parseLong(dc, ConstantesNumero.N10);
-
-					if (iNumero % ConstantesNumero.N97 != iDc) {
-						result = false;
-					} else {
-						result = true;
-					}
-				}
-			}
-		} catch (final IllegalArgumentException exc) {
-			result = false;
-		}
-		return result;
+		return NifUtils.esNSS(nss);
 	}
 
 	public int validaDocumento(final String valor) {
-		if (esNif(valor))
-			return TIPO_DOCUMENTO_NIF;
-		if (esCif(valor))
-			return TIPO_DOCUMENTO_CIF;
+		if (esDni(valor))
+			return TIPO_DOCUMENTO_DNI;
 		if (esNie(valor))
 			return TIPO_DOCUMENTO_NIE;
+		if (esNifOtros(valor))
+			return TIPO_DOCUMENTO_NIF_OTROS;
+		if (esNifPersonaJuridica(valor))
+			return TIPO_DOCUMENTO_NIF_PJ;
 		if (esNumeroSeguridadSocial(valor))
 			return TIPO_DOCUMENTO_NSS;
 		return DOCUMENTO_NO_VALIDO;
@@ -437,8 +328,7 @@ public final class ValidacionesTipo {
 	}
 
 	public boolean esHora(final String hora) {
-		final boolean res = (!esCadenaVacia(hora) && compruebaRegExp(hora, patronHora));
-		return res;
+		return (!esCadenaVacia(hora) && compruebaRegExp(hora, patronHora));
 	}
 
 	public boolean esFecha(final String fecha, final String formato) {
@@ -723,7 +613,7 @@ public final class ValidacionesTipo {
 		return sdf.format(new Date());
 	}
 
-	public String getFechaActual(String formato) {
+	public String getFechaActual(final String formato) {
 		final SimpleDateFormat sdf = new SimpleDateFormat(formato);
 		return sdf.format(new Date());
 	}
@@ -825,7 +715,7 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public int obtenerAnyo(final String pFecha, String formato) throws ValidacionTipoException {
+	public int obtenerAnyo(final String pFecha, final String formato) throws ValidacionTipoException {
 		try {
 			final Date fecha = parseFecha(pFecha, formato);
 			final Calendar cal = Calendar.getInstance();
@@ -836,7 +726,7 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public int obtenerMes(final String pFecha, String formato) throws ValidacionTipoException {
+	public int obtenerMes(final String pFecha, final String formato) throws ValidacionTipoException {
 		try {
 			final Date fecha = parseFecha(pFecha, formato);
 			final Calendar cal = Calendar.getInstance();
@@ -847,7 +737,7 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public int obtenerDia(final String pFecha, String formato) throws ValidacionTipoException {
+	public int obtenerDia(final String pFecha, final String formato) throws ValidacionTipoException {
 		try {
 			final Date fecha = parseFecha(pFecha, formato);
 			final Calendar cal = Calendar.getInstance();
@@ -858,7 +748,7 @@ public final class ValidacionesTipo {
 		}
 	}
 
-	public String sumaDias(final String pFecha, final int pDias, String formato) throws ValidacionTipoException {
+	public String sumaDias(final String pFecha, final int pDias, final String formato) throws ValidacionTipoException {
 		final Date fecha = parseFecha(pFecha, formato);
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(fecha);
@@ -943,25 +833,35 @@ public final class ValidacionesTipo {
 			if (d2 == null) {
 				distancia = 0;
 			} else {
-				final Calendar calendar2 = Calendar.getInstance();
-				calendar2.setTime(d2);
-				int mult = 0;
-				if (d2.after(d1)) {
-					mult = ConstantesNumero.N1;
-				} else {
-					mult = ConstantesNumero.N_1;
+				distancia = getDistanciaDias(d1, d2, calendar1, pHabiles);
+			}
+		}
+		return distancia;
+	}
+
+	/**
+	 * Metodo principal para calcular distancia de dias, que se quejaba el
+	 * checkstyle por ser demasiado complejo el método.
+	 **/
+	private int getDistanciaDias(final Date d1, final Date d2, final Calendar calendar1, final boolean pHabiles) {
+		int distancia = 0;
+		final Calendar calendar2 = Calendar.getInstance();
+		calendar2.setTime(d2);
+		int mult = 0;
+		if (d2.after(d1)) {
+			mult = ConstantesNumero.N1;
+		} else {
+			mult = ConstantesNumero.N_1;
+		}
+		while (!calendar1.getTime().equals(calendar2.getTime())) {
+			calendar1.add(Calendar.DATE, mult);
+			if (pHabiles) {
+				final int dia = calendar1.get(Calendar.DAY_OF_WEEK);
+				if (dia != Calendar.SATURDAY && dia != Calendar.SUNDAY) {
+					distancia += mult;
 				}
-				while (!calendar1.getTime().equals(calendar2.getTime())) {
-					calendar1.add(Calendar.DATE, mult);
-					if (pHabiles) {
-						final int dia = calendar1.get(Calendar.DAY_OF_WEEK);
-						if (dia != Calendar.SATURDAY && dia != Calendar.SUNDAY) {
-							distancia += mult;
-						}
-					} else {
-						distancia += mult;
-					}
-				}
+			} else {
+				distancia += mult;
 			}
 		}
 		return distancia;
@@ -975,10 +875,6 @@ public final class ValidacionesTipo {
 	 * @return true si OK
 	 */
 	private boolean checkIBAN(final String accountNumber) {
-
-		final int IBANNUMBER_MIN_SIZE = 15;
-		final int IBANNUMBER_MAX_SIZE = 34;
-		final BigInteger IBANNUMBER_MAGIC_NUMBER = new BigInteger("97");
 
 		String newAccountNumber = accountNumber.trim();
 

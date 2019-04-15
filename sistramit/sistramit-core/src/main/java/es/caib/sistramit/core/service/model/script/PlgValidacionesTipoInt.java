@@ -31,26 +31,14 @@ public interface PlgValidacionesTipoInt {
 	 * @return true, si es satisfactorio true Si es un NIF valido false Si no es un
 	 *         NIF valido
 	 */
-	boolean esNif(final String valor);
-
-	/**
-	 * Valida si el parametro es un CIF o no. Valida que:<br />
-	 * -- El formato inicial del parametro. <br />
-	 * -- El formato general del parametro. <br />
-	 * -- La letra del digito de control
-	 *
-	 * @param valor
-	 *            Cif que se quiere validar
-	 * @return true, si es satisfactorio true Si es un CIF valido false Si no es un
-	 *         CIF valido
-	 */
-	boolean esCif(final String valor);
+	boolean esDni(final String valor);
 
 	/**
 	 * Valida si el parametro es un NIE o no. Valida que:<br />
-	 * -- El formato inicial del parametro <br />
-	 * -- El formato general del parametro <br />
-	 * -- La letra del digito de control
+	 * -- El parametro tenga 9 caracteres. <br />
+	 * -- El parametro empieza por X/Y/Z <br />
+	 * -- Contiene 7 dígitos <br />
+	 * -- Finaliza con una la letra del digito de control
 	 *
 	 * @param nie
 	 *            NIE que se quiere validar
@@ -58,6 +46,52 @@ public interface PlgValidacionesTipoInt {
 	 *         NIE valido
 	 */
 	boolean esNie(final String nie);
+
+	/**
+	 * Valida si el parametro es un NIF Otros o no (es un nif para menores). Valida
+	 * que:<br />
+	 * -- El parametro tenga 9 caracteres. <br />
+	 * -- El parametro empieza por J/K/L <br />
+	 * -- Contiene 7 dígitos <br />
+	 * -- Finaliza con una la letra del digito de control
+	 *
+	 * @param valor
+	 *            nif que se quiere validar
+	 * @return true, si es satisfactorio true Si es un NIF valido false Si no es un
+	 *         NIF valido
+	 */
+	boolean esNifOtros(final String valor);
+
+	/**
+	 * Valida si el parametro es un NIF o no. Valida que: <br />
+	 * -- El parametro tenga 9 caracteres. <br />
+	 * -- El parametro termina en una letra. <br />
+	 * -- La letra cumple la validación.
+	 *
+	 * @param valor
+	 *            nif que se quiere validar
+	 * @return true, si es satisfactorio true Si es un NIF valido false Si no es un
+	 *         NIF valido
+	 */
+	boolean esNifPersonaJuridica(final String valor);
+
+	/**
+	 * Valida si es un nif válido de persona física.
+	 * 
+	 * @param valor
+	 *            nif
+	 * @return indica si es válido
+	 */
+	boolean esNifPersonaFisica(final String valor);
+
+	/**
+	 * Valida si es un nif válido (de persona física o jurídica).
+	 * 
+	 * @param valor
+	 *            nif
+	 * @return indica si es válido
+	 */
+	boolean esNif(final String valor);
 
 	/**
 	 * Valida si el parametro es un Numero de la Seguridad Social (NSS) o no. Valida

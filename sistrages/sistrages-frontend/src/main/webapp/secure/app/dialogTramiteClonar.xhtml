@@ -32,16 +32,16 @@
 			<!-- Contenido dialogo -->
 			<!-- Growl mensajes -->
 			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
-			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w30, w70 margin-left-10" columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="areas" value="#{msg['dialogTramiteClonar.headerArea']}"  />
-				<p:selectOneMenu id="areas" styleClass="w90" value="#{dialogTramiteClonar.areaID}"  >
+				<p:selectOneMenu id="areas" styleClass="w90" value="#{dialogTramiteClonar.areaID}" height="150" appendTo="@this" >
 						    <f:selectItems value="#{dialogTramiteClonar.areas}" var="area"   itemLabel="#{area.identificador}" itemValue="#{area.codigo}" />
 							<p:ajax listener="#{dialogTramiteClonar.onChangeArea}" update="@form" process="@this"/>
 				</p:selectOneMenu>
 
 				<p:outputLabel for="tramites" value="#{msg['dialogTramiteClonar.headerTramites']}"  />
-				<p:selectOneMenu id="tramites" styleClass="w90"  value="#{dialogTramiteClonar.tramiteID}">
+				<p:selectOneMenu id="tramites" styleClass="w90"  value="#{dialogTramiteClonar.tramiteID}" >
 					     <f:selectItems value="#{dialogTramiteClonar.tramites}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}"  />
 				</p:selectOneMenu >
 

@@ -9,137 +9,107 @@ public class Entidad extends ModelApi {
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * codigo.
-	 */
+	/** codigo. */
 	private Long codigo;
 
-	/**
-	 * codigo DIR 3.
-	 */
+	/** codigo DIR 3. */
 	private String codigoDIR3;
 
-	/**
-	 * nombre.
-	 */
+	/** nombre. */
 	private Literal nombre;
 
-	/**
-	 * activo.
-	 */
+	/** activo. */
 	private boolean activo;
 
-	/**
-	 * rol.
-	 */
+	/** rol. */
 	private String rol;
 
-	/**
-	 * logo gestor.
-	 */
+	/** logo gestor. */
 	private Fichero logoGestor;
 
-	/**
-	 * logo asistente.
-	 */
+	/** logo asistente. */
 	private Fichero logoAsistente;
 
-	/**
-	 * css.
-	 */
+	/** css. */
 	private Fichero css;
 
-	/**
-	 * pie.
-	 */
+	/** pie. */
 	private Literal pie;
 
-	/**
-	 * email.
-	 */
+	/** email. */
 	private String email;
 
-	/**
-	 * email habilitado.
-	 */
+	/** email habilitado. */
 	private boolean emailHabilitado;
 
-	/**
-	 * telefono.
-	 */
+	/** telefono. */
 	private String telefono;
 
-	/**
-	 * telefono habilitado.
-	 */
+	/** telefono habilitado. */
 	private boolean telefonoHabilitado;
 
-	/**
-	 * url soporte.
-	 */
+	/** url soporte. */
 	private String urlSoporte;
 
-	/**
-	 * url soporte habilitado.
-	 */
+	/** url soporte habilitado. */
 	private boolean urlSoporteHabilitado;
 
-	/**
-	 * formulario incidencias habilitado.
-	 */
+	/** formulario incidencias habilitado. */
 	private boolean formularioIncidenciasHabilitado;
 
-	/**
-	 * url carpeta ciudadana.
-	 */
+	/** url carpeta ciudadana. */
 	private Literal urlCarpetaCiudadana;
 
-	/**
-	 * dias preregistro.
-	 */
+	/** dias preregistro. */
 	private Integer diasPreregistro;
 
-	/**
-	 * lopd.
-	 */
+	/** lopd. */
 	private Literal lopd;
 
-	/**
-	 * mapa web.
-	 */
+	/** mapa web. */
 	private Literal mapaWeb;
 
-	/**
-	 * aviso legal.
-	 */
+	/** aviso legal. */
 	private Literal avisoLegal;
 
-	/**
-	 * rss.
-	 */
+	/** rss. */
 	private Literal rss;
 
-	/**
-	 * url youtube.
-	 */
+	/** url youtube. */
 	private String urlYoutube;
 
-	/**
-	 * url instagram.
-	 */
+	/** url instagram. */
 	private String urlInstagram;
 
-	/**
-	 * url twitter.
-	 */
+	/** url twitter. */
 	private String urlTwitter;
 
-	/**
-	 * url facebook.
-	 */
+	/** url facebook. */
 	private String urlFacebook;
 
+	/** Rol. **/
 	private String rolSup;
+
+	/** Texto respecto LOPD (introducción). **/
+	private Literal lopdIntroduccion;
+
+	/** Permite subsanación paso anexar. **/
+	private boolean permiteSubsanarAnexar;
+
+	/** Permite subsanación paso pagar. **/
+	private boolean permiteSubsanarPagar;
+
+	/** Permite subsanación paso registrar. **/
+	private boolean permiteSubsanarRegistrar;
+
+	/** Instrucciones subsanación */
+	private Literal instruccionesSubsanacion;
+
+	/** Días a mantener los trámites presenciales. **/
+	private Integer diasTramitesPresenciales;
+
+	/** Instrucciones presencial */
+	private Literal instruccionesPresencial;
 
 	/**
 	 * Obtiene el valor de codigo.
@@ -564,6 +534,111 @@ public class Entidad extends ModelApi {
 
 	public void setRolSup(final String rolSup) {
 		this.rolSup = rolSup;
+	}
+
+	/**
+	 * @return the lopdIntroduccion
+	 */
+	public final Literal getLopdIntroduccion() {
+		return lopdIntroduccion;
+	}
+
+	/**
+	 * @param lopdIntroduccion
+	 *            the lopdIntroduccion to set
+	 */
+	public final void setLopdIntroduccion(final Literal lopdIntroduccion) {
+		this.lopdIntroduccion = lopdIntroduccion;
+	}
+
+	/**
+	 * @return the permiteSubsanarAnexar
+	 */
+	public final boolean isPermiteSubsanarAnexar() {
+		return permiteSubsanarAnexar;
+	}
+
+	/**
+	 * @param permiteSubsanarAnexar
+	 *            the permiteSubsanarAnexar to set
+	 */
+	public final void setPermiteSubsanarAnexar(final boolean permiteSubsanarAnexar) {
+		this.permiteSubsanarAnexar = permiteSubsanarAnexar;
+	}
+
+	/**
+	 * @return the permiteSubsanarPagar
+	 */
+	public final boolean isPermiteSubsanarPagar() {
+		return permiteSubsanarPagar;
+	}
+
+	/**
+	 * @param permiteSubsanarPagar
+	 *            the permiteSubsanarPagar to set
+	 */
+	public final void setPermiteSubsanarPagar(final boolean permiteSubsanarPagar) {
+		this.permiteSubsanarPagar = permiteSubsanarPagar;
+	}
+
+	/**
+	 * @return the permiteSubsanarRegistrar
+	 */
+	public final boolean isPermiteSubsanarRegistrar() {
+		return permiteSubsanarRegistrar;
+	}
+
+	/**
+	 * @param permiteSubsanarRegistrar
+	 *            the permiteSubsanarRegistrar to set
+	 */
+	public final void setPermiteSubsanarRegistrar(final boolean permiteSubsanarRegistrar) {
+		this.permiteSubsanarRegistrar = permiteSubsanarRegistrar;
+	}
+
+	/**
+	 * @return the instruccionesSubsanacion
+	 */
+	public final Literal getInstruccionesSubsanacion() {
+		return instruccionesSubsanacion;
+	}
+
+	/**
+	 * @param instruccionesSubsanacion
+	 *            the instruccionesSubsanacion to set
+	 */
+	public final void setInstruccionesSubsanacion(final Literal instruccionesSubsanacion) {
+		this.instruccionesSubsanacion = instruccionesSubsanacion;
+	}
+
+	/**
+	 * @return the instruccionesPresencial
+	 */
+	public final Literal getInstruccionesPresencial() {
+		return instruccionesPresencial;
+	}
+
+	/**
+	 * @param instruccionesPresencial
+	 *            the instruccionesPresencial to set
+	 */
+	public final void setInstruccionesPresencial(final Literal instruccionesPresencial) {
+		this.instruccionesPresencial = instruccionesPresencial;
+	}
+
+	/**
+	 * @return the diasTramitesPresenciales
+	 */
+	public Integer getDiasTramitesPresenciales() {
+		return diasTramitesPresenciales;
+	}
+
+	/**
+	 * @param diasTramitesPresenciales
+	 *            the diasTramitesPresenciales to set
+	 */
+	public void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
+		this.diasTramitesPresenciales = diasTramitesPresenciales;
 	}
 
 }

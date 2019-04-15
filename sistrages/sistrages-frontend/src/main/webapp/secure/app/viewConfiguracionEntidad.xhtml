@@ -34,7 +34,7 @@
 			<p:panel header="#{msg['viewConfiguracionEntidad.assistentTramitacio.titulo']}"  columnClasses="w25 right-alignment, w75 left-alignment">
 
 					<p:tabView activeIndex="0" dynamic="true" style="margin: 30px;" >
-	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabConfiguracion']}" >
+	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabPropiedades']}" >
 	        				<h:panelGrid columns="2" cellpadding="5" >
 					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLog']}" />
 					            <p:column>
@@ -67,17 +67,7 @@
 								<p:outputLabel for="diasPreregistro" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerDiasPreregistro']}" />
 					            <p:inputNumber  id="diasPreregistro" decimalPlaces="0" padControl="false" size="10" value="#{viewConfiguracionEntidad.data.diasPreregistro}" maxValue="999" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
-								<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopd']}" />
-				            	<p:column>
-					            	<p:inputTextarea   id="inputLopd" cols="70" rows="5" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.lopd.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
-					            	<p:commandButton id="btnLopd" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarLopd}" process="@this" update=":form:growl" styleClass="va-top">
-					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoLopd}" update=":form:growl inputLopd"/>
-					        		</p:commandButton>
-								</p:column>
-
-								<p:outputLabel for="emailGenerico" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerEmailGenerico']}" />
-					            <p:inputText  id="emailGenerico" size="70" value="#{viewConfiguracionEntidad.data.email}" maxlength="500" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
-	        				</h:panelGrid>
+							</h:panelGrid>
 
 	        			</p:tab>
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabAyuda']}">
@@ -103,7 +93,7 @@
 							<h:panelGrid styleClass="noBorders" columns="2" cellpadding="10">
 				        		<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerContacto']}" />
 				        		<p:column>
-					        		<p:inputTextarea  id="inputPie" cols="70" rows="5" style="margin-right:10px" value="#{viewConfiguracionEntidad.data.pie.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					        		<p:inputTextarea  id="inputPie" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.pie.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
 					            	<p:commandButton id="btnAssistentPie" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarAssistentPie}" process="@this" update=":form:growl" styleClass="va-top">
 					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoAsistentePie}" update=":form:growl inputPie"/>
 					        		</p:commandButton>
@@ -149,6 +139,64 @@
 			        			<p:inputText  id="inputUrlFacebook" size="70" value="#{viewConfiguracionEntidad.data.urlFacebook}" maxlength="255" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 			        		</h:panelGrid>
 	        			</p:tab>
+	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabSubsanacion']}" >
+
+							<h:panelGrid styleClass="noBorders" columns="2" cellpadding="10">
+			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerSubsanacionAnexar']}" />
+			        			<p:selectBooleanCheckbox id="checkSubsanarAnexar" required="true" value="#{viewConfiguracionEntidad.data.permiteSubsanarAnexar}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+
+			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerSubsanacionPagar']}" />
+			        			<p:selectBooleanCheckbox id="checkSubsanarPagar" required="true" value="#{viewConfiguracionEntidad.data.permiteSubsanarPagar}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+
+			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerSubsanacionRegistrar']}" />
+			        			<p:selectBooleanCheckbox id="checkSubsanarRegistrar" required="true" value="#{viewConfiguracionEntidad.data.permiteSubsanarRegistrar}" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+
+			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerSubsanacionInstrucciones']}" />
+			        			<p:column>
+					            	<p:inputTextarea id="inputInstruccionesSubsanacion" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.instruccionesSubsanacion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					            	<p:commandButton id="btnInstruccionesSubsanacion" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarInstruccionesSubsanacion}" process="@this" update=":form:growl" styleClass="va-top">
+					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoInstruccionesSubsanacion}" update=":form:growl inputInstruccionesSubsanacion"/>
+					        		</p:commandButton>
+								</p:column>
+			        		</h:panelGrid>
+
+			        	</p:tab>
+			        	<p:tab title="#{msg['viewConfiguracionEntidad.tabEntrega']}" >
+
+			        		<h:panelGrid styleClass="noBorders" columns="2" cellpadding="10">
+			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerEntregaPresencialDias']}" />
+			        			<p:inputNumber  id="diasPresencial" decimalPlaces="0" padControl="false" size="10" value="#{viewConfiguracionEntidad.data.diasTramitesPresenciales}" maxValue="999" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
+
+			        			<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerEntregaPresencialInstrucciones']}" />
+			        			<p:column>
+					            	<p:inputTextarea id="inputInstruccionesPresencial" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.instruccionesPresencial.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+					            	<p:commandButton id="btnInstruccionesPresencial" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarInstruccionesPresencial}" process="@this" update=":form:growl" styleClass="va-top">
+					            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoInstruccionesPresencial}" update=":form:growl inputInstruccionesPresencial"/>
+					        		</p:commandButton>
+								</p:column>
+			        		</h:panelGrid>
+	        			</p:tab>
+	        			<p:tab title="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopdTitulo']}">
+	        				<h:panelGrid columns="2" cellpadding="5" >
+
+			        					<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopd']}" />
+						            	<p:column>
+							            	<p:inputTextarea id="inputLopd" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.lopd.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+							            	<p:commandButton id="btnLopd" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarLopd}" process="@this" update=":form:growl" styleClass="va-top">
+							            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoLopd}" update=":form:growl inputLopd"/>
+							        		</p:commandButton>
+										</p:column>
+
+										<h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLopdIntroduccion']}" />
+						            	<p:column>
+							            	<p:inputTextarea id="inputLopdIntroduccion" autoResize="false" scrollHeight="100" cols="70" rows="5" style="margin-right:10px;height:120px" value="#{viewConfiguracionEntidad.data.lopdIntroduccion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" disabled="true" styleClass="margin-right-10"/>
+							            	<p:commandButton id="btnLopdIntroduccion" icon="fa fa-language" actionListener="#{viewConfiguracionEntidad.explorarLopdIntroduccion}" process="@this" update=":form:growl" styleClass="va-top">
+							            		<p:ajax event="dialogReturn" listener="#{viewConfiguracionEntidad.returnDialogoLopdIntroduccion}" update=":form:growl inputLopdIntroduccion"/>
+							        		</p:commandButton>
+										</p:column>
+							</h:panelGrid>
+	        			</p:tab>
+
 	        		</p:tabView>
 			</p:panel>
 			<!-- Toolbar -->

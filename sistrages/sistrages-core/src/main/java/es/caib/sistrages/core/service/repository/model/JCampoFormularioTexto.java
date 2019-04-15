@@ -68,14 +68,17 @@ public class JCampoFormularioTexto implements IModelApi {
 	@Column(name = "CTX_NUMSIG", nullable = false, precision = 1, scale = 0)
 	private boolean numeroConSigno;
 
-	@Column(name = "CTX_IDENIF", nullable = false, precision = 1, scale = 0)
-	private boolean identNif;
-
-	@Column(name = "CTX_IDECIF", nullable = false, precision = 1, scale = 0)
-	private boolean identCif;
+	@Column(name = "CTX_IDEDNI", nullable = false, precision = 1, scale = 0)
+	private boolean identDni;
 
 	@Column(name = "CTX_IDENIE", nullable = false, precision = 1, scale = 0)
 	private boolean identNie;
+
+	@Column(name = "CTX_IDENIO", nullable = false, precision = 1, scale = 0)
+	private boolean identNifOtros;
+
+	@Column(name = "CTX_IDENIJ", nullable = false, precision = 1, scale = 0)
+	private boolean identNif;
 
 	@Column(name = "CTX_IDENSS", nullable = false, precision = 1, scale = 0)
 	private boolean identNss;
@@ -213,14 +216,6 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.identNif = identNif;
 	}
 
-	public boolean isIdentCif() {
-		return this.identCif;
-	}
-
-	public void setIdentCif(final boolean identCif) {
-		this.identCif = identCif;
-	}
-
 	public boolean isIdentNie() {
 		return this.identNie;
 	}
@@ -235,6 +230,36 @@ public class JCampoFormularioTexto implements IModelApi {
 
 	public void setIdentNss(final boolean identNss) {
 		this.identNss = identNss;
+	}
+
+	/**
+	 * @return the identDni
+	 */
+	public final boolean isIdentDni() {
+		return identDni;
+	}
+
+	/**
+	 * @param identDni
+	 *            the identDni to set
+	 */
+	public final void setIdentDni(final boolean identDni) {
+		this.identDni = identDni;
+	}
+
+	/**
+	 * @return the identNifOtros
+	 */
+	public final boolean isIdentNifOtros() {
+		return identNifOtros;
+	}
+
+	/**
+	 * @param identNifOtros
+	 *            the identNifOtros to set
+	 */
+	public final void setIdentNifOtros(final boolean identNifOtros) {
+		this.identNifOtros = identNifOtros;
 	}
 
 	public boolean isTelefonoMovil() {
@@ -281,9 +306,10 @@ public class JCampoFormularioTexto implements IModelApi {
 				campoTexto.setNumeroRangoMinimo(numeroRangoMinimo);
 				campoTexto.setNumeroRangoMaximo(numeroRangoMaximo);
 				campoTexto.setNumeroConSigno(numeroConSigno);
-				campoTexto.setIdentNif(identNif);
-				campoTexto.setIdentCif(identCif);
+				campoTexto.setIdentDni(identDni);
 				campoTexto.setIdentNie(identNie);
+				campoTexto.setIdentNifOtros(identNifOtros);
+				campoTexto.setIdentNif(identNif);
 				campoTexto.setIdentNss(identNss);
 				campoTexto.setTelefonoMovil(telefonoMovil);
 				campoTexto.setTelefonoFijo(telefonoFijo);
@@ -301,9 +327,10 @@ public class JCampoFormularioTexto implements IModelApi {
 		jModel.setTipo(TypeCampoTexto.NORMAL.name());
 		jModel.setNormalMultilinea(false);
 		jModel.setNumeroConSigno(false);
-		jModel.setIdentNif(false);
-		jModel.setIdentCif(false);
+		jModel.setIdentDni(false);
 		jModel.setIdentNie(false);
+		jModel.setIdentNifOtros(false);
+		jModel.setIdentNif(false);
 		jModel.setIdentNss(false);
 		jModel.setTelefonoFijo(false);
 		jModel.setTelefonoMovil(false);
@@ -320,8 +347,9 @@ public class JCampoFormularioTexto implements IModelApi {
 		if (campoFormularioTexto != null) {
 			jcampoTexto = new JCampoFormularioTexto();
 			jcampoTexto.setCampoFormulario(jcampo);
-			jcampoTexto.setIdentCif(campoFormularioTexto.isIdentCif());
+			jcampoTexto.setIdentDni(campoFormularioTexto.isIdentDni());
 			jcampoTexto.setIdentNie(campoFormularioTexto.isIdentNie());
+			jcampoTexto.setIdentNifOtros(campoFormularioTexto.isIdentNifOtros());
 			jcampoTexto.setIdentNif(campoFormularioTexto.isIdentNif());
 			jcampoTexto.setIdentNss(campoFormularioTexto.isIdentNss());
 			jcampoTexto.setNormalExpresionRegular(campoFormularioTexto.getNormalExpresionRegular());

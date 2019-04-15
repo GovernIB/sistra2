@@ -232,6 +232,9 @@
 .imc-form .imc-el-control input[type=email],
 .imc-form .imc-el-control input[type=password] { width: 100%; }
 
+.imc-form .imc-el-control input[data-mayuscules="s"] { text-transform: uppercase; }
+
+
 .imc-form .imc-el-control a.imc-select,
 .imc-form .imc-el-control a.imc-select span { width: 100%; }
 
@@ -263,9 +266,6 @@
 .imc-form .imc-el-error input[type=email]:focus,
 .imc-form .imc-el-error textarea:focus,
 .imc-form .imc-el-error a.imc-select:focus { border-color: #cc073c; }
-
-
-
 
 .imc-form .imc-el-obligatori { color: #000; }
 .imc-form .imc-el-obligatori .imc-el-etiqueta label::before {

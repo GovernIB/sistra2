@@ -170,4 +170,17 @@ public class ScriptDaoImpl implements ScriptDao {
 		return repetido;
 	};
 
+	@Override
+	public void updateScript(final Script pScript) {
+		if (pScript == null) {
+			throw new FaltanDatosException("Falta el script");
+		}
+
+		if (pScript.getCodigo() == null) {
+			throw new FaltanDatosException("No se puede actualizar porque no existe.");
+		}
+
+		final JScript jScript = JScript.fromModel(pScript);
+		entityManager.merge(jScript);
+	}
 }

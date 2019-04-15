@@ -295,9 +295,10 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 	 */
 	public void editarAyudaTexto() {
 		if (data.getAyudaTexto() == null) {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.ALTA, null, tramiteVersion);
+			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.ALTA, null, idiomas, idiomas, true);
 		} else {
-			UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.EDICION, data.getAyudaTexto(), tramiteVersion);
+			UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, data.getAyudaTexto(), idiomas, idiomas,
+					true);
 		}
 	}
 

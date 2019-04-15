@@ -6,7 +6,7 @@ body{
 /****  cabecera *****/
 /** Para el growl . **/
 .ui-growl-item-container{
-	opacity: 1;
+	opacity: 1 !important;
 }
 
 /* para que salga fresa la cabecera */
@@ -373,8 +373,32 @@ body{
      padding-left: 0.4em !important;
 }
 
+.padding-left-5 {
+     padding-left: 0.5em !important;
+}
+
+.padding-left-6 {
+     padding-left: 0.6em !important;
+}
+
+.padding-left-7 {
+     padding-left: 0.7em !important;
+}
+
 .padding-left-8 {
      padding-left: 0.8em !important;
+}
+
+.padding-left-10 {
+     padding-left: 1.0em !important;
+}
+
+.padding-left-11 {
+     padding-left: 1.1em !important;
+}
+
+.padding-left-12 {
+     padding-left: 1.2em !important;
 }
 
 .padding-left-18 {
@@ -595,10 +619,10 @@ label.ui-state-disabled {
 	height:100%;
 }
 
-.ui-datatable-ver-scroll-460 .ui-datatable-tablewrapper{
-     overflow: auto !important;
-     height:460px !important;
-}
 #dialogScript\:arbol.ui-tree .ui-tree-container {
 	height: 330px;
+}
+
+#dialogErroresValidacion {
+	width: 1050px;
 }

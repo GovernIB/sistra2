@@ -7,13 +7,13 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getXml(idFormulario)');
+		copiarPortapeles('PLUGIN_FORMULARIOS.getXml(idFormulario)');
 	}
 </script>
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+  		  <li><a href="./index.html">PLUGIN_FORMULARIOS</a></li>
       	  <li>></li>
       	  <li><a href="./getXml.html">getXml</a></li>
   	</ul>
@@ -52,7 +52,7 @@
  </p>
    <p> Obtenir el XML del formulari amb identificador 'Form1':</p>
  <p class="codigoScript">
-	var xml = PLUGIN_DATOSFORMULARIO.getXml('Form1');	
+	var xml = PLUGIN_FORMULARIOS.getXml('Form1');	
  </p>
  <p>
   La funció getXml retornarà una cadena de text on el contingut serà el XML del formulari amb els seus valors.

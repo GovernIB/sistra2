@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Valida si el valor introduït és no nul, i posseeix el format i validacions necessàries per a ser un NIE (Número Identificació Estrangeria) Vàlid. Es considera vàlida tota aquella cadena que tingui 9 números i/o caràcters alfanumèrics que compleixin amb la regla de validació.</li>    
+    	<li>Valida si el valor introduït posseeix el format requerit per a ser un NIE (Número Identificació d'Estranger) vàlid. Es considera vàlida tota aquella cadena que tingui 9 caràcters alfanumèrics i compleixi amb la regla de validació.</li>
 	</ul>
 </p>
 <p>
@@ -36,7 +36,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>nie</b>: cadena que es vol validar.</li>
+		<li><b>nie</b>: cadena que representa el NIE que es vol validar.</li>
 	</ul>
 </p>
 <p>
@@ -54,14 +54,14 @@
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNie('Y23459781X');
 </p>
-<p>La funció esNie retorna 'true', pel fet que el valor indicat correspon a un NIE.</p>
+<p>La funció esNie retorna 'true' pel fet que el valor indicat correspon a un NIE.</p>
 <br />
 
 <p><b>Exemple 2</b> Validar la cadena 'A623459781. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNie('A623459781');
 </p>
-<p>La funció esNie retorna 'false', pel fet que el valor indicat no correspon a un NIE vàlid.</p>
+<p>La funció esNie retorna 'false' ja que el valor indicat no correspon a un NIE vàlid.</p>
 <br />
 
 </body>

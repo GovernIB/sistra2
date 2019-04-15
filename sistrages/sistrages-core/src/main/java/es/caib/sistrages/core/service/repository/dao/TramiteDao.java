@@ -5,6 +5,7 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.DominioTramite;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
@@ -318,5 +319,13 @@ public interface TramiteDao {
 	 * @return
 	 */
 	String getIdentificadorByCodigoVersion(Long codigo);
+
+	/**
+	 * Actualiza literal.
+	 *
+	 * @param pLiteral
+	 *            literal
+	 */
+	void updateLiteral(Literal pLiteral);
 
 }

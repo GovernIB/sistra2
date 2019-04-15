@@ -77,13 +77,6 @@
 							<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionTasa.returnDialogoPago}" update="growl scriptdepago" />
 				</p:commandButton>
 
-	          	<p:outputLabel for="tipo" value="#{msg['dialogDefinicionVersionTasa.tipopago']}" />
-	          	<p:panelGrid styleClass="noBorders noPadding-left" columns="1">
-	          			 <p:selectOneMenu id="tipo" value="#{dialogDefinicionVersionTasa.data.tipo}" update="growl">
-						    <f:selectItems value="#{tipoPago.ALL_VALUES}"  itemLabel="#{msg['typePago.'+=tipo]}" var="tipo" />
-						</p:selectOneMenu>
-				</p:panelGrid>
-
 				<p:outputLabel value="#{msg['dialogDefinicionVersionTasa.simularpago']}" />
 				<p:selectBooleanCheckbox id="simularpago" value="#{dialogDefinicionVersionTasa.data.simulado}" />
 

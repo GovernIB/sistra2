@@ -54,6 +54,10 @@ public class JPasoAnexar implements IModelApi {
 	@OrderBy("orden ASC")
 	private Set<JAnexoTramite> anexosTramite = new HashSet<>(0);
 
+	/** Indica si se habilita subsanación. **/
+	@Column(name = "PAN_SUBSAN", nullable = false, precision = 1, scale = 0)
+	private boolean permiteSubsanar;
+
 	/**
 	 * Constructor vacio.
 	 */
@@ -122,6 +126,21 @@ public class JPasoAnexar implements IModelApi {
 	}
 
 	/**
+	 * @return the permiteSubsanar
+	 */
+	public final boolean isPermiteSubsanar() {
+		return permiteSubsanar;
+	}
+
+	/**
+	 * @param permiteSubsanar
+	 *            the permiteSubsanar to set
+	 */
+	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
+		this.permiteSubsanar = permiteSubsanar;
+	}
+
+	/**
 	 * From model.
 	 *
 	 * @param paso
@@ -132,6 +151,7 @@ public class JPasoAnexar implements IModelApi {
 		if (paso != null) {
 			jpaso = new JPasoAnexar();
 			jpaso.setCodigo(paso.getCodigo());
+			jpaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 			if (paso.getDocumentos() != null) {
 				final Set<JAnexoTramite> anexos = new HashSet<>();
 				for (final Documento doc : paso.getDocumentos()) {
@@ -159,6 +179,7 @@ public class JPasoAnexar implements IModelApi {
 			jpasoAnexar.setCodigo(null);
 			jpasoAnexar.setPasoTramitacion(jpasoTramitacion);
 			jpasoAnexar.setScriptAnexosDinamicos(JScript.clonar(origPasoAnexar.getScriptAnexosDinamicos()));
+			jpasoAnexar.setPermiteSubsanar(origPasoAnexar.isPermiteSubsanar());
 			if (origPasoAnexar.getAnexosTramite() != null) {
 				jpasoAnexar.setAnexosTramite(new HashSet<JAnexoTramite>());
 				int ordenAnexo = 1;

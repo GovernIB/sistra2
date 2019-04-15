@@ -559,9 +559,10 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampoTexto.setPermiteRango(campoTexto.isPermiteRango());
 					break;
 				case ID:
-					jCampoTexto.setIdentNif(campoTexto.isIdentNif());
-					jCampoTexto.setIdentCif(campoTexto.isIdentCif());
+					jCampoTexto.setIdentDni(campoTexto.isIdentDni());
 					jCampoTexto.setIdentNie(campoTexto.isIdentNie());
+					jCampoTexto.setIdentNifOtros(campoTexto.isIdentNifOtros());
+					jCampoTexto.setIdentNif(campoTexto.isIdentNif());
 					jCampoTexto.setIdentNss(campoTexto.isIdentNss());
 					break;
 				case TELEFONO:

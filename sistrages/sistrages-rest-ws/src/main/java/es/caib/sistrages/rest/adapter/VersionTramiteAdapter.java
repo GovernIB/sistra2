@@ -298,6 +298,10 @@ public class VersionTramiteAdapter {
 		resPaso.setScriptRepresentante(AdapterUtils.generaScript(paso.getScriptRepresentante()));
 		resPaso.setScriptValidar(AdapterUtils.generaScript(paso.getScriptValidarRegistrar()));
 		resPaso.setValidaRepresentacion(paso.isValidaRepresentacion());
+		resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());
+		resPaso.setInstruccionesSubsanacion(
+				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesSubsanacion(), idioma));
+
 		return resPaso;
 	}
 
@@ -317,6 +321,7 @@ public class VersionTramiteAdapter {
 			resPaso.setPasoFinal(paso.isPasoFinal());
 			resPaso.setAnexos(generaAnexos(paso.getDocumentos(), idioma));
 			resPaso.setScriptAnexosDinamicos(AdapterUtils.generaScript(paso.getScriptAnexosDinamicos()));
+			resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 		}
 		return resPaso;
 	}
@@ -352,6 +357,7 @@ public class VersionTramiteAdapter {
 			resPaso.setTipo(paso.getTipo().toString());
 			resPaso.setPasoFinal(paso.isPasoFinal());
 			resPaso.setPagos(generarPagos(paso.getTasas(), idioma));
+			resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 		}
 		return resPaso;
 	}
@@ -398,7 +404,7 @@ public class VersionTramiteAdapter {
 		List<RFormularioTramite> res = null;
 
 		if (formulariosTramite != null) {
-			res = new ArrayList<RFormularioTramite>();
+			res = new ArrayList<>();
 			for (final FormularioTramite f : formulariosTramite) {
 				final RFormularioTramite formularioTramite = new RFormularioTramite();
 				formularioTramite.setDescripcion(AdapterUtils.generarLiteralIdioma(f.getDescripcion(), idioma));
@@ -408,7 +414,6 @@ public class VersionTramiteAdapter {
 				formularioTramite.setFormularioInterno(generaFormularioInterno(f.getIdFormularioInterno(), idioma));
 				formularioTramite.setIdentificador(f.getIdentificador());
 				formularioTramite.setObligatoriedad(generaObligatoriedad(f.getObligatoriedad()));
-				formularioTramite.setPresentarPreregistro(f.isDebePrerregistrarse());
 				formularioTramite.setScriptDatosIniciales(AdapterUtils.generaScript(f.getScriptDatosIniciales()));
 				formularioTramite.setScriptObligatoriedad(AdapterUtils.generaScript(f.getScriptObligatoriedad()));
 				formularioTramite.setScriptFirmantes(AdapterUtils.generaScript(f.getScriptFirma()));
@@ -458,7 +463,7 @@ public class VersionTramiteAdapter {
 			final String idioma) {
 		List<RPlantillaFormulario> lpf = null;
 		if (plantillas != null) {
-			lpf = new ArrayList<RPlantillaFormulario>();
+			lpf = new ArrayList<>();
 			for (final PlantillaFormulario p : plantillas) {
 				final RPlantillaFormulario plantillaFormulario = new RPlantillaFormulario();
 				plantillaFormulario.setClaseFormateador((getStringFormateador(p.getIdFormateadorFormulario())));
@@ -565,8 +570,9 @@ public class VersionTramiteAdapter {
 	 */
 	private List<RComponente> generaComponentes(final List<ComponenteFormulario> componentes, final String idioma) {
 
+		List<RComponente> lc = null;
 		if (componentes != null) {
-			final List<RComponente> lc = new ArrayList<RComponente>();
+			lc = new ArrayList<>();
 			for (final ComponenteFormulario c : componentes) {
 				switch (c.getTipo()) {
 				case CAMPO_TEXTO:
@@ -595,13 +601,13 @@ public class VersionTramiteAdapter {
 					lc.add(resET);
 					break;
 				default:
-					return null;
+					lc = null;
+					return lc;
 				}
 			}
-			return lc;
-		} else {
-			return null;
+
 		}
+		return lc;
 	}
 
 	/**
@@ -807,7 +813,7 @@ public class VersionTramiteAdapter {
 	private List<RParametroDominio> generaParametrosDominio(final List<ParametroDominio> ori) {
 		List<RParametroDominio> lpd = null;
 		if (ori != null) {
-			lpd = new ArrayList<RParametroDominio>();
+			lpd = new ArrayList<>();
 			for (final ParametroDominio p : ori) {
 				final RParametroDominio res = new RParametroDominio();
 				res.setIdentificador(p.getParametro());
@@ -922,8 +928,9 @@ public class VersionTramiteAdapter {
 		RPropiedadesTextoIdentificacion res = null;
 		if (componenteOrigen != null) {
 			res = new RPropiedadesTextoIdentificacion();
-			res.setCif(componenteOrigen.isIdentCif());
+			res.setDni(componenteOrigen.isIdentDni());
 			res.setNie(componenteOrigen.isIdentNie());
+			res.setNifOtros(componenteOrigen.isIdentNifOtros());
 			res.setNif(componenteOrigen.isIdentNif());
 			res.setNss(componenteOrigen.isIdentNss());
 		}
@@ -987,7 +994,7 @@ public class VersionTramiteAdapter {
 	private List<RPagoTramite> generarPagos(final List<Tasa> tasas, final String idioma) {
 		List<RPagoTramite> lres = null;
 		if (tasas != null) {
-			lres = new ArrayList<RPagoTramite>();
+			lres = new ArrayList<>();
 			for (final Tasa t : tasas) {
 				final RPagoTramite res = new RPagoTramite();
 				res.setDescripcion(AdapterUtils.generarLiteralIdioma(t.getDescripcion(), idioma));
@@ -995,7 +1002,6 @@ public class VersionTramiteAdapter {
 				res.setObligatoriedad(t.getObligatoriedad().toString());
 				res.setScriptDependencia(AdapterUtils.generaScript(t.getScriptObligatoriedad()));
 				res.setScriptPago(AdapterUtils.generaScript(t.getScriptPago()));
-				res.setTipo(t.getTipo().toString());
 				res.setSimularPago(t.isSimulado());
 				lres.add(res);
 			}
@@ -1013,7 +1019,7 @@ public class VersionTramiteAdapter {
 	private List<RAnexoTramite> generaAnexos(final List<Documento> documentos, final String idioma) {
 		List<RAnexoTramite> lres = null;
 		if (documentos != null) {
-			lres = new ArrayList<RAnexoTramite>();
+			lres = new ArrayList<>();
 			for (final Documento d : documentos) {
 				final RAnexoTramite res = new RAnexoTramite();
 				res.setAyuda(generaAyudaFichero(d.getAyudaTexto(), d.getAyudaFichero(), d.getAyudaURL(), idioma));

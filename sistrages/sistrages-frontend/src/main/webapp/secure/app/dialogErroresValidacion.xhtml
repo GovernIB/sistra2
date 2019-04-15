@@ -19,37 +19,57 @@
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogErroresValidacion.modoAcceso}"/>
+		<f:viewParam name="IDIOMAS" value="#{dialogErroresValidacion.idiomas}"/>
+		<f:viewParam name="TRAMITE" value="#{dialogErroresValidacion.idTramite}"/>
+		<f:viewParam name="TRAMITEVERSION" value="#{dialogErroresValidacion.idTramiteVersion}"/>
 		<f:viewAction action="#{dialogErroresValidacion.init}" />
 	</f:metadata>
 	<h:form id="dialogErroresValidacion" styleClass="margin-top-10">
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+			
+			<p:dataTable  id="dataTable" var="dt" value="#{dialogErroresValidacion.listaErrores}"
+							emptyMessage="#{msg['error.emptyRows']}" styleClass="margin-left-25 margin-right-25"
+							scrollable="true" scrollHeight="440" selection="#{dialogErroresValidacion.filaSeleccionada}"
+							selectionMode="single" rowKey="#{dt.hashCode()}">
+					
+					<p:ajax event="rowSelect" global="false"/>
+					<p:ajax event="rowDblselect" oncomplete="triggerDoubleClickCorregir();"  disabled="#{dialogErroresValidacion.isConsulta()}"/>
+					
+					<!-- Columnas -->
+						<p:column headerText="#{msg['dialogErroresValidacion.tipo']}" styleClass="grid-left" style="width:12%;" sortBy="#{dt.tipo}">
+							<h:outputText value="#{msg['typeErrorValidacion.' += dt.tipo]}"/>
+						</p:column>
 
-						<p:dataTable  id="dataTable" var="dt" value="#{dialogErroresValidacion.listaErrores}"
-										  emptyMessage="#{msg['error.emptyRows']}" styleClass="margin-left-25 margin-right-25 ui-datatable-ver-scroll-460"
-										  scrollable="false" scrollHeight="460"
-				                          paginator="false"
-				                          selectionMode="single" rowKey="#{dt.elemento}">
+						<p:column headerText="#{msg['dialogErroresValidacion.item']}" styleClass="grid-left" style="width:30%;" sortBy="#{dt.elemento}">
+							<h:outputText value="#{dt.elemento}" />
+						</p:column>
 
-								<!-- Columnas -->
-							    <p:column headerText="#{msg['dialogErroresValidacion.item']}" styleClass="grid-left ui-panelgrid-cell" width="35%">
-							        <h:outputText value="#{dt.elemento}" />
-							    </p:column>
-
-							    <p:column headerText="#{msg['dialogErroresValidacion.descripcion']}" styleClass="grid-left ui-panelgrid-cell" width="65%">
-							        <h:outputText value="#{dt.descripcion}" />
-							    </p:column>
-
-
-				 		</p:dataTable>
+						<p:column headerText="#{msg['dialogErroresValidacion.descripcion']}" styleClass="grid-left" style="width:58%;" sortBy="#{dt.descripcion}">
+							<h:outputText value="#{dt.descripcion}"/>
+						</p:column>
+			</p:dataTable>
 
 
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton id="btnCorregir" value="#{msg['botones.corregir']}" actionListener="#{dialogErroresValidacion.corregir}" rendered="#{dialogErroresValidacion.isEdicion()}" process="@this" styleClass="boton" update="growlDialog">
+							<p:ajax event="dialogReturn" listener="#{dialogErroresValidacion.returnDialogo}"/>
+						</p:commandButton>
+					</f:facet> 	
 					<f:facet name="right">
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogErroresValidacion.cerrar}" process="@this" styleClass="boton-azul"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
 	</h:form>
+	
+	<h:outputScript >
+		function triggerDoubleClickCorregir() {
+			document.getElementById("dialogErroresValidacion:btnCorregir").click();
+		}
+	</h:outputScript>
 </h:body>
 
 </f:view>

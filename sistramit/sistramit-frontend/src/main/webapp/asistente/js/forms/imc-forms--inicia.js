@@ -460,7 +460,6 @@ $.fn.appFormsConfiguracio = function(options) {
 
 					$(json_config)
 						.each(function() {
-
 							var conf = this
 								,conf_id = conf.id
 								,conf_tipus = conf.tipo || false
@@ -590,6 +589,15 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								}
 
+								// mayúscules
+
+								if (conf_opcions.mayusculas && conf_opcions.mayusculas === "s") {
+
+									elm_input
+										.attr({ "data-mayuscules": conf_opcions.mayusculas });
+
+								}
+
 								// expresió regular
 
 								if (conf_opcions.regexp && conf_opcions.regexp !== null) {
@@ -601,24 +609,30 @@ $.fn.appFormsConfiguracio = function(options) {
 
 								// identificador
 
-								if (conf_opcions.nif && conf_opcions.nif === "s") {
+								if (conf_opcions.dni && conf_opcions.dni === "s") {
 
 									elm_input
-										.attr("data-nif", conf_opcions.nif);
+										.attr("data-dni", conf_opcions.dni);
 
 								}
 
-								if (conf_opcions.cif && conf_opcions.cif === "s") {
+								if (conf_opcions.nifOtros && conf_opcions.nifOtros === "s") {
 
 									elm_input
-										.attr("data-cif", conf_opcions.cif);
+										.attr("data-nifOtros", conf_opcions.nifOtros);
 
 								}
 
 								if (conf_opcions.nie && conf_opcions.nie === "s") {
-
 									elm_input
 										.attr("data-nie", conf_opcions.nie);
+
+								}
+
+								if (conf_opcions.nifPJ && conf_opcions.nifPJ === "s") {
+
+									elm_input
+										.attr("data-nifPJ", conf_opcions.nifPJ);
 
 								}
 
@@ -1162,7 +1176,7 @@ $.fn.appFormsConfiguracio = function(options) {
 									}
 									,0
 									, function() {
-										
+
 										primer_element_camp
 											.focus();
 
@@ -1305,21 +1319,27 @@ $.fn.appFormsValida = function(options) {
 
 					var idValid = false;
 
-					if (input.attr("data-nif") === "s") {
+					if (input.attr("data-dni") === "s") {
 
-						idValid = ( appValidaIdentificador.nif(input_val) ) ? true : false;
-
-					}
-
-					if (!idValid && input.attr("data-cif") === "s") {
-
-						idValid = ( appValidaIdentificador.cif(input_val) ) ? true : false;
+						idValid = ( appValidaIdentificador.dni(input_val) ) ? true : false;
 
 					}
 
 					if (!idValid && input.attr("data-nie") === "s") {
 
 						idValid = ( appValidaIdentificador.nie(input_val) ) ? true : false;
+
+					}
+
+					if (!idValid && input.attr("data-nifOtros") === "s") {
+
+						idValid = ( appValidaIdentificador.nifOtros(input_val) ) ? true : false;
+
+					}
+
+					if (!idValid && input.attr("data-nifPJ") === "s") {
+
+						idValid = ( appValidaIdentificador.nifPJ(input_val) ) ? true : false;
 
 					}
 
@@ -1749,7 +1769,7 @@ $.fn.appFormsFormateig = function(options) {
 					if (!arxius_data) {
 
 						$.when(
-			
+
 							//$.get(APP_ + "css/ui-lightness/jquery-ui-1.10.3.custom.min.css?" + APP_VERSIO)
 							$.getScript(APP_ + "js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
 							,$.getScript(APP_ + "js/utils/jquery-ui-1.10.3.custom.min.js?" + APP_VERSIO)
@@ -1814,7 +1834,7 @@ $.fn.appFormsFormateig = function(options) {
 					if (!arxius_hora) {
 
 						$.when(
-			
+
 							$.getScript(APP_ + "js/utils/jquery-maskedinput.min.js?" + APP_VERSIO)
 
 						).then(
@@ -1826,7 +1846,7 @@ $.fn.appFormsFormateig = function(options) {
 								// configura
 
 								configura_hora();
-								
+
 							}
 
 						).fail(

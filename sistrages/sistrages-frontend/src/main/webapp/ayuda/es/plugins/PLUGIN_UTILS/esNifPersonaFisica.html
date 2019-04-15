@@ -1,0 +1,69 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
+	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNifPersonaFisica(nif)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="./esNifPersonaFisica.html">esNifPersonaFisica</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	esNifPersonaFisica(String nif): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida si el valor introducido posee el formato requerido para ser un NIF de persona física válido (DNI, NIE o NIF Otros).</li>
+</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>nif</b>: cadena que representa el NIF de persona física a validar.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si la cadena es un NIF de persona física válido y false si la cadena no es un NIF de persona física válida.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar la cadena '62424335N'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNifPersonaFisica('62424335N');
+</p>
+<p>La función esNifPersonaFisica retorna 'true', debido a que la cadena contiene un NIF de persona física válida.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar la cadena '4854391C. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNifPersonaFisica('4854391C');
+</p>
+<p>La función esNifPersonaFisica retorna 'false', debido a que el valor de la cadena no se corresponde a un NIF de persona física válida.</p>
+<br />
+
+</body>
+</html>

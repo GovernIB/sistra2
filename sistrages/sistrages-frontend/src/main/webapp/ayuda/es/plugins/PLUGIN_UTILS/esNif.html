@@ -28,7 +28,7 @@
 </p>
 <p>
 	<ul>
-    	<li>Valida si el valor introducido es no nulo, y posee el formato y validaciones necesarias para ser un NIF válido. Se considera válido toda aquella cadena que tenga 8 números y un carácter alfanumérico que cumpla con la regla de validación.</li>
+    	<li>Valida si el valor introducido posee el formato requerido para ser un NIF (de persona física o jurídica) válido.</li>
 </li>
 	</ul>
 </p>
@@ -37,7 +37,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>nif</b>: Cadena que representa el NIF a validar.</li>
+		<li><b>nif</b>: cadena que representa el NIF a validar.</li>
 	</ul>
 </p>
 <p>
@@ -45,15 +45,15 @@
 </p>
 <p>
 	<ul>
-		<li><b>boolean</b>:true si la cadena es un NIF válido y false si la cadena no es un NIF válido.</li>
+		<li><b>boolean</b>: true si la cadena es un NIF y false si la cadena no es un NIF.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
 </p>
-<p><b>Ejemplo 1</b> Validar la cadena '79865432D'. </p>
+<p><b>Ejemplo 1</b> Validar la cadena '62424335N'. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esNif('79865432D');
+	var valido = PLUGIN_UTILS.esNif('62424335N');
 </p>
 <p>La función esNif retorna 'true', debido a que la cadena contiene un NIF válido.</p>
 <br />
@@ -62,7 +62,7 @@
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNif('4854391C');
 </p>
-<p>La función esNif retorna 'false', debido a que el valor de la cadena no se corresponde a un nif válido</p>
+<p>La función esNif retorna 'false', debido a que el valor de la cadena no se corresponde a un NIF válido.</p>
 <br />
 
 </body>

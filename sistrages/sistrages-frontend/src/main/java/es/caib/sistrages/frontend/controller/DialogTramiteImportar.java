@@ -592,7 +592,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
 					TypeImportarResultado.ERROR, tramite, tramiteActual);
 			filaTramite.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.areaDistinta"));
-			// return false;
 		}
 
 		// Si existe el trámite en el entorno pero no el area, es que algo está mal.
@@ -601,7 +600,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
 					TypeImportarResultado.ERROR, tramite, tramiteActual);
 			filaTramite.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.tramiteareaincorrecto"));
-			// return false;
 		}
 
 		// Obtenemos la version y sus pasos si el trámite existe. Además, seteamos debug

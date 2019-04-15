@@ -10,6 +10,7 @@ import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
@@ -45,8 +46,6 @@ public class DialogTraduccion extends DialogControllerBase {
 	/** Obligatorio aleman. **/
 	private boolean requiredDe = false;
 
-	/** Data en formato JSON. **/
-	private String iData;
 	/** Idiomas obligatorios en formato JSON. **/
 	private String iIdiomasObligatorios;
 	/** Idiomas posibles en formato JSON. **/
@@ -77,10 +76,10 @@ public class DialogTraduccion extends DialogControllerBase {
 	 */
 	public void init() {
 
-		if (iData == null || iData.isEmpty()) {
+		if (UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_LITERALES) == null) {
 			data = new Literal();
 		} else {
-			data = (Literal) UtilJSON.fromJSON(iData, Literal.class);
+			data = (Literal) UtilJSF.getSessionBean().getMochilaDatos().get(Constantes.CLAVE_MOCHILA_LITERALES);
 		}
 
 		if (iIdiomasObligatorios == null || iIdiomasObligatorios.isEmpty()) {
@@ -394,21 +393,6 @@ public class DialogTraduccion extends DialogControllerBase {
 	 */
 	public void setRequiredDe(final boolean requiredDe) {
 		this.requiredDe = requiredDe;
-	}
-
-	/**
-	 * @return the iData
-	 */
-	public String getiData() {
-		return iData;
-	}
-
-	/**
-	 * @param iData
-	 *            the iData to set
-	 */
-	public void setiData(final String iData) {
-		this.iData = iData;
 	}
 
 	/**

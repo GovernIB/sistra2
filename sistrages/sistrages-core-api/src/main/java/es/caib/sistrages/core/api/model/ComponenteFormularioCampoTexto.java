@@ -73,19 +73,24 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	private boolean numeroConSigno;
 
 	/**
-	 * ident nif.
+	 * ident dni.
 	 */
-	private boolean identNif;
-
-	/**
-	 * ident cif.
-	 */
-	private boolean identCif;
+	private boolean identDni;
 
 	/**
 	 * ident nie.
 	 */
 	private boolean identNie;
+
+	/**
+	 * ident nif.
+	 */
+	private boolean identNifOtros;
+
+	/**
+	 * ident nif.
+	 */
+	private boolean identNif;
 
 	/**
 	 * ident nss.
@@ -362,25 +367,6 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	}
 
 	/**
-	 * Verifica si es ident cif.
-	 *
-	 * @return true, si es ident cif
-	 */
-	public boolean isIdentCif() {
-		return identCif;
-	}
-
-	/**
-	 * Establece el valor de identCif.
-	 *
-	 * @param identCif
-	 *            el nuevo valor de identCif
-	 */
-	public void setIdentCif(final boolean identCif) {
-		this.identCif = identCif;
-	}
-
-	/**
 	 * Verifica si es ident nie.
 	 *
 	 * @return true, si es ident nie
@@ -473,6 +459,36 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	 */
 	public void setPermiteRango(final boolean permiteRango) {
 		this.permiteRango = permiteRango;
+	}
+
+	/**
+	 * @return the identDni
+	 */
+	public boolean isIdentDni() {
+		return identDni;
+	}
+
+	/**
+	 * @param identDni
+	 *            the identDni to set
+	 */
+	public void setIdentDni(final boolean identDni) {
+		this.identDni = identDni;
+	}
+
+	/**
+	 * @return the identNifOtros
+	 */
+	public boolean isIdentNifOtros() {
+		return identNifOtros;
+	}
+
+	/**
+	 * @param identNifOtros
+	 *            the identNifOtros to set
+	 */
+	public void setIdentNifOtros(final boolean identNifOtros) {
+		this.identNifOtros = identNifOtros;
 	}
 
 }

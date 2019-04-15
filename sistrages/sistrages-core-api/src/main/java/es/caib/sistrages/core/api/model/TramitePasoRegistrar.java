@@ -46,6 +46,12 @@ public class TramitePasoRegistrar extends TramitePaso {
 	/** Indica si valida representación */
 	private boolean validaRepresentacion;
 
+	/** Indica si se habilita subsanación. **/
+	private boolean permiteSubsanar;
+
+	/** Instrucciones subsanación */
+	private Literal instruccionesSubsanacion;
+
 	/**
 	 * @return the scriptDestinoRegistro
 	 */
@@ -209,6 +215,36 @@ public class TramitePasoRegistrar extends TramitePaso {
 	 */
 	public void setValidaRepresentacion(final boolean validaRepresentacion) {
 		this.validaRepresentacion = validaRepresentacion;
+	}
+
+	/**
+	 * @return the permiteSubsanar
+	 */
+	public final boolean isPermiteSubsanar() {
+		return permiteSubsanar;
+	}
+
+	/**
+	 * @param permiteSubsanar
+	 *            the permiteSubsanar to set
+	 */
+	public final void setPermiteSubsanar(final boolean permiteSubsanar) {
+		this.permiteSubsanar = permiteSubsanar;
+	}
+
+	/**
+	 * @return the instruccionesSubsanacion
+	 */
+	public final Literal getInstruccionesSubsanacion() {
+		return instruccionesSubsanacion;
+	}
+
+	/**
+	 * @param instruccionesSubsanacion
+	 *            the instruccionesSubsanacion to set
+	 */
+	public final void setInstruccionesSubsanacion(final Literal instruccionesSubsanacion) {
+		this.instruccionesSubsanacion = instruccionesSubsanacion;
 	}
 
 }

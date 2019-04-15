@@ -7,13 +7,13 @@
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('PLUGIN_DATOSFORMULARIO.getValorMultiple(idFormulario,campo,indice)');
+		copiarPortapeles('PLUGIN_FORMULARIOS.getValorMultiple(idFormulario,campo,indice)');
 	}
 </script>
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+  		  <li><a href="./index.html">PLUGIN_FORMULARIOS</a></li>
       	  <li>></li>
       	  <li><a href="./getValorMultiple.html">getValorMultiple</a></li>
   	</ul>
@@ -55,13 +55,13 @@
  </p>
   <p>Obtenir l'últim valor del camp múltiple 'campoTitulaciones' del formulari amb id 'Form1', per a això primer s'ha d'obtenir el total de valors:</p>
  <p class="codigoScript">
-	var total = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorMultiple('Form1','campoTitulaciones');	
+	var total = PLUGIN_FORMULARIOS.getNumeroValoresValorMultiple('Form1','campoTitulaciones');	
 </p>
 <p>
 	La funció getNumeroValoresValorMultiple retornarà el número  8(total de valors d'aquest camp). Amb aquest valor podem calcular l'índex de l'últim element de la següent manera:
 </p>
 <p class="codigoScript">
-	var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorMultiple('Form1','campoTitulaciones', total -1);	
+	var valorCompuesto = PLUGIN_FORMULARIOS.getValorMultiple('Form1','campoTitulaciones', total -1);	
  </p>
  <p>
    La funció getValorMultiple retornarà l'objecte valorCompuesto situat en la posició indicada. Per a obtenir les dades del valor compost podem demanar el seu codi o descripció tal com es mostra a continuació:

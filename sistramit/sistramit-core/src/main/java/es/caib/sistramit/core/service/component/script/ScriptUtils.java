@@ -7,7 +7,7 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistra2.commons.utils.XssFilter;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
@@ -72,28 +72,23 @@ public final class ScriptUtils {
 	 */
 	public static void validarDatosPersona(final String nifNormalizado, final String pNombre, final String pApellido1,
 			final String pApellido2) throws ScriptException {
-
-		if (!ValidacionesTipo.getInstance().esNif(nifNormalizado)
-				&& !ValidacionesTipo.getInstance().esCif(nifNormalizado)
-				&& !ValidacionesTipo.getInstance().esNie(nifNormalizado)) {
-			throw new ScriptException("El dato proporcionado como nif persona no es nif/nie/cif: " + nifNormalizado);
+		if (!NifUtils.esNifPersonaFisica(nifNormalizado) && !NifUtils.esNifPersonaJuridica(nifNormalizado)) {
+			throw new ScriptException("El dato proporcionado como nif persona no es un nif válido: " + nifNormalizado);
 		}
+
 		if (StringUtils.isEmpty(pNombre) || !XssFilter.filtroXss(pNombre)) {
 			throw new ScriptException(
 					"El dato proporcionado como nombre persona esta vacio o contiene caracteres no permitidos");
 		}
 
-		if (!StringUtils.isBlank(pApellido1)) {
-			if (!XssFilter.filtroXss(pApellido1)) {
-				throw new ScriptException(
-						"El dato proporcionado como apellido 1 persona contiene caracteres no permitidos");
-			}
+		if (!StringUtils.isBlank(pApellido1) && !XssFilter.filtroXss(pApellido1)) {
+			throw new ScriptException(
+					"El dato proporcionado como apellido 1 persona contiene caracteres no permitidos");
 		}
-		if (!StringUtils.isBlank(pApellido2)) {
-			if (!XssFilter.filtroXss(pApellido2)) {
-				throw new ScriptException(
-						"El dato proporcionado como apellido 2 persona contiene caracteres no permitidos");
-			}
+
+		if (!StringUtils.isBlank(pApellido2) && !XssFilter.filtroXss(pApellido2)) {
+			throw new ScriptException(
+					"El dato proporcionado como apellido 2 persona contiene caracteres no permitidos");
 		}
 	}
 

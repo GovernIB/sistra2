@@ -11,6 +11,8 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.controller.DialogTraduccion;
+import es.caib.sistrages.frontend.controller.DialogTraduccionHTML;
+import es.caib.sistrages.frontend.model.comun.Constantes;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeParametroVentana;
 
@@ -111,8 +113,10 @@ public final class UtilTraducciones {
 			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional) {
 
 		final Map<String, String> params = new HashMap<>();
-		if (traducciones != null) {
-			params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(traducciones));
+		if (traducciones == null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_LITERALES);
+		} else {
+			UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_LITERALES, traducciones);
 		}
 
 		if (idiomas != null) {
@@ -132,7 +136,47 @@ public final class UtilTraducciones {
 		final int altura = getAltura(idiomas);
 
 		UtilJSF.openDialog(DialogTraduccion.class, modoAcceso, params, true, 470, altura);
+	}
 
+	/**
+	 * Abre un dialog de tipo traduccion (es el método PADRE que realmente crea el
+	 * dialog).
+	 *
+	 * @param modoAcceso
+	 *            Modo de acceso (ALTA, EDICION o CONSULTA)
+	 * @param traducciones
+	 *            Dato en formato json de tipo Traducciones
+	 * @param idiomas
+	 *            La lista de idiomas que se puede introducir literal. Si no se
+	 *            introduce, se supondrán que son los que tenga traducciones.
+	 * @param idiomasObligatorios
+	 *            La lista de idiomas obligatorios. Si no se introduce, se supondrán
+	 *            que son los que tenga traducciones.
+	 */
+	public static void openDialogTraduccionHTML(final TypeModoAcceso modoAcceso, final Literal traducciones,
+			final List<String> idiomas, final List<String> idiomasObligatorios, final Boolean opcional) {
+
+		final Map<String, String> params = new HashMap<>();
+		if (traducciones == null) {
+			UtilJSF.getSessionBean().limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_LITERALES_HTML);
+		} else {
+			UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_LITERALES_HTML, traducciones);
+		}
+
+		if (idiomas != null) {
+			params.put(TypeParametroVentana.IDIOMAS.toString(), UtilJSON.toJSON(idiomas));
+		}
+
+		if (idiomasObligatorios != null) {
+			params.put(TypeParametroVentana.OBLIGATORIOS.toString(), UtilJSON.toJSON(idiomasObligatorios));
+		}
+
+		// Variable que marca que si es opcional, tiene que aparecer el botón de borrar
+		if (opcional != null && opcional) {
+			params.put(TypeParametroVentana.ES_OPCIONAL.toString(), "S");
+		}
+
+		UtilJSF.openDialog(DialogTraduccionHTML.class, modoAcceso, params, true, 770, 700);
 	}
 
 	/**
