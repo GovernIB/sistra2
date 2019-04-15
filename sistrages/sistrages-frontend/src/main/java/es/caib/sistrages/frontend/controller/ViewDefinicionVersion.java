@@ -48,6 +48,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeExtension;
+import es.caib.sistrages.core.api.model.types.TypePaso;
 import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
@@ -129,9 +130,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 	/** url de la opcion del arbol seleccionada */
 	private String opcionUrl;
-
-	/** Aviso entidad. **/
-	// private AvisoEntidad avisoEntidad;
 
 	/** tramite version. */
 	private TramiteVersion tramiteVersion;
@@ -589,7 +587,14 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	}
 
 	/**
-	 * Consultar Script.
+	 * Consultar traduccion HTML.
+	 */
+	public void consultarTraduccionHTML(final Literal literal) {
+		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.CONSULTA, literal, idiomas, idiomas, false);
+	}
+
+	/**
+	 * Consultar traduccion HTML.
 	 */
 	public void consultarTraduccion(final Literal literal) {
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.CONSULTA, literal, tramiteVersion);
@@ -658,6 +663,35 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			inicializarArbol();
 
 			if (TypeModoAcceso.ALTA.equals(respuesta.getModoAcceso())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(Constantes.LITERAL_INFO_ALTA_OK));
+			} else if (TypeModoAcceso.EDICION.equals(respuesta.getModoAcceso())) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+						UtilJSF.getLiteral(Constantes.LITERAL_INFO_MODIFICADO_OK));
+			}
+		}
+
+	}
+
+	/**
+	 * Cuando vuelve de editar el control de acceso.
+	 *
+	 * @param event
+	 */
+	public void returnDialogoRefrescarTramiteRegistro(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+		if (!respuesta.isCanceled()) {
+
+			recuperarDatos();
+
+			// Refrescamos el arbol
+			inicializarArbol();
+
+			final Entidad entidad = this.entidadService.loadEntidad(UtilJSF.getIdEntidad());
+			if (!entidad.isPermiteSubsanarRegistrar()
+					&& ((TramitePasoRegistrar) respuesta.getResult()).isPermiteSubsanar()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("viewDefinicionVersionRegistrarTramite.warning.entidadSinSubsanacion"));
+			} else if (TypeModoAcceso.ALTA.equals(respuesta.getModoAcceso())) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(Constantes.LITERAL_INFO_ALTA_OK));
 			} else if (TypeModoAcceso.EDICION.equals(respuesta.getModoAcceso())) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
@@ -855,7 +889,7 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), tramiteVersion.getCodigo().toString());
 		params.put(TypeParametroVentana.TRAMITEPASO.toString(),
 				((OpcionArbol) this.selectedNode.getData()).getTramitePaso().getCodigo().toString());
-		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 500);
+		UtilJSF.openDialog(DialogDefinicionVersionFormulario.class, TypeModoAcceso.EDICION, params, true, 1100, 420);
 	}
 
 	/**
@@ -1219,6 +1253,78 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 			this.editarDocumento();
 			documentoAlta = null;
 		}
+	}
+
+	/**
+	 * Activa la subsanación del paso anexar documento.
+	 *
+	 * @param idPaso
+	 *            Id del paso.
+	 * @param tipoPaso
+	 *            Tipo de paso
+	 **/
+	public void activarSubsanacion(final Long idPaso, final String tipoPaso) {
+
+		tramiteService.permiteSubsanacion(idPaso, true);
+
+		final Entidad entidad = this.entidadService.loadEntidad(UtilJSF.getIdEntidad());
+		final TypePaso typePaso = TypePaso.fromString(tipoPaso);
+		switch (typePaso) {
+		case ANEXAR:
+			if (!entidad.isPermiteSubsanarAnexar()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("viewDefinicionVersionAnexarDocumentos.warning.entidadSinSubsanacion"));
+			}
+			this.getTramitePasoANEXSeleccionado().setPermiteSubsanar(true);
+			break;
+		case REGISTRAR:
+			if (!entidad.isPermiteSubsanarRegistrar()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("viewDefinicionVersionRegistrarTramite.warning.entidadSinSubsanacion"));
+			}
+			this.getTramitePasoREGSeleccionado().setPermiteSubsanar(true);
+			break;
+		case PAGAR:
+			if (!entidad.isPermiteSubsanarPagar()) {
+				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("viewDefinicionVersionTasa.warning.entidadSinSubsanacion"));
+			}
+			this.getTramitePasoTSSeleccionado().setPermiteSubsanar(true);
+			break;
+		default:
+			break;
+
+		}
+
+	}
+
+	/**
+	 * Desactiva la subsanación del paso anexar documento.
+	 *
+	 * @param idPaso
+	 *            Id del paso.
+	 * @param tipoPaso
+	 *            Tipo de paso
+	 */
+	public void desactivarSubsanacion(final Long idPaso, final String tipoPaso) {
+
+		tramiteService.permiteSubsanacion(idPaso, false);
+
+		final TypePaso typePaso = TypePaso.fromString(tipoPaso);
+		switch (typePaso) {
+		case ANEXAR:
+			this.getTramitePasoANEXSeleccionado().setPermiteSubsanar(false);
+			break;
+		case REGISTRAR:
+			this.getTramitePasoREGSeleccionado().setPermiteSubsanar(false);
+			break;
+		case PAGAR:
+			this.getTramitePasoTSSeleccionado().setPermiteSubsanar(false);
+			break;
+		default:
+			break;
+		}
+
 	}
 
 	// ------- VIEW DE PASO DE TASA ------------------------------

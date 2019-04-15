@@ -9,109 +9,139 @@
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-		<!-- Toolbar -->
-		<p:toolbar id="toolbar">
-			<f:facet name="right">
-				<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
-					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
-						actionListener="#{viewDefinicionVersion.nuevaTasa()}" process="@this"
-						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasaAlta}" update="growl formArbol:arbol @form" oncomplete="$('#formViewDefinicionVersionPagarTasas\\:btnEditarHidden').click();" />
-					</p:commandButton>
+		<h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
 
-					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
-						actionListener="#{viewDefinicionVersion.editarTasa()}" process="@this"
-						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
-					</p:commandButton>
+				<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.listafija']}" />
+				<p:outputPanel>
 
-					<p:commandButton id="btnEliminar"
-						value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
-						actionListener="#{viewDefinicionVersion.eliminarTasa()}"
-						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						process="@this" update="growl formArbol:arbol @form" >
-						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
-		        	</p:commandButton>
+						<!-- Toolbar -->
+						<p:toolbar id="toolbar">
+							<f:facet name="right">
+								<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+									<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file"
+										actionListener="#{viewDefinicionVersion.nuevaTasa()}" process="@this"
+										rendered="#{viewDefinicionVersion.permiteEditar()}"
+										update="growl">
+										<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoTasaAlta}" update="growl formArbol:arbol @form" oncomplete="$('#formViewDefinicionVersionPagarTasas\\:btnEditarHidden').click();" />
+									</p:commandButton>
 
-					<p:commandButton id="btnSubir"
-						value="#{msg['botones.subir']}" icon="fa fa-caret-up"
-						actionListener="#{viewDefinicionVersion.subirTasa()}"
-						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						process="@this" update="growl formArbol:arbol @form" />
+									<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit"
+										actionListener="#{viewDefinicionVersion.editarTasa()}" process="@this"
+										rendered="#{viewDefinicionVersion.permiteEditar()}"
+										update="growl">
+										<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
+									</p:commandButton>
 
-					<p:commandButton id="btnBajar"
-						value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
-						actionListener="#{viewDefinicionVersion.bajarTasa()}"
-						rendered="#{viewDefinicionVersion.permiteEditar()}"
-						process="@this" update="growl formArbol:arbol @form" />
+									<p:commandButton id="btnEliminar"
+										value="#{msg['botones.eliminar']}" icon="fa fa-trash-o"
+										actionListener="#{viewDefinicionVersion.eliminarTasa()}"
+										rendered="#{viewDefinicionVersion.permiteEditar()}"
+										process="@this" update="growl formArbol:arbol @form" >
+										<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+						        	</p:commandButton>
 
-					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
-						icon="fa fa-question-circle-o"
-						actionListener="#{viewDefinicionVersion.ayudaTasas()}" process="@this"
-						update="growl formArbol:arbol @form" />
-				</h:panelGrid>
-			</f:facet>
-		</p:toolbar>
+									<p:commandButton id="btnSubir"
+										value="#{msg['botones.subir']}" icon="fa fa-caret-up"
+										actionListener="#{viewDefinicionVersion.subirTasa()}"
+										rendered="#{viewDefinicionVersion.permiteEditar()}"
+										process="@this" update="growl formArbol:arbol @form" />
+
+									<p:commandButton id="btnBajar"
+										value="#{msg['botones.bajar']}" icon="fa fa-caret-down"
+										actionListener="#{viewDefinicionVersion.bajarTasa()}"
+										rendered="#{viewDefinicionVersion.permiteEditar()}"
+										process="@this" update="growl formArbol:arbol @form" />
+
+									<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}"
+										icon="fa fa-question-circle-o"
+										actionListener="#{viewDefinicionVersion.ayudaTasas()}" process="@this"
+										update="growl formArbol:arbol @form" />
+								</h:panelGrid>
+							</f:facet>
+						</p:toolbar>
 
 
-		<p:dataTable id="dataTable" var="tasas"
-			emptyMessage="#{msg['error.emptyRows']}" value="#{viewDefinicionVersion.tramitePasoTSSeleccionado.tasas}" rows="10"
-			scrollable="true" paginator="false" rowKey="#{tasas.codigo}" selectionMode="single"
-			 selection="#{viewDefinicionVersion.tasaSeleccionado}" dblClickSelect="true">
+						<p:dataTable id="dataTable" var="tasas"
+							emptyMessage="#{msg['error.emptyRows']}" value="#{viewDefinicionVersion.tramitePasoTSSeleccionado.tasas}" rows="10"
+							scrollable="true" paginator="false" rowKey="#{tasas.codigo}" selectionMode="single"
+							 selection="#{viewDefinicionVersion.tasaSeleccionado}" dblClickSelect="true">
 
-			<!-- Necesario para actualizar en controlador la fila seleccionada -->
-			<p:ajax event="rowSelect" global="false"/>
-			<p:ajax event="rowDblselect"
-                 		oncomplete="triggerDblClick();"
-                       />
+							<!-- Necesario para actualizar en controlador la fila seleccionada -->
+							<p:ajax event="rowSelect" global="false"/>
+							<p:ajax event="rowDblselect"
+				                 		oncomplete="triggerDblClick();"
+				                       />
 
-			<!-- Columnas -->
-			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerIdentificador']}" >
-				<h:outputText value="#{tasas.identificador}" />
-			</p:column>
+							<!-- Columnas -->
+							<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerIdentificador']}" >
+								<h:outputText value="#{tasas.identificador}" />
+							</p:column>
 
-			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerDescripcion']}">
-				<h:outputText value="#{tasas.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
-			</p:column>
+							<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerDescripcion']}">
+								<h:outputText value="#{tasas.descripcion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
+							</p:column>
 
-			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerObligatoriedad']}">
-				<h:outputText value="#{msg['typeFormularioObligatoriedad.'+=tasas.obligatoriedad]}" />
-			</p:column>
+							<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerObligatoriedad']}">
+								<h:outputText value="#{msg['typeFormularioObligatoriedad.'+=tasas.obligatoriedad]}" />
+							</p:column>
+						</p:dataTable>
 
-			<p:column styleClass="grid-center" headerText="#{msg['viewDefinicionVersionPagarTasas.headerTipo']}">
-				<h:outputText value="#{msg['typePago.'+=tasas.tipo]}" />
-			</p:column>
+				</p:outputPanel>
 
-		</p:dataTable>
 
-				<p:confirmDialog global="true" >
+				<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
+				<p:column>
+					<h:panelGrid id="columnaBotonSubsanar" style="margin-bottom:0px" columns="2" >
+						<p:selectBooleanCheckbox id="checkSubsanar" value="#{viewDefinicionVersion.tramitePasoTSSeleccionado.permiteSubsanar}" disabled="true" style="margin-left:5px;margin-right:20px" />
+						<p:commandButton id="btnActivarSubsanacion" actionListener="#{viewDefinicionVersion.activarSubsanacion(viewDefinicionVersion.tramitePasoTSSeleccionado.codigo,'pt')}"
+								value="#{msg['viewDefinicionVersionAnexarDocumentos.activarSubsanacion']}"
+								process="@this" update="growl checkSubsanar columnaBotonSubsanar"
+								rendered="#{!viewDefinicionVersion.tramitePasoTSSeleccionado.permiteSubsanar}"
+								>
+						</p:commandButton>
+						<p:commandButton id="btnDesactivarSubsanacion" actionListener="#{viewDefinicionVersion.desactivarSubsanacion(viewDefinicionVersion.tramitePasoTSSeleccionado.codigo,'pt')}"
+								value="#{msg['viewDefinicionVersionAnexarDocumentos.desactivarSubsanacion']}"
+								process="@this" update="checkSubsanar columnaBotonSubsanar"
+								rendered="#{viewDefinicionVersion.tramitePasoTSSeleccionado.permiteSubsanar}"
+								>
+						</p:commandButton>
+					</h:panelGrid>
+				</p:column>
+
+				<p:outputLabel value=" " />
+				<p:outputLabel value=" " />
+
+				<p:outputLabel value=" " />
+				<p:outputLabel value=" " />
+			</h:panelGrid>
+
+
+			<p:confirmDialog global="true" >
 					<p:outputPanel styleClass="confirmar_botonera">
 			        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
 			        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
 					</p:outputPanel>
-			    </p:confirmDialog>
+			</p:confirmDialog>
 
 
-			    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
+			<p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarTasaAlta()}" process="@this"
 						update="growl" style="display:none">
 					<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
-				</p:commandButton>
+			</p:commandButton>
 
-				 <h:outputScript >
+			<h:outputScript >
 			      function triggerDblClick() {
 			       	$('#formViewDefinicionVersionPagarTasas\\:btnEditarDblClickHidden').click();
 			      }
-			    </h:outputScript>
+			</h:outputScript>
 
-				<p:commandButton id="btnEditarDblClickHidden"
+			<p:commandButton id="btnEditarDblClickHidden"
 					 	value="#{msg['botones.editar']}" icon="fa fa-edit"
 						actionListener="#{viewDefinicionVersion.editarTasaDblClick()}" process="@this"
 						update="growl" style="display:none">
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol @form" />
-					</p:commandButton>
+			</p:commandButton>
 	</h:form>
 
 </ui:composition>

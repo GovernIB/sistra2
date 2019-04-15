@@ -102,15 +102,41 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "url de Youtube")
 	private String urlYoutube;
 
-	/**
-	 * logo gestor.
-	 */
+	/** logo gestor. */
 	@ApiModelProperty(value = "logo Gestor")
 	private String logoGestor;
 
 	/** Plantillas por defecto para visualización formularios. */
 	@ApiModelProperty(value = "Plantillas")
 	private List<RPlantillaIdioma> plantillasDefecto;
+
+	/** Texto respecto LOPD (introducción). **/
+	@ApiModelProperty(value = "lopd introduccion")
+	private RLiteral lopdIntroduccion;
+
+	/** Permite subsanación paso anexar. **/
+	@ApiModelProperty(value = "permite subsanar anexar")
+	private boolean permiteSubsanarAnexar;
+
+	/** Permite subsanación paso pagar. **/
+	@ApiModelProperty(value = "permite subsanar pagar")
+	private boolean permiteSubsanarPagar;
+
+	/** Permite subsanación paso registrar. **/
+	@ApiModelProperty(value = "permite subsanar registrar")
+	private boolean permiteSubsanarRegistrar;
+
+	/** Instrucciones subsanación */
+	@ApiModelProperty(value = "instrucciones subsanacion")
+	private RLiteral instruccionesSubsanacion;
+
+	/** Días a mantener los trámites presenciales. **/
+	@ApiModelProperty(value = "dias tramites presenciales")
+	private Integer diasTramitesPresenciales;
+
+	/** Instrucciones presencial */
+	@ApiModelProperty(value = "instrucciones presencial")
+	private RLiteral instruccionesPresencial;
 
 	/**
 	 * Método de acceso a logo.
@@ -457,13 +483,13 @@ public class RConfiguracionEntidad {
 		return logoGestor;
 	}
 
-	public void setLogoGestor(String logoGestor) {
+	public void setLogoGestor(final String logoGestor) {
 		this.logoGestor = logoGestor;
 	}
 
 	/**
 	 * Método de acceso a plantillasDefecto.
-	 * 
+	 *
 	 * @return plantillasDefecto
 	 */
 	public List<RPlantillaIdioma> getPlantillasDefecto() {
@@ -472,12 +498,117 @@ public class RConfiguracionEntidad {
 
 	/**
 	 * Método para establecer plantillasDefecto.
-	 * 
+	 *
 	 * @param plantillasDefecto
 	 *            plantillasDefecto a establecer
 	 */
-	public void setPlantillasDefecto(List<RPlantillaIdioma> plantillasDefecto) {
+	public void setPlantillasDefecto(final List<RPlantillaIdioma> plantillasDefecto) {
 		this.plantillasDefecto = plantillasDefecto;
+	}
+
+	/**
+	 * @return the lopdIntroduccion
+	 */
+	public final RLiteral getLopdIntroduccion() {
+		return lopdIntroduccion;
+	}
+
+	/**
+	 * @param lopdIntroduccion
+	 *            the lopdIntroduccion to set
+	 */
+	public final void setLopdIntroduccion(final RLiteral lopdIntroduccion) {
+		this.lopdIntroduccion = lopdIntroduccion;
+	}
+
+	/**
+	 * @return the permiteSubsanarAnexar
+	 */
+	public final boolean isPermiteSubsanarAnexar() {
+		return permiteSubsanarAnexar;
+	}
+
+	/**
+	 * @param permiteSubsanarAnexar
+	 *            the permiteSubsanarAnexar to set
+	 */
+	public final void setPermiteSubsanarAnexar(final boolean permiteSubsanarAnexar) {
+		this.permiteSubsanarAnexar = permiteSubsanarAnexar;
+	}
+
+	/**
+	 * @return the permiteSubsanarPagar
+	 */
+	public final boolean isPermiteSubsanarPagar() {
+		return permiteSubsanarPagar;
+	}
+
+	/**
+	 * @param permiteSubsanarPagar
+	 *            the permiteSubsanarPagar to set
+	 */
+	public final void setPermiteSubsanarPagar(final boolean permiteSubsanarPagar) {
+		this.permiteSubsanarPagar = permiteSubsanarPagar;
+	}
+
+	/**
+	 * @return the permiteSubsanarRegistrar
+	 */
+	public final boolean isPermiteSubsanarRegistrar() {
+		return permiteSubsanarRegistrar;
+	}
+
+	/**
+	 * @param permiteSubsanarRegistrar
+	 *            the permiteSubsanarRegistrar to set
+	 */
+	public final void setPermiteSubsanarRegistrar(final boolean permiteSubsanarRegistrar) {
+		this.permiteSubsanarRegistrar = permiteSubsanarRegistrar;
+	}
+
+	/**
+	 * @return the instruccionesSubsanacion
+	 */
+	public final RLiteral getInstruccionesSubsanacion() {
+		return instruccionesSubsanacion;
+	}
+
+	/**
+	 * @param instruccionesSubsanacion
+	 *            the instruccionesSubsanacion to set
+	 */
+	public final void setInstruccionesSubsanacion(final RLiteral instruccionesSubsanacion) {
+		this.instruccionesSubsanacion = instruccionesSubsanacion;
+	}
+
+	/**
+	 * @return the diasTramitesPresenciales
+	 */
+	public final Integer getDiasTramitesPresenciales() {
+		return diasTramitesPresenciales;
+	}
+
+	/**
+	 * @param diasTramitesPresenciales
+	 *            the diasTramitesPresenciales to set
+	 */
+	public final void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
+		this.diasTramitesPresenciales = diasTramitesPresenciales;
+	}
+
+	/**
+	 * @return the instruccionesPresencial
+	 */
+	public final RLiteral getInstruccionesPresencial() {
+		return instruccionesPresencial;
+	}
+
+	/**
+	 * @param instruccionesPresencial
+	 *            the instruccionesPresencial to set
+	 */
+	public final void setInstruccionesPresencial(final RLiteral instruccionesPresencial) {
+		this.instruccionesPresencial = instruccionesPresencial;
 	}
 
 }

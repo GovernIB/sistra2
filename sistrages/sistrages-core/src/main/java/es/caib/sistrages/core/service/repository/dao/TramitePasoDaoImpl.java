@@ -967,8 +967,9 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setAlineacionTexto(componente.getAlineacionTexto());
 		comp.setExpresionRegular(componente.getExpresionRegular());
 		comp.setIdComponente(componente.getIdComponente());
-		comp.setIdentCif(componente.isIdentCif());
+		comp.setIdentDni(componente.isIdentDni());
 		comp.setIdentNie(componente.isIdentNie());
+		comp.setIdentNifOtros(componente.isIdentNifOtros());
 		comp.setIdentNif(componente.isIdentNif());
 		comp.setIdentNss(componente.isIdentNss());
 		comp.setNoModificable(componente.isNoModificable());
@@ -1219,6 +1220,32 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 			repetido = true;
 		}
 		return repetido;
+
+	}
+
+	@Override
+	public void permiteSubsanacion(final Long idPaso, final boolean activarSubsanacion) {
+		if (idPaso == null) {
+			throw new FaltanDatosException(STRING_FALTA_TRAMITE);
+		}
+
+		final Query queryAnexar = entityManager.createQuery(
+				"update JPasoAnexar paso set permiteSubsanar = :activarSubsanacion where paso.pasoTramitacion.codigo = :idPaso");
+		queryAnexar.setParameter("activarSubsanacion", activarSubsanacion);
+		queryAnexar.setParameter("idPaso", idPaso);
+		queryAnexar.executeUpdate();
+
+		final Query queryTasa = entityManager.createQuery(
+				"update JPasoPagos paso set permiteSubsanar = :activarSubsanacion where paso.pasoTramitacion.codigo = :idPaso");
+		queryTasa.setParameter("activarSubsanacion", activarSubsanacion);
+		queryTasa.setParameter("idPaso", idPaso);
+		queryTasa.executeUpdate();
+
+		final Query queryRegistrar = entityManager.createQuery(
+				"update JPasoRegistrar paso set permiteSubsanar = :activarSubsanacion where paso.pasoTramitacion.codigo = :idPaso");
+		queryRegistrar.setParameter("activarSubsanacion", activarSubsanacion);
+		queryRegistrar.setParameter("idPaso", idPaso);
+		queryRegistrar.executeUpdate();
 
 	}
 }

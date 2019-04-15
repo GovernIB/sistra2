@@ -234,4 +234,13 @@ public interface TramitePasoDao {
 	 */
 	boolean checkFormularioRepetido(Long idTramiteVersion, String identificador, Long idFormulario);
 
+	/**
+	 * Método que activar/desactiva la posibilidad de subsanar los documentos
+	 * asociados a un paso.
+	 * 
+	 * @param idPaso
+	 * @param activarSubsanacion
+	 */
+	void permiteSubsanacion(Long idPaso, boolean activarSubsanacion);
+
 }

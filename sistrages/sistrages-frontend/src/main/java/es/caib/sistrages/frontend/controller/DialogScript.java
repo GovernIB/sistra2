@@ -1,7 +1,6 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +62,6 @@ public class DialogScript extends DialogControllerBase {
 	@Inject
 	private FormularioInternoService formularioInternoService;
 
-	/** Id del script. **/
-	private String id;
 	/** Id tramite version. **/
 	private String idTramiteVersion;
 	/** Formulario actual. **/
@@ -89,15 +86,6 @@ public class DialogScript extends DialogControllerBase {
 	private String tipoScriptFormulario;
 	/** Tipo de typeScript. **/
 	private TypeScript tipoScript;
-	/** Data del script en formato JSON. **/
-	private String iData;
-
-	/** Lenguaje de programacion (javascript/css/java..). **/
-	private String mode = "javascript";
-	/** Tema. **/
-	private final String theme = "blackboard";
-	/** Keymap. **/
-	private final String keymap = "default";
 
 	/** Visible formulario. **/
 	private boolean visibleFormularios = true;
@@ -154,11 +142,7 @@ public class DialogScript extends DialogControllerBase {
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		final Object json = mochila.get(Constantes.CLAVE_MOCHILA_SCRIPT);
 		if (json == null) {
-			if (id == null) {
-				data = new Script();
-			} else {
-				data = scriptService.getScript(Long.valueOf(id));
-			}
+			data = new Script();
 		} else {
 			data = (Script) UtilJSON.fromJSON(json.toString(), Script.class);
 		}
@@ -254,17 +238,6 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * Cambia el modo.
-	 */
-	public void changeMode() {
-		if (mode.equals("css")) {
-			mode = "javascript";
-		} else {
-			mode = "css";
-		}
-	}
-
-	/**
 	 * Consultar dominio.
 	 *
 	 * @param idDominio
@@ -324,13 +297,13 @@ public class DialogScript extends DialogControllerBase {
 	public void aceptar() {
 
 		if (isIdentificadorMensajesRepetido()) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+			UtilJSF.showMessageDialog(TypeNivelGravedad.ERROR, "ERROR",
 					UtilJSF.getLiteral("dialogScript.error.identificadorDuplicado"));
 			return;
 		}
 
 		if (data.getMensajes() != null && !data.getMensajes().isEmpty() && estaVacio()) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+			UtilJSF.showMessageDialog(TypeNivelGravedad.ERROR, "ERROR",
 					UtilJSF.getLiteral("dialogScript.error.scriptvacioconmensajes"));
 			return;
 		}
@@ -572,208 +545,6 @@ public class DialogScript extends DialogControllerBase {
 		this.mostrarLateralAyuda = false;
 	}
 
-	public List<String> getThemes() {
-		final List<String> results = new ArrayList<>();
-
-		results.add("3024-day");
-		results.add("3024-night");
-		results.add("abcdef");
-		results.add("ambiance");
-		results.add("ambiance-mobile");
-		results.add("base16-dark");
-		results.add("base16-light");
-		results.add("bespin");
-		results.add("blackboard");
-		results.add("cobalt");
-		results.add("colorforth");
-		results.add("dracula");
-		results.add("eclipse");
-		results.add("elegant");
-		results.add("erlang-dark");
-		results.add("hopscotch");
-		results.add("icecoder");
-		results.add("isotope");
-		results.add("lesser-dark");
-		results.add("liquibyte");
-		results.add("material");
-		results.add("mbo");
-		results.add("mdn-like");
-		results.add("midnight");
-		results.add("monokai");
-		results.add("neat");
-		results.add("neo");
-		results.add("night");
-		results.add("panda-syntax");
-		results.add("paraiso-dark");
-		results.add("paraiso-light");
-		results.add("pastel-on-dark");
-		results.add("railscasts");
-		results.add("rubyblue");
-		results.add("seti");
-		results.add("solarized");
-		results.add("the-matrix");
-		results.add("tomorrow-night-bright");
-		results.add("tomorrow-night-eighties");
-		results.add("ttcn");
-		results.add("twilight");
-		results.add("vibrant-ink");
-		results.add("xq-dark");
-		results.add("xq-light");
-		results.add("yeti");
-		results.add("zenburn");
-
-		Collections.sort(results);
-		return results;
-	}
-
-	public List<String> getModes() {
-		final List<String> results = new ArrayList<>();
-
-		results.add("apl");
-		results.add("asn.1");
-		results.add("asterisk");
-		results.add("asciiarmor");
-		results.add("brainfuck");
-		results.add("clike");
-		results.add("clojure");
-		results.add("cmake");
-		results.add("cobol");
-		results.add("coffeescript");
-		results.add("commonlisp");
-		results.add("crystal");
-		results.add("css");
-		results.add("cypher");
-		results.add("d");
-		results.add("dart");
-		results.add("diff");
-		results.add("django");
-		results.add("dtd");
-		results.add("dylan");
-		results.add("ebnf");
-		results.add("ecl");
-		results.add("eiffel");
-		results.add("eml");
-		results.add("erlang");
-		results.add("fcl");
-		results.add("fortran");
-		results.add("freemarker");
-		results.add("gfm");
-		results.add("gas");
-		results.add("gherkin");
-		results.add("go");
-		results.add("groovy");
-		results.add("haml");
-		results.add("haskell");
-		results.add("haskell-literate");
-		results.add("haxe");
-		results.add("htmlembedded");
-		results.add("htmlmixed");
-		results.add("http");
-		results.add("idl");
-		results.add("javascript");
-		results.add("jinja2");
-		results.add("julia");
-		results.add("jsx");
-		results.add("lua");
-		results.add("markdown");
-		results.add("mathematica");
-		results.add("mbox");
-		results.add("mirc");
-		results.add("mllike");
-		results.add("modelica");
-		results.add("mscgen");
-		results.add("mumps");
-		results.add("nginx");
-		results.add("ntriples");
-		results.add("octave");
-		results.add("oz");
-		results.add("pascal");
-		results.add("pegjs");
-		results.add("perl");
-		results.add("php");
-		results.add("pig");
-		results.add("powershell");
-		results.add("properties");
-		results.add("protobuf");
-		results.add("python");
-		results.add("pug");
-		results.add("puppet");
-		results.add("q");
-		results.add("r");
-		results.add("rpm");
-		results.add("rst");
-		results.add("ruby");
-		results.add("sass");
-		results.add("scala");
-		results.add("scheme");
-		results.add("shell");
-		results.add("sieve");
-		results.add("slim");
-		results.add("smalltalk");
-		results.add("smarty");
-		results.add("solr");
-		results.add("soy");
-		results.add("sparql");
-		results.add("swift");
-		results.add("spreadsheet");
-		results.add("stylus");
-		results.add("sql");
-		results.add("stex");
-		results.add("tcl");
-		results.add("textile");
-		results.add("tiddlywiki");
-		results.add("tiki");
-		results.add("toml");
-		results.add("tornado");
-		results.add("troff");
-		results.add("ttcn");
-		results.add("ttcn-cfg");
-		results.add("turtle");
-		results.add("twig");
-		results.add("vb");
-		results.add("vbscript");
-		results.add("velocity");
-		results.add("verilog");
-		results.add("vhdl");
-		results.add("vue");
-		results.add("webidl");
-		results.add("xml");
-		results.add("xquery");
-		results.add("yaml");
-		results.add("yaml-frontmatter");
-		results.add("z80");
-
-		Collections.sort(results);
-		return results;
-	}
-
-	public List<String> getKeymaps() {
-		final List<String> results = new ArrayList<>();
-
-		results.add("default");
-		results.add("emacs");
-		results.add("sublime");
-		results.add("vim");
-
-		Collections.sort(results);
-		return results;
-	}
-
-	/**
-	 * @return the mode
-	 */
-	public String getMode() {
-		return mode;
-	}
-
-	/**
-	 * @param mode
-	 *            the mode to set
-	 */
-	public void setMode(final String mode) {
-		this.mode = mode;
-	}
-
 	/**
 	 * @return the visibleFormularios
 	 */
@@ -842,35 +613,6 @@ public class DialogScript extends DialogControllerBase {
 	}
 
 	/**
-	 * @return the theme
-	 */
-	public String getTheme() {
-		return theme;
-	}
-
-	/**
-	 * @return the keymap
-	 */
-	public String getKeymap() {
-		return keymap;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	/**
 	 * @return the data
 	 */
 	public Script getData() {
@@ -883,21 +625,6 @@ public class DialogScript extends DialogControllerBase {
 	 */
 	public void setData(final Script data) {
 		this.data = data;
-	}
-
-	/**
-	 * @return the iData
-	 */
-	public String getiData() {
-		return iData;
-	}
-
-	/**
-	 * @param iData
-	 *            the iData to set
-	 */
-	public void setiData(final String iData) {
-		this.iData = iData;
 	}
 
 	/**
@@ -1239,7 +966,7 @@ public class DialogScript extends DialogControllerBase {
 			mochilaDatos.put(Constantes.CLAVE_MOCHILA_ERRORESVALIDACION,
 					listaErrores.stream().map(SerializationUtils::clone).collect(java.util.stream.Collectors.toList()));
 
-			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 900, 520);
+			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
 			return false;
 		}
 

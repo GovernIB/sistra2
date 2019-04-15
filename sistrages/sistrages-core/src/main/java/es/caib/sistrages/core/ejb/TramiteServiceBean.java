@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -494,6 +495,24 @@ public class TramiteServiceBean implements TramiteService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
 	public String getIdentificadorByCodigoVersion(final Long codigo) {
 		return tramiteService.getIdentificadorByCodigoVersion(codigo);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void permiteSubsanacion(final Long idPaso, final boolean activarSubsanacion) {
+		tramiteService.permiteSubsanacion(idPaso, activarSubsanacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateLiteral(final Literal pLiteral) {
+		tramiteService.updateLiteral(pLiteral);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public void updateScript(final Script pScript) {
+		tramiteService.updateScript(pScript);
 	}
 
 }

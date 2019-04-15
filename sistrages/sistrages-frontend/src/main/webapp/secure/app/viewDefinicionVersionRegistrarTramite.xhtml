@@ -11,7 +11,7 @@
 		<!-- Growl mensajes -->
 		<p:growl id="growl" widgetVar="growl" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
 
-        <h:panelGrid columns="2" columnClasses="w10 grid-left, w90 grid-left" styleClass="w100 h100" cellpadding="10" cellspacing="10">
+        <h:panelGrid columns="2" columnClasses="w15 grid-left, w85 grid-left" styleClass="w100 h100" cellpadding="9" cellspacing="9">
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino']}" />
 			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,,,">
@@ -57,19 +57,27 @@
 				</p:row>
 			</p:panelGrid>
 
-			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instrucciones']}" />
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
+						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
+       		</p:outputPanel>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesEntrega']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="instrucciones" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion)}"
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesPresentacion)}"
 						process="@this" update="growl"  style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
 
-			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.tramitacion']}" />
-            <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}"  />
-           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccion(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesFinTramitacion)}"
-						process="@this" update="growl" style="margin-left:2px;margin-bottom:1px" />
+			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.instruccionesSubsanacion']}" />
+			<p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="instruccionesSubsanacion" disabled="true" styleClass="w85" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesSubsanacion.getTraduccion(sessionBean.lang,viewDefinicionVersion.idiomas)}" />
+           		<p:commandButton icon="fa fa-language" actionListener="#{viewDefinicionVersion.consultarTraduccionHTML(viewDefinicionVersion.tramitePasoREGSeleccionado.instruccionesSubsanacion)}"
+						process="@this" update="growl"  style="margin-left:2px;margin-bottom:1px" />
        		</p:outputPanel>
+
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.presentacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
@@ -82,21 +90,29 @@
 
 			<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.representacion']}" />
             <p:outputPanel styleClass="ui-inputgroup">
-            <p:selectBooleanCheckbox id="admite" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.admiteRepresentacion}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.admite']}"/>
-            <p:spacer width="30" height="1"/>
-           		<p:commandButton id="scriptButton3"
-           				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante eq null}"
-						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
-						process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
+	            <p:selectBooleanCheckbox id="admite" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.admiteRepresentacion}"   itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.admite']}"/>
+	            <p:spacer width="30" height="1"/>
+	           		<p:commandButton id="scriptButton3"
+	           				disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante eq null}"
+							icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante.codigo)}"
+							process="@this" update="growl" value="#{msg['script.SCRIPT_REPRESENTADO_REGISTRO.titulo']}" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptRepresentante)}" />
 				<p:spacer width="30" height="1"/>
 				<p:selectBooleanCheckbox id="valida" disabled="true" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.validaRepresentacion}" itemLabel="#{msg['viewDefinicionVersionRegistrarTramite.representacion.valida']}"/>
        		</p:outputPanel>
 
-       		<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.registrar']}" />
+    		<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.registrar']}" />
 			<p:commandButton id="scriptButton4"
 						disabled="#{viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar eq null}"
 						icon="fa fa-bolt" actionListener="#{viewDefinicionVersion.consultarScript(TypeScriptFlujo.SCRIPT_PERMITIR_REGISTRO.name(), viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar.codigo)}"
 						process="@this" update="growl" styleClass="#{viewDefinicionVersion.getColorScript(viewDefinicionVersion.tramitePasoREGSeleccionado.scriptValidarRegistrar)}"/>
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
+			<p:column>
+				<h:panelGrid id="columnaBotonSubsanar" style="margin-bottom:0px" columns="2" >
+					<p:selectBooleanCheckbox id="checkSubsanar" value="#{viewDefinicionVersion.tramitePasoREGSeleccionado.permiteSubsanar}" disabled="true" style="margin-left:5px;margin-right:20px" />
+				</h:panelGrid>
+			</p:column>
+
 
 			<f:facet name = "footer">
 				<p:outputPanel id="toolbar" styleClass="grid-right">
@@ -104,7 +120,7 @@
 						actionListener="#{viewDefinicionVersion.editarPaso()}"
 						rendered="#{viewDefinicionVersion.permiteEditar()}"
 						process="@this" update="growl">
-						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramite}" update="growl formArbol:arbol formViewDefinicionVersionRegistrarTramite"/>
+						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoRefrescarTramiteRegistro}" update="growl formArbol:arbol formViewDefinicionVersionRegistrarTramite"/>
 		        </p:commandButton>
            		<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o"
 						actionListener="#{viewDefinicionVersion.ayudaRegistrar()}"

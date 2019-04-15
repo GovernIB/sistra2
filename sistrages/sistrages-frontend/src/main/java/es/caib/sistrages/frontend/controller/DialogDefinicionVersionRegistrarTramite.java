@@ -187,8 +187,17 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 * Editar descripcion
 	 */
 	public void editarInstPresentacion() {
-		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.EDICION, this.data.getInstruccionesPresentacion(),
-				tramiteVersion);
+		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, this.data.getInstruccionesPresentacion(),
+				idiomas, idiomas, true);
+
+	}
+
+	/**
+	 * Editar descripcion
+	 */
+	public void editarInstSubsanacion() {
+		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, this.data.getInstruccionesSubsanacion(),
+				idiomas, idiomas, true);
 
 	}
 
@@ -196,8 +205,29 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 * Editar descripcion
 	 */
 	public void editarInstTramitacion() {
-		UtilTraducciones.openDialogTraduccionOpcional(TypeModoAcceso.EDICION,
-				this.data.getInstruccionesFinTramitacion(), tramiteVersion);
+		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, this.data.getInstruccionesFinTramitacion(),
+				idiomas, idiomas, true);
+	}
+
+	/**
+	 * Retorno dialogo de instrucciones.
+	 *
+	 * @param event
+	 *            respuesta dialogo
+	 */
+	public void returnDialogoSubsanacion(final SelectEvent event) {
+		final DialogResult respuesta = (DialogResult) event.getObject();
+
+		if (!respuesta.isCanceled()) {
+			switch (respuesta.getModoAcceso()) {
+			case ALTA:
+			case EDICION:
+				data.setInstruccionesSubsanacion((Literal) respuesta.getResult());
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	/**

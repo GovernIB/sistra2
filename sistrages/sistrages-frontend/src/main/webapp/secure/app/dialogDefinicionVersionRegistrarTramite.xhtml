@@ -85,7 +85,16 @@
 				</p:row>
 			</p:panelGrid>
 
-			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instrucciones']}" />
+			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instruccionesTramitacion']}" />
+            <p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="tramitacion" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"
+						process="@this" update="growl">
+					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoInstrucciones}" update="growl tramitacion"/>
+				</p:commandButton>
+       		</p:outputPanel>
+
+			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instruccionesEntrega']}" />
             <p:outputPanel styleClass="ui-inputgroup">
            		<p:inputText id="instrucciones" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesPresentacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}" styleClass="w85"/>
            		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstPresentacion()}"
@@ -94,13 +103,13 @@
 				  </p:commandButton>
        		</p:outputPanel>
 
-			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.tramitacion']}" />
-            <p:outputPanel styleClass="ui-inputgroup">
-           		<p:inputText id="tramitacion" required="true" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesFinTramitacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}"  styleClass="w85"/>
-           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstTramitacion()}"
+			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.instruccionesSubsanacion']}" />
+			<p:outputPanel styleClass="ui-inputgroup">
+           		<p:inputText id="instruccionesSubsanacion" disabled="true" value="#{dialogDefinicionVersionRegistrarTramite.data.instruccionesSubsanacion.getTraduccion(sessionBean.lang,dialogDefinicionVersionRegistrarTramite.idiomas)}" styleClass="w85"/>
+           		<p:commandButton icon="fa fa-language" actionListener="#{dialogDefinicionVersionRegistrarTramite.editarInstSubsanacion()}"
 						process="@this" update="growl">
-					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoInstrucciones}" update="growl tramitacion"/>
-				</p:commandButton>
+					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoSubsanacion}" update="growl instruccionesSubsanacion"/>
+				  </p:commandButton>
        		</p:outputPanel>
 
 			<p:outputLabel value="#{msg['dialogDefinicionVersionRegistrarTramite.presentacion']}" />
@@ -134,6 +143,12 @@
 						process="@this" update="growl" styleClass="#{dialogDefinicionVersionRegistrarTramite.getColorScript(dialogDefinicionVersionRegistrarTramite.data.scriptValidarRegistrar)}" >
 					<p:ajax event="dialogReturn" listener="#{dialogDefinicionVersionRegistrarTramite.returnDialogoScriptValidarRegistro}" update="growl buttonScript4"/>
 			</p:commandButton>
+
+
+			<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
+			<p:selectBooleanCheckbox id="checkSubsanar" value="#{dialogDefinicionVersionRegistrarTramite.data.permiteSubsanar}" style="margin-left:5px;margin-right:20px" />
+
+
 		</h:panelGrid>
 		</p:outputPanel>
 		<p:outputPanel styleClass="botonera">

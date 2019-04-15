@@ -23,6 +23,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -51,6 +52,7 @@ import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
 import es.caib.sistrages.core.service.repository.dao.HistorialVersionDao;
+import es.caib.sistrages.core.service.repository.dao.ScriptDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
 import es.caib.sistrages.core.service.repository.dao.TramitePasoDao;
 
@@ -132,6 +134,9 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Autowired
 	ValidadorComponent validadorComponent;
+
+	@Autowired
+	ScriptDao scriptDao;
 
 	/*
 	 * (non-Javadoc)
@@ -1024,6 +1029,24 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public String getIdentificadorByCodigoVersion(final Long codigo) {
 		return tramiteDao.getIdentificadorByCodigoVersion(codigo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void permiteSubsanacion(final Long idPaso, final boolean activarSubsanacion) {
+		tramitePasoDao.permiteSubsanacion(idPaso, activarSubsanacion);
+	}
+	
+	@Override
+	@NegocioInterceptor
+	public void updateLiteral(final Literal pLiteral) {
+		tramiteDao.updateLiteral(pLiteral);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void updateScript(final Script pScript) {
+		scriptDao.updateScript(pScript);
 	}
 
 }

@@ -13,6 +13,7 @@ import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.HistorialVersion;
+import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
@@ -628,5 +629,31 @@ public interface TramiteService {
 	 * @return
 	 */
 	public String getIdentificadorByCodigoVersion(Long codigo);
+
+	/**
+	 * Método que activar/desactivar el permitir subsanar documentos a un paso del
+	 * trámite.
+	 *
+	 * @param idPaso
+	 * @param activarSubsanacion
+	 */
+	public void permiteSubsanacion(Long idPaso, boolean activarSubsanacion);
+
+
+	/**
+	 * Actualiza literal.
+	 *
+	 * @param pLiteral
+	 *            literal
+	 */
+	void updateLiteral(Literal pLiteral);
+
+	/**
+	 * Actualiza script.
+	 *
+	 * @param pScript
+	 *            script
+	 */
+	void updateScript(Script pScript);
 
 }

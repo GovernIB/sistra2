@@ -1,7 +1,6 @@
 package es.caib.sistrages.core.api.model;
 
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypePago;
 
 /**
  *
@@ -39,9 +38,6 @@ public class Tasa extends ModelApi {
 
 	/** Permite establecer dinámicamente los datos del pago */
 	private Script scriptPago;
-
-	/** Tipo: T (Telemático) / P (Presencial). Dependerá del tipo de plugin. */
-	private TypePago tipo;
 
 	/** Indica que el pago es simulado. */
 	private boolean simulado;
@@ -202,21 +198,6 @@ public class Tasa extends ModelApi {
 	 */
 	public void setSimulado(final boolean simulado) {
 		this.simulado = simulado;
-	}
-
-	/**
-	 * @param tipo
-	 *            the tipo to set
-	 */
-	public void setTipo(final TypePago tipo) {
-		this.tipo = tipo;
-	}
-
-	/**
-	 * @return the tipo
-	 */
-	public TypePago getTipo() {
-		return tipo;
 	}
 
 }

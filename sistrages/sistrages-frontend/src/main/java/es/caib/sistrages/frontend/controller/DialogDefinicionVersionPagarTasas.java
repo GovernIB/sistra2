@@ -12,7 +12,6 @@ import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypePago;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -63,7 +62,6 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	public void init() {
 		data = new Tasa();
 		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		data.setTipo(TypePago.PRESENCIAL);
 		data.setTipoPlugin(null);
 		data.setSimulado(false);
 		data.setOrden(0);

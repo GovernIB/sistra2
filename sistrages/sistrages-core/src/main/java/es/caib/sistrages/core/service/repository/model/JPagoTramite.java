@@ -15,7 +15,6 @@ import javax.persistence.UniqueConstraint;
 
 import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypePago;
 
 /**
  * JPagoTramite
@@ -56,9 +55,6 @@ public class JPagoTramite implements IModelApi {
 
 	@Column(name = "PAG_OBLIGA", nullable = false, length = 1)
 	private String obligatorio;
-
-	@Column(name = "PAG_TIPO", nullable = false, length = 1)
-	private String tipo;
 
 	@Column(name = "PAG_SIMULA", nullable = false, precision = 1, scale = 0)
 	private boolean simulado;
@@ -188,21 +184,6 @@ public class JPagoTramite implements IModelApi {
 	}
 
 	/**
-	 * @return the tipo
-	 */
-	public String getTipo() {
-		return tipo;
-	}
-
-	/**
-	 * @param tipo
-	 *            the tipo to set
-	 */
-	public void setTipo(final String tipo) {
-		this.tipo = tipo;
-	}
-
-	/**
 	 * @return the simulado
 	 */
 	public boolean isSimulado() {
@@ -242,9 +223,6 @@ public class JPagoTramite implements IModelApi {
 			}
 			pago.setOrden(tasa.getOrden());
 			pago.setSimulado(tasa.isSimulado());
-			if (tasa.getTipo() != null) {
-				pago.setTipo(tasa.getTipo().toString());
-			}
 			pago.setScriptObligatoriedad(JScript.fromModel(tasa.getScriptObligatoriedad()));
 			pago.setScriptDatosPago(JScript.fromModel(tasa.getScriptPago()));
 		}
@@ -266,7 +244,6 @@ public class JPagoTramite implements IModelApi {
 		tasa.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		tasa.setOrden(this.getOrden());
 		tasa.setSimulado(this.isSimulado());
-		tasa.setTipo(TypePago.fromString(this.getTipo()));
 		if (this.getScriptDatosPago() != null) {
 			tasa.setScriptPago(this.getScriptDatosPago().toModel());
 		}
@@ -294,7 +271,6 @@ public class JPagoTramite implements IModelApi {
 			jpagoTramite.setObligatorio(origPagoTramite.getObligatorio());
 			jpagoTramite.setOrden(origPagoTramite.getOrden());
 			jpagoTramite.setSimulado(origPagoTramite.isSimulado());
-			jpagoTramite.setTipo(origPagoTramite.getTipo());
 			jpagoTramite.setScriptObligatoriedad(JScript.clonar(origPagoTramite.getScriptObligatoriedad()));
 			jpagoTramite.setScriptDatosPago(JScript.clonar(origPagoTramite.getScriptDatosPago()));
 		}

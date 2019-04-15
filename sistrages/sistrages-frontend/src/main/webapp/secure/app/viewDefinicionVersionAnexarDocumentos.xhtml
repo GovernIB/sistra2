@@ -97,6 +97,25 @@
 						<p:ajax event="dialogReturn" listener="#{viewDefinicionVersion.returnDialogoScriptListaDinamica}" update="growl listadinamica" />
 				</p:commandButton>
 
+				<p:outputLabel value="#{msg['viewDefinicionVersionAnexarDocumentos.headerPermitirSubsanacion']}" />
+				<p:column>
+					<h:panelGrid id="columnaBotonSubsanar" style="margin-bottom:0px" columns="2" >
+						<p:selectBooleanCheckbox id="checkSubsanar" value="#{viewDefinicionVersion.tramitePasoANEXSeleccionado.permiteSubsanar}" disabled="true" style="margin-left:5px;margin-right:20px" />
+						<p:commandButton id="btnActivarSubsanacion" actionListener="#{viewDefinicionVersion.activarSubsanacion(viewDefinicionVersion.tramitePasoANEXSeleccionado.codigo,'ad')}"
+								value="#{msg['viewDefinicionVersionAnexarDocumentos.activarSubsanacion']}"
+								process="@this" update="growl checkSubsanar columnaBotonSubsanar"
+								rendered="#{!viewDefinicionVersion.tramitePasoANEXSeleccionado.permiteSubsanar}"
+								>
+						</p:commandButton>
+						<p:commandButton id="btnDesactivarSubsanacion" actionListener="#{viewDefinicionVersion.desactivarSubsanacion(viewDefinicionVersion.tramitePasoANEXSeleccionado.codigo,'ad')}"
+								value="#{msg['viewDefinicionVersionAnexarDocumentos.desactivarSubsanacion']}"
+								process="@this" update="checkSubsanar columnaBotonSubsanar"
+								rendered="#{viewDefinicionVersion.tramitePasoANEXSeleccionado.permiteSubsanar}"
+								>
+						</p:commandButton>
+					</h:panelGrid>
+				</p:column>
+
 				<p:confirmDialog global="true" >
 					<p:outputPanel styleClass="confirmar_botonera">
 			        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>

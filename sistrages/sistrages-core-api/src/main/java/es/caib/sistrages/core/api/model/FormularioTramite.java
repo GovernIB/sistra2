@@ -58,9 +58,6 @@ public class FormularioTramite extends ModelApi {
 	 */
 	private Script scriptFirma;
 
-	/** Indica si se debe presentar en preregistro. */
-	private boolean debePrerregistrarse;
-
 	/**
 	 * Permite establecer parametros cada vez que se acceda al idFormularioInterno
 	 */
@@ -276,21 +273,6 @@ public class FormularioTramite extends ModelApi {
 	 */
 	public void setScriptFirma(final Script scriptFirma) {
 		this.scriptFirma = scriptFirma;
-	}
-
-	/**
-	 * @return the debePrerregistrarse
-	 */
-	public boolean isDebePrerregistrarse() {
-		return debePrerregistrarse;
-	}
-
-	/**
-	 * @param debePrerregistrarse
-	 *            the debePrerregistrarse to set
-	 */
-	public void setDebePrerregistrarse(final boolean debePrerregistrarse) {
-		this.debePrerregistrarse = debePrerregistrarse;
 	}
 
 	/**

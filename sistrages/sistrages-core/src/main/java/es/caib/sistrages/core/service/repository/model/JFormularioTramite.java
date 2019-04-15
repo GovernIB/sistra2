@@ -87,9 +87,6 @@ public class JFormularioTramite implements IModelApi {
 	@Column(name = "FTR_FIRDIG", precision = 1, scale = 0)
 	private Boolean firmarDigitalmente;
 
-	@Column(name = "FTR_PREREG", precision = 1, scale = 0)
-	private Boolean prerregistro;
-
 	@Column(name = "FTR_TIPFOR", nullable = false, length = 1)
 	private String tipoFormulario;
 
@@ -226,14 +223,6 @@ public class JFormularioTramite implements IModelApi {
 		this.firmarDigitalmente = firmarDigitalmente;
 	}
 
-	public Boolean getPrerregistro() {
-		return this.prerregistro;
-	}
-
-	public void setPrerregistro(final Boolean prerregistro) {
-		this.prerregistro = prerregistro;
-	}
-
 	public String getTipoFormulario() {
 		return this.tipoFormulario;
 	}
@@ -299,7 +288,6 @@ public class JFormularioTramite implements IModelApi {
 			}
 			jformularioTramite.setObligatorio(formulario.getObligatoriedad().toString());
 			jformularioTramite.setOrden(formulario.getOrden());
-			jformularioTramite.setPrerregistro(formulario.isDebePrerregistrarse());
 
 			jformularioTramite.setScriptDatosIniciales(JScript.fromModel(formulario.getScriptDatosIniciales()));
 			jformularioTramite.setScriptFirmar(JScript.fromModel(formulario.getScriptFirma()));
@@ -338,7 +326,6 @@ public class JFormularioTramite implements IModelApi {
 		}
 		mformulario.setObligatoriedad(TypeFormularioObligatoriedad.fromString(this.getObligatorio()));
 		mformulario.setOrden(this.getOrden());
-		mformulario.setDebePrerregistrarse(this.getPrerregistro());
 
 		if (this.getScriptDatosIniciales() != null) {
 			mformulario.setScriptDatosIniciales(this.getScriptDatosIniciales().toModel());
@@ -380,7 +367,6 @@ public class JFormularioTramite implements IModelApi {
 
 			jformularioTramite.setObligatorio(formularioTramite.getObligatorio());
 			jformularioTramite.setOrden(formularioTramite.getOrden());
-			jformularioTramite.setPrerregistro(formularioTramite.getPrerregistro());
 
 			jformularioTramite.setScriptDatosIniciales(JScript.clonar(formularioTramite.getScriptDatosIniciales()));
 			jformularioTramite.setScriptFirmar(JScript.clonar(formularioTramite.getScriptFirmar()));

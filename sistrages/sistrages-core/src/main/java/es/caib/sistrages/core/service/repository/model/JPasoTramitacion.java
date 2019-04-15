@@ -295,6 +295,10 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setCodigoLibroRegistro(this.getPasoRegistrar().getCodigoLibroRegistro());
 		paso.setCodigoOficinaRegistro(this.getPasoRegistrar().getCodigoOficinaRegistro());
 		paso.setCodigoTipoAsunto(this.getPasoRegistrar().getCodigoTipoAsunto());
+		paso.setPermiteSubsanar(this.getPasoRegistrar().isPermiteSubsanar());
+		if (this.getPasoRegistrar().getInstruccionesSubsanacion() != null) {
+			paso.setInstruccionesSubsanacion(this.getPasoRegistrar().getInstruccionesSubsanacion().toModel());
+		}
 		if (this.getPasoRegistrar().getInstruccionesFinTramitacion() != null) {
 			paso.setInstruccionesFinTramitacion(this.getPasoRegistrar().getInstruccionesFinTramitacion().toModel());
 		}
@@ -327,6 +331,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
 		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
+		paso.setPermiteSubsanar(this.getPasoAnexar().isPermiteSubsanar());
 
 		if (this.getPasoAnexar().getAnexosTramite() != null) {
 			final List<Documento> docs = new ArrayList<>();
@@ -352,6 +357,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
 		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
+		paso.setPermiteSubsanar(this.getPasoPagos().isPermiteSubsanar());
 
 		if (this.getPasoPagos().getPagosTramite() != null) {
 			final List<Tasa> tasas = new ArrayList<>();
@@ -372,6 +378,7 @@ public class JPasoTramitacion implements IModelApi {
 		paso.setOrden(this.getOrden());
 		paso.setPasoFinal(this.isPasoFinal());
 		paso.setTipo(TypePaso.fromString(this.getTipoPaso()));
+
 		if (this.getPasoRellenar().getFormulariosTramite() != null) {
 			final List<FormularioTramite> formularios = new ArrayList<>();
 			for (final JFormularioTramite jformulario : this.getPasoRellenar().getFormulariosTramite()) {
