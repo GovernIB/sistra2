@@ -81,9 +81,9 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	private static final String MARCADOR_PENDIENTE_ASISTENTE = "pendienteAsistente";
 
 	@Override
-	protected void actualizarDatosInternos(DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-			DefinicionTramiteSTG pDefinicionTramite, VariablesFlujo pVariablesFlujo,
-			TypeFaseActualizacionDatosInternos pFaseEjecucion) {
+	protected void actualizarDatosInternos(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
+			final TypeFaseActualizacionDatosInternos pFaseEjecucion) {
 		// Obtenemos datos internos del paso anexar
 		final DatosInternosPasoAnexar dipa = (DatosInternosPasoAnexar) pDatosPaso.internalData();
 		// Regenera datos a partir de persistencia
@@ -222,8 +222,6 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 				pVariablesFlujo);
 
 		// Si hay algun doc presencial, todos deberan ser presenciales
-		// TODO Que pasa con opcionales?? Obliga a preregistro : dejarlo asi y
-		// forzar a que sean dependientes segun datos formulario
 		revisarDocumentosPresenciales(anexosFij, anexosDin);
 
 		// Creamos detalle paso
@@ -248,7 +246,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * @param anexosDin
 	 *            Anexos dinamicos
 	 */
-	private void revisarDocumentosPresenciales(List<Anexo> anexosFij, List<Anexo> anexosDin) {
+	private void revisarDocumentosPresenciales(final List<Anexo> anexosFij, final List<Anexo> anexosDin) {
 		if (existeDocPresencial(anexosFij) || existeDocPresencial(anexosDin)) {
 			convertirDocPresencial(anexosFij);
 			convertirDocPresencial(anexosDin);
@@ -262,7 +260,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 *            Lista anexos
 	 * @return boolean
 	 */
-	private boolean existeDocPresencial(List<Anexo> listaAnexos) {
+	private boolean existeDocPresencial(final List<Anexo> listaAnexos) {
 		boolean res = false;
 		if (listaAnexos != null) {
 			for (final Anexo a : listaAnexos) {
@@ -281,7 +279,7 @@ public final class ControladorPasoAnexar extends ControladorPasoReferenciaImpl {
 	 * @param listaAnexos
 	 *            Lista anexos
 	 */
-	private void convertirDocPresencial(List<Anexo> listaAnexos) {
+	private void convertirDocPresencial(final List<Anexo> listaAnexos) {
 		if (listaAnexos != null) {
 			for (final Anexo a : listaAnexos) {
 				if (a.getPresentacion() == TypePresentacion.ELECTRONICA) {

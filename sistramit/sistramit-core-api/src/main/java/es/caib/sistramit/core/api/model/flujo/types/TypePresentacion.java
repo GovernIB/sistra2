@@ -15,7 +15,11 @@ public enum TypePresentacion {
 	/**
 	 * Presencial (Código String: p).
 	 */
-	PRESENCIAL("p");
+	PRESENCIAL("p"),
+	/**
+	 * Subsanable (Código String: s).
+	 */
+	SUBSANAR("s");
 
 	/**
 	 * Valor como string.

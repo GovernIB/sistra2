@@ -20,7 +20,7 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeOrigenDocumento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeValidez;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
-import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistra2.commons.utils.NifUtils;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.AccionPasoNoPermitidaException;
@@ -74,7 +74,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 
 	// TODO PENDIENTE PREREGISTRO (ENTREGA PRESENCIAL). VER QUE PASA CON
 	// JUSTIFICANTE PARA REGISTRO (NO NECESARIO?) Y PARA PRESENCIAL (NECESARIO?).
-	// VERIFICAR SI DOCS FIRMADOS.
+
+	// TODO VERIFICAR SI DOCS FIRMADOS.
 
 	/** DAO acceso BBDD. */
 	@Autowired
@@ -141,7 +142,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *            Definición trámite
 	 */
 	private void validacionesRegistrar(final DatosInternosPasoRegistrar pDipa, final DatosPersistenciaPaso pDpp,
-			final boolean pReintentar, final VariablesFlujo pVariablesFlujo, DefinicionTramiteSTG pDefinicionTramite) {
+			final boolean pReintentar, final VariablesFlujo pVariablesFlujo,
+			final DefinicionTramiteSTG pDefinicionTramite) {
 
 		final DetallePasoRegistrar detallePasoRegistrar = (DetallePasoRegistrar) pDipa.getDetallePaso();
 
@@ -214,7 +216,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 * @return Resultado registro
 	 */
 	private ResultadoRegistrar registrarTramite(final DatosInternosPasoRegistrar pDipa,
-			final DatosPersistenciaPaso pDpp, boolean reintentar, final VariablesFlujo pVariablesFlujo,
+			final DatosPersistenciaPaso pDpp, final boolean reintentar, final VariablesFlujo pVariablesFlujo,
 			final DefinicionTramiteSTG pDefinicionTramite) {
 		ResultadoRegistrar resReg = null;
 
@@ -346,8 +348,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *            Definición trámite
 	 * @return asiento registral
 	 */
-	private AsientoRegistral generarAsiento(DatosInternosPasoRegistrar pDipa, VariablesFlujo pVariablesFlujo,
-			DefinicionTramiteSTG pDefinicionTramite) {
+	private AsientoRegistral generarAsiento(final DatosInternosPasoRegistrar pDipa,
+			final VariablesFlujo pVariablesFlujo, final DefinicionTramiteSTG pDefinicionTramite) {
 		final AsientoRegistral asiento = new AsientoRegistral();
 		// - Datos origen
 		final DatosOrigen datosOrigen = new DatosOrigen();
@@ -401,9 +403,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *            documentos registro
 	 * @return documentos asiento
 	 */
-	private List<DocumentoAsiento> generarDocumentosRegistro(DatosInternosPasoRegistrar pDipa,
-			VariablesFlujo pVariablesFlujo,
-			List<es.caib.sistramit.core.api.model.flujo.DocumentoRegistro> listaDocumentosRegistro) {
+	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
+			final VariablesFlujo pVariablesFlujo,
+			final List<es.caib.sistramit.core.api.model.flujo.DocumentoRegistro> listaDocumentosRegistro) {
 		final List<DocumentoAsiento> documentosRegistro = new ArrayList<>();
 		if (listaDocumentosRegistro != null) {
 			for (final es.caib.sistramit.core.api.model.flujo.DocumentoRegistro dr : listaDocumentosRegistro) {
@@ -426,8 +428,9 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *            Documento registro
 	 * @return
 	 */
-	private List<DocumentoAsiento> generarDocumentosRegistro(DatosInternosPasoRegistrar pDipa,
-			VariablesFlujo pVariablesFlujo, final es.caib.sistramit.core.api.model.flujo.DocumentoRegistro pDocReg) {
+	private List<DocumentoAsiento> generarDocumentosRegistro(final DatosInternosPasoRegistrar pDipa,
+			final VariablesFlujo pVariablesFlujo,
+			final es.caib.sistramit.core.api.model.flujo.DocumentoRegistro pDocReg) {
 
 		final List<DocumentoAsiento> res = new ArrayList<>();
 
@@ -558,7 +561,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *            tipo firma digital
 	 * @return tipo firma asiento
 	 */
-	private TypeFirmaAsiento calcularTipoFirmaAsiento(TypeFirmaDigital typeFirmaDigital) {
+	private TypeFirmaAsiento calcularTipoFirmaAsiento(final TypeFirmaDigital typeFirmaDigital) {
 		TypeFirmaAsiento res = null;
 		switch (typeFirmaDigital) {
 		case PADES:
@@ -586,7 +589,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 * @return tipo documento asiento
 	 */
 	private TypeDocumental calcularTipoDocumental(
-			es.caib.sistramit.core.api.model.flujo.types.TypeDocumento tipoDocumento, boolean xml) {
+			final es.caib.sistramit.core.api.model.flujo.types.TypeDocumento tipoDocumento, final boolean xml) {
 		TypeDocumental res;
 		if (xml) {
 			res = TypeDocumental.FICHERO_TECNICO;
@@ -600,7 +603,8 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		return res;
 	}
 
-	private TypeValidez calcularValidez(es.caib.sistramit.core.api.model.flujo.types.TypeDocumento tipoDocumento) {
+	private TypeValidez calcularValidez(
+			final es.caib.sistramit.core.api.model.flujo.types.TypeDocumento tipoDocumento) {
 		TypeValidez res = null;
 		switch (tipoDocumento) {
 		case FORMULARIO:
@@ -627,13 +631,12 @@ public final class AccionRegistrarTramite implements AccionPaso {
 	 *            datos usuario
 	 * @return interesado
 	 */
-	private Interesado generarInteresado(TypeInteresado tipoInteresado, final DatosUsuario datosUsuario) {
+	private Interesado generarInteresado(final TypeInteresado tipoInteresado, final DatosUsuario datosUsuario) {
 
 		TypeDocumentoIdentificacion tipoDocumento = null;
-		if (ValidacionesTipo.getInstance().esNif(datosUsuario.getNif())
-				|| ValidacionesTipo.getInstance().esNie(datosUsuario.getNif())) {
+		if (NifUtils.esNifPersonaFisica(datosUsuario.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.NIF;
-		} else if (ValidacionesTipo.getInstance().esCif(datosUsuario.getNif())) {
+		} else if (NifUtils.esNifPersonaFisica(datosUsuario.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.CIF;
 		} else {
 			throw new TipoNoControladoException("Tipo de identificación no controlado");

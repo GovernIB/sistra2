@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
@@ -11,7 +10,8 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
  * @author Indra
  *
  */
-public class DatosSesionPago implements Serializable {
+@SuppressWarnings("serial")
+public class DatosSesionPago implements ModelApi {
 
 	/** Identificador pasarela de pago a utilizar. */
 	private String pasarelaId;

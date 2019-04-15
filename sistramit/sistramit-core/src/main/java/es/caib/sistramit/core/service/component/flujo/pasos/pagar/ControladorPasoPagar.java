@@ -151,8 +151,8 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 	 *            Definición trámite
 	 * @return Datos documento pago
 	 */
-	private DatosDocumentoPago crearDatosDocumentoPago(DatosInternosPasoPagar pDipa, DatosPersistenciaPaso pDpp,
-			Pago pDetallePago, DefinicionTramiteSTG pDefinicionTramite) {
+	private DatosDocumentoPago crearDatosDocumentoPago(final DatosInternosPasoPagar pDipa,
+			final DatosPersistenciaPaso pDpp, final Pago pDetallePago, final DefinicionTramiteSTG pDefinicionTramite) {
 		// Obtenemos documento de persistencia
 		final DocumentoPasoPersistencia dpp = pDpp.getDocumentoPasoPersistencia(pDetallePago.getId(),
 				ConstantesNumero.N1);
@@ -269,6 +269,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 			}
 			pago.setObligatorio(rs);
 
+			// TODO SUBSANACION REVISAR SEGUN REQUISITOS A ESTABLECER
 			// Tipos presentacion según definición
 			if ("T".equalsIgnoreCase(detalle.getTipo())) {
 				pago.getPresentacionesPermitidas().add(TypePresentacion.ELECTRONICA);
@@ -286,8 +287,7 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 
 			// Verificamos que existe un tipo de presentacion permitida
 			if (pago.getPresentacionesPermitidas().isEmpty()) {
-				throw new ErrorConfiguracionException(
-						"No existe ninguna presentación permitida para el pago (debe existir un pago configurado únicamente como presencial y el trámite no es preregistro)");
+				throw new ErrorConfiguracionException("No existe ninguna presentación permitida para el pago");
 			}
 
 			// Calculamos los datos del pago y los almacenamos en datos internos

@@ -3,6 +3,7 @@ package es.caib.sistramit.core.api.model.flujo;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
+import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 
@@ -54,6 +55,9 @@ public class DetalleTramiteInfo implements ModelApi {
 	/** Tipo paso actual. */
 	private TypePaso tipoPasoActual;
 
+	/** Tipo presentacion (puede variar a lo largo del flujo). */
+	private TypePresentacion presentacion = TypePresentacion.ELECTRONICA;
+
 	/**
 	 * Método de acceso a idSesionTramitacion.
 	 *
@@ -69,7 +73,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param idSesionTramitacion
 	 *            idSesionTramitacion a establecer
 	 */
-	public void setIdSesion(String idSesionTramitacion) {
+	public void setIdSesion(final String idSesionTramitacion) {
 		this.idSesion = idSesionTramitacion;
 	}
 
@@ -88,7 +92,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param idTramite
 	 *            idTramite a establecer
 	 */
-	public void setId(String idTramite) {
+	public void setId(final String idTramite) {
 		this.id = idTramite;
 	}
 
@@ -107,7 +111,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param version
 	 *            version a establecer
 	 */
-	public void setVersion(int version) {
+	public void setVersion(final int version) {
 		this.version = version;
 	}
 
@@ -126,7 +130,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param idioma
 	 *            idioma a establecer
 	 */
-	public void setIdioma(String idioma) {
+	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
 
@@ -145,7 +149,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param titulo
 	 *            titulo a establecer
 	 */
-	public void setTitulo(String titulo) {
+	public void setTitulo(final String titulo) {
 		this.titulo = titulo;
 	}
 
@@ -164,7 +168,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param tipoFlujo
 	 *            tipoFlujo a establecer
 	 */
-	public void setTipoFlujo(TypeFlujoTramitacion tipoFlujo) {
+	public void setTipoFlujo(final TypeFlujoTramitacion tipoFlujo) {
 		this.tipoFlujo = tipoFlujo;
 	}
 
@@ -183,7 +187,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param autenticacion
 	 *            autenticacion a establecer
 	 */
-	public void setAutenticacion(TypeAutenticacion autenticacion) {
+	public void setAutenticacion(final TypeAutenticacion autenticacion) {
 		this.autenticacion = autenticacion;
 	}
 
@@ -202,7 +206,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param metodoAutenticacion
 	 *            metodoAutenticacion a establecer
 	 */
-	public void setMetodoAutenticacion(TypeMetodoAutenticacion metodoAutenticacion) {
+	public void setMetodoAutenticacion(final TypeMetodoAutenticacion metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
 	}
 
@@ -221,7 +225,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param nuevo
 	 *            nuevo a establecer
 	 */
-	public void setNuevo(TypeSiNo nuevo) {
+	public void setNuevo(final TypeSiNo nuevo) {
 		this.nuevo = nuevo;
 	}
 
@@ -240,7 +244,7 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param persistente
 	 *            persistente a establecer
 	 */
-	public void setPersistente(TypeSiNo persistente) {
+	public void setPersistente(final TypeSiNo persistente) {
 		this.persistente = persistente;
 	}
 
@@ -259,13 +263,13 @@ public class DetalleTramiteInfo implements ModelApi {
 	 * @param diasPersistencia
 	 *            diasPersistencia a establecer
 	 */
-	public void setDiasPersistencia(int diasPersistencia) {
+	public void setDiasPersistencia(final int diasPersistencia) {
 		this.diasPersistencia = diasPersistencia;
 	}
 
 	/**
 	 * Método de acceso a idPasoActual.
-	 * 
+	 *
 	 * @return idPasoActual
 	 */
 	public String getIdPasoActual() {
@@ -274,17 +278,17 @@ public class DetalleTramiteInfo implements ModelApi {
 
 	/**
 	 * Método para establecer idPasoActual.
-	 * 
+	 *
 	 * @param idPasoActual
 	 *            idPasoActual a establecer
 	 */
-	public void setIdPasoActual(String idPasoActual) {
+	public void setIdPasoActual(final String idPasoActual) {
 		this.idPasoActual = idPasoActual;
 	}
 
 	/**
 	 * Método de acceso a tipoPasoActual.
-	 * 
+	 *
 	 * @return tipoPasoActual
 	 */
 	public TypePaso getTipoPasoActual() {
@@ -293,12 +297,31 @@ public class DetalleTramiteInfo implements ModelApi {
 
 	/**
 	 * Método para establecer tipoPasoActual.
-	 * 
+	 *
 	 * @param tipoPasoActual
 	 *            tipoPasoActual a establecer
 	 */
-	public void setTipoPasoActual(TypePaso tipoPasoActual) {
+	public void setTipoPasoActual(final TypePaso tipoPasoActual) {
 		this.tipoPasoActual = tipoPasoActual;
+	}
+
+	/**
+	 * Método de acceso a presentacion.
+	 *
+	 * @return presentacion
+	 */
+	public TypePresentacion getPresentacion() {
+		return presentacion;
+	}
+
+	/**
+	 * Método para establecer presentacion.
+	 *
+	 * @param presentacion
+	 *            presentacion a establecer
+	 */
+	public void setPresentacion(final TypePresentacion presentacion) {
+		this.presentacion = presentacion;
 	}
 
 }

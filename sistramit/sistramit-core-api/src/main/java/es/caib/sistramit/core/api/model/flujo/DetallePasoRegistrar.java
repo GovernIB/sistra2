@@ -18,6 +18,11 @@ import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 public final class DetallePasoRegistrar extends DetallePaso {
 
 	/**
+	 * Contador documentos.
+	 */
+	private ContadorDocumentos contador = new ContadorDocumentos();
+
+	/**
 	 * Lista de formularios a registrar.
 	 */
 	private List<DocumentoRegistro> formularios = new ArrayList<>();
@@ -57,6 +62,11 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * Instrucciones entrega presencial.
 	 */
 	private String instruccionesEntregaPresencial;
+
+	/**
+	 * Indica si el paso es subsanable.
+	 */
+	private TypeSiNo subsanable = TypeSiNo.NO;
 
 	/**
 	 * Constructor.
@@ -138,7 +148,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * @param registrar
 	 *            registrar a establecer
 	 */
-	public void setRegistrar(TypeSiNo registrar) {
+	public void setRegistrar(final TypeSiNo registrar) {
 		this.registrar = registrar;
 	}
 
@@ -157,7 +167,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * @param formularios
 	 *            formularios a establecer
 	 */
-	public void setFormularios(List<DocumentoRegistro> formularios) {
+	public void setFormularios(final List<DocumentoRegistro> formularios) {
 		this.formularios = formularios;
 	}
 
@@ -176,7 +186,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * @param anexos
 	 *            anexos a establecer
 	 */
-	public void setAnexos(List<DocumentoRegistro> anexos) {
+	public void setAnexos(final List<DocumentoRegistro> anexos) {
 		this.anexos = anexos;
 	}
 
@@ -195,7 +205,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * @param pagos
 	 *            pagos a establecer
 	 */
-	public void setPagos(List<DocumentoRegistro> pagos) {
+	public void setPagos(final List<DocumentoRegistro> pagos) {
 		this.pagos = pagos;
 	}
 
@@ -214,7 +224,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * @param instruccionesEntregaPresencial
 	 *            instruccionesEntregaPresencial a establecer
 	 */
-	public void setInstruccionesEntregaPresencial(String instruccionesEntregaPresencial) {
+	public void setInstruccionesEntregaPresencial(final String instruccionesEntregaPresencial) {
 		this.instruccionesEntregaPresencial = instruccionesEntregaPresencial;
 	}
 
@@ -234,7 +244,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 * @param docs
 	 * @return
 	 */
-	private boolean verificarFirmas(List<DocumentoRegistro> docs) {
+	private boolean verificarFirmas(final List<DocumentoRegistro> docs) {
 		boolean res = true;
 		if (docs != null) {
 			for (final DocumentoRegistro doc : docs) {
@@ -260,7 +270,7 @@ public final class DetallePasoRegistrar extends DetallePaso {
 	 *            instancia
 	 * @return documento registro o nulo si no lo encuentra
 	 */
-	public DocumentoRegistro buscarDocumentoRegistro(String idDocumento, int instancia) {
+	public DocumentoRegistro buscarDocumentoRegistro(final String idDocumento, final int instancia) {
 		DocumentoRegistro res = null;
 		res = buscarDocumentoRegistro(formularios, idDocumento, instancia);
 		if (res == null) {
@@ -272,8 +282,8 @@ public final class DetallePasoRegistrar extends DetallePaso {
 		return res;
 	}
 
-	private DocumentoRegistro buscarDocumentoRegistro(List<DocumentoRegistro> listaDocsRegistro, String idDocumento,
-			int instancia) {
+	private DocumentoRegistro buscarDocumentoRegistro(final List<DocumentoRegistro> listaDocsRegistro,
+			final String idDocumento, final int instancia) {
 		DocumentoRegistro res = null;
 		for (final DocumentoRegistro dr : listaDocsRegistro) {
 			if (dr.getId().equals(idDocumento) && dr.getInstancia() == instancia) {
@@ -305,11 +315,49 @@ public final class DetallePasoRegistrar extends DetallePaso {
 		return strb.toString();
 	}
 
-	private void printDocumentos(final String ident, final StringBuffer strb, List<DocumentoRegistro> docsr) {
+	private void printDocumentos(final String ident, final StringBuffer strb, final List<DocumentoRegistro> docsr) {
 		for (final DocumentoRegistro dr : docsr) {
 			strb.append(ident).append("  - " + dr.getId() + "-" + dr.getInstancia() + " - Firmar:" + dr.getFirmar()
 					+ " - Firmado:" + dr.getFirmado() + "\n");
 		}
+	}
+
+	/**
+	 * Método de acceso a contador.
+	 *
+	 * @return contador
+	 */
+	public ContadorDocumentos getContador() {
+		return contador;
+	}
+
+	/**
+	 * Método para establecer contador.
+	 *
+	 * @param contador
+	 *            contador a establecer
+	 */
+	public void setContador(final ContadorDocumentos contador) {
+		this.contador = contador;
+	}
+
+	/**
+	 * Método de acceso a subsanable.
+	 * 
+	 * @return subsanable
+	 */
+	public TypeSiNo getSubsanable() {
+		return subsanable;
+	}
+
+	/**
+	 * Método para establecer subsanable.
+	 * 
+	 * @param subsanable
+	 *            subsanable a establecer
+	 */
+	public void setSubsanable(final TypeSiNo subsanable) {
+		this.subsanable = subsanable;
 	}
 
 }

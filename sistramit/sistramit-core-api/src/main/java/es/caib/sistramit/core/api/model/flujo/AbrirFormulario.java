@@ -1,7 +1,5 @@
 package es.caib.sistramit.core.api.model.flujo;
 
-import java.io.Serializable;
-
 import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
 
 /**
@@ -14,7 +12,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeFormulario;
  *
  */
 @SuppressWarnings("serial")
-public final class AbrirFormulario implements Serializable {
+public final class AbrirFormulario implements ModelApi {
 
 	/**
 	 * Indica si es externo o interno.
@@ -65,13 +63,13 @@ public final class AbrirFormulario implements Serializable {
 	 * @param url
 	 *            url a establecer
 	 */
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 
 	/**
 	 * Método de acceso a ticket.
-	 * 
+	 *
 	 * @return ticket
 	 */
 	public String getTicket() {
@@ -80,11 +78,11 @@ public final class AbrirFormulario implements Serializable {
 
 	/**
 	 * Método para establecer ticket.
-	 * 
+	 *
 	 * @param ticket
 	 *            ticket a establecer
 	 */
-	public void setTicket(String ticket) {
+	public void setTicket(final String ticket) {
 		this.ticket = ticket;
 	}
 

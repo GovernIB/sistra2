@@ -416,7 +416,7 @@ public final class VariablesFlujo implements Serializable {
 	}
 
 	/**
-	 * Devuelve si existe documentación presencial (preregistro).
+	 * Devuelve si existe documentación presencial.
 	 *
 	 * @return boolean
 	 */
