@@ -48,4 +48,28 @@ public interface ResRegistroInt extends PluginScriptRes {
 	 */
 	void setNumeroExpediente(String numeroExpediente);
 
+	/**
+	 * Método para establecer textoExpone.
+	 *
+	 * @param textoExpone
+	 *            textoExpone a establecer
+	 */
+	void setExpone(String textoExpone);
+
+	/**
+	 * Método para establecer textoSolicita.
+	 *
+	 * @param textoSolicita
+	 *            textoSolicita a establecer
+	 */
+	void setSolicita(String textoSolicita);
+
+	/**
+	 * Método para establecer codigoOrganoDestino.
+	 *
+	 * @param codigoOrganoDestino
+	 *            codigoOrganoDestino a establecer
+	 */
+	void setCodigoOrganoDestino(String codigoOrganoDestino);
+
 }

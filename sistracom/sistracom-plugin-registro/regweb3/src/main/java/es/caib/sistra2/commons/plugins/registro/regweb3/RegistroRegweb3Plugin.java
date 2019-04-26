@@ -8,12 +8,14 @@ import java.util.Properties;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import es.caib.regweb3.ws.api.v3.AnexoWs;
+import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
 import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
 import es.caib.regweb3.ws.api.v3.IdentificadorWs;
 import es.caib.regweb3.ws.api.v3.InteresadoWs;
 import es.caib.regweb3.ws.api.v3.JustificanteWs;
 import es.caib.regweb3.ws.api.v3.LibroWs;
 import es.caib.regweb3.ws.api.v3.OficinaWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
 import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
@@ -170,9 +172,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	public ResultadoRegistro registroEntrada(AsientoRegistral asientoRegistral) throws RegistroPluginException {
 
 		// Mapea parametros ws
-		final RegistroEntradaWs paramEntrada = (RegistroEntradaWs) mapearParametrosRegistro(asientoRegistral);
+		final AsientoRegistralWs paramEntrada = mapearParametrosRegistro(asientoRegistral);
 
-		IdentificadorWs result = new IdentificadorWs();
+		AsientoRegistralWs result = new AsientoRegistralWs();
 
 		try {
 
@@ -181,20 +183,21 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					: false);
 
 			// Invoca a Regweb3
-			final RegWebRegistroEntradaWs service = UtilsRegweb3.getRegistroEntradaService(
+			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(),
-					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ENTRADA),
+					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
 
-			result = service.nuevoRegistroEntrada(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada);
+			// creacion de asiento registral de entrada con tipo de operacion normal
+			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada, null);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de entrada : " + ex.getMessage(), ex);
 		}
 
 		// Devuelve resultado registro
 		final ResultadoRegistro resReg = new ResultadoRegistro();
-		resReg.setFechaRegistro(result.getFecha());
+		resReg.setFechaRegistro(result.getFechaRegistro());
 		resReg.setNumeroRegistro(result.getNumeroRegistroFormateado());
 		return resReg;
 	}
@@ -203,9 +206,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	public ResultadoRegistro registroSalida(AsientoRegistral asientoRegistral) throws RegistroPluginException {
 
 		// Mapea parametros ws
-		final RegistroSalidaWs paramEntrada = (RegistroSalidaWs) mapearParametrosRegistro(asientoRegistral);
+		final AsientoRegistralWs paramEntrada = mapearParametrosRegistro(asientoRegistral);
 
-		IdentificadorWs result = new IdentificadorWs();
+		AsientoRegistralWs result = new AsientoRegistralWs();
 
 		try {
 
@@ -214,19 +217,21 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					: false);
 
 			// Invoca a Regweb3
-			final RegWebRegistroSalidaWs service = UtilsRegweb3.getRegistroSalidaService(
+			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(),
-					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_SALIDA), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
+					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
 					getPropiedad(ConstantesRegweb3.PROP_USUARIO), getPropiedad(ConstantesRegweb3.PROP_PASSWORD),
 					logCalls);
-			result = service.nuevoRegistroSalida(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada);
+			// creacion de asiento registral de salida con tipo de operacion normal
+			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
+					ConstantesRegweb3.OPERACION_NORMAL);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de salida : " + ex.getMessage(), ex);
 		}
 
 		// Devuelve resultado registro
 		final ResultadoRegistro resReg = new ResultadoRegistro();
-		resReg.setFechaRegistro(result.getFecha());
+		resReg.setFechaRegistro(result.getFechaRegistro());
 		resReg.setNumeroRegistro(result.getNumeroRegistroFormateado());
 		return resReg;
 	}
@@ -246,11 +251,12 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					: false);
 
 			// Invoca a Regweb3
-			final RegWebRegistroEntradaWs service = UtilsRegweb3.getRegistroEntradaService(codigoEntidad,
-					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ENTRADA),
+			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(codigoEntidad,
+					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
-			result = service.obtenerJustificante(codigoEntidad, numeroRegistro);
+
+			result = service.obtenerJustificante(codigoEntidad, numeroRegistro, ConstantesRegweb3.REGISTRO_ENTRADA);
 
 		} catch (final Exception ex) {
 			throw new RegistroPluginException(
@@ -273,39 +279,57 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	 *            asiento registral
 	 * @throws RegistroPluginException
 	 */
-	private RegistroWs mapearParametrosRegistro(AsientoRegistral asiento) throws RegistroPluginException {
+	private AsientoRegistralWs mapearParametrosRegistro(AsientoRegistral asiento) throws RegistroPluginException {
 
 		// Crea parametros segun sea registro entrada o salida
 		final boolean esRegistroSalida = (asiento.getDatosOrigen().getTipoRegistro() == TypeRegistro.REGISTRO_SALIDA);
 
-		RegistroWs registroWs = null;
+		AsientoRegistralWs asientoWs = new AsientoRegistralWs();
+
 		if (esRegistroSalida) {
-			registroWs = new RegistroSalidaWs();
+			asientoWs.setTipoRegistro(ConstantesRegweb3.REGISTRO_SALIDA);
 		} else {
-			registroWs = new RegistroEntradaWs();
+			asientoWs.setTipoRegistro(ConstantesRegweb3.REGISTRO_ENTRADA);
 		}
 
 		// Datos aplicacion
-		registroWs.setAplicacion(getPropiedad(ConstantesRegweb3.PROP_APLICACION_CODIGO));
-		registroWs.setVersion(getPropiedad(ConstantesRegweb3.PROP_APLICACION_VERSION));
+		asientoWs.setAplicacionTelematica(getPropiedad(ConstantesRegweb3.PROP_APLICACION_CODIGO));
 
-		registroWs.setCodigoUsuario(getPropiedad(ConstantesRegweb3.PROP_USUARIO));
+		asientoWs.setCodigoUsuario(getPropiedad(ConstantesRegweb3.PROP_USUARIO));
 
 		// Datos oficina registro
-		registroWs.setOficina(asiento.getDatosOrigen().getCodigoOficinaRegistro());
-		registroWs.setLibro(asiento.getDatosOrigen().getLibroOficinaRegistro());
+		asientoWs.setEntidadRegistralOrigenCodigo(asiento.getDatosOrigen().getCodigoOficinaRegistro());
+		asientoWs.setLibroCodigo(asiento.getDatosOrigen().getLibroOficinaRegistro());
 		if (esRegistroSalida) {
-			((RegistroSalidaWs) registroWs).setOrigen(asiento.getDatosAsunto().getCodigoOrganoDestino());
+			asientoWs.setUnidadTramitacionOrigenCodigo(asiento.getDatosAsunto().getCodigoOrganoDestino());
 		} else {
-			((RegistroEntradaWs) registroWs).setDestino(asiento.getDatosAsunto().getCodigoOrganoDestino());
+			asientoWs.setUnidadTramitacionDestinoCodigo(asiento.getDatosAsunto().getCodigoOrganoDestino());
 		}
 
 		// Datos asunto
-		registroWs.setExtracto(asiento.getDatosAsunto().getExtractoAsunto());
-		registroWs.setDocFisica(new Long(ConstantesRegweb3.DOC_FISICA_REQUERIDA));
-		registroWs.setIdioma(asiento.getDatosAsunto().getIdiomaAsunto());
-		registroWs.setTipoAsunto(asiento.getDatosAsunto().getTipoAsunto());
-		registroWs.setNumExpediente(asiento.getDatosAsunto().getNumeroExpediente());
+		asientoWs.setResumen(asiento.getDatosAsunto().getExtractoAsunto());
+		asientoWs.setTipoDocumentacionFisicaCodigo(ConstantesRegweb3.TIPO_DOCFIS_DIGTL);
+		asientoWs.setTipoAsunto(asiento.getDatosAsunto().getTipoAsunto());
+		switch(asiento.getDatosAsunto().getIdiomaAsunto()) {
+			case "es":
+				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_CASTELLANO);
+				break;
+			case "ca":
+				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_CATALAN);
+				break;
+			case "en":
+				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_INGLES);
+				break;
+			default:
+				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_OTROS);
+		}
+		asientoWs.setNumeroExpediente(asiento.getDatosAsunto().getNumeroExpediente());
+		asientoWs.setExpone(asiento.getDatosAsunto().getTextoExpone());
+		asientoWs.setSolicita(asiento.getDatosAsunto().getTextoSolicita());
+		asientoWs.setCodigoSia(Long.parseLong(asiento.getDatosAsunto().getCodigoSiaProcedimiento()));
+
+		// Se indica que el asiento no se hace de forma presencial
+		asientoWs.setPresencial(false);
 
 		// Datos interesado: representante / representado
 		final Interesado representanteAsiento = UtilsRegweb3.obtenerDatosInteresadoAsiento(asiento,
@@ -326,7 +350,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		final InteresadoWs interesadoWs = new InteresadoWs();
 		interesadoWs.setInteresado(interesado);
 		interesadoWs.setRepresentante(representante);
-		registroWs.getInteresados().add(interesadoWs);
+		asientoWs.getInteresados().add(interesadoWs);
 
 		// Anexos
 		if ("true".equals(getPropiedad(ConstantesRegweb3.PROP_INSERTADOCS))) {
@@ -336,6 +360,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 			Integer origenDocumento;
 			String tipoDocumental;
+
 			if (esRegistroSalida) {
 				origenDocumento = ConstantesRegweb3.ORIGEN_DOCUMENTO_ADMINISTRACION;
 				tipoDocumental = ConstantesRegweb3.TIPO_DOCUMENTAL_NOTIFICACION;
@@ -348,26 +373,23 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			for (final Iterator it = asiento.getDocumentosRegistro().iterator(); it.hasNext();) {
 
 				AnexoWs anexoWs = null;
-				final String tipoDocumento = ConstantesRegweb3.TIPO_DOCUMENTO_ANEXO;
-				final String validezDocumento = ConstantesRegweb3.VALIDEZ_DOCUMENTO_COPIA;
-				final boolean anexarInterno = false;
 
 				final DocumentoAsiento dr = (DocumentoAsiento) it.next();
 
 				if (dr.getTipoDocumento() == TypeDocumental.FICHERO_TECNICO && anexarInternos) {
 					anexoWs = generarAnexoWs(dr);
-					registroWs.getAnexos().add(anexoWs);
+					asientoWs.getAnexos().add(anexoWs);
 				}
 
 				if (!(dr.getTipoDocumento() == TypeDocumental.FICHERO_TECNICO) && anexarFormateados) {
 					anexoWs = generarAnexoWs(dr);
-					registroWs.getAnexos().add(anexoWs);
+					asientoWs.getAnexos().add(anexoWs);
 				}
 
 			}
 		}
 
-		return registroWs;
+		return asientoWs;
 
 	}
 

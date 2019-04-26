@@ -24,6 +24,15 @@ public final class ResRegistro implements ResRegistroInt {
 	/** Expediente (para tramites continuacion). */
 	private String numeroExpediente;
 
+	/** texto relativo al expone (solo para solicitud generica). */
+	private String textoExpone;
+
+	/** texto relativo al solicita (solo para solicitud generica). */
+	private String textoSolicita;
+
+	/** codigo del organo sobre el que se realiza el asiento . */
+	private String codigoOrganoDestino;
+
 	@Override
 	public String getPluginId() {
 		return ID;
@@ -108,5 +117,68 @@ public final class ResRegistro implements ResRegistroInt {
 	public void setNumeroExpediente(String numeroExpediente) {
 		this.numeroExpediente = numeroExpediente;
 	}
+
+	/**
+	 * Método de acceso a textoExpone.
+	 *
+	 * @return textoExpone
+	 */
+	public String getExpone() {
+		return textoExpone;
+	}
+
+	/**
+	 * Método para establecer textoExpone.
+	 *
+	 * @param textoExpone
+	 *            textoExpone a establecer
+	 */
+	@Override
+	public void setExpone(String textoExpone) {
+		this.textoExpone = textoExpone;
+
+	}
+
+	/**
+	 * Método de acceso a textoSolicita.
+	 *
+	 * @return textoSolicita
+	 */
+	public String getSolicita() {
+		return textoSolicita;
+	}
+
+	/**
+	 * Método para establecer textoSolicita.
+	 *
+	 * @param textoSolicita
+	 *            textoSolicita a establecer
+	 */
+	@Override
+	public void setSolicita(String textoSolicita) {
+		this.textoSolicita = textoSolicita;
+	}
+
+	/**
+	 * Método de acceso a codigoOrganoDestino.
+	 *
+	 * @return codigoOrganoDestino
+	 */
+	public String getCodigoOrganoDestino() {
+		return codigoOrganoDestino;
+	}
+
+	/**
+	 * Método para establecer codigoOrganoDestino.
+	 *
+	 * @param codigoOrganoDestino
+	 *            codigoOrganoDestino a establecer
+	 */
+	@Override
+	public void setCodigoOrganoDestino(String codigoOrganoDestino) {
+		this.codigoOrganoDestino = codigoOrganoDestino;
+	}
+
+
 
 }

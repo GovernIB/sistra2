@@ -19,6 +19,8 @@ public class DatosAsunto implements Serializable {
 	private String codigoOrganoDestino;
 	private String codigoSiaProcedimiento;
 	private String numeroExpediente;
+	private String textoExpone;
+	private String textoSolicita;
 
 	public Date getFechaAsunto() {
 		return fechaAsunto;
@@ -81,7 +83,7 @@ public class DatosAsunto implements Serializable {
 
 	/**
 	 * Método de acceso a numeroExpediente.
-	 * 
+	 *
 	 * @return numeroExpediente
 	 */
 	public String getNumeroExpediente() {
@@ -90,12 +92,50 @@ public class DatosAsunto implements Serializable {
 
 	/**
 	 * Método para establecer numeroExpediente.
-	 * 
+	 *
 	 * @param numeroExpediente
 	 *            numeroExpediente a establecer
 	 */
 	public void setNumeroExpediente(String numeroExpediente) {
 		this.numeroExpediente = numeroExpediente;
+	}
+
+	/**
+	 * Método de acceso a textoExpone.
+	 *
+	 * @return textoExpone
+	 */
+	public String getTextoExpone() {
+		return textoExpone;
+	}
+
+	/**
+	 * Método para establecer textoExpone.
+	 *
+	 * @param textoExpone
+	 *            textoExpone a establecer
+	 */
+	public void setTextoExpone(String textoExpone) {
+		this.textoExpone = textoExpone;
+	}
+
+	/**
+	 * Método de acceso a textoSolicita.
+	 *
+	 * @return textoSolicita
+	 */
+	public String getTextoSolicita() {
+		return textoSolicita;
+	}
+
+	/**
+	 * Método para establecer textoSolicita.
+	 *
+	 * @param textoSolicita
+	 *            textoSolicita a establecer
+	 */
+	public void setTextoSolicita(String textoSolicita) {
+		this.textoSolicita = textoSolicita;
 	}
 
 }

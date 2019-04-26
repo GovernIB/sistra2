@@ -411,7 +411,12 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		} else {
 			datosRegistrales.setTipoAsunto(pasoRegistrar.getDestino().getTipoAsunto());
 		}
+		if (StringUtils.isNotBlank(resRegistro.getCodigoOrganoDestino())) {
+			datosRegistrales.setCodigoOrganoDestino(resRegistro.getCodigoOrganoDestino());
+		}
 		datosRegistrales.setNumeroExpediente(resRegistro.getNumeroExpediente());
+		datosRegistrales.setTextoExpone(resRegistro.getExpone());
+		datosRegistrales.setTextoSolicita(resRegistro.getSolicita());
 
 		return datosRegistrales;
 	}

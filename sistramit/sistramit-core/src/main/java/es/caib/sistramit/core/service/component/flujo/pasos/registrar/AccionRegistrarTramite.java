@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -365,8 +366,14 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		datosAsunto.setIdiomaAsunto(pVariablesFlujo.getIdioma());
 		datosAsunto.setExtractoAsunto(pVariablesFlujo.getTituloTramite());
 		datosAsunto.setTipoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getTipoAsunto());
-		datosAsunto.setCodigoOrganoDestino(pVariablesFlujo.getDatosTramiteCP().getOrganoDestinoDir3());
+		if (StringUtils.isNotBlank(pDipa.getParametrosRegistro().getDatosRegistrales().getCodigoOrganoDestino())) {
+			datosAsunto.setCodigoOrganoDestino(pDipa.getParametrosRegistro().getDatosRegistrales().getCodigoOrganoDestino());
+		}else {
+			datosAsunto.setCodigoOrganoDestino(pVariablesFlujo.getDatosTramiteCP().getOrganoDestinoDir3());
+		}
 		datosAsunto.setNumeroExpediente(pDipa.getParametrosRegistro().getDatosRegistrales().getNumeroExpediente());
+		datosAsunto.setTextoExpone(pDipa.getParametrosRegistro().getDatosRegistrales().getTextoExpone());
+		datosAsunto.setTextoSolicita(pDipa.getParametrosRegistro().getDatosRegistrales().getTextoSolicita());
 		asiento.setDatosAsunto(datosAsunto);
 		// - Interesados
 		final List<Interesado> interesados = new ArrayList<>();

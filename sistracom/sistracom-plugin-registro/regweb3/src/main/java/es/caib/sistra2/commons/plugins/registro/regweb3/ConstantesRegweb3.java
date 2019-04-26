@@ -7,12 +7,10 @@ package es.caib.sistra2.commons.plugins.registro.regweb3;
  */
 public class ConstantesRegweb3 {
 
-	/** Nombre de propiedad de endpoint de entrada */
-	public final static String PROP_ENDPOINT_ENTRADA = "endpoint.entrada";
 	/** Nombre de propiedad de endpoint de info */
 	public final static String PROP_ENDPOINT_INFO = "endpoint.info";
 	/** Nombre de propiedad de endpoint de salida */
-	public final static String PROP_ENDPOINT_SALIDA = "endpoint.salida";
+	public final static String PROP_ENDPOINT_ASIENTO = "endpoint.asiento";
 	/** Nombre de propiedad de identificador de aplicacion */
 	public final static String PROP_APLICACION_CODIGO = "aplicacion.codigo";
 	/** Nombre de propiedad de version de aplicacion */
@@ -38,6 +36,13 @@ public class ConstantesRegweb3 {
 	/** Constante para indicar registro salida. */
 	public static final Long REGISTRO_SALIDA = 2L;
 
+	/** Constante para indicar la operacion notificacion en caso de registro de salida. */
+	public static final Long OPERACION_NOTIFICACION = 1L;
+	/** Constante para indicar la operacion comunicacion en caso de registro de salida */
+	public static final Long OPERACION_COMUNICACION = 2L;
+	/** Constante para indicar la operacion asiento normal en caso de registro de salida. */
+	public static final Long OPERACION_NORMAL = null;
+
 	/** Tipo interesado Persona f�sica. */
 	public final static String TIPO_INTERESADO_PERSONA_FISICA = "2";
 	/** Tipo interesado Persona juridica. */
@@ -53,9 +58,6 @@ public class ConstantesRegweb3 {
 	public final static String TIPO_DOCID_NIE = "E";
 	/** Tipo documento identificacion: Pasaporte. */
 	public final static String TIPO_DOCID_PSP = "P";
-
-	/** Documetacion fisica: Acompa�a documentaci�n f�sica (u otros soportes) requerida.*/
-	public final static String DOC_FISICA_REQUERIDA = "01";
 
 
 	/** Tipo documento: formulario. */
@@ -101,5 +103,23 @@ public class ConstantesRegweb3 {
 	public final static String VALIDEZ_DOCUMENTO_COPIA_ORIGINAL = "03";
 	/** Validez documento: Copia original (documento adjunto es el original electr�nico).*/
 	public final static String VALIDEZ_DOCUMENTO_ORIGINAL = "04";
+
+	/** Idiomas */
+	/** Constante para indicar idioma catalán. */
+	public static final Long IDIOMA_CATALAN = 1L;
+	/** Constante para indicar idioma castellano. */
+	public static final Long IDIOMA_CASTELLANO = 2L;
+	/** Constante para indicar idioma inglés. */
+	public static final Long IDIOMA_INGLES = 5L;
+	/** Constante para indicar idioma otros. */
+	public static final Long IDIOMA_OTROS = 6L;
+
+	/** Tipo de documentacion fisica */
+	/** Constante para indicar documentación adjunta en soporte papel. */
+	public static final Long TIPO_DOCFIS_PAPEL = 1L;
+	/** Constante para indicar documentación adjunta digitalizada y complementariamente en papel. */
+	public static final Long TIPO_DOCFIS_MIXTA = 2L;
+	/** Constante para indicar documentación adjunta digitalizada. */
+	public static final Long TIPO_DOCFIS_DIGTL = 2L;
 
 }

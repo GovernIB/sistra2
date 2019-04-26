@@ -1,0 +1,51 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setExpone(textoExpone)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO&metodo=setExpone">setExpone</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setExpone(String textoExpone): void
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir un text d'exposició dels fets. Aquest valor únicament té sentit per sol·licituds genèriques.</li>
+    </ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>textoExpone</b>: cadena de text amb els fet a exposar.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que estam desenvolupant una sol·licitud genèrica i volem enviar a registre el text d'exposició. Per fer-ho podriem referenciar un camp (p.ex. EXPONE) del formulari (p.ej. FORM1) al que el ciutadà ha emplenat el text d'exposició dels fets: </p>
+ <p class="codigoScript">
+var textoExpone = PLUGIN_FORMULARIOS.getValor('FORM1','EXPONE');
+DATOS_REGISTRO.setNumeroExpediente(textoExpone);
+</p>
+</body>
+</html>

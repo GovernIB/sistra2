@@ -1,0 +1,51 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setExpone(textoExpone)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setExpone">setExpone</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setExpone(String textoExpone): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer un texto de exposición de hechos. Este valor únicamente tiene sentido para solicitudes genéricas.</li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>textoExpone</b>: cadena de texto con los hechos a exponer.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>Pongamos por caso que estamos desarrollando una solicitud genérica y queremos enviar a registro el texto de exposición. Para ello podríamos referenciar un campo (p.ej. EXPONE) del formulario (p.ej. FORM1) en el que el ciudadano ha cumplimentado dicho texto: </p>
+ <p class="codigoScript">
+var textoExpone = PLUGIN_FORMULARIOS.getValor('FORM1','EXPONE');
+DATOS_REGISTRO.setNumeroExpediente(textoExpone);
+</p>
+</body>
+</html>

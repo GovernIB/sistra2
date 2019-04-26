@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.ws.BindingProvider;
 
+import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
 import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
 import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
 import es.caib.regweb3.ws.api.v3.RegWebInfoWsService;
@@ -16,6 +17,8 @@ import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWsService;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
 import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWsService;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWsService;
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.Interesado;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
@@ -23,6 +26,7 @@ import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
 import es.caib.sistra2.commons.ws.utils.WsClientUtil;
 
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistra2.commons.utils.NifUtils;
 
 
 /**
@@ -63,6 +67,24 @@ public class UtilsRegweb3 {
         RegWebRegistroSalidaWsService service = new RegWebRegistroSalidaWsService(wsdl);
 
         RegWebRegistroSalidaWs api = service.getRegWebRegistroSalidaWs();
+
+        configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
+
+       return api;
+    }
+
+	/**
+	 * Obtiene service asiento registral.
+	 * @return service asiento registral
+	 * @throws Exception
+	 */
+	public static RegWebAsientoRegistralWs getAsientoRegistralService(String entidad, String endpoint, String wsdlDir,
+			String user, String pass, boolean logCalls) throws Exception  {
+
+        URL wsdl = obtenerUrlWsdl(endpoint, wsdlDir, "RegWebAsientoRegistral");
+        RegWebAsientoRegistralWsService service = new RegWebAsientoRegistralWsService(wsdl);
+
+        RegWebAsientoRegistralWs api = service.getRegWebAsientoRegistralWs();
 
         configurarService((BindingProvider) api, endpoint, user, pass, logCalls);
 
@@ -131,24 +153,13 @@ public class UtilsRegweb3 {
 	 */
 	public static String getTipoInteresado(String documentoIdentificacion) {
 		String result = null;
-		int validacion = ValidacionesTipo.getInstance().validaDocumento(documentoIdentificacion);
-		switch (validacion) {
-		case 1: // NIF
+
+		if (NifUtils.esNifPersonaFisica(documentoIdentificacion)) {
 			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA;
-			break;
-		case 2: // CIF
+		}else if (NifUtils.esNifPersonaFisica(documentoIdentificacion)) {
 			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_JURIDICA;
-			break;
-		case 3: // NIE
-			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA;
-			break;
-		case 5: // Pasaporte
-			result = ConstantesRegweb3.TIPO_INTERESADO_PERSONA_FISICA;
-			break;
-		default:
-			result = null;
-			break;
 		}
+
 		return result;
 	}
 
@@ -159,21 +170,15 @@ public class UtilsRegweb3 {
 	 */
 	public static String getTipoDocumentoIdentificacion(String documentoIdentificacion) {
 		String result = null;
-		int validacion = ValidacionesTipo.getInstance().validaDocumento(documentoIdentificacion);
-		switch (validacion) {
-		case 1: // NIF
+
+		if (NifUtils.esDni(documentoIdentificacion) || NifUtils.esNifOtros(documentoIdentificacion)) {
 			result = ConstantesRegweb3.TIPO_DOCID_NIF;
-			break;
-		case 2: // CIF
-			result = ConstantesRegweb3.TIPO_DOCID_CIF;
-			break;
-		case 3: // NIE
+		} else if (NifUtils.esNie(documentoIdentificacion)) {
 			result = ConstantesRegweb3.TIPO_DOCID_NIE;
-			break;
-		default:
-			result = null;
-			break;
+		} else if (NifUtils.esNifPersonaJuridica(documentoIdentificacion)) {
+			result = ConstantesRegweb3.TIPO_DOCID_CIF;
 		}
+
 		return result;
 	}
 
