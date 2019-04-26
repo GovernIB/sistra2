@@ -86,31 +86,35 @@ public class DialogDominioPing extends DialogControllerBase {
 	 */
 	public void ping() {
 
-		if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
-			valoresDominio = pingFuenteDatos(getValorParametrosDominio());
-		}
+		try {
+			if (dominio.getTipo() == TypeDominio.FUENTE_DATOS) {
+				valoresDominio = pingFuenteDatos(getValorParametrosDominio());
+			}
 
-		if (dominio.getTipo() == TypeDominio.CONSULTA_BD) {
-			valoresDominio = pingConsultaBD(getValorParametrosDominio());
-		}
+			if (dominio.getTipo() == TypeDominio.CONSULTA_BD) {
+				valoresDominio = pingConsultaBD(getValorParametrosDominio());
+			}
 
-		if (dominio.getTipo() == TypeDominio.CONSULTA_REMOTA) {
-			valoresDominio = pingConsultaRemota(getParametrosDominio());
-		}
+			if (dominio.getTipo() == TypeDominio.CONSULTA_REMOTA) {
+				valoresDominio = pingConsultaRemota(getParametrosDominio());
+			}
 
-		if (valoresDominio != null) {
-			if (valoresDominio.isError()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-						valoresDominio.getCodigoError() + " : " + valoresDominio.getDescripcionError());
-			} else {
-				if (valoresDominio.getFicheros().isEmpty()) {
-					mostrarTablaDatos = true;
-					mostrarTablaFicheros = false;
+			if (valoresDominio != null) {
+				if (valoresDominio.isError()) {
+					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							valoresDominio.getCodigoError() + " : " + valoresDominio.getDescripcionError());
 				} else {
-					mostrarTablaDatos = false;
-					mostrarTablaFicheros = true;
+					if (valoresDominio.getFicheros().isEmpty()) {
+						mostrarTablaDatos = true;
+						mostrarTablaFicheros = false;
+					} else {
+						mostrarTablaDatos = false;
+						mostrarTablaFicheros = true;
+					}
 				}
 			}
+		} catch (final Exception e) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Error:" + e.getLocalizedMessage());
 		}
 	}
 
