@@ -507,8 +507,7 @@ public class DialogScript extends DialogControllerBase {
 	 * Muestra el lateral de ayuda.
 	 */
 	public void mostrarAyuda(final TypePluginScript plugin) {
-		this.urlIframe = "/sistragesback/ayuda/" + UtilJSF.getIdioma().toString() + "/plugins/" + plugin.name()
-				+ "/index.html";
+		this.urlIframe = "AyudaServlet?ts=" + System.currentTimeMillis() + "&lang=" + UtilJSF.getIdioma().toString() + "&plugin=" + plugin.name();
 		this.mostrarLateralAyuda = true;
 	}
 

@@ -1,6 +1,8 @@
 <html>
 <head>
-<link rel="stylesheet" href="../../ayuda/ayuda.css" type="text/css" />
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
 </head>
 <body>
 <h1 class="stgH1">MANTENIMENTO DE ANEXO</h1>
@@ -19,11 +21,11 @@
 		<li><span class="boton">Depende:</span> si se marca esta opci&oacute;n la obligatoriedad de anexado del documento depender&aacute; del script 'Establecer dependencia'.</li>
 		<li><span class="boton">Establecer dependencia:</span> script que permite establecer la obligatoriedad de un documento seg&uacute;n otros datos del tr&aacute;mite (dominios, datos de un formulario previo, datos de sesi&oacute;, etc.). &uacute;nicamente se tendr&aacute; en cuenta el valor de este script si se ha fijado previamente la obligatoriedad 'Depende'.</li>
 		</ul>
-		<li><span class="boton">Ayuda:</span> en este apartado se configura la información relativa al documento anexo, que se mostrar&aacute; al ciudadano en el asistente de tramitaci&oacute;n para facilitar la aportaci&oacute;n:</li>
+		<li><span class="boton">Ayuda:</span> en este apartado se configura la informaciÃ³n relativa al documento anexo, que se mostrar&aacute; al ciudadano en el asistente de tramitaci&oacute;n para facilitar la aportaci&oacute;n:</li>
 		<ul class="detalle">
-		<li><span class="boton">Fichero:</span> esta opción permite al desarrollador adjuntar un documento que se mostrar&aacute; en el asistente de tramitaci&oacute;n a modo de plantilla del documento a anexar.</li>
+		<li><span class="boton">Fichero:</span> esta opciÃ³n permite al desarrollador adjuntar un documento que se mostrar&aacute; en el asistente de tramitaci&oacute;n a modo de plantilla del documento a anexar.</li>
 		<li><span class="boton">URL:</span> permite indicar un enlace de la que el ciudadano pueda descargar, desde el asistente de tramitaci&oacute;n, un documento a modo de plantilla del documento a anexar.</li>
-		<li><span class="boton">Mensaje (HTML):</span> posibilita añadir un mensaje, con soporte HTML, que se mostrar&aacute; en el asistente de tramitaci&oacute;n como informaci&oacute;n de inter&eacute;s para el ciudadano para la aportaci&oacute;n del documento.</li>
+		<li><span class="boton">Mensaje (HTML):</span> posibilita aÃ±adir un mensaje, con soporte HTML, que se mostrar&aacute; en el asistente de tramitaci&oacute;n como informaci&oacute;n de inter&eacute;s para el ciudadano para la aportaci&oacute;n del documento.</li>
 		</ul>
 		<li><span class="boton">Firmar digitalmente:</span> permite establecer que se requiera la firma electr&oacute;nica del formulario. Esta firma se solicitar&aacute; en el &uacute;ltimo paso del asistente, de manera previa al registro del tr&aacute;mite.</li>
 		<li><span class="nombreCampo">Establecer firmante:</span> script que permite, en caso de requerirse firma electr&oacute;nica del fomulario, establecer el firmante o firmantes requeridos. Para tramitaciones autenticadas, si no se consignan firmantes, se solicitar&aacute; la firma del usuario autenticado. Para tramitaciones no autenticadas ser&aacute; obligatorio consignar por lo menos un firmante en el script.</li>
@@ -31,7 +33,7 @@
 		<ul class="detalle">
 		<li><span class="boton">Num. instancias:</span> indica, en formato num&eacute;rico entero, la cantidad de fichero que se permitir&aacute; adjuntar al ciudadano para el documento anexo.</li>
 		<li><span class="boton">Extensiones:</span> indica las extensiones de ficheros que se permitir&aacute;n adjuntar para el documento anexo. Si se marca "Todas" se pemitir&aacute; cualquier extensi&oacute;n, y en caso de marcar "Personalizadas" se deber&aacute;n consignar en el campo de texto las extensiones deseadas, separadas por punto y coma (;).</li>
-		<li><span class="boton">Tam. m&aacute;ximo:</span> indica, en formato num&eacute;rico entero, el tamaño m&aacute;ximo de los ficheros que se permitir&aacute;n adjuntar. Adem&aacute;s dicho tamaño se puede expresar en kilobytes (KB) o megabytes (MB), marcando la opci&oacute;n correspondiente.</li>
+		<li><span class="boton">Tam. m&aacute;ximo:</span> indica, en formato num&eacute;rico entero, el tamaÃ±o m&aacute;ximo de los ficheros que se permitir&aacute;n adjuntar. Adem&aacute;s dicho tamaÃ±o se puede expresar en kilobytes (KB) o megabytes (MB), marcando la opci&oacute;n correspondiente.</li>
 		<li><span class="boton">Convertir a PDF:</span> indica si el fichero anexado se ha de convertir a PDF tras su aportaci&oacute;n desde el asistente. Los formatos de ficheros convertibles depender&aacute;n del plugin de conversi&aacute;n a PDF definido en la instalaci&oacute;n.</li>
 		<li><span class="boton">Anexar firmado:</span> indica si el fichero aportado ha de ir firmado. En ese caso se validar&aacute; la firma contenida en el documento. El formato del fichero a aportar est&aacute; restringido a PDF.</li>
 		<li><span class="boton">Firmar:</span> indica si el fichero aportado se deber&aacute; firmar electr&oacute;nicamente desde el asistente de tramitaci&oacute;n. En caso de estar marcada esta opci&oacute;n se solicitar&aacute; la firma por parte del firmante o firmantes establecidos en el script "Establecer firmantes". Para tramitaciones autenticadas, si el script no tiene valor se solicitar&aacute; la firma por parte del usuario autenticado.</li>

@@ -2,8 +2,8 @@
 <head>
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
-	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
-	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
 </head>
 <script type="text/javascript">
 	function copiar () {
@@ -13,14 +13,14 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">PLUGIN_UTILS</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
       	  <li>></li>
-      	  <li><a href="./esNif.html">esNif</a></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=esNif">esNif</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
-	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
 	esNif(String nif): boolean
 </h1>
 <p>
@@ -51,14 +51,14 @@
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p><b>Exemple 1</b> Validar la cadena 'B88018098'. </p>
+<p><b>Exemple 1</b> Validar la cadena 'Q6361408E'. </p>
  <p class="codigoScript">
-	var valido = PLUGIN_UTILS.esNif('B88018098');
+	var valido = PLUGIN_UTILS.esNif('Q6361408E');
 </p>
 <p>La funció esNif retorna 'true', pel fet que la cadena conté un NIF vàlid.</p>
 <br />
 
-<p><b>Exemple 2</b> Validar la cadena 'A76381906. </p>
+<p><b>Exemple 2</b> Validar la cadena 'A76381906'. </p>
  <p class="codigoScript">
 	var valido = PLUGIN_UTILS.esNif('A76381906');
 </p>

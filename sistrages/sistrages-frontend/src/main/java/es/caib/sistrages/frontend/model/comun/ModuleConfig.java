@@ -41,9 +41,10 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * @param version the version to set
+	 * @param version
+	 *            the version to set
 	 */
-	public void setVersion(String version) {
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 
@@ -55,9 +56,10 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * @param commit the commit to set
+	 * @param commit
+	 *            the commit to set
 	 */
-	public void setCommit(String commit) {
+	public void setCommit(final String commit) {
 		this.commit = commit;
 	}
 

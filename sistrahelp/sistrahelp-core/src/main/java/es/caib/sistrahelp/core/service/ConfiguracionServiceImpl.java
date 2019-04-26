@@ -55,4 +55,10 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 			throw new FicheroExternoException("Error al acceder al fichero con path " + rutafichero, e);
 		}
 	}
+
+	@Override
+	@NegocioInterceptor
+	public String obtenerPropiedadConfiguracion(final TypePropiedadConfiguracion propiedad) {
+		return configuracionComponent.obtenerPropiedadConfiguracion(propiedad);
+	}
 }

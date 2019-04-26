@@ -2,8 +2,8 @@
 <head>
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
-	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
-	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
 </head>
 <script type="text/javascript">
 	function copiar () {
@@ -13,14 +13,14 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">DATOS_FORMULARIOS</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS">DATOS_FORMULARIOS</a></li>
       	  <li>></li>
-      	  <li><a href="./setValorMultiple.html">setValorMultiple</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_FORMULARIOS&metodo=setValorMultiple">setValorMultiple</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
-	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
 	setValorMultiple(idFormulario, campo, valorMultiple): void
 </h1>
 <p>
@@ -39,7 +39,7 @@
 </p>
 <p>
 	<ul>
-		<li><b>idFormulario</b>: Identificador del formulario en el que quiere modificar el valor del campo.</li>	
+		<li><b>idFormulario</b>: Identificador del formulario en el que quiere modificar el valor del campo.</li>
 		<li><b>campo</b>: Campo al que se desea asignar el valor múltiple.</li>
 		<li><b>valorMultiple</b>: Valor múltiple a establecer en el campo.</li>
 	</ul>
@@ -50,9 +50,9 @@
 <p>Por ejemplo, supongamos un campo que es una lista desplegable que contiene información sobre un municipio. Podemos inicializar una variable múltiple con diferentes datos fijos sobre municipios de les Illes Balears de la manera siguiente: </p>
  <p class="codigoScript">
 var municipios = DATOS_FORMULARIOS.crearValorMultiple();
-municipios.addValor('0337','Manacor'); 
-municipios.addValor('0407','Palma de Mallorca'); 
-municipios.addValor('2060','Eivissa'); 
+municipios.addValor('0337','Manacor');
+municipios.addValor('0407','Palma de Mallorca');
+municipios.addValor('2060','Eivissa');
 </p>
 <p>una vez creada la variable, podríamos asignar los valores al campo del formulario (FORM1):</p>
 <p class="codigoScript">

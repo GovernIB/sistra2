@@ -2,25 +2,25 @@
 <head>
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
-	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
-	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
 </head>
 <script type="text/javascript">
 	function copiar () {
-		copiarPortapeles('DATOS_PARAMETROS_INICIALES.addParametro(codigo, valor)');
+		copiarPortapeles('DATOS_PARAMETROSINICIALES.addParametro(codigo, valor)');
 	}
 </script>
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">DATOS_PARAMETROS_INICIALES</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PARAMETROSINICIALES">DATOS_PARAMETROSINICIALES</a></li>
       	  <li>></li>
-      	  <li><a href="./addParametro.html">addParametro</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_PARAMETROSINICIALES&metodo=addParametro">addParametro</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
-	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
 	addParametro(String codigo, String valor): void
 </h1>
 <p>
@@ -45,7 +45,7 @@
 </p>
 <p>Supongamos que queremos añadir un parámetro, por ejemplo provincia, a la versión de un trámite. A dicho parámetro le queremos asignar el código 07 referido a la provincia Islas Baleares. Para ello haríamos lo siguiente: </p>
  <p class="codigoScript">
-var params = DATOS_PARAMETROS_INICIALES.addParametro('prov','07');
+var params = DATOS_PARAMETROSINICIALES.addParametro('prov','07');
 </p>
 </body>
 </html>

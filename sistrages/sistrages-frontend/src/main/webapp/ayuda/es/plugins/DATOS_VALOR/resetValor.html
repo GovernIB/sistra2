@@ -2,8 +2,8 @@
 <head>
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
-	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
-	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
 </head>
 <script type="text/javascript">
 	function copiar () {
@@ -13,14 +13,14 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">DATOS_VALOR</a></li>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_VALOR">DATOS_VALOR</a></li>
       	  <li>></li>
-      	  <li><a href="./resetValor.html">resetValor</a></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_VALOR&metodo=resetValor">resetValor</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
-	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
 	resetValor(): void
 </h1>
 <p>
@@ -37,9 +37,9 @@
 <p>Para ver la funcionalidad de esta función, primero añadimos elementos al actual campo, en este caso, el campo, indica el municipio de un usuario:</p>
  <p class="codigoScript">
 var municipios = DATOS_VALOR.crearValorMultiple();
-municipios.addValor('0337','Manacor'); 
-municipios.addValor('0407','Palma de Mallorca'); 
-municipios.addValor('2060','Eivissa'); 
+municipios.addValor('0337','Manacor');
+municipios.addValor('0407','Palma de Mallorca');
+municipios.addValor('2060','Eivissa');
 DATOS_VALOR.setValorMultiple('municipios', municipios);
 </p>
 <p> ahora el campo actual tiene 3 valores correspondientes a municipios de les Illes Balears, si en este punto podemos inferir de otros campos que el usuario no pertenece a Les Illes Balears, existe la opción de borrar todos los valores mediante la siguiente sentencia: </p>

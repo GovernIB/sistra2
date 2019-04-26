@@ -2,8 +2,8 @@
 <head>
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
-	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
-	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
 </head>
 <script type="text/javascript">
 	function copiar () {
@@ -13,14 +13,14 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">PLUGIN_FORMULARIOS</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_FORMULARIOS">PLUGIN_FORMULARIOS</a></li>
       	  <li>></li>
-      	  <li><a href="./getValorMultiple.html">getValorMultiple</a></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_FORMULARIOS&metodo=getValorMultiple">getValorMultiple</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
-	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
 	getValorMultiple(String idFormulario, String campo, int indice): VALOR_CAMPOCOMPUESTO
 </h1>
 <p>
@@ -55,13 +55,13 @@
  </p>
   <p>Obtenir l'últim valor del camp múltiple 'campoTitulaciones' del formulari amb id 'Form1', per a això primer s'ha d'obtenir el total de valors:</p>
  <p class="codigoScript">
-	var total = PLUGIN_FORMULARIOS.getNumeroValoresValorMultiple('Form1','campoTitulaciones');	
+	var total = PLUGIN_FORMULARIOS.getNumeroValoresValorMultiple('Form1','campoTitulaciones');
 </p>
 <p>
 	La funció getNumeroValoresValorMultiple retornarà el número  8(total de valors d'aquest camp). Amb aquest valor podem calcular l'índex de l'últim element de la següent manera:
 </p>
 <p class="codigoScript">
-	var valorCompuesto = PLUGIN_FORMULARIOS.getValorMultiple('Form1','campoTitulaciones', total -1);	
+	var valorCompuesto = PLUGIN_FORMULARIOS.getValorMultiple('Form1','campoTitulaciones', total -1);
  </p>
  <p>
    La funció getValorMultiple retornarà l'objecte valorCompuesto situat en la posició indicada. Per a obtenir les dades del valor compost podem demanar el seu codi o descripció tal com es mostra a continuació:

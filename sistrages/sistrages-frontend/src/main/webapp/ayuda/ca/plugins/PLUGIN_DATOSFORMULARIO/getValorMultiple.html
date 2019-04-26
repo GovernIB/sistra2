@@ -2,8 +2,8 @@
 <head>
 	<meta charset=UTF-8>
 	<meta http-equiv="content-type" content="text/html; utf-8">
-	<link rel="stylesheet" href="../../../../ayuda/ayuda.css" type="text/css" />
-	<script type="text/javascript" src="../../../../ayuda/ayuda.js"></script>
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
 </head>
 <script type="text/javascript">
 	function copiar () {
@@ -13,14 +13,14 @@
 <body class="bodyPlugins">
 <div class="seccionBreadcrumb">
   	<ul>
-  		  <li><a href="./index.html">PLUGIN_DATOSFORMULARIO</a></li>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DATOSFORMULARIO">PLUGIN_DATOSFORMULARIO</a></li>
       	  <li>></li>
-      	  <li><a href="./getValorMultiple.html">getValorMultiple</a></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_DATOSFORMULARIO&metodo=getValorMultiple">getValorMultiple</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
-	<img class="iconCopy" src="../../../../resources/images/copy.jpg" onclick="copiar(); return false;" />
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
 	getValorMultiple(String campo, String indice): VALOR_CAMPOCOMPUESTO
 </h1>
 <p>
@@ -53,14 +53,14 @@
  </p>
    <p> Obtenir l'últim valor del camp múltiple 'campoTitulaciones', per a això primer s'ha d'obtenir el total de valors:</p>
 	<p class="codigoScript">
-	var total = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorMultiple('campoTitulaciones');	
+	var total = PLUGIN_DATOSFORMULARIO.getNumeroValoresValorMultiple('campoTitulaciones');
 	</p>
 <p>
 	La funció getNumeroValoresValorMultiple retornarà 8 (total de valors d'aquest camp). Amb aquest valor podem calcular l'índex de l'últim element de la següent manera:
 </p>
 <p class="codigoScript">
 	if (numero > 0) {
-		var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorMultiple('campoTitulaciones', total -1);	
+		var valorCompuesto = PLUGIN_DATOSFORMULARIO.getValorMultiple('campoTitulaciones', total -1);
 	}
  </p>
  <p>

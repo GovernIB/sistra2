@@ -10,6 +10,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistrahelp.core.api.model.ContenidoFichero;
 import es.caib.sistrahelp.core.api.model.Entidad;
 import es.caib.sistrahelp.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.sistrahelp.core.api.model.types.TypePropiedadConfiguracion;
 import es.caib.sistrahelp.core.api.service.ConfiguracionService;
 
 @Stateless
@@ -29,6 +30,12 @@ public class ConfiguracionServiceBean implements ConfiguracionService {
 	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
 	public ContenidoFichero getContentFicheroByPath(final String fichero) {
 		return configuracionService.getContentFicheroByPath(fichero);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.HELPDESK, ConstantesRolesAcceso.SUPERVISOR_ENTIDAD })
+	public String obtenerPropiedadConfiguracion(TypePropiedadConfiguracion propiedad) {
+		return configuracionService.obtenerPropiedadConfiguracion(propiedad);
 	}
 
 }
