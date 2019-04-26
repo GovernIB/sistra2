@@ -1,0 +1,51 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setCodigoOrganoDestino(codigoOrganoDestino)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=DATOS_REGISTRO&metodo=setCodigoOrganoDestino">setCodigoOrganoDestino</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setCodigoOrganoDestino(String codigoOrganoDestino): void
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Método que permite establecer el código del organismo destino donde se hace el apunte registral de entrada de las solicitudes asociadas a la versión del trámite.</li>
+    </ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigoOrganoDestino</b>: Código de órgano destino. Dependerá de la solución de registro, pero típicamente será un código DIR3.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLO</b>
+</p>
+<p>Pongamos por caso que queremos hacer el apunte registral en un órgano destino establecido en un campo (p.ej ORGANO_DESTINO) de un formulario (p. ej. FORM-1). Para ello estableceremos las siguientes líneas en el script:</p>
+ <p class="codigoScript">
+var codigoOrganoDestino = PLUGIN_FORMULARIOS.getValor('FORM-1', 'ORGANO_DESTINO');
+DATOS_REGISTRO.setCodigoOrganoDestino(codigoOrganoDestino);
+</p>
+</body>
+</html>

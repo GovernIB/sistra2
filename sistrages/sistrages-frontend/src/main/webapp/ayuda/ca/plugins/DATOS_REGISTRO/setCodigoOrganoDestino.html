@@ -1,0 +1,51 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('DATOS_REGISTRO.setCodigoOrganoDestino(codigoOrganoDestino)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO">DATOS_REGISTRO</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=DATOS_REGISTRO&metodo=setOficina">setCodigoOrganoDestino</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setCodigoOrganoDestino(String codigoOrganoDestino): void
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Mètode que permet establir el codi d'organisme on es fa l'anotació registral d'entrada de les sol·licituds associades a la versió del tràmit.</li>
+    </ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>codigoOrganoDestino</b>: Codi de l'òrgan destí. Dependrà de la sol·lució de registre, però típicament serà un codi DIR3.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p>Posam per cas que volem fer l'apunt registral a un òrgan destí establert a un camp (p. ex. ORGANO_DESTINO) d'un formulari (p. ex. FORM-1). Per fer això establirem les seg&uuml;ents línies a l'script:</p>
+ <p class="codigoScript">
+var codigoOrganoDestino = PLUGIN_FORMULARIOS.getValor('FORM-1', 'ORGANO_DESTINO');
+DATOS_REGISTRO.setCodigoOrganoDestino(codigoOrganoDestino);
+</p>
+</body>
+</html>
