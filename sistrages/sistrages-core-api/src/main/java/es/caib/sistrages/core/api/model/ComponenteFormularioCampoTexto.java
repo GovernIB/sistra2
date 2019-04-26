@@ -113,6 +113,11 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	private boolean permiteRango;
 
 	/**
+	 * forzar mayusculas.
+	 */
+	private boolean forzarMayusculas;
+
+	/**
 	 * Crea una nueva instancia de ComponenteFormularioCampoTexto.
 	 */
 	public ComponenteFormularioCampoTexto() {
@@ -489,6 +494,14 @@ public final class ComponenteFormularioCampoTexto extends ComponenteFormularioCa
 	 */
 	public void setIdentNifOtros(final boolean identNifOtros) {
 		this.identNifOtros = identNifOtros;
+	}
+
+	public boolean isForzarMayusculas() {
+		return forzarMayusculas;
+	}
+
+	public void setForzarMayusculas(final boolean forzarMayusculas) {
+		this.forzarMayusculas = forzarMayusculas;
 	}
 
 }

@@ -8,7 +8,7 @@ package es.caib.sistrages.core.api.model.types;
  */
 public enum TypeErrorValidacion {
 
-	LITERALES("L"), SCRIPTS("S"), DOMINIOS("D"), FORMATEADOR("F"), DATOS_REGISTRO("R");
+	LITERALES("L"), LITERALES_HTML("H"), SCRIPTS("S"), DOMINIOS("D"), FORMATEADOR("F"), DATOS_REGISTRO("R");
 
 	/** Valor. **/
 	private String valor;

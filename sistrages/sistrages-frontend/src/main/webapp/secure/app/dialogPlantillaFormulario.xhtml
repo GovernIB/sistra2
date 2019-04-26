@@ -31,10 +31,11 @@
 				<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
 				<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18,padding-right-18" columns = "2" cellpadding = "5" cellspacing = "0">
 
-					<h:column><p:outputLabel value="#{msg['dialogPlantillaFormulario.identificador']}" /></h:column>
+					<h:column><p:outputLabel value="#{msg['dialogPlantillaFormulario.identificador']}" for="identificador"/></h:column>
 					<h:column>
-						<p:inputText id="identificador" value="#{dialogPlantillaFormulario.data.identificador}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase();">
-					   		 <p:keyFilter regEx="/[a-z0-9_-]/i"/>
+						<p:inputText id="identificador" value="#{dialogPlantillaFormulario.data.identificador}" required="true" size="30" maxlength="20" onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+							<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+							<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 					   	</p:inputText>
 					</h:column>
 					<h:column><p:outputLabel value="#{msg['dialogPlantillaFormulario.formateador']}" /></h:column>

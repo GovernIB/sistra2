@@ -681,6 +681,8 @@ public class VersionTramiteAdapter {
 		resSL.setTipo(cs.getTipo().toString());
 		resSL.setTipoSelector(cs.getTipoCampoIndexado().toString());
 		resSL.setTipoListaValores(cs.getTipoListaValores().toString());
+
+		resSL.setIndiceAlfabetico(cs.isIndiceAlfabetico());
 		return resSL;
 	}
 
@@ -911,6 +913,8 @@ public class VersionTramiteAdapter {
 				res.setLineas(1);
 			}
 			res.setTamanyoMax(ct.getNormalTamanyo() == null ? 0 : ct.getNormalTamanyo());
+
+			res.setForzarMayusculas(ct.isForzarMayusculas());
 			return res;
 		}
 		return null;

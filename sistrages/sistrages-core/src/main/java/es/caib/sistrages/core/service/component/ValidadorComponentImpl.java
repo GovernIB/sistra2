@@ -50,6 +50,7 @@ import es.caib.sistrages.core.api.model.types.TypeErrorValidacion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
 import es.caib.sistrages.core.api.model.types.TypeScriptFlujo;
+import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.service.component.literales.Literales;
@@ -238,7 +239,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	private void comprobarDebeSaber(final TramiteVersion pTramiteVersion, final List<String> pIdiomasTramiteVersion,
 			final String pIdioma, final List<ErrorValidacion> listaErrores, final TramitePasoDebeSaber pasoDebeSaber) {
 
-		comprobarLiteral(pasoDebeSaber.getInstruccionesIniciales(), "tramitePasoDebeSaber.instruccionesiniciales",
+		comprobarLiteralHTML(pasoDebeSaber.getInstruccionesIniciales(), "tramitePasoDebeSaber.instruccionesiniciales",
 				new String[] { literales.getLiteral("validador", "tramitePasoDebeSaber", pIdioma) },
 				"literal.paso.elemento", pIdiomasTramiteVersion, pIdioma, listaErrores);
 	}
@@ -323,13 +324,22 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	private void comprobarDisenyoFormulario(final TramiteVersion pTramiteVersion,
 			final List<String> pIdiomasTramiteVersion, final String pIdioma, final List<ErrorValidacion> listaErrores,
 			final FormularioTramite formulario) {
+		final ObjectNode params = JsonNodeFactory.instance.objectNode();
+		params.put("TRAMITEVERSION", String.valueOf(pTramiteVersion.getCodigo()));
+		params.put("FORMULARIO_ACTUAL", String.valueOf(formulario.getCodigo()));
+		params.put("FORM_INTERNO_ACTUAL", String.valueOf(formulario.getIdFormularioInterno()));
 
 		comprobarLiteral(formulario.getDisenyoFormulario().getTextoCabecera(),
 				"tramitePasoRellenar.disenyoFormulario.textoCabecera", new String[] { formulario.getIdentificador() },
 				"literal.formulario.elemento", pIdiomasTramiteVersion, pIdioma, listaErrores);
 
 		if (formulario.getDisenyoFormulario().getPaginas() != null) {
+
+			params.put("TIPO_SCRIPT_FORMULARIO", UtilJSON.toJSON(TypeScriptFormulario.SCRIPT_VALIDACION_PAGINA));
+
 			for (final PaginaFormulario paginaFormulario : formulario.getDisenyoFormulario().getPaginas()) {
+
+				params.put("PAGINA", String.valueOf(paginaFormulario.getCodigo()));
 
 				comprobarScript(paginaFormulario.getScriptValidacion(),
 						"tramitePasoRellenar.disenyoFormulario.scriptValidacion",
@@ -339,7 +349,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 								formulario.getIdentificador() },
 						"literal.script.mensaje.formulario.pagina", "compilar.script.formulario.pagina",
 						"dominio.script.formulario.pagina", pTramiteVersion.getListaAuxDominios(),
-						pIdiomasTramiteVersion, pIdioma, listaErrores, null);
+						pIdiomasTramiteVersion, pIdioma, listaErrores, UtilJSON.toJSON(params));
 			}
 		}
 
@@ -357,6 +367,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			// tipificamos el error
 			error.setTipo(TypeErrorValidacion.FORMATEADOR);
 
+			params.put("ID", String.valueOf(formulario.getIdFormularioInterno()));
+			error.setParams(UtilJSON.toJSON(params));
+
 			listaErrores.add(error);
 		} else if (formulario.getDisenyoFormulario().getPlantillas() != null
 				&& !formulario.getDisenyoFormulario().getPlantillas().isEmpty()) {
@@ -371,15 +384,21 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 					// tipificamos el error
 					error.setTipo(TypeErrorValidacion.FORMATEADOR);
 
+					params.put("ID", String.valueOf(formulario.getIdFormularioInterno()));
+					error.setParams(UtilJSON.toJSON(params));
+
 					listaErrores.add(error);
 				}
 			}
 		}
 
+		params.put("TIPO_SCRIPT_FORMULARIO", UtilJSON.toJSON(TypeScriptFormulario.SCRIPT_PLANTILLA_PDF_DINAMICA));
+
 		comprobarScript(formulario.getDisenyoFormulario().getScriptPlantilla(),
 				"tramitePasoRellenar.disenyoFormulario.scriptPlantilla", new String[] { formulario.getIdentificador() },
 				"literal.script.mensaje.formulario", "compilar.script.formulario", "dominio.script.formulario",
-				pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma, listaErrores, null);
+				pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma, listaErrores,
+				UtilJSON.toJSON(params));
 
 		if (formulario.getDisenyoFormulario().getPaginas() != null) {
 			for (final PaginaFormulario paginaFormulario : formulario.getDisenyoFormulario().getPaginas()) {
@@ -387,6 +406,8 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 					for (final LineaComponentesFormulario linea : paginaFormulario.getLineas()) {
 						if (linea.getComponentes() != null) {
 							for (final ComponenteFormulario componente : linea.getComponentes()) {
+								params.put("COMPONENTE", String.valueOf(componente.getCodigo()));
+
 								if (componente instanceof ComponenteFormularioSeccion) {
 									final ComponenteFormularioSeccion seccion = (ComponenteFormularioSeccion) componente;
 
@@ -438,6 +459,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 											pIdiomasTramiteVersion, pIdioma, listaErrores);
 
 									// script autorelleno
+									params.put("TIPO_SCRIPT_FORMULARIO",
+											UtilJSON.toJSON(TypeScriptFormulario.SCRIPT_AUTORELLENABLE));
+
 									comprobarScript(campo.getScriptAutorrellenable(),
 											"tramitePasoRellenar.disenyoFormulario.scriptAutorellenable",
 											new String[] { campo.getIdComponente(),
@@ -449,9 +473,12 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 											"compilar.script.formulario.disenyoFormulario.pagina",
 											"dominio.script.formulario.disenyoFormulario.pagina",
 											pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma,
-											listaErrores, null);
+											listaErrores, UtilJSON.toJSON(params));
 
 									// script soloLectura
+									params.put("TIPO_SCRIPT_FORMULARIO",
+											UtilJSON.toJSON(TypeScriptFormulario.SCRIPT_ESTADO));
+
 									comprobarScript(campo.getScriptSoloLectura(),
 											"tramitePasoRellenar.disenyoFormulario.scriptSoloLectura",
 											new String[] { campo.getIdComponente(),
@@ -463,9 +490,12 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 											"compilar.script.formulario.disenyoFormulario.pagina",
 											"dominio.script.formulario.disenyoFormulario.pagina",
 											pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma,
-											listaErrores, null);
+											listaErrores, UtilJSON.toJSON(params));
 
 									// script Validacion
+									params.put("TIPO_SCRIPT_FORMULARIO",
+											UtilJSON.toJSON(TypeScriptFormulario.SCRIPT_VALIDACION_CAMPO));
+
 									comprobarScript(campo.getScriptValidacion(),
 											"tramitePasoRellenar.disenyoFormulario.scriptValidacion",
 											new String[] { campo.getIdComponente(),
@@ -477,7 +507,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 											"compilar.script.formulario.disenyoFormulario.pagina",
 											"dominio.script.formulario.disenyoFormulario.pagina",
 											pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma,
-											listaErrores, null);
+											listaErrores, UtilJSON.toJSON(params));
 
 									if (componente instanceof ComponenteFormularioCampoSelector) {
 										final ComponenteFormularioCampoSelector selector = (ComponenteFormularioCampoSelector) componente;
@@ -496,6 +526,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 										} else if (TypeListaValores.SCRIPT.equals(selector.getTipoListaValores())) {
 											// selector.getScriptValoresPosibles()
+											params.put("TIPO_SCRIPT_FORMULARIO",
+													UtilJSON.toJSON(TypeScriptFormulario.SCRIPT_VALORES_POSIBLES));
+
 											comprobarScript(selector.getScriptValoresPosibles(),
 													"tramitePasoRellenar.disenyoFormulario.scriptValoresPosibles",
 													new String[] { campo.getIdComponente(),
@@ -508,7 +541,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 													"compilar.script.formulario.disenyoFormulario.pagina",
 													"dominio.script.formulario.disenyoFormulario.pagina",
 													pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion,
-													pIdioma, listaErrores, null);
+													pIdioma, listaErrores, UtilJSON.toJSON(params));
 
 										} else if (TypeListaValores.DOMINIO.equals(selector.getTipoListaValores())) {
 
@@ -529,6 +562,10 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 												// tipificamos el error
 												error.setTipo(TypeErrorValidacion.DOMINIOS);
+
+												final Dominio dom = new Dominio();
+												dom.setCodigo(selector.getCodDominio());
+												error.setItem(dom);
 
 												listaErrores.add(error);
 											}
@@ -744,14 +781,21 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 				pTramiteVersion.getListaAuxDominios(), pIdiomasTramiteVersion, pIdioma, listaErrores,
 				UtilJSON.toJSON(params));
 
-		comprobarLiteral(pasoRegistrar.getInstruccionesPresentacion(), "tramitePasoRegistrar.instruccionesPresentacion",
-				new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
-				"literal.paso.elemento", pIdiomasTramiteVersion, pIdioma, listaErrores);
-
-		comprobarLiteral(pasoRegistrar.getInstruccionesFinTramitacion(),
+		comprobarLiteralHTML(pasoRegistrar.getInstruccionesFinTramitacion(),
 				"tramitePasoRegistrar.instruccionesFinTramitacion",
 				new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
 				"literal.paso.elemento", pIdiomasTramiteVersion, pIdioma, listaErrores);
+
+		comprobarLiteralHTML(pasoRegistrar.getInstruccionesPresentacion(),
+				"tramitePasoRegistrar.instruccionesPresentacion",
+				new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
+				"literal.paso.elemento", pIdiomasTramiteVersion, pIdioma, listaErrores);
+
+		comprobarLiteralHTML(pasoRegistrar.getInstruccionesSubsanacion(),
+				"tramitePasoRegistrar.instruccionesSubsanacion",
+				new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
+				"literal.paso.elemento", pIdiomasTramiteVersion, pIdioma, listaErrores);
+
 	}
 
 	/**
@@ -813,17 +857,34 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	 * @param listaErrores
 	 *            lista errores
 	 */
-	private void comprobarLiteral(final Literal pLiteral, final String pTextoLiteral, final String[] pOpciones,
+	private void comprobarLiteralAux(final Literal pLiteral, final String pTextoLiteral, final String[] pOpciones,
 			final String pLiteralOpciones, final List<String> pIdiomasTramiteVersion, final String pIdioma,
-			final List<ErrorValidacion> listaErrores) {
+			final List<ErrorValidacion> listaErrores, final TypeErrorValidacion pTipoError) {
 		if (literalIncompleto(pLiteral, pIdiomasTramiteVersion)) {
 			final ErrorValidacion error = errorValidacion(pTextoLiteral, pOpciones, pLiteralOpciones, pIdioma);
 
 			// tipificamos el error
-			error.setTipo(TypeErrorValidacion.LITERALES);
+			error.setTipo(pTipoError);
+			error.setItem(pLiteral);
 
 			listaErrores.add(error);
 		}
+	}
+
+	private void comprobarLiteral(final Literal pLiteral, final String pTextoLiteral, final String[] pOpciones,
+			final String pLiteralOpciones, final List<String> pIdiomasTramiteVersion, final String pIdioma,
+			final List<ErrorValidacion> listaErrores) {
+
+		comprobarLiteralAux(pLiteral, pTextoLiteral, pOpciones, pLiteralOpciones, pIdiomasTramiteVersion, pIdioma,
+				listaErrores, TypeErrorValidacion.LITERALES);
+
+	}
+
+	private void comprobarLiteralHTML(final Literal pLiteral, final String pTextoLiteral, final String[] pOpciones,
+			final String pLiteralOpciones, final List<String> pIdiomasTramiteVersion, final String pIdioma,
+			final List<ErrorValidacion> listaErrores) {
+		comprobarLiteralAux(pLiteral, pTextoLiteral, pOpciones, pLiteralOpciones, pIdiomasTramiteVersion, pIdioma,
+				listaErrores, TypeErrorValidacion.LITERALES_HTML);
 	}
 
 	/**
@@ -998,6 +1059,8 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 							pOpciones, pLiteralOpciones, pIdioma);
 					// tipificamos el error
 					error.setTipo(TypeErrorValidacion.LITERALES);
+					error.setItem(valorListaFija.getDescripcion());
+
 					listaErrores.add(error);
 
 				}
@@ -1106,9 +1169,13 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 
 			if (listaDom != null && !listaDom.isEmpty()) {
 				for (final Dominio dominio : pListaDominios) {
-					listaDom.removeIf(e -> e.equals(dominio.getIdentificador()));
+					listaDom.removeIf(
 
-					if (listaDom.isEmpty()) {
+							e -> e.equals(dominio.getIdentificador()));
+
+					if (listaDom.isEmpty())
+
+					{
 						break;
 					}
 				}

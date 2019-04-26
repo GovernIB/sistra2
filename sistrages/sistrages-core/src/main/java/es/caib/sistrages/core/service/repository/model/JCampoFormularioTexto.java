@@ -92,6 +92,9 @@ public class JCampoFormularioTexto implements IModelApi {
 	@Column(name = "CTX_PERRAN", nullable = false, precision = 1, scale = 0)
 	private boolean permiteRango;
 
+	@Column(name = "CTX_NORMAY", nullable = false, precision = 1, scale = 0)
+	private boolean forzarMayusculas;
+
 	public JCampoFormularioTexto() {
 		super();
 	}
@@ -286,6 +289,14 @@ public class JCampoFormularioTexto implements IModelApi {
 		this.permiteRango = permiteRango;
 	}
 
+	public boolean isForzarMayusculas() {
+		return forzarMayusculas;
+	}
+
+	public void setForzarMayusculas(final boolean forzarMayusculas) {
+		this.forzarMayusculas = forzarMayusculas;
+	}
+
 	public ComponenteFormularioCampoTexto toModel() {
 		ComponenteFormularioCampoTexto campoTexto = null;
 
@@ -314,6 +325,7 @@ public class JCampoFormularioTexto implements IModelApi {
 				campoTexto.setTelefonoMovil(telefonoMovil);
 				campoTexto.setTelefonoFijo(telefonoFijo);
 				campoTexto.setPermiteRango(permiteRango);
+				campoTexto.setForzarMayusculas(forzarMayusculas);
 			}
 
 		}
@@ -338,6 +350,7 @@ public class JCampoFormularioTexto implements IModelApi {
 		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.CAMPO_TEXTO, pOrden, pJLinea));
 		jModel.setNumeroSeparador("PC"); // Punto y coma
 		jModel.setNormalTamanyo(50);
+		jModel.setForzarMayusculas(false);
 		return jModel;
 	}
 
@@ -367,8 +380,8 @@ public class JCampoFormularioTexto implements IModelApi {
 			jcampoTexto.setTelefonoFijo(campoFormularioTexto.isTelefonoFijo());
 			jcampoTexto.setTelefonoMovil(campoFormularioTexto.isTelefonoMovil());
 			jcampoTexto.setTipo(campoFormularioTexto.getTipo());
+			jcampoTexto.setForzarMayusculas(campoFormularioTexto.isForzarMayusculas());
 		}
 		return jcampoTexto;
 	}
-
 }

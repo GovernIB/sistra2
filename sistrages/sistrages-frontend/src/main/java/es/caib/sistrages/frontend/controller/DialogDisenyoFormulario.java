@@ -38,6 +38,7 @@ import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorListaFija;
 import es.caib.sistrages.core.api.model.comun.ConstantesDisenyo;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
+import es.caib.sistrages.core.api.model.types.TypeCampoIndexado;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
 import es.caib.sistrages.core.api.model.types.TypeListaValores;
@@ -547,8 +548,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				} else {
 					BeanUtils.copyProperties(traduccionesEdit, traduccionesMod);
 				}
-			} else if (respuesta.isCanceled() && respuesta.getModoAcceso() == TypeModoAcceso.EDICION) {
-				traduccionesEdit = null;
 			}
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new FrontException("Error estableciendo traducciones", e);
@@ -1760,6 +1759,12 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 		}
 	}
+
+	public boolean isListaDesplegable() {
+		final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
+		return TypeCampoIndexado.DESPLEGABLE.equals(campo.getTipoCampoIndexado());
+	}
+
 	// -- Getters / Setters
 
 	/**

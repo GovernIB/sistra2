@@ -151,6 +151,8 @@ public class DialogMensajeAviso extends DialogControllerBase {
 
 		/** Cargamos el grid de trámites. **/
 		tramites = tramiteService.listTramiteByEntidad(UtilJSF.getIdEntidad());
+		Collections.sort(tramites, (o1, o2) -> o1.getIdentificador().compareTo(o2.getIdentificador()));
+
 		listaTramites = new ArrayList<>();
 		if (data != null && data.getListaSerializadaTramites() != null) {
 			final String[] trams = data.getListaSerializadaTramites().split(";");

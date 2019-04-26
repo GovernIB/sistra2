@@ -19,6 +19,8 @@ create sequence STG_FICHER_SEQ;
 
 create sequence STG_FILFUE_SEQ;
 
+create sequence STG_FMTPLI_SEQ;
+
 create sequence STG_FORELE_SEQ;
 
 create sequence STG_FORFMT_SEQ;
@@ -70,8 +72,6 @@ create sequence STG_TRAMIT_SEQ;
 create sequence STG_VALCFU_SEQ;
 
 create sequence STG_VERTRA_SEQ;
-
-create sequence STG_FMTPLI_SEQ;
 
 /*==============================================================*/
 /* Table: STG_ACCPER                                            */
@@ -531,6 +531,7 @@ create table STG_ENTIDA
    ENT_CSSTT            NUMBER(18),
    ENT_PIETT            NUMBER(18),
    ENT_URLCAR           NUMBER(18),
+   ENT_LOPDI            NUMBER(18),
    ENT_LOPD             NUMBER(18),
    ENT_MAPAW            NUMBER(18),
    ENT_AVISOL           NUMBER(18),
@@ -546,7 +547,13 @@ create table STG_ENTIDA
    ENT_YOUTUB           VARCHAR2(255 CHAR),
    ENT_INSTAG           VARCHAR2(255 CHAR),
    ENT_TWITTR           VARCHAR2(255 CHAR),
-   ENT_FACEBK           VARCHAR2(255 CHAR)
+   ENT_FACEBK           VARCHAR2(255 CHAR),
+   ENT_SUBANE           NUMBER(1)            default 0 not null,
+   ENT_SUBPAG           NUMBER(1)            default 0 not null,
+   ENT_SUBREG           NUMBER(1)            default 0 not null,
+   ENT_SUBINS           NUMBER(18),
+   ENT_PRSDIA           NUMBER(3),
+   ENT_PRSINS           NUMBER(18)
 );
 
 comment on table STG_ENTIDA is
@@ -570,7 +577,6 @@ comment on column STG_ENTIDA.ENT_ROLADM is
 comment on column STG_ENTIDA.ENT_ROLSUP is
 'Role asociado al supervidor de la entidad (STH)';
 
-
 comment on column STG_ENTIDA.ENT_LOGOTG is
 'Logo entidad Gestor Trámites';
 
@@ -585,6 +591,9 @@ comment on column STG_ENTIDA.ENT_PIETT is
 
 comment on column STG_ENTIDA.ENT_URLCAR is
 'Url Carpeta Ciudadana';
+
+comment on column STG_ENTIDA.ENT_LOPDI is
+'Texto respecto LOPD (introducción)';
 
 comment on column STG_ENTIDA.ENT_LOPD is
 'Texto respecto LOPD';
@@ -633,6 +642,24 @@ comment on column STG_ENTIDA.ENT_TWITTR is
 
 comment on column STG_ENTIDA.ENT_FACEBK is
 'Facebook';
+
+comment on column STG_ENTIDA.ENT_SUBANE is
+'Permite subsanación pago anexar';
+
+comment on column STG_ENTIDA.ENT_SUBPAG is
+'Permite subsanación pago pagar';
+
+comment on column STG_ENTIDA.ENT_SUBREG is
+'Permite subsanación pago registrar';
+
+comment on column STG_ENTIDA.ENT_SUBINS is
+'Instrucciones subsanación';
+
+comment on column STG_ENTIDA.ENT_PRSDIA is
+'Días a mantener los trámites presenciales';
+
+comment on column STG_ENTIDA.ENT_PRSINS is
+'Instrucciones presencial';
 
 alter table STG_ENTIDA
    add constraint STG_ENTIDA_PK primary key (ENT_CODIGO);
@@ -733,6 +760,35 @@ comment on column STG_FILFUE.FIF_CODFUE is
 
 alter table STG_FILFUE
    add constraint STG_FILFUE_PK primary key (FIF_CODIGO);
+
+/*==============================================================*/
+/* Table: STG_FMTPLI                                            */
+/*==============================================================*/
+create table STG_FMTPLI
+(
+   PFI_CODIGO           NUMBER(18)           not null,
+   PFI_CODFMT           NUMBER(18)           not null,
+   PFI_CODIDI           VARCHAR2(2 CHAR)     not null,
+   PFI_CODFIC           NUMBER(18)           not null
+);
+
+comment on table STG_FMTPLI is
+'Plantilla idioma por defecto formateador';
+
+comment on column STG_FMTPLI.PFI_CODIGO is
+'Código';
+
+comment on column STG_FMTPLI.PFI_CODFMT is
+'Código formateador';
+
+comment on column STG_FMTPLI.PFI_CODIDI is
+'Identificador idioma';
+
+comment on column STG_FMTPLI.PFI_CODFIC is
+'Código fichero';
+
+alter table STG_FMTPLI
+   add constraint STG_FMTPLI_PK primary key (PFI_CODIGO);
 
 /*==============================================================*/
 /* Table: STG_FORCAM                                            */
@@ -852,6 +908,7 @@ comment on column STG_FORCIN.CIN_INDICE is
 comment on column STG_FORCIN.CIN_ALTURA is
 'Indica altura del selector';
 
+
 alter table STG_FORCIN
    add constraint STG_FORCIN_PK primary key (CIN_CODIGO);
 
@@ -866,6 +923,7 @@ create table STG_FORCTX
    CTX_NORTAM           NUMBER(4),
    CTX_NORMUL           NUMBER(1)            default 0 not null,
    CTX_NORLIN           NUMBER(3),
+   CTX_NORMAY           NUMBER(1)            default 0 not null,
    CTX_NOREXP           VARCHAR2(4000 CHAR),
    CTX_NUMENT           NUMBER(2),
    CTX_NUMDEC           NUMBER(1),
@@ -873,9 +931,10 @@ create table STG_FORCTX
    CTX_NUMRMI           NUMBER(10),
    CTX_NUMRMX           NUMBER(10),
    CTX_NUMSIG           NUMBER(1)            default 0 not null,
-   CTX_IDENIF           NUMBER(1)            default 0 not null,
-   CTX_IDECIF           NUMBER(1)            default 0 not null,
+   CTX_IDENIJ           NUMBER(1)            default 0 not null,
+   CTX_IDEDNI           NUMBER(1)            default 0 not null,
    CTX_IDENIE           NUMBER(1)            default 0 not null,
+   CTX_IDENIO           NUMBER(1)            default 0 not null,
    CTX_IDENSS           NUMBER(1)            default 0 not null,
    CTX_TELMOV           NUMBER(1)            default 0 not null,
    CTX_TELFIJ           NUMBER(1)            default 0 not null,
@@ -913,6 +972,9 @@ comment on column STG_FORCTX.CTX_NORMUL is
 comment on column STG_FORCTX.CTX_NORLIN is
 'Número líneas (tipo normal)';
 
+comment on column STG_FORCTX.CTX_NORMAY is
+'Forzar mayúsculas (tipo normal)';
+
 comment on column STG_FORCTX.CTX_NOREXP is
 'Expresión regular (tipo normal)';
 
@@ -937,14 +999,17 @@ comment on column STG_FORCTX.CTX_NUMRMX is
 comment on column STG_FORCTX.CTX_NUMSIG is
 'Indica si se admiten números con signo (tipo numero)';
 
-comment on column STG_FORCTX.CTX_IDENIF is
-'Permite nif (tipo identificación)';
+comment on column STG_FORCTX.CTX_IDENIJ is
+'Permite nif persona jurídica (tipo identificación)';
 
-comment on column STG_FORCTX.CTX_IDECIF is
-'Permite cif (tipo identificación)';
+comment on column STG_FORCTX.CTX_IDEDNI is
+'Permite dni (tipo identificación)';
 
 comment on column STG_FORCTX.CTX_IDENIE is
 'Permite nie (tipo identificación)';
+
+comment on column STG_FORCTX.CTX_IDENIO is
+'Permite nif persona física especiales (tipo identificación)';
 
 comment on column STG_FORCTX.CTX_IDENSS is
 'Permite nss (tipo identificación)';
@@ -1053,8 +1118,8 @@ create table STG_FORFMT
    FMT_CODENT           NUMBER(18)           not null,
    FMT_CLASS            VARCHAR2(500 CHAR)   not null,
    FMT_DESCRI           VARCHAR2(255 CHAR)   not null,
-   FMT_DEFECT NUMBER(1) default 0 not null,
-   FMT_BLOCK NUMBER(1) default 0 not null
+   FMT_DEFECT           NUMBER(1)            default 0 not null,
+   FMT_BLOCK            NUMBER(1)            default 0 not null
 );
 
 comment on table STG_FORFMT is
@@ -1075,9 +1140,11 @@ comment on column STG_FORFMT.FMT_CLASS is
 comment on column STG_FORFMT.FMT_DESCRI is
 'Descripción del formateador';
 
-comment on column STG_FORFMT.FMT_DEFECT is 'Formateador por defecto';
+comment on column STG_FORFMT.FMT_DEFECT is
+'Formateador por defecto';
 
-comment on column STG_FORFMT.FMT_BLOCK is 'Indica si el trámite se bloquea para que no se pueda seleccionar a nivel de formulario';
+comment on column STG_FORFMT.FMT_BLOCK is
+'Indica si el trámite se bloquea para que no se pueda seleccionar a nivel de formulario';
 
 alter table STG_FORFMT
    add constraint STG_FORFMT_PK primary key (FMT_CODIGO);
@@ -1089,46 +1156,6 @@ create unique index STG_FORFMT_IDENTI_UK on STG_FORFMT (
    FMT_IDENTI ASC,
    FMT_CODENT ASC
 );
-
-
-create table STG_FMTPLI
-(
-   PFI_CODIGO           NUMBER(18)           not null,
-   PFI_CODFMT           NUMBER(18)           not null,
-   PFI_CODIDI           VARCHAR2(2 CHAR)     not null,
-   PFI_CODFIC           NUMBER(18)           not null
-);
-
-comment on table STG_FMTPLI is
-'Plantilla idioma por defecto formateador';
-
-comment on column STG_FMTPLI.PFI_CODIGO is
-'Código';
-
-comment on column STG_FMTPLI.PFI_CODFMT is
-'Código formateador';
-
-comment on column STG_FMTPLI.PFI_CODIDI is
-'Identificador idioma';
-
-comment on column STG_FMTPLI.PFI_CODFIC is
-'Código fichero';
-
-alter table STG_FMTPLI
-   add constraint STG_FMTPLI_PK primary key (PFI_CODIGO);
-
-alter table STG_FMTPLI
-   add constraint STG_FMTPLI_FORFMT_FK foreign key (PFI_CODFMT)
-      references STG_FORFMT (FMT_CODIGO);
-
-alter table STG_FMTPLI
-   add constraint STG_FMTPLI_IDIOMA_FK foreign key (PFI_CODIDI)
-      references STG_IDIOMA (IDI_IDENTI);
-
-alter table STG_FMTPLI
-   add constraint STG_FMTPLI_FICHER_FK foreign key (PFI_CODFIC)
-      references STG_FICHER (FIC_CODIGO);
-
 
 /*==============================================================*/
 /* Table: STG_FORIMG                                            */
@@ -1779,7 +1806,8 @@ create unique index STG_PAGTRA_CODPTR_IDENTI_UK on STG_PAGTRA (
 create table STG_PASANE
 (
    PAN_CODIGO           NUMBER(18)           not null,
-   PAN_SCRDIN           NUMBER(18)
+   PAN_SCRDIN           NUMBER(18),
+   PAN_SUBSAN           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_PASANE is
@@ -1790,6 +1818,9 @@ comment on column STG_PASANE.PAN_CODIGO is
 
 comment on column STG_PASANE.PAN_SCRDIN is
 'Script para anexos dinámicos';
+
+comment on column STG_PASANE.PAN_SUBSAN is
+'Indica si se habilita subsanación';
 
 alter table STG_PASANE
    add constraint STG_PASANE_PK primary key (PAN_CODIGO);
@@ -1923,7 +1954,8 @@ create unique index STG_PASOTR_IDEPTR_CODVTR_UK on STG_PASOTR (
 /*==============================================================*/
 create table STG_PASPAG
 (
-   PPG_CODIGO           NUMBER(18)           not null
+   PPG_CODIGO           NUMBER(18)           not null,
+   PPG_SUBSAN           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_PASPAG is
@@ -1931,6 +1963,9 @@ comment on table STG_PASPAG is
 
 comment on column STG_PASPAG.PPG_CODIGO is
 'Código';
+
+comment on column STG_PASPAG.PPG_SUBSAN is
+'Indica si se habilita subsanación';
 
 alter table STG_PASPAG
    add constraint STG_PASPAG_PK primary key (PPG_CODIGO);
@@ -1945,13 +1980,15 @@ create table STG_PASREG
    PRG_REGLIB           VARCHAR2(20 CHAR),
    PRG_REGASU           VARCHAR2(20 CHAR),
    PRG_SCRREG           NUMBER(18),
-   PRG_INSPRE           NUMBER(18),
    PRG_INSFIT           NUMBER(18),
+   PRG_INSPRE           NUMBER(18),
+   PRG_INSSUB           NUMBER(18),
    PRG_SCRPRE           NUMBER(18),
    PRG_REPADM           NUMBER(1)            default 0 not null,
    PRG_REPVAL           NUMBER(1)            default 0 not null,
    PRG_SCRREP           NUMBER(18),
-   PRG_SCRVAL           NUMBER(18)
+   PRG_SCRVAL           NUMBER(18),
+   PRG_SUBSAN           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_PASREG is
@@ -1972,11 +2009,14 @@ comment on column STG_PASREG.PRG_REGASU is
 comment on column STG_PASREG.PRG_SCRREG is
 'Script destino registro';
 
-comment on column STG_PASREG.PRG_INSPRE is
-'Instrucciones presentación';
-
 comment on column STG_PASREG.PRG_INSFIT is
 'Instrucciones fin tramitación';
+
+comment on column STG_PASREG.PRG_INSPRE is
+'Instrucciones entrega presencial';
+
+comment on column STG_PASREG.PRG_INSSUB is
+'Instrucciones subsanación';
 
 comment on column STG_PASREG.PRG_SCRPRE is
 'Script presentador';
@@ -1992,6 +2032,9 @@ comment on column STG_PASREG.PRG_SCRREP is
 
 comment on column STG_PASREG.PRG_SCRVAL is
 'Script para validar permitir registrar';
+
+comment on column STG_PASREG.PRG_SUBSAN is
+'Indica si se habilita subsanación';
 
 alter table STG_PASREG
    add constraint STG_PASREG_PK primary key (PRG_CODIGO);
@@ -2213,6 +2256,39 @@ comment on column STG_SCRIPT.SCR_SCRIPT is
 
 alter table STG_SCRIPT
    add constraint STG_SCRIPT_PK primary key (SCR_CODIGO);
+
+/*==============================================================*/
+/* Table: STG_SESION                                            */
+/*==============================================================*/
+create table STG_SESION
+(
+   SESI_USUA            VARCHAR2(100 CHAR)   not null,
+   SESI_FECHA           DATE                 not null,
+   SESI_PERFIL          VARCHAR2(50),
+   SESI_IDIOMA          VARCHAR2(2 CHAR),
+   SESI_ENTIDA          NUMBER(18)
+);
+
+comment on table STG_SESION is
+'Sesiones usuario';
+
+comment on column STG_SESION.SESI_USUA is
+'Identificador fijo';
+
+comment on column STG_SESION.SESI_FECHA is
+'Fecha ultima sesión';
+
+comment on column STG_SESION.SESI_PERFIL is
+'Perfil usado';
+
+comment on column STG_SESION.SESI_IDIOMA is
+'Idioma';
+
+comment on column STG_SESION.SESI_ENTIDA is
+'Entidad (opcional según perfil)';
+
+alter table STG_SESION
+   add constraint STG_SESION_PK primary key (SESI_USUA);
 
 /*==============================================================*/
 /* Table: STG_TRADUC                                            */
@@ -2442,39 +2518,6 @@ comment on column STG_VERTRA.VTR_DESMEN is
 alter table STG_VERTRA
    add constraint STG_VERTRA_PK primary key (VTR_CODIGO);
 
-
-
-create table STG_SESION
-(
-   SESI_USUA            VARCHAR2(100 CHAR)   not null,
-   SESI_FECHA           DATE                 not null,
-   SESI_PERFIL          VARCHAR2(50)         not null,
-   SESI_IDIOMA          VARCHAR2(2 CHAR)     not null,
-   SESI_ENTIDA          NUMBER(18)
-);
-
-comment on table STG_SESION is
-'Sesiones usuario';
-
-comment on column STG_SESION.SESI_USUA is
-'Identificador fijo';
-
-comment on column STG_SESION.SESI_FECHA is
-'Fecha ultima sesión';
-
-comment on column STG_SESION.SESI_PERFIL is
-'Perfil usado';
-
-comment on column STG_SESION.SESI_IDIOMA is
-'Idioma';
-
-comment on column STG_SESION.SESI_ENTIDA is
-'Entidad (opcional según perfil)';
-
-alter table STG_SESION
-   add constraint STG_SESION_PK primary key (SESI_USUA);
-
-
 /*==============================================================*/
 /* Index: STG_VERTRA_CODTRM_NUMVER_UK                           */
 /*==============================================================*/
@@ -2580,6 +2623,10 @@ alter table STG_ENTIDA
       references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_ENTIDA
+   add constraint STG_ENTIDA_TRADUC_FK10 foreign key (ENT_PRSINS)
+      references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_ENTIDA
    add constraint STG_ENTIDA_TRADUC_FK2 foreign key (ENT_PIETT)
       references STG_TRADUC (TRA_CODIGO);
 
@@ -2603,9 +2650,29 @@ alter table STG_ENTIDA
    add constraint STG_ENTIDA_TRADUC_FK7 foreign key (ENT_RSS)
       references STG_TRADUC (TRA_CODIGO);
 
+alter table STG_ENTIDA
+   add constraint STG_ENTIDA_TRADUC_FK8 foreign key (ENT_LOPDI)
+      references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_ENTIDA
+   add constraint STG_ENTIDA_TRADUC_FK9 foreign key (ENT_SUBINS)
+      references STG_TRADUC (TRA_CODIGO);
+
 alter table STG_FILFUE
    add constraint STG_FILFUE_FUEDAT_FK foreign key (FIF_CODFUE)
       references STG_FUEDAT (FUE_CODIGO);
+
+alter table STG_FMTPLI
+   add constraint STG_FMTPLI_FICHER_FK foreign key (PFI_CODFIC)
+      references STG_FICHER (FIC_CODIGO);
+
+alter table STG_FMTPLI
+   add constraint STG_FMTPLI_FORFMT_FK foreign key (PFI_CODFMT)
+      references STG_FORFMT (FMT_CODIGO);
+
+alter table STG_FMTPLI
+   add constraint STG_FMTPLI_IDIOMA_FK foreign key (PFI_CODIDI)
+      references STG_IDIOMA (IDI_IDENTI);
 
 alter table STG_FORCAM
    add constraint STG_FORCAM_FORELE_FK foreign key (FCA_CODIGO)
@@ -2897,6 +2964,10 @@ alter table STG_PASREG
 
 alter table STG_PASREG
    add constraint STG_PASREG_TRADUC_FK2 foreign key (PRG_INSFIT)
+      references STG_TRADUC (TRA_CODIGO);
+
+alter table STG_PASREG
+   add constraint STG_PASREG_TRADUC_FK3 foreign key (PRG_INSSUB)
       references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_PASREL

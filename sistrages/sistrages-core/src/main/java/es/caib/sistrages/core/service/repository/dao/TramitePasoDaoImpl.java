@@ -1005,6 +1005,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		}
 		comp.setTipo(componente.getTipo());
 		comp.setTipoCampoTexto(componente.getTipoCampoTexto());
+
+		comp.setForzarMayusculas(componente.isForzarMayusculas());
 		formularioInternoDao.updateComponente(comp);
 	}
 

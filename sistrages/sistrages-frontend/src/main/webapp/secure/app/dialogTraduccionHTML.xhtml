@@ -23,7 +23,7 @@
     tinyMCE.init({
 		   // General options
 		    mode : "textareas",
-
+		    readonly : #{dialogTraduccionHTML.readonly}
 		 });
 
 
@@ -103,29 +103,29 @@
     function guardar() {
     	if (visibleCa) {
     		if (!checkTiny("formTraduccion:traduccion_ca")) {
-				debugger;
 				document.getElementById("formTraduccion:btnErrorCa").click();
+				document.getElementById("formTraduccion:btnCa").click();
     			return;
     		}
     	}
     	if (visibleEs) {
     		if (!checkTiny("formTraduccion:traduccion_es")) {
-				debugger;
 				document.getElementById("formTraduccion:btnErrorEs").click();
+				document.getElementById("formTraduccion:btnEs").click();
     			return;
     		}
     	}
     	if (visibleEn) {
     		if (!checkTiny("formTraduccion:traduccion_en")) {
-				debugger;
 				document.getElementById("formTraduccion:btnErrorEn").click();
+				document.getElementById("formTraduccion:btnEn").click();
     			return;
     		}
     	}
     	if (visibleDe) {
     		if (!checkTiny("formTraduccion:traduccion_de")) {
-				debugger;
 				document.getElementById("formTraduccion:btnErrorDe").click();
+				document.getElementById("formTraduccion:btnDe").click();
     			return;
     		}
     	}

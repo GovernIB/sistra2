@@ -94,7 +94,7 @@ public class Script extends ModelApi {
 
 	/**
 	 * Clonar.
-	 * 
+	 *
 	 * @param iScript
 	 * @return
 	 */
@@ -112,6 +112,25 @@ public class Script extends ModelApi {
 			}
 		}
 		return script;
+	}
+
+	/**
+	 * Busca entre los literales si contiene el literal según el identificador
+	 *
+	 * @param identificador
+	 * @return
+	 */
+	public boolean containLiteral(final String identificador) {
+		boolean existe = false;
+		if (this.mensajes != null) {
+			for (final LiteralScript mensaje : this.mensajes) {
+				if (mensaje.getIdentificador().equals(identificador)) {
+					existe = true;
+					break;
+				}
+			}
+		}
+		return existe;
 	}
 
 }

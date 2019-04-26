@@ -1255,7 +1255,13 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	public void validarVersion() {
-		if (validoTramiteVersion(true)) {
+
+		if (!verificarFilaSeleccionadaVersion()) {
+			return;
+		}
+
+		// miramos si esta bloqueado o no para permitir la correccion de errores
+		if (validoTramiteVersion(!this.versionSeleccionada.getBloqueada())) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
 		}
 	}

@@ -20,6 +20,9 @@
     <h:outputStylesheet library="css" name="style.css" />
   </f:facet>
 
+   <p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
+   <ui:include src="../common/popups.xhtml" />
+
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteClonar.modoAcceso}"/>
@@ -27,7 +30,9 @@
 		<f:viewParam name="AREA" value="#{dialogTramiteClonar.idArea}"/>
 		<f:viewAction action="#{dialogTramiteClonar.init}" />
 	</f:metadata>
+
 	<h:form id="dialogDominioClonar" styleClass="margin-top-10">
+
   		<p:outputPanel>
 			<!-- Contenido dialogo -->
 			<!-- Growl mensajes -->

@@ -76,7 +76,8 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 		if (modo == TypeModoAcceso.EDICION) {
 			final boolean hayErroresLiteral = listaErrores.stream()
-					.anyMatch(e -> TypeErrorValidacion.LITERALES.equals(e.getTipo()));
+					.anyMatch(e -> TypeErrorValidacion.LITERALES.equals(e.getTipo())
+							|| TypeErrorValidacion.FORMATEADOR.equals(e.getTipo()));
 			if (StringUtils.isNotEmpty(idiomas) && hayErroresLiteral) {
 				idiomasObligatorios = UtilTraducciones.getIdiomas(idiomas);
 			}
@@ -94,12 +95,16 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		if (verificarFilaSeleccionada()) {
 			if (TypeErrorValidacion.LITERALES.equals(filaSeleccionada.getTipo())) {
 				corregirLiteral();
+			} else if (TypeErrorValidacion.LITERALES_HTML.equals(filaSeleccionada.getTipo())) {
+				corregirLiteralHTML();
 			} else if (TypeErrorValidacion.SCRIPTS.equals(filaSeleccionada.getTipo())) {
 				corregirScript();
 			} else if (TypeErrorValidacion.DOMINIOS.equals(filaSeleccionada.getTipo())) {
 				corregirDominio();
 			} else if (TypeErrorValidacion.DATOS_REGISTRO.equals(filaSeleccionada.getTipo())) {
 				corregirDatosRegistro();
+			} else if (TypeErrorValidacion.FORMATEADOR.equals(filaSeleccionada.getTipo())) {
+				corregirFormateador();
 			}
 
 		}
@@ -126,6 +131,11 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		}
 	}
 
+	public void validar() {
+		listaErrores = tramiteService.validarVersionTramite(Long.valueOf(idTramiteVersion),
+				UtilJSF.getSessionBean().getLang());
+	}
+
 	private boolean verificarFilaSeleccionada() {
 		boolean isFilaSeleccionada = true;
 		if (this.filaSeleccionada == null) {
@@ -141,6 +151,15 @@ public class DialogErroresValidacion extends DialogControllerBase {
 		}
 		UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, literal, getIdiomasObligatorios(),
 				getIdiomasObligatorios());
+	}
+
+	private void corregirLiteralHTML() {
+		Literal literal = null;
+		if (filaSeleccionada.getItem() instanceof Literal) {
+			literal = (Literal) filaSeleccionada.getItem();
+		}
+		UtilTraducciones.openDialogTraduccionHTML(TypeModoAcceso.EDICION, literal, getIdiomasObligatorios(),
+				getIdiomasObligatorios(), false);
 	}
 
 	private void corregirScript() {
@@ -166,13 +185,21 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 	private void corregirDominio() {
 		Dominio dominioError = null;
+		Dominio dominioAux = null;
 		if (filaSeleccionada.getItem() instanceof Dominio) {
 			dominioError = (Dominio) filaSeleccionada.getItem();
 
-			if (dominioError != null && StringUtils.isNotEmpty(dominioError.getIdentificador())) {
+			if (dominioError != null
+					&& (StringUtils.isNotEmpty(dominioError.getIdentificador()) || dominioError.getCodigo() != null)) {
 
 				// cargamos dominio
-				final Dominio dominio = dominioService.loadDominio(dominioError.getIdentificador());
+				if (StringUtils.isNotEmpty(dominioError.getIdentificador())) {
+					dominioAux = dominioService.loadDominio(dominioError.getIdentificador());
+				} else if (dominioError.getCodigo() != null) {
+					dominioAux = dominioService.loadDominio(dominioError.getCodigo());
+				}
+				// esto es por un error con el final de la variable dominio
+				final Dominio dominio = dominioAux;
 
 				// existe en la app
 				if (dominio != null) {
@@ -211,6 +238,21 @@ public class DialogErroresValidacion extends DialogControllerBase {
 
 			UtilJSF.openDialog(DialogDefinicionVersionRegistrarTramite.class, TypeModoAcceso.EDICION, map, true, 950,
 					450);
+		}
+	}
+
+	private void corregirFormateador() {
+		if (StringUtils.isNotEmpty(filaSeleccionada.getParams())) {
+			final Map<String, String> params = (Map<String, String>) UtilJSON.fromJSON(filaSeleccionada.getParams(),
+					Map.class);
+
+			Map<String, Object> mochilaDatos = null;
+			UtilJSF.getSessionBean().limpiaMochilaDatos();
+			mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
+			mochilaDatos.put(Constantes.CLAVE_MOCHILA_IDIOMASXDEFECTO, idiomasObligatorios);
+
+			UtilJSF.openDialog(DialogPropiedadesFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 950,
+					460);
 		}
 	}
 

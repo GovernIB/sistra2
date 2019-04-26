@@ -36,8 +36,15 @@
 	   		</p:inputNumber>
 	   	</p:outputPanel>
    	</h:column>
-
-
+   	
+   	   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.forzarMayusculas']}"/></h:column>
+   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}">
+   		<p:outputPanel>
+	   		<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.forzarMayusculas}" disabled="#{dialogDisenyoFormulario.consulta}">
+	   			<p:ajax event="change" global="false"/>
+	   		</p:selectBooleanCheckbox>
+	   	</p:outputPanel>
+   	</h:column>
 
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.exprRegular']}" /></h:column>
    	<h:column rendered="#{dialogDisenyoFormulario.campoExprRegular}">

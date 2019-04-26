@@ -76,6 +76,9 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	/** Literal falta literal. **/
 	private final static String ERROR_FATAL_LITERAL = "error.faltaliteral";
 
+	/** Es modo readonly. **/
+	private int readonly;
+
 	/**
 	 * Inicializacion.
 	 *
@@ -111,6 +114,12 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 		}
 
 		prepararIdiomaInicial();
+
+		if (TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.CONSULTA) {
+			readonly = 1;
+		} else {
+			readonly = 0;
+		}
 	}
 
 	/** Lanza los errores por idioma. **/
@@ -565,6 +574,21 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	 */
 	public void setIdiomaInicial(final String idiomaInicial) {
 		this.idiomaInicial = idiomaInicial;
+	}
+
+	/**
+	 * @return the readonly
+	 */
+	public int getReadonly() {
+		return readonly;
+	}
+
+	/**
+	 * @param readonly
+	 *            the readonly to set
+	 */
+	public void setReadonly(final int readonly) {
+		this.readonly = readonly;
 	}
 
 }

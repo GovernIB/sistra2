@@ -63,4 +63,13 @@
 			<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoParametrosDominioCIN}" update="growlDisenyoFormulario"/>
 		</p:commandButton>
 	</h:column>
+	
+	<h:column rendered="#{dialogDisenyoFormulario.isListaDesplegable()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.indiceAlfabetico']}"/></h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.isListaDesplegable()}">
+		<p:outputPanel>
+			<p:selectBooleanCheckbox value="#{dialogDisenyoFormulario.objetoFormularioEdit.indiceAlfabetico}" disabled="#{dialogDisenyoFormulario.consulta}">
+				<p:ajax event="change" global="false"/>
+			</p:selectBooleanCheckbox>
+		</p:outputPanel>
+   	</h:column>
 </ui:composition>

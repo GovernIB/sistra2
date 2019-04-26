@@ -19,8 +19,9 @@
 	         <h:panelGrid columns="2" header="#{msg['dialogDisenyoFormulario.componente.panelPropiedades']}"  columnClasses="w30,w70" >
 	         	<h:column><h:outputText value="#{msg['dialogDisenyoFormulario.componente.identificador']}" /></h:column>
 	         	<h:column>
-	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}">
-	         			<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+	         		<p:inputText value="#{dialogDisenyoFormulario.objetoFormularioEdit.idComponente}" maxlength="50" disabled="#{dialogDisenyoFormulario.consulta}" validatorMessage="#{msg['error.validacion.identificador']}">
+						<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+						<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,50}$" />
 	         			<p:ajax event="blur" process="@this" />
 	         		</p:inputText>
 	         	</h:column>

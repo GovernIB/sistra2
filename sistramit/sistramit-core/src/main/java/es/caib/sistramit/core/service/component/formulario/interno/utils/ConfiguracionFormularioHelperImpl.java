@@ -25,6 +25,9 @@ import es.caib.sistramit.core.api.model.formulario.AccionFormulario;
 import es.caib.sistramit.core.api.model.formulario.AccionFormularioNormalizada;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorDesplegable;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorMultiple;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelectorUnico;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoCP;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoEmail;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoExpReg;
@@ -38,6 +41,7 @@ import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoPasswo
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoTelefono;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoVerificacion;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
+import es.caib.sistramit.core.api.model.formulario.OpcionesSelectorDesplegable;
 import es.caib.sistramit.core.api.model.formulario.ValoresCampoVerificacion;
 import es.caib.sistramit.core.api.model.formulario.types.TypeAccionFormularioNormalizado;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
@@ -228,11 +232,30 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			throw new ErrorConfiguracionException("Campo de tipo selector " + pCampoDef.getTipoSelector()
 					+ " no soportado para campo " + pCampoDef.getIdentificador());
 		}
-		final ConfiguracionCampoSelector confCampoSelector = new ConfiguracionCampoSelector();
+		ConfiguracionCampoSelector confCampoSelector = null;
+		switch (tipoSelector) {
+		case LISTA:
+			confCampoSelector = new ConfiguracionCampoSelectorDesplegable();
+			if (pCampoDef.isIndiceAlfabetico()) {
+				final OpcionesSelectorDesplegable opcs = new OpcionesSelectorDesplegable();
+				opcs.setIndice(TypeSiNo.SI);
+				((ConfiguracionCampoSelectorDesplegable) confCampoSelector).setOpciones(opcs);
+			}
+			break;
+		case UNICO:
+			confCampoSelector = new ConfiguracionCampoSelectorUnico();
+			break;
+		case MULTIPLE:
+			confCampoSelector = new ConfiguracionCampoSelectorMultiple();
+			break;
+		default:
+			throw new ErrorConfiguracionException("Campo de tipo selector " + pCampoDef.getTipoSelector()
+					+ " no soportado para campo " + pCampoDef.getIdentificador());
+		}
+
 		// Establecemos propiedades generales
 		establecerPropiedadesGenerales(pCampoDef, confCampoSelector);
-		// Establecemos propiedades específicas
-		confCampoSelector.setContenido(tipoSelector);
+
 		return confCampoSelector;
 	}
 
@@ -361,6 +384,8 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		confCampo = confCampoNormal;
 		confCampoNormal.getOpciones().setLineas(pCampoDef.getTextoNormal().getLineas());
 		confCampoNormal.getOpciones().setTamanyo(pCampoDef.getTextoNormal().getTamanyoMax());
+		confCampoNormal.getOpciones()
+				.setMayusculas(TypeSiNo.fromBoolean(pCampoDef.getTextoNormal().isForzarMayusculas()));
 		return confCampo;
 	}
 

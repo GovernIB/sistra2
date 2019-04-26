@@ -16,6 +16,9 @@
     	<h:outputStylesheet library="css" name="style.css" />
   	</f:facet>
 
+	<p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
+	<ui:include src="../common/popups.xhtml" />
+	
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogErroresValidacion.modoAcceso}"/>
@@ -50,15 +53,17 @@
 						</p:column>
 			</p:dataTable>
 
-
-		  	 <p:outputPanel styleClass="botonera">
+			 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
 						<p:commandButton id="btnCorregir" value="#{msg['botones.corregir']}" actionListener="#{dialogErroresValidacion.corregir}" rendered="#{dialogErroresValidacion.isEdicion()}" process="@this" styleClass="boton" update="growlDialog">
 							<p:ajax event="dialogReturn" listener="#{dialogErroresValidacion.returnDialogo}"/>
 						</p:commandButton>
-					</f:facet> 	
-					<f:facet name="right">
+						
+
+						<p:commandButton id="btnValidar" value="#{msg['botones.validar']}" actionListener="#{dialogErroresValidacion.validar}" rendered="#{dialogErroresValidacion.isEdicion()}" process="@this" styleClass="boton" update="growlDialog dataTable"/>
+
+						
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogErroresValidacion.cerrar}" process="@this" styleClass="boton-azul"/>
 					</f:facet>
 				</p:toolbar>

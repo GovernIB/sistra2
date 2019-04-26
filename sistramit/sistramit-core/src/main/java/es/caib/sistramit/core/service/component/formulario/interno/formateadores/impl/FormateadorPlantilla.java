@@ -27,6 +27,8 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	/** Como es la visualización de listados. **/
 	private TipoVisualizacionValorIndexado listadoVisualizacion;
 
+	protected static final String CODIGO_LISTAS = "[CODIGO]";
+
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
 			final RFormularioInterno defFormInterno, final String tituloProcedimiento) {
@@ -41,8 +43,9 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 				for (final ValorCampo valor : xml.getValores()) {
 					if (valor instanceof ValorCampoSimple) {
 						datos.put(valor.getId(), ((ValorCampoSimple) valor).getValor());
-					} else if (valor instanceof ValorCampoIndexado) {
-						datos.put(valor.getId(), getValor((ValorCampoIndexado) valor));
+					} else if (valor instanceof ValorCampoIndexado && ((ValorCampoIndexado) valor).getValor() != null) {
+						datos.put(valor.getId()+CODIGO_LISTAS, getValor((ValorCampoIndexado) valor, true));
+						datos.put(valor.getId(), getValor((ValorCampoIndexado) valor, false));
 					} else if (valor instanceof ValorCampoListaIndexados) {
 						datos.put(valor.getId(), getValor((ValorCampoListaIndexados) valor));
 					}
@@ -68,7 +71,7 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	 */
 	private void inicializarValores() {
 
-		listadoVisualizacion = TipoVisualizacionValorIndexado.DESCRIPCION_CODIGO_CON_PARENTESIS;
+		listadoVisualizacion = TipoVisualizacionValorIndexado.DESCRIPCION;
 	}
 
 	/**
@@ -78,11 +81,15 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 	 * @param valor
 	 * @return
 	 */
-	private String getValor(final ValorCampoIndexado valor) {
-		if (listadoVisualizacion == TipoVisualizacionValorIndexado.DESCRIPCION) {
-			return valor.getValor().getDescripcion();
-		} else {
-			return getValorCampoIndexado(valor.getValor());
+	private String getValor(final ValorCampoIndexado valor, final boolean codigo) {
+		if(codigo){
+			return valor.getValor().getValor();
+		}else {
+			if (listadoVisualizacion == TipoVisualizacionValorIndexado.DESCRIPCION) {
+				return valor.getValor().getDescripcion();
+			} else {
+				return getValorCampoIndexado(valor.getValor());
+			}
 		}
 	}
 

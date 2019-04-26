@@ -37,8 +37,9 @@
 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 				<p:outputLabel for="identificador" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerIdentificador']}" />
-				<p:inputText  id="identificador" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.identificador}" size="25" onblur="this.value = this.value.toUpperCase();" maxlength="20">
-	          		<p:keyFilter regEx="/[a-z0-9_-]/i"/>
+				<p:inputText  id="identificador" required="true" value="#{dialogDefinicionVersionAnexarDocumentos.data.identificador}" size="25" onblur="this.value = this.value.toUpperCase();" maxlength="20" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
 	          	</p:inputText>
 
 				<p:outputLabel for="inputDescripcion" value="#{msg['dialogDefinicionVersionAnexarDocumentos.headerDescripcion']}" />

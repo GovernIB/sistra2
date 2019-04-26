@@ -20,6 +20,9 @@ public class RPropiedadesTextoNormal {
 	@ApiModelProperty(value = "Texto normal: multilinea")
 	private int lineas;
 
+	@ApiModelProperty(value = "Texto normal: forzar mayúsculas")
+	private boolean forzarMayusculas;
+
 	/**
 	 * Método de acceso a tamanyoMax.
 	 *
@@ -35,7 +38,7 @@ public class RPropiedadesTextoNormal {
 	 * @param tamanyoMax
 	 *            tamanyoMax a establecer
 	 */
-	public void setTamanyoMax(int tamanyoMax) {
+	public void setTamanyoMax(final int tamanyoMax) {
 		this.tamanyoMax = tamanyoMax;
 	}
 
@@ -54,8 +57,16 @@ public class RPropiedadesTextoNormal {
 	 * @param lineas
 	 *            lineas a establecer
 	 */
-	public void setLineas(int lineas) {
+	public void setLineas(final int lineas) {
 		this.lineas = lineas;
+	}
+
+	public boolean isForzarMayusculas() {
+		return forzarMayusculas;
+	}
+
+	public void setForzarMayusculas(final boolean forzarMayusculas) {
+		this.forzarMayusculas = forzarMayusculas;
 	}
 
 }

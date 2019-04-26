@@ -480,8 +480,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampo.setScriptAutocalculado(null);
 				} else {
 					if (campo.getScriptAutorrellenable().getCodigo() != null) {
-						final JScript scriptAuto = jCampo.getScriptAutocalculado();
-						scriptAuto.setScript(campo.getScriptAutorrellenable().getContenido());
+						jCampo.setScriptAutocalculado(
+								JScript.merge(jCampo.getScriptAutocalculado(), campo.getScriptAutorrellenable()));
 					} else {
 						jCampo.setScriptAutocalculado(JScript.fromModel(campo.getScriptAutorrellenable()));
 					}
@@ -491,8 +491,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampo.setScriptSoloLectura(null);
 				} else {
 					if (campo.getScriptSoloLectura().getCodigo() != null) {
-						final JScript scriptSoloLectura = jCampo.getScriptSoloLectura();
-						scriptSoloLectura.setScript(campo.getScriptSoloLectura().getContenido());
+						jCampo.setScriptSoloLectura(
+								JScript.merge(jCampo.getScriptSoloLectura(), campo.getScriptSoloLectura()));
 					} else {
 						jCampo.setScriptSoloLectura(JScript.fromModel(campo.getScriptSoloLectura()));
 					}
@@ -502,8 +502,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampo.setScriptValidaciones(null);
 				} else {
 					if (campo.getScriptValidacion().getCodigo() != null) {
-						final JScript scriptValidacion = jCampo.getScriptValidaciones();
-						scriptValidacion.setScript(campo.getScriptValidacion().getContenido());
+						jCampo.setScriptValidaciones(
+								JScript.merge(jCampo.getScriptValidaciones(), campo.getScriptValidacion()));
 					} else {
 						jCampo.setScriptValidaciones(JScript.fromModel(campo.getScriptValidacion()));
 					}
@@ -548,6 +548,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 					jCampoTexto.setNormalTamanyo(campoTexto.getNormalTamanyo());
 					jCampoTexto.setNormalMultilinea(campoTexto.isNormalMultilinea());
 					jCampoTexto.setNormalNumeroLineas(campoTexto.getNormalNumeroLineas());
+					jCampoTexto.setForzarMayusculas(campoTexto.isForzarMayusculas());
 					break;
 				case NUMERO:
 					jCampoTexto.setNumeroDigitosEnteros(campoTexto.getNumeroDigitosEnteros());
@@ -595,6 +596,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 				jCampoIndexado.setTipoCampoIndexado(campoIndexado.getTipoCampoIndexado().name());
 				jCampoIndexado.setTipoListaValores(campoIndexado.getTipoListaValores().toString());
+				jCampoIndexado.setIndiceAlfabetico(campoIndexado.isIndiceAlfabetico());
 
 				if (TypeListaValores.FIJA.equals(campoIndexado.getTipoListaValores())) {
 					jCampoIndexado = JCampoFormularioIndexado.mergeListaValoresFijaModel(jCampoIndexado, campoIndexado);

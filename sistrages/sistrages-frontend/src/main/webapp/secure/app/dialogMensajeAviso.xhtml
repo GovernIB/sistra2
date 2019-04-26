@@ -62,13 +62,13 @@
 					<p:calendar id="fechaFin" value="#{dialogMensajeAviso.data.fechaFin}" disabled="#{dialogMensajeAviso.isConsulta()}" size="19" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true" />
 
 					<h:panelGrid id="labelListaTramites" columns="1" styleClass="w100">
-						<p:outputLabel value="#{msg['dialogMensajeAviso.headerListaTramites']}DD" rendered="#{dialogMensajeAviso.mostrarListaTramites() }"  />
+						<p:outputLabel value="#{msg['dialogMensajeAviso.headerListaTramites']}" rendered="#{dialogMensajeAviso.mostrarListaTramites() }"  />
 					</h:panelGrid>
 					<h:panelGrid id="columnaListaTramites" style="margin-bottom:0px" columns="1" styleClass="w100">
 
 								<h:panelGrid  style="margin-bottom:0px" columns="5" styleClass="w100" rendered="#{dialogMensajeAviso.mostrarListaTramites() and dialogMensajeAviso.isNotTipoTramite()}">
 										<p:outputLabel value="#{msg['dialogMensajeAviso.headerTramite']}:" styleClass="margin-right-10" ></p:outputLabel>
-										<p:selectOneMenu id="comboTramites" value="#{dialogMensajeAviso.tramiteSeleccionado}" styleClass="margin-right-10"   >
+										<p:selectOneMenu id="comboTramites" value="#{dialogMensajeAviso.tramiteSeleccionado}" styleClass="margin-right-10" filter="true" filterMatchMode="contains">
 												<f:selectItem itemLabel=""  noSelectionOption="true"></f:selectItem>
 										     	<f:selectItems value="#{dialogMensajeAviso.tramites}" var="tramite" itemLabel="#{tramite.identificador}" itemValue="#{tramite.codigo}"  />
 			 							      	<p:ajax event="change" listener="#{dialogMensajeAviso.actualizarVersion()}" process="@this" update="@form" />

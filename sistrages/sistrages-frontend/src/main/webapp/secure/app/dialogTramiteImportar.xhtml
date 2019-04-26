@@ -18,6 +18,9 @@
 		<h:outputStylesheet library="css" name="style.css" />
 	</f:facet>
 
+   <p:ajaxStatus id="startAjaxDialog" onstart="PF('loading').show();" oncomplete="PF('loading').hide();"/>
+   <ui:include src="../common/popups.xhtml" />
+
 	<!-- Parametros dialogo -->
 	<f:metadata>
 		<f:viewParam name="MODO_ACCESO" value="#{dialogTramiteImportar.modoAcceso}"/>
