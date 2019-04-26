@@ -116,7 +116,8 @@ public final class ControladorPasoRegistrarHelper {
 					null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
 			final ResPersona resPresentador = (ResPersona) resultadoScriptParametros.getResultado();
 			// Validamos que se haya establecido presentador
-			if (StringUtils.isBlank(resPresentador.getNif()) || StringUtils.isBlank(resPresentador.getNombre())) {
+			if (resPresentador.isNulo() || StringUtils.isBlank(resPresentador.getNif())
+					|| StringUtils.isBlank(resPresentador.getNombre())) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_PRESENTADOR_REGISTRO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
 						"No se ha especificado presentador en el script");
@@ -175,16 +176,17 @@ public final class ControladorPasoRegistrarHelper {
 					pVariablesFlujo, null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
 
 			final ResPersona resRepresentado = (ResPersona) resultadoScriptParametros.getResultado();
-			// Validamos que se haya establecido representado
-			if (StringUtils.isBlank(resRepresentado.getNif()) || StringUtils.isBlank(resRepresentado.getNombre())) {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
-						"No se ha especificado representado en el script");
+			if (!resRepresentado.isNulo()) {
+				// Validamos que se haya establecido representado
+				if (StringUtils.isBlank(resRepresentado.getNif()) || StringUtils.isBlank(resRepresentado.getNombre())) {
+					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(),
+							pVariablesFlujo.getIdSesionTramitacion(), idPaso,
+							"No se ha especificado representado en el script");
+				}
+				// Devolvemos representado establecido en el script
+				representado = new DatosUsuario(resRepresentado.getNif(), resRepresentado.getNombre(),
+						resRepresentado.getApellido1(), resRepresentado.getApellido2());
 			}
-			// Devolvemos representado establecido en el script
-			representado = new DatosUsuario(resRepresentado.getNif(), resRepresentado.getNombre(),
-					resRepresentado.getApellido1(), resRepresentado.getApellido2());
-
 		} else {
 			// Si no hay script no hay representado
 			representado = null;

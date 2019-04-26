@@ -269,11 +269,11 @@ public final class ControladorPasoPagar extends ControladorPasoReferenciaImpl {
 			}
 			pago.setObligatorio(rs);
 
+			// TODO SUBSANACION REVISAR SEGUN REQUISITOS A ESTABLECER
+			// Si existe documentacion presencial, permitimos pago presencial
 			pago.getPresentacionesPermitidas().add(TypePresentacion.ELECTRONICA);
-
-			// Verificamos que existe un tipo de presentacion permitida
-			if (pago.getPresentacionesPermitidas().isEmpty()) {
-				throw new ErrorConfiguracionException("No existe ninguna presentación permitida para el pago");
+			if (pVariablesFlujo.existeDocumentacionPresencial()) {
+				pago.getPresentacionesPermitidas().add(TypePresentacion.PRESENCIAL);
 			}
 
 			// Calculamos los datos del pago y los almacenamos en datos internos

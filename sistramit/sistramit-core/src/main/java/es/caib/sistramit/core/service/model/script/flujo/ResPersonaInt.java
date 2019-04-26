@@ -34,4 +34,11 @@ public interface ResPersonaInt extends PluginScriptRes {
 	void setDatosPersona(final String pNif, final String pNombre, final String pApellido1, final String pApellido2)
 			throws ScriptException;
 
+	/**
+	 * Indica si no se devuelven datos de persona.
+	 * 
+	 * @param nulo
+	 */
+	void setNulo(boolean nulo);
+
 }

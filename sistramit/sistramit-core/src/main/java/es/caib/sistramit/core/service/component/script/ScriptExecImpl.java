@@ -98,6 +98,12 @@ public final class ScriptExecImpl implements ScriptExec {
 	private DominiosComponent dominiosComponent;
 
 	/**
+	 * Constante para indicar que no devuelve nada el script. Si se establece este
+	 * valor en getPluginResultadoFlujo se devolverá null como resultado del script.
+	 */
+	private final static String SCRIPT_RETURN_NONE = "SCRIPT_RETURN_NONE";
+
+	/**
 	 * Constructor.
 	 */
 	public ScriptExecImpl() {
@@ -197,7 +203,7 @@ public final class ScriptExecImpl implements ScriptExec {
 	 */
 	private RespuestaScript generarRespuestaScriptFlujo(final TypeScriptFlujo pTipoScript,
 			final Map<String, String> codigosError, final List<PluginScript> plugins, final Object result,
-			String pIdElemento) {
+			final String pIdElemento) {
 		final RespuestaScript respuestaScript = new RespuestaScript();
 		// - Evaluamos si se ha marcado con error el script
 		final PlgError plgError = (PlgError) getPlugin(plugins, PlgErrorInt.ID);
@@ -272,7 +278,7 @@ public final class ScriptExecImpl implements ScriptExec {
 		Object res = null;
 		// Obtenemos si el script devuelve resultado a traves de un plugin
 		// resultado
-		final String idPlgRes = getPluginResultadoFlujo(pTipoScript);
+		final String idPlgRes = getPluginResultadoFlujo(pTipoScript, result);
 		// Si es asi obtenemos plugin resultado
 		if (idPlgRes != null) {
 			res = getPlugin(plugins, idPlgRes);
@@ -292,9 +298,10 @@ public final class ScriptExecImpl implements ScriptExec {
 	 *
 	 * @param pTipoScript
 	 *            Tipo scripto flujo
+	 * @param result
 	 * @return Id plugin resultado. Nulo si no devuelve plugin tipo resultado.
 	 */
-	private String getPluginResultadoFlujo(final TypeScriptFlujo pTipoScript) {
+	private String getPluginResultadoFlujo(final TypeScriptFlujo pTipoScript, final Object result) {
 		String res = null;
 		switch (pTipoScript) {
 		case SCRIPT_PARAMETROS_INICIALES:
@@ -522,10 +529,12 @@ public final class ScriptExecImpl implements ScriptExec {
 	 */
 	private PluginScript getPlugin(final List<PluginScript> plugins, final String name) {
 		PluginScript res = null;
-		for (final PluginScript p : plugins) {
-			if (p.getPluginId().equals(name)) {
-				res = p;
-				break;
+		if (!name.equals(SCRIPT_RETURN_NONE)) {
+			for (final PluginScript p : plugins) {
+				if (p.getPluginId().equals(name)) {
+					res = p;
+					break;
+				}
 			}
 		}
 		return res;

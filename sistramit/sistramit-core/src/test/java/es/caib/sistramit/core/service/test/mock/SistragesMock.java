@@ -10,37 +10,19 @@ import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.caib.sistrages.rest.api.interna.RAnexoTramite;
-import es.caib.sistrages.rest.api.interna.RAnexoTramiteAyuda;
-import es.caib.sistrages.rest.api.interna.RAnexoTramitePresentacionElectronica;
 import es.caib.sistrages.rest.api.interna.RAviso;
 import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
-import es.caib.sistrages.rest.api.interna.RDestinoRegistro;
 import es.caib.sistrages.rest.api.interna.RDominio;
-import es.caib.sistrages.rest.api.interna.RFormularioInterno;
-import es.caib.sistrages.rest.api.interna.RFormularioTramite;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
-import es.caib.sistrages.rest.api.interna.RPagoTramite;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacion;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionAnexar;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionDebeSaber;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionPagar;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
-import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RPlugin;
-import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistrages.rest.api.interna.RValorParametro;
 import es.caib.sistrages.rest.api.interna.RValoresDominio;
 import es.caib.sistrages.rest.api.interna.RVersionTramite;
-import es.caib.sistrages.rest.api.interna.RVersionTramiteControlAcceso;
-import es.caib.sistrages.rest.api.interna.RVersionTramitePropiedades;
-import es.caib.sistramit.core.api.model.flujo.types.TypeObligatoriedad;
-import es.caib.sistramit.core.api.model.flujo.types.TypePaso;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
@@ -279,27 +261,6 @@ public class SistragesMock {
 		} catch (final Exception ex) {
 			throw new RuntimeException("Error cargando definición trámite desde json", ex);
 		}
-
-		// final List<RPasoTramitacion> pasos = new ArrayList<>();
-		// pasos.add(crearPasoDebeSaber());
-		// pasos.add(crearPasoRellenar());
-		// pasos.add(crearPasoAnexar());
-		// pasos.add(crearPasoPagar());
-		// pasos.add(crearPasoRegistrar());
-		//
-		// final RVersionTramite vt = new RVersionTramite();
-		// vt.setIdEntidad("ENTIDAD1");
-		// vt.setTimestamp(generateTimestamp());
-		// vt.setIdentificador("T1");
-		// vt.setVersion(1);
-		// vt.setIdioma("es");
-		// vt.setTipoFlujo("N");
-		// vt.setPropiedades(crearPropiedadesVT());
-		// vt.setControlAcceso(crearControlAcceso());
-		// vt.setPasos(pasos);
-		// vt.setDominios(crearDominios());
-		//
-		// return vt;
 	}
 
 	public static RDominio crearDominio(final String idDominio) {
@@ -314,223 +275,6 @@ public class SistragesMock {
 			dom1.setSql("Select 1 from dual");
 		}
 		return dom1;
-	}
-
-	private static RPasoTramitacion crearPasoPagar() {
-		final RPasoTramitacionPagar p = new RPasoTramitacionPagar();
-		p.setIdentificador("PT1");
-		p.setTipo(TypePaso.PAGAR.toString());
-		final List<RPagoTramite> pagos = new ArrayList<>();
-
-		// Pago electronico
-		final RPagoTramite pagoElectronico = new RPagoTramite();
-		pagoElectronico.setDescripcion("Pago electronico");
-		pagoElectronico.setIdentificador("P1");
-		pagoElectronico.setObligatoriedad(TypeObligatoriedad.OBLIGATORIO.toString());
-		pagoElectronico.setSimularPago(true);
-		pagoElectronico.setTipo("A");
-		final RScript scriptPagoElectronico = new RScript();
-		scriptPagoElectronico.setScript(
-				"DATOS_PAGO.setPasarela('ATIB'); DATOS_PAGO.setOrganismo('ORG1'); DATOS_PAGO.setDetallePago('046','C1','T1', 100);");
-		pagoElectronico.setScriptPago(scriptPagoElectronico);
-		pagos.add(pagoElectronico);
-
-		// Pago presencial
-		final RPagoTramite pagoPresencial = new RPagoTramite();
-		pagoPresencial.setDescripcion("Pago presencial");
-		pagoPresencial.setIdentificador("P2");
-		pagoPresencial.setObligatoriedad(TypeObligatoriedad.OBLIGATORIO.toString());
-		pagoPresencial.setSimularPago(true);
-		pagoPresencial.setTipo("P");
-		final RScript scriptPagoPresencial = new RScript();
-		scriptPagoPresencial.setScript(
-				"DATOS_PAGO.setPasarela('ATIB'); DATOS_PAGO.setOrganismo('ORG1'); DATOS_PAGO.setDetallePago('046','C1','T1', 100);");
-		pagoPresencial.setScriptPago(scriptPagoPresencial);
-		// pagos.add(pagoPresencial);
-
-		p.setPagos(pagos);
-
-		return p;
-	}
-
-	private static RVersionTramitePropiedades crearPropiedadesVT() {
-		final RVersionTramitePropiedades p = new RVersionTramitePropiedades();
-		p.setAutenticado(true);
-		p.setNoAutenticado(true);
-		p.setNivelQAA(3);
-		p.setPersistente(true);
-		return p;
-	}
-
-	private static RVersionTramiteControlAcceso crearControlAcceso() {
-		final RVersionTramiteControlAcceso c = new RVersionTramiteControlAcceso();
-		c.setActivo(true);
-		c.setDebug(true);
-		return c;
-	}
-
-	private static RPasoTramitacionDebeSaber crearPasoDebeSaber() {
-		final RPasoTramitacionDebeSaber pd = new RPasoTramitacionDebeSaber();
-		pd.setIdentificador("DS1");
-		pd.setTipo("DS");
-		pd.setInstruccionesInicio("debe saber");
-		return pd;
-	}
-
-	private static RPasoTramitacionRellenar crearPasoRellenar() {
-		final RPasoTramitacionRellenar pr = new RPasoTramitacionRellenar();
-		final List<RFormularioTramite> fl = new ArrayList<>();
-		fl.add(crearFormularioTramite());
-		pr.setIdentificador("RF1");
-		pr.setTipo("RF");
-		pr.setFormularios(fl);
-		return pr;
-	}
-
-	private static RPasoTramitacionAnexar crearPasoAnexar() {
-		final RPasoTramitacionAnexar pr = new RPasoTramitacionAnexar();
-		final List<RAnexoTramite> fl = new ArrayList<>();
-		// Anexos electronicos
-		// - Anexo de 1 instancia
-		fl.add(crearAnexoTramite("ANE1", 1, false));
-		// - Anexo multiinstancia
-		fl.add(crearAnexoTramite("ANE2", 2, false));
-		// - Anexo XML con validacion
-		final RAnexoTramite anexoXml = crearAnexoTramite("ANE-XML", 1, false);
-		final RScript scriptValidacionXml = new RScript();
-		scriptValidacionXml.setScript("var dni = PLUGIN_VALIDACIONANEXO.getValorXml('//xml/dni');\r\n"
-				+ "PLUGIN_LOG.debug('VALOR XML: ' + dni);\r\n"
-				+ "if (!PLUGIN_VALIDACIONES.esIgual(dni,'11111111H')) {\r\n"
-				+ "	PLUGIN_ERROR.setExisteError(true);\r\n"
-				+ "	PLUGIN_ERROR.setTextoMensajeError('No coincide valor XML');\r\n" + "}");
-		anexoXml.getPresentacionElectronica().setScriptValidacion(scriptValidacionXml);
-		fl.add(anexoXml);
-
-		// - Anexo formulario PDF con validacion
-		final RAnexoTramite anexoFormularioPDF = crearAnexoTramite("ANE-PDF", 1, false);
-		final RScript scriptValidacionPDF = new RScript();
-		scriptValidacionPDF.setScript("var dni = PLUGIN_VALIDACIONANEXO.getValorPdf('SUJETOPASIVONIF');\r\n"
-				+ "PLUGIN_LOG.debug('VALOR PDF: ' + dni);\r\n" + "if (!PLUGIN_VALIDACIONES.esIgual(dni,'6666sq')) {\r\n"
-				+ "	PLUGIN_ERROR.setExisteError(true);\r\n"
-				+ "	PLUGIN_ERROR.setTextoMensajeError('No coincide valor PDF');\r\n" + "}");
-		anexoFormularioPDF.getPresentacionElectronica().setScriptValidacion(scriptValidacionPDF);
-		fl.add(anexoFormularioPDF);
-
-		// Anexos presenciales (dependiente dato formulario F1.PRESENTACION)
-		fl.add(crearAnexoPresencialTramite("ANEP"));
-		pr.setIdentificador("AD1");
-		pr.setTipo("AD");
-		pr.setAnexos(fl);
-		return pr;
-	}
-
-	private static RAnexoTramite crearAnexoTramite(final String identificador, final int instancias,
-			final boolean firmar) {
-
-		final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
-		ayuda.setUrl("http://www.google.es");
-		ayuda.setMensajeHtml("Mensaje <strong>HTML</strong>");
-
-		final List<String> extensiones = new ArrayList<>();
-		extensiones.add("pdf");
-		extensiones.add("odt");
-		extensiones.add("xml");
-
-		final RAnexoTramitePresentacionElectronica presentacionElectronica = new RAnexoTramitePresentacionElectronica();
-		presentacionElectronica.setTamanyoMax(1);
-		presentacionElectronica.setTamanyoUnidad("MB");
-		presentacionElectronica.setExtensiones(extensiones);
-		presentacionElectronica.setInstancias(instancias);
-		presentacionElectronica.setConvertirPDF(false);
-		presentacionElectronica.setAnexarFirmado(false);
-		presentacionElectronica.setFirmar(firmar);
-
-		final RScript scriptDependencia = new RScript();
-		scriptDependencia.setScript("return 'S';");
-
-		final RAnexoTramite anexo = new RAnexoTramite();
-		anexo.setIdentificador(identificador);
-		anexo.setDescripcion(identificador);
-		anexo.setAyuda(ayuda);
-		anexo.setObligatoriedad("D");
-		anexo.setScriptDependencia(scriptDependencia);
-		anexo.setPresentacion("E");
-		anexo.setPresentacionElectronica(presentacionElectronica);
-
-		return anexo;
-	}
-
-	private static RAnexoTramite crearAnexoPresencialTramite(final String identificador) {
-
-		final RAnexoTramiteAyuda ayuda = new RAnexoTramiteAyuda();
-		ayuda.setUrl("http://www.google.es");
-		ayuda.setMensajeHtml("Mensaje <strong>HTML</strong>");
-
-		final RScript scriptDependencia = new RScript();
-		scriptDependencia.setScript("return (PLUGIN_FORMULARIOS.getValor('F1', 'PRESENTACION') == 'p'?'s':'d');");
-
-		final RAnexoTramite anexo = new RAnexoTramite();
-		anexo.setIdentificador(identificador);
-		anexo.setDescripcion(identificador);
-		anexo.setAyuda(ayuda);
-		anexo.setObligatoriedad("D");
-		anexo.setScriptDependencia(scriptDependencia);
-		anexo.setPresentacion("P");
-
-		return anexo;
-	}
-
-	private static RPasoTramitacionRegistrar crearPasoRegistrar() {
-		final RPasoTramitacionRegistrar pr = new RPasoTramitacionRegistrar();
-		pr.setIdentificador("RT1");
-		pr.setTipo("RT");
-		final RDestinoRegistro destino = new RDestinoRegistro();
-		destino.setOficinaRegistro("OF1");
-		destino.setLibroRegistro("LIB1");
-		destino.setTipoAsunto("AS1");
-		pr.setDestino(destino);
-		return pr;
-	}
-
-	private static RFormularioTramite crearFormularioTramite() {
-		RFormularioTramite f;
-		f = new RFormularioTramite();
-		f.setIdentificador("F1");
-		f.setDescripcion("Formulario");
-		f.setObligatoriedad("S");
-		f.setInterno(true);
-		f.setFirmar(true);
-		f.setFormularioInterno(crearFormularioDisenyo());
-
-		final RScript scriptDatosIniciales = new RScript();
-		scriptDatosIniciales.setScript("DATOS_INICIALES_FORMULARIO.setValorCompuesto('SEL_LISTA', 'V2','Valor 2'); "
-				+ "DATOS_INICIALES_FORMULARIO.setValor('CHK_ESTADO', 'S'); "
-				+ "DATOS_INICIALES_FORMULARIO.setValor('TXT_NORMAL', 'VALOR INICIAL');");
-		f.setScriptDatosIniciales(scriptDatosIniciales);
-
-		final RScript scriptPostguardar = new RScript();
-		scriptPostguardar.setScript("PLUGIN_LOG.debug(PLUGIN_FORMULARIOS.getValor('F1','CAMPO1'));");
-		f.setScriptPostguardar(scriptPostguardar);
-
-		return f;
-	}
-
-	private static RFormularioInterno crearFormularioDisenyo() {
-		try {
-			final InputStream inputStream = Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("test-files/formularioInterno.json");
-			final StringWriter writer = new StringWriter();
-			IOUtils.copy(inputStream, writer, "UTF-8");
-			final String formularioInternoJSON = writer.toString();
-			final ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			final RFormularioInterno formularioInterno = mapper.readValue(formularioInternoJSON,
-					RFormularioInterno.class);
-			return formularioInterno;
-		} catch (final Exception ex) {
-			throw new RuntimeException("Error cargando definición formulario desde json");
-		}
-
 	}
 
 	public static RAvisosEntidad crearAvisos() {

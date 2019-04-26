@@ -18,6 +18,11 @@ import es.caib.sistramit.core.service.model.script.flujo.ResPersonaInt;
 public final class ResPersona implements ResPersonaInt {
 
 	/**
+	 * Indica si es nulo.
+	 */
+	private boolean nulo;
+
+	/**
 	 * Nif persona.
 	 */
 	private String nif;
@@ -93,6 +98,20 @@ public final class ResPersona implements ResPersonaInt {
 	 */
 	public String getApellido2() {
 		return apellido2;
+	}
+
+	@Override
+	public void setNulo(final boolean pNulo) {
+		this.nulo = pNulo;
+	}
+
+	/**
+	 * Método de acceso a nulo.
+	 * 
+	 * @return nulo
+	 */
+	public boolean isNulo() {
+		return nulo;
 	}
 
 }
