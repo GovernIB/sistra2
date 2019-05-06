@@ -10,6 +10,18 @@ import java.io.Serializable;
  */
 @SuppressWarnings("serial")
 public final class RParametroDominio implements Serializable {
+
+	/** Constructor vacio. **/
+	public RParametroDominio() {
+		// Constructor vacio
+	}
+
+	/** Constructor. **/
+	public RParametroDominio(final String codigo, final String valor) {
+		this.codigo = codigo;
+		this.valor = valor;
+	}
+
 	/**
 	 * Código parámetro.
 	 */

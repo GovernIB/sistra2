@@ -26,10 +26,13 @@ public class Utilidades {
 	 * @return
 	 */
 	public static ValoresDominio getValoresDominio(final RValoresDominio rvaloresDominio) {
-		final ValoresDominio valoresDominio = new ValoresDominio();
-		valoresDominio.setDatos(rvaloresDominio.getDatos());
-		valoresDominio.setCodigoError(rvaloresDominio.getCodigoError());
-		valoresDominio.setError(rvaloresDominio.isError());
+		ValoresDominio valoresDominio = null;
+		if (rvaloresDominio != null) {
+			valoresDominio = new ValoresDominio();
+			valoresDominio.setDatos(rvaloresDominio.getDatos());
+			valoresDominio.setCodigoError(rvaloresDominio.getCodigoError());
+			valoresDominio.setError(rvaloresDominio.isError());
+		}
 		return valoresDominio;
 	}
 
@@ -55,6 +58,6 @@ public class Utilidades {
 				}
 			}
 		}
-		return null;
+		return valoresDominio;
 	}
 }

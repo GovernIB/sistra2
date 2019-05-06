@@ -73,10 +73,10 @@ public class ComponenteAutenticacionPluginMock extends AbstractPluginProperties
 		final DatosUsuario ui = new DatosUsuario();
 		ui.setAutenticacion(TipoAutenticacion.AUTENTICADO);
 		ui.setMetodoAutenticacion(TipoMetodoAutenticacion.CLAVE_CERTIFICADO);
-		ui.setNif("11111111H");
-		ui.setNombre("José");
-		ui.setApellido1("García");
-		ui.setApellido2("Gutierrez");
+		ui.setNif("00000000T");
+		ui.setNombre("NOM");
+		ui.setApellido1("APE1");
+		ui.setApellido2("APE2");
 		ui.setEmail("correo@email.es");
 		return ui;
 	}

@@ -14,14 +14,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import es.caib.sistra2.commons.plugins.dominio.api.DominioPluginException;
 import es.caib.sistra2.commons.plugins.dominio.api.IDominioPlugin;
 import es.caib.sistra2.commons.plugins.dominio.api.ParametroDominio;
 import es.caib.sistra2.commons.plugins.dominio.api.ValoresDominio;
+import es.caib.sistra2.commons.plugins.dominio.rest.api.v1.RFiltroDominio;
+import es.caib.sistra2.commons.plugins.dominio.rest.api.v1.RParametroDominio;
 import es.caib.sistra2.commons.plugins.dominio.rest.api.v1.RValoresDominio;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.SistraFacade;
 import es.caib.sistra2.commons.plugins.dominio.rest.cxf.SistraFacadeException_Exception;
@@ -37,7 +37,12 @@ import es.caib.sistra2.commons.ws.utils.WsClientUtil;
 public class DominioPluginRest extends AbstractPluginProperties implements IDominioPlugin {
 
 	/** Prefix. */
-	public static final String IMPLEMENTATION_BASE_PROPERTY = "rest.";
+	public static final String IMPLEMENTATION_BASE_PROPERTY = "loginib.rest.";
+
+	/** Propiedades. **/
+	private static final QName SERVICE_NAME = new QName("urn:es:caib:sistra:ws:v2:services", "SistraFacadeService");
+	private static final String BASE_PROPERTY_USER = ".USER";
+	private static final String BASE_PROPERTY_PASS = ".PASS";
 
 	/** Constructor. **/
 	public DominioPluginRest(final String prefijoPropiedades, final Properties properties) {
@@ -61,22 +66,24 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 			final List<ParametroDominio> parametros) throws DominioPluginException {
 		ValoresDominio retorno;
 		if (url.endsWith("wsdl")) {
-			retorno = invocarDominioSistra1();
+			retorno = invocarDominioWSDL(idDominio, url, parametros);
 		} else {
-			retorno = invocarDominioSistra2();
+			retorno = invocarDominioREST(idDominio, url, parametros);
 		}
 		return retorno;
 	}
 
-	private static final QName SERVICE_NAME = new QName("urn:es:caib:sistra:ws:v2:services", "SistraFacadeService");
-
 	/**
-	 * Invoca un dominio de sistra1
+	 * Invoca un dominio wsdl (principalmente de sistra1)
 	 *
+	 * @param idDominio
+	 * @param url
+	 * @param parametros
 	 * @return
 	 * @throws DominioPluginException
 	 */
-	private ValoresDominio invocarDominioSistra1() throws DominioPluginException {
+	private ValoresDominio invocarDominioWSDL(final String idDominio, final String url,
+			final List<ParametroDominio> parametros) throws DominioPluginException {
 		ValoresDominio valoresDominio = null;
 		URL wsdlURL;
 		/***
@@ -93,7 +100,7 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		 */
 
 		try {
-			wsdlURL = new URL("https://proves.caib.es/udit/integracion/sistra/services/SistraFacade?wsdl");
+			wsdlURL = new URL(url);
 		} catch (final MalformedURLException e) {
 			throw new DominioPluginException("URL mal formada", e.getCause());
 		}
@@ -101,30 +108,51 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 		final SistraFacadeService ss = new SistraFacadeService(wsdlURL, SERVICE_NAME);
 		final SistraFacade port = ss.getSistraFacade();
 
+		final String user = getPropiedad(idDominio, BASE_PROPERTY_USER);
+		final String pass = getPropiedad(idDominio, BASE_PROPERTY_PASS);
+
 		try {
-			configurarService((BindingProvider) port, "endpoint.entrada", "$sistra_udit", "sistra_udit", false);
+			configurarService((BindingProvider) port, getEndpoint(url), user, pass, false);
 		} catch (final Exception e1) {
 			throw new DominioPluginException("Mal configuracion del servicio", e1.getCause());
 
 		}
-		// user --> $sistra_udit
-		// pass --> sistra_udit
-		{
 
-			final java.lang.String _obtenerDominio_id = "CICONIF";
-			final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio _obtenerDominio_parametros = new es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio();
-			_obtenerDominio_parametros.getParametro().add("NIF=74239824X");
-			try {
-				final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ValoresDominio valoresDominioSistra1 = port
-						.obtenerDominio(_obtenerDominio_id, _obtenerDominio_parametros);
-				valoresDominio = Utilidades.getValoresDominioSistra1(valoresDominioSistra1);
-
-			} catch (final SistraFacadeException_Exception e) {
-				throw new DominioPluginException("Error conectándose a la url", e.getCause());
+		final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio parametrosWSDL = new es.caib.sistra2.commons.plugins.dominio.rest.cxf.ParametrosDominio();
+		if (parametros != null && !parametros.isEmpty()) {
+			for (final ParametroDominio parametro : parametros) {
+				if (parametro.getValor() != null && !parametro.getValor().isEmpty()) {
+					parametrosWSDL.getParametro().add(parametro.getValor());
+				}
 			}
 		}
 
+		try {
+			final es.caib.sistra2.commons.plugins.dominio.rest.cxf.ValoresDominio valoresDominioSistra1 = port
+					.obtenerDominio(idDominio, parametrosWSDL);
+			valoresDominio = Utilidades.getValoresDominioSistra1(valoresDominioSistra1);
+
+		} catch (final SistraFacadeException_Exception e) {
+			throw new DominioPluginException("Error conectándose a la url", e.getCause());
+		}
+
 		return valoresDominio;
+	}
+
+	/**
+	 * Extrae la url
+	 *
+	 * @param url
+	 * @return
+	 */
+	private String getEndpoint(final String url) {
+		String endpoint;
+		if (url.endsWith("?wsdl")) {
+			endpoint = url.substring(0, url.indexOf("?wsdl"));
+		} else {
+			endpoint = url;
+		}
+		return endpoint;
 	}
 
 	/**
@@ -142,39 +170,51 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 */
 	private void configurarService(final BindingProvider bp, final String endpoint, final String user,
 			final String pass, final boolean logCalls) throws Exception {
-
 		bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
-
 		WsClientUtil.configurePort(bp, endpoint, user, pass, "BASIC", logCalls);
-
 	}
 
 	/**
-	 * Invoca un dominio de sistra2
+	 * Invoca un dominio de tipo REST (principalmente de tipo sistra2)
 	 *
+	 * @param idDominio
+	 * @param url
+	 * @param parametros
 	 * @return
 	 * @throws DominioPluginException
 	 */
-	private ValoresDominio invocarDominioSistra2() throws DominioPluginException {
+	private ValoresDominio invocarDominioREST(final String idDominio, final String url,
+			final List<ParametroDominio> parametros) throws DominioPluginException {
 		final RestTemplate restTemplate = new RestTemplate();
 
-		if (getProperty("usr") != null) {
-			restTemplate.getInterceptors()
-					.add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
+		final String user = getPropiedad(idDominio, BASE_PROPERTY_USER);
+		final String pass = getPropiedad(idDominio, BASE_PROPERTY_PASS);
+
+		if (user != null && pass != null) {
+			restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(user, pass));
 		}
+
 		final HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
 		// Obtener valores dominio.
-		final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		// map.add("idioma", idioma);
-		final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-		final ResponseEntity<RValoresDominio> response = restTemplate
-				.postForEntity("http://localhost:8090/dominios/ok2", request, RValoresDominio.class);
-		restTemplate.getForEntity("http://localhost:8090/dominios/ok", String.class).getBody();
+		final RFiltroDominio filtro = new RFiltroDominio();
+		filtro.setIdDominio(idDominio);
 
-		if (response == null || response.getBody() == null) {
-			throw new DominioPluginException("Esta vacío de datos.");
+		if (parametros != null && !parametros.isEmpty()) {
+			for (final ParametroDominio parametro : parametros) {
+				if (parametro.getValor() != null && !parametro.getValor().isEmpty()) {
+					filtro.addParam(new RParametroDominio(parametro.getCodigo(), parametro.getValor()));
+				}
+			}
+		}
+		final HttpEntity<RFiltroDominio> request = new HttpEntity<>(filtro, headers);
+
+		final ResponseEntity<RValoresDominio> response = restTemplate.postForEntity(url, request,
+				RValoresDominio.class);
+
+		if (response == null) {
+			throw new DominioPluginException("Respuesta vacía.");
 		}
 
 		return Utilidades.getValoresDominio(response.getBody());
@@ -189,11 +229,12 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */
-	private String getPropiedad(final String propiedad) throws DominioPluginException {
-		final String res = getProperty(DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
-		if (res == null) {
-			throw new DominioPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
+	private String getPropiedad(final String idDominio, final String propiedad) throws DominioPluginException {
+		String valor = null;
+		final String login = getProperty(IMPLEMENTATION_BASE_PROPERTY + "DOMINIO." + idDominio + ".LOGIN");
+		if (login != null) {
+			valor = getProperty(IMPLEMENTATION_BASE_PROPERTY + "LOGIN." + login + propiedad);
 		}
-		return res;
+		return valor;
 	}
 }
