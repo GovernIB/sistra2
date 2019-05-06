@@ -152,9 +152,6 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 **/
 	public void init() {
 
-		// TITULO ??
-		// setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
 		// Recuperacion formulario
 		recuperarFormulario(id);
 

@@ -238,6 +238,20 @@ public final class ValidacionesTipo {
 		return (checkIBAN(pNumeroCuenta) && esNumeroCuentaValido(pNumeroCuenta.substring(ConstantesNumero.N4)));
 	}
 
+	public boolean esNumeroSwiftValido(final String codigo) {
+		return codigo != null && (codigo.length() == 8 || codigo.length() == 11);
+	}
+
+	public boolean esNumeroSwiftValido(final String banco, final String pais, final String localidad,
+			final String sucursal) {
+		final boolean codigoBancoCorrecto = banco != null && banco.length() == 4;
+		final boolean codigoPaisCorrecto = pais != null && pais.length() == 2;
+		final boolean codigoLocalidadCorrecto = localidad != null && localidad.length() == 2;
+		final boolean codigoSucursalCorrecto = sucursal == null || (sucursal != null && sucursal.length() == 3);
+
+		return codigoBancoCorrecto && codigoPaisCorrecto && codigoLocalidadCorrecto && codigoSucursalCorrecto;
+	}
+
 	/**
 	 * Verifica digitos cuenta.
 	 *

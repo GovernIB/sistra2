@@ -97,6 +97,17 @@ public final class PlgUtils implements PlgUtilsInt {
 	}
 
 	@Override
+	public boolean esNumeroSwiftValido(final String codigo) {
+		return ValidacionesTipo.getInstance().esNumeroSwiftValido(codigo);
+	}
+
+	@Override
+	public boolean esNumeroSwiftValido(final String banco, final String pais, final String localidad,
+			final String sucursal) {
+		return ValidacionesTipo.getInstance().esNumeroSwiftValido(banco, pais, localidad, sucursal);
+	}
+
+	@Override
 	public boolean esFecha(final String fecha) {
 		return ValidacionesTipo.getInstance().esFecha(fecha, ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
 	}

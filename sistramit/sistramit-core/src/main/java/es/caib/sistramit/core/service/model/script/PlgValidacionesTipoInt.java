@@ -77,7 +77,7 @@ public interface PlgValidacionesTipoInt {
 
 	/**
 	 * Valida si es un nif válido de persona física.
-	 * 
+	 *
 	 * @param valor
 	 *            nif
 	 * @return indica si es válido
@@ -86,7 +86,7 @@ public interface PlgValidacionesTipoInt {
 
 	/**
 	 * Valida si es un nif válido (de persona física o jurídica).
-	 * 
+	 *
 	 * @param valor
 	 *            nif
 	 * @return indica si es válido
@@ -166,6 +166,42 @@ public interface PlgValidacionesTipoInt {
 	 */
 	boolean esNumeroCuentaIbanValido(final String iban, final String entidad, final String sucursal, final String dc,
 			final String cuenta);
+
+	/**
+	 * Valida un número de cuenta SWIFT. Está formado por 8 u 11 caracteres e
+	 * identifica el banco, pais y sucursal. La sucursal no es obligatoria y, en
+	 * caso de no introducirla, se indica que es central (también se puede indicar
+	 * con el 'XXX')
+	 *
+	 * {@link https://es.wikipedia.org/wiki/ISO_9362}
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	boolean esNumeroSwiftValido(final String codigo);
+
+	/**
+	 * Valida un número de cuenta SWIFT. Está formado por 8 u 11 caracteres,
+	 * siendo:<br />
+	 * <ul>
+	 * <li>El banco son los primeros 4 caracteres.</li>
+	 * <li>El pais se indica con 2 caracteres (españa sería el ES, según el ISO
+	 * 3166-1-alfa-2)</li>
+	 * <li>La localidad se indica con 2 caracteres</li>
+	 * <li>La sucursal se indica con 3 caracteres (no obligatorios). En caso de no
+	 * pasarse, se refiere a la central (que también se puede indicar con el código
+	 * 'XXX')</li>
+	 * </ul>
+	 *
+	 * {@link https://es.wikipedia.org/wiki/ISO_9362}
+	 * 
+	 * @param banco
+	 * @param pais
+	 * @param localidad
+	 * @param sucursal
+	 * @return
+	 */
+	boolean esNumeroSwiftValido(final String banco, final String pais, final String localidad, final String sucursal);
 
 	/**
 	 * Verifica que el String sea tranformable a fecha (formato yyyy-MM-yyyy).

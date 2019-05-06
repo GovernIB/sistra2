@@ -18,7 +18,11 @@ public enum TypeEtiqueta {
 	/**
 	 * Error.
 	 */
-	ERROR("E");
+	ERROR("E"),
+	/**
+	 * Etiqueta.
+	 */
+	ETIQUETA("Q");
 
 	private String valor;
 

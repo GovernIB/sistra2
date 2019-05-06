@@ -64,16 +64,24 @@
 		                        />
 
 				<!-- Columnas -->
-				<p:column headerText="#{msg['viewFormateadorFormulario.headerIdentificador']}">
+				<p:column headerText="#{msg['viewFormateadorFormulario.headerIdentificador']}" width="15%">
 			        <h:outputText value="#{td.identificador}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewFormateadorFormulario.headerClassname']}">
+			    <p:column headerText="#{msg['viewFormateadorFormulario.headerClassname']}" width="25%">
 			        <h:outputText value="#{td.classname}" />
 			    </p:column>
 
-			    <p:column headerText="#{msg['viewFormateadorFormulario.headerDescripcion']}">
+			    <p:column headerText="#{msg['viewFormateadorFormulario.headerDescripcion']}" width="25%">
 			        <h:outputText value="#{td.descripcion}" />
+			    </p:column>
+
+			    <p:column headerText="#{msg['viewFormateadorFormulario.headerGenerico']}" width="10%">
+			        <p:selectBooleanCheckbox  value="#{td.porDefecto}" />
+			    </p:column>
+
+				<p:column headerText="#{msg['viewFormateadorFormulario.headerDesactivarPersonalizacion']}" width="25%" style="text-align:center">
+					<p:selectBooleanCheckbox  value="#{td.bloquear}" />
 			    </p:column>
 
 			</p:dataTable>

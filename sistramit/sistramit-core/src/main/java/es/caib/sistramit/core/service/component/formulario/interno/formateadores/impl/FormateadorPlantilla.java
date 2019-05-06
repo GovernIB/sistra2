@@ -25,15 +25,12 @@ import es.caib.sistramit.core.service.util.UtilsFormulario;
 public class FormateadorPlantilla implements FormateadorPdfFormulario {
 
 	/** Como es la visualización de listados. **/
-	private TipoVisualizacionValorIndexado listadoVisualizacion;
-
-	protected static final String CODIGO_LISTAS = "[CODIGO]";
+	private TipoVisualizacionValorIndexado listadoVisualizacion = TipoVisualizacionValorIndexado.DESCRIPCION;
 
 	@Override
 	public byte[] formatear(final byte[] ixml, final byte[] plantilla, final String idioma,
 			final RFormularioInterno defFormInterno, final String tituloProcedimiento) {
 
-		inicializarValores();
 		try {
 
 			final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
@@ -44,14 +41,25 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 					if (valor instanceof ValorCampoSimple) {
 						datos.put(valor.getId(), ((ValorCampoSimple) valor).getValor());
 					} else if (valor instanceof ValorCampoIndexado && ((ValorCampoIndexado) valor).getValor() != null) {
-						datos.put(valor.getId()+CODIGO_LISTAS, getValor((ValorCampoIndexado) valor, true));
-						datos.put(valor.getId(), getValor((ValorCampoIndexado) valor, false));
+
+						datos.put(valor.getId(), ((ValorCampoIndexado) valor).getValor().getDescripcion());
+						datos.put(valor.getId() + ".DESCRIPCION",
+								((ValorCampoIndexado) valor).getValor().getDescripcion());
+						datos.put(valor.getId() + ".CODIGO", ((ValorCampoIndexado) valor).getValor().getValor());
+
 					} else if (valor instanceof ValorCampoListaIndexados) {
-						datos.put(valor.getId(), getValor((ValorCampoListaIndexados) valor));
+						datos.put(valor.getId(), getDescripcion((ValorCampoListaIndexados) valor));
+						datos.put(valor.getId() + ".ELEMENTOS",
+								String.valueOf(((ValorCampoListaIndexados) valor).getValor().size()));
+						for (int i = 0; i < ((ValorCampoListaIndexados) valor).getValor().size(); i++) {
+							datos.put(valor.getId() + "[" + (i + 1) + "].DESCRIPCION",
+									((ValorCampoListaIndexados) valor).getValor().get(i).getDescripcion());
+							datos.put(valor.getId() + "[" + (i + 1) + "].CODIGO",
+									((ValorCampoListaIndexados) valor).getValor().get(i).getValor());
+						}
 					}
 				}
 			}
-			// pdf.establecerSoloImpresion();
 			pdf.ponerValor(datos);
 			return pdf.guardarEnMemoria(true);
 
@@ -59,48 +67,15 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
 		}
 
-		// final Path path = Paths.get("P:\\prueba.pdf");
-		// Files.write(path, retorno);
-
 	}
 
 	/**
-	 * Inicializa los valores
+	 * Obtiene la descripcion
 	 *
-	 * @param plantilla
-	 */
-	private void inicializarValores() {
-
-		listadoVisualizacion = TipoVisualizacionValorIndexado.DESCRIPCION;
-	}
-
-	/**
-	 * Objeto propiedad para ValorCampoIndexado
-	 *
-	 * @param etiqueta
 	 * @param valor
 	 * @return
 	 */
-	private String getValor(final ValorCampoIndexado valor, final boolean codigo) {
-		if(codigo){
-			return valor.getValor().getValor();
-		}else {
-			if (listadoVisualizacion == TipoVisualizacionValorIndexado.DESCRIPCION) {
-				return valor.getValor().getDescripcion();
-			} else {
-				return getValorCampoIndexado(valor.getValor());
-			}
-		}
-	}
-
-	/**
-	 * Objeto propiedad para ValorCampoListaIndexados.
-	 *
-	 * @param etiqueta
-	 * @param valor
-	 * @return
-	 */
-	private String getValor(final ValorCampoListaIndexados valor) {
+	private String getDescripcion(final ValorCampoListaIndexados valor) {
 		final ValorCampoListaIndexados valorLista = valor;
 		final StringBuilder valorListaSimple = new StringBuilder("");
 		final String separador = ",";
@@ -163,6 +138,21 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 
 		return texto.toString();
 
+	}
+
+	/**
+	 * @return the listadoVisualizacion
+	 */
+	public final TipoVisualizacionValorIndexado getListadoVisualizacion() {
+		return listadoVisualizacion;
+	}
+
+	/**
+	 * @param listadoVisualizacion
+	 *            the listadoVisualizacion to set
+	 */
+	public final void setListadoVisualizacion(final TipoVisualizacionValorIndexado listadoVisualizacion) {
+		this.listadoVisualizacion = listadoVisualizacion;
 	}
 
 }
