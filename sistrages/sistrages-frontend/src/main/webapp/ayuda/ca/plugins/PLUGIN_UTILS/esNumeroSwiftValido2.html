@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNumeroSwiftValido(banc, pais, localitat, sucursal)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=esNumeroSwiftValido2">esNumeroSwiftValido</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	esNumeroSwiftValido(String banc, String pais, String localitat, String sucursal): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓ</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida que el valor introduït no sigui nul i que compleixi amb les regles de validació necessàries per a ser un SWIFT (codi d'identificació bancària per a realitzar transferències) Vàlid. Es considera vàlida tota aquella cadena que tingui 4 caràcters del banc, 2 caràcters per al país, 2 caràcters per a la localitat i 3 caràcters per a la sucursal (la sucursal pot ser nul i en aquest cas, serà seu central).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES D'ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>banc</b>: Codi de 4 caràcters del banc. </li>
+		<li><b>pais</b>: Codi de 2 caràcters per al país (segons la ISO 3166-1-alfa-2).</li>
+		<li><b>localitat</b>: Codi de 2 caràcters per a la localitat.</li>
+		<li><b>sucursal</b>: Codi de 3 caràcters de la sucursal.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÀMETRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si banc+pais+localitat+sucursal formen un codi Swift vàlid i false si banc+pais+localitat+sucursal no formen un número Swift vàlid.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar els següents valors: banco: 'BBVA', pais: 'ESP', localidad: '88', sucursal: 'XXX'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroSwiftValido('BBVA', 'ESP', '88', 'XXX');
+</p>
+<p>La funció esNumeroSwiftValido retorna 'false' ja que els paràmetres introduïts no formen un codi SWIFT vàlid, el codi de país ha de tenir longitud 2.</p>
+<br />
+
+<p><b>Exemple 2</b> Validar els següents valors: banco: 'BBVA', pais: 'ES', localidad: '88', sucursal: 'XXX'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroSwiftValido ('BBVA', 'ESP', '88', 'XXX');
+</p>
+<p>La funció esNumeroSwiftValido retorna 'true', ja que els paràmetres introduïts formen un codi SWIFT vàlid.</p>
+<br />
+
+</body>
+</html>

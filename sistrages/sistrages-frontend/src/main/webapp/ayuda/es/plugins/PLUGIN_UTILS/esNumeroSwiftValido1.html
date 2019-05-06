@@ -1,0 +1,68 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNumeroSwiftValido(swift)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esNumeroSwiftValido1">esNumeroSwiftValido</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	esNumeroSwiftValido(String swift): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida que el valor introducido no sea nulo y cumpla con las reglas de validación necesarias para ser un SWIFT (código de identificación bancaria para realizar transferencias) Válido. Se considera válida toda aquella cadena que tenga 8-11 caracteres números que cumplan con las reglas de validación correspondientes a código del banco, clave del país, localidad y sucursal (la sucursal es opcional, en caso de no introducirse, será sede central).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>swift</b>: Código de 8-11 caracteres del código Swift.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si la cadena introducida es un número de Swift válido y false si la cadena introducida no es un número swift válido</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar la cadena 'BBVAXESMM'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroSwiftValido('BBVAXESMM');
+</p>
+<p>La función esNumeroSwiftValido retorna 'false' debido a que la cadena no cumple con las reglas de validación, son 9 caracteres y no 8 o 11.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar la cadena  'BBVAESMM'. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroSwiftValido ('BBVAESMM');
+</p>
+<p>La función esNumeroSwiftValido retorna 'true', debido a que la cadena cumple los requisitos para ser un número SWIFT válido.</p>
+<br />
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">DISEÑO DE PLANTILLAS DE VISUALIZACIÓN PDF</h1>
+<p>
+	En esta ayuda se establecen los principios básicos para el diseño de plantillas de visualización con los formatadores incluídos por defecto en las instalaciones de SISTRA2.<br>
+	Los formateadores incluídos en las instalaciones SISTRA2, y que por tanto pueden ser utilizados para la renderización de formularios en PDF, son el formateador genérico y el formateador basado en plantillas PDF.<br>
+	A continuación de presentan ambos formateadores y se indican tanto las opciones de configuración, para el caso del genérico, como la manera de referenciar los campos del formulario en las plantillas cuando se utiliza el formateador basado en plantillas PDF.
+</p>
+<h2 class="stgH2">PLANTILLAS BASADAS EN FORMATEADOR GENÉRICO</h2>
+<p>El formateador genérico permite generar una plantilla PDF simple con los campos del formulario. Los ficheros de plantilla a indicar para este formateador son ficheros de propiedades (.properties), en los que se puede personalizar aspectos concretos del PDF a visualizar.<br>
+A continuación se indican las propiedades a indicar en los ficheros plantilla y los valores que pueden tomar:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">logo.url:</span> propiedad en la que se indica la ruta del logo a plasmar en la plantilla de visualización del formulario. En caso de no tener valor no se incluirá logo.</li>
+		<li><span class="nombreCampo">titulo.procedimiento:</span> propiedad que permite indicar si se muestra el título del procedimiento, obtenido del catálogo de procedimientos y servicios, junto con el título del formulario. Esta propiedad tomar los valores true o false.</li>
+		<li><span class="nombreCampo">campoIndexado.visualizacion:</span> propiedad que fija la manera de mostrar los valores asociados a campos indexados (campos de tipo selector). Los valores que admite esta propiedad son:</li>
+		<ul class="detalle">
+		<li><span class="boton">DESCRIPCION_CODIGO_CON_PARENTESIS:</span> Se mostrará la descripción del valor seleccionado seguido del código entre paréntesis (p.ej: ESPAÑA (34)).</li>
+		<li><span class="boton">CODIGO_DESCRIPCION_CON_PARENTESIS:</span> Se mostrará el código asociado al valor seleccionado seguido de la descripción entre paréntesis (p.ej: 34 (ESPAÑA)).</li>
+		<li><span class="boton">DESCRIPCION_CODIGO_CON_GUION:</span> Se mostrará la descripción del valor seleccionado seguido de un guión y el código (p.ej: ESPAÑA - 34).</li>
+		<li><span class="boton">CODIGO_DESCRIPCION_CON_GUION:</span> Se mostrará el código asociado al valor seleccionado seguido de un guión y la descripción (p.ej: 34 - ESPAÑA).</li>
+		<li><span class="boton">DESCRIPCION:</span> Se mostrará únicamente la descripción del valor seleccionado (p.ej: ESPAÑA).</li>
+		</ul>
+		<li><span class="nombreCampo">aviso.mostrar:</span> propiedad que indica si se han de plasmar los campos del formulario del tipo "Aviso" en el PDF de visualización del formulario.</li>
+	</ul>
+</p>
+<h2 class="stgH2">PLANTILLAS BASADAS EN FORMATEADOR DE PLANTILLAS PDF</h2>
+<p>El formateador basado en plantillas PDF permite generar un PDF de visualización del formulario a partir del diseño de un formulario PDF en el que se asocien los identificadores de los campos del formulario a plasmar. El diseño de estas plantillas requerirá de alguna herramienta de creación de formularios PDF (p.ej: Acrobat Pro, Nitro PDF, etc.)<br>
+A continuación se indica la manera de referenciar los diferentes campos del formulario en la plantilla de visualización:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Campos simples:</span> estos campos, entre los que se encuentran los campos de texto, avisos y <i>checkbox</i>, se han de referenciar directamente con el identificador establecido en el formulario.</li>
+		<li><span class="nombreCampo">Campos indexados:</span> estos campos se corresponden con los selectores de tipo "Lista desplegable" y "Selección única". Dado que estos campos siempre dispondrán de un código y una descripción, la manera de plasmar los distintos valores será la siguiente:</li>
+		<ul class="detalle">
+		<li><span class="boton">Identificador:</span> si se referencia el identificador del campo establecido en el formulario, por ejemplo CAMPO1, se plasmará la descripción del valor seleccionado.</li>
+		<li><span class="boton">Identificador.DESCRIPCION:</span> si se referencia el identificador seguido de un punto y el literal "DESCRIPCION", por ejemplo CAMPO1.DESCRIPCION, se plasmará igualmente la descripción del valor seleccionado.</li>
+		<li><span class="boton">Identificador.CODIGO:</span> si se referencia el identificador seguido de un punto y el literal "CODIGO", por ejemplo CAMPO1.CODIGO, se plasmará el código del valor seleccionado.</li>
+		</ul>
+		<li><span class="nombreCampo">Campos de selección múltiple: estos campos se corresponden con los selectores de tipo "Selección múltiple". Estos campos, al igual que los indexados, dispondrán de código y descripción pero además podrán incluir más de un valor seleccionado. Por ello, se permiten las referencias siguientes:</span></li>
+		<ul class="detalle">
+		<li><span class="boton">Identificador:</span> si se referencia el identificador del campo establecido en el formulario, por ejemplo CAMPO1, se plasmarán las descripciones de todos los valores seleccionados separadas por comas.</li>
+		<li><span class="boton">Identificador.NUMELEMENTOS:</span> si se referencia el identificador seguido de un punto y el literal "NUMELEMENTOS", por ejemplo CAMPO1.NUMELEMENTOS, se recuperará el número de elementos seleccionados en el campo.</li>
+		<li><span class="boton">Identificador[i].DESCRIPCION:</span> si se referencia el identificador seguido del número de elemento (i) entre corchetes y un punto junto al literal "DESCRIPCION", se devolverá la descripción del elemento "i" seleccionado (p.ej: CAMPO1[1].DESCRIPCION).</li>
+		<li><span class="boton">Identificador[i].CODIGO:</span> si se referencia el identificador seguido del número de elemento (i) entre corchetes y un punto junto al literal "CODIGO", se devolverá el código del elemento "i" seleccionado (p.ej: CAMPO1[1].CODIGO).</li>
+		</ul>
+	</ul>
+</p>
+</body>
+</html>

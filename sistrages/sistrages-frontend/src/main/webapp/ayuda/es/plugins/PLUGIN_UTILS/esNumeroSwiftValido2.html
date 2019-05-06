@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.esNumeroSwiftValido(banco, pais, localidad, sucursal)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_UTILS&metodo=esNumeroSwiftValido2">esNumeroSwiftValido</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	esNumeroSwiftValido(String banco, String pais, String localidad, String sucursal): boolean
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida que el valor introducido no sea nulo y cumpla con las reglas de validación necesarias para ser un SWIFT (código de identificación bancaria para realizar transferencias) Válido. Se considera válida toda aquella cadena que contenga 4 caracteres del banco, 2 caracteres para el pais, 2 caracteres para la localidad y 3 caracteres para la sucural (la sucursal puede ser nulo y en dicho caso, será sede central).</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>banco</b>: Código de 4 caracteres del banco. </li>
+		<li><b>pais</b>: Código de 2 caracteres para el país (según la ISO 3166-1-alfa-2).</li>
+		<li><b>localidad</b>: Código de 2 caracteres para la localidad.</li>
+		<li><b>sucursal</b>: Código de 3 caracteres de la sucursal.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE SALIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si banco+pais+localidad+sucursal forman un código SWIFT válido y false si banco+pais+localidad+sucursal no forman un número SWIFT válido.</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p><b>Ejemplo 1</b> Validar los siguientes valores: banco: 'BBVA', pais: 'ESP', localidad: '88', sucursal: 'XXX'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroSwiftValido('BBVA', 'ESP', '88', 'XXX');
+</p>
+<p>La función esNumeroSwiftValido retorna 'false' ya que los parámetros introducidos no forman un código SWIFT válido, el código de país debe tener longitud 2.</p>
+<br />
+
+<p><b>Ejemplo 2</b> Validar los siguientes valores: banco: 'BBVA', pais: 'ES', localidad: '88', sucursal: 'XXX'.  </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.esNumeroSwiftValido ('BBVA', 'ESP', '88', 'XXX');
+</p>
+<p>La función esNumeroSwiftValido retorna 'true', ya que los parámetros introducidos forman un código SWIFT válido.</p>
+<br />
+
+</body>
+</html>

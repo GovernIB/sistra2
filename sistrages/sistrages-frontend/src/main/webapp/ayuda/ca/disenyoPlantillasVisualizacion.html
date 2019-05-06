@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">DISENY DE PLANTILLES DE VISUALITZACIÓ PDF</h1>
+<p>
+	En aquesta ajuda s'estableixen els principis bàsics per al disseny de plantilles de visualització amb els formatadors inclosos per defecte en en les instal·lacions de SISTRA2.<br>
+	Els formatadors inclosos a les instal·lacions SISTRA2, i que per tant poden ser utilitzats per a la renderització de formularis en PDF, són el formatador genèric i el formateador basat en plantilles PDF.<br>
+	A continuació es presenten tots dos formatadors i s'indiquen tant les opcions de configuració, per al cas del genèric, com la manera de referenciar els camps del formulari en les plantilles quan s'utilitza el formateador basat en plantilles PDF.
+</p>
+<h2 class="stgH2">PLANTILLAS BASATS EN FORMATADOR GENÈRIC</h2>
+<p>El formatador genèric permet generar una plantilla PDF simple amb els camps del formulari. Els fitxers de plantilla a indicar per aquest formatador són fitxers de propietats (.properties), als que es poden personalitzar aspectes concrets del PDF a visualitzar.<br>
+A continuació s'indiquen les propietats a incloure als fitxers plantilla i els valors que poden agafar:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">logo.url:</span> propietat en la qual s'indica la ruta del logo a plasmar en la plantilla de visualització del formulari. En cas de no tenir valor no s'inclourà logo.</li>
+		<li><span class="nombreCampo">titulo.procedimiento:</span> propietat que permet indicar si es mostra el títol del procediment, obtingut del catàleg de procediments i serveis, juntament amb el títol del formulari. Aquesta propietat pot prendre els valors true o false.</li>
+		<li><span class="nombreCampo">campoIndexado.visualizacion:</span> propietat que fixa la manera de mostrar els valors associats a camps indexats (camps de tipus selector). Els valors que admet aquesta propietat són:</li>
+		<ul class="detalle">
+		<li><span class="boton">DESCRIPCION_CODIGO_CON_PARENTESIS:</span> Es mostrarà la descripció del valor seleccionat seguit del codi entre parèntesi (p.ej: ESPANYA (34)).</li>
+		<li><span class="boton">CODIGO_DESCRIPCION_CON_PARENTESIS:</span> Es mostrarà el codi associat al valor seleccionat seguit de la descripció entre parèntesi (p.ej: 34 (ESPANYA)).</li>
+		<li><span class="boton">DESCRIPCION_CODIGO_CON_GUION:</span> Es mostrarà la descripció del valor seleccionat seguit d'un guió i el codi (p.ej: ESPANYA - 34).</li>
+		<li><span class="boton">CODIGO_DESCRIPCION_CON_GUION:</span> Es mostrarà el codi associat al valor seleccionat seguit d'un guió i la descripció (p.ej: 34 - ESPANYA).</li>
+		<li><span class="boton">DESCRIPCION:</span> Es mostrarà únicament la descripció del valor seleccionat (p.ej: ESPANYA).</li>
+		</ul>
+		<li><span class="nombreCampo">aviso.mostrar:</span> propietat que indica si s'han de plasmar els camps del formulari del tipus "Avís" en el PDF de visualització del formulari.</li>
+	</ul>
+</p>
+<h2 class="stgH2">PLANTILLES BASADES EN FORMATADOR DE PLANTILLES PDF</h2>
+<p>El formatador basat en plantilles PDF permet generar un PDF de visualització del formulari a partir del disseny d'un formulari PDF en el qual s'associïn els identificadors dels camps del formulari a plasmar. El disseny d'aquestes plantilles requerirà d'alguna eina de creació de formularis PDF (p.ej: Acrobat Pro, Nitre PDF, etc.)<br>
+A continuació s'indica la manera de referenciar els diferents camps del formulari en la plantilla de visualització:</p>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Camps simples:</span> aquests camps, entre els que es troben els camps de text, avisos i <i>checkbox</i>, s'han de referenciar directament amb l'identificador establert en el formulari.</li>
+		<li><span class="nombreCampo">Camps indexats:</span> aquests camps es corresponen amb els selectors de tipus "Llista desplegable" i "Selecció única". Atès que aquests camps sempre disposaran d'un codi i una descripció, la manera de plasmar els diferents valors serà la seg&uuml;ent:</li>
+		<ul class="detalle">
+		<li><span class="boton">Identificador:</span> si es referencia l'identificador del camp establert en el formulari, per exemple CAMPO1, es plasmarà la descripció del valor seleccionat.</li>
+		<li><span class="boton">Identificador.DESCRIPCION:</span> si es referencia l'identificador seguit d'un punt i el literal "DESCRIPCION", per exemple CAMPO1.DESCRIPCION, es plasmarà igualment la descripció del valor seleccionat.</li>
+		<li><span class="boton">Identificador.CODIGO:</span> si es referencia l'identificador seguit d'un punt i el literal "CODIGO", per exemple CAMPO1.CODIGO, es plasmarà el codi del valor seleccionat.</li>
+		</ul>
+		<li><span class="nombreCampo">Camps de selecció múltiple: aquests camps es corresponen amb els selectors de tipus "Selecció múltiple". Aquests camps, igual que els indexats, disposaran de codi i descripció però a més podran incloure més d'un valor seleccionat. Per això, es permeten les referències seg&uuml;ents:</span></li>
+		<ul class="detalle">
+		<li><span class="boton">Identificador:</span> si es referencia l'identificador del camp establert en el formulari, per exemple CAMPO1, es plasmaran les descripcions de tots els valors seleccionats separades per comes.</li>
+		<li><span class="boton">Identificador.ELEMENTOS:</span> si es referencia l'identificador seguit d'un punt i el literal "NUMELEMENTOS", per exemple CAMPO1.NUMELEMENTOS, es recuperarà el nombre d'elements seleccionats en el camp.</li>
+		<li><span class="boton">Identificador[i].DESCRIPCION:</span> si es referencia l'identificador seguit del número d'element (i) entre claudàtors i un punt al costat del literal "DESCRIPCION", es retornarà la descripció de l'element "i" seleccionat (p.ej: CAMPO1[1].DESCRIPCION).</li>
+		<li><span class="boton">Identificador[i].CODIGO:</span> si es referencia l'identificador seguit del número d'element (i) entre claudàtors i un punt al costat del literal "CODIGO", es retornarà el codi de l'element "i" seleccionat (p.ej: CAMPO1[1].CODIGO).</li>
+		</ul>
+	</ul>
+</p>
+</body>
+</html>

@@ -64,23 +64,23 @@ public class AyudaServlet extends HttpServlet {
 		String url = null;
 		String mimeType = null;
 		if (StringUtils.isNotEmpty(id)) {
-			url = "/ayuda/" + lang + "/" + id + ".html";
+			url = lang + "/" + id + ".html";
 			mimeType = "text/html";
 		} else if (StringUtils.isNotEmpty(plugin)) {
 			if (StringUtils.isEmpty(metodo)) {
-				url = "/ayuda/" + lang + "/plugins/" + plugin + "/index.html";
+				url = lang + "/plugins/" + plugin + "/index.html";
 			} else {
-				url = "/ayuda/" + lang + "/plugins/" + plugin + "/" + metodo + ".html";
+				url = lang + "/plugins/" + plugin + "/" + metodo + ".html";
 			}
 			mimeType = "text/html";
 		} else if (StringUtils.isNotEmpty(css)) {
-			url = "/ayuda/" + css + ".css";
+			url = css + ".css";
 			mimeType = "text/css";
 		} else if (StringUtils.isNotEmpty(js)) {
-			url = "/ayuda/" + js + ".js";
+			url = js + ".js";
 			mimeType = "text/javascript";
 		} else if (StringUtils.isNotEmpty(jpg)) {
-			url = "/ayuda/" + jpg + ".jpg";
+			url = jpg + ".jpg";
 			mimeType = "image/jpeg";
 		}
 
@@ -89,7 +89,7 @@ public class AyudaServlet extends HttpServlet {
 
 	}
 
-	private void retornarContenidoAyuda(final String url, final String mimeType, final HttpServletRequest request,
+	private void retornarContenidoAyuda( String url, final String mimeType, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException, ServletException {
 
 		// Obtiene directorio externo ayuda
@@ -99,6 +99,7 @@ public class AyudaServlet extends HttpServlet {
 		if (StringUtils.isEmpty(url))
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		else if (StringUtils.isBlank(dirAyudaExterna)) {
+			url = "/ayuda/" + url;
 			request.getRequestDispatcher(url).forward(request, response);
 		} else {
 			if (StringUtils.isBlank(mimeType)) {
