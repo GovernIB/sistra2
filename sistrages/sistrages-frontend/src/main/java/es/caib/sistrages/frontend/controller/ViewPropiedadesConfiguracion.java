@@ -90,7 +90,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 	 * Abre dialogo para nuevo dato.
 	 */
 	public void nuevo() {
-		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.ALTA, null, true, 550, 250);
+		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.ALTA, null, true, 550, 380);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.EDICION, params, true, 550, 250);
+		UtilJSF.openDialog(DialogPropiedadConfiguracion.class, TypeModoAcceso.EDICION, params, true, 550, 380);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class ViewPropiedadesConfiguracion extends ViewControllerBase {
 		}
 
 	}
-	
+
 	public void ayuda() {
 		UtilJSF.openHelp("propiedadesConfiguracion");
 	}

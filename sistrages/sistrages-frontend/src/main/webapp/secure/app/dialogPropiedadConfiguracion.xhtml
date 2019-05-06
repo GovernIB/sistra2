@@ -39,7 +39,7 @@
 				 	<p:inputText id="valor" value="#{dialogPropiedadConfiguracion.data.valor}" disabled="#{dialogPropiedadConfiguracion.consulta}" size="40" maxlength="500"/>
 
 					<p:outputLabel for="descripcion" value="#{msg['dialogPropiedadConfiguracion.headerDescripcion']}" />
-				 	<p:inputText id="descripcion" value="#{dialogPropiedadConfiguracion.data.descripcion}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" size="40" />
+				 	<p:inputTextarea id="descripcion" value="#{dialogPropiedadConfiguracion.data.descripcion}" disabled="#{!dialogPropiedadConfiguracion.alta}" required="true" rows="10" cols="40"  />
 
 				</h:panelGrid>
 			</p:outputPanel>

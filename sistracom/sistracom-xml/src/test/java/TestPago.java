@@ -28,8 +28,8 @@ public class TestPago {
         datosPago.setTASA("tasa");
         datosPago.setDETALLEPAGO("detallepago");
         final CONTRIBUYENTE contribuyente = datosPago.addNewCONTRIBUYENTE();
-        contribuyente.setNIF("11111111H");
-        contribuyente.setNOMBRE("Jose Garcia Gutierrez");
+        contribuyente.setNIF("00000000T");
+        contribuyente.setNOMBRE("PRUEBASPF APELLIDOUNOPF APELLIDODOSPF");
         datosPago.setCONTRIBUYENTE(contribuyente);
         datosPago.setORGANISMO("organismo");
 

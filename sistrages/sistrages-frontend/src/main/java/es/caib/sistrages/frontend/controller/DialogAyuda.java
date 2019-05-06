@@ -27,30 +27,48 @@ public class DialogAyuda extends DialogControllerBase {
 	 * Inicializacion.
 	 **/
 	public void init() {
-		urlIframe = "AyudaServlet?ts=" + System.currentTimeMillis();
+		urlIframe = "AyudaServlet?ts=" + System.currentTimeMillis() + "&id=" + id + "&lang="
+				+ UtilJSF.getIdioma().toString();
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	public String getUrlIframe() {
-		return urlIframe + "&id=" + id + "&lang=" + UtilJSF.getIdioma().toString();
-	}
-
-	public void setUrlIframe(final String urlIframe) {
-		this.urlIframe = urlIframe;
-	}
-
+	/**
+	 * Botón de cancelar la ayuda.
+	 */
 	public void cancelar() {
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * @return the id
+	 */
+	public final String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public final void setId(final String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the urlIframe
+	 */
+	public final String getUrlIframe() {
+		return urlIframe;
+	}
+
+	/**
+	 * @param urlIframe
+	 *            the urlIframe to set
+	 */
+	public final void setUrlIframe(final String urlIframe) {
+		this.urlIframe = urlIframe;
 	}
 
 }
