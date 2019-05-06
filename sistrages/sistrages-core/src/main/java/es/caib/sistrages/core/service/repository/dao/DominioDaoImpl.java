@@ -125,11 +125,42 @@ public class DominioDaoImpl implements DominioDao {
 	 * Long)
 	 */
 	@Override
-	public void remove(final Long idDominio) {
-		final JDominio hdominio = entityManager.find(JDominio.class, idDominio);
-		if (hdominio != null) {
-			entityManager.remove(hdominio);
+	public boolean remove(final Long idDominio) {
+		boolean retorno;
+		final boolean existeComp = isComponenteConDominio(idDominio);
+		if (existeComp) {
+			retorno = false;
+		} else {
+
+			final JDominio hdominio = entityManager.find(JDominio.class, idDominio);
+			if (hdominio == null) {
+				// No existe
+				retorno = false;
+			} else {
+				if (hdominio.getVersionesTramite() != null && !hdominio.getVersionesTramite().isEmpty()) {
+					// Si tiene versiones tramites asociadas, no se borra
+					retorno = false;
+				} else {
+					// Si no tiene relaciones, se borra correctamente
+					entityManager.remove(hdominio);
+					retorno = true;
+				}
+			}
+
 		}
+		return retorno;
+	}
+
+	/**
+	 *
+	 * @param idDominio
+	 * @return
+	 */
+	private boolean isComponenteConDominio(final Long idDominio) {
+		final String sql = "SELECT DISTINCT c FROM JCampoFormularioIndexado c where c.dominio.codigo = " + idDominio;
+		final Query query = entityManager.createQuery(sql);
+		final List<JDominio> lista = query.getResultList();
+		return !lista.isEmpty();
 	}
 
 	/*

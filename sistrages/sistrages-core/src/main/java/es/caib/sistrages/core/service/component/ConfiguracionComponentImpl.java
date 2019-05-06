@@ -1,7 +1,5 @@
 package es.caib.sistrages.core.service.component;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
@@ -34,34 +32,30 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	@Override
 	public IPlugin obtenerPluginGlobal(final TypePlugin tipoPlugin) {
 		final List<Plugin> plugins = pluginsDao.getAll(TypeAmbito.GLOBAL, null);
-		return createPlugin(plugins, tipoPlugin);
+		return createPlugin(plugins, tipoPlugin, true);
 	}
 
 	@Override
 	public IPlugin obtenerPluginEntidad(final TypePlugin tipoPlugin, final Long idEntidad) {
 		final List<Plugin> plugins = pluginsDao.getAll(TypeAmbito.ENTIDAD, idEntidad);
-		return createPlugin(plugins, tipoPlugin);
+		return createPlugin(plugins, tipoPlugin, true);
+	}
+
+	@Override
+	public IPlugin obtenerPlugin(final TypePlugin tipoPlugin, final Long idEntidad) {
+		List<Plugin> plugins = pluginsDao.getAll(TypeAmbito.ENTIDAD, idEntidad);
+		IPlugin iplugin = createPlugin(plugins, tipoPlugin, false);
+		if (iplugin == null) {
+			plugins = pluginsDao.getAll(TypeAmbito.GLOBAL, null);
+			iplugin = createPlugin(plugins, tipoPlugin, false);
+		}
+
+		return iplugin;
 	}
 
 	// ----------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// ----------------------------------------------------------------------
-	/**
-	 * Carga propiedades locales de fichero de properties.
-	 *
-	 * @return properties
-	 */
-	private Properties recuperarConfiguracionProperties() {
-		final String pathProperties = System.getProperty("es.caib.sistramit.properties.path");
-		try (FileInputStream fis = new FileInputStream(pathProperties);) {
-			final Properties props = new Properties();
-			props.load(fis);
-			return props;
-		} catch (final IOException e) {
-			throw new CargaConfiguracionException(
-					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
-		}
-	}
 
 	/**
 	 * Obtiene valor propiedad de configuracion global.
@@ -79,7 +73,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		return res;
 	}
 
-	private IPlugin createPlugin(final List<Plugin> plugins, final TypePlugin plgTipo) {
+	private IPlugin createPlugin(final List<Plugin> plugins, final TypePlugin plgTipo, final boolean lanzarExcepcion) {
 		String prefijoGlobal = this.getPropiedadGlobal(TypePropiedadConfiguracion.PLUGINS_PREFIJO);
 		if (prefijoGlobal != null && !prefijoGlobal.endsWith(".")) {
 			prefijoGlobal = prefijoGlobal + ".";
@@ -97,7 +91,11 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 			}
 
 			if (rplg == null) {
-				throw new CargaConfiguracionException("No existe plugin de tipo " + plgTipo);
+				if (lanzarExcepcion) {
+					throw new CargaConfiguracionException("No existe plugin de tipo " + plgTipo);
+				} else {
+					return null;
+				}
 			}
 
 			classname = rplg.getClassname();
@@ -137,7 +135,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 *            valores propiedades
 	 * @return valor propiedad
 	 */
-	private String reemplazarPropsSystem(String valor) {
+	private String reemplazarPropsSystem(final String valor) {
 		final String placeholder = "${system.";
 		String res = valor;
 		if (res != null) {

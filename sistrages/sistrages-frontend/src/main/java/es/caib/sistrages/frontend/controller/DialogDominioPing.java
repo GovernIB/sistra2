@@ -114,6 +114,7 @@ public class DialogDominioPing extends DialogControllerBase {
 				}
 			}
 		} catch (final Exception e) {
+			getLogger().error("Error haciendo el ping del dominio:" + this.id, e);
 			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Error:" + e.getLocalizedMessage());
 		}
 	}

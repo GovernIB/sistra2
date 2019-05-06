@@ -22,6 +22,7 @@ import es.caib.sistrages.core.api.model.DominioTramite;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
+import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.HistorialVersion;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Script;
@@ -40,6 +41,7 @@ import es.caib.sistrages.core.api.model.comun.FilaImportarTramite;
 import es.caib.sistrages.core.api.model.comun.FilaImportarTramiteVersion;
 import es.caib.sistrages.core.api.model.comun.TramiteSimple;
 import es.caib.sistrages.core.api.model.types.TypeAccionHistorial;
+import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
@@ -192,8 +194,19 @@ public class TramiteServiceImpl implements TramiteService {
 		}
 
 		// Borrado en cascada: dominios y formateadores
-		dominiosDao.removeByArea(id);
-		fuenteDatoDao.removeByArea(id);
+		// dominiosDao.removeByArea(id); fuenteDatoDao.removeByArea(id);
+
+		// Si tiene dominio/FD, entonces no se permite borrar
+		// porque se puede borrar sin querer
+		final List<Dominio> doms = dominiosDao.getAllByFiltro(TypeAmbito.AREA, id, null);
+		if (!doms.isEmpty()) {
+			return false;
+		}
+
+		final List<FuenteDatos> fuentes = fuenteDatoDao.getAllByFiltro(TypeAmbito.AREA, id, null);
+		if (!fuentes.isEmpty()) {
+			return false;
+		}
 
 		// Borramos area
 		areaDao.remove(id);
@@ -1036,7 +1049,7 @@ public class TramiteServiceImpl implements TramiteService {
 	public void permiteSubsanacion(final Long idPaso, final boolean activarSubsanacion) {
 		tramitePasoDao.permiteSubsanacion(idPaso, activarSubsanacion);
 	}
-	
+
 	@Override
 	@NegocioInterceptor
 	public void updateLiteral(final Literal pLiteral) {

@@ -95,8 +95,7 @@ public class DominioServiceImpl implements DominioService {
 	@Override
 	@NegocioInterceptor
 	public boolean removeDominio(final Long idDominio) {
-		dominioDao.remove(idDominio);
-		return true;
+		return dominioDao.remove(idDominio);
 	}
 
 	/*

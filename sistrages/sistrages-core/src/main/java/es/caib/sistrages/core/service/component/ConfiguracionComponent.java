@@ -13,6 +13,16 @@ import es.caib.sistrages.core.api.model.types.TypePlugin;
 public interface ConfiguracionComponent {
 
 	/**
+	 * Obtiene tipo plugin entidad o global. Primero busca si existe de tipo entidad
+	 * y sino busca por global.
+	 *
+	 * @param tipoPlugin
+	 *            tipo plugin
+	 * @return Plugin
+	 */
+	IPlugin obtenerPlugin(TypePlugin tipoPlugin, Long idEntidad);
+
+	/**
 	 * Obtiene tipo plugin global.
 	 *
 	 * @param tipoPlugin

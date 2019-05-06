@@ -81,7 +81,7 @@ public interface DominioDao {
 	 * @param idDominio
 	 *            the id dominio
 	 */
-	void remove(final Long idDominio);
+	boolean remove(final Long idDominio);
 
 	/**
 	 * Elimina by entidad.
