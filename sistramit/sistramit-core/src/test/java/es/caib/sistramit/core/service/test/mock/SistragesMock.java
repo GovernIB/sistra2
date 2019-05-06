@@ -196,6 +196,13 @@ public class SistragesMock {
 		plugin.setPropiedades(crearListaParametros());
 		plugins.add(plugin);
 
+		plugin = new RPlugin();
+		plugin.setTipo(TypePluginEntidad.VALIDACION_FIRMA_SERVIDOR.toString());
+		plugin.setClassname("es.caib.sistra2.commons.plugins.validacionfirma.mock.ValidacionFirmaPluginMock");
+		plugin.setPrefijoPropiedades("prefijo");
+		plugin.setPropiedades(crearListaParametros());
+		plugins.add(plugin);
+
 		return plugins;
 	}
 

@@ -1,16 +1,8 @@
 package es.caib.sistramit.core.service.component.flujo.pasos.registrar;
 
-import java.util.Date;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.caib.sistra2.commons.plugins.firmacliente.api.FicheroFirmado;
-import es.caib.sistra2.commons.plugins.firmacliente.api.FirmaPluginException;
-import es.caib.sistra2.commons.plugins.firmacliente.api.IFirmaPlugin;
-import es.caib.sistra2.commons.plugins.firmacliente.api.TypeEstadoFirmado;
 import es.caib.sistramit.core.api.exception.SesionFirmaClienteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
@@ -21,10 +13,10 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
-import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
-import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.component.integracion.FirmaComponent;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
+import es.caib.sistramit.core.service.model.flujo.DatosFicheroPersistencia;
 import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoRegistrar;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.DatosPersistenciaPaso;
@@ -34,9 +26,9 @@ import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.RespuestaAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
-import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.model.integracion.FirmaClienteRespuesta;
+import es.caib.sistramit.core.service.model.integracion.ValidacionFirmante;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
 
@@ -49,16 +41,13 @@ import es.caib.sistramit.core.service.util.UtilsFlujo;
 @Component("accionRtVerificarFirmaDocumento")
 public final class AccionVerificarFirmaDocumento implements AccionPaso {
 
-	/** Configuración. */
-	@Autowired
-	private ConfiguracionComponent configuracionComponent;
-
 	/** Atributo dao de AccionObtenerDatosAnexo. */
 	@Autowired
 	private FlujoPasoDao dao;
 
-	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(AccionVerificarFirmaDocumento.class);
+	/** Firma. */
+	@Autowired
+	private FirmaComponent firmaComponent;
 
 	@Override
 	public RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
@@ -79,11 +68,12 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 				nifFirmante);
 
 		// Recuperamos firma
-		final FirmaClienteRespuesta resFirma = recuperarFirma(dipa, pDefinicionTramite, idDocumento, instancia);
+		final FirmaClienteRespuesta resFirma = recuperarFirma(dipa, pDefinicionTramite, idDocumento, instancia,
+				nifFirmante, pVariablesFlujo);
 
 		// Según resultado validacion actualizamos estado paso y persistencia
 		// - Actualizamos detalle
-		actualizarDetalle(dipa, idDocumento, instancia, nifFirmante, resFirma, pVariablesFlujo);
+		actualizarDetalle(dipa, idDocumento, instancia, nifFirmante, resFirma);
 		// - Actualizamos persistencia
 		actualizarPersistencia(dipa, idDocumento, instancia, nifFirmante, resFirma, pVariablesFlujo);
 
@@ -117,8 +107,9 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 	 * @param pVariablesFlujo
 	 *            variables flujo
 	 */
-	private void actualizarPersistencia(DatosInternosPasoRegistrar dipa, String idDocumento, int instancia,
-			String nifFirmante, FirmaClienteRespuesta resFirma, VariablesFlujo pVariablesFlujo) {
+	private void actualizarPersistencia(final DatosInternosPasoRegistrar dipa, final String idDocumento,
+			final int instancia, final String nifFirmante, final FirmaClienteRespuesta resFirma,
+			final VariablesFlujo pVariablesFlujo) {
 
 		// Si la firma es correcta, almacenamos firma
 		if (resFirma.isFinalizada() && resFirma.isValida()) {
@@ -169,11 +160,9 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 	 *            nif firmante
 	 * @param resFirma
 	 *            resultado firma
-	 * @param pVariablesFlujo
-	 *            variables flujo
 	 */
-	private void actualizarDetalle(DatosInternosPasoRegistrar dipa, String idDocumento, int instancia,
-			String nifFirmante, FirmaClienteRespuesta resFirma, VariablesFlujo pVariablesFlujo) {
+	private void actualizarDetalle(final DatosInternosPasoRegistrar dipa, final String idDocumento, final int instancia,
+			final String nifFirmante, final FirmaClienteRespuesta resFirma) {
 		// Actualiza info firma
 		final DetallePasoRegistrar dpr = (DetallePasoRegistrar) dipa.getDetallePaso();
 		final DocumentoRegistro dr = dpr.buscarDocumentoRegistro(idDocumento, instancia);
@@ -200,13 +189,26 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 	 *            id documento
 	 * @param instancia
 	 *            instancia
+	 * @param pVariablesFlujo
+	 *            Variables flujo
 	 * @return Respuesta firma cliente
 	 */
 	private FirmaClienteRespuesta recuperarFirma(final DatosInternosPasoRegistrar dipa,
-			final DefinicionTramiteSTG pDefinicionTramite, final String idDocumento, final int instancia) {
+			final DefinicionTramiteSTG pDefinicionTramite, final String idDocumento, final int instancia,
+			final String nifFirmante, final VariablesFlujo pVariablesFlujo) {
 
-		final FirmaClienteRespuesta resFirma = new FirmaClienteRespuesta();
-		resFirma.setFecha(new Date());
+		// Id fichero
+		final String fileId = idDocumento + "-" + instancia;
+
+		// Id entidad
+		final String idEntidad = pDefinicionTramite.getDefinicionVersion().getIdEntidad();
+
+		// Recupera fichero a firmar
+		final ReferenciaFichero ref = UtilsPasoRegistrar.getInstance().obtenerReferenciaFicheroFirmar(pVariablesFlujo,
+				idDocumento, instancia);
+		final DatosFicheroPersistencia fic = dao
+				.recuperarFicheroPersistencia(new ReferenciaFichero(ref.getId(), ref.getClave()));
+		final byte[] signedDocument = fic.getContenido();
 
 		// Recupera sesion de firma asociada al documento
 		final String sf = dipa.recuperarSesionFirma(idDocumento, instancia);
@@ -214,45 +216,18 @@ public final class AccionVerificarFirmaDocumento implements AccionPaso {
 			throw new SesionFirmaClienteException("No existe sesion de firma almacenada en datos paso");
 		}
 
-		// Instancia plugin
-		final IFirmaPlugin plgFirma = (IFirmaPlugin) configuracionComponent.obtenerPluginEntidad(
-				TypePluginEntidad.FIRMA, pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+		// Recupera firma de componente externo
+		final FirmaClienteRespuesta resFirma = firmaComponent.recuperarResultadoFirmaExterna(idEntidad, sf, fileId);
 
-		// Verifica estado sesion firma y recupera fichero firmado
-		try {
-			final TypeEstadoFirmado estado = plgFirma.obtenerEstadoSesionFirma(sf);
-			if (estado == null) {
-				throw new SesionFirmaClienteException("No se ha recuperado estado firma");
-			}
-			if (estado == TypeEstadoFirmado.FINALIZADO_OK) {
-				// Recoge firma
-				final FicheroFirmado fic = plgFirma.obtenerFirmaFichero(sf, idDocumento + "-" + instancia);
-				final TypeFirmaDigital tipoFirma = TypeFirmaDigital.fromString(fic.getFirmaTipo().toString());
-				if (tipoFirma == null) {
-					throw new SesionFirmaClienteException("Tipo firma no reconocida: " + fic.getFirmaTipo().toString());
-				}
-				// Establece datos firma
-				resFirma.setFinalizada(true);
-				resFirma.setFirmaContenido(fic.getFirmaFichero());
-				resFirma.setFirmaTipo(tipoFirma);
-			} else if (estado == TypeEstadoFirmado.CANCELADO) {
-				resFirma.setCancelada(true);
-			}
-		} catch (final FirmaPluginException ex) {
-			throw new SesionFirmaClienteException("Error accediendo a plugin firma cliente: " + ex.getMessage(), ex);
-		}
-
-		// Cerramos sesion firma (no gestionamos excepcion)
-		try {
-			plgFirma.cerrarSesionFirma(sf);
-		} catch (final FirmaPluginException ex) {
-			LOGGER.warn("Error cerrando sesion de firma cliente: " + ex.getMessage(), ex);
-		}
+		// Realiza validación de la firma
+		final String idioma = pDefinicionTramite.getDefinicionVersion().getIdioma();
 
 		// Validamos firma y verificar nif firmante concuerda
 		if (resFirma.isFinalizada()) {
-			// TODO PENDIENTE PLUGIN VALIDACION FIRMA
-			resFirma.setValida(true);
+			final ValidacionFirmante validacionFirmante = firmaComponent.validarFirmante(idEntidad, idioma,
+					signedDocument, resFirma.getFirmaContenido(), nifFirmante);
+			resFirma.setValida(validacionFirmante.isCorrecto());
+			resFirma.setDetalleError(validacionFirmante.getDetalleError());
 		}
 
 		// Devuelve respuesta

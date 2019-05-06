@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RScript;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -169,35 +170,36 @@ public final class ControladorPasoRegistrarHelper {
 		// Ejecutamos script representado (si existe script y admite
 		// representación)
 		if (defPaso.isAdmiteRepresentacion()) {
-			if (UtilsSTG.existeScript(scriptRepresentante)) {
-				final Map<String, String> codigosErrorParametros = UtilsSTG
-						.convertLiteralesToMap(scriptRepresentante.getLiterales());
-				final RespuestaScript resultadoScriptParametros = scriptFlujo.executeScriptFlujo(
-						TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO, idPaso, scriptRepresentante.getScript(),
-						pVariablesFlujo, null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
-
-				final ResPersona resRepresentado = (ResPersona) resultadoScriptParametros.getResultado();
-				if (!resRepresentado.isNulo()) {
-					// Validamos que se haya establecido representado
-					if (StringUtils.isBlank(resRepresentado.getNif()) || StringUtils.isBlank(resRepresentado.getNombre())) {
-						throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(),
-								pVariablesFlujo.getIdSesionTramitacion(), idPaso,
-								"No se ha especificado representado en el script");
-					}
-					// Devolvemos representado establecido en el script
-					representado = new DatosUsuario(resRepresentado.getNif(), resRepresentado.getNombre(),
-							resRepresentado.getApellido1(), resRepresentado.getApellido2());
-				}
-			}else {
-				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(),
-						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
+			// Si admite representacion se debe indicar script
+			if (!UtilsSTG.existeScript(scriptRepresentante)) {
+				throw new ErrorConfiguracionException(
 						"Se ha indica que se admite representación pero no se ha cumplimentado script del representado");
+			}
+
+			// Ejecutamos script
+			final Map<String, String> codigosErrorParametros = UtilsSTG
+					.convertLiteralesToMap(scriptRepresentante.getLiterales());
+			final RespuestaScript resultadoScriptParametros = scriptFlujo.executeScriptFlujo(
+					TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO, idPaso, scriptRepresentante.getScript(),
+					pVariablesFlujo, null, pVariablesFlujo.getDocumentos(), codigosErrorParametros, pDefinicionTramite);
+
+			final ResPersona resRepresentado = (ResPersona) resultadoScriptParametros.getResultado();
+			if (!resRepresentado.isNulo()) {
+				// Validamos que se haya establecido representado
+				if (StringUtils.isBlank(resRepresentado.getNif()) || StringUtils.isBlank(resRepresentado.getNombre())) {
+					throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(),
+							pVariablesFlujo.getIdSesionTramitacion(), idPaso,
+							"No se ha especificado representado en el script");
+				}
+				// Devolvemos representado establecido en el script
+				representado = new DatosUsuario(resRepresentado.getNif(), resRepresentado.getNombre(),
+						resRepresentado.getApellido1(), resRepresentado.getApellido2());
 			}
 
 			// Si no se ha establecido representado y se admite representacion
 			// generamos error
-			if (representado != null && (StringUtils.isBlank(representado.getNif())
-					|| StringUtils.isBlank(representado.getNombre()))) {
+			if (representado != null
+					&& (StringUtils.isBlank(representado.getNif()) || StringUtils.isBlank(representado.getNombre()))) {
 				throw new ErrorScriptException(TypeScriptFlujo.SCRIPT_REPRESENTADO_REGISTRO.name(),
 						pVariablesFlujo.getIdSesionTramitacion(), idPaso,
 						"El trámite admite representacion y no se ha especificado representado en el script");

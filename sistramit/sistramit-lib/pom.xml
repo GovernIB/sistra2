@@ -140,6 +140,12 @@
 
 		<dependency>
 			<groupId>es.caib.sistra2</groupId>
+			<artifactId>sistracom-plugin-validacionfirma-mock</artifactId>
+			<version>${sistra2.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.caib.sistra2</groupId>
 			<artifactId>sistracom-plugin-registro-mock</artifactId>
 			<version>${sistra2.version}</version>
 		</dependency>
@@ -170,10 +176,9 @@
 			<version>${sistra2.version}</version>
 		</dependency>
 
-<!--
 		<dependency>
 			<groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
-  			<artifactId>pluginsib-validatesignature-afirmacxf</artifactId>
+  			<artifactId>pluginsib-validatesignature-afirmacxf-jboss7</artifactId>
 			<version>${plugins-ib.version}</version>
 			<exclusions>
 			    <exclusion>
@@ -204,9 +209,24 @@
 			      <groupId>org.apache.santuario</groupId>
 			      <artifactId>xmlsec</artifactId>
 			    </exclusion>
-			  </exclusions>
+			    <exclusion>
+			    	<groupId>org.bouncycastle</groupId>
+			    	<artifactId>bcprov-jdk16</artifactId>
+			    </exclusion>
+			    <exclusion>
+			    	<groupId>org.bouncycastle</groupId>
+			    	<artifactId>bcmail-jdk16</artifactId>
+			    </exclusion>
+			    <exclusion>
+			    	<groupId>org.bouncycastle</groupId>
+			    	<artifactId>bcprov-jdk15on</artifactId>
+			    </exclusion>
+			    <exclusion>
+			    	<groupId>org.bouncycastle</groupId>
+			    	<artifactId>bctsp-jdk16</artifactId>
+			    </exclusion>
+			</exclusions>
 		</dependency>
- -->
 
 		<dependency>
 			<groupId>org.fundaciobit.pluginsib.documentconverter</groupId>

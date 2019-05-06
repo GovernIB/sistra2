@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.model.flujo;
+package es.caib.sistramit.core.service.model.integracion;
 
 import java.io.Serializable;
 

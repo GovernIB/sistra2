@@ -477,16 +477,22 @@ public class AsistenteTramitacionController extends TramitacionController {
 		// datos verificacion)
 
 		String mensaje = "firmaClienteVerificada";
+		String detalleError = null;
 
 		if (fv.getCancelada() == TypeSiNo.SI) {
 			mensaje = "firmaClienteCancelada";
+		}
+
+		if (fv.getVerificada() == TypeSiNo.NO) {
+			mensaje = "firmaClienteNoVerificada";
+			detalleError = fv.getDetalleError();
 		}
 
 		// Cargamos asistente
 		debug("Firma verificada");
 
 		// En funcion del resultado, mostramos mensaje al usuario
-		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, null, TypeRespuestaJSON.SUCCESS);
+		final MensajeAsistente ma = generarMensajeErrorAsistente("atencion", mensaje, detalleError, TypeRespuestaJSON.SUCCESS);
 		this.setMensajeAsistente(ma);
 
 		// Redirigimos a carga asistente

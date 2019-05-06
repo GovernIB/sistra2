@@ -100,7 +100,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	private CalculoDatosFormularioHelper calculoDatosFormularioHelper;
 
 	@Override
-	public String cargarSesion(String ticket) {
+	public String cargarSesion(final String ticket) {
 
 		// Obtenemos datos inicio de sesión
 		final DatosInicioSesionFormulario dis = dao.obtenerDatosInicioSesionGestorFormularios(ticket);
@@ -191,13 +191,15 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	}
 
 	@Override
-	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(String idCampo, List<ValorCampo> valoresPagina) {
+	public ResultadoEvaluarCambioCampo evaluarCambioCampoPagina(final String idCampo,
+			final List<ValorCampo> valoresPagina) {
 		// Calculamos como se quedan los datos tras el cambio del campo
 		return calculoDatosFormularioHelper.calcularDatosPaginaCambioCampo(datosSesion, idCampo, valoresPagina);
 	}
 
 	@Override
-	public ResultadoGuardarPagina guardarPagina(List<ValorCampo> valoresPagina, String accionPersonalizada) {
+	public ResultadoGuardarPagina guardarPagina(final List<ValorCampo> valoresPagina,
+			final String accionPersonalizada) {
 
 		// Verificamos que no este finalizada la sesion de formulario
 		if (datosSesion.isFinalizada()) {
@@ -256,7 +258,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	}
 
 	@Override
-	public List<ValorCampo> deserializarValoresCampos(Map<String, String> valores) {
+	public List<ValorCampo> deserializarValoresCampos(final Map<String, String> valores) {
 		final List<ValorCampo> lista = new ArrayList<>();
 		for (final String idCampo : valores.keySet()) {
 			final String valorSerializado = valores.get(idCampo);
@@ -296,8 +298,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *            xml datos iniciales
 	 * @return Genera datos formulario interno
 	 */
-	private DatosFormularioInterno inicializarConfiguracionFormulario(RFormularioTramite defForm,
-			byte[] xmlDatosIniciales) {
+	private DatosFormularioInterno inicializarConfiguracionFormulario(final RFormularioTramite defForm,
+			final byte[] xmlDatosIniciales) {
 
 		// Parseamos datos iniciales
 		final XmlFormulario xmlForm = UtilsFormulario.xmlToValores(xmlDatosIniciales);
@@ -497,8 +499,9 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 *            XML Formulario
 	 * @return PDF
 	 */
-	private byte[] generarPdfFormulario(DefinicionTramiteSTG definicionTramiteSTG,
-			DatosInicioSesionFormulario datosInicioSesionFormulario, RPlantillaFormulario plantillaPdf, byte[] xml) {
+	private byte[] generarPdfFormulario(final DefinicionTramiteSTG definicionTramiteSTG,
+			final DatosInicioSesionFormulario datosInicioSesionFormulario, final RPlantillaFormulario plantillaPdf,
+			final byte[] xml) {
 
 		// Obtenemos plantilla
 		byte[] plantilla = null;
@@ -509,7 +512,8 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 			try (final FileInputStream fis = new FileInputStream(pathFile);) {
 				plantilla = IOUtils.toByteArray(fis);
 			} catch (final IOException e) {
-				throw new ErrorPdfFormularioException("Error generando pdf formulario", e);
+				throw new ErrorPdfFormularioException(
+						"Error generando pdf formulario, no se puede acceder a plantilla: " + e.getMessage(), e);
 			}
 		}
 
