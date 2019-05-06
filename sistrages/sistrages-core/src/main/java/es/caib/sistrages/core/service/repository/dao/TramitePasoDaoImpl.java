@@ -976,7 +976,7 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 		comp.setNoMostrarTexto(componente.isNoMostrarTexto());
 		comp.setNormalMultilinea(componente.isNormalMultilinea());
 		comp.setNormalNumeroLineas(componente.getNormalNumeroLineas());
-		comp.setNormalTamanyo(componente.getNormalNumeroLineas());
+		comp.setNormalTamanyo(componente.getNormalTamanyo());
 		comp.setNumColumnas(componente.getNumColumnas());
 		comp.setNumeroConSigno(componente.isNumeroConSigno());
 		comp.setNumeroDigitosDecimales(componente.getNumeroDigitosDecimales());
