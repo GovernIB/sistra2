@@ -374,7 +374,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		if (TypeExtension.PERSONALIZADAS.equals(data.getExtensionSeleccion())) {
 			final String[] listaExtensiones = data.getExtensiones().split(Constantes.LISTAS_SEPARADOR);
 			for (final String cadena : listaExtensiones) {
-				if (!cadena.matches("^\\w{3}$")) {
+				if (!cadena.matches("^\\w{3,4}$")) {
 					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("error.extensiones.formato"));
 					return false;
