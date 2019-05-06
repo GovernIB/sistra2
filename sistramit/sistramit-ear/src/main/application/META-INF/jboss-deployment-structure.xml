@@ -4,6 +4,7 @@
 	<deployment>
         <dependencies>
             <module name="org.javassist" export="true" slot="main" />
+            <module name="org.bouncycastle" export="true" slot="main" />
         </dependencies>
     </deployment>
 </jboss-deployment-structure>

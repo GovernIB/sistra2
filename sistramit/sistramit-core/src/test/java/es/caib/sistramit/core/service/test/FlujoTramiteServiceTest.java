@@ -27,6 +27,7 @@ import es.caib.sistramit.core.api.model.flujo.DetallePasoRellenar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
+import es.caib.sistramit.core.api.model.flujo.FirmaVerificacion;
 import es.caib.sistramit.core.api.model.flujo.PagoVerificacion;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
@@ -840,6 +841,10 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoRegistrar.VERIFICAR_FIRMA_DOCUMENTO, parametros);
+		final FirmaVerificacion firmaVerificacion = (FirmaVerificacion) resPaso.getParametroRetorno("resultado");
+		Assert.isTrue(
+				firmaVerificacion.getRealizada() == TypeSiNo.SI && firmaVerificacion.getVerificada() == TypeSiNo.SI,
+				"No se ha verificado la firma correctamente: " + firmaVerificacion.getDetalleError());
 
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		this.logger.info("Detalle paso: " + dp.print());
