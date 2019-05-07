@@ -37,7 +37,7 @@ import es.caib.sistra2.commons.ws.utils.WsClientUtil;
 public class DominioPluginRest extends AbstractPluginProperties implements IDominioPlugin {
 
 	/** Prefix. */
-	public static final String IMPLEMENTATION_BASE_PROPERTY = "loginib.rest.";
+	public static final String IMPLEMENTATION_BASE_PROPERTY = "ws.";
 
 	/** Propiedades. **/
 	private static final QName SERVICE_NAME = new QName("urn:es:caib:sistra:ws:v2:services", "SistraFacadeService");
@@ -231,9 +231,9 @@ public class DominioPluginRest extends AbstractPluginProperties implements IDomi
 	 */
 	private String getPropiedad(final String idDominio, final String propiedad) throws DominioPluginException {
 		String valor = null;
-		final String login = getProperty(IMPLEMENTATION_BASE_PROPERTY + "DOMINIO." + idDominio + ".LOGIN");
+		final String login = getProperty(DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "DOMINIO." + idDominio + ".LOGIN");
 		if (login != null) {
-			valor = getProperty(IMPLEMENTATION_BASE_PROPERTY + "LOGIN." + login + propiedad);
+			valor = getProperty(DOMINIO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + "LOGIN." + login + propiedad);
 		}
 		return valor;
 	}
