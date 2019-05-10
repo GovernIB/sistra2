@@ -192,22 +192,25 @@ public final class FirmaComponentImpl implements FirmaComponent {
 			detalleError = validateResponse.getValidationStatus().getErrorMsg();
 		} else {
 
-			// TODO ALEX: BUSCAR EN TODAS LA FIRMAS, NO SOLO EN LA PRIMERA
-
 			final SignatureDetailInfo[] detalleFirmas = validateResponse.getSignatureDetailInfo();
-			final SignatureDetailInfo detalleFirma = detalleFirmas[0];
-			final InformacioCertificat datosCertificadoFirma = detalleFirma.getCertificateInfo();
-			final String clasificacion = Integer.toString(datosCertificadoFirma.getClassificacio());
-			String nifFirma = null;
-			if ("0".equals(clasificacion) || "5".equals(clasificacion)) {
-				nifFirma = datosCertificadoFirma.getNifResponsable();
-			} else if ("1".equals(clasificacion) || "11".equals(clasificacion) || "12".equals(clasificacion)) {
-				nifFirma = datosCertificadoFirma.getUnitatOrganitzativaNifCif();
-			}
-			if (!StringUtils.equals(nifFirma, nifFirmante)) {
-				detalleError = literalesComponent.getLiteral(Literales.PASO_REGISTRAR, "firma.firmanteNoValido",
-						idioma);
-				firmaValida = false;
+			firmaValida = false;
+			detalleError = literalesComponent.getLiteral(Literales.PASO_REGISTRAR, "firma.firmanteNoValido",
+					idioma);
+			for (int i = 0; i < detalleFirmas.length; i++) {
+				final SignatureDetailInfo detalleFirma = detalleFirmas[i];
+				final InformacioCertificat datosCertificadoFirma = detalleFirma.getCertificateInfo();
+				final String clasificacion = Integer.toString(datosCertificadoFirma.getClassificacio());
+				String nifFirma = null;
+				if ("0".equals(clasificacion) || "5".equals(clasificacion)) {
+					nifFirma = datosCertificadoFirma.getNifResponsable();
+				} else if ("1".equals(clasificacion) || "11".equals(clasificacion) || "12".equals(clasificacion)) {
+					nifFirma = datosCertificadoFirma.getUnitatOrganitzativaNifCif();
+				}
+				if (StringUtils.equals(nifFirma, nifFirmante)) {
+					firmaValida = true;
+					detalleError = null;
+					break;
+				}
 			}
 		}
 
