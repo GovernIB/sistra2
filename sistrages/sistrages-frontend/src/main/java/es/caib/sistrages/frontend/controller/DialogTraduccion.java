@@ -157,28 +157,28 @@ public class DialogTraduccion extends DialogControllerBase {
 
 		if (visibleCa) {
 			if (textoCa == null || textoCa.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 		}
 		if (visibleEs) {
 			if (textoEs == null || textoEs.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 		}
 		if (visibleEn) {
 			if (textoEn == null || textoEn.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 		}
 		if (visibleDe) {
 			if (textoDe == null || textoDe.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));

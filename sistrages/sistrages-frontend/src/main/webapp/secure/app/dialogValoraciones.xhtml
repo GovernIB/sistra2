@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogValoraciones.titulo']}"/></title>
+</h:head>
+
+<h:body>
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogValoraciones.modoAcceso}"/>
+		<f:viewAction action="#{dialogValoraciones.init}" />
+	</f:metadata>
+	<h:form id="dialogValoraciones">
+		<p:outputPanel>
+			<!-- Growl mensajes -->
+			<p:growl id="growlDialog" widgetVar="growlDialog" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+
+			<h:panelGrid columnClasses="padding-left-18,wpx25" columns="2" cellpadding="5" styleClass="w100">
+
+					<p:dataTable id="dataTableValoraciones" emptyMessage="#{msg['error.emptyRows']}" var="td" value="#{dialogValoraciones.listaDatos}"
+						paginator="false" selectionMode="single" selection="#{dialogValoraciones.datoSeleccionado}"
+						rowKey="#{td.codigo}" >
+
+						<!-- Necesario para actualizar en controlador la fila seleccionada -->
+						<p:ajax event="rowSelect" global="false"/>
+						<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":dialogValoraciones"
+		                        />
+
+						<!-- Columnas -->
+						<p:column headerText="#{msg['dialogValoraciones.headerIdentificador']}">
+							<h:outputText value="#{td.identificador}" />
+						</p:column>
+
+						<p:column headerText="#{msg['dialogValoraciones.headerDescripcion']}">
+							<h:outputText value="#{td.descripcion.getTraduccion(sessionBean.lang,sessionBean.idiomas)}" />
+						</p:column>
+
+
+					</p:dataTable>
+
+					<p:column style="width:20px">
+						<p>
+							<p:commandButton id="btnNuevaValoracion" icon="fa fa-plus" title="#{msg['botones.nuevo']}" actionListener="#{dialogValoraciones.nuevaValoracion}" process="@this" update="growlDialog" rendered="#{!dialogValoraciones.consulta}">
+								<p:ajax event="dialogReturn" listener="#{dialogValoraciones.returnDialogo}" update="growlDialog dataTableValoraciones" />
+							</p:commandButton>
+						</p>
+						<p>
+							<p:commandButton id="btnEditarValoracion" icon="fa fa-edit" title="#{msg['botones.editar']}" actionListener="#{dialogValoraciones.editarValoracion}" process="@this" update="growlDialog" rendered="#{!dialogValoraciones.consulta}">
+								<p:ajax event="dialogReturn" listener="#{dialogValoraciones.returnDialogo}" update="growlDialog dataTableValoraciones" />
+							</p:commandButton>
+						</p>
+						<p>
+							<p:commandButton id="btnEliminarValoracion" icon="fa fa-minus" title="#{msg['botones.eliminar']}" actionListener="#{dialogValoraciones.quitarValoracion}" process="@this" update="growlDialog dataTableValoraciones" rendered="#{!dialogValoraciones.consulta}"/>
+						</p>
+					</p:column>
+
+			</h:panelGrid>
+			<h:outputScript >
+		      function triggerDblClick() {
+		        document.getElementById("form:btnEditar").click();
+		      }
+		    </h:outputScript>
+		</p:outputPanel>
+		<p:outputPanel styleClass="botonera">
+			<p:toolbar>
+				<f:facet name="right">
+					<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogValoraciones.cerrar}" process="@form" update="@form growlDialog" />
+					<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogValoraciones.ayuda()}" process="@this" update="growlDialog"/>
+				</f:facet>
+			</p:toolbar>
+		</p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

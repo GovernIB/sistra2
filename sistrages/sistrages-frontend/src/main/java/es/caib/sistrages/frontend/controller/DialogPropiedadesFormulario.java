@@ -201,7 +201,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
 		if (posicion >= this.data.getPaginas().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -218,7 +218,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		final int posicion = this.data.getPaginas().indexOf(this.paginaSeleccionada);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -290,7 +290,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 
 		// siempre tiene que haber una pagina
 		if (data.getPaginas().size() == 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.numeroPaginasMinimo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.numeroPaginasMinimo"));
 			return;
 		}
 
@@ -320,7 +320,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				plantilla = (PlantillaFormulario) respuesta.getResult();
 
 				if (formateadorDuplicado(plantilla)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 					return;
 				}
 
@@ -334,7 +334,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 				plantilla = (PlantillaFormulario) respuesta.getResult();
 
 				if (formateadorDuplicado(plantilla)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 					return;
 				}
 
@@ -461,7 +461,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		boolean filaSeleccionada = true;
 
 		if (filaseleccionada == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -471,7 +471,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 	 * Sin implementar.
 	 */
 	public void sinImplementar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 
 	/**

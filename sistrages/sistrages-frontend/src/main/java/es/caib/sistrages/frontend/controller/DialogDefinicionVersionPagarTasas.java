@@ -106,13 +106,13 @@ public class DialogDefinicionVersionPagarTasas extends DialogControllerBase {
 	public void aceptar() {
 
 		if (this.data.getDescripcion() == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.descripcion.norelleno"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.descripcion.norelleno"));
 			return;
 		}
 
 		if (tramiteService.checkTasaRepetida(tramiteVersion.getCodigo(), this.data.getIdentificador(),
 				this.data.getCodigo())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
 			return;
 		}
 

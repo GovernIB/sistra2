@@ -141,7 +141,7 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 
 	/** Lanza error de falta por rellenar el idioma texto. **/
 	private void lanzarError(final String texto) {
-		UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(texto));
+		addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(texto));
 		return;
 	}
 
@@ -217,28 +217,28 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 
 		if (visibleCa) {
 			if (textoCa == null || textoCa.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 		}
 		if (visibleEs) {
 			if (textoEs == null || textoEs.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 		}
 		if (visibleEn) {
 			if (textoEn == null || textoEn.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 		}
 		if (visibleDe) {
 			if (textoDe == null || textoDe.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(ERROR_FATAL_LITERAL));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));

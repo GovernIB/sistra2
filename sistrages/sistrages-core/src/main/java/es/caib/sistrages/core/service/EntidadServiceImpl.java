@@ -12,6 +12,7 @@ import es.caib.sistrages.core.api.exception.NoExisteDato;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
@@ -23,6 +24,7 @@ import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioSoporteDao;
 import es.caib.sistrages.core.service.repository.dao.FuenteDatoDao;
+import es.caib.sistrages.core.service.repository.dao.IncidenciaValoracionDao;
 import es.caib.sistrages.core.service.repository.dao.PluginsDao;
 
 @Service
@@ -39,6 +41,10 @@ public class EntidadServiceImpl implements EntidadService {
 	/** DAO Area. */
 	@Autowired
 	AreaDao areaDao;
+
+	/** DAO Aviso. */
+	@Autowired
+	IncidenciaValoracionDao avisoDao;
 
 	/** DAO Fichero Externo. */
 	@Autowired
@@ -368,4 +374,45 @@ public class EntidadServiceImpl implements EntidadService {
 		}
 	}
 
+	@Override
+	@NegocioInterceptor
+	public List<IncidenciaValoracion> getValoraciones(final Long idEntidad) {
+		return avisoDao.getValoraciones(idEntidad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public IncidenciaValoracion loadValoracion(final Long idValoracion) {
+		return avisoDao.loadValoracion(idValoracion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void addValoracion(final Long idEntidad, final IncidenciaValoracion valoracion) {
+		avisoDao.addValoracion(idEntidad, valoracion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void updateValoracion(final IncidenciaValoracion valoracion) {
+		avisoDao.updateValoracion(valoracion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public void removeValoracion(final Long idValoracion) {
+		avisoDao.removeValoracion(idValoracion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean existeCodigoDIR3(final String codigoDIR3, final Long idEntidad) {
+		return entidadDao.existeCodigoDIR3(codigoDIR3, idEntidad);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean existeIdentificadorValoracion(final String identificador, final Long idEntidad, final Long codigo) {
+		return avisoDao.existeIdentificador(identificador, idEntidad, codigo);
+	}
 }

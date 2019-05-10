@@ -61,8 +61,7 @@ public class DialogArea extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
 		if (areaService.checkIdentificadorAreaRepetido(data.getIdentificador(), data.getCodigo())) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
-					UtilJSF.getLiteral("dialogArea.error.identificadorDuplicado"));
+			addMessageContext(TypeNivelGravedad.INFO, "ERROR", UtilJSF.getLiteral("dialogArea.error.identificadorDuplicado"));
 			return;
 		}
 

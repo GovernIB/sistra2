@@ -71,7 +71,11 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	/** Tipos. **/
 	private List<TipoAsunto> tipos;
 
+	/** Entidad. **/
 	private Entidad entidad;
+
+	/** Mostra oficina (solo si en entidad no tiene el registro centralizado. **/
+	private boolean mostrarOficina;
 
 	/**
 	 * Inicialización.
@@ -79,6 +83,9 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	public void init() {
 		setData((FilaImportarTramiteVersion) UtilJSF.getSessionBean().getMochilaDatos()
 				.get(Constantes.CLAVE_MOCHILA_IMPORTAR));
+
+		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
+		mostrarOficina = !entidad.isRegistroCentralizado();
 
 		if (data.getTramiteVersionActual() == null) {
 
@@ -105,34 +112,36 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	 */
 	private void cargarDatosRegistro() {
 		iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
-		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 		try {
-			oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
-			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
 
-			boolean encontradoOficina = false;
-			if (this.data.getTramiteVersionResultadoOficina() != null) {
-				// Es muy marciano, pero por si el cod oficina registro no existe en el listado
-				// de oficinas de la entidad, puede pasar
-				for (final OficinaRegistro ofi : oficinas) {
-					if (this.data.getTramiteVersionResultadoOficina().equals(ofi.getCodigo())) {
-						encontradoOficina = true;
-						libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
-								this.data.getTramiteVersionResultadoOficina(), TypeRegistro.REGISTRO_ENTRADA);
-						break;
+			tipos = iplugin.obtenerTiposAsunto(entidad.getCodigoDIR3());
+			if (mostrarOficina) {
+				oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
+
+				boolean encontradoOficina = false;
+				if (this.data.getTramiteVersionResultadoOficina() != null) {
+					// Es muy marciano, pero por si el cod oficina registro no existe en el listado
+					// de oficinas de la entidad, puede pasar
+					for (final OficinaRegistro ofi : oficinas) {
+						if (this.data.getTramiteVersionResultadoOficina().equals(ofi.getCodigo())) {
+							encontradoOficina = true;
+							libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
+									this.data.getTramiteVersionResultadoOficina(), TypeRegistro.REGISTRO_ENTRADA);
+							break;
+						}
 					}
+
 				}
 
-			}
-
-			if (!encontradoOficina) {
-				libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), oficinas.get(0).getCodigo(),
-						TypeRegistro.REGISTRO_ENTRADA);
+				if (!encontradoOficina) {
+					libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(), oficinas.get(0).getCodigo(),
+							TypeRegistro.REGISTRO_ENTRADA);
+				}
 			}
 
 		} catch (final RegistroPluginException e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportarRegistro.registro.error"));
 		}
 	}
@@ -160,7 +169,7 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 					this.data.getTramiteVersionResultadoOficina(), TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportarRegistro.registro.error"));
 		}
 	}
@@ -171,36 +180,51 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	public void guardar() {
 
 		UtilJSF.getSessionBean().limpiaMochilaDatos();
-		final Map<String, Object> mochilaDatos = UtilJSF.getSessionBean().getMochilaDatos();
 
-		// Preparamos los textos (solo se utilizan de info en el xhtml)
-		for (final OficinaRegistro oficina : this.oficinas) {
-			if (oficina.getCodigo() != null
-					&& oficina.getCodigo().equals(this.data.getTramiteVersionResultadoOficina())) {
-				this.data.setTramiteVersionResultadoOficinaText(oficina.getNombre());
-				break;
-			}
-		}
-		for (final TipoAsunto tipo : this.tipos) {
-			if (tipo.getCodigo() != null && tipo.getCodigo().equals(this.data.getTramiteVersionResultadoTipo())) {
-				this.data.setTramiteVersionResultadoTipoText(tipo.getNombre());
-				break;
-			}
-		}
-		for (final LibroOficina libro : this.libros) {
-			if (libro.getCodigo() != null && libro.getCodigo().equals(this.data.getTramiteVersionResultadoLibro())) {
-				this.data.setTramiteVersionResultadoLibroText(libro.getNombre());
+		for (final TipoAsunto tipoRegistro : this.tipos) {
+			if (tipoRegistro.getCodigo() != null
+					&& tipoRegistro.getCodigo().equals(this.data.getTramiteVersionResultadoTipo())) {
+				this.data.setTramiteVersionResultadoTipoText(tipoRegistro.getNombre());
 				break;
 			}
 		}
 
-		mochilaDatos.put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.data);
+		if (mostrarOficina) {
+			guardarOficina();
+		} else {
+			this.data.setTramiteVersionResultadoOficinaText("");
+			this.data.setTramiteVersionResultadoOficina("");
+			this.data.setTramiteVersionResultadoLibroText("");
+			this.data.setTramiteVersionResultadoLibro("");
+		}
 
+		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_IMPORTAR, this.data);
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
+	}
+
+	/**
+	 * Guarda los datos de oficina (oficina registro y libro oficina)
+	 */
+	private void guardarOficina() {
+		// Preparamos los textos (solo se utilizan de info en el xhtml)
+		for (final OficinaRegistro oficinaRegistro : this.oficinas) {
+			if (oficinaRegistro.getCodigo() != null
+					&& oficinaRegistro.getCodigo().equals(this.data.getTramiteVersionResultadoOficina())) {
+				this.data.setTramiteVersionResultadoOficinaText(oficinaRegistro.getNombre());
+				break;
+			}
+		}
+		for (final LibroOficina libroRegistro : this.libros) {
+			if (libroRegistro.getCodigo() != null
+					&& libroRegistro.getCodigo().equals(this.data.getTramiteVersionResultadoLibro())) {
+				this.data.setTramiteVersionResultadoLibroText(libroRegistro.getNombre());
+				break;
+			}
+		}
 	}
 
 	/**
@@ -331,6 +355,21 @@ public class DialogTramiteImportarRegistro extends DialogControllerBase {
 	 */
 	public void setTipos(final List<TipoAsunto> tipos) {
 		this.tipos = tipos;
+	}
+
+	/**
+	 * @return the mostrarOficina
+	 */
+	public boolean isMostrarOficina() {
+		return mostrarOficina;
+	}
+
+	/**
+	 * @param mostrarOficina
+	 *            the mostrarOficina to set
+	 */
+	public void setMostrarOficina(final boolean mostrarOficina) {
+		this.mostrarOficina = mostrarOficina;
 	}
 
 }

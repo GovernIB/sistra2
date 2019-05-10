@@ -297,13 +297,13 @@ public class DialogScript extends DialogControllerBase {
 	public void aceptar() {
 
 		if (isIdentificadorMensajesRepetido()) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.ERROR, "ERROR",
+			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
 					UtilJSF.getLiteral("dialogScript.error.identificadorDuplicado"));
 			return;
 		}
 
 		if (data.getMensajes() != null && !data.getMensajes().isEmpty() && estaVacio()) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.ERROR, "ERROR",
+			addMessageContext(TypeNivelGravedad.ERROR, "ERROR",
 					UtilJSF.getLiteral("dialogScript.error.scriptvacioconmensajes"));
 			return;
 		}
@@ -417,7 +417,7 @@ public class DialogScript extends DialogControllerBase {
 	private boolean verificarFilaSeleccionadaMensaje() {
 		boolean filaSeleccionada = true;
 		if (this.mensajeSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -507,7 +507,8 @@ public class DialogScript extends DialogControllerBase {
 	 * Muestra el lateral de ayuda.
 	 */
 	public void mostrarAyuda(final TypePluginScript plugin) {
-		this.urlIframe = "AyudaServlet?ts=" + System.currentTimeMillis() + "&lang=" + UtilJSF.getIdioma().toString() + "&plugin=" + plugin.name();
+		this.urlIframe = "AyudaServlet?ts=" + System.currentTimeMillis() + "&lang=" + UtilJSF.getIdioma().toString()
+				+ "&plugin=" + plugin.name();
 		this.mostrarLateralAyuda = true;
 	}
 
@@ -515,7 +516,7 @@ public class DialogScript extends DialogControllerBase {
 	 * Muestra mensaje de copy.
 	 */
 	public void mensajeCopy() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 	}
 
 	/**

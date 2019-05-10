@@ -78,7 +78,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 		ambito = fuente.getAmbito();
 		campos = fuente.getCampos();
 		if (campos == null || campos.isEmpty()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFuenteDatos.faltanCampos"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFuenteDatos.faltanCampos"));
 		} else {
 			refreshTabla();
 		}
@@ -131,7 +131,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 					message = UtilJSF.getLiteral("info.modificado.ok");
 				} catch (final Exception ex) {
 					if (ex.getCause() instanceof FuenteDatosPkException) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+						addMessageContext(TypeNivelGravedad.INFO,
 								UtilJSF.getLiteral("info.importarCSV.error.pk"));
 						return;
 					}
@@ -148,7 +148,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 
 		// Mostramos mensaje
 		if (message != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			addMessageContext(TypeNivelGravedad.INFO, message);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 
 		if (respuesta != null && !respuesta.isCanceled()) {
 			final String message = UtilJSF.getLiteral("info.importarCSV.ok");
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			addMessageContext(TypeNivelGravedad.INFO, message);
 			refreshTabla();
 		}
 
@@ -227,7 +227,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 
 		final int posicion = this.data.getFilas().indexOf(this.valorSeleccionado);
 		if (posicion >= this.data.getFilas().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -244,7 +244,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 
 		final int posicion = this.data.getFilas().indexOf(this.valorSeleccionado);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -298,7 +298,7 @@ public class DialogFuenteDatos extends DialogControllerBase {
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;

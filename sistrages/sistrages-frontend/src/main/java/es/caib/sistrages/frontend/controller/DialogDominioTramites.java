@@ -68,7 +68,7 @@ public class DialogDominioTramites extends DialogControllerBase {
 	 */
 	public void consultarTramite() {
 		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			return;
 		}
 

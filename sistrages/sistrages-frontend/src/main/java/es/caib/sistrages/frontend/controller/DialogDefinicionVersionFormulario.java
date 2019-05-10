@@ -310,13 +310,13 @@ public class DialogDefinicionVersionFormulario extends DialogControllerBase {
 		if (TypeFormularioObligatoriedad.DEPENDIENTE.equals(data.getObligatoriedad())
 				&& (data.getScriptObligatoriedad() == null
 						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
 			return false;
 		}
 
 		if (tramiteService.checkFormularioRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
 				this.data.getCodigo())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
 			return false;
 		}
 

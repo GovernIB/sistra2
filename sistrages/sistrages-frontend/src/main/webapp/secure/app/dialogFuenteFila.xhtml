@@ -37,7 +37,7 @@
 			<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="w25," columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
 
 			  	<c:forEach items="#{dialogFuenteFila.data.datos}" var="dato">
-			  			<h:outputText value="#{dato.idCampo}" />
+			  			<p:outputLabel value="#{dato.idCampo}" />
 			  			<p:inputTextarea value="#{dato.valor}" rows="4" cols="40" required="true" />
 				</c:forEach>
 

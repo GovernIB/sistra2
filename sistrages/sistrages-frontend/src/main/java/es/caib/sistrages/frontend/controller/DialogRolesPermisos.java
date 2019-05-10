@@ -81,7 +81,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 
 		if (gestor == null && helpdesk == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
 			return;
 		} else {
 
@@ -170,7 +170,7 @@ public class DialogRolesPermisos extends DialogControllerBase {
 			if (data.isAlta() || data.isModificacion() || data.isConsulta() || data.isHelpdesk()) {
 				return true;
 			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.permiso"));
 				return false;
 			}
 		} else {

@@ -4,6 +4,7 @@
 package es.caib.sistrages.frontend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -12,11 +13,19 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
+import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.Literal;
+import es.caib.sistrages.core.api.model.types.TypePlugin;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
+import es.caib.sistrages.core.api.service.ComponenteService;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.core.api.service.SystemService;
 import es.caib.sistrages.frontend.model.DialogResult;
@@ -40,20 +49,29 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 @ViewScoped
 public class ViewConfiguracionEntidad extends ViewControllerBase {
 
-	/**
-	 * Servicio.
-	 */
+	/** Log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(DialogDefinicionVersionRegistrarTramite.class);
+
+	/** Entidad service. **/
 	@Inject
 	private EntidadService entidadService;
 
+	/** System service. **/
 	@Inject
 	private SystemService systemService;
+
+	/** Componente service. */
+	@Inject
+	private ComponenteService componenteService;
 
 	/** Datos elemento. */
 	private Entidad data;
 
 	/** Id entidad. */
 	private Long idEntidad;
+
+	/** Oficinas. **/
+	private List<OficinaRegistro> oficinas;
 
 	/**
 	 * Inicializacion.
@@ -68,6 +86,16 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 		// recupera datos entidad activa
 		setData(entidadService.loadEntidad(idEntidad));
+
+		final IRegistroPlugin iplugin = (IRegistroPlugin) componenteService.obtenerPluginEntidad(TypePlugin.REGISTRO,
+				UtilJSF.getIdEntidad());
+		try {
+			oficinas = iplugin.obtenerOficinasRegistro(data.getCodigoDIR3(), TypeRegistro.REGISTRO_ENTRADA);
+		} catch (final RegistroPluginException e) {
+			LOGGER.error("Error obteniendo informacion de registro", e);
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
+		}
 
 	}
 
@@ -366,6 +394,9 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		UtilJSF.getSessionBean().refrescarEntidad();
 	}
 
+	/**
+	 * Abre el dialog con los formularios de soporte.
+	 */
 	public void abrirFormularioSoporte() {
 		// Muestra dialogo
 		TypeModoAcceso modo = null;
@@ -378,24 +409,50 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 		UtilJSF.openDialog(ViewFormularioSoporte.class, modo, null, true, 850, 350);
 	}
 
+	/** Abre el dialog con las valoraciones predefinidas. */
+	public void abrirValoraciones() {
+		// Muestra dialogo
+		TypeModoAcceso modo = null;
+
+		if (getPermiteEditar()) {
+			modo = TypeModoAcceso.ALTA;
+		} else {
+			modo = TypeModoAcceso.CONSULTA;
+		}
+		UtilJSF.openDialog(DialogValoraciones.class, modo, null, true, 850, 350);
+	}
+
+	/**
+	 * Descarga fichero
+	 *
+	 * @param fichero
+	 */
 	public void descargaFichero(final Fichero fichero) {
 		if (fichero != null && fichero.getCodigo() != null) {
 			UtilJSF.redirectJsfPage(Constantes.DESCARGA_FICHEROS_URL + "?id=" + fichero.getCodigo());
 		}
 	}
 
+	/** Gestion de fichero del logo gestor. **/
 	public void gestionFicheroLogoGestor() {
 		gestionFichero(TypeCampoFichero.LOGO_GESTOR_ENTIDAD);
 	}
 
+	/** Gestion de fichero del logo asistente. **/
 	public void gestionFicheroLogoAsistente() {
 		gestionFichero(TypeCampoFichero.LOGO_ASISTENTE_ENTIDAD);
 	}
 
+	/** Gestion de fichero del css asistente. **/
 	public void gestionFicheroCssAsistente() {
 		gestionFichero(TypeCampoFichero.CSS_ENTIDAD);
 	}
 
+	/**
+	 * Método unificado para gestionar ficheros.
+	 *
+	 * @param campoFichero
+	 */
 	private void gestionFichero(final TypeCampoFichero campoFichero) {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
@@ -430,6 +487,21 @@ public class ViewConfiguracionEntidad extends ViewControllerBase {
 	 */
 	public void setData(final Entidad data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the oficinas
+	 */
+	public List<OficinaRegistro> getOficinas() {
+		return oficinas;
+	}
+
+	/**
+	 * @param oficinas
+	 *            the oficinas to set
+	 */
+	public void setOficinas(final List<OficinaRegistro> oficinas) {
+		this.oficinas = oficinas;
 	}
 
 }

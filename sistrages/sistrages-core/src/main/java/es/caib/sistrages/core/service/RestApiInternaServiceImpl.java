@@ -26,12 +26,14 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.FormRenderComponent;
 import es.caib.sistrages.core.service.component.FuenteDatosComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
+import es.caib.sistrages.core.service.repository.dao.IncidenciaValoracionDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
 import es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
@@ -54,15 +56,11 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(RestApiInternaServiceImpl.class);
 
-	/**
-	 * configuracion global dao.
-	 */
+	/** configuracion global dao. */
 	@Autowired
 	ConfiguracionGlobalDao configuracionGlobalDao;
 
-	/**
-	 * plugin dao.
-	 */
+	/** plugin dao. */
 	@Autowired
 	PluginsDao pluginDao;
 
@@ -97,6 +95,10 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	/** DAO Area. */
 	@Autowired
 	AreaDao areaDao;
+
+	/** DAO Area. */
+	@Autowired
+	IncidenciaValoracionDao avisoDao;
 
 	/**
 	 * FormateadorFormulario
@@ -331,6 +333,12 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@NegocioInterceptor
 	public String getIdentificadorByCodigoVersion(final Long codigoTramiteVersion) {
 		return tramiteDao.getIdentificadorByCodigoVersion(codigoTramiteVersion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<IncidenciaValoracion> getValoraciones(final Long codigo) {
+		return avisoDao.getValoraciones(codigo);
 	}
 
 }

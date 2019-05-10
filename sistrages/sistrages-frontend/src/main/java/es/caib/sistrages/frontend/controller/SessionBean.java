@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -259,23 +258,22 @@ public class SessionBean {
 	 */
 	public void showError() {
 		if (getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_MSG) != null) {
-			final String literalError = (String) getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_MSG);
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, literalError);
+			final String msg = (String) getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_MSG);
+			String title = null;
+			if (getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_TLE) != null) {
+				title = (String) getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_TLE);
+			}
+			final TypeNivelGravedad gravedad = TypeNivelGravedad
+					.valueOf(getMochilaDatos().get(Constantes.CLAVE_MOCHILA_ERRORES_NVL).toString());
+			if (title == null) {
+				UtilJSF.addMessageContext(gravedad, msg);
+			} else {
+				UtilJSF.addMessageContext(gravedad, msg, title);
+			}
 			limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_ERRORES_MSG);
+			limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_ERRORES_NVL);
+			limpiaMochilaDatos(Constantes.CLAVE_MOCHILA_ERRORES_TLE);
 		}
-	}
-
-	/**
-	 * Se encarga de llamar al botón que generará el evento del botón
-	 *
-	 * @param literal
-	 */
-	public void prepararErrorGrowl(final String literal) {
-		UtilJSF.getSessionBean().getMochilaDatos().put(Constantes.CLAVE_MOCHILA_ERRORES_MSG,
-				UtilJSF.getLiteral(literal));
-		final RequestContext context = RequestContext.getCurrentInstance();
-		final String evento = "window.parent.document.getElementById('formHeader:hiddenGrowl').click()";
-		context.execute(evento);
 	}
 
 	/** Cambio de idioma. */

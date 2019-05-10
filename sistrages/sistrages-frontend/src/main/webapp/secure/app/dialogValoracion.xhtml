@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeFormularioSoporte" var="TypeFormularioSoporte" />
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogValoracion.titulo']}"/></title>
+</h:head>
+
+<h:body>
+	<f:facet name="last">
+	    <h:outputStylesheet library="css" name="style.css" />
+	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogValoracion.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogValoracion.id}"/>
+		<f:viewAction action="#{dialogValoracion.init}" />
+	</f:metadata>
+
+	<h:form id="dialogValoracion" styleClass="margin-top-10">
+
+  		<!-- Growl mensajes -->
+		<p:growl id="growlDialogValoracion" widgetVar="growlDialogValoracion" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}" />
+
+		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25, " columns = "2" cellpadding = "5" cellspacing = "0"  width="100%">
+
+			<p:outputLabel for="inputIdentificador" value="#{msg['dialogValoracion.headerIdentificador']}" />
+			<p:inputText id="inputIdentificador" value="#{dialogValoracion.data.identificador}" size="40" required="true" maxlength="20"  onblur="this.value = this.value.toUpperCase();" validatorMessage="#{msg['error.validacion.identificador']}">
+					<p:keyFilter regEx="/[a-z0-9_-]/i" preventPaste="false"/>
+					<f:validateRegex pattern="^[a-zA-Z0-9_-]{1,20}$" />
+			</p:inputText>
+
+			<p:outputLabel for="inputDescripcionHidden" value="#{msg['dialogValoracion.headerDescripcion']}" />
+			<p:column>
+				<p:inputText id="inputDescripcion"  value="#{dialogValoracion.descripcion}" disabled="true" required="true" size="40" styleClass="margin-right-10 #{not descripcionComponent.valid ? 'ui-state-error' : ''}"/>
+				<p:inputText id="inputDescripcionHidden" value="#{dialogValoracion.descripcion}" type="hidden" required="true" binding="#{descripcionComponent}"/>
+				<p:commandButton id="btnDescripcion" icon="fa fa-language" actionListener="#{dialogValoracion.editarDescripcion}" process="@this" update="growlDialogValoracion" style="margin-right:5px">
+            		<p:ajax event="dialogReturn" listener="#{dialogValoracion.returnDialogoDescripcion}" update="growlDialogValoracion inputDescripcion inputDescripcionHidden" />
+        		</p:commandButton>
+			</p:column>
+
+
+	 	</h:panelGrid>
+
+ 	    <p:outputPanel styleClass="botonera">
+	     	<p:toolbar>
+				<f:facet name="right">
+	        		<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogValoracion.aceptar}" process="@form" update="@form growlDialogValoracion" styleClass="boton-azul" />
+					<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogValoracion.cancelar}" process="@this"/>
+				</f:facet>
+		  </p:toolbar>
+	    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

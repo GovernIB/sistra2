@@ -360,14 +360,14 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 
 		if (tramiteService.checkAnexoRepetido(tramiteVersion.getCodigo(), this.data.getIdentificador(),
 				this.data.getCodigo())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
 			return false;
 		}
 
 		if (TypeFormularioObligatoriedad.DEPENDIENTE.equals(data.getObligatoriedad())
 				&& (data.getScriptObligatoriedad() == null
 						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
 			return false;
 		}
 
@@ -375,7 +375,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 			final String[] listaExtensiones = data.getExtensiones().split(Constantes.LISTAS_SEPARADOR);
 			for (final String cadena : listaExtensiones) {
 				if (!cadena.matches("^\\w{3,4}$")) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("error.extensiones.formato"));
 					return false;
 				}
@@ -383,7 +383,7 @@ public class DialogDefinicionVersionAnexo extends DialogControllerBase {
 		}
 
 		if (data.isDebeAnexarFirmado() && data.isDebeFirmarDigitalmente()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.firma.unicidad"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.firma.unicidad"));
 			return false;
 		}
 

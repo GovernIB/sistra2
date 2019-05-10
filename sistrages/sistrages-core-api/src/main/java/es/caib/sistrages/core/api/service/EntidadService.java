@@ -5,6 +5,7 @@ import java.util.List;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 
 /**
@@ -181,5 +182,67 @@ public interface EntidadService {
 	 * @return true, si se ha realizado con &eacute;xito
 	 */
 	public boolean removeOpcionFormularioSoporte(Long id);
+
+	/**
+	 * Obtiene la lista de valoraciones que tiene la entidad.
+	 *
+	 * @param idEntidad
+	 *            Codigo de la entidad.
+	 * @return Listado de valoraciones
+	 */
+	public List<IncidenciaValoracion> getValoraciones(final Long idEntidad);
+
+	/**
+	 * Obtiene la valoracion.
+	 *
+	 * @param idValoracion
+	 * @return
+	 */
+	public IncidenciaValoracion loadValoracion(Long idValoracion);
+
+	/**
+	 * Añade una valoracion.
+	 *
+	 * @param idEntidad
+	 * @param data
+	 */
+	public void addValoracion(Long idEntidad, IncidenciaValoracion valoracion);
+
+	/**
+	 * Actualiza una valoracion.
+	 *
+	 * @param valoracion
+	 */
+	public void updateValoracion(IncidenciaValoracion valoracion);
+
+	/**
+	 * Borra una valoracion
+	 *
+	 * @param idValoracion
+	 */
+	void removeValoracion(Long idValoracion);
+
+	/**
+	 * Comprueba si al crear o modificar una entidad, si repetimos código dir
+	 *
+	 * @param codigoDIR3
+	 *            Código DIR3
+	 * @param idEntidad
+	 *            Puede ser nulo cuando es alta
+	 * @return Devuelve true si hay ya alguna entidad con dicho código DIR3
+	 */
+	public boolean existeCodigoDIR3(String codigoDIR3, Long idEntidad);
+
+	/**
+	 * Comprueba si al crear o modificar una valoración, si repetimos el
+	 * identificador segun entidad.
+	 *
+	 * @param identificador
+	 * @param idEntidad
+	 * @param codigo
+	 *            Puede ser nulo cuando es alta
+	 * @return Devuelve true si hay ya alguna valoración con dicho identificador
+	 */
+	public boolean existeIdentificadorValoracion(String identificador, Long idEntidad, Long codigo);
 
 }

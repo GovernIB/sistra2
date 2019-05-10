@@ -154,7 +154,7 @@ public class VersionTramiteAdapter {
 			rVersionTramite.setControlAcceso(generaControlAcceso(tv));
 			rVersionTramite.setIdEntidad(generaidEntidadfromTramite(tv.getIdTramite()));
 			rVersionTramite.setIdArea(generaidAreafromTramite(tv.getIdTramite()));
-			rVersionTramite.setPropiedades(generaPropiedades(tv));
+			rVersionTramite.setPropiedades(generaPropiedades(tv, idioma));
 		}
 		return rVersionTramite;
 
@@ -206,7 +206,7 @@ public class VersionTramiteAdapter {
 	 * @param tv
 	 * @return
 	 */
-	private RVersionTramitePropiedades generaPropiedades(final TramiteVersion tv) {
+	private RVersionTramitePropiedades generaPropiedades(final TramiteVersion tv, final String idioma) {
 
 		final RVersionTramitePropiedades res = new RVersionTramitePropiedades();
 		res.setAutenticado(tv.isAutenticado());
@@ -221,8 +221,8 @@ public class VersionTramiteAdapter {
 		res.setNivelQAA(tv.getNivelQAA());
 		res.setNoAutenticado(tv.isNoAutenticado());
 		res.setPersistente(tv.isPersistencia());
-		res.setScriptParametrosIniciales(AdapterUtils.generaScript(tv.getScriptInicializacionTramite()));
-		res.setScriptPersonalizacion(AdapterUtils.generaScript(tv.getScriptPersonalizacion()));
+		res.setScriptParametrosIniciales(AdapterUtils.generaScript(tv.getScriptInicializacionTramite(), idioma));
+		res.setScriptPersonalizacion(AdapterUtils.generaScript(tv.getScriptPersonalizacion(), idioma));
 		return res;
 	}
 
@@ -293,10 +293,10 @@ public class VersionTramiteAdapter {
 				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesPresentacion(), idioma));
 		resPaso.setInstruccionesTramitacionHtml(
 				AdapterUtils.generarLiteralIdioma(paso.getInstruccionesFinTramitacion(), idioma));
-		resPaso.setScriptDestino(AdapterUtils.generaScript(paso.getScriptDestinoRegistro()));
-		resPaso.setScriptPresentador(AdapterUtils.generaScript(paso.getScriptPresentador()));
-		resPaso.setScriptRepresentante(AdapterUtils.generaScript(paso.getScriptRepresentante()));
-		resPaso.setScriptValidar(AdapterUtils.generaScript(paso.getScriptValidarRegistrar()));
+		resPaso.setScriptDestino(AdapterUtils.generaScript(paso.getScriptDestinoRegistro(), idioma));
+		resPaso.setScriptPresentador(AdapterUtils.generaScript(paso.getScriptPresentador(), idioma));
+		resPaso.setScriptRepresentante(AdapterUtils.generaScript(paso.getScriptRepresentante(), idioma));
+		resPaso.setScriptValidar(AdapterUtils.generaScript(paso.getScriptValidarRegistrar(), idioma));
 		resPaso.setValidaRepresentacion(paso.isValidaRepresentacion());
 		resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 		resPaso.setInstruccionesSubsanacion(
@@ -320,7 +320,7 @@ public class VersionTramiteAdapter {
 			resPaso.setTipo(paso.getTipo().toString());
 			resPaso.setPasoFinal(paso.isPasoFinal());
 			resPaso.setAnexos(generaAnexos(paso.getDocumentos(), idioma));
-			resPaso.setScriptAnexosDinamicos(AdapterUtils.generaScript(paso.getScriptAnexosDinamicos()));
+			resPaso.setScriptAnexosDinamicos(AdapterUtils.generaScript(paso.getScriptAnexosDinamicos(), idioma));
 			resPaso.setPermiteSubsanar(paso.isPermiteSubsanar());
 		}
 		return resPaso;
@@ -414,11 +414,14 @@ public class VersionTramiteAdapter {
 				formularioTramite.setFormularioInterno(generaFormularioInterno(f.getIdFormularioInterno(), idioma));
 				formularioTramite.setIdentificador(f.getIdentificador());
 				formularioTramite.setObligatoriedad(generaObligatoriedad(f.getObligatoriedad()));
-				formularioTramite.setScriptDatosIniciales(AdapterUtils.generaScript(f.getScriptDatosIniciales()));
-				formularioTramite.setScriptObligatoriedad(AdapterUtils.generaScript(f.getScriptObligatoriedad()));
-				formularioTramite.setScriptFirmantes(AdapterUtils.generaScript(f.getScriptFirma()));
-				formularioTramite.setScriptParametrosApertura(AdapterUtils.generaScript(f.getScriptParametros()));
-				formularioTramite.setScriptPostguardar(AdapterUtils.generaScript(f.getScriptRetorno()));
+				formularioTramite
+						.setScriptDatosIniciales(AdapterUtils.generaScript(f.getScriptDatosIniciales(), idioma));
+				formularioTramite
+						.setScriptObligatoriedad(AdapterUtils.generaScript(f.getScriptObligatoriedad(), idioma));
+				formularioTramite.setScriptFirmantes(AdapterUtils.generaScript(f.getScriptFirma(), idioma));
+				formularioTramite
+						.setScriptParametrosApertura(AdapterUtils.generaScript(f.getScriptParametros(), idioma));
+				formularioTramite.setScriptPostguardar(AdapterUtils.generaScript(f.getScriptRetorno(), idioma));
 				res.add(formularioTramite);
 			}
 		}
@@ -444,7 +447,7 @@ public class VersionTramiteAdapter {
 				formInterno.setPaginas(generarPaginas(d.getPaginas(), d.getCodigo(), idioma));
 				formInterno.setPlantillas(generarPlantillas(d.getPlantillas(), idioma));
 
-				formInterno.setScriptPlantillas(AdapterUtils.generaScript(d.getScriptPlantilla()));
+				formInterno.setScriptPlantillas(AdapterUtils.generaScript(d.getScriptPlantilla(), idioma));
 				formInterno.setTitulo(AdapterUtils.generarLiteralIdioma(d.getTextoCabecera(), idioma));
 
 			}
@@ -534,7 +537,7 @@ public class VersionTramiteAdapter {
 				}
 				res.setLineas(generarLineas(p.getLineas(), idioma));
 				res.setPaginaFinal(p.isPaginaFinal());
-				res.setScriptValidacion(AdapterUtils.generaScript(p.getScriptValidacion()));
+				res.setScriptValidacion(AdapterUtils.generaScript(p.getScriptValidacion(), idioma));
 				lpf.add(res);
 			}
 		}
@@ -673,11 +676,11 @@ public class VersionTramiteAdapter {
 			resSL.setListaFija(generaListaFija(cs.getListaValorListaFija(), idioma));
 			break;
 		case SCRIPT:
-			resSL.setScriptListaValores(AdapterUtils.generaScript(cs.getScriptValoresPosibles()));
+			resSL.setScriptListaValores(AdapterUtils.generaScript(cs.getScriptValoresPosibles(), idioma));
 			break;
 		}
 		resSL.setMostrarEtiqueta(!cs.isNoMostrarTexto());
-		resSL.setPropiedadesCampo(generarPropiedadesCampo(cs));
+		resSL.setPropiedadesCampo(generarPropiedadesCampo(cs, idioma));
 		resSL.setTipo(cs.getTipo().toString());
 		resSL.setTipoSelector(cs.getTipoCampoIndexado().toString());
 		resSL.setTipoListaValores(cs.getTipoListaValores().toString());
@@ -702,7 +705,7 @@ public class VersionTramiteAdapter {
 		resCH.setEtiqueta(AdapterUtils.generarLiteralIdioma(cch.getTexto(), idioma));
 		resCH.setIdentificador(cch.getIdComponente());
 		resCH.setMostrarEtiqueta(!cch.isNoMostrarTexto());
-		resCH.setPropiedadesCampo(generarPropiedadesCampo(cch));
+		resCH.setPropiedadesCampo(generarPropiedadesCampo(cch, idioma));
 		resCH.setTipo(cch.getTipo().toString());
 		resCH.setValorChecked(cch.getValorChecked());
 		resCH.setValorNoChecked(cch.getValorNoChecked());
@@ -726,7 +729,7 @@ public class VersionTramiteAdapter {
 		resTB.setMostrarEtiqueta(!ct.isNoMostrarTexto());
 		resTB.setTipo(ct.getTipo().toString());
 		resTB.setTipoTexto(ct.getTipoCampoTexto().toString());
-		resTB.setPropiedadesCampo(generaPropiedadesCampo(ct));
+		resTB.setPropiedadesCampo(generaPropiedadesCampo(ct, idioma));
 		switch (ct.getTipoCampoTexto()) {
 		case NORMAL:
 			resTB.setTextoNormal(generaTextoNormal(ct));
@@ -833,13 +836,14 @@ public class VersionTramiteAdapter {
 	 * @param ori
 	 * @return RPropiedadesCampo
 	 */
-	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoCheckbox ori) {
+	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoCheckbox ori,
+			final String idioma) {
 		final RPropiedadesCampo res = new RPropiedadesCampo();
 		res.setNoModificable(ori.isNoModificable());
 		res.setObligatorio(ori.isObligatorio());
-		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable()));
-		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura())));
-		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion())));
+		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable(), idioma));
+		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura(), idioma)));
+		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion(), idioma)));
 		res.setSoloLectura(ori.isSoloLectura());
 		return res;
 	}
@@ -850,13 +854,13 @@ public class VersionTramiteAdapter {
 	 * @param ori
 	 * @return RPropiedadesCampo
 	 */
-	private RPropiedadesCampo generaPropiedadesCampo(final ComponenteFormularioCampoTexto ori) {
+	private RPropiedadesCampo generaPropiedadesCampo(final ComponenteFormularioCampoTexto ori, final String idioma) {
 		final RPropiedadesCampo res = new RPropiedadesCampo();
 		res.setNoModificable(ori.isNoModificable());
 		res.setObligatorio(ori.isObligatorio());
-		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable()));
-		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura())));
-		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion())));
+		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable(), idioma));
+		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura(), idioma)));
+		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion(), idioma)));
 		res.setSoloLectura(ori.isSoloLectura());
 		return res;
 	}
@@ -867,13 +871,14 @@ public class VersionTramiteAdapter {
 	 * @param ori
 	 * @return RPropiedadesCampo
 	 */
-	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoSelector ori) {
+	private RPropiedadesCampo generarPropiedadesCampo(final ComponenteFormularioCampoSelector ori,
+			final String idioma) {
 		final RPropiedadesCampo res = new RPropiedadesCampo();
 		res.setNoModificable(ori.isNoModificable());
 		res.setObligatorio(ori.isObligatorio());
-		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable()));
-		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura())));
-		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion())));
+		res.setScriptAutorrellenable(AdapterUtils.generaScript(ori.getScriptAutorrellenable(), idioma));
+		res.setScriptEstado((AdapterUtils.generaScript(ori.getScriptSoloLectura(), idioma)));
+		res.setScriptValidacion((AdapterUtils.generaScript(ori.getScriptValidacion(), idioma)));
 		res.setSoloLectura(ori.isSoloLectura());
 		return res;
 	}
@@ -1004,8 +1009,8 @@ public class VersionTramiteAdapter {
 				res.setDescripcion(AdapterUtils.generarLiteralIdioma(t.getDescripcion(), idioma));
 				res.setIdentificador(t.getIdentificador());
 				res.setObligatoriedad(t.getObligatoriedad().toString());
-				res.setScriptDependencia(AdapterUtils.generaScript(t.getScriptObligatoriedad()));
-				res.setScriptPago(AdapterUtils.generaScript(t.getScriptPago()));
+				res.setScriptDependencia(AdapterUtils.generaScript(t.getScriptObligatoriedad(), idioma));
+				res.setScriptPago(AdapterUtils.generaScript(t.getScriptPago(), idioma));
 				res.setSimularPago(t.isSimulado());
 				lres.add(res);
 			}
@@ -1031,7 +1036,7 @@ public class VersionTramiteAdapter {
 				res.setIdentificador(d.getIdentificador());
 				res.setObligatoriedad(d.getObligatoriedad().toString());
 				res.setPresentacion(d.getTipoPresentacion().toString());
-				res.setScriptDependencia(AdapterUtils.generaScript(d.getScriptObligatoriedad()));
+				res.setScriptDependencia(AdapterUtils.generaScript(d.getScriptObligatoriedad(), idioma));
 
 				final RAnexoTramitePresentacionElectronica resPE = new RAnexoTramitePresentacionElectronica();
 				resPE.setAnexarFirmado(d.isDebeAnexarFirmado());
@@ -1041,8 +1046,8 @@ public class VersionTramiteAdapter {
 				}
 				resPE.setFirmar(d.isDebeFirmarDigitalmente());
 				resPE.setInstancias(d.getNumeroInstancia());
-				resPE.setScriptFirmantes(AdapterUtils.generaScript(d.getScriptFirmarDigitalmente()));
-				resPE.setScriptValidacion(AdapterUtils.generaScript(d.getScriptValidacion()));
+				resPE.setScriptFirmantes(AdapterUtils.generaScript(d.getScriptFirmarDigitalmente(), idioma));
+				resPE.setScriptValidacion(AdapterUtils.generaScript(d.getScriptValidacion(), idioma));
 				resPE.setTamanyoMax(d.getTamanyoMaximo());
 				resPE.setTamanyoUnidad(d.getTipoTamanyo() == null ? null : d.getTipoTamanyo().toString());
 

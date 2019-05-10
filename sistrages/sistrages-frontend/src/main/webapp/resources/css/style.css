@@ -8,6 +8,10 @@ body{
 .ui-growl-item-container{
 	opacity: 1 !important;
 }
+.ui-growl {
+    bottom: 20px !important;
+    top: auto !important;
+}
 
 /* para que salga fresa la cabecera */
 .header-color, .ui-dialog-titlebar {background-color: #CC073C;}

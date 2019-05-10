@@ -19,6 +19,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 
 /**
@@ -86,4 +87,6 @@ public interface RestApiInternaService {
 	List<Entidad> listEntidad();
 
 	String getIdentificadorByCodigoVersion(Long codigoTramiteVersion);
+
+	List<IncidenciaValoracion> getValoraciones(Long codigo);
 }

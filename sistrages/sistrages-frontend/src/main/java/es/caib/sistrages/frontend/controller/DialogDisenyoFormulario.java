@@ -304,7 +304,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	 * Sin implementar.
 	 */
 	public void sinImplementar() {
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
+		addMessageContext(TypeNivelGravedad.INFO, "Sin implementar");
 	}
 
 	/**
@@ -355,8 +355,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			if (objetoFormularioEdit instanceof ComponenteFormulario) {
 
 				if (!linea.cabenComponentes((ComponenteFormulario) objetoFormularioEdit, false)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-							UtilJSF.getLiteral("warning.componente.sinespacio"), true);
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"),
+							true);
 					return false;
 				}
 
@@ -364,7 +364,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					final ComponenteFormularioCampo campo = (ComponenteFormularioCampo) objetoFormularioEdit;
 
 					if (campo.isNoModificable() && !campo.isSoloLectura()) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						addMessageContext(TypeNivelGravedad.WARNING,
 								UtilJSF.getLiteral("warning.componente.soloLectura.unchecked"), true);
 						return false;
 					}
@@ -375,7 +375,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 					if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())
 							&& (campo.getNormalTamanyo() == null || campo.getNormalTamanyo() <= 0)) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						addMessageContext(TypeNivelGravedad.WARNING,
 								UtilJSF.getLiteral("warning.componente.normal.tamaño"), true);
 						return false;
 					}
@@ -383,7 +383,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					if (TypeCampoTexto.ID.equals(campo.getTipoCampoTexto()) && !campo.isIdentDni()
 							&& !campo.isIdentNie() && !campo.isIdentNifOtros() && !campo.isIdentNif()
 							&& !campo.isIdentNss()) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+						addMessageContext(TypeNivelGravedad.WARNING,
 								UtilJSF.getLiteral("warning.componente.identificacion"), true);
 						return false;
 					}
@@ -391,22 +391,22 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					if (TypeCampoTexto.NUMERO.equals(campo.getTipoCampoTexto())
 							&& (campo.getNumeroDigitosEnteros() == null || campo.getNumeroDigitosEnteros() <= 0)
 							&& (campo.getNumeroDigitosDecimales() == null || campo.getNumeroDigitosDecimales() <= 0)) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-								UtilJSF.getLiteral("warning.componente.numero"), true);
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.numero"),
+								true);
 						return false;
 					}
 
 					if (TypeCampoTexto.TELEFONO.equals(campo.getTipoCampoTexto()) && !campo.isTelefonoFijo()
 							&& !campo.isTelefonoMovil()) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-								UtilJSF.getLiteral("warning.componente.telefono"), true);
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.telefono"),
+								true);
 						return false;
 					}
 
 					if (TypeCampoTexto.EXPRESION.equals(campo.getTipoCampoTexto())
 							&& StringUtils.isEmpty(campo.getExpresionRegular())) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-								UtilJSF.getLiteral("warning.componente.expresion"), true);
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.expresion"),
+								true);
 						return false;
 					}
 
@@ -415,24 +415,23 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoSelector) {
 					final ComponenteFormularioCampoSelector campo = (ComponenteFormularioCampoSelector) objetoFormularioEdit;
 					if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores()) && campo.getCodDominio() == null) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.dominio"),
-								true);
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.dominio"), true);
 						return false;
 					} else if (TypeListaValores.DOMINIO.equals(campo.getTipoListaValores())
 							&& campo.getCodDominio() != null) {
 						final Dominio dominio = dominioService.loadDominio(campo.getCodDominio());
 						if (!TypeDominio.LISTA_FIJA.equals(dominio.getTipo())) {
 							if (StringUtils.isEmpty(campo.getCampoDominioCodigo())) {
-								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								addMessageContext(TypeNivelGravedad.WARNING,
 										UtilJSF.getLiteral("warning.dominio.codigo"), true);
 								return false;
 							} else if (StringUtils.isEmpty(campo.getCampoDominioDescripcion())) {
-								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								addMessageContext(TypeNivelGravedad.WARNING,
 										UtilJSF.getLiteral("warning.dominio.descripcion"), true);
 								return false;
 							} else if (!dominio.getParametros().isEmpty()
 									&& campo.getListaParametrosDominio().isEmpty()) {
-								UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+								addMessageContext(TypeNivelGravedad.WARNING,
 										UtilJSF.getLiteral("warning.dominio.parametros"), true);
 								return false;
 							}
@@ -445,8 +444,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 						objetoFormularioEdit.getCodigo(),
 						((ComponenteFormulario) objetoFormularioEdit).getIdComponente());
 				if (isDuplicado) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-							UtilJSF.getLiteral("warning.identificador.duplicado"), true);
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.identificador.duplicado"),
+							true);
 					return false;
 				}
 			}
@@ -505,7 +504,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 					throw new ErrorNoControladoException(e);
 				}
 
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
+				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.modificado.ok"));
 
 				// Refresca iframe formulario
 				// TODO Pasarle componente destino para posicionarse
@@ -780,8 +779,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				|| tipoObjetoCopy == TypeObjetoFormulario.ETIQUETA || tipoObjetoCopy == TypeObjetoFormulario.LINEA) {
 			seleccionable = true;
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"), true);
 			tipoObjetoCopy = null;
 			seleccionable = false;
 		}
@@ -794,15 +792,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public void paste() {
 
 		if ((!copy && !cut) || objetoFormularioEdit == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.primerocopy"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.primerocopy"), true);
 
 			return;
 		}
 
 		if (cut && objetoFormularioEdit.getCodigo().compareTo(idObjetoCopy) == 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.mismoelemento"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.mismoelemento"), true);
 
 			return;
 		}
@@ -836,15 +832,13 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 
 			if (!linea.cabenComponentes((ComponenteFormulario) objetoCopy, true)) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("warning.componente.sinespacio"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
 				return;
 			}
 
 			orden = UtilDisenyo.ordenInsercionComponente(linea, ordenSeleccionado, posicionamiento);
 			if (orden == null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("warning.componente.sinespacio"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
 				return;
 			} else {
 
@@ -915,8 +909,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			final Integer orden = UtilDisenyo.ordenInsercionLinea(pagina, lineaDestino, posicionamiento);
 
 			if (orden == null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("warning.componente.sinespacio"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
 				return;
 			} else {
 
@@ -957,8 +950,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 			}
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.copypaste.noimplementado"), true);
 
 			return;
 		}
@@ -1061,7 +1053,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			} else {
 				message = UtilJSF.getLiteral("info.modificado.ok");
 			}
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			addMessageContext(TypeNivelGravedad.INFO, message);
 
 			final DisenyoFormulario formularioNuevo = (DisenyoFormulario) respuesta.getResult();
 
@@ -1097,8 +1089,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		if (objetoFormularioEdit == null) {
 			// mostrar aviso, hay que seleccionar una linea o componente
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"), true);
 		} else {
 			if (objetoFormularioEdit instanceof LineaComponentesFormulario) {
 				linea = (LineaComponentesFormulario) objetoFormularioEdit;
@@ -1121,8 +1112,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				seleccionaComponente(componente);
 
 			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("warning.componente.sinespacio"), true);
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"), true);
 			}
 
 		}
@@ -1148,8 +1138,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		if (objetoFormularioEdit == null && !pagina.getLineas().isEmpty()) {
 			// mostrar aviso, hay que seleccionar una linea o componente
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"), true);
 		} else {
 			// hay algo seleccionado
 			if (objetoFormularioEdit != null) {
@@ -1194,7 +1183,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			final RequestContext contextReq = RequestContext.getCurrentInstance();
 			contextReq.execute("PF('confirmarEliminar').jq.click();");
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"));
 		}
 	}
 
@@ -1264,8 +1253,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				campo.setNormalNumeroLineas(1);
 			} else {
 				campo.setNormalMultilinea(false);
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("warning.componente.sinespacio"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"));
 			}
 
 		} else {
@@ -1386,8 +1374,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		if (objetoFormularioEdit == null) {
 			// mostrar aviso, hay que seleccionar una linea o componente
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"), true);
 		} else {
 			final LineaComponentesFormulario linea = (LineaComponentesFormulario) objetoFormularioEdit;
 			ordenSeleccionado = linea.getOrden();
@@ -1419,8 +1406,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 
 		if (objetoFormularioEdit == null) {
 			// mostrar aviso, hay que seleccionar una linea o componente
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"),
-					true);
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.seleccionado"), true);
 		} else {
 			final ComponenteFormulario campo = (ComponenteFormulario) objetoFormularioEdit;
 			linea = pagina.getLineaComponente(campo.getCodigo());
@@ -1443,8 +1429,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				campo.setOrden(orden);
 
 			} else {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-						UtilJSF.getLiteral("warning.componente.sinespacio"), true);
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.componente.sinespacio"), true);
 			}
 
 		}
@@ -1533,7 +1518,7 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 			}
 
 			if (!dominioService.tieneTramiteVersion(campo.getCodDominio(), tramiteVersion.getCodigo())) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
+				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.alta.dominio.empleado"));
 			}
 		} else {
 			UtilJSF.doValidationFailed();

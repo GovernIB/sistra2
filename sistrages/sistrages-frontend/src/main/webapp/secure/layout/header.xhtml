@@ -8,7 +8,11 @@
 
 <h:body>
   <ui:composition>
-  	<h:form>
+  	<h:form id="formHeader">
+  		<p:growl id="growlHeader" widgetVar="growlHeader" life="#{sessionBean.growlLife}" sticky="#{sessionBean.growlSticky}"  />
+        <p:commandButton id="hiddenGrowl" widgetVar="hiddenGrowl" styleClass="button" process="@this" update="growlHeader"  action="#{sessionBean.showError()}"  style="display:none">
+        </p:commandButton>
+
   		<p:panelGrid columns="4" styleClass="ui-noborder w100 h100"
   		columnClasses="logo-color grid-center noPadding-bottom noPadding-top h100 wpx120 ,
   					   header-color grid-left wpx200,

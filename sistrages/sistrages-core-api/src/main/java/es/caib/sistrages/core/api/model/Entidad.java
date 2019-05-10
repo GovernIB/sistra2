@@ -111,6 +111,15 @@ public class Entidad extends ModelApi {
 	/** Instrucciones presencial */
 	private Literal instruccionesPresencial;
 
+	/** Habilitado registro centralizado */
+	private boolean registroCentralizado;
+
+	/** Codigo de oficina registro centralizado. **/
+	private String oficinaRegistroCentralizado;
+
+	/** Permite valorar tramite. **/
+	private boolean valorarTramite;
+
 	/**
 	 * Obtiene el valor de codigo.
 	 *
@@ -639,6 +648,51 @@ public class Entidad extends ModelApi {
 	 */
 	public void setDiasTramitesPresenciales(final Integer diasTramitesPresenciales) {
 		this.diasTramitesPresenciales = diasTramitesPresenciales;
+	}
+
+	/**
+	 * @return the registroCentralizado
+	 */
+	public final boolean isRegistroCentralizado() {
+		return registroCentralizado;
+	}
+
+	/**
+	 * @param registroCentralizado
+	 *            the registroCentralizado to set
+	 */
+	public final void setRegistroCentralizado(final boolean registroCentralizado) {
+		this.registroCentralizado = registroCentralizado;
+	}
+
+	/**
+	 * @return the oficinaRegistroCentralizado
+	 */
+	public String getOficinaRegistroCentralizado() {
+		return oficinaRegistroCentralizado;
+	}
+
+	/**
+	 * @param oficinaRegistroCentralizado
+	 *            the oficinaRegistroCentralizado to set
+	 */
+	public void setOficinaRegistroCentralizado(final String oficinaRegistroCentralizado) {
+		this.oficinaRegistroCentralizado = oficinaRegistroCentralizado;
+	}
+
+	/**
+	 * @return the valorarTramite
+	 */
+	public boolean isValorarTramite() {
+		return valorarTramite;
+	}
+
+	/**
+	 * @param valorarTramite
+	 *            the valorarTramite to set
+	 */
+	public void setValorarTramite(final boolean valorarTramite) {
+		this.valorarTramite = valorarTramite;
 	}
 
 }

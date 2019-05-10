@@ -85,12 +85,12 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 		if (modoAcceso != null && TypeModoAcceso.valueOf(modoAcceso) == TypeModoAcceso.EDICION) {
 			if (!tramiteVersionIdiomaEsSoportado && !tramiteVersionIdiomaCaSoportado
 					&& !tramiteVersionIdiomaEnSoportado) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.idioma"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.idioma"));
 				return;
 			}
 
 			if (!this.getTramiteVersion().isAutenticado() && !this.getTramiteVersion().isNoAutenticado()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.tipoAutenticacion"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.tipoAutenticacion"));
 				return;
 			}
 
@@ -98,7 +98,7 @@ public class DialogDefinicionVersionPropiedades extends DialogControllerBase {
 			// infinita (por días), tenga que tener valor el num. dias
 			if (this.getTramiteVersion().isPersistencia() && !this.getTramiteVersion().isPersistenciaInfinita()
 					&& this.getTramiteVersion().getPersistenciaDias() == null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.numdias"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.numdias"));
 				return;
 			}
 

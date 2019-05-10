@@ -28,6 +28,7 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
@@ -221,6 +222,12 @@ public class RestApiInternaServiceBean implements RestApiInternaService {
 	@RolesAllowed(ConstantesRolesAcceso.REST)
 	public String getIdentificadorByCodigoVersion(final Long codigoTramiteVersion) {
 		return restApiService.getIdentificadorByCodigoVersion(codigoTramiteVersion);
+	}
+
+	@Override
+	@RolesAllowed(ConstantesRolesAcceso.REST)
+	public List<IncidenciaValoracion> getValoraciones(final Long codigo) {
+		return restApiService.getValoraciones(codigo);
 	}
 
 }

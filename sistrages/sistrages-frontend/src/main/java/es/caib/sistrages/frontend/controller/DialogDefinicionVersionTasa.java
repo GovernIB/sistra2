@@ -35,7 +35,7 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
  */
 @ManagedBean
 @ViewScoped
-public class DialogDefinicionVersionTasa extends ViewControllerBase {
+public class DialogDefinicionVersionTasa extends DialogControllerBase {
 
 	/** Tramite service. */
 	@Inject
@@ -197,14 +197,14 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	private boolean verificarGuardar() {
 		if (tramiteService.checkTasaRepetida(tramiteVersion.getCodigo(), this.data.getIdentificador(),
 				this.data.getCodigo())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.identificador.repetido"));
 			return false;
 		}
 
 		if (TypeFormularioObligatoriedad.DEPENDIENTE.equals(data.getObligatoriedad())
 				&& (data.getScriptObligatoriedad() == null
 						|| StringUtils.isEmpty(data.getScriptObligatoriedad().getContenido()))) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.obligatorio.dependencia"));
 			return false;
 		}
 
@@ -287,9 +287,10 @@ public class DialogDefinicionVersionTasa extends ViewControllerBase {
 	}
 
 	/**
-	 * @param idiomas the idiomas to set
+	 * @param idiomas
+	 *            the idiomas to set
 	 */
-	public void setIdiomas(List<String> idiomas) {
+	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
 	}
 

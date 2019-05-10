@@ -33,9 +33,9 @@
 
 			<p:panel header="#{msg['viewConfiguracionEntidad.assistentTramitacio.titulo']}"  columnClasses="w25 right-alignment, w75 left-alignment">
 
-					<p:tabView activeIndex="0" dynamic="true" style="margin: 30px;" >
+					<p:tabView id="tabView" activeIndex="0" dynamic="true" style="margin: 30px;" >
 	        			<p:tab title="#{msg['viewConfiguracionEntidad.tabPropiedades']}" >
-	        				<h:panelGrid columns="2" cellpadding="5" >
+	        				<h:panelGrid id="gridPropiedades" columns="2" cellpadding="5" >
 					            <h:outputText value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerLog']}" />
 					            <p:column>
 					           		<h:outputText value="#{msg['error.noexistefitxer']}" rendered="#{empty viewConfiguracionEntidad.data.logoAsistente}"/>
@@ -67,6 +67,13 @@
 								<p:outputLabel for="diasPreregistro" value="#{msg['viewConfiguracionEntidad.assistentTramitacio.headerDiasPreregistro']}" />
 					            <p:inputNumber  id="diasPreregistro" decimalPlaces="0" padControl="false" size="10" value="#{viewConfiguracionEntidad.data.diasPreregistro}" maxValue="999" disabled="#{!viewConfiguracionEntidad.permiteEditar}"/>
 
+								<h:outputText value="#{msg['viewConfiguracionEntidad.propiedades.headerPermitirValoraciones']}:" />
+			        			<p:column>
+			        					<p:selectBooleanCheckbox id="checkPermitirValorar" value="#{viewConfiguracionEntidad.data.valorarTramite}" disabled="#{!viewConfiguracionEntidad.permiteEditar}" styleClass="margin-right-10">
+			        						<p:ajax event="change" global="false"  update="btnValoraciones gridPropiedades"  />
+	   									</p:selectBooleanCheckbox>
+	   								    <p:commandButton id="btnValoraciones" actionListener="#{viewConfiguracionEntidad.abrirValoraciones}" icon="fa fa-cog" process="@this" update=":form:growl"  disabled="#{!viewConfiguracionEntidad.permiteEditar or !viewConfiguracionEntidad.data.valorarTramite}" />
+								</p:column>
 							</h:panelGrid>
 
 	        			</p:tab>
@@ -196,14 +203,27 @@
 										</p:column>
 							</h:panelGrid>
 	        			</p:tab>
+						<p:tab id="tabRegistro" title="#{msg['viewConfiguracionEntidad.tabRegistro']}">
+	        				<h:panelGrid id="panelResgistro" columns="2" cellpadding="5" >
+			        					<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerRegistroCentralizado']}:" />
+			        					<p:selectBooleanCheckbox id="checkRegistroCentralizado" value="#{viewConfiguracionEntidad.data.registroCentralizado}" disabled="#{!viewConfiguracionEntidad.permiteEditar}">
+			        						<p:ajax event="change" global="false"  update="oficina panelResgistro"  />
+	   									</p:selectBooleanCheckbox>
 
+	   									<h:outputText value="#{msg['viewConfiguracionEntidad.registro.headerOficinaRegistro']}:" rendered="#{viewConfiguracionEntidad.data.registroCentralizado}" />
+			        					<p:selectOneMenu id="oficina" styleClass="w90" value="#{viewConfiguracionEntidad.data.oficinaRegistroCentralizado}"  rendered="#{viewConfiguracionEntidad.data.registroCentralizado}" required="#{viewConfiguracionEntidad.data.registroCentralizado}" requiredMessage="#{msg['viewConfiguracionEntidad.registro.oficinaRegistroObligatoria']}" >
+						    				<f:selectItem noSelectionOption="true" itemLabel=" " itemValue=""></f:selectItem>
+						    				<f:selectItems value="#{viewConfiguracionEntidad.oficinas}"  itemLabel="#{oficina.nombre}" itemValue="#{oficina.codigo}" var="oficina"  />
+										</p:selectOneMenu>
+							</h:panelGrid>
+	        			</p:tab>
 	        		</p:tabView>
 			</p:panel>
 			<!-- Toolbar -->
 			<p:toolbar id="toolbar">
 				<f:facet name="right">
-				 	<p:commandButton id="btnAceptar"  value="#{msg['botones.guardar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@form" update="growl" styleClass="boton-azul" style="margin-right:20px" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
-				 	<p:commandButton id="btnRefrescar"  value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewConfiguracionEntidad.refrescar()}" process="@form" update="@form growl" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
+				 	<p:commandButton id="btnAceptar"  value="#{msg['botones.guardar']}" icon="fa fa-check" actionListener="#{viewConfiguracionEntidad.aceptar()}" process="@form" update="growl form:tabView:panelResgistro" styleClass="boton-azul" style="margin-right:20px" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
+				 	<p:commandButton id="btnRefrescar"  value="#{msg['botones.refrescarCache']}" icon="fa fa-refresh" actionListener="#{viewConfiguracionEntidad.refrescar()}" process="@form" update="growl" rendered="#{viewConfiguracionEntidad.permiteEditar}"/>
 				 	<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewConfiguracionEntidad.ayuda()}" process="@this" update="growl"/>
 				</f:facet>
 			</p:toolbar>

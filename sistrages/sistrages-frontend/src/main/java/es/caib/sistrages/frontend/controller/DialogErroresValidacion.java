@@ -207,20 +207,20 @@ public class DialogErroresValidacion extends DialogControllerBase {
 					if (listaDominios.stream().anyMatch(d -> dominio.getCodigo().equals(d.getCodigo()))) {
 						// asociar
 						dominioService.addTramiteVersion(dominio.getCodigo(), Long.valueOf(idTramiteVersion));
-						UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+						addMessageContext(TypeNivelGravedad.INFO,
 								UtilJSF.getLiteral("info.alta.dominio.empleado"));
 
 					} else {
 						if (TypeAmbito.ENTIDAD.equals(dominio.getAmbito())) {
-							UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							addMessageContext(TypeNivelGravedad.ERROR,
 									UtilJSF.getLiteral("error.dominio.pertence.entidad"));
 						} else if (TypeAmbito.AREA.equals(dominio.getAmbito())) {
-							UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+							addMessageContext(TypeNivelGravedad.ERROR,
 									UtilJSF.getLiteral("error.dominio.pertence.area"));
 						}
 					}
 				} else {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.dominio.noexiste"));
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.dominio.noexiste"));
 				}
 			}
 		}

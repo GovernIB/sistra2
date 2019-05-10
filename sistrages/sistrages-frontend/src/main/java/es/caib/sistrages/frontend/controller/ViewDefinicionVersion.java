@@ -184,6 +184,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	/** Idiomas del tramite version. **/
 	private List<String> idiomas;
 
+	/** Entidad. **/
+	private Entidad entidad;
+
 	/**
 	 * Crea una nueva instancia de view definicion version.
 	 */
@@ -203,6 +206,9 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 
 		/* titulo pantalla */
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+
+		/** Cargamos la entidad. **/
+		entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 
 		// Control acceso
 		UtilJSF.verificarAccesoAdministradorDesarrolladorEntidadByEntidad(UtilJSF.getIdEntidad());
@@ -321,27 +327,13 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	private void checkPermiteEditar() {
 
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
+		// Sólo se puede editar en desarrollo y si está bloqueado
+		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO) || !this.tramiteVersion.getBloqueada()) {
 			permiteEditar = false;
 			return;
-		}
-
-		if (!this.tramiteVersion.getBloqueada()) {
-			permiteEditar = false;
-			return;
-		}
-
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-
-			permiteEditar = true;
-
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-
-			permiteEditar = this.tramiteVersion.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName());
-
 		} else {
-
-			permiteEditar = false;
+			// Sólo el usuario que lo haya bloqueado podrá editarlo
+			permiteEditar = this.tramiteVersion.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName());
 		}
 	}
 
@@ -502,7 +494,6 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 					final TramitePasoRegistrar pasoRegistrar = (TramitePasoRegistrar) paso;
 					final IRegistroPlugin iplugin = (IRegistroPlugin) componenteService
 							.obtenerPluginEntidad(TypePlugin.REGISTRO, UtilJSF.getIdEntidad());
-					final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 					try {
 
 						// Buscamos la oficina de registro
@@ -2182,5 +2173,20 @@ public class ViewDefinicionVersion extends ViewControllerBase {
 	 */
 	public void setPermiteBloquear(final boolean permiteBloquear) {
 		this.permiteBloquear = permiteBloquear;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public final Entidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad
+	 *            the entidad to set
+	 */
+	public final void setEntidad(final Entidad entidad) {
+		this.entidad = entidad;
 	}
 }

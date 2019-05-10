@@ -90,6 +90,9 @@
 			        			<p:ajax event="dialogReturn" listener="#{viewTramites.returnDialogoDesbloquear}" update="growl @form" />
 			        		</p:commandButton>
 
+							<p:commandButton id="btnPrevisualizar" value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}" process="@this" rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
+
+
 			        		<p:menuButton value="#{msg['viewTramites.mas']}" rendered="#{not(not viewTramites.seleccionadasAreas or (not viewTramites.seleccionadaArea and viewTramites.seleccionadasAreas and viewTramites.tramiteSeleccionada eq null and viewTramites.versionSeleccionada eq null))}">
 	        					<p:menuitem id="btnImportar"  value="#{msg['botones.importarTramite']}" icon="fa fa-upload"  onclick="triggerImportarTramite(); return false;" rendered="#{viewTramites.permiteEditarTramite or viewTramites.permiteAltaArea and viewTramites.seleccionadaArea}"></p:menuitem>
 								<p:separator rendered="#{viewTramites.permiteEditarTramite or viewTramites.permiteAltaArea and viewTramites.seleccionadaArea}" />
@@ -100,8 +103,7 @@
 			        			</p:menuitem>
 								<p:separator rendered="#{viewTramites.permiteAltaTramite and viewTramites.tramiteSeleccionada ne null}" />
 
-								<p:menuitem id="btnPrevisualizar"  value="#{msg['botones.previsualizarTramite']}" icon="fa fa-eye" actionListener="#{viewTramites.previsualizar}"  process="@this" update="growl @form"   rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
-	        					<p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{viewTramites.permiteEditarTramite and viewTramites.versionSeleccionada ne null}"></p:menuitem>
+								<p:menuitem id="btnControlAcceso" value="#{msg['botones.controlAcceso']}" icon="fa fa-edit" onclick="triggerControlAcceso();return false;" rendered="#{viewTramites.permiteEditarTramite and viewTramites.versionSeleccionada ne null}"></p:menuitem>
 			        			<p:menuitem id="btnHistorial" value="#{msg['botones.historial']}" icon="fa fa-history" actionListener="#{viewTramites.historialVersion}" process="@this" update="growl" rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}" />
 								<p:separator rendered="#{viewTramites.permiteAltaTramite and viewTramites.versionSeleccionada ne null}"  />
 

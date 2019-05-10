@@ -113,7 +113,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 
 		final int posicion = this.data.indexOf(this.valorSeleccionado);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -130,7 +130,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 
 		final int posicion = this.data.indexOf(this.valorSeleccionado);
 		if (posicion >= this.data.size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -157,7 +157,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 	private boolean verificarFilaSeleccionadaValor() {
 		boolean filaSeleccionada = true;
 		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -192,7 +192,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 				final ValorListaFija propiedad = (ValorListaFija) respuesta.getResult();
 
 				if (!valida(propiedad)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 					return;
 				}
 
@@ -206,7 +206,7 @@ public class DialogListaValoresFijaCIN extends DialogControllerBase {
 				final ValorListaFija propiedadEdicion = (ValorListaFija) respuesta.getResult();
 
 				if (!valida(propiedadEdicion)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 					return;
 				}
 

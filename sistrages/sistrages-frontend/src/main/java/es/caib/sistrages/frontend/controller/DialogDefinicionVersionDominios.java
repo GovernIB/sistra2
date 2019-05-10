@@ -78,12 +78,12 @@ public class DialogDefinicionVersionDominios extends DialogControllerBase {
 	public void aceptar() {
 
 		if (this.datoSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			return;
 		}
 
 		if (dominioService.tieneTramiteVersion(this.datoSeleccionado.getCodigo(), Long.valueOf(this.id))) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.tramiteDominio.yaexiste"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.tramiteDominio.yaexiste"));
 			return;
 		}
 

@@ -216,7 +216,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		}
 
 		if (this.tramiteVersion != null && this.tramiteVersion.getBloqueada() && todoCorrecto) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.tramiteBloqueado"));
 			todoCorrecto = false;
 		}
@@ -253,7 +253,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		if (paso.getFormulariosTramite() != null) {
 			for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
 				if (literalIncompleto(formulario.getDescripcion())) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.formulario.desc"));
 					return true;
 				}
@@ -271,7 +271,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	private boolean checkLiteralIncompleto(final TramitePasoRegistrar paso) {
 		if (literalIncompleto(paso.getInstruccionesFinTramitacion())
 				|| literalIncompleto(paso.getInstruccionesPresentacion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.registrar.inst"));
 			return true;
 		}
@@ -287,7 +287,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 */
 	private boolean checkLiteralIncompleto(final TramitePasoDebeSaber paso) {
 		if (literalIncompleto(paso.getInstruccionesIniciales())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.debesaber.instr"));
 			return true;
 		}
@@ -302,7 +302,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 */
 	private boolean checkLiteralIncompleto(final TramitePasoAnexar paso) {
 		if (literalIncompleto(paso.getDescripcion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.anexar.desc"));
 			return true;
 		}
@@ -310,7 +310,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		if (paso.getDocumentos() != null) {
 			for (final Documento documento : paso.getDocumentos()) {
 				if (literalIncompleto(documento.getAyudaTexto()) || literalIncompleto(documento.getDescripcion())) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.anexo.lit"));
 					return true;
 				}
@@ -327,7 +327,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 */
 	private boolean checkLiteralIncompleto(final TramitePasoTasa paso) {
 		if (literalIncompleto(paso.getDescripcion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.tasar.desc"));
 			return true;
 		}
@@ -335,7 +335,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		if (paso.getTasas() != null) {
 			for (final Tasa tasa : paso.getTasas()) {
 				if (literalIncompleto(tasa.getDescripcion())) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.tasa.lit"));
 					return true;
 				}

@@ -153,7 +153,7 @@ public class DialogFuente extends DialogControllerBase {
 
 		final int posicion = this.data.getCampos().indexOf(this.valorSeleccionado);
 		if (posicion >= this.data.getCampos().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -170,7 +170,7 @@ public class DialogFuente extends DialogControllerBase {
 
 		final int posicion = this.data.getCampos().indexOf(this.valorSeleccionado);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -193,7 +193,7 @@ public class DialogFuente extends DialogControllerBase {
 
 				// Checkeamos si hay un campo repetido.
 				if (codigoCampos.containsKey(campo.getIdentificador())) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+					addMessageContext(TypeNivelGravedad.WARNING,
 							UtilJSF.getLiteral("dialogFuente.error.camposRepes"));
 					return;
 				} else {
@@ -209,7 +209,7 @@ public class DialogFuente extends DialogControllerBase {
 		if (this.data.getCampos() != null) {
 			for (final FuenteDatosCampo fdc : this.data.getCampos()) {
 				if (camposNombre.contains(fdc.getIdentificador())) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 					return;
 				}
 				camposNombre.add(fdc.getIdentificador());
@@ -220,7 +220,7 @@ public class DialogFuente extends DialogControllerBase {
 		case ALTA:
 			// Verifica unicidad codigo
 			if (dominioService.loadFuenteDato(this.data.getIdentificador()) != null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 
@@ -230,14 +230,14 @@ public class DialogFuente extends DialogControllerBase {
 			// Verifica unicidad codigo
 			final FuenteDatos d = dominioService.loadFuenteDato(this.data.getIdentificador());
 			if (d != null && d.getCodigo().longValue() != this.data.getCodigo().longValue()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 			try {
 				this.dominioService.updateFuenteDato(this.data);
 			} catch (final Exception ex) {
 				if (ex.getCause() instanceof FuenteDatosPkException) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
+					addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importarCSV.error.pk"));
 					return;
 				}
 			}
@@ -324,7 +324,7 @@ public class DialogFuente extends DialogControllerBase {
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;

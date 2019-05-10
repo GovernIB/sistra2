@@ -138,6 +138,21 @@ public class RConfiguracionEntidad {
 	@ApiModelProperty(value = "instrucciones presencial")
 	private RLiteral instruccionesPresencial;
 
+	/** Registro centralizado. */
+	@ApiModelProperty(value = "Registro centralizado")
+	private boolean registroCentralizado;
+
+	/** Codigo de oficina registro si es registro centralizado */
+	@ApiModelProperty(value = "Codigo de oficina registro si es registro centralizado")
+	private String oficinaRegistroCentralizado;
+
+	/** Permite valorar tramite. **/
+	@ApiModelProperty(value = "Permite Valorar tramites")
+	private boolean valorarTramite;
+
+	/** Lista de incidencias valoraciones. */
+	private List<RIncidenciaValoracion> incidenciasValoracion;
+
 	/**
 	 * Método de acceso a logo.
 	 *
@@ -609,6 +624,66 @@ public class RConfiguracionEntidad {
 	 */
 	public final void setInstruccionesPresencial(final RLiteral instruccionesPresencial) {
 		this.instruccionesPresencial = instruccionesPresencial;
+	}
+
+	/**
+	 * @return the registroCentralizado
+	 */
+	public final boolean isRegistroCentralizado() {
+		return registroCentralizado;
+	}
+
+	/**
+	 * @param registroCentralizado
+	 *            the registroCentralizado to set
+	 */
+	public final void setRegistroCentralizado(final boolean registroCentralizado) {
+		this.registroCentralizado = registroCentralizado;
+	}
+
+	/**
+	 * @return the oficinaRegistroCentralizado
+	 */
+	public final String getOficinaRegistroCentralizado() {
+		return oficinaRegistroCentralizado;
+	}
+
+	/**
+	 * @param oficinaRegistroCentralizado
+	 *            the oficinaRegistroCentralizado to set
+	 */
+	public final void setOficinaRegistroCentralizado(final String oficinaRegistroCentralizado) {
+		this.oficinaRegistroCentralizado = oficinaRegistroCentralizado;
+	}
+
+	/**
+	 * @return the valorarTramite
+	 */
+	public final boolean isValorarTramite() {
+		return valorarTramite;
+	}
+
+	/**
+	 * @param valorarTramite
+	 *            the valorarTramite to set
+	 */
+	public final void setValorarTramite(final boolean valorarTramite) {
+		this.valorarTramite = valorarTramite;
+	}
+
+	/**
+	 * @return the incidenciasValoracion
+	 */
+	public List<RIncidenciaValoracion> getIncidenciasValoracion() {
+		return incidenciasValoracion;
+	}
+
+	/**
+	 * @param incidenciasValoracion
+	 *            the incidenciasValoracion to set
+	 */
+	public void setIncidenciasValoracion(final List<RIncidenciaValoracion> incidenciasValoracion) {
+		this.incidenciasValoracion = incidenciasValoracion;
 	}
 
 }

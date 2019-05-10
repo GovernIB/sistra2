@@ -102,6 +102,11 @@ public class ViewTramites extends ViewControllerBase {
 	/** Indica si es entorno editable (DESARROLLO) o no editable (PRE/PRO) */
 	private boolean permiteAccionEntorno;
 
+	/** Literal. **/
+	private static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
+	private static final String LITERAL_INFO_BORRADO_OK = "info.borrado.ok";
+	private static final String LITERAL_INFO_MODIFICADO_OK = "info.modificado.ok";
+
 	/**
 	 * Inicializacion.
 	 */
@@ -166,7 +171,7 @@ public class ViewTramites extends ViewControllerBase {
 		if (tramiteService.removeArea(area.getCodigo())) {
 			listaAreasSeleccionadas.clear();
 			this.buscarAreas();
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_BORRADO_OK));
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
@@ -277,7 +282,7 @@ public class ViewTramites extends ViewControllerBase {
 
 		if (tramiteService.removeTramite(tramiteSeleccionada.getTramite().getCodigo())) {
 			buscarTramites();
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_BORRADO_OK));
 		} else {
 			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
 		}
@@ -312,7 +317,7 @@ public class ViewTramites extends ViewControllerBase {
 		// Verificamos si se ha modificado
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
-			final String message = UtilJSF.getLiteral("info.modificado.ok");
+			final String message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 			// Refrescamos datos
@@ -344,9 +349,9 @@ public class ViewTramites extends ViewControllerBase {
 			// Mensaje
 			String message = null;
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
@@ -518,9 +523,9 @@ public class ViewTramites extends ViewControllerBase {
 			// Mensaje
 			String message = null;
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
@@ -543,7 +548,7 @@ public class ViewTramites extends ViewControllerBase {
 		if (!respuesta.isCanceled()) {
 			// Mensaje
 			String message = null;
-			message = UtilJSF.getLiteral("info.modificado.ok");
+			message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
 			// Refrescamos datos
@@ -894,13 +899,13 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		Long idTramite = null;
+		Long idTramiteSeleccionado = null;
 		if (this.versionSeleccionada != null) {
-			idTramite = this.versionSeleccionada.getIdTramite();
+			idTramiteSeleccionado = this.versionSeleccionada.getIdTramite();
 		} else {
-			idTramite = this.tramiteSeleccionada.getTramite().getCodigo();
+			idTramiteSeleccionado = this.tramiteSeleccionada.getTramite().getCodigo();
 		}
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTramite));
+		params.put(TypeParametroVentana.ID.toString(), String.valueOf(idTramiteSeleccionado));
 		UtilJSF.openDialog(DialogTramiteVersion.class, TypeModoAcceso.ALTA, params, true, 400, 150);
 
 	}
@@ -921,9 +926,9 @@ public class ViewTramites extends ViewControllerBase {
 		if (!respuesta.isCanceled() && !respuesta.getModoAcceso().equals(TypeModoAcceso.CONSULTA)) {
 			// Mensaje
 			if (respuesta.getModoAcceso().equals(TypeModoAcceso.ALTA)) {
-				message = UtilJSF.getLiteral("info.alta.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_ALTA_OK);
 			} else {
-				message = UtilJSF.getLiteral("info.modificado.ok");
+				message = UtilJSF.getLiteral(LITERAL_INFO_MODIFICADO_OK);
 			}
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
 
@@ -973,6 +978,13 @@ public class ViewTramites extends ViewControllerBase {
 		if (!verificarFilaSeleccionadaVersion())
 			return;
 
+		// Solo se pueden eliminar versiones desbloqueadas
+		if (this.versionSeleccionada.getBloqueada()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.eliminar.versionbloqueada"));
+			return;
+		}
+
 		// Eliminamos
 		this.tramiteService.removeTramiteVersion(this.versionSeleccionada.getCodigo(),
 				this.versionSeleccionada.getNumeroVersion());
@@ -981,7 +993,7 @@ public class ViewTramites extends ViewControllerBase {
 		buscarTramites();
 
 		// Mostramos mensaje
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
+		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral(LITERAL_INFO_BORRADO_OK));
 	}
 
 	/**
@@ -1027,7 +1039,6 @@ public class ViewTramites extends ViewControllerBase {
 				UtilJSF.getSessionBean().getUserName());
 
 		editarVersion();
-		// buscarTramites();
 
 	}
 
@@ -1052,8 +1063,8 @@ public class ViewTramites extends ViewControllerBase {
 			return;
 		}
 
-		if ((UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& !this.versionSeleccionada.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName()))) {
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+				&& !this.versionSeleccionada.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName())) {
 			// Si no puedes editar, no puedes bloquear
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
 			return;
@@ -1088,9 +1099,7 @@ public class ViewTramites extends ViewControllerBase {
 	public boolean isPermiteBloquear() {
 		boolean resultado = true;
 
-		if (this.versionSeleccionada == null) {
-			resultado = false;
-		} else if (versionSeleccionada.getBloqueada()) {
+		if (this.versionSeleccionada == null || versionSeleccionada.getBloqueada()) {
 			resultado = false;
 		}
 
