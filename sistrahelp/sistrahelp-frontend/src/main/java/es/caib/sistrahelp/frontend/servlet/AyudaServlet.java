@@ -95,6 +95,7 @@ public class AyudaServlet extends HttpServlet {
 			} else {
 				response.setHeader("Content-Type", mimeType);
 			}
+			url = "/sistrahelp/" + url;
 			final File f = new File(dirAyudaExterna + url);
 			if (f.exists()) {
 				final FileInputStream fis = new FileInputStream(f);
