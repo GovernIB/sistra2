@@ -19,6 +19,7 @@ import es.caib.sistra2.commons.plugins.registro.api.DocumentoAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.Interesado;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
@@ -199,10 +200,10 @@ public class TestRegistro {
 			System.out.println("Fecha de registro de entrada: " + resultadoRegistro.getFechaRegistro());
 
 			// Obtenemos justificante de registro de entrada
-			final byte[] justificanteRegistro = plugin.obtenerJustificanteRegistro(entidad,
+			final ResultadoJustificante justificanteRegistro = plugin.obtenerJustificanteRegistro(entidad,
 					resultadoRegistro.getNumeroRegistro());
 			final Path path = Paths.get("/justificante_" + resultadoRegistro.getNumeroRegistro());
-			Files.write(path, justificanteRegistro);
+			Files.write(path, justificanteRegistro.getContenido());
 
 		} catch (final Exception e) {
 			e.printStackTrace();

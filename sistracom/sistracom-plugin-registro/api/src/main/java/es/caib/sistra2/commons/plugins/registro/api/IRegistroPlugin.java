@@ -42,6 +42,17 @@ public interface IRegistroPlugin extends IPlugin {
 			throws RegistroPluginException;
 
 	/**
+	 * Recupera libro asociado a organismo.
+	 * 
+	 * @param codigoEntidad
+	 *            codigo DIR3 entidad
+	 * @param codigoOrganismo
+	 *            codigo DIR3 organismo
+	 * @return libro asociado a organismo
+	 */
+	LibroOficina obtenerLibroOrganismo(String codigoEntidad, String codigoOrganismo) throws RegistroPluginException;
+
+	/**
 	 * Recupera los tipos de asunto de una entidad
 	 *
 	 * @param codigoEntidad
@@ -77,6 +88,15 @@ public interface IRegistroPlugin extends IPlugin {
 	 *            numero de registro asignado al apunte registral
 	 * @throws RegistroPluginException
 	 */
-	byte[] obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro) throws RegistroPluginException;
+	ResultadoJustificante obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro)
+			throws RegistroPluginException;
+
+	/**
+	 * Indica si los justificantes se descargarán indicando una url externa.
+	 *
+	 * @return true si los justificantes se descargaran redirigiendo a una url o
+	 *         false si se obtiene directamente el contenido del justificante.
+	 */
+	boolean descargaExternaJustificantes() throws RegistroPluginException;
 
 }

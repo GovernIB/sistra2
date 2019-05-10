@@ -2,6 +2,7 @@ package es.caib.sistra2.commons.plugins.registro.regweb3;
 
 /**
  * Constantes Regweb3.
+ * 
  * @author Indra
  *
  */
@@ -23,24 +24,39 @@ public class ConstantesRegweb3 {
 	public final static String PROP_INSERTADOCS = "insertarDocs";
 	/** Nombre de propiedad que indica si se han de enviar documentos internos */
 	public final static String PROP_INSERTADOCS_INT = "insertarDocs.internos";
-	/** Nombre de propiedad de que indica si se han de enviar documentos formateados */
+	/**
+	 * Nombre de propiedad de que indica si se han de enviar documentos formateados
+	 */
 	public final static String PROP_INSERTADOCS_FOR = "insertarDocs.formateados";
 	/** Nombre de propiedad que indica la ruta en la que se encuentran los WSDL */
 	public final static String PROP_WSDL_DIR = "wsdl.dir";
 	/** Nombre de propiedad de password del usuario de conexion */
 	public final static String PROP_LOG_PETICIONES = "log.peticionesWS";
-
+	/**
+	 * Nombre de propiedad para indicar si los justificantes se generan como CSV
+	 * (true/false).
+	 */
+	public final static String PROP_JUSTIFICANTE_CSV = "justificanteCSV";
 
 	/** Constante para indicar registro entrada. */
 	public static final Long REGISTRO_ENTRADA = 1L;
 	/** Constante para indicar registro salida. */
 	public static final Long REGISTRO_SALIDA = 2L;
 
-	/** Constante para indicar la operacion notificacion en caso de registro de salida. */
+	/**
+	 * Constante para indicar la operacion notificacion en caso de registro de
+	 * salida.
+	 */
 	public static final Long OPERACION_NOTIFICACION = 1L;
-	/** Constante para indicar la operacion comunicacion en caso de registro de salida */
+	/**
+	 * Constante para indicar la operacion comunicacion en caso de registro de
+	 * salida
+	 */
 	public static final Long OPERACION_COMUNICACION = 2L;
-	/** Constante para indicar la operacion asiento normal en caso de registro de salida. */
+	/**
+	 * Constante para indicar la operacion asiento normal en caso de registro de
+	 * salida.
+	 */
 	public static final Long OPERACION_NORMAL = null;
 
 	/** Tipo interesado Persona f�sica. */
@@ -59,14 +75,12 @@ public class ConstantesRegweb3 {
 	/** Tipo documento identificacion: Pasaporte. */
 	public final static String TIPO_DOCID_PSP = "P";
 
-
 	/** Tipo documento: formulario. */
 	public final static String TIPO_DOCUMENTO_FORMULARIO = "01";
 	/** Tipo documento: anexo. */
 	public final static String TIPO_DOCUMENTO_ANEXO = "02";
 	/** Tipo documento: fichero tecnico intermedio. */
 	public final static String TIPO_DOCUMENTO_FICHERO_TECNICO = "03";
-
 
 	/** Tipo documental: Comunicaci�n. */
 	public final static String TIPO_DOCUMENTAL_COMUNICACION = "TD06";
@@ -81,8 +95,6 @@ public class ConstantesRegweb3 {
 	/** Tipo documental: Otros. */
 	public final static String TIPO_DOCUMENTAL_OTROS = "TD99";
 
-
-
 	/** Origen documento: ciudadano. */
 	public final static Integer ORIGEN_DOCUMENTO_CIUDADANO = new Integer(0);
 	/** Origen documento: administracion. * */
@@ -95,13 +107,27 @@ public class ConstantesRegweb3 {
 	/** Modo firma: detached. */
 	public final static Integer MODO_FIRMA_DETACHED = new Integer(2);
 
-	/** Validez documento: Copia (documento adjunto es una copia del original sin estar cotejada por ning�n organismo oficial y por tanto, sin validez jur�dica).*/
+	/**
+	 * Validez documento: Copia (documento adjunto es una copia del original sin
+	 * estar cotejada por ning�n organismo oficial y por tanto, sin validez
+	 * jur�dica).
+	 */
 	public final static String VALIDEZ_DOCUMENTO_COPIA = "01";
-	/** Validez documento: Copia compulsada (documento adjunto es una copia del original y cotejada por un organismo oficial, y por tanto, con validez jur�dica).*/
+	/**
+	 * Validez documento: Copia compulsada (documento adjunto es una copia del
+	 * original y cotejada por un organismo oficial, y por tanto, con validez
+	 * jur�dica).
+	 */
 	public final static String VALIDEZ_DOCUMENTO_COPIA_COMPULSADA = "02";
-	/** Validez documento: Copia original (documento adjunto es una copia del documento pero con exactamente la misma validez jur�dica que el original).*/
+	/**
+	 * Validez documento: Copia original (documento adjunto es una copia del
+	 * documento pero con exactamente la misma validez jur�dica que el original).
+	 */
 	public final static String VALIDEZ_DOCUMENTO_COPIA_ORIGINAL = "03";
-	/** Validez documento: Copia original (documento adjunto es el original electr�nico).*/
+	/**
+	 * Validez documento: Copia original (documento adjunto es el original
+	 * electr�nico).
+	 */
 	public final static String VALIDEZ_DOCUMENTO_ORIGINAL = "04";
 
 	/** Idiomas */
@@ -117,7 +143,10 @@ public class ConstantesRegweb3 {
 	/** Tipo de documentacion fisica */
 	/** Constante para indicar documentación adjunta en soporte papel. */
 	public static final Long TIPO_DOCFIS_PAPEL = 1L;
-	/** Constante para indicar documentación adjunta digitalizada y complementariamente en papel. */
+	/**
+	 * Constante para indicar documentación adjunta digitalizada y
+	 * complementariamente en papel.
+	 */
 	public static final Long TIPO_DOCFIS_MIXTA = 2L;
 	/** Constante para indicar documentación adjunta digitalizada. */
 	public static final Long TIPO_DOCFIS_DIGTL = 2L;

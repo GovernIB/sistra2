@@ -1,7 +1,6 @@
 package es.caib.sistra2.commons.plugins.registro.api;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeCanal;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumentoIdentificacion;
@@ -71,7 +70,7 @@ public class Interesado implements Serializable {
 		return actuaComo;
 	}
 
-	public void setActuaComo(TypeInteresado actuaComo) {
+	public void setActuaComo(final TypeInteresado actuaComo) {
 		this.actuaComo = actuaComo;
 	}
 
@@ -79,7 +78,7 @@ public class Interesado implements Serializable {
 		return tipoDocumento;
 	}
 
-	public void setTipoDocumento(TypeDocumentoIdentificacion tipoDocumento) {
+	public void setTipoDocumento(final TypeDocumentoIdentificacion tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
 
@@ -87,7 +86,7 @@ public class Interesado implements Serializable {
 		return docIdentificacion;
 	}
 
-	public void setDocIdentificacion(String docIdentificacion) {
+	public void setDocIdentificacion(final String docIdentificacion) {
 		this.docIdentificacion = docIdentificacion;
 	}
 
@@ -95,7 +94,7 @@ public class Interesado implements Serializable {
 		return razonSocial;
 	}
 
-	public void setRazonSocial(String razonSocial) {
+	public void setRazonSocial(final String razonSocial) {
 		this.razonSocial = razonSocial;
 	}
 
@@ -103,7 +102,7 @@ public class Interesado implements Serializable {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(final String nombre) {
 		this.nombre = nombre;
 	}
 
@@ -111,7 +110,7 @@ public class Interesado implements Serializable {
 		return apellido1;
 	}
 
-	public void setApellido1(String apellido1) {
+	public void setApellido1(final String apellido1) {
 		this.apellido1 = apellido1;
 	}
 
@@ -119,7 +118,7 @@ public class Interesado implements Serializable {
 		return apellido2;
 	}
 
-	public void setApellido2(String apellido2) {
+	public void setApellido2(final String apellido2) {
 		this.apellido2 = apellido2;
 	}
 
@@ -127,7 +126,7 @@ public class Interesado implements Serializable {
 		return pais;
 	}
 
-	public void setPais(Long pais) {
+	public void setPais(final Long pais) {
 		this.pais = pais;
 	}
 
@@ -135,7 +134,7 @@ public class Interesado implements Serializable {
 		return provincia;
 	}
 
-	public void setProvincia(Long provincia) {
+	public void setProvincia(final Long provincia) {
 		this.provincia = provincia;
 	}
 
@@ -143,7 +142,7 @@ public class Interesado implements Serializable {
 		return municipio;
 	}
 
-	public void setMunicipio(Long municipio) {
+	public void setMunicipio(final Long municipio) {
 		this.municipio = municipio;
 	}
 
@@ -151,7 +150,7 @@ public class Interesado implements Serializable {
 		return direccion;
 	}
 
-	public void setDireccion(String direccion) {
+	public void setDireccion(final String direccion) {
 		this.direccion = direccion;
 	}
 
@@ -159,7 +158,7 @@ public class Interesado implements Serializable {
 		return codigoPostal;
 	}
 
-	public void setCodigoPostal(String codigoPostal) {
+	public void setCodigoPostal(final String codigoPostal) {
 		this.codigoPostal = codigoPostal;
 	}
 
@@ -167,7 +166,7 @@ public class Interesado implements Serializable {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(final String email) {
 		this.email = email;
 	}
 
@@ -175,7 +174,7 @@ public class Interesado implements Serializable {
 		return telefono;
 	}
 
-	public void setTelefono(String telefono) {
+	public void setTelefono(final String telefono) {
 		this.telefono = telefono;
 	}
 
@@ -183,7 +182,7 @@ public class Interesado implements Serializable {
 		return direccionElectronica;
 	}
 
-	public void setDireccionElectronica(String direccionElectronica) {
+	public void setDireccionElectronica(final String direccionElectronica) {
 		this.direccionElectronica = direccionElectronica;
 	}
 
@@ -191,7 +190,7 @@ public class Interesado implements Serializable {
 		return canal;
 	}
 
-	public void setCanal(TypeCanal canal) {
+	public void setCanal(final TypeCanal canal) {
 		this.canal = canal;
 	}
 
@@ -199,9 +198,8 @@ public class Interesado implements Serializable {
 		return observaciones;
 	}
 
-	public void setObservaciones(String observaciones) {
+	public void setObservaciones(final String observaciones) {
 		this.observaciones = observaciones;
 	}
-
 
 }

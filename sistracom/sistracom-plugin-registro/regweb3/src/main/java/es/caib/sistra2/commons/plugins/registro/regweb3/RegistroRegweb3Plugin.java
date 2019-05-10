@@ -10,18 +10,13 @@ import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import es.caib.regweb3.ws.api.v3.AnexoWs;
 import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
 import es.caib.regweb3.ws.api.v3.DatosInteresadoWs;
-import es.caib.regweb3.ws.api.v3.IdentificadorWs;
 import es.caib.regweb3.ws.api.v3.InteresadoWs;
+import es.caib.regweb3.ws.api.v3.JustificanteReferenciaWs;
 import es.caib.regweb3.ws.api.v3.JustificanteWs;
 import es.caib.regweb3.ws.api.v3.LibroWs;
 import es.caib.regweb3.ws.api.v3.OficinaWs;
 import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
 import es.caib.regweb3.ws.api.v3.RegWebInfoWs;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroEntradaWs;
-import es.caib.regweb3.ws.api.v3.RegWebRegistroSalidaWs;
-import es.caib.regweb3.ws.api.v3.RegistroEntradaWs;
-import es.caib.regweb3.ws.api.v3.RegistroSalidaWs;
-import es.caib.regweb3.ws.api.v3.RegistroWs;
 import es.caib.regweb3.ws.api.v3.TipoAsuntoWs;
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.DocumentoAsiento;
@@ -30,6 +25,7 @@ import es.caib.sistra2.commons.plugins.registro.api.Interesado;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
+import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
@@ -53,7 +49,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public List<OficinaRegistro> obtenerOficinasRegistro(final String codigoEntidad, TypeRegistro tipoRegistro)
+	public List<OficinaRegistro> obtenerOficinasRegistro(final String codigoEntidad, final TypeRegistro tipoRegistro)
 			throws RegistroPluginException {
 
 		final List<OficinaRegistro> res = new ArrayList<>();
@@ -96,8 +92,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public List<LibroOficina> obtenerLibrosOficina(String codigoEntidad, String codigoOficina,
-			TypeRegistro tipoRegistro) throws RegistroPluginException {
+	public List<LibroOficina> obtenerLibrosOficina(final String codigoEntidad, final String codigoOficina,
+			final TypeRegistro tipoRegistro) throws RegistroPluginException {
 		final List<LibroOficina> res = new ArrayList<>();
 
 		try {
@@ -138,7 +134,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public List<TipoAsunto> obtenerTiposAsunto(String codigoEntidad) throws RegistroPluginException {
+	public List<TipoAsunto> obtenerTiposAsunto(final String codigoEntidad) throws RegistroPluginException {
 		final List<TipoAsunto> res = new ArrayList<>();
 
 		try {
@@ -169,7 +165,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public ResultadoRegistro registroEntrada(AsientoRegistral asientoRegistral) throws RegistroPluginException {
+	public ResultadoRegistro registroEntrada(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
 
 		// Mapea parametros ws
 		final AsientoRegistralWs paramEntrada = mapearParametrosRegistro(asientoRegistral);
@@ -190,7 +186,8 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
 
 			// creacion de asiento registral de entrada con tipo de operacion normal
-			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada, null);
+			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
+					null);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de entrada : " + ex.getMessage(), ex);
 		}
@@ -203,7 +200,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public ResultadoRegistro registroSalida(AsientoRegistral asientoRegistral) throws RegistroPluginException {
+	public ResultadoRegistro registroSalida(final AsientoRegistral asientoRegistral) throws RegistroPluginException {
 
 		// Mapea parametros ws
 		final AsientoRegistralWs paramEntrada = mapearParametrosRegistro(asientoRegistral);
@@ -219,9 +216,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 			// Invoca a Regweb3
 			final RegWebAsientoRegistralWs service = UtilsRegweb3.getAsientoRegistralService(
 					asientoRegistral.getDatosOrigen().getCodigoEntidad(),
-					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
-					getPropiedad(ConstantesRegweb3.PROP_USUARIO), getPropiedad(ConstantesRegweb3.PROP_PASSWORD),
-					logCalls);
+					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_ASIENTO),
+					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
+					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
 			// creacion de asiento registral de salida con tipo de operacion normal
 			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
 					ConstantesRegweb3.OPERACION_NORMAL);
@@ -237,12 +234,11 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	}
 
 	@Override
-	public byte[] obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro)
+	public ResultadoJustificante obtenerJustificanteRegistro(final String codigoEntidad, final String numeroRegistro)
 			throws RegistroPluginException {
 
-		byte[] resultado = null;
-
-		JustificanteWs result = new JustificanteWs();
+		byte[] content = null;
+		String url = null;
 
 		try {
 
@@ -256,7 +252,13 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
 
-			result = service.obtenerJustificante(codigoEntidad, numeroRegistro, ConstantesRegweb3.REGISTRO_ENTRADA);
+			if (this.descargaExternaJustificantes()) {
+				final JustificanteReferenciaWs referencia = service.obtenerReferenciaJustificante(codigoEntidad, numeroRegistro);
+				url = referencia.getUrl();
+			} else {
+				final JustificanteWs result = service.obtenerJustificante(codigoEntidad, numeroRegistro, ConstantesRegweb3.REGISTRO_ENTRADA);
+				content = result.getJustificante();
+			}
 
 		} catch (final Exception ex) {
 			throw new RegistroPluginException(
@@ -265,9 +267,45 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					ex);
 		}
 
-		resultado = result.getJustificante();
+		final ResultadoJustificante res = new ResultadoJustificante();
+		res.setContenido(content);
+		return res;
 
-		return resultado;
+	}
+
+	@Override
+	public boolean descargaExternaJustificantes() throws RegistroPluginException {
+		return "true".equals(getPropiedad(ConstantesRegweb3.PROP_JUSTIFICANTE_CSV));
+	}
+
+	@Override
+	public LibroOficina obtenerLibroOrganismo(final String codigoEntidad, final String codigoOrganismo)
+			throws RegistroPluginException {
+
+		LibroWs libroWs = new LibroWs();
+
+		try {
+
+			final boolean logCalls = (getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES) != null
+					? "true".equals(getPropiedad(ConstantesRegweb3.PROP_LOG_PETICIONES))
+					: false);
+
+			final RegWebInfoWs service = UtilsRegweb3.getRegistroInfoService(codigoEntidad,
+					getPropiedad(ConstantesRegweb3.PROP_ENDPOINT_INFO), getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR),
+					getPropiedad(ConstantesRegweb3.PROP_USUARIO), getPropiedad(ConstantesRegweb3.PROP_PASSWORD),
+					logCalls);
+
+			libroWs = service.listarLibroOrganismo(codigoEntidad, codigoOrganismo);
+
+		} catch (final Exception ex) {
+			throw new RegistroPluginException("Error consultando oficinas registro: " + ex.getMessage(), ex);
+		}
+
+		final LibroOficina res = new LibroOficina();
+		res.setCodigo(libroWs.getCodigoLibro());
+		res.setNombre(libroWs.getNombreCorto());
+
+		return res;
 	}
 
 	// ----------- Funciones auxiliares
@@ -279,12 +317,12 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	 *            asiento registral
 	 * @throws RegistroPluginException
 	 */
-	private AsientoRegistralWs mapearParametrosRegistro(AsientoRegistral asiento) throws RegistroPluginException {
+	private AsientoRegistralWs mapearParametrosRegistro(final AsientoRegistral asiento) throws RegistroPluginException {
 
 		// Crea parametros segun sea registro entrada o salida
 		final boolean esRegistroSalida = (asiento.getDatosOrigen().getTipoRegistro() == TypeRegistro.REGISTRO_SALIDA);
 
-		AsientoRegistralWs asientoWs = new AsientoRegistralWs();
+		final AsientoRegistralWs asientoWs = new AsientoRegistralWs();
 
 		if (esRegistroSalida) {
 			asientoWs.setTipoRegistro(ConstantesRegweb3.REGISTRO_SALIDA);
@@ -310,18 +348,18 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		asientoWs.setResumen(asiento.getDatosAsunto().getExtractoAsunto());
 		asientoWs.setTipoDocumentacionFisicaCodigo(ConstantesRegweb3.TIPO_DOCFIS_DIGTL);
 		asientoWs.setTipoAsunto(asiento.getDatosAsunto().getTipoAsunto());
-		switch(asiento.getDatosAsunto().getIdiomaAsunto()) {
-			case "es":
-				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_CASTELLANO);
-				break;
-			case "ca":
-				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_CATALAN);
-				break;
-			case "en":
-				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_INGLES);
-				break;
-			default:
-				asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_OTROS);
+		switch (asiento.getDatosAsunto().getIdiomaAsunto()) {
+		case "es":
+			asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_CASTELLANO);
+			break;
+		case "ca":
+			asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_CATALAN);
+			break;
+		case "en":
+			asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_INGLES);
+			break;
+		default:
+			asientoWs.setIdioma(ConstantesRegweb3.IDIOMA_OTROS);
 		}
 		asientoWs.setNumeroExpediente(asiento.getDatosAsunto().getNumeroExpediente());
 		asientoWs.setExpone(asiento.getDatosAsunto().getTextoExpone());
@@ -401,7 +439,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	 * @return valor
 	 * @throws RegistroPluginException
 	 */
-	private String getPropiedad(String propiedad) throws RegistroPluginException {
+	private String getPropiedad(final String propiedad) throws RegistroPluginException {
 		final String res = getProperty(REGISTRO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
 		if (res == null) {
 			throw new RegistroPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
@@ -418,7 +456,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	 * @param origenDocumento
 	 * @return
 	 */
-	private AnexoWs generarAnexoWs(DocumentoAsiento dr) throws RegistroPluginException {
+	private AnexoWs generarAnexoWs(final DocumentoAsiento dr) throws RegistroPluginException {
 
 		final AnexoWs anexoAsiento = new AnexoWs();
 		anexoAsiento.setTitulo(dr.getTituloDoc());
@@ -457,7 +495,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 	/**
 	 * Obtiene extension fichero.
 	 */
-	private String getExtension(String filename) {
+	private String getExtension(final String filename) {
 		if (filename.lastIndexOf(".") != -1) {
 			return filename.substring(filename.lastIndexOf(".") + 1);
 		} else {

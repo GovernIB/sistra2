@@ -15,6 +15,7 @@ import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
 import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.OficinaRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
+import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
@@ -109,7 +110,7 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	}
 
 	@Override
-	public byte[] obtenerJustificanteRegistro(final String codigoEntidad, final String numeroRegistro)
+	public ResultadoJustificante obtenerJustificanteRegistro(final String codigoEntidad, final String numeroRegistro)
 			throws RegistroPluginException {
 		// Lee pdf mock del classpath
 		byte[] content = null;
@@ -119,23 +120,23 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 		} catch (final IOException e) {
 			throw new RegistroPluginException("Excepcion al recuperar justificante simulado: " + e.getMessage(), e);
 		}
-		return content;
+		final ResultadoJustificante res = new ResultadoJustificante();
+		res.setContenido(content);
+		return res;
 	}
 
-	/**
-	 * Obtiene propiedad.
-	 *
-	 * @param propiedad
-	 *            propiedad
-	 * @return valor
-	 * @throws RegistroPluginException
-	 */
-	private String getPropiedad(final String propiedad) throws RegistroPluginException {
-		final String res = getProperty(REGISTRO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
-		if (res == null) {
-			throw new RegistroPluginException("No se ha especificado parametro " + propiedad + " en propiedades");
-		}
-		return res;
+	@Override
+	public boolean descargaExternaJustificantes() throws RegistroPluginException {
+		return false;
+	}
+
+	@Override
+	public LibroOficina obtenerLibroOrganismo(final String codigoEntidad, final String codigoOrganismo)
+			throws RegistroPluginException {
+		final LibroOficina lo = new LibroOficina();
+		lo.setCodigo("codlib.codofi1.1");
+		lo.setNombre("libro oficina (1) 1");
+		return lo;
 	}
 
 }
