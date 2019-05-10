@@ -82,6 +82,12 @@ public final class Constantes {
 	/** Constante errores de validacion. **/
 	public static final String CLAVE_MOCHILA_ERRORES_MSG = "ERRORESMSG";
 
+	/** Constante errores de validacion. **/
+	public static final String CLAVE_MOCHILA_ERRORES_NVL = "ERRORESNVL";
+
+	/** Constante errores de validacion. **/
+	public static final String CLAVE_MOCHILA_ERRORES_TLE = "ERRORESTLE";
+
 	/** Constante mochila literal. **/
 	public static final String CLAVE_MOCHILA_LITERALES = "LITERALES";
 
@@ -108,4 +114,8 @@ public final class Constantes {
 	/** Literal info alta ok. */
 	public static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
 
+	/**
+	 * Indica si el growl en un dialog se muestra en el padre o dentro del dialog.
+	 **/
+	public static final boolean GROWL_PADRE = true;
 }

@@ -76,14 +76,14 @@ public class DialogTramiteVersion extends DialogControllerBase {
 	 */
 	public void aceptar() {
 		if (dataVersion.getTipoFlujo() == TypeFlujo.PERSONALIZADO) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogTramiteVersion.tipoNoImplementado"));
 			return;
 		} else {
 
 			// Comprobamos que la realease no esté repetida.
 			if (tramiteService.tieneTramiteNumVersionRepetida(Long.valueOf(id), this.dataVersion.getNumeroVersion())) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("dialogTramiteVersion.numVersionRepetida"));
 				return;
 			}

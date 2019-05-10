@@ -170,6 +170,18 @@ public class JEntidad implements IModelApi {
 	@JoinColumn(name = "ENT_PRSINS")
 	private JLiteral instruccionesPresencial;
 
+	/** Habilitado registro centralizado */
+	@Column(name = "ENT_REGCEN", nullable = false, precision = 1, scale = 0)
+	private boolean registroCentralizado;
+
+	/** Codigo de oficina registro centralizado. **/
+	@Column(name = "ENT_REGOFI", length = 20)
+	private String oficinaRegistroCentralizado;
+
+	/** Habilitado valorar trámites */
+	@Column(name = "ENT_VALTRA", nullable = false, precision = 1, scale = 0)
+	private boolean valorarTramite;
+
 	/**
 	 * @return the codigo
 	 */
@@ -625,6 +637,58 @@ public class JEntidad implements IModelApi {
 	}
 
 	/**
+	 * @return the registroCentralizado
+	 */
+	public final boolean isRegistroCentralizado() {
+		return registroCentralizado;
+	}
+
+	/**
+	 * @param registroCentralizado
+	 *            the registroCentralizado to set
+	 */
+	public final void setRegistroCentralizado(final boolean registroCentralizado) {
+		this.registroCentralizado = registroCentralizado;
+	}
+
+	/**
+	 * @return the diasTramitesPresenciales
+	 */
+	public final Integer getDiasTramitesPresenciales() {
+		return diasTramitesPresenciales;
+	}
+
+	/**
+	 * @return the oficinaRegistroCentralizado
+	 */
+	public final String getOficinaRegistroCentralizado() {
+		return oficinaRegistroCentralizado;
+	}
+
+	/**
+	 * @param oficinaRegistroCentralizado
+	 *            the oficinaRegistroCentralizado to set
+	 */
+	public final void setOficinaRegistroCentralizado(final String oficinaRegistroCentralizado) {
+		this.oficinaRegistroCentralizado = oficinaRegistroCentralizado;
+	}
+
+	/**
+	 * @return the valorarTramite
+	 */
+	public final boolean isValorarTramite() {
+		return valorarTramite;
+	}
+
+	/**
+	 * @param valorarTramite
+	 *            the valorarTramite to set
+	 */
+	public final void setValorarTramite(final boolean valorarTramite) {
+		this.valorarTramite = valorarTramite;
+	}
+
+	/**
 	 * toModel.
 	 */
 	public Entidad toModel() {
@@ -694,6 +758,9 @@ public class JEntidad implements IModelApi {
 			entidad.setInstruccionesPresencial(instruccionesPresencial.toModel());
 		}
 		entidad.setDiasTramitesPresenciales(diasTramitesPresenciales);
+		entidad.setRegistroCentralizado(registroCentralizado);
+		entidad.setOficinaRegistroCentralizado(oficinaRegistroCentralizado);
+		entidad.setValorarTramite(valorarTramite);
 		return entidad;
 	}
 

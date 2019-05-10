@@ -127,7 +127,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 			contenido = file.getContents();
 			prepararImportacion(contenido);
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
 		}
 	}
 
@@ -167,7 +167,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error extrayendo la info del zip.", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDominioImportar.error.cargandoFichero"));
 			setMostrarPanelInfo(false);
 			return;
@@ -179,7 +179,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 
 		// 2. Comprobamos que tiene lo básico:
 		if (data == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDominioImportar.error.dominioobligatorio"));
 			setMostrarPanelInfo(false);
 			return;
@@ -329,7 +329,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 			fuentesDatosContent = contenidoFile;
 
 		} else if (!nombreFichero.equals("info.properties")) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
+			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
 		}
 		return true;
@@ -353,7 +353,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
 		if (!prop.getProperty("version").equals(getVersion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.version"));
 			return false;
 		}
@@ -369,13 +369,13 @@ public class DialogDominioImportar extends DialogControllerBase {
 
 			final TypeImportarTipo tipo = TypeImportarTipo.fromString(prop.getProperty("tipo"));
 			if (tipo != TypeImportarTipo.DOMINIO) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				addMessageContext(TypeNivelGravedad.ERROR,
 						UtilJSF.getLiteral("dialogDominioImportar.error.tipodominio"));
 				correcto = false;
 			}
 
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.entorno"));
 
 			correcto = false;
@@ -394,7 +394,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 		// Comprobamos que el dominio está checkeado
 		if (filaDominio.getResultado() == TypeImportarResultado.WARNING
 				|| filaDominio.getResultado() == TypeImportarResultado.ERROR) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.warning.check"));
 			return;
 		}
@@ -405,7 +405,7 @@ public class DialogDominioImportar extends DialogControllerBase {
 		}
 		this.dominioService.importarDominio(filaDominio, UtilJSF.getIdEntidad(), idArea);
 
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);

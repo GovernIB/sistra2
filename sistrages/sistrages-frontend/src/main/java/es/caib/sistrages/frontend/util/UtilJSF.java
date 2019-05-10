@@ -267,8 +267,11 @@ public final class UtilJSF {
 	 * @param message
 	 *            Mensaje
 	 */
-	public static void showMessageDialog(final TypeNivelGravedad nivel, final String title, final String message) {
+	public static void showMessageDialogBORRAR(final TypeNivelGravedad nivel, final String title,
+			final String message) {
+		// TODO BORRAR
 		final Severity severity = getSeverity(nivel);
+
 		RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(severity, title, message));
 	}
 

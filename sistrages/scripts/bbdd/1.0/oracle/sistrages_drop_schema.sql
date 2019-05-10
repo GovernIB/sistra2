@@ -26,6 +26,8 @@ drop table STG_FICHER cascade constraints;
 
 drop table STG_FILFUE cascade constraints;
 
+drop table STG_FMTPLI cascade constraints;
+
 drop table STG_FORCAM cascade constraints;
 
 drop table STG_FORCHK cascade constraints;
@@ -102,6 +104,8 @@ drop table STG_ROLARE cascade constraints;
 
 drop table STG_SCRIPT cascade constraints;
 
+drop table STG_SESION cascade constraints;
+
 drop table STG_TRADUC cascade constraints;
 
 drop table STG_TRAIDI cascade constraints;
@@ -109,6 +113,8 @@ drop table STG_TRAIDI cascade constraints;
 drop table STG_TRAMIT cascade constraints;
 
 drop table STG_VALCFU cascade constraints;
+
+drop table STG_VALORA cascade constraints;
 
 drop table STG_VERTRA cascade constraints;
 
@@ -131,6 +137,8 @@ drop sequence STG_ENTIDA_SEQ;
 drop sequence STG_FICHER_SEQ;
 
 drop sequence STG_FILFUE_SEQ;
+
+drop sequence STG_FMTPLI_SEQ;
 
 drop sequence STG_FORELE_SEQ;
 
@@ -181,6 +189,8 @@ drop sequence STG_TRAIDI_SEQ;
 drop sequence STG_TRAMIT_SEQ;
 
 drop sequence STG_VALCFU_SEQ;
+
+drop sequence STG_VALORA_SEQ;
 
 drop sequence STG_VERTRA_SEQ;
 

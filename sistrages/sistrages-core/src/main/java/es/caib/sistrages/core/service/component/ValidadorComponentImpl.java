@@ -27,6 +27,7 @@ import es.caib.sistrages.core.api.model.ComponenteFormularioSeccion;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
+import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
@@ -54,6 +55,7 @@ import es.caib.sistrages.core.api.model.types.TypeScriptFormulario;
 import es.caib.sistrages.core.api.service.DominioService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.core.service.component.literales.Literales;
+import es.caib.sistrages.core.service.repository.dao.EntidadDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
@@ -65,6 +67,9 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 	private static final String REGEX_PARAM_PLUGIN = "\\w*\\(['|\"](\\w*-?\\w*)*";
 	private static final Pattern PLUGINDOMI_INVOCAR_PATTERN = Pattern
 			.compile("PLUGIN_DOMINIOS.invocarDominio" + REGEX_PARAM_PLUGIN);
+
+	@Autowired
+	EntidadDao entidadDao;
 
 	@Autowired
 	TramiteDao tramiteDao;
@@ -712,11 +717,14 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			final List<String> pIdiomasTramiteVersion, final String pIdioma, final List<ErrorValidacion> listaErrores,
 			final TramitePasoRegistrar pasoRegistrar) {
 
+		final Long idEntidad = tramiteDao.getById(pTramiteVersion.getIdTramite()).getIdEntidad();
+		final Entidad entidad = entidadDao.getById(idEntidad);
+
 		final ObjectNode params = JsonNodeFactory.instance.objectNode();
 		params.put("TRAMITEVERSION", String.valueOf(pTramiteVersion.getCodigo()));
 		params.put("TRAMITEPASO", String.valueOf(pasoRegistrar.getCodigo()));
 
-		if (StringUtils.isEmpty(pasoRegistrar.getCodigoOficinaRegistro())) {
+		if (StringUtils.isEmpty(pasoRegistrar.getCodigoOficinaRegistro()) && !entidad.isRegistroCentralizado()) {
 			final ErrorValidacion error = errorValidacion("tramitePasoRegistrar.oficinaRegistro",
 					new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
 					"vacio.registrar", pIdioma);
@@ -727,7 +735,7 @@ public class ValidadorComponentImpl implements ValidadorComponent {
 			listaErrores.add(error);
 		}
 
-		if (StringUtils.isEmpty(pasoRegistrar.getCodigoLibroRegistro())) {
+		if (StringUtils.isEmpty(pasoRegistrar.getCodigoLibroRegistro()) && !entidad.isRegistroCentralizado()) {
 			final ErrorValidacion error = errorValidacion("tramitePasoRegistrar.libroRegistro",
 					new String[] { literales.getLiteral("validador", "tramitePasoRegistrar", pIdioma) },
 					"vacio.registrar", pIdioma);

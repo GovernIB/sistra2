@@ -243,8 +243,9 @@ public class JFormulario implements IModelApi {
 								jPagForm.setScriptValidacion(null);
 							} else {
 								if (pag.getScriptValidacion().getCodigo() != null) {
-									final JScript scriptValidacion = jPagForm.getScriptValidacion();
-									scriptValidacion.setScript(pag.getScriptValidacion().getContenido());
+									final JScript scriptValidacion = JScript.merge(jPagForm.getScriptValidacion(),
+											pag.getScriptValidacion());
+									jPagForm.setScriptValidacion(scriptValidacion);
 								} else {
 									jPagForm.setScriptValidacion(JScript.fromModel(pag.getScriptValidacion()));
 								}

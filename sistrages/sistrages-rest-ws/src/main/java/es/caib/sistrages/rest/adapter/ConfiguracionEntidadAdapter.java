@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
+import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.ROpcionFormularioSoporte;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
 import es.caib.sistrages.rest.api.interna.RPlantillaIdioma;
@@ -37,17 +39,17 @@ public class ConfiguracionEntidadAdapter {
 	 * @param formSoporte
 	 */
 	public RConfiguracionEntidad convertir(final Entidad entidad, final List<FormularioSoporte> formSoporte,
-			final List<PlantillaFormateador> plantillas) {
+			final List<PlantillaFormateador> plantillas, final List<IncidenciaValoracion> valoraciones) {
 
 		final RConfiguracionEntidad rConfiguracionEntidad = new RConfiguracionEntidad();
 		rConfiguracionEntidad.setTimestamp(System.currentTimeMillis() + "");
 		rConfiguracionEntidad.setIdentificador(entidad.getCodigoDIR3() != null ? entidad.getCodigoDIR3() : null);
 		rConfiguracionEntidad.setLogo(restApiService.getReferenciaFichero(
 				entidad.getLogoAsistente() != null ? entidad.getLogoAsistente().getCodigo() : null));
-		rConfiguracionEntidad.setLogoGestor(restApiService.getReferenciaFichero(
-				entidad.getLogoGestor() != null ? entidad.getLogoGestor().getCodigo() : null));
-		rConfiguracionEntidad.setCss(restApiService
-				.getReferenciaFichero(entidad.getCss() != null ? entidad.getCss().getCodigo() : null));
+		rConfiguracionEntidad.setLogoGestor(restApiService
+				.getReferenciaFichero(entidad.getLogoGestor() != null ? entidad.getLogoGestor().getCodigo() : null));
+		rConfiguracionEntidad.setCss(
+				restApiService.getReferenciaFichero(entidad.getCss() != null ? entidad.getCss().getCodigo() : null));
 		rConfiguracionEntidad.setEmail(entidad.getEmail());
 		rConfiguracionEntidad.setContactoHTML(AdapterUtils.generarLiteral(entidad.getPie()));
 		rConfiguracionEntidad.setUrlCarpeta(AdapterUtils.generarLiteral(entidad.getUrlCarpetaCiudadana()));
@@ -76,6 +78,8 @@ public class ConfiguracionEntidadAdapter {
 				.setInstruccionesPresencial(AdapterUtils.generarLiteral(entidad.getInstruccionesPresencial()));
 		rConfiguracionEntidad
 				.setInstruccionesSubsanacion(AdapterUtils.generarLiteral(entidad.getInstruccionesSubsanacion()));
+		rConfiguracionEntidad.setOficinaRegistroCentralizado(entidad.getOficinaRegistroCentralizado());
+		rConfiguracionEntidad.setRegistroCentralizado(entidad.isRegistroCentralizado());
 
 		if (plantillas != null && !plantillas.isEmpty()) {
 			final List<RPlantillaIdioma> plantillasDefecto = new ArrayList<>();
@@ -96,6 +100,17 @@ public class ConfiguracionEntidadAdapter {
 				plantillasDefecto.add(rplantilla);
 			}
 			rConfiguracionEntidad.setPlantillasDefecto(plantillasDefecto);
+		}
+		rConfiguracionEntidad.setValorarTramite(entidad.isValorarTramite());
+		if (valoraciones != null) {
+			final List<RIncidenciaValoracion> rvaloraciones = new ArrayList<>();
+			for (final IncidenciaValoracion valoracion : valoraciones) {
+				final RIncidenciaValoracion rvaloracion = new RIncidenciaValoracion();
+				rvaloracion.setDescripcion(AdapterUtils.generarLiteral(valoracion.getDescripcion()));
+				rvaloracion.setIdentificador(valoracion.getIdentificador());
+				rvaloraciones.add(rvaloracion);
+			}
+			rConfiguracionEntidad.setIncidenciasValoracion(rvaloraciones);
 		}
 		return rConfiguracionEntidad;
 	}

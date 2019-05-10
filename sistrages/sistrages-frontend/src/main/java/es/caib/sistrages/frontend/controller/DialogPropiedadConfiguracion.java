@@ -57,7 +57,7 @@ public class DialogPropiedadConfiguracion extends DialogControllerBase {
 		switch (acceso) {
 		case ALTA:
 			if (configuracionGlobalService.getConfiguracionGlobal(data.getPropiedad()) != null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.duplicated"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.duplicated"));
 				return;
 			}
 

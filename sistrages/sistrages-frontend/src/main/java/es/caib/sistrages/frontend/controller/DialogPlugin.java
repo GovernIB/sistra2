@@ -126,7 +126,7 @@ public class DialogPlugin extends DialogControllerBase {
 				}
 
 				if (duplicado) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 				} else {
 					this.data.getPropiedades().add(propiedad);
 				}
@@ -148,7 +148,7 @@ public class DialogPlugin extends DialogControllerBase {
 				}
 
 				if (duplicadoEdicion && !propiedadSeleccionada.getCodigo().equals(propiedadEdicion.getCodigo())) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 				} else {
 					this.data.getPropiedades().remove(posicion);
 					this.data.getPropiedades().add(posicion, propiedadEdicion);
@@ -203,7 +203,7 @@ public class DialogPlugin extends DialogControllerBase {
 
 		final int posicion = this.data.getPropiedades().indexOf(this.propiedadSeleccionada);
 		if (posicion >= this.data.getPropiedades().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -220,7 +220,7 @@ public class DialogPlugin extends DialogControllerBase {
 
 		final int posicion = this.data.getPropiedades().indexOf(this.propiedadSeleccionada);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -237,7 +237,7 @@ public class DialogPlugin extends DialogControllerBase {
 		boolean filaSeleccionada = true;
 
 		if (this.propiedadSeleccionada == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -260,7 +260,7 @@ public class DialogPlugin extends DialogControllerBase {
 					data.getTipo());
 
 			if (listaPlugin != null && !listaPlugin.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.tipo.duplicado"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.tipo.duplicado"));
 				return;
 			}
 
@@ -276,7 +276,7 @@ public class DialogPlugin extends DialogControllerBase {
 
 			if (listaPluginEdicion != null && !listaPluginEdicion.isEmpty()
 					&& !tipoInicialEdicion.equals(data.getTipo())) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.tipo.duplicado"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.tipo.duplicado"));
 				return;
 			}
 
@@ -311,7 +311,7 @@ public class DialogPlugin extends DialogControllerBase {
 	private boolean verificarGuardar() {
 		if (MAXLENGTH_PROPIEDADES
 				- (data.getPropiedades() == null ? 0 : UtilJSON.toJSON(data.getPropiedades()).length()) < 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("error.propiedades.tamanyosuperado"));
 			return false;
 		}

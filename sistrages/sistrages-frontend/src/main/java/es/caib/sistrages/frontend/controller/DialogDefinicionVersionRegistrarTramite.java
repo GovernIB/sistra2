@@ -65,6 +65,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	/** Id. **/
 	private String id;
 
+	/** Entidad. **/
 	private Entidad entidad;
 
 	/** Tramite Paso Registrar. **/
@@ -126,7 +127,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 
 		} catch (final RegistroPluginException e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
 		}
 	}
@@ -142,7 +143,7 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 					TypeRegistro.REGISTRO_ENTRADA);
 		} catch (final RegistroPluginException e) {
 			LOGGER.error("Error obteniendo informacion de registro", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.error"));
 		}
 	}
@@ -151,13 +152,6 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 * Guarda los datos y cierra el dialog.
 	 */
 	public void aceptar() {
-
-		if (this.data.getCodigoOficinaRegistro() == null || this.data.getCodigoLibroRegistro() == null
-				|| this.data.getCodigoTipoAsunto() == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogDefinicionVersionRegistrarTramite.registro.obligatorio"));
-			return;
-		}
 
 		tramiteService.updateTramitePaso(data);
 
@@ -470,5 +464,20 @@ public class DialogDefinicionVersionRegistrarTramite extends DialogControllerBas
 	 */
 	public void setIdiomas(final List<String> idiomas) {
 		this.idiomas = idiomas;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public final Entidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad
+	 *            the entidad to set
+	 */
+	public final void setEntidad(final Entidad entidad) {
+		this.entidad = entidad;
 	}
 }

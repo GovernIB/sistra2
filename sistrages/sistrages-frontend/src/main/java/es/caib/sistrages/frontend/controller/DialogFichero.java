@@ -221,12 +221,12 @@ public class DialogFichero extends DialogControllerBase {
 					dominioService.importarCSV(Long.valueOf(id), csv);
 				} catch (final Exception ex) {
 					if (ex.getCause() instanceof FuenteDatosPkException) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+						addMessageContext(TypeNivelGravedad.INFO,
 								UtilJSF.getLiteral("info.importarCSV.error.pk"));
 						return;
 					}
 					if (ex.getCause() instanceof FuenteDatosCSVNoExisteCampoException) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+						addMessageContext(TypeNivelGravedad.INFO,
 								UtilJSF.getLiteral("info.importarCSV.error.campo"));
 						return;
 					}
@@ -275,20 +275,20 @@ public class DialogFichero extends DialogControllerBase {
 			if (tipoCampoFichero == TypeCampoFichero.FUENTE_ENTIDAD_CSV) {
 				this.cerrarCsv();
 			} else if (tipoCampoFichero == TypeCampoFichero.TRAMITE_DOC) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
+				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
 			} else if (tipoCampoFichero == TypeCampoFichero.PLANTILLA_IDIOMA_FORM
 					|| tipoCampoFichero == TypeCampoFichero.PLANTILLA_FORMATEADOR) {
 				comprobarFichero();
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
+				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
 			} else {
 				entidad = entidadService.loadEntidad(entidad.getCodigo());
 				comprobarFichero();
 
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
+				addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.anexar"));
 			}
 
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
 		}
 	}
 
@@ -328,7 +328,7 @@ public class DialogFichero extends DialogControllerBase {
 		}
 
 		comprobarFichero();
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.quitar"));
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.fichero.quitar"));
 	}
 
 	/**

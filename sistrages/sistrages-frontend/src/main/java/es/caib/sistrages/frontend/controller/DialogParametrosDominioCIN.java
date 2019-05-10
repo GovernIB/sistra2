@@ -60,7 +60,7 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 	public void aceptar() {
 		final String param = parametroInexistente();
 		if (param != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("error.parametro.inexistente", new Object[] { param }));
 			return;
 		}
@@ -128,7 +128,7 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 	private boolean verificarFilaSeleccionadaValor() {
 		boolean filaSeleccionada = true;
 		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -180,7 +180,7 @@ public class DialogParametrosDominioCIN extends DialogControllerBase {
 				final ParametroDominio propiedad = (ParametroDominio) respuesta.getResult();
 
 				if (parametroDuplicado(propiedad)) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
+					addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.valor.duplicated"));
 					return;
 				}
 

@@ -142,4 +142,15 @@ public interface EntidadDao {
 	 */
 	Fichero uploadCssAsistente(final Long idEntidad, final Fichero fichero);
 
+	/**
+	 * Comprueba si al crear o modificar una entidad, si repetimos código dir
+	 *
+	 * @param codigoDIR3
+	 *            Código DIR3
+	 * @param idEntidad
+	 *            Puede ser nulo cuando es alta
+	 * @return Devuelve true si hay ya alguna entidad con dicho código DIR3
+	 */
+	boolean existeCodigoDIR3(String codigoDIR3, Long idEntidad);
+
 }

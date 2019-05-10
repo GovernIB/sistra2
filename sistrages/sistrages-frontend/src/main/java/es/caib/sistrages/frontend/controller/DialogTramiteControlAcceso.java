@@ -148,12 +148,12 @@ public class DialogTramiteControlAcceso extends DialogControllerBase {
 		boolean retorno;
 		if (avisoEntidad.getFechaFin() != null && avisoEntidad.getFechaInicio() != null
 				&& avisoEntidad.getFechaFin().before(avisoEntidad.getFechaInicio())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogTramiteControlAcceso.error.fechas"));
 			retorno = false;
 		} else if (isVacio(avisoEntidad.getMensaje()) && (avisoEntidad.isBloqueado()
 				|| avisoEntidad.getFechaFin() != null || avisoEntidad.getFechaInicio() != null)) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogTramiteControlAcceso.error.mensaje"));
 			retorno = false;
 		} else {

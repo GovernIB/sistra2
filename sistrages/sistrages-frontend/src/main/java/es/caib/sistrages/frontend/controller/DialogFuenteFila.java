@@ -116,7 +116,7 @@ public class DialogFuenteFila extends DialogControllerBase {
 			UtilJSF.closeDialog(result);
 		} else {
 			final String message = UtilJSF.getLiteral("error.fuentedatos.pk");
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, message);
+			addMessageContext(TypeNivelGravedad.INFO, message);
 		}
 	}
 

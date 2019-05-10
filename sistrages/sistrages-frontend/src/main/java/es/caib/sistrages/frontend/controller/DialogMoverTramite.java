@@ -61,7 +61,7 @@ public class DialogMoverTramite extends DialogControllerBase {
 	public void aceptar() {
 
 		if (data.getIdArea().compareTo(idAreaDestino) == 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogMoverTramite.error.mismarea"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogMoverTramite.error.mismarea"));
 			return;
 		}
 

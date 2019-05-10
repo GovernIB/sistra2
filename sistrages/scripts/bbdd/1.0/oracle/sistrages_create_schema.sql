@@ -1,4 +1,3 @@
-
 create sequence STG_ACCPER_SEQ;
 
 create sequence STG_ANETRA_SEQ;
@@ -70,6 +69,8 @@ create sequence STG_TRAIDI_SEQ;
 create sequence STG_TRAMIT_SEQ;
 
 create sequence STG_VALCFU_SEQ;
+
+create sequence STG_VALORA_SEQ;
 
 create sequence STG_VERTRA_SEQ;
 
@@ -553,7 +554,10 @@ create table STG_ENTIDA
    ENT_SUBREG           NUMBER(1)            default 0 not null,
    ENT_SUBINS           NUMBER(18),
    ENT_PRSDIA           NUMBER(3),
-   ENT_PRSINS           NUMBER(18)
+   ENT_PRSINS           NUMBER(18),
+   ENT_REGCEN           NUMBER(1)            default 0 not null,
+   ENT_REGOFI           VARCHAR2(20 CHAR),
+   ENT_VALTRA           NUMBER(1)            default 0 not null
 );
 
 comment on table STG_ENTIDA is
@@ -660,6 +664,15 @@ comment on column STG_ENTIDA.ENT_PRSDIA is
 
 comment on column STG_ENTIDA.ENT_PRSINS is
 'Instrucciones presencial';
+
+comment on column STG_ENTIDA.ENT_REGCEN is
+'Indica si los datos de registro están centralizados';
+
+comment on column STG_ENTIDA.ENT_REGOFI is
+'Indica oficina de registro centralizada';
+
+comment on column STG_ENTIDA.ENT_VALTRA is
+'Indica si en los trámites normalizados se realiza valoración del trámite al finalizar';
 
 alter table STG_ENTIDA
    add constraint STG_ENTIDA_PK primary key (ENT_CODIGO);
@@ -907,7 +920,6 @@ comment on column STG_FORCIN.CIN_INDICE is
 
 comment on column STG_FORCIN.CIN_ALTURA is
 'Indica altura del selector';
-
 
 alter table STG_FORCIN
    add constraint STG_FORCIN_PK primary key (CIN_CODIGO);
@@ -2402,6 +2414,43 @@ alter table STG_VALCFU
    add constraint STG_VACFU_PK primary key (VCF_CODIGO);
 
 /*==============================================================*/
+/* Table: STG_VALORA                                            */
+/*==============================================================*/
+create table STG_VALORA
+(
+   VAT_CODIGO           NUMBER(18)           not null,
+   VAT_CODENT           NUMBER(18)           not null,
+   VAT_IDENTI           VARCHAR2(20 CHAR)    not null,
+   VAT_DESCRI           NUMBER(18)           not null
+);
+
+comment on table STG_VALORA is
+'Lista valoraciones trámite';
+
+comment on column STG_VALORA.VAT_CODIGO is
+'Código interno';
+
+comment on column STG_VALORA.VAT_CODENT is
+'Código entidad';
+
+comment on column STG_VALORA.VAT_IDENTI is
+'Código incidencia';
+
+comment on column STG_VALORA.VAT_DESCRI is
+'Descripción incidencia';
+
+alter table STG_VALORA
+   add constraint STG_VALORA_PK primary key (VAT_CODIGO);
+
+/*==============================================================*/
+/* Index: STG_VALORA_IDENTI_UK                                  */
+/*==============================================================*/
+create unique index STG_VALORA_IDENTI_UK on STG_VALORA (
+   VAT_CODENT ASC,
+   VAT_IDENTI ASC
+);
+
+/*==============================================================*/
 /* Table: STG_VERTRA                                            */
 /*==============================================================*/
 create table STG_VERTRA
@@ -3013,6 +3062,14 @@ alter table STG_VALCFU
 alter table STG_VALCFU
    add constraint STG_VALCFU_FILFUE_FK foreign key (VCF_CODFIF)
       references STG_FILFUE (FIF_CODIGO);
+
+alter table STG_VALORA
+   add constraint STG_VALORA_ENTIDA_FK foreign key (VAT_CODENT)
+      references STG_ENTIDA (ENT_CODIGO);
+
+alter table STG_VALORA
+   add constraint STG_VALORA_TRADUC_FK foreign key (VAT_DESCRI)
+      references STG_TRADUC (TRA_CODIGO);
 
 alter table STG_VERTRA
    add constraint STG_VERTRA_SCRIPT_FK foreign key (VTR_SCRPER)

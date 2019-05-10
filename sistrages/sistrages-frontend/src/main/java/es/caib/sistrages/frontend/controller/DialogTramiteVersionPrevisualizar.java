@@ -148,7 +148,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	public void aceptar() {
 
 		if (tramiteSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite"));
 
 			return;
@@ -275,7 +275,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 				}
 
 				if (duplicado) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 				} else {
 					this.parametros.add(propiedad);
 				}
@@ -299,7 +299,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 				}
 
 				if (duplicadoEdicion && !valorSeleccionado.getCodigo().equals(propiedadEdicion.getCodigo())) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+					addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 				} else {
 					this.parametros.remove(posicion);
 					this.parametros.add(posicion, propiedadEdicion);
@@ -323,7 +323,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	private boolean verificarFilaSeleccionadaValor() {
 		boolean filaSeleccionada = true;
 		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -338,7 +338,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 		final int posicion = this.parametros.indexOf(this.valorSeleccionado);
 		if (posicion >= this.parametros.size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -355,7 +355,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 		final int posicion = this.parametros.indexOf(this.valorSeleccionado);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -374,7 +374,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 
 			UtilJSF.openDialog(DialogErroresValidacion.class, TypeModoAcceso.CONSULTA, null, true, 1050, 520);
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.validacion"));
 
 		}
 	}

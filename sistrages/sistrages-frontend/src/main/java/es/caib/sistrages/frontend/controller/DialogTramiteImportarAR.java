@@ -60,7 +60,7 @@ public class DialogTramiteImportarAR extends DialogControllerBase {
 	public void guardar() {
 
 		if (data.getAreaResultado().isEmpty()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, "Rellena el valor");
+			addMessageContext(TypeNivelGravedad.WARNING, "Rellena el valor");
 			return;
 		}
 

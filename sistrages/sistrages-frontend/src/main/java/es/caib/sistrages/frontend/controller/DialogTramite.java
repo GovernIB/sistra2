@@ -49,7 +49,7 @@ public class DialogTramite extends DialogControllerBase {
 	public void aceptar() {
 
 		if (isIdentificadorRepetido()) {
-			UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "ERROR",
+			addMessageContext(TypeNivelGravedad.INFO, "ERROR",
 					UtilJSF.getLiteral("dialogTramite.error.identificadorDuplicado"));
 			return;
 		}

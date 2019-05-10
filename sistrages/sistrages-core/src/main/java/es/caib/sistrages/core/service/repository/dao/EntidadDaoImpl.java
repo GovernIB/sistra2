@@ -192,6 +192,9 @@ public class EntidadDaoImpl implements EntidadDao {
 		jEntidad.setDiasTramitesPresenciales(entidad.getDiasTramitesPresenciales());
 		jEntidad.setInstruccionesPresencial(
 				JLiteral.mergeModel(jEntidad.getInstruccionesPresencial(), entidad.getInstruccionesPresencial()));
+		jEntidad.setRegistroCentralizado(entidad.isRegistroCentralizado());
+		jEntidad.setOficinaRegistroCentralizado(entidad.getOficinaRegistroCentralizado());
+		jEntidad.setValorarTramite(entidad.isValorarTramite());
 		entityManager.merge(jEntidad);
 	}
 
@@ -383,5 +386,29 @@ public class EntidadDaoImpl implements EntidadDao {
 		entityManager.merge(jEntidad);
 
 		return jEntidad.getCssAsistenteTramitacion().toModel();
+	}
+
+	@Override
+	public boolean existeCodigoDIR3(final String codigoDIR3, final Long idEntidad) {
+		String sql = "Select count(t) From JEntidad t where t.codigoDir3 = :codigoDir3";
+		if (idEntidad != null) {
+			sql += " and t.codigo != :idEntidad";
+		}
+		final Query query = entityManager.createQuery(sql);
+
+		query.setParameter("codigoDir3", codigoDIR3);
+		if (idEntidad != null) {
+			query.setParameter("idEntidad", idEntidad);
+		}
+
+		final Long cuantos = (Long) query.getSingleResult();
+
+		boolean repetido;
+		if (cuantos == 0) {
+			repetido = false;
+		} else {
+			repetido = true;
+		}
+		return repetido;
 	}
 }

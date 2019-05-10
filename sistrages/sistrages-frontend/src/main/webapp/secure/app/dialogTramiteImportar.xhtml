@@ -113,12 +113,12 @@
 					<h:column>
 						<p:outputLabel value=" " />
 						<div style="margin-bottom:7px">
-							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionOficina']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" /></b>
-							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoOficina} - #{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoOficinaText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" />
+							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionOficina']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo and dialogTramiteImportar.mostrarRegistroOficina}" /></b>
+							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoOficina} - #{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoOficinaText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo and dialogTramiteImportar.mostrarRegistroOficina}" />
 						</div>
 						<div style="margin-bottom:7px">
-							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionLibro']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo}"  /></b>
-							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoLibro} - #{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoLibroText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo}" />
+							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionLibro']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo and dialogTramiteImportar.mostrarRegistroOficina}"  /></b>
+							<p:outputLabel value="#{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoLibro} - #{dialogTramiteImportar.filaTramiteRegistro.tramiteVersionResultadoLibroText}" rendered="#{dialogTramiteImportar.mostrarRegistroInfo and dialogTramiteImportar.mostrarRegistroOficina}" />
 						</div>
 						<div style="margin-bottom:7px">
 							<b><p:outputLabel value="#{msg['dialogTramiteImportar.headerVersionTipo']}: " rendered="#{dialogTramiteImportar.mostrarRegistroInfo}"/></b>

@@ -196,8 +196,8 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 			jForm.setScriptPlantilla(null);
 		} else {
 			if (pFormInt.getScriptPlantilla().getCodigo() != null) {
-				final JScript script = jForm.getScriptPlantilla();
-				script.setScript(pFormInt.getScriptPlantilla().getContenido());
+				final JScript script = JScript.merge(jForm.getScriptPlantilla(), pFormInt.getScriptPlantilla());
+				jForm.setScriptPlantilla(script);
 			} else {
 				jForm.setScriptPlantilla(JScript.fromModel(pFormInt.getScriptPlantilla()));
 			}
@@ -630,8 +630,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 						jCampoIndexado.setScriptValoresPosibles(null);
 					} else {
 						if (campoIndexado.getScriptValoresPosibles().getCodigo() != null) {
-							final JScript scriptValores = jCampoIndexado.getScriptValoresPosibles();
-							scriptValores.setScript(campoIndexado.getScriptValoresPosibles().getContenido());
+							final JScript scriptValores = JScript.merge(jCampoIndexado.getScriptValoresPosibles(),
+									campoIndexado.getScriptValoresPosibles());
+							jCampoIndexado.setScriptValoresPosibles(scriptValores);
 						} else {
 							jCampoIndexado.setScriptValoresPosibles(
 									JScript.fromModel(campoIndexado.getScriptValoresPosibles()));

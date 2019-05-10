@@ -3,7 +3,7 @@ create sequence STT_DOCPTR_SEQ;
 create sequence STT_FICPTR_SEQ;
 
 create sequence STT_FIRDPT_SEQ;
-TRAPER
+
 create sequence STT_FORMUL_SEQ;
 
 create sequence STT_INVALI_SEQ;
@@ -784,7 +784,7 @@ create table STT_TRAPER
    TRP_DESTRA           VARCHAR2(1000 CHAR)  not null,
    TRP_IDETCP           VARCHAR2(20 CHAR)    not null,
    TRP_IDEPCP           VARCHAR2(20 CHAR)    not null,
-   TRP_SERVCP  			NUMBER(1) 			default 0 not null,
+   TRP_SERVCP           NUMBER(1)            default 0 not null,
    TRP_IDEARE           VARCHAR2(20 CHAR),
    TRP_PROSIA           VARCHAR2(20 CHAR)    not null,
    TRP_ESTADO           VARCHAR2(1 CHAR)     not null,

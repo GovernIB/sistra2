@@ -6,9 +6,8 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.Literal;
-import es.caib.sistrages.core.api.model.types.TypeFormularioSoporte;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -18,21 +17,18 @@ import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
-public class DialogFormularioSoporte extends DialogControllerBase {
+public class DialogValoracion extends DialogControllerBase {
 
 	@Inject
 	private EntidadService entidadService;
 
-	/**
-	 * Id elemento a tratar.
-	 */
+	/** Id elemento a tratar. */
 	private String id;
 
 	/** Datos elemento. */
-	private FormularioSoporte data;
+	private IncidenciaValoracion data;
 
-	private String tipoIncidencia;
-
+	/** Descripcion. **/
 	private String descripcion;
 
 	/**
@@ -41,17 +37,13 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 		if (modo == TypeModoAcceso.ALTA) {
-			data = new FormularioSoporte();
+			data = new IncidenciaValoracion();
 
 		} else {
 			if (id != null) {
-				data = entidadService.loadOpcionFormularioSoporte(Long.valueOf(id));
+				data = entidadService.loadValoracion(Long.valueOf(id));
 				if (data != null && data.getDescripcion() != null) {
 					descripcion = data.getDescripcion().getTraduccion(UtilJSF.getSessionBean().getLang());
-				}
-
-				if (data != null && data.getTipoIncidencia() != null) {
-					tipoIncidencia = data.getTipoIncidencia().getTraduccion(UtilJSF.getSessionBean().getLang());
 				}
 			}
 		}
@@ -76,21 +68,6 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * Retorno dialogo de los botones de propiedades.
-	 *
-	 * @param event
-	 *            respuesta dialogo
-	 */
-	public void returnDialogoTipoIncidencia(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
-		if (!respuesta.isCanceled() && respuesta.getModoAcceso() != TypeModoAcceso.CONSULTA) {
-			final Literal literales = (Literal) respuesta.getResult();
-			data.setTipoIncidencia(literales);
-			tipoIncidencia = literales.getTraduccion(UtilJSF.getSessionBean().getLang());
-		}
-	}
-
-	/**
 	 * Editar descripcion del dominio.
 	 *
 	 *
@@ -105,26 +82,14 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * Editar descripcion del dominio.
-	 *
-	 *
-	 */
-	public void editarTipoIncidencia() {
-		if (data.getTipoIncidencia() == null) {
-			UtilTraducciones.openDialogTraduccionAlta();
-		} else {
-			UtilTraducciones.openDialogTraduccion(TypeModoAcceso.EDICION, data.getTipoIncidencia(), null, null);
-		}
-	}
-
-	/**
 	 * Aceptar.
 	 */
 	public void aceptar() {
 
-		if (data.getTipoDestinatario() == TypeFormularioSoporte.LISTA_DE_EMAILS && data.getListaEmails().isEmpty()) {
+		if (entidadService.existeIdentificadorValoracion(data.getIdentificador(), UtilJSF.getIdEntidad(),
+				data.getCodigo())) {
 			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogFormularioSoporte.error.emailVacio"));
+					UtilJSF.getLiteral("dialogValoracion.error.codigoIdentificador"));
 			return;
 		}
 
@@ -132,10 +97,10 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
 		case ALTA:
-			entidadService.addOpcionFormularioSoporte(UtilJSF.getIdEntidad(), data);
+			entidadService.addValoracion(UtilJSF.getIdEntidad(), data);
 			break;
 		case EDICION:
-			entidadService.updateOpcionFormularioSoporte(data);
+			entidadService.updateValoracion(data);
 			break;
 		case CONSULTA:
 			// No hay que hacer nada
@@ -160,7 +125,7 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	/**
 	 * @return the data
 	 */
-	public FormularioSoporte getData() {
+	public IncidenciaValoracion getData() {
 		return data;
 	}
 
@@ -168,32 +133,38 @@ public class DialogFormularioSoporte extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setData(final FormularioSoporte data) {
+	public void setData(final IncidenciaValoracion data) {
 		this.data = data;
 	}
 
-	public String getTipoIncidencia() {
-		return tipoIncidencia;
-	}
-
-	public void setTipoIncidencia(final String tipoIncidencia) {
-		this.tipoIncidencia = tipoIncidencia;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(final String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getId() {
+	/**
+	 * @return the id
+	 */
+	public final String getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public final void setId(final String id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public final String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public final void setDescripcion(final String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 }

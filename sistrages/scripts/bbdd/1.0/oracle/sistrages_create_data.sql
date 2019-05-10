@@ -34,4 +34,4 @@ insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'sistramit.anexoSoporte.extensiones','pdf','Extensiones permitidas para el anexo del formulario de soporte (lista separada por comas).');
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'sistramit.anexoSoporte.tamanyo','1MB','Tamaño máximo permitido para el anexo del formulario de soporte (MB).');
 insert into  STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) values (STG_CNFGLO_SEQ.NEXTVAL, 'growl.propiedades','sticky=false#life=4000','Parametro para alterar las propieades de un growl a nivel global (sticky y tiempo)');
-
+INSERT INTO STG_CNFGLO (CFG_CODIGO, CFG_PROP, CFG_VALOR, CFG_DESCR) VALUES (STG_CNFGLO_SEQ.nextval, 'ayuda.path', '', 'Propiedad para externalizar la ayuda en un directorio externo (se indica la ruta del directorio donde se ubicará la ayuda). Si esta propiedad no tiene valor se usará la ayuda incluida en la aplicación.');

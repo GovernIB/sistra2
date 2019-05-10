@@ -71,7 +71,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		if (acceso == TypeModoAcceso.EDICION && data.isPorDefecto()) {
 			final List<PlantillaFormateador> plantillas = fmtService.getListaPlantillasFormateador(data.getCodigo());
 			if (plantillas == null || plantillas.isEmpty()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				addMessageContext(TypeNivelGravedad.ERROR,
 						UtilJSF.getLiteral("dialogFormateadorFormulario.porDefecto.faltanPlantillas"));
 				return;
 			}
@@ -86,7 +86,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 				}
 
 				if (!encontrado) {
-					UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					addMessageContext(TypeNivelGravedad.ERROR,
 							UtilJSF.getLiteral("dialogFormateadorFormulario.porDefecto.faltanPlantillas"));
 					return;
 				}
@@ -97,7 +97,7 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 		switch (acceso) {
 		case ALTA:
 			if (fmtService.getFormateadorFormulario(data.getIdentificador()) != null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 			fmtService.addFormateadorFormulario(idEntidad, data);
@@ -106,13 +106,13 @@ public class DialogFormateadorFormulario extends DialogControllerBase {
 			// Comprobamos si cambia a bloqueado
 			if (!estabaBloqueado && data.isBloquear()
 					&& fmtService.tieneRelacionesFormateadorFormulario(data.getCodigo())) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.formateadorNoBloqueable"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.formateadorNoBloqueable"));
 				return;
 			}
 			// Comprobamos si se repite
 			final FormateadorFormulario f = fmtService.getFormateadorFormulario(data.getIdentificador());
 			if (f != null && f.getCodigo().longValue() != data.getCodigo().longValue()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return;
 			}
 			fmtService.updateFormateadorFormulario(data, idEntidad);

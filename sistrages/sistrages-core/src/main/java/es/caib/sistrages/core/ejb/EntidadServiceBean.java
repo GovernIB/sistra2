@@ -14,6 +14,7 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
 import es.caib.sistrages.core.api.service.EntidadService;
@@ -262,6 +263,48 @@ public class EntidadServiceBean implements EntidadService {
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
 	public boolean removeOpcionFormularioSoporte(final Long id) {
 		return entidadService.removeOpcionFormularioSoporte(id);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<IncidenciaValoracion> getValoraciones(final Long idEntidad) {
+		return entidadService.getValoraciones(idEntidad);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public IncidenciaValoracion loadValoracion(final Long idValoracion) {
+		return entidadService.loadValoracion(idValoracion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void addValoracion(final Long idEntidad, final IncidenciaValoracion valoracion) {
+		entidadService.addValoracion(idEntidad, valoracion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void updateValoracion(final IncidenciaValoracion valoracion) {
+		entidadService.updateValoracion(valoracion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public void removeValoracion(final Long idValoracion) {
+		entidadService.removeValoracion(idValoracion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public boolean existeCodigoDIR3(final String codigoDIR3, final Long idEntidad) {
+		return entidadService.existeCodigoDIR3(codigoDIR3, idEntidad);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT })
+	public boolean existeIdentificadorValoracion(final String identificador, final Long idEntidad, final Long codigo) {
+		return entidadService.existeIdentificadorValoracion(identificador, idEntidad, codigo);
 	}
 
 }

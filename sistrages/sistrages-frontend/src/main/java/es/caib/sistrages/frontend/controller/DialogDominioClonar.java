@@ -136,21 +136,21 @@ public class DialogDominioClonar extends DialogControllerBase {
 	public void clonar() {
 
 		if (data.getAmbito() == TypeAmbito.AREA && areaID == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
 			return;
 		}
 
 		if (data.getTipo() == TypeDominio.FUENTE_DATOS && fuenteID == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
 			return;
 		}
 
 		if (nuevoIdentificador == null || nuevoIdentificador.isEmpty()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral(LITERAL_ERROR_OBLIGATORIO));
 			return;
 		}
 		if (dominioService.loadDominio(nuevoIdentificador) != null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 			return;
 		}
 

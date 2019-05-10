@@ -89,6 +89,12 @@ public class DialogEntidad extends DialogControllerBase {
 	 * Aceptar.
 	 */
 	public void aceptar() {
+
+		if (entidadService.existeCodigoDIR3(data.getCodigoDIR3(), data.getCodigo())) {
+			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogEntidad.error.codigoDIR3repetido"));
+			return;
+		}
+
 		// Realizamos alta o update
 		final TypeModoAcceso acceso = TypeModoAcceso.valueOf(modoAcceso);
 		switch (acceso) {
@@ -120,7 +126,7 @@ public class DialogEntidad extends DialogControllerBase {
 	}
 
 	public void mensaje() {
-		UtilJSF.showMessageDialog(TypeNivelGravedad.INFO, "Atento", "Ojo al dato.");
+		addMessageContext(TypeNivelGravedad.INFO, "Atento", "Ojo al dato.");
 	}
 
 	public String getId() {

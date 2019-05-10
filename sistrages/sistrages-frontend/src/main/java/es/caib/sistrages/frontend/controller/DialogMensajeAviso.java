@@ -184,13 +184,13 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	 */
 	public void anyadirTram() {
 		if (tramiteSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogMensajeAviso.error.seleccioneTramite"));
 			return;
 		}
 
 		if (versionSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogMensajeAviso.error.seleccioneVersion"));
 			return;
 		}
@@ -205,7 +205,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 
 		for (final TramiteMensajeAviso mensajeAviso : listaTramites) {
 			if (mensajeAviso.contains(codigoVersion, versionSeleccionado)) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("dialogMensajeAviso.error.yaintroducido"));
 				return;
 			}
@@ -289,13 +289,13 @@ public class DialogMensajeAviso extends DialogControllerBase {
 	private boolean verificarGuardar() {
 
 		if (!validasFechas()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogMensajeAviso.error.fechaInicialPosterior"));
 			return false;
 		}
 
 		if (data.getMensaje() == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogMensajeAviso.error.descripcionvacia"));
 			return false;
 		}
@@ -319,7 +319,7 @@ public class DialogMensajeAviso extends DialogControllerBase {
 
 		if ((data.getTipo() == TypeAvisoEntidad.LISTA || data.getTipo() == TypeAvisoEntidad.TRAMITE_VERSION)
 				&& data.getListaSerializadaTramites().isEmpty()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+			addMessageContext(TypeNivelGravedad.WARNING,
 					UtilJSF.getLiteral("dialogMensajeAviso.error.tramitesvacios"));
 			return;
 		}

@@ -15,7 +15,7 @@
 
          	<p:outputLabel value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino']}" />
 			<p:panelGrid styleClass="noBorders" columnClasses="noPadding-left,,,">
-				<p:row>
+				<p:row  rendered="#{!viewDefinicionVersion.entidad.registroCentralizado}">
 					<p:column>
 						<p:outputLabel for="oficina"
 							value="#{msg['viewDefinicionVersionRegistrarTramite.datosdestino.oficina']}" />

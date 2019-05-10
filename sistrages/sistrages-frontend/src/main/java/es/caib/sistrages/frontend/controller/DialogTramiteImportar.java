@@ -198,6 +198,12 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	private boolean todoCorrecto;
 
 	/**
+	 * Indica si se debe mostrar el registro de oficina (si entidad es de registro
+	 * centralizado o no)
+	 **/
+	private boolean mostrarRegistroOficina;
+
+	/**
 	 * Inicialización.
 	 */
 	public void init() {
@@ -221,7 +227,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			contenido = file.getContents();
 			prepararImportacion(contenido);
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofitxer"));
 		}
 	}
 
@@ -265,7 +271,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error extrayendo la info del zip.", e);
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.fichero"));
 			setMostrarPanelInfo(false);
 			return;
@@ -279,7 +285,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		// tramiteVersion, pasos y una area)
 		if (tramite == null || tramiteVersion == null || area == null || tramiteVersion.getListaPasos() == null
 				|| tramiteVersion.getListaPasos().isEmpty()) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.ficheroContenido"));
 			setMostrarPanelInfo(false);
 			return;
@@ -709,7 +715,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				rellenarInfoRegistro();
 			} catch (final Exception e) {
 				LOGGER.error("Error intentando carga el plugin de registro al importar", e);
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				addMessageContext(TypeNivelGravedad.ERROR,
 						UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
 				filaTramiteVersion.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.pluginregistro"));
 
@@ -734,27 +740,31 @@ public class DialogTramiteImportar extends DialogControllerBase {
 				UtilJSF.getIdEntidad());
 		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
 
-		// Cargamos los datos de oficina y registro (registro sólo si se encuentra la
-		// oficina desde donde viene)
-		if (this.filaTramiteRegistro.getTramiteVersionResultadoOficina() != null
-				&& !this.filaTramiteRegistro.getTramiteVersionResultadoOficina().isEmpty()) {
-			final List<OficinaRegistro> oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
-					TypeRegistro.REGISTRO_ENTRADA);
-			for (final OficinaRegistro oficina : oficinas) {
-				if (oficina.getCodigo().equals(this.filaTramiteRegistro.getTramiteVersionResultadoOficina())) {
-					this.filaTramiteRegistro.setTramiteVersionResultadoOficinaText(oficina.getNombre());
-					final List<LibroOficina> libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
-							oficina.getCodigo(), TypeRegistro.REGISTRO_ENTRADA);
-					for (final LibroOficina libro : libros) {
-						if (libro.getCodigo().equals(this.filaTramiteRegistro.getTramiteVersionResultadoLibro())) {
-							this.filaTramiteRegistro.setTramiteVersionResultadoLibroText(libro.getNombre());
-							break;
-						}
-					}
-					break;
-				}
-			}
+		mostrarRegistroOficina = !entidad.isRegistroCentralizado();
+		if (!entidad.isRegistroCentralizado()) {
 
+			// Cargamos los datos de oficina y registro (registro sólo si se encuentra la
+			// oficina desde donde viene)
+			if (this.filaTramiteRegistro.getTramiteVersionResultadoOficina() != null
+					&& !this.filaTramiteRegistro.getTramiteVersionResultadoOficina().isEmpty()) {
+				final List<OficinaRegistro> oficinas = iplugin.obtenerOficinasRegistro(entidad.getCodigoDIR3(),
+						TypeRegistro.REGISTRO_ENTRADA);
+				for (final OficinaRegistro oficina : oficinas) {
+					if (oficina.getCodigo().equals(this.filaTramiteRegistro.getTramiteVersionResultadoOficina())) {
+						this.filaTramiteRegistro.setTramiteVersionResultadoOficinaText(oficina.getNombre());
+						final List<LibroOficina> libros = iplugin.obtenerLibrosOficina(entidad.getCodigoDIR3(),
+								oficina.getCodigo(), TypeRegistro.REGISTRO_ENTRADA);
+						for (final LibroOficina libro : libros) {
+							if (libro.getCodigo().equals(this.filaTramiteRegistro.getTramiteVersionResultadoLibro())) {
+								this.filaTramiteRegistro.setTramiteVersionResultadoLibroText(libro.getNombre());
+								break;
+							}
+						}
+						break;
+					}
+				}
+
+			}
 		}
 
 		// Cargamos los datos del tipo
@@ -1013,7 +1023,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			formateadores.put(codigo, formateador);
 
 		} else if (!nombreFichero.equals("info.properties")) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
+			addMessageContext(TypeNivelGravedad.ERROR, "Fichero desconocido.");
 			return false;
 		}
 		return true;
@@ -1051,7 +1061,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		prop.load(zipPropertiesStream);
 		// Checkeamos misma versión.
 		if (!prop.getProperty("version").equals(getVersion())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.version"));
 			return false;
 		}
@@ -1067,13 +1077,13 @@ public class DialogTramiteImportar extends DialogControllerBase {
 
 			final TypeImportarTipo tipo = TypeImportarTipo.fromString(prop.getProperty("tipo"));
 			if (tipo != TypeImportarTipo.TRAMITE) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+				addMessageContext(TypeNivelGravedad.ERROR,
 						UtilJSF.getLiteral("dialogTramiteImportar.error.tipoTramite"));
 				correcto = false;
 			}
 
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.error.entorno"));
 
 			correcto = false;
@@ -1120,7 +1130,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		tramiteService.importar(filaArea, filaTramite, filaTramiteRegistro, filasDominios, filasFormateador,
 				UtilJSF.getIdEntidad(), formularios, ficheros, ficherosContent, UtilJSF.getSessionBean().getUserName());
 
-		UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 		final DialogResult result = new DialogResult();
 		result.setModoAcceso(TypeModoAcceso.valueOf(modoAcceso));
 		result.setCanceled(false);
@@ -1137,7 +1147,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		final boolean noCheckeado = resultado == TypeImportarResultado.WARNING
 				|| resultado == TypeImportarResultado.ERROR;
 		if (noCheckeado) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteImportar.warning.check"));
 		}
 		return noCheckeado;
@@ -1612,5 +1622,20 @@ public class DialogTramiteImportar extends DialogControllerBase {
 	 */
 	public void setTodoCorrecto(final boolean todoCorrecto) {
 		this.todoCorrecto = todoCorrecto;
+	}
+
+	/**
+	 * @return the mostrarRegistroOficina
+	 */
+	public boolean isMostrarRegistroOficina() {
+		return mostrarRegistroOficina;
+	}
+
+	/**
+	 * @param mostrarRegistroOficina
+	 *            the mostrarRegistroOficina to set
+	 */
+	public void setMostrarRegistroOficina(final boolean mostrarRegistroOficina) {
+		this.mostrarRegistroOficina = mostrarRegistroOficina;
 	}
 }

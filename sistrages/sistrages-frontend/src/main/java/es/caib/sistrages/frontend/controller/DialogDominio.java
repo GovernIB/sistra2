@@ -272,7 +272,7 @@ public class DialogDominio extends DialogControllerBase {
 					}
 
 					if (duplicado) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 					} else {
 						this.data.getParametros().add(propiedad);
 					}
@@ -290,7 +290,7 @@ public class DialogDominio extends DialogControllerBase {
 					}
 
 					if (duplicado) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 					} else {
 						this.data.getListaFija().add(propiedad);
 					}
@@ -315,7 +315,7 @@ public class DialogDominio extends DialogControllerBase {
 					}
 
 					if (duplicado && !propiedadSeleccionada.getCodigo().equals(propiedadEdicion.getCodigo())) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 					} else {
 						this.data.getParametros().remove(posicion);
 						this.data.getParametros().add(posicion, propiedadEdicion);
@@ -338,7 +338,7 @@ public class DialogDominio extends DialogControllerBase {
 					}
 
 					if (duplicado && !valorSeleccionado.getCodigo().equals(propiedadEdicion.getCodigo())) {
-						UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
+						addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.duplicated"));
 					} else {
 						this.data.getListaFija().remove(posicion);
 						this.data.getListaFija().add(posicion, propiedadEdicion);
@@ -367,9 +367,9 @@ public class DialogDominio extends DialogControllerBase {
 
 		final ResultadoError resultado = UtilRest.refrescar(urlBase, usuario, pwd, "D", data.getIdentificador());
 		if (resultado.getCodigo() == 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
+			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.refrescar"));
 		} else {
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("error.refrescar") + ": " + resultado.getMensaje());
 		}
 
@@ -453,7 +453,7 @@ public class DialogDominio extends DialogControllerBase {
 
 		final int posicion = this.data.getParametros().indexOf(this.propiedadSeleccionada);
 		if (posicion >= this.data.getParametros().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -474,7 +474,7 @@ public class DialogDominio extends DialogControllerBase {
 
 		final int posicion = this.data.getListaFija().indexOf(this.valorSeleccionado);
 		if (posicion >= this.data.getListaFija().size() - 1) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverabajo"));
 			return;
 		}
 
@@ -491,7 +491,7 @@ public class DialogDominio extends DialogControllerBase {
 
 		final int posicion = this.data.getParametros().indexOf(this.propiedadSeleccionada);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -512,7 +512,7 @@ public class DialogDominio extends DialogControllerBase {
 
 		final int posicion = this.data.getListaFija().indexOf(this.valorSeleccionado);
 		if (posicion <= 0) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.moverarriba"));
 			return;
 		}
 
@@ -528,7 +528,7 @@ public class DialogDominio extends DialogControllerBase {
 	private boolean verificarFilaSeleccionada() {
 		boolean filaSeleccionada = true;
 		if (this.propiedadSeleccionada == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -542,7 +542,7 @@ public class DialogDominio extends DialogControllerBase {
 	private boolean verificarFilaSeleccionadaValor() {
 		boolean filaSeleccionada = true;
 		if (this.valorSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
@@ -612,7 +612,7 @@ public class DialogDominio extends DialogControllerBase {
 		if (this.data.getTipo() == TypeDominio.FUENTE_DATOS) {
 
 			if (idFuenteDato == null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.fuenteDatos"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.fuenteDatos"));
 				return false;
 			} else {
 				final FuenteDatos fuenteDato = dominioService.loadFuenteDato(idFuenteDato);
@@ -638,7 +638,7 @@ public class DialogDominio extends DialogControllerBase {
 			}
 			// Verifica unicidad codigo dominio
 			if (dominioService.loadDominio(this.data.getIdentificador()) != null) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return false;
 			}
 			// Alta dominio
@@ -653,7 +653,7 @@ public class DialogDominio extends DialogControllerBase {
 			// Verifica unicidad codigo dominio
 			final Dominio d = dominioService.loadDominio(this.data.getIdentificador());
 			if (d != null && d.getCodigo().longValue() != this.data.getCodigo().longValue()) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
+				addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.codigoRepetido"));
 				return false;
 			}
 			// En caso de cambio de identificador hay que controlar si se esta
@@ -766,7 +766,7 @@ public class DialogDominio extends DialogControllerBase {
 	public void fuentedatosEST() {
 
 		if (this.idFuenteDato == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 		} else {
 
 			// Muestra dialogo
@@ -786,7 +786,7 @@ public class DialogDominio extends DialogControllerBase {
 	 */
 	public void fuentedatosDAT() {
 		if (this.idFuenteDato == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
+			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.noseleccionadofila"));
 		} else {
 
 			// Muestra dialogo
@@ -833,7 +833,7 @@ public class DialogDominio extends DialogControllerBase {
 		if (TypeDominio.CONSULTA_REMOTA.equals(data.getTipo()) || TypeDominio.CONSULTA_BD.equals(data.getTipo())) {
 			if (MAXLENGTH_PARAMETROS
 					- (data.getParametros() == null ? 0 : UtilJSON.toJSON(data.getParametros()).length()) < 0) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+				addMessageContext(TypeNivelGravedad.WARNING,
 						UtilJSF.getLiteral("error.parametros.tamanyosuperado"));
 				return false;
 			}
@@ -842,7 +842,7 @@ public class DialogDominio extends DialogControllerBase {
 		if (TypeDominio.LISTA_FIJA.equals(data.getTipo())) {
 			if (MAXLENGTH_LISTAVALORES
 					- (data.getListaFija() == null ? 0 : UtilJSON.toJSON(data.getListaFija()).length()) < 0) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.lista.tamanyosuperado"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.lista.tamanyosuperado"));
 				return false;
 			}
 		}

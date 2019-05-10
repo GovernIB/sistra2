@@ -10,8 +10,7 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
-import es.caib.sistrages.core.api.model.Entidad;
-import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.service.EntidadService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -21,16 +20,16 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 
 @ManagedBean
 @ViewScoped
-public class ViewFormularioSoporte extends DialogControllerBase {
+public class DialogValoraciones extends DialogControllerBase {
 
 	@Inject
 	private EntidadService entidadService;
 
 	/** Datos elemento. */
-	private List<FormularioSoporte> listaDatos;
+	private List<IncidenciaValoracion> listaDatos;
 
 	/** Data Seleccionada. **/
-	private FormularioSoporte datoSeleccionado;
+	private IncidenciaValoracion datoSeleccionado;
 
 	/**
 	 * Inicialización.
@@ -67,49 +66,43 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	}
 
 	/**
-	 * Crea nueva propiedad.
+	 * Crea nueva Valoracion.
 	 */
-	public void nuevoFormulario() {
-		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.ALTA, null, true, 600, 250);
+	public void nuevaValoracion() {
+		UtilJSF.openDialog(DialogValoracion.class, TypeModoAcceso.ALTA, null, true, 600, 150);
+
 	}
 
 	/**
-	 * Edita una propiedad.
+	 * Edita una Valoracion.
 	 */
-	public void editarFormulario() {
+	public void editarValoracion() {
 
-		if (!verificarFilaSeleccionada())
+		if (!verificarFilaSeleccionada()) {
 			return;
+		}
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogFormularioSoporte.class, TypeModoAcceso.EDICION, params, true, 600, 250);
+		UtilJSF.openDialog(DialogValoracion.class, TypeModoAcceso.EDICION, params, true, 600, 250);
+
 	}
 
 	/**
-	 * Quita un formulario.
+	 * Quita un Valoracion.
 	 */
-	public void quitarFormulario() {
+	public void quitarValoracion() {
 		if (!verificarFilaSeleccionada())
 			return;
 
-		// Verificamos que no sea la última y que este habilitado en la entidad el
-		// formulario de soporte
-		final Entidad entidad = entidadService.loadEntidad(UtilJSF.getIdEntidad());
-		if (entidad.isFormularioIncidenciasHabilitado() && listaDatos.size() == 1) {
-			addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("dialogFormularioSoporte.error.noOpciones"));
-			return;
-		}
-
 		// Eliminamos
-		if (entidadService.removeOpcionFormularioSoporte(datoSeleccionado.getCodigo())) {
-			// Refrescamos datos
-			buscar();
-			// Mostramos mensaje
-			addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
-		} else {
-			addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.borrar.dependencias"));
-		}
+		entidadService.removeValoracion(datoSeleccionado.getCodigo());
+
+		// Refrescamos datos
+		buscar();
+
+		// Mostramos mensaje
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.borrado.ok"));
 
 	}
 
@@ -132,7 +125,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	 */
 	private void buscar() {
 		// lista
-		listaDatos = entidadService.listOpcionesFormularioSoporte(UtilJSF.getIdEntidad());
+		listaDatos = entidadService.getValoraciones(UtilJSF.getIdEntidad());
 		// Quitamos seleccion de dato
 		datoSeleccionado = null;
 	}
@@ -148,13 +141,13 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	 * Abrir ayuda.
 	 */
 	public void ayuda() {
-		UtilJSF.openHelp("formularioSoporte");
+		UtilJSF.openHelp("valoraciones");
 	}
 
 	/**
 	 * @return the data
 	 */
-	public List<FormularioSoporte> getListaDatos() {
+	public List<IncidenciaValoracion> getListaDatos() {
 		return listaDatos;
 	}
 
@@ -162,14 +155,14 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	 * @param data
 	 *            the data to set
 	 */
-	public void setListaDatos(final List<FormularioSoporte> data) {
+	public void setListaDatos(final List<IncidenciaValoracion> data) {
 		this.listaDatos = data;
 	}
 
 	/**
 	 * @return the dataSeleccionada
 	 */
-	public FormularioSoporte getDatoSeleccionado() {
+	public IncidenciaValoracion getDatoSeleccionado() {
 		return datoSeleccionado;
 	}
 
@@ -177,7 +170,7 @@ public class ViewFormularioSoporte extends DialogControllerBase {
 	 * @param dataSeleccionada
 	 *            the dataSeleccionada to set
 	 */
-	public void setDatoSeleccionado(final FormularioSoporte datoSeleccionado) {
+	public void setDatoSeleccionado(final IncidenciaValoracion datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
 	}
 
