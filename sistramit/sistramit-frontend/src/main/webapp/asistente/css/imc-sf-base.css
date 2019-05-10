@@ -399,9 +399,12 @@ aside address { display: inline; }
 .imc-missatge[data-accio='formSurt'] button[data-tipus="surt"],
 .imc-missatge[data-accio='formSurt'] button[data-tipus="cancela"] { display: inline-block; }
 
-
-
 .imc-missatge.imc--no-pot-guardar[data-accio='formSurt'] button[data-tipus="desa"] { display: none; }
+
+
+.imc-missatge[data-accio='correcte'] .imc--text { background: #fff url(imgs/icones/ico_correcte_4dba79.svg) no-repeat 1.5em 1em / auto 3em; }
+
+.imc-missatge[data-accio='correcte'] button[data-tipus="accepta"] { display: inline-block; }
 
 
 /* missatge inline */

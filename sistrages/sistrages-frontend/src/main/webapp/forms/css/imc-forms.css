@@ -174,7 +174,7 @@
 
 .imc-form button { display: inline-block; font: normal 110% 'Bariol Regular',Arial,Helvetica,sans-serif; color: #fff; vertical-align: middle; padding: .4em 1em; background-color: #4dba79; border:none; cursor: pointer; will-change: background-color; }
 .imc-form button:hover,
-.imc-form button:focus { background-color: #000; }
+.imc-form button:focus { background-color: #265d3c; }
 .imc-form button {
 	-webkit-transition: background-color .2s ease-out;
 	-moz-transition: background-color .2s ease-out;
@@ -219,7 +219,7 @@
 .imc-form p.imc-info { clear: both; width: 100%; margin: 0 0 1.2em 0; }
 
 .imc-form div.imc-element,
-.imc-form fieldset.imc-element { float: left; width: 16.6%; padding: .3em 0 .4em 0; }
+.imc-form fieldset.imc-element { float: left; width: 16.6%; padding: .4em 0 .4em 0; }
 
 .imc-form .imc-el-hidden { display: none; }
 
@@ -231,6 +231,9 @@
 .imc-form .imc-el-control input[type=number],
 .imc-form .imc-el-control input[type=email],
 .imc-form .imc-el-control input[type=password] { width: 100%; }
+
+.imc-form .imc-el-control input[data-mayuscules="s"] { text-transform: uppercase; }
+
 
 .imc-form .imc-el-control a.imc-select,
 .imc-form .imc-el-control a.imc-select span { width: 100%; }
@@ -263,9 +266,6 @@
 .imc-form .imc-el-error input[type=email]:focus,
 .imc-form .imc-el-error textarea:focus,
 .imc-form .imc-el-error a.imc-select:focus { border-color: #cc073c; }
-
-
-
 
 .imc-form .imc-el-obligatori { color: #000; }
 .imc-form .imc-el-obligatori .imc-el-etiqueta label::before {
@@ -309,8 +309,22 @@
 .imc-form input[type=time][readonly],
 .imc-form input[type=email][readonly],
 .imc-form textarea[readonly],
-.imc-form a.imc-select.imc-select-lectura { background-color: #f2f2f2; border-color: #cecdcd; }
+.imc-form a.imc-select.imc-select-lectura { background-color: #e2e2e2; border-color: #e2e2e2; }
 
+.imc-form input[type=text][readonly]:hover,
+.imc-form input[type=number][readonly]:hover,
+.imc-form input[type=date][readonly]:hover,
+.imc-form input[type=time][readonly]:hover,
+.imc-form input[type=email][readonly]:hover,
+.imc-form textarea[readonly]:hover,
+.imc-form a.imc-select.imc-select-lectura:hover,
+.imc-form input[type=text][readonly]:focus,
+.imc-form input[type=number][readonly]:focus,
+.imc-form input[type=date][readonly]:focus,
+.imc-form input[type=time][readonly]:focus,
+.imc-form input[type=email][readonly]:focus,
+.imc-form textarea[readonly]:focus,
+.imc-form a.imc-select.imc-select-lectura:focus { border-color: #cecdcd; }
 
 
 .imc-form input[type=text][disabled],
@@ -321,10 +335,25 @@
 .imc-form textarea[disabled],
 .imc-form a.imc-select.imc-select-deshabilitat { color: #999; background-color: #cecdcd; border-color: #cecdcd; }
 
+.imc-form input[type=text][disabled]:hover,
+.imc-form input[type=number][disabled]:hover,
+.imc-form input[type=date][disabled]:hover,
+.imc-form input[type=time][disabled]:hover,
+.imc-form input[type=email][disabled]:hover,
+.imc-form textarea[disabled]:hover,
+.imc-form a.imc-select.imc-select-deshabilitat:hover,
+.imc-form input[type=text][disabled]:focus,
+.imc-form input[type=number][disabled]:focus,
+.imc-form input[type=date][disabled]:focus,
+.imc-form input[type=time][disabled]:focus,
+.imc-form input[type=email][disabled]:focus,
+.imc-form textarea[disabled]:focus,
+.imc-form a.imc-select.imc-select-deshabilitat:focus { border-color: #000; }
 
 
 .imc-form a.imc-select.imc-select-deshabilitat span { color: #999; }
 
+.imc-form div[data-contingut="id"] input { text-transform: uppercase; }
 
 
 .imc-form input.imc-data-lectura,
@@ -357,7 +386,7 @@
 .imc-form .imc-el-6 a.imc-select,
 .imc-form .imc-el-6 a.imc-select span { width:51.9em !important; }
 */
-.imc-form .imc-el-ajuda { display: none; position: absolute; z-index: 5; top: 0; left: 0; width: 30em; color: #fff; padding: .3em 1em .5em; background-color: #333; }
+.imc-form .imc-el-ajuda { display: none; position: absolute; z-index: 5; top: 0; left: 0; width: 30em; color: #fff; padding: .3em 1em .5em; background-color: #4dba79; }
 .imc-form .imc-el-ajuda-on { display: block; }
 
 .imc-form .imc-el-ajuda::before {
@@ -368,7 +397,7 @@
 	bottom: -0.3em;
 	width: .6em;
 	height: .6em;
-	background-color: #333;
+	background-color: #4dba79;
 	transform: rotate(45deg);
 }
 
@@ -424,10 +453,17 @@
 .imc-form .imc-el-files-3 textarea { min-height: 9.7em; max-height: 9.7em; }
 .imc-form .imc-el-files-4 textarea { min-height: 13.6em; max-height: 13.6em; }
 
+.imc-form .imc-el-files-5 textarea { min-height: 17.5em; max-height: 17.5em; }
+.imc-form .imc-el-files-6 textarea { min-height: 21.4em; max-height: 21.4em; }
+.imc-form .imc-el-files-7 textarea { min-height: 25.3em; max-height: 25.3em; }
+.imc-form .imc-el-files-8 textarea { min-height: 29.2em; max-height: 29.2em; }
+.imc-form .imc-el-files-9 textarea { min-height: 33.1em; max-height: 33.1em; }
+.imc-form .imc-el-files-10 textarea { min-height: 37em; max-height: 37em; }
+
 .imc-form .imc-element.imc-el-textarea-mono textarea { font-family: "Courier New", Courier, monospace; }
 
-.imc-form .imc-element fielset { border: none; }
-.imc-form .imc-element legend { display: block; width: 100%; padding: 0 .7em .2em .7em; }
+.imc-form .imc-element fieldset { border: none; }
+.imc-form .imc-element legend { display: block; width: 100%; padding: .4em .7em .2em .7em; }
 .imc-form .imc-element ul { list-style: none; margin: 0 .7em; }
 .imc-form .imc-element ul li { padding: .1em 0; }
 .imc-form .imc-element ul li input { vertical-align: top; }
@@ -467,6 +503,7 @@
 
 .imc-form .imc-el-files-3 > ul { height: 10.7em !important; }
 .imc-form .imc-el-files-4 > ul { height: 15em !important; }
+
 
 /* arbre */
 
@@ -647,7 +684,7 @@
 
 .imc-form .imc-el-table .imc-el-etiqueta { min-height: 3em; padding: .3em .5em 0 .5em; }
 .imc-form .imc-el-table .imc-el-control { min-height: 3em; padding: .3em .5em 0 .5em; }
-
+[type="text"][readonly]
 .imc-form .imc-el-ta-cap .imc-el-etiqueta { font-weight: bold; border: 1px solid #ccc; }
 .imc-form .imc-el-ta-cap .imc-el-control { display: none; }
 
@@ -661,9 +698,30 @@
 .imc-form .imc-el-table.imc-el-files-4 .imc-el-etiqueta,
 .imc-form .imc-el-table.imc-el-files-4 .imc-el-control { height: 12em; }
 
+.imc-form .imc-el-table.imc-el-files-5 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-5 .imc-el-control { height: 15em; }
+.imc-form .imc-el-table.imc-el-files-6 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-6 .imc-el-control { height: 18em; }
+.imc-form .imc-el-table.imc-el-files-7 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-7 .imc-el-control { height: 21em; }
+.imc-form .imc-el-table.imc-el-files-8 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-8 .imc-el-control { height: 24em; }
+.imc-form .imc-el-table.imc-el-files-9 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-9 .imc-el-control { height: 27em; }
+.imc-form .imc-el-table.imc-el-files-10 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-10 .imc-el-control { height: 30em; }
+
 .imc-form .imc-el-table.imc-el-files-2 textarea { height: 4.5em; min-height: 4.5em; max-height: 4.5em; }
 .imc-form .imc-el-table.imc-el-files-3 textarea { height: 7.3em; min-height: 7.3em; max-height: 7.3em; }
 .imc-form .imc-el-table.imc-el-files-4 textarea { height: 10em; min-height: 10em; max-height: 10em; }
+
+.imc-form .imc-el-table.imc-el-files-5 textarea { height: 12.7em; min-height: 12.7em; max-height: 12.7em; }
+.imc-form .imc-el-table.imc-el-files-6 textarea { height: 15.4em; min-height: 15.4em; max-height: 15.4em; }
+.imc-form .imc-el-table.imc-el-files-7 textarea { height: 18.1em; min-height: 18.1em; max-height: 18.1em; }
+.imc-form .imc-el-table.imc-el-files-8 textarea { height: 20.8em; min-height: 20.8em; max-height: 20.8em; }
+.imc-form .imc-el-table.imc-el-files-9 textarea { height: 23.5em; min-height: 23.5em; max-height: 23.5em; }
+.imc-form .imc-el-table.imc-el-files-10 textarea { height: 26.2em; min-height: 26.2em; max-height: 26.2em; }
+
 
 /* lectura */
 
@@ -756,7 +814,7 @@
 .imc-form .imc-el-captcha .imc-bt-refrescar:hover,
 .imc-form .imc-el-captcha .imc-bt-refrescar:focus { background-color: #000; }
 
-/* missatge en linia */
+/* missatge en línia */
 
 .imc-form .imc-element.imc-missatge-en-linia { position: relative; width: 100%; font-size: 1.1em; padding: .8em 1em .3em 4.5em; margin-bottom: .7em; border: 3px solid rgba(53, 151, 212, .4); }
 
@@ -777,6 +835,9 @@
 .imc-form .imc-missatge-en-linia-info::before { background-image: url(../imgs/icones/ico_info.svg); }
 .imc-form .imc-missatge-en-linia-alerta::before { background-image: url(../imgs/icones/ico_alerta.svg); }
 .imc-form .imc-missatge-en-linia-error::before { background-image: url(../imgs/icones/ico_error.svg); }
+
+.imc-form .imc-element.imc-missatge-en-linia-etiqueta { padding-left: 1em; border: none; }
+.imc-form .imc-element.imc-missatge-en-linia-etiqueta::before { display: none; }
 
 .imc-form .imc-missatge-en-linia p { padding-bottom: .5em; }
 .imc-form .imc-missatge-en-linia ul { list-style: circle; padding-bottom: .5em; margin: .5em 0 0 2em; }
@@ -799,6 +860,14 @@
 .imc--forms-nav .imc--finalitza button { background-color: #265d3c; }
 .imc--forms-nav .imc--finalitza button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(../imgs/icones/ico_correcte.svg) no-repeat center center / auto 100%; opacity: .5; }
 .imc--forms-nav .imc--finalitza button span { padding-right: .5em; }
+
+.imc--forms-nav .imc--finalitza button:hover,
+.imc--forms-nav .imc--finalitza button:focus { background-color: #000; }
+
+.imc--forms-nav .imc--tanca { padding-right: 2em; }
+.imc--forms-nav .imc--tanca button::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1.1em; height: 1.1em; background: transparent url(../imgs/icones/ico_tanca_fff.svg) no-repeat center center / auto 100%; opacity: .5; }
+.imc--forms-nav .imc--tanca button span { padding-right: .5em; }
+
 
 /*
 .imc--forms-nav li.imc-nav-desa { }
@@ -943,6 +1012,17 @@
 .imc-missatge-sortir .imc--text .imc--cancela:active span { color: #fff; }
 
 
+/* type number */
+
+input[type=number],
+input[type=number]:focus
+input[type=number]:hover {
+	-webkit-appearance: none;
+	-moz-appearance: textfield;
+	appearance: none;
+}
+
+
 
 /* media */
 
@@ -982,6 +1062,15 @@
 	.imc-el-taula-botonera button[class] span { position: absolute; top: -999em; left: -999em; }
 
 	.imc-el-taula-botonera button[class]::before { margin-right: 0; }
+
+	.imc-formulari .imc--finestra {
+		overflow: auto;
+	}
+
+	.imc-formulari .imc--marc,
+	.imc-formulari .imc--finestra > h3 {
+		min-width: 45em;
+	}
 
 }
 

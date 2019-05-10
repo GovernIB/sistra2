@@ -378,7 +378,7 @@ $.fn.appMissatge = function(options) {
 
 				alAcceptar();
 
-				if (accio === "informa" || accio === "alerta") {
+				if (accio === "informa" || accio === "alerta" || accio === "correcte") {
 					
 					amaga();
 

@@ -14,10 +14,16 @@ public enum TypeAccionPasoGuardar implements TypeAccionPaso {
 	 */
 	DESCARGAR_DOCUMENTO,
 	/**
-	 * Descargar justificante. Parámetros entrada: no tiene. Parámetros salida:
-	 * nombreFichero, datosFichero (byte[])
+	 * Descargar justificante. Parámetros entrada: no tiene. Parámetros salida: si
+	 * se devuelve el contenido: nombreFichero, datosFichero (byte[]) y si se
+	 * devuelve la url de acceso: url.
 	 */
-	DESCARGAR_JUSTIFICANTE;
+	DESCARGAR_JUSTIFICANTE,
+	/**
+	 * Encuesta valoracion del tramite. Parámetros entrada: valoracion, problemas,
+	 * observaciones.
+	 */
+	VALORACION_TRAMITE;
 
 	@Override
 	public boolean isModificaPaso() {

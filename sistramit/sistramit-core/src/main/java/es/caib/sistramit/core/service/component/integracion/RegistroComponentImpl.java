@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
 import es.caib.sistra2.commons.plugins.registro.api.IRegistroPlugin;
+import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
+import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistramit.core.api.exception.RegistroJustificanteException;
 import es.caib.sistramit.core.api.exception.RegistroSolicitudException;
@@ -38,7 +40,8 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	private AuditoriaComponent auditoriaComponent;
 
 	@Override
-	public ResultadoRegistrar registrar(String idSesionTramitacion, AsientoRegistral asiento, boolean debugEnabled) {
+	public ResultadoRegistrar registrar(final String idSesionTramitacion, final AsientoRegistral asiento,
+			final boolean debugEnabled) {
 
 		final ResultadoRegistrar resultado = new ResultadoRegistrar();
 
@@ -70,22 +73,22 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	}
 
 	@Override
-	public ResultadoRegistrar reintentarRegistro(String idSesionTramitacion, boolean debugEnabled) {
+	public ResultadoRegistrar reintentarRegistro(final String idSesionTramitacion, final boolean debugEnabled) {
 		// TODO No esta habilitado mecanismo para registro
 		throw new RuntimeException("No esta habilitado mecanismo para registro");
 	}
 
 	@Override
-	public byte[] obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro, boolean debugEnabled) {
+	public ResultadoJustificante obtenerJustificanteRegistro(final String codigoEntidad, final String numeroRegistro,
+			final boolean debugEnabled) {
 
 		if (debugEnabled) {
 			log.debug("Obteniendo justificante registro " + codigoEntidad + " - " + numeroRegistro);
 		}
 
-		// TODO Ver implicaciones gestion presencial
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
-		byte[] justificante;
+		ResultadoJustificante justificante;
 		try {
 			justificante = plgRegistro.obtenerJustificanteRegistro(codigoEntidad, numeroRegistro);
 		} catch (final RegistroPluginException e) {
@@ -93,6 +96,40 @@ public final class RegistroComponentImpl implements RegistroComponent {
 					"Error obteniendo justificante registro: " + codigoEntidad + " - " + numeroRegistro, e);
 		}
 		return justificante;
+	}
+
+	@Override
+	public String obtenerLibroOrganismo(final String codigoEntidad, final String codigoOrganismo,
+			final boolean debugEnabled) {
+
+		if (debugEnabled) {
+			log.debug("Obteniendo libro organismo " + codigoEntidad + " - " + codigoOrganismo);
+		}
+
+		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
+				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
+
+		LibroOficina libro = null;
+		try {
+			libro = plgRegistro.obtenerLibroOrganismo(codigoEntidad, codigoOrganismo);
+		} catch (final RegistroPluginException e) {
+			throw new RegistroJustificanteException(
+					"Error obteniendo libro asociado a organismo: " + codigoEntidad + " - " + codigoOrganismo, e);
+		}
+		return libro.getCodigo();
+	}
+
+	@Override
+	public boolean descargaExternaJustificantes(final String codigoEntidad) {
+		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
+				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
+
+		try {
+			return plgRegistro.descargaExternaJustificantes();
+		} catch (final RegistroPluginException e) {
+			throw new RegistroJustificanteException(
+					"Error obteniendo si se descargan justificantes de forma externa: " + codigoEntidad, e);
+		}
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.caib.sistra2.commons.utils.ConstantesNumero;
+import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
@@ -24,6 +25,7 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
+import es.caib.sistramit.core.service.component.integracion.RegistroComponent;
 import es.caib.sistramit.core.service.component.script.plugins.flujo.ResRegistro;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoJustificante;
@@ -69,11 +71,14 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	/** Accion registrar tramite. */
 	@Autowired
 	private AccionRegistrarTramite accionRegistrarTramite;
+	/** Componente registro. */
+	@Autowired
+	private RegistroComponent registroComponent;
 
 	@Override
-	protected void actualizarDatosInternos(DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-			DefinicionTramiteSTG pDefinicionTramite, VariablesFlujo pVariablesFlujo,
-			TypeFaseActualizacionDatosInternos pFaseEjecucion) {
+	protected void actualizarDatosInternos(final DatosPaso pDatosPaso, final DatosPersistenciaPaso pDpp,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo,
+			final TypeFaseActualizacionDatosInternos pFaseEjecucion) {
 
 		// Obtenemos datos internos del paso
 		final DatosInternosPasoRegistrar dipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
@@ -84,7 +89,7 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	}
 
 	@Override
-	protected EstadoSubestadoPaso evaluarEstadoPaso(DatosPaso pDatosPaso) {
+	protected EstadoSubestadoPaso evaluarEstadoPaso(final DatosPaso pDatosPaso) {
 		// Obtenemos datos internos del paso
 		final DatosInternosPasoRegistrar pDipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
 
@@ -112,8 +117,8 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	}
 
 	@Override
-	protected List<DatosDocumento> obtenerDocumentosCompletadosPaso(DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-			DefinicionTramiteSTG pDefinicionTramite) {
+	protected List<DatosDocumento> obtenerDocumentosCompletadosPaso(final DatosPaso pDatosPaso,
+			final DatosPersistenciaPaso pDpp, final DefinicionTramiteSTG pDefinicionTramite) {
 		// Obtenemos datos internos del paso
 		final DatosInternosPasoRegistrar dipa = (DatosInternosPasoRegistrar) pDatosPaso.internalData();
 		// Devolvemos datos justificante
@@ -124,9 +129,9 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	}
 
 	@Override
-	protected RespuestaEjecutarAccionPaso ejecutarAccionPaso(DatosPaso pDatosPaso, DatosPersistenciaPaso pDpp,
-			TypeAccionPaso pAccionPaso, ParametrosAccionPaso pParametros, DefinicionTramiteSTG pDefinicionTramite,
-			VariablesFlujo pVariablesFlujo) {
+	protected RespuestaEjecutarAccionPaso ejecutarAccionPaso(final DatosPaso pDatosPaso,
+			final DatosPersistenciaPaso pDpp, final TypeAccionPaso pAccionPaso, final ParametrosAccionPaso pParametros,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 		// Ejecutamos accion
 		AccionPaso accionPaso = null;
 		switch ((TypeAccionPasoRegistrar) pAccionPaso) {
@@ -339,8 +344,8 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	 *            Variables flujo
 	 * @return Parametros representacion
 	 */
-	private DatosRepresentacion calcularDatosRepresentacion(String pIdpaso, DefinicionTramiteSTG pDefinicionTramite,
-			VariablesFlujo pVariablesFlujo) {
+	private DatosRepresentacion calcularDatosRepresentacion(final String pIdpaso,
+			final DefinicionTramiteSTG pDefinicionTramite, final VariablesFlujo pVariablesFlujo) {
 		// Ejecutamos script calculo representado
 		final DatosUsuario representado = ControladorPasoRegistrarHelper.getInstance()
 				.ejecutarScriptRepresentado(pIdpaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
@@ -390,31 +395,65 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		final RPasoTramitacionRegistrar pasoRegistrar = (RPasoTramitacionRegistrar) UtilsSTG
 				.devuelveDefinicionPaso(pIdPaso, pDefinicionTramite);
 
+		// Verificamos si se establece datos centralizados a nivel de entidad
+		final RConfiguracionEntidad entidadInfo = getConfig()
+				.obtenerConfiguracionEntidad(pDefinicionTramite.getDefinicionVersion().getIdEntidad());
+
 		// Evaluamos script de parametros dinamicos si existe
 		final ResRegistro resRegistro = ControladorPasoRegistrarHelper.getInstance()
 				.ejecutarScriptParametrosRegistro(pIdPaso, pDefinicionTramite, pVariablesFlujo, getScriptFlujo());
 
 		// Establecemos datos registro destino
 		final DatosRegistrales datosRegistrales = new DatosRegistrales();
+
+		// - Organo destino
+		if (StringUtils.isNotBlank(resRegistro.getCodigoOrganoDestino())) {
+			datosRegistrales.setCodigoOrganoDestino(resRegistro.getCodigoOrganoDestino());
+		} else {
+			datosRegistrales.setCodigoOrganoDestino(pVariablesFlujo.getDatosTramiteCP().getOrganoDestinoDir3());
+		}
+
+		// - Oficina registro
 		if (StringUtils.isNotBlank(resRegistro.getOficina())) {
+			// Oficina viene por script
 			datosRegistrales.setOficina(resRegistro.getOficina());
 		} else {
-			datosRegistrales.setOficina(pasoRegistrar.getDestino().getOficinaRegistro());
+			// Verificamos si oficina se fija por entidad o a nivel de versión de trámite
+			if (entidadInfo.isRegistroCentralizado()) {
+				datosRegistrales.setOficina(entidadInfo.getOficinaRegistroCentralizado());
+			} else {
+				datosRegistrales.setOficina(pasoRegistrar.getDestino().getOficinaRegistro());
+			}
 		}
+
+		// - Libro
 		if (StringUtils.isNotBlank(resRegistro.getLibro())) {
+			// Libro se establece por script
 			datosRegistrales.setLibro(resRegistro.getLibro());
 		} else {
-			datosRegistrales.setLibro(pasoRegistrar.getDestino().getLibroRegistro());
+			// Verificamos si libro se calcula automáticamente o a nivel de versión de
+			// trámite
+			if (entidadInfo.isRegistroCentralizado()) {
+				final String libro = registroComponent.obtenerLibroOrganismo(entidadInfo.getIdentificador(),
+						datosRegistrales.getCodigoOrganoDestino(), pVariablesFlujo.isDebugEnabled());
+				datosRegistrales.setLibro(libro);
+			} else {
+				datosRegistrales.setLibro(pasoRegistrar.getDestino().getLibroRegistro());
+			}
 		}
+
+		// - Tipo asunto
 		if (StringUtils.isNotBlank(resRegistro.getTipoAsunto())) {
 			datosRegistrales.setTipoAsunto(resRegistro.getTipoAsunto());
 		} else {
+			// TODO PENDIENTE VER SI TIPO ASUNTO SE CENTRALIZA
 			datosRegistrales.setTipoAsunto(pasoRegistrar.getDestino().getTipoAsunto());
 		}
-		if (StringUtils.isNotBlank(resRegistro.getCodigoOrganoDestino())) {
-			datosRegistrales.setCodigoOrganoDestino(resRegistro.getCodigoOrganoDestino());
-		}
+
+		// - N. expediente
 		datosRegistrales.setNumeroExpediente(resRegistro.getNumeroExpediente());
+
+		// - Expone / Solicita
 		datosRegistrales.setTextoExpone(resRegistro.getExpone());
 		datosRegistrales.setTextoSolicita(resRegistro.getSolicita());
 

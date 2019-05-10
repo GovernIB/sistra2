@@ -471,7 +471,7 @@ $.fn.appFormsConfiguracio = function(options) {
 								,conf_valors = conf.valores || false;
 
 							var elm = imc_forms_contenidor.find("*[data-id="+conf_id+"]")
-								,elm_input = elm.find("input:first");
+								,elm_input = elm.find("input:first, textarea:first");
 
 							elm
 								.removeClass("imc-el-error");
@@ -1208,9 +1208,9 @@ $.fn.appFormsValida = function(options) {
 
 				element
 					.off(".appFormsValida")
-					.on("focus.appFormsValida", "input", valora)
-					.on("blur.appFormsValida", "input", valida)
-					.on("blur.appFormsValida", "div[data-contingut='nu'] input", formateja);
+					.on("focus.appFormsValida", "input, textarea", valora)
+					.on("blur.appFormsValida", "input, textarea", valida)
+					.on("blur.appFormsValida", "div[data-contingut='nu'] input, div[data-contingut='nu'] textarea", formateja);
 
 			},
 			formateja = function(e) {
@@ -1453,6 +1453,9 @@ $.fn.appFormsAvalua = function(options) {
 							$("#imc-preevalua")
 								.remove();
 
+							$(window)
+								.off(".preevalua");
+
 						};
 
 					if ($("#imc-preevalua").length) {
@@ -1475,6 +1478,9 @@ $.fn.appFormsAvalua = function(options) {
 						.append( preevalua_el_R )
 						.on("click", preevaluaAmaga)
 						.appendTo( imc_forms_contenidor );
+
+					$(window)
+						.on("click.preevalua", preevaluaAmaga);
 
 				}
 

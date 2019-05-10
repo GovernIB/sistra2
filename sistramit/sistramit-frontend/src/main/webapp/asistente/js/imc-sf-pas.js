@@ -104,7 +104,10 @@ var HTML_PAS_LITERALS = {
 		},
 		"gj": {
 			txtDesauJustificant: txtDesauJustificant
+			,txtAnarAlJustificant: txtAnarAlJustificant
+			,txtObriFinestra: txtObriFinestra
 			,txtDesauInfo: txtDesauInfo
+			,txtNumeroRegistre: txtNumeroRegistre
 			,txtDesauJustificant: txtDesauJustificant
 			,txtDesauDocumentacio: txtDesauDocumentacio
 			,txtDesauDocumentacioInfo: txtDesauDocumentacioInfo
@@ -114,6 +117,17 @@ var HTML_PAS_LITERALS = {
 			,txtAnterior: txtAnterior
 			,txtRegistrar: txtRegistrar
 			,txtSotiuTramit: txtSotiuTramit
+			,txtValoracioTitol: txtValoracioTitol
+			,txtValoracioInformacio: txtValoracioInformacio
+			,txtValoracio1: txtValoracio1
+			,txtValoracio2: txtValoracio2
+			,txtValoracio3: txtValoracio3
+			,txtValoracio4: txtValoracio4
+			,txtValoracio5: txtValoracio5
+			,txtValoracioProblemesLlista: txtValoracioProblemesLlista
+			,txtValoracioProblemesObservacions: txtValoracioProblemesObservacions
+			,txtValora: txtValora
+			,txtSenseValoracio: txtSenseValoracio
 		}
 
 		
@@ -527,9 +541,24 @@ $.fn.appPas = function(options) {
 
 				} else if (pas_tipus === "gj") {
 
+					HTML_PAS_LITERALS[pas_tipus]["jsonNumeroRegistre"] = pas_json.datos.actual.justificante.numero;
+					HTML_PAS_LITERALS[pas_tipus]["jsonJustificantURL"] = pas_json.datos.actual.justificante.url;
+					HTML_PAS_LITERALS[pas_tipus]["app_tramit_justificant"] = APP_TRAMIT_JUSTIFICANT + "?idPaso=" + APP_TRAMIT_PAS_ID;
+
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.justificante.formularios;
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.justificante.anexos;
 					HTML_PAS_LITERALS[pas_tipus]["pagaments"] = pas_json.datos.actual.justificante.pagos;
+
+					HTML_PAS_LITERALS[pas_tipus]["jsonValoracio"] = pas_json.datos.actual.valoracion;
+					HTML_PAS_LITERALS[pas_tipus]["jsonValorat"] = false;
+					HTML_PAS_LITERALS[pas_tipus]["jsonValoracioProblemes"] = false;
+
+					if (pas_json.datos.actual.valoracion) {
+
+						HTML_PAS_LITERALS[pas_tipus]["jsonValorat"] = pas_json.datos.actual.valoracion.valorado;
+						HTML_PAS_LITERALS[pas_tipus]["jsonValoracioProblemes"] = pas_json.datos.actual.valoracion.problemas;
+
+					}
 
 					var txtGlobals = {
 							globals: {

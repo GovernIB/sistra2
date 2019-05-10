@@ -447,6 +447,9 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		case ERROR:
 			estilo.append("imc-missatge-en-linia-error");
 			break;
+		case ETIQUETA:
+			estilo.append("imc-missatge-en-linia-etiqueta");
+			break;
 		}
 
 		escribeLinea(pOut, "<div class=\"imc-element imc-missatge-en-linia imc-missatge-en-linia-icona-sup ",
@@ -635,7 +638,7 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 		return id;
 	}
 
-	private String escribeTieneScripts(ComponenteFormularioCampo campo, boolean pModoEdicion) {
+	private String escribeTieneScripts(final ComponenteFormularioCampo campo, final boolean pModoEdicion) {
 		String res = "";
 		if (pModoEdicion && (campo.getScriptAutorrellenable() != null || campo.getScriptSoloLectura() != null
 				|| campo.getScriptValidacion() != null || ((campo instanceof ComponenteFormularioCampoSelector)

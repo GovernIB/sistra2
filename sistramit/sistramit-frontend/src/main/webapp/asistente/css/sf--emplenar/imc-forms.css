@@ -309,7 +309,7 @@
 .imc-form input[type=time][readonly],
 .imc-form input[type=email][readonly],
 .imc-form textarea[readonly],
-.imc-form a.imc-select.imc-select-lectura { background-color: #f2f2f2; border-color: #cecdcd; }
+.imc-form a.imc-select.imc-select-lectura { background-color: #e2e2e2; border-color: #e2e2e2; }
 
 .imc-form input[type=text][readonly]:hover,
 .imc-form input[type=number][readonly]:hover,
@@ -324,7 +324,7 @@
 .imc-form input[type=time][readonly]:focus,
 .imc-form input[type=email][readonly]:focus,
 .imc-form textarea[readonly]:focus,
-.imc-form a.imc-select.imc-select-lectura:focus { border-color: #000; }
+.imc-form a.imc-select.imc-select-lectura:focus { border-color: #cecdcd; }
 
 
 .imc-form input[type=text][disabled],
@@ -453,6 +453,13 @@
 .imc-form .imc-el-files-3 textarea { min-height: 9.7em; max-height: 9.7em; }
 .imc-form .imc-el-files-4 textarea { min-height: 13.6em; max-height: 13.6em; }
 
+.imc-form .imc-el-files-5 textarea { min-height: 17.5em; max-height: 17.5em; }
+.imc-form .imc-el-files-6 textarea { min-height: 21.4em; max-height: 21.4em; }
+.imc-form .imc-el-files-7 textarea { min-height: 25.3em; max-height: 25.3em; }
+.imc-form .imc-el-files-8 textarea { min-height: 29.2em; max-height: 29.2em; }
+.imc-form .imc-el-files-9 textarea { min-height: 33.1em; max-height: 33.1em; }
+.imc-form .imc-el-files-10 textarea { min-height: 37em; max-height: 37em; }
+
 .imc-form .imc-element.imc-el-textarea-mono textarea { font-family: "Courier New", Courier, monospace; }
 
 .imc-form .imc-element fieldset { border: none; }
@@ -496,6 +503,7 @@
 
 .imc-form .imc-el-files-3 > ul { height: 10.7em !important; }
 .imc-form .imc-el-files-4 > ul { height: 15em !important; }
+
 
 /* arbre */
 
@@ -676,7 +684,7 @@
 
 .imc-form .imc-el-table .imc-el-etiqueta { min-height: 3em; padding: .3em .5em 0 .5em; }
 .imc-form .imc-el-table .imc-el-control { min-height: 3em; padding: .3em .5em 0 .5em; }
-
+[type="text"][readonly]
 .imc-form .imc-el-ta-cap .imc-el-etiqueta { font-weight: bold; border: 1px solid #ccc; }
 .imc-form .imc-el-ta-cap .imc-el-control { display: none; }
 
@@ -690,9 +698,30 @@
 .imc-form .imc-el-table.imc-el-files-4 .imc-el-etiqueta,
 .imc-form .imc-el-table.imc-el-files-4 .imc-el-control { height: 12em; }
 
+.imc-form .imc-el-table.imc-el-files-5 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-5 .imc-el-control { height: 15em; }
+.imc-form .imc-el-table.imc-el-files-6 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-6 .imc-el-control { height: 18em; }
+.imc-form .imc-el-table.imc-el-files-7 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-7 .imc-el-control { height: 21em; }
+.imc-form .imc-el-table.imc-el-files-8 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-8 .imc-el-control { height: 24em; }
+.imc-form .imc-el-table.imc-el-files-9 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-9 .imc-el-control { height: 27em; }
+.imc-form .imc-el-table.imc-el-files-10 .imc-el-etiqueta,
+.imc-form .imc-el-table.imc-el-files-10 .imc-el-control { height: 30em; }
+
 .imc-form .imc-el-table.imc-el-files-2 textarea { height: 4.5em; min-height: 4.5em; max-height: 4.5em; }
 .imc-form .imc-el-table.imc-el-files-3 textarea { height: 7.3em; min-height: 7.3em; max-height: 7.3em; }
 .imc-form .imc-el-table.imc-el-files-4 textarea { height: 10em; min-height: 10em; max-height: 10em; }
+
+.imc-form .imc-el-table.imc-el-files-5 textarea { height: 12.7em; min-height: 12.7em; max-height: 12.7em; }
+.imc-form .imc-el-table.imc-el-files-6 textarea { height: 15.4em; min-height: 15.4em; max-height: 15.4em; }
+.imc-form .imc-el-table.imc-el-files-7 textarea { height: 18.1em; min-height: 18.1em; max-height: 18.1em; }
+.imc-form .imc-el-table.imc-el-files-8 textarea { height: 20.8em; min-height: 20.8em; max-height: 20.8em; }
+.imc-form .imc-el-table.imc-el-files-9 textarea { height: 23.5em; min-height: 23.5em; max-height: 23.5em; }
+.imc-form .imc-el-table.imc-el-files-10 textarea { height: 26.2em; min-height: 26.2em; max-height: 26.2em; }
+
 
 /* lectura */
 
@@ -785,7 +814,7 @@
 .imc-form .imc-el-captcha .imc-bt-refrescar:hover,
 .imc-form .imc-el-captcha .imc-bt-refrescar:focus { background-color: #000; }
 
-/* missatge en linia */
+/* missatge en línia */
 
 .imc-form .imc-element.imc-missatge-en-linia { position: relative; width: 100%; font-size: 1.1em; padding: .8em 1em .3em 4.5em; margin-bottom: .7em; border: 3px solid rgba(53, 151, 212, .4); }
 
@@ -806,6 +835,9 @@
 .imc-form .imc-missatge-en-linia-info::before { background-image: url(imgs/icones/ico_info.svg); }
 .imc-form .imc-missatge-en-linia-alerta::before { background-image: url(imgs/icones/ico_alerta.svg); }
 .imc-form .imc-missatge-en-linia-error::before { background-image: url(imgs/icones/ico_error.svg); }
+
+.imc-form .imc-element.imc-missatge-en-linia-etiqueta { padding-left: 1em; border: none; }
+.imc-form .imc-element.imc-missatge-en-linia-etiqueta::before { display: none; }
 
 .imc-form .imc-missatge-en-linia p { padding-bottom: .5em; }
 .imc-form .imc-missatge-en-linia ul { list-style: circle; padding-bottom: .5em; margin: .5em 0 0 2em; }

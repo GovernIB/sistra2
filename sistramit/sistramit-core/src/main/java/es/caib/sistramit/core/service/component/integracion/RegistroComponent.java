@@ -1,6 +1,7 @@
 package es.caib.sistramit.core.service.component.integracion;
 
 import es.caib.sistra2.commons.plugins.registro.api.AsientoRegistral;
+import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 
 /**
@@ -43,6 +44,29 @@ public interface RegistroComponent {
 	 *            Indica si se debugea
 	 * @return justificante registro
 	 */
-	byte[] obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro, boolean debugEnabled);
+	ResultadoJustificante obtenerJustificanteRegistro(String codigoEntidad, String numeroRegistro,
+			boolean debugEnabled);
+
+	/**
+	 * Obtener libro organismo.
+	 *
+	 * @param codigoEntidad
+	 *            código entidad
+	 * @param codigoOrganismo
+	 *            código organismo
+	 * @param debugEnabled
+	 *            debug
+	 * @return libro organismo
+	 */
+	String obtenerLibroOrganismo(String codigoEntidad, String codigoOrganismo, boolean debugEnabled);
+
+	/**
+	 * Verificamos si los justificantes se redirigen a una url externa.
+	 * 
+	 * @param codigoEntidad
+	 *            Código entidad
+	 * @return boolean
+	 */
+	boolean descargaExternaJustificantes(String codigoEntidad);
 
 }

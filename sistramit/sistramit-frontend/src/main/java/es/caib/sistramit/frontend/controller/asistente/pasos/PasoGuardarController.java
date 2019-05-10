@@ -1,5 +1,7 @@
 package es.caib.sistramit.frontend.controller.asistente.pasos;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +12,7 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
+import es.caib.sistramit.frontend.model.RespuestaJSON;
 
 /**
  * Interacción con paso Guardar.
@@ -53,10 +56,15 @@ public final class PasoGuardarController extends TramitacionController {
 
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, pParametros);
-		final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
-		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
-
-		return generarDownloadView(nombreFichero, datos);
+		if (rap.getParametroRetorno("url") != null) {
+			// Redireccion url
+			return new ModelAndView("redirect:" + rap.getParametroRetorno("url"));
+		} else {
+			// Descarga fichero
+			final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
+			final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
+			return generarDownloadView(nombreFichero, datos);
+		}
 
 	}
 
@@ -91,6 +99,50 @@ public final class PasoGuardarController extends TramitacionController {
 		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
 
 		return generarDownloadView(nombreFichero, datos);
+
+	}
+
+	/**
+	 * Valoración trámite.
+	 *
+	 * @param idPaso
+	 *            Identificador paso.
+	 * @param idDocumento
+	 *            Identificador documento.
+	 * @param instancia
+	 *            Instancia documento.
+	 * @return Documento para descargar.
+	 */
+	@RequestMapping("/valorarTramite.json")
+	public ModelAndView valorarTramite(@RequestParam(PARAM_ID_PASO) final String idPaso,
+			@RequestParam("valoracion") final String valoracion,
+			@RequestParam("problemas") final List<String> problemas,
+			@RequestParam("observaciones") final String observaciones) {
+
+		debug("Valoración trámite");
+
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+		// Serializamos lista problemas a un string separado por ;
+		String problemasStr = null;
+		if (problemas != null) {
+			problemasStr = "";
+			for (final String p : problemas) {
+				problemasStr += (p + ";");
+			}
+		}
+
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada("valoracion", valoracion);
+		pParametros.addParametroEntrada("problemas", problemasStr);
+		pParametros.addParametroEntrada("observaciones", observaciones);
+
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.VALORACION_TRAMITE, pParametros);
+
+		final RespuestaJSON respuesta = new RespuestaJSON();
+		return generarJsonView(respuesta);
 
 	}
 

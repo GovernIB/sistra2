@@ -21,6 +21,7 @@ import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.AbrirFormulario;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoAnexar;
+import es.caib.sistramit.core.api.model.flujo.DetallePasoGuardar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoPagar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoRellenar;
@@ -34,6 +35,7 @@ import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoIrAPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoAnexar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoPagar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoRellenar;
@@ -219,7 +221,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		// Pasamos a paso siguiente: pagar
 		flujoTramitacion_pagar_electronico(idSesionTramitacion, usuarioAutenticadoInfo);
 
-		// Pasamos a paso siguiente: pagar
+		// Pasamos a paso siguiente: registrar
 		flujoTramitacion_registro_electronico(idSesionTramitacion, usuarioAutenticadoInfo);
 
 	}
@@ -790,7 +792,7 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		String idPaso;
 
-		// - Pasamos a paso pagar
+		// - Pasamos a paso registrar
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		rp = flujoTramitacionService.irAPaso(idSesionTramitacion, dp.getSiguiente());
 		Assert.isTrue(StringUtils.equals(rp.getIdPasoActual(), dp.getSiguiente()),
@@ -861,6 +863,26 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		Assert.isTrue(dp.getActual().getTipo() == TypePaso.GUARDAR, "No esta en paso guardar");
 		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso registrar no esta completado");
 		this.logger.info("Detalle paso: " + dp.print());
+
+		// -- Paso Guardar: descargar justificante
+		idPaso = dp.getActual().getId();
+		parametros = new ParametrosAccionPaso();
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, parametros);
+		Assert.isTrue(resPaso.getParametroRetorno("nombreFichero") != null,
+				"Justificante registro no tiene nombre fichero");
+		Assert.isTrue(resPaso.getParametroRetorno("datosFichero") != null, "Justificante registro no tiene contenido");
+
+		// -- Paso Guardar: valorar trámite
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("valoracion", "1");
+		parametros.addParametroEntrada("problemas", "P1;P2;P3");
+		parametros.addParametroEntrada("observaciones", "Observaciones valoración");
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.VALORACION_TRAMITE, parametros);
+		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		Assert.isTrue(((DetallePasoGuardar) dp.getActual()).getValoracion().getValorado() == TypeSiNo.SI,
+				"No se ha valorado trámite");
 
 	}
 

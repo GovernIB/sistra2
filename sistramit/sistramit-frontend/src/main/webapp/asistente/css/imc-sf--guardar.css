@@ -9,35 +9,49 @@
 .imc-contingut h3 { margin-top: 1.5em; }
 
 .imc--guarda h4 { margin-bottom: .5em; }
-.imc--guarda h4 span { font-size: 1.2em; }
+.imc--guarda h4 span { font-size: 1.4em; }
 
 .imc--guarda h5 { margin-bottom: .5em; }
 .imc--guarda h5 span { font-size: 1.2em; font-weight: normal; }
 
-.imc--guarda p { margin-bottom: 1em; }
+.imc--guarda div > p { margin-bottom: 1em; }
 
-.imc--guarda p.imc--fi-bt { text-align: center; margin-bottom: 2em; }
-.imc--guarda p.imc--fi-bt button { font-size: 1.5em; }
+.imc--guarda .imc--fi-bt { text-align: center; margin-bottom: 2em; }
 
-.imc--guarda p.imc--fi-bt button.imc-bt { background-color: #265d3c; }
-.imc--guarda p.imc--fi-bt button.imc-bt span { color: #fff; }
+.imc--guarda .imc--fi-bt p { display: inline-block; vertical-align: middle; text-align: left; padding: .1em 1em .3em 1em; margin-right: 2em; margin-bottom: 0; background-color: #fff; }
+.imc--guarda .imc--fi-bt p span { display: block; font-size: .8em; }
+.imc--guarda .imc--fi-bt p strong { display: block; font-size: 1.2em; }
 
-.imc--guarda p.imc--fi-bt button.imc-bt:hover,
-.imc--guarda p.imc--fi-bt button.imc-bt:focus { background-color: #000; }
+.imc--guarda .imc--fi-bt button,
+.imc--guarda .imc--fi-bt a { font-size: 1.5em; }
 
-.imc--guarda p.imc--fi-bt button.imc-bt::before { background-image: url(imgs/icones/ico_desau.svg); background-size: auto 1em; }
+.imc--guarda .imc--fi-bt button.imc-bt,
+.imc--guarda .imc--fi-bt a.imc-bt { background-color: #265d3c; }
+.imc--guarda .imc--fi-bt button.imc-bt span,
+.imc--guarda .imc--fi-bt a.imc-bt span { color: #fff; }
 
-.imc--guarda > ul { margin-bottom: 1em; }
-.imc--guarda > ul > li { padding-left: 2em; margin-bottom: .4em; }
-.imc--guarda > ul div.imc--reg { display: grid; grid-auto-flow: column; grid-template-columns: 3em auto 4em; grid-column-gap: 0; grid-row-gap: 0; min-height: 2.5em; padding: 0; background-color: #fff; }
+.imc--guarda .imc--fi-bt button.imc-bt:hover,
+.imc--guarda .imc--fi-bt button.imc-bt:focus,
+.imc--guarda .imc--fi-bt a.imc-bt:hover,
+.imc--guarda .imc--fi-bt a.imc-bt:focus { background-color: #000; }
 
-.imc--guarda > ul div.imc--reg .imc--icona { display: block; background: #8c8c8c url() no-repeat center center / auto 1em; }
+.imc--guarda .imc--fi-bt button.imc-bt::before { background-image: url(imgs/icones/ico_desau.svg); background-size: auto 1em; }
 
-.imc--guarda > ul div.imc--form .imc--icona { background-image: url(imgs/icones/ico_form.svg); }
-.imc--guarda > ul div.imc--doc .imc--icona { background-image: url(imgs/icones/ico_doc.svg); }
-.imc--guarda > ul div.imc--pagament .imc--icona { background-image: url(imgs/icones/ico_pagar.svg); }
+.imc--guarda .imc--fi-bt a.imc-bt::before { background-image: url(imgs/icones/ico_finestra_nova.svg); background-size: auto 1em; }
 
-.imc--guarda > ul div.imc--reg strong { align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
+.imc--guarda-documentacio { margin-bottom: 3em; }
+
+.imc--guarda-documentacio > ul { margin-bottom: 1em; }
+.imc--guarda-documentacio > ul > li { padding-left: 2em; margin-bottom: .4em; }
+.imc--guarda-documentacio > ul div.imc--reg { display: grid; grid-auto-flow: column; grid-template-columns: 3em auto 4em; grid-column-gap: 0; grid-row-gap: 0; min-height: 2.5em; padding: 0; background-color: #fff; }
+
+.imc--guarda-documentacio > ul div.imc--reg .imc--icona { display: block; background: #8c8c8c url() no-repeat center center / auto 1em; }
+
+.imc--guarda-documentacio > ul div.imc--form .imc--icona { background-image: url(imgs/icones/ico_form.svg); }
+.imc--guarda-documentacio > ul div.imc--doc .imc--icona { background-image: url(imgs/icones/ico_doc.svg); }
+.imc--guarda-documentacio > ul div.imc--pagament .imc--icona { background-image: url(imgs/icones/ico_pagar.svg); }
+
+.imc--guarda-documentacio > ul div.imc--reg strong { align-self: center; font-size: 1.2em; font-weight: normal; padding: .2em 1em; }
 
 .imc--guarda .imc--descarrega { background: #4dba79 url(imgs/icones/ico_descarrega.svg) no-repeat center center / auto 1em; }
 .imc--guarda .imc--descarrega span { position: absolute; top: -999em; left: -999em; }
@@ -88,6 +102,84 @@
 }
 
 
+/* valora */
+
+.imc--estrelles { text-align: center; margin: 1em 0 1.5em 0; }
+
+.imc--estrelles svg {
+    width: 1.5em; height: 1.5em; fill: currentColor; stroke: currentColor;
+}
+
+.imc--estrelles label,
+.imc--estrelles output {
+    display: inline-block; vertical-align: middle; position: relative; font-size: 2em; width: 2em; height: 1.5em; color: #4dba79; margin-left: -3px; cursor: pointer; border-bottom: 0px solid transparent;
+}
+
+.imc--estrelles output {
+    width: 10em; font-size: 1.5em; text-align: left; padding: .2em 1em 0 1em;
+}
+
+.imc--estrelles input:checked ~ label {
+    color: #999;
+}
+
+.imc--estrelles input:checked + label {
+    color: #4dba79; border-bottom-color: ##4dba79;
+}
+
+.imc--estrelles input:focus + label {
+    border-bottom-style: dotted;
+}
+
+.imc--estrelles:hover input + label {
+    color: #4dba79;
+}
+
+.imc--estrelles input:hover ~ label,
+.imc--estrelles input:focus ~ label {
+    color: #999;
+}
+
+.imc--estrelles input:hover + label,
+.imc--estrelles input:focus + label {
+    color: #4dba79;
+}
+
+.imc--estrelles input,
+.imc--estrelles label span {
+    overflow: hidden; clip: rect(0 0 0 0); position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; border: 0;
+}
+
+.imc--problemes { margin: 1em 0 1.5em 0 !important; }
+.imc--problemes li { font-size: 1.1em; padding: 0 0 .3em 2em; }
+.imc--problemes label { cursor: pointer; }
+
+.imc--valoracio p { margin-bottom: .5em !important; }
+
+.imc--valoracio textarea { width: 100%; min-width: 100%; max-width: 100%; min-height: 3em; max-height: 10em; font: normal 1em 'Bariol Regular', Arial, Helvetica, sans-serif; padding: .4em .5em; margin-bottom: 1em; background-color: #fff; border: 1px solid #ccc; }
+
+.imc--valoracio .imc--accions { text-align: center; }
+
+.imc--valoracio .imc--accions button { font-size: 1.5em; }
+
+.imc--valoracio .imc--accions button.imc-bt { background-color: #265d3c; }
+.imc--valoracio .imc--accions button.imc-bt span { color: #fff; }
+
+.imc--valoracio .imc--accions button.imc-bt:hover,
+.imc--valoracio .imc--accions button.imc-bt:focus { background-color: #000; }
+
+.imc--valoracio .imc--accions button.imc-bt::before { background-image: url(imgs/icones/ico_estrella_fff.svg); background-size: auto 1em; }
+
+.imc--valoracio p label { display: block; padding-bottom: .3em; }
+
+.imc--valoracio-especifica { display: none; }
+
+
+
 /* navegació */
+
+nav.imc--navegacio.imc--g li:last-child {
+    padding: 0;
+}
 
 nav .imc-bt.imc--sortir::before { background-image: url(imgs/icones/ico_desconecta.svg); background-size: auto 1.5em; }

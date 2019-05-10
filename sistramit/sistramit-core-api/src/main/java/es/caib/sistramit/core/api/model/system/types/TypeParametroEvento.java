@@ -25,58 +25,25 @@ public enum TypeParametroEvento {
 	 */
 	VERSION_NAVEGADOR("VNA"),
 	/**
-	 * Idioma.
-	 */
-	IDIOMA("ID"),
-
-	/**
 	 * Para inicio tramites incorrectos: url inicio.
 	 */
 	URL_INICIO("URL"),
 	/**
-	 * Para inicio tramites incorrectos: excepcion asociada.
-	 */
-	EXCEPCION_ORIGEN("EXCEPCIONORIGEN"),
-	/**
-	 * Id sesión.
-	 */
-	ID_SESION("IDS"),
-	/**
-	 * Autenticado (S/N).
-	 */
-	AUTENTICADO("AUT"),
-	/**
-	 * METODO_AUTENTICACION.
-	 */
-	METODO_AUTENTICACION("AUTMET"),
-	/**
-	 * NIF.
-	 */
-	NIF("NIF"),
-	/**
-	 * Nombre.
-	 */
-	NOMBRE("NOMBRE"),
-	/**
-	 * Email.
-	 */
-	EMAIL("EMAIL"),
-	/**
-	 * Id tramite.
-	 */
-	TRAMITE_ID("IDTRAM"),
-	/**
-	 * Version tramite.
-	 */
-	TRAMITE_VERSION("VERTRAM"),
-	/**
-	 * ID SIA procedimiento.
-	 */
-	PROCEDIMIENTO_IDSIA("IDSIA"),
-	/**
 	 * Número registro (evento envio/registro).
 	 */
-	NUMERO_REGISTRO("NUMREG");
+	NUMERO_REGISTRO("NUMREG"),
+	/**
+	 * Valoración trámite: puntuación.
+	 */
+	VALORACION_PUNTUACION("VALPUN"),
+	/**
+	 * Valoración trámite: lista problemas separados por ";".
+	 */
+	VALORACION_PROBLEMAS("VALPROB"),
+	/**
+	 * Valoración trámite: observaciones.
+	 */
+	VALORACION_OBSERVACIONES("VALOBS");
 
 	/**
 	 * Valor como string.

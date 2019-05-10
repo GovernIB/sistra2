@@ -15,6 +15,7 @@ import es.caib.sistrages.rest.api.interna.RAvisosEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionEntidad;
 import es.caib.sistrages.rest.api.interna.RConfiguracionGlobal;
 import es.caib.sistrages.rest.api.interna.RDominio;
+import es.caib.sistrages.rest.api.interna.RIncidenciaValoracion;
 import es.caib.sistrages.rest.api.interna.RListaParametros;
 import es.caib.sistrages.rest.api.interna.RLiteral;
 import es.caib.sistrages.rest.api.interna.RLiteralIdioma;
@@ -144,6 +145,14 @@ public class SistragesMock {
 		opc.setListaEmails("email1;email2");
 		opciones.add(opc);
 
+		final List<RIncidenciaValoracion> incidenciasValoracion = new ArrayList<>();
+		for (int i = 1; i <= 5; i++) {
+			final RIncidenciaValoracion inci = new RIncidenciaValoracion();
+			inci.setIdentificador("P" + i);
+			inci.setDescripcion(generarLiteral());
+			incidenciasValoracion.add(inci);
+		}
+
 		final RConfiguracionEntidad e = new RConfiguracionEntidad();
 		e.setTimestamp(generateTimestamp());
 		e.setIdentificador("E1");
@@ -164,6 +173,8 @@ public class SistragesMock {
 		e.setUrlYoutube("http://youtube");
 		e.setPlugins(crearPluginsEntidad());
 		e.setInfoLopdHTML(generarLiteral());
+		e.setValorarTramite(true);
+		e.setIncidenciasValoracion(incidenciasValoracion);
 
 		return e;
 

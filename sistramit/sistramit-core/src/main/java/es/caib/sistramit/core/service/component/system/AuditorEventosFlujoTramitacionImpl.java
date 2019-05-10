@@ -1,6 +1,5 @@
 package es.caib.sistramit.core.service.component.system;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -169,7 +168,7 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 	 *            Resultado
 	 * @return Eventos
 	 */
-	private List<EventoAuditoria> eventoFlujoTramitacionAccionPaso(String idSesionTramitacion,
+	private List<EventoAuditoria> eventoFlujoTramitacionAccionPaso(final String idSesionTramitacion,
 			final Object[] pArgumentos, final Object pResult) {
 
 		final List<EventoAuditoria> eventos = new ArrayList<>();
@@ -203,16 +202,4 @@ public final class AuditorEventosFlujoTramitacionImpl implements AuditorEventosF
 		return eventos;
 	}
 
-	/**
-	 * Obtiene informacion excepcion origen.
-	 *
-	 * @param pExcepcion
-	 *            excepcion origen
-	 * @return informacion excepcion origen.
-	 */
-	private String getInfoExcepcionOrigen(final ServiceException pExcepcion) {
-		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		final String fechaStr = sdf.format(pExcepcion.getFechaExcepcion());
-		return fechaStr + " - " + pExcepcion.getClass().getSimpleName();
-	}
 }

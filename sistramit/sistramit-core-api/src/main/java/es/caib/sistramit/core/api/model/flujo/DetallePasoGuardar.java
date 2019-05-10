@@ -37,6 +37,11 @@ public final class DetallePasoGuardar extends DetallePaso {
 	private String instruccionesSubsanacion;
 
 	/**
+	 * Valoración trámite.
+	 */
+	private ValoracionTramite valoracion;
+
+	/**
 	 * Constructor.
 	 */
 	public DetallePasoGuardar() {
@@ -116,7 +121,7 @@ public final class DetallePasoGuardar extends DetallePaso {
 
 	/**
 	 * Método de acceso a instruccionesSubsanacion.
-	 * 
+	 *
 	 * @return instruccionesSubsanacion
 	 */
 	public String getInstruccionesSubsanacion() {
@@ -125,12 +130,31 @@ public final class DetallePasoGuardar extends DetallePaso {
 
 	/**
 	 * Método para establecer instruccionesSubsanacion.
-	 * 
+	 *
 	 * @param instruccionesSubsanacion
 	 *            instruccionesSubsanacion a establecer
 	 */
 	public void setInstruccionesSubsanacion(final String instruccionesSubsanacion) {
 		this.instruccionesSubsanacion = instruccionesSubsanacion;
+	}
+
+	/**
+	 * Método de acceso a valoracion.
+	 * 
+	 * @return valoracion
+	 */
+	public ValoracionTramite getValoracion() {
+		return valoracion;
+	}
+
+	/**
+	 * Método para establecer valoracion.
+	 * 
+	 * @param valoracion
+	 *            valoracion a establecer
+	 */
+	public void setValoracion(final ValoracionTramite valoracion) {
+		this.valoracion = valoracion;
 	}
 
 }

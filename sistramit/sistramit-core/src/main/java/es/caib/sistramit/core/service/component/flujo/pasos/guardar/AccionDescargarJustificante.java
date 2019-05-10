@@ -3,6 +3,7 @@ package es.caib.sistramit.core.service.component.flujo.pasos.guardar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
@@ -42,15 +43,18 @@ public final class AccionDescargarJustificante implements AccionPaso {
 				.getDocumento(ConstantesFlujo.ID_JUSTIFICANTE_REGISTRO, ConstantesNumero.N1);
 
 		// Obtenemos justificante
-
-		final byte[] justif = registroComponent.obtenerJustificanteRegistro(
+		final ResultadoJustificante justif = registroComponent.obtenerJustificanteRegistro(
 				pDefinicionTramite.getDefinicionVersion().getIdEntidad(), ddj.getNumeroRegistro(),
 				pVariablesFlujo.isDebugEnabled());
 
 		// Devolvemos fichero
 		final RespuestaAccionPaso rp = new RespuestaAccionPaso();
-		rp.addParametroRetorno("nombreFichero", ddj.getNumeroRegistro() + ".pdf");
-		rp.addParametroRetorno("datosFichero", justif);
+		if (justif.getContenido() != null) {
+			rp.addParametroRetorno("nombreFichero", ddj.getNumeroRegistro() + ".pdf");
+			rp.addParametroRetorno("datosFichero", justif.getContenido());
+		} else {
+			rp.addParametroRetorno("url", justif.getUrl());
+		}
 		final RespuestaEjecutarAccionPaso rep = new RespuestaEjecutarAccionPaso();
 		rep.setRespuestaAccionPaso(rp);
 		return rep;

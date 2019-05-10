@@ -1297,7 +1297,9 @@ $.fn.appAnnexatEsborra = function(opcions){
 						envia_ajax = false;
 
 						consola("Annexar esborra: error des de JSON");
-						errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+
+						imc_contenidor
+							.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
 
 					}
 
@@ -1309,7 +1311,9 @@ $.fn.appAnnexatEsborra = function(opcions){
 					}
 					
 					consola("Annexar esborra: error des de FAIL");
-					errors({ estat: "fail" });
+
+					imc_contenidor
+						.errors({ estat: "fail" });
 					
 				});
 				
