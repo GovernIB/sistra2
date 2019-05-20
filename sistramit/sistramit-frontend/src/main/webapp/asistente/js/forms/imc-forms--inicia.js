@@ -875,6 +875,8 @@ $.fn.appFormsConfiguracio = function(options) {
 
 							if (val_valor && val_valor !== "" && val_valor !== null) {
 
+								// amb valor
+
 								if (elm_input_tipus === "texto") {
 
 									elm_input
@@ -888,11 +890,6 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										setTimeout(
 											function() {
-												/*
-												elm
-													.find("a[data-value='"+opcio_valor+"']:first")
-														.trigger("click");
-												*/
 
 												var elm_txt = elm.find("a[data-value='"+opcio_valor+"']:first").text();
 
@@ -918,18 +915,10 @@ $.fn.appFormsConfiguracio = function(options) {
 
 											setTimeout(
 												function() {
-													/*
-													elm
-														.find("input[value='"+selec_val+"']:first")
-															.parent()
-																.find("label")
-																	.trigger("click");
-													*/
 
 													elm
 														.find("input[value='"+selec_val+"']:first")
 															.prop("checked", true);
-
 
 													if (elm_esLectura) {
 
@@ -952,13 +941,6 @@ $.fn.appFormsConfiguracio = function(options) {
 
 										setTimeout(
 											function() {
-												/*
-												elm
-													.find("input[value='"+opcio_valor+"']:first")
-														.parent()
-															.find("label")
-																.trigger("click");
-												*/
 
 												elm
 													.find("input[value='"+opcio_valor+"']:first")
@@ -980,6 +962,72 @@ $.fn.appFormsConfiguracio = function(options) {
 												.trigger("click");
 
 									}
+
+								}
+
+							} else {
+
+								// sense valor (null)
+
+								if (elm_input_tipus === "texto") {
+
+									elm_input
+										.val( "" );
+
+								} else if (elm_input_tipus === "selector" && elm_input_contingut === "d") {
+
+									setTimeout(
+										function() {
+
+											elm_input
+												.val( "" );
+
+											elm
+												.find("a.imc-select:first")
+													.html( $("<span>").text("") );
+
+										}
+										,50
+									);
+
+								} else if (elm_input_tipus === "selector" && elm_input_contingut === "m") {
+
+									setTimeout(
+										function() {
+
+											elm
+												.find("input")
+													.prop("checked", false);
+
+											if (elm_esLectura) {
+
+												elm
+													.find("input")
+														.attr("disabled", "disabled");
+
+											}
+
+										}
+										,50
+									);
+
+								} else if (elm_input_tipus === "selector" && elm_input_contingut === "u") {
+
+									setTimeout(
+										function() {
+
+											elm
+												.find("input")
+													.prop("checked", false);
+
+										},50
+									);
+
+								} else if (elm_input_tipus === "verificacion") {
+
+									elm
+										.find("input")
+											.prop("checked", false);
 
 								}
 
@@ -1419,7 +1467,7 @@ $.fn.appFormsAvalua = function(options) {
 					.off(".appFormsAvalua")
 					.on("focus.appFormsAvalua", "div[data-tipus='texto'] input, div[data-tipus='texto'] textarea", preevalua)
 					.on("blur.appFormsAvalua", "div[data-tipus='texto'] input, div[data-tipus='texto'] textarea", selecciona)
-					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] .imc-select-submenu a", selecciona)
+					.on("click.appFormsAvalua", "div[data-tipus='selector'][data-contingut='d'] .imc-select-submenu ul a", selecciona)
 					.on("click.appFormsAvalua", "fieldset[data-tipus='selector'] label", selecciona)
 					.on("click.appFormsAvalua", "div[data-type='check'] .imc-input-check", selecciona);
 
@@ -1723,7 +1771,7 @@ $.fn.appFormsAvalua = function(options) {
 					if (el_seguent.length) {
 
 						el_seguent
-							.find("input:first, textarea:first")
+							.find("input:first, textarea:first, a.imc-select:first")
 								.focus();
 
 					} else {
@@ -2123,6 +2171,7 @@ $.fn.appFormsAccions = function(options) {
 
 				imc_formulari_finestra
 					.find("*[data-id='"+camp_id+"']")
+						.addClass("imc-el-error")
 						.appDestaca({ referent: imc_forms_contenidor });
 
 			},

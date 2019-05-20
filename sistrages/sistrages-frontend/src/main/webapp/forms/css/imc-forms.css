@@ -210,11 +210,21 @@
 
 
 .imc-form h4 { clear: both; width: 100%; font-size: 1.1em; font-weight: normal; text-transform: uppercase; padding: 1em 0 .5em 0; margin: .5em 0 .1em 0; }
+/*
+.imc-form h4.imc-seccio { overflow: hidden; position: relative; width: 100%; }
 
-.imc-form h4.imc-seccio { overflow: hidden; width: 100%; }
+.imc-form h4.imc-seccio::before { content: ""; display: block; position: absolute; top: 2em; left: 2.6em; width: 100%; height: .5em; border-bottom: 1px solid rgba(204, 7, 60, .4); }
+
 .imc-form h4.imc-seccio span { display: block; padding: .2em 0; }
-.imc-form h4.imc-seccio span.imc-se-marca { float: left; position: relative; top: -0.2em; width: 2em; height: 2em; text-align:center; padding-top: .3em; border: 1px solid rgba(204, 7, 60, .4); border-radius: 50%; }
-.imc-form h4.imc-seccio span.imc-se-titol { width: 100%; padding-left: 2.6em; }
+.imc-form h4.imc-seccio span.imc-se-marca { float: left; position: relative; top: -0.2em; width: 2em; height: 2em; text-align:center; padding-top: .25em; border: 3px solid rgba(204, 7, 60, .4); border-radius: 50%; }
+.imc-form h4.imc-seccio span.imc-se-titol { width: 100%; font-weight: bold; padding-left: 2.6em; }
+*/
+
+
+.imc-form h4.imc-seccio { display: flex; font-weight: bold; line-height: 2.5em; padding: 0; margin: 1em 0 .1em 0; background-color: #f2f2f2; }
+.imc-form h4.imc-seccio span.imc-se-marca { width: 3em; color: #fff; text-align: center; background-color: #666; }
+.imc-form h4.imc-seccio span.imc-se-titol { width: calc(100% - 3em); padding-left: 1.2em; }
+
 
 .imc-form p.imc-info { clear: both; width: 100%; margin: 0 0 1.2em 0; }
 
@@ -816,7 +826,7 @@
 
 /* missatge en línia */
 
-.imc-form .imc-element.imc-missatge-en-linia { position: relative; width: 100%; font-size: 1.1em; padding: .8em 1em .3em 4.5em; margin-bottom: .7em; border: 3px solid rgba(53, 151, 212, .4); }
+.imc-form .imc-element.imc-missatge-en-linia { position: relative; width: 100%; font-size: 1em; padding: .8em 1em .3em 4.5em; margin-bottom: .7em; border: 3px solid rgba(53, 151, 212, .4); }
 
 .imc-form .imc-missatge-en-linia-alerta { color: #000; border-color: rgba(218, 162, 29, .4); }
 .imc-form .imc-missatge-en-linia-error { color: #c00; border-color: rgba(204, 7, 60, .4); }

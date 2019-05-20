@@ -8,6 +8,7 @@ import es.caib.sistra2.commons.utils.ConstantesNumero;
 import es.caib.sistramit.core.api.exception.AccesoNoPermitidoException;
 import es.caib.sistramit.core.api.exception.LimiteTramitacionException;
 import es.caib.sistramit.core.api.exception.LoginException;
+import es.caib.sistramit.core.api.exception.RegistroJustificanteException;
 import es.caib.sistramit.core.api.exception.ServiceException;
 import es.caib.sistramit.core.api.exception.TramiteFinalizadoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
@@ -52,7 +53,7 @@ public final class ErroresImpl implements Errores {
 	private static final String[] SERVICE_EXCEPTION_NO_RECARGAR = { AccesoNoPermitidoException.class.getName(),
 			LoginException.class.getName(), TramiteFinalizadoException.class.getName(),
 			TramiteNoExisteException.class.getName(), UsuarioNoPermitidoException.class.getName(),
-			LimiteTramitacionException.class.getName() };
+			LimiteTramitacionException.class.getName(), RegistroJustificanteException.class.getName() };
 
 	@Override
 	public RespuestaJSON generarRespuestaJsonExcepcion(final Exception pEx, final String idioma) {
@@ -125,7 +126,8 @@ public final class ErroresImpl implements Errores {
 
 		// Si es una excepción para la que no hay que recargar, intentamos redirigir a
 		// entidad
-		if (!isExceptionServiceRecargar(pEx) && sesionHttp != null && sesionHttp.getIdTramite() != null) {
+		if (!isExceptionServiceRecargar(pEx) && (pTipoError == TypeRespuestaJSON.FATAL) && sesionHttp != null
+				&& sesionHttp.getIdTramite() != null) {
 			try {
 				final String urlEntidad = flujoTramitacionService.obtenerUrlEntidad(sesionHttp.getIdTramite(),
 						sesionHttp.getVersion(), sesionHttp.getIdioma());

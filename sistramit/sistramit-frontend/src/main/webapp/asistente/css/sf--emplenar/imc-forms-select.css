@@ -297,16 +297,16 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 	background: #bbb url() no-repeat center center / .5em auto;
 }
 
-.imc-input-check label:focus::before { background-color: #000; }
+.imc-input-check label:focus::before { background-color: #000 !important; }
 
 .imc-input-check input:checked ~ label { color: #368355; }
-.imc-input-check input:checked ~ label::before { background-color: #368355; background-image: url(imgs/icones/ico_input_check.svg) }
+.imc-input-check input:checked ~ label::before { background-color: #368355; background-image: url(imgs/icones/ico_input_check.svg); }
 
 .imc-input-check input:disabled ~ label { display: none; color: #999; }
 .imc-input-check input:disabled ~ label::before { background-color: #999; }
 
 .imc-input-check input:checked:disabled ~ label { display: inline-block; color: #333; }
-.imc-input-check input:checked:disabled ~ label::before { background-color: #000; background-image: url(imgs/icones/ico_input_check.svg) }
+.imc-input-check input:checked:disabled ~ label::before { background-color: #000; background-image: url(imgs/icones/ico_input_check.svg); }
 
 .imc-el-error .imc-input-check input ~ label { color: #c00 !important; }
 .imc-el-error .imc-input-check input ~ label::before { background-color: #c00; }
@@ -332,7 +332,7 @@ div.imc-select-lectura a.imc-select:focus { background: none; background-color: 
 	background: #bbb url() no-repeat center center / .4em auto;
 } 
 
-.imc-input-radio label:focus::before { background-color: #000; }
+.imc-input-radio label:focus::before { background-color: #000 !important; }
 
 .imc-input-radio input:checked ~ label { color: #368355; }
 .imc-input-radio input:checked ~ label::before { background-color: #368355; background-image: url(imgs/icones/ico_input_radio.svg) }

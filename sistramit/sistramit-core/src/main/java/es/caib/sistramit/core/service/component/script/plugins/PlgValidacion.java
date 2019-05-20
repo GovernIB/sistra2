@@ -61,7 +61,7 @@ public final class PlgValidacion implements PlgValidacionInt {
 	/**
 	 * Constructor (validación asociada a un elemento).
 	 */
-	public PlgValidacion(String pIdElemento) {
+	public PlgValidacion(final String pIdElemento) {
 		super();
 		this.campo = pIdElemento;
 	}
@@ -155,8 +155,15 @@ public final class PlgValidacion implements PlgValidacionInt {
 	 * @param idElemento
 	 *            idElemento a establecer
 	 */
-	public void setCampo(String idElemento) {
+	public void setCampo(final String idElemento) {
 		this.campo = idElemento;
+	}
+
+	@Override
+	public void setExisteAviso(final boolean pExisteAviso, final String pTipo, final String pCampo)
+			throws ScriptException {
+		this.setExisteAviso(pExisteAviso, pTipo);
+		this.setCampo(pCampo);
 	}
 
 }

@@ -350,7 +350,7 @@ $.fn.appRegistra = function(options) {
 				// missatge carregant
 				
 				imc_missatge
-					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtRegistrant });
+					.appMissatge({ accio: "carregant", amagaDesdeFons: false, titol: txtRegistrant, text: txtRegistrantText });
 
 				registrant();
 

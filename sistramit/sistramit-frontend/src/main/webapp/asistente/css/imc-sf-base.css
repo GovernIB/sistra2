@@ -331,7 +331,7 @@ aside address { display: inline; }
 }
 
 .imc-missatge[data-accio='carregant'] .imc--text { min-height: 4em; }
-.imc-missatge[data-accio='carregant'] .imc--text div,
+.imc-missatge[data-accio='carregant'] .imc--text div { margin-bottom: 0; }
 .imc-missatge[data-accio='carregant'] .imc--text .imc--botonera { display: none; }
 
 
@@ -754,7 +754,7 @@ width: 100%; }
 /* scroll */
 
 ::-webkit-scrollbar {
-    width: .5em;
+    width: .8em;
 }
 
 ::-webkit-scrollbar-track {

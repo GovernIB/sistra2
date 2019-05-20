@@ -1,24 +1,29 @@
 // guardar justificant
 
 var imc_guarda,
-	imc_bt_desa_justificant,
+	imc_bt_justificant_desa,
+	imc_bt_justificant_url,
 	imc_bt_tramit_surt;
 
 
 // onReady
 
 function appPasGuardarInicia() {
-	
+
 	imc_guarda = imc_contingut.find(".imc--guarda:first");
-	imc_bt_desa_justificant = $("#imc-bt-justificant-desa");
+	imc_bt_justificant_desa = $("#imc-bt-justificant-desa");
+	imc_bt_justificant_url = $("#imc-bt-justificant-url");
 	imc_bt_tramit_surt = $("#imc-bt-tramit-surt");
 
 	imc_guarda
 		.appGuarda()
 		.appValora();
 
-	imc_bt_desa_justificant
+	imc_bt_justificant_desa
 		.appJustificantDesa();
+
+	imc_bt_justificant_url
+		.appJustificantURL();
 
 	imc_bt_tramit_surt
 		.appTramitSurt();
@@ -53,10 +58,10 @@ $.fn.appGuarda = function(options) {
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia;
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -70,7 +75,6 @@ $.fn.appJustificantDesa = function(options) {
 	}, options);
 	this.each(function(){
 		var element = $(this),
-			envia_ajax = false,
 			inicia = function() {
 
 				element
@@ -83,10 +87,160 @@ $.fn.appJustificantDesa = function(options) {
 				document.location = APP_TRAMIT_JUSTIFICANT + "?idPaso=" + APP_TRAMIT_PAS_ID;
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
+	});
+	return this;
+}
+
+
+// appJustificantURL
+
+$.fn.appJustificantURL = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			envia_ajax = false,
+			inicia = function() {
+
+				element
+					.off('.appJustificantURL')
+					.on('click.appJustificantURL', envia);
+
+			},
+			envia = function() {
+
+				// missatge
+
+				imc_missatge
+					.appMissatge({ accio: "carregant", titol: "Descarregant l'adreça del justificant..." });
+
+				// envia config
+
+				var	pag_url = APP_TRAMIT_JUSTIFICANT_URL,
+					formData = new FormData();
+
+				// dades
+
+				formData
+					.append("idPaso", APP_TRAMIT_PAS_ID);
+
+				// envia ajax
+
+				if (envia_ajax) {
+
+					envia_ajax
+						.abort();
+
+				}
+
+				envia_ajax = $.ajax({
+								type: "post",
+								url: pag_url,
+								data: formData,
+								processData: false,
+								cache: false,
+								contentType: false,
+								beforeSend: function(xhr) {
+									xhr.setRequestHeader(headerCSRF, tokenCSRF);
+								}
+							})
+							.done(function( data ) {
+
+								var json = data;
+
+								if (json.estado === "SUCCESS" || json.estado === "WARNING") {
+
+									descarregat(json);
+
+								} else {
+
+									envia_ajax = false;
+
+									consola("Justificant URL: error des de JSON");
+
+									imc_contenidor
+										.errors({ estat: json.estado, titol: data.mensaje.titulo, text: data.mensaje.texto, url: json.url });
+
+								}
+
+							})
+							.fail(function(dades, tipus, errorThrown) {
+
+								if (tipus === "abort") {
+									return false;
+								}
+
+								envia_ajax = false;
+
+								consola("Justificant URL: error des de FAIL");
+
+								imc_contenidor
+									.errors({ estat: "fail" });
+
+							});
+
+
+			},
+			descarregat = function(json) {
+
+				// missatge?
+
+				var estat = (json.estado === "SUCCESS") ? "correcte" : "warning"
+					,titol = json.mensaje.titulo
+					,text = json.mensaje.texto;
+
+				if (titol) {
+
+					imc_missatge
+						.appMissatge({ accio: estat, titol: titol, text: text, alAcceptar: function() { obri(json); } });
+
+					return;
+
+				}
+
+				obri(json);
+
+			},
+			obri = function(json) {
+
+				var url = json.datos.url;
+
+				var obri_url = function() {
+
+						window
+							.open(url, "_blank");
+
+					};
+
+				$("<a>")
+					.attr({ href: "javascript:;", id: "imc--bt-justificant-url-dinamic", target: "_blank" })
+					.on("click", obri_url)
+					.appendTo( imc_body )
+					.trigger("click");
+
+				setTimeout(
+					function() {
+
+						$("#imc--bt-justificant-url-dinamic")
+							.remove();
+
+					}
+					,100
+				);
+
+				imc_missatge
+					.appMissatge({ araAmaga: true });
+
+			};
+
+		// inicia
+		inicia();
+
 	});
 	return this;
 }
@@ -100,7 +254,6 @@ $.fn.appTramitSurt = function(options) {
 	}, options);
 	this.each(function(){
 		var element = $(this),
-			envia_ajax = false,
 			inicia = function() {
 
 				element
@@ -121,10 +274,10 @@ $.fn.appTramitSurt = function(options) {
 					});
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }
@@ -141,7 +294,7 @@ $.fn.appValora = function(options) {
 			valoracio_el = element.find(".imc--valoracio:first"),
 			output_el = false,
 			envia_ajax = false,
-			valor_per_especificar = 3,
+			valor_per_especificar = 2,
 			especificar_el = element.find(".imc--valoracio-especifica:first"),
 			inicia = function() {
 
@@ -252,7 +405,7 @@ $.fn.appValora = function(options) {
 								}
 							})
 							.done(function( data ) {
-								
+
 								var json = data;
 
 								if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -278,12 +431,12 @@ $.fn.appValora = function(options) {
 								}
 
 								envia_ajax = false;
-								
+
 								consola("Guarda valora: error des de FAIL");
 
 								imc_contenidor
 									.errors({ estat: "fail" });
-								
+
 							});
 
 
@@ -302,10 +455,10 @@ $.fn.appValora = function(options) {
 					});
 
 			};
-		
+
 		// inicia
 		inicia();
-		
+
 	});
 	return this;
 }

@@ -1,0 +1,52 @@
+<html>
+<head>
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_VALIDACION.setExisteAviso(existeAviso, tipo)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+    	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_VALIDACION">PLUGIN_VALIDACION</a></li>
+       	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=es&plugin=PLUGIN_VALIDACION&metodo=setExisteAviso2">setExisteAviso</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	setExisteAviso(boolean existeAviso, String tipo, String campo)
+</h1>
+<p>
+	<b>DESCRIPCIÓN</b>
+</p>
+<p>
+	<ul>
+		<li>Método para establecer si se genera aviso para usarse en el script de validación de página y poder indicar el campo de formulario al que aplica la validación.</li>
+	</ul>
+</p>
+<p>
+	<b>PARÁMETROS DE ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>existeAviso</b>: establecer si se genera aviso.</li>
+		<li><b>tipo</b>: INFO / WARNING / ERROR</li>
+		<li><b>campo</b>: Identificador campo formulario</li>
+	</ul>
+</p>
+<p>
+	<b>EJEMPLOS</b>
+</p>
+<p>
+	Vamos a proceder a indicar que existe un aviso de tipo WARNING sobre el campo txtValor:
+</p>
+<p class="codigoScript">
+	 PLUGIN_VALIDACION.setExisteAviso(true, 'WARNING', 'txtValor');
+</p>
+</body>
+</html>

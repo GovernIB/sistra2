@@ -13,7 +13,7 @@
 			<div class="imc--fi-bt">
 				<p><span>{{txtNumeroRegistre}}:</span> <strong>{{jsonNumeroRegistre}}</strong></p>
 				{{if jsonJustificantURL|equals>s}}
-				<a href="{{app_tramit_justificant}}" class="imc-bt imc--ico imc--justificant" target="_blank" title="{{txtObriFinestra}}"><span>{{txtAnarAlJustificant}}</span></a>
+				<button type="button" id="imc-bt-justificant-url" class="imc-bt imc--ico imc--justificant" title="{{txtObriFinestra}}"><span>{{txtAnarAlJustificant}}</span></button>
 				{{else}}
 				<button type="button" id="imc-bt-justificant-desa" class="imc-bt imc--ico imc--justificant"><span>{{txtDesauJustificant}}</span></button>
 				{{/if}}

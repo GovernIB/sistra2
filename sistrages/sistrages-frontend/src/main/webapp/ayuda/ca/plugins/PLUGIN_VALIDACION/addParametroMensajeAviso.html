@@ -22,27 +22,27 @@
 	addParametroMensajeAviso(String parametro)
 </h1>
 <p>
-	<b>DESCRIPCIÓN</b>
+	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Parámetros a substuir en el mensaje que hace referencia el código de aviso.
+		<li>Paràmetres a substuir al missatge que al que fa referència el codi d'avís.
 	 * ({0} {1} ...).</li>
 	</ul>
 </p>
 <p>
-	<b>PARÁMETROS DE ENTRADA</b>
+	<b>PARÀMETRES D'ENTRADA</b>
 </p>
 <p>
 	<ul>
-		<li><b>parametro</b>: parametro a sustituir.</li>
+		<li><b>parametro</b>: paràmetre a substituir.</li>
 	</ul>
 </p>
 <p>
-	<b>EJEMPLOS</b>
+	<b>EXEMPLE</b>
 </p>
 <p>
-	Supongamos que tenemos un mensaje 'DNI_INCORRECTO' con el siguiente texto 'El dni {0} para la persona {1}, {2} {3} está incorrecto'. Si quisiéramos sustituir los parámetros, entonces primero setearíamos el mensaje de aviso y luego pasaríamos los parámetros:
+	Suposem que tenim un missatge 'DNI_INCORRECTO' amb el text seg&uuml;ent 'El dni {0} per a la persona {1}, {2} {3} és incorrecte'. Si vulguéssim substituir els paràmetres, aleshores primer establiriem el missatge d'avís i després passaríem els paràmetres:
 </p>
 <p class="codigoScript">
 	 PLUGIN_VALIDACION.setCodigoMensajeAviso('DNI_INCORRECTO');
@@ -52,7 +52,7 @@
 	 PLUGIN_VALIDACION.addParametroMensajeAviso(apellido2);
 </p>
 <p>
-	El parámetro {0} pertenecería al dni, el {1} al nombre, {2} al apellido1 y el {3} al apellido 2, quedándonos el mensaje como 'El dni dni para la persona nombre, apellido1 apellido2 está incorrecto'. También deberíamos especificar el grado del mensaje:
+	El paràmetre {0} faria referència al dni, el {1} al nombre, {2} al apellido1 i el {3} al apellido 2, quedant el missatge 'El dni per a la persona nombre, apellido1 apellido2 és incorrecte'. També hauríem d'especificar el grau del missatge:
 </p>
 <p class="codigoScript">
 	PLUGIN_VALIDACION.setExisteAviso(true, 'ERROR');

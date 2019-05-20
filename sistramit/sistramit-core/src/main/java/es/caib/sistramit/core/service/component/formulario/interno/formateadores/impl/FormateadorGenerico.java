@@ -2,6 +2,7 @@ package es.caib.sistramit.core.service.component.formulario.interno.formateadore
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,9 +11,12 @@ import es.caib.sistra2.commons.pdf.PDFDocument;
 import es.caib.sistra2.commons.pdf.Parrafo;
 import es.caib.sistra2.commons.pdf.Propiedad;
 import es.caib.sistra2.commons.pdf.Seccion;
+import es.caib.sistra2.commons.utils.ValidacionTipoException;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
 import es.caib.sistrages.rest.api.interna.RComponente;
 import es.caib.sistrages.rest.api.interna.RComponenteAviso;
 import es.caib.sistrages.rest.api.interna.RComponenteSeccion;
+import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistrages.rest.api.interna.RLineaComponentes;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
@@ -22,10 +26,13 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
+import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.model.formulario.types.TipoVisualizacionValorIndexado;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
  * Formateador PDF para formularios.
@@ -189,11 +196,50 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	}
 
 	/**
+	 * Comprueba si un componente es de tipo fecha y por tanto su valor es de tipo
+	 * fecha en formato String
+	 *
+	 * @param componente
+	 * @return
+	 */
+	private boolean isComponenteTipoFecha(final RComponente componente) {
+		return UtilsSTG.traduceTipoCampo(componente.getTipo()) == TypeCampo.TEXTO
+				&& UtilsSTG.traduceTipoTexto(((RComponenteTextbox) componente).getTipoTexto()) == TypeTexto.FECHA;
+	}
+
+	/**
+	 * Convierte la fecha en formato YYYY-MM-DD a DD-MM-YYYY
+	 *
+	 * @param fecha
+	 *            Fecha en formato YYYY-MM-DD
+	 * @return Fecha en formato DD-MM-YYYY
+	 * @throws Exception
+	 */
+	private String getConversionFecha(final String fecha) {
+		String valor;
+		try {
+			if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy-MM-dd")) {
+				final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy-MM-dd");
+				valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd-MM-yyyy");
+			} else if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy/MM/dd")) {
+				final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy/MM/dd");
+				valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd/MM/yyyy");
+			} else {
+				throw new FormateadorException("Fecha no valida");
+			}
+		} catch (final ValidacionTipoException e) {
+			throw new FormateadorException("Fecha no valida");
+		}
+		return valor;
+	}
+
+	/**
 	 * Busca un valor y lo añade.
 	 *
 	 * @param componente
 	 * @param seccion
 	 * @param xml
+	 * @throws Exception
 	 */
 	private void anyadirDato(final RComponente componente, final Seccion seccion, final XmlFormulario xml) {
 
@@ -202,7 +248,11 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 			if (valor.getId() != null && componente.getIdentificador().equals(valor.getId())) {
 				encontrado = true;
 				if (valor instanceof ValorCampoSimple) {
-					seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoSimple) valor));
+					String valorCampoSimple = ((ValorCampoSimple) valor).getValor();
+					if (isComponenteTipoFecha(componente)) {
+						valorCampoSimple = getConversionFecha(valorCampoSimple);
+					}
+					seccion.addCampo(createPropiedad(componente.getEtiqueta(), valorCampoSimple));
 				} else if (valor instanceof ValorCampoIndexado) {
 					seccion.addCampo(getPropiedad(componente.getEtiqueta(), (ValorCampoIndexado) valor));
 				} else if (valor instanceof ValorCampoListaIndexados) {
@@ -322,8 +372,8 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @param valor
 	 * @return
 	 */
-	private Propiedad getPropiedad(final String etiqueta, final ValorCampoSimple valor) {
-		return new Propiedad(etiqueta, valor.getValor());
+	private Propiedad createPropiedad(final String etiqueta, final String valor) {
+		return new Propiedad(etiqueta, valor);
 	}
 
 }

@@ -227,10 +227,13 @@ body.imc--sense-scroll { overflow: hidden; }
 .imc-formulari .imc--finestra .imc--ajuda.imc--desactivada strong { color: #666; }
 .imc-formulari .imc--finestra .imc--ajuda.imc--desactivada strong::before { background-color: #999; }
 
-.imc-formulari .imc--finestra > h3 { height: 3.5em; padding: 1em; margin-bottom: 0; background-color: #eaeaea; }
-.imc-formulari .imc--finestra > h3 span { display: block; overflow: hidden; font-size: 1.2em; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; }
+.imc-formulari .imc--finestra > h3 { height: 3.5em; padding: 1em; margin-bottom: 0; border-bottom: 1px solid #aeaeae; }
+
+.imc-formulari .imc--finestra > h3 span { display: block; overflow: hidden; font-size: 1.35em; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; }
+.imc-formulari .imc--finestra > h3 span::before { content: ""; display: inline-block; vertical-align: middle; position: relative; top: -0.1em; width: 1em; height: 1em; margin-right: .8em; background: transparent url(imgs/icones/ico_formulari.svg) no-repeat center center / auto 100%; opacity: .4; }
 
 .imc-formulari .imc--contingut { overflow: auto; position: relative; min-width: 45em; height: calc(100% - 6.5em); }
+
 
 
 /* suporta */

@@ -13,20 +13,20 @@
   	<ul>
     	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_VALIDACION">PLUGIN_VALIDACION</a></li>
        	  <li>></li>
-      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_VALIDACION&metodo=setExisteAviso">setExisteAviso</a></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_VALIDACION&metodo=setExisteAviso2">setExisteAviso</a></li>
   	</ul>
 </div>
 
 <h1 class="cabeceraPlugin">
 	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
-	setExisteAviso(boolean existeAviso, String tipo)
+	setExisteAviso(boolean existeAviso, String tipo, String campo)
 </h1>
 <p>
 	<b>DESCRIPCIÓ</b>
 </p>
 <p>
 	<ul>
-		<li>Mètode per establir si es genera avís.</li>
+		<li>Mètode per establir si es genera avís per emprar-se a l'script de validació de pàgina i poder indicar el camp del formulari al qual aplica la validació.</li>
 	</ul>
 </p>
 <p>
@@ -34,18 +34,19 @@
 </p>
 <p>
 	<ul>
-		<li><b>existeAviso</b>: booleà que permet establir si es genera avís.</li>
+		<li><b>existeAviso</b>: booleà quer permet establir si es genera avís.</li>
 		<li><b>tipo</b>: INFO / WARNING / ERROR</li>
+		<li><b>campo</b>: Identificador camp formulari</li>
 	</ul>
 </p>
 <p>
-	<b>EXEMPLES</b>
+	<b>EXEMPLE</b>
 </p>
 <p>
-	Per indicar que existeix un avís de tipo WARNING incorporarem el codi seg&uuml;ent:
+	Podem indicar que existeix un avís de tipus WARNING al camp txtValor de la seg&uuml;ent manera:
 </p>
 <p class="codigoScript">
-	 PLUGIN_VALIDACION.setExisteAviso(true, 'WARNING');
+	 PLUGIN_VALIDACION.setExisteAviso(true, 'WARNING', 'txtValor');
 </p>
 </body>
 </html>

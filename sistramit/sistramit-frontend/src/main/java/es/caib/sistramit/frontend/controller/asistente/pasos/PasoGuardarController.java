@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,6 +13,7 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
 import es.caib.sistramit.frontend.controller.TramitacionController;
+import es.caib.sistramit.frontend.model.RedireccionUrl;
 import es.caib.sistramit.frontend.model.RespuestaJSON;
 
 /**
@@ -56,15 +58,42 @@ public final class PasoGuardarController extends TramitacionController {
 
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, pParametros);
-		if (rap.getParametroRetorno("url") != null) {
-			// Redireccion url
-			return new ModelAndView("redirect:" + rap.getParametroRetorno("url"));
-		} else {
-			// Descarga fichero
-			final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
-			final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
-			return generarDownloadView(nombreFichero, datos);
-		}
+		final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
+		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
+		return generarDownloadView(nombreFichero, datos);
+
+	}
+
+	/**
+	 * Realiza download justificante registro mediante redirección.
+	 *
+	 * @param idPaso
+	 *            Identificador paso.
+	 * @param idDocumento
+	 *            Identificador documento.
+	 * @param instancia
+	 *            Instancia documento.
+	 * @return Documento para descargar.
+	 */
+	@RequestMapping(value = "/redirigirJustificante.json", method = RequestMethod.POST)
+	public ModelAndView redirigirJustificante(@RequestParam(PARAM_ID_PASO) final String idPaso) {
+
+		debug("Obteniendo justificante registro para redirección");
+
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, pParametros);
+		final String url = (String) rap.getParametroRetorno("url");
+
+		final RedireccionUrl redireccion = new RedireccionUrl();
+		redireccion.setUrl(url);
+		final RespuestaJSON respuesta = new RespuestaJSON();
+		respuesta.setDatos(redireccion);
+		return generarJsonView(respuesta);
 
 	}
 
@@ -113,7 +142,7 @@ public final class PasoGuardarController extends TramitacionController {
 	 *            Instancia documento.
 	 * @return Documento para descargar.
 	 */
-	@RequestMapping("/valorarTramite.json")
+	@RequestMapping(value = "/valorarTramite.json", method = RequestMethod.POST)
 	public ModelAndView valorarTramite(@RequestParam(PARAM_ID_PASO) final String idPaso,
 			@RequestParam("valoracion") final String valoracion,
 			@RequestParam("problemas") final List<String> problemas,

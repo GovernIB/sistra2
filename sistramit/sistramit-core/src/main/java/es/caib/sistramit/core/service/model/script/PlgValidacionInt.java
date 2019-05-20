@@ -31,6 +31,23 @@ public interface PlgValidacionInt extends PluginScriptPlg {
 	void setExisteAviso(final boolean pExisteAviso, final String pTipo) throws ScriptException;
 
 	/**
+	 * Método para establecer si se genera aviso permitiendo indicar el campo para
+	 * el que se establece la validación (para script de validación de página de
+	 * formulario).
+	 *
+	 * @param pExisteAviso
+	 *            establecer si se genera aviso.
+	 * @param pTipo
+	 *            INFO / WARNING
+	 * @param pCampo
+	 *            Id campo
+	 * @throws ScriptException
+	 *             Excepcion
+	 *
+	 */
+	void setExisteAviso(final boolean pExisteAviso, final String pTipo, final String pCampo) throws ScriptException;
+
+	/**
 	 * Parámetros a substuir en el mensaje que hace referencia el código de aviso.
 	 * ({0} {1} ...).
 	 *

@@ -31,6 +31,17 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	/** Prefix. */
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "mock.";
 
+	/**
+	 * Nombre de propiedad para indicar si los justificantes se generan como CSV
+	 * (true/false).
+	 */
+	public final static String PROP_JUSTIFICANTE_CSV = "justificanteCSV";
+
+	/**
+	 * Si genera error al consultar justificante (true/false).
+	 */
+	public final static String PROP_JUSTIFICANTE_ERROR = "justificanteERROR";
+
 	public RegistroMockPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
 	}
@@ -112,22 +123,31 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	@Override
 	public ResultadoJustificante obtenerJustificanteRegistro(final String codigoEntidad, final String numeroRegistro)
 			throws RegistroPluginException {
-		// Lee pdf mock del classpath
-		byte[] content = null;
-		try (final InputStream isFile = RegistroMockPlugin.class.getClassLoader()
-				.getResourceAsStream("justificanteRegistroMock.pdf");) {
-			content = IOUtils.toByteArray(isFile);
-		} catch (final IOException e) {
-			throw new RegistroPluginException("Excepcion al recuperar justificante simulado: " + e.getMessage(), e);
+
+		if ("true".equals(getPropiedad(PROP_JUSTIFICANTE_ERROR))) {
+			throw new RegistroPluginException("Simulación error descarga justificante");
 		}
+
 		final ResultadoJustificante res = new ResultadoJustificante();
-		res.setContenido(content);
+		if (descargaExternaJustificantes()) {
+			res.setUrl("https://www.google.es/search?q=justificante");
+		} else {
+			// Lee pdf mock del classpath
+			byte[] content = null;
+			try (final InputStream isFile = RegistroMockPlugin.class.getClassLoader()
+					.getResourceAsStream("justificanteRegistroMock.pdf");) {
+				content = IOUtils.toByteArray(isFile);
+			} catch (final IOException e) {
+				throw new RegistroPluginException("Excepcion al recuperar justificante simulado: " + e.getMessage(), e);
+			}
+			res.setContenido(content);
+		}
 		return res;
 	}
 
 	@Override
 	public boolean descargaExternaJustificantes() throws RegistroPluginException {
-		return false;
+		return "true".equals(getPropiedad(PROP_JUSTIFICANTE_CSV));
 	}
 
 	@Override
@@ -137,6 +157,19 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 		lo.setCodigo("codlib.codofi1.1");
 		lo.setNombre("libro oficina (1) 1");
 		return lo;
+	}
+
+	/**
+	 * Obtiene propiedad.
+	 *
+	 * @param propiedad
+	 *            propiedad
+	 * @return valor
+	 * @throws RegistroPluginException
+	 */
+	private String getPropiedad(final String propiedad) throws RegistroPluginException {
+		final String res = getProperty(REGISTRO_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
+		return res;
 	}
 
 }

@@ -543,7 +543,6 @@ $.fn.appPas = function(options) {
 
 					HTML_PAS_LITERALS[pas_tipus]["jsonNumeroRegistre"] = pas_json.datos.actual.justificante.numero;
 					HTML_PAS_LITERALS[pas_tipus]["jsonJustificantURL"] = pas_json.datos.actual.justificante.url;
-					HTML_PAS_LITERALS[pas_tipus]["app_tramit_justificant"] = APP_TRAMIT_JUSTIFICANT + "?idPaso=" + APP_TRAMIT_PAS_ID;
 
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.justificante.formularios;
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.justificante.anexos;
