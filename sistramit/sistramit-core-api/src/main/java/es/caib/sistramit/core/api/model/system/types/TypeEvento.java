@@ -33,7 +33,7 @@ public enum TypeEvento {
 	 */
 	FIN_TRAMITE("TR_FIN"),
 	/**
-	 * FIN DE TRÁMITE.
+	 * VALORACIÓN TRÁMITE.
 	 */
 	VALORACION_TRAMITE("TR_VAL"),
 	/**

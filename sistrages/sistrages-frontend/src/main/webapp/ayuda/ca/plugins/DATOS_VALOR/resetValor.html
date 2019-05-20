@@ -28,21 +28,13 @@
 </p>
 <p>
 	<ul>
-    	<li>Mètode que elimina tots els valors associats a aquest objecte.</li>
+    	<li>Mètode que permet inicialitzar el valor del camp actual.</li>
 	</ul>
 </p>
 <p>
 	<b>EXEMPLES</b>
 </p>
-<p>Per a veure la funcionalitat d'aquesta funció, primer afegim elements a l'actual camp, en aquest cas, el camp, indica el municipi d'un usuari:</p>
- <p class="codigoScript">
-var municipios = DATOS_VALOR.crearValorMultiple();
-municipios.addValor('0337','Manacor');
-municipios.addValor('0407','Palma de Mallorca');
-municipios.addValor('2060','Eivissa');
-DATOS_VALOR.setValorMultiple('municipios', municipios);
-</p>
-<p> ara el camp actual té 3 valors corresponents a municipis dels Illes Balears, si en aquest punt podem inferir d'altres camps que l'usuari no pertany als Illes Balears, existeix l'opció d'esborrar tots els valors mitjançant la següent sentència:</p>
+<p> Posem per cas que el camp té valor i volem buidar-lo sota una casuística determinada. El reset ens permetrà buidar el camp:</p>
 <p class="codigoScript">
 DATOS_VALOR.resetValor();
 </p>

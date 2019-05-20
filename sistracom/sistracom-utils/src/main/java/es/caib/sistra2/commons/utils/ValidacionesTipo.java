@@ -773,18 +773,18 @@ public final class ValidacionesTipo {
 	/**
 	 * Parsea fecha de string.
 	 *
-	 * @param pFecha
+	 * @param fecha
 	 *            fecha
 	 * @param formato
 	 *            formato
 	 * @return fecha
 	 * @throws ValidacionTipoException
 	 */
-	private Date parseFecha(final String pFecha, final String formato) throws ValidacionTipoException {
+	public Date parseFecha(final String fecha, final String formato) throws ValidacionTipoException {
 		try {
 			final SimpleDateFormat df = new SimpleDateFormat(formato);
 			df.setLenient(false);
-			return df.parse(pFecha);
+			return df.parse(fecha);
 		} catch (final ParseException e) {
 			throw new ValidacionTipoException(FORMATO_FECHA_INCORRECTO, e);
 		}
@@ -793,17 +793,17 @@ public final class ValidacionesTipo {
 	/**
 	 * Parsea fecha de string.
 	 *
-	 * @param pFecha
+	 * @param fecha
 	 *            fecha
 	 * @param formato
 	 *            formato
 	 * @return fecha
 	 * @throws ValidacionTipoException
 	 */
-	private String formateaFecha(final Date pFecha, final String formato) {
+	public String formateaFecha(final Date fecha, final String formato) {
 		final SimpleDateFormat df = new SimpleDateFormat(formato);
 		df.setLenient(false);
-		return df.format(pFecha);
+		return df.format(fecha);
 	}
 
 	public int distanciaDias(final Date pFecha1, final Date pFecha2) throws ValidacionTipoException {

@@ -69,6 +69,9 @@ public class JCampoFormularioIndexado implements IModelApi {
 	@Column(name = "CIN_ALTURA", nullable = false, precision = 2, scale = 0)
 	private int altura;
 
+	@Column(name = "CIN_ORIENTA", length = 1)
+	private String orientacion;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campoFormularioIndexado", orphanRemoval = true, cascade = CascadeType.ALL)
 	private Set<JParametroDominioCampoIndexado> parametrosDominio = new HashSet<>(0);
 
@@ -175,6 +178,21 @@ public class JCampoFormularioIndexado implements IModelApi {
 		this.altura = altura;
 	}
 
+	/**
+	 * @return the orientacion
+	 */
+	public final String getOrientacion() {
+		return orientacion;
+	}
+
+	/**
+	 * @param orientacion
+	 *            the orientacion to set
+	 */
+	public final void setOrientacion(final String orientacion) {
+		this.orientacion = orientacion;
+	}
+
 	public ComponenteFormularioCampoSelector toModel() {
 		ComponenteFormularioCampoSelector campoSelector = null;
 
@@ -195,7 +213,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 				campoSelector.setCampoDominioDescripcion(campoDominioDescripcion);
 				campoSelector.setIndiceAlfabetico(indiceAlfabetico);
 				campoSelector.setAltura(altura);
-
+				campoSelector.setOrientacion(orientacion);
 				if (parametrosDominio != null) {
 					if (campoSelector.getListaParametrosDominio() == null) {
 						campoSelector.setListaParametrosDominio(new ArrayList<>());
@@ -233,6 +251,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 		jModel.setIndiceAlfabetico(false);
 		jModel.setAltura(1);
 		jModel.setCampoFormulario(JCampoFormulario.createDefault(TypeObjetoFormulario.SELECTOR, pOrden, pJLinea));
+		jModel.setOrientacion("V");// Vertical(V)
 		return jModel;
 	}
 
@@ -355,7 +374,9 @@ public class JCampoFormularioIndexado implements IModelApi {
 			jcampoIndexado.setDominio(campoFormularioIndexado.getDominio());
 			jcampoIndexado.setScriptValoresPosibles(JScript.clonar(campoFormularioIndexado.getScriptValoresPosibles()));
 			jcampoIndexado.setTipoCampoIndexado(campoFormularioIndexado.getTipoCampoIndexado());
-			if (cambioArea && campoFormularioIndexado.getTipoListaValores().equals("D")) {
+			if (cambioArea && campoFormularioIndexado.getTipoListaValores().equals("D")
+					&& campoFormularioIndexado.getDominio() != null
+					&& "A".equals(campoFormularioIndexado.getDominio().getAmbito())) {
 				// Si se ha cambiado de area, pasa a ser tipo lista fija si era de tipo dominio.
 				jcampoIndexado.setTipoListaValores("F");
 				jcampoIndexado.setCampoDominioCodigo(null);
@@ -376,7 +397,7 @@ public class JCampoFormularioIndexado implements IModelApi {
 			jcampoIndexado.setCampoDominioDescripcion(campoFormularioIndexado.getCampoDominioDescripcion());
 			jcampoIndexado.setIndiceAlfabetico(campoFormularioIndexado.isIndiceAlfabetico());
 			jcampoIndexado.setAltura(campoFormularioIndexado.getAltura());
-
+			jcampoIndexado.setOrientacion(campoFormularioIndexado.getOrientacion());
 			if (campoFormularioIndexado.getListaFijaValores() != null) {
 				final Set<JListaFijaValoresCampoIndexado> listaFijaValores = new HashSet<>(0);
 				for (final JListaFijaValoresCampoIndexado lista : campoFormularioIndexado.getListaFijaValores()) {

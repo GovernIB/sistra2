@@ -258,21 +258,23 @@ public final class UtilJSF {
 	}
 
 	/**
-	 * Muestra mensaje como ventana de dialogo.
+	 * Añade mensaje a un componente para que lo trate la aplicación (growl,
+	 * messages,...).
 	 *
 	 * @param nivel
-	 *            Nivel gravedad
-	 * @param title
-	 *            Titulo
+	 *            Nivel de gravedad.
 	 * @param message
 	 *            Mensaje
+	 * @param detail
+	 *            Detalle
+	 * @param idComponente
+	 *            Si el id componente es nulo, se enviará al growl.
 	 */
-	public static void showMessageDialogBORRAR(final TypeNivelGravedad nivel, final String title,
-			final String message) {
-		// TODO BORRAR
+	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
+			final String idComponente) {
 		final Severity severity = getSeverity(nivel);
-
-		RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(severity, title, message));
+		final FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(idComponente, new FacesMessage(severity, message, detail));
 	}
 
 	/**
@@ -285,7 +287,7 @@ public final class UtilJSF {
 	 *            Mensaje
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message) {
-		addMessageContext(nivel, message, message);
+		addMessageContext(nivel, message, message, null);
 	}
 
 	/**
@@ -300,9 +302,7 @@ public final class UtilJSF {
 	 *            Detalle
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail) {
-		final Severity severity = getSeverity(nivel);
-		final FacesContext context = FacesContext.getCurrentInstance();
-		context.addMessage(null, new FacesMessage(severity, message, detail));
+		addMessageContext(nivel, message, message, null);
 	}
 
 	/**
@@ -318,8 +318,23 @@ public final class UtilJSF {
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message,
 			final boolean validationFailed) {
-		addMessageContext(nivel, message, message, validationFailed);
+		addMessageContext(nivel, message, message, validationFailed, null);
+	}
 
+	/**
+	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
+	 * messages,...).
+	 *
+	 * @param nivel
+	 *            Nivel gravedad
+	 * @param message
+	 *            Mensaje
+	 * @param validationFailed
+	 *            añade la marca de error de validacion
+	 */
+	public static void addMessageContext(final TypeNivelGravedad nivel, final String message,
+			final boolean validationFailed, final String idComponente) {
+		addMessageContext(nivel, message, message, validationFailed, idComponente);
 	}
 
 	/**
@@ -337,7 +352,25 @@ public final class UtilJSF {
 	 */
 	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
 			final boolean validationFailed) {
-		addMessageContext(nivel, message, detail);
+		addMessageContext(nivel, message, detail, validationFailed, null);
+	}
+
+	/**
+	 * Añade mensaje al contexto para que lo trate la aplicación (growl,
+	 * messages,...).
+	 *
+	 * @param nivel
+	 *            Nivel gravedad
+	 * @param message
+	 *            Mensaje
+	 * @param detail
+	 *            Detalle
+	 * @param validationFailed
+	 *            añade la marca de error de validacion
+	 */
+	public static void addMessageContext(final TypeNivelGravedad nivel, final String message, final String detail,
+			final boolean validationFailed, final String idComponente) {
+		addMessageContext(nivel, message, detail, idComponente);
 
 		if (validationFailed) {
 			FacesContext.getCurrentInstance().validationFailed();

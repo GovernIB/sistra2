@@ -215,13 +215,35 @@ public final class UtilsFlujo {
 	 */
 	public static DatosUsuario getDatosUsuario(final UsuarioAutenticadoInfo usuInfo) {
 		DatosUsuario res = null;
-		if (usuInfo.getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
+		if (usuInfo != null && usuInfo.getAutenticacion() != null
+				&& usuInfo.getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
 			res = new DatosUsuario();
 			res.setNif(usuInfo.getNif());
 			res.setNombre(usuInfo.getNombre());
 			res.setApellido1(usuInfo.getApellido1());
 			res.setApellido2(usuInfo.getApellido2());
 			res.setCorreo(usuInfo.getEmail());
+		}
+		return res;
+	}
+
+	/**
+	 * Genera datos representante a partir info autenticación.
+	 *
+	 * @param usuInfo
+	 *            info autenticación
+	 * @return datos usuario
+	 */
+	public static DatosUsuario getDatosRepresentante(final UsuarioAutenticadoInfo usuInfo) {
+		DatosUsuario res = null;
+		if (usuInfo != null && usuInfo.getAutenticacion() != null && usuInfo.getRepresentante() != null
+				&& usuInfo.getAutenticacion() == TypeAutenticacion.AUTENTICADO) {
+			res = new DatosUsuario();
+			res.setNif(usuInfo.getRepresentante().getNif());
+			res.setNombre(usuInfo.getRepresentante().getNombre());
+			res.setApellido1(usuInfo.getRepresentante().getApellido1());
+			res.setApellido2(usuInfo.getRepresentante().getApellido2());
+			res.setCorreo(usuInfo.getRepresentante().getEmail());
 		}
 		return res;
 	}
@@ -665,7 +687,7 @@ public final class UtilsFlujo {
 		return res;
 	}
 
-	public static boolean isErrorValidacion(MensajeValidacion validacion) {
+	public static boolean isErrorValidacion(final MensajeValidacion validacion) {
 		return (validacion != null && validacion.getEstado() == TypeValidacion.ERROR);
 	}
 

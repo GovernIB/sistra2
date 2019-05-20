@@ -196,8 +196,9 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public void changeAreaTramite(final Long idArea, final Long idTramite, final Long idAreaAntigua) {
-		tramiteService.changeAreaTramite(idArea, idTramite, idAreaAntigua);
+	public void changeAreaTramite(final Long idArea, final Long idTramite, final Long idAreaAntigua,
+			final String usuario) {
+		tramiteService.changeAreaTramite(idArea, idTramite, idAreaAntigua, usuario);
 	}
 
 	@Override
@@ -335,8 +336,8 @@ public class TramiteServiceBean implements TramiteService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
-	public boolean tieneTramiteNumVersionRepetida(final Long idTramite, final int release) {
-		return tramiteService.tieneTramiteNumVersionRepetida(idTramite, release);
+	public boolean tieneTramiteNumVersionRepetida(final Long idTramite, final int numVersion) {
+		return tramiteService.tieneTramiteNumVersionRepetida(idTramite, numVersion);
 	}
 
 	@Override
@@ -515,4 +516,34 @@ public class TramiteServiceBean implements TramiteService {
 		tramiteService.updateScript(pScript);
 	}
 
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public TramiteVersion createTramiteVersionDefault(final Integer pNumVersion, final String pIdiomasSoportados,
+			final String pDatosUsuarioBloqueo) {
+		return tramiteService.createTramiteVersionDefault(pNumVersion, pIdiomasSoportados, pDatosUsuarioBloqueo);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public List<TramitePaso> createListaPasosNormalizado() {
+		return tramiteService.createListaPasosNormalizado();
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Documento createDocumentoDefault() {
+		return tramiteService.createDocumentoDefault();
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public Tasa createTasaDefault() {
+		return tramiteService.createTasaDefault();
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.ADMIN_ENT, ConstantesRolesAcceso.DESAR })
+	public FormularioTramite createFormularioTramiteDefault() {
+		return tramiteService.createFormularioTramiteDefault();
+	}
 }

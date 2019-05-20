@@ -36,7 +36,6 @@ import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.TramiteNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.AnexoFichero;
-import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetallePasos;
 import es.caib.sistramit.core.api.model.flujo.DetalleTramite;
 import es.caib.sistramit.core.api.model.flujo.FlujoTramitacionInfo;
@@ -48,7 +47,6 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeFlujoTramitacion;
 import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
-import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.api.model.system.types.TypePropiedadConfiguracion;
 import es.caib.sistramit.core.service.component.integracion.CatalogoProcedimientosComponent;
@@ -424,17 +422,6 @@ public class FlujoTramitacionComponentImpl implements FlujoTramitacionComponent 
 		final DatosPersistenciaTramite tram = dao.obtenerTramitePersistencia(pIdSesionTramitacion);
 		if (tram == null) {
 			throw new TramiteNoExisteException(pIdSesionTramitacion);
-		}
-
-		// Obtenemos usuario iniciador y nivel auth de persistencia
-		final TypeAutenticacion nivelAuthIniciador = tram.getAutenticacion();
-		DatosUsuario usuarioIniciador = null;
-		if (nivelAuthIniciador != TypeAutenticacion.ANONIMO) {
-			usuarioIniciador = new DatosUsuario();
-			usuarioIniciador.setNif(tram.getNifIniciador());
-			usuarioIniciador.setNombre(tram.getNombreIniciador());
-			usuarioIniciador.setApellido1(tram.getApellido1Iniciador());
-			usuarioIniciador.setApellido2(tram.getApellido2Iniciador());
 		}
 
 		// Verificamos si usuario puede cargar el tramite

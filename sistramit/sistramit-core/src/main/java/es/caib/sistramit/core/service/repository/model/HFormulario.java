@@ -75,6 +75,7 @@ public final class HFormulario implements IModelApi {
 	private byte[] datosActuales;
 
 	/** Atributo informacion autenticación. */
+	@Lob
 	@Column(name = "SFR_INFAUT")
 	private String infoAutenticacion;
 
@@ -427,7 +428,7 @@ public final class HFormulario implements IModelApi {
 	 * @param interno
 	 *            interno a establecer
 	 */
-	public void setInterno(boolean interno) {
+	public void setInterno(final boolean interno) {
 		this.interno = interno;
 	}
 
@@ -446,7 +447,7 @@ public final class HFormulario implements IModelApi {
 	 * @param infoAutenticacion
 	 *            infoAutenticacion a establecer
 	 */
-	public void setInfoAutenticacion(String infoAutenticacion) {
+	public void setInfoAutenticacion(final String infoAutenticacion) {
 		this.infoAutenticacion = infoAutenticacion;
 	}
 
@@ -465,13 +466,13 @@ public final class HFormulario implements IModelApi {
 	 * @param idioma
 	 *            idioma a establecer
 	 */
-	public void setIdioma(String idioma) {
+	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
 
 	/**
 	 * Método de acceso a tituloProcedimiento.
-	 * 
+	 *
 	 * @return tituloProcedimiento
 	 */
 	public String getTituloProcedimiento() {
@@ -480,11 +481,11 @@ public final class HFormulario implements IModelApi {
 
 	/**
 	 * Método para establecer tituloProcedimiento.
-	 * 
+	 *
 	 * @param tituloProcedimiento
 	 *            tituloProcedimiento a establecer
 	 */
-	public void setTituloProcedimiento(String tituloProcedimiento) {
+	public void setTituloProcedimiento(final String tituloProcedimiento) {
 		this.tituloProcedimiento = tituloProcedimiento;
 	}
 

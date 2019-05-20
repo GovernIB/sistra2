@@ -52,6 +52,11 @@ public final class VariablesFlujo implements Serializable {
 	private DatosUsuario usuario;
 
 	/**
+	 * Datos del representante que esta actualmente autenticado.
+	 */
+	private DatosUsuario representante;
+
+	/**
 	 * Idioma de tramitación.
 	 */
 	private String idioma;
@@ -126,7 +131,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param entorno
 	 *            entorno a establecer
 	 */
-	public void setEntorno(TypeEntorno entorno) {
+	public void setEntorno(final TypeEntorno entorno) {
 		this.entorno = entorno;
 	}
 
@@ -145,7 +150,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param idSesionTramitacion
 	 *            idSesionTramitacion a establecer
 	 */
-	public void setIdSesionTramitacion(String idSesionTramitacion) {
+	public void setIdSesionTramitacion(final String idSesionTramitacion) {
 		this.idSesionTramitacion = idSesionTramitacion;
 	}
 
@@ -164,7 +169,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param nivelAutenticacion
 	 *            nivelAutenticacion a establecer
 	 */
-	public void setNivelAutenticacion(TypeAutenticacion nivelAutenticacion) {
+	public void setNivelAutenticacion(final TypeAutenticacion nivelAutenticacion) {
 		this.nivelAutenticacion = nivelAutenticacion;
 	}
 
@@ -183,7 +188,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param metodoAutenticacion
 	 *            metodoAutenticacion a establecer
 	 */
-	public void setMetodoAutenticacion(TypeMetodoAutenticacion metodoAutenticacion) {
+	public void setMetodoAutenticacion(final TypeMetodoAutenticacion metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
 	}
 
@@ -202,7 +207,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param usuario
 	 *            usuario a establecer
 	 */
-	public void setUsuario(DatosUsuario usuario) {
+	public void setUsuario(final DatosUsuario usuario) {
 		this.usuario = usuario;
 	}
 
@@ -221,7 +226,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param idioma
 	 *            idioma a establecer
 	 */
-	public void setIdioma(String idioma) {
+	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
 
@@ -240,7 +245,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param urlInicioTramite
 	 *            urlInicioTramite a establecer
 	 */
-	public void setUrlInicioTramite(String urlInicioTramite) {
+	public void setUrlInicioTramite(final String urlInicioTramite) {
 		this.urlInicioTramite = urlInicioTramite;
 	}
 
@@ -259,7 +264,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param idTramite
 	 *            idTramite a establecer
 	 */
-	public void setIdTramite(String idTramite) {
+	public void setIdTramite(final String idTramite) {
 		this.idTramite = idTramite;
 	}
 
@@ -278,7 +283,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param versionTramite
 	 *            versionTramite a establecer
 	 */
-	public void setVersionTramite(int versionTramite) {
+	public void setVersionTramite(final int versionTramite) {
 		this.versionTramite = versionTramite;
 	}
 
@@ -297,7 +302,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param tituloTramite
 	 *            tituloTramite a establecer
 	 */
-	public void setTituloTramite(String tituloTramite) {
+	public void setTituloTramite(final String tituloTramite) {
 		this.tituloTramite = tituloTramite;
 	}
 
@@ -316,7 +321,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param parametrosInicio
 	 *            parametrosInicio a establecer
 	 */
-	public void setParametrosInicio(Map<String, String> parametrosInicio) {
+	public void setParametrosInicio(final Map<String, String> parametrosInicio) {
 		this.parametrosInicio = parametrosInicio;
 	}
 
@@ -335,7 +340,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param datosTramiteCP
 	 *            datosTramiteCP a establecer
 	 */
-	public void setDatosTramiteCP(DefinicionTramiteCP datosTramiteCP) {
+	public void setDatosTramiteCP(final DefinicionTramiteCP datosTramiteCP) {
 		this.datosTramiteCP = datosTramiteCP;
 	}
 
@@ -354,7 +359,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param documentos
 	 *            documentos a establecer
 	 */
-	public void setDocumentos(List<DatosDocumento> documentos) {
+	public void setDocumentos(final List<DatosDocumento> documentos) {
 		this.documentos = documentos;
 	}
 
@@ -373,7 +378,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param fechaInicioPlazo
 	 *            fechaInicioPlazo a establecer
 	 */
-	public void setFechaInicioPlazo(Date fechaInicioPlazo) {
+	public void setFechaInicioPlazo(final Date fechaInicioPlazo) {
 		this.fechaInicioPlazo = fechaInicioPlazo;
 	}
 
@@ -392,7 +397,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param fechaFinPlazo
 	 *            fechaFinPlazo a establecer
 	 */
-	public void setFechaFinPlazo(Date fechaFinPlazo) {
+	public void setFechaFinPlazo(final Date fechaFinPlazo) {
 		this.fechaFinPlazo = fechaFinPlazo;
 	}
 
@@ -411,7 +416,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param debugEnabled
 	 *            debugEnabled a establecer
 	 */
-	public void setDebugEnabled(boolean debugEnabled) {
+	public void setDebugEnabled(final boolean debugEnabled) {
 		this.debugEnabled = debugEnabled;
 	}
 
@@ -446,7 +451,7 @@ public final class VariablesFlujo implements Serializable {
 	 * @param usuarioAutenticado
 	 *            usuarioAutenticado a establecer
 	 */
-	public void setUsuarioAutenticado(UsuarioAutenticadoInfo usuarioAutenticado) {
+	public void setUsuarioAutenticado(final UsuarioAutenticadoInfo usuarioAutenticado) {
 		this.usuarioAutenticado = usuarioAutenticado;
 	}
 
@@ -475,6 +480,25 @@ public final class VariablesFlujo implements Serializable {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Método de acceso a representante.
+	 * 
+	 * @return representante
+	 */
+	public DatosUsuario getRepresentante() {
+		return representante;
+	}
+
+	/**
+	 * Método para establecer representante.
+	 * 
+	 * @param representante
+	 *            representante a establecer
+	 */
+	public void setRepresentante(final DatosUsuario representante) {
+		this.representante = representante;
 	}
 
 }

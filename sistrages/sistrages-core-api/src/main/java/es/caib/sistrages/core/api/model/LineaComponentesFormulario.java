@@ -173,4 +173,50 @@ public final class LineaComponentesFormulario extends ObjetoFormulario
 		}
 
 	}
+
+	/**
+	 * Evalua si cabe el componente en la linea.
+	 *
+	 * @param pNumColumnasElemento
+	 *            num. de columnas del elemento a insertar
+	 * @return true, si cabe
+	 */
+	public boolean cabeComponente(final int pNumColumnasElemento) {
+		boolean res = true;
+
+		if (!componentes.isEmpty()) {
+			int ncolumnas = pNumColumnasElemento;
+
+			for (final ComponenteFormulario elementoFormulario : componentes) {
+				switch (elementoFormulario.getTipo()) {
+				case SECCION:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				case ETIQUETA:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				case CAMPO_TEXTO:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				case SELECTOR:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				case CHECKBOX:
+					ncolumnas += elementoFormulario.getNumColumnas();
+					break;
+				default:
+					break;
+				}
+
+				if (ncolumnas > ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA) {
+					res = false;
+					break;
+				}
+			}
+		} else if (pNumColumnasElemento > ConstantesDisenyo.NUM_MAX_COMPONENTES_LINEA) {
+			res = false;
+		}
+
+		return res;
+	}
 }

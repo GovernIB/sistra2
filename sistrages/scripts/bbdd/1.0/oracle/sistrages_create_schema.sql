@@ -883,7 +883,8 @@ create table STG_FORCIN
    CIN_DOMCCD           VARCHAR2(100 CHAR),
    CIN_DOMCDS           VARCHAR2(100 CHAR),
    CIN_INDICE           NUMBER(1)            default 0 not null,
-   CIN_ALTURA           NUMBER(2)            default 1 not null
+   CIN_ALTURA           NUMBER(2)            default 1 not null,
+   CIN_ORIENTA          VARCHAR2(1 CHAR)     default 'V' not null
 );
 
 comment on table STG_FORCIN is
@@ -920,6 +921,9 @@ comment on column STG_FORCIN.CIN_INDICE is
 
 comment on column STG_FORCIN.CIN_ALTURA is
 'Indica altura del selector';
+
+comment on column STG_FORCIN.CIN_ORIENTA is
+'Indica orientación (selección única): Horizontal (H) / Vertical (V)';
 
 alter table STG_FORCIN
    add constraint STG_FORCIN_PK primary key (CIN_CODIGO);

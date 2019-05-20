@@ -14,55 +14,38 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	/** Serial version UID. **/
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * tipo campo indexado.
-	 */
+	/** tipo campo indexado. */
 	private TypeCampoIndexado tipoCampoIndexado;
 
-	/**
-	 * tipo lista valores.
-	 */
+	/** tipo lista valores. */
 	private TypeListaValores tipoListaValores;
 
-	/**
-	 * script valores posibles.
-	 */
+	/** script valores posibles. */
 	private Script scriptValoresPosibles;
 
-	/**
-	 * codDominio.
-	 */
+	/** codDominio. */
 	private Long codDominio;
 
-	/**
-	 * campo codDominio codigo.
-	 */
+	/** campo codDominio codigo. */
 	private String campoDominioCodigo;
 
-	/**
-	 * campo codDominio descripcion.
-	 */
+	/** campo codDominio descripcion. */
 	private String campoDominioDescripcion;
 
-	/**
-	 * indice alfabetico.
-	 */
+	/** indice alfabetico. */
 	private boolean indiceAlfabetico;
 
-	/**
-	 * lista parametros codDominio.
-	 */
+	/** lista parametros codDominio. */
 	private List<ParametroDominio> listaParametrosDominio;
 
-	/**
-	 * lista valor lista fija.
-	 */
+	/** lista valor lista fija. */
 	private List<ValorListaFija> listaValorListaFija;
 
-	/**
-	 * altura.
-	 */
+	/** altura. */
 	private int altura;
+
+	/** Orientacion. **/
+	private String orientacion;
 
 	/**
 	 * Crea una nueva instancia de ComponenteFormularioCampoSelector.
@@ -259,6 +242,21 @@ public final class ComponenteFormularioCampoSelector extends ComponenteFormulari
 	 */
 	public void setAltura(final int altura) {
 		this.altura = altura;
+	}
+
+	/**
+	 * @return the orientacion
+	 */
+	public String getOrientacion() {
+		return orientacion;
+	}
+
+	/**
+	 * @param orientacion
+	 *            the orientacion to set
+	 */
+	public void setOrientacion(final String orientacion) {
+		this.orientacion = orientacion;
 	}
 
 }

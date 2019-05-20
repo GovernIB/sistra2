@@ -66,7 +66,8 @@ public class DialogMoverTramite extends DialogControllerBase {
 		}
 
 		// Realizamos update
-		tramiteService.changeAreaTramite(idAreaDestino, data.getCodigo(), data.getIdArea());
+		tramiteService.changeAreaTramite(idAreaDestino, data.getCodigo(), data.getIdArea(),
+				UtilJSF.getSessionBean().getUserName());
 
 		// Retornamos resultado
 		final DialogResult result = new DialogResult();

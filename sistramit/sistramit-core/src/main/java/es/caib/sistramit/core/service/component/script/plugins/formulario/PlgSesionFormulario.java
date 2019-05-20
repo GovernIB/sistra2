@@ -5,6 +5,7 @@ import es.caib.sistramit.core.service.component.script.plugins.ClzDatosUsuario;
 import es.caib.sistramit.core.service.model.formulario.interno.VariablesFormulario;
 import es.caib.sistramit.core.service.model.script.ClzDatosUsuarioInt;
 import es.caib.sistramit.core.service.model.script.formulario.PlgSesionFormularioInt;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
 /**
  * Plugin de acceso a los datos de la sesión de tramitación.
@@ -65,7 +66,12 @@ public final class PlgSesionFormulario implements PlgSesionFormularioInt {
 	}
 
 	@Override
-	public String getParametro(String idParametro) {
+	public ClzDatosUsuarioInt getRepresentante() {
+		return new ClzDatosUsuario(UtilsFlujo.getDatosRepresentante(variablesFormulario.getUsuarioAutenticado()));
+	}
+
+	@Override
+	public String getParametro(final String idParametro) {
 		return variablesFormulario.getParametrosApertura().getParametro(idParametro);
 	}
 

@@ -45,6 +45,7 @@ import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
 import es.caib.sistrages.core.service.component.AreaComponent;
+import es.caib.sistrages.core.service.component.TramiteComponent;
 import es.caib.sistrages.core.service.component.ValidadorComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
@@ -139,6 +140,9 @@ public class TramiteServiceImpl implements TramiteService {
 
 	@Autowired
 	ScriptDao scriptDao;
+
+	@Autowired
+	TramiteComponent tramiteComponent;
 
 	/*
 	 * (non-Javadoc)
@@ -320,9 +324,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public void addTramiteVersion(final TramiteVersion tramiteVersion, final String idTramite, final String usuario) {
-		final Long idTramiteVersion = tramiteDao.addTramiteVersion(tramiteVersion, idTramite);
-		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.CREACION, "");
-		historialVersionDao.add(idTramiteVersion, usuario, TypeAccionHistorial.BLOQUEAR, "");
+		tramiteComponent.addTramiteVersion(tramiteVersion, idTramite, usuario);
 	}
 
 	/*
@@ -416,10 +418,21 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public void changeAreaTramite(final Long idArea, final Long idTramite, final Long idAreaAntigua) {
+	public void changeAreaTramite(final Long idArea, final Long idTramite, final Long idAreaAntigua,
+			final String usuario) {
 		tramiteDao.changeAreaTramite(idArea, idTramite);
+		final Area areaAntigua = areaDao.getById(idAreaAntigua);
 		dominiosDao.borrarReferencias(idTramite, idAreaAntigua);
 		formularioInternoDao.borrarReferencias(idTramite, idAreaAntigua);
+
+		final List<TramiteVersion> versiones = tramiteDao.getTramitesVersion(idTramite, null);
+		if (versiones != null) {
+			for (final TramiteVersion version : versiones) {
+				tramiteDao.incrementarRelease(version.getCodigo());
+				historialVersionDao.add(version.getCodigo(), usuario, TypeAccionHistorial.MOVER_TRAMITE,
+						"Tràmit mogut des de l'àrea " + areaAntigua.getCodigoDIR3Entidad());
+			}
+		}
 	}
 
 	/*
@@ -497,9 +510,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public FormularioTramite addFormularioTramite(final FormularioTramite formularioTramite, final Long idTramitePaso) {
-		// Primero creamos el formulario interno y luego el formulario tramite.
-		final Long idFormularioInterno = formularioInternoDao.addFormulario(formularioTramite);
-		return tramitePasoDao.addFormularioTramite(formularioTramite, idTramitePaso, idFormularioInterno);
+		return tramiteComponent.addFormularioTramite(formularioTramite, idTramitePaso);
 	}
 
 	/*
@@ -525,7 +536,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public Documento addDocumentoTramite(final Documento documento, final Long idTramitePaso) {
-		return tramitePasoDao.addDocumentoTramite(documento, idTramitePaso);
+		return tramiteComponent.addDocumentoTramite(documento, idTramitePaso);
 	}
 
 	/*
@@ -589,7 +600,7 @@ public class TramiteServiceImpl implements TramiteService {
 	@Override
 	@NegocioInterceptor
 	public Tasa addTasaTramite(final Tasa tasa, final Long idTramitePaso) {
-		return tramitePasoDao.addTasaTramite(tasa, idTramitePaso);
+		return tramiteComponent.addTasaTramite(tasa, idTramitePaso);
 	}
 
 	/*
@@ -721,8 +732,8 @@ public class TramiteServiceImpl implements TramiteService {
 	 */
 	@Override
 	@NegocioInterceptor
-	public boolean tieneTramiteNumVersionRepetida(final Long idTramite, final int release) {
-		return tramiteDao.tieneTramiteNumVersionRepetido(idTramite, release);
+	public boolean tieneTramiteNumVersionRepetida(final Long idTramite, final int numVersion) {
+		return tramiteDao.tieneTramiteNumVersionRepetido(idTramite, numVersion);
 	}
 
 	/*
@@ -1060,6 +1071,37 @@ public class TramiteServiceImpl implements TramiteService {
 	@NegocioInterceptor
 	public void updateScript(final Script pScript) {
 		scriptDao.updateScript(pScript);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TramiteVersion createTramiteVersionDefault(final Integer pNumVersion, final String pIdiomasSoportados,
+			final String pDatosUsuarioBloqueo) {
+		return tramiteComponent.createTramiteVersionDefault(pNumVersion, pIdiomasSoportados, pDatosUsuarioBloqueo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<TramitePaso> createListaPasosNormalizado() {
+		return tramiteComponent.createNormalizado();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Documento createDocumentoDefault() {
+		return tramiteComponent.createDocumentoDefault();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Tasa createTasaDefault() {
+		return tramiteComponent.createTasaDefault();
+	}
+
+	@Override
+	@NegocioInterceptor
+	public FormularioTramite createFormularioTramiteDefault() {
+		return tramiteComponent.createFormularioTramiteDefault();
 	}
 
 }

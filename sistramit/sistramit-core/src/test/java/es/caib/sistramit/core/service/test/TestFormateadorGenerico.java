@@ -53,6 +53,7 @@ public class TestFormateadorGenerico {
 		pValores.add(new ValorCampoSimple("ID_1540200310032", "Pepe"));
 		pValores.add(new ValorCampoSimple("ID_1540217970178", "López"));
 		pValores.add(new ValorCampoSimple("ID_1540218013263", "Pérez"));
+		pValores.add(new ValorCampoSimple("ID_FECHA", "2019-01-01"));
 
 		// Sección Estudios universitarios
 		final ValorCampoListaIndexados listaTitulos = new ValorCampoListaIndexados();

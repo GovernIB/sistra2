@@ -103,7 +103,7 @@
                 "etiqueta": "Apellido 2",
                 "mostrarEtiqueta": true,
                 "alineacion": "I",
-                "columnas": 2,
+                "columnas": 1,
                 "ayuda": "",
                 "propiedadesCampo": {
                     "obligatorio": false,
@@ -114,6 +114,44 @@
                     "scriptValidacion": null
                 },
                 "tipoTexto": null,
+                "textoNormal": {
+                    "tamanyoMax": 0,
+                    "multilinea": false
+                },
+                "textoNumero": {
+                    "precisionEntera": 0,
+                    "precisionDecimal": 0,
+                    "formatoNumero": null,
+                    "rango": false,
+                    "rangoDesde": 0,
+                    "rangoHasta": 0,
+                    "negativos": false
+                },
+                "textoIdentificacion": {
+                    "nif": false,
+                    "cif": false,
+                    "nie": false,
+                    "nss": false
+                },
+                "textoExpRegular": null
+            }, {
+                "type": "RComponenteTextbox",
+                "identificador": "ID_FECHA",
+                "tipo": "CT",
+                "etiqueta": "Fecha",
+                "mostrarEtiqueta": true,
+                "alineacion": "I",
+                "columnas": 1,
+                "ayuda": "",
+                "propiedadesCampo": {
+                    "obligatorio": false,
+                    "soloLectura": false,
+                    "noModificable": false,
+                    "scriptAutorrellenable": null,
+                    "scriptEstado": null,
+                    "scriptValidacion": null
+                },
+                "tipoTexto": "FECHA",
                 "textoNormal": {
                     "tamanyoMax": 0,
                     "multilinea": false

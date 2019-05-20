@@ -56,8 +56,16 @@ public interface PlgSesionFormularioInt extends PluginScriptPlg {
 	ClzDatosUsuarioInt getUsuario();
 
 	/**
+	 * Devuelve representante usuario autenticado. Sólo para trámites que se han
+	 * iniciado de forma autenticada.
+	 *
+	 * @return Devuelve usuario (null si no hay representante).
+	 */
+	ClzDatosUsuarioInt getRepresentante();
+
+	/**
 	 * Obtiene datos apertura formulario.
-	 * 
+	 *
 	 * @param idParametro
 	 *            id parámetro
 	 * @return parámetro

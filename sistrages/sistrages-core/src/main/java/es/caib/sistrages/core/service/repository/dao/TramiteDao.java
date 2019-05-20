@@ -174,13 +174,13 @@ public interface TramiteDao {
 	boolean tieneTramiteVersion(Long idTramite);
 
 	/**
-	 * Tiene release repetida.
+	 * Tiene version repetida.
 	 *
 	 * @param idTramite
-	 * @param release
+	 * @param numVersion
 	 * @return
 	 */
-	boolean tieneTramiteNumVersionRepetido(Long idTramite, int release);
+	boolean tieneTramiteNumVersionRepetido(Long idTramite, int numVersion);
 
 	/**
 	 * Obtiene la release máxima del tramite (por defecto, es 0).
@@ -328,4 +328,10 @@ public interface TramiteDao {
 	 */
 	void updateLiteral(Literal pLiteral);
 
+	/**
+	 * Incrementar version de una version.
+	 * 
+	 * @param codigo
+	 */
+	void incrementarRelease(Long idTramiteVersion);
 }
