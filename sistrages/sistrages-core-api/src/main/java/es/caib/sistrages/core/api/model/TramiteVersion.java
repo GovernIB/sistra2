@@ -670,6 +670,50 @@ public class TramiteVersion extends ModelApi {
 	}
 
 	/**
+	 * OBtiene el paso de rellenar, si lo tiene.
+	 *
+	 * @return
+	 */
+	public TramitePasoRellenar getPasoRellenar() {
+		TramitePasoRellenar pasoRellenar = null;
+		if (listaPasos != null) {
+			for (final TramitePaso paso : this.listaPasos) {
+				if (paso instanceof TramitePasoRellenar) {
+					pasoRellenar = (TramitePasoRellenar) paso;
+					break;
+				}
+			}
+		}
+		return pasoRellenar;
+	}
+
+	public TramitePasoAnexar getPasoAnexar() {
+		TramitePasoAnexar pasoAnexar = null;
+		if (listaPasos != null) {
+			for (final TramitePaso paso : this.listaPasos) {
+				if (paso instanceof TramitePasoAnexar) {
+					pasoAnexar = (TramitePasoAnexar) paso;
+					break;
+				}
+			}
+		}
+		return pasoAnexar;
+	}
+
+	public TramitePasoTasa getPasoTasa() {
+		TramitePasoTasa pasoTasa = null;
+		if (listaPasos != null) {
+			for (final TramitePaso paso : this.listaPasos) {
+				if (paso instanceof TramitePasoTasa) {
+					pasoTasa = (TramitePasoTasa) paso;
+					break;
+				}
+			}
+		}
+		return pasoTasa;
+	}
+
+	/**
 	 * @return the fechaUltima
 	 */
 	public Date getFechaUltima() {
@@ -688,7 +732,7 @@ public class TramiteVersion extends ModelApi {
 		return listaAuxDominios;
 	}
 
-	public void setListaAuxDominios(List<Dominio> listaAuxDominios) {
+	public void setListaAuxDominios(final List<Dominio> listaAuxDominios) {
 		this.listaAuxDominios = listaAuxDominios;
 	}
 

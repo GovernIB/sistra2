@@ -6,6 +6,7 @@ import java.util.List;
 import es.caib.sistramit.core.api.model.comun.types.TypeEntorno;
 import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.service.model.formulario.ParametrosAperturaFormulario;
@@ -35,6 +36,10 @@ public final class VariablesFormulario implements Serializable {
 	 * Usuario que rellena el formulario (si esta autenticado).
 	 */
 	private DatosUsuario usuario;
+	/**
+	 * Usuario autenticado.
+	 */
+	private UsuarioAutenticadoInfo usuarioAutenticado;
 	/**
 	 * Parámetros de apertura del formulario.
 	 */
@@ -210,7 +215,7 @@ public final class VariablesFormulario implements Serializable {
 
 	/**
 	 * Método de acceso a metodoAutenticacion.
-	 * 
+	 *
 	 * @return metodoAutenticacion
 	 */
 	public TypeMetodoAutenticacion getMetodoAutenticacion() {
@@ -219,12 +224,31 @@ public final class VariablesFormulario implements Serializable {
 
 	/**
 	 * Método para establecer metodoAutenticacion.
-	 * 
+	 *
 	 * @param metodoAutenticacion
 	 *            metodoAutenticacion a establecer
 	 */
-	public void setMetodoAutenticacion(TypeMetodoAutenticacion metodoAutenticacion) {
+	public void setMetodoAutenticacion(final TypeMetodoAutenticacion metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a usuarioAutenticado.
+	 * 
+	 * @return usuarioAutenticado
+	 */
+	public UsuarioAutenticadoInfo getUsuarioAutenticado() {
+		return usuarioAutenticado;
+	}
+
+	/**
+	 * Método para establecer usuarioAutenticado.
+	 * 
+	 * @param usuarioAutenticado
+	 *            usuarioAutenticado a establecer
+	 */
+	public void setUsuarioAutenticado(final UsuarioAutenticadoInfo usuarioAutenticado) {
+		this.usuarioAutenticado = usuarioAutenticado;
 	}
 
 }

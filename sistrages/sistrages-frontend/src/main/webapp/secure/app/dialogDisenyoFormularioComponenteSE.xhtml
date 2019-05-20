@@ -7,6 +7,7 @@
 
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeCampoIndexado" var="TypeCampoIndexado"/>
 	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeListaValores" var="TypeListaValores"/>
+	<p:importEnum type="es.caib.sistrages.core.api.model.types.TypeOrientacion" var="TypeOrientacion"/>
 
 	<h:column><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tipo']}" /></h:column>
 	<h:column>
@@ -14,6 +15,14 @@
 		    <p:ajax event="blur" process="@this"/>
 		    <p:ajax event="change" update="panelPropietats" />
 		    <f:selectItems value="#{TypeCampoIndexado.ALL_VALUES}" var="tipoCampoIndexado" itemLabel="#{msg['typeCampoIndexado.' += tipoCampoIndexado.name()]}" />
+		</p:selectOneMenu>
+	</h:column>
+
+	<h:column rendered="#{dialogDisenyoFormulario.isListaSeleccionUnica()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.orientacion']}" /></h:column>
+	<h:column rendered="#{dialogDisenyoFormulario.isListaSeleccionUnica()}">
+		<p:selectOneMenu id="tipoOrientacion" value="#{dialogDisenyoFormulario.objetoFormularioEdit.orientacion}" disabled="#{dialogDisenyoFormulario.consulta}">
+		    <p:ajax event="blur" process="@this" />
+		    <f:selectItems value="#{TypeOrientacion.ALL_VALUES}" var="tipoOrientacion" itemLabel="#{msg['typeOrientacion.' += tipoOrientacion.name()]}"  itemValue="#{tipoOrientacion.toString()}" />
 		</p:selectOneMenu>
 	</h:column>
 
@@ -63,7 +72,7 @@
 			<p:ajax event="dialogReturn" listener="#{dialogDisenyoFormulario.returnDialogoParametrosDominioCIN}" update="growlDisenyoFormulario"/>
 		</p:commandButton>
 	</h:column>
-	
+
 	<h:column rendered="#{dialogDisenyoFormulario.isListaDesplegable()}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.indiceAlfabetico']}"/></h:column>
 	<h:column rendered="#{dialogDisenyoFormulario.isListaDesplegable()}">
 		<p:outputPanel>

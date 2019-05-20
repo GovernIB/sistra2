@@ -24,7 +24,6 @@ import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ErrorScriptException;
 import es.caib.sistramit.core.api.exception.TimestampFlujoException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
-import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.flujo.DetallePaso;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
@@ -143,21 +142,9 @@ public final class ModificacionesFlujoImpl implements ModificacionesFlujo {
 		vf.setEntorno(pDatosSesion.getDatosTramite().getEntorno());
 		vf.setDebugEnabled(UtilsSTG.isDebugEnabled(pDatosSesion.getDefinicionTramite()));
 		vf.setDatosTramiteCP(pDatosSesion.getDatosTramite().getDefinicionTramiteCP());
-
 		vf.setMetodoAutenticacion(pDatosSesion.getDatosTramite().getMetodoAutenticacionInicio());
 		vf.setNivelAutenticacion(pDatosSesion.getDatosTramite().getNivelAutenticacion());
-
-		DatosUsuario du = null;
-		if (pDatosSesion.getDatosTramite().getNivelAutenticacion() == TypeAutenticacion.AUTENTICADO) {
-			du = new DatosUsuario();
-			du.setNif(pDatosSesion.getDatosTramite().getIniciador().getNif());
-			du.setNombre(pDatosSesion.getDatosTramite().getIniciador().getNombre());
-			du.setApellido1(pDatosSesion.getDatosTramite().getIniciador().getApellido1());
-			du.setApellido2(pDatosSesion.getDatosTramite().getIniciador().getApellido2());
-			du.setCorreo(pDatosSesion.getDatosTramite().getIniciador().getCorreo());
-		}
-
-		vf.setUsuario(du);
+		vf.setUsuario(pDatosSesion.getDatosTramite().getIniciador());
 		vf.setUsuarioAutenticado(pDatosSesion.getDatosTramite().getUsuarioAutenticado());
 		vf.setParametrosInicio(pDatosSesion.getDatosTramite().getParametrosInicio());
 

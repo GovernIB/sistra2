@@ -125,8 +125,12 @@ public interface TramiteService {
 	 *            id área
 	 * @param idTramite
 	 *            id trámite
+	 * @param idAreaAntigua
+	 *            id área antes asociado
+	 * @param usuario
+	 *            Nick del usuario
 	 */
-	public void changeAreaTramite(Long idArea, Long idTramite, final Long idAreaAntigua);
+	public void changeAreaTramite(Long idArea, Long idTramite, final Long idAreaAntigua, final String usuario);
 
 	/**
 	 * Elimina un Tramite.
@@ -391,13 +395,13 @@ public interface TramiteService {
 	public boolean tieneTramiteVersion(Long idTramite);
 
 	/**
-	 * Comprueba si tiene la release repetida.
+	 * Comprueba si tiene la version repetida.
 	 *
 	 * @param idTramite
-	 * @param release
+	 * @param version
 	 * @return
 	 */
-	public boolean tieneTramiteNumVersionRepetida(Long idTramite, int release);
+	public boolean tieneTramiteNumVersionRepetida(Long idTramite, int numVersion);
 
 	/**
 	 * Obtiene la num version de un trámite.
@@ -639,7 +643,6 @@ public interface TramiteService {
 	 */
 	public void permiteSubsanacion(Long idPaso, boolean activarSubsanacion);
 
-
 	/**
 	 * Actualiza literal.
 	 *
@@ -655,5 +658,33 @@ public interface TramiteService {
 	 *            script
 	 */
 	void updateScript(Script pScript);
+
+	/**
+	 * Crea TramiteVersion por defecto.
+	 *
+	 * @param pNumVersion
+	 *            num version
+	 * @param pIdiomasSoportados
+	 *            idiomas soportados
+	 * @param pDatosUsuarioBloqueo
+	 *            datos usuario bloqueo
+	 * @return the tramite version
+	 */
+
+	TramiteVersion createTramiteVersionDefault(Integer pNumVersion, String pIdiomasSoportados,
+			String pDatosUsuarioBloqueo);
+
+	/**
+	 * Crea lista de pasos normalizado.
+	 *
+	 * @return lista de pasos normalizado
+	 */
+	List<TramitePaso> createListaPasosNormalizado();
+
+	Documento createDocumentoDefault();
+
+	Tasa createTasaDefault();
+
+	FormularioTramite createFormularioTramiteDefault();
 
 }

@@ -23,6 +23,7 @@ import es.caib.sistramit.core.api.model.security.ConstantesSeguridad;
 import es.caib.sistramit.core.api.model.security.InfoLoginTramite;
 import es.caib.sistramit.core.api.model.security.SesionInfo;
 import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoInfo;
+import es.caib.sistramit.core.api.model.security.UsuarioAutenticadoRepresentante;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.system.rest.externo.InfoTicketAcceso;
@@ -85,7 +86,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	@NegocioInterceptor
-	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(String idSesionTramitacion) {
+	public InfoLoginTramite obtenerInfoLoginTramiteAnonimoPersistente(final String idSesionTramitacion) {
 		final DatosPersistenciaTramite dpt = flujoTramiteDao.obtenerTramitePersistencia(idSesionTramitacion);
 		final InfoLoginTramite infoLogin = generarInfoLoginTramite(dpt.getIdTramite(), dpt.getVersionTramite(),
 				dpt.getIdTramiteCP(), dpt.isServicioCP(), dpt.getIdioma());
@@ -96,8 +97,8 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarSesionAutenticacion(final String idEntidad, final String lang,
-			List<TypeAutenticacion> authList, String qaa, final String urlCallback, final String urlCallbackError,
-			final boolean debug) {
+			final List<TypeAutenticacion> authList, final String qaa, final String urlCallback,
+			final String urlCallbackError, final boolean debug) {
 		final String urlAutenticacion = autenticacionComponent.iniciarSesionAutenticacion(idEntidad, lang, authList,
 				qaa, urlCallback, urlCallbackError, debug);
 		return urlAutenticacion;
@@ -132,13 +133,23 @@ public class SecurityServiceImpl implements SecurityService {
 		u.setMetodoAutenticacion(usuario.getMetodoAutenticacion());
 		u.setSesionInfo(sesionInfo);
 
+		if (usuario.getRepresentante() != null) {
+			final UsuarioAutenticadoRepresentante representante = new UsuarioAutenticadoRepresentante();
+			representante.setNif(usuario.getRepresentante().getNif());
+			representante.setNombre(usuario.getRepresentante().getNombre());
+			representante.setApellido1(usuario.getRepresentante().getApellido1());
+			representante.setApellido2(usuario.getRepresentante().getApellido2());
+			representante.setEmail(usuario.getRepresentante().getEmail());
+			u.setRepresentante(representante);
+		}
+
 		return u;
 
 	}
 
 	@Override
 	@NegocioInterceptor
-	public UsuarioAutenticadoInfo validarUsuarioAnonimo(SesionInfo sesionInfo) {
+	public UsuarioAutenticadoInfo validarUsuarioAnonimo(final SesionInfo sesionInfo) {
 		final UsuarioAutenticadoInfo u = new UsuarioAutenticadoInfo();
 		u.setUsername(ConstantesSeguridad.ANONIMO_USER);
 		u.setAutenticacion(TypeAutenticacion.ANONIMO);
@@ -161,7 +172,7 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	@Override
-	public RetornoPago obtenerTicketPago(String ticket) {
+	public RetornoPago obtenerTicketPago(final String ticket) {
 		return pagoExternoDao.obtenerTicketPago(ticket);
 	}
 
@@ -211,7 +222,7 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	@Override
-	public InfoTicketAcceso obtenerTicketAccesoCDC(String ticket) {
+	public InfoTicketAcceso obtenerTicketAccesoCDC(final String ticket) {
 		return ticketCDCDao.obtieneTicketAcceso(ticket);
 	}
 

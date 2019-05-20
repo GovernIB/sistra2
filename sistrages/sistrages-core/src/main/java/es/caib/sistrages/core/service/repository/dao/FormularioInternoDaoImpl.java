@@ -29,6 +29,7 @@ import es.caib.sistrages.core.api.model.ObjetoFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaFormulario;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
+import es.caib.sistrages.core.api.model.Script;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioComponenteSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioPaginaSimple;
 import es.caib.sistrages.core.api.model.comun.DisenyoFormularioSimple;
@@ -597,7 +598,7 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				jCampoIndexado.setTipoCampoIndexado(campoIndexado.getTipoCampoIndexado().name());
 				jCampoIndexado.setTipoListaValores(campoIndexado.getTipoListaValores().toString());
 				jCampoIndexado.setIndiceAlfabetico(campoIndexado.isIndiceAlfabetico());
-
+				jCampoIndexado.setOrientacion(campoIndexado.getOrientacion());
 				if (TypeListaValores.FIJA.equals(campoIndexado.getTipoListaValores())) {
 					jCampoIndexado = JCampoFormularioIndexado.mergeListaValoresFijaModel(jCampoIndexado, campoIndexado);
 				} else if (!campoIndexado.getListaValorListaFija().isEmpty()) {
@@ -964,6 +965,11 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 		final JFormulario jFormulario = entityManager.find(JFormulario.class, idFormulario);
 		final JPaginaFormulario jpagina = JPaginaFormulario.fromModel(paginaFormulario);
+		jpagina.setOrden(paginaFormulario.getOrden());
+		jpagina.setPaginaFinal(paginaFormulario.isPaginaFinal());
+		if (paginaFormulario.getScriptValidacion() != null) {
+			jpagina.setScriptValidacion(JScript.fromModel(Script.clonar(paginaFormulario.getScriptValidacion())));
+		}
 		jpagina.setFormulario(jFormulario);
 		entityManager.persist(jpagina);
 		return jpagina.getCodigo();

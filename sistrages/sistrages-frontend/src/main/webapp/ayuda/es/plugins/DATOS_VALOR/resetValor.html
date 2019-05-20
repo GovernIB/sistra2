@@ -28,21 +28,12 @@
 </p>
 <p>
 	<ul>
-    	<li>Método que elimina todos los valores asociados a este objeto.</li>
+    	<li>Método que resetea el campo actual.</li>
 	</ul>
 </p>
 <p>
 	<b>EJEMPLOS</b>
-</p>
-<p>Para ver la funcionalidad de esta función, primero añadimos elementos al actual campo, en este caso, el campo, indica el municipio de un usuario:</p>
- <p class="codigoScript">
-var municipios = DATOS_VALOR.crearValorMultiple();
-municipios.addValor('0337','Manacor');
-municipios.addValor('0407','Palma de Mallorca');
-municipios.addValor('2060','Eivissa');
-DATOS_VALOR.setValorMultiple('municipios', municipios);
-</p>
-<p> ahora el campo actual tiene 3 valores correspondientes a municipios de les Illes Balears, si en este punto podemos inferir de otros campos que el usuario no pertenece a Les Illes Balears, existe la opción de borrar todos los valores mediante la siguiente sentencia: </p>
+<p>Pongamos por caso que el campo tiene valor y queremos vaciarlo en una situación determinado. El reset nos permitirá vaciar el campo: </p>
 <p class="codigoScript">
 DATOS_VALOR.resetValor();
 </p>

@@ -11,9 +11,6 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
-import es.caib.sistrages.core.api.model.types.TypePresentacion;
-import es.caib.sistrages.core.api.model.types.TypeTamanyo;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -65,13 +62,7 @@ public class DialogDefinicionVersionAnexarDocumentos extends DialogControllerBas
 	 * Init.
 	 */
 	public void init() {
-		data = new Documento();
-		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		data.setTipoTamanyo(TypeTamanyo.KILOBYTES);
-		data.setTipoPresentacion(TypePresentacion.ELECTRONICA);
-		data.setNumeroInstancia(1);
-		data.setExtensiones("pdf;doc");
-		data.setTamanyoMaximo(1024);
+		data = tramiteService.createDocumentoDefault();
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 	}

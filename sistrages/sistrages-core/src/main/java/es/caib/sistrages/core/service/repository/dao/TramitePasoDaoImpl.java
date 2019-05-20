@@ -598,7 +598,8 @@ public class TramitePasoDaoImpl implements TramitePasoDao {
 							.setPermitirAccionesPersonalizadas(formularioInterno.isPermitirAccionesPersonalizadas());
 					if (formularioInterno.getScriptPlantilla() != null) {
 						formularioInterno.getScriptPlantilla().setCodigo(null);
-						disenyoFormularioAlmacenado.setScriptPlantilla(formularioInterno.getScriptPlantilla());
+						disenyoFormularioAlmacenado
+								.setScriptPlantilla(Script.clonar(formularioInterno.getScriptPlantilla()));
 					}
 
 					if (formularioInterno.getTextoCabecera() != null) {

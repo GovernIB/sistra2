@@ -12,15 +12,21 @@ import es.caib.sistrages.rest.api.interna.RComponenteSelector;
 import es.caib.sistrages.rest.api.interna.RPaginaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
 import es.caib.sistramit.core.api.exception.CampoFormularioNoExisteException;
+import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioCaracteresNoPermitidosException;
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoSelector;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
 import es.caib.sistramit.core.api.model.formulario.PaginaFormularioData;
 import es.caib.sistramit.core.api.model.formulario.ResultadoEvaluarCambioCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
+import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorResetCampos;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
 import es.caib.sistramit.core.service.component.script.RespuestaScript;
 import es.caib.sistramit.core.service.component.script.ScriptExec;
 import es.caib.sistramit.core.service.component.script.plugins.formulario.ResEstadoCampo;
@@ -49,8 +55,8 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	private ConfiguracionFormularioHelper configuracionFormularioHelper;
 
 	@Override
-	public ResultadoEvaluarCambioCampo calcularDatosPaginaCambioCampo(DatosSesionFormularioInterno datosSesion,
-			String idCampo, List<ValorCampo> valoresPagina) {
+	public ResultadoEvaluarCambioCampo calcularDatosPaginaCambioCampo(final DatosSesionFormularioInterno datosSesion,
+			final String idCampo, final List<ValorCampo> valoresPagina) {
 		// Debe existir un campo que se modifique
 		if (idCampo == null) {
 			throw new CampoFormularioNoExisteException(datosSesion.getIdFormulario(), null);
@@ -85,7 +91,7 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	}
 
 	@Override
-	public void calcularCamposOcultosPagina(DatosSesionFormularioInterno pDatosSesion) {
+	public void calcularCamposOcultosPagina(final DatosSesionFormularioInterno pDatosSesion) {
 		// Actualizamos datos de la pagina actual con los nuevos datos
 		final PaginaFormularioData paginaActual = pDatosSesion.getDatosFormulario().getPaginaActualFormulario();
 
@@ -229,25 +235,61 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 					vc = ejecutarScriptAutorrellenable(datosSesion, campoDefAuto);
 				}
 
+				if (vc == null) {
+					throw new ErrorConfiguracionException(
+							"No existe valor calculado para campo " + campoDefAuto.getIdentificador());
+				}
+
 				// En caso de que se haya reseteado el valor desde el script o
 				// si no tiene dependencia autorrellenable pero es un selector,
 				// reseteamos valor campo
-				if (vc != null) {
-					// Si se ha reseteado campo, creamos valor vacio dependiendo
-					// del campo
-					if (vc instanceof ValorResetCampos) {
-						vc = UtilsFormularioInterno.crearValorVacio(campoDefAuto);
-					}
-
-					// Establecemos valor en formulario
-					datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValorCampo(vc);
-
-					// Marcamos como modificado
-					res.getValores().add(vc);
-					modificados.add(campoDefAuto.getIdentificador());
+				if (vc instanceof ValorResetCampos) {
+					vc = calcularValorVacio(datosSesion, campoDefAuto);
 				}
+
+				// Establecemos valor en formulario
+				datosSesion.getDatosFormulario().getPaginaActualFormulario().actualizarValorCampo(vc);
+
+				// Marcamos como modificado
+				res.getValores().add(vc);
+				modificados.add(campoDefAuto.getIdentificador());
 			}
 		}
+	}
+
+	/**
+	 * Calcular valor vacío.
+	 *
+	 * @param pagAct
+	 *            Datos página
+	 * @param ccs
+	 *            Componente selector
+	 */
+	private ValorCampo calcularValorVacio(final DatosSesionFormularioInterno datosSesion,
+			final RComponente campoDefAuto) {
+
+		final ValorCampo vc = UtilsFormularioInterno.crearValorVacio(campoDefAuto);
+
+		// Si es de tipo selector ajustamos valor vacío
+		final ConfiguracionCampo configuracionCampo = datosSesion.getDatosFormulario()
+				.getConfiguracionCampo(vc.getId());
+		if (configuracionCampo.getTipo() == TypeCampo.SELECTOR) {
+
+			// Si es de tipo lista y no es obligatorio se establece como valor no
+			// seleccionado
+			final ConfiguracionCampoSelector ccs = (ConfiguracionCampoSelector) configuracionCampo;
+			if (ccs.getContenido() == TypeSelector.LISTA && ccs.getObligatorio() == TypeSiNo.NO) {
+				final ValorIndexado valorNoSelect = UtilsFormularioInterno.crearValorIndexadoNoSelect();
+				((ValorCampoIndexado) vc).setValor(valorNoSelect);
+			}
+
+			// Ajustes selector único: si esta vacío se debería establecer la primera opción
+			// pero no tenemos acceso a los valores posibles en este punto, con lo que lo
+			// dejamos nulo
+
+		}
+
+		return vc;
 	}
 
 	/**
@@ -292,8 +334,8 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * @param res
 	 *            Resumen de los datos y configuracion modificada
 	 */
-	private void calcularDatosPaginaEstado(DatosSesionFormularioInterno datosSesion, String idCampo,
-			ResultadoEvaluarCambioCampo res) {
+	private void calcularDatosPaginaEstado(final DatosSesionFormularioInterno datosSesion, final String idCampo,
+			final ResultadoEvaluarCambioCampo res) {
 		// Definicion pagina actual
 		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
 
@@ -339,8 +381,8 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 *            Definicion paginas
 	 * @return Lista de campos modificados
 	 */
-	private List<String> revisarScriptEstadoCampos(DatosSesionFormularioInterno datosSesion, String idCampo,
-			List<String> camposModificados, RPaginaFormulario paginaDef) {
+	private List<String> revisarScriptEstadoCampos(final DatosSesionFormularioInterno datosSesion, final String idCampo,
+			final List<String> camposModificados, final RPaginaFormulario paginaDef) {
 		// Creamos lista de campos para los que se modifica o hay que refrescar
 		// su estado
 		final List<String> estadosModificado = new ArrayList<>();
@@ -398,8 +440,8 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 	 * @param res
 	 *            Resumen de los datos y configuracion modificada
 	 */
-	private void calcularDatosPaginaValoresPosibles(DatosSesionFormularioInterno datosSesion, String idCampo,
-			ResultadoEvaluarCambioCampo res) {
+	private void calcularDatosPaginaValoresPosibles(final DatosSesionFormularioInterno datosSesion,
+			final String idCampo, final ResultadoEvaluarCambioCampo res) {
 		// Definicion pagina actual
 		final RPaginaFormulario paginaDef = UtilsFormularioInterno.obtenerDefinicionPaginaActual(datosSesion);
 
@@ -435,6 +477,15 @@ public final class CalculoDatosFormularioHelperImpl implements CalculoDatosFormu
 				// Calculamos lista de valores posibles
 				final ValoresPosiblesCampo vpc = valoresPosiblesHelper.calcularValoresPosiblesCampoSelector(datosSesion,
 						(RComponenteSelector) campoDefSel);
+
+				// Si es selector tipo lista no obligatorio añadimos valor no seleccionado
+				final ConfiguracionCampoSelector ccs = (ConfiguracionCampoSelector) datosSesion.getDatosFormulario()
+						.getConfiguracionCampo(campoDefSel.getIdentificador());
+				if (ccs.getContenido() == TypeSelector.LISTA && ccs.getObligatorio() == TypeSiNo.NO) {
+					final ValorIndexado valorNoSelect = UtilsFormularioInterno.crearValorIndexadoNoSelect();
+					vpc.getValores().add(0, valorNoSelect);
+				}
+
 				// Marcamos que se han modificado los valores posibles para el campo
 				res.getValoresPosibles().add(vpc);
 			}

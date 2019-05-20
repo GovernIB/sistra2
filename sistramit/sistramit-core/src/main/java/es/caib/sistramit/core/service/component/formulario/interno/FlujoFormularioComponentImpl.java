@@ -40,6 +40,7 @@ import es.caib.sistramit.core.api.model.formulario.ResultadoGuardarPagina;
 import es.caib.sistramit.core.api.model.formulario.SesionFormularioInfo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
+import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValoresPosiblesCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
 import es.caib.sistramit.core.api.model.formulario.types.TypeSelector;
@@ -179,7 +180,7 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 		pagAct.setAcciones(acciones);
 
 		// Ajuste valores selectores (no obligatorios, radios,...)
-		ajustarSelectores(pagAct);
+		ajustarSelectoresPagina(pagAct);
 
 		return pagAct;
 	}
@@ -541,41 +542,51 @@ public class FlujoFormularioComponentImpl implements FlujoFormularioComponent {
 	 * @param pagAct
 	 *            Datos página
 	 */
-	private void ajustarSelectores(final PaginaFormulario pagAct) {
+	private void ajustarSelectoresPagina(final PaginaFormulario pagAct) {
 
 		for (final ConfiguracionCampo cc : pagAct.getConfiguracion()) {
 			if (cc.getTipo() == TypeCampo.SELECTOR) {
-
 				final ConfiguracionCampoSelector ccs = (ConfiguracionCampoSelector) cc;
+				ajustarSelector(pagAct, ccs);
+			}
+		}
+	}
 
-				// Ajustes selector lista: si no es obligatorio se añade a valores posibles
-				// valor para no seleccionado y si esta vacío se establece como valor no
-				// seleccionado
-				if (ccs.getContenido() == TypeSelector.LISTA && cc.getObligatorio() == TypeSiNo.NO) {
-					final ValoresPosiblesCampo vp = UtilsFormularioInterno
-							.buscarValoresPosibles(pagAct.getValoresPosibles(), ccs.getId());
-					// Añadir valor NO-SELECT a valores posibles
-					vp.getValores().add(0, UtilsFormularioInterno.crearValorIndexadoNoSelect());
-					// Si no tiene valor el campo, se establece valor NO-SELECT
-					final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(pagAct.getValores(), ccs.getId());
-					if (vc != null && ((ValorCampoIndexado) vc).esVacio()) {
-						((ValorCampoIndexado) vc).setValor(UtilsFormularioInterno.crearValorIndexadoNoSelect());
-					}
+	/**
+	 * Ajusta selector.
+	 * 
+	 * @param pagAct
+	 *            Datos página
+	 * @param ccs
+	 *            Componente selector
+	 */
+	private void ajustarSelector(final PaginaFormulario pagAct, final ConfiguracionCampoSelector ccs) {
+		// Ajustes selector lista: si no es obligatorio se añade a valores posibles
+		// valor para no seleccionado y si esta vacío se establece como valor no
+		// seleccionado
+		if (ccs.getContenido() == TypeSelector.LISTA && ccs.getObligatorio() == TypeSiNo.NO) {
+			final ValoresPosiblesCampo vp = UtilsFormularioInterno.buscarValoresPosibles(pagAct.getValoresPosibles(),
+					ccs.getId());
+			// Añadir valor NO-SELECT a valores posibles
+			final ValorIndexado valorNoSelect = UtilsFormularioInterno.crearValorIndexadoNoSelect();
+			vp.getValores().add(0, valorNoSelect);
+			// Si no tiene valor el campo, se establece valor NO-SELECT
+			final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(pagAct.getValores(), ccs.getId());
+			if (vc != null && ((ValorCampoIndexado) vc).esVacio()) {
+				((ValorCampoIndexado) vc).setValor(valorNoSelect);
+			}
+		}
+
+		// Ajustes selector unico: si esta vacío se establece primera opción
+		if (ccs.getContenido() == TypeSelector.UNICO) {
+			// Si no tiene valor el campo, se establece primer valor posible
+			final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(pagAct.getValores(), ccs.getId());
+			if (vc != null && ((ValorCampoIndexado) vc).esVacio()) {
+				final ValoresPosiblesCampo vp = UtilsFormularioInterno
+						.buscarValoresPosibles(pagAct.getValoresPosibles(), ccs.getId());
+				if (!vp.getValores().isEmpty()) {
+					((ValorCampoIndexado) vc).setValor(vp.getValores().get(0));
 				}
-
-				// Ajustes selector unico: si esta vacío se establece primera opción
-				if (ccs.getContenido() == TypeSelector.UNICO) {
-					// Si no tiene valor el campo, se establece primer valor posible
-					final ValorCampo vc = UtilsFormularioInterno.buscarValorCampo(pagAct.getValores(), ccs.getId());
-					if (vc != null && ((ValorCampoIndexado) vc).esVacio()) {
-						final ValoresPosiblesCampo vp = UtilsFormularioInterno
-								.buscarValoresPosibles(pagAct.getValoresPosibles(), ccs.getId());
-						if (!vp.getValores().isEmpty()) {
-							((ValorCampoIndexado) vc).setValor(vp.getValores().get(0));
-						}
-					}
-				}
-
 			}
 		}
 	}

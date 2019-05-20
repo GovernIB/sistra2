@@ -315,7 +315,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		final StringBuilder sqlCount = new StringBuilder(
-				"Select count(*) From JVersionTramite v where  v.tramite.id = ");
+				"Select count(*) From JVersionTramite v where  v.tramite.codigo = ");
 		sqlCount.append(idTramite);
 		sqlCount.append(" and v.numeroVersion = ");
 		sqlCount.append(tramiteVersion.getRelease());
@@ -370,7 +370,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		entityManager.flush();
 
 		// Paso 2. Buscamos las relaciones de dominios y las añadimos
-		final String sqlDominios = "Select d From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+		final String sqlDominios = "Select d From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
 
 		final Query queryDominios = entityManager.createQuery(sqlDominios);
 		queryDominios.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
@@ -390,7 +390,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final Map<String, JFormateadorFormulario> formateadores = getFormateadoresTramiteVersion(idTramiteVersion);
 
 		// Paso 3. Buscamos los pasos y los clonamos y añadimos.
-		final String sqlPasos = "Select p From JPasoTramitacion p where p.versionTramite.id = :idTramiteVersion order by p.orden asc";
+		final String sqlPasos = "Select p From JPasoTramitacion p where p.versionTramite.codigo = :idTramiteVersion order by p.orden asc";
 		final Long idEntidad = jVersionTramite.getTramite().getArea().getEntidad().getCodigo();
 		final Query queryPasos = entityManager.createQuery(sqlPasos);
 		queryPasos.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
@@ -584,7 +584,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		final JVersionTramite jTramiteVersion = entityManager.find(JVersionTramite.class, idTramiteVersion);
 
 		// Paso1. Obtenemos los pasos y los borramos
-		final String sql = "Select t From JPasoTramitacion t where t.versionTramite.id = :idTramiteVersion";
+		final String sql = "Select t From JPasoTramitacion t where t.versionTramite.codigo = :idTramiteVersion";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
@@ -604,7 +604,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		}
 
 		// Paso2. Obtenemos los pasos y los borramos
-		final String sqlHistorico = "Select t From JHistorialVersion t where t.versionTramite.id = :idTramiteVersion";
+		final String sqlHistorico = "Select t From JHistorialVersion t where t.versionTramite.codigo = :idTramiteVersion";
 
 		final Query queryHistorico = entityManager.createQuery(sqlHistorico);
 		queryHistorico.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
@@ -617,7 +617,7 @@ public class TramiteDaoImpl implements TramiteDao {
 
 		// Paso 3. Buscamos los dominios que tengan la versión trámite y borramos la
 		// relacion
-		final String sqlDominio = "Select d From JDominio d join d.versionesTramite t where t.id = :idTramiteVersion";
+		final String sqlDominio = "Select d From JDominio d join d.versionesTramite t where t.codigo = :idTramiteVersion";
 
 		final Query queryDominio = entityManager.createQuery(sqlDominio);
 		queryDominio.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
@@ -661,7 +661,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dominio> getDominioSimpleByTramiteId(final Long idTramiteVersion) {
-		final String sql = "Select d.codigo, d.identificador, d.descripcion, d.ambito From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+		final String sql = "Select d.codigo, d.identificador, d.descripcion, d.ambito From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
@@ -694,7 +694,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getTramiteDominiosIdentificador(final Long idTramiteVersion) {
-		final String sql = "Select d.identificador From JDominio d JOIN d.versionesTramite t where t.id = :idTramiteVersion order by d.identificador asc";
+		final String sql = "Select d.identificador From JDominio d JOIN d.versionesTramite t where t.codigo = :idTramiteVersion order by d.identificador asc";
 
 		final Query query = entityManager.createQuery(sql);
 		query.setParameter(STRING_ID_TRAMITE_VERSION, idTramiteVersion);
@@ -729,7 +729,7 @@ public class TramiteDaoImpl implements TramiteDao {
 	@Override
 	public boolean tieneTramiteVersion(final Long idTramite) {
 		final StringBuilder sqlCount = new StringBuilder(
-				"Select count(*) From JVersionTramite v where v.tramite.id = ");
+				"Select count(*) From JVersionTramite v where v.tramite.codigo = ");
 		sqlCount.append(idTramite);
 		final Query query = entityManager.createQuery(sqlCount.toString());
 		final Long cuantos = (Long) query.getSingleResult();
@@ -743,12 +743,12 @@ public class TramiteDaoImpl implements TramiteDao {
 	}
 
 	@Override
-	public boolean tieneTramiteNumVersionRepetido(final Long idTramite, final int release) {
+	public boolean tieneTramiteNumVersionRepetido(final Long idTramite, final int numVersion) {
 		final StringBuilder sqlCount = new StringBuilder(
-				"Select count(*) From JVersionTramite v where v.tramite.id = ");
+				"Select count(*) From JVersionTramite v where v.tramite.codigo = ");
 		sqlCount.append(idTramite);
 		sqlCount.append(" and v.numeroVersion = ");
-		sqlCount.append(release);
+		sqlCount.append(numVersion);
 		final Query query = entityManager.createQuery(sqlCount.toString());
 		final Long cuantos = (Long) query.getSingleResult();
 
@@ -767,7 +767,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		// Primero comprobamos si tiene, si no tiene, se devuelve el valor por defecto
 		// (0) sino el máximo valor +1
 		final StringBuilder sqlCount = new StringBuilder(
-				"Select count(v) From JVersionTramite v where v.tramite.id = ");
+				"Select count(v) From JVersionTramite v where v.tramite.codigo = ");
 		sqlCount.append(idTramite);
 		final Query query = entityManager.createQuery(sqlCount.toString());
 		final Long cuantos = (Long) query.getSingleResult();
@@ -778,7 +778,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		} else {
 
 			final StringBuilder sqlMax = new StringBuilder(
-					"Select max(v.numeroVersion) From JVersionTramite v where v.tramite.id = ");
+					"Select max(v.numeroVersion) From JVersionTramite v where v.tramite.codigo = ");
 			sqlMax.append(idTramite);
 			final Query queryMax = entityManager.createQuery(sqlMax.toString());
 			realeaseMax = (Integer) queryMax.getSingleResult();
@@ -947,7 +947,7 @@ public class TramiteDaoImpl implements TramiteDao {
 		} else {
 
 			// Obtenemos los pasos y los borramos
-			final String sql = "Select t From JPasoTramitacion t where t.versionTramite.id = :idTramiteVersion";
+			final String sql = "Select t From JPasoTramitacion t where t.versionTramite.codigo = :idTramiteVersion";
 
 			final Query query = entityManager.createQuery(sql);
 			query.setParameter(STRING_ID_TRAMITE_VERSION, filaTramiteVersion.getTramiteVersionActual().getCodigo());
@@ -1009,7 +1009,7 @@ public class TramiteDaoImpl implements TramiteDao {
 			entityManager.merge(jTramiteVersion);
 
 			// Actualizamos el historial
-			final String sqlHistorial = "Select t From JHistorialVersion t where t.versionTramite.id = :idTramiteVersion and t.release >= :release";
+			final String sqlHistorial = "Select t From JHistorialVersion t where t.versionTramite.codigo = :idTramiteVersion and t.release >= :release";
 
 			final Query queryHistorial = entityManager.createQuery(sqlHistorial);
 			queryHistorial.setParameter(STRING_ID_TRAMITE_VERSION,
@@ -1199,4 +1199,15 @@ public class TramiteDaoImpl implements TramiteDao {
 		entityManager.merge(jLiteralNew);
 	}
 
+	@Override
+	public void incrementarRelease(final Long idTramiteVersion) {
+		final String sql = "Select t From JVersionTramite t where t.codigo = :idTramite ";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("idTramite", idTramiteVersion);
+
+		final JVersionTramite jversion = (JVersionTramite) query.getSingleResult();
+		jversion.setRelease(jversion.getRelease() + 1);
+		entityManager.merge(jversion);
+
+	}
 }

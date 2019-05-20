@@ -684,7 +684,7 @@ public class VersionTramiteAdapter {
 		resSL.setTipo(cs.getTipo().toString());
 		resSL.setTipoSelector(cs.getTipoCampoIndexado().toString());
 		resSL.setTipoListaValores(cs.getTipoListaValores().toString());
-
+		resSL.setOrientacion(cs.getOrientacion());
 		resSL.setIndiceAlfabetico(cs.isIndiceAlfabetico());
 		return resSL;
 	}

@@ -48,14 +48,14 @@
 						<p:outputLabel for="paginaFinal" value="#{msg['dialogPaginaFormulario.paginaFinal']}"  />
 					</h:column>
 					<h:column>
-						<p:selectBooleanCheckbox id="paginaFinal" value="#{dialogPaginaFormulario.data.paginaFinal}"/>
+						<p:selectBooleanCheckbox id="paginaFinal" value="#{dialogPaginaFormulario.data.paginaFinal}" disabled="#{dialogPaginaFormulario.consulta}" />
 					</h:column>
 				</h:panelGrid>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPaginaFormulario.aceptar()}" process="@form" update="@form growlDialog"/>
+		        		<p:commandButton value="#{msg['botones.aceptar']}" actionListener="#{dialogPaginaFormulario.aceptar()}" process="@form" update="@form growlDialog" rendered="#{dialogPaginaFormulario.alta or dialogPaginaFormulario.edicion}" />
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPaginaFormulario.cancelar()}" process="@this"/>
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPaginaFormulario.ayuda()}" process="@this"/>
 					</f:facet>

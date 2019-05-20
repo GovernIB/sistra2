@@ -41,6 +41,10 @@ public class RComponenteSelector extends RComponente {
 	@ApiModelProperty(value = "Indice alfabetico")
 	private boolean indiceAlfabetico;
 
+	/** Tipo orientacion: HORIZONTAL o VERTICAL. */
+	@ApiModelProperty(value = "Tipo orientacion: HORIZONTAL o VERTICAL")
+	private String orientacion;
+
 	/**
 	 * Método de acceso a propiedadesCampo.
 	 *
@@ -172,6 +176,21 @@ public class RComponenteSelector extends RComponente {
 	 */
 	public void setIndiceAlfabetico(final boolean indiceAlfabetico) {
 		this.indiceAlfabetico = indiceAlfabetico;
+	}
+
+	/**
+	 * @return the orientacion
+	 */
+	public final String getOrientacion() {
+		return orientacion;
+	}
+
+	/**
+	 * @param orientacion
+	 *            the orientacion to set
+	 */
+	public final void setOrientacion(final String orientacion) {
+		this.orientacion = orientacion;
 	}
 
 }

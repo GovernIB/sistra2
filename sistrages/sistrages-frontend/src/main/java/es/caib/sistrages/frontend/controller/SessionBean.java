@@ -424,6 +424,13 @@ public class SessionBean {
 
 		}
 
+		// MIGRACION
+		if (Constantes.USUARIO_MIGRACION.equals(userName)) {
+			item = new DefaultMenuItem("Migrar de Sistra");
+			item.setUrl(UtilJSF.getUrlArbolDefinicionVersion("migracion/viewMigracion"));
+			model.addElement(item);
+		}
+
 		model.generateUniqueIds();
 		return model;
 	}

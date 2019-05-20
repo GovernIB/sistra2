@@ -26,7 +26,11 @@ public enum TypeAccionHistorial {
 	/**
 	 * Importación de una versión de trámite
 	 */
-	IMPORTACION("I");
+	IMPORTACION("I"),
+	/**
+	 * Mover un trámite a otra área
+	 */
+	MOVER_TRAMITE("M");
 
 	/** Valor. **/
 	private String valor;

@@ -118,4 +118,7 @@ public final class Constantes {
 	 * Indica si el growl en un dialog se muestra en el padre o dentro del dialog.
 	 **/
 	public static final boolean GROWL_PADRE = true;
+	
+	public static final String USUARIO_MIGRACION = "migracion";
+
 }

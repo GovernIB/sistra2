@@ -15,6 +15,7 @@ import es.caib.loginib.rest.api.v1.RDatosAutenticacion;
 import es.caib.loginib.rest.api.v1.RLoginParams;
 import es.caib.loginib.rest.api.v1.RLogoutParams;
 import es.caib.sistra2.commons.plugins.autenticacion.api.AutenticacionPluginException;
+import es.caib.sistra2.commons.plugins.autenticacion.api.DatosRepresentante;
 import es.caib.sistra2.commons.plugins.autenticacion.api.DatosUsuario;
 import es.caib.sistra2.commons.plugins.autenticacion.api.IComponenteAutenticacionPlugin;
 import es.caib.sistra2.commons.plugins.autenticacion.api.TipoAutenticacion;
@@ -83,17 +84,26 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 
 		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(getPropiedad("usr"), getPropiedad("pwd")));
 
-		final RDatosAutenticacion datosUtenticacion = restTemplate
+		final RDatosAutenticacion datosAutenticacion = restTemplate
 				.getForObject(getPropiedad("url") + "/ticket/" + pTicket, RDatosAutenticacion.class);
 
 		final DatosUsuario datos = new DatosUsuario();
-		datos.setMetodoAutenticacion(TipoMetodoAutenticacion.fromString(datosUtenticacion.getMetodoAutenticacion()));
-		datos.setNif(datosUtenticacion.getNif());
-		datos.setNombre(datosUtenticacion.getNombre());
-		datos.setApellido1(datosUtenticacion.getApellido1());
-		datos.setApellido2(datosUtenticacion.getApellido2());
-		datos.setMetodoAutenticacion(TipoMetodoAutenticacion.fromString(datosUtenticacion.getMetodoAutenticacion()));
-		if ("ANONIMO".equals(datosUtenticacion.getMetodoAutenticacion())) {
+		datos.setMetodoAutenticacion(TipoMetodoAutenticacion.fromString(datosAutenticacion.getMetodoAutenticacion()));
+		datos.setNif(datosAutenticacion.getNif());
+		datos.setNombre(datosAutenticacion.getNombre());
+		datos.setApellido1(datosAutenticacion.getApellido1());
+		datos.setApellido2(datosAutenticacion.getApellido2());
+		datos.setMetodoAutenticacion(TipoMetodoAutenticacion.fromString(datosAutenticacion.getMetodoAutenticacion()));
+		if (datosAutenticacion.getRepresentante() != null) {
+			final DatosRepresentante representante = new DatosRepresentante();
+			representante.setNif(datosAutenticacion.getRepresentante().getNif());
+			representante.setNombre(datosAutenticacion.getRepresentante().getNombre());
+			representante.setApellido1(datosAutenticacion.getRepresentante().getApellido1());
+			representante.setApellido2(datosAutenticacion.getRepresentante().getApellido2());
+			datos.setRepresentante(representante);
+		}
+
+		if ("ANONIMO".equals(datosAutenticacion.getMetodoAutenticacion())) {
 			datos.setAutenticacion(TipoAutenticacion.ANONIMO);
 		} else {
 			datos.setAutenticacion(TipoAutenticacion.AUTENTICADO);
@@ -134,7 +144,7 @@ public class ComponenteAutenticacionPluginLoginib extends AbstractPluginProperti
 	 * @return valor
 	 * @throws AutenticacionPluginException
 	 */
-	private String getPropiedad(String propiedad) throws AutenticacionPluginException {
+	private String getPropiedad(final String propiedad) throws AutenticacionPluginException {
 		final String res = getProperty(AUTENTICACION_BASE_PROPERTY + IMPLEMENTATION_BASE_PROPERTY + propiedad);
 		if (res == null) {
 			throw new AutenticacionPluginException("No se ha especificado parametro " + propiedad + " en propiedades");

@@ -10,8 +10,6 @@
 	<packaging>war</packaging>
 	<name>sistrages-frontend</name>
 	<dependencies>
-
-
 		<!-- Spring web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -133,6 +131,39 @@
 	</profiles>
 	<build>
 		<plugins>
+
+			<plugin>
+				<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
+				<artifactId>svn-revision-number-maven-plugin</artifactId>
+				<version>1.13</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+			    <configuration>
+			    		<entries>
+			    			<entry>
+			    				<path>${project.basedir}</path>
+			    				<prefix>prefix</prefix>
+			    			</entry>
+			    		</entries>
+			    </configuration>
+				<dependencies>
+			        <dependency>
+			            <groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+			            <artifactId>maven-scm-provider-svnjava</artifactId>
+			            <version>2.0.2</version>
+			        </dependency>
+			        <dependency>
+						  <groupId>org.tmatesoft.svnkit</groupId>
+						  <artifactId>svnkit</artifactId>
+						  <version>1.8.3-1</version>
+						</dependency>
+			    </dependencies>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -154,6 +185,7 @@
 				</configuration>
 			</plugin>
 
+
 			<plugin>
                 <!-- Ref: https://github.com/ktoso/maven-git-commit-id-plugin#using-the-plugin -->
                 <groupId>pl.project13.maven</groupId>
@@ -167,6 +199,7 @@
                         </execution>
                 </executions>
                 <configuration>
+                		<skip>${svn.activo}</skip>
                 		<generateGitPropertiesFile>true</generateGitPropertiesFile>
                         <generateGitPropertiesFilename>src/git.properties</generateGitPropertiesFilename>
                 </configuration>
@@ -186,13 +219,26 @@
                             <echo message="compile classpath: ${compile_classpath}" />
                         </target>
 			          	<tasks>
-							<copy file="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.original.xml" tofile="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.xml" overwrite="true"  />
-							<replace dir="src/main/webapp/WEB-INF" >
-				              	<include name="**/sistrages-ac-frontend.xml"/>
-				             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
-				             	<replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
-				            </replace>
-
+			          		<taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                				  classpathref="maven.plugin.classpath" />
+			          		<copy file="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.original.xml" tofile="${basedir}/src/main/webapp/WEB-INF/sistrages-ac-frontend.xml" overwrite="true"  />
+							<if>
+			          			<equals arg1="${svn.activo}" arg2="true" />
+			          			<then>
+			          				<replace dir="src/main/webapp/WEB-INF" >
+			          					<include name="**/sistrages-ac-frontend.xml"/>
+						             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
+						             	<replacefilter token="SISTRA_COMMIT" value="${prefix.revision}" />
+						            </replace>
+			          			</then>
+			          			<else>
+			          				<replace dir="src/main/webapp/WEB-INF" >
+						              	<include name="**/sistrages-ac-frontend.xml"/>
+						             	<replacefilter token="SISTRA_VERSION" value="${sistra2.version}" />
+						             	<replacefilter token="SISTRA_COMMIT" value="${git.commit.id.abbrev}" />
+						            </replace>
+			          			</else>
+			          		</if>
 				        </tasks>
 			        </configuration>
 			        <goals>
@@ -200,10 +246,14 @@
                     </goals>
 			      </execution>
 			    </executions>
+			    <dependencies>
+		          <dependency>
+		            <groupId>ant-contrib</groupId>
+		            <artifactId>ant-contrib</artifactId>
+		            <version>20020829</version>
+		          </dependency>
+		        </dependencies>
 			  </plugin>
-
-
-
 		</plugins>
 		<finalName>sistrages-frontend</finalName>
 	</build>

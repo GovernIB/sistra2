@@ -22,7 +22,6 @@ import es.caib.sistrages.rest.api.interna.RScript;
 import es.caib.sistramit.core.api.exception.ErrorConfiguracionException;
 import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.exception.ValorCampoFormularioNoValidoException;
-import es.caib.sistramit.core.api.model.flujo.DatosUsuario;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTexto;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionModificadaCampo;
@@ -44,6 +43,7 @@ import es.caib.sistramit.core.service.model.formulario.interno.types.TypeParamet
 import es.caib.sistramit.core.service.model.integracion.ParametrosDominio;
 import es.caib.sistramit.core.service.model.integracion.ValoresDominio;
 import es.caib.sistramit.core.service.model.script.formulario.PlgDatosFormularioInt;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
 import es.caib.sistramit.core.service.util.UtilsSTG;
 
@@ -78,7 +78,7 @@ public class UtilsFormularioInterno {
 	 *            Definición página
 	 * @return Lista campos
 	 */
-	public static List<RComponente> devuelveListaCampos(RFormularioInterno defFormulario) {
+	public static List<RComponente> devuelveListaCampos(final RFormularioInterno defFormulario) {
 		final List<RComponente> campos = new ArrayList<>();
 		for (final RPaginaFormulario defPagina : defFormulario.getPaginas()) {
 			campos.addAll(devuelveListaCampos(defPagina));
@@ -93,7 +93,7 @@ public class UtilsFormularioInterno {
 	 *            Definición página
 	 * @return Lista campos
 	 */
-	public static List<RComponente> devuelveListaCampos(RPaginaFormulario defPagina) {
+	public static List<RComponente> devuelveListaCampos(final RPaginaFormulario defPagina) {
 		final List<RComponente> campos = new ArrayList<>();
 		for (final RLineaComponentes linea : defPagina.getLineas()) {
 			for (final RComponente c : linea.getComponentes()) {
@@ -112,7 +112,7 @@ public class UtilsFormularioInterno {
 	 *            idComponente
 	 * @return Campo
 	 */
-	public static RComponente devuelveComponentePagina(RPaginaFormulario defPagina, String idComponente) {
+	public static RComponente devuelveComponentePagina(final RPaginaFormulario defPagina, final String idComponente) {
 		RComponente res = null;
 		for (final RLineaComponentes linea : defPagina.getLineas()) {
 			for (final RComponente c : linea.getComponentes()) {
@@ -187,7 +187,7 @@ public class UtilsFormularioInterno {
 	 *            Campo
 	 * @return
 	 */
-	public static RPropiedadesCampo obtenerPropiedadesCampo(RComponente pCampoDef) {
+	public static RPropiedadesCampo obtenerPropiedadesCampo(final RComponente pCampoDef) {
 		final TypeCampo tipoCampo = UtilsSTG.traduceTipoCampo(pCampoDef.getTipo());
 		RPropiedadesCampo propsCampo = null;
 		switch (tipoCampo) {
@@ -213,7 +213,7 @@ public class UtilsFormularioInterno {
 	 *            Datos sesión
 	 * @return definición página
 	 */
-	public static RPaginaFormulario obtenerDefinicionPaginaActual(DatosSesionFormularioInterno pDatosSesion) {
+	public static RPaginaFormulario obtenerDefinicionPaginaActual(final DatosSesionFormularioInterno pDatosSesion) {
 		final RFormularioTramite defFormulario = UtilsSTG.devuelveDefinicionFormulario(
 				pDatosSesion.getDatosInicioSesion().getIdPaso(), pDatosSesion.getDatosInicioSesion().getIdFormulario(),
 				pDatosSesion.getDefinicionTramite());
@@ -240,10 +240,8 @@ public class UtilsFormularioInterno {
 		res.setParametrosApertura(pDatosSesion.getDatosInicioSesion().getParametros());
 		res.setNivelAutenticacion(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getAutenticacion());
 		res.setMetodoAutenticacion(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getMetodoAutenticacion());
-		res.setUsuario(new DatosUsuario(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getNif(),
-				pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getNombre(),
-				pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getApellido1(),
-				pDatosSesion.getDatosInicioSesion().getInfoAutenticacion().getApellido2()));
+		res.setUsuario(UtilsFlujo.getDatosUsuario(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion()));
+		res.setUsuarioAutenticado(pDatosSesion.getDatosInicioSesion().getInfoAutenticacion());
 		res.setDebugEnabled(pDatosSesion.isDebugEnabled());
 		if (pIdCampo != null) {
 			res.setValoresCampo(pDatosSesion.getDatosFormulario().getValoresAccesiblesCampo(pIdCampo));
@@ -262,8 +260,8 @@ public class UtilsFormularioInterno {
 	 *            Definicion campo selector
 	 * @return parametros
 	 */
-	public static ParametrosDominio obtenerParametrosDominio(DatosSesionFormularioInterno pDatosSesion,
-			RComponenteSelector pCampoDef) {
+	public static ParametrosDominio obtenerParametrosDominio(final DatosSesionFormularioInterno pDatosSesion,
+			final RComponenteSelector pCampoDef) {
 
 		final ParametrosDominio parametros = new ParametrosDominio();
 
@@ -511,8 +509,8 @@ public class UtilsFormularioInterno {
 	 *            idcampo
 	 * @return valores posibles campo
 	 */
-	public static ValoresPosiblesCampo buscarValoresPosibles(List<ValoresPosiblesCampo> valoresPosibles,
-			String idCampo) {
+	public static ValoresPosiblesCampo buscarValoresPosibles(final List<ValoresPosiblesCampo> valoresPosibles,
+			final String idCampo) {
 		ValoresPosiblesCampo res = null;
 		for (final ValoresPosiblesCampo cc : valoresPosibles) {
 			if (cc.getId().equals(idCampo)) {

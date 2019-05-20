@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.service.test;
 
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -26,8 +30,15 @@ public class TestFormateadorPlantilla1 {
 
 	public static void main(final String args[]) throws Exception {
 
-		/** El formulario interno no se usa para nada. **/
-		final RFormularioInterno formularioInterno = new RFormularioInterno();
+		/** El formulario interno, aprovec. **/
+		final InputStream inputStream = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("formateador/template/formularioInternoTest.json");
+		final StringWriter writer = new StringWriter();
+		IOUtils.copy(inputStream, writer, "UTF-8");
+		final String formularioInternoJSON = writer.toString();
+		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		final RFormularioInterno formularioInterno = mapper.readValue(formularioInternoJSON, RFormularioInterno.class);
 
 		/** Para generar el formulario. **/
 		final XmlFormulario formulario = new XmlFormulario();
@@ -40,7 +51,7 @@ public class TestFormateadorPlantilla1 {
 		pValores.add(new ValorCampoSimple("IMPORTE", "123.63"));
 		pValores.add(new ValorCampoSimple("FECHACREACION", new Date().toString()));
 		pValores.add(new ValorCampoSimple("LOCALIZADOR", "Localizador"));
-		pValores.add(new ValorCampoSimple("FECHAPAGO", new Date().toString()));
+		pValores.add(new ValorCampoSimple("FECHAPAGO", "2019-01-01"));
 		formulario.setValores(pValores);
 
 		final byte[] plantilla = IOUtils.toByteArray(Thread.currentThread().getContextClassLoader()

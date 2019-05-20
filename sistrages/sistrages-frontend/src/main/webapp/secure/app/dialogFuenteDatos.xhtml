@@ -51,12 +51,15 @@
 			        	 selectionMode="single"
 			        	 selection="#{dialogFuenteDatos.valorSeleccionado}"
 			        	 rowIndexVar="rowIndex"
-			        	 rowKey="#{td.idString}">
+			        	 rowKey="#{td.codigo}">
 
 
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false" />
-				<p:ajax event="rowUnselect" />
+				<p:ajax event="rowDblselect"
+		                  		oncomplete="triggerDblClick();"
+		                        update=":dialogFuenteDatos:dataTableDatos"
+		                        />
 
 				<c:if test="${not empty dialogFuenteDatos.data.filas}">
 					<!-- Columnas, sin el rowIndex no va muy bien que se diga -->
@@ -110,6 +113,17 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
+		    <h:outputScript >
+		      function triggerDblClick() {
+				  $('#dialogFuenteDatos\\:btnEditarHidden').click();
+		      }
+		    </h:outputScript>
+
+		    <p:commandButton id="btnEditarHidden" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogFuenteDatos.editarFuenteDato()}" process="@this" update="growlDialog" style="display:none">
+       				<p:ajax event="dialogReturn" listener="#{dialogFuenteDatos.returnDialogo}" update="growlDialog dataTableDatos"/>
+       		</p:commandButton>
+
 
 		    <!-- dialogo para confirmar -->
 		    <p:confirmDialog global="true" >

@@ -11,8 +11,6 @@ import org.primefaces.event.SelectEvent;
 import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.TramiteVersion;
-import es.caib.sistrages.core.api.model.types.TypeFormulario;
-import es.caib.sistrages.core.api.model.types.TypeFormularioObligatoriedad;
 import es.caib.sistrages.core.api.service.TramiteService;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
@@ -64,9 +62,7 @@ public class DialogDefinicionVersionRellenar extends DialogControllerBase {
 	 */
 	public void init() {
 
-		data = new FormularioTramite();
-		data.setObligatoriedad(TypeFormularioObligatoriedad.OBLIGATORIO);
-		data.setTipo(TypeFormulario.TRAMITE);
+		data = tramiteService.createFormularioTramiteDefault();
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(idTramiteVersion));
 		idiomas = UtilTraducciones.getIdiomas(tramiteVersion.getIdiomasSoportados());
 	}

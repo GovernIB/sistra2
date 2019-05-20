@@ -16,6 +16,7 @@ import es.caib.sistrages.core.api.model.LineaComponentesFormulario;
 import es.caib.sistrages.core.api.model.PaginaFormulario;
 import es.caib.sistrages.core.api.model.types.TypeAlineacionTexto;
 import es.caib.sistrages.core.api.model.types.TypeCampoTexto;
+import es.caib.sistrages.core.api.model.types.TypeOrientacion;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 
 @Component("formRenderComponent")
@@ -396,9 +397,15 @@ public class FormRenderComponentImpl implements FormRenderComponent {
 
 		// estilo.append(" imc-el-name-").append(String.valueOf(pCampo.getCodigo()));
 
+		String orientacion;
+		if (pCampo.getOrientacion().equals(TypeOrientacion.HORIZONTAL.toString())) {
+			orientacion = "imc-el-horizontal";
+		} else {
+			orientacion = "imc-el-vertical";
+		}
 		escribeLinea(pOut, "<fieldset", escribeId(pCampo.getIdComponente()),
 				escribeCodigo(pCampo.getCodigo(), pModoEdicion), escribeObligatorio(pCampo, pModoEdicion),
-				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element imc-el-vertical", estilo.toString(),
+				escribeTieneScripts(pCampo, pModoEdicion), " class=\"imc-element " + orientacion, estilo.toString(),
 				"\" data-type=\"radio-list\">", 6);
 
 		if (!pCampo.isNoMostrarTexto() && pCampo.getTexto() != null) {

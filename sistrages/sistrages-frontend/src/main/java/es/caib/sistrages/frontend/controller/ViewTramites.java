@@ -18,11 +18,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.sistrages.core.api.model.Area;
-import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.ErrorValidacion;
-import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.model.types.TypeEntorno;
 import es.caib.sistrages.core.api.model.types.TypeRoleAcceso;
 import es.caib.sistrages.core.api.model.types.TypeRolePermisos;
@@ -49,9 +47,7 @@ import es.caib.sistrages.frontend.util.UtilRest;
 @ViewScoped
 public class ViewTramites extends ViewControllerBase {
 
-	/**
-	 * Service.
-	 */
+	/** Service. */
 	@Inject
 	private TramiteService tramiteService;
 
@@ -90,17 +86,11 @@ public class ViewTramites extends ViewControllerBase {
 	/** Lista de areas seleccionadas. **/
 	private List<Area> listaAreasSeleccionadas;
 
-	/**
-	 * Para evitar el retrase en las comprobaciones en perfil desarrollador.
-	 **/
+	/** Para evitar el retrase en las comprobaciones en perfil desarrollador. **/
 	private List<TypeRolePermisos> permisosCacheados = new ArrayList<>();
-	private Long idAreaCacheada = -1l;
 
 	/** Indica si se permite refrescar. **/
 	private boolean permiteRefrescar;
-
-	/** Indica si es entorno editable (DESARROLLO) o no editable (PRE/PRO) */
-	private boolean permiteAccionEntorno;
 
 	/** Literal. **/
 	private static final String LITERAL_INFO_ALTA_OK = "info.alta.ok";
@@ -128,11 +118,6 @@ public class ViewTramites extends ViewControllerBase {
 		idTramiteVersion = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest())
 				.getParameter("tramite_version");
 		buscarAreas();
-		if (UtilJSF.getEntorno().equals(TypeEntorno.DESARROLLO.toString())) {
-			setPermiteAccionEntorno(true);
-		} else {
-			setPermiteAccionEntorno(false);
-		}
 
 	}
 
@@ -208,6 +193,13 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Abre dialogo de nuevo tramite.
+	 */
+	public void nuevoTramite() {
+		abrirTramite(TypeModoAcceso.ALTA);
+	}
+
+	/**
 	 * Abre dialogo para consultar datos de tramite.
 	 */
 	public void consultarTramite() {
@@ -245,25 +237,10 @@ public class ViewTramites extends ViewControllerBase {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.importar.ok"));
 
 			// Refrescamos datos
-			buscarTramites();
+			buscarAreas();
+			// buscarTramites();
 
 		}
-	}
-
-	/**
-	 * Abre dialogo de nuevo tramite.
-	 */
-	public void nuevoTramite() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaArea()) {
-			return;
-		}
-
-		final Map<String, String> params = new HashMap<>();
-
-		final Area area = listaAreasSeleccionadas.get(0);
-		params.put(TypeParametroVentana.AREA.toString(), String.valueOf(area.getCodigo()));
-		UtilJSF.openDialog(DialogTramite.class, TypeModoAcceso.ALTA, params, true, 540, 220);
 	}
 
 	/**
@@ -361,29 +338,11 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * Obtiene el valor de permiteAlta.
-	 *
-	 * @return el valor de permiteAlta
-	 */
-	public boolean getPermiteAltaArea() {
-		boolean retorno;
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
-			retorno = true;
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
-			retorno = true;
-		} else {
-			retorno = false;
-		}
-		return retorno;
-	}
-
-	/**
-	 * Obtiene el valor de permiteEditar.
+	 * Obtiene el valor de permiteEditarArea.
 	 *
 	 * @return el valor de permiteEditar
 	 */
-	public boolean getPermiteEditarArea() {
+	public boolean getTienePermisosArea() {
 		boolean retorno;
 		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 			retorno = true;
@@ -396,109 +355,96 @@ public class ViewTramites extends ViewControllerBase {
 		return retorno;
 	}
 
+	/** Comprueba que el entorno no es desarrollo. **/
+	public boolean isNotDesarrollo() {
+		return TypeEntorno.fromString(UtilJSF.getEntorno()) != TypeEntorno.DESARROLLO;
+	}
+
 	/**
-	 * Obtiene el valor de permiteAlta.
+	 * Obtiene el valor de tienePermisosTramite, se tiene que cumplir que:
+	 * <ul>
+	 * <li>Tiene que haber una fila o versión seleccionada.</li>
+	 * <li>Si eres adm. entidad ya puedes tocarlo.</li>
+	 * <li>Sino tienes que ser adminisitrador o desarrollador de área.</li>
+	 * </ul>
 	 *
-	 * @return el valor de permiteAlta
+	 * @return el valor de tienePermisosTramite
 	 */
-	public boolean getPermiteAltaTramite() {
-		boolean res = false;
+	public boolean getTienePermisosTramite() {
+		boolean res;
 
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilasSeleccionadasArea()) {
-			return false;
+		if (!verificarFilaSeleccionadaTramite() && !verificarFilaSeleccionadaVersion()) {
+			res = false;
 		}
-
 		// Admin entidad
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 			res = true;
 		}
-
-		// Desarrollador
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+		// Admin area o Desarrollador (solo funciona en entorno de desarrollo)
+		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
 				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
-			final Area areaSeleccionada = listaAreasSeleccionadas.get(0);
-			if (areaSeleccionada != null) {
-				if (areaSeleccionada.getCodigo().compareTo(idAreaCacheada) != 0) {
-					permisosCacheados = securityService
-							.getPermisosDesarrolladorEntidadByArea(areaSeleccionada.getCodigo());
-				}
 
+			if (tramiteSeleccionada != null) {
+				permisosCacheados = securityService
+						.getPermisosDesarrolladorEntidadByArea(tramiteSeleccionada.getTramite().getIdArea());
+			} else {
+				final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
+				permisosCacheados = securityService.getPermisosDesarrolladorEntidadByArea(tramite.getIdArea());
+			}
+
+			if (permisosCacheados != null) {
 				res = permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
 						|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA);
-				idAreaCacheada = areaSeleccionada.getCodigo();
 
+			} else {
+				res = false;
 			}
+		} else {
+			res = false;
 		}
 		return res;
 	}
 
 	/**
-	 * Obtiene el valor de permiteEditar.
+	 * Obtiene el valor de tienePermisosVersion, se tiene que cumplir que:
+	 * <ul>
+	 * <li>Tiene que haber una versión seleccionada.</li>
+	 * <li>Si eres adm. entidad ya puedes tocarlo.</li>
+	 * <li>Sino tienes que ser adminisitrador o desarrollador de área.</li>
+	 * </ul>
 	 *
-	 * @return el valor de permiteEditar
+	 * @return el valor de tienePermisosTramite
 	 */
-	public boolean getPermiteEditarTramite() {
-		boolean res = false;
+	public boolean getTienePermisosVersion() {
+		boolean res;
 
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilasSeleccionadasArea()) {
-			return false;
+		if (!verificarFilaSeleccionadaVersion()) {
+			res = false;
 		}
-
 		// Admin entidad
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
+		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.ADMIN_ENT) {
 			res = true;
 		}
-
-		// Desarrollador
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
+		// Admin area o Desarrollador
+		else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
 				&& TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
-			final Area areaSeleccionada = listaAreasSeleccionadas.get(0);
-			if (areaSeleccionada != null) {
-				if (areaSeleccionada.getCodigo().compareTo(idAreaCacheada) != 0) {
-					permisosCacheados = securityService
-							.getPermisosDesarrolladorEntidadByArea(areaSeleccionada.getCodigo());
-				}
-				res = (permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-						|| permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA));
-				idAreaCacheada = areaSeleccionada.getCodigo();
-			}
-		}
 
-		return res;
-	}
+			final Tramite tramite = tramiteService.getTramite(this.versionSeleccionada.getIdTramite());
+			permisosCacheados = securityService.getPermisosDesarrolladorEntidadByArea(tramite.getIdArea());
 
-	/**
-	 * Obtiene el valor de permiteEditar.
-	 *
-	 * @return el valor de permiteEditar
-	 */
-	public boolean getPermiteConsultarTramite() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaArea()) {
-			return false;
-		}
+			if (permisosCacheados != null) {
+				res = permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
+						|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA);
 
-		final Area areaSeleccionada = listaAreasSeleccionadas.get(0);
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-			if (areaSeleccionada == null) {
-				return false;
 			} else {
-				if (areaSeleccionada.getCodigo().compareTo(idAreaCacheada) != 0) {
-					permisosCacheados = securityService
-							.getPermisosDesarrolladorEntidadByArea(areaSeleccionada.getCodigo());
-				}
-				if (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
-					return (permisosCacheados.contains(TypeRolePermisos.CONSULTA));
-				} else {
-					return (permisosCacheados.contains(TypeRolePermisos.CONSULTA)
-							|| permisosCacheados.contains(TypeRolePermisos.ADMINISTRADOR_AREA)
-							|| permisosCacheados.contains(TypeRolePermisos.DESARROLLADOR_AREA));
-				}
+				res = false;
 			}
+		} else {
+			res = false;
 		}
-		return false;
+		return res;
 	}
 
 	/**
@@ -581,6 +527,11 @@ public class ViewTramites extends ViewControllerBase {
 
 	}
 
+	/**
+	 * Verifica si hay algun area seleccionado
+	 *
+	 * @return
+	 */
 	private boolean verificarFilasSeleccionadasArea() {
 		boolean filaSeleccionada = true;
 		if (this.listaAreasSeleccionadas == null || listaAreasSeleccionadas.isEmpty()) {
@@ -601,14 +552,6 @@ public class ViewTramites extends ViewControllerBase {
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
-	}
-
-	public boolean getSeleccionadasAreas() {
-		return verificarFilasSeleccionadasArea();
-	}
-
-	public boolean getSeleccionadaArea() {
-		return verificarFilaSeleccionadaArea();
 	}
 
 	/**
@@ -637,9 +580,7 @@ public class ViewTramites extends ViewControllerBase {
 		return filaSeleccionada;
 	}
 
-	/**
-	 * Buscar areas.
-	 */
+	/** Buscar areas. */
 	private void buscarAreas() {
 		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(),
 				this.filtro);
@@ -667,6 +608,16 @@ public class ViewTramites extends ViewControllerBase {
 
 		}
 
+		buscarAreasPreseleccionadas();
+
+		buscarTramites();
+	}
+
+	/**
+	 * Si hay un area marcada por url, lo marcaremos como la seleccionada. Sino,
+	 * marcaremos todas como seleccionadas.
+	 */
+	private void buscarAreasPreseleccionadas() {
 		if (StringUtils.isNotEmpty(idArea)) {
 			for (final Area area : getListaAreas()) {
 				if (area.getCodigo().compareTo(Long.valueOf(idArea)) == 0) {
@@ -688,18 +639,15 @@ public class ViewTramites extends ViewControllerBase {
 
 		// Lo desactivamos
 		idArea = null;
-
-		buscarTramites();
 	}
 
+	/** Buscar tramites. **/
 	private void buscarTramites() {
 		buscarTramites(null);
 	}
 
-	/**
-	 * Buscar tramites.
-	 */
-	private void buscarTramites(final String filtro) {
+	/** Desmarca quitando la seleccion. **/
+	private void desmarcar() {
 		// Quitamos seleccion de dato
 		tramiteSeleccionada = null;
 		versionSeleccionada = null;
@@ -709,7 +657,16 @@ public class ViewTramites extends ViewControllerBase {
 		} else {
 			listaTramiteVersiones.clear();
 		}
+	}
 
+	/**
+	 * Buscar tramites.
+	 *
+	 * @param filtro
+	 */
+	private void buscarTramites(final String filtro) {
+
+		desmarcar();
 		// Verifica si no hay fila seleccionada
 		if (!verificarFilasSeleccionadasArea()) {
 			return;
@@ -739,30 +696,43 @@ public class ViewTramites extends ViewControllerBase {
 
 		}
 
+		if (idTramite != null && !idTramite.isEmpty()) {
+			buscarTramitesPorDefecto();
+		}
+
+		Collections.sort(listaTramiteVersiones,
+				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
+
+	}
+
+	/**
+	 * Método para buscar si tiene marcado un idTramite o idTramiteVersion por
+	 * defecto.
+	 */
+	private void buscarTramitesPorDefecto() {
 		/**
 		 * Comprobamos si hay que marcar algo por defecto (tramite o tramite version).
 		 **/
-		if (idTramite != null && !idTramite.isEmpty()) {
-			final Long lIdTramite = Long.valueOf(idTramite);
-			for (final TramiteVersiones itemTramiteVersiones : listaTramiteVersiones) {
-				if (itemTramiteVersiones.getTramite().getCodigo().compareTo(lIdTramite) == 0) {
-					this.tramiteSeleccionada = itemTramiteVersiones;
-					break;
-				}
+		final Long lIdTramite = Long.valueOf(idTramite);
+		for (final TramiteVersiones itemTramiteVersiones : listaTramiteVersiones) {
+			if (itemTramiteVersiones.getTramite().getCodigo().compareTo(lIdTramite) == 0) {
+				this.tramiteSeleccionada = itemTramiteVersiones;
+				break;
 			}
+		}
 
-			if (this.tramiteSeleccionada != null && idTramiteVersion != null && !idTramiteVersion.isEmpty()) {
-				final Long lIdTramiteVersion = Long.valueOf(idTramiteVersion);
-				for (final TramiteVersion version : this.tramiteSeleccionada.getListaVersiones()) {
-					if (version.getCodigo().compareTo(lIdTramiteVersion) == 0) {
-						this.versionSeleccionada = version;
-						this.tramiteSeleccionada = null;
-					}
+		/**
+		 * Si tiene un trámite seleccionado, lo buscamos
+		 */
+		if (this.tramiteSeleccionada != null && idTramiteVersion != null && !idTramiteVersion.isEmpty()) {
+			final Long lIdTramiteVersion = Long.valueOf(idTramiteVersion);
+			for (final TramiteVersion version : this.tramiteSeleccionada.getListaVersiones()) {
+				if (version.getCodigo().compareTo(lIdTramiteVersion) == 0) {
+					this.versionSeleccionada = version;
+					this.tramiteSeleccionada = null;
 				}
 			}
 		}
-		Collections.sort(listaTramiteVersiones,
-				(o1, o2) -> o1.getTramite().getIdentificador().compareTo((o2.getTramite().getIdentificador())));
 
 	}
 
@@ -781,17 +751,6 @@ public class ViewTramites extends ViewControllerBase {
 			expandir = false;
 		}
 		return expandir;
-	}
-
-	public String getIdentificadorArea(final String idArea) {
-
-		for (final Area area : listaAreasSeleccionadas) {
-			if (area.getCodigo().equals(Long.valueOf(idArea))) {
-				return area.getIdentificador();
-			}
-		}
-		return "";
-
 	}
 
 	/**
@@ -828,8 +787,13 @@ public class ViewTramites extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
-		params.put(TypeParametroVentana.ID.toString(),
-				String.valueOf(this.tramiteSeleccionada.getTramite().getCodigo()));
+		if (modoAcceso == TypeModoAcceso.ALTA) {
+			final Area area = listaAreasSeleccionadas.get(0);
+			params.put(TypeParametroVentana.AREA.toString(), String.valueOf(area.getCodigo()));
+		} else {
+			params.put(TypeParametroVentana.ID.toString(),
+					String.valueOf(this.tramiteSeleccionada.getTramite().getCodigo()));
+		}
 		UtilJSF.openDialog(DialogTramite.class, modoAcceso, params, true, 540, 220);
 	}
 
@@ -839,18 +803,23 @@ public class ViewTramites extends ViewControllerBase {
 	public void moverTramite() {
 
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaTramite())
+		if (!verificarFilaSeleccionadaTramite()) {
 			return;
+		}
 
-		// Verificamos que los dominiosId que tiene asignado, alguna de sus
-		// versiones,
-		// no
-		// sea ninguno de ambito area.
-		/*
-		 * if (checkDominioArea()) {
-		 * UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
-		 * UtilJSF.getLiteral("viewTramites.error.tramiteConDominioAreas")); return; }
-		 */
+		boolean versionBloqueada = false;
+		for (final TramiteVersion version : this.tramiteSeleccionada.getListaVersiones()) {
+			if (version.getBloqueada()) {
+				versionBloqueada = true;
+				break;
+			}
+		}
+
+		if (versionBloqueada) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
+					UtilJSF.getLiteral("viewTramitesVersion.movertramite.versionbloqueada"));
+			return;
+		}
 
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
@@ -859,34 +828,12 @@ public class ViewTramites extends ViewControllerBase {
 		UtilJSF.openDialog(DialogMoverTramite.class, TypeModoAcceso.EDICION, params, true, 540, 180);
 	}
 
-	/**
-	 * Comprobamos que no tiene ningun dominio de tipo area asignado.
-	 *
-	 * @return
-	 */
-	private boolean checkDominioArea() {
-		final List<TramiteVersion> tramitesVersion = tramiteService
-				.listTramiteVersion(this.tramiteSeleccionada.getTramite().getCodigo(), null);
-		if (tramitesVersion != null) {
-			for (final TramiteVersion tramiteVersion : tramitesVersion) {
-				final List<Dominio> dominiosSimples = tramiteService
-						.getDominioSimpleByTramiteId(tramiteVersion.getCodigo());
-				if (dominiosSimples != null) {
-					for (final Dominio dominio : dominiosSimples) {
-						if (dominio.getAmbito() == TypeAmbito.AREA) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-
+	/** UnselectTramite. **/
 	public void unSelectTramite() {
 		tramiteSeleccionada = null;
 	}
 
+	/** SelectTramite. **/
 	public void unSelectVersionTramite() {
 		versionSeleccionada = null;
 	}
@@ -1006,33 +953,14 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void bloquear() {
 
-		if (!verificarFilaSeleccionadaVersion())
+		if (!isPermiteBloquear() || !getTienePermisosTramite()) {
 			return;
+		}
 
 		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
 			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
 					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
 			return;
-		}
-
-		if (this.versionSeleccionada.getBloqueada()) {
-			// Si está bloqueada, entonces no puedes bloquearlo.
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
-					UtilJSF.getLiteral("viewTramitesVersion.bloquear.errorYaBloqueado"));
-			return;
-		}
-
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR) {
-
-			final Area areaSeleccionada = listaAreasSeleccionadas.get(0);
-			final List<TypeRolePermisos> permisos = securityService
-					.getPermisosDesarrolladorEntidadByArea(areaSeleccionada.getCodigo());
-			// Si no puedes editar, no puedes bloquear
-			if (!permisos.contains(TypeRolePermisos.DESARROLLADOR_AREA)
-					&& !permisos.contains(TypeRolePermisos.ADMINISTRADOR_AREA)) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
-				return;
-			}
 		}
 
 		tramiteService.bloquearTramiteVersion(this.versionSeleccionada.getCodigo(),
@@ -1047,26 +975,7 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void desbloquear() {
 
-		if (!verificarFilaSeleccionadaVersion())
-			return;
-
-		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
-					UtilJSF.getLiteral("viewTramitesVersion.entorno.noDesarrollo"));
-			return;
-		}
-
-		if (!this.versionSeleccionada.getBloqueada()) {
-			// Si está desbloqueada, entonces no puedes bloquearlo.
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO,
-					UtilJSF.getLiteral("viewTramitesVersion.bloquear.errorYaDesbloqueado"));
-			return;
-		}
-
-		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& !this.versionSeleccionada.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName())) {
-			// Si no puedes editar, no puedes bloquear
-			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.permisos.insuficientes"));
+		if (!isPermiteDesbloquear() || !getTienePermisosTramite()) {
 			return;
 		}
 
@@ -1099,10 +1008,12 @@ public class ViewTramites extends ViewControllerBase {
 	public boolean isPermiteBloquear() {
 		boolean resultado = true;
 
+		// Si no hay versión seleccionada o está bloqueada
 		if (this.versionSeleccionada == null || versionSeleccionada.getBloqueada()) {
 			resultado = false;
 		}
 
+		// Solo se puede bloquear/desbloquear en desarrollo
 		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
 			resultado = false;
 		}
@@ -1118,15 +1029,18 @@ public class ViewTramites extends ViewControllerBase {
 	public boolean isPermiteDesbloquear() {
 		boolean permiteDesbloquear = true;
 
-		if (this.versionSeleccionada == null) {
-			permiteDesbloquear = false;
-		} else if (!versionSeleccionada.getBloqueada()) {
-			permiteDesbloquear = false;
-		} else if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR
-				&& !this.versionSeleccionada.getDatosUsuarioBloqueo().equals(UtilJSF.getSessionBean().getUserName())) {
+		// Si no hay versión seleccionada o ya está desbloqueada
+		if (this.versionSeleccionada == null || !versionSeleccionada.getBloqueada()) {
 			permiteDesbloquear = false;
 		}
 
+		// Tiene que estar bloqueado por el mismo usuario
+		if (UtilJSF.getSessionBean().getActiveRole() == TypeRoleAcceso.DESAR && this.versionSeleccionada != null
+				&& !UtilJSF.getSessionBean().getUserName().equals(this.versionSeleccionada.getDatosUsuarioBloqueo())) {
+			permiteDesbloquear = false;
+		}
+
+		// Solo se puede bloquear/desbloquear en desarrollo
 		if (!UtilJSF.checkEntorno(TypeEntorno.DESARROLLO)) {
 			permiteDesbloquear = false;
 		}
@@ -1232,8 +1146,15 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void duplicarVersion() {
 		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaVersion())
+		if (!verificarFilaSeleccionadaVersion()) {
 			return;
+		}
+
+		if (this.versionSeleccionada.getBloqueada()) {
+			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+					UtilJSF.getLiteral("dialogTramiteExportar.error.tramiteBloqueado"));
+			return;
+		}
 
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.versionSeleccionada.getCodigo()));
@@ -1257,12 +1178,32 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
+	 * Obtiene el identificador de un area
+	 * 
+	 * @param idArea
+	 * @return
+	 */
+	public String getIdentificadorArea(final String idArea) {
+
+		for (final Area area : listaAreasSeleccionadas) {
+			if (area.getCodigo().equals(Long.valueOf(idArea))) {
+				return area.getIdentificador();
+			}
+		}
+		return "";
+
+	}
+
+	/**
 	 * Ayuda.
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("tramites");
 	}
 
+	/**
+	 * Valida version.
+	 */
 	public void validarVersion() {
 
 		if (!verificarFilaSeleccionadaVersion()) {
@@ -1404,21 +1345,6 @@ public class ViewTramites extends ViewControllerBase {
 	}
 
 	/**
-	 * @return the permiteAccionEntorno
-	 */
-	public boolean isPermiteAccionEntorno() {
-		return permiteAccionEntorno;
-	}
-
-	/**
-	 * @param permiteAccionEntorno
-	 *            the permiteAccionEntorno to set
-	 */
-	public void setPermiteAccionEntorno(final boolean permiteAccionEntorno) {
-		this.permiteAccionEntorno = permiteAccionEntorno;
-	}
-
-	/**
 	 * @return the idTramite
 	 */
 	public String getIdTramite() {
@@ -1446,6 +1372,24 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void setIdTramiteVersion(final String idTramiteVersion) {
 		this.idTramiteVersion = idTramiteVersion;
+	}
+
+	/**
+	 * Get seleccionadas areas
+	 *
+	 * @return
+	 */
+	public boolean getSeleccionadasAreas() {
+		return verificarFilasSeleccionadasArea();
+	}
+
+	/**
+	 * Get seleccionada area.
+	 *
+	 * @return
+	 */
+	public boolean getSeleccionadaArea() {
+		return verificarFilaSeleccionadaArea();
 	}
 
 }

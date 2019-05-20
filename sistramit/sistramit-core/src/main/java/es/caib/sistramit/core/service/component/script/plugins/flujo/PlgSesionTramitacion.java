@@ -9,6 +9,7 @@ import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.script.ClzDatosUsuarioInt;
 import es.caib.sistramit.core.service.model.script.ClzTramiteCPInt;
 import es.caib.sistramit.core.service.model.script.flujo.PlgSesionTramitacionInt;
+import es.caib.sistramit.core.service.util.UtilsFlujo;
 
 /**
  * Plugin de acceso a los datos de la sesión de tramitación.
@@ -63,6 +64,11 @@ public final class PlgSesionTramitacion implements PlgSesionTramitacionInt {
 	@Override
 	public ClzDatosUsuarioInt getUsuario() {
 		return new ClzDatosUsuario(variablesFlujo.getUsuario());
+	}
+
+	@Override
+	public ClzDatosUsuarioInt getRepresentante() {
+		return new ClzDatosUsuario(UtilsFlujo.getDatosRepresentante(variablesFlujo.getUsuarioAutenticado()));
 	}
 
 	@Override

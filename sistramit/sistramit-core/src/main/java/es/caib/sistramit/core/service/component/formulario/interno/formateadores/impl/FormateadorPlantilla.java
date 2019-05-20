@@ -1,9 +1,15 @@
 package es.caib.sistramit.core.service.component.formulario.interno.formateadores.impl;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import es.caib.sistra2.commons.pdf.PdfUtil;
+import es.caib.sistra2.commons.utils.ValidacionTipoException;
+import es.caib.sistra2.commons.utils.ValidacionesTipo;
+import es.caib.sistrages.rest.api.interna.RComponente;
+import es.caib.sistrages.rest.api.interna.RComponenteTextbox;
 import es.caib.sistrages.rest.api.interna.RFormularioInterno;
 import es.caib.sistramit.core.api.exception.FormateadorException;
 import es.caib.sistramit.core.api.model.formulario.ValorCampo;
@@ -11,10 +17,14 @@ import es.caib.sistramit.core.api.model.formulario.ValorCampoIndexado;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoListaIndexados;
 import es.caib.sistramit.core.api.model.formulario.ValorCampoSimple;
 import es.caib.sistramit.core.api.model.formulario.ValorIndexado;
+import es.caib.sistramit.core.api.model.formulario.types.TypeCampo;
+import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
 import es.caib.sistramit.core.service.component.formulario.interno.formateadores.FormateadorPdfFormulario;
+import es.caib.sistramit.core.service.component.formulario.interno.utils.UtilsFormularioInterno;
 import es.caib.sistramit.core.service.model.formulario.XmlFormulario;
 import es.caib.sistramit.core.service.model.formulario.types.TipoVisualizacionValorIndexado;
 import es.caib.sistramit.core.service.util.UtilsFormulario;
+import es.caib.sistramit.core.service.util.UtilsSTG;
 
 /**
  * Formateador PDF para formularios.
@@ -36,10 +46,18 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 			final XmlFormulario xml = UtilsFormulario.xmlToValores(ixml);
 			final PdfUtil pdf = new PdfUtil(plantilla);
 			final Map<String, String> datos = new HashMap<>();
+			List<RComponente> componentes = null;
+			if (defFormInterno != null && defFormInterno.getPaginas() != null) {
+				componentes = UtilsFormularioInterno.devuelveListaCampos(defFormInterno);
+			}
 			if (xml != null && xml.getValores() != null) {
 				for (final ValorCampo valor : xml.getValores()) {
 					if (valor instanceof ValorCampoSimple) {
-						datos.put(valor.getId(), ((ValorCampoSimple) valor).getValor());
+						if (isComponenteTipoFecha(componentes, valor.getId())) {
+							datos.put(valor.getId(), getConversionFecha(((ValorCampoSimple) valor).getValor()));
+						} else {
+							datos.put(valor.getId(), ((ValorCampoSimple) valor).getValor());
+						}
 					} else if (valor instanceof ValorCampoIndexado && ((ValorCampoIndexado) valor).getValor() != null) {
 
 						datos.put(valor.getId(), ((ValorCampoIndexado) valor).getValor().getDescripcion());
@@ -66,6 +84,54 @@ public class FormateadorPlantilla implements FormateadorPdfFormulario {
 		} catch (final Exception e) {
 			throw new FormateadorException("Error convirtiendo el documento a bytes", e);
 		}
+	}
+
+	/**
+	 * Convierte la fecha en formato YYYY-MM-DD a DD-MM-YYYY
+	 *
+	 * @param fecha
+	 *            Fecha en formato YYYY-MM-DD
+	 * @return Fecha en formato DD-MM-YYYY
+	 * @throws Exception
+	 */
+	private String getConversionFecha(final String fecha) {
+		String valor;
+		try {
+			if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy-MM-dd")) {
+				final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy-MM-dd");
+				valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd-MM-yyyy");
+			} else if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy/MM/dd")) {
+				final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy/MM/dd");
+				valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd/MM/yyyy");
+			} else {
+				throw new FormateadorException("Fecha no valida");
+			}
+		} catch (final ValidacionTipoException e) {
+			throw new FormateadorException("Fecha no valida");
+		}
+		return valor;
+	}
+
+	/**
+	 * Comprueba si un componente es de tipo fecha y por tanto su valor es de tipo
+	 * fecha en formato String
+	 *
+	 * @param componente
+	 * @return
+	 */
+	private boolean isComponenteTipoFecha(final List<RComponente> componentes, final String identificador) {
+		boolean retorno = false;
+
+		if (componentes != null) {
+			for (final RComponente componente : componentes) {
+				if (identificador.equals(componente.getIdentificador())) {
+					retorno = UtilsSTG.traduceTipoCampo(componente.getTipo()) == TypeCampo.TEXTO && UtilsSTG
+							.traduceTipoTexto(((RComponenteTextbox) componente).getTipoTexto()) == TypeTexto.FECHA;
+					break;
+				}
+			}
+		}
+		return retorno;
 
 	}
 

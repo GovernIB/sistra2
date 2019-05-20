@@ -74,7 +74,13 @@ public class DialogPaginaFormulario extends DialogControllerBase {
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
 		mochila.put(Constantes.CLAVE_MOCHILA_SCRIPT, UtilJSON.toJSON(script));
-		UtilJSF.openDialog(DialogScript.class, TypeModoAcceso.EDICION, maps, true, 700);
+		TypeModoAcceso modo;
+		if (modoAcceso.equals(TypeModoAcceso.CONSULTA.toString())) {
+			modo = TypeModoAcceso.CONSULTA;
+		} else {
+			modo = TypeModoAcceso.EDICION;
+		}
+		UtilJSF.openDialog(DialogScript.class, modo, maps, true, 700);
 
 	}
 

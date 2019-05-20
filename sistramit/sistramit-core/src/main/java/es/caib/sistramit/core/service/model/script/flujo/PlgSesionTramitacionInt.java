@@ -17,8 +17,6 @@ public interface PlgSesionTramitacionInt extends PluginScriptPlg {
 	 */
 	String ID = "PLUGIN_SESIONTRAMITACION";
 
-	// TODO Pendiente ver si ofrecemos datos del catalogo
-
 	/**
 	 * Devuelve id sesion tramitación.
 	 *
@@ -72,6 +70,14 @@ public interface PlgSesionTramitacionInt extends PluginScriptPlg {
 	 *         autenticada).
 	 */
 	ClzDatosUsuarioInt getUsuario();
+
+	/**
+	 * Devuelve representante usuario autenticado. Sólo para trámites que se han
+	 * iniciado de forma autenticada.
+	 *
+	 * @return Devuelve usuario (null si no hay representante).
+	 */
+	ClzDatosUsuarioInt getRepresentante();
 
 	/**
 	 * Devuelve el tramite cp

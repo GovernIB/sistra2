@@ -15,6 +15,7 @@ import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
 import es.caib.sistramit.core.api.model.security.types.TypeMetodoAutenticacion;
 import es.caib.sistramit.core.api.model.system.types.TypePluginGlobal;
 import es.caib.sistramit.core.service.component.system.ConfiguracionComponent;
+import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionRepresentante;
 import es.caib.sistramit.core.service.model.integracion.DatosAutenticacionUsuario;
 
 /**
@@ -72,6 +73,18 @@ public final class AutenticacionComponentImpl implements AutenticacionComponent 
 		res.setApellido1(u.getApellido1());
 		res.setApellido2(u.getApellido2());
 		res.setEmail(u.getEmail());
+
+		if (u.getRepresentante() != null) {
+			final DatosAutenticacionRepresentante representante = new DatosAutenticacionRepresentante();
+			representante.setNif(u.getRepresentante().getNif());
+			representante.setNombre(u.getRepresentante().getNombre());
+			representante.setApellido1(u.getRepresentante().getApellido1());
+			representante.setApellido2(u.getRepresentante().getApellido2());
+			representante.setEmail(u.getRepresentante().getEmail());
+			res.setRepresentante(representante);
+		}
+
+		// TODO REPRESENTANTE
 
 		return res;
 	}

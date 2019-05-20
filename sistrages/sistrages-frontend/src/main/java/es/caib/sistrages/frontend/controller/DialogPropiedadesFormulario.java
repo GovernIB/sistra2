@@ -232,7 +232,19 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		this.data.getPaginas().add(pagina);
 	}
 
+	/** Consultar pagina. **/
+	public void consultarPagina() {
+
+		abrirPagina(TypeModoAcceso.CONSULTA);
+	}
+
+	/** Editar pagina. **/
 	public void editarPagina() {
+		abrirPagina(TypeModoAcceso.valueOf(modoAcceso));
+	}
+
+	/** Abrir dialog pagina formulario. **/
+	public void abrirPagina(final TypeModoAcceso modo) {
 
 		if (!verificarFilaSeleccionada(paginaSeleccionada)) {
 			return;
@@ -244,7 +256,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		params.put(TypeParametroVentana.FORM_INTERNO_ACTUAL.toString(), this.id);
 		params.put(TypeParametroVentana.TRAMITEVERSION.toString(), idTramiteVersion);
 
-		UtilJSF.openDialog(DialogPaginaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 130);
+		UtilJSF.openDialog(DialogPaginaFormulario.class, modo, params, true, 430, 130);
 	}
 
 	/**
@@ -355,7 +367,18 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		}
 	}
 
+	/** Consultar plantilla. **/
+	public void consultarPlantilla() {
+		abrirPlantilla(TypeModoAcceso.CONSULTA);
+	}
+
+	/** Editar plantilla. **/
 	public void editarPlantilla() {
+		abrirPlantilla(TypeModoAcceso.valueOf(modoAcceso));
+	}
+
+	/** Abrir dialog de plantilla formulario. **/
+	private void abrirPlantilla(final TypeModoAcceso modo) {
 
 		if (!verificarFilaSeleccionada(plantillaSeleccionada)) {
 			return;
@@ -364,7 +387,7 @@ public class DialogPropiedadesFormulario extends DialogControllerBase {
 		// Abrimos seleccion ficheros
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.DATO.toString(), UtilJSON.toJSON(this.plantillaSeleccionada));
-		UtilJSF.openDialog(DialogPlantillaFormulario.class, TypeModoAcceso.valueOf(modoAcceso), params, true, 430, 230);
+		UtilJSF.openDialog(DialogPlantillaFormulario.class, modo, params, true, 430, 230);
 	}
 
 	/**
