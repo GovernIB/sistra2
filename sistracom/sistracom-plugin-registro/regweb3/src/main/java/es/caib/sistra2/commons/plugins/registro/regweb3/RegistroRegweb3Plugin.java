@@ -187,7 +187,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 
 			// creacion de asiento registral de entrada con tipo de operacion normal
 			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
-					null);
+					null, true);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de entrada : " + ex.getMessage(), ex);
 		}
@@ -221,7 +221,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
 			// creacion de asiento registral de salida con tipo de operacion normal
 			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
-					ConstantesRegweb3.OPERACION_NORMAL);
+					ConstantesRegweb3.OPERACION_NORMAL,false);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de salida : " + ex.getMessage(), ex);
 		}
