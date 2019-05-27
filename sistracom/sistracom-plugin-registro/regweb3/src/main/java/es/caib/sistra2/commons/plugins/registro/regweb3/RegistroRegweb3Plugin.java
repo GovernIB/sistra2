@@ -31,6 +31,7 @@ import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeDocumental;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeFirmaAsiento;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeInteresado;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 
 /**
@@ -221,7 +222,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
 			// creacion de asiento registral de salida con tipo de operacion normal
 			result = service.crearAsientoRegistral(asientoRegistral.getDatosOrigen().getCodigoEntidad(), paramEntrada,
-					ConstantesRegweb3.OPERACION_NORMAL,false);
+					ConstantesRegweb3.OPERACION_NORMAL, false);
 		} catch (final Exception ex) {
 			throw new RegistroPluginException("Error realizando registro de salida : " + ex.getMessage(), ex);
 		}
@@ -252,12 +253,21 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 					getPropiedad(ConstantesRegweb3.PROP_WSDL_DIR), getPropiedad(ConstantesRegweb3.PROP_USUARIO),
 					getPropiedad(ConstantesRegweb3.PROP_PASSWORD), logCalls);
 
-			if (this.descargaExternaJustificantes()) {
-				final JustificanteReferenciaWs referencia = service.obtenerReferenciaJustificante(codigoEntidad, numeroRegistro);
+			// Devuelve justificante según método de descarga
+			switch (descargaJustificantes()) {
+			case URL_EXTERNA:
+				final JustificanteReferenciaWs referencia = service.obtenerReferenciaJustificante(codigoEntidad,
+						numeroRegistro);
 				url = referencia.getUrl();
-			} else {
-				final JustificanteWs result = service.obtenerJustificante(codigoEntidad, numeroRegistro, ConstantesRegweb3.REGISTRO_ENTRADA);
+				break;
+			case FICHERO:
+				final JustificanteWs result = service.obtenerJustificante(codigoEntidad, numeroRegistro,
+						ConstantesRegweb3.REGISTRO_ENTRADA);
 				content = result.getJustificante();
+				break;
+			default:
+				// Redireccion a carpeta. No debe entrar aquí.
+				throw new RegistroPluginException("Si se redirige a carpeta no debe descargarse");
 			}
 
 		} catch (final Exception ex) {
@@ -268,14 +278,10 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		}
 
 		final ResultadoJustificante res = new ResultadoJustificante();
+		res.setUrl(url);
 		res.setContenido(content);
 		return res;
 
-	}
-
-	@Override
-	public boolean descargaExternaJustificantes() throws RegistroPluginException {
-		return "true".equals(getPropiedad(ConstantesRegweb3.PROP_JUSTIFICANTE_CSV));
 	}
 
 	@Override
@@ -306,6 +312,16 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		res.setNombre(libroWs.getNombreCorto());
 
 		return res;
+	}
+
+	@Override
+	public TypeJustificante descargaJustificantes() throws RegistroPluginException {
+		TypeJustificante tipoJustificante = TypeJustificante
+				.fromString(getPropiedad(ConstantesRegweb3.PROP_JUSTIFICANTE_DESCARGA));
+		if (tipoJustificante == null) {
+			tipoJustificante = TypeJustificante.FICHERO;
+		}
+		return tipoJustificante;
 	}
 
 	// ----------- Funciones auxiliares
@@ -465,6 +481,9 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 		anexoAsiento.setOrigenCiudadanoAdmin(dr.getOrigenDocumento().intValue());
 		anexoAsiento.setModoFirma(dr.getModoFirma().intValue());
 		anexoAsiento.setValidezDocumento(dr.getValidez().toString());
+		anexoAsiento.setNombreFicheroAnexado(dr.getNombreFichero());
+		anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
+		anexoAsiento.setTipoMIMEFicheroAnexado(MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 
 		if (dr.getModoFirma() != TypeFirmaAsiento.SIN_FIRMA) {
 			if (dr.getModoFirma() == TypeFirmaAsiento.FIRMA_DETACHED) {
@@ -476,17 +495,7 @@ public class RegistroRegweb3Plugin extends AbstractPluginProperties implements I
 				anexoAsiento.setNombreFirmaAnexada(dr.getNombreFirmaAnexada());
 				anexoAsiento.setTipoMIMEFirmaAnexada(
 						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFirmaAnexada())));
-			} else {
-				anexoAsiento.setFirmaAnexada(dr.getContenidoFirma());
-				anexoAsiento.setNombreFirmaAnexada(dr.getNombreFirmaAnexada());
-				anexoAsiento.setTipoMIMEFirmaAnexada(
-						MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFirmaAnexada())));
 			}
-		} else {
-			anexoAsiento.setNombreFicheroAnexado(dr.getNombreFichero());
-			anexoAsiento.setFicheroAnexado(dr.getContenidoFichero());
-			anexoAsiento
-					.setTipoMIMEFicheroAnexado(MimeType.getMimeTypeForExtension(getExtension(dr.getNombreFichero())));
 		}
 
 		return anexoAsiento;

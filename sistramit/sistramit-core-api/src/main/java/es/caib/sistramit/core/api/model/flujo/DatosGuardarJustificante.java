@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDescargaJustificante;
 
 /**
  * Datos del justificante en el paso guardar.
@@ -29,10 +30,16 @@ public final class DatosGuardarJustificante implements ModelApi {
 	 */
 	private String fecha;
 
+	// TODO BORRAR
 	/**
 	 * Url acceso justificante.
 	 */
 	private TypeSiNo url = TypeSiNo.NO;
+
+	/**
+	 * Tipo de descarga del justificante.
+	 */
+	private TypeDescargaJustificante descarga = TypeDescargaJustificante.FICHERO;
 
 	/**
 	 * Asunto.
@@ -213,7 +220,7 @@ public final class DatosGuardarJustificante implements ModelApi {
 
 	/**
 	 * Método de acceso a url.
-	 * 
+	 *
 	 * @return url
 	 */
 	public TypeSiNo getUrl() {
@@ -222,12 +229,31 @@ public final class DatosGuardarJustificante implements ModelApi {
 
 	/**
 	 * Método para establecer url.
-	 * 
+	 *
 	 * @param url
 	 *            url a establecer
 	 */
 	public void setUrl(final TypeSiNo url) {
 		this.url = url;
+	}
+
+	/**
+	 * Método de acceso a descarga.
+	 * 
+	 * @return descarga
+	 */
+	public TypeDescargaJustificante getDescarga() {
+		return descarga;
+	}
+
+	/**
+	 * Método para establecer descarga.
+	 * 
+	 * @param descarga
+	 *            descarga a establecer
+	 */
+	public void setDescarga(final TypeDescargaJustificante descarga) {
+		this.descarga = descarga;
 	}
 
 }

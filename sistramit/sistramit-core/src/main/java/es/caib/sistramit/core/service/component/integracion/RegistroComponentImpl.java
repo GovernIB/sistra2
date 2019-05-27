@@ -11,9 +11,11 @@ import es.caib.sistra2.commons.plugins.registro.api.LibroOficina;
 import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistramit.core.api.exception.RegistroJustificanteException;
 import es.caib.sistramit.core.api.exception.RegistroSolicitudException;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
+import es.caib.sistramit.core.api.model.flujo.types.TypeDescargaJustificante;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.system.types.TypePluginEntidad;
 import es.caib.sistramit.core.service.component.system.AuditoriaComponent;
@@ -120,15 +122,33 @@ public final class RegistroComponentImpl implements RegistroComponent {
 	}
 
 	@Override
-	public boolean descargaExternaJustificantes(final String codigoEntidad) {
+	public TypeDescargaJustificante descargaJustificantes(final String codigoEntidad) {
 		final IRegistroPlugin plgRegistro = (IRegistroPlugin) configuracionComponent
 				.obtenerPluginEntidad(TypePluginEntidad.REGISTRO, codigoEntidad);
 
 		try {
-			return plgRegistro.descargaExternaJustificantes();
+			TypeDescargaJustificante res = TypeDescargaJustificante.FICHERO;
+			final TypeJustificante justif = plgRegistro.descargaJustificantes();
+			if (justif != null) {
+				switch (justif) {
+				case FICHERO:
+					res = TypeDescargaJustificante.FICHERO;
+					break;
+				case URL_EXTERNA:
+					res = TypeDescargaJustificante.URL_EXTERNA;
+					break;
+				case CARPETA_CIUDADANA:
+					res = TypeDescargaJustificante.CARPETA_CIUDADANA;
+					break;
+				default:
+					res = TypeDescargaJustificante.FICHERO;
+					break;
+				}
+			}
+			return res;
 		} catch (final RegistroPluginException e) {
 			throw new RegistroJustificanteException(
-					"Error obteniendo si se descargan justificantes de forma externa: " + codigoEntidad, e);
+					"Error obteniendo como se descargan justificantes para entidad: " + codigoEntidad, e);
 		}
 	}
 

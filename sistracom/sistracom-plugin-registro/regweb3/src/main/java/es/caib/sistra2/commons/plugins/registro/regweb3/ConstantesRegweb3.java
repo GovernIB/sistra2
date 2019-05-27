@@ -2,7 +2,7 @@ package es.caib.sistra2.commons.plugins.registro.regweb3;
 
 /**
  * Constantes Regweb3.
- * 
+ *
  * @author Indra
  *
  */
@@ -36,7 +36,7 @@ public class ConstantesRegweb3 {
 	 * Nombre de propiedad para indicar si los justificantes se generan como CSV
 	 * (true/false).
 	 */
-	public final static String PROP_JUSTIFICANTE_CSV = "justificanteCSV";
+	public final static String PROP_JUSTIFICANTE_DESCARGA = "justificanteDESCARGA";
 
 	/** Constante para indicar registro entrada. */
 	public static final Long REGISTRO_ENTRADA = 1L;
@@ -149,6 +149,6 @@ public class ConstantesRegweb3 {
 	 */
 	public static final Long TIPO_DOCFIS_MIXTA = 2L;
 	/** Constante para indicar documentación adjunta digitalizada. */
-	public static final Long TIPO_DOCFIS_DIGTL = 2L;
+	public static final Long TIPO_DOCFIS_DIGTL = 3L;
 
 }

@@ -128,6 +128,9 @@ var HTML_PAS_LITERALS = {
 			,txtValoracioProblemesObservacions: txtValoracioProblemesObservacions
 			,txtValora: txtValora
 			,txtSenseValoracio: txtSenseValoracio
+			,txtCarpetaCiutadana: txtCarpetaCiutadana
+			,txtCarpetaNumeroRegistre: txtCarpetaNumeroRegistre
+			,txtCarpetaAnarJustificant: txtCarpetaAnarJustificant
 		}
 
 		
@@ -542,7 +545,9 @@ $.fn.appPas = function(options) {
 				} else if (pas_tipus === "gj") {
 
 					HTML_PAS_LITERALS[pas_tipus]["jsonNumeroRegistre"] = pas_json.datos.actual.justificante.numero;
-					HTML_PAS_LITERALS[pas_tipus]["jsonJustificantURL"] = pas_json.datos.actual.justificante.url;
+
+					HTML_PAS_LITERALS[pas_tipus]["jsonJustificantDescarrega"] = pas_json.datos.actual.justificante.descarga;
+					HTML_PAS_LITERALS[pas_tipus]["jsonCarpetaURL"] = APP_JSON_TRAMIT_E.urlCarpeta;
 
 					HTML_PAS_LITERALS[pas_tipus]["formularis"] = pas_json.datos.actual.justificante.formularios;
 					HTML_PAS_LITERALS[pas_tipus]["annexes"] = pas_json.datos.actual.justificante.anexos;

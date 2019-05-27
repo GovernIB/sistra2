@@ -178,8 +178,8 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 		justificante.setFormularios(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.FORMULARIO));
 		justificante.setAnexos(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.ANEXO));
 		justificante.setPagos(UtilsFlujo.obtenerDocumentosTipo(docsRegPorTipo, TypeDocumento.PAGO));
-		justificante.setUrl(TypeSiNo.fromBoolean(registroComponent
-				.descargaExternaJustificantes(pDefinicionTramite.getDefinicionVersion().getIdEntidad())));
+		justificante.setDescarga(
+				registroComponent.descargaJustificantes(pDefinicionTramite.getDefinicionVersion().getIdEntidad()));
 
 		// Generamos detalle paso
 		final DetallePasoGuardar dpds = new DetallePasoGuardar();

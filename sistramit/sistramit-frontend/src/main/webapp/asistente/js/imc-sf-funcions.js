@@ -3,6 +3,21 @@
 var APP_ACCESSIBILITAT_HTML = false;
 
 
+// estaBuit
+
+$.fn.estaBuit = function() {
+
+	var valor = this[0],
+		estaBuit = false;
+
+	if (valor === "" || valor === null || valor === "null" || valor === false || valor === 0) {
+		estaBuit = true;
+	}
+
+	return estaBuit;
+}
+
+
 // appCap
 
 $.fn.appCap = function(options) {

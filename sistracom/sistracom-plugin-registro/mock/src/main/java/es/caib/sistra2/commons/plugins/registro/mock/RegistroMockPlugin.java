@@ -18,6 +18,7 @@ import es.caib.sistra2.commons.plugins.registro.api.RegistroPluginException;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.ResultadoRegistro;
 import es.caib.sistra2.commons.plugins.registro.api.TipoAsunto;
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 
 /**
@@ -32,10 +33,9 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 	public static final String IMPLEMENTATION_BASE_PROPERTY = "mock.";
 
 	/**
-	 * Nombre de propiedad para indicar si los justificantes se generan como CSV
-	 * (true/false).
+	 * Nombre de propiedad para indicar como se descargan los justificantes.
 	 */
-	public final static String PROP_JUSTIFICANTE_CSV = "justificanteCSV";
+	public final static String PROP_JUSTIFICANTE_DESCARGA = "justificanteDESCARGA";
 
 	/**
 	 * Si genera error al consultar justificante (true/false).
@@ -129,9 +129,12 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 		}
 
 		final ResultadoJustificante res = new ResultadoJustificante();
-		if (descargaExternaJustificantes()) {
+
+		switch (descargaJustificantes()) {
+		case URL_EXTERNA:
 			res.setUrl("https://www.google.es/search?q=justificante");
-		} else {
+			break;
+		case FICHERO:
 			// Lee pdf mock del classpath
 			byte[] content = null;
 			try (final InputStream isFile = RegistroMockPlugin.class.getClassLoader()
@@ -141,13 +144,13 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 				throw new RegistroPluginException("Excepcion al recuperar justificante simulado: " + e.getMessage(), e);
 			}
 			res.setContenido(content);
+			break;
+		default:
+			// Redireccion a carpeta. No debe entrar aquí.
+			throw new RegistroPluginException("Si se redirige a carpeta no debe descargarse");
 		}
-		return res;
-	}
 
-	@Override
-	public boolean descargaExternaJustificantes() throws RegistroPluginException {
-		return "true".equals(getPropiedad(PROP_JUSTIFICANTE_CSV));
+		return res;
 	}
 
 	@Override
@@ -157,6 +160,15 @@ public class RegistroMockPlugin extends AbstractPluginProperties implements IReg
 		lo.setCodigo("codlib.codofi1.1");
 		lo.setNombre("libro oficina (1) 1");
 		return lo;
+	}
+
+	@Override
+	public TypeJustificante descargaJustificantes() throws RegistroPluginException {
+		TypeJustificante tipoJustificante = TypeJustificante.fromString(getPropiedad(PROP_JUSTIFICANTE_DESCARGA));
+		if (tipoJustificante == null) {
+			tipoJustificante = TypeJustificante.FICHERO;
+		}
+		return tipoJustificante;
 	}
 
 	/**

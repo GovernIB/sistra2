@@ -900,6 +900,16 @@ $.fn.appFormsConfiguracio = function(options) {
 													.find("a.imc-select:first")
 														.html( $("<span>").text(elm_txt) );
 
+												elm
+													.find("ul li.imc-select-seleccionat")
+														.removeClass("imc-select-seleccionat");
+
+												elm
+													.find("ul a[data-value='" + opcio_valor + "']:first")
+														.parent()
+															.addClass("imc-select-seleccionat");
+
+
 											},50
 										);
 

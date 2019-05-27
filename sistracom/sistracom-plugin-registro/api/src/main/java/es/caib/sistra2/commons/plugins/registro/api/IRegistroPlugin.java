@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.fundaciobit.pluginsib.core.IPlugin;
 
+import es.caib.sistra2.commons.plugins.registro.api.types.TypeJustificante;
 import es.caib.sistra2.commons.plugins.registro.api.types.TypeRegistro;
 
 /**
@@ -43,7 +44,7 @@ public interface IRegistroPlugin extends IPlugin {
 
 	/**
 	 * Recupera libro asociado a organismo.
-	 * 
+	 *
 	 * @param codigoEntidad
 	 *            codigo DIR3 entidad
 	 * @param codigoOrganismo
@@ -92,11 +93,10 @@ public interface IRegistroPlugin extends IPlugin {
 			throws RegistroPluginException;
 
 	/**
-	 * Indica si los justificantes se descargarán indicando una url externa.
+	 * Indica como se realiza la descarga de los justificantes.
 	 *
-	 * @return true si los justificantes se descargaran redirigiendo a una url o
-	 *         false si se obtiene directamente el contenido del justificante.
+	 * @return Indica como se realiza la descarga de los justificantes.
 	 */
-	boolean descargaExternaJustificantes() throws RegistroPluginException;
+	TypeJustificante descargaJustificantes() throws RegistroPluginException;
 
 }

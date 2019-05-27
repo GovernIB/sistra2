@@ -253,7 +253,29 @@ function carregaHTML() {
 			// cap
 
 			var jsonAutenticacio = APP_JSON_TRAMIT_T.autenticacion,
-				jsonUsuari = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 + ", " + APP_JSON_TRAMIT_U.nombre : txtSenseAutenticacio;
+				jsonUsuari = txtSenseAutenticacio;
+
+			if (jsonAutenticacio === "c") {
+
+				var usuari_cognom1 = APP_JSON_TRAMIT_U.apellido1
+					,usuari_cognom2 = APP_JSON_TRAMIT_U.apellido2
+					,usuari_nom = APP_JSON_TRAMIT_U.nombre;
+
+				if (!$([usuari_cognom1]).estaBuit() && !$([usuari_cognom2]).estaBuit() && !$([usuari_nom]).estaBuit()) {
+
+					jsonUsuari = APP_JSON_TRAMIT_U.apellido1 + " " + APP_JSON_TRAMIT_U.apellido2 + ", " + APP_JSON_TRAMIT_U.nombre;
+
+				} else if (!$([usuari_cognom1]).estaBuit() && $([usuari_cognom2]).estaBuit() && !$([usuari_nom]).estaBuit()) {
+
+					jsonUsuari = APP_JSON_TRAMIT_U.apellido1 + ", " + APP_JSON_TRAMIT_U.nombre;
+
+				} else if ($([usuari_cognom1]).estaBuit() && $([usuari_cognom2]).estaBuit() && !$([usuari_nom]).estaBuit()) {
+
+					jsonUsuari = APP_JSON_TRAMIT_U.nombre;
+
+				}
+
+			}
 
 			APP_USUARI_ID = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.nif : false;
 
