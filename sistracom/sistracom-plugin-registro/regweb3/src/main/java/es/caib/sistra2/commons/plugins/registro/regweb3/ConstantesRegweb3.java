@@ -4,7 +4,6 @@ package es.caib.sistra2.commons.plugins.registro.regweb3;
  * Constantes Regweb3.
  *
  * @author Indra
- *
  */
 public class ConstantesRegweb3 {
 
