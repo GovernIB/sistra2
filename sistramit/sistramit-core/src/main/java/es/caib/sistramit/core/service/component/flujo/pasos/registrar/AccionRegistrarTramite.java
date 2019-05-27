@@ -548,10 +548,12 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		documentoAsientoRegistral.setValidez(calcularValidez(documento.getTipo()));
 		documentoAsientoRegistral.setNombreFichero(nombreFic);
 		documentoAsientoRegistral.setContenidoFichero(contentFic);
-		if (anexarFirma) {
-			documentoAsientoRegistral.setNombreFirmaAnexada(firmaFichero.getNombre());
-			documentoAsientoRegistral.setContenidoFirma(firmaFichero.getContenido());
+		if (firmaDocumento != null) {
 			documentoAsientoRegistral.setModoFirma(calcularTipoFirmaAsiento(firmaDocumento.getTipoFirma()));
+			if(anexarFirma) {
+				documentoAsientoRegistral.setNombreFirmaAnexada(firmaFichero.getNombre());
+				documentoAsientoRegistral.setContenidoFirma(firmaFichero.getContenido());
+			}
 		} else {
 			documentoAsientoRegistral.setModoFirma(TypeFirmaAsiento.SIN_FIRMA);
 		}
@@ -640,7 +642,7 @@ public final class AccionRegistrarTramite implements AccionPaso {
 		TypeDocumentoIdentificacion tipoDocumento = null;
 		if (NifUtils.esNifPersonaFisica(datosUsuario.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.NIF;
-		} else if (NifUtils.esNifPersonaFisica(datosUsuario.getNif())) {
+		} else if (NifUtils.esNifPersonaJuridica(datosUsuario.getNif())) {
 			tipoDocumento = TypeDocumentoIdentificacion.CIF;
 		} else {
 			throw new TipoNoControladoException("Tipo de identificación no controlado");

@@ -3,6 +3,7 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
@@ -37,8 +38,9 @@
 			 	<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w15, w75, w10" columns = "3" cellpadding = "5" cellspacing = "0"  width="100%">
 
 					<p:outputLabel   for="idioma" value="#{msg['dialogTramiteVersionPrevisualizar.idioma']}" />
-                	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}">
+                	<p:selectOneMenu id="idioma"  value="#{dialogTramiteVersionPrevisualizar.idioma}" >
 						<f:selectItems value="#{dialogTramiteVersionPrevisualizar.idiomas}" var="idi" itemLabel="#{msg['' += idi]}" itemValue="#{idi.toString()}" />
+						<p:ajax event="change" update="dialogTramite:txtCopy" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
 					</p:selectOneMenu >
 					<p:outputLabel   value="" />
 
@@ -46,6 +48,7 @@
 					<p:column>
 						<p:selectOneMenu id="procedimiento"  value="#{dialogTramiteVersionPrevisualizar.tramiteSeleccionado}" style="width:400px;" styleClass="margin-top-10">
 							<f:selectItems value="#{dialogTramiteVersionPrevisualizar.tramites}" var="tramite" itemLabel="#{dialogTramiteVersionPrevisualizar.getText(tramite)}" itemValue="#{tramite.identificador}" />
+							<p:ajax event="change" update="dialogTramite:txtCopy" listener="#{dialogTramiteVersionPrevisualizar.recalcularURL()}" />
 						</p:selectOneMenu >
 						<p style="line-height:20px; padding:0px; margin:0px;">
 							<p:outputLabel   styleClass="outputlabel-nota"  value="#{msg['dialogTramiteVersionPrevisualizar.infoVigente']}" />
@@ -88,16 +91,16 @@
 						<p:column>
 								<p>
 									<p:commandButton id="btnNuevoValor" title="#{msg['botones.nuevo']}" icon="fa fa-plus" actionListener="#{dialogTramiteVersionPrevisualizar.nuevoValor()}" process="@this" update="growlDialog"  >
-		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores"/>
+		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores dialogTramite:txtCopy"/>
 		        					</p:commandButton>
 		        				</p>
 		        				<p>
 		        					<p:commandButton id="btnEditarValor" title="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{dialogTramiteVersionPrevisualizar.editarValor()}" process="@this" update="growlDialog"  >
-		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores"/>
+		        						<p:ajax event="dialogReturn" listener="#{dialogTramiteVersionPrevisualizar.returnDialogo}" update="growlDialog datalistValores dialogTramite:txtCopy"/>
 		        					</p:commandButton>
 		        				</p>
 							    <p>
-							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogTramiteVersionPrevisualizar.quitarValor()}" process="@this" update="growlDialog datalistValores"   />
+							    	<p:commandButton id="btnEliminarValor" title="#{msg['botones.eliminar']}" icon="fa fa-minus" actionListener="#{dialogTramiteVersionPrevisualizar.quitarValor()}" process="@this" update="growlDialog datalistValores dialogTramite:txtCopy"   />
 							    </p>
 
 						</p:column>
@@ -113,14 +116,49 @@
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
+		     		<f:facet name="left">
+		     			<p:inputText id="txtCopy" value="#{dialogTramiteVersionPrevisualizar.urlTramite}" style="display:none" />
+						<p:commandButton id="btnCopiar" value="#{msg['botones.copiar']}" icon="fa fa-copy" onclick="copiarClipboard();"></p:commandButton>
+						<p:commandButton id="hiddenCommandGrowl" styleClass="button" process="@this"  action="#{dialogTramiteVersionPrevisualizar.avisarGrowl()}"  style="display:none" />
+		     		</f:facet>
 					<f:facet name="right">
-		        		<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
+						<p:commandButton value="#{msg['botones.previsualizarTramite']}" actionListener="#{dialogTramiteVersionPrevisualizar.aceptar}" process="@form" update="@form growlDialog"  styleClass="boton-azul" />
 		        		<p:commandButton value="#{msg['botones.validarVersion']}" actionListener="#{dialogTramiteVersionPrevisualizar.validar}" process="@this" update="growlDialog" />
 						<p:commandButton id="btnCancelar" value="#{msg['botones.cancelar']}" actionListener="#{dialogTramiteVersionPrevisualizar.cancelar}" process="@this" />
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogTramiteVersionPrevisualizar.ayuda()}" process="@this"/>
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+
+		    <h:outputScript >
+
+				function copiarClipboard() {
+
+					// Crea un campo de texto "oculto"
+					var aux = document.createElement("input");
+
+					var texto = document.getElementById("dialogTramite:txtCopy");
+
+					// Asigna el contenido del elemento especificado al valor del campo
+					aux.setAttribute("value", texto.value);
+
+					// Añade el campo a la página
+					document.body.appendChild(aux);
+
+					// Selecciona el contenido del campo
+					aux.select();
+
+					// Copia el texto seleccionado
+					document.execCommand("copy");
+
+					// Elimina el campo de la página
+					document.body.removeChild(aux);
+
+					document.getElementById("dialogTramite:hiddenCommandGrowl").click();
+				}
+
+
+			</h:outputScript>
 	</h:form>
 </h:body>
 

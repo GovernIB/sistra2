@@ -87,6 +87,9 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	/** Tramites. **/
 	private List<DefinicionTramiteCP> tramites;
 
+	/** Url Tramite. **/
+	private String urlTramite;
+
 	public String getText(final DefinicionTramiteCP tramite) {
 
 		final StringBuilder texto = new StringBuilder();
@@ -139,19 +142,50 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 				.obtenerPluginEntidad(TypePlugin.CATALOGO_PROCEDIMIENTOS, UtilJSF.getIdEntidad());
 
 		tramites = iplugin.obtenerTramites(tramite.getIdentificador(), this.data.getNumeroVersion(), idioma);
-
+		if (tramiteSeleccionado == null && tramites != null && !tramites.isEmpty()) {
+			tramiteSeleccionado = tramites.get(0).getIdentificador();
+		}
+		calcularUrl(false);
 	}
 
 	/**
-	 * Aceptar.
+	 * Previsualizar
+	 *
+	 * @param previsualizar
+	 *            Si es true, se previsualizar, si es false, se copia.
 	 */
 	public void aceptar() {
 
-		if (tramiteSeleccionado == null) {
-			addMessageContext(TypeNivelGravedad.WARNING,
-					UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite"));
-
+		if (!calcularUrl(true)) {
 			return;
+		}
+		setUrl(urlTramite);
+	}
+
+	/**
+	 * Recalcula la url porque se ha cambiado un campo
+	 */
+	public void recalcularURL() {
+		calcularUrl(false);
+	}
+
+	/**
+	 * Método que calcula la url.
+	 *
+	 * @param lanzarError
+	 *            Si está a true, manda un error al copiar, si está a false, pone el
+	 *            literal en el copy/paste
+	 * @return
+	 */
+	private boolean calcularUrl(final boolean lanzarError) {
+		if (tramiteSeleccionado == null) {
+			if (lanzarError) {
+				addMessageContext(TypeNivelGravedad.WARNING,
+						UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite"));
+			} else {
+				urlTramite = UtilJSF.getLiteral("dialogTramiteVersionPrevisualizar.error.sinseleccionartramite");
+			}
+			return false;
 		}
 
 		final Map<String, Object> mochila = UtilJSF.getSessionBean().getMochilaDatos();
@@ -174,10 +208,15 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			}
 		}
 
-		setUrl(urlBase + "/asistente/iniciarTramite.html?tramite=" + tramite.getIdentificador() + "&version="
+		urlTramite = urlBase + "/asistente/iniciarTramite.html?tramite=" + tramite.getIdentificador() + "&version="
 				+ data.getNumeroVersion() + "&idioma=" + idioma + "&servicioCatalogo=" + servicioCatalogo
-				+ "&idTramiteCatalogo=" + tramiteSeleccionado + params);
+				+ "&idTramiteCatalogo=" + tramiteSeleccionado + params;
+		return true;
+	}
 
+	/** Avisa al growl que se ha copiado correctamente **/
+	public void avisarGrowl() {
+		addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
 	}
 
 	/**
@@ -247,6 +286,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 			return;
 
 		this.parametros.remove(this.valorSeleccionado);
+		recalcularURL();
 
 	}
 
@@ -280,6 +320,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 					this.parametros.add(propiedad);
 				}
 
+				recalcularURL();
 				break;
 
 			case EDICION:
@@ -306,6 +347,7 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 					this.valorSeleccionado = propiedadEdicion;
 				}
 
+				recalcularURL();
 				break;
 			case CONSULTA:
 				// No hay que hacer nada
@@ -512,6 +554,21 @@ public class DialogTramiteVersionPrevisualizar extends DialogControllerBase {
 	 */
 	public void setTramiteSeleccionado(final String tramiteSeleccionado) {
 		this.tramiteSeleccionado = tramiteSeleccionado;
+	}
+
+	/**
+	 * @return the urlTramite
+	 */
+	public final String getUrlTramite() {
+		return urlTramite;
+	}
+
+	/**
+	 * @param urlTramite
+	 *            the urlTramite to set
+	 */
+	public final void setUrlTramite(final String urlTramite) {
+		this.urlTramite = urlTramite;
 	}
 
 }

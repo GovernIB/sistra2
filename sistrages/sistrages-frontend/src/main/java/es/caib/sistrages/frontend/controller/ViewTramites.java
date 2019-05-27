@@ -219,7 +219,13 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	public void importar() {
 		final Map<String, String> params = new HashMap<>();
-		UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
+		if (TypeEntorno.fromString(UtilJSF.getEntorno()) == TypeEntorno.DESARROLLO) {
+			UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
+		} else {
+			UtilJSF.openDialog(DialogTramiteImportar.class, TypeModoAcceso.EDICION, params, true, 800);
+			// UtilJSF.openDialog(DialogCuadernoCarga.class, TypeModoAcceso.EDICION, params,
+			// true, 800);
+		}
 	}
 
 	/**
@@ -585,6 +591,12 @@ public class ViewTramites extends ViewControllerBase {
 		final List<Area> listaTodasAreas = tramiteService.listArea(UtilJSF.getSessionBean().getEntidad().getCodigo(),
 				this.filtro);
 
+		if (listaAreasSeleccionadas == null) {
+			listaAreasSeleccionadas = new ArrayList<>();
+		} else {
+			listaAreasSeleccionadas.clear();
+		}
+
 		if (getListaAreas() == null) {
 			setListaAreas(new ArrayList<>());
 		} else {
@@ -780,10 +792,6 @@ public class ViewTramites extends ViewControllerBase {
 	 */
 	private void abrirTramite(final TypeModoAcceso modoAcceso) {
 
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionadaTramite())
-			return;
-
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 
@@ -791,6 +799,12 @@ public class ViewTramites extends ViewControllerBase {
 			final Area area = listaAreasSeleccionadas.get(0);
 			params.put(TypeParametroVentana.AREA.toString(), String.valueOf(area.getCodigo()));
 		} else {
+
+			// Verifica si no hay fila seleccionada (editar/consultar)
+			if (!verificarFilaSeleccionadaTramite()) {
+				return;
+			}
+
 			params.put(TypeParametroVentana.ID.toString(),
 					String.valueOf(this.tramiteSeleccionada.getTramite().getCodigo()));
 		}
@@ -1179,7 +1193,7 @@ public class ViewTramites extends ViewControllerBase {
 
 	/**
 	 * Obtiene el identificador de un area
-	 * 
+	 *
 	 * @param idArea
 	 * @return
 	 */
