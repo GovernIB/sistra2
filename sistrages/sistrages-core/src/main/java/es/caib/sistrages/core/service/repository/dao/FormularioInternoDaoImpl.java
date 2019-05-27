@@ -574,6 +574,9 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 				case EXPRESION:
 					jCampoTexto.setNormalExpresionRegular(campoTexto.getExpresionRegular());
 					break;
+				case EMAIL:
+					jCampoTexto.setNormalTamanyo(campoTexto.getNormalTamanyo());
+					break;
 				}
 
 				jCampoTexto.setPermiteRango(campoTexto.isPermiteRango());

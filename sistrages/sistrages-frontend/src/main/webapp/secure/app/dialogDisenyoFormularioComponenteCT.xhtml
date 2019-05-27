@@ -17,8 +17,8 @@
 		</p:selectOneMenu>
 	</h:column>
 
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tamanyo']}" /></h:column>
-   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal}">
+   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}"><p:outputLabel value="#{msg['dialogDisenyoFormulario.componente.tamanyo']}" /></h:column>
+   	<h:column rendered="#{dialogDisenyoFormulario.campoTextoNormal or dialogDisenyoFormulario.campoTextoEmail}">
    		<p:inputNumber value="#{dialogDisenyoFormulario.objetoFormularioEdit.normalTamanyo}" decimalPlaces="0" minValue="1" maxValue="9999" disabled="#{dialogDisenyoFormulario.consulta}">
    			<p:ajax event="blur" process="@this" />
    		</p:inputNumber>

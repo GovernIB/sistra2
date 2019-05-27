@@ -482,7 +482,8 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 				if (objetoFormularioEdit instanceof ComponenteFormularioCampoTexto) {
 					final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
 
-					if (TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())
+					if ((TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto())
+							|| TypeCampoTexto.EMAIL.equals(campo.getTipoCampoTexto()))
 							&& (campo.getNormalTamanyo() == null || campo.getNormalTamanyo() <= 0)) {
 						addMessageContext(TypeNivelGravedad.WARNING,
 								UtilJSF.getLiteral("warning.componente.normal.tamaño"), true);
@@ -2198,6 +2199,16 @@ public class DialogDisenyoFormulario extends DialogControllerBase {
 	public boolean isCampoTextoNormal() {
 		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
 		return TypeCampoTexto.NORMAL.equals(campo.getTipoCampoTexto());
+	}
+
+	/**
+	 * Comprueba si es un componente de tipo texto
+	 *
+	 * @return
+	 */
+	public boolean isCampoTextoEmail() {
+		final ComponenteFormularioCampoTexto campo = (ComponenteFormularioCampoTexto) objetoFormularioEdit;
+		return TypeCampoTexto.EMAIL.equals(campo.getTipoCampoTexto());
 	}
 
 	/**

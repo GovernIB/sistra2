@@ -308,8 +308,7 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 			confCampo = confCampoCP;
 			break;
 		case EMAIL: // Email
-			final ConfiguracionCampoTextoEmail confCampoEmail = new ConfiguracionCampoTextoEmail();
-			confCampo = confCampoEmail;
+			confCampo = obtenerConfCampoTextoEmail(pCampoDef);
 			break;
 		case FECHA: // Fecha
 			final ConfiguracionCampoTextoFecha confCampoFecha = new ConfiguracionCampoTextoFecha();
@@ -386,6 +385,21 @@ public final class ConfiguracionFormularioHelperImpl implements ConfiguracionFor
 		confCampoNormal.getOpciones().setTamanyo(pCampoDef.getTextoNormal().getTamanyoMax());
 		confCampoNormal.getOpciones()
 				.setMayusculas(TypeSiNo.fromBoolean(pCampoDef.getTextoNormal().isForzarMayusculas()));
+		return confCampo;
+	}
+
+	/**
+	 * Configuracion campo texto email.
+	 *
+	 * @param pCampoDef
+	 *            Definicion campo
+	 * @return configuracion campo
+	 */
+	private ConfiguracionCampo obtenerConfCampoTextoEmail(final RComponenteTextbox pCampoDef) {
+		ConfiguracionCampo confCampo;
+		final ConfiguracionCampoTextoEmail confCampoEmail = new ConfiguracionCampoTextoEmail();
+		confCampo = confCampoEmail;
+		confCampoEmail.getOpciones().setTamanyo(pCampoDef.getTextoEmail().getTamanyoMax());
 		return confCampo;
 	}
 

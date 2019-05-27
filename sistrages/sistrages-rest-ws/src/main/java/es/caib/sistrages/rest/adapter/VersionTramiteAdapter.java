@@ -72,6 +72,7 @@ import es.caib.sistrages.rest.api.interna.RPasoTramitacionRegistrar;
 import es.caib.sistrages.rest.api.interna.RPasoTramitacionRellenar;
 import es.caib.sistrages.rest.api.interna.RPlantillaFormulario;
 import es.caib.sistrages.rest.api.interna.RPropiedadesCampo;
+import es.caib.sistrages.rest.api.interna.RPropiedadesTextoEmail;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoExpRegular;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoIdentificacion;
 import es.caib.sistrages.rest.api.interna.RPropiedadesTextoNormal;
@@ -746,10 +747,29 @@ public class VersionTramiteAdapter {
 		case EXPRESION:
 			resTB.setTextoExpRegular(generaExpresionRegular(ct.getExpresionRegular()));
 			break;
+		case EMAIL:
+			resTB.setTextoEmail(generaTextoEmail(ct));
+			break;
 		default:
 			// No se genera props específicas
 		}
 		return resTB;
+	}
+
+	/**
+	 * Genera propiedades Texto Email
+	 *
+	 * @param ct
+	 * @return RPropiedadesTextoNormal
+	 */
+	private RPropiedadesTextoEmail generaTextoEmail(final ComponenteFormularioCampoTexto ct) {
+		if (ct != null) {
+			final RPropiedadesTextoEmail res = new RPropiedadesTextoEmail();
+			res.setTamanyoMax(ct.getNormalTamanyo() == null ? 0 : ct.getNormalTamanyo());
+			return res;
+		}
+		return null;
+
 	}
 
 	/**

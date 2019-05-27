@@ -216,16 +216,18 @@ public class FormateadorGenerico implements FormateadorPdfFormulario {
 	 * @throws Exception
 	 */
 	private String getConversionFecha(final String fecha) {
-		String valor;
+		String valor = "";
 		try {
-			if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy-MM-dd")) {
-				final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy-MM-dd");
-				valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd-MM-yyyy");
-			} else if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy/MM/dd")) {
-				final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy/MM/dd");
-				valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd/MM/yyyy");
-			} else {
-				throw new FormateadorException("Fecha no valida");
+			if (StringUtils.isNotBlank(fecha)) {
+				if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy-MM-dd")) {
+					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy-MM-dd");
+					valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd-MM-yyyy");
+				} else if (ValidacionesTipo.getInstance().esFecha(fecha, "yyyy/MM/dd")) {
+					final Date date = ValidacionesTipo.getInstance().parseFecha(fecha, "yyyy/MM/dd");
+					valor = ValidacionesTipo.getInstance().formateaFecha(date, "dd/MM/yyyy");
+				} else {
+					throw new FormateadorException("Fecha no valida");
+				}
 			}
 		} catch (final ValidacionTipoException e) {
 			throw new FormateadorException("Fecha no valida");

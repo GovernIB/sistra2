@@ -20,6 +20,7 @@ import es.caib.sistramit.core.api.exception.TipoNoControladoException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampo;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTexto;
+import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoEmail;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoExpReg;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoId;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoNormal;
@@ -28,6 +29,7 @@ import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoPasswo
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoTextoTelefono;
 import es.caib.sistramit.core.api.model.formulario.ConfiguracionCampoVerificacion;
 import es.caib.sistramit.core.api.model.formulario.MensajeValidacion;
+import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoEmail;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoExpReg;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoId;
 import es.caib.sistramit.core.api.model.formulario.OpcionesCampoTextoNormal;
@@ -212,9 +214,7 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 			}
 			break;
 		case EMAIL:
-			if (!ValidacionesTipo.getInstance().esEmail(vcs.getValor())) {
-				validacionCorrecta = false;
-			}
+			validacionCorrecta = validacionConfiguracionCampoTextoEmail(vcs, (ConfiguracionCampoTextoEmail) confTexto);
 			break;
 		case EXPRESION_REGULAR:
 			validacionCorrecta = validacionConfiguracionCampoTextoExpReg(vcs,
@@ -541,6 +541,31 @@ public final class ValidacionesFormularioHelperImpl implements ValidacionesFormu
 			validacionCorrecta = false;
 		}
 
+		return validacionCorrecta;
+	}
+
+	/**
+	 * Validacion campo texto email.
+	 *
+	 * @param vcs
+	 *            Valor campo
+	 * @param confTextoEmail
+	 *            Configuracion campo
+	 * @return boolean indicando si la validacion es correcta
+	 */
+	private boolean validacionConfiguracionCampoTextoEmail(final ValorCampoSimple vcs,
+			final ConfiguracionCampoTextoEmail confTextoEmail) {
+		boolean validacionCorrecta = true;
+		final OpcionesCampoTextoEmail opcionesCampoTextoNormal = confTextoEmail.getOpciones();
+		// Tamaño maximo
+		if (opcionesCampoTextoNormal.getTamanyo() > 0
+				&& vcs.getValor().length() > opcionesCampoTextoNormal.getTamanyo()) {
+			validacionCorrecta = false;
+		}
+		// Formato email
+		if (validacionCorrecta && !ValidacionesTipo.getInstance().esEmail(vcs.getValor())) {
+			validacionCorrecta = false;
+		}
 		return validacionCorrecta;
 	}
 

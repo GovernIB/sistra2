@@ -11,12 +11,36 @@ import es.caib.sistramit.core.api.model.formulario.types.TypeTexto;
 @SuppressWarnings("serial")
 public class ConfiguracionCampoTextoEmail extends ConfiguracionCampoTexto {
 
-    /**
-     * Constructor.
-     */
-    public ConfiguracionCampoTextoEmail() {
-        super();
-        setContenido(TypeTexto.EMAIL);
-    }
+	/**
+	 * Opciones campo email.
+	 */
+	private OpcionesCampoTextoEmail opciones = new OpcionesCampoTextoEmail();
+
+	/**
+	 * Constructor.
+	 */
+	public ConfiguracionCampoTextoEmail() {
+		super();
+		setContenido(TypeTexto.EMAIL);
+	}
+
+	/**
+	 * Método de acceso a opciones.
+	 * 
+	 * @return opciones
+	 */
+	public OpcionesCampoTextoEmail getOpciones() {
+		return opciones;
+	}
+
+	/**
+	 * Método para establecer opciones.
+	 * 
+	 * @param opciones
+	 *            opciones a establecer
+	 */
+	public void setOpciones(final OpcionesCampoTextoEmail opciones) {
+		this.opciones = opciones;
+	}
 
 }

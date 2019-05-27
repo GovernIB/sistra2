@@ -304,13 +304,10 @@ public class DialogTramiteImportar extends DialogControllerBase {
 		// Paso 2. Preparamos la info a mostrar de tramite
 		prepararImportacionTramite();
 
-		// Paso 3. Preparamos la info a mostrar de tramite
-		prepararImportacionTramiteVersion();
-
-		// Paso 4. Preparamos la info a mostrar de los dominios/FD
+		// Paso 3. Preparamos la info a mostrar de los dominios/FD
 		prepararImportacionDominioFD();
 
-		// Paso 5. Preparamos la info a mostrar de los Formateadores.
+		// Paso 4. Preparamos la info a mostrar de los Formateadores.
 		prepararImportacionFormateadores();
 
 		// Seteamos si se ven los botones de area/tramite/tramiteVersion
@@ -601,7 +598,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
 					TypeImportarResultado.ERROR, tramite, tramiteActual);
 			filaTramite.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.areaDistinta"));
-			return false;
 		}
 
 		// Si existe el trámite en el entorno pero no el area, es que algo está mal.
@@ -610,7 +606,6 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			filaTramite = new FilaImportarTramite(TypeImportarAccion.NADA, TypeImportarEstado.EXISTE,
 					TypeImportarResultado.ERROR, tramite, tramiteActual);
 			filaTramite.setMensaje(UtilJSF.getLiteral("dialogTramiteImportar.error.tramiteareaincorrecto"));
-			return false;
 		}
 
 		// Obtenemos la version y sus pasos si el trámite existe. Además, seteamos debug
@@ -665,10 +660,7 @@ public class DialogTramiteImportar extends DialogControllerBase {
 			}
 
 		}
-		return true;
-	}
 
-	public boolean prepararImportacionTramiteVersion() {
 		// Paso 3.3. Tramite Version.
 		if (tramiteVersionActual == null) {
 

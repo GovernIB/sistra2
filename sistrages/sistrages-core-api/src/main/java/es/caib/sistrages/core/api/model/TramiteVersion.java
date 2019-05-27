@@ -713,6 +713,19 @@ public class TramiteVersion extends ModelApi {
 		return pasoTasa;
 	}
 
+	public TramitePasoDebeSaber getPasoDebeSaber() {
+		TramitePasoDebeSaber pasoDebeSaber = null;
+		if (listaPasos != null) {
+			for (final TramitePaso paso : this.listaPasos) {
+				if (paso instanceof TramitePasoDebeSaber) {
+					pasoDebeSaber = (TramitePasoDebeSaber) paso;
+					break;
+				}
+			}
+		}
+		return pasoDebeSaber;
+	}
+
 	/**
 	 * @return the fechaUltima
 	 */

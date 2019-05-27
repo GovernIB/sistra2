@@ -27,6 +27,10 @@ public class RComponenteTextbox extends RComponente {
 	@ApiModelProperty(value = "Propiedades texto normal")
 	private RPropiedadesTextoNormal textoNormal;
 
+	/** Propiedades texto email. */
+	@ApiModelProperty(value = "Propiedades texto email")
+	private RPropiedadesTextoEmail textoEmail;
+
 	/** Propiedades texto numero. */
 	@ApiModelProperty(value = "Propiedades texto numero")
 	private RPropiedadesTextoNumero textoNumero;
@@ -58,7 +62,7 @@ public class RComponenteTextbox extends RComponente {
 	 * @param propiedadesCampo
 	 *            propiedadesCampo a establecer
 	 */
-	public void setPropiedadesCampo(RPropiedadesCampo propiedadesCampo) {
+	public void setPropiedadesCampo(final RPropiedadesCampo propiedadesCampo) {
 		this.propiedadesCampo = propiedadesCampo;
 	}
 
@@ -77,7 +81,7 @@ public class RComponenteTextbox extends RComponente {
 	 * @param tipoTexto
 	 *            tipoTexto a establecer
 	 */
-	public void setTipoTexto(String tipoTexto) {
+	public void setTipoTexto(final String tipoTexto) {
 		this.tipoTexto = tipoTexto;
 	}
 
@@ -96,7 +100,7 @@ public class RComponenteTextbox extends RComponente {
 	 * @param textoNormal
 	 *            textoNormal a establecer
 	 */
-	public void setTextoNormal(RPropiedadesTextoNormal textoNormal) {
+	public void setTextoNormal(final RPropiedadesTextoNormal textoNormal) {
 		this.textoNormal = textoNormal;
 	}
 
@@ -115,7 +119,7 @@ public class RComponenteTextbox extends RComponente {
 	 * @param textoNumero
 	 *            textoNumero a establecer
 	 */
-	public void setTextoNumero(RPropiedadesTextoNumero textoNumero) {
+	public void setTextoNumero(final RPropiedadesTextoNumero textoNumero) {
 		this.textoNumero = textoNumero;
 	}
 
@@ -134,7 +138,7 @@ public class RComponenteTextbox extends RComponente {
 	 * @param textoIdentificacion
 	 *            textoIdentificacion a establecer
 	 */
-	public void setTextoIdentificacion(RPropiedadesTextoIdentificacion textoIdentificacion) {
+	public void setTextoIdentificacion(final RPropiedadesTextoIdentificacion textoIdentificacion) {
 		this.textoIdentificacion = textoIdentificacion;
 	}
 
@@ -153,13 +157,13 @@ public class RComponenteTextbox extends RComponente {
 	 * @param textoExpRegular
 	 *            textoExpRegular a establecer
 	 */
-	public void setTextoExpRegular(RPropiedadesTextoExpRegular textoExpRegular) {
+	public void setTextoExpRegular(final RPropiedadesTextoExpRegular textoExpRegular) {
 		this.textoExpRegular = textoExpRegular;
 	}
 
 	/**
 	 * Método de acceso a textoTelefono.
-	 * 
+	 *
 	 * @return textoTelefono
 	 */
 	public RPropiedadesTextoTelefono getTextoTelefono() {
@@ -168,12 +172,31 @@ public class RComponenteTextbox extends RComponente {
 
 	/**
 	 * Método para establecer textoTelefono.
-	 * 
+	 *
 	 * @param textoTelefono
 	 *            textoTelefono a establecer
 	 */
-	public void setTextoTelefono(RPropiedadesTextoTelefono textoTelefono) {
+	public void setTextoTelefono(final RPropiedadesTextoTelefono textoTelefono) {
 		this.textoTelefono = textoTelefono;
+	}
+
+	/**
+	 * Método de acceso a textoEmail.
+	 * 
+	 * @return textoEmail
+	 */
+	public RPropiedadesTextoEmail getTextoEmail() {
+		return textoEmail;
+	}
+
+	/**
+	 * Método para establecer textoEmail.
+	 * 
+	 * @param textoEmail
+	 *            textoEmail a establecer
+	 */
+	public void setTextoEmail(final RPropiedadesTextoEmail textoEmail) {
+		this.textoEmail = textoEmail;
 	}
 
 }
