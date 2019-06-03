@@ -101,9 +101,11 @@ var HTML_PAS_LITERALS = {
 			,txtAnterior: txtAnterior
 			,txtRegistrar: txtRegistrar
 			,txtReintentar: txtReintentar
+			,txtSignatura: txtSignatura
 		},
 		"gj": {
-			txtDesauJustificant: txtDesauJustificant
+			txtRegistratCorrectament: txtRegistratCorrectament
+			,txtDesauJustificant: txtDesauJustificant
 			,txtAnarAlJustificant: txtAnarAlJustificant
 			,txtObriFinestra: txtObriFinestra
 			,txtDesauInfo: txtDesauInfo
@@ -131,6 +133,7 @@ var HTML_PAS_LITERALS = {
 			,txtCarpetaCiutadana: txtCarpetaCiutadana
 			,txtCarpetaNumeroRegistre: txtCarpetaNumeroRegistre
 			,txtCarpetaAnarJustificant: txtCarpetaAnarJustificant
+			,txtSignatura: txtSignatura
 		}
 
 		
@@ -539,6 +542,7 @@ $.fn.appPas = function(options) {
 								,txtSignant: txtSignant
 								,txtSignants: txtSignants
 								,txtSignatEl: txtSignatEl
+								,txtSignatura: txtSignatura
 							}
 						};
 
@@ -570,6 +574,7 @@ $.fn.appPas = function(options) {
 								,txtSignant: txtSignant
 								,txtSignants: txtSignants
 								,txtSignatEl: txtSignatEl
+								,txtSignatura: txtSignatura
 							}
 						};
 

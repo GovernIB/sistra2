@@ -58,6 +58,7 @@
 
 .imc--registre .imc--signants li .imc--registre .imc--signa { width: 5.2em; }
 
+.imc--registre .imc--signants .imc--descarrega { margin-left: auto; }
 
 .imc--pagaments .imc--opcions { display: flex; align-items: center; width: calc(100% - 4.5em); margin-left: 4.5em; background-color: #dbdbdb; }
 

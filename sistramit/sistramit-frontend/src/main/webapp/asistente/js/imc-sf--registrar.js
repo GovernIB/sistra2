@@ -23,7 +23,8 @@ function appPasRegistrarInicia() {
 
 	imc_registre
 		.appRegistre()
-		.appSigna();
+		.appSigna()
+		.appSiganuraDescarrega();
 
 	imc_bt_registra
 		.appRegistra();
@@ -286,7 +287,7 @@ $.fn.appRegistre = function(options) {
 
 				element
 					.off('.appRegistre')
-					.on('click.appRegistre', ".imc--descarrega", descarrega);
+					.on('click.appRegistre', "button[data-es='document'].imc--descarrega", descarrega);
 
 			},
 			descarrega = function(e) {
@@ -299,6 +300,43 @@ $.fn.appRegistre = function(options) {
 					,id = "idDocumento";
 
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia;
+
+			};
+		
+		// inicia
+		inicia();
+		
+	});
+	return this;
+}
+
+
+// appSiganuraDescarrega
+
+$.fn.appSiganuraDescarrega = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			inicia = function() {
+
+				element
+					.off('.appSiganuraDescarrega')
+					.on('click.appSiganuraDescarrega', "button[data-es='signatura'].imc--descarrega", descarrega);
+
+			},
+			descarrega = function(e) {
+
+				var bt = $(this)
+					,bt_tipus = bt.attr("data-tipus")
+					,elm_id = bt.closest(".imc--reg-doc").attr("data-id")
+					,elm_instancia = bt.closest(".imc--reg-doc").attr("data-instancia")
+					,elm_signant = bt.closest(".imc--signat").attr("data-nif")
+					,url = APP_SIGNATURA_REGISTRAR_DESCARREGA
+					,id = "idDocumento";
+
+				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + elm_signant;
 
 			};
 		

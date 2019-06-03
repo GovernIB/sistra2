@@ -70,6 +70,7 @@ var APP_TAXA_URL = APP_SERVIDOR + "pt/iniciarPago.json"
 var  APP_SIGNATURA_URL = APP_SERVIDOR + "rt/firmarDocumento.json"
 	,APP_TRAMIT_REGISTRA = APP_SERVIDOR + "rt//registrarTramite.json"
 	,APP_REGISTRE_DESCARREGA = APP_SERVIDOR + "rt/descargarDocumento.html"
+	,APP_SIGNATURA_REGISTRAR_DESCARREGA = APP_SERVIDOR + "rt/descargarFirma.html"
 	,APP_TRAMIT_REINTENTA = APP_SERVIDOR + "rt/reintentar.json";
 
 
@@ -79,4 +80,5 @@ var APP_TRAMIT_JUSTIFICANT = APP_SERVIDOR + "gj/descargarJustificante.html",
 	APP_TRAMIT_JUSTIFICANT_URL = APP_SERVIDOR + "gj/redirigirJustificante.json",
 	APP_GUARDA_DESCARREGA = APP_SERVIDOR + "gj/descargarDocumento.html",
 	APP_TRAMIT_SURT = APP_SERVIDOR + "gj/salirTramite.html",
+	APP_SIGNATURA_GUARDAR_DESCARREGA = APP_SERVIDOR + "gj/descargarFirma.html",
 	APP_TRAMIT_VALORA = APP_SERVIDOR + "gj/valorarTramite.json";

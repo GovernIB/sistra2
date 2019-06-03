@@ -8,6 +8,11 @@
 
 .imc-contingut h3 { margin-top: 1.5em; }
 
+.imc--guarda-correcte { position: relative; padding: 1em 2em 1em 5em; margin-bottom: 1.5em; background-color: #fff; }
+.imc--guarda-correcte p { font-size: 1.4em; font-weight: bold; margin-bottom: 0 !important; }
+
+.imc--guarda-correcte::before { content: ""; display: block; position: absolute; top: .8em; left: 1.5em; width: 2em; height: 2em; background: transparent url(imgs/icones/ico_tramitat_4dba79.svg) no-repeat center center / 100% auto; }
+
 .imc--guarda h4 { margin-bottom: .5em; }
 .imc--guarda h4 span { font-size: 1.4em; }
 
@@ -86,6 +91,8 @@
 .imc--guarda .imc--signants li .imc-bt.imc--ico::before { margin-right: .5em; }
 
 .imc--guarda .imc--signants li .imc--registre .imc--signa { width: 5.2em; }
+
+.imc--guarda .imc--signants li .imc--descarrega { margin-left: auto; }
 
 .imc--pagaments .imc--opcions { display: flex; align-items: center; width: calc(100% - 4.5em); margin-left: 4.5em; background-color: #dbdbdb; }
 

@@ -4,6 +4,12 @@
 
 	<div class="imc--guarda">
 
+		<div class="imc--guarda-correcte">
+
+			<p>{{txtRegistratCorrectament|upcase}}</p>
+
+		</div>
+
 		<div class="imc--guarda-justificant">
 
 			<h4><span>{{txtDesauJustificant}}</span></h4>
@@ -49,7 +55,7 @@
 						<span class="imc--icona"></span>
 						<strong>{{titulo}}</strong>
 						{{if descargable|equals>s}}
-						<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="formulari"><span>{{txtDescarrega}}</span></button>
+						<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="formulari" data-es="document"><span>{{txtDescarrega}}</span></button>
 						{{/if}}
 					</div>
 
@@ -70,6 +76,9 @@
 										{{firmante.nombre}} ({{firmante.nif}})
 									</strong>
 									<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
+									{{if descargable|equals>s}}
+									<button type="button" class="imc-bt imc--ico imc--descarrega" title="{{txtDescarrega}} {{txtSignatura}}" data-tipus="formulari" data-es="signatura"><span>{{txtDescarrega}} {{txtSignatura|downcase}}</span></button>
+									{{/if}}
 
 								</li>
 								{{/firmas}}
@@ -94,7 +103,7 @@
 						<span class="imc--icona"></span>
 						<strong>{{titulo}}</strong>
 						{{if descargable|equals>s}}
-						<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="annexe"><span>{{txtDescarrega}}</span></button>
+						<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="annexe" data-es="document"><span>{{txtDescarrega}}</span></button>
 						{{/if}}
 					</div>
 
@@ -115,6 +124,9 @@
 										{{firmante.nombre}} ({{firmante.nif}})
 									</strong>
 									<div class="imc--signatura-info">{{txtSignatEl}} {{fechaFirma}}</div>
+									{{if descargable|equals>s}}
+									<button type="button" class="imc-bt imc--ico imc--descarrega" title="{{txtDescarrega}} {{txtSignatura}}" data-tipus="formulari" data-es="signatura"><span>{{txtDescarrega}} {{txtSignatura|downcase}}</span></button>
+									{{/if}}
 
 								</li>
 								{{/firmas}}
@@ -139,7 +151,7 @@
 						<span class="imc--icona"></span>
 						<strong>{{titulo}}</strong>
 						{{if descargable|equals>s}}
-						<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="taxa"><span>{{txtDescarrega}}</span></button>
+						<button type="button" class="imc--descarrega" title="{{txtDescarrega}}" data-tipus="taxa" data-es="document"><span>{{txtDescarrega}}</span></button>
 						{{/if}}
 					</div>
 				</li>

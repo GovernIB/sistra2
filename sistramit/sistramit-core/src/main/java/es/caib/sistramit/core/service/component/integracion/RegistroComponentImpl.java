@@ -115,7 +115,7 @@ public final class RegistroComponentImpl implements RegistroComponent {
 		try {
 			libro = plgRegistro.obtenerLibroOrganismo(codigoEntidad, codigoOrganismo);
 		} catch (final RegistroPluginException e) {
-			throw new RegistroJustificanteException(
+			throw new RegistroSolicitudException(
 					"Error obteniendo libro asociado a organismo: " + codigoEntidad + " - " + codigoOrganismo, e);
 		}
 		return libro.getCodigo();

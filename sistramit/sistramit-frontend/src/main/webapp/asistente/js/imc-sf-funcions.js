@@ -15,6 +15,18 @@ $.fn.estaBuit = function() {
 	}
 
 	return estaBuit;
+
+}
+
+
+// nomesText
+
+$.fn.nomesText = function() {
+
+	var valor = this[0];
+
+	return $(valor).text();
+
 }
 
 

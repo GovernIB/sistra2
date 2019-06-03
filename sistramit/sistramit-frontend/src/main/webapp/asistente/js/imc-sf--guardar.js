@@ -9,7 +9,7 @@ var imc_guarda,
 // onReady
 
 function appPasGuardarInicia() {
-
+	
 	imc_guarda = imc_contingut.find(".imc--guarda:first");
 	imc_bt_justificant_desa = $("#imc-bt-justificant-desa");
 	imc_bt_justificant_url = $("#imc-bt-justificant-url");
@@ -17,6 +17,7 @@ function appPasGuardarInicia() {
 
 	imc_guarda
 		.appGuarda()
+		.appSiganuraDescarrega()
 		.appValora();
 
 	imc_bt_justificant_desa
@@ -58,10 +59,10 @@ $.fn.appGuarda = function(options) {
 				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -87,10 +88,10 @@ $.fn.appJustificantDesa = function(options) {
 				document.location = APP_TRAMIT_JUSTIFICANT + "?idPaso=" + APP_TRAMIT_PAS_ID;
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -150,7 +151,7 @@ $.fn.appJustificantURL = function(options) {
 								}
 							})
 							.done(function( data ) {
-
+								
 								var json = data;
 
 								if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -176,12 +177,12 @@ $.fn.appJustificantURL = function(options) {
 								}
 
 								envia_ajax = false;
-
+								
 								consola("Justificant URL: error des de FAIL");
 
 								imc_contenidor
 									.errors({ estat: "fail" });
-
+								
 							});
 
 
@@ -237,10 +238,47 @@ $.fn.appJustificantURL = function(options) {
 					.appMissatge({ araAmaga: true });
 
 			};
-
+		
 		// inicia
 		inicia();
+		
+	});
+	return this;
+}
 
+
+// appSiganuraDescarrega
+
+$.fn.appSiganuraDescarrega = function(options) {
+	var settings = $.extend({
+		element: ""
+	}, options);
+	this.each(function(){
+		var element = $(this),
+			inicia = function() {
+
+				element
+					.off('.appSiganuraDescarrega')
+					.on('click.appSiganuraDescarrega', "button[data-es='signatura'].imc--descarrega", descarrega);
+
+			},
+			descarrega = function(e) {
+
+				var bt = $(this)
+					,bt_tipus = bt.attr("data-tipus")
+					,elm_id = bt.closest(".imc--reg-doc").attr("data-id")
+					,elm_instancia = bt.closest(".imc--reg-doc").attr("data-instancia")
+					,elm_signant = bt.closest(".imc--signat").attr("data-nif")
+					,url = APP_SIGNATURA_GUARDAR_DESCARREGA
+					,id = "idDocumento";
+
+				document.location = url + "?" + id + "=" + elm_id + "&idPaso=" + APP_TRAMIT_PAS_ID + "&instancia=" + elm_instancia + "&firmante=" + elm_signant;
+
+			};
+		
+		// inicia
+		inicia();
+		
 	});
 	return this;
 }
@@ -274,10 +312,10 @@ $.fn.appTramitSurt = function(options) {
 					});
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }
@@ -294,8 +332,9 @@ $.fn.appValora = function(options) {
 			valoracio_el = element.find(".imc--valoracio:first"),
 			output_el = false,
 			envia_ajax = false,
-			valor_per_especificar = 2,
+			valor_per_especificar = 3,
 			especificar_el = element.find(".imc--valoracio-especifica:first"),
+			valor_seleccionat = 0,
 			inicia = function() {
 
 				if (valoracio_el.length) {
@@ -304,10 +343,29 @@ $.fn.appValora = function(options) {
 
 					valoracio_el
 						.off('.appValora')
+						.on('mouseenter.appValora', ".imc--estrelles label", entra)
+						.on('mouseleave.appValora', ".imc--estrelles label", surt)
 						.on('click.appValora', ".imc--estrelles label", valora)
 						.on('click.appValora', "button[data-accio='valora']", envia);
 
 				}
+
+			},
+			entra = function(e) {
+
+				var label_el = $(this)
+					,label_el_txt = label_el.find("span:first").text();
+
+				output_el
+					.text( label_el_txt );
+
+			},
+			surt = function() {
+
+				var label_el_txt = (valor_seleccionat === 0) ? txtSenseValoracio : valoracio_el.find(".imc--estrelles label[for=imc-f-estrelles-"+valor_seleccionat+"]:first").text();
+
+				output_el
+					.text( label_el_txt );
 
 			},
 			valora = function(e) {
@@ -316,6 +374,8 @@ $.fn.appValora = function(options) {
 					,label_el_txt = label_el.find("span:first").text()
 					,label_el_for = label_el.attr("for")
 					,label_el_val = $("#"+label_el_for).val();
+
+				valor_seleccionat = label_el_val;
 
 				output_el
 					.text( label_el_txt );
@@ -405,7 +465,7 @@ $.fn.appValora = function(options) {
 								}
 							})
 							.done(function( data ) {
-
+								
 								var json = data;
 
 								if (json.estado === "SUCCESS" || json.estado === "WARNING") {
@@ -431,12 +491,12 @@ $.fn.appValora = function(options) {
 								}
 
 								envia_ajax = false;
-
+								
 								consola("Guarda valora: error des de FAIL");
 
 								imc_contenidor
 									.errors({ estat: "fail" });
-
+								
 							});
 
 
@@ -455,10 +515,10 @@ $.fn.appValora = function(options) {
 					});
 
 			};
-
+		
 		// inicia
 		inicia();
-
+		
 	});
 	return this;
 }

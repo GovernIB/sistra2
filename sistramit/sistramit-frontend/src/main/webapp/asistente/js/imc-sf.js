@@ -238,6 +238,14 @@ function carregaHTML() {
 
 		function( cssBotonera, cssBase, htmlCap, htmlContacte, htmlMissatge) {
 
+			// MarkUp retorna només text
+
+			Mark.pipes.nomesText = function (str, n) {
+
+				return ($(str).length) ? $(str).text() : str;
+
+			};
+
 			// estils
 
 			$("<style>")
@@ -279,6 +287,8 @@ function carregaHTML() {
 
 			APP_USUARI_ID = ( jsonAutenticacio === "c") ? APP_JSON_TRAMIT_U.nif : false;
 
+			var jsonTramitTitol = APP_JSON_TRAMIT_T.titulo;
+
 			var txtHTML_Cap = {
 					txtGovern: txtGovern
 					,txtAplicacioTitol: txtAplicacioTitol
@@ -291,7 +301,7 @@ function carregaHTML() {
 					,jsonAutenticacio: jsonAutenticacio
 					,jsonUsuari: jsonUsuari
 					,jsonClauTramitacio: APP_JSON_TRAMIT_T.idSesion
-					,jsonTramitTitol: APP_JSON_TRAMIT_T.titulo
+					,jsonTramitTitol: jsonTramitTitol
 					,txtCalSaber: txtCalSaber
 					,txtEmplenar: txtEmplenar
 					,txtAnnexar: txtAnnexar

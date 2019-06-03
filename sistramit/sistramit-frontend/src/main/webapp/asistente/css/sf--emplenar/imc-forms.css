@@ -302,7 +302,7 @@
 .imc-form *[data-obligatori="s"] legend { color: #000; }
 
 .imc-form *[data-obligatori="s"] .imc-el-etiqueta label::before,
-.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::after,
+/*.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::after,*/
 .imc-form *[data-obligatori="s"] legend::before {
 	content: "";
 	display: inline-block;
@@ -315,7 +315,26 @@
 	background: transparent url(imgs/icones/ico_form_obligatori_4dba79.svg) no-repeat top left / auto .7em;
 }
 
-.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::after { margin-left: .3em; margin-right: 0; }
+/*.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::after { margin-left: .3em; margin-right: 0; }*/
+
+
+.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 1em;
+	vertical-align: middle;
+	width: .7em;
+	height: .7em;
+	margin-right: 0;
+	margin-left: .3em;
+	background: transparent url(imgs/icones/ico_form_obligatori_4dba79.svg) no-repeat top left / auto .7em;
+}
+
+.imc-form .imc-el-check[data-obligatori="s"] .imc-input-check label::before {
+    margin-right: 1.3em;
+}
 
 
 .imc-form input[type=text][readonly],
@@ -856,6 +875,8 @@
 
 .imc-form .imc-missatge-en-linia p { padding-bottom: .5em; }
 .imc-form .imc-missatge-en-linia ul { list-style: circle; padding-bottom: .5em; margin: .5em 0 0 2em; }
+
+.imc-form .imc-element.imc-missatge-en-linia ul li { list-style: circle; }
 
 /* nav */
 
