@@ -172,7 +172,7 @@ public class JScript implements IModelApi {
 
 		// Buscamos si se han borrado literales y se añaden a la lista para borrar
 		for (final JLiteralErrorScript jliteral : jscript.getLiterales()) {
-			if (!mscript.containLiteral(jliteral.getIdentificador())) {
+			if (!mscript.containLiteral(jliteral.getCodigo())) {
 				literalesBorrar.add(jliteral);
 			}
 		}
@@ -192,19 +192,23 @@ public class JScript implements IModelApi {
 	}
 
 	/**
-	 * Merge los literales. Dependiendo de si existe o no: - Si no existe, se añade
-	 * directamente al jscript.literales - Si existe, se realiza un merge de sus
-	 * literales
+	 * Merge los literales. Dependiendo de si existe o no:
+	 * <ul>
+	 * <li>Si no existe, se añade directamente al jscript.literales</li>
+	 * <li>Si existe, se realiza un merge de sus literales</li>
+	 * </ul>
 	 *
 	 * @param mensaje
 	 */
 	private void addLiteralMerge(final LiteralScript mensaje) {
 
 		boolean existe = false;
-		if (this.getLiterales() != null) {
+		// Comparamos por codigo
+		if (this.getLiterales() != null && mensaje.getCodigo() != null) {
 			for (final JLiteralErrorScript literal : this.getLiterales()) {
-				if (literal.getIdentificador().equals(mensaje.getIdentificador())) {
+				if (literal.getCodigo().equals(mensaje.getCodigo())) {
 					literal.setLiteral(JLiteral.mergeModel(literal.getLiteral(), mensaje.getLiteral()));
+					literal.setIdentificador(mensaje.getIdentificador());
 					existe = true;
 					break;
 				}

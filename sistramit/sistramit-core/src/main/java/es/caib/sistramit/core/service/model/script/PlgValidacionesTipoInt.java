@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.service.model.script;
 
+import java.util.Date;
+
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 
 public interface PlgValidacionesTipoInt {
@@ -174,7 +176,7 @@ public interface PlgValidacionesTipoInt {
 	 * con el 'XXX')
 	 *
 	 * {@link https://es.wikipedia.org/wiki/ISO_9362}
-	 * 
+	 *
 	 * @param codigo
 	 * @return
 	 */
@@ -194,7 +196,7 @@ public interface PlgValidacionesTipoInt {
 	 * </ul>
 	 *
 	 * {@link https://es.wikipedia.org/wiki/ISO_9362}
-	 * 
+	 *
 	 * @param banco
 	 * @param pais
 	 * @param localidad
@@ -504,5 +506,11 @@ public interface PlgValidacionesTipoInt {
 	 *         Si no está dentro del rango marcado
 	 */
 	boolean validaRangoF(float valor, float minimo, float maximo);
+
+	boolean hayDistanciaAnyos(final String fechaIni, final String fechaFin, final String formatoFecha,
+			final int numAnyos) throws ValidacionTipoException;
+
+	public boolean hayDistanciaAnyos(final Date iniDate, final Date finDate, final int numAnyos)
+			throws ValidacionTipoException;
 
 }

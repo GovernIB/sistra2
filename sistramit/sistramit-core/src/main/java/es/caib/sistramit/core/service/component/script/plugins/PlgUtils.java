@@ -1,5 +1,7 @@
 package es.caib.sistramit.core.service.component.script.plugins;
 
+import java.util.Date;
+
 import es.caib.sistra2.commons.utils.ValidacionTipoException;
 import es.caib.sistra2.commons.utils.ValidacionesCadena;
 import es.caib.sistra2.commons.utils.ValidacionesTipo;
@@ -232,6 +234,18 @@ public final class PlgUtils implements PlgUtilsInt {
 	public int distanciaDiasHabiles(final String fecha1, final String fecha2) throws ValidacionTipoException {
 		return ValidacionesTipo.getInstance().distanciaDiasHabiles(fecha1, fecha2,
 				ValidacionesTipo.FORMATO_FECHA_INTERNACIONAL);
+	}
+
+	@Override
+	public boolean hayDistanciaAnyos(final Date fecha1, final Date fecha2, final int numAnyos)
+			throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().hayDistanciaAnyos(fecha1, fecha2, numAnyos);
+	}
+
+	@Override
+	public boolean hayDistanciaAnyos(final String fecha1, final String fecha2, final String formatoFecha,
+			final int numAnyos) throws ValidacionTipoException {
+		return ValidacionesTipo.getInstance().hayDistanciaAnyos(fecha1, fecha2, formatoFecha, numAnyos);
 	}
 
 	@Override

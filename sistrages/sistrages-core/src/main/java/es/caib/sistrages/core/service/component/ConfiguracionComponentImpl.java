@@ -53,6 +53,29 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 		return iplugin;
 	}
 
+	@Override
+	public String replaceSystemPlaceholders(final String valor) {
+		final String placeholder = "${system.";
+		String res = valor;
+		if (res != null) {
+			int pos = valor.indexOf(placeholder);
+			while (pos >= 0) {
+				final int pos2 = res.indexOf("}", pos + 1);
+				if (pos2 >= 0) {
+					final String propSystem = res.substring(pos + placeholder.length(), pos2);
+					final String valueSystem = System.getProperty(propSystem);
+					if (valueSystem.indexOf(placeholder) >= 0) {
+						throw new ErrorNoControladoException(
+								"Valor no válido para propiedad " + propSystem + ": " + valueSystem);
+					}
+					res = StringUtils.replace(res, placeholder + propSystem + "}", valueSystem);
+				}
+				pos = res.indexOf(placeholder);
+			}
+		}
+		return res;
+	}
+
 	// ----------------------------------------------------------------------
 	// FUNCIONES PRIVADAS
 	// ----------------------------------------------------------------------
@@ -107,7 +130,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 				for (final Propiedad propiedad : rplg.getPropiedades()) {
 
 					// Comprobamos si la propiedad hay que cargarla de system
-					final String valorProp = reemplazarPropsSystem(propiedad.getValor());
+					final String valorProp = replaceSystemPlaceholders(propiedad.getValor());
 
 					prop.put(prefijoGlobal + rplg.getPrefijoPropiedades() + propiedad.getCodigo(), valorProp);
 				}
@@ -126,35 +149,6 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 			throw new CargaConfiguracionException(
 					"Error al instanciar plugin " + plgTipo + " con classname " + classname, e);
 		}
-	}
-
-	/**
-	 * Reemplaza propiedades con valor ${system.propiedad}
-	 *
-	 * @param valor
-	 *            valores propiedades
-	 * @return valor propiedad
-	 */
-	private String reemplazarPropsSystem(final String valor) {
-		final String placeholder = "${system.";
-		String res = valor;
-		if (res != null) {
-			int pos = valor.indexOf(placeholder);
-			while (pos >= 0) {
-				final int pos2 = res.indexOf("}", pos + 1);
-				if (pos2 >= 0) {
-					final String propSystem = res.substring(pos + placeholder.length(), pos2);
-					final String valueSystem = System.getProperty(propSystem);
-					if (valueSystem.indexOf(placeholder) >= 0) {
-						throw new ErrorNoControladoException(
-								"Valor no válido para propiedad " + propSystem + ": " + valueSystem);
-					}
-					res = StringUtils.replace(res, placeholder + propSystem + "}", valueSystem);
-				}
-				pos = res.indexOf(placeholder);
-			}
-		}
-		return res;
 	}
 
 }

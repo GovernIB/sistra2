@@ -1,6 +1,8 @@
 package es.caib.sistramit.core.api.model.flujo;
 
+import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 
 /**
  * Indica el estado de una firma.
@@ -11,110 +13,157 @@ import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
 @SuppressWarnings("serial")
 public final class Firma implements ModelApi {
 
-    /**
-     * Indica firmante.
-     */
-    private Persona firmante;
+	/**
+	 * Indica firmante.
+	 */
+	private Persona firmante;
 
-    /**
-     * Indica si ha firmado.
-     */
-    private TypeEstadoFirma estadoFirma = TypeEstadoFirma.NO_FIRMADO;
+	/**
+	 * Indica si se permite descargar la firma desde la lista.
+	 */
+	private TypeSiNo descargable = TypeSiNo.NO;
 
-    /**
-     * En caso de que se haya firmado indica la fecha (dd/mm/aaaa hh:mm).
-     */
-    private String fechaFirma;
+	/**
+	 * Indica si ha firmado.
+	 */
+	private TypeEstadoFirma estadoFirma = TypeEstadoFirma.NO_FIRMADO;
 
-    /**
-     * Constructor.
-     */
-    public Firma() {
-        super();
-    }
+	/**
+	 * En caso de que se haya firmado indica la fecha (dd/mm/aaaa hh:mm).
+	 */
+	private String fechaFirma;
 
-    /**
-     * Constructor.
-     *
-     * @param pFirmante
-     *            firmante
-     * @param pEstadoFirma
-     *            Parámetro estado firma
-     * @param pFechaFirma
-     *            Parámetro fecha firma
-     */
-    public Firma(final Persona pFirmante, final TypeEstadoFirma pEstadoFirma,
-            final String pFechaFirma) {
-        super();
-        firmante = pFirmante;
-        estadoFirma = pEstadoFirma;
-        fechaFirma = pFechaFirma;
-    }
+	/**
+	 * Tipo de firma.
+	 */
+	private TypeFirmaDigital tipoFirma;
 
-    /**
-     * Crea instancia Firma.
-     *
-     * @return Firma
-     */
-    public static Firma createNewFirma() {
-        return new Firma();
-    }
+	/**
+	 * Constructor.
+	 */
+	public Firma() {
+		super();
+	}
 
-    /**
-     * Método de acceso a estadoFirma.
-     *
-     * @return estadoFirma
-     */
-    public TypeEstadoFirma getEstadoFirma() {
-        return estadoFirma;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param pFirmante
+	 *            firmante
+	 * @param pEstadoFirma
+	 *            Parámetro estado firma
+	 * @param pFechaFirma
+	 *            Parámetro fecha firma
+	 */
+	public Firma(final Persona pFirmante, final TypeEstadoFirma pEstadoFirma, final String pFechaFirma) {
+		super();
+		firmante = pFirmante;
+		estadoFirma = pEstadoFirma;
+		fechaFirma = pFechaFirma;
+	}
 
-    /**
-     * Método para establecer estadoFirma.
-     *
-     * @param pEstadoFirma
-     *            estadoFirma a establecer
-     */
-    public void setEstadoFirma(final TypeEstadoFirma pEstadoFirma) {
-        estadoFirma = pEstadoFirma;
-    }
+	/**
+	 * Crea instancia Firma.
+	 *
+	 * @return Firma
+	 */
+	public static Firma createNewFirma() {
+		return new Firma();
+	}
 
-    /**
-     * Método de acceso a fechaFirma.
-     *
-     * @return fechaFirma
-     */
-    public String getFechaFirma() {
-        return fechaFirma;
-    }
+	/**
+	 * Método de acceso a estadoFirma.
+	 *
+	 * @return estadoFirma
+	 */
+	public TypeEstadoFirma getEstadoFirma() {
+		return estadoFirma;
+	}
 
-    /**
-     * Método para establecer fechaFirma.
-     *
-     * @param pFechaFirma
-     *            fechaFirma a establecer
-     */
-    public void setFechaFirma(final String pFechaFirma) {
-        fechaFirma = pFechaFirma;
-    }
+	/**
+	 * Método para establecer estadoFirma.
+	 *
+	 * @param pEstadoFirma
+	 *            estadoFirma a establecer
+	 */
+	public void setEstadoFirma(final TypeEstadoFirma pEstadoFirma) {
+		estadoFirma = pEstadoFirma;
+	}
 
-    /**
-     * Método de acceso a firmante.
-     *
-     * @return firmante
-     */
-    public Persona getFirmante() {
-        return firmante;
-    }
+	/**
+	 * Método de acceso a fechaFirma.
+	 *
+	 * @return fechaFirma
+	 */
+	public String getFechaFirma() {
+		return fechaFirma;
+	}
 
-    /**
-     * Método para establecer firmante.
-     *
-     * @param firmante
-     *            firmante a establecer
-     */
-    public void setFirmante(Persona firmante) {
-        this.firmante = firmante;
-    }
+	/**
+	 * Método para establecer fechaFirma.
+	 *
+	 * @param pFechaFirma
+	 *            fechaFirma a establecer
+	 */
+	public void setFechaFirma(final String pFechaFirma) {
+		fechaFirma = pFechaFirma;
+	}
+
+	/**
+	 * Método de acceso a firmante.
+	 *
+	 * @return firmante
+	 */
+	public Persona getFirmante() {
+		return firmante;
+	}
+
+	/**
+	 * Método para establecer firmante.
+	 *
+	 * @param firmante
+	 *            firmante a establecer
+	 */
+	public void setFirmante(final Persona firmante) {
+		this.firmante = firmante;
+	}
+
+	/**
+	 * Método de acceso a descargable.
+	 *
+	 * @return descargable
+	 */
+	public TypeSiNo getDescargable() {
+		return descargable;
+	}
+
+	/**
+	 * Método para establecer descargable.
+	 *
+	 * @param descargable
+	 *            descargable a establecer
+	 */
+	public void setDescargable(final TypeSiNo descargable) {
+		this.descargable = descargable;
+	}
+
+	/**
+	 * Método de acceso a tipoFirma.
+	 * 
+	 * @return tipoFirma
+	 */
+	public TypeFirmaDigital getTipoFirma() {
+		return tipoFirma;
+	}
+
+	/**
+	 * Método para establecer tipoFirma.
+	 * 
+	 * @param tipoFirma
+	 *            tipoFirma a establecer
+	 */
+	public void setTipoFirma(final TypeFirmaDigital tipoFirma) {
+		this.tipoFirma = tipoFirma;
+	}
 
 }

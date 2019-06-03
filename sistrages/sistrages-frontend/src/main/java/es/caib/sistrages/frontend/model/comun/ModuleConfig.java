@@ -16,7 +16,9 @@ public final class ModuleConfig {
 	private String version;
 
 	/** Commit. **/
-	private String commit;
+	private String commitSvn;
+
+	private String commitGit;
 
 	/**
 	 * @return the entorno
@@ -51,16 +53,24 @@ public final class ModuleConfig {
 	/**
 	 * @return the commit
 	 */
-	public String getCommit() {
-		return commit;
+	public String getCommitSvn() {
+		return commitSvn;
 	}
 
 	/**
 	 * @param commit
 	 *            the commit to set
 	 */
-	public void setCommit(final String commit) {
-		this.commit = commit;
+	public void setCommitSvn(final String commit_svn) {
+		this.commitSvn = commit_svn;
+	}
+
+	public String getCommitGit() {
+		return commitGit;
+	}
+
+	public void setCommitGit(final String commit_git) {
+		this.commitGit = commit_git;
 	}
 
 }

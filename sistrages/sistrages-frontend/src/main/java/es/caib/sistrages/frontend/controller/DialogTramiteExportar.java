@@ -19,30 +19,19 @@ import javax.inject.Inject;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import es.caib.sistrages.core.api.model.Area;
 import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.ContenidoFichero;
 import es.caib.sistrages.core.api.model.DisenyoFormulario;
-import es.caib.sistrages.core.api.model.Documento;
 import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Fichero;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
-import es.caib.sistrages.core.api.model.FormularioTramite;
 import es.caib.sistrages.core.api.model.FuenteDatos;
 import es.caib.sistrages.core.api.model.FuenteDatosValores;
-import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.ModelApi;
-import es.caib.sistrages.core.api.model.Tasa;
 import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
-import es.caib.sistrages.core.api.model.TramitePasoAnexar;
-import es.caib.sistrages.core.api.model.TramitePasoDebeSaber;
-import es.caib.sistrages.core.api.model.TramitePasoRegistrar;
-import es.caib.sistrages.core.api.model.TramitePasoRellenar;
-import es.caib.sistrages.core.api.model.TramitePasoTasa;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.comun.CsvDocumento;
 import es.caib.sistrages.core.api.model.types.TypeDominio;
@@ -59,7 +48,6 @@ import es.caib.sistrages.frontend.model.types.TypeImportarTipo;
 import es.caib.sistrages.frontend.model.types.TypeModoAcceso;
 import es.caib.sistrages.frontend.model.types.TypeNivelGravedad;
 import es.caib.sistrages.frontend.util.UtilJSF;
-import es.caib.sistrages.frontend.util.UtilTraducciones;
 
 @ManagedBean
 @ViewScoped
@@ -67,9 +55,6 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 	/** LITERAL GUION. **/
 	private static final String GUION = "-";
-
-	/** Log. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DialogTramiteExportar.class);
 
 	/** Servicio. **/
 	@Inject
@@ -127,11 +112,11 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	/** Mostrar botón exportar. **/
 	private boolean mostrarBotonExportar;
 
-	/** Idiomas del tramite version. **/
-	private List<String> idiomasTramiteVersion;
-
 	/** Nombre de los ficheros. **/
 	private final Map<String, Boolean> nombreFicheros = new HashMap<>();
+
+	/** Literal de terminacion. **/
+	private final static String LITERAL_SUFIJO_DATA = ".data";
 
 	/**
 	 * Inicialización.
@@ -139,7 +124,6 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	public void init() {
 
 		tramiteVersion = tramiteService.getTramiteVersion(Long.valueOf(id));
-		idiomasTramiteVersion = UtilTraducciones.getIdiomasSoportados(tramiteVersion);
 		pasos = tramiteService.getTramitePasos(Long.valueOf(id));
 		dominiosId = new ArrayList<>();
 		final List<Dominio> dominiosSimples = tramiteService.getDominioSimpleByTramiteId(Long.valueOf(id));
@@ -183,166 +167,23 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	}
 
 	/**
-	 * Comprueba que todo está correcto. Es decir, que los scripts están correctos y
-	 * que los literales están rellenos en todos los idiomas del tramite version.
+	 * Comprueba que está correcto. Es decir, que los scripts están correctos y que
+	 * los literales están rellenos en todos los idiomas del tramite version.
 	 *
-	 * TODO Faltaría comprobar los scripts.
 	 *
 	 * @return
 	 */
 	private boolean checkTodoCorrecto() {
 
-		boolean todoCorrecto = true;
-
-		for (final TramitePaso paso : this.pasos) {
-
-			boolean continuar = true;
-			if (paso instanceof TramitePasoTasa && checkLiteralIncompleto((TramitePasoTasa) paso)) {
-				continuar = false;
-			} else if (paso instanceof TramitePasoAnexar && checkLiteralIncompleto((TramitePasoAnexar) paso)) {
-				continuar = false;
-			} else if (paso instanceof TramitePasoDebeSaber && checkLiteralIncompleto((TramitePasoDebeSaber) paso)) {
-				continuar = false;
-			} else if (paso instanceof TramitePasoRegistrar && checkLiteralIncompleto((TramitePasoRegistrar) paso)) {
-				continuar = false;
-			} else if (paso instanceof TramitePasoRellenar && checkLiteralIncompleto((TramitePasoRellenar) paso)) {
-				continuar = false;
-			}
-
-			if (!continuar) {
-				todoCorrecto = false;
-				break;
-			}
-		}
-
-		if (this.tramiteVersion != null && this.tramiteVersion.getBloqueada() && todoCorrecto) {
+		boolean correcto = true;
+		if (this.tramiteVersion != null && this.tramiteVersion.getBloqueada()) {
 			addMessageContext(TypeNivelGravedad.ERROR,
 					UtilJSF.getLiteral("dialogTramiteExportar.error.tramiteBloqueado"));
-			todoCorrecto = false;
+			correcto = false;
 		}
 
-		return todoCorrecto;
+		return correcto;
 
-	}
-
-	/**
-	 * Comprueba que el literal tiene todos los idiomas del idioma indicado por el
-	 * tramite version.
-	 *
-	 * @param literal
-	 * @return
-	 */
-	private boolean literalIncompleto(final Literal literal) {
-		if (literal != null) {
-			for (final String idioma : idiomasTramiteVersion) {
-				if (!literal.contains(idioma) || literal.getTraduccion(idioma).isEmpty()) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Comprueba si está incorrecto los literales de paso rellenar.
-	 *
-	 * @param paso
-	 * @return
-	 */
-	private boolean checkLiteralIncompleto(final TramitePasoRellenar paso) {
-		if (paso.getFormulariosTramite() != null) {
-			for (final FormularioTramite formulario : paso.getFormulariosTramite()) {
-				if (literalIncompleto(formulario.getDescripcion())) {
-					addMessageContext(TypeNivelGravedad.ERROR,
-							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.formulario.desc"));
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Comprueba si está incorrecto los literales de paso registrar.
-	 *
-	 * @param paso
-	 * @return
-	 */
-	private boolean checkLiteralIncompleto(final TramitePasoRegistrar paso) {
-		if (literalIncompleto(paso.getInstruccionesFinTramitacion())
-				|| literalIncompleto(paso.getInstruccionesPresentacion())) {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.registrar.inst"));
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Comprueba si está incorrecto los literales de paso debe saber.
-	 *
-	 * @param paso
-	 * @return
-	 */
-	private boolean checkLiteralIncompleto(final TramitePasoDebeSaber paso) {
-		if (literalIncompleto(paso.getInstruccionesIniciales())) {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.debesaber.instr"));
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Comprueba si está incorrecto los literales de paso anexar.
-	 *
-	 * @param paso
-	 * @return
-	 */
-	private boolean checkLiteralIncompleto(final TramitePasoAnexar paso) {
-		if (literalIncompleto(paso.getDescripcion())) {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.anexar.desc"));
-			return true;
-		}
-
-		if (paso.getDocumentos() != null) {
-			for (final Documento documento : paso.getDocumentos()) {
-				if (literalIncompleto(documento.getAyudaTexto()) || literalIncompleto(documento.getDescripcion())) {
-					addMessageContext(TypeNivelGravedad.ERROR,
-							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.anexo.lit"));
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Comprueba si está incorrecto los literales de paso tasa.
-	 *
-	 * @param paso
-	 * @return
-	 */
-	private boolean checkLiteralIncompleto(final TramitePasoTasa paso) {
-		if (literalIncompleto(paso.getDescripcion())) {
-			addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.tasar.desc"));
-			return true;
-		}
-
-		if (paso.getTasas() != null) {
-			for (final Tasa tasa : paso.getTasas()) {
-				if (literalIncompleto(tasa.getDescripcion())) {
-					addMessageContext(TypeNivelGravedad.ERROR,
-							UtilJSF.getLiteral("dialogTramiteExportar.error.incompleto.tasa.lit"));
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -354,6 +195,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		result.setCanceled(true);
 		UtilJSF.closeDialog(result);
 	}
+
+	private boolean generandoFichero = false;
 
 	/**
 	 * Exportación de un tramite version a un zip. Pasos a realizar:<br />
@@ -374,6 +217,12 @@ public class DialogTramiteExportar extends DialogControllerBase {
 	 * @throws Exception
 	 ***/
 	public StreamedContent getFichero() throws Exception {
+
+		if (generandoFichero) {
+			return null;
+		}
+
+		generandoFichero = true;
 
 		byte[] content = null;
 
@@ -396,21 +245,22 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 5. Incluir los dominios_ID.data
 		for (final Dominio dominio : dominios) {
-			incluirModelApi(zos, dominio, "dominios_" + dominio.getCodigo() + ".data");
+			incluirModelApi(zos, dominio, "dominios_" + dominio.getCodigo() + LITERAL_SUFIJO_DATA);
 		}
 
 		// 6. Incluir los formularios_ID.data
 		for (final DisenyoFormulario formulario : formularios) {
-			incluirModelApi(zos, formulario, "formularios_" + formulario.getCodigo() + ".data");
+			incluirModelApi(zos, formulario, "formularios_" + formulario.getCodigo() + LITERAL_SUFIJO_DATA);
 		}
 
 		// 7. Incluir los ficheros_ID.data y ficherosContent_ID.data
 		for (final Fichero fichero : ficheros) {
-			incluirModelApi(zos, fichero, "ficheros_" + fichero.getCodigo() + ".data");
+			incluirModelApi(zos, fichero, "ficheros_" + fichero.getCodigo() + LITERAL_SUFIJO_DATA);
 
 			// El contenido del fichero se hace manual
 			final ContenidoFichero contenido = gestorFicherosService.obtenerContenidoFichero(fichero.getCodigo());
-			final ZipEntry zeTramiteVersion = new ZipEntry("ficherosContent_" + fichero.getCodigo() + ".data");
+			final ZipEntry zeTramiteVersion = new ZipEntry(
+					"ficherosContent_" + fichero.getCodigo() + LITERAL_SUFIJO_DATA);
 			zos.putNextEntry(zeTramiteVersion);
 			zos.write(contenido.getContent());
 
@@ -418,7 +268,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 8. Incluir los dominios_ID.data
 		for (final FuenteDatos fuente : fuenteDatos) {
-			incluirModelApi(zos, fuente, "fuenteDatos_" + fuente.getCodigo() + ".data");
+			incluirModelApi(zos, fuente, "fuenteDatos_" + fuente.getCodigo() + LITERAL_SUFIJO_DATA);
 
 			// 8. y fuenteDatos_ID.csv (se prepara manualmente el contenido)
 			final FuenteDatosValores fd = dominioService.loadFuenteDatoValores(fuente.getCodigo());
@@ -432,7 +282,7 @@ public class DialogTramiteExportar extends DialogControllerBase {
 
 		// 9. Incluir los formeateadores_ID.data
 		for (final FormateadorFormulario formateador : formateadores) {
-			incluirModelApi(zos, formateador, "formateadores_" + formateador.getCodigo() + ".data");
+			incluirModelApi(zos, formateador, "formateadores_" + formateador.getCodigo() + LITERAL_SUFIJO_DATA);
 		}
 
 		zos.closeEntry();
@@ -440,6 +290,8 @@ public class DialogTramiteExportar extends DialogControllerBase {
 		fos.close();
 
 		content = fos.toByteArray();
+
+		generandoFichero = false;
 
 		// 10. Descargar.
 		final InputStream myInputStream = new ByteArrayInputStream(content);

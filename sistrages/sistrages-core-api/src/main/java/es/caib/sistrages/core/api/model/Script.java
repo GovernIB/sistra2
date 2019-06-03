@@ -133,4 +133,24 @@ public class Script extends ModelApi {
 		return existe;
 	}
 
+	/**
+	 * Busca entre los literales si contiene el literal según el codigo
+	 *
+	 * @param codigo
+	 * @return
+	 */
+	public boolean containLiteral(final Long codigo) {
+		boolean existe = false;
+		if (this.mensajes != null) {
+			for (final LiteralScript mensaje : this.mensajes) {
+				// El identificador puede estar a nulo
+				if (mensaje.getCodigo() != null && mensaje.getCodigo().compareTo(codigo) == 0) {
+					existe = true;
+					break;
+				}
+			}
+		}
+		return existe;
+	}
+
 }

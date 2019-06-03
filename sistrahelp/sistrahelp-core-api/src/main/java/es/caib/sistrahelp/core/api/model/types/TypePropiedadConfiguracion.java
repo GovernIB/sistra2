@@ -18,7 +18,7 @@ public enum TypePropiedadConfiguracion {
 	SISTRAGES_USR("sistrages.rest.user"),
 	/** STG Url. */
 	SISTRAGES_PWD("sistrages.rest.pwd"),
-	SISTRAGES_AYUDA_PATH("ayuda.path"),
+	SISTRAGES_AYUDA_PATH("ayuda.sistrahelp.path"),
 
 	PATH_FICHEROS_EXTERNOS("ficherosExternos.path"),
 

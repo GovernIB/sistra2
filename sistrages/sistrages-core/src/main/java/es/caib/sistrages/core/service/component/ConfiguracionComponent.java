@@ -40,4 +40,13 @@ public interface ConfiguracionComponent {
 	 */
 	IPlugin obtenerPluginEntidad(TypePlugin tipoPlugin, Long idEntidad);
 
+	/**
+	 * Reemplaza propiedades con valor ${system.propiedad}
+	 *
+	 * @param valor
+	 *            valores propiedades
+	 * @return valor propiedad
+	 */
+	String replaceSystemPlaceholders(String valor);
+
 }

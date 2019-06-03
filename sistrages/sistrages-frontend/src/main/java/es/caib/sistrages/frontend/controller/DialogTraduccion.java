@@ -150,6 +150,9 @@ public class DialogTraduccion extends DialogControllerBase {
 		}
 	}
 
+	private static final String LITERAL_ERROR_FALTA_LITERAL = "error.faltaliteral";
+	private static final String LITERAL_ERROR_ETIQUETA_HTML = "error.etiquetaHTML";
+
 	/**
 	 * Aceptar.
 	 */
@@ -157,28 +160,44 @@ public class DialogTraduccion extends DialogControllerBase {
 
 		if (visibleCa) {
 			if (textoCa == null || textoCa.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+				return;
+			}
+			if (contieneEtiquetaHTML(textoCa)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.CATALAN.toString(), textoCa));
 		}
 		if (visibleEs) {
 			if (textoEs == null || textoEs.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+				return;
+			}
+			if (contieneEtiquetaHTML(textoEs)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.CASTELLANO.toString(), textoEs));
 		}
 		if (visibleEn) {
 			if (textoEn == null || textoEn.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+				return;
+			}
+			if (contieneEtiquetaHTML(textoEn)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.INGLES.toString(), textoEn));
 		}
 		if (visibleDe) {
 			if (textoDe == null || textoDe.isEmpty()) {
-				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("error.faltaliteral"));
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_FALTA_LITERAL));
+				return;
+			}
+			if (contieneEtiquetaHTML(textoDe)) {
+				addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral(LITERAL_ERROR_ETIQUETA_HTML));
 				return;
 			}
 			data.add(new Traduccion(TypeIdioma.ALEMAN.toString(), textoDe));
@@ -190,6 +209,16 @@ public class DialogTraduccion extends DialogControllerBase {
 		result.setResult(data);
 		UtilJSF.closeDialog(result);
 
+	}
+
+	/**
+	 * Comprueba si contienen los caracteres < y >
+	 *
+	 * @param texto
+	 * @return
+	 */
+	private boolean contieneEtiquetaHTML(final String texto) {
+		return texto.contains("<") && texto.contains(">");
 	}
 
 	/**

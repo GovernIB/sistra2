@@ -18,6 +18,7 @@ import es.caib.sistrages.core.api.model.Dominio;
 import es.caib.sistrages.core.api.model.Entidad;
 import es.caib.sistrages.core.api.model.FormateadorFormulario;
 import es.caib.sistrages.core.api.model.FormularioSoporte;
+import es.caib.sistrages.core.api.model.IncidenciaValoracion;
 import es.caib.sistrages.core.api.model.PlantillaFormateador;
 import es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario;
 import es.caib.sistrages.core.api.model.Plugin;
@@ -26,14 +27,14 @@ import es.caib.sistrages.core.api.model.Tramite;
 import es.caib.sistrages.core.api.model.TramitePaso;
 import es.caib.sistrages.core.api.model.TramiteVersion;
 import es.caib.sistrages.core.api.model.ValorParametroDominio;
-import es.caib.sistrages.core.api.model.IncidenciaValoracion;
+import es.caib.sistrages.core.api.model.comun.Propiedad;
 import es.caib.sistrages.core.api.model.types.TypeAmbito;
 import es.caib.sistrages.core.api.service.RestApiInternaService;
 import es.caib.sistrages.core.interceptor.NegocioInterceptor;
+import es.caib.sistrages.core.service.component.ConfiguracionComponent;
 import es.caib.sistrages.core.service.component.FormRenderComponent;
 import es.caib.sistrages.core.service.component.FuenteDatosComponent;
 import es.caib.sistrages.core.service.repository.dao.AreaDao;
-import es.caib.sistrages.core.service.repository.dao.IncidenciaValoracionDao;
 import es.caib.sistrages.core.service.repository.dao.AvisoEntidadDao;
 import es.caib.sistrages.core.service.repository.dao.ConfiguracionGlobalDao;
 import es.caib.sistrages.core.service.repository.dao.DominioDao;
@@ -42,6 +43,7 @@ import es.caib.sistrages.core.service.repository.dao.FicheroExternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormateadorFormularioDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioInternoDao;
 import es.caib.sistrages.core.service.repository.dao.FormularioSoporteDao;
+import es.caib.sistrages.core.service.repository.dao.IncidenciaValoracionDao;
 import es.caib.sistrages.core.service.repository.dao.PluginsDao;
 import es.caib.sistrages.core.service.repository.dao.RolDao;
 import es.caib.sistrages.core.service.repository.dao.TramiteDao;
@@ -58,78 +60,75 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 
 	/** configuracion global dao. */
 	@Autowired
-	ConfiguracionGlobalDao configuracionGlobalDao;
+	private ConfiguracionGlobalDao configuracionGlobalDao;
 
 	/** plugin dao. */
 	@Autowired
-	PluginsDao pluginDao;
+	private PluginsDao pluginDao;
 
 	/** DAO Formulario soporte. */
 	@Autowired
-	FormularioSoporteDao formularioSoporteDao;
+	private FormularioSoporteDao formularioSoporteDao;
 
 	/** DAO Entidad. */
 	@Autowired
-	EntidadDao entidadDao;
+	private EntidadDao entidadDao;
 
 	/** FicheroExterno dao. */
 	@Autowired
-	FicheroExternoDao ficheroExternoDao;
+	private FicheroExternoDao ficheroExternoDao;
 
 	/** DAO Tramite. */
 	@Autowired
-	TramiteDao tramiteDao;
+	private TramiteDao tramiteDao;
 
 	/** DAO Tramite Paso. **/
 	@Autowired
-	TramitePasoDao tramitePasoDao;
+	private TramitePasoDao tramitePasoDao;
 
 	/** DAO Dominio. */
 	@Autowired
-	DominioDao dominioDao;
+	private DominioDao dominioDao;
 
 	/** DAO formulario. */
 	@Autowired
-	FormularioInternoDao formIntDao;
+	private FormularioInternoDao formIntDao;
 
 	/** DAO Area. */
 	@Autowired
-	AreaDao areaDao;
+	private AreaDao areaDao;
 
 	/** DAO Area. */
 	@Autowired
-	IncidenciaValoracionDao avisoDao;
+	private IncidenciaValoracionDao avisoDao;
 
-	/**
-	 * FormateadorFormulario
-	 */
+	/** FormateadorFormulario. */
 	@Autowired
-	FormateadorFormularioDao fmtDao;
+	private FormateadorFormularioDao fmtDao;
 
-	/**
-	 * aviso entidad dao.
-	 */
+	/** Aviso entidad dao. */
 	@Autowired
-	AvisoEntidadDao avisoEntidadDao;
+	private AvisoEntidadDao avisoEntidadDao;
 
-	/**
-	 * aviso entidad dao.
-	 */
+	/** Aviso entidad dao. */
 	@Autowired
-	RolDao rolDao;
+	private RolDao rolDao;
 
-	/**
-	 * Componente fuente de datos
-	 */
+	/** Configuracion. */
 	@Autowired
-	FuenteDatosComponent fuenteDatosComponent;
+	private ConfiguracionComponent configuracionComponent;
 
+	/** Componente fuente de datos. */
 	@Autowired
-	FormRenderComponent formRenderComponent;
+	private FuenteDatosComponent fuenteDatosComponent;
+
+	/** Form renderer. */
+	@Autowired
+	private FormRenderComponent formRenderComponent;
 
 	/** DAO Formateador Formulario DAO. */
 	@Autowired
-	FormateadorFormularioDao formateadorFormularioDAO;
+	private FormateadorFormularioDao formateadorFormularioDAO;
 
 	@Override
 	@NegocioInterceptor
@@ -146,7 +145,15 @@ public class RestApiInternaServiceImpl implements RestApiInternaService {
 	@Override
 	@NegocioInterceptor
 	public List<Plugin> listPlugin(final TypeAmbito ambito, final Long idEntidad, final String filtro) {
-		return pluginDao.getAllByFiltro(ambito, idEntidad, filtro);
+		// Obtenemos plugins
+		final List<Plugin> plugins = pluginDao.getAllByFiltro(ambito, idEntidad, filtro);
+		// Reemplazamos system placeholders
+		for (final Plugin plg : plugins) {
+			for (final Propiedad prop : plg.getPropiedades()) {
+				prop.setValor(configuracionComponent.replaceSystemPlaceholders(prop.getValor()));
+			}
+		}
+		return plugins;
 	}
 
 	@Override

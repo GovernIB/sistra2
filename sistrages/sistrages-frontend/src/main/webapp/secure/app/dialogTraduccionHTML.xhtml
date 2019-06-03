@@ -23,6 +23,9 @@
     tinyMCE.init({
 		   // General options
 		    mode : "textareas",
+		    plugins: "code image link lists  ",
+		    toolbar: "bold italic | link image | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat #{dialogTraduccionHTML.sourceCode}" ,
+		    menubar: "",
 		    readonly : #{dialogTraduccionHTML.readonly}
 		 });
 

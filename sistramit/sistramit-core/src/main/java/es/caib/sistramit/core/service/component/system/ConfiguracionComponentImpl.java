@@ -180,8 +180,10 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 				prop = new Properties();
 				for (final RValorParametro parametro : rplg.getPropiedades().getParametros()) {
 
+					// SE RESUELVE EN STG
 					// Comprobamos si la propiedad hay que cargarla de system
-					final String valorProp = reemplazarPropsSystem(parametro.getValor());
+					// final String valorProp = reemplazarPropsSystem(parametro.getValor());
+					final String valorProp = parametro.getValor();
 
 					prop.put(prefijoGlobal + rplg.getPrefijoPropiedades() + parametro.getCodigo(), valorProp);
 				}
@@ -208,7 +210,7 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 	 *            valores propiedades
 	 * @return valor propiedad
 	 */
-	private String reemplazarPropsSystem(String valor) {
+	private String reemplazarPropsSystem(final String valor) {
 		final String placeholder = "${system.";
 		String res = valor;
 		if (res != null) {

@@ -76,7 +76,7 @@
 
 							<p:selectOneMenu id="filtroEvento" value="#{viewAuditoriaTramites.filtros.evento}">
 							 	<f:selectItem itemLabel="#{msg['selectItem.Todos']}" itemValue="" />
-		    					<f:selectItems value="#{viewAuditoriaTramites.tiposEventos}" var="evento" itemLabel="#{evento} - #{msg['typeEvento.' += evento]}"/>
+		    					<f:selectItems value="#{viewAuditoriaTramites.tiposEventos}" var="evento" itemLabel="#{evento} - #{msg['typeEvento.' += evento]}" />
 							</p:selectOneMenu >
 
 			        	</h:panelGrid>

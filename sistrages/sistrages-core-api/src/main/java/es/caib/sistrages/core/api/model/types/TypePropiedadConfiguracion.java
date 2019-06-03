@@ -16,7 +16,9 @@ public enum TypePropiedadConfiguracion {
 	/** Url asistente. */
 	SISTRAMIT_URL("sistramit.url"),
 	/** Prefijo plugin. */
-	PLUGINS_PREFIJO("plugins.prefix");
+	PLUGINS_PREFIJO("plugins.prefix"),
+	/** Tinymce botón code activo. **/
+	TINYMCE_CODE("tinymce.code");
 	/**
 	 * Valor como string.
 	 */

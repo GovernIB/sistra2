@@ -233,4 +233,12 @@ public interface FormularioInternoDao {
 	 */
 	void borrarReferencias(Long idTramite, Long idAreaAntigua);
 
+	/**
+	 * Actualiza pagina.
+	 *
+	 * @param paginaFormulario
+	 *            pagina formulario
+	 */
+	void updatePagina(PaginaFormulario paginaFormulario);
+
 }

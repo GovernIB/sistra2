@@ -960,4 +960,73 @@ public final class ValidacionesTipo {
 		return respuesta;
 	}
 
+	/**
+	 * Compara dos fechas y ve si la distancia entre dos fechas (en formato texto)
+	 * concuerda con la distancia que se pasa como parámetro de entrada.
+	 *
+	 * @param fechaIni
+	 * @param fechaFin
+	 * @param formatoFecha
+	 * @param numAnyos
+	 * @return
+	 * @throws ValidacionTipoException
+	 */
+	public boolean hayDistanciaAnyos(final String fechaIni, final String fechaFin, final String formatoFecha,
+			final int numAnyos) throws ValidacionTipoException {
+
+		Date iniDate;
+		Date finDate;
+
+		final SimpleDateFormat sdfFormatoFecha;
+		if (formatoFecha == null || formatoFecha.isEmpty()) {
+			sdfFormatoFecha = new SimpleDateFormat(ValidacionesTipo.FORMATO_FECHA);
+		} else {
+			sdfFormatoFecha = new SimpleDateFormat(formatoFecha);
+		}
+		try {
+			iniDate = sdfFormatoFecha.parse(fechaIni);
+			finDate = sdfFormatoFecha.parse(fechaFin);
+		} catch (final Exception e) {
+			throw new ValidacionTipoException("No se puede convertir correctamente las fechas.");
+		}
+
+		return hayDistanciaAnyos(iniDate, finDate, numAnyos);
+	}
+
+	/**
+	 * Compara la distancia entre dos fechas y ve si la distancia concuerda con la
+	 * que se pasa por entrada.
+	 *
+	 * @param fecha1
+	 * @param fecha2
+	 * @param numAnyos
+	 * @return
+	 */
+	public boolean hayDistanciaAnyos(final Date fecha1, final Date fecha2, final int numAnyos) {
+		boolean resultado = false;
+		Calendar iniCalendar;
+		Calendar finCalendar;
+
+		if (fecha1 == null || fecha2 == null || numAnyos < 0) // No se proporciona una fecha válida o un numero de años
+																// positivo
+		{
+			return resultado; // Salida de la función.
+		}
+
+		iniCalendar = Calendar.getInstance();
+		finCalendar = Calendar.getInstance();
+		iniCalendar.setTime(fecha1);
+		finCalendar.setTime(fecha2);
+
+		if (finCalendar.before(iniCalendar)) // La fecha menor de la comparación no es válida.
+		{
+			return resultado; // Salida de la función.
+		}
+
+		// Evaluación de la condición.
+		iniCalendar.add(Calendar.YEAR, numAnyos); // Actualización de la fecha de comparación.
+		resultado = finCalendar.before(iniCalendar); // Comparación de fechas.
+		return !resultado; // Salida de la función.
+
+	}
 }

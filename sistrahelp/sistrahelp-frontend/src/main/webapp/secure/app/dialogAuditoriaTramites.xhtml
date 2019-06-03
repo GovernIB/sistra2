@@ -57,8 +57,8 @@
 				<p:spacer height="5px"/>
 				<p:fieldset legend="#{msg['dialogAuditoriaTramites.detalle']}" styleClass="margin-left-10 margin-right-10  noPadding" rendered="#{dialogAuditoriaTramites.mostrarDetalle}">
 			 		<h:panelGrid rowClasses=", ui-datatable-odd" columnClasses="padding-left-18 w25 grid-right,padding-right-18 w75" columns="2"  styleClass="w100">
-				 		<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" />
-				 		<h:panelGroup>
+				 		<p:outputLabel for="codigoError" value="#{msg['dialogAuditoriaTramites.codigoError']}:" rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" />
+				 		<h:panelGroup rendered="#{dialogAuditoriaTramites.dato.codigoError != null and not empty dialogAuditoriaTramites.dato.codigoError}" >
 							<p:inputText id="codigoError" value="#{dialogAuditoriaTramites.dato.codigoError}" disabled="true" size="70"/>
 							<p:spacer width="5px"/>
 							<p:commandButton value="#{msg['dialogAuditoriaTramites.trazaError']}" id="trazaErrorBtn" onclick="PF('dlgTraza').show();" rendered="#{dialogAuditoriaTramites.dato.trazaError ne null}"/>
@@ -106,7 +106,7 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" process="@this" actionListener="#{dialogAuditoriaTramites.ayuda()}" />
-						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogAuditoriaTramites.cerrar}" process="@this" styleClass="boton-azul" />			
+						<p:commandButton value="#{msg['botones.volver']}" actionListener="#{dialogAuditoriaTramites.cerrar}" process="@this" styleClass="boton-azul" />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>

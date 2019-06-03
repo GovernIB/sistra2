@@ -4,10 +4,14 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
+import es.caib.sistrages.core.api.model.ConfiguracionGlobal;
 import es.caib.sistrages.core.api.model.Literal;
 import es.caib.sistrages.core.api.model.Traduccion;
 import es.caib.sistrages.core.api.model.types.TypeIdioma;
+import es.caib.sistrages.core.api.model.types.TypePropiedadConfiguracion;
+import es.caib.sistrages.core.api.service.ConfiguracionGlobalService;
 import es.caib.sistrages.core.api.util.UtilJSON;
 import es.caib.sistrages.frontend.model.DialogResult;
 import es.caib.sistrages.frontend.model.comun.Constantes;
@@ -18,6 +22,10 @@ import es.caib.sistrages.frontend.util.UtilJSF;
 @ManagedBean
 @ViewScoped
 public class DialogTraduccionHTML extends DialogControllerBase {
+
+	/** Servicio. */
+	@Inject
+	private ConfiguracionGlobalService configuracionGlobalService;
 
 	/** Texto Catalan. **/
 	private String textoCa;
@@ -79,6 +87,9 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	/** Es modo readonly. **/
 	private int readonly;
 
+	/** Indica si se añade el plugin del código fuente. **/
+	private String sourceCode;
+
 	/**
 	 * Inicializacion.
 	 *
@@ -119,6 +130,23 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 			readonly = 1;
 		} else {
 			readonly = 0;
+		}
+
+		prepararCodeActivo();
+
+	}
+
+	/** Prepara si activamos el botón de source. **/
+	private void prepararCodeActivo() {
+		try {
+			final ConfiguracionGlobal confGlobal = configuracionGlobalService
+					.getConfiguracionGlobal(TypePropiedadConfiguracion.TINYMCE_CODE);
+			if (confGlobal != null && confGlobal.getValor() != null && Boolean.parseBoolean(confGlobal.getValor())) {
+				sourceCode = " | code";
+			}
+		} catch (final Exception e) {
+			getLogger().error("Error obteniendo la propiedad de sourceCode de tinymce ", e);
+			sourceCode = "";
 		}
 	}
 
@@ -589,6 +617,21 @@ public class DialogTraduccionHTML extends DialogControllerBase {
 	 */
 	public void setReadonly(final int readonly) {
 		this.readonly = readonly;
+	}
+
+	/**
+	 * @return the sourceCode
+	 */
+	public String getSourceCode() {
+		return sourceCode;
+	}
+
+	/**
+	 * @param sourceCode
+	 *            the sourceCode to set
+	 */
+	public void setSourceCode(final String sourceCode) {
+		this.sourceCode = sourceCode;
 	}
 
 }

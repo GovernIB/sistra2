@@ -66,7 +66,7 @@ public class ViewAuditoriaTramites extends ViewControllerBase {
 		// cargamos los eventos quitando el de purga
 		tiposEventos = new ArrayList<>();
 		for (final TypeEvento ev : TypeEvento.values()) {
-			if (!TypeEvento.PROCESO_PURGA.equals(ev)) {
+			if (!TypeEvento.PROCESO_PURGA.equals(ev) && !TypeEvento.VALORACION_TRAMITE.equals(ev)) {
 				tiposEventos.add(ev);
 			}
 		}

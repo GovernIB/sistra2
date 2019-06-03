@@ -1,0 +1,72 @@
+﻿<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+	<script type="text/javascript" src="AyudaServlet?js=ayuda"></script>
+</head>
+<script type="text/javascript">
+	function copiar () {
+		copiarPortapeles('PLUGIN_UTILS.hayDistanciaAnyos(fechaIni, fechaFin, formatoFecha, distanciaAnyos)');
+	}
+</script>
+<body class="bodyPlugins">
+<div class="seccionBreadcrumb">
+  	<ul>
+  		  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS">PLUGIN_UTILS</a></li>
+      	  <li>></li>
+      	  <li><a href="AyudaServlet?lang=ca&plugin=PLUGIN_UTILS&metodo=hayDistanciaAnyos">hayDistanciaAnyos</a></li>
+  	</ul>
+</div>
+
+<h1 class="cabeceraPlugin">
+	<img class="iconCopy" src="AyudaServlet?jpg=copy" onclick="copiar(); return false;" />
+	hayDistanciaAnyos(String fechaIni, String fechaFin, String formatoFecha, int distanciaAnyos): boolean
+</h1>
+<p>
+	<b>DESCRIPCI&Oacute;</b>
+</p>
+<p>
+	<ul>
+    	<li>Valida que la distància mínima entre dues dates sigui com a mínim del paràmetre de distància que es passa per entrada.</li>
+
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES D&#39;ENTRADA</b>
+</p>
+<p>
+	<ul>
+		<li><b>fechaIni</b>: Data inicial menor que la fechaFin.</li>
+		<li><b>fechaFin</b>: Fecha final mayor que la fechaIni. </li>
+		<li><b>formatoFecha</b>: Paràmetre opcional que indica el format de les dates per a convertir-lo en una variable de tipus data. Si es passa nul, el format data és 'dd/MM/YYYY' (per exemple, una data en aquest format seria '30/12/2019').</li>
+		<li><b>distanciaAnyos</b>Nombre mínim d'anys de distància. </li>
+	</ul>
+</p>
+<p>
+	<b>PAR&#192;METRES DE SORTIDA</b>
+</p>
+<p>
+	<ul>
+		<li><b>boolean</b>: true si la distància en anys entre totes dues dates és com a mínim el paràmetre añosDistancia, false si no compleix el mínim en anyos de distància entre tots dos.</li>
+	</ul>
+</p>
+<p>
+	<b>EXEMPLES</b>
+</p>
+<p><b>Exemple 1</b> Validar si la distància entre dues dates és d'almenys 3 anys. </p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.hayDistanciaAnyos('01/06/2019','05/07/2015', null,3);
+</p>
+<p>La funció hayDistanciaAnyos retorna 'true' perquè la distància d'anys entre totes dues dates és major o igual a 3 anys.</p>
+<br />
+
+<p><b>Exemple 2</b> Validar si la distància entre dues dates és d'almenys 5 anys.</p>
+ <p class="codigoScript">
+	var valido = PLUGIN_UTILS.hayDistanciaAnyos('01/01/2018','05/07/2015','dd/MM/YYYY',5);
+</p>
+<p>La funció hayDistanciaAnyos retorna 'false' perquè la distància d'anys entre totes dues dates no és major i igual a 5 anys.</p>
+<br />
+
+</body>
+</html>

@@ -159,6 +159,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		return formInt;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * addFormulario(es.caib.sistrages.core.api.model.FormularioTramite, boolean)
+	 */
 	@Override
 	public Long addFormulario(final FormularioTramite pFormTra, final boolean crearPaginaInicial) {
 		if (pFormTra == null) {
@@ -180,11 +186,23 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		return jForm.getCodigo();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * addFormulario(es.caib.sistrages.core.api.model.FormularioTramite)
+	 */
 	@Override
 	public Long addFormulario(final FormularioTramite pFormTra) {
 		return addFormulario(pFormTra, true);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * updateFormulario(es.caib.sistrages.core.api.model.DisenyoFormulario)
+	 */
 	@Override
 	public void updateFormulario(final DisenyoFormulario pFormInt) {
 
@@ -292,6 +310,13 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		return componenteFormularioToModel(getJElementoById(pId));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * addComponente(es.caib.sistrages.core.api.model.types.TypeObjetoFormulario,
+	 * java.lang.Long, java.lang.Long, java.lang.Integer, java.lang.String)
+	 */
 	@Override
 	public ObjetoFormulario addComponente(final TypeObjetoFormulario pTipoObjeto, final Long pIdPagina,
 			final Long pIdLinea, final Integer pOrden, final String pPosicion) {
@@ -396,6 +421,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * removeLineaFormulario(java.lang.Long)
+	 */
 	@Override
 	public void removeLineaFormulario(final Long pId) {
 		final JLineaFormulario jLinea = getJLineaById(pId);
@@ -425,6 +456,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		entityManager.merge(jPagina);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * removeComponenteFormulario(java.lang.Long)
+	 */
 	@Override
 	public void removeComponenteFormulario(final Long pId) {
 		final JElementoFormulario jElemento = getJElementoById(pId);
@@ -455,6 +492,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		entityManager.merge(jLineaFormulario);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * updateComponente(es.caib.sistrages.core.api.model.ComponenteFormulario)
+	 */
 	@Override
 	public ObjetoFormulario updateComponente(final ComponenteFormulario pComponente) {
 		// TODO
@@ -655,6 +698,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * updateOrdenComponente(java.lang.Long, java.lang.Integer)
+	 */
 	@Override
 	public void updateOrdenComponente(final Long pId, final Integer pOrden) {
 		final JElementoFormulario jElemento = getJElementoById(pId);
@@ -662,6 +711,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		entityManager.merge(jElemento);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * updateOrdenLinea(java.lang.Long, java.lang.Integer)
+	 */
 	@Override
 	public void updateOrdenLinea(final Long pId, final Integer pOrden) {
 		final JLineaFormulario jLinea = getJLineaById(pId);
@@ -669,6 +724,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		entityManager.merge(jLinea);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * getListaPlantillaIdiomaFormularioById(java.lang.Long)
+	 */
 	@Override
 	public List<PlantillaIdiomaFormulario> getListaPlantillaIdiomaFormularioById(final Long pId) {
 		final List<PlantillaIdiomaFormulario> lista = new ArrayList<>();
@@ -681,6 +742,13 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		return lista;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * uploadPlantillaIdiomaFormulario(java.lang.Long,
+	 * es.caib.sistrages.core.api.model.PlantillaIdiomaFormulario)
+	 */
 	@Override
 	public PlantillaIdiomaFormulario uploadPlantillaIdiomaFormulario(final Long idPlantilla,
 			final PlantillaIdiomaFormulario plantilla) {
@@ -705,6 +773,12 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		return jPlantillaIdioma.toModel();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see es.caib.sistrages.core.service.repository.dao.FormularioInternoDao#
+	 * removePlantillaIdiomaFormulario(java.lang.Long)
+	 */
 	@Override
 	public void removePlantillaIdiomaFormulario(final Long idPlantilla) {
 		final JPlantillaIdiomaFormulario jPlantillaIdioma = entityManager.find(JPlantillaIdiomaFormulario.class,
@@ -1329,5 +1403,25 @@ public class FormularioInternoDaoImpl implements FormularioInternoDao {
 		query.setParameter("idTramite", idTramite);
 
 		return query.getResultList();
+	}
+
+	@Override
+	public void updatePagina(final PaginaFormulario paginaFormulario) {
+
+		if (paginaFormulario != null && paginaFormulario.getCodigo() == null) {
+			throw new FaltanDatosException(FALTA_ID);
+		}
+
+		if (paginaFormulario != null && paginaFormulario.getCodigo() != null) {
+			final JPaginaFormulario jpagina = entityManager.find(JPaginaFormulario.class, paginaFormulario.getCodigo());
+
+			jpagina.setOrden(paginaFormulario.getOrden());
+			jpagina.setPaginaFinal(paginaFormulario.isPaginaFinal());
+			if (paginaFormulario.getScriptValidacion() != null) {
+				jpagina.setScriptValidacion(JScript.fromModel(Script.clonar(paginaFormulario.getScriptValidacion())));
+			}
+
+			entityManager.merge(jpagina);
+		}
 	}
 }

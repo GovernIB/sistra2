@@ -104,7 +104,7 @@ public final class Constantes {
 	public static final String SISTRAMIT_REST_URL = "sistramit.rest.url";
 
 	/** Sistrages ayuda externa. */
-	public static final String SISTRAGES_AYUDA_PATH = "ayuda.path";
+	public static final String SISTRAGES_AYUDA_PATH = "ayuda.sistrages.path";
 
 	public static final String EXTENSIONES_TODAS = "*";
 	public static final String LISTAS_SEPARADOR = ";";
@@ -118,7 +118,7 @@ public final class Constantes {
 	 * Indica si el growl en un dialog se muestra en el padre o dentro del dialog.
 	 **/
 	public static final boolean GROWL_PADRE = true;
-	
+
 	public static final String USUARIO_MIGRACION = "migracion";
 
 }
