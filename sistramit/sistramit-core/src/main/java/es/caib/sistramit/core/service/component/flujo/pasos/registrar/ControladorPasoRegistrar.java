@@ -68,6 +68,9 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 	/** Accion verificar firma documento. */
 	@Autowired
 	private AccionVerificarFirmaDocumento accionVerificarFirmarDocumento;
+	/** Accion descargar firma documento. */
+	@Autowired
+	private AccionDescargarFirma accionDescargarFirma;
 	/** Accion registrar tramite. */
 	@Autowired
 	private AccionRegistrarTramite accionRegistrarTramite;
@@ -143,6 +146,9 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 			break;
 		case VERIFICAR_FIRMA_DOCUMENTO:
 			accionPaso = accionVerificarFirmarDocumento;
+			break;
+		case DESCARGAR_FIRMA:
+			accionPaso = accionDescargarFirma;
 			break;
 		case REGISTRAR_TRAMITE:
 			accionPaso = accionRegistrarTramite;
@@ -456,6 +462,11 @@ public final class ControladorPasoRegistrar extends ControladorPasoReferenciaImp
 		// - Expone / Solicita
 		datosRegistrales.setTextoExpone(resRegistro.getExpone());
 		datosRegistrales.setTextoSolicita(resRegistro.getSolicita());
+
+		// - Extracto
+		if (StringUtils.isNotBlank(resRegistro.getExtracto())){
+			datosRegistrales.setExtracto(resRegistro.getExtracto());
+		}
 
 		return datosRegistrales;
 	}

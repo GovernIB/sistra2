@@ -14,6 +14,7 @@ import es.caib.sistramit.core.api.exception.AccionPasoNoExisteException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.DatosGuardarJustificante;
 import es.caib.sistramit.core.api.model.flujo.DetallePasoGuardar;
+import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
 import es.caib.sistramit.core.api.model.flujo.DocumentosRegistroPorTipo;
 import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ValoracionIncidencia;
@@ -21,6 +22,7 @@ import es.caib.sistramit.core.api.model.flujo.ValoracionTramite;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPasoGuardar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.service.component.flujo.ConstantesFlujo;
 import es.caib.sistramit.core.service.component.flujo.pasos.AccionPaso;
 import es.caib.sistramit.core.service.component.flujo.pasos.ControladorPasoReferenciaImpl;
@@ -51,6 +53,10 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 	/** Accion descargar documento. */
 	@Autowired
 	private AccionDescargarDocumento accionDescargarDocumento;
+
+	/** Accion descargar firma documento. */
+	@Autowired
+	private AccionDescargarFirma accionDescargarFirma;
 
 	/** Accion descargar justificante. */
 	@Autowired
@@ -98,6 +104,9 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 		switch ((TypeAccionPasoGuardar) pAccionPaso) {
 		case DESCARGAR_DOCUMENTO:
 			accionPaso = accionDescargarDocumento;
+			break;
+		case DESCARGAR_FIRMA:
+			accionPaso = accionDescargarFirma;
 			break;
 		case DESCARGAR_JUSTIFICANTE:
 			accionPaso = accionDescargarJustificante;
@@ -167,6 +176,9 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 		// Documentos registro
 		final List<DocumentosRegistroPorTipo> docsRegPorTipo = UtilsFlujo.buscarDocumentosParaRegistrar(getDao(),
 				pVariablesFlujo);
+		// Revisamos descarga documentos firmados en función de tipo de firma y número
+		// firmantes.
+		revisarDescargaDocumentosFirmados(docsRegPorTipo);
 
 		// Datos justificante
 		final DatosGuardarJustificante justificante = new DatosGuardarJustificante();
@@ -201,6 +213,28 @@ public final class ControladorPasoGuardar extends ControladorPasoReferenciaImpl 
 			dpds.setValoracion(valoracionTramite);
 		}
 		return dpds;
+	}
+
+	/**
+	 * Revisamos descarga documentos firmados en función de tipo de firma y número
+	 * firmantes: Si la firma es PDF y hay un solo firmante, la descarga del
+	 * documento será directamente la descarga de la firma. En otro caso, se
+	 * descarga documento original y firmas por separado.
+	 *
+	 * @param docsRegPorTipo
+	 *            Documentos registrados
+	 */
+	private void revisarDescargaDocumentosFirmados(final List<DocumentosRegistroPorTipo> docsRegPorTipo) {
+		for (final DocumentosRegistroPorTipo drt : docsRegPorTipo) {
+			for (final DocumentoRegistro dr : drt.getListado()) {
+				if (dr.getFirmado() == TypeSiNo.SI) {
+					if (dr.getFirmas().size() == ConstantesNumero.N1
+							&& dr.getFirmas().get(0).getTipoFirma() == TypeFirmaDigital.PADES) {
+						dr.getFirmas().get(0).setDescargable(TypeSiNo.NO);
+					}
+				}
+			}
+		}
 	}
 
 	/**

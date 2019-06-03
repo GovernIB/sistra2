@@ -35,6 +35,9 @@ public final class PasoGuardarController extends TramitacionController {
 	/** Constante parametro instancia. */
 	private static final String PARAM_INSTANCIA = "instancia";
 
+	/** Constante parametro firmante. */
+	private static final String PARAM_FIRMANTE = "firmante";
+
 	/**
 	 * Realiza download justificante registro.
 	 *
@@ -124,6 +127,44 @@ public final class PasoGuardarController extends TramitacionController {
 
 		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoGuardar.DESCARGAR_DOCUMENTO, pParametros);
+		final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
+		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
+
+		return generarDownloadView(nombreFichero, datos);
+
+	}
+
+	/**
+	 * Realiza download de una firma de un documento.
+	 *
+	 * @param idPaso
+	 *            Identificador paso.
+	 * @param idDocumento
+	 *            Identificador documento.
+	 * @param instancia
+	 *            Instancia documento.
+	 * @param firmante
+	 *            Nif firmante.
+	 * @return Firma para descargar.
+	 */
+	@RequestMapping("/descargarFirma.html")
+	public ModelAndView descargarFirma(@RequestParam(PARAM_ID_PASO) final String idPaso,
+			@RequestParam(PARAM_ID_DOCUMENTO) final String idDocumento,
+			@RequestParam(PARAM_INSTANCIA) final String instancia,
+			@RequestParam(PARAM_FIRMANTE) final String firmante) {
+
+		debug("Obteniendo firma documento registro: " + idDocumento + " - " + instancia + " para nif " + firmante);
+
+		final String idSesionTramitacion = getIdSesionTramitacionActiva();
+
+		ParametrosAccionPaso pParametros;
+		pParametros = new ParametrosAccionPaso();
+		pParametros.addParametroEntrada(PARAM_ID_DOCUMENTO, idDocumento);
+		pParametros.addParametroEntrada(PARAM_INSTANCIA, instancia);
+		pParametros.addParametroEntrada(PARAM_FIRMANTE, firmante);
+
+		final ResultadoAccionPaso rap = getFlujoTramitacionService().accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.DESCARGAR_FIRMA, pParametros);
 		final byte[] datos = (byte[]) rap.getParametroRetorno("datosFichero");
 		final String nombreFichero = (String) rap.getParametroRetorno("nombreFichero");
 

@@ -14,6 +14,12 @@ public enum TypeAccionPasoGuardar implements TypeAccionPaso {
 	 */
 	DESCARGAR_DOCUMENTO,
 	/**
+	 * Descargar firma documento. Parámetros entrada: idDocumento, instancia
+	 * (opcional, solo para anexos multiinstancia), firmante. Parámetros salida:
+	 * nombreFichero, datosFichero.
+	 */
+	DESCARGAR_FIRMA,
+	/**
 	 * Descargar justificante. Parámetros entrada: no tiene. Parámetros salida: si
 	 * se devuelve el contenido: nombreFichero, datosFichero (byte[]) y si se
 	 * devuelve la url de acceso: url.

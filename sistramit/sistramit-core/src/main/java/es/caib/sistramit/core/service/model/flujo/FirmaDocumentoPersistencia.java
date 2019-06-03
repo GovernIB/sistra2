@@ -3,7 +3,7 @@ package es.caib.sistramit.core.service.model.flujo;
 import java.io.Serializable;
 import java.util.Date;
 
-import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 
 /**
  * Firma de un documento.

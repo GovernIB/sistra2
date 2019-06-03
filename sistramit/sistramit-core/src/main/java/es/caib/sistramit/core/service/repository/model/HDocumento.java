@@ -26,12 +26,12 @@ import es.caib.sistramit.core.api.exception.RepositoryException;
 import es.caib.sistramit.core.api.model.comun.types.TypeSiNo;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoPagoIncorrecto;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.service.model.flujo.DocumentoPasoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.FirmaDocumentoPersistencia;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.types.TypeDocumentoPersistencia;
-import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 
 /**
  * Mapea tabla STT_DOCPTR.

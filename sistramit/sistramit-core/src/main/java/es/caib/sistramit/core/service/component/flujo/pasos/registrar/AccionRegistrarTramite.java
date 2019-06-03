@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,7 @@ import es.caib.sistramit.core.api.model.flujo.ParametrosAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.ResultadoRegistrar;
 import es.caib.sistramit.core.api.model.flujo.types.TypeAccionPaso;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoDocumento;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.api.model.flujo.types.TypePresentacion;
 import es.caib.sistramit.core.api.model.flujo.types.TypeResultadoRegistro;
 import es.caib.sistramit.core.api.model.security.types.TypeAutenticacion;
@@ -57,7 +59,6 @@ import es.caib.sistramit.core.service.model.flujo.RespuestaEjecutarAccionPaso;
 import es.caib.sistramit.core.service.model.flujo.ResultadoRegistro;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
 import es.caib.sistramit.core.service.model.flujo.types.TypeEstadoPaso;
-import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.service.model.integracion.DefinicionTramiteSTG;
 import es.caib.sistramit.core.service.repository.dao.FlujoPasoDao;
 import es.caib.sistramit.core.service.util.UtilsFlujo;
@@ -363,7 +364,11 @@ public final class AccionRegistrarTramite implements AccionPaso {
 				pVariablesFlujo.getDatosTramiteCP().getProcedimiento().getIdProcedimientoSIA());
 		datosAsunto.setFechaAsunto(new Date());
 		datosAsunto.setIdiomaAsunto(pVariablesFlujo.getIdioma());
-		datosAsunto.setExtractoAsunto(pVariablesFlujo.getTituloTramite());
+		if(StringUtils.isNotBlank(pDipa.getParametrosRegistro().getDatosRegistrales().getExtracto())) {
+			datosAsunto.setExtractoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getExtracto());
+		}else {
+			datosAsunto.setExtractoAsunto(pVariablesFlujo.getTituloTramite());
+		}
 		datosAsunto.setTipoAsunto(pDipa.getParametrosRegistro().getDatosRegistrales().getTipoAsunto());
 		datosAsunto
 				.setCodigoOrganoDestino(pDipa.getParametrosRegistro().getDatosRegistrales().getCodigoOrganoDestino());

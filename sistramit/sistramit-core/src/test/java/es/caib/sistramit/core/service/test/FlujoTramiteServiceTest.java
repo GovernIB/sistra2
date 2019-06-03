@@ -851,6 +851,16 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
 		this.logger.info("Detalle paso: " + dp.print());
 
+		// -- Descargar firma
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idDocumento", formulario.getId());
+		parametros.addParametroEntrada("instancia", "1");
+		parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoRegistrar.DESCARGAR_FIRMA, parametros);
+		Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
+				&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado firma");
+
 		// -- Registrar
 		parametros = new ParametrosAccionPaso();
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
@@ -860,12 +870,31 @@ public class FlujoTramiteServiceTest extends BaseDbUnit {
 
 		// -- Paso terminado, pasa automáticamente a Guardar
 		dp = flujoTramitacionService.obtenerDetallePasos(idSesionTramitacion);
+		idPaso = dp.getActual().getId();
 		Assert.isTrue(dp.getActual().getTipo() == TypePaso.GUARDAR, "No esta en paso guardar");
 		Assert.isTrue(dp.getActual().getCompletado() == TypeSiNo.SI, "Paso registrar no esta completado");
 		this.logger.info("Detalle paso: " + dp.print());
 
+		// -- Paso Guardar: Descargar formulario
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idDocumento", formulario.getId());
+		parametros.addParametroEntrada("instancia", "1");
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
+				TypeAccionPasoGuardar.DESCARGAR_DOCUMENTO, parametros);
+		Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
+				&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado documento");
+
+		// -- Paso Guardar: Descargar firma formulario
+		parametros = new ParametrosAccionPaso();
+		parametros.addParametroEntrada("idDocumento", formulario.getId());
+		parametros.addParametroEntrada("instancia", "1");
+		parametros.addParametroEntrada("firmante", usuarioAutenticadoInfo.getNif());
+		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso, TypeAccionPasoGuardar.DESCARGAR_FIRMA,
+				parametros);
+		Assert.isTrue((resPaso.getParametroRetorno("nombreFichero") != null
+				&& resPaso.getParametroRetorno("datosFichero") != null), "No se ha recuperado firma");
+
 		// -- Paso Guardar: descargar justificante
-		idPaso = dp.getActual().getId();
 		parametros = new ParametrosAccionPaso();
 		resPaso = flujoTramitacionService.accionPaso(idSesionTramitacion, idPaso,
 				TypeAccionPasoGuardar.DESCARGAR_JUSTIFICANTE, parametros);

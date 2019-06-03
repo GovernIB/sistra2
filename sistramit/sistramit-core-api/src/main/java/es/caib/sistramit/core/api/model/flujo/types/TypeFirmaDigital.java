@@ -1,4 +1,4 @@
-package es.caib.sistramit.core.service.model.flujo.types;
+package es.caib.sistramit.core.api.model.flujo.types;
 
 /**
  * Indica tipo de firma digital.

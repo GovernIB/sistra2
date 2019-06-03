@@ -660,6 +660,8 @@ public final class UtilsFlujo {
 				if (fdp != null) {
 					fdr.setEstadoFirma(TypeEstadoFirma.FIRMADO);
 					fdr.setFechaFirma(UtilsFlujo.formateaFechaFront(fdp.getFecha()));
+					fdr.setDescargable(TypeSiNo.SI);
+					fdr.setTipoFirma(fdp.getTipoFirma());
 				}
 				firmas.add(fdr);
 			}

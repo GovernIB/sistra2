@@ -8,6 +8,7 @@ import es.caib.sistramit.core.api.model.flujo.DocumentoRegistro;
 import es.caib.sistramit.core.api.model.flujo.Firma;
 import es.caib.sistramit.core.api.model.flujo.Persona;
 import es.caib.sistramit.core.api.model.flujo.types.TypeEstadoFirma;
+import es.caib.sistramit.core.api.model.flujo.types.TypeFirmaDigital;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumento;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoAnexo;
 import es.caib.sistramit.core.service.model.flujo.DatosDocumentoFormulario;
@@ -15,7 +16,6 @@ import es.caib.sistramit.core.service.model.flujo.DatosInternosPasoRegistrar;
 import es.caib.sistramit.core.service.model.flujo.DatosPaso;
 import es.caib.sistramit.core.service.model.flujo.ReferenciaFichero;
 import es.caib.sistramit.core.service.model.flujo.VariablesFlujo;
-import es.caib.sistramit.core.service.model.flujo.types.TypeFirmaDigital;
 
 /**
  * Utils paso registrar.
